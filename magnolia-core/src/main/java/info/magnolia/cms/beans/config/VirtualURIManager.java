@@ -15,10 +15,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.SimpleUrlPattern;
-import info.magnolia.cms.util.StringComparator;
-import info.magnolia.cms.util.UrlPattern;
+import info.magnolia.cms.util.*;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -90,9 +87,9 @@ public final class VirtualURIManager extends ObservedManager {
             Iterator it = list.iterator();
             while (it.hasNext()) {
                 Content container = (Content) it.next();
-                NodeData fromURI = container.getNodeData("fromURI"); //$NON-NLS-1$
+                NodeData fromURI = NodeDataUtil.getOrCreate(container,"fromURI"); //$NON-NLS-1$
                 UrlPattern p = new SimpleUrlPattern(fromURI.getString());
-                cachedURImapping.put(p, container.getNodeData("toURI").getString()); //$NON-NLS-1$
+                cachedURImapping.put(p, NodeDataUtil.getString(container,"toURI")); //$NON-NLS-1$
             }
             log.info("Config : VirtualMap loaded - " + node.getHandle()); //$NON-NLS-1$
         }
@@ -103,6 +100,10 @@ public final class VirtualURIManager extends ObservedManager {
 
     protected void onClear() {
         this.cachedURImapping.clear();
+    }
+
+    public Map getURIMappings() {
+        return cachedURImapping;
     }
 
     /**

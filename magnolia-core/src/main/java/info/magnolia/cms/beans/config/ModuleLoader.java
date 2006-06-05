@@ -20,18 +20,15 @@ import info.magnolia.cms.module.ModuleDefinition;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
-
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.servlet.ServletContextEvent;
-
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.OrderedMapIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -164,11 +161,12 @@ public final class ModuleLoader {
             }
             final Module m = module;
             // add destroy method as a shutdown task
-            ShutdownManager.addShutdownTask(new ShutdownManager.ShutdownTask() {
+            ShutdownManager.addShutdownTask(new ShutdownTask() {
 
-                public void execute(ServletContextEvent sce) {
+                public boolean execute(info.magnolia.context.Context context) {
                 	log.info("Shutting down module: "+m.getName());
                     m.destroy();
+                    return true;
                 }
 
                 public String toString() {

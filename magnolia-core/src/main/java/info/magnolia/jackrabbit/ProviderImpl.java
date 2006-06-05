@@ -13,6 +13,7 @@
 package info.magnolia.jackrabbit;
 
 import info.magnolia.cms.beans.config.ShutdownManager;
+import info.magnolia.cms.beans.config.ShutdownTask;
 import info.magnolia.cms.core.Path;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -179,9 +180,8 @@ public class ProviderImpl implements Provider {
         }
 
         if (addShutdownTask) {
-            ShutdownManager.addShutdownTask(new ShutdownManager.ShutdownTask() {
-
-                public void execute(ServletContextEvent sce) {
+            ShutdownManager.addShutdownTask(new ShutdownTask() {
+                public boolean execute(info.magnolia.context.Context context) {
                     log.info("Shutting down repository bound to '{}'", bindName);
 
                     try {
@@ -200,6 +200,7 @@ public class ProviderImpl implements Provider {
                             e.getClass().getName(),
                             e.getMessage()}), e);
                     }
+                    return true;
                 }
             });
         }

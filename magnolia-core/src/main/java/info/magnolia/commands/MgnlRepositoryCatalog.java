@@ -9,6 +9,7 @@ import org.apache.commons.chain.Chain;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.impl.CatalogBase;
 import org.apache.commons.chain.impl.ChainBase;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,7 +40,7 @@ public class MgnlRepositoryCatalog extends CatalogBase {
             String actionName = actionNode.getName();
 
             NodeData impl = actionNode.getNodeData(CLASS_NODE_DATA);
-            if (impl != null && impl.getString() != null && !(impl.getString().equals(""))) {
+            if (impl != null && impl.getString() != null && !(impl.getString().equals(StringUtils.EMPTY))) {
 
                 Command command;
 				try {

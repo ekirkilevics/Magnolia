@@ -13,17 +13,12 @@
 
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ParagraphManager;
-import info.magnolia.cms.beans.config.TemplateManager;
-import info.magnolia.cms.beans.config.TemplateRendererManager;
-import info.magnolia.cms.beans.config.VirtualURIManager;
+import info.magnolia.cms.beans.config.*;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.ControlsManager;
 import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.InitializationException;
-import info.magnolia.cms.module.InvalidConfigException;
 import info.magnolia.cms.util.ContentUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +44,7 @@ public abstract class AbstractAdminModule extends AbstractModule {
      * method.
      * @throws InitializationException
      */
-    public final void init(Content configNode) throws InvalidConfigException, InitializationException {
+    public final void init(Content configNode) throws InitializationException {
         this.setConfigNode(configNode);
         try {
             Content node;
@@ -100,6 +95,12 @@ public abstract class AbstractAdminModule extends AbstractModule {
             node = ContentUtil.getCaseInsensitive(moduleNode, "trees");
             if (node != null) {
                 TreeHandlerManager.getInstance().register(node);
+            }
+
+            // register shutdown tasks
+            node = ContentUtil.getCaseInsensitive(moduleNode,"shutdown");
+            if(node!=null) {
+                ShutdownManager.getInstance().register(node);
             }
 
             onInit();
