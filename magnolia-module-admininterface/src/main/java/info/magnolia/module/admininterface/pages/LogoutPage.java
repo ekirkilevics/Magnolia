@@ -53,7 +53,7 @@ public class LogoutPage extends PageMVCHandler {
             session.invalidate();
             log.info("Logging out user");
         }
-        getResponse().sendRedirect(request.getContextPath());
+        getResponse().sendRedirect(request.getContextPath() + "/");
     }
 
 }
