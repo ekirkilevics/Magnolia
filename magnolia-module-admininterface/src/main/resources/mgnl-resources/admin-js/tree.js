@@ -502,7 +502,7 @@
         {
         var text=mgnlMessages.get('tree.deletenode.confirm.text.js', null, [this.selectedNode.id]);
         var title=mgnlMessages.get('tree.deletenode.confirm.title.js');
-        if (!this.selectedNode.isActivated || mgnlConfirm(text,title))
+        if (mgnlConfirm(text,title))
             {
             var parentNode=this.getNode(this.selectedNode.parentId);
             var deleteNode=this.selectedNode.label;
@@ -808,7 +808,7 @@
                 control.focus();
 
                 this.lastEditedHtmlObject=span;
-                this.lastEditedOriginalValue=span.innerHTML;
+                this.lastEditedOriginalValue=value;
                 this.lastEditedName=column.name;
                 this.lastEditedIsMeta=column.isMeta;
                 this.lastEditedIsLabel=column.isLabel;
@@ -854,7 +854,7 @@
     mgnlTree.prototype.saveNodeData = function(value, displayValue)
         {
         var exit=false;
-        if (value==this.lastEditedOriginalValue || (value=="" && this.lastEditedOriginalValue==this.strings.empty))
+        if (value==this.lastEditedOriginalValue || displayValue==this.lastEditedOriginalValue ||(value=="" && this.lastEditedOriginalValue==this.strings.empty))
             {
             exit=true;
             }
