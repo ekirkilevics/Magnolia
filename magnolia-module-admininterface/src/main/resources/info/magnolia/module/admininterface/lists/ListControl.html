@@ -5,58 +5,24 @@
 <input type="hidden" name="groupByOrder" value="${this.groupByOrder}"/>
 
 <script>
-	function ${this.name}Resize(){
-		var thisHeight = MgnlDHTMLUtil.getHeight($('mgnlListDiv'));
-		var thisWidth = MgnlDHTMLUtil.getWidth($('mgnlListDiv'));
-		<#if this.groupableFields?has_content || this.sortableFields?has_content>
-			var sortWidth = MgnlDHTMLUtil.getWidth($('${this.name}SortGroupDiv'));
-			$('${this.name}SortGroupDiv').style.left = thisWidth - sortWidth + "px";		
-			$('${this.name}ContentDiv').style.width = thisWidth - sortWidth + "px";	
-			$('${this.name}SortGroupDiv').style.height = thisHeight -1 + "px";
-		<#else/>
-			$('${this.name}ContentDiv').style.width = thisWidth + "px";	
-		</#if>
-		
-		$('${this.name}ContentDiv').style.height = thisHeight + "px";
-		$('${this.name}InnerContentDiv').style.height = thisHeight + "px";
-
-	}
+	var ${this.name};
 	
-	function ${this.name}Init(){
-		${this.name} = new mgnl.controls.List('${this.name}');	
-		${this.name}Resize();
-	}
-
-	MgnlDHTMLUtil.addOnLoad(${this.name}Init);
-	MgnlDHTMLUtil.addOnResize(${this.name}Resize);
+	MgnlDHTMLUtil.addOnLoad(function(){
+        ${this.name} = new mgnl.controls.List('${this.name}', document.mgnlForm);
+        // add the columns
+        <#list this.children as column>
+            new mgnl.controls.ListColumn(
+                ${this.name}, // the list itself
+                '${column.width}', // 100 or 200px --> px means fixed size
+                ${column_index} // index of this column
+            );
+        </#list>
+        
+		${this.name}.resize();
+	});
+	
+	MgnlDHTMLUtil.addOnResize(function(){${this.name}.resize();});
 </script>
-
-<script>
-	function sort(name, direction){
-		document.mgnlForm.sortBy.value = name;
-		document.mgnlForm.sortByOrder.value = direction;
-		document.mgnlForm.submit();
-	}
-
-	function group(name, direction){
-		document.mgnlForm.groupBy.value = name;
-		document.mgnlForm.groupByOrder.value = direction;
-		document.mgnlForm.submit();
-	}
-
-</script>
-
-<style>
-    <#list this.children as column>
-        .${this.name}CssClassColumn${column_index}{
-            position:absolute;
-            left:${column_index * 200}px;
-            clip:rect(0 200 100 0);
-            cursor:default;
-            padding-left:8px;
-        }
-    </#list>
-</style>
 
 <#if this.contextMenu?exists>
 	${this.contextMenu.html}
@@ -72,7 +38,7 @@
 		</div>
 	</#if>
 	
-	<div id="${this.name}ContentDiv" class="mgnlListContentDiv mgnlBgLight">
+	<div id="${this.name}ContentDiv" class="mgnlListContentDiv mgnlBgLight" >
 		<#include "ListControlContent.html"/>
 	</div>
 </div>

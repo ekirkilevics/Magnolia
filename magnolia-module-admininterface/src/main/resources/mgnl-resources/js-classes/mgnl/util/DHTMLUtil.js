@@ -164,6 +164,28 @@ classDef("mgnl.util.DHTMLUtil", {
     
     getWidth: function(element){
         return element.offsetWidth;
-    }    
+    },
+    
+    getCSSClass: function(name){
+	    var rulesKey;
+	    if (document.all){
+	        rulesKey="rules";
+	    }
+	    else if (document.getElementById){
+	        rulesKey="cssRules";
+	    }
+	    for (var elem0 = document.styleSheets.length-1; elem0>=0; elem0--) {
+		    var rules=document.styleSheets[elem0][rulesKey];
+		
+		    //for (var elem1 in rule) //does not work in firebird 0.8, safari 1.2
+		    for (var elem1=0; elem1<rules.length; elem1++){
+		        var cssClass=rules[elem1].selectorText;
+		        // in safar 1.3 the selectorText is in lower case
+		        if (cssClass && cssClass.toLowerCase().indexOf("." + name.toLowerCase())!=-1){
+		            return rules[elem1];
+		        }
+		    }
+        }
+    }   
 
 });

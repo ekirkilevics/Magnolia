@@ -47,19 +47,26 @@ MgnlRuntime = mgnl.Runtime = {
      
     /**
      * Creates the package object structure if not yet existing and register the class. 
-     * It adds a debug method
      * @param name the full name (including the class name)
-     * @param obj a constructor or object defining the class
+     * @param prototypeOrKlass same as klass but can be the prototype of this class (used for a nicer syntax)
+     * @param klass a constructor or object defining the class
      */
-    classDef: function(name, obj){
+    classDef: function(name, prototypeOrKlass, klass){
         var names = name.split(".");
-        var current = window; 
+        var current = window;
+
+        if(!klass){
+            klass = prototypeOrKlass;
+        }
+        else{
+            klass.prototype = prototypeOrKlass;
+        }
         
         // create package structure
         for(i=0; i<names.length; i++){
             var varName = names[i];
             if(i == names.length -1){
-                current[varName] = obj;
+                current[varName] = klass;
             }
             else if(current[varName] == null){
                 current[varName] = new Object;
@@ -68,11 +75,11 @@ MgnlRuntime = mgnl.Runtime = {
         }
         
         // add the the class name
-        if(obj.prototype)
-            obj.prototype._class = name; 
+        if(klass.prototype)
+            klass.prototype._class = name; 
         else
-            obj._class = name;
-        return obj;
+            klass._class = name;
+        return klass;
     },
 
     /**
@@ -251,7 +258,7 @@ MgnlRuntime = mgnl.Runtime = {
 };
 
 // define shortcuts: the wrapping function is used to save the this variable
-classDef = function(name, obj){mgnl.Runtime.classDef(name, obj)};
+classDef = function(name, prototypeOrKlass, klass){mgnl.Runtime.classDef(name, prototypeOrKlass, klass)};
 importClass = function(name, sync){mgnl.Runtime.importClass(name,sync)};
 
 // define this class properly

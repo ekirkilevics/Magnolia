@@ -1,10 +1,21 @@
-<div class="mgnlListHeaderBackground">
+<style>
+    <#list this.children as column>
+        .${this.name}CssClassColumn${column_index}{
+            position:absolute;
+            left:0px;
+            clip:rect(0 0 0 0);
+            cursor:default;
+            padding-left:8px;
+        }
+    </#list>
+</style>
 
+<div class="mgnlListHeaderBackground">
 <!-- delimiters -->
     <!-- move icons -->
     <#list this.children as column>
 		<#if (column_index > 0)>
-        <div style="left:${column_index*200}px" onmousedown="${this.name}.dragColumnStart(this,${column_index});" class="mgnlListColumnResizer" id="${this.name}ColumnResizer${column_index}"></div>
+        <div onmousedown="${this.name}.startResizeColumn(${column_index});" class="mgnlListColumnResizer" id="${this.name}ColumnResizer${column_index}"></div>
 		</#if>
     </#list>
 
@@ -16,12 +27,12 @@
 </div>
 
 <!-- column resizer line -->
-<div id="${this.name}_ColumnResizerLine" style="position:absolute;top:0px;left:-100px;visibility:hidden;width:1px;height:200px;background-color:#333333;z-index:490;">
+<div id="${this.name}ColumnResizerLine" style="position:absolute;top:0px;visibility:hidden;width:1px;height:200px;background-color:#333333;z-index:490;">
 </div>
 
 <!-- column lines -->
 <#list 1..(this.children?size-1) as i>
-    <div id="${this.name}ColumnLine${i}" class="mgnlListColumnLine" style="left:${i*200+5}px;height:100%"> </div>
+    <div id="${this.name}ColumnLine${i}" class="mgnlListColumnLine"> </div>
 </#list>
 
 <!-- content -->

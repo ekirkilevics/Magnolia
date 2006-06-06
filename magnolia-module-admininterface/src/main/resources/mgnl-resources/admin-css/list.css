@@ -16,8 +16,6 @@
     width:1px;
     background-color: #D8EFB6;
     position: absolute;
-    left:10px;
-    height:100px;
     z-index: 1;
 }
 
@@ -42,7 +40,6 @@
 }
 
 .mgnlListContentDiv {
-    width: 800px;
     position: absolute;
 }
 
@@ -52,11 +49,9 @@
 
 .mgnlListSortGroupDiv {
     position: absolute;
-    left: 800px;
-    width: 200px;
+    width: 150px;
     border:  solid thin silver;
     background-color: #EDEEE9;
-    height: 800px;
 }
 
 .mgnlListRow{

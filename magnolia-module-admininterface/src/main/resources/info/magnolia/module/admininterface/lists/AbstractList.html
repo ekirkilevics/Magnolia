@@ -8,20 +8,30 @@
         <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/pro-css/search.css">
     
         <script type="text/javascript">
-
+            var functionBar;
             
             function mgnlListResize(){
                 // set the size of the list div
                 var height = MgnlDHTMLUtil.getWindowSize().h;
-                var functionBar = $('mgnlFunctionBarDiv');
+                var width = MgnlDHTMLUtil.getWindowSize().w;
                 if(functionBar){
-                    $('mgnlListDiv').style.height = height - MgnlDHTMLUtil.getHeight(functionBar) + "px";
+                    $('${this.list.name}Div').style.height = height - MgnlDHTMLUtil.getHeight(functionBar) + "px";
+                    functionBar.style.top=height - MgnlDHTMLUtil.getHeight(functionBar);
                 }
                 else{
-                    $('mgnlListDiv').style.height = height + "px";
+                    $('${this.list.name}Div').style.height = height + "px";
                 }
+                $('${this.list.name}Div').style.width = width + "px";
             }
-            MgnlDHTMLUtil.addOnLoad(mgnlListResize);
+            
+            MgnlDHTMLUtil.addOnLoad(function(){
+                functionBar = $('mgnlFunctionBarDiv');
+                if(functionBar){
+                    functionBar.style.position = "absolute";
+                }
+                mgnlListResize();
+            });
+            
             MgnlDHTMLUtil.addOnResize(mgnlListResize);
         </script>
     </head>
@@ -33,7 +43,7 @@
             <!--  used by subclasses mainly to add additional hiddenfields or js -->
             ${this.onRender()}
             
-            <div id="mgnlListDiv" style="height: 500px;">
+            <div id="${this.list.name}Div" style="position:absolute;">
                 ${this.list.render()}
             </div>
 
@@ -47,7 +57,7 @@
             <#if message?exists>
                 <script>MgnlDHTMLUtil.addOnLoad(function(){alert("${message}")});</script>
             </#if>
-
         </form>
+
     </body>
 </html>

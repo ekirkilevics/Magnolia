@@ -23,6 +23,7 @@ classDef("mgnl.util.Debug", {
      */
     contextes : {
         "mgnl.Runtime": true,
+        "mgnl.controls.List": true,
         tree: true,
         dialog: true,
         acl: true,
