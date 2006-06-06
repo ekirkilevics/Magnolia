@@ -12,21 +12,19 @@
  */
 package info.magnolia.module.owfe.commands.flow;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.commands.ContextAttributes;
 import info.magnolia.context.Context;
 import openwfe.org.engine.workitem.LaunchItem;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 
 /**
@@ -49,7 +47,7 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
      */
     public void prepareLaunchItem(Context context, LaunchItem launchItem) {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ");
-        
+
         // add start date and end date
         String repository = (String) context.get(ContextAttributes.P_REPOSITORY);
         String path = (String) context.get(ContextAttributes.P_PATH);
@@ -59,6 +57,7 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
         Content node = null;
         try {
             node = hm.getContent(path);
+            launchItem.getAttributes().puts(ContextAttributes.P_PATH,path);
         }
         catch (RepositoryException e) {
             log.error("can't find node for path [" + path + "]", e);
@@ -75,7 +74,7 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
         catch (Exception e) {
             log.warn("cannot get start time for node " + path, e);
         }
-        
+
         if (cd != null) {
             date = sdf.format(new Date(cd.getTimeInMillis()));
             log.debug("start date = " + date);
