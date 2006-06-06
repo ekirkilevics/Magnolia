@@ -74,7 +74,8 @@ classDef("mgnl.util.Debug", {
         
         if(context != null)
             msg = context + ": " + msg;
-        div.innerHTML += msg + "<br>";
+        div.appendChild(document.createTextNode(msg));
+        div.appendChild(document.createElement("br"));
     },
     
     /**
