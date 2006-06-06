@@ -73,10 +73,26 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     private String repository;
 
+    private static ContentFilter MAGNOLIA_FILTER = new ContentFilter() {
+
+        public boolean accept(Content content) {
+
+            try {
+                String nodetype = content.getNodeType().getName();
+                // export only "magnolia" nodes
+                return nodetype.startsWith("mgnl:");
+            }
+            catch (RepositoryException e) {
+                log.error("Unable to read nodetype for node {}", content.getHandle());
+            }
+            return false;
+        }
+    };
+
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(DevelopmentUtilsPage.class);
+    protected static Logger log = LoggerFactory.getLogger(DevelopmentUtilsPage.class);
 
     /**
      * @param name
@@ -252,12 +268,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
             HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
             Content wesiteRoot = hm.getRoot();
 
-            Iterator children = wesiteRoot.getChildren(new ContentFilter() {
-
-                public boolean accept(Content content) {
-                    return true;
-                }
-            }).iterator();
+            Iterator children = wesiteRoot.getChildren(MAGNOLIA_FILTER).iterator();
             while (children.hasNext()) {
                 Content exported = (Content) children.next();
                 exportNode(repositoryName, hm.getWorkspace().getSession(), exported);
@@ -280,12 +291,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
         try {
             Content parentNode = hm.getContent(parentpath);
-            Iterator children = parentNode.getChildren(new ContentFilter() {
-
-                public boolean accept(Content content) {
-                    return true;
-                }
-            }).iterator();
+            Iterator children = parentNode.getChildren(MAGNOLIA_FILTER).iterator();
             while (children.hasNext()) {
                 Content exported = (Content) children.next();
                 exportNode(repository, hm.getWorkspace().getSession(), exported);
