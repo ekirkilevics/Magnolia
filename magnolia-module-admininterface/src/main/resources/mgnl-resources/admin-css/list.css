@@ -45,6 +45,7 @@
 
 .mgnlListInnerContentDiv {
     border-left: thin solid #999;
+    overflow: auto;
 }
 
 .mgnlListSortGroupDiv {
@@ -54,7 +55,10 @@
     background-color: #EDEEE9;
 }
 
-.mgnlListRow{
+.mgnlListRow, .mgnlListRowHover, .mgnlListRowSelected{
+    position:relative;
+    margin-top: 6px;
+    height: 18px;
 }
 
 .mgnlListRowHover{
