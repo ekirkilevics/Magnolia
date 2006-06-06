@@ -145,7 +145,7 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      * go through all roles and set ACL
      * */
     private void addGroups(Content node, PrincipalCollection principalList, GroupList groupList, RoleList roleList) {
-        HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_GROUPS);
+        HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_GROUPS);
         try {
             if (!node.hasContent("groups")) return;
             Content groupNode = node.getContent("groups");
@@ -154,7 +154,9 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 String groupUUID = ((NodeData) children.next()).getString();
                 Content group;
                 try {
-                    group = rolesHierarchy.getContentByUUID(groupUUID);
+                    group = groupsHierarchy.getContentByUUID(groupUUID);
+                    // ignore if this groups is already in a list to avoid infinite recursion
+                    if (groupList.has(group.getName())) continue;
                 } catch (ItemNotFoundException e) {
                     if (log.isDebugEnabled()) {
                         log.debug("Group does not exist", e);
