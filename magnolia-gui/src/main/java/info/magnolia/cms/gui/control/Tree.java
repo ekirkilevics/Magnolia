@@ -184,7 +184,7 @@ public class Tree extends ControlSuper {
      */
     public void setPathSelected(String s) {
         if (StringUtils.isNotEmpty(s)) {
-            if(StringUtils.isEmpty(this.getPathOpen())){
+            if (StringUtils.isEmpty(this.getPathOpen())) {
                 this.setPathOpen(StringUtils.substringBeforeLast(s, "/")); //$NON-NLS-1$
             }
         }
@@ -823,6 +823,9 @@ public class Tree extends ControlSuper {
         }
         rule.addAllowType(ItemType.NT_METADATA);
         rule.addAllowType(ItemType.NT_RESOURCE);
+        rule.addAllowType(ItemType.USER.getSystemName());
+        rule.addAllowType(ItemType.GROUP.getSystemName());
+        rule.addAllowType(ItemType.ROLE.getSystemName());
 
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
         syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
@@ -1296,7 +1299,8 @@ public class Tree extends ControlSuper {
         }
         else if (itemType.equals(ITEM_TYPE_NODEDATA)) {
             icon = this.getIconNodeData();
-        } else {
+        }
+        else {
             icon = this.getIconPage();
         }
         return icon;
