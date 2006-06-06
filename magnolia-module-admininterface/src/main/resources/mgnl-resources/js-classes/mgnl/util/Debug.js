@@ -16,7 +16,7 @@ classDef("mgnl.util.Debug", {
     /**
      * True if the debuggin is working
      */
-    on: true,
+    on: false,
 
     /**
      * the context which can be switched on and of
