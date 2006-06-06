@@ -717,6 +717,12 @@ public class Tree extends ControlSuper {
         String returnValue = StringUtils.EMPTY;
         String parentPath = StringUtils.substringBeforeLast(this.getPath(), "/"); //$NON-NLS-1$
         newLabel = Path.getValidatedLabel(newLabel);
+
+        // don't rename if it uses the same name as the current
+        if(this.getPath().endsWith("/" + newLabel)){
+            return newLabel;
+        }
+
         String dest = parentPath + "/" + newLabel; //$NON-NLS-1$
         if (getHierarchyManager().isExist(dest)) {
             newLabel = Path.getUniqueLabel(getHierarchyManager(), parentPath, newLabel);
@@ -758,7 +764,7 @@ public class Tree extends ControlSuper {
                 parent.orderBefore(newLabel, placedBefore);
             }
         }
-        // SessionAccessControl.invalidateUser(this.getRequest());
+
         Content newPage = getHierarchyManager().getContent(dest);
         returnValue = newLabel;
         newPage.updateMetaData();
