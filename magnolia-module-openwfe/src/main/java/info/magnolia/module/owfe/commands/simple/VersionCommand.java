@@ -12,7 +12,6 @@
  */
 package info.magnolia.module.owfe.commands.simple;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.commands.ContextAttributes;
@@ -38,8 +37,9 @@ public class VersionCommand implements Command {
      */
     public boolean execute(Context ctx) {
         String path = (String) ctx.get(ContextAttributes.P_PATH);
+        String repository = (String) ctx.get(ContextAttributes.P_REPOSITORY);
         try {
-            Content node = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent(path);
+            Content node = MgnlContext.getHierarchyManager(repository).getContent(path);
             node.addVersion();
         }
         catch (Exception e) {
