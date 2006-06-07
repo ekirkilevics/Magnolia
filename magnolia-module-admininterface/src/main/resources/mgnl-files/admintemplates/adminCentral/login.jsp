@@ -19,7 +19,7 @@
     <body>
       <div id="frame">
         <div id="logo">
-          <img src="${pageContext.request.contextPath}/.resources/loginForm/logo.gif" width="271" height="51"
+          <img src="${pageContext.request.contextPath}/.resources/loginForm/logo.gif" 
             title="magnolia Content Management Suite" alt="magnolia Content Management Suite" />
         </div>
         <div id="form">
