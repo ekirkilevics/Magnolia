@@ -1,14 +1,22 @@
 <#if this.groupableFields?has_content>
-	Group by:<br/>
+	<div class="mgnlListSortGroupTitle">${renderer.getMessage("list.groupby")}:</div>
 	<#list this.groupableFields as field>
-		<a href="javascript:${this.name}.group('${field}','${renderer.nextGroupByOrder(this, field)}');">${this.getColumnLabel(field)}</a><br/>
+		<div class="${renderer.getGroupLinkCSSClass(this, field)}">
+			<a href="javascript:${this.name}.group('${field}','${renderer.nextGroupByOrder(this, field)}');">${this.getColumnLabel(field)}</a>
+		</div>
 	</#list>
-    <p/>
 </#if>
+
 <#if this.sortableFields?has_content>
-	Sort by:<br/>
+	<#if this.groupableFields?has_content>
+		<div class="mgnlListSortGroupLine"></div>
+	</#if>
+
+	<div class="mgnlListSortGroupTitle">${renderer.getMessage("list.sortby")}:</div>
 	<#list this.sortableFields as field>
-		<a href="javascript:${this.name}.sort('${field}','${renderer.nextSortByOrder(this, field)}');">${this.getColumnLabel(field)}</a><br/>
+		<div class="${renderer.getSortLinkCSSClass(this, field)}">
+			<a href="javascript:${this.name}.sort('${field}','${renderer.nextSortByOrder(this, field)}');">${this.getColumnLabel(field)}</a>
+		</div>
 	</#list>
 </#if>
 

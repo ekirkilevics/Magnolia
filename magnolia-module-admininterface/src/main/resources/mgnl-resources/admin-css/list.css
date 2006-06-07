@@ -53,6 +53,35 @@
     width: 150px;
     border:  solid thin silver;
     background-color: #EDEEE9;
+    padding: 3px 5px 5px 5px;
+}
+
+.mgnlListSortGroupTitle {
+    font-weight: bold;
+}
+
+.mgnlListSortGroupLine {
+    margin: 10 0 10 0;
+    border-top: thin solid #C2C2C2;
+    height:1px;
+    background-color: white;
+}
+
+.mgnlListSortGroupLink, .mgnlListSortGroupLinkASC, .mgnlListSortGroupLinkDESC{
+    padding-top: 5px;
+}
+
+.mgnlListSortGroupLink a, .mgnlListSortGroupLinkASC a, .mgnlListSortGroupLinkDESC a{
+    text-decoration: none;
+}
+
+.mgnlListSortGroupLink a {
+    color: gray;
+}
+
+.mgnlListSortGroupLinkASC a, .mgnlListSortGroupLinkDESC a{
+    color: #28506A;
+    font-weight: bold;
 }
 
 .mgnlListRow, .mgnlListRowHover, .mgnlListRowSelected{

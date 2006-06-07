@@ -14,6 +14,8 @@ package info.magnolia.cms.gui.controlx.impl;
 
 import info.magnolia.cms.gui.controlx.Control;
 import info.magnolia.cms.gui.controlx.Renderer;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.FreeMarkerUtil;
 
 import java.util.HashMap;
@@ -21,14 +23,14 @@ import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
+
 /**
  * Used the classname by default to get the template to render.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class TemplatedRenderer implements Renderer {
-    
+
     private String templateName;
 
     /**
@@ -45,7 +47,8 @@ public class TemplatedRenderer implements Renderer {
     }
 
     /**
-     * @see info.magnolia.cms.gui.controlx.Renderer#render(info.magnolia.cms.gui.controlx.Control)
+     * Render the using the template. The control is passed under the name 'this' and the renderer class is passed under
+     * the name 'renderer'
      */
     public String render(Control control) {
         Map data = new HashMap();
@@ -55,18 +58,34 @@ public class TemplatedRenderer implements Renderer {
     }
 
     /**
+     * Get the message from the renderer. Uses getMessages().
+     * @param key 
+     * @return the string found, or the key if not found
+     */
+    public String getMessage(String key) {
+        return getMessages().getWithDefault(key, key);
+    }
+
+    /**
+     * Get the messages used for the rendering. By default the standard messages are returned.
+     * @return the messages
+     */
+    public Messages getMessages() {
+        return MessagesManager.getMessages();
+    }
+
+    /**
      * @return
      */
     protected String getTemplateName(Control control) {
-        if(this.templateName == null){
+        if (this.templateName == null) {
             return "/" + StringUtils.replace(control.getClass().getName(), ".", "/") + ".html";
         }
-        else{
+        else {
             return this.templateName;
         }
     }
 
-    
     /**
      * @return Returns the templateName.
      */
@@ -74,7 +93,6 @@ public class TemplatedRenderer implements Renderer {
         return this.templateName;
     }
 
-    
     /**
      * @param templateName The templateName to set.
      */

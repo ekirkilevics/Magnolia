@@ -103,5 +103,31 @@ public class ListControlRenderer extends TemplatedRenderer {
     public String onRightClick(ListControl list, Integer index){
         return "";
     }
+    
+    /**
+     * Used to get the css class for the grouplinks
+     * @param list
+     * @param field
+     * @return the css class as a string
+     */
+    public String getGroupLinkCSSClass(ListControl list, String field){
+       if(list.getGroupBy().equals(field)){
+           return "mgnlListSortGroupLink" + list.getGroupByOrder().toUpperCase();
+       }
+       return "mgnlListSortGroupLink";
+    }
+
+    /**
+     * Used to get the css class for the sort links
+     * @param list
+     * @param field
+     * @return the css class as a string
+     */
+    public String getSortLinkCSSClass(ListControl list, String field){
+       if(list.getSortBy().equals(field)){
+           return "mgnlListSortGroupLink" + list.getSortByOrder().toUpperCase();
+       }
+       return "mgnlListSortGroupLink";
+    }
 
 }
