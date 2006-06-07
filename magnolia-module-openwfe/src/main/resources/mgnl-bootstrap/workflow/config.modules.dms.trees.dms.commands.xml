@@ -14,14 +14,14 @@
     <sv:value>mix:versionable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>3b9f4a42-50d6-4860-840e-077eb66c70f3</sv:value>
+    <sv:value>f6831e8f-b3eb-4787-9859-05066ff75efc</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>486a9349-3a50-49a1-b76b-c9750c9fb4f7</sv:value>
+      <sv:value>2ebf1434-dee4-4b05-9eb8-bebf6ab513a7</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -30,7 +30,7 @@
       <sv:value>2006-05-23T14:39:56.187+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-05-23T14:40:00.913+02:00</sv:value>
+      <sv:value>2006-06-07T18:12:13.393+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
@@ -50,14 +50,14 @@
       <sv:value>mix:versionable</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>be76d2f2-d128-4070-8509-141b3b683ff7</sv:value>
+      <sv:value>599074b0-ecfd-4ab1-aa8a-a3ee433254ae</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>682e6366-cec9-45ae-bb28-f83a2d8c256e</sv:value>
+        <sv:value>c4308182-9cbd-4afc-902a-3833934d5b09</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -86,7 +86,7 @@
         <sv:value>mix:versionable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>d8fc6026-fa85-45af-b3f1-1f50c2b60745</sv:value>
+        <sv:value>37ef3d1f-4f45-4a0b-bc5b-15652de554d2</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
         <sv:value>info.magnolia.module.owfe.commands.simple.VersionCommand</sv:value>
@@ -96,7 +96,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>af3fb75c-5b21-4c3b-9ada-8b9ae59b15db</sv:value>
+          <sv:value>b36ffdf4-9da9-4404-a744-60ce1270045e</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -126,7 +126,7 @@
         <sv:value>mix:versionable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>6bc37b49-d4d5-49f1-8ff3-755f693c78ee</sv:value>
+        <sv:value>02f6828d-9a8c-40d2-a0eb-b3e53170b5df</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
         <sv:value>info.magnolia.module.owfe.commands.flow.FlowCommand</sv:value>
@@ -139,7 +139,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>accb64c5-4ba2-4477-9e29-dfc02462fbad</sv:value>
+          <sv:value>5b2a8d6c-c145-4bb9-a6cc-dd9cc99679cf</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="webScheduledActivation"
+<sv:node sv:name="scheduledActivation"
   xmlns:jcr="http://www.jcp.org/jcr/1.0"
   xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
@@ -22,7 +22,7 @@
   </sv:property>
   <sv:property sv:name="value" sv:type="String">
     <sv:value>&lt;?xml version="1.0" encoding="UTF-8"?&gt;&#xd;
-&lt;process-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.openwfe.org/flowdef_r1.5.0.xsd" name="webScheduledActivation" revision="1.0"&gt;&#xd;
+&lt;process-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.openwfe.org/flowdef_r1.5.0.xsd" name="scheduledActivation" revision="1.0"&gt;&#xd;
   &lt;description language="default"&gt;worflow for web activation process.&lt;/description&gt; &#xd;
 &lt;sequence&gt;&#xd;
 &lt;log message="~~~~~~~~~~~~~~~flow starts, start date is '${f:startDate}', end date is '${f:endDate}'"/&gt;&#xd;

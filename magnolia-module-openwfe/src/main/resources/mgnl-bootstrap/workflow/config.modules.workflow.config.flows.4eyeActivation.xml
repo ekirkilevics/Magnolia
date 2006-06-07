@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="webActivation" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+<sv:node sv:name="4eyeActivation" xmlns:jcr="http://www.jcp.org/jcr/1.0"
   xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
   xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
@@ -21,7 +21,7 @@
   </sv:property>
   <sv:property sv:name="value" sv:type="String">
     <sv:value>&lt;?xml version="1.0" encoding="UTF-8" ?&gt; &#xd;
-&lt;process-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.openwfe.org/flowdef_r1.5.0.xsd" name="webActivation" revision="1.0"&gt;&#xd;
+&lt;process-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.openwfe.org/flowdef_r1.5.0.xsd" name="4eyeActivation" revision="1.0"&gt;&#xd;
   &lt;description language="default"&gt;worflow for web activation process.&lt;/description&gt; &#xd;
 &lt;sequence&gt;&#xd;
 &lt;set field="OK" value="false"/&gt;&#xd;
