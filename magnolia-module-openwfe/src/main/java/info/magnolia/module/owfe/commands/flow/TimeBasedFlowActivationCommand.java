@@ -34,7 +34,7 @@ import java.util.Date;
  */
 public class TimeBasedFlowActivationCommand extends FlowCommand {
 
-    private static final String WEB_SCHEDULED_ACTIVATION = "webScheduledActivation";
+    private static final String WEB_SCHEDULED_ACTIVATION = "scheduledActivation";
 
     private static Logger log = LoggerFactory.getLogger(TimeBasedFlowActivationCommand.class);
 
@@ -47,6 +47,8 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
      * Set the start and end date for this page
      */
     public void prepareLaunchItem(Context context, LaunchItem launchItem) {
+        super.prepareLaunchItem(context, launchItem);
+        
         SimpleDateFormat sdf = new SimpleDateFormat(WorkflowConstants.OPENWFE_DATE_FORMAT);
 
         // add start date and end date
@@ -58,7 +60,6 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
         Content node = null;
         try {
             node = hm.getContent(path);
-            launchItem.getAttributes().puts(ContextAttributes.P_PATH,path);
         }
         catch (RepositoryException e) {
             log.error("can't find node for path [" + path + "]", e);
