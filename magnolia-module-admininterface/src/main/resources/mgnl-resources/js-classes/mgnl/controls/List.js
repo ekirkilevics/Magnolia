@@ -129,9 +129,9 @@ classDef("mgnl.controls.List", function(name, form){
         MgnlDebug.debug("new total widht:" + this.width, this);
         
 
-        this.contentDiv.style.width = this.width + "px"; 
-        this.contentDiv.style.height = this.height + "px";
-        this.innerContentDiv.style.height = this.height + "px";
+        this.contentDiv.style.width = this.width; 
+        this.contentDiv.style.height = this.height;
+        this.innerContentDiv.style.height = this.height -20;
         
         // columns
         var factor = this.getWidthFactor(this.width);

@@ -40,7 +40,7 @@ classDef("mgnl.controls.ListColumn", function (list, width, index){
     
     this.resize = function(left, width){
         this.cssClass.style.left = left + "px";
-        this.cssClass.style.width = width;
+        this.cssClass.style.width = width-30;
         this.cssClass.style.clip="rect(0 " + width + " 20 0)";
         
         if(this.resizer){
