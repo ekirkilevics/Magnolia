@@ -16,6 +16,9 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>d4d4c39c-d81a-4288-9ec9-15dbb535a6f5</sv:value>
   </sv:property>
+  <sv:property sv:name="class" sv:type="String">
+    <sv:value>info.magnolia.module.admininterface.dialogs.GroupEditDialog</sv:value>
+  </sv:property>
   <sv:property sv:name="width" sv:type="String">
     <sv:value>500</sv:value>
   </sv:property>
