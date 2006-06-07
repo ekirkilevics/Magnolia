@@ -7,6 +7,8 @@
 <%@ page import="java.util.Iterator"%>
 <%@ page import="java.util.List"%>
 <%@ page import="java.util.Map"%>
+<%@ page import="info.magnolia.cms.core.SystemProperty"%>
+<%@ page import="org.apache.commons.lang.StringUtils"%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head><title>Server configuration page</title>
@@ -15,12 +17,13 @@
 
 <h1>Server configuration page</h1>
 
+
 <!--
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     General Server Data
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 -->
-<table id="mytable" cellspacing="0" summary="Shutdown tasks">
+<table id="mytable" cellspacing="0" summary="Server data">
     <caption>General Magnolia Server Data</caption>
     <tr>
         <th scope="col" class="nobg">Configuration</th>
@@ -48,6 +51,34 @@
 
 </table>
 
+
+<br/><br/><br/>
+
+<!--
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    General System Data
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+-->
+<table id="mytable" cellspacing="0" summary="System data">
+    <caption>General Magnolia System Data</caption>
+    <tr>
+        <th scope="col" class="nobg">Configuration</th>
+        <th scope="col" >Value</th>
+    </tr>
+    <%
+        Map props = SystemProperty.getPropertyList();
+        Iterator iterp = props.keySet().iterator();
+        while(iterp.hasNext()) {
+            Object key = iterp.next();
+            Object value = props.get(key);
+    %>
+    <tr>
+        <td><%=key%></td><td><%=(value!=null) ? value : StringUtils.EMPTY%></td>
+    </tr>
+    <%
+        }
+    %>
+</table>
 
 <br/><br/><br/>
 
