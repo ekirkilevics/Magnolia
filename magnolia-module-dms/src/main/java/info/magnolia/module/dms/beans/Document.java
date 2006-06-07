@@ -16,9 +16,9 @@ import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.gui.dialog.DialogFile;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
 import java.io.InputStream;
@@ -285,25 +285,25 @@ public class Document {
 
     public void updateMetaData() {
         try {
-            node.getNodeData("title", true).setValue(this.getFileName());
-            node.getNodeData("type", true).setValue(this.getFileExtension().toLowerCase());
-            node.getNodeData("name", true).setValue(node.getName());
+            NodeDataUtil.getOrCreate(node,"title").setValue(this.getFileName());
+            NodeDataUtil.getOrCreate(node,"type").setValue(this.getFileExtension().toLowerCase());
+            NodeDataUtil.getOrCreate(node,"name").setValue(node.getName());
 
             // store the file type (for sorting)
-            node.getNodeData("type", true).setValue(this.getFileExtension().toLowerCase());
+            NodeDataUtil.getOrCreate(node,"type").setValue(this.getFileExtension().toLowerCase());
 
             // store a sortable date
-            node.getNodeData("creationDate", true).setValue(node.getMetaData().getCreationDate());
-            node.getNodeData("modificationDate", true).setValue(node.getMetaData().getModificationDate());
+            NodeDataUtil.getOrCreate(node,"creationDate").setValue(node.getMetaData().getCreationDate());
+            NodeDataUtil.getOrCreate(node,"modificationDate").setValue(node.getMetaData().getModificationDate());
 
-            if (StringUtils.isEmpty(node.getNodeData("creator", true).getString())) {
+            if (StringUtils.isEmpty(NodeDataUtil.getOrCreate(node,"creator").getString())) {
                 node.getNodeData("creator").setValue(node.getMetaData().getAuthorId());
             }
 
-            node.getNodeData("modifier", true).setValue(node.getMetaData().getAuthorId());
+            NodeDataUtil.getOrCreate(node,"modifier").setValue(node.getMetaData().getAuthorId());
 
             // store the node name in the name field
-            node.getNodeData("title", true).setValue(this.getFileName());
+            NodeDataUtil.getOrCreate(node,"title").setValue(this.getFileName());
 
             node.save();
 

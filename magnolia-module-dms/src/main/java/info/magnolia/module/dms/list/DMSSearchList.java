@@ -36,8 +36,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -46,8 +44,6 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class DMSSearchList extends AbstractSimpleSearchList {
-    
-    private static Logger log = LoggerFactory.getLogger(DMSSearchList.class);
     
     protected Messages msgs = MessagesUtil.chainWithDefault("info.magnolia.module.dms.messages");
 

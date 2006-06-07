@@ -75,7 +75,6 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
         TreeColumn colDate = new TreeColumn(tree.getJavascriptTree(), request);
         colDate.setName(MetaData.LAST_MODIFIED);
         colDate.setIsMeta(true);
-        colDate.setDateFormat(DMSConfig.getDateFormat());
         colDate.setWidth(1);
         colDate.setTitle(msgs.get("dms.list.date"));
 

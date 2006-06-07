@@ -15,7 +15,7 @@ package info.magnolia.module.dms;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.SessionAccessControl;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.dms.beans.Document;
 
 import java.io.IOException;
@@ -38,7 +38,9 @@ import org.apache.log4j.Logger;
  */
 public class DMSDownloadServlet extends HttpServlet {
 
-    Logger log = Logger.getLogger(DMSDownloadServlet.class);
+    private static final long serialVersionUID = 222L;
+
+    private static Logger log = Logger.getLogger(DMSDownloadServlet.class);
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         try {
@@ -80,7 +82,7 @@ public class DMSDownloadServlet extends HttpServlet {
     }
 
     public void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, DMSConfig.REPOSITORY);
+        HierarchyManager hm = MgnlContext.getHierarchyManager(DMSModule.getInstance().getRepository());
         Document doc;
         String versionName = (String) request.getParameter("mgnlVersion");
 
@@ -97,7 +99,7 @@ public class DMSDownloadServlet extends HttpServlet {
                     doc = new Document(hm.getContent(path), versionName);
                 }
                 else {
-                    response.sendError(response.SC_NOT_FOUND);
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
                     return;
                 }
             }
@@ -117,17 +119,17 @@ public class DMSDownloadServlet extends HttpServlet {
             uuid = StringUtils.substringBefore(uuid, "/");
             Content node;
             try {
-                node = SessionAccessControl.getHierarchyManager(request, DMSConfig.REPOSITORY).getContentByUUID(uuid);
+                node = hm.getContentByUUID(uuid);
             }
             catch (Exception e) {
                 log.error("can't find file by uuid [" + uuid + "]", e);
-                response.sendError(response.SC_NOT_FOUND);
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
                 return;
             }
             doc = new Document(node, versionName);
         }
         else {
-            response.sendError(response.SC_NOT_FOUND);
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
             return;
         }
 

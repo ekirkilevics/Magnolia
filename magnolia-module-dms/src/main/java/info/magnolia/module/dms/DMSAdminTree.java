@@ -17,9 +17,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.security.SessionAccessControl;
-import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.dms.beans.Document;
 import info.magnolia.module.dms.gui.DMSTreeControl;
@@ -30,7 +29,6 @@ import java.util.Iterator;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -60,9 +58,9 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
      * Title is related to the Node name
      */
     public String saveValue() {
-        String view = this.VIEW_VALUE;
+        String view = VIEW_VALUE;
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.request, this.getRepository());
+            HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
             // get the node bover it get's renamed
             Content node = hm.getContent(this.getPath());
 
@@ -101,7 +99,7 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
      */
     protected String rename(String value) {
         try {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.request, this.getRepository());
+            HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
             Content node = hm.getContent(this.getPath());
 
             if (Path.getValidatedLabel(value).matches("^-*$")) {
@@ -116,7 +114,7 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
             String name = super.rename(value);
 
             if (node.getNodeType().getName().equals(ItemType.CONTENTNODE.getSystemName())) {
-                node.getNodeData("name", true).setValue(name);
+                NodeDataUtil.getOrCreate(node,"name").setValue(name);
                 node.save();
             }
 
@@ -128,47 +126,12 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
         }
     }
 
-    /**
-     * If the node type is CONTENT do not activate CONTENTNODES if the recursive flag is not setted
-     */
-    public String activate() {
-        boolean recursive = (request.getParameter("recursive") != null); //$NON-NLS-1$
-        boolean includeContentNodes = false;
-
-        if (!recursive) {
-            HierarchyManager hm = SessionAccessControl.getHierarchyManager(this.request, this.getRepository());
-            // this is true if one activates a document (not a folder)
-            try {
-                if (hm.getContent(this.getPathSelected()).isNodeType(ItemType.NT_CONTENTNODE)) {
-                    includeContentNodes = true;
-                    // activate the subnode containing the file
-                    recursive = true;
-                }
-            }
-            catch (Exception e) {
-                // should not occure
-            }
-        }
-
-        // by default every CONTENTNODE under the specified CONTENT node is activated
-        try {
-            throw new NotImplementedException("New activation");
-            //FIXME: Activation
-            //this.getTree().activateNode(this.getPathSelected(), recursive, includeContentNodes);
-        }
-        catch (Exception e) {
-            log.error("can't activate", e);
-            AlertUtil.setMessage(MessagesManager.get("tree.error.activate") + " " +AlertUtil.getExceptionMessage(e));
-        }
-        return VIEW_TREE;
-    }
-
     public String createNode() {
         String view = super.createNode();
 
         // get all childs
         String createItemType = request.getParameter("createItemType");
-        HierarchyManager hm = SessionAccessControl.getHierarchyManager(request, this.getRepository());
+        HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
         Content parentNode;
         try {
             parentNode = hm.getContent(this.getPath());
@@ -178,8 +141,8 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
             for (Iterator iter = childs.iterator(); iter.hasNext();) {
                 Content child = (Content) iter.next();
                 if (!child.hasNodeData("title") || StringUtils.isEmpty(child.getNodeData("title").getString())) {
-                    child.getNodeData("title", true).setValue(child.getName());
-                    child.getNodeData("type", true).setValue("folder");
+                    NodeDataUtil.getOrCreate(child, "title").setValue(child.getName());
+                    NodeDataUtil.getOrCreate(child, "type").setValue("folder");
                     child.save();
                 }
             }

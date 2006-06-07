@@ -26,12 +26,10 @@ import info.magnolia.cms.gui.dialog.DialogSelect;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.SessionAccessControl;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.context.WebContextImpl;
+import info.magnolia.module.dms.DMSModule;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -45,7 +43,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.io.CopyUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.apache.tools.zip.ZipEntry;
@@ -81,8 +79,6 @@ public class ZipUploadView {
      */
     private String msg = "";
 
-    private HttpServletRequest request;
-
     public ZipUploadView() {
     }
 
@@ -90,12 +86,11 @@ public class ZipUploadView {
      * Process.
      */
     public void process(HttpServletRequest request) {
-        this.request = request;
         MgnlContext.initAsWebContext(request);
         this.form = new RequestFormUtil(request);
         this.setPath(form.getParameter("path"));
         this.setEncoding(form.getParameter("encoding"));
-        this.hm = SessionAccessControl.getHierarchyManager(request, "dms");
+        this.hm = MgnlContext.getHierarchyManager(DMSModule.getInstance().getRepository());
         success = _process();
     }
 
@@ -109,7 +104,7 @@ public class ZipUploadView {
             try {
                 File tmpFile = File.createTempFile("dms_zipupload", ".zip");
                 FileOutputStream tmpStream = new FileOutputStream(tmpFile);
-                CopyUtils.copy(doc.getStream(), tmpStream);
+                IOUtils.copy(doc.getStream(), tmpStream);
                 ZipFile zip = new ZipFile(tmpFile, this.getEncoding());
 
                 for (Enumeration em = zip.getEntries(); em.hasMoreElements();) {
@@ -262,8 +257,8 @@ public class ZipUploadView {
                 catch (Exception e) {
                     log.error("can't create path", e);
                 }
-                node.getNodeData("title", true).setValue(niceNames[i]);
-                node.getNodeData("type", true).setValue("folder");
+                NodeDataUtil.getOrCreate(node, "title").setValue(niceNames[i]);
+                NodeDataUtil.getOrCreate(node, "type").setValue("folder");
             }
         }
     }
