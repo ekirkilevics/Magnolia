@@ -63,5 +63,10 @@ public final class WorkflowConstants {
     public static final String STORE_ITERATOR_QUERY = "select * from "+NODENAME_EXPRESSION;
     
     public static final String ATT_ASSIGN_TO = "assignTo";
-    
+
+    public static final String START_DATE = "startDate";
+
+    public static final String END_DATE = "endDate";
+                                                                                                    ;
+    public static final String OPENWFE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ssZ";
 }

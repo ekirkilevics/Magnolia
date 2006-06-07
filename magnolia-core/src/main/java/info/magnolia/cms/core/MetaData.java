@@ -51,10 +51,6 @@ public class MetaData {
 
     public static final String ACTIVATOR_ID = "activatorid"; //$NON-NLS-1$
 
-    public static final String START_TIME = "starttime"; //$NON-NLS-1$
-
-    public static final String END_TIME = "endtime"; //$NON-NLS-1$
-
     public static final String TEMPLATE = "template"; //$NON-NLS-1$
 
     public static final String TEMPLATE_TYPE = "templatetype"; //$NON-NLS-1$
@@ -321,40 +317,6 @@ public class MetaData {
     public void setActivatorId(String value) throws AccessDeniedException {
         allowUpdate();
         setProperty(this.getInternalPropertyName(ACTIVATOR_ID), value);
-    }
-
-    /**
-     * Part of metadata, node activation time
-     */
-    public void setStartTime(Calendar value) throws AccessDeniedException {
-        allowUpdate();
-        setProperty(this.getInternalPropertyName(START_TIME), value);
-    }
-
-    /**
-     * Part of metadata, node activation time
-     *
-     * @return Calendar
-     */
-    public Calendar getStartTime() {
-        return getDateProperty(this.getInternalPropertyName(START_TIME));
-    }
-
-    /**
-     * Part of metadata, node de-activation time
-     */
-    public void setEndTime(Calendar value) throws AccessDeniedException {
-        allowUpdate();
-        setProperty(this.getInternalPropertyName(END_TIME), value);
-    }
-
-    /**
-     * Part of metadata, node de-activation time
-     *
-     * @return Calendar
-     */
-    public Calendar getEndTime() {
-        return getDateProperty(this.getInternalPropertyName(END_TIME));
     }
 
     /**
@@ -700,8 +662,6 @@ public class MetaData {
                 .append("creationDate", this.getCreationDate()) //$NON-NLS-1$
                 .append("lastActionDate", this.getLastActionDate()) //$NON-NLS-1$
                 .append("modificationDate", this.getModificationDate()) //$NON-NLS-1$
-                .append("startTime", this.getStartTime()) //$NON-NLS-1$
-                .append("endTime", this.getEndTime()) //$NON-NLS-1$
                 .toString();
     }
 

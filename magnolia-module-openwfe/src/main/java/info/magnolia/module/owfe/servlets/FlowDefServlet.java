@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.owfe.WorkflowUtil;
+import info.magnolia.module.owfe.WorkflowConstants;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
 
@@ -158,9 +159,13 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements ja
                 return;
             }
         }
-        sb.append("<hr><p>result<p>");
-        // for testing
         String query = request.getParameter("query");
+        String method = request.getParameter("method");
+
+        if(query!=null || method !=null)
+            sb.append("<hr><p>result<p>");
+
+
         if (query != null && query.length() > 0) {
             try {
                 sb.append("<hr>").append(new JCRWorkItemAPI().doQuery(query).toString());
@@ -172,7 +177,6 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements ja
         }
 
         // set date
-        String method = request.getParameter("method");
 
         if (method != null) {
             if (method.equalsIgnoreCase("setDate")) {
@@ -237,9 +241,9 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements ja
             Calendar start_c = Calendar.getInstance();
             Calendar stop_c = Calendar.getInstance();
             start_c.setTime(new Date(Timestamp.valueOf(start).getTime()));
-            ct.getMetaData().setStartTime(start_c);
+            ct.getNodeData(WorkflowConstants.START_DATE).setValue(start_c);
             stop_c.setTime(new Date(Timestamp.valueOf(stop).getTime()));
-            ct.getMetaData().setEndTime(stop_c);
+            ct.getNodeData(WorkflowConstants.END_DATE).setValue(stop_c);
             hm.save();
             return "set date ok. path " + pathSelected + ", start date " + start + ", stop date " + stop;
         }
