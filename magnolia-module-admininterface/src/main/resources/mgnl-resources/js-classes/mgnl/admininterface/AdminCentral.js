@@ -28,6 +28,9 @@ function MgnlAdminCentral(){
     this.divContent = $("mgnlAdminCentralContentDiv");
     this.divScrolledContent = $("mgnlAdminCentralScrolledContentDiv");
     this.divMenu = $("mgnlAdminCentralMenuDiv");
+    this.divFooter =$('mgnlAdminCentralFooterDiv');
+    this.iframeContent = $("mgnlAdminCentralContentIFrame");
+    this.iframeScrolledContent = $("mgnlAdminCentralScrolledContentIFrame");
     
     /**
      * Used if this instance is called from an other window
@@ -41,28 +44,22 @@ function MgnlAdminCentral(){
         if (this.divContent && this.divMenu){
             var sizeObj=mgnlGetWindowSize();
 
-            var h=sizeObj.h-60-20;
-            var w=sizeObj.w-205-20;
+            var h=sizeObj.h-60-25;
+            var w=sizeObj.w-195-20;
     
             this.divMenu.style.height=h;
     
             this.divContent.style.width=w;
             this.divContent.style.height=h;
-            if($("mgnlAdminCentralContentIFrame").border=="none"){
-                $("mgnlAdminCentralContentIFrame").style.height=h+2;
-            }
-            else{
-                $("mgnlAdminCentralContentIFrame").style.height=h+2;
-            }
-
             this.divScrolledContent.style.width=w;
             this.divScrolledContent.style.height=h;
-            if($("mgnlAdminCentralScrolledContentIFrame").border=="none"){
-                $("mgnlAdminCentralScrolledContentIFrame").style.height=h+2;
-            }
-            else{
-                $("mgnlAdminCentralScrolledContentIFrame").style.height=h+2;
-            }
+            
+            this.iframeContent.style.height=h+2;
+            this.iframeScrolledContent.style.height=h+2;
+
+            // set the position of the footer
+            this.divFooter.style.top = sizeObj.h - 17;
+            this.divFooter.style.width = w;
         }
     };
 

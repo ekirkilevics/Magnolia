@@ -18,6 +18,7 @@
 <License>
     <Meta>
         <VersionNumber>${pom.version}</VersionNumber>
+        <Edition>${magnolia.edition}</Edition>
         <BuildNumber>${magnolia.releaseDate}</BuildNumber>
         <Provider>${pom.organization.name}</Provider>
         <ProviderAddress>
