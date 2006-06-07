@@ -21,7 +21,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>d9f9c473-40f8-4f12-9def-8b24f6786305</sv:value>
+      <sv:value>ab87a6c7-0e12-4a52-9cb1-6f67f9c61d28</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
       <sv:value>2006-05-31T11:24:45.257+02:00</sv:value>
@@ -51,7 +51,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>c50dbe11-ac2f-4150-923e-dd55db4c6332</sv:value>
+        <sv:value>24586771-9ed3-4690-9148-e16f58c26f77</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
@@ -88,7 +88,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>0bb5cadc-4fe0-4480-bf2b-720c204de383</sv:value>
+        <sv:value>f82426c8-da4b-4a49-ba26-c5200c397f86</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -133,7 +133,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>3ded46d6-c3a5-4a3a-82fd-e0e005e1bb31</sv:value>
+          <sv:value>0cc94f06-7651-4043-8985-b942c7c1ef70</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -182,7 +182,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>f64c77b2-3bc7-46d9-af06-d95ee8aeeb5b</sv:value>
+          <sv:value>20b41f7b-0018-4658-9a3c-20343e8f3ce1</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -216,7 +216,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>0c45dbc3-a2b2-4cc7-ab6e-ebc30a86b355</sv:value>
+          <sv:value>449535c1-44fb-47e1-8b34-aaa02dc4928b</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -255,6 +255,9 @@
     <sv:property sv:name="icon" sv:type="String">
       <sv:value>/.resources/icons/24/gears.gif</sv:value>
     </sv:property>
+    <sv:property sv:name="onclick" sv:type="String">
+      <sv:value>MgnlAdminCentral.showTree('config')</sv:value>
+    </sv:property>
     <sv:property sv:name="label" sv:type="String">
       <sv:value>menu.config</sv:value>
     </sv:property>
@@ -263,7 +266,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>06c1c582-0486-43dc-bb83-e94e99a0e047</sv:value>
+        <sv:value>8ab8b620-f11c-46f7-91dc-2fc29f832ea8</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -272,7 +275,7 @@
         <sv:value>2006-02-15T09:01:47.223+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2006-05-31T13:44:04.988+02:00</sv:value>
+        <sv:value>2006-06-07T14:50:34.164+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:activated" sv:type="Boolean">
         <sv:value>false</sv:value>
@@ -283,55 +286,6 @@
       <sv:property sv:name="mgnl:activatorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
-    </sv:node>
-    <sv:node sv:name="navigate">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>1443b0de-822a-4eca-9206-c8deb18e07d9</sv:value>
-      </sv:property>
-      <sv:property sv:name="icon" sv:type="String">
-        <sv:value>/.resources/icons/16/compass.gif</sv:value>
-      </sv:property>
-      <sv:property sv:name="onclick" sv:type="String">
-        <sv:value>MgnlAdminCentral.showTree('config')</sv:value>
-      </sv:property>
-      <sv:property sv:name="label" sv:type="String">
-        <sv:value>menu.config.navigate</sv:value>
-      </sv:property>
-      <sv:node sv:name="MetaData">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:metaData</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>cbdafab1-2d4b-4f69-977e-1861ea81eaba</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:authorid" sv:type="String">
-          <sv:value>superuser</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-          <sv:value>2005-05-16T20:46:02.928+02:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2006-05-31T14:08:12.952+02:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-          <sv:value>false</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:Data" sv:type="String">
-          <sv:value>MetaData</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-          <sv:value>2006-05-31T13:43:42.785+02:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:activatorid" sv:type="String">
-          <sv:value>superuser</sv:value>
-        </sv:property>
-      </sv:node>
     </sv:node>
     <sv:node sv:name="templates">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -357,7 +311,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>9c95c8e1-8fc9-4f2d-84b4-23e605f519a8</sv:value>
+          <sv:value>d0ff50c7-4451-477f-8d64-397f0117e42a</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -406,7 +360,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>44d4fbdf-6812-402b-a199-b3b466ef4230</sv:value>
+          <sv:value>dab5624a-f61e-4c16-898a-24f76620f5dc</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -455,7 +409,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>8efe718b-242b-40b6-8028-21a1025cf3ce</sv:value>
+          <sv:value>41347a45-325c-4f13-8dc0-28057c25b3bb</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -504,7 +458,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>f6091b49-ff79-4435-b87b-2263871295de</sv:value>
+          <sv:value>758f09b1-6e5b-4091-a33b-08328713e55d</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -553,7 +507,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>a2d946b5-eed8-4c31-b8ae-c6dfe87e2115</sv:value>
+          <sv:value>603fb774-1a86-4c68-a4d1-1c26ec0a9777</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -602,7 +556,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>9229540a-bf72-4f23-9f5f-e4df18bde99d</sv:value>
+          <sv:value>db137eef-05aa-4ad4-87c1-7ff93a0563c0</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -651,7 +605,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>16798674-7ece-4110-8b5f-7f49152ddef3</sv:value>
+          <sv:value>637c73cd-fe38-43cb-ba24-aa146e578f98</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -700,7 +654,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>80a82b3d-1aad-4c2d-b06c-dffd27c3ec3c</sv:value>
+          <sv:value>0b177ecd-be5e-4a93-b417-6b9572941c52</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -749,7 +703,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>a232c730-9229-40a2-8efa-b8333e42e06b</sv:value>
+          <sv:value>b4ba719f-0511-4b05-8bf5-4de4e793707c</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -798,7 +752,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>6dd1efd8-5158-4d86-b9c4-8f8d3d4d9f49</sv:value>
+          <sv:value>7c70a5f8-027e-409e-822a-5c1d23a1e4a7</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -848,7 +802,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>1b3e9164-499d-4df5-aafd-5aff6998bdc2</sv:value>
+        <sv:value>74106b65-f77c-4db5-a688-cbf97d165916</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -896,7 +850,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>5b86d425-a869-4309-9483-7646887f8923</sv:value>
+          <sv:value>95751730-1de5-47af-9918-e3efc7e85087</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -945,7 +899,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>550398a8-25c5-4034-9aa5-2917caa13edf</sv:value>
+          <sv:value>f37cc51d-c4ee-47f5-aed1-6d801be73b55</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -994,7 +948,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>71df5b36-a0d9-4273-8c54-21ea5268e325</sv:value>
+          <sv:value>3244ed5c-be02-4a90-b8be-b3f6dab2be06</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -1043,7 +997,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>5d57defa-d09c-4fbd-b5c9-ee63a13568f4</sv:value>
+          <sv:value>395b8c25-fd9b-4361-9d68-67def2b33326</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -1092,7 +1046,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>444fc433-630f-4a6a-acc1-80fa60b31c11</sv:value>
+          <sv:value>26dd327d-7b1f-42ff-af9a-7edb5e8d9003</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -1141,7 +1095,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>3f8719bb-69ca-484e-a983-45015cb805d1</sv:value>
+          <sv:value>81a414ce-59ce-44ab-bcd1-ca6ff2d58f1d</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -1190,7 +1144,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>592ad1c4-7380-4b30-bf06-90f19fb05492</sv:value>
+          <sv:value>b30e7d76-4b36-4138-a5f2-96325819b776</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -1239,7 +1193,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>d260eef8-afa4-4974-a2a0-81c269ac96b1</sv:value>
+          <sv:value>b802f7c8-32c4-434f-ad0f-d5845565cd7d</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -1288,7 +1242,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>38103db3-6461-4b79-aeca-0731422f5272</sv:value>
+          <sv:value>132f62bc-0a5d-443a-935b-c06951e7d65f</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -1337,7 +1291,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>b24edc2d-4c68-4bc1-9ffe-76d7dd124542</sv:value>
+          <sv:value>02b34991-0621-4135-a192-84bd155eee47</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
