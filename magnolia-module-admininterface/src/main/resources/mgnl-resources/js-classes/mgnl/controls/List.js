@@ -123,13 +123,14 @@ classDef("mgnl.controls.List", function(name, form){
             var sortWidth = MgnlDHTMLUtil.getWidth(this.sortGroupDiv);
             this.sortGroupDiv.style.left = this.width - sortWidth + "px";        
             this.sortGroupDiv.style.height = this.height -1 + "px";
+            this.sortGroupDiv.style.visibility = "visible";
             this.width -= sortWidth
         }
         
         MgnlDebug.debug("new total widht:" + this.width, this);
         
 
-        this.contentDiv.style.width = this.width; 
+        this.contentDiv.style.width = this.width;
         this.contentDiv.style.height = this.height;
         this.innerContentDiv.style.height = this.height -20;
         

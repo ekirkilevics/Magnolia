@@ -33,7 +33,6 @@
     border-left: 1px #999999 solid;
     border-right: 1px #CCCCCC solid;
     position: relative;
-    z-index:460;
     background-image:url(../../.resources/controls/list/headerBackgroundGreen.gif);
     background-repeat: repeat;
     height:20px;
@@ -44,16 +43,17 @@
 }
 
 .mgnlListInnerContentDiv {
-    border-left: thin solid #999;
+    border-left: 1px solid #999;
     overflow: auto;
 }
 
 .mgnlListSortGroupDiv {
     position: absolute;
-    width: 150px;
-    border:  solid thin silver;
+    width: 160px;
+    border:  1px solid silver;
     background-color: #EDEEE9;
-    padding: 3px 5px 5px 5px;
+    padding: 10px 5px 5px 5px;
+    visibility: hidden;
 }
 
 .mgnlListSortGroupTitle {
@@ -61,10 +61,11 @@
 }
 
 .mgnlListSortGroupLine {
+    background-image: url("../../.resources/controls/list/separator.gif");
+    background-repeat: repeat;
     margin: 10 0 10 0;
-    border-top: thin solid #C2C2C2;
-    height:1px;
-    background-color: white;
+    height:2px;
+    overflow: hidden;
 }
 
 .mgnlListSortGroupLink, .mgnlListSortGroupLinkASC, .mgnlListSortGroupLinkDESC{
@@ -86,7 +87,7 @@
 
 .mgnlListRow, .mgnlListRowHover, .mgnlListRowSelected{
     position:relative;
-    margin-top: 6px;
+    margin-top: 5px;
     height: 18px;
 }
 

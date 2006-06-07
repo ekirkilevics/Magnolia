@@ -3,7 +3,7 @@ div.mgnlFunctionBar{
     padding:2px;
     font-family: verdana;
     font-size: 10px;
-    border: thin solid;
+    border: 1px solid;
     border-left-color: #999;
     border-top-color:#ccc;
     border-bottom-color: #ccc;

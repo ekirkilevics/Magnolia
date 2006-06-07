@@ -97,7 +97,7 @@ function MgnlAdminCentral(){
         var div = scrolled? this.divScrolledContent : this.divContent;
         // border?
         if(border){
-            div.style.border= 'solid thin';
+            div.style.border= 'solid 1px';
             div.style.borderTopColor = "#999";
             div.style.borderLeftColor = "#999";
             div.style.borderRightColor = "#ccc"; 
