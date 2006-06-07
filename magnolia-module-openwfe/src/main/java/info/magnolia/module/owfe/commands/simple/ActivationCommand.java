@@ -36,19 +36,18 @@ public class ActivationCommand implements Command {
     private static Logger log = LoggerFactory.getLogger(ActivationCommand.class);
 
     public boolean execute(Context ctx) {
-
-        String path;
         boolean recursive;
-        path = (String) ctx.get(ContextAttributes.P_PATH);
-
+        String path = (String) ctx.get(ContextAttributes.P_PATH);
+        String repository = (String) ctx.get(ContextAttributes.P_REPOSITORY);
         recursive = Boolean.valueOf((String) ctx.get(ContextAttributes.P_RECURSIVE)).booleanValue();
+
         if (log.isDebugEnabled()) {
             log.debug("recursive = " + recursive);
             log.debug("user = " + ((info.magnolia.context.Context) ctx).getUser().getName());
         }
         
         try {
-            doActivate(path, recursive);
+            doActivate(repository, path, recursive);
         }
         catch (Exception e) {
             log.error("cannot do activate:"+ e.getMessage());
@@ -64,7 +63,7 @@ public class ActivationCommand implements Command {
      * @param recursive activet recursively or no
      * @throws Exception
      */
-    private void doActivate(String path, boolean recursive) throws Exception {
+    private void doActivate(String repository, String path, boolean recursive) throws Exception {
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
         rule.addAllowType(ItemType.NT_METADATA);
@@ -74,8 +73,8 @@ public class ActivationCommand implements Command {
         }
 
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), ContentRepository.WEBSITE, ContentRepository
-            .getDefaultWorkspace(ContentRepository.WEBSITE), rule);
+        syndicator.init(MgnlContext.getUser(), repository, ContentRepository
+            .getDefaultWorkspace(repository), rule);
 
         String parentPath = StringUtils.substringBeforeLast(path, "/");
         if (StringUtils.isEmpty(parentPath)) {
