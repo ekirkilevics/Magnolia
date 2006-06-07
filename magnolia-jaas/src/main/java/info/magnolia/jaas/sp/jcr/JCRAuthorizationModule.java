@@ -128,6 +128,12 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                         log.debug("Role does not exist", e);
                     }
                     continue;
+                } catch (RepositoryException re) {
+                    // this can happen if the roleUUID is not a valid uuid string
+                    if (log.isDebugEnabled()) {
+                        log.debug("Exception caught", re);
+                    }
+                    continue;
                 }
                 roleList.add(role.getName());
                 this.setACL(role, principalList);
