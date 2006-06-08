@@ -10,7 +10,7 @@
  * Copyright 2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module.owfe.commands.flow;
+package info.magnolia.module.workflow.commands.flow;
 
 import java.io.Serializable;
 import java.util.Iterator;
@@ -18,10 +18,10 @@ import java.util.Map;
 
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
-import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
-import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
 import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.WorkflowModule;
+import info.magnolia.module.workflow.jcr.JCRFlowDefinition;
+import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 import openwfe.org.engine.workitem.AttributeUtils;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;

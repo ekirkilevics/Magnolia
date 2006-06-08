@@ -10,7 +10,7 @@
  * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module.owfe.util;
+package info.magnolia.module.workflow.util;
 
 import openwfe.org.engine.workitem.StringAttribute;
 

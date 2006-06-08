@@ -10,15 +10,15 @@
  * Copyright 2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module.owfe.jcr;
+package info.magnolia.module.workflow.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.module.owfe.servlets.FlowDefServlet;
 import info.magnolia.module.workflow.WorkflowConstants;
+import info.magnolia.module.workflow.servlets.FlowDefServlet;
 
 import java.io.File;
 import java.io.FileOutputStream;

@@ -15,9 +15,9 @@ package info.magnolia.module.workflow;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
-import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
-import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
+import info.magnolia.module.workflow.jcr.JCRFlowDefinition;
+import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
+import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
 
 import java.util.Collection;
 import java.util.Iterator;

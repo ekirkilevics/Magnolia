@@ -23,7 +23,7 @@ import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.module.admininterface.AbstractAdminModule;
-import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
+import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 import openwfe.org.ServiceException;
 import openwfe.org.engine.impl.expool.SimpleExpressionPool;
 
