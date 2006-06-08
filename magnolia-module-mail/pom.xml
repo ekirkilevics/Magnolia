@@ -26,6 +26,11 @@
       <version>3.0-rc1-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-openwfe</artifactId>
+      <version>3.0-rc1-SNAPSHOT</version>
+    </dependency>
+	<dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
