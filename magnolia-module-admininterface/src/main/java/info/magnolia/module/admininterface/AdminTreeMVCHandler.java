@@ -22,7 +22,6 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.commands.ContextAttributes;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
@@ -194,8 +193,8 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         Context context = MgnlContext.getInstance();
         
         // set general parameters (repository, path, ..)
-        context.put(ContextAttributes.P_REPOSITORY, this.getRepository());
-        context.put(ContextAttributes.P_PATH, this.pathSelected);
+        context.put(Context.ATTRIBUTE_REPOSITORY, this.getRepository());
+        context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
 
         return context;
     }

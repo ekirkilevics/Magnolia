@@ -19,14 +19,24 @@ package info.magnolia.module.owfe;
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public final class WorkflowConstants {
+    
+    final static public String PARTICIPANT_PREFIX_USER = "user-";
+    
+    final static public String PARTICIPANT_PREFIX_GROUP = "group-";
+    
+    final static public String PARTICIPANT_PREFIX_ROLE = "role-";
+    
+    final static public String PARTICIPANT_PREFIX_COMMAND = "command-";
 
-    final static public String WEBSITE_REPOSITORY = "website";
+    public static final String ATTRIBUTE_ASSIGN_TO = "assignTo";
 
-    final static public String WORKFLOW_EMAIL_TEMPLATE = "workflowEmail";
+    public static final String ATTRIBUTE_START_DATE = "startDate";
 
-    final static public String WORKFLOW_EMAIL_FROM_FIELD = "workflow@magnolia.info";
+    public static final String ATTRIBUTE_END_DATE = "endDate";
+    
+    final static public String ATTRIBUTE_WORKFLOW_DEFINITION_URL = "field:__definition__";
 
-    final static public String WORKFLOW_EMAIL_SUBJECT_FIELD = "Workflow Request";
+    final static public String ATTRIBUTE_DEFINITION = "__definition__";
     
     public static final String REPO_OWFE = "magnolia";
 
@@ -62,11 +72,5 @@ public final class WorkflowConstants {
 
     public static final String STORE_ITERATOR_QUERY = "select * from "+NODENAME_EXPRESSION;
     
-    public static final String ATT_ASSIGN_TO = "assignTo";
-
-    public static final String START_DATE = "startDate";
-
-    public static final String END_DATE = "endDate";
-                                                                                                    ;
     public static final String OPENWFE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ssZ";
 }

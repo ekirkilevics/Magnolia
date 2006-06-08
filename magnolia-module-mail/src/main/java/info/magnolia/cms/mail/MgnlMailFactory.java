@@ -13,7 +13,7 @@ import info.magnolia.cms.mail.templates.impl.MagnoliaEmail;
 import info.magnolia.cms.mail.templates.impl.SimpleEmail;
 import info.magnolia.cms.mail.templates.impl.VelocityEmail;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.MgnlCoreConstants;
+import info.magnolia.module.owfe.WorkflowConstants;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,6 +28,7 @@ import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -213,7 +214,7 @@ public class MgnlMailFactory {
         props.put("mail.smtp.port", this.mailParameters.get(SMTP_PORT));
         Authenticator auth = null;
         if (Boolean.valueOf((String) this.mailParameters.get(SMTP_AUTH)).booleanValue()) {
-            props.put("mail.smtp.auth", MgnlCoreConstants.TRUE);
+            props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.user", this.mailParameters.get(SMTP_USER));
             auth = new Authenticator() {
 
@@ -275,17 +276,17 @@ public class MgnlMailFactory {
             if (i != 0) {
                 ret.append("\n");
             }
-            if (userName.startsWith(MgnlCoreConstants.PREFIX_USER)) {
-                userName = userName.substring(MgnlCoreConstants.PREFIX_USER_LEN);
+            if (userName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_USER)) {
+                userName = StringUtils.removeStart(userName, WorkflowConstants.PARTICIPANT_PREFIX_USER);
                 if (log.isDebugEnabled()) {
                     log.debug("username =" + userName);
                 }
                 ret.append(getUserMail(userName));
             }
-            else if (userName.startsWith(MgnlCoreConstants.PREFIX_GROUP)) {
+            else if (userName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_GROUP)) {
 
             }
-            else if (userName.startsWith(MgnlCoreConstants.PREFIX_ROLE)) {
+            else if (userName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_ROLE)) {
 
             }
             else {

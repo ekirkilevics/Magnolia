@@ -13,8 +13,7 @@
 package info.magnolia.module.owfe;
 
 import info.magnolia.cms.security.MgnlUser;
-import info.magnolia.cms.util.MgnlCoreConstants;
-import info.magnolia.commands.ContextAttributes;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
@@ -132,7 +131,7 @@ public class WorkflowUtil {
 		wi.touch();
 
 		try {
-			wi.getAttributes().puts(ContextAttributes.ATT_OK,MgnlCoreConstants.TRUE);
+			wi.getAttributes().puts(Context.ATTRIBUTE_OK,"true");
 			WorkflowModule.getEngine().reply(wi);
 		} catch (Exception e) {
 			log.error("reply to engine failed", e);
@@ -157,8 +156,8 @@ public class WorkflowUtil {
 		wi.touch();
 
 		try {
-			wi.getAttributes().puts(ContextAttributes.ATT_OK,MgnlCoreConstants.FALSE);
-			wi.getAttributes().puts(ContextAttributes.ATT_COMMENT, comment);
+			wi.getAttributes().puts(Context.ATTRIBUTE_OK, "false");
+			wi.getAttributes().puts(Context.ATTRIBUTE_COMMENT, comment);
 			WorkflowModule.getEngine().reply(wi);
 		} catch (Exception e) {
 			log.error("Error while accessing the workflow engine", e);
@@ -227,7 +226,7 @@ public class WorkflowUtil {
 		}
 
 		try {
-			wi.addAttribute(WorkflowConstants.ATT_ASSIGN_TO, new StringAttribute(userName));
+			wi.addAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, new StringAttribute(userName));
 			storage.storeWorkItem(StringUtils.EMPTY, wi);
 		} catch (Exception e) {
 			log.error("assign work item to user " + userName + " failed.)", e);
@@ -292,19 +291,19 @@ public class WorkflowUtil {
 		try {
 			// Get the references
 			LaunchItem li = new LaunchItem();
-			li.setWorkflowDefinitionUrl(ContextAttributes.P_WORKFLOW_DEFINITION_URL);
+			li.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
 
 			// Retrieve and add the flow definition to the LaunchItem
 			String flowDef = new JCRFlowDefinition().getflowDefAsString(flowName);
-			li.getAttributes().puts(ContextAttributes.P_DEFINITION, flowDef);
+			li.getAttributes().puts(WorkflowConstants.ATTRIBUTE_DEFINITION, flowDef);
 			JCRPersistedEngine engine = WorkflowModule.getEngine();
 
 			// start activation
 			if (repository != null) {
-				li.addAttribute(ContextAttributes.P_REPOSITORY, new StringAttribute(repository));
+				li.addAttribute(Context.ATTRIBUTE_REPOSITORY, new StringAttribute(repository));
 			}
 			if (path != null) {
-				li.addAttribute(ContextAttributes.P_PATH,new StringAttribute(path));
+				li.addAttribute(Context.ATTRIBUTE_PATH,new StringAttribute(path));
 			}
 
 			// Launch the item
