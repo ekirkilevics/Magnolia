@@ -194,7 +194,11 @@ public class SimpleExchangeServlet extends HttpServlet {
         Iterator nodeDataIterator = destination.getNodeDataCollection().iterator();
         while (nodeDataIterator.hasNext()) {
             NodeData nodeData = (NodeData) nodeDataIterator.next();
-            nodeData.delete();
+            // Ignore binary types, since these are sub nodes and already taken care of while
+            // importing sub resources
+            if (nodeData.getType() != PropertyType.BINARY) {
+                nodeData.delete();
+            }
         }
 
         // copy all properties
