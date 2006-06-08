@@ -19,12 +19,9 @@ import java.util.Map;
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
 import info.magnolia.module.workflow.WorkflowConstants;
-import info.magnolia.module.workflow.WorkflowModule;
-import info.magnolia.module.workflow.jcr.JCRFlowDefinition;
-import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
+import info.magnolia.module.workflow.WorkflowUtil;
 import openwfe.org.engine.workitem.AttributeUtils;
 import openwfe.org.engine.workitem.LaunchItem;
-import openwfe.org.engine.workitem.StringAttribute;
 import openwfe.org.engine.workitem.StringMapAttribute;
 
 import org.slf4j.Logger;
@@ -47,16 +44,9 @@ public class FlowCommand extends MgnlCommand {
             
             prepareLaunchItem(ctx, li);
             
-            li.addAttribute(Context.ATTRIBUTE_ACTION, new StringAttribute(this.getClass().getName()));
             li.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
 
-            // Retrieve and add the flow definition to the LaunchItem
-            String flowDef = new JCRFlowDefinition().getflowDefAsString(getWorkflowName());
-            li.getAttributes().puts(WorkflowConstants.ATTRIBUTE_DEFINITION, flowDef);
-            JCRPersistedEngine engine = WorkflowModule.getEngine();
-
-            // Launch the item
-            engine.launch(li, true);
+            WorkflowUtil.launchFlow(li, getWorkflowName());
 
         }
         catch (Exception e) {

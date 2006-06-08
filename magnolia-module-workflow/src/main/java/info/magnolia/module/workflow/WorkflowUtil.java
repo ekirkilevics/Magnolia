@@ -24,28 +24,35 @@ import java.util.Iterator;
 import java.util.List;
 
 import openwfe.org.engine.expressions.FlowExpressionId;
+import openwfe.org.engine.workitem.InFlowItem;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
+import openwfe.org.worklist.store.StoreException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- * the class implements all the interface of work flow API
+ * Util to use the mangoila workflow module. Methods to launch and proceed.
  * @author jackie
  */
 public class WorkflowUtil {
 
-	private final static Logger log = LoggerFactory.getLogger(WorkflowUtil.class.getName());
+    final static public StringAttribute ATTRIBUTE_TRUE = new StringAttribute("true");
+
+    final static public StringAttribute ATTRIBUTE_FALSE = new StringAttribute("false");
+
+    private final static Logger log = LoggerFactory.getLogger(WorkflowUtil.class.getName());
 
     /**
      * Where the work items are stored
      */
-	private static JCRWorkItemAPI storage;
-    
-    static{
+    private static JCRWorkItemAPI storage;
+
+    static {
         try {
             storage = new JCRWorkItemAPI();
         }
@@ -57,261 +64,267 @@ public class WorkflowUtil {
     /**
      * Util: don't instantiate
      */
-	private WorkflowUtil() {
-	}
+    private WorkflowUtil() {
+    }
 
-	/**
-	 * get all work items for the user
-	 * 
-	 * @param userName
-	 * @return
-	 * @throws Exception
-	 */
-	public static List getWorkItems(String userName) throws Exception {
-		if (log.isDebugEnabled()) {
-			log.debug("enter getWorkItems");
-			log.debug("user name = " + userName);
-		}
+    /**
+     * Simply launch a flow for the specified node
+     */
+    public static void launchFlow(String repository, String path, String flowName) throws Exception {
+        try {
+            // Get the references
+            LaunchItem li = new LaunchItem();
 
-		long start = System.currentTimeMillis();
-		
-		MgnlUser user = (MgnlUser) MgnlContext.getUser();
-		Collection groups = user.getGroups();
-		Collection roles = user.getRoles();
-		StringBuffer queryString = new StringBuffer();
-		queryString.append("//*[(@assignTo=\"");
-		queryString.append(userName);
-		queryString.append("\") or (@participant=\"user-");
-		queryString.append(userName);
-		queryString.append("\" and not(@assignTo))");
-		for (Iterator iter = groups.iterator(); iter.hasNext();) {
-			Object group = iter.next();
-			queryString.append(" or (@participant=\"group-");
-			queryString.append(group);
-			queryString.append("\" and @assignTo!=\"");
-			queryString.append(userName);
-			queryString.append("\") ");
-		}
-		for (Iterator iter = roles.iterator(); iter.hasNext();) {
-			Object role = iter.next();
-			queryString.append(" or (@participant=\"role-");
-			queryString.append(role);
-			queryString.append("\" and @assignTo!=\"");
-			queryString.append(userName);
-			queryString.append("\") ");
-		}
-		queryString.append("]");
+            // start activation
+            if (repository != null) {
+                li.addAttribute(Context.ATTRIBUTE_REPOSITORY, new StringAttribute(repository));
+            }
+            if (path != null) {
+                li.addAttribute(Context.ATTRIBUTE_PATH, new StringAttribute(path));
+            }
+            launchFlow(li, flowName);
+            // Launch the item
+        }
+        catch (Exception e) {
+            log.error("Launching flow " + flowName + " failed", e);
+        }
+    }
 
-		if (log.isDebugEnabled())
-			log.info("xpath query string = " + queryString);
-		
-		final List doQuery = storage.doQuery(queryString.toString());
-		long end = System.currentTimeMillis();
-		log.info("Retrieving workitems done. (Took " + (end - start) + " ms)");
-		return doQuery;
-	}
+    /**
+     * Start a flow
+     * @param li the prepared lunchItem
+     * @param flowName the flow to start
+     * @throws Exception
+     */
+    public static void launchFlow(LaunchItem li, String flowName) {
+        li.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
 
-	/**
-	 * remove one work item by id
-	 */
-	private static void removeWorkItem(InFlowWorkItem wi) throws Exception {
-		storage.removeWorkItem(wi.getId());
-	}
+        // Retrieve and add the flow definition to the LaunchItem
+        String flowDef = new JCRFlowDefinition().getflowDefAsString(flowName);
+        li.getAttributes().puts(WorkflowConstants.ATTRIBUTE_DEFINITION, flowDef);
+        JCRPersistedEngine engine = WorkflowModule.getEngine();
 
-	/**
-	 * approve activiation
-	 */
-	public static void approveActivation(String expressionId) throws Exception {
-		// get workitem
-		InFlowWorkItem wi = storage.retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(expressionId));
-		if (wi == null) {
-			throw new Exception("can't get the work iem by this expression id ("+ expressionId + ")");
-		}
+        try {
+            // Launch the item
+            engine.launch(li, true);
+        }
+        catch (Exception e) {
+            log.error("Launching flow " + flowName + " failed", e);
+        }
+    }
 
-		wi.touch();
+    /**
+     * @param id
+     */
+    public static void proceed(String id) {
+        proceed(id, WorkflowConstants.ACTION_PROCEED);
+    }
 
-		try {
-			wi.getAttributes().puts(Context.ATTRIBUTE_OK,"true");
-			WorkflowModule.getEngine().reply(wi);
-		} catch (Exception e) {
-			log.error("reply to engine failed", e);
+    public static void proceed(String id, String action) {
+        proceed(id, action, null);
+    }
 
-		} finally {
-			removeWorkItem(wi);
-		}
+    public static void proceed(String id, String action, String comment) {
+        InFlowWorkItem wi = getWorkItem(id);
+        if (wi == null) {
+            log.error("can't proceed workitem [{}]", id);
+            return;
+        }
+        wi.touch();
 
-		log.info("approve ok");
-	}
+        wi.getAttributes().puts(WorkflowConstants.ATTRIBUTE_ACTION, action);
+        if (StringUtils.isNotEmpty(comment)) {
+            wi.getAttributes().puts(Context.ATTRIBUTE_COMMENT, comment);
+        }
+        proceed(wi);
+    }
 
-	/**
-	 * reject the activation request, the work item will be removed
-	 */
-	public static void rejectActivation(String expressionId, String comment)
-			throws Exception {
+    /**
+     * Proceed this item
+     * @param wi
+     */
+    public static void proceed(InFlowWorkItem wi) {
+        try {
+            WorkflowModule.getEngine().reply(wi);
+        }
+        catch (Exception e) {
+            log.error("Error while accessing the workflow engine", e);
+        }
+        finally {
+            removeWorkItem(wi);
+        }
+    }
 
-		InFlowWorkItem wi = storage.retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(expressionId));
-		if (wi == null) {
-			throw new Exception("cant not get the work iem by this expression id ("+ expressionId + ")");
-		}
-		wi.touch();
+    /**
+     * @param id
+     * @return
+     * @throws StoreException
+     * @throws Exception
+     */
+    public static InFlowWorkItem getWorkItem(String id) {
+        InFlowWorkItem wi = null;
+        try {
+            wi = storage.retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(id));
+        }
+        catch (StoreException e) {
+            log.error("can't get the workitem by expression [" + id + "]", e);
+        }
+        return wi;
+    }
 
-		try {
-			wi.getAttributes().puts(Context.ATTRIBUTE_OK, "false");
-			wi.getAttributes().puts(Context.ATTRIBUTE_COMMENT, comment);
-			WorkflowModule.getEngine().reply(wi);
-		} catch (Exception e) {
-			log.error("Error while accessing the workflow engine", e);
-		} finally {
-			removeWorkItem(wi);
-		}
+    /**
+     * get all work items for the user
+     * @param userName
+     * @return
+     * @throws Exception
+     */
+    public static List getWorkItems(String userName) throws Exception {
+        if (log.isDebugEnabled()) {
+            log.debug("enter getWorkItems");
+            log.debug("user name = " + userName);
+        }
 
-		if (log.isDebugEnabled()) {
-			log.debug("work item removed.");
-		}
+        long start = System.currentTimeMillis();
 
-		log.info("reject ok");
-	}
+        MgnlUser user = (MgnlUser) MgnlContext.getUser();
+        Collection groups = user.getGroups();
+        Collection roles = user.getRoles();
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("//*[(@assignTo=\"");
+        queryString.append(userName);
+        queryString.append("\") or (@participant=\"user-");
+        queryString.append(userName);
+        queryString.append("\" and not(@assignTo))");
+        for (Iterator iter = groups.iterator(); iter.hasNext();) {
+            Object group = iter.next();
+            queryString.append(" or (@participant=\"group-");
+            queryString.append(group);
+            // FIXME
+            //queryString.append("\" and @assignTo!=\"");
+            //queryString.append(userName);
+            queryString.append("\") ");
+        }
+        for (Iterator iter = roles.iterator(); iter.hasNext();) {
+            Object role = iter.next();
+            //FIXME
+            queryString.append(" or (@participant=\"role-");
+            queryString.append(role);
+            //queryString.append("\" and @assignTo!=\"");
+            //queryString.append(userName);
+            queryString.append("\") ");
+        }
+        queryString.append("]");
 
-	public static void cancel(String expressionId) {
-		try {
-			storage.removeWorkItem(FlowExpressionId.fromParseableString(expressionId));
-		} catch (Exception e) {
-			log.info("can't cancel", e);
-		}
-	}
+        if (log.isDebugEnabled())
+            log.info("xpath query string = " + queryString);
 
-	/**
-	 * assign work item to a user, if userName = "", then assignment for the
-	 * workItem will be deleted
-	 */
-	public static void assignWorkItemToUser(String expressionId, String userName) {
-		if (expressionId == null || expressionId.length() == 0) {
-			log.error("can not assign work item, invalid express id "+ expressionId);
-			return;
-		}
+        final List doQuery = storage.doQuery(queryString.toString());
+        long end = System.currentTimeMillis();
+        log.debug("Retrieving workitems done. (Took " + (end - start) + " ms)");
+        return doQuery;
+    }
 
-		if (userName == null) {
-			log.info("User name was null");
-			return;
-		}
+    public static String getId(InFlowItem wi) {
+        return wi.getId().toParseableString();
+    }
 
-		FlowExpressionId eid = FlowExpressionId.fromParseableString(expressionId);
-		if (eid == null) {
-			log.error("can not assign work item, can not parse invalid express id "+ expressionId);
-			return;
-		}
+    /**
+     * assign work item to a user, if userName = "", then assignment for the workItem will be deleted
+     */
+    public static void assignWorkItemToUser(String id, String userName) {
+        if (id == null || id.length() == 0) {
+            log.error("can not assign work item, invalid express id " + id);
+            return;
+        }
 
-		InFlowWorkItem if_wi = null;
-		try {
-			if_wi = storage.retrieveWorkItem(StringUtils.EMPTY, eid);
-		} catch (Exception e) {
-			log.error("retrieve work item failed", e);
-		}
-		if (if_wi == null) {
-			log.error("can not assign work item, can not retrieve work tiem by  express id "+ expressionId);
-			return;
-		}
-		assignWorkItemToUser(if_wi, userName);
+        if (userName == null) {
+            log.info("User name was null");
+            return;
+        }
 
-	}
+        InFlowWorkItem wi = getWorkItem(id);
+        if (wi == null) {
+            log.error("can not assign work item, can not retrieve work tiem by  express id " + id);
+            return;
+        }
+        assignWorkItemToUser(wi, userName);
+    }
 
-	/**
-	 * assign work item to a user, if userName = "", then assignment for the
-	 * workItem will be deleted
-	 */
-	public static void assignWorkItemToUser(InFlowWorkItem wi, String userName) {
-		if (userName == null) {
-			log.info("User name was null");
-			return;
-		}
+    /**
+     * assign work item to a user, if userName = "", then assignment for the workItem will be deleted
+     */
+    public static void assignWorkItemToUser(InFlowWorkItem wi, String userName) {
+        if (userName == null) {
+            log.info("User name was null");
+            return;
+        }
 
-		try {
-			wi.addAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, new StringAttribute(userName));
-			storage.storeWorkItem(StringUtils.EMPTY, wi);
-		} catch (Exception e) {
-			log.error("assign work item to user " + userName + " failed.)", e);
-		}
+        try {
+            wi.addAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, new StringAttribute(userName));
+            storage.storeWorkItem(StringUtils.EMPTY, wi);
+        }
+        catch (Exception e) {
+            log.error("assign work item to user " + userName + " failed.)", e);
+        }
 
-	}
+    }
 
-	/**
-	 * return a list of workItem for one group
-	 */
-	public static List getGroupInbox(String GroupName) throws Exception {
-		if (log.isDebugEnabled()) {
-			log.debug("enter getGroupInbox");
-			log.debug("GroupName = " + GroupName);
-		}
+    /**
+     * return a list of workItem for one usre
+     */
+    public static List getUserInbox(String userName) throws Exception {
+        return getWorkItems(userName);
+    }
 
-		StringBuffer queryString = new StringBuffer();
-		queryString.append("//*[@participant=\"group-");
-		queryString.append(GroupName);
-		queryString.append("\"]");
+    /**
+     * return a list of workItem for one group
+     */
+    public static List getGroupInbox(String GroupName) throws Exception {
+        if (log.isDebugEnabled()) {
+            log.debug("enter getGroupInbox");
+            log.debug("GroupName = " + GroupName);
+        }
 
-		if (log.isDebugEnabled())
-			log.debug("xpath query string = " + queryString);
-		return storage.doQuery(queryString.toString());
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("//*[@participant=\"group-");
+        queryString.append(GroupName);
+        queryString.append("\"]");
 
-	}
+        if (log.isDebugEnabled())
+            log.debug("xpath query string = " + queryString);
+        return storage.doQuery(queryString.toString());
 
-	/**
-	 * return a list of workItem for one role
-	 */
-	public static List getRoleInbox(String roleName) throws Exception {
-		if (log.isDebugEnabled()) {
-			log.debug("enter getGroupInbox");
-			log.debug("roleName = " + roleName);
-		}
+    }
 
-		StringBuffer queryString = new StringBuffer();
-		queryString.append("//*[@participant=\"group-");
-		queryString.append(roleName);
-		queryString.append("\"]");
+    /**
+     * return a list of workItem for one role
+     */
+    public static List getRoleInbox(String roleName) throws Exception {
+        if (log.isDebugEnabled()) {
+            log.debug("enter getGroupInbox");
+            log.debug("roleName = " + roleName);
+        }
 
-		if (log.isDebugEnabled())
-			log.debug("xpath query string = " + queryString);
-		return storage.doQuery(queryString.toString());
-	}
+        StringBuffer queryString = new StringBuffer();
+        queryString.append("//*[@participant=\"group-");
+        queryString.append(roleName);
+        queryString.append("\"]");
 
-	/**
-	 * return a list of workItem for one usre
-	 */
-	public static List getUserInbox(String userName) throws Exception {
-		return getWorkItems(userName);
-	}
+        if (log.isDebugEnabled())
+            log.debug("xpath query string = " + queryString);
+        return storage.doQuery(queryString.toString());
+    }
 
-	/**
-	 * Simply launch a flow
-	 */
-	public static void launchFlow(String repository, String path, String flowName)
-			throws Exception {
-		if (flowName == null || flowName.length() == 0) {
-			throw new IllegalArgumentException("flowName is null or empty string");
-		}
-		try {
-			// Get the references
-			LaunchItem li = new LaunchItem();
-			li.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
-
-			// Retrieve and add the flow definition to the LaunchItem
-			String flowDef = new JCRFlowDefinition().getflowDefAsString(flowName);
-			li.getAttributes().puts(WorkflowConstants.ATTRIBUTE_DEFINITION, flowDef);
-			JCRPersistedEngine engine = WorkflowModule.getEngine();
-
-			// start activation
-			if (repository != null) {
-				li.addAttribute(Context.ATTRIBUTE_REPOSITORY, new StringAttribute(repository));
-			}
-			if (path != null) {
-				li.addAttribute(Context.ATTRIBUTE_PATH,new StringAttribute(path));
-			}
-
-			// Launch the item
-			engine.launch(li, true);
-
-		} catch (Exception e) {
-			log.error("Launching flow " + flowName + " failed", e);
-		}
-	}
+    /**
+     * remove one work item by id
+     */
+    private static void removeWorkItem(InFlowWorkItem wi) {
+        try {
+            storage.removeWorkItem(wi.getId());
+        }
+        catch (StoreException e) {
+            log.error("can't remove workitem", e);
+        }
+    }
 
 }

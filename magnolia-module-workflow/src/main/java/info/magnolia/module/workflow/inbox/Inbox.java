@@ -25,6 +25,7 @@ import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.lists.AbstractList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
+import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.WorkflowUtil;
 
 import java.util.Iterator;
@@ -38,7 +39,7 @@ import openwfe.org.engine.workitem.StringMapAttribute;
 
 /**
  * @author Philipp Bracher
- * @version $Revision$ ($Author$)
+ * @version $Revision:3416 $ ($Author:philipp $)
  */
 public class Inbox extends AbstractList {
 
@@ -164,7 +165,7 @@ public class Inbox extends AbstractList {
      */
     public String proceed() {
         try {
-            WorkflowUtil.approveActivation(this.getFlowItemId());
+            WorkflowUtil.proceed(this.getFlowItemId(), WorkflowConstants.ACTION_PROCEED);
         }
         catch (Exception e) {
             AlertUtil.setMessage("can't proceed:", e);
@@ -177,7 +178,7 @@ public class Inbox extends AbstractList {
      */
     public String reject() {
         try {
-            WorkflowUtil.rejectActivation(this.getFlowItemId(), this.getComment());
+            WorkflowUtil.proceed(this.getFlowItemId(), WorkflowConstants.ACTION_REJECT, this.getComment());
         }
         catch (Exception e) {
             AlertUtil.setMessage("can't reject:", e);
@@ -190,7 +191,7 @@ public class Inbox extends AbstractList {
      */
     public String cancel() {
         try {
-            WorkflowUtil.cancel(this.getFlowItemId());
+            WorkflowUtil.proceed(this.getFlowItemId(), WorkflowConstants.ACTION_CANCEL);
         }
         catch (Exception e) {
             AlertUtil.setMessage("can't cancel:", e);

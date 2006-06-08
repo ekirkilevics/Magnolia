@@ -27,6 +27,8 @@ public final class WorkflowConstants {
     final static public String PARTICIPANT_PREFIX_ROLE = "role-";
     
     final static public String PARTICIPANT_PREFIX_COMMAND = "command-";
+    
+    final static public String ATTRIBUTE_ACTION = "action";
 
     public static final String ATTRIBUTE_ASSIGN_TO = "assignTo";
 
@@ -37,6 +39,12 @@ public final class WorkflowConstants {
     final static public String ATTRIBUTE_WORKFLOW_DEFINITION_URL = "field:__definition__";
 
     final static public String ATTRIBUTE_DEFINITION = "__definition__";
+    
+    public static final String ACTION_PROCEED = "proceed";
+    
+    public static final String ACTION_REJECT = "reject";
+    
+    public static final String ACTION_CANCEL = "cancel";
     
     public static final String REPO_OWFE = "magnolia";
 
@@ -73,4 +81,5 @@ public final class WorkflowConstants {
     public static final String STORE_ITERATOR_QUERY = "select * from "+NODENAME_EXPRESSION;
     
     public static final String OPENWFE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ssZ";
+
 }

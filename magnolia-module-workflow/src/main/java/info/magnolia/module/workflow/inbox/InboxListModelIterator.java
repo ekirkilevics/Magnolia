@@ -13,6 +13,7 @@
 package info.magnolia.module.workflow.inbox;
 
 import info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl;
+import info.magnolia.module.workflow.WorkflowUtil;
 
 import java.util.List;
 
@@ -21,7 +22,7 @@ import openwfe.org.engine.workitem.InFlowItem;
 
 /**
  * @author Philipp Bracher
- * @version $Revision$ ($Author$)
+ * @version $Revision:3416 $ ($Author:philipp $)
  */
 public class InboxListModelIterator extends ListModelIteratorImpl {
 
@@ -42,7 +43,7 @@ public class InboxListModelIterator extends ListModelIteratorImpl {
             return item.getAttribute(name);
         }
         else if (name.equalsIgnoreCase("id")) {
-            return item.getId().toParseableString();
+            return WorkflowUtil.getId(item);
         }
         else {
             return super.getValue(name, obj);
