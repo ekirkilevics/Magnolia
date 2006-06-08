@@ -61,12 +61,12 @@ public abstract class AbstractContext implements Context {
      * @return attribute value
      */
     public Object getAttribute(String name) {
-        Object value = this.getAttribute(name, MgnlContext.REQUEST_SCOPE);
+        Object value = this.getAttribute(name, Context.LOCALE_SCOPE);
         if (null == value) {
-            value = this.getAttribute(name, MgnlContext.SESSION_SCOPE);
+            value = this.getAttribute(name, Context.SESSION_SCOPE);
         }
         if (null == value) {
-            value = this.getAttribute(name, MgnlContext.APPLICATION_SCOPE);
+            value = this.getAttribute(name, Context.APPLICATION_SCOPE);
         }
         return value;
     }
@@ -76,9 +76,9 @@ public abstract class AbstractContext implements Context {
      */
     public Map getAttributes(){
         Map map = new HashMap();
-        map.putAll(this.getAttributes(MgnlContext.REQUEST_SCOPE));
-        map.putAll(this.getAttributes(MgnlContext.SESSION_SCOPE));
-        map.putAll(this.getAttributes(MgnlContext.APPLICATION_SCOPE));
+        map.putAll(this.getAttributes(Context.LOCALE_SCOPE));
+        map.putAll(this.getAttributes(Context.SESSION_SCOPE));
+        map.putAll(this.getAttributes(Context.APPLICATION_SCOPE));
         return map;
     }
 
@@ -160,7 +160,7 @@ public abstract class AbstractContext implements Context {
      * Map implementation
      */
     public Object put(Object key, Object value) {
-        this.setAttribute(key.toString(), value, MgnlContext.REQUEST_SCOPE);
+        this.setAttribute(key.toString(), value, Context.LOCALE_SCOPE);
         return value;
     }
     
@@ -170,7 +170,7 @@ public abstract class AbstractContext implements Context {
     public void clear() {
         for (Iterator iter = this.getAttributes().keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
-            this.removeAttribute(key, MgnlContext.REQUEST_SCOPE);
+            this.removeAttribute(key, Context.LOCALE_SCOPE);
             
         }
         throw new UnsupportedOperationException("you can not clear a magnolia context");
@@ -210,7 +210,7 @@ public abstract class AbstractContext implements Context {
     public void putAll(Map map) {
         for (Iterator iter = map.entrySet().iterator(); iter.hasNext();) {
             Entry entry = (Entry) iter.next();
-            this.setAttribute(entry.getKey().toString(), entry.getValue(), MgnlContext.REQUEST_SCOPE);
+            this.setAttribute(entry.getKey().toString(), entry.getValue(), Context.LOCALE_SCOPE);
         }
     }
 
@@ -219,7 +219,7 @@ public abstract class AbstractContext implements Context {
      */
     public Object remove(Object key) {
         Object obj = this.getAttribute(key.toString());
-        this.removeAttribute(key.toString(), MgnlContext.REQUEST_SCOPE);
+        this.removeAttribute(key.toString(), Context.LOCALE_SCOPE);
         return obj;
     }
 

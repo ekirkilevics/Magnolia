@@ -57,21 +57,6 @@ public class MgnlContext {
     private static ThreadLocal localContext = new ThreadLocal();
 
     /**
-     * Attribute visibility scope
-     */
-    public static final int REQUEST_SCOPE = 1;
-
-    /**
-     * Attribute visibility scope Shared by all requests from this session
-     */
-    public static final int SESSION_SCOPE = 2;
-
-    /**
-     * Attribute visibility scope, its visible to all sessions of this application
-     */
-    public static final int APPLICATION_SCOPE = 3;
-
-    /**
      * Do not instantiate this class. The constructor must be public to use discovery
      */
     public MgnlContext() {
@@ -253,7 +238,7 @@ public class MgnlContext {
      * @param value
      */
     public static void setAttribute(String name, Object value) {
-        getInstance().setAttribute(name, value, MgnlContext.REQUEST_SCOPE);
+        getInstance().setAttribute(name, value, Context.LOCALE_SCOPE);
     }
 
     /**

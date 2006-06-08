@@ -33,6 +33,28 @@ import java.util.Map;
 public interface Context extends org.apache.commons.chain.Context {
 
     /**
+     * Attribute visibility scope
+     */
+    public static final int LOCALE_SCOPE = 1;
+    /**
+     * Attribute visibility scope Shared by all requests from this session
+     */
+    public static final int SESSION_SCOPE = 2;
+    /**
+     * Attribute visibility scope, its visible to all sessions of this application
+     */
+    public static final int APPLICATION_SCOPE = 3;
+    final static public String ATTRIBUTE_REPOSITORY = "repository";
+    final static public String ATTRIBUTE_PATH = "path";
+    final static public String ATTRIBUTE_VERSION = "version";
+    final static public String ATTRIBUTE_UUID = "uuid";
+    final static public String ATTRIBUTE_RECURSIVE = "recursive";
+    final static public String ATTRIBUTE_ACTION = "action";
+    public static final String ATTRIBUTE_OK = "OK";
+    public static final String ATTRIBUTE_COMMENT = "comment";
+    public static final String ATTRIBUTE_MESSAGE = "mgnlAlertMsg";
+
+    /**
      * Set user instance for this context
      *
      * @param user

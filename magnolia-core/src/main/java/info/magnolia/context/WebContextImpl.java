@@ -93,7 +93,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public void setLocale(Locale locale) {
         super.setLocale(locale);
-        this.setAttribute(Config.FMT_LOCALE + ".session", locale.getLanguage(), MgnlContext.SESSION_SCOPE); //$NON-NLS-1$
+        this.setAttribute(Config.FMT_LOCALE + ".session", locale.getLanguage(), Context.SESSION_SCOPE); //$NON-NLS-1$
     }
 
     /**
@@ -189,10 +189,10 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public void setAttribute(String name, Object value, int scope) {
         switch (scope) {
-            case MgnlContext.REQUEST_SCOPE:
+            case Context.LOCALE_SCOPE:
                 this.request.setAttribute(name, value);
                 break;
-            case MgnlContext.SESSION_SCOPE:
+            case Context.SESSION_SCOPE:
 
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
@@ -206,8 +206,8 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
                 httpsession.setAttribute(name, value);
                 break;
-            case MgnlContext.APPLICATION_SCOPE:
-                MgnlContext.getSystemContext().setAttribute(name, value, MgnlContext.APPLICATION_SCOPE);
+            case Context.APPLICATION_SCOPE:
+                MgnlContext.getSystemContext().setAttribute(name, value, Context.APPLICATION_SCOPE);
                 break;
             default:
                 this.request.setAttribute(name, value);
@@ -224,20 +224,20 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public Object getAttribute(String name, int scope) {
         switch (scope) {
-            case MgnlContext.REQUEST_SCOPE:
+            case Context.LOCALE_SCOPE:
                 Object obj = this.request.getAttribute(name);
                 if(obj == null){
                     obj = this.getParameter(name);
                 }
                 return obj;
-            case MgnlContext.SESSION_SCOPE:
+            case Context.SESSION_SCOPE:
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
                     return null;
                 }
                 return httpsession.getAttribute(name);
-            case MgnlContext.APPLICATION_SCOPE:
-                return MgnlContext.getSystemContext().getAttribute(name, MgnlContext.APPLICATION_SCOPE);
+            case Context.APPLICATION_SCOPE:
+                return MgnlContext.getSystemContext().getAttribute(name, Context.APPLICATION_SCOPE);
             default:
                 log.error("no illegal scope passed");
                 return null;
@@ -250,17 +250,17 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public void removeAttribute(String name, int scope) {
         switch (scope) {
-            case MgnlContext.REQUEST_SCOPE:
+            case Context.LOCALE_SCOPE:
                 this.request.removeAttribute(name);
                 break;
-            case MgnlContext.SESSION_SCOPE:
+            case Context.SESSION_SCOPE:
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession != null) {
                     httpsession.removeAttribute(name);
                 }
                 break;
-            case MgnlContext.APPLICATION_SCOPE:
-                MgnlContext.getSystemContext().removeAttribute(name, MgnlContext.APPLICATION_SCOPE);
+            case Context.APPLICATION_SCOPE:
+                MgnlContext.getSystemContext().removeAttribute(name, Context.APPLICATION_SCOPE);
                 break;
             default:
                 log.error("no illegal scope passed");
@@ -274,7 +274,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         Map map = new HashMap();
         Enumeration keysEnum;
         switch (scope) {
-            case MgnlContext.REQUEST_SCOPE:
+            case Context.LOCALE_SCOPE:
                 // add parameters
                 map.putAll(this.getParameters());
                 // attributes have higher priority
@@ -285,7 +285,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                     map.put(key, value);
                 }
                 return map;
-            case MgnlContext.SESSION_SCOPE:
+            case Context.SESSION_SCOPE:
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
                     return null;
@@ -297,8 +297,8 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                     map.put(key, value);
                 }
                 return map;
-            case MgnlContext.APPLICATION_SCOPE:
-                return MgnlContext.getSystemContext().getAttributes(MgnlContext.APPLICATION_SCOPE);
+            case Context.APPLICATION_SCOPE:
+                return MgnlContext.getSystemContext().getAttributes(Context.APPLICATION_SCOPE);
             default:
                 log.error("no illegal scope passed");
                 return null;
