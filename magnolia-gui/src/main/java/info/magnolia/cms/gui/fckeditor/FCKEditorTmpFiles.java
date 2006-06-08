@@ -13,6 +13,7 @@
 package info.magnolia.cms.gui.fckeditor;
 
 import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
 import java.util.HashMap;
@@ -68,10 +69,10 @@ public class FCKEditorTmpFiles {
      * @return the map
      */
     private static Map getTmpFiles() {
-        Map fckTmpFiles = (Map) MgnlContext.getAttribute(ATTRIBUTE_FCK_TEMPFILES, MgnlContext.SESSION_SCOPE);
+        Map fckTmpFiles = (Map) MgnlContext.getAttribute(ATTRIBUTE_FCK_TEMPFILES, Context.SESSION_SCOPE);
         if (fckTmpFiles == null) {
             fckTmpFiles = new HashMap();
-            MgnlContext.setAttribute(ATTRIBUTE_FCK_TEMPFILES, fckTmpFiles, MgnlContext.SESSION_SCOPE);
+            MgnlContext.setAttribute(ATTRIBUTE_FCK_TEMPFILES, fckTmpFiles, Context.SESSION_SCOPE);
         }
         return fckTmpFiles;
     }
