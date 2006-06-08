@@ -388,7 +388,7 @@ public class ModuleRegistration {
      * @return the level
      */
     private int calcDependencyLevel(ModuleDefinition def) {
-        if (def.getDependencies().size() == 0) {
+        if (def.getDependencies() == null || def.getDependencies().size() == 0) {
             return 0;
         }
         List dependencyLevels = new ArrayList();
