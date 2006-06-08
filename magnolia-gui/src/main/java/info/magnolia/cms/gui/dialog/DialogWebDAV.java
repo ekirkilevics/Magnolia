@@ -87,7 +87,7 @@ public class DialogWebDAV extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
             throws RepositoryException {
@@ -228,7 +228,7 @@ public class DialogWebDAV extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);

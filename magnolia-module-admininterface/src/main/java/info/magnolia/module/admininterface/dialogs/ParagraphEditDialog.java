@@ -15,7 +15,7 @@ package info.magnolia.module.admininterface.dialogs;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.dialog.DialogDialog;
+import info.magnolia.cms.gui.dialog.Dialog;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -46,8 +46,8 @@ public class ParagraphEditDialog extends ConfiguredDialog {
      * @see info.magnolia.module.admininterface.DialogMVCHandler#createDialog(info.magnolia.cms.core.Content,
      * info.magnolia.cms.core.Content)
      */
-    protected DialogDialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
-        DialogDialog dialog = super.createDialog(configNode, websiteNode);
+    protected Dialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
+        Dialog dialog = super.createDialog(configNode, websiteNode);
         dialog.setConfig("paragraph", paragraph); //$NON-NLS-1$
         return dialog;
     }

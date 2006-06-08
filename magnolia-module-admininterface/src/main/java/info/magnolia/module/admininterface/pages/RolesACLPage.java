@@ -9,7 +9,7 @@ import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.dialog.DialogBox;
 import info.magnolia.cms.gui.dialog.DialogButton;
 import info.magnolia.cms.gui.dialog.DialogFactory;
-import info.magnolia.cms.gui.dialog.DialogSuper;
+import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -156,7 +156,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
         PrintWriter out = response.getWriter();
         Messages msgs = MessagesManager.getMessages();
 
-        DialogSuper dialogControl = (DialogSuper) request.getAttribute("dialogObject"); //$NON-NLS-1$
+        DialogControlImpl dialogControl = (DialogControlImpl) request.getAttribute("dialogObject"); //$NON-NLS-1$
         Content role = dialogControl.getWebsiteNode();
 
         // select the repository

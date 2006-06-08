@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class TreeColumn extends ControlSuper {
+public class TreeColumn extends ControlImpl {
 
     public static final String EDIT_CSSCLASS_EDIT = CssConstants.CSSCLASS_EDIT;
 

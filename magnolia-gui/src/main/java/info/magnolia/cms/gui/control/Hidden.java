@@ -20,7 +20,7 @@ import info.magnolia.cms.core.Content;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Hidden extends ControlSuper {
+public class Hidden extends ControlImpl {
 
     public Hidden() {
     }

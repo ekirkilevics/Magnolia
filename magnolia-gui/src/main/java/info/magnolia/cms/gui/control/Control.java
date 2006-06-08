@@ -17,7 +17,7 @@ package info.magnolia.cms.gui.control;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public interface ControlInterface {
+public interface Control {
 
     /**
      * Returns the html code for the control.

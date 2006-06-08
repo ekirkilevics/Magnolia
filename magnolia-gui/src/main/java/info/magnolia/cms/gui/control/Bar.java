@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Bar extends ControlSuper {
+public class Bar extends ControlImpl {
 
     private List buttonsLeft = new ArrayList();
 

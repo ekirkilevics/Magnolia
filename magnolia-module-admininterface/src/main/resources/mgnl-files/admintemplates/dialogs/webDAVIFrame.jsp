@@ -2,10 +2,10 @@
     xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt" xmlns:cms="urn:jsptld:cms-taglib">
     <jsp:directive.page contentType="text/html; charset=UTF-8" />
     <jsp:directive.page import="info.magnolia.cms.gui.dialog.DialogWebDAV" />
-    <jsp:directive.page import="info.magnolia.cms.gui.dialog.DialogSuper" />
+    <jsp:directive.page import="info.magnolia.cms.gui.dialog.DialogControlImpl" />
 
     <jsp:scriptlet>
-    DialogWebDAV dav=(DialogWebDAV) request.getSession().getAttribute(request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
+    DialogWebDAV dav=(DialogWebDAV) request.getSession().getAttribute(request.getParameter(DialogControlImpl.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
     //do not remove session attribute!
     if (dav!=null) {
         if (request.getParameter("subDirectory")!=null) dav.setSubDirectory(request.getParameter("subDirectory"));

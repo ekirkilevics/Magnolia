@@ -31,7 +31,7 @@ public class DialogHidden extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
         Hidden control = new Hidden(this.getName(), this.getValue());

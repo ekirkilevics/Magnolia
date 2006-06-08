@@ -19,7 +19,7 @@ import info.magnolia.cms.core.Content;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class SelectOption extends ControlSuper {
+public class SelectOption extends ControlImpl {
 
     private String label;
 

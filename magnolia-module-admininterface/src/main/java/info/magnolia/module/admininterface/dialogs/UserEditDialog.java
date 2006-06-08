@@ -18,8 +18,8 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.gui.dialog.DialogDialog;
-import info.magnolia.cms.gui.dialog.DialogSuper;
+import info.magnolia.cms.gui.dialog.Dialog;
+import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.context.MgnlContext;
 
@@ -96,13 +96,13 @@ public class UserEditDialog extends ConfiguredDialog {
      * @param storageNode
      * @throws javax.jcr.RepositoryException
      */
-    protected DialogDialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
-        DialogDialog dialog = super.createDialog(configNode, storageNode);
+    protected Dialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
+        Dialog dialog = super.createDialog(configNode, storageNode);
         // dont do anythig if command is "save"
         if (this.getCommand().equalsIgnoreCase(COMMAND_SAVE)) return dialog;
 
         // replace UUID with Path for groups and roles
-        DialogSuper control = dialog.getSub("groups");
+        DialogControlImpl control = dialog.getSub("groups");
         HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
         List values = control.getValues();
         for (int index=0; index < values.size(); index++) {

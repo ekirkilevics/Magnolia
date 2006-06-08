@@ -19,7 +19,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Button extends ControlSuper {
+public class Button extends ControlImpl {
 
     /**
      * html before.

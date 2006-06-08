@@ -25,7 +25,7 @@ import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 
 import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.util.FreeMarkerUtil;
 
 
@@ -165,9 +165,9 @@ public class DialogMultiSelect extends DialogBox {
     public String getSaveInfo() {
         Boolean renderSaveInfo =  BooleanUtils.toBooleanObject(this.getConfigValue("saveInfo"));
         if(BooleanUtils.toBooleanDefaultIfNull(renderSaveInfo, true)){
-            ControlSuper dummy = new ControlSuper(this.getName(), (String)null);
+            ControlImpl dummy = new ControlImpl(this.getName(), (String)null);
             if (!isSaveAsList() && !isSaveAsJSON()) {
-                dummy.setValueType(ControlSuper.VALUETYPE_MULTIPLE);
+                dummy.setValueType(ControlImpl.VALUETYPE_MULTIPLE);
             }
             return dummy.getHtmlSaveInfo();
         }

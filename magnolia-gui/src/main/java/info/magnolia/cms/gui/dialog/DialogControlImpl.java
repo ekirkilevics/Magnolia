@@ -40,7 +40,7 @@ import java.util.*;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public abstract class DialogSuper implements DialogInterface {
+public abstract class DialogControlImpl implements DialogControl {
 
     private static final String I18N_BASENAME_PROPERTY = "i18nBasename";
 
@@ -51,7 +51,7 @@ public abstract class DialogSuper implements DialogInterface {
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(DialogSuper.class);
+    private static Logger log = LoggerFactory.getLogger(DialogControlImpl.class);
 
     /**
      * Current request.
@@ -96,9 +96,9 @@ public abstract class DialogSuper implements DialogInterface {
      */
     private List values;
 
-    private DialogSuper parent;
+    private DialogControlImpl parent;
 
-    private DialogSuper topParent;
+    private DialogControlImpl topParent;
 
     /**
      * Used if this control has its own message bundle defined or if this is the dialog object itself. Use getMessages
@@ -123,7 +123,7 @@ public abstract class DialogSuper implements DialogInterface {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPreSubs(out);
@@ -260,7 +260,7 @@ public abstract class DialogSuper implements DialogInterface {
             // use underscore (not divis)! could be used as js variable names
             String dsId = this.getId() + "_" + i; //$NON-NLS-1$
 
-            DialogSuper ds = (DialogSuper) it.next();
+            DialogControlImpl ds = (DialogControlImpl) it.next();
             ds.setId(dsId);
             ds.setParent(this);
             if (this.getParent() == null) {
@@ -276,15 +276,15 @@ public abstract class DialogSuper implements DialogInterface {
         // do nothing
     }
 
-    public DialogSuper getParent() {
+    public DialogControlImpl getParent() {
         return this.parent;
     }
 
-    protected void setTopParent(DialogSuper top) {
+    protected void setTopParent(DialogControlImpl top) {
         this.topParent = top;
     }
 
-    public DialogSuper getTopParent() {
+    public DialogControlImpl getTopParent() {
         return this.topParent;
     }
 
@@ -297,17 +297,17 @@ public abstract class DialogSuper implements DialogInterface {
      * @param name the name of the control to find
      * @return the found control or null
      */
-    public DialogSuper getSub(String name) {
-        DialogSuper found;
+    public DialogControlImpl getSub(String name) {
+        DialogControlImpl found;
         for (Iterator iter = subs.iterator(); iter.hasNext();) {
             Object control = iter.next();
 
-            // could be an implementation of DialogInterface only
-            if (control instanceof DialogSuper) {
-                if (StringUtils.equals(((DialogSuper) control).getName(), name)) {
-                    return (DialogSuper) control;
+            // could be an implementation of DialogControl only
+            if (control instanceof DialogControlImpl) {
+                if (StringUtils.equals(((DialogControlImpl) control).getName(), name)) {
+                    return (DialogControlImpl) control;
                 }
-                found = ((DialogSuper)control).getSub(name);
+                found = ((DialogControlImpl)control).getSub(name);
                 if(found != null){
                     return found;
                 }
@@ -444,7 +444,7 @@ public abstract class DialogSuper implements DialogInterface {
             if (log.isDebugEnabled()) {
                 log.debug("Loading control \"" + controlType + "\" for " + configNode.getHandle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            DialogInterface dialogControl = DialogFactory.loadDialog(
+            DialogControl dialogControl = DialogFactory.loadDialog(
                 request,
                 response,
                 this.getWebsiteNode(),
@@ -453,7 +453,7 @@ public abstract class DialogSuper implements DialogInterface {
         }
     }
 
-    private void setParent(DialogSuper parent) {
+    private void setParent(DialogControlImpl parent) {
         this.parent = parent;
     }
 
@@ -514,9 +514,9 @@ public abstract class DialogSuper implements DialogInterface {
             }
         }
         for (Iterator iter = this.getSubs().iterator(); iter.hasNext();) {
-            DialogInterface sub = (DialogInterface) iter.next();
-            if(sub instanceof DialogSuper){
-                if(!((DialogSuper)sub).validate()){
+            DialogControl sub = (DialogControl) iter.next();
+            if(sub instanceof DialogControlImpl){
+                if(!((DialogControlImpl)sub).validate()){
                     return false;
                 }
             }

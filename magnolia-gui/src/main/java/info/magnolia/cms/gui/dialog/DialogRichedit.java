@@ -16,7 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.Edit;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
@@ -161,7 +161,7 @@ public class DialogRichedit extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
             throws RepositoryException {
@@ -172,7 +172,7 @@ public class DialogRichedit extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
         Messages msgs = MessagesManager.getMessages();
@@ -502,7 +502,7 @@ public class DialogRichedit extends DialogBox {
             Edit hiddenTextarea = new Edit(this.getName(), StringUtils.EMPTY);
             hiddenTextarea.setRows("5"); //$NON-NLS-1$
             // special handling during saving
-            hiddenTextarea.setIsRichEditValue(ControlSuper.RICHEDIT_KUPU);
+            hiddenTextarea.setIsRichEditValue(ControlImpl.RICHEDIT_KUPU);
             out.write(hiddenTextarea.getHtml());
             out.write("</div>"); //$NON-NLS-1$
 

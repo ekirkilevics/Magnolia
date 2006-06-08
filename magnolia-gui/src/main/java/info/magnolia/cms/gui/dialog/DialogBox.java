@@ -26,7 +26,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class DialogBox extends DialogSuper {
+public class DialogBox extends DialogControlImpl {
 
     public static final int BOXTYPE_2COLS = 0;
 

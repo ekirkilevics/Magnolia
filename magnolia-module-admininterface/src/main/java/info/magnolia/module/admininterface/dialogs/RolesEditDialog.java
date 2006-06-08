@@ -16,7 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.gui.dialog.DialogDialog;
+import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.module.admininterface.pages.RolesACLPage;
 
@@ -67,9 +67,9 @@ public class RolesEditDialog extends ConfiguredDialog {
      * @see info.magnolia.module.admininterface.DialogMVCHandler#createDialog(info.magnolia.cms.core.Content,
      * info.magnolia.cms.core.Content)
      */
-    protected DialogDialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
+    protected Dialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
 
-        DialogDialog dialog = super.createDialog(configNode, storageNode);
+        Dialog dialog = super.createDialog(configNode, storageNode);
 
         dialog.setJavascriptSources(request.getContextPath() + "/.resources/admin-js/dialogs/DynamicTable.js"); //$NON-NLS-1$
         dialog.setJavascriptSources(request.getContextPath()

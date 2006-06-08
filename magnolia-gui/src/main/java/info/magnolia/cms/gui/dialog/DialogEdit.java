@@ -36,7 +36,7 @@ public class DialogEdit extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
         Edit control = new Edit(this.getName(), this.getValue());

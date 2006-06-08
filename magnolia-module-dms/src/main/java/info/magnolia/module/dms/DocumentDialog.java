@@ -15,8 +15,8 @@ package info.magnolia.module.dms;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.gui.dialog.DialogDialog;
-import info.magnolia.cms.gui.dialog.DialogSuper;
+import info.magnolia.cms.gui.dialog.Dialog;
+import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.security.Permission;
@@ -66,14 +66,14 @@ public class DocumentDialog extends ConfiguredDialog {
     /**
      * Add the comment popup to the dialog
      */
-    protected DialogDialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
+    protected Dialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
         // get the version node
         Document doc = new Document(storageNode, version);
         // set this document for some of the subcontrols
         Document.setCurrent(request, doc);
 
         // execute the js init code
-        DialogDialog dialog = new DialogDialog(){
+        Dialog dialog = new Dialog(){
             protected void drawHtmlPreSubsHead(Writer out) throws IOException {
                 super.drawHtmlPreSubsHead(out);
                 out.write("<script>");
@@ -84,7 +84,7 @@ public class DocumentDialog extends ConfiguredDialog {
 
         dialog.init(request, response, storageNode, configNode);
 
-        dialog.addSub(new DialogSuper(){
+        dialog.addSub(new DialogControlImpl(){
             public void drawHtml(Writer out) throws IOException {
                 String str = "";
                 try {

@@ -25,7 +25,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Select extends ControlSuper {
+public class Select extends ControlImpl {
 
     private List options = new ArrayList();
 

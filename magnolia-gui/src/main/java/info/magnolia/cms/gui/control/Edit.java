@@ -19,7 +19,7 @@ import info.magnolia.cms.core.Content;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Edit extends ControlSuper {
+public class Edit extends ControlImpl {
 
     String rows = "1"; //$NON-NLS-1$
 
@@ -52,7 +52,7 @@ public class Edit extends ControlSuper {
             html.append("<input type=\"text\""); //$NON-NLS-1$
             html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             html.append(" id=\"" + id + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-            html.append(" value=\"" + ControlSuper.escapeHTML(this.getValue()) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append(" value=\"" + ControlImpl.escapeHTML(this.getValue()) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             html.append(getHtmlEvents());
             html.append(this.getHtmlCssClass());
             html.append(this.getHtmlCssStyles());

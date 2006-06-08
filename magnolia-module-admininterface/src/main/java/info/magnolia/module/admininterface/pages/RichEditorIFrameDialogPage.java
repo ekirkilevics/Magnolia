@@ -1,7 +1,7 @@
 package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.gui.dialog.DialogRichedit;
-import info.magnolia.cms.gui.dialog.DialogSuper;
+import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.module.admininterface.SimplePageMVCHandler;
 
 import java.io.IOException;
@@ -41,14 +41,14 @@ public class RichEditorIFrameDialogPage extends SimplePageMVCHandler {
         // @todo IMPORTANT remove use of http session
         HttpSession httpsession = request.getSession(true);
         DialogRichedit richE = (DialogRichedit) httpsession.getAttribute(request
-            .getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
+            .getParameter(DialogControlImpl.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
         if (richE != null) {
             richE.removeSessionAttribute();
             richE.drawHtmlEditor(out);
         }
         else {
             log.error("DialogRichedit not found in session with name [" //$NON-NLS-1$
-                + request.getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT)
+                + request.getParameter(DialogControlImpl.SESSION_ATTRIBUTENAME_DIALOGOBJECT)
                 + "]"); //$NON-NLS-1$
         }
     }

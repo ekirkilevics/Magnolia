@@ -14,7 +14,7 @@ package info.magnolia.module.dms.gui;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.Edit;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.dialog.DialogFile;
@@ -99,7 +99,7 @@ public class DMSDialogFileControl extends DialogFile {
             out.write("<input type=\"hidden\" id=\""
                 + this.getName()
                 + "_contentEmpty\" value=\""
-                + ControlSuper.escapeHTML(htmlContentEmpty)
+                + ControlImpl.escapeHTML(htmlContentEmpty)
                 + "\">");
 
         }

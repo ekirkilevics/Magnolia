@@ -25,7 +25,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class DialogTab extends DialogSuper {
+public class DialogTab extends DialogControlImpl {
 
     /**
      * Empty constructor should only be used by DialogFactory.

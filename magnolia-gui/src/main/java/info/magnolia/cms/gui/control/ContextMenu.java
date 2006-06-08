@@ -22,7 +22,7 @@ import java.util.List;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class ContextMenu extends ControlSuper {
+public class ContextMenu extends ControlImpl {
 
     /**
      * All the menu items showed by the context menu

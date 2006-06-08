@@ -16,10 +16,10 @@ import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.dialog.DialogBox;
 import info.magnolia.cms.gui.dialog.DialogButtonSet;
-import info.magnolia.cms.gui.dialog.DialogDialog;
+import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.dialog.DialogHidden;
 import info.magnolia.cms.gui.dialog.DialogStatic;
@@ -62,8 +62,8 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
     /**
      * @see .DialogMVCHandler#createDialog(Content, Content)
      */
-    protected DialogDialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
-        DialogDialog dialog = DialogFactory.getDialogDialogInstance(request, response, null, null);
+    protected Dialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
+        Dialog dialog = DialogFactory.getDialogInstance(request, response, null, null);
 
         dialog.setConfig("paragraph", paragraph); //$NON-NLS-1$
 
@@ -87,7 +87,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
 
         DialogButtonSet c1 = DialogFactory.getDialogButtonSetInstance(request, response, null, null);
         c1.setName("mgnlParagraph"); //$NON-NLS-1$
-        c1.setButtonType(ControlSuper.BUTTONTYPE_RADIO);
+        c1.setButtonType(ControlImpl.BUTTONTYPE_RADIO);
         c1.setBoxType(DialogBox.BOXTYPE_1COL);
         c1.setConfig("saveInfo", "false"); //$NON-NLS-1$ //$NON-NLS-2$
         c1.setConfig("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$

@@ -23,7 +23,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Password extends ControlSuper {
+public class Password extends ControlImpl {
 
     public Password() {
     }

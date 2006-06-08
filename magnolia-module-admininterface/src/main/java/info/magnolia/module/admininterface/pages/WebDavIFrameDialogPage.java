@@ -1,6 +1,6 @@
 package info.magnolia.module.admininterface.pages;
 
-import info.magnolia.cms.gui.dialog.DialogSuper;
+import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.gui.dialog.DialogWebDAV;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.SimplePageMVCHandler;
@@ -34,7 +34,7 @@ public class WebDavIFrameDialogPage extends SimplePageMVCHandler {
         // @todo IMPORTANT remove use of http session
         HttpSession httpsession = request.getSession(true);
         DialogWebDAV dav = (DialogWebDAV) httpsession.getAttribute(request
-            .getParameter(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
+            .getParameter(DialogControlImpl.SESSION_ATTRIBUTENAME_DIALOGOBJECT));
         // do not remove session attribute!
         if (dav != null) {
             if (request.getParameter("subDirectory") != null) { //$NON-NLS-1$

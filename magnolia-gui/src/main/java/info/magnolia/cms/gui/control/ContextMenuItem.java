@@ -22,7 +22,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class ContextMenuItem extends ControlSuper {
+public class ContextMenuItem extends ControlImpl {
 
     private String icon;
 

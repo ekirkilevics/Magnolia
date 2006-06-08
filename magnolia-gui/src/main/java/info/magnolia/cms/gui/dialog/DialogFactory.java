@@ -54,8 +54,8 @@ public final class DialogFactory {
     /**
      * Register a new dialog.
      * @param name dialog name (e.g. "richEdit")
-     * @param dialogClass implementing class. Must implements <code>info.magnolia.cms.gui.dialog.DialogInterface</code>
-     * @see info.magnolia.cms.gui.dialog.DialogInterface
+     * @param dialogClass implementing class. Must implements <code>info.magnolia.cms.gui.dialog.DialogControl</code>
+     * @see info.magnolia.cms.gui.dialog.DialogControl
      */
     public static void registerDialog(String name, Class dialogClass) {
         // @todo check if dialogClass is a valid dialog
@@ -74,16 +74,16 @@ public final class DialogFactory {
      * nodeData
      * @throws RepositoryException for errors during initialization of dialog with repository data
      */
-    public static DialogInterface loadDialog(HttpServletRequest request, HttpServletResponse response,
+    public static DialogControl loadDialog(HttpServletRequest request, HttpServletResponse response,
         Content storageNode, Content configNode) throws RepositoryException {
         String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
 
         return getDialogControlInstanceByName(request,response,storageNode, configNode, controlType);
     }
 
-    public static DialogDialog getDialogDialogInstance(HttpServletRequest request, HttpServletResponse response,
+    public static Dialog getDialogInstance(HttpServletRequest request, HttpServletResponse response,
         Content storageNode, Content configNode) throws RepositoryException {
-        DialogDialog dialog = new DialogDialog();
+        Dialog dialog = new Dialog();
         dialog.init(request, response, storageNode, configNode);
         return dialog;
     }
@@ -155,7 +155,7 @@ public final class DialogFactory {
      * @return the conrol
      * @throws RepositoryException
      */
-    public static DialogInterface getDialogControlInstanceByName(HttpServletRequest request,
+    public static DialogControl getDialogControlInstanceByName(HttpServletRequest request,
         HttpServletResponse response, Content storageNode, Content configNode, String controlType)
         throws RepositoryException {
 
@@ -170,9 +170,9 @@ public final class DialogFactory {
             }
         }
 
-        DialogInterface control = null;
+        DialogControl control = null;
         try {
-            control = (DialogInterface) dialogClass.newInstance();
+            control = (DialogControl) dialogClass.newInstance();
         }
         catch (Exception e) {
             // should never happen

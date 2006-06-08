@@ -16,7 +16,7 @@ package info.magnolia.cms.gui.control;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Radio extends ControlSuper {
+public class Radio extends ControlImpl {
 
     public Radio() {
     }

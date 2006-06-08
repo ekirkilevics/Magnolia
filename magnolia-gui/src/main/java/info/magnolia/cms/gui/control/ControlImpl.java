@@ -31,7 +31,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class ControlSuper implements ControlInterface {
+public class ControlImpl implements Control {
 
     public static final int BUTTONTYPE_PUSHBUTTON = 0;
 
@@ -117,20 +117,20 @@ public class ControlSuper implements ControlInterface {
 
     private HttpServletRequest request;
 
-    public ControlSuper() {
+    public ControlImpl() {
     }
 
-    public ControlSuper(String name, String value) {
+    public ControlImpl(String name, String value) {
         this.setName(name);
         this.setValue(value);
     }
 
-    public ControlSuper(String name, List values) {
+    public ControlImpl(String name, List values) {
         this.setName(name);
         this.setValues(values);
     }
 
-    public ControlSuper(String name, Content websiteNode) {
+    public ControlImpl(String name, Content websiteNode) {
         this.setName(name);
         this.setWebsiteNode(websiteNode);
     }
@@ -308,7 +308,7 @@ public class ControlSuper implements ControlInterface {
 
     /**
      * Returns an empty string.
-     * @see info.magnolia.cms.gui.control.ControlInterface#getHtml()
+     * @see info.magnolia.cms.gui.control.Control#getHtml()
      */
     public String getHtml() {
         return StringUtils.EMPTY;

@@ -25,7 +25,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class ButtonSet extends ControlSuper {
+public class ButtonSet extends ControlImpl {
 
     // default values for divided button (checkbox, radio)
     private static final String HTML_PRE_DIVIDED = "<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">"; //$NON-NLS-1$
@@ -186,7 +186,7 @@ public class ButtonSet extends ControlSuper {
                 b.setCssClass(this.getCssClass());
             }
             b.setId(this.getName() + "_SETBUTTON_" + i); //$NON-NLS-1$
-            if (this.getValueType() == ControlSuper.VALUETYPE_MULTIPLE) {
+            if (this.getValueType() == ControlImpl.VALUETYPE_MULTIPLE) {
                 if (this.getValues().size() != 0) {
                     if (this.getValues().contains(b.getValue())) {
                         b.setState(BUTTONSTATE_PUSHED);

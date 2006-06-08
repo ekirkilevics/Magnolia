@@ -20,22 +20,15 @@ import info.magnolia.cms.i18n.MessagesManager;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class File extends ControlSuper {
+public class File extends ControlImpl {
 
     public static final String REMOVE = "remove"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(File.class);
 
     private String cssClassFileName;
 

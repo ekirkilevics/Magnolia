@@ -16,7 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.*;
-import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
 import info.magnolia.cms.gui.misc.FileProperties;
@@ -53,7 +53,7 @@ import java.text.ParseException;
 /**
  * This class handels the saving in the dialogs. It uses the mgnlSaveInfo parameters sendend from the browser to store
  * the data in the node.The structure of the parameter is the following: <br>
- * <code>name, type, valueType, isRichEditValue, encoding</code> <p/> To find the consts see ControlSuper <table>
+ * <code>name, type, valueType, isRichEditValue, encoding</code> <p/> To find the consts see ControlImpl <table>
  * <tr>
  * <td>name</td>
  * <td>the name of the field</td>
@@ -198,9 +198,9 @@ public class SaveHandlerImpl implements SaveHandler {
 
         String name;
         int type = PropertyType.STRING;
-        int valueType = ControlSuper.VALUETYPE_SINGLE;
+        int valueType = ControlImpl.VALUETYPE_SINGLE;
         int isRichEditValue = 0;
-        int encoding = ControlSuper.ENCODING_NO;
+        int encoding = ControlImpl.ENCODING_NO;
         String[] values = {StringUtils.EMPTY};
         if (StringUtils.contains(saveInfo, ',')) {
             String[] info = StringUtils.split(saveInfo, ',');
@@ -227,10 +227,10 @@ public class SaveHandlerImpl implements SaveHandler {
         }
         else {
             values = getForm().getParameterValues(name);
-            if (valueType == ControlSuper.VALUETYPE_MULTIPLE) {
+            if (valueType == ControlImpl.VALUETYPE_MULTIPLE) {
                 processMultiple(node, name, type, values);
             }
-            else if (isRichEditValue != ControlSuper.RICHEDIT_NONE) {
+            else if (isRichEditValue != ControlImpl.RICHEDIT_NONE) {
                 processRichEdit(node, name, type, isRichEditValue, encoding, values);
             }
             else if(type == PropertyType.DATE) {
@@ -283,7 +283,7 @@ public class SaveHandlerImpl implements SaveHandler {
 
         valueStr = cleanLineBreaks(valueStr,isRichEditValue);
 
-        if (isRichEditValue == ControlSuper.RICHEDIT_FCK) {
+        if (isRichEditValue == ControlImpl.RICHEDIT_FCK) {
             valueStr = updateLinks(node, name, valueStr);
         }
 
@@ -312,7 +312,7 @@ public class SaveHandlerImpl implements SaveHandler {
         valueStr = StringUtils.replace(valueStr, "<P><br />", "<P>"); //$NON-NLS-1$ //$NON-NLS-2$
 
         // replace <P>
-        if(isRichEditValue != ControlSuper.RICHEDIT_FCK)
+        if(isRichEditValue != ControlImpl.RICHEDIT_FCK)
             valueStr = replacePByBr(valueStr, "p"); //$NON-NLS-1$
         return valueStr;
     }
@@ -392,7 +392,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @param node node where the data must be stored
      * @param name name of the field
      * @param type type
-     * @param valueType internal value type (according to ControlSuper)
+     * @param valueType internal value type (according to ControlImpl)
      * @param encoding must we encode (base64)
      * @param values all values belonging to this field
      * @throws PathNotFoundException exception
@@ -426,13 +426,13 @@ public class SaveHandlerImpl implements SaveHandler {
         // actualy encoding does only work for control password
         boolean remove = false;
         boolean write = false;
-        if (encoding == ControlSuper.ENCODING_BASE64) {
+        if (encoding == ControlImpl.ENCODING_BASE64) {
             if (StringUtils.isNotBlank(valueStr)) {
                 valueStr = new String(Base64.encodeBase64(valueStr.getBytes()));
                 write = true;
             }
         }
-        else if (encoding == ControlSuper.ENCODING_UNIX) {
+        else if (encoding == ControlImpl.ENCODING_UNIX) {
             if (StringUtils.isNotEmpty(valueStr)) {
                 valueStr = Digester.getSHA1Hex(valueStr);
                 write = true;

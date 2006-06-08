@@ -26,6 +26,6 @@ public class SaveTest extends TestCase {
      */
     public void testGetRichEditValueStrCleanExplorerPs() {
         Save save = new Save();
-        assertEquals("aaa\n\n  bbb", save.getRichEditValueStr("<P>aaa</P>\r\n<P><BR>bbb</P>", ControlSuper.RICHEDIT_KUPU));
+        assertEquals("aaa\n\n  bbb", save.getRichEditValueStr("<P>aaa</P>\r\n<P><BR>bbb</P>", ControlImpl.RICHEDIT_KUPU));
     }
 }

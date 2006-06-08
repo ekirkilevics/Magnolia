@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public interface DialogInterface {
+public interface DialogControl {
 
     /**
      * Initialize a Dialog. This method is guaranteed to be called just after the control instantiation.

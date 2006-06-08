@@ -19,7 +19,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.dialog.DialogBox;
-import info.magnolia.cms.gui.dialog.DialogDialog;
+import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.dialog.DialogHidden;
 import info.magnolia.cms.gui.dialog.DialogSelect;
@@ -305,7 +305,7 @@ public class ZipUploadView {
 
     public void render(HttpServletRequest request, HttpServletResponse response) throws RepositoryException,
         IOException {
-        DialogDialog dialog = DialogFactory.getDialogDialogInstance(request, response, null, null);
+        Dialog dialog = DialogFactory.getDialogInstance(request, response, null, null);
         dialog.setConfig("width", 500);
         dialog.setConfig("height", 300);
 

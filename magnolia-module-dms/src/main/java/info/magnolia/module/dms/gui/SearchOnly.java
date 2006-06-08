@@ -12,7 +12,7 @@
  */
 package info.magnolia.module.dms.gui;
 
-import info.magnolia.cms.gui.dialog.DialogSuper;
+import info.magnolia.cms.gui.dialog.DialogControlImpl;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -23,7 +23,7 @@ import java.io.Writer;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class SearchOnly extends DialogSuper {
+public class SearchOnly extends DialogControlImpl {
 
     /**
      * No rendering

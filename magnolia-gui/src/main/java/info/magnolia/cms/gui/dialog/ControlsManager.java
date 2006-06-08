@@ -86,8 +86,8 @@ public final class ControlsManager extends ObservedManager {
                 continue;
             }
 
-            if (!DialogInterface.class.isAssignableFrom(controlClass)) {
-                log.error("Config : Invalid class specified for control [{}]: does not implement DialogInterface", //$NON-NLS-1$
+            if (!DialogControl.class.isAssignableFrom(controlClass)) {
+                log.error("Config : Invalid class specified for control [{}]: does not implement DialogControl", //$NON-NLS-1$
                     nameNodeData);
                 continue;
             }

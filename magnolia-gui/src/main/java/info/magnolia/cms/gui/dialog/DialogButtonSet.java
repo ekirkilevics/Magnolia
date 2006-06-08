@@ -16,7 +16,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
-import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.CssConstants;
 import org.apache.commons.lang.StringUtils;
@@ -45,7 +45,7 @@ public class DialogButtonSet extends DialogBox {
      */
     private static Logger log = LoggerFactory.getLogger(DialogButtonSet.class);
 
-    private int buttonType = ControlSuper.BUTTONTYPE_RADIO;
+    private int buttonType = ControlImpl.BUTTONTYPE_RADIO;
 
     /**
      * Empty constructor should only be used by DialogFactory.
@@ -76,7 +76,7 @@ public class DialogButtonSet extends DialogBox {
                 }
 
                 if (setDefaultSelected && n.getNodeData("selected").getBoolean()) { //$NON-NLS-1$
-                    button.setState(ControlSuper.BUTTONSTATE_PUSHED);
+                    button.setState(ControlImpl.BUTTONSTATE_PUSHED);
                 }
                 options.add(button);
             }
@@ -97,7 +97,7 @@ public class DialogButtonSet extends DialogBox {
         button.setLabel(label);
 
         if (configNode.getNodeData("selected").getBoolean()) { //$NON-NLS-1$
-            button.setState(ControlSuper.BUTTONSTATE_PUSHED);
+            button.setState(ControlImpl.BUTTONSTATE_PUSHED);
         }
 
         button.setValue("true"); //$NON-NLS-1$
@@ -107,7 +107,7 @@ public class DialogButtonSet extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
             throws RepositoryException {
@@ -123,14 +123,14 @@ public class DialogButtonSet extends DialogBox {
 
             // custom settings
             if (controlType.equals("radio")) { //$NON-NLS-1$
-                setButtonType(ControlSuper.BUTTONTYPE_RADIO);
+                setButtonType(ControlImpl.BUTTONTYPE_RADIO);
                 setOptions(configNode, true);
             } else if (controlType.equals("checkbox")) { //$NON-NLS-1$
-                setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+                setButtonType(ControlImpl.BUTTONTYPE_CHECKBOX);
                 setOptions(configNode, false);
                 setConfig("valueType", "multiple"); //$NON-NLS-1$ //$NON-NLS-2$
             } else if (controlType.equals("checkboxSwitch")) { //$NON-NLS-1$
-                setButtonType(ControlSuper.BUTTONTYPE_CHECKBOX);
+                setButtonType(ControlImpl.BUTTONTYPE_CHECKBOX);
                 setOption(configNode);
             }
         }
@@ -153,7 +153,7 @@ public class DialogButtonSet extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
@@ -161,8 +161,8 @@ public class DialogButtonSet extends DialogBox {
         if (this.getConfigValue("valueType").equals("multiple")) { //$NON-NLS-1$ //$NON-NLS-2$
             // checkbox
             control = new ButtonSet(this.getName(), this.getValues());
-            control.setValueType(ControlSuper.VALUETYPE_MULTIPLE);
-        } else if (this.getButtonType() == ControlSuper.BUTTONTYPE_CHECKBOX) {
+            control.setValueType(ControlImpl.VALUETYPE_MULTIPLE);
+        } else if (this.getButtonType() == ControlImpl.BUTTONTYPE_CHECKBOX) {
             // checkboxSwitch
             control = new ButtonSet(this.getName() + "_SWITCH", this.getValue()); //$NON-NLS-1$
         } else {
@@ -216,8 +216,8 @@ public class DialogButtonSet extends DialogBox {
         }
         control.setButtons(this.getOptions());
         out.write(control.getHtml());
-        if (control.getButtonType() == ControlSuper.BUTTONTYPE_CHECKBOX
-                && control.getValueType() != ControlSuper.VALUETYPE_MULTIPLE) {
+        if (control.getButtonType() == ControlImpl.BUTTONTYPE_CHECKBOX
+                && control.getValueType() != ControlImpl.VALUETYPE_MULTIPLE) {
             // checkboxSwitch: value is stored in a hidden field (allows default selecting)
             String value = this.getValue();
             if (StringUtils.isEmpty(value)) {

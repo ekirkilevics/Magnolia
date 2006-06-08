@@ -16,9 +16,9 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.gui.dialog.DialogDialog;
+import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogFactory;
-import info.magnolia.cms.gui.dialog.DialogSuper;
+import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -99,7 +99,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     protected HierarchyManager hm;
 
-    private DialogDialog dialog;
+    private Dialog dialog;
 
     protected Messages msgs;
 
@@ -150,7 +150,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         return VIEW_SHOW_DIALOG;
     }
 
-    private void configureDialog(DialogDialog dialog) {
+    private void configureDialog(Dialog dialog) {
         dialog.setConfig("dialog", getName()); //$NON-NLS-1$
         dialog.setConfig("path", path); //$NON-NLS-1$
         dialog.setConfig("nodeCollection", nodeCollectionName); //$NON-NLS-1$
@@ -166,8 +166,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @param storageNode
      * @throws RepositoryException
      */
-    protected DialogDialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
-        return DialogFactory.getDialogDialogInstance(this.getRequest(), this.getResponse(), storageNode, configNode);
+    protected Dialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
+        return DialogFactory.getDialogInstance(this.getRequest(), this.getResponse(), storageNode, configNode);
     }
 
     /**
@@ -367,7 +367,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     }
 
     public void removeSessionAttributes() {
-        String[] toRemove = form.getParameterValues(DialogSuper.SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE);
+        String[] toRemove = form.getParameterValues(DialogControlImpl.SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE);
         if (toRemove != null) {
             for (int i = 0; i < toRemove.length; i++) {
                 HttpSession httpsession = this.getRequest().getSession(false);
@@ -381,14 +381,14 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     /**
      * @param dialog The dialog to set.
      */
-    protected void setDialog(DialogDialog dialog) {
+    protected void setDialog(Dialog dialog) {
         this.dialog = dialog;
     }
 
     /**
      * @return Returns the dialog.
      */
-    protected DialogDialog getDialog() {
+    protected Dialog getDialog() {
         if (this.dialog == null) {
             try {
                 this.dialog = createDialog(this.getConfigNode(), this.getStorageNode());

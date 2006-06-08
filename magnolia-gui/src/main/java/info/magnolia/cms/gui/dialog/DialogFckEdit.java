@@ -13,7 +13,7 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.context.MgnlContext;
 
@@ -206,7 +206,7 @@ public class DialogFckEdit extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#init(HttpServletRequest, HttpServletResponse, Content, Content)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
@@ -214,7 +214,7 @@ public class DialogFckEdit extends DialogBox {
     }
 
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogInterface#drawHtml(Writer)
+     * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {
         // get the config values
@@ -286,11 +286,11 @@ public class DialogFckEdit extends DialogBox {
         out.write("<input type='hidden' name='mgnlSaveInfo' value='" //$NON-NLS-1$
             + id
             + ",String," //$NON-NLS-1$
-            + ControlSuper.VALUETYPE_SINGLE
+            + ControlImpl.VALUETYPE_SINGLE
             + "," //$NON-NLS-1$
-            + ControlSuper.RICHEDIT_FCK
+            + ControlImpl.RICHEDIT_FCK
             + "," //$NON-NLS-1$
-            + ControlSuper.ENCODING_NO
+            + ControlImpl.ENCODING_NO
             + "' />"); //$NON-NLS-1$
 
         this.drawHtmlPost(out);

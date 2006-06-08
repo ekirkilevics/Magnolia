@@ -14,7 +14,7 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
-import info.magnolia.cms.gui.control.ControlSuper;
+import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
@@ -35,7 +35,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class DialogDialog extends DialogSuper {
+public class Dialog extends DialogControlImpl {
 
     public static final String DIALOGSIZE_NORMAL_WIDTH = "800"; //$NON-NLS-1$
 
@@ -56,7 +56,7 @@ public class DialogDialog extends DialogSuper {
     /**
      * Empty constructor should only be used by DialogFactory.
      */
-    protected DialogDialog() {
+    protected Dialog() {
     }
 
     public void setCallbackJavascript(String s) {
@@ -245,11 +245,11 @@ public class DialogDialog extends DialogSuper {
             + "\">"); //$NON-NLS-1$
         if (this.getOptions().size() != 0) {
             ButtonSet control = new ButtonSet();
-            ((Button) this.getOptions().get(0)).setState(ControlSuper.BUTTONSTATE_PUSHED);
+            ((Button) this.getOptions().get(0)).setState(ControlImpl.BUTTONSTATE_PUSHED);
             control.setButtons(this.getOptions());
             control.setName(this.getId());
             control.setSaveInfo(false);
-            control.setButtonType(ControlSuper.BUTTONTYPE_PUSHBUTTON);
+            control.setButtonType(ControlImpl.BUTTONTYPE_PUSHBUTTON);
             out.write(control.getHtml());
         }
         out.write("</td></tr></table>\n</div>\n"); //$NON-NLS-1$

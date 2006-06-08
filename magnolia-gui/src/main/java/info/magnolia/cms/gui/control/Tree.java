@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * @author Vinzenz Wyser
  * @version 2.0
  */
-public class Tree extends ControlSuper {
+public class Tree extends ControlImpl {
 
     public static final String DOCROOT = "/.resources/controls/tree/"; //$NON-NLS-1$
 
