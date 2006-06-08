@@ -13,7 +13,6 @@ import info.magnolia.cms.mail.templates.impl.MagnoliaEmail;
 import info.magnolia.cms.mail.templates.impl.SimpleEmail;
 import info.magnolia.cms.mail.templates.impl.VelocityEmail;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.module.workflow.WorkflowConstants;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,7 +27,6 @@ import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
 
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,6 +65,12 @@ public class MgnlMailFactory {
     protected static final String MAIL_TYPE = "type";
 
     protected static final String MAIL_ATTACHMENT = "attachment";
+
+    final static public String PARTICIPANT_PREFIX_USER = "user-";
+
+    final static public String PARTICIPANT_PREFIX_GROUP = "group-";
+
+    final static public String PARTICIPANT_PREFIX_ROLE = "role-";
 
     /**
      * @deprecated should be registered suring module initialization!
@@ -276,17 +280,17 @@ public class MgnlMailFactory {
             if (i != 0) {
                 ret.append("\n");
             }
-            if (userName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_USER)) {
-                userName = StringUtils.removeStart(userName, WorkflowConstants.PARTICIPANT_PREFIX_USER);
+            if (userName.startsWith(PARTICIPANT_PREFIX_USER)) {
+                userName = StringUtils.removeStart(userName, PARTICIPANT_PREFIX_USER);
                 if (log.isDebugEnabled()) {
                     log.debug("username =" + userName);
                 }
                 ret.append(getUserMail(userName));
             }
-            else if (userName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_GROUP)) {
+            else if (userName.startsWith(PARTICIPANT_PREFIX_GROUP)) {
 
             }
-            else if (userName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_ROLE)) {
+            else if (userName.startsWith(PARTICIPANT_PREFIX_ROLE)) {
 
             }
             else {
