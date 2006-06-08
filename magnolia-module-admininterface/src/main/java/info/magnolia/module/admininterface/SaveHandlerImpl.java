@@ -140,7 +140,6 @@ public class SaveHandlerImpl implements SaveHandler {
     /**
      * Initialize the SaveHandlerImpl control.
      * @param form the form generated from the request due to handle multipart forms
-     * @param request request
      */
     public void init(MultipartForm form) {
         this.setForm(form);
@@ -267,7 +266,7 @@ public class SaveHandlerImpl implements SaveHandler {
             valueStr = values[0]; // values is null when the expected field would not exis, e.g no
         }
 
-        valueStr = cleanLineBreaks(valueStr);
+        valueStr = cleanLineBreaks(valueStr,isRichEditValue);
 
         if (isRichEditValue == ControlSuper.RICHEDIT_FCK) {
             valueStr = updateLinks(node, name, valueStr);
@@ -283,7 +282,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @param valueStr
      * @return the cleaned string
      */
-    private String cleanLineBreaks(String valueStr) {
+    private String cleanLineBreaks(String valueStr, int isRichEditValue) {
         // encode the internal links to avoid dependences from the contextpath, position of the page
         valueStr = LinkUtil.convertAbsoluteLinksToUUIDs(valueStr);
 
@@ -292,14 +291,14 @@ public class SaveHandlerImpl implements SaveHandler {
 
         // ie inserts some strange br...
         valueStr = StringUtils.replace(valueStr, "</br>", StringUtils.EMPTY); //$NON-NLS-1$
-        valueStr = StringUtils.replace(valueStr, "<P><BR>", "<P>"); //$NON-NLS-1$ //$NON-NLS-2$
-
-        valueStr = StringUtils.replace(valueStr, "<br>", "\n "); //$NON-NLS-1$ //$NON-NLS-2$
-        valueStr = StringUtils.replace(valueStr, "<BR>", "\n "); //$NON-NLS-1$ //$NON-NLS-2$
-        valueStr = StringUtils.replace(valueStr, "<br/>", "\n "); //$NON-NLS-1$ //$NON-NLS-2$
+        valueStr = StringUtils.replace(valueStr, "<br>", "<br/>"); //$NON-NLS-1$ //$NON-NLS-2$
+        valueStr = StringUtils.replace(valueStr, "<BR>", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
+        valueStr = StringUtils.replace(valueStr, "<br/>", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
+        valueStr = StringUtils.replace(valueStr, "<P><br />", "<P>"); //$NON-NLS-1$ //$NON-NLS-2$
 
         // replace <P>
-        valueStr = replacePByBr(valueStr, "p"); //$NON-NLS-1$
+        if(isRichEditValue != ControlSuper.RICHEDIT_FCK)
+            valueStr = replacePByBr(valueStr, "p"); //$NON-NLS-1$
         return valueStr;
     }
 
