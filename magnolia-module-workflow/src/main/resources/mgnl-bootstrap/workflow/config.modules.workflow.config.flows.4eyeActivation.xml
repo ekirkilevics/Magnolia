@@ -16,42 +16,31 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>b0366ff9-b103-4999-a197-ac89bc389376</sv:value>
   </sv:property>
-  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-    <sv:value>true</sv:value>
-  </sv:property>
   <sv:property sv:name="value" sv:type="String">
-    <sv:value>&lt;?xml version="1.0" encoding="UTF-8" ?&gt; &#xd;
-&lt;process-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.openwfe.org/flowdef_r1.5.0.xsd" name="4eyeActivation" revision="1.0"&gt;&#xd;
-  &lt;description language="default"&gt;worflow for web activation process.&lt;/description&gt; &#xd;
-&lt;sequence&gt;&#xd;
-&lt;set field="OK" value="false"/&gt;&#xd;
- &lt;participant ref="user-superuser" /&gt; &#xd;
-&lt;if&gt;&#xd;
-			    &#xd;
-			        &lt;equals field-value="OK" &#xd;
-				        other-value="true"/&gt;&#xd;
-			    &#xd;
-                            &lt;!-- then --&gt;&#xd;
-                            &lt;participant ref="command-activate" /&gt; &#xd;
-                            &lt;!-- else --&gt;&#xd;
-                            &lt;unset field="OK"/&gt;&#xd;
-                        &lt;/if&gt;&#xd;
-  &#xd;
+    <sv:value>&lt;process-definition  &#xd;
+  name="4eyeActivation" &#xd;
+  revision="1.0"&gt;&#xd;
+&#xd;
+  &lt;description language="default"&gt;workflow for activation process.&lt;/description&gt;&#xd;
+  &lt;sequence&gt;&#xd;
+    &lt;participant ref="group-publisher"/&gt;&#xd;
+    &lt;if&gt;&#xd;
+      &lt;equals field-value="action" other-value="proceed"/&gt;&#xd;
+      &lt;!-- then --&gt;&#xd;
+      &lt;participant ref="command-activate"/&gt;&#xd;
+    &lt;/if&gt;&#xd;
   &lt;/sequence&gt;&#xd;
-  &lt;/process-definition&gt;</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:created" sv:type="Date">
-    <sv:value>2006-04-19T18:22:15.330+08:00</sv:value>
+&lt;/process-definition&gt;</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>91e3c0ed-c849-4adc-b9b0-69749de3c7a9</sv:value>
+    </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
       <sv:value>2006-04-06T13:34:15.422+08:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:created" sv:type="Date">
-      <sv:value>2006-04-19T18:22:15.330+08:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
