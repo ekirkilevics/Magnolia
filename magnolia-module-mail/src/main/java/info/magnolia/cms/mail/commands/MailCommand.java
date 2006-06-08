@@ -10,13 +10,12 @@
  * Copyright 2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module.owfe.commands.simple;
+package info.magnolia.cms.mail.commands;
 
+import info.magnolia.cms.mail.MailConstants;
 import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MgnlEmail;
-import info.magnolia.commands.ContextAttributes;
-import info.magnolia.module.owfe.WorkflowConstants;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
@@ -38,12 +37,12 @@ public class MailCommand implements Command {
         }
 
         try {
-            String mailTo = (String) ctx.get(ContextAttributes.P_MAILTO);;
+            String mailTo = (String) ctx.get(MailConstants.ATTRIBUTE_MAILTO);;
             ctx.put("user",mailTo);
             if (log.isDebugEnabled()) {
                 log.debug("mail receiver list: " + mailTo);
             }
-            String mailTemplate = (String) ctx.get(ContextAttributes.P_MAILTEMPLATE);
+            String mailTemplate = (String) ctx.get(MailConstants.ATTRIBUTE_MAILTEMPLATE);
             log.info("mail template: " + mailTemplate);
 
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
@@ -51,8 +50,8 @@ public class MailCommand implements Command {
             // FIXME
             // MgnlEmail email = factory.getEmailFromTemplate(mailTemplate, ctx);
             MgnlEmail email= null;
-            email.setFrom(WorkflowConstants.WORKFLOW_EMAIL_FROM_FIELD);
-            email.setSubject(WorkflowConstants.WORKFLOW_EMAIL_SUBJECT_FIELD);
+            email.setFrom(MailConstants.WORKFLOW_EMAIL_FROM_FIELD);
+            email.setSubject(MailConstants.WORKFLOW_EMAIL_SUBJECT_FIELD);
             // FIXME
             //email.setParameters(params);
             email.setToList(factory.convertEmailList(mailTo));
