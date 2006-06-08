@@ -16,10 +16,15 @@ import info.magnolia.cms.i18n.MessagesManager;
 
 import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
 
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -53,12 +58,17 @@ public class DialogDate extends DialogEditWithButton {
             pattern += "TXX:XX:XX"; //$NON-NLS-1$
         }
         this.setConfig("onchange", "mgnlDialogDatePatternCheck(this,'" + pattern + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        if (this.getWebsiteNode() != null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
+        boolean exist = this.getWebsiteNode().getNodeData(this.getName()).isExist();
+        if (this.getWebsiteNode() != null && exist) {
             Calendar valueCalendar = this.getWebsiteNode().getNodeData(this.getName()).getDate();
 
+            // valueCalendar is in UTC  turn it back into the current timezone
             if (valueCalendar != null) {
                 Date valueDate = valueCalendar.getTime();
-                this.setValue(DateFormatUtils.formatUTC(valueDate, format));
+                Calendar c = Calendar.getInstance(); // this has the default timezone for the server
+                c.setTime(valueDate);
+                this.setValue(DateFormatUtils.format(c.getTime(), format));
+
             }
         }
         // check this!

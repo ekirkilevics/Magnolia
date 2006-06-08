@@ -15,11 +15,7 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.*;
 import info.magnolia.cms.gui.control.ControlSuper;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
@@ -29,34 +25,29 @@ import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.LinkUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.Value;
-import javax.jcr.ValueFactory;
-
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.commons.lang.time.DateFormatUtils;
 import org.devlib.schmidt.imageinfo.ImageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.text.SimpleDateFormat;
+import java.text.ParseException;
 
 
 /**
@@ -230,6 +221,7 @@ public class SaveHandlerImpl implements SaveHandler {
         else {
             name = saveInfo;
         }
+
         if (type == PropertyType.BINARY) {
             processBinary(node, name);
         }
@@ -241,9 +233,32 @@ public class SaveHandlerImpl implements SaveHandler {
             else if (isRichEditValue != ControlSuper.RICHEDIT_NONE) {
                 processRichEdit(node, name, type, isRichEditValue, encoding, values);
             }
+            else if(type == PropertyType.DATE) {
+                processDate(node, name, type, valueType, encoding, values);
+            }
             else {
                 processCommon(node, name, type, valueType, encoding, values);
             }
+        }
+    }
+
+    protected void processDate(Content node, String name, int type, int valueType, int encoding, String[] values) {
+        if(StringUtils.isEmpty(values[0]))
+            return;
+        try {
+            String simpleDate = "yyyy-MM-dd";
+            String longDate = "yyyy-MM-dd'T'HH:mm:ss";
+            SimpleDateFormat sdf;
+            if(values[0].length()>simpleDate.length())
+                sdf = new SimpleDateFormat(longDate);
+            else
+                sdf = new SimpleDateFormat(simpleDate);
+            Date value = sdf.parse(values[0]);
+            Calendar instance = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
+            instance.setTimeInMillis(value.getTime());
+            NodeDataUtil.getOrCreate(node,name).setValue(instance);
+        } catch (Exception e) {
+            log.error("Could not update date value of node:"+node.getHandle()+" of property:"+name);
         }
     }
 
@@ -260,7 +275,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @throws AccessDeniedException
      */
     protected void processRichEdit(Content node, String name, int type, int isRichEditValue, int encoding,
-        String[] values) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+                                   String[] values) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         String valueStr = StringUtils.EMPTY;
         if (values != null) {
             valueStr = values[0]; // values is null when the expected field would not exis, e.g no
@@ -462,16 +477,9 @@ public class SaveHandlerImpl implements SaveHandler {
     protected void processWriteCommon(Content node, String name, String valueStr, int type)
         throws AccessDeniedException, RepositoryException {
         Value value = this.getValue(valueStr, type);
-
-        NodeData data = node.getNodeData(name);
-
         if (null != value) {
-            if (data.isExist()) {
-                data.setValue(value);
-            }
-            else {
-                node.createNodeData(name, value);
-            }
+            NodeData data = NodeDataUtil.getOrCreate(node,name);
+            data.setValue(value);
         }
     }
 
@@ -853,7 +861,7 @@ public class SaveHandlerImpl implements SaveHandler {
         if (doc != null) {
             if (!data.isExist()) {
                 data = node.createNodeData(name, PropertyType.BINARY);
-          
+
                     log.debug("creating under - {}", node.getHandle()); //$NON-NLS-1$
                     log.debug("creating node data for binary store - {}", name); //$NON-NLS-1$
 
