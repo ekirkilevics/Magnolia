@@ -16,7 +16,9 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
+import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -207,24 +209,19 @@ public class MgnlUser implements User {
             }
 
             if (groups != null) {
-                Collection c = groups.getChildren(ItemType.CONTENTNODE);
+                Collection c = groups.getNodeDataCollection();
                 Iterator it = c.iterator();
                 while (it.hasNext()) {
-                    Content ct = (Content) it.next();
-
-                    if (ct == null) {
-                        log.error("group node is null");
-                        continue;
-                    }
-                    String s = ct.getTitle();
-                    list.add(s);
+                    NodeData nd = (NodeData) it.next();
+                    String uuid = nd.getString();
+                    Content group = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS).getContentByUUID(uuid);
+                    list.add(group.getName());
                 }
             }
 
         }
         catch (Exception e) {
-
-            log.warn("can not add group reference to user.", e);
+            log.warn("cant read groups of user.", e);
         }
 
         return list;
@@ -234,32 +231,29 @@ public class MgnlUser implements User {
         ArrayList list = new ArrayList();
 
         try {
-            Content groups = null;
+            Content roles = null;
             try {
                 // get "groups" node under node "user"
-                groups = userNode.getContent("roles");
+                roles = userNode.getContent("roles");
             }
             catch (javax.jcr.PathNotFoundException e) {
-                log.warn("the user " + getName() + " does have not groups node");
+                log.warn("the user " + getName() + " does have not roles node");
             }
 
-            if (groups != null) {
-                Collection c = groups.getChildren(ItemType.CONTENTNODE);
+            if (roles != null) {
+                Collection c = roles.getNodeDataCollection();
                 Iterator it = c.iterator();
                 while (it.hasNext()) {
-                    Content ct = (Content) it.next();
-                    if (ct == null) {
-                        log.error("group node is null");
-                        continue;
-                    }
-                    list.add(ct);
+                    NodeData nd = (NodeData) it.next();
+                    String uuid = nd.getString();
+                    Content role = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES).getContentByUUID(uuid);
+                    list.add(role.getName());
                 }
             }
 
         }
         catch (Exception e) {
-
-            log.warn("can not add group reference to user.", e);
+            log.warn("can't read roles of user.", e);
         }
 
         return list;
