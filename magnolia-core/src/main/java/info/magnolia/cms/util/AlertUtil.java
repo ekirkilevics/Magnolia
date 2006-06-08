@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
 import org.apache.commons.lang.StringUtils;
@@ -24,11 +25,6 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision$ ($Author$)
  */
 public class AlertUtil {
-
-    /**
-     * The key to store the
-     */
-    public static String MESSAGE_ATTRIBUTE = "mgnlAlertMsg";
 
     /**
      * Util: do not instantiate.
@@ -44,7 +40,7 @@ public class AlertUtil {
 
     public static void setMessage(String msg) {
         if (!isMessageSet()) {
-            MgnlContext.setAttribute(MESSAGE_ATTRIBUTE, msg);
+            MgnlContext.setAttribute(Context.ATTRIBUTE_MESSAGE, msg);
         }
     }
 
@@ -63,7 +59,7 @@ public class AlertUtil {
      * @return true if set
      */
     public static boolean isMessageSet() {
-        return StringUtils.isNotEmpty((String) MgnlContext.getAttribute(MESSAGE_ATTRIBUTE));
+        return StringUtils.isNotEmpty((String) MgnlContext.getAttribute(Context.ATTRIBUTE_MESSAGE));
     }
 
     /**
@@ -72,7 +68,7 @@ public class AlertUtil {
      * @return the message
      */
     public static String getMessage() {
-        return (String) MgnlContext.getAttribute(MESSAGE_ATTRIBUTE);
+        return (String) MgnlContext.getAttribute(Context.ATTRIBUTE_MESSAGE);
     }
 
     /**
