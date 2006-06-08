@@ -22,7 +22,7 @@ import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.owfe.WorkflowConstants;
+import info.magnolia.module.workflow.WorkflowConstants;
 
 import java.io.InputStream;
 import java.util.ArrayList;

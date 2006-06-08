@@ -18,10 +18,10 @@ import java.util.Map;
 
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
-import info.magnolia.module.owfe.WorkflowConstants;
-import info.magnolia.module.owfe.WorkflowModule;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
+import info.magnolia.module.workflow.WorkflowConstants;
+import info.magnolia.module.workflow.WorkflowModule;
 import openwfe.org.engine.workitem.AttributeUtils;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;

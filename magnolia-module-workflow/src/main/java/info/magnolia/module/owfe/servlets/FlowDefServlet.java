@@ -15,10 +15,10 @@ package info.magnolia.module.owfe.servlets;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.module.owfe.WorkflowUtil;
-import info.magnolia.module.owfe.WorkflowConstants;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRWorkItemAPI;
+import info.magnolia.module.workflow.WorkflowConstants;
+import info.magnolia.module.workflow.WorkflowUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;

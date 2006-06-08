@@ -17,8 +17,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.module.owfe.WorkflowConstants;
 import info.magnolia.module.owfe.servlets.FlowDefServlet;
+import info.magnolia.module.workflow.WorkflowConstants;
 
 import java.io.File;
 import java.io.FileOutputStream;

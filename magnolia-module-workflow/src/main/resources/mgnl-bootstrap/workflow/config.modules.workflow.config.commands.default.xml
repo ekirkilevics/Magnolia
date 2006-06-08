@@ -104,7 +104,7 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>info.magnolia.module.owfe.commands.simple.ActivationCommand</sv:value>
+        <sv:value>info.magnolia.module.workflow.commands.simple.ActivationCommand</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
         <sv:value>2006-04-02T00:04:59.229+08:00</sv:value>
@@ -282,7 +282,7 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>info.magnolia.module.owfe.commands.flow.TimeBasedFlowActivationCommand</sv:value>
+        <sv:value>info.magnolia.module.workflow.commands.flow.TimeBasedFlowActivationCommand</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
         <sv:value>2006-04-02T00:04:59.239+08:00</sv:value>
@@ -371,7 +371,7 @@
         <sv:value>true</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>info.magnolia.module.owfe.commands.simple.DeactivationCommand</sv:value>
+        <sv:value>info.magnolia.module.workflow.commands.simple.DeactivationCommand</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:created" sv:type="Date">
         <sv:value>2006-04-02T00:04:59.249+08:00</sv:value>

@@ -10,7 +10,7 @@
  * Copyright 2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module.owfe;
+package info.magnolia.module.workflow;
 
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;

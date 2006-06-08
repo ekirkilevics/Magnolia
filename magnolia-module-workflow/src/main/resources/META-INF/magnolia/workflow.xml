@@ -3,7 +3,7 @@
   <name>workflow</name>
   <displayName>Workflow</displayName>
   <description>Workflow using OpenWFE</description>
-  <class>info.magnolia.module.owfe.WorkflowModule</class>
+  <class>info.magnolia.module.workflow.WorkflowModule</class>
   <version>3.0</version>
   <dependencies>
     <dependency>
@@ -13,7 +13,7 @@
   </dependencies>
   <servlets>
     <servlet>
-      <class>info.magnolia.module.owfe.servlets.FlowDefServlet</class>
+      <class>info.magnolia.module.workflow.servlets.FlowDefServlet</class>
       <mappings>
         <mapping>/.magnolia/flows</mapping>
       </mappings>

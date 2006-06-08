@@ -89,7 +89,7 @@
         <sv:value>37ef3d1f-4f45-4a0b-bc5b-15652de554d2</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>info.magnolia.module.owfe.commands.simple.VersionCommand</sv:value>
+        <sv:value>info.magnolia.module.workflow.commands.simple.VersionCommand</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -129,7 +129,7 @@
         <sv:value>02f6828d-9a8c-40d2-a0eb-b3e53170b5df</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>info.magnolia.module.owfe.commands.flow.FlowCommand</sv:value>
+        <sv:value>info.magnolia.module.workflow.commands.flow.FlowCommand</sv:value>
       </sv:property>
       <sv:property sv:name="workflowName" sv:type="String">
         <sv:value>4eyeActivation</sv:value>

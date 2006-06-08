@@ -16,7 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.Context;
-import info.magnolia.module.owfe.WorkflowConstants;
+import info.magnolia.module.workflow.WorkflowConstants;
 import openwfe.org.engine.workitem.LaunchItem;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

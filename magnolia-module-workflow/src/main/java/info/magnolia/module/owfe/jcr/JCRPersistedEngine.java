@@ -12,7 +12,7 @@
  */
 package info.magnolia.module.owfe.jcr;
 
-import info.magnolia.module.owfe.WorkflowConstants;
+import info.magnolia.module.workflow.WorkflowConstants;
 import openwfe.org.ServiceException;
 import openwfe.org.embed.impl.engine.FsPersistedEngine;
 import openwfe.org.embed.impl.engine.PersistedEngine;

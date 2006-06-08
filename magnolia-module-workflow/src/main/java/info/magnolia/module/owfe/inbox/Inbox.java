@@ -25,7 +25,7 @@ import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.lists.AbstractList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
-import info.magnolia.module.owfe.WorkflowUtil;
+import info.magnolia.module.workflow.WorkflowUtil;
 
 import java.util.Iterator;
 
