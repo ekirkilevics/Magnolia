@@ -6,8 +6,8 @@
     <relativePath>../magnolia-project/pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>magnolia-module-openwfe</artifactId>
-  <name>magnolia-module-openwfe</name>
+  <artifactId>magnolia-module-workflow</artifactId>
+  <name>magnolia-module-workflow</name>
   <version>3.0-rc1-SNAPSHOT</version>
   <dependencies>
     <dependency>
@@ -97,7 +97,7 @@
     <site>
       <id>magnolia</id>
       <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30/magnolia-module-openwfe</url>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30/magnolia-module-workflow</url>
     </site>
   </distributionManagement>
 </project>

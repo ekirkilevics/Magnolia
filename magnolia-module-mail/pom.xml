@@ -27,7 +27,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-openwfe</artifactId>
+      <artifactId>magnolia-module-workflow</artifactId>
       <version>3.0-rc1-SNAPSHOT</version>
     </dependency>
 	<dependency>
