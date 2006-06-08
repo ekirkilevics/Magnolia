@@ -13,6 +13,12 @@
 package info.magnolia.module.admininterface.trees;
 
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
+import info.magnolia.cms.exchange.Syndicator;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.context.MgnlContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,4 +40,29 @@ public class RolesTreeHandler extends AdminTreeMVCHandler {
         super(name, request, response);
         this.setConfiguration(new RolesTreeConfiguration());
     }
+
+    /**
+     * Create the <code>Syndicator</code> to activate the specified path.
+     * @param path node path to be activated
+     * @return the <code>Syndicator</code> used to activate
+     */
+    public Syndicator getActivationSyndicator(String path) {
+        /*
+         * Here rule defines which content types to collect, its a resposibility of the caller ro set this, it will be
+         * different in every hierarchy, for instance - in website tree recursive activation : rule will allow
+         * mgnl:contentNode, mgnl:content and nt:file - in website tree non-recursive activation : rule will allow
+         * mgnl:contentNode and nt:file only
+         */
+        Rule rule = new Rule();
+        rule.addAllowType(ItemType.NT_METADATA);
+        rule.addAllowType(ItemType.ROLE.getSystemName());
+        rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
+
+        Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
+        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
+            .getRepository()), rule);
+
+        return syndicator;
+    }
+
 }

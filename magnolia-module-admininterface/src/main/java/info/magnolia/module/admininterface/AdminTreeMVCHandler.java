@@ -15,19 +15,27 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.core.*;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.PathNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -119,6 +127,13 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         return getName();
     }
 
+    /**
+     * @return the current HierarchyManager
+     */
+    public HierarchyManager getHierarchyManager() {
+        return MgnlContext.getHierarchyManager(this.getRepository());
+    }
+
     public AdminTreeMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
 
@@ -185,13 +200,13 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
 
         return COMMAND_SHOW_TREE;
     }
-    
+
     /**
-     * TODO: this is a temporary solution 
+     * TODO: this is a temporary solution
      */
     protected Context getCommandContext(String commandName) {
         Context context = MgnlContext.getInstance();
-        
+
         // set general parameters (repository, path, ..)
         context.put(Context.ATTRIBUTE_REPOSITORY, this.getRepository());
         context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
@@ -215,7 +230,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
 
     /**
      * Create a new node and show the tree
-     * @return
+     * @return newly created content node
      */
     public String createNode() {
         String createItemType = Tree.ITEM_TYPE_NODEDATA;
@@ -271,7 +286,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
     private void copyOrMove(int action) throws ExchangeException, RepositoryException {
         String pathClipboard = this.getRequest().getParameter("pathClipboard"); //$NON-NLS-1$
         int pasteType = Integer.parseInt(this.getRequest().getParameter("pasteType")); //$NON-NLS-1$
-        newPath = getTree().pasteNode(pathClipboard, pathSelected, pasteType, action);
+        newPath = pasteNode(pathClipboard, pathSelected, pasteType, action);
 
         if (pasteType == Tree.PASTETYPE_SUB) {
             pathOpen = pathSelected;
@@ -284,11 +299,32 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         pathSelected = null;
     }
 
+    public void deleteNode(String parentPath, String label) throws ExchangeException, RepositoryException {
+        Content parentNode = getHierarchyManager().getContent(parentPath);
+        String path;
+        if (!parentPath.equals("/")) { //$NON-NLS-1$
+            path = parentPath + "/" + label; //$NON-NLS-1$
+        }
+        else {
+            path = "/" + label; //$NON-NLS-1$
+        }
+        this.deActivateNode(path);
+        parentNode.delete(label);
+        parentNode.save();
+    }
+
+    public void deleteNode(String path) throws Exception {
+        String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
+        String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
+        deleteNode(parentPath, label);
+    }
+
+
     public String delete() {
         String deleteNode = this.getRequest().getParameter("deleteNode"); //$NON-NLS-1$
         try {
             synchronized (ExclusiveWrite.getInstance()) {
-                getTree().deleteNode(path, deleteNode);
+                deleteNode(path, deleteNode);
             }
         }
         catch (Exception e) {
@@ -302,7 +338,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         boolean recursive = (this.getRequest().getParameter("recursive") != null); //$NON-NLS-1$
         // by default every CONTENTNODE under the specified CONTENT node is activated
         try {
-            getTree().activateNode(pathSelected, recursive, true);
+            activateNode(pathSelected, recursive);
         }
         catch (Exception e) {
             log.error("can't activate", e);
@@ -313,13 +349,192 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
 
     public String deactivate() {
         try {
-            getTree().deActivateNode(pathSelected);
+            deActivateNode(pathSelected);
         }
         catch (Exception e) {
             log.error("can't deactivate", e);
             AlertUtil.setMessage(MessagesManager.get("tree.error.deactivate") + " " + AlertUtil.getExceptionMessage(e));
         }
         return VIEW_TREE;
+    }
+
+    /**
+     * @param path
+     * @param recursive
+     */
+    public void activateNode(String path, boolean recursive) throws ExchangeException,
+        RepositoryException {
+
+        String parentPath = StringUtils.substringBeforeLast(path, "/");
+        if (StringUtils.isEmpty(parentPath)) {
+            parentPath = "/";
+        }
+
+        Syndicator syndicator = getActivationSyndicator(path);
+        if (recursive) {
+            activateNodeRecursive(syndicator, parentPath, path);
+        }
+        else {
+            syndicator.activate(parentPath, path);
+        }
+    }
+
+    /**
+     * recursive activation
+     * Override this method to provide tree specific node recursion
+     * @param syndicator
+     * @param parentPath
+     * @param path
+     */
+    public void activateNodeRecursive(Syndicator syndicator, String parentPath, String path) throws ExchangeException,
+        RepositoryException {
+        syndicator.activate(parentPath, path);
+        Iterator children = this.getTree().getHierarchyManager().getContent(path).getChildren().iterator();
+        while (children.hasNext()) {
+            this.activateNodeRecursive(syndicator, path, ((Content) children.next()).getHandle());
+        }
+    }
+
+    /**
+     * Create the <code>Syndicator</code> to activate the specified path.
+     * method implementation will make sure that proper node collection Rule and Sysdicator is used
+     * @param path node path to be activated
+     * @return the <code>Syndicator</code> used to activate
+     */
+    public abstract Syndicator getActivationSyndicator(String path);
+
+    public void deActivateNode(String path) throws ExchangeException, RepositoryException {
+        // do not deactivate node datas
+        if (this.getTree().getHierarchyManager().isNodeData(path)) {
+            return;
+        }
+
+        Syndicator syndicator = getDeactivationSyndicator(path);
+        syndicator.deActivate(path);
+    }
+
+    /**
+     * Create the <code>Syndicator</code> to deactivate the specified path.
+     * @param path node path to be deactivated
+     * @return the <code>Syndicator</code> used to deactivate
+     */
+    protected Syndicator getDeactivationSyndicator(String path) {
+        Rule rule = new Rule();
+        Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
+        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
+            .getRepository()), rule);
+        return syndicator;
+    }
+
+    public Content copyMoveNode(String source, String destination, boolean move) throws ExchangeException,
+        RepositoryException {
+        // todo: ??? generic -> RequestInterceptor.java
+        if (getHierarchyManager().isExist(destination)) {
+            String parentPath = StringUtils.substringBeforeLast(destination, "/"); //$NON-NLS-1$
+            String label = StringUtils.substringAfterLast(destination, "/"); //$NON-NLS-1$
+            label = Path.getUniqueLabel(getHierarchyManager(), parentPath, label);
+            destination = parentPath + "/" + label; //$NON-NLS-1$
+        }
+        if (move) {
+            if (destination.indexOf(source + "/") == 0) { //$NON-NLS-1$
+                // todo: disable this possibility in javascript
+                // move source into destinatin not possible
+                return null;
+            }
+            this.deActivateNode(source);
+            try {
+                getHierarchyManager().moveTo(source, destination);
+            }
+            catch (Exception e) {
+                // try to move below node data
+                return null;
+            }
+        }
+        else {
+            // copy
+            getHierarchyManager().copyTo(source, destination);
+        }
+        // SessionAccessControl.invalidateUser(this.getRequest());
+        Content newContent = getHierarchyManager().getContent(destination);
+        try {
+            newContent.updateMetaData();
+            newContent.getMetaData().setUnActivated();
+        }
+        catch (Exception e) {
+            if (log.isDebugEnabled())
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+        }
+        newContent.save();
+        return newContent;
+    }
+
+    public void moveNode(String source, String destination) throws ExchangeException, RepositoryException {
+        this.copyMoveNode(source, destination, true);
+    }
+
+    public void copyNode(String source, String destination) throws ExchangeException, RepositoryException {
+        this.copyMoveNode(source, destination, false);
+    }
+
+    public String renameNode(String newLabel) throws AccessDeniedException, ExchangeException, PathNotFoundException,
+        RepositoryException {
+        String returnValue;
+        String parentPath = StringUtils.substringBeforeLast(this.getPath(), "/"); //$NON-NLS-1$
+        newLabel = Path.getValidatedLabel(newLabel);
+
+        // don't rename if it uses the same name as the current
+        if(this.getPath().endsWith("/" + newLabel)){
+            return newLabel;
+        }
+
+        String dest = parentPath + "/" + newLabel; //$NON-NLS-1$
+        if (getHierarchyManager().isExist(dest)) {
+            newLabel = Path.getUniqueLabel(getHierarchyManager(), parentPath, newLabel);
+            dest = parentPath + "/" + newLabel; //$NON-NLS-1$
+        }
+        this.deActivateNode(this.getPath());
+
+        if (log.isInfoEnabled()) {
+            log.info("Moving node from " + this.getPath() + " to " + dest); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        if (getHierarchyManager().isNodeData(this.getPath())) {
+            Content parentPage = getHierarchyManager().getContent(parentPath);
+            NodeData newNodeData = parentPage.createNodeData(newLabel);
+            NodeData existingNodeData = getHierarchyManager().getNodeData(this.getPath());
+            newNodeData.setValue(existingNodeData.getString());
+            existingNodeData.delete();
+            dest = parentPath;
+        }
+        else {
+            // we can't rename a node. we must move
+            // we must place the node at the same position
+            Content current = getHierarchyManager().getContent(this.getPath());
+            Content parent = current.getParent();
+            String placedBefore = null;
+            for (Iterator iter = parent.getChildren(current.getNodeTypeName()).iterator(); iter.hasNext();) {
+                Content child = (Content) iter.next();
+                if (child.getHandle().equals(this.getPath())) {
+                    if (iter.hasNext()) {
+                        child = (Content) iter.next();
+                        placedBefore = child.getName();
+                    }
+                }
+            }
+
+            getHierarchyManager().moveTo(this.getPath(), dest);
+
+            // now set at the same place as before
+            if (placedBefore != null) {
+                parent.orderBefore(newLabel, placedBefore);
+            }
+        }
+
+        Content newPage = getHierarchyManager().getContent(dest);
+        returnValue = newLabel;
+        newPage.updateMetaData();
+        newPage.save();
+
+        return returnValue;
     }
 
     /**
@@ -389,7 +604,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
     protected String rename(String value) {
         try {
             synchronized (ExclusiveWrite.getInstance()) {
-                return getTree().renameNode(value);
+                return renameNode(value);
             }
         }
         catch (Exception e) {
@@ -397,6 +612,70 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
             AlertUtil.setMessage(MessagesManager.get("tree.error.rename") + " " + AlertUtil.getExceptionMessage(e));
         }
         return StringUtils.EMPTY;
+    }
+
+    public String pasteNode(String pathOrigin, String pathSelected, int pasteType, int action)
+        throws ExchangeException, RepositoryException {
+        boolean move = false;
+        if (action == Tree.ACTION_MOVE) {
+            move = true;
+        }
+        String label = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
+        String slash = "/"; //$NON-NLS-1$
+        if (pathSelected.equals("/")) { //$NON-NLS-1$
+            slash = StringUtils.EMPTY;
+        }
+        String destination = pathSelected + slash + label;
+        if (pasteType == Tree.PASTETYPE_SUB && action != Tree.ACTION_COPY && destination.equals(pathOrigin)) {
+            // drag node to parent node: move to last position
+            pasteType = Tree.PASTETYPE_LAST;
+        }
+        if (pasteType == Tree.PASTETYPE_SUB) {
+            destination = pathSelected + slash + label;
+            Content touchedContent = this.copyMoveNode(pathOrigin, destination, move);
+            if (touchedContent == null) {
+                return StringUtils.EMPTY;
+            }
+            return touchedContent.getHandle();
+
+        }
+        else if (pasteType == Tree.PASTETYPE_LAST) {
+            // LAST only available for sorting inside the same directory
+            try {
+                Content touchedContent = getHierarchyManager().getContent(pathOrigin);
+                return touchedContent.getHandle();
+            }
+            catch (RepositoryException re) {
+                return StringUtils.EMPTY;
+            }
+        }
+        else {
+            try {
+                // PASTETYPE_ABOVE | PASTETYPE_BELOW
+                String nameSelected = StringUtils.substringAfterLast(pathSelected, "/"); //$NON-NLS-1$
+                String nameOrigin = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
+                Content tomove = getHierarchyManager().getContent(pathOrigin);
+                Content selected = getHierarchyManager().getContent(pathSelected);
+                if (tomove.getParent().getUUID().equals(selected.getParent().getUUID())) {
+                    tomove.getParent().orderBefore(nameOrigin, nameSelected);
+                    tomove.getParent().save();
+                }
+                else {
+                    String newOrigin = selected.getParent().getHandle() + "/" + nameOrigin;
+                    getHierarchyManager().moveTo(pathOrigin, newOrigin);
+                    Content newNode = getHierarchyManager().getContent(newOrigin);
+                    if (pasteType == Tree.PASTETYPE_ABOVE) {
+                        newNode.getParent().orderBefore(nameOrigin, nameSelected);
+                    }
+                }
+                return tomove.getHandle();
+            }
+            catch (RepositoryException re) {
+                re.printStackTrace();
+                log.error("Problem when pasting node", re);
+                return StringUtils.EMPTY;
+            }
+        }
     }
 
     /**
@@ -409,28 +688,32 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
 
         // an alert can happen if there were deactivation problems during a renaming
         if (AlertUtil.isMessageSet()) {
-            html.append("<input type=\"hidden\" id=\"mgnlMessage\" value=\"" + AlertUtil.getMessage() + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append("<input type=\"hidden\" id=\"mgnlMessage\" value=\"");
+            html.append(AlertUtil.getMessage());
+            html.append("\" />");
         }
 
         if (VIEW_TREE.equals(view) || VIEW_CREATE.equals(view) || VIEW_COPY_MOVE.equals(view)) {
             // if there was a node created we have not to set the pathes
-            if (view != VIEW_CREATE) {
+            if (!view.equals(VIEW_CREATE)) {
                 getTree().setPathOpen(pathOpen);
                 getTree().setPathSelected(pathSelected);
             }
 
             // after moving or copying
-            if (view == VIEW_COPY_MOVE) {
+            if (view.equals(VIEW_COPY_MOVE)) {
                 // pass new path to tree.js for selecting the newly created node
                 // NOTE: tree.js checks for this pattern; adapt it there, if any changes are made here
-                html.append("<input type=\"hidden\" id=\"mgnlSelectNode\" value=\"" + newPath + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
+                html.append("<input type=\"hidden\" id=\"mgnlSelectNode\" value=\"");
+                html.append(newPath);
+                html.append("\" />");
             }
 
             renderTree(html);
         }
 
         // after saving a column value
-        else if (view == VIEW_VALUE) {
+        else if (view.equals(VIEW_VALUE)) {
             html.append(displayValue);
         }
         this.getResponse().getWriter().print(html);
@@ -455,7 +738,9 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
             html.append("<title>Magnolia</title>"); //$NON-NLS-1$
             html.append("<script>window.onresize = mgnlTreeResize;</script>"); //$NON-NLS-1$
             html.append("</head>"); //$NON-NLS-1$
-            html.append("<body class=\"mgnlBgDark\" onload=\"" + tree.getJavascriptTree() + ".resizeOnload();\" >"); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append("<body class=\"mgnlBgDark\" onload=\"");
+            html.append(tree.getJavascriptTree());
+            html.append(".resizeOnload();\" >");
         }
 
         tree.setSnippetMode(snippetMode);
@@ -468,7 +753,9 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         this.getConfiguration().prepareFunctionBar(tree, this.isBrowseMode(), this.getRequest());
 
         if (!snippetMode) {
-            html.append("<div id=\"" + tree.getJavascriptTree() + "_DivSuper\" style=\"display:block;\">"); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append("<div id=\"");
+            html.append(tree.getJavascriptTree());
+            html.append("_DivSuper\" style=\"display:block;\">");
         }
         html.append(tree.getHtml());
         if (!snippetMode) {

@@ -94,6 +94,9 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
         RoleList roleList = new RoleListImpl();
         PrincipalCollection principalList = new PrincipalCollectionImpl();
         GroupList groupList = new GroupListImpl();
+
+        this.setACL(this.user, principalList);
+
         this.addGroups(this.user, principalList, groupList, roleList);
         this.addRoles(this.user, principalList, roleList);
         /**

@@ -20,15 +20,10 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.exchange.ExchangeException;
-import info.magnolia.cms.exchange.Syndicator;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
@@ -39,7 +34,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
@@ -397,26 +391,6 @@ public class Tree extends ControlImpl {
         return this.columnResizer;
     }
 
-    public void deleteNode(String parentPath, String label) throws ExchangeException, RepositoryException {
-        Content parentNode = getHierarchyManager().getContent(parentPath);
-        String path;
-        if (!parentPath.equals("/")) { //$NON-NLS-1$
-            path = parentPath + "/" + label; //$NON-NLS-1$
-        }
-        else {
-            path = "/" + label; //$NON-NLS-1$
-        }
-        this.deActivateNode(path);
-        parentNode.delete(label);
-        parentNode.save();
-    }
-
-    public void deleteNode(String path) throws Exception {
-        String parentPath = StringUtils.substringBeforeLast(path, "/"); //$NON-NLS-1$
-        String label = StringUtils.substringAfterLast(path, "/"); //$NON-NLS-1$
-        deleteNode(parentPath, label);
-    }
-
     public String createNode(String itemType) {
         return this.createNode("untitled", itemType); //$NON-NLS-1$
     }
@@ -461,10 +435,9 @@ public class Tree extends ControlImpl {
                     && itemType.equals(ItemType.CONTENT.getSystemName())) {
                     Iterator templates = TemplateManager.getInstance().getAvailableTemplates(
                         MgnlContext.getAccessManager(ContentRepository.CONFIG));
-                    while (templates.hasNext()) {
+                    if (templates.hasNext()) {
                         Template template = (Template) templates.next();
                         newNode.getMetaData().setTemplate(template.getName());
-                        break;
                     }
                 }
             }
@@ -598,273 +571,6 @@ public class Tree extends ControlImpl {
         return StringUtils.EMPTY;
     }
 
-    public String pasteNode(String pathOrigin, String pathSelected, int pasteType, int action)
-        throws ExchangeException, RepositoryException {
-        boolean move = false;
-        if (action == ACTION_MOVE) {
-            move = true;
-        }
-        String label = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
-        String slash = "/"; //$NON-NLS-1$
-        if (pathSelected.equals("/")) { //$NON-NLS-1$
-            slash = StringUtils.EMPTY;
-        }
-        String destination = pathSelected + slash + label;
-        if (pasteType == PASTETYPE_SUB && action != ACTION_COPY && destination.equals(pathOrigin)) {
-            // drag node to parent node: move to last position
-            pasteType = PASTETYPE_LAST;
-        }
-        if (pasteType == PASTETYPE_SUB) {
-            destination = pathSelected + slash + label;
-            Content touchedContent = this.copyMoveNode(pathOrigin, destination, move);
-            if (touchedContent == null) {
-                return StringUtils.EMPTY;
-            }
-            return touchedContent.getHandle();
-
-        }
-        else if (pasteType == PASTETYPE_LAST) {
-            // LAST only available for sorting inside the same directory
-            try {
-                Content touchedContent = getHierarchyManager().getContent(pathOrigin);
-                return touchedContent.getHandle();
-            }
-            catch (RepositoryException re) {
-                return StringUtils.EMPTY;
-            }
-        }
-        else {
-            try {
-                // PASTETYPE_ABOVE | PASTETYPE_BELOW
-                String nameSelected = StringUtils.substringAfterLast(pathSelected, "/"); //$NON-NLS-1$
-                String nameOrigin = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
-                Content tomove = getHierarchyManager().getContent(pathOrigin);
-                Content selected = getHierarchyManager().getContent(pathSelected);
-                if (tomove.getParent().getUUID().equals(selected.getParent().getUUID())) {
-                    tomove.getParent().orderBefore(nameOrigin, nameSelected);
-                    tomove.getParent().save();
-                }
-                else {
-                    String newOrigin = selected.getParent().getHandle() + "/" + nameOrigin;
-                    getHierarchyManager().moveTo(pathOrigin, newOrigin);
-                    Content newNode = getHierarchyManager().getContent(newOrigin);
-                    if (pasteType == PASTETYPE_ABOVE) {
-                        newNode.getParent().orderBefore(nameOrigin, nameSelected);
-                    }
-                }
-                return tomove.getHandle();
-            }
-            catch (RepositoryException re) {
-                re.printStackTrace();
-                log.error("Problem when pasting node", re);
-                return StringUtils.EMPTY;
-            }
-        }
-    }
-
-    public Content copyMoveNode(String source, String destination, boolean move) throws ExchangeException,
-        RepositoryException {
-        // todo: ??? generic -> RequestInterceptor.java
-        if (getHierarchyManager().isExist(destination)) {
-            String parentPath = StringUtils.substringBeforeLast(destination, "/"); //$NON-NLS-1$
-            String label = StringUtils.substringAfterLast(destination, "/"); //$NON-NLS-1$
-            label = Path.getUniqueLabel(getHierarchyManager(), parentPath, label);
-            destination = parentPath + "/" + label; //$NON-NLS-1$
-        }
-        if (move) {
-            if (destination.indexOf(source + "/") == 0) { //$NON-NLS-1$
-                // todo: disable this possibility in javascript
-                // move source into destinatin not possible
-                return null;
-            }
-            this.deActivateNode(source);
-            try {
-                getHierarchyManager().moveTo(source, destination);
-            }
-            catch (Exception e) {
-                // try to move below node data
-                return null;
-            }
-        }
-        else {
-            // copy
-            getHierarchyManager().copyTo(source, destination);
-        }
-        // SessionAccessControl.invalidateUser(this.getRequest());
-        Content newContent = getHierarchyManager().getContent(destination);
-        try {
-            newContent.updateMetaData();
-            newContent.getMetaData().setUnActivated();
-        }
-        catch (Exception e) {
-            if (log.isDebugEnabled())
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-        }
-        newContent.save();
-        return newContent;
-    }
-
-    public void moveNode(String source, String destination) throws ExchangeException, RepositoryException {
-        this.copyMoveNode(source, destination, true);
-    }
-
-    public void copyNode(String source, String destination) throws ExchangeException, RepositoryException {
-        this.copyMoveNode(source, destination, false);
-    }
-
-    public String renameNode(String newLabel) throws AccessDeniedException, ExchangeException, PathNotFoundException,
-        RepositoryException {
-        String returnValue = StringUtils.EMPTY;
-        String parentPath = StringUtils.substringBeforeLast(this.getPath(), "/"); //$NON-NLS-1$
-        newLabel = Path.getValidatedLabel(newLabel);
-
-        // don't rename if it uses the same name as the current
-        if(this.getPath().endsWith("/" + newLabel)){
-            return newLabel;
-        }
-
-        String dest = parentPath + "/" + newLabel; //$NON-NLS-1$
-        if (getHierarchyManager().isExist(dest)) {
-            newLabel = Path.getUniqueLabel(getHierarchyManager(), parentPath, newLabel);
-            dest = parentPath + "/" + newLabel; //$NON-NLS-1$
-        }
-        this.deActivateNode(this.getPath());
-
-        if (log.isInfoEnabled()) {
-            log.info("Moving node from " + this.getPath() + " to " + dest); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        if (getHierarchyManager().isNodeData(this.getPath())) {
-            Content parentPage = getHierarchyManager().getContent(parentPath);
-            NodeData newNodeData = parentPage.createNodeData(newLabel);
-            NodeData existingNodeData = getHierarchyManager().getNodeData(this.getPath());
-            newNodeData.setValue(existingNodeData.getString());
-            existingNodeData.delete();
-            dest = parentPath;
-        }
-        else {
-            // we can't rename a node. we must move
-            // we must place the node at the same position
-            Content current = getHierarchyManager().getContent(this.getPath());
-            Content parent = current.getParent();
-            String placedBefore = null;
-            for (Iterator iter = parent.getChildren(current.getNodeTypeName()).iterator(); iter.hasNext();) {
-                Content child = (Content) iter.next();
-                if (child.getHandle().equals(this.getPath())) {
-                    if (iter.hasNext()) {
-                        child = (Content) iter.next();
-                        placedBefore = child.getName();
-                    }
-                }
-            }
-
-            getHierarchyManager().moveTo(this.getPath(), dest);
-
-            // now set at the same place as before
-            if (placedBefore != null) {
-                parent.orderBefore(newLabel, placedBefore);
-            }
-        }
-
-        Content newPage = getHierarchyManager().getContent(dest);
-        returnValue = newLabel;
-        newPage.updateMetaData();
-        newPage.save();
-
-        return returnValue;
-    }
-
-    /**
-     * @param path
-     * @param recursive
-     * @param includeContentNodes
-     */
-    public void activateNode(String path, boolean recursive, boolean includeContentNodes) throws ExchangeException,
-        RepositoryException {
-
-        String parentPath = StringUtils.substringBeforeLast(path, "/");
-        if (StringUtils.isEmpty(parentPath)) {
-            parentPath = "/";
-        }
-
-        Syndicator syndicator = getActivationSyndicator(path, includeContentNodes);
-        if (recursive) {
-            activateNodeRecursive(syndicator, parentPath, path);
-        }
-        else {
-            syndicator.activate(parentPath, path);
-        }
-    }
-
-    /**
-     * recursive activation
-     * @param syndicator
-     * @param parentPath
-     * @param path
-     */
-    private void activateNodeRecursive(Syndicator syndicator, String parentPath, String path) throws ExchangeException,
-        RepositoryException {
-        syndicator.activate(parentPath, path);
-        Iterator children = this.hm.getContent(path).getChildren().iterator();
-        while (children.hasNext()) {
-            this.activateNodeRecursive(syndicator, path, ((Content) children.next()).getHandle());
-        }
-    }
-
-    /**
-     * Create the <code>Syndicator</code> to activate the specified path.
-     * @param path node path to be activated
-     * @param includeContentNodes flag if the activation should consider ContentNodes
-     * @return the <code>Syndicator</code> used to activate
-     */
-    protected Syndicator getActivationSyndicator(String path, boolean includeContentNodes) {
-        /*
-         * Here rule defines which content types to collect, its a resposibility of the caller ro set this, it will be
-         * different in every hierarchy, for instance - in website tree recursive activation : rule will allow
-         * mgnl:contentNode, mgnl:content and nt:file - in website tree non-recursive activation : rule will allow
-         * mgnl:contentNode and nt:file only
-         */
-        Rule rule = new Rule();
-        if (includeContentNodes) {
-            rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
-        }
-        rule.addAllowType(ItemType.NT_METADATA);
-        rule.addAllowType(ItemType.NT_RESOURCE);
-        rule.addAllowType(ItemType.USER.getSystemName());
-        rule.addAllowType(ItemType.GROUP.getSystemName());
-        rule.addAllowType(ItemType.ROLE.getSystemName());
-
-        Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
-            .getRepository()), rule);
-
-        return syndicator;
-    }
-
-    public void deActivateNode(String path) throws ExchangeException, RepositoryException {
-        // do not deactivate node datas
-        if (getHierarchyManager().isNodeData(path)) {
-            return;
-        }
-
-        Syndicator syndicator = getDeactivationSyndicator(path);
-        syndicator.deActivate(path);
-    }
-
-    /**
-     * Create the <code>Syndicator</code> to deactivate the specified path.
-     * @param path node path to be deactivated
-     * @return the <code>Syndicator</code> used to deactivate
-     */
-    protected Syndicator getDeactivationSyndicator(String path) {
-        Rule rule = new Rule();
-        rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
-        rule.addAllowType(ItemType.NT_FILE);
-        Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
-            .getRepository()), rule);
-        return syndicator;
-    }
-
     public String getHtml() {
         StringBuffer html = new StringBuffer();
         if (!this.getSnippetMode()) {
@@ -925,7 +631,7 @@ public class Tree extends ControlImpl {
         params.put("PASTETYPE_SUB", new Integer(Tree.PASTETYPE_SUB));
         params.put("DOCROOT", Tree.DOCROOT);
         params.put("lineId", lineId);
-        params.put("permissionWrite", new Boolean(permissionWrite));
+        params.put("permissionWrite", Boolean.valueOf(permissionWrite));
         params.put("columns", this.getColumns());
         params.put("menu", this.getMenu());
         params.put("treeCssClass", "mgnlTreeDiv");
@@ -941,7 +647,7 @@ public class Tree extends ControlImpl {
 
     public String getHtmlChildren() {
         StringBuffer html = new StringBuffer();
-        Content parentNode = null;
+        Content parentNode;
         try {
             parentNode = getHierarchyManager().getContent(this.getPathCurrent());
             // loop the children of the different item types
@@ -983,8 +689,8 @@ public class Tree extends ControlImpl {
                 Object o = it.next();
                 Content c = null;
                 NodeData d = null;
-                String handle = StringUtils.EMPTY;
-                String name = StringUtils.EMPTY;
+                String handle;
+                String name;
                 boolean hasSub = false;
                 boolean showSub = false;
                 boolean isActivated = false;
@@ -1063,49 +769,42 @@ public class Tree extends ControlImpl {
                 String jsHighlightLine = this.javascriptTree + ".moveNodeHighlightLine('" + idPre + "_LineInter');"; //$NON-NLS-1$ //$NON-NLS-2$
                 String jsResetLine = this.javascriptTree + ".moveNodeResetLine('" + idPre + "_LineInter');"; //$NON-NLS-1$ //$NON-NLS-2$
 
-                int maskWidth = left;
-                if (maskWidth < 1) {
-                    maskWidth = 1;
-                }
-
                 // lineInter: line between nodes, to allow set cursor between nodes
                 // try to avoid blank images, setting js actions on divs should be ok
                 if (permissionWriteParent) {
-                    html.append("<div id=\"" //$NON-NLS-1$
-                        + idPre
-                        + "_LineInter\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\"" //$NON-NLS-1$
-                        + jsHighlightLine
-                        + "\" onmouseout=\"" //$NON-NLS-1$
-                        + jsResetLine
-                        + "\" onmousedown=\"" //$NON-NLS-1$
-                        + this.javascriptTree
-                        + ".pasteNode('" //$NON-NLS-1$
-                        + handle
-                        + "'," //$NON-NLS-1$
-                        + Tree.PASTETYPE_ABOVE
-                        + ",true);\" ></div>"); //$NON-NLS-1$
+                    html.append("<div id=\"");
+                    html.append(idPre);
+                    html.append("_LineInter\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\"");
+                    html.append(jsHighlightLine);
+                    html.append("\" onmouseout=\"");
+                    html.append(jsResetLine);
+                    html.append("\" onmousedown=\"");
+                    html.append(this.javascriptTree);
+                    html.append(".pasteNode('");
+                    html.append(handle);
+                    html.append("'," + Tree.PASTETYPE_ABOVE + ",true);\" ></div>");
                 }
                 else {
-                    html.append("<div id=\"" //$NON-NLS-1$
-                        + idPre
-                        + "_LineInter\" class=\"mgnlTreeLineInter mgnlLineDisabled\"></div>"); //$NON-NLS-1$
+                    html.append("<div id=\"");
+                    html.append(idPre);
+                    html.append("_LineInter\" class=\"mgnlTreeLineInter mgnlLineDisabled\"></div>");
                 }
 
-                html.append("<div id=\"" //$NON-NLS-1$
-                    + idPre
-                    + "_DivMain\" style=\"position:relative;top:0;left:0;width:100%;height:18px;\">"); //$NON-NLS-1$
+                html.append("<div id=\"");
+                html.append(idPre);
+                html.append("_DivMain\" style=\"position:relative;top:0;left:0;width:100%;height:18px;\">");
                 html.append("&nbsp;"); // do not remove! //$NON-NLS-1$
                 int paddingLeft = left + 8;
                 if (paddingLeft < 8) {
                     paddingLeft = 8;
                 }
-                html.append("<span id=\"" //$NON-NLS-1$
-                    + idPre
-                    + "_Column0Outer\" class=\"mgnlTreeColumn " //$NON-NLS-1$
-                    + this.javascriptTree
-                    + "CssClassColumn0\" style=\"padding-left:" //$NON-NLS-1$
-                    + paddingLeft
-                    + "px;\">"); //$NON-NLS-1$
+                html.append("<span id=\"");
+                html.append(idPre);
+                html.append("_Column0Outer\" class=\"mgnlTreeColumn ");
+                html.append(this.javascriptTree);
+                html.append("CssClassColumn0\" style=\"padding-left:");
+                html.append(paddingLeft);
+                html.append("px;\">");
                 if (this.getDrawShifter()) {
                     String shifter = StringUtils.EMPTY;
                     if (hasSub) {
@@ -1126,47 +825,47 @@ public class Tree extends ControlImpl {
                         }
                     }
                     if (StringUtils.isNotEmpty(shifter)) {
-                        html.append("<img id=\"" //$NON-NLS-1$
-                            + idPre
-                            + "_Shifter\" onmousedown=\"" //$NON-NLS-1$
-                            + this.javascriptTree
-                            + ".shifterDown('" //$NON-NLS-1$
-                            + handle
-                            + "');\" onmouseout=\"" //$NON-NLS-1$
-                            + this.javascriptTree
-                            + ".shifterOut();\" class=\"mgnlTreeShifter\" src=\"" //$NON-NLS-1$
-                            + this.getRequest().getContextPath()
-                            + shifter
-                            + "\" />"); //$NON-NLS-1$
+                        html.append("<img id=\"");
+                        html.append(idPre);
+                        html.append("_Shifter\" onmousedown=\"");
+                        html.append(this.javascriptTree);
+                        html.append(".shifterDown('");
+                        html.append(handle);
+                        html.append("');\" onmouseout=\"");
+                        html.append(this.javascriptTree);
+                        html.append(".shifterOut();\" class=\"mgnlTreeShifter\" src=\"");
+                        html.append(this.getRequest().getContextPath());
+                        html.append(shifter);
+                        html.append("\" />");
                     }
                 }
-                html.append("<span id=" //$NON-NLS-1$
-                    + idPre
-                    + "_Name onmouseover=\"" //$NON-NLS-1$
-                    + jsHighlightNode
-                    + "\" onmouseout=\"" //$NON-NLS-1$
-                    + jsResetNode
-                    + "\" onmousedown=\"" //$NON-NLS-1$
-                    + jsSelectNode
-                    + this.javascriptTree
-                    + ".pasteNode('" //$NON-NLS-1$
-                    + handle
-                    + "'," //$NON-NLS-1$
-                    + Tree.PASTETYPE_SUB
-                    + "," //$NON-NLS-1$
-                    + permissionWrite
-                    + ");\">"); //$NON-NLS-1$
+                html.append("<span id=");
+                html.append(idPre);
+                html.append("_Name onmouseover=\"");
+                html.append(jsHighlightNode);
+                html.append("\" onmouseout=\"");
+                html.append(jsResetNode);
+                html.append("\" onmousedown=\"");
+                html.append(jsSelectNode);
+                html.append(this.javascriptTree);
+                html.append(".pasteNode('");
+                html.append(handle);
+                html.append("'," + Tree.PASTETYPE_SUB + ",");
+                html.append(permissionWrite);
+                html.append(");\">");
                 if (StringUtils.isNotEmpty(icon)) {
-                    html.append("<img id=\"" //$NON-NLS-1$
-                        + idPre
-                        + "_Icon\" class=\"mgnlTreeIcon\" src=\"" //$NON-NLS-1$
-                        + this.getRequest().getContextPath()
-                        + icon
-                        + "\" onmousedown=\"" //$NON-NLS-1$
-                        + jsExpandNode
-                        + "\""); //$NON-NLS-1$
+                    html.append("<img id=\"");
+                    html.append(idPre);
+                    html.append("_Icon\" class=\"mgnlTreeIcon\" src=\"");
+                    html.append(this.getRequest().getContextPath());
+                    html.append(icon);
+                    html.append("\" onmousedown=\"");
+                    html.append(jsExpandNode);
+                    html.append("\"");
                     if (this.getIconOndblclick() != null) {
-                        html.append(" ondblclick=\"" + this.getIconOndblclick() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+                        html.append(" ondblclick=\"");
+                        html.append(this.getIconOndblclick());
+                        html.append("\"");
                     }
                     html.append(" />"); //$NON-NLS-1$
                 }
@@ -1174,7 +873,11 @@ public class Tree extends ControlImpl {
                 if (permissionWrite && StringUtils.isNotEmpty(this.getColumns(0).getHtmlEdit())) {
                     dblclick = " ondblclick=\"" + this.javascriptTree + ".editNodeData(this,'" + handle + "',0);\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 }
-                html.append("<span class=\"mgnlTreeText\" id=\"" + idPre + "_Column0Main\"" + dblclick + ">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                html.append("<span class=\"mgnlTreeText\" id=\"");
+                html.append(idPre);
+                html.append("_Column0Main\"");
+                html.append(dblclick);
+                html.append(">");
                 html.append(name);
                 html.append("</span></span></span>"); //$NON-NLS-1$
                 html.append(new Hidden(idPre + "_PermissionWrite", Boolean.toString(permissionWrite), false).getHtml()); //$NON-NLS-1$
@@ -1207,34 +910,40 @@ public class Tree extends ControlImpl {
                     tc.setEvent("onmouseover", jsHighlightNode, true); //$NON-NLS-1$
                     tc.setEvent("onmouseout", jsResetNode, true); //$NON-NLS-1$
                     tc.setEvent("onmousedown", jsSelectNode, true); //$NON-NLS-1$
-                    html.append("<span class=\"mgnlTreeColumn " //$NON-NLS-1$
-                        + this.javascriptTree
-                        + "CssClassColumn" //$NON-NLS-1$
-                        + i
-                        + "\"><span id=\"" //$NON-NLS-1$
-                        + idPre
-                        + "_Column" //$NON-NLS-1$
-                        + i
-                        + "Main\"" //$NON-NLS-1$
-                        + tc.getHtmlCssClass()
-                        + tc.getHtmlEvents());
+                    html.append("<span class=\"mgnlTreeColumn ");
+                    html.append(this.javascriptTree);
+                    html.append("CssClassColumn");
+                    html.append(i);
+                    html.append("\"><span id=\"");
+                    html.append(idPre);
+                    html.append("_Column");
+                    html.append(i);
+                    html.append("Main\"");
+                    html.append(tc.getHtmlCssClass());
+                    html.append(tc.getHtmlEvents());
                     if (permissionWrite && StringUtils.isNotEmpty(tc.getHtmlEdit())) {
-                        html.append(" ondblclick=\"" //$NON-NLS-1$
-                            + this.javascriptTree
-                            + ".editNodeData(this,'" //$NON-NLS-1$
-                            + handle
-                            + "'," //$NON-NLS-1$
-                            + i
-                            + ");\""); //$NON-NLS-1$
+                        html.append(" ondblclick=\"");
+                        html.append(this.javascriptTree);
+                        html.append(".editNodeData(this,'");
+                        html.append(handle);
+                        html.append("',");
+                        html.append(i);
+                        html.append(");\"");
                     }
-                    html.append(">" + str + "</span></span>"); //$NON-NLS-1$ //$NON-NLS-2$
+                    html.append(">");
+                    html.append(str);
+                    html.append("</span></span>");
                 }
                 html.append("</div>"); //$NON-NLS-1$
                 String display = "none"; //$NON-NLS-1$
                 if (showSub) {
                     display = "block"; //$NON-NLS-1$
                 }
-                html.append("<div id=\"" + idPre + "_DivSub\" style=\"display:" + display + ";\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                html.append("<div id=\"");
+                html.append(idPre);
+                html.append("_DivSub\" style=\"display:");
+                html.append(display);
+                html.append(";\">");
                 if (hasSub) {
                     if (showSub) {
                         String pathRemaining = this.getPathOpen().substring(this.getPathCurrent().length());
@@ -1267,17 +976,14 @@ public class Tree extends ControlImpl {
     }
 
     protected boolean hasSub(Content c, String type) {
-        int size = 0;
+        int size;
         if (type.equalsIgnoreCase(ITEM_TYPE_NODEDATA)) {
             size = c.getNodeDataCollection().size();
         }
         else {
             size = c.getChildren(type).size();
         }
-        if (size > 0) {
-            return true;
-        }
-        return false;
+        return size > 0;
     }
 
     /**
@@ -1299,7 +1005,7 @@ public class Tree extends ControlImpl {
      * @return the icon
      */
     protected String getIcon(Content node, NodeData nodedata, String itemType) {
-        String icon = null;
+        String icon;
         if (itemType.equals(ItemType.CONTENTNODE.getSystemName())) {
             icon = this.getIconContentNode();
         }

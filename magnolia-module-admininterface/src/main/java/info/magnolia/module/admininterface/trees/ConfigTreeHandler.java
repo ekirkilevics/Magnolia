@@ -12,12 +12,18 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.exchange.Syndicator;
+import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
+import info.magnolia.context.MgnlContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -46,20 +52,36 @@ public class ConfigTreeHandler extends AdminTreeMVCHandler {
     }
 
     /**
-     * Do not active sub CONTENTNODES automatically
+     * Create the <code>Syndicator</code> to activate the specified path.
+     * @param path node path to be activated
+     * @return the <code>Syndicator</code> used to activate
+     * @see info.magnolia.module.admininterface.AdminTreeMVCHandler#getActivationSyndicator(String)
      */
-    public String activate() {
+    public Syndicator getActivationSyndicator(String path) {
         boolean recursive = (this.getRequest().getParameter("recursive") != null); //$NON-NLS-1$
-        // do not activate nodes of type CONTENTNODE if recursive is false
-        try {
-            this.getTree().activateNode(this.getPathSelected(), recursive, false);
-        }
-        catch (Exception e) {
-            log.error("can't activate", e);
-            AlertUtil.setMessage(MessagesManager.get("tree.error.activate") + " " + AlertUtil.getExceptionMessage(e));
+        Rule rule = new Rule();
+        if (recursive) {
+            rule.addAllowType(ItemType.CONTENT.getSystemName());
+            rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
+            rule.addAllowType(ItemType.NT_METADATA);
+            rule.addAllowType(ItemType.NT_RESOURCE);
         }
 
-        return VIEW_TREE;
+        Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
+        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
+            .getRepository()), rule);
+
+        return syndicator;
     }
 
+    /**
+     * since Rule take care of what sub nodes to include we can simply activate this path
+     * @param syndicator
+     * @param parentPath
+     * @param path
+     */
+    public void activateNodeRecursive(Syndicator syndicator, String parentPath, String path) throws ExchangeException,
+        RepositoryException {
+        syndicator.activate(parentPath, path);
+    }
 }

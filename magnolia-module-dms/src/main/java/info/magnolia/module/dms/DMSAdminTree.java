@@ -18,6 +18,10 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.Rule;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.exchange.Syndicator;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.dms.beans.Document;
@@ -153,5 +157,27 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
 
         return view;
     }
+
+    /**
+     * Create the <code>Syndicator</code> to activate the specified path.
+     * @param path node path to be activated
+     * @return the <code>Syndicator</code> used to activate
+     */
+    public Syndicator getActivationSyndicator(String path) {
+        boolean recursive = (this.getRequest().getParameter("recursive") != null); //$NON-NLS-1$
+        Rule rule = new Rule();
+        if (recursive) {
+            rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
+            rule.addAllowType(ItemType.NT_METADATA);
+            rule.addAllowType(ItemType.NT_RESOURCE);
+        }
+
+        Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
+        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
+            .getRepository()), rule);
+
+        return syndicator;
+    }
+
 
 }
