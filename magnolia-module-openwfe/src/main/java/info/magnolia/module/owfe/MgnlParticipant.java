@@ -28,8 +28,6 @@ import org.slf4j.LoggerFactory;
 
 public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
-    private static final String PREFIX_COMMAND = "command-";
-
     /**
      * Logger
      */
@@ -70,7 +68,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         if (log.isDebugEnabled()) {
             log.debug("participant name = " + parName);
         }
-        if (parName.startsWith(PREFIX_COMMAND)) // handle commands
+        if (parName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND)) // handle commands
         {
             log.info("consume command " + parName + "...");
             if (log.isDebugEnabled()) {
@@ -78,7 +76,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             }
 
             try {
-                String name =  StringUtils.removeStart(parName, PREFIX_COMMAND);
+                String name =  StringUtils.removeStart(parName, WorkflowConstants.PARTICIPANT_PREFIX_COMMAND);
                 Command c = CommandsManager.getInstance().getCommand(name);
                 if (c != null) {
                     log.info("Command has been found through the magnolia catalog:" + c.getClass().getName());

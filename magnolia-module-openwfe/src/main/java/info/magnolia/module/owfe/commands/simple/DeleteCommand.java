@@ -14,13 +14,12 @@ package info.magnolia.module.owfe.commands.simple;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.chain.Command;
-import org.apache.commons.chain.Context;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,12 +29,12 @@ import org.slf4j.LoggerFactory;
  * the command to delete one node
  * @author jackie
  */
-public class DeleteCommand implements Command {
+public class DeleteCommand extends MgnlCommand {
 
     private static Logger log = LoggerFactory.getLogger(DeleteCommand.class);
     
     public boolean execute(Context ctx) {
-        String path = (String) ctx.get(ContextAttributes.P_PATH);
+        String path = (String) ctx.get(Context.ATTRIBUTE_PATH);
         try {
             deleteNode(ctx, path);
         }
@@ -55,7 +54,7 @@ public class DeleteCommand implements Command {
         else {
             path = "/" + label;
         }
-        context.put(ContextAttributes.P_PATH, path);
+        context.put(Context.ATTRIBUTE_PATH, path);
         new DeactivationCommand().execute(context);
         parentNode.delete(label);
         parentNode.save();

@@ -18,10 +18,9 @@ import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
+import info.magnolia.context.Context;
 
-import org.apache.commons.chain.Command;
-import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -30,13 +29,13 @@ import org.slf4j.LoggerFactory;
  * the deactivation command which do real deactivation
  * @author jackie
  */
-public class DeactivationCommand implements Command {
+public class DeactivationCommand extends MgnlCommand {
     
     private static Logger log = LoggerFactory.getLogger(DeactivationCommand.class);
 
     public boolean execute(Context ctx) {
         String path;
-        path = (String) ctx.get(ContextAttributes.P_PATH);
+        path = (String) ctx.get(Context.ATTRIBUTE_PATH);
         try {
             doDeactivate(((info.magnolia.context.Context) ctx).getUser(), path);
         }

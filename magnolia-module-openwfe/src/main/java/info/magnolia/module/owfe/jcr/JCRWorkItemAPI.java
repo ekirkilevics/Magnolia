@@ -259,11 +259,11 @@ public class JCRWorkItemAPI {
                 log.debug("participant = " + wi.getParticipantName());
             }
             
-            StringAttribute assignTo = (StringAttribute) wi.getAttribute(WorkflowConstants.ATT_ASSIGN_TO);
+            StringAttribute assignTo = (StringAttribute) wi.getAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO);
             if (assignTo != null) {
                 String s = assignTo.toString();
                 if (s.length() > 0) {
-                    newc.createNodeData(WorkflowConstants.ATT_ASSIGN_TO, vf.createValue(s));
+                    newc.createNodeData(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, vf.createValue(s));
                 }
                 if(log.isDebugEnabled()) log.debug("assignTo=" + s);
             }

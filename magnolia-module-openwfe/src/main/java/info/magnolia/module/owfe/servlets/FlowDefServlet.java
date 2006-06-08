@@ -241,9 +241,9 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements ja
             Calendar start_c = Calendar.getInstance();
             Calendar stop_c = Calendar.getInstance();
             start_c.setTime(new Date(Timestamp.valueOf(start).getTime()));
-            ct.getNodeData(WorkflowConstants.START_DATE).setValue(start_c);
+            ct.getNodeData(WorkflowConstants.ATTRIBUTE_START_DATE).setValue(start_c);
             stop_c.setTime(new Date(Timestamp.valueOf(stop).getTime()));
-            ct.getNodeData(WorkflowConstants.END_DATE).setValue(stop_c);
+            ct.getNodeData(WorkflowConstants.ATTRIBUTE_END_DATE).setValue(stop_c);
             hm.save();
             return "set date ok. path " + pathSelected + ", start date " + start + ", stop date " + stop;
         }

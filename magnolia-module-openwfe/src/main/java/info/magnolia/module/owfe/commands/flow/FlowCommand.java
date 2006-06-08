@@ -16,10 +16,9 @@ import java.io.Serializable;
 import java.util.Iterator;
 import java.util.Map;
 
-import info.magnolia.commands.ContextAttributes;
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.module.owfe.WorkflowConstants;
 import info.magnolia.module.owfe.WorkflowModule;
 import info.magnolia.module.owfe.jcr.JCRFlowDefinition;
 import info.magnolia.module.owfe.jcr.JCRPersistedEngine;
@@ -48,12 +47,12 @@ public class FlowCommand extends MgnlCommand {
             
             prepareLaunchItem(ctx, li);
             
-            li.addAttribute(ContextAttributes.P_ACTION, new StringAttribute(this.getClass().getName()));
-            li.setWorkflowDefinitionUrl(ContextAttributes.P_WORKFLOW_DEFINITION_URL);
+            li.addAttribute(Context.ATTRIBUTE_ACTION, new StringAttribute(this.getClass().getName()));
+            li.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
 
             // Retrieve and add the flow definition to the LaunchItem
             String flowDef = new JCRFlowDefinition().getflowDefAsString(getWorkflowName());
-            li.getAttributes().puts(ContextAttributes.P_DEFINITION, flowDef);
+            li.getAttributes().puts(WorkflowConstants.ATTRIBUTE_DEFINITION, flowDef);
             JCRPersistedEngine engine = WorkflowModule.getEngine();
 
             // Launch the item
@@ -73,7 +72,7 @@ public class FlowCommand extends MgnlCommand {
      * @param launchItem
      */
     public void prepareLaunchItem(Context context, LaunchItem launchItem){
-        Map map = context.getAttributes(MgnlContext.REQUEST_SCOPE);
+        Map map = context.getAttributes(Context.LOCALE_SCOPE);
         // remove not serializable objects
         for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();

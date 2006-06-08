@@ -17,11 +17,10 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
-import org.apache.commons.chain.Command;
-import org.apache.commons.chain.Context;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,15 +30,15 @@ import org.slf4j.LoggerFactory;
  * the activation command which do real activation
  * @author jackie
  */
-public class ActivationCommand implements Command {
+public class ActivationCommand extends MgnlCommand {
     
     private static Logger log = LoggerFactory.getLogger(ActivationCommand.class);
 
     public boolean execute(Context ctx) {
         boolean recursive;
-        String path = (String) ctx.get(ContextAttributes.P_PATH);
-        String repository = (String) ctx.get(ContextAttributes.P_REPOSITORY);
-        recursive = Boolean.valueOf((String) ctx.get(ContextAttributes.P_RECURSIVE)).booleanValue();
+        String path = (String) ctx.get(Context.ATTRIBUTE_PATH);
+        String repository = (String) ctx.get(Context.ATTRIBUTE_REPOSITORY);
+        recursive = Boolean.valueOf((String) ctx.get(Context.ATTRIBUTE_RECURSIVE)).booleanValue();
 
         if (log.isDebugEnabled()) {
             log.debug("recursive = " + recursive);

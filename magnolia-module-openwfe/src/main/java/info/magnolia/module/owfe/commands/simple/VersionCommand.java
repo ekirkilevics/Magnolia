@@ -14,11 +14,10 @@ package info.magnolia.module.owfe.commands.simple;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.commands.ContextAttributes;
+import info.magnolia.commands.MgnlCommand;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
-import org.apache.commons.chain.Command;
-import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -28,7 +27,7 @@ import org.slf4j.LoggerFactory;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class VersionCommand implements Command {
+public class VersionCommand extends MgnlCommand {
 
     private static Logger log = LoggerFactory.getLogger(VersionCommand.class);
     
@@ -36,8 +35,8 @@ public class VersionCommand implements Command {
      * @see info.magnolia.commands.MgnlCommand#exec(java.util.HashMap, org.apache.commons.chain.Context)
      */
     public boolean execute(Context ctx) {
-        String path = (String) ctx.get(ContextAttributes.P_PATH);
-        String repository = (String) ctx.get(ContextAttributes.P_REPOSITORY);
+        String path = (String) ctx.get(Context.ATTRIBUTE_PATH);
+        String repository = (String) ctx.get(Context.ATTRIBUTE_REPOSITORY);
         try {
             Content node = MgnlContext.getHierarchyManager(repository).getContent(path);
             node.addVersion();

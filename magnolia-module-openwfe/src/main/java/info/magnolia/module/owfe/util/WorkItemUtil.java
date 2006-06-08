@@ -12,7 +12,6 @@
  */
 package info.magnolia.module.owfe.util;
 
-import info.magnolia.cms.util.MgnlCoreConstants;
 import openwfe.org.engine.workitem.StringAttribute;
 
 
@@ -23,7 +22,7 @@ import openwfe.org.engine.workitem.StringAttribute;
  */
 public class WorkItemUtil {
 
-    final static public StringAttribute ATT_TRUE = new StringAttribute(MgnlCoreConstants.TRUE);
+    final static public StringAttribute ATTRIBUTE_TRUE = new StringAttribute("true");
 
-    final static public StringAttribute ATT_FALSE = new StringAttribute(MgnlCoreConstants.FALSE);
+    final static public StringAttribute ATTRIBUTE_FALSE = new StringAttribute("false");
 }

@@ -15,7 +15,6 @@ package info.magnolia.module.owfe.commands.flow;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.commands.ContextAttributes;
 import info.magnolia.context.Context;
 import info.magnolia.module.owfe.WorkflowConstants;
 import openwfe.org.engine.workitem.LaunchItem;
@@ -52,8 +51,8 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
         SimpleDateFormat sdf = new SimpleDateFormat(WorkflowConstants.OPENWFE_DATE_FORMAT);
 
         // add start date and end date
-        String repository = (String) context.get(ContextAttributes.P_REPOSITORY);
-        String path = (String) context.get(ContextAttributes.P_PATH);
+        String repository = (String) context.get(Context.ATTRIBUTE_REPOSITORY);
+        String path = (String) context.get(Context.ATTRIBUTE_PATH);
 
         HierarchyManager hm = ContentRepository.getHierarchyManager(repository);
 
@@ -71,8 +70,8 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
 
         // get start time
         try {
-            if(node.hasNodeData(WorkflowConstants.START_DATE))
-                cd = node.getNodeData(WorkflowConstants.START_DATE).getDate();
+            if(node.hasNodeData(WorkflowConstants.ATTRIBUTE_START_DATE))
+                cd = node.getNodeData(WorkflowConstants.ATTRIBUTE_START_DATE).getDate();
         }
         catch (Exception e) {
             log.warn("cannot get start time for node " + path, e);
@@ -82,15 +81,15 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
             String date1 = sdf.format(new Date(cd.getTimeInMillis()));
             if(log.isDebugEnabled())
             log.debug("start date = " + date1);
-            launchItem.getAttributes().puts(ContextAttributes.P_START_DATE, date1);
+            launchItem.getAttributes().puts(WorkflowConstants.ATTRIBUTE_START_DATE, date1);
         }
 
         Calendar ce = null;
 
         // get end time
         try {
-            if(node.hasNodeData(WorkflowConstants.END_DATE))
-                ce = node.getNodeData(WorkflowConstants.END_DATE).getDate();
+            if(node.hasNodeData(WorkflowConstants.ATTRIBUTE_END_DATE))
+                ce = node.getNodeData(WorkflowConstants.ATTRIBUTE_END_DATE).getDate();
         }
         catch (Exception e) {
             log.warn("cannot get end time for node " + path, e);
@@ -100,7 +99,7 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
             String date2 = sdf.format(new Date(ce.getTimeInMillis()));
             if(log.isDebugEnabled())
                 log.debug("end date = " + date2);
-            launchItem.getAttributes().puts(ContextAttributes.P_END_DATE, date2);
+            launchItem.getAttributes().puts(WorkflowConstants.ATTRIBUTE_END_DATE, date2);
         }
     }
 
