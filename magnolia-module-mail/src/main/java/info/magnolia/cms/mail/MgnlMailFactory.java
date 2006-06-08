@@ -13,7 +13,7 @@ import info.magnolia.cms.mail.templates.impl.MagnoliaEmail;
 import info.magnolia.cms.mail.templates.impl.SimpleEmail;
 import info.magnolia.cms.mail.templates.impl.VelocityEmail;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.module.owfe.WorkflowConstants;
+import info.magnolia.module.workflow.WorkflowConstants;
 
 import java.net.URL;
 import java.util.ArrayList;
