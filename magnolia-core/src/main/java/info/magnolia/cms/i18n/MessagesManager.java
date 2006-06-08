@@ -18,6 +18,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
@@ -349,7 +350,7 @@ public final class MessagesManager {
      * @deprecated use MgnlContext instead
      */
     public static void setUserLanguage(String language, HttpSession session) {
-        MgnlContext.setAttribute(Config.FMT_LOCALE + ".session", language, MgnlContext.SESSION_SCOPE); //$NON-NLS-1$
+        MgnlContext.setAttribute(Config.FMT_LOCALE + ".session", language, Context.SESSION_SCOPE); //$NON-NLS-1$
     }
 
     public static void reloadBundles() throws Exception {
