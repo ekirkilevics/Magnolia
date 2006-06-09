@@ -94,7 +94,6 @@ public class WorkflowUtil {
      * Start a flow
      * @param li the prepared lunchItem
      * @param flowName the flow to start
-     * @throws Exception
      */
     public static void launchFlow(LaunchItem li, String flowName) {
         li.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
@@ -139,6 +138,14 @@ public class WorkflowUtil {
         proceed(wi);
     }
 
+    public static void reject(String id, String comment) {
+        proceed(id,WorkflowConstants.ACTION_REJECT,comment);
+    }
+
+    public static void cancel(String id, String comment) {
+        proceed(id,WorkflowConstants.ACTION_CANCEL,comment);
+    }
+
     /**
      * Proceed this item
      * @param wi
@@ -156,10 +163,8 @@ public class WorkflowUtil {
     }
 
     /**
-     * @param id
-     * @return
-     * @throws StoreException
-     * @throws Exception
+     * @param id identifier for the workitem as stored in the engine
+     * @return <code>InFlowWorkItem</code> corresponding to the workitem
      */
     public static InFlowWorkItem getWorkItem(String id) {
         InFlowWorkItem wi = null;
