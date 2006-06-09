@@ -2,9 +2,8 @@ package info.magnolia.cms.mail.templates.impl;
 
 import info.magnolia.cms.mail.templates.MgnlEmail;
 
-import java.util.HashMap;
-
 import javax.mail.Session;
+import java.util.Map;
 
 
 /**
@@ -18,7 +17,7 @@ public class SimpleEmail extends MgnlEmail {
         this.setHeader(CONTENT_TYPE, TEXT_PLAIN_UTF);
     }
 
-    public void setBody(String body, HashMap parameters) throws Exception {
+    public void setBody(String body, Map parameters) throws Exception {
         this.setContent(body, TEXT_PLAIN_UTF);
     }
 }

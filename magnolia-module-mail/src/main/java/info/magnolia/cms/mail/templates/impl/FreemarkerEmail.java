@@ -7,10 +7,9 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 
-import java.io.StringWriter;
-import java.util.HashMap;
-
 import javax.mail.Session;
+import java.io.StringWriter;
+import java.util.Map;
 
 
 /**
@@ -41,12 +40,12 @@ public class FreemarkerEmail extends HtmlEmail {
         }
     }
 
-    public void setBodyFromResourceFile(String resourceFile, HashMap _map) throws Exception {
+    public void setBodyFromResourceFile(String resourceFile, Map _map) throws Exception {
         Template late = cfg.getTemplate(resourceFile);
         setBodyFromTemplate(late, _map);
     }
 
-    public void setBodyFromTemplate(Template template, HashMap _map) throws Exception {
+    public void setBodyFromTemplate(Template template, Map _map) throws Exception {
         StringWriter writer = new StringWriter();
         template.process(_map, writer);
         writer.flush();

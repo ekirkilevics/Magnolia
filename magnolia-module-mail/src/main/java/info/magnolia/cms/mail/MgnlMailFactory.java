@@ -98,7 +98,7 @@ public class MgnlMailFactory extends ObservedManager {
      * @return a new <code>MgnlMail</code> instance, with the template set
      * @throws Exception if fails
      */
-    public MgnlEmail getEmailFromTemplate(String id, HashMap map) throws Exception {
+    public MgnlEmail getEmailFromTemplate(String id, Map map) throws Exception {
         if (id == null) {
             return new SimpleEmail(getSession());
         }
@@ -144,6 +144,9 @@ public class MgnlMailFactory extends ObservedManager {
                 mail.addAttachment(a);
             }
         }
+
+        // parameters
+        mail.setParameters(map);
 
         return mail;
     }

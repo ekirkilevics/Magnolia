@@ -6,6 +6,7 @@ import info.magnolia.cms.mail.templates.MgnlMultipartEmail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.mail.BodyPart;
 import javax.mail.Session;
@@ -25,7 +26,7 @@ public class HtmlEmail extends MgnlMultipartEmail {
         this.setHeader(CONTENT_TYPE, TEXT_HTML_UTF);
     }
 
-    public void setBody(String body, HashMap parameters) throws Exception {
+    public void setBody(String body, Map parameters) throws Exception {
         // check if multipart
         if (!isMultipart()) { // it is not a multipart yet, just set the text for content
             this.setContent(body, TEXT_HTML_UTF);

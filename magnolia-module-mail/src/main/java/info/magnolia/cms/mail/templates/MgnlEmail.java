@@ -1,13 +1,9 @@
 package info.magnolia.cms.mail.templates;
 
 import info.magnolia.cms.mail.MailException;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Address;
@@ -16,10 +12,12 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Map;
 
 
 /**
@@ -42,7 +40,7 @@ public abstract class MgnlEmail extends MimeMessage {
 
     private String template;
 
-    private HashMap parameters;
+    private Map parameters;
 
     private boolean bodyNotSetFlag; // used for threads
 
@@ -58,13 +56,13 @@ public abstract class MgnlEmail extends MimeMessage {
         super(_session);
     }
 
-    public abstract void setBody(String body, HashMap _parameters) throws Exception;
+    public abstract void setBody(String body, Map _parameters) throws Exception;
 
     public void setTemplate(String _template) {
         this.template = _template;
     }
 
-    public HashMap getParameters() {
+    public Map getParameters() {
         return this.parameters;
     }
 
@@ -72,8 +70,12 @@ public abstract class MgnlEmail extends MimeMessage {
         return this.template;
     }
 
-    public void setParameters(HashMap _parameters) {
+    public void setParameters(Map _parameters) {
         this.parameters = _parameters;
+    }
+
+    public void addParameters(Map params) {
+        this.parameters.putAll(params);
     }
 
     public void setBody() throws Exception {
@@ -148,7 +150,7 @@ public abstract class MgnlEmail extends MimeMessage {
         throw new MailException("Cannot add attachment to this email. It is not a Multimime email");
     }
 
-    public void setBodyFromResourceFile(String resourceFile, HashMap map) throws Exception {
+    public void setBodyFromResourceFile(String resourceFile, Map map) throws Exception {
         URL url = this.getClass().getResource("/" + resourceFile);
         log.info("This is the url:" + url);
         BufferedReader br = new BufferedReader(new FileReader(url.getFile()));

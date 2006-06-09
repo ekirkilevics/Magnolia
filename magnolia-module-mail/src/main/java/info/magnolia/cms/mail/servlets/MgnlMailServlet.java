@@ -4,12 +4,14 @@ import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.mail.MailConstants;
 import info.magnolia.cms.mail.MgnlMailFactory;
+import info.magnolia.cms.mail.commands.MailCommand;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.cms.servlets.ContextSensitiveServlet;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.Context;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -103,15 +105,24 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
             String cc = request.getParameter(CCRECIPIENTS);
             String parameters = request.getParameter(PARAMETERS);
             String template = request.getParameter(TEMPLATE);
-            String user = MgnlContext.getUser().getName();
 
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
 
             HashMap map = convertToMap(parameters);
-            map.put("user",user);
 
-            if (template != null && !(template.equals(StringUtils.EMPTY))) {
+            String user = MgnlContext.getUser().getName();
+
+
+
+/*
+            MailCommand command = new MailCommand();
+            Context instance = MgnlContext.getInstance();
+            command.execute(instance);
+*/
+
+
+            if (StringUtils.isNotEmpty(template)) {
                 MgnlEmail email = factory.getEmailFromTemplate(template, map);
                 email.setToList(factory.convertEmailList(to));
                 email.setCcList(factory.convertEmailList(cc));

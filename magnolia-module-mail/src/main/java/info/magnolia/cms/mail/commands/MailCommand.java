@@ -19,8 +19,11 @@ import info.magnolia.cms.mail.templates.MgnlEmail;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.HashMap;
 
 
 /**
@@ -47,15 +50,36 @@ public class MailCommand implements Command {
 
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
-            // FIXME
-            // MgnlEmail email = factory.getEmailFromTemplate(mailTemplate, ctx);
-            MgnlEmail email= null;
+            log.info(ctx.toString());
+
+            MgnlEmail email = factory.getEmailFromTemplate(mailTemplate, ctx);
             email.setFrom(MailConstants.WORKFLOW_EMAIL_FROM_FIELD);
             email.setSubject(MailConstants.WORKFLOW_EMAIL_SUBJECT_FIELD);
-            // FIXME
-            //email.setParameters(params);
             email.setToList(factory.convertEmailList(mailTo));
             handler.prepareAndSendMail(email);
+
+            /*String template = (String)ctx.get("template");
+            String to = (String)ctx.get("to");
+            String cc = (String)ctx.get()
+
+            if (StringUtils.isNotEmpty(template)) {
+                MgnlEmail email = factory.getEmailFromTemplate(template, ctx);
+                email.setToList(factory.convertEmailList(to));
+                email.setCcList(factory.convertEmailList(cc));
+                handler.prepareAndSendMail(email);
+            }
+            else {
+                MgnlEmail email = factory.getEmailFromType(type);
+                email.setFrom(from);
+                email.setSubject(subject);
+                email.setToList(factory.convertEmailList(to));
+                email.setBody(text, map);
+                if (attachment != null) {
+                    email.addAttachment(attachment);
+                }
+                email.setCcList(factory.convertEmailList(cc));
+                handler.prepareAndSendMail(email);
+            }*/
 
             log.info("send mail successfully to:" + mailTo);
         }

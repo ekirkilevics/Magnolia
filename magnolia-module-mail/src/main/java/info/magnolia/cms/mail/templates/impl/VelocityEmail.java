@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.StringWriter;
 import java.net.URL;
 import java.util.HashMap;
+import java.util.Map;
 
 import javax.mail.Session;
 
@@ -31,7 +32,7 @@ public class VelocityEmail extends HtmlEmail {
         super(_session);
     }
 
-    public void setBodyFromResourceFile(String resourceFile, HashMap _map) throws Exception {
+    public void setBodyFromResourceFile(String resourceFile, Map _map) throws Exception {
         VelocityContext context = new VelocityContext(_map);
         URL url = this.getClass().getResource("/" + resourceFile);
         log.info("This is the url:" + url);
