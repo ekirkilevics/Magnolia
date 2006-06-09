@@ -274,7 +274,8 @@ public class Document {
         this.fileNode.setAttribute(FileProperties.PROPERTY_EXTENSION, extension);
         this.fileNode.setAttribute(FileProperties.PROPERTY_FILENAME, label);
         this.fileNode.setAttribute(FileProperties.PROPERTY_SIZE, Long.toString(size));
-        this.fileNode.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, MIMEMapping.getMIMEType(extension));
+        String mimetype = StringUtils.defaultIfEmpty(MIMEMapping.getMIMEType(extension), "application/octet-stream");
+        this.fileNode.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, mimetype);
         
         // set time flag
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
