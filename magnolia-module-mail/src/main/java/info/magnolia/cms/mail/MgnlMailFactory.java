@@ -41,7 +41,7 @@ public class MgnlMailFactory extends ObservedManager {
 
     protected static final String EMAIL = "email";
 
-    public static final String SMTP_SERVER = "smtpServer";
+    protected static final String SMTP_SERVER = "smtpServer";
 
     protected static final String SMTP_PORT = "smtpPort";
 
@@ -60,13 +60,6 @@ public class MgnlMailFactory extends ObservedManager {
     protected static final String MAIL_TYPE = "type";
 
     protected static final String MAIL_ATTACHMENT = "attachment";
-
-    final static public String PARTICIPANT_PREFIX_USER = "user-";
-
-    final static public String PARTICIPANT_PREFIX_GROUP = "group-";
-
-    final static public String PARTICIPANT_PREFIX_ROLE = "role-";
-
 
     private static Logger log = LoggerFactory.getLogger(MgnlMailFactory.class);
 
@@ -292,17 +285,17 @@ public class MgnlMailFactory extends ObservedManager {
             if (i != 0) {
                 ret.append("\n");
             }
-            if (userName.startsWith(PARTICIPANT_PREFIX_USER)) {
-                userName = StringUtils.removeStart(userName, PARTICIPANT_PREFIX_USER);
+            if (userName.startsWith(MailConstants.PREFIX_USER)) {
+                userName = StringUtils.removeStart(userName, MailConstants.PREFIX_USER);
                 if (log.isDebugEnabled()) {
                     log.debug("username =" + userName);
                 }
                 ret.append(getUserMail(userName));
             }
-            else if (userName.startsWith(PARTICIPANT_PREFIX_GROUP)) {
+            else if (userName.startsWith(MailConstants.PREFIX_GROUP)) {
 
             }
-            else if (userName.startsWith(PARTICIPANT_PREFIX_ROLE)) {
+            else if (userName.startsWith(MailConstants.PREFIX_ROLE)) {
 
             }
             else {

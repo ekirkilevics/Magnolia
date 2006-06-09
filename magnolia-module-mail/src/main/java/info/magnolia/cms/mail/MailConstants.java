@@ -6,9 +6,9 @@ package info.magnolia.cms.mail;
  */
 public interface MailConstants {
 
-    final static public String ATTRIBUTE_MAILTEMPLATE = "mailTemplate";
+    public static final String ATTRIBUTE_MAILTEMPLATE = "mailTemplate";
     
-    final static public String ATTRIBUTE_MAILTO = "mailTo";
+    public static final String ATTRIBUTE_MAILTO = "mailTo";
     
     public static final String MAIL_TEMPLATE_HTML = "html";
 
@@ -20,10 +20,16 @@ public interface MailConstants {
 
     public static final String MAIL_TEMPLATE_MAGNOLIA = "magnolia";
     
-    final static public String WORKFLOW_EMAIL_TEMPLATE = "workflowEmail";
+    public static final String WORKFLOW_EMAIL_TEMPLATE = "workflowEmail";
 
-    final static public String WORKFLOW_EMAIL_FROM_FIELD = "workflow@magnolia.info";
+    public static final String WORKFLOW_EMAIL_FROM_FIELD = "workflow@magnolia.info";
 
-    final static public String WORKFLOW_EMAIL_SUBJECT_FIELD = "Workflow Request";
+    public static final String WORKFLOW_EMAIL_SUBJECT_FIELD = "Workflow Request";
+
+    final static public String PREFIX_USER = "user-";
+
+    final static public String PREFIX_GROUP = "group-";
+
+    final static public String PREFIX_ROLE = "role-";
 
 }
