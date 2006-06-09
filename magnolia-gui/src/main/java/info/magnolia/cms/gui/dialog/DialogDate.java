@@ -58,8 +58,8 @@ public class DialogDate extends DialogEditWithButton {
             pattern += "TXX:XX:XX"; //$NON-NLS-1$
         }
         this.setConfig("onchange", "mgnlDialogDatePatternCheck(this,'" + pattern + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        boolean exist = this.getWebsiteNode().getNodeData(this.getName()).isExist();
-        if (this.getWebsiteNode() != null && exist) {
+
+        if (this.getWebsiteNode() != null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
             Calendar valueCalendar = this.getWebsiteNode().getNodeData(this.getName()).getDate();
 
             // valueCalendar is in UTC  turn it back into the current timezone
