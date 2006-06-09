@@ -47,13 +47,16 @@ public final class MIMEMapping {
     private static final String START_PAGE = "server"; //$NON-NLS-1$
 
     private static Map cachedContent = new Hashtable();
-    
+
     /**
      * Used to keep the configuration in memory
      */
-    private static class MIMEMappingItem{
+    private static class MIMEMappingItem {
+
         private String ext;
+
         private String mime;
+
         private String icon;
     }
 
@@ -104,13 +107,16 @@ public final class MIMEMapping {
 
         log.info("Registering event listener for MIMEMapping"); //$NON-NLS-1$
 
-        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, "/" + START_PAGE + "/" + "MIMEMapping", new EventListener() {
+        ObservationUtil.registerChangeListener(
+            ContentRepository.CONFIG,
+            "/" + START_PAGE + "/" + "MIMEMapping",
+            new EventListener() {
+
                 public void onEvent(EventIterator iterator) {
                     // reload everything
                     reload();
                 }
-            }
-        );
+            });
     }
 
     /**
@@ -140,15 +146,16 @@ public final class MIMEMapping {
      * @return MIME type
      */
     public static String getMIMEType(String key) {
-    	if (StringUtils.isEmpty(key)) {
-    		return StringUtils.EMPTY;
-    	}
-    	// check that the cached content contains the key first to avoid NPE when accessing 'mime'
-    	String loweredKey = key.toLowerCase();
-    	if(MIMEMapping.cachedContent.containsKey(loweredKey))
-    		return ((MIMEMappingItem) MIMEMapping.cachedContent.get(loweredKey)).mime;
-    	else // this is expected by the caller getMIMEType(HttpServletRequest)
-    		return null;
+        if (StringUtils.isEmpty(key)) {
+            return StringUtils.EMPTY;
+        }
+        // check that the cached content contains the key first to avoid NPE when accessing 'mime'
+        String loweredKey = key.toLowerCase();
+        if (MIMEMapping.cachedContent.containsKey(loweredKey))
+            return ((MIMEMappingItem) MIMEMapping.cachedContent.get(loweredKey)).mime;
+        else
+            // this is expected by the caller getMIMEType(HttpServletRequest)
+            return null;
     }
 
     /**
@@ -166,11 +173,11 @@ public final class MIMEMapping {
                 extension = Server.getDefaultExtension();
             }
         }
-        String mimeType = getMIMEType(extension) ;
+        String mimeType = getMIMEType(extension);
 
         if (mimeType == null && StringUtils.isNotEmpty(extension)) {
             log.info("Cannot find MIME type for extension \"" + extension + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-            mimeType = (String) MIMEMapping.cachedContent.get(Server.getDefaultExtension());
+            mimeType = ((MIMEMappingItem) MIMEMapping.cachedContent.get(Server.getDefaultExtension())).mime;
         }
         return mimeType;
     }
@@ -190,18 +197,18 @@ public final class MIMEMapping {
         }
         return StringUtils.EMPTY;
     }
-    
+
     /**
      * Returns the icon used for rendering this type
      * @param extension
      * @return the icon name
      */
-    public static String getMIMETypeIcon(String extension){
+    public static String getMIMETypeIcon(String extension) {
         MIMEMappingItem item = (MIMEMappingItem) MIMEMapping.cachedContent.get(extension.toLowerCase());
-        if(item != null){
-            return  StringUtils.defaultIfEmpty(item.icon, "/.resources/file-icons/general.png");
+        if (item != null) {
+            return StringUtils.defaultIfEmpty(item.icon, "/.resources/file-icons/general.png");
         }
-        else{
+        else {
             return "/.resources/file-icons/general.png";
         }
     }
