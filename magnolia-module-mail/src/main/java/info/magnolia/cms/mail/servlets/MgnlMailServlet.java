@@ -9,14 +9,12 @@ import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.cms.servlets.ContextSensitiveServlet;
 import info.magnolia.cms.util.RequestFormUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Properties;
+import java.util.*;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -105,11 +103,13 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
             String cc = request.getParameter(CCRECIPIENTS);
             String parameters = request.getParameter(PARAMETERS);
             String template = request.getParameter(TEMPLATE);
+            String user = MgnlContext.getUser().getName();
 
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
 
             HashMap map = convertToMap(parameters);
+            map.put("user",user);
 
             if (template != null && !(template.equals(StringUtils.EMPTY))) {
                 MgnlEmail email = factory.getEmailFromTemplate(template, map);
@@ -342,7 +342,7 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
         StringBuffer buffer = new StringBuffer();
         buffer.append("<select ");
         try {
-            ArrayList list = MgnlMailFactory.getInstance().listTemplatesFromRepository();
+            List list = MgnlMailFactory.getInstance().listTemplates();
 
             // if no template, disable
             if (list.size() == 0) {

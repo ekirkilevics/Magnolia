@@ -2,35 +2,47 @@ package info.magnolia.cms.mail;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.InitializationException;
+import info.magnolia.cms.module.InvalidConfigException;
+import info.magnolia.cms.module.RegisterException;
+import info.magnolia.cms.module.AbstractModule;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 
 import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.BooleanUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
-public class Engine extends AbstractAdminModule {
+public class Engine extends AbstractModule {
 
-    private static final String SERVER_MAIL_CONFIG = "smtp";
+    public static final String SERVER_MAIL_CONFIG = "smtp";
+
+    public static final String MAIL_TEMPLATES_PATH = "templates";
+
+    static final Logger log = LoggerFactory.getLogger(Engine.class);
+
 
     /**
-     * @see info.magnolia.module.admininterface.AbstractAdminModule#onInit()
+     * Init cache manager
      */
-    public void onInit() throws InitializationException {
-        Content config = getConfigNode();
-
+    public void init(Content configNode) throws InvalidConfigException, InitializationException {
         try {
-            Content smtpNode = config.getContent(SERVER_MAIL_CONFIG);
-            MgnlMailFactory.getInstance().initMailParameter(smtpNode);
+            Content smtpNode = configNode.getContent(SERVER_MAIL_CONFIG);
+            Content templateNode = configNode.getContent(MAIL_TEMPLATES_PATH);
+            log.info("Loading mail server settings");
+            MgnlMailFactory.getInstance().register(smtpNode);
+            log.info("Loading mail templates");
+            MgnlMailFactory.getInstance().register(templateNode);
+            this.setInitialized(true);
         }
         catch (RepositoryException e) {
-            log
-                .error(
-                    "Missing configuration for {}{}, module is not properly initialized",
-                    config.getHandle(),
-                    "/smtp");
+            log.error("Missing configuration for mail. Module is not properly initialized");
         }
-
     }
 }
