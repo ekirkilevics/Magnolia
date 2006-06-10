@@ -49,9 +49,6 @@ import org.apache.log4j.Logger;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
-import com.sun.tools.javac.code.Attribute.Error;
-
-
 /**
  * Upload a zip file
  * @author philipp
@@ -210,9 +207,9 @@ public class ZipUploadView {
         Content node = hm.createContent(path, name, ItemType.CONTENTNODE.getSystemName());
         InputStream stream = zip.getInputStream(entry);
         long size = entry.getSize();
-        
+
         log.info("import:" + node.getHandle() + " free memory: " + Runtime.getRuntime().freeMemory()/1024 + "k");
-        
+
         try{
             info.magnolia.module.dms.beans.Document doc = new info.magnolia.module.dms.beans.Document(node);
             // set all the information
