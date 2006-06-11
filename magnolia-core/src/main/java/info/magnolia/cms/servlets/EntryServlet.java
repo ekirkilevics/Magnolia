@@ -105,7 +105,7 @@ public class EntryServlet extends ContextSensitiveServlet {
         }
 
         if (ModuleRegistration.getInstance().isRestartNeeded()) {
-            req.getRequestDispatcher("/admintemplates/adminCentral/restart.jsp").forward(req, res);
+            res.sendRedirect(req.getContextPath() + "/.magnolia/pages/restart.html");
         }
 
         try {
