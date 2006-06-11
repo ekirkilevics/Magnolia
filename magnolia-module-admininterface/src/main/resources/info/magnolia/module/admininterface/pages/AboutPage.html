@@ -1,0 +1,50 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>${this.messages.get("about.title")}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+    <style type="text/css">
+      body {padding-left: 15px;}
+      a {color: #000;}
+      .framediv {
+        position:absolute;
+        top:15px;
+        left:220px;
+        width: 550px;
+        border-style:solid;
+        border-width:1px;
+        border-top-color:#999;
+        border-left-color:#999;
+        border-bottom-color:#CCC;
+        border-right-color:#CCC;
+      }
+
+      .framediv iframe {
+        width: 100%;
+        height: 460px;
+        border: none;
+      }
+    </style>
+  </head>
+  <body class="mgnlBgLight">
+    <div class="mgnlText">
+      <h1>Magnolia CMS</h1>
+      <pre>
+${this.messages.get("about.version")}: ${this.license.ImplementationVersion}
+${this.messages.get("about.build")}: ${this.license.BuildNumber}
+
+${this.license.ProviderAddress}
+
+<a href="http://${this.license.ProductDomain}${this.license.VersionPageHandle}" target="_blank">${this.license.ProductDomain}</a>
+
+<a href="mailto:${this.license.ProviderEmail}">${this.license.ProviderEmail}</a>
+</pre>
+    </div>
+    <div class="framediv">
+      <iframe
+        src="http://www.magnolia.info/en/magnolia/admincentral/aboutmagnolia.html?magnoliaVersion=${this.license.VersionNumber}&amp;amp;magnoliaBuild=${this.license.ImplementationVersion}&amp;amp;serverOS=${this.license.OSName}&amp;amp;isAdmin=${this.isAdmin}">
+      </iframe>
+    </div>
+  </body>
+</html>

@@ -215,12 +215,25 @@ public class EntryServlet extends ContextSensitiveServlet {
         String uri = this.getURIMap(request);
         if (StringUtils.isNotEmpty(uri)) {
             if (!response.isCommitted()) {
-                try {
-                    request.getRequestDispatcher(uri).forward(request, response);
+
+                if (uri.startsWith("redirect:")) {
+                    try {
+                        response.sendRedirect(request.getContextPath() + StringUtils.substringAfter(uri, "redirect:"));
+                    }
+                    catch (IOException e) {
+                        log.error("Failed to redirect to {}:{}", //$NON-NLS-1$
+                            new Object[]{uri, e.getMessage()});
+                    }
                 }
-                catch (Exception e) {
-                    log.error("Failed to forward to {} - {}:{}", //$NON-NLS-1$
-                        new Object[]{uri, ClassUtils.getShortClassName(e.getClass()), e.getMessage()});
+                else {
+
+                    try {
+                        request.getRequestDispatcher(uri).forward(request, response);
+                    }
+                    catch (Exception e) {
+                        log.error("Failed to forward to {} - {}:{}", //$NON-NLS-1$
+                            new Object[]{uri, ClassUtils.getShortClassName(e.getClass()), e.getMessage()});
+                    }
                 }
             }
             else {

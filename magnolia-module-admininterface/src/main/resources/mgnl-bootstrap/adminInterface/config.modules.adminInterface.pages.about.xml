@@ -14,38 +14,32 @@
     <sv:value>mix:versionable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>f45829b2-6c56-416c-a1fd-7148de15cb87</sv:value>
+    <sv:value>9bddd11f-def1-48ab-8621-29ae888b3f6c</sv:value>
   </sv:property>
-  <sv:property sv:name="toURI" sv:type="String">
-    <sv:value>redirect:/.magnolia/pages/about.html</sv:value>
-  </sv:property>
-  <sv:property sv:name="fromURI" sv:type="String">
-    <sv:value>/.magnolia/adminCentral/about.html</sv:value>
+  <sv:property sv:name="class" sv:type="String">
+    <sv:value>info.magnolia.module.admininterface.pages.AboutPage</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>e4682c99-19c4-477d-9c1c-cbedf6b4f9a2</sv:value>
+      <sv:value>79131041-a13d-4117-a3fe-2fbdabef04c2</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:creationdate" sv:type="String">
-      <sv:value>2004-11-02T15:34:20.687+01:00</sv:value>
+    <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      <sv:value>2006-06-10T17:40:37.578+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-06-11T10:43:16.804+02:00</sv:value>
+      <sv:value>2006-06-11T10:15:43.366+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:Data" sv:type="String">
-      <sv:value>MetaData</sv:value>
-    </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-      <sv:value>2006-02-15T10:22:05.609+01:00</sv:value>
+      <sv:value>2006-06-11T10:15:29.006+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
