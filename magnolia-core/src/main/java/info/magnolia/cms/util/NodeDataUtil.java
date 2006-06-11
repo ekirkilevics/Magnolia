@@ -214,8 +214,7 @@ public class NodeDataUtil {
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
-    public static NodeData getOrCreate(Content node, String name) throws AccessDeniedException, PathNotFoundException,
-        RepositoryException {
+    public static NodeData getOrCreate(Content node, String name) throws AccessDeniedException, RepositoryException {
         return getOrCreate(node, name, PropertyType.STRING);
     }
 
@@ -229,7 +228,7 @@ public class NodeDataUtil {
      * @throws RepositoryException
      */
     public static NodeData getOrCreate(Content node, String name, int type) throws AccessDeniedException,
-        PathNotFoundException, RepositoryException {
+        RepositoryException {
         if (node.hasNodeData(name)) {
             return node.getNodeData(name);
         }

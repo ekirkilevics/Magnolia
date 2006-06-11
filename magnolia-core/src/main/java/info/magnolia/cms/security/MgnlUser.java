@@ -18,12 +18,15 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.Iterator;
 
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.codec.binary.Base64;
@@ -214,7 +217,10 @@ public class MgnlUser implements User {
                 while (it.hasNext()) {
                     NodeData nd = (NodeData) it.next();
                     String uuid = nd.getString();
-                    Content group = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS).getContentByUUID(uuid);
+                    Content group = MgnlContext
+                        .getSystemContext()
+                        .getHierarchyManager(ContentRepository.USER_GROUPS)
+                        .getContentByUUID(uuid);
                     list.add(group.getName());
                 }
             }
@@ -246,7 +252,10 @@ public class MgnlUser implements User {
                 while (it.hasNext()) {
                     NodeData nd = (NodeData) it.next();
                     String uuid = nd.getString();
-                    Content role = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES).getContentByUUID(uuid);
+                    Content role = MgnlContext
+                        .getSystemContext()
+                        .getHierarchyManager(ContentRepository.USER_ROLES)
+                        .getContentByUUID(uuid);
                     list.add(role.getName());
                 }
             }
@@ -257,6 +266,26 @@ public class MgnlUser implements User {
         }
 
         return list;
+    }
+
+    /**
+     * Update the "last access" timestamp.
+     */
+    public void setLastAccess() {
+
+        NodeData lastaccess;
+        try {
+            lastaccess = NodeDataUtil.getOrCreate(userNode, "lastaccess", PropertyType.DATE);
+            synchronized (lastaccess) {
+                lastaccess.setValue(new GregorianCalendar());
+                lastaccess.save();
+            }
+        }
+        catch (RepositoryException e) {
+            log.error(
+                "Unable to set the last access date due to a " + e.getClass().getName() + " - " + e.getMessage(),
+                e);
+        }
 
     }
 }

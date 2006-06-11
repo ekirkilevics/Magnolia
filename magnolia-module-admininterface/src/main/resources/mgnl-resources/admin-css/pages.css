@@ -1,5 +1,9 @@
+#mgnl h3 {
+    border-bottom: 1px solid #9DB517;
+}
+
 #mgnl .formelement {
-    height: 18px;
+    height: 24px;
 }
 
 #mgnl .formelement label {
@@ -8,7 +12,14 @@
     clear: left;
 }
 
-#mgnl .formelement input {
-    width: 200px;
+#mgnl .formelement input.text {
+    width: 400px;
     clear: right;
+}
+
+#mgnl .pageframe {
+    background-color: #fff;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid #9DB517;
 }

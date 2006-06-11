@@ -24,6 +24,7 @@ import java.util.Iterator;
 import java.util.Set;
 
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.security.auth.Subject;
 
 import org.apache.commons.codec.binary.Base64;
@@ -40,7 +41,7 @@ public class MgnlUserManager implements UserManager {
 
     /**
      * Logger
-     * */
+     */
     public static Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
     /**
@@ -56,17 +57,26 @@ public class MgnlUserManager implements UserManager {
      */
     public User getUser(String name) {
         try {
-            return new MgnlUser(getHierarchyManager().getContent(name));
+            Content node = getHierarchyManager().getContent(name);
+            MgnlUser user = new MgnlUser(node);
+            user.setLastAccess();
+            return user;
         }
-        catch (Exception e) {
-            log.info("can't find user [" + name + "]", e);
+        catch (PathNotFoundException e) {
+            log.debug("User not found: [{}]", name);
+            return null;
+        }
+        catch (RepositoryException e) {
+            log.info("Unable to load user [" + name + "] due to: " //
+                + e.getClass().getName()
+                + " - "
+                + e.getMessage(), e);
             return null;
         }
     }
 
     /**
      * Get system user, this user must always exist in magnolia repository.
-     *
      * @return system user
      */
     public User getSystemUser() {
@@ -83,7 +93,7 @@ public class MgnlUserManager implements UserManager {
     /**
      * Get Anonymous user, this user must always exist in magnolia repository.
      * @return anonymous user
-     * */
+     */
     public User getAnonymousUser() {
         try {
             return new MgnlUser(getHierarchyManager().getContent(UserManager.ANONYMOUS_USER));
@@ -152,6 +162,7 @@ public class MgnlUserManager implements UserManager {
         try {
             Content node = getHierarchyManager().getContent(name);
             user = new MgnlUser(node);
+            ((MgnlUser) user).setLastAccess();
         }
         catch (PathNotFoundException e) {
             log.error("user not registered in magnolia itself [" + name + "]");

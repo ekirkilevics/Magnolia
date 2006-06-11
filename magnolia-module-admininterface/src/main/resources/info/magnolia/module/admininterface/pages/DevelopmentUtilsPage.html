@@ -6,71 +6,75 @@
     <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
   </head>
   <body id="mgnl">
-    <h3>Backup configuration</h3>
-    <form action="">
-      <input type="hidden" name="command" value="backup" />
-      <div class="formelement">
-        <label for="templates">Templates</label>
-        <input type="checkbox" name="templates" checked="checked" />
-      </div>
-      <div class="formelement">
-        <label for="paragraphs">Paragraphs</label>
-        <input type="checkbox" name="paragraphs" checked="checked" />
-      </div>
-      <div class="formelement">
-        <label for="dialogs">Dialogs</label>
-        <input type="checkbox" name="dialogs" checked="checked" />
-      </div>
-      <div class="formelement">
-        <label for="website">Website</label>
-        <input type="checkbox" name="website" checked="checked" />
-      </div>
-      <div class="formelement">
-        <label for="users">Users</label>
-        <input type="checkbox" name="users" />
-      </div>
-      <div class="formelement">
-        <label for="groups">Groups</label>
-        <input type="checkbox" name="groups" />
-      </div>
-      <div class="formelement">
-        <label for="roles">Roles</label>
-        <input type="checkbox" name="roles" />
-      </div>
-      <div class="formelement">
-        <label for="secure">Secure URIs</label>
-        <input type="checkbox" name="secure" />
-      </div>
-      <div class="formelement">
-        <label for="rootdir">Root dir, relative to webapp</label>
-        <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" />
-      </div>
-      <input type="submit" value="backup" class="mgnlControlButton" />
-    </form>
-    <h3>Backup subnodes to separate files</h3>
-    <form action="">
-      <input type="hidden" name="command" value="backupChildren" />
-      <div class="formelement">
-        <label for="repository">Repository</label>
-        <select name="repository">
-          [#list this.repositories as item]
-          <option>${item}</option>
-          [/#list]
-        </select>
-      </div>
-      <div class="formelement">
-        <label for="parentpath">
-          Parent path
-          <small>(all the children will be saved)</small>
-        </label>
-        <input type="text" name="parentpath" />
-      </div>
-      <div class="formelement">
-        <label for="rootdir">Root dir, relative to webapp</label>
-        <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" />
-      </div>
-      <input type="submit" value="backupChildren" class="mgnlControlButton" />
-    </form>
+    <div class="pageframe">
+      <h3>Backup configuration</h3>
+      <form action="">
+        <input type="hidden" name="command" value="backup" />
+        <div class="formelement">
+          <label for="templates">Templates</label>
+          <input type="checkbox" name="templates" checked="checked" />
+        </div>
+        <div class="formelement">
+          <label for="paragraphs">Paragraphs</label>
+          <input type="checkbox" name="paragraphs" checked="checked" />
+        </div>
+        <div class="formelement">
+          <label for="dialogs">Dialogs</label>
+          <input type="checkbox" name="dialogs" checked="checked" />
+        </div>
+        <div class="formelement">
+          <label for="website">Website</label>
+          <input type="checkbox" name="website" checked="checked" />
+        </div>
+        <div class="formelement">
+          <label for="users">Users</label>
+          <input type="checkbox" name="users" />
+        </div>
+        <div class="formelement">
+          <label for="groups">Groups</label>
+          <input type="checkbox" name="groups" />
+        </div>
+        <div class="formelement">
+          <label for="roles">Roles</label>
+          <input type="checkbox" name="roles" />
+        </div>
+        <div class="formelement">
+          <label for="secure">Secure URIs</label>
+          <input type="checkbox" name="secure" />
+        </div>
+        <div class="formelement">
+          <label for="rootdir">Root dir, relative to webapp</label>
+          <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" class="text" />
+        </div>
+        <input type="submit" value="backup" class="mgnlControlButton" />
+      </form>
+    </div>
+    <div class="pageframe">
+      <h3>Backup subnodes to separate files</h3>
+      <form action="">
+        <input type="hidden" name="command" value="backupChildren" />
+        <div class="formelement">
+          <label for="repository">Repository</label>
+          <select name="repository">
+            [#list this.repositories as item]
+            <option>${item}</option>
+            [/#list]
+          </select>
+        </div>
+        <div class="formelement">
+          <label for="parentpath">
+            Parent path
+            <small>(all the children will be saved)</small>
+          </label>
+          <input type="text" name="parentpath" class="text" />
+        </div>
+        <div class="formelement">
+          <label for="rootdir">Root dir, relative to webapp</label>
+          <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" class="text" />
+        </div>
+        <input type="submit" value="backupChildren" class="mgnlControlButton" />
+      </form>
+    </div>
     [#if message?exists]
     <hr />
     <pre>${message}</pre>

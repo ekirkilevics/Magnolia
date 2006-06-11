@@ -1,0 +1,21 @@
+#mgnl table.data {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+#mgnl table.data td,#mgnl table.data th {
+    text-align: left;
+    padding: 2px;
+    border: 1px solid #999;
+    font-size: 9pt;
+}
+
+#mgnl table.data th {
+    background-color: #9DB517;
+    color: #fff;
+    font-weight: bold;
+}
+
+#mgnl table.data td {
+    background-color: #fff;
+}
