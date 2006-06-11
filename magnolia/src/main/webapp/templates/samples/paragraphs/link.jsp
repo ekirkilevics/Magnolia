@@ -20,8 +20,13 @@
         html.append("&raquo; <a href=\"");
 
         if (linkType.equals("external")) {
-            //if no protocol is defined, add http:// to link
-            if (html.indexOf("://")==-1) html.append("http://"+link+"\" target=\"_blank\">");
+            // if no protocol is defined, prepend http:// to link
+            if (html.indexOf("://")==-1) {
+            	html.append("http://"+link);
+            }
+			// open all external protocols in new window
+            html.append(link+"\" target=\"_blank\">");
+
             if (!text.equals("")) html.append(text);
             else html.append(link);
         }
