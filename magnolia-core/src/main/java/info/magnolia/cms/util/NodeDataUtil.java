@@ -20,14 +20,15 @@ import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Date;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import java.util.Date;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -56,10 +57,8 @@ public class NodeDataUtil {
     }
 
     /**
-     * <p/>
-     * Returns the representation of the value as a String:
+     * <p/> Returns the representation of the value as a String:
      * </p>
-     *
      * @return String
      */
     public String getValueString() {
@@ -67,10 +66,8 @@ public class NodeDataUtil {
     }
 
     /**
-     * <p/>
-     * Returns the representation of the value as a String:
+     * <p/> Returns the representation of the value as a String:
      * </p>
-     *
      * @return String
      */
     public String getValueString(String dateFormat) {
@@ -100,10 +97,9 @@ public class NodeDataUtil {
         }
         return StringUtils.EMPTY;
     }
-    
+
     /**
      * Returns the value as an Object.
-     *
      * @return Object
      */
     public static Object getValue(NodeData nd) {
@@ -155,7 +151,6 @@ public class NodeDataUtil {
 
     /**
      * Simple method to get strings like configuration informations
-     *
      * @param repository
      * @param path
      * @return
@@ -166,7 +161,6 @@ public class NodeDataUtil {
 
     /**
      * Get the string or the empty string if not existing
-     *
      * @param node
      * @param name
      * @return a string
@@ -177,7 +171,6 @@ public class NodeDataUtil {
 
     /**
      * You can define a default value if not found
-     *
      * @param repository
      * @param path
      * @param defaultValue
@@ -194,7 +187,6 @@ public class NodeDataUtil {
 
     /**
      * You can define a default value if not found
-     *
      * @param node
      * @param name
      * @param defaultValue
@@ -215,7 +207,6 @@ public class NodeDataUtil {
 
     /**
      * If the NodeData does not exist yet, just create it.
-     *
      * @param node
      * @param name
      * @return the found or created NodeData
@@ -224,31 +215,44 @@ public class NodeDataUtil {
      * @throws RepositoryException
      */
     public static NodeData getOrCreate(Content node, String name) throws AccessDeniedException, PathNotFoundException,
-            RepositoryException {
+        RepositoryException {
+        return getOrCreate(node, name, PropertyType.STRING);
+    }
+
+    /**
+     * If the NodeData does not exist yet, just create it.
+     * @param node
+     * @param name
+     * @return the found or created NodeData
+     * @throws AccessDeniedException
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     */
+    public static NodeData getOrCreate(Content node, String name, int type) throws AccessDeniedException,
+        PathNotFoundException, RepositoryException {
         if (node.hasNodeData(name)) {
             return node.getNodeData(name);
         }
 
-        return node.createNodeData(name);
+        return node.createNodeData(name, type);
     }
 
     /**
      * Uses the i18n mechanism to translate the message if the resulting string is a key
-     *
      * @param node
      * @param string
      * @return the i18n string
      */
     public static Object getI18NString(Content node, String str) {
         String key = getString(node, str);
-        String i18nBasename = NodeDataUtil.getString(node,"i18nBasename");
-        if(StringUtils.isNotEmpty(i18nBasename)){
+        String i18nBasename = NodeDataUtil.getString(node, "i18nBasename");
+        if (StringUtils.isNotEmpty(i18nBasename)) {
             Messages msgs = MessagesUtil.chainWithDefault(i18nBasename);
             return msgs.getWithDefault(key, key);
         }
-        else{
-            return MessagesManager.getWithDefault(key, key);
-        }
+
+        return MessagesManager.getWithDefault(key, key);
+
     }
 
     /**
