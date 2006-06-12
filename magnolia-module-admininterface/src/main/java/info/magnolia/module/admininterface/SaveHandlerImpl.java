@@ -22,10 +22,7 @@ import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Digester;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.cms.util.LinkUtil;
-import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.*;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
@@ -246,17 +243,8 @@ public class SaveHandlerImpl implements SaveHandler {
         if(StringUtils.isEmpty(values[0]))
             return;
         try {
-            String simpleDate = "yyyy-MM-dd";
-            String longDate = "yyyy-MM-dd'T'HH:mm:ss";
-            SimpleDateFormat sdf;
-            if(values[0].length()>simpleDate.length())
-                sdf = new SimpleDateFormat(longDate);
-            else
-                sdf = new SimpleDateFormat(simpleDate);
-            Date value = sdf.parse(values[0]);
-            Calendar instance = Calendar.getInstance(TimeZone.getTimeZone("UTC"));
-            instance.setTimeInMillis(value.getTime());
-            NodeDataUtil.getOrCreate(node,name).setValue(instance);
+            Calendar utc = DateUtil.getUTCCalendarFromDialogString(values[0]);
+            NodeDataUtil.getOrCreate(node,name).setValue(utc);
         } catch (Exception e) {
             log.error("Could not update date value of node:"+node.getHandle()+" of property:"+name);
         }

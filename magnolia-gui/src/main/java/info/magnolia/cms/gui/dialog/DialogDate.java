@@ -13,6 +13,7 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.util.DateUtil;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -64,10 +65,8 @@ public class DialogDate extends DialogEditWithButton {
 
             // valueCalendar is in UTC  turn it back into the current timezone
             if (valueCalendar != null) {
-                Date valueDate = valueCalendar.getTime();
-                Calendar c = Calendar.getInstance(); // this has the default timezone for the server
-                c.setTime(valueDate);
-                this.setValue(DateFormatUtils.format(c.getTime(), format));
+                Calendar local = DateUtil.getLocalCalendarFromUTC(valueCalendar);
+                this.setValue(DateFormatUtils.format(local.getTime(), format));
 
             }
         }
