@@ -14,6 +14,7 @@ package info.magnolia.jackrabbit;
 
 import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.beans.config.ShutdownTask;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Path;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -41,7 +42,6 @@ import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
-import javax.servlet.ServletContextEvent;
 import javax.xml.transform.TransformerFactoryConfigurationError;
 
 import org.apache.commons.io.IOUtils;
@@ -383,9 +383,10 @@ public class ProviderImpl implements Provider {
      * @see info.magnolia.repository.Provider#registerWorkspace(java.lang.String)
      */
     public boolean registerWorkspace(String workspaceName) throws RepositoryException {
-
         // check if workspace already exists
-        SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
+        SimpleCredentials credentials = new SimpleCredentials(
+                ContentRepository.REPOSITORY_USER,
+                ContentRepository.REPOSITORY_PSWD.toCharArray());
         Session jcrSession = this.repository.login(credentials);
         WorkspaceImpl defaultWorkspace = (WorkspaceImpl) jcrSession.getWorkspace();
         String[] workspaceNames = defaultWorkspace.getAccessibleWorkspaceNames();
