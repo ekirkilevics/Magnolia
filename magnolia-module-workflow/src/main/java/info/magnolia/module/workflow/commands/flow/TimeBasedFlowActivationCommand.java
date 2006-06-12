@@ -14,7 +14,7 @@ package info.magnolia.module.workflow.commands.flow;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.DateUtil;
 import info.magnolia.context.Context;
 import info.magnolia.module.workflow.WorkflowConstants;
 import openwfe.org.engine.workitem.LaunchItem;
@@ -35,10 +35,9 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
 
     private static final String WEB_SCHEDULED_ACTIVATION = "scheduledActivation";
 
-    private static Logger log = LoggerFactory.getLogger(TimeBasedFlowActivationCommand.class);
+    private static final Logger log = LoggerFactory.getLogger(TimeBasedFlowActivationCommand.class);
 
     public TimeBasedFlowActivationCommand() {
-        // set default value
         setWorkflowName(WEB_SCHEDULED_ACTIVATION);
     }
 
@@ -47,59 +46,42 @@ public class TimeBasedFlowActivationCommand extends FlowCommand {
      */
     public void prepareLaunchItem(Context context, LaunchItem launchItem) {
         super.prepareLaunchItem(context, launchItem);
-        
-        SimpleDateFormat sdf = new SimpleDateFormat(WorkflowConstants.OPENWFE_DATE_FORMAT);
 
-        // add start date and end date
         String repository = (String) context.get(Context.ATTRIBUTE_REPOSITORY);
         String path = (String) context.get(Context.ATTRIBUTE_PATH);
 
-        HierarchyManager hm = ContentRepository.getHierarchyManager(repository);
-
-        Content node = null;
         try {
-            node = hm.getContent(path);
+            Content node = ContentRepository.getHierarchyManager(repository).getContent(path);
+            updateDateAttribute(node, launchItem,WorkflowConstants.ATTRIBUTE_START_DATE);
+            updateDateAttribute(node, launchItem,WorkflowConstants.ATTRIBUTE_END_DATE);
         }
         catch (RepositoryException e) {
             log.error("can't find node for path [" + path + "]", e);
-            return;
         }
 
-        Calendar cd = null;
+    }
 
-
-        // get start time
+    /**
+     * Set a date stored in the repository into the list of attributes of the launch item.
+     *
+     * <ul>
+     * <li>get utc calendar from repository</li>
+     * <li>convert utc to local calendar</li>
+     * <li>get string time for open wfe from local calendar</li>
+     * <li>set string attribute of the launch item</li>
+     * </ul>
+     */
+    private void updateDateAttribute(Content node, LaunchItem launchItem,String attributeName)  {
+        final SimpleDateFormat sdf = new SimpleDateFormat(WorkflowConstants.OPENWFE_DATE_FORMAT);
         try {
-            if(node.hasNodeData(WorkflowConstants.ATTRIBUTE_START_DATE))
-                cd = node.getNodeData(WorkflowConstants.ATTRIBUTE_START_DATE).getDate();
-        }
-        catch (Exception e) {
-            log.warn("cannot get start time for node " + path, e);
-        }
-
-        if (cd != null) {
-            String date1 = sdf.format(new Date(cd.getTimeInMillis()));
-            if(log.isDebugEnabled())
-            log.debug("start date = " + date1);
-            launchItem.getAttributes().puts(WorkflowConstants.ATTRIBUTE_START_DATE, date1);
-        }
-
-        Calendar ce = null;
-
-        // get end time
-        try {
-            if(node.hasNodeData(WorkflowConstants.ATTRIBUTE_END_DATE))
-                ce = node.getNodeData(WorkflowConstants.ATTRIBUTE_END_DATE).getDate();
-        }
-        catch (Exception e) {
-            log.warn("cannot get end time for node " + path, e);
-        }
-
-        if (ce != null) {
-            String date2 = sdf.format(new Date(ce.getTimeInMillis()));
-            if(log.isDebugEnabled())
-                log.debug("end date = " + date2);
-            launchItem.getAttributes().puts(WorkflowConstants.ATTRIBUTE_END_DATE, date2);
+            if(node.hasNodeData(attributeName)) {
+                Calendar cd = node.getNodeData(attributeName).getDate();
+                cd = DateUtil.getLocalCalendarFromUTC(cd);
+                String date = sdf.format(new Date(cd.getTimeInMillis()));
+                launchItem.getAttributes().puts(attributeName, date);
+            }
+        } catch (Exception e) {
+            log.warn("cannot set date:"+attributeName+" for node" + node.getHandle(), e);
         }
     }
 
