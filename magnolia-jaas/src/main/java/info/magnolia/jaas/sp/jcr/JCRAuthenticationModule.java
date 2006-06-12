@@ -140,8 +140,8 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
         EntityImpl user = new EntityImpl();
         String language = this.user.getNodeData("language").getString();
         user.addProperty(Entity.LANGUAGE, language);
-        String name = this.user.getTitle();
-        user.addProperty(Entity.NAME, name);
+        user.addProperty(Entity.NAME, this.user.getName());
+        user.addProperty(Entity.FULL_NAME, this.user.getTitle());
         user.addProperty(Entity.PASSWORD, new String(this.pswd));
         this.subject.getPrincipals().add(user);
     }
