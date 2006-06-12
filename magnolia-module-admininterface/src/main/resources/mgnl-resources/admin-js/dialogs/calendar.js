@@ -117,41 +117,6 @@ function Calendar_calc_month_year(p_Month, p_Year, incr) {
     return ret_arr;
 }
 
-
-function Calendar_calc_month_year(p_Month, p_Year, incr) {
-    /*
-    Will return an 1-D array with 1st element being the calculated month
-    and second being the calculated year
-    after applying the month increment/decrement as specified by 'incr' parameter.
-    'incr' will normally have 1/-1 to navigate thru the months.
-    */
-    var ret_arr = new Array();
-
-    if (incr == -1) {
-        // B A C K W A R D
-        if (p_Month == 0) {
-            ret_arr[0] = 11;
-            ret_arr[1] = parseInt(p_Year) - 1;
-        }
-        else {
-            ret_arr[0] = parseInt(p_Month) - 1;
-            ret_arr[1] = parseInt(p_Year);
-        }
-    } else if (incr == 1) {
-        // F O R W A R D
-        if (p_Month == 11) {
-            ret_arr[0] = 0;
-            ret_arr[1] = parseInt(p_Year) + 1;
-        }
-        else {
-            ret_arr[0] = parseInt(p_Month) + 1;
-            ret_arr[1] = parseInt(p_Year);
-        }
-    }
-
-    return ret_arr;
-}
-
 Calendar.prototype.getMonthlyCalendarCode = function() {
     var vCode = "";
     var vHeader_Code = "";
@@ -616,7 +581,7 @@ function show_calendar() {
 
     p_month = new String(gNow.getMonth());
     p_year = new String(gNow.getFullYear().toString());
-    vWinCal = window.open("/admindocroot/0.gif", "Calendar","width=275,height=360,status=no,resizable=no");
+    vWinCal = window.open("/admindocroot/0.gif", "Calendar","width=275,height=400,status=no,resizable=no");
     vWinCal.opener = self;
     ggWinCal = vWinCal;
     selectedTime =
