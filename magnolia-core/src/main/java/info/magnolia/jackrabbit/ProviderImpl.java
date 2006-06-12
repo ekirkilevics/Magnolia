@@ -251,7 +251,9 @@ public class ProviderImpl implements Provider {
     public void registerNodeTypes(String configuration) throws RepositoryException {
 
         // check if workspace already exists
-        SimpleCredentials credentials = new SimpleCredentials("admin", "admin".toCharArray());
+        SimpleCredentials credentials = new SimpleCredentials(
+                ContentRepository.REPOSITORY_USER,
+                ContentRepository.REPOSITORY_PSWD.toCharArray());
         Session jcrSession = this.repository.login(credentials);
         Workspace workspace = jcrSession.getWorkspace();
 
