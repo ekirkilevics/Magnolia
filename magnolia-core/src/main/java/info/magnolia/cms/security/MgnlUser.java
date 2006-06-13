@@ -15,7 +15,6 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -28,8 +27,11 @@ import java.util.Iterator;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.PathNotFoundException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -115,11 +117,26 @@ public class MgnlUser implements User {
      */
     private boolean hasAny(String name, String nodeName) {
         try {
+            HierarchyManager hm;
+            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES))
+                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
+            else
+                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+
             Content node = userNode.getContent(nodeName);
-            for (Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
-                Content subNode = (Content) iter.next();
-                if (subNode.getNodeData("path").getString().equals("/" + name)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    return true;
+            for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
+                NodeData nodeData = (NodeData) iter.next();
+                // check for the existence of this ID
+                try {
+                    if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
+                        return true;
+                    }
+                } catch(ItemNotFoundException e) {
+                    if (log.isDebugEnabled())
+                        log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
+                } catch (IllegalArgumentException e) {
+                    if (log.isDebugEnabled())
+                        log.debug(nodeData.getHandle()+" has invalid value");
                 }
             }
         }
@@ -136,12 +153,26 @@ public class MgnlUser implements User {
      */
     private void remove(String name, String nodeName) {
         try {
+            HierarchyManager hm;
+            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES))
+                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
+            else
+                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
             Content node = userNode.getContent(nodeName);
 
-            for (Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
-                Content subNode = (Content) iter.next();
-                if (subNode.getNodeData("path").getString().equals("/" + name)) { //$NON-NLS-1$ //$NON-NLS-2$
-                    subNode.delete();
+            for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
+                NodeData nodeData = (NodeData) iter.next();
+                // check for the existence of this ID
+                try {
+                    if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
+                        nodeData.delete();
+                    }
+                } catch(ItemNotFoundException e) {
+                    if (log.isDebugEnabled())
+                        log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
+                } catch (IllegalArgumentException e) {
+                    if (log.isDebugEnabled())
+                        log.debug(nodeData.getHandle()+" has invalid value");
                 }
             }
             userNode.save();
@@ -156,16 +187,25 @@ public class MgnlUser implements User {
      */
     private void add(String name, String nodeName) {
         try {
+            HierarchyManager hm;
+            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES))
+                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
+            else
+                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+
             if (!this.hasAny(name, nodeName)) {
                 Content node = userNode.getContent(nodeName);
-
-                // used only to get the unique label
-                HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-                if (!node.hasContent(name)) {
-                    String newName = Path.getUniqueLabel(hm, node.getHandle(), "0");
-                    Content subNode = node.createContent(newName, ItemType.CONTENTNODE);
-                    subNode.createNodeData("path").setValue("/" + name);
+                // add corresponding ID
+                try {
+                    String value = hm.getContent("/"+name).getUUID(); // assuming that there is a flat hierarchy
+                    // used only to get the unique label
+                    HierarchyManager usersHM = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+                    String newName = Path.getUniqueLabel(usersHM, node.getHandle(), "0");
+                    node.createNodeData(newName).setValue(value);
                     userNode.save();
+                } catch(PathNotFoundException e) {
+                    if (log.isDebugEnabled())
+                        log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
                 }
             }
         }

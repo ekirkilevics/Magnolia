@@ -33,12 +33,28 @@ public interface Group {
     public void addRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
+     * add subgroup to this group
+     * @param groupName
+     * @throws UnsupportedOperationException if the implementation does not support writing
+     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
+     * */
+    public void addGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException;
+
+    /**
      * remove role from this group
      * @param roleName
      * @throws UnsupportedOperationException if the implementation does not support writing
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
      * */
     public void removeRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
+
+    /**
+     * remove subgroup from this group
+     * @param groupName
+     * @throws UnsupportedOperationException if the implementation does not support writing
+     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
+     * */
+    public void removeGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
      * returns true if role exist in this group
