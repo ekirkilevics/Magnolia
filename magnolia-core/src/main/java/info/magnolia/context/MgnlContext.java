@@ -238,7 +238,7 @@ public class MgnlContext {
      * @param value
      */
     public static void setAttribute(String name, Object value) {
-        getInstance().setAttribute(name, value, Context.LOCALE_SCOPE);
+        getInstance().setAttribute(name, value, Context.LOCAL_SCOPE);
     }
 
     /**

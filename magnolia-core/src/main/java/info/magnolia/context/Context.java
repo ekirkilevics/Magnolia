@@ -34,7 +34,7 @@ public interface Context extends org.apache.commons.chain.Context {
     /**
      * Attribute visibility scope
      */
-    public static final int LOCALE_SCOPE = 1;
+    public static final int LOCAL_SCOPE = 1;
 
     /**
      * Attribute visibility scope Shared by all requests from this session

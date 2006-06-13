@@ -62,7 +62,7 @@ public class FlowCommand extends MgnlCommand {
      * @param launchItem
      */
     public void prepareLaunchItem(Context context, LaunchItem launchItem){
-        Map map = context.getAttributes(Context.LOCALE_SCOPE);
+        Map map = context.getAttributes(Context.LOCAL_SCOPE);
         // remove not serializable objects
         for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();

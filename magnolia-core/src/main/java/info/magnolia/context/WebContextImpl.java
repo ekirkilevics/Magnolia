@@ -189,7 +189,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public void setAttribute(String name, Object value, int scope) {
         switch (scope) {
-            case Context.LOCALE_SCOPE:
+            case Context.LOCAL_SCOPE:
                 this.request.setAttribute(name, value);
                 break;
             case Context.SESSION_SCOPE:
@@ -224,7 +224,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public Object getAttribute(String name, int scope) {
         switch (scope) {
-            case Context.LOCALE_SCOPE:
+            case Context.LOCAL_SCOPE:
                 Object obj = this.request.getAttribute(name);
                 if(obj == null){
                     obj = this.getParameter(name);
@@ -250,7 +250,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public void removeAttribute(String name, int scope) {
         switch (scope) {
-            case Context.LOCALE_SCOPE:
+            case Context.LOCAL_SCOPE:
                 this.request.removeAttribute(name);
                 break;
             case Context.SESSION_SCOPE:
@@ -274,7 +274,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         Map map = new HashMap();
         Enumeration keysEnum;
         switch (scope) {
-            case Context.LOCALE_SCOPE:
+            case Context.LOCAL_SCOPE:
                 // add parameters
                 map.putAll(this.getParameters());
                 // attributes have higher priority

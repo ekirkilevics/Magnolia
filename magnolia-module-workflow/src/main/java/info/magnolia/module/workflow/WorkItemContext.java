@@ -53,7 +53,7 @@ public class WorkItemContext extends ContextDecorator {
      * Use work item if request scope
      */
     public Object getAttribute(String name, int scope) {
-        if(scope == Context.LOCALE_SCOPE){
+        if(scope == Context.LOCAL_SCOPE){
             Attribute attr = this.workItem.getAttribute(name);
             if(attr != null){
                 Object obj = AttributeUtils.owfe2java(attr);
@@ -69,7 +69,7 @@ public class WorkItemContext extends ContextDecorator {
      * Use work item if request scope
      */
     public Map getAttributes(int scope) {
-        if(scope == Context.LOCALE_SCOPE){
+        if(scope == Context.LOCAL_SCOPE){
             return AttributeUtils.map2java(this.workItem.getAttributes());
         }
         return super.getAttributes(scope);
@@ -79,7 +79,7 @@ public class WorkItemContext extends ContextDecorator {
      * Use work item if request scope
      */
     public void setAttribute(String name, Object value, int scope) {
-        if(scope == Context.LOCALE_SCOPE){
+        if(scope == Context.LOCAL_SCOPE){
             Attribute attr = AttributeUtils.java2owfe(value);
             try {
                 this.workItem.addAttribute(name, attr);
@@ -95,7 +95,7 @@ public class WorkItemContext extends ContextDecorator {
      * Use work item if request scope
      */
     public void removeAttribute(String name, int scope) {
-        if(scope == Context.LOCALE_SCOPE){
+        if(scope == Context.LOCAL_SCOPE){
             this.workItem.removeAttribute(name);
         }
         this.removeAttribute(name, scope);
