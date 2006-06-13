@@ -82,6 +82,10 @@ public class DocumentDialog extends ConfiguredDialog {
             };
         };
 
+        if(StringUtils.isNotEmpty(this.version)){
+            storageNode = storageNode.getVersionedContent(this.version);
+        }
+        
         dialog.init(request, response, storageNode, configNode);
 
         dialog.addSub(new DialogControlImpl(){
