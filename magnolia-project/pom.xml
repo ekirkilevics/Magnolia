@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>3.0-rc1-SNAPSHOT</version>
+  <version>3.0-rc1</version>
   <description>
     Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
     java content repositories (JCR).
@@ -82,9 +81,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/magnolia-project</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/magnolia-project</developerConnection>
-    <url>http://svn.magnolia.info/view</url>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-project-3.0-rc1</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-project-3.0-rc1</developerConnection>
+    <url>http://svn.magnolia.info/view/tags/magnolia-project-3.0-rc1</url>
   </scm>
   <organization>
     <name>Obinary Ltd</name>
