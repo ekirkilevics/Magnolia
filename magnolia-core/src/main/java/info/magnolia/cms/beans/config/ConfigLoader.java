@@ -241,7 +241,7 @@ public class ConfigLoader {
     private void printSystemRestartInfo() {
         ModuleLoader loader = ModuleLoader.getInstance();
         System.out.println("-----------------------------------------------------"); //$NON-NLS-1$
-        System.out.println("One or more modules need a restart of the container:"); //$NON-NLS-1$
+        System.out.println("One or more modules need a restart of the webapp:"); //$NON-NLS-1$
         for (Iterator iter = loader.getModuleInstances().keySet().iterator(); iter.hasNext();) {
             String moduleName = (String) iter.next();
             Module module = loader.getModuleInstance(moduleName);
