@@ -18,6 +18,7 @@ import info.magnolia.cms.util.DateUtil;
 import info.magnolia.context.Context;
 import info.magnolia.module.workflow.WorkflowConstants;
 import openwfe.org.engine.workitem.LaunchItem;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,16 +32,16 @@ import java.util.Date;
  * The activation command which will launch a flow to do scheduled activation by "sleep" functionality of owfe
  * @author jackie
  */
-public class TimeBasedFlowActivationCommand extends FlowCommand {
+public class ActivationFlowCommand extends FlowCommand {
 
-    private static final String WEB_SCHEDULED_ACTIVATION = "scheduledActivation";
+    private static final String WEB_SCHEDULED_ACTIVATION = "activation";
 
-    private static final Logger log = LoggerFactory.getLogger(TimeBasedFlowActivationCommand.class);
-
-    public TimeBasedFlowActivationCommand() {
+    private static final Logger log = LoggerFactory.getLogger(ActivationFlowCommand.class);
+    
+    public ActivationFlowCommand() {
         setWorkflowName(WEB_SCHEDULED_ACTIVATION);
     }
-
+    
     /**
      * Set the start and end date for this page
      */
