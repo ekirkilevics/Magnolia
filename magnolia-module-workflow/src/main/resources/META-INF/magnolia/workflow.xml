@@ -10,6 +10,11 @@
       <name>adminInterface</name>
       <version>3.0</version>
     </dependency>
+    <dependency>
+       <name>dms</name>
+        <version>3.0</version>
+        <optional>true</optional>
+    </dependency>
   </dependencies>
   <servlets>
     <servlet>
