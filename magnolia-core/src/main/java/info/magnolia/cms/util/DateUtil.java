@@ -76,7 +76,7 @@ public class DateUtil {
      * Convert a string date from a dialog date to a UTC calendar ready to be stored in the repository
      */
     public static Calendar getUTCCalendarFromDialogString(String dateString) throws ParseException {
-        SimpleDateFormat sdf = (dateString.length()>YYYY_MM_DD.length()) ? new SimpleDateFormat(YYYY_MM_DD) : new SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS);
+        SimpleDateFormat sdf = (dateString.length()>YYYY_MM_DD.length()) ? new SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS) : new SimpleDateFormat(YYYY_MM_DD) ;
         return getUTCCalendarFromLocalDate(sdf.parse(dateString));
     }
 
