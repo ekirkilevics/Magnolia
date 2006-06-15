@@ -156,7 +156,8 @@ public class BarMain extends Bar {
      */
     public void setButtonEditView() {
         Button b = new Button();
-        b.setLabel("&raquo;"); //$NON-NLS-1$
+        String str = MessagesManager.get("buttons.preview.hidden");
+        b.setLabel("&raquo;" + str); //$NON-NLS-1$
         b.setOnclick("mgnlPreview(false);"); //$NON-NLS-1$
         this.setButtonEditView(b);
     }
