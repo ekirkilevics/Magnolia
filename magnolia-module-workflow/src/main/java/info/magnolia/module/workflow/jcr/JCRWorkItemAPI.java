@@ -207,8 +207,9 @@ public class JCRWorkItemAPI {
      */
     public String createPathFromId(FlowExpressionId eid) {
 		String wlInstId = eid.getWorkflowInstanceId();
-		int groupNumber = Integer.valueOf(
-				wlInstId.substring(wlInstId.length() - 3)).intValue() % 100;
+        // FIXME someone who knows the code better should have a look
+		String groupString = StringUtils.right(StringUtils.substringBefore(wlInstId, "."),3);
+		int groupNumber = Integer.parseInt(groupString) % 100;
 		StringBuffer buffer = new StringBuffer(eid.getWorkflowDefinitionName());
 		buffer.append(WorkflowConstants.SLASH);
 		buffer.append(eid.getWorkflowDefinitionRevision());
