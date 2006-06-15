@@ -1,0 +1,2394 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sv:node sv:name="help" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+  xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
+  xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
+  xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
+  xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>mgnl:content</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+    <sv:value>mix:versionable</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:uuid" sv:type="String">
+    <sv:value>b64f3db3-6b91-45a9-a7e2-39be7f939320</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+    <sv:value>true</sv:value>
+  </sv:property>
+  <sv:property sv:name="headerImageAlt" sv:type="String">
+    <sv:value>Magnolia CMS</sv:value>
+  </sv:property>
+  <sv:property sv:name="hideInNav" sv:type="String">
+    <sv:value>false</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:created" sv:type="Date">
+    <sv:value>2006-05-11T14:48:51.414+02:00</sv:value>
+  </sv:property>
+  <sv:property sv:name="title" sv:type="String">
+    <sv:value>Help</sv:value>
+  </sv:property>
+  <sv:node sv:name="MetaData">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:metaData</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>43078180-a30e-4f85-b549-4d4148074a67</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:authorid" sv:type="String">
+      <sv:value>superuser</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:title" sv:type="String">
+      <sv:value/>
+    </sv:property>
+    <sv:property sv:name="mgnl:creationdate" sv:type="String">
+      <sv:value>2004-11-12T15:48:52.071+01:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+      <sv:value>2006-06-15T09:06:54.939+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+      <sv:value>false</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:template" sv:type="String">
+      <sv:value>sampleTwoColumns</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:Data" sv:type="String">
+      <sv:value>MetaData</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+      <sv:value>2006-06-13T11:02:52.284+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-11T14:48:51.414+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:activatorid" sv:type="String">
+      <sv:value>superuser</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+      <sv:value>1100257829755000</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="mainColumnParagraphs">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>01f3301e-926c-476b-8db7-46f8be38b88e</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-11T14:48:51.418+02:00</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>0e9538b9-e86c-469e-8ba9-a6dfe01d2ef3</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.418+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-12T15:51:33.465+01:00</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="0">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>a842c66f-f267-4847-aaf9-c3c50b59055b</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="imageFloat" sv:type="String">
+        <sv:value>left</sv:value>
+      </sv:property>
+      <sv:property sv:name="lineAbove" sv:type="String">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-06-13T11:53:39.276+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="text" sv:type="String">
+        <sv:value>Magnolia Documentation is available at the &lt;a href="http://www.magnolia.info/en/magnolia/developer.html" target="_blank"&gt;magnolia documentation&lt;/a&gt; section.</sv:value>
+      </sv:property>
+      <sv:property sv:name="spacer" sv:type="Long">
+        <sv:value>1</sv:value>
+      </sv:property>
+      <sv:property sv:name="title" sv:type="String">
+        <sv:value>Documentation</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>c990eea0-6c48-4856-bbd0-13f9f6993559</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:template" sv:type="String">
+          <sv:value>samplesTextImage</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-13T11:53:39.276+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2006-06-13T11:53:39.277+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+          <sv:value>2006-06-15T09:06:54.938+02:00</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="text_files">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>fbea78d6-bfce-4c9b-a598-4d7ffedd9fa9</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-13T11:53:39.280+02:00</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>116ab892-f5fb-4bfd-b538-ccf5a25f54eb</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-13T11:53:39.280+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2006-06-13T11:53:39.281+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+    <sv:node sv:name="06">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>e572f8f7-d5d5-47d8-bde7-4cceb587dc95</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="imageFloat" sv:type="String">
+        <sv:value>left</sv:value>
+      </sv:property>
+      <sv:property sv:name="lineAbove" sv:type="String">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="paragraph" sv:type="String">
+        <sv:value>samplesTextImage</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.421+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="spacer" sv:type="Long">
+        <sv:value>1</sv:value>
+      </sv:property>
+      <sv:property sv:name="text" sv:type="String">
+        <sv:value>For a complete list of open issues and planned features check the release notes and change log in &lt;a target="_blank" href="http://jira.magnolia.info"&gt;jira&lt;/a&gt;.</sv:value>
+      </sv:property>
+      <sv:property sv:name="title" sv:type="String">
+        <sv:value>Open issues and planned features</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>a7525136-645b-4170-8860-2b3b83dd1834</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="String">
+          <sv:value>2004-11-12T15:57:23.702+01:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+          <sv:value>2006-06-13T11:54:11.424+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:template" sv:type="String">
+          <sv:value>samplesTextImage</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.421+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+          <sv:value>1100271092547000</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="text_files">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>f6908f2e-7fd9-4eda-8f77-1fec948bea1f</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-09T15:50:44.975+02:00</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>4f646bc5-c9ab-4e5d-b0c9-97967eadc8bd</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-09T15:50:44.975+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2006-06-09T15:50:44.976+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="rightColumnParagraphs">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>11e116db-c4ba-45e9-8752-7da4a1d05863</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-11T14:48:51.468+02:00</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>f74ea156-c9a4-4d91-8a59-3c0bc6a4e4b8</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.468+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2005-06-17T09:35:27.584+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="0">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>5a691226-c1d5-49a4-9790-5db41773dc19</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="paragraph" sv:type="String">
+        <sv:value>samplesRightColumn</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.471+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="text" sv:type="String">
+        <sv:value>Magnolia Organization offers professional training services in Los Angeles and Basel. In addition, special on-site developer training can be arranged for.      &lt;br /&gt;&lt;br /&gt;&lt;span style="font-weight: bold;"&gt;Next developer training:&lt;/span&gt;        &lt;br /&gt;&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; June 19th - June 22nd &lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; Los Angeles, USA     &lt;br /&gt;&lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; July 17th - 20th &lt;br /&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp; Basel, Switzerland&lt;br /&gt; &lt;ul type="square"&gt; &lt;/ul&gt;     For more information, see our online section on &lt;a href="http://www.magnolia.info/en/magnolia/services/training.html" target="_blank"&gt;Magnolia training&lt;/a&gt;</sv:value>
+      </sv:property>
+      <sv:property sv:name="title" sv:type="String">
+        <sv:value>Magnolia Training</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>aff8a859-0cd8-405b-8908-f8503a282ca6</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2005-06-17T09:35:27.589+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+          <sv:value>2006-06-12T17:50:11.431+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:template" sv:type="String">
+          <sv:value>samplesRightColumn</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.471+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+          <sv:value>1118993727591000</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="text_files">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>90fff952-f954-4107-97a7-9b6acaa6c4c9</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-09T16:00:15.090+02:00</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>2bc83688-b98c-4884-8379-a565ac111c84</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-09T16:00:15.091+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2006-06-09T16:00:15.091+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="services">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:content</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>d5c5cd5c-2e15-476a-9b89-79b3b7d7db09</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="hideInNav" sv:type="String">
+      <sv:value>false</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-11T14:48:51.475+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="navTitle" sv:type="String">
+      <sv:value>Services</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>Magnolia International Services</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>3b9c39e2-1b1c-404e-a831-6f3e5fdbbe53</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:title" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-12T12:15:15.713+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-06-13T13:28:39.724+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:template" sv:type="String">
+        <sv:value>sampleTwoColumns</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-06-13T11:45:38.931+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.475+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+        <sv:value>1100275372520000</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="mainColumnParagraphs">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>2c09663b-9db8-4e9a-b325-ef564a821a50</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.485+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>6773c78f-6900-472b-bbfe-822b0d99e200</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.485+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="String">
+          <sv:value>2004-11-12T12:16:00.142+01:00</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="0">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>586b1a67-dbbc-4e70-b69e-fd10f4512ffe</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="imageFloat" sv:type="String">
+          <sv:value>left</sv:value>
+        </sv:property>
+        <sv:property sv:name="lineAbove" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="paragraph" sv:type="String">
+          <sv:value>samplesTextImage</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.493+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>&lt;a target="_blank" href="http://www.magnolia.info"&gt;Magnolia International&lt;/a&gt; offers a wide range of services which will help users and developers to enable them a quick start and get an in-depth understanding of Magnolia.</sv:value>
+        </sv:property>
+        <sv:property sv:name="spacer" sv:type="Long">
+          <sv:value>1</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>86dc2bf6-8025-42da-91db-b56cbb1ce06f</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="String">
+            <sv:value>2004-11-12T12:16:00.187+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-13T11:42:35.039+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesTextImage</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-05-11T14:48:51.494+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1100258160231000</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>56b76dab-88b1-41df-85a3-6fc495aa6de8</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-13T11:42:24.363+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>373c2fbf-683f-453b-af9f-b702c87ca360</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-13T11:42:24.363+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-13T11:42:24.364+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="01">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>3d87ec5d-3a3a-4052-918a-3ea1f7e8cd57</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="imageFloat" sv:type="String">
+          <sv:value>left</sv:value>
+        </sv:property>
+        <sv:property sv:name="lineAbove" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="paragraph" sv:type="String">
+          <sv:value>samplesTextImage</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.534+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>We have extensive experience with Magnolia projects around the world. We will be happy to provide our profound Magnolia expertise to realize any of your requirements.</sv:value>
+        </sv:property>
+        <sv:property sv:name="spacer" sv:type="Long">
+          <sv:value>1</sv:value>
+        </sv:property>
+        <sv:property sv:name="title" sv:type="String">
+          <sv:value>Professional Services</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>044bf67c-b88a-40d6-945b-6243e7a9b4bf</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="String">
+            <sv:value>2004-11-12T12:18:47.299+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-13T11:40:31.287+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesTextImage</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-05-11T14:48:51.534+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1100258195825250</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>b6a2d648-28ea-4360-9781-5ab4f0064156</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-13T11:40:31.296+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>d7b97f77-faba-4392-b756-07c289976b2e</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-13T11:40:31.297+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-13T11:40:31.297+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="00">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>98f7fefe-e4c8-4818-adfa-e9f4c6a76955</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="imageFloat" sv:type="String">
+          <sv:value>left</sv:value>
+        </sv:property>
+        <sv:property sv:name="lineAbove" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="paragraph" sv:type="String">
+          <sv:value>samplesTextImage</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.499+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>If you are looking for a professional partner to plan and implement your new website based on Magnolia, ask the experts: Magnolia International has been implementing dynamic websites for many years, and as the core developers of Magnolia, we know how to implement your requirements professionally. Just outline your ideas, and we will provide a cost estimate.</sv:value>
+        </sv:property>
+        <sv:property sv:name="spacer" sv:type="Long">
+          <sv:value>1</sv:value>
+        </sv:property>
+        <sv:property sv:name="title" sv:type="String">
+          <sv:value>Implementation of Magnolia-based projects</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>a6d38452-2490-4a02-853a-10414284d700</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="String">
+            <sv:value>2004-11-12T12:17:35.108+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-13T11:43:43.036+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesTextImage</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-05-11T14:48:51.499+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1100258183960500</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>9fbb368d-c77a-404c-b001-51d8eb8e8325</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-13T11:43:43.043+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>554eca23-7f87-499f-9b4b-a2d967e2bbd0</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-13T11:43:43.043+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-13T11:43:43.044+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="02">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>2cf0fc03-62f1-404f-9102-8b4d605f7c41</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="imageFloat" sv:type="String">
+          <sv:value>left</sv:value>
+        </sv:property>
+        <sv:property sv:name="lineAbove" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="paragraph" sv:type="String">
+          <sv:value>samplesTextImage</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.537+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>You would like the quality of open source Magnolia combined with the best possible support? We meet your needs: as the core developers of Magnolia, we have the expertise regarding any questions on Magnolia.      You will receive an acceptance feedback and a time estimate for each support request (regardless of the support level) within about one business day.</sv:value>
+        </sv:property>
+        <sv:property sv:name="spacer" sv:type="Long">
+          <sv:value>1</sv:value>
+        </sv:property>
+        <sv:property sv:name="title" sv:type="String">
+          <sv:value>Magnolia Support Services</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>c21644d6-e1b8-48e8-b007-1bd5979a8053</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="String">
+            <sv:value>2004-11-12T12:20:03.722+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-13T11:44:50.795+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesTextImage</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-05-11T14:48:51.537+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1100258207690000</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>7539969d-c748-4d96-a822-572d82c78aa9</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-13T11:44:50.803+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>a14af4a0-13ca-4895-8f33-74be0dcc3d9b</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-13T11:44:50.803+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-13T11:44:50.804+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="03">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>5f83ee08-642e-4369-8f58-240801aae306</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="imageFloat" sv:type="String">
+          <sv:value>left</sv:value>
+        </sv:property>
+        <sv:property sv:name="lineAbove" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="paragraph" sv:type="String">
+          <sv:value>samplesTextImage</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.541+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>If you want to make use of our in-depth knowledge of magnolia, please review our &lt;a href="http://www.magnolia.info/en/magnolia/services/training.html" target="_blank"&gt;training offerings&lt;/a&gt;.
+  &lt;a href="mailto:marketing@obinary.com"&gt;&lt;/a&gt;</sv:value>
+        </sv:property>
+        <sv:property sv:name="spacer" sv:type="Long">
+          <sv:value>1</sv:value>
+        </sv:property>
+        <sv:property sv:name="title" sv:type="String">
+          <sv:value>Magnolia Training Services</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>d75f725c-6841-44ac-933b-148474ac5d0d</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="String">
+            <sv:value>2004-11-12T12:21:41.920+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2005-06-17T09:44:53.873+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesTextImage</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-05-11T14:48:51.541+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1100258501960000</sv:value>
+          </sv:property>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="05">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>64db086f-4f7d-4e57-a37a-0e167abda0af</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="imageFloat" sv:type="String">
+          <sv:value>left</sv:value>
+        </sv:property>
+        <sv:property sv:name="lineAbove" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="paragraph" sv:type="String">
+          <sv:value>samplesTextImage</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.545+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>If you are interested in our services, do not hesitate to contact us through our &lt;a target="_blank" href="http://www.magnolia.info/en/magnolia/contact.html"&gt;contact form&lt;/a&gt; or via &lt;a href="obinary-services/"&gt;marketing@obinary.com&lt;/a&gt;</sv:value>
+        </sv:property>
+        <sv:property sv:name="spacer" sv:type="Long">
+          <sv:value>1</sv:value>
+        </sv:property>
+        <sv:property sv:name="title" sv:type="String">
+          <sv:value>Contact Magnolia International</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>46d205c2-6432-47b3-9625-34f990f94fae</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="String">
+            <sv:value>2004-11-12T12:30:14.736+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-13T11:44:17.600+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesTextImage</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-05-11T14:48:51.545+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1100259014780000</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>743d88e6-3bac-4d76-b76c-e3ad8580c764</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-13T11:41:15.936+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>9345b312-8bed-4b1e-9c54-719cce3934e5</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-13T11:41:15.936+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-13T11:41:15.936+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+    <sv:node sv:name="rightColumnParagraphs">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>dcfa5c47-b3b2-4d5c-96cc-79c293742ec0</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.548+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>92fa5be7-9883-4e7e-82ff-d1ccf742cc24</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.548+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="String">
+          <sv:value>2004-11-12T12:38:08.329+01:00</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="0">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>cc7f7b9d-ba31-4b0c-8823-132f374bc155</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-13T13:28:39.722+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>If you provide services or implement projects with Magnolia, you should become a Magnolia partner. The goal of our partnerships is to develop a network of trusted and educated parties who share a common interest in advancing Magnolia. &lt;a href="http://www.magnolia.info/en/magnolia/partners.html" target="_blank"&gt;Partnerships&lt;/a&gt; are handled by &lt;a href="http://www.magnolia.info/" target="_blank"&gt;Magnolia Organization&lt;/a&gt;.</sv:value>
+        </sv:property>
+        <sv:property sv:name="title" sv:type="String">
+          <sv:value>Magnolia Partnership</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>0b5608dd-d786-4d82-868d-60528bea75a5</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesRightColumn</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-13T13:28:39.722+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2006-06-13T13:28:39.723+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-13T13:28:39.724+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>0ed6c210-4204-4e43-bfa2-ae195093d596</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-13T13:28:39.727+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>7f295112-8e00-46fe-af9b-b2ae0604f682</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-13T13:28:39.727+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-13T13:28:39.727+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+    <sv:node sv:name="footerPar">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>fdba7a19-25f8-454c-a87c-7e6eb4b0c646</sv:value>
+      </sv:property>
+      <sv:property sv:name="paragraph" sv:type="String">
+        <sv:value>samplesPageFooter</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.551+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>708627b0-195b-49c4-a7a1-b3c4f37f230a</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2005-06-13T10:59:32.098+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+          <sv:value>2005-06-13T10:59:42.919+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:template" sv:type="String">
+          <sv:value>samplesPageFooter</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.551+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+          <sv:value>1118653172100000</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="user-mailing-list">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:content</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>522c0cac-7d67-4324-869f-7553426f95b0</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="hideInNav" sv:type="String">
+      <sv:value>false</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-11T14:48:51.570+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>User Mailing List</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>54be8109-a1ce-43f2-a784-1587dcb4cdee</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:title" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-12T12:10:30.741+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-06-13T12:09:02.354+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:template" sv:type="String">
+        <sv:value>sampleTwoColumns</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-06-13T11:36:04.396+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.570+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+        <sv:value>1100275373770000</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="mainColumnParagraphs">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>60ab6b65-2358-4d78-957e-5754dd0a31ef</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.573+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>0dc9b013-a37d-470f-963c-5457d6435f59</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.573+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="String">
+          <sv:value>2004-11-12T15:19:32.803+01:00</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="0">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>0dbf43c4-46c1-4cc9-a25d-e810d47a94da</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="imageFloat" sv:type="String">
+          <sv:value>left</sv:value>
+        </sv:property>
+        <sv:property sv:name="lineAbove" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="paragraph" sv:type="String">
+          <sv:value>samplesTextImage</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.580+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>If you want to create web-sites with Magnolia, feel free to subscribe to the Magnolia user mailing list. Simply send an empty email. You can cancel at any time.    &lt;br /&gt;&lt;br /&gt;To &lt;strong&gt;subscribe&lt;/strong&gt; send a mail to: &lt;a href="help/"&gt;user-list-subscribe@magnolia.info&lt;/a&gt;&lt;br /&gt;You will need to confirm your subscription. We do not publish your subscriber address, so it is perfectly safe to use your standard email address.&lt;br /&gt;To &lt;strong&gt;post&lt;/strong&gt; send mails to:&lt;a href="help/"&gt; user-list@magnolia.info&lt;/a&gt;      &lt;br /&gt;&lt;br /&gt;Here are a few comments that make life easier for you and everyone else on the list. Please take the time to read them.&lt;br /&gt; &lt;ul&gt;     &lt;li&gt;We only accept plain text email on this list. If you are a windows user, by default that requirement will not be met. Please read &lt;a href="http://expita.com/nomime.html" target="_blank" class="contentLink"&gt;&amp;quot;Configuring Mail Clients to Send Plain ASCII Text&amp;quot; &lt;/a&gt;to understand what is wrong with non-ASCII mail and what you can do about it. Even if that is the only thing you get out of visiting magnolia.info, it will be worth it.&lt;/li&gt;     &lt;li&gt;Please be sure to check the &lt;a target="_blank" href="http://webmail.magnolia.info/Lists/user-list/List.html?&amp;amp;Sort=4&amp;amp;SDir=0&amp;amp;Limit=20" class="contentLink"&gt;archive&lt;/a&gt; first. Your mail might not&amp;nbsp; get answered if it has been answered before. As an alternative use &lt;a target="gmane" href="http://www.gmane.org"&gt;gmane&lt;/a&gt; (the search box to your right lets you directly search their archives)       &lt;/li&gt;     &lt;li&gt;Trim your replies. That means do not simply hit &amp;quot;Reply&amp;quot; and start typing. Remove anything that is not directly relevant to your reply before you start typing. We all have the previous mail in our inbox, there is no need to have the whole thread copied into each reply.&lt;/li&gt;     &lt;li&gt;Be concise - provide as much detail as necessary and as little as possible to state your case.       &lt;/li&gt;     &lt;li&gt;If you want to get the most out of the mailing list, take the time to read &lt;a target="_blank" class="contentLink" href="http://www.catb.org/%7Eesr/faqs/smart-questions.html"&gt;asking smart questions&lt;/a&gt;, a great article by Eric S. Raymond. Its the best article on the web about asking questions on mailing lists bar none.&lt;/li&gt;     &lt;li&gt;Keep in mind that all information and answers are provided by volunteers. Commercial support packages are available through &lt;span class="contentLink"&gt;partners&lt;/span&gt; of the &lt;a href="http://www.magnolia.info/en/magnolia/partners.html" class="contentLink"&gt;Magnolia partner network.&lt;/a&gt;&lt;/li&gt; &lt;/ul&gt; You can unsubscribe at any time by sending an empty email to    &lt;br /&gt;&lt;a href="help/" class="contentLink"&gt;user-list-off@magnolia.info&lt;/a&gt;&lt;br /&gt;&lt;br /&gt;To switch to the DIGEST mode, send an empty email to   &lt;br /&gt;&lt;a href="help/" class="contentLink"&gt;user-list-digest@magnolia.info&lt;/a&gt;      &lt;br /&gt;&lt;br /&gt;To switch to the INDEX mode, send an empty email to    &lt;br /&gt;&lt;a class="contentLink" href="help/"&gt;user-list-index@magnolia.info&lt;/a&gt;      &lt;br /&gt;&lt;br /&gt;For any administrative enquieries, please use    &lt;br /&gt;&lt;a class="contentLink" href="help/"&gt;user-list-request@magnolia.info&lt;/a&gt;</sv:value>
+        </sv:property>
+        <sv:property sv:name="spacer" sv:type="Long">
+          <sv:value>1</sv:value>
+        </sv:property>
+        <sv:property sv:name="title" sv:type="String">
+          <sv:value>Magnolia User Mailing List</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>e53ec42c-76cc-4fb7-9b5e-48147253c461</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="String">
+            <sv:value>2004-11-12T15:19:32.843+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-12T16:42:28.536+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesTextImage</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-05-11T14:48:51.580+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1100269172878000</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>b20bd496-1660-4763-ac52-381956d2c79a</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-12T16:42:01.869+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>4fd68f77-e11b-4b7a-ac87-5bc9f251997d</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-12T16:42:01.869+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-12T16:42:01.870+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+    <sv:node sv:name="rightColumnParagraphs">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>33099d6f-d907-460d-981b-9128cfb4c0ab</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.583+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>cd8d638e-df02-4f9b-8111-1a18ed7384bc</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.583+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="String">
+          <sv:value>2004-11-12T16:04:50.310+01:00</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="00">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>acd6b788-6d73-487e-a561-b4c7390914a2</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-12T15:43:27.793+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>&lt;form action="http://search.gmane.org/" target="gmane" method="get"&gt;     &lt;input type="text" name="query" /&gt;&lt;select name="group"&gt;     &lt;option value="gmane.comp.cms.magnolia.user"&gt;User List&lt;/option&gt;     &lt;option value="gmane.comp.cms.magnolia.devel"&gt;Developer List&lt;/option&gt;     &lt;/select&gt;&lt;input type="submit" value="Search" /&gt; &lt;/form&gt;</sv:value>
+        </sv:property>
+        <sv:property sv:name="title" sv:type="String">
+          <sv:value>Search Magnolia Mail Archives online</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>6809a260-ba9a-483f-83b2-362a5d8829ed</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesRightColumn</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-12T15:43:27.793+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2006-06-12T15:43:27.794+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-13T12:09:02.349+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>53514ac7-ac51-4fd1-a9e4-e84781de62a9</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-12T15:43:27.800+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>64256984-d579-46ab-9eeb-1622f3c77cc2</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-12T15:43:27.800+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-12T15:43:27.801+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="feedback">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:content</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>ebdd94d2-2f13-4881-99d1-39603d0ecb8d</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-11T14:48:51.554+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>Feedback</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>be5ca317-3478-4f9a-acdd-71a78a9d811c</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:title" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2004-11-12T12:46:55.655+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-06-12T17:42:17.444+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:template" sv:type="String">
+        <sv:value>sampleTwoColumns</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.554+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+        <sv:value>1100275373520000</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="mainColumnParagraphs">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>366187d8-5cab-40c6-b81f-3000f5ae5f55</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.557+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>b3c0ca07-8ee8-4817-a7f8-5e774b329a28</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.557+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="String">
+          <sv:value>2004-11-12T12:47:24.869+01:00</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="0">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>f311769a-8e99-4bda-8b5f-e5f92d340a8f</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="imageFloat" sv:type="String">
+          <sv:value>left</sv:value>
+        </sv:property>
+        <sv:property sv:name="lineAbove" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="paragraph" sv:type="String">
+          <sv:value>samplesTextImage</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.560+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>We have set up an &lt;a target="_blank" href="http://jira.magnolia.info/"&gt;issue tracker&lt;/a&gt;.
+  
+  If you use Magnolia and find a bug, make sure its a bug (and not simply a configuration issue), check the issue tracker if it has been reported
+  before, and add it if no one else has done so. 
+  
+  A good bug description needs at least the following information:
+  &lt;ol&gt;     &lt;li&gt;state what did you do to make things go wrong (this must be
+      reproducable or else your bug will most likely be resolved with a
+      &amp;quot;works for me&amp;quot; resolution). It should also include relevant background
+      information like what system you are running on.&lt;/li&gt;     &lt;li&gt;state what you expect to happen
+      &lt;/li&gt;     &lt;li&gt;state what happens instead&lt;/li&gt; &lt;/ol&gt; If you don't know if something is a bug or a configuration problem, check the &lt;a target="_blank" href="http://webmail.magnolia.info/Lists/user-list/List.html?&amp;amp;Sort=4&amp;amp;SDir=0&amp;amp;Limit=20"&gt;mailing list archives&lt;/a&gt; for similar problems. If in doubt, post it on the list, and if the general agreement is that its a bug, go add it to the issue tracker.</sv:value>
+        </sv:property>
+        <sv:property sv:name="spacer" sv:type="Long">
+          <sv:value>2</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>58f413b2-8b6b-4924-aed1-eb9c492a86a6</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="String">
+            <sv:value>2004-11-12T12:47:24.922+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2005-06-16T14:46:26.510+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesTextImage</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-05-11T14:48:51.561+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1100260044985000</sv:value>
+          </sv:property>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+    <sv:node sv:name="rightColumnParagraphs">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>08a53e9f-267e-4e1b-94cf-b5fa2a1c3966</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.564+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>370e0e8e-f327-44cb-ae91-3d3368af01d4</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:Data" sv:type="String">
+          <sv:value>MetaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.564+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="String">
+          <sv:value>2004-11-12T16:01:43.470+01:00</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="0">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>b268abfe-45ba-4d60-86db-85ee949d4fa4</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="paragraph" sv:type="String">
+          <sv:value>samplesRightColumn</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-05-11T14:48:51.566+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>We welcome your feedback. If you find that Magnolia lacks a feature, add an issue to our &lt;a target="_blank" href="http://jira.magnolia.info/"&gt;issue tracker&lt;/a&gt;.      Mark your issue as &amp;quot;New feature&amp;quot; if it is something that does not currently exist, and as &amp;quot;improvement&amp;quot; if it exists but could be better.      You have to create an account to be able to post issues, which has the advantage that you can receive feedback on the issues you have entered.</sv:value>
+        </sv:property>
+        <sv:property sv:name="title" sv:type="String">
+          <sv:value>Request for Enhancement</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>51f6193b-d397-4250-baf6-6e42d7d169f3</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="String">
+            <sv:value>2004-11-12T16:01:43.514+01:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-12T17:42:17.427+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesRightColumn</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:Data" sv:type="String">
+            <sv:value>MetaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-05-11T14:48:51.566+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:sequenceposition" sv:type="String">
+            <sv:value>1100271703553000</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>6d90bc41-d909-43ca-b7d9-8bef5e1215d6</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-12T17:42:17.449+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>251e1fed-6c84-4ac2-91bc-06dc81c041f3</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-12T17:42:17.449+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-12T17:42:17.450+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="openwfe">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:content</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>db8c11a3-2a12-4b20-8fce-002e61520a53</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-06-14T11:34:03.180+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>OpenWFE</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>f52794bd-7340-45c5-96ae-c698695b22be</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-06-14T11:34:03.182+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-06-15T10:56:13.600+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:template" sv:type="String">
+        <sv:value>sampleTwoColumns</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2006-06-15T10:55:49.216+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-06-14T11:34:03.181+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="mainColumnParagraphs">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>0ae6a050-dc59-4eec-a6e3-3c54d9f4b7ea</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-06-14T11:35:14.419+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>79bfd253-4942-423d-baf4-d7fbc9c4e5a8</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-14T11:35:14.419+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2006-06-14T11:35:14.420+02:00</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="0">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>5b90928d-b5f7-4784-a15e-83061a22e73d</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="imageFloat" sv:type="String">
+          <sv:value>left</sv:value>
+        </sv:property>
+        <sv:property sv:name="lineAbove" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-14T11:35:14.421+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>OpenWFE is the Business Process Engine embedded within Magnolia.&lt;br /&gt;&lt;br /&gt;OpenWFE is a cross-platform open source workflow and business process management suite. Its wide-open service-oriented architecture makes it suitable for the largest possible range of applications - from distributed enterprise process management to embedding workflow within a single application, OpenWFE provides the flexibility, extensibility and completeness that no other open source workflow environment currently matches.&lt;br /&gt;  &lt;br /&gt; OpenWFE is one of the select workflow environments that implements the complete set of standard workflow control patterns, a feature that even most commercial rivals lack, and which brings unprecedented expressiveness to workflow definitions.&lt;br /&gt;  &lt;br /&gt; OpenWFE is used around the world in countless implementations, and has ranked several times amongst the top 10 out of 100'000 projects listed on sourceforge, the worlds leading open source development repository.&lt;br /&gt;&lt;br /&gt;Please visit &lt;a target="_blank" href="http://www.openwfe.org/"&gt;OpenWFE&lt;/a&gt; for more details.</sv:value>
+        </sv:property>
+        <sv:property sv:name="spacer" sv:type="Long">
+          <sv:value>1</sv:value>
+        </sv:property>
+        <sv:property sv:name="title" sv:type="String">
+          <sv:value>OpenWFE Documentation</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>d9f5b09e-91a4-4d0e-baa6-5038bc4db33b</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesTextImage</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-14T11:35:14.421+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2006-06-14T11:35:14.422+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-15T10:56:13.599+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>f974fc56-6dda-41ff-8d1e-dcbec4213bf7</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-14T11:35:14.425+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>43721ec8-ce5a-466f-8cd6-1abd5fb8a5cc</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-14T11:35:14.426+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-14T11:35:14.426+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+      <sv:node sv:name="00">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>b4625f71-db30-4efd-bbd7-d2ac6f1e89f5</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="link" sv:type="String">
+          <sv:value>/openwfe</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-14T11:35:57.023+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="extension" sv:type="String">
+          <sv:value>pdf</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>c1f54be1-cd61-47a1-9625-18a1440f5410</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>dms</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-14T11:35:57.023+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2006-06-14T11:35:57.024+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-14T11:35:57.024+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="search">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:content</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>2bacbe1a-c042-462c-9ebc-d4db95eb8e94</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="hideInNav" sv:type="String">
+      <sv:value>false</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-05-11T14:48:51.626+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="title" sv:type="String">
+      <sv:value>Search</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>12352e56-7dd3-4ea1-8934-79668a180e7f</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:title" sv:type="String">
+        <sv:value/>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2005-06-13T10:43:10.352+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-06-13T13:30:50.810+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:template" sv:type="String">
+        <sv:value>sampleSearch</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-05-11T14:48:51.626+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:sequenceposition" sv:type="Long">
+        <sv:value>1118652190354000</sv:value>
+      </sv:property>
+    </sv:node>
+    <sv:node sv:name="mainColumnParagraphs">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>453844c7-9b96-433f-8ebf-83e877bb891c</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-06-12T15:32:28.067+02:00</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>89c4d111-375d-4ade-ab9a-e27d6c2b8fe7</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-12T15:32:28.067+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2006-06-12T15:32:28.068+02:00</sv:value>
+        </sv:property>
+      </sv:node>
+      <sv:node sv:name="0">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:contentNode</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+          <sv:value>mix:versionable</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>a66385d0-951e-4013-b442-f3a433e4e3b2</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+          <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:created" sv:type="Date">
+          <sv:value>2006-06-13T13:30:19.884+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="imageFloat" sv:type="String">
+          <sv:value>left</sv:value>
+        </sv:property>
+        <sv:property sv:name="spacer" sv:type="Long">
+          <sv:value>1</sv:value>
+        </sv:property>
+        <sv:property sv:name="text" sv:type="String">
+          <sv:value>Search through the contents of this web site</sv:value>
+        </sv:property>
+        <sv:property sv:name="lineAbove" sv:type="String">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:metaData</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>73ad47a2-7ccd-4424-bc47-f991b852cd06</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:template" sv:type="String">
+            <sv:value>samplesTextImage</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:authorid" sv:type="String">
+            <sv:value>superuser</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-13T13:30:19.885+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+            <sv:value>2006-06-13T13:30:19.885+02:00</sv:value>
+          </sv:property>
+          <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+            <sv:value>2006-06-13T13:30:50.809+02:00</sv:value>
+          </sv:property>
+        </sv:node>
+        <sv:node sv:name="text_files">
+          <sv:property sv:name="jcr:primaryType" sv:type="Name">
+            <sv:value>mgnl:contentNode</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+            <sv:value>mix:versionable</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:uuid" sv:type="String">
+            <sv:value>9e5bd46f-384c-4ff4-a475-7c8934ceb2b1</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+            <sv:value>true</sv:value>
+          </sv:property>
+          <sv:property sv:name="jcr:created" sv:type="Date">
+            <sv:value>2006-06-13T13:30:19.888+02:00</sv:value>
+          </sv:property>
+          <sv:node sv:name="MetaData">
+            <sv:property sv:name="jcr:primaryType" sv:type="Name">
+              <sv:value>mgnl:metaData</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:uuid" sv:type="String">
+              <sv:value>e6121f74-2704-41a6-9865-68f96db895f4</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+              <sv:value>true</sv:value>
+            </sv:property>
+            <sv:property sv:name="jcr:created" sv:type="Date">
+              <sv:value>2006-06-13T13:30:19.889+02:00</sv:value>
+            </sv:property>
+            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+              <sv:value>2006-06-13T13:30:19.889+02:00</sv:value>
+            </sv:property>
+          </sv:node>
+        </sv:node>
+      </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="headerImage">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:resource</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>385f195a-db7b-4062-8a2e-0acce3b94561</sv:value>
+    </sv:property>
+    <sv:property sv:name="fileName" sv:type="String">
+      <sv:value>header30_2</sv:value>
+    </sv:property>
+    <sv:property sv:name="nodeDataTemplate" sv:type="String">
+      <sv:value/>
+    </sv:property>
+    <sv:property sv:name="size" sv:type="String">
+      <sv:value>14708</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>jpg</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:data" sv:type="Binary">
+      <sv:value>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</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mimeType" sv:type="String">
+      <sv:value>image/jpeg</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:lastModified" sv:type="Date">
+      <sv:value>2006-06-09T15:47:48.417+02:00</sv:value>
+    </sv:property>
+  </sv:node>
+  <sv:node sv:name="footerPar">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>5c670bfc-2dd2-4442-88ed-1e98e7e2b8a5</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:property sv:name="footerText" sv:type="String">
+      <sv:value>&lt;center&gt;&lt;a href="http://www.magnolia.info" target="_blank"&gt;Magnolia International Ltd.&lt;/a&gt;  Maiengasse 30, 4056 Basel, Switzerland&#xd;
+Tel +41 61 228 9000 (9AM-5PM GMT+1) &lt;a href="mailto:info@magnolia.info"&gt;info@magnolia.info&lt;/a&gt;&lt;/center&gt;&#xd;
+&lt;br /&gt;</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:created" sv:type="Date">
+      <sv:value>2006-06-13T13:50:05.828+02:00</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>d260a5f5-80e9-4579-8f90-fa44eb9320a3</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:template" sv:type="String">
+        <sv:value>samplesPageFooter</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:created" sv:type="Date">
+        <sv:value>2006-06-13T13:50:05.828+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-06-13T13:50:05.829+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2006-06-13T13:50:05.829+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+</sv:node>
