@@ -261,6 +261,7 @@ public final class ContentRepository {
                 while (wspIterator.hasNext()) {
                     Element workspace = (Element) wspIterator.next();
                     String wspName = workspace.getAttributeValue(ATTRIBUTE_NAME);
+                    log.info("Loading workspace:"+wspName);
                     map.addWorkspace(wspName);
                 }
             }

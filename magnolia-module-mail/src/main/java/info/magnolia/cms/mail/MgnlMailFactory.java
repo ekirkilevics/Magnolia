@@ -201,7 +201,9 @@ public class MgnlMailFactory extends ObservedManager {
             Iterator iter = templatesNode.getChildren().iterator();
             while (iter.hasNext()) {
                 Content temp = (Content) iter.next();
-                list.add(temp.getName());
+                String templateName = temp.getName();
+                log.info("Loading template:"+templateName);
+                list.add(templateName);
             }
         }
         catch (Exception e) {

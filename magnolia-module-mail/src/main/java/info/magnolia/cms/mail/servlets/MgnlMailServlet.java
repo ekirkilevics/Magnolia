@@ -5,26 +5,25 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.mail.MailConstants;
 import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.commands.MailCommand;
-import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MailAttachment;
-import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.cms.servlets.ContextSensitiveServlet;
 import info.magnolia.cms.util.RequestFormUtil;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.context.Context;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.*;
+import info.magnolia.context.MgnlContext;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Properties;
 
 
 /**
@@ -77,7 +76,7 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
     private static final String NONE = "<none>";
 
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
         super.doPost(httpServletRequest, httpServletResponse);
 
         RequestFormUtil request = new RequestFormUtil(httpServletRequest);
@@ -88,58 +87,53 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
         }
 
         try {
+            // Retrieve the context
+            Context ctx = MgnlContext.getInstance();
 
+            // get any possible attachment
             MultipartForm form = (MultipartForm) httpServletRequest.getAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME);
             Document doc = form.getDocument("file");
 
-            MailAttachment attachment = null;
             if (doc != null) {
-                attachment = new MailAttachment(doc.getFile().toURL(), ATT_ID);
+                MailAttachment attachment = new MailAttachment(doc.getFile().toURL(), ATT_ID);
+                ctx.put(MailConstants.ATTRIBUTE_ATTACHMENT,attachment);
             }
 
-            String type = request.getParameter(TYPE);
-            String subject = request.getParameter(SUBJECT);
-            String from = request.getParameter(FROM);
-            String text = request.getParameter(TEXT);
+
+            // add all possible parameters to the context
+            String template = request.getParameter(TEMPLATE);
+            String parameters = request.getParameter(PARAMETERS);
             String to = request.getParameter(TORECIPIENTS);
             String cc = request.getParameter(CCRECIPIENTS);
-            String parameters = request.getParameter(PARAMETERS);
-            String template = request.getParameter(TEMPLATE);
 
-            MgnlMailFactory factory = MgnlMailFactory.getInstance();
-            MgnlMailHandler handler = factory.getEmailHandler();
+            if (to!=null) ctx.put(MailConstants.ATTRIBUTE_TO,to);
+            if (cc!=null) ctx.put(MailConstants.ATTRIBUTE_CC,cc);
 
+            // convert optional parameters and add them to the context
+            if(log.isDebugEnabled())
+                log.info(ctx.getAttributes().toString());
             HashMap map = convertToMap(parameters);
+            ctx.putAll(map);
 
-            String user = MgnlContext.getUser().getName();
+            if (isTemplate(template))  {
+                // this is a template based email, just add the template
+                ctx.put(MailConstants.ATTRIBUTE_TEMPLATE,template);
+            } else {
+                // this is a static email, add all parameters
+                String type = request.getParameter(TYPE);
+                String subject = request.getParameter(SUBJECT);
+                String from = request.getParameter(FROM);
+                String text = request.getParameter(TEXT);
 
+                if (type!=null) ctx.put(MailConstants.ATTRIBUTE_TYPE,type);
+                if (subject!=null) ctx.put(MailConstants.ATTRIBUTE_SUBJECT,subject);
+                if (from!=null) ctx.put(MailConstants.ATTRIBUTE_FROM,from);
+                if (text!=null) ctx.put(MailConstants.ATTRIBUTE_TEXT,text);
+            }
 
-
-/*
+            // execute the command
             MailCommand command = new MailCommand();
-            Context instance = MgnlContext.getInstance();
-            command.execute(instance);
-*/
-
-
-            if (StringUtils.isNotEmpty(template)) {
-                MgnlEmail email = factory.getEmailFromTemplate(template, map);
-                email.setToList(factory.convertEmailList(to));
-                email.setCcList(factory.convertEmailList(cc));
-                handler.prepareAndSendMail(email);
-            }
-            else {
-                MgnlEmail email = factory.getEmailFromType(type);
-                email.setFrom(from);
-                email.setSubject(subject);
-                email.setToList(factory.convertEmailList(to));
-                email.setBody(text, map);
-                if (attachment != null) {
-                    email.addAttachment(attachment);
-                }
-                email.setCcList(factory.convertEmailList(cc));
-                handler.prepareAndSendMail(email);
-            }
+            command.execute(ctx);
 
             setMessage(false, null, "Mail was sent to " + to, httpServletResponse);
         }
@@ -151,8 +145,12 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
         }
     }
 
+    private boolean isTemplate(String template) {
+        return StringUtils.isNotEmpty(template) && (!template.trim().equalsIgnoreCase(NONE));
+    }
+
     private void setMessage(boolean error, Exception e, String message, HttpServletResponse response)
-        throws IOException {
+            throws IOException {
         PrintWriter writer = response.getWriter();
         writer.write("<h1>Message</h1>");
         if (!error) {
@@ -195,27 +193,28 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
     private String getServletStyle() {
         StringBuffer buffer = new StringBuffer();
         buffer
-            .append(""
-                + "<style type=\"text/css\">\n"
-                + "<!--\n "
-                + "body    { background-color: rgb(255,255,255); color: rgb(0,0,0); margin: 0px 0px; font-size: 10pt ; font-family: verdana}"
-                + "p.error       { font-size: 8pt; color: red; }"
-                + "p.success { font-size: 8pt; color: green; }"
-                + "p.comments { font-size: 7pt; }"
-                + "textArea {color: blue }"
-                + "input {color:blue ; font-size: 10pt}"
-                + "table {font-size: 10pt}"
-                + "tr {font-size: 10pt}"
-                + "td {font-size: 10pt}"
-                + "h1 {font-family: verdana ; font-size : 12pt}"
-                + "-->\n "
-                + "</style>"
-                + "");
+                .append(""
+                        + "<style type=\"text/css\">\n"
+                        + "<!--\n "
+                        + "body    { background-color: rgb(255,255,255); color: rgb(0,0,0); margin: 0px 0px; font-size: 10pt ; font-family: verdana}"
+                        + "p.error       { font-size: 8pt; color: red; }"
+                        + "p.success { font-size: 8pt; color: green; }"
+                        + "p.comments { font-size: 7pt; }"
+                        + "textArea {color: blue }"
+                        + "input {background-color:white ; font-size: 10pt ; width: 400px}"
+                        + "textarea {background-color:white ; font-size: 10pt ; width: 400px}"
+                        + "table {font-size: 10pt ; width: 90%}"
+                        + "tr {font-size: 10pt}"
+                        + "td {font-size: 10pt}"
+                        + "h1 {font-family: verdana ; font-size : 12pt}"
+                        + "-->\n "
+                        + "</style>"
+                        + "");
         return buffer.toString();
     }
 
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-        throws ServletException, IOException {
+            throws ServletException, IOException {
         super.doGet(httpServletRequest, httpServletResponse);
         StringBuffer sb = displayForm();
 
@@ -231,45 +230,49 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
         StringBuffer sb = new StringBuffer();
 
         sb.append(getServletStyle());
-        sb.append("<h1>Email Servlet</h1>");
+        sb.append("<center><h1>Email Servlet</h1></center>");
 
-        // Email edit area
         sb.append("<form method=\"post\" enctype=\"multipart/form-data\">");
         sb.append("<input type=\"hidden\"  width=\"80%\" name=\"" + ACTION + "\" value=\"action\"/>");
+
+        sb.append("<h1>Options for all emails</h1>");
+
+        sb.append("<table>");
+        addSection("To", TORECIPIENTS, HTML_TEXT, "The main recipients of the email", sb);
+        addSection(
+                "Parameters",
+                PARAMETERS,
+                HTML_TEXT_AREA,
+                "Parameters that can be used when processing the email",
+                sb);
+        addSection(
+                "Template",
+                TEMPLATE,
+                HTML_SELECT,
+                "If a template is set, the type of the mail, the content and subject are retrieved from the repository.<br>"
+                        +"The configuration for template us under the following node (/modules/mail/config/templates)",sb);
+        sb.append("</table>");
+
+        sb.append("<h1>Options for statically defined emails</h1>");
         sb.append("<table>");
         addSection("From", FROM, HTML_TEXT, "The sender of the email", sb);
         addSection("Subject", SUBJECT, HTML_TEXT, "The subject of the email", sb);
         addSection(
-            "Text",
-            TEXT,
-            HTML_BIG_TEXT_AREA,
-            "The content of the email. Note that this is not used if a template is set",
-            sb);
-        addSection("To", TORECIPIENTS, HTML_TEXT, "The main recipients of the email", sb);
+                "Text",
+                TEXT,
+                HTML_BIG_TEXT_AREA,
+                "The content of the email. Note that this is not used if a template is set",
+                sb);
         addSection("Cc", CCRECIPIENTS, HTML_TEXT, "The cc recipients of the email", sb);
-        addSection(
-            "Parameters",
-            PARAMETERS,
-            HTML_TEXT_AREA,
-            "Parameters that can be used when processing the email",
-            sb);
         addSection("Attach", FILE, HTML_FILE, "The attachment has a default id of '"
-            + ATT_ID
-            + "'. This is only limited in the servlet", sb);
+                + ATT_ID
+                + "'. This is only limited in the servlet", sb);
         addSection(
-            "Template",
-            TEMPLATE,
-            HTML_SELECT,
-            "If a template is set, the type of the mail, the content and subject are retrieved from the repository.The configuration for template us under the following node ("
-                + "/modules/mail/config/templates"
-                + ")",
-            sb);
-        addSection(
-            "Email Type",
-            TYPE,
-            HTML_SELECT,
-            "This define the format of the email. In the future more implementation can be added",
-            sb);
+                "Email Type",
+                TYPE,
+                HTML_SELECT,
+                "This define the format of the email. In the future more implementation can be added",
+                sb);
         sb.append("</table>");
         sb.append("<center><input type=\"submit\" value=\"send\"/></center>");
         sb.append("</form>");
@@ -288,7 +291,7 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
      */
     private StringBuffer addSection(String label, String name, String htmlInputType, String comments, StringBuffer sb) {
         sb.append("<tr>");
-        sb.append("<td>").append(label).append(" :</td>");
+        sb.append("<td width=\"40%\">").append(label).append(" :</td>");
         sb.append("<td>");
         if (htmlInputType.equals(HTML_SMALL_TEXT_AREA)) {
             sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"2\"  name=\"").append(name).append("\"></textArea>");
@@ -298,12 +301,12 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
         }
         else if (htmlInputType.equals(HTML_BIG_TEXT_AREA)) {
             sb
-                .append("<textArea  cols=\"80\" width=\"80%\"rows=\"10\"  name=\"")
-                .append(name)
-                .append("\"/></textArea>");
+                    .append("<textArea  cols=\"80\" width=\"80%\"rows=\"5\"  name=\"")
+                    .append(name)
+                    .append("\"/></textArea>");
         }
         else if (htmlInputType.equals(HTML_TEXT_AREA)) {
-            sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"5\"  name=\"").append(name).append("\"/></textArea>");
+            sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"4\"  name=\"").append(name).append("\"/></textArea>");
         }
         else if (htmlInputType.equals(HTML_TEXT)) {
             sb.append("<input type=\"text\" width=\"80%\"cols=\"80\" name=\"").append(name).append("\"/>");
@@ -351,7 +354,7 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
 
     private StringBuffer getTemplateSelectBox() {
         StringBuffer buffer = new StringBuffer();
-        buffer.append("<select ");
+        buffer.append("<select width=\"80%\"");
         try {
             List list = MgnlMailFactory.getInstance().listTemplates();
 

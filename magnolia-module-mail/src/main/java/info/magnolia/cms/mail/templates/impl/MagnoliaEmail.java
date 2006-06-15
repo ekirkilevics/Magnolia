@@ -5,21 +5,6 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-
-import javax.mail.Session;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
@@ -31,6 +16,13 @@ import org.jdom.Element;
 import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+
+import javax.mail.Session;
+import java.io.*;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -79,7 +71,7 @@ public class MagnoliaEmail extends FreemarkerEmail {
         super(_session);
     }
 
-    public void setBodyFromResourceFile(String resourceFile, HashMap _map) throws Exception {
+    public void setBodyFromResourceFile(String resourceFile, Map _map) throws Exception {
         URL url = new URL(resourceFile);
         // retrieve the html content
         String _content = retrieveContentFromMagnolia(resourceFile);
