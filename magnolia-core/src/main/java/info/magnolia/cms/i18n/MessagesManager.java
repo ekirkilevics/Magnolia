@@ -266,6 +266,9 @@ public final class MessagesManager {
     }
 
     public static Messages getMessages(String basename, Locale locale) {
+        if(StringUtils.isEmpty(basename)){
+            basename = MessagesManager.DEFAULT_BASENAME;
+        }
         return (Messages) messages.get(new MessagesID(basename, locale));
     }
 
