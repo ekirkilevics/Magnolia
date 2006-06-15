@@ -14,14 +14,14 @@
     <sv:value>mix:versionable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>f6831e8f-b3eb-4787-9859-05066ff75efc</sv:value>
+    <sv:value>3a0d77ad-1b1b-46e3-8a10-5cf3acd71aa2</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>2ebf1434-dee4-4b05-9eb8-bebf6ab513a7</sv:value>
+      <sv:value>0dec0830-8600-4485-8f94-753dffd6d636</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -30,13 +30,13 @@
       <sv:value>2006-05-23T14:39:56.187+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-06-07T18:12:13.393+02:00</sv:value>
+      <sv:value>2006-06-15T11:35:50.670+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-      <sv:value>2006-05-23T14:40:00.834+02:00</sv:value>
+      <sv:value>2006-06-15T11:35:50.632+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -50,14 +50,14 @@
       <sv:value>mix:versionable</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>599074b0-ecfd-4ab1-aa8a-a3ee433254ae</sv:value>
+      <sv:value>1318a43d-b785-402a-bfcb-c4c7f08db37a</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>c4308182-9cbd-4afc-902a-3833934d5b09</sv:value>
+        <sv:value>0f6deb3e-00a4-4fc6-8423-cab2f7428ad7</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -86,7 +86,7 @@
         <sv:value>mix:versionable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>37ef3d1f-4f45-4a0b-bc5b-15652de554d2</sv:value>
+        <sv:value>62e3bbf5-c341-4988-8b0f-51fc92f98717</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
         <sv:value>info.magnolia.module.workflow.commands.simple.VersionCommand</sv:value>
@@ -96,7 +96,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>b36ffdf4-9da9-4404-a744-60ce1270045e</sv:value>
+          <sv:value>5016f5fb-7d5f-4c87-81a5-76326aa97ed7</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -126,20 +126,20 @@
         <sv:value>mix:versionable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>02f6828d-9a8c-40d2-a0eb-b3e53170b5df</sv:value>
+        <sv:value>c00c065f-ea57-4569-bd0a-02728ec894c6</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>info.magnolia.module.workflow.commands.flow.FlowCommand</sv:value>
+        <sv:value>info.magnolia.module.workflow.commands.flow.ActivationFlowCommand</sv:value>
       </sv:property>
       <sv:property sv:name="workflowName" sv:type="String">
-        <sv:value>4eyeActivation</sv:value>
+        <sv:value>activation</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>5b2a8d6c-c145-4bb9-a6cc-dd9cc99679cf</sv:value>
+          <sv:value>db21be43-5730-4b5d-9273-18fdfd1bf713</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -155,6 +155,52 @@
         </sv:property>
         <sv:property sv:name="mgnl:lastaction" sv:type="Date">
           <sv:value>2006-05-23T14:40:05.602+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:activatorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
+    <sv:node sv:name="alert">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:versionable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>3fc430e4-34dc-4d17-94f5-5552d7feffea</sv:value>
+      </sv:property>
+      <sv:property sv:name="message" sv:type="String">
+        <sv:value>workflow.started</sv:value>
+      </sv:property>
+      <sv:property sv:name="impl" sv:type="String">
+        <sv:value>info.magnolia.module.workflow.commands.simple.MessageCommand</sv:value>
+      </sv:property>
+      <sv:property sv:name="i18nBasename" sv:type="String">
+        <sv:value>info.magnolia.module.workflow.messages</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="jcr:uuid" sv:type="String">
+          <sv:value>84b08f9b-ab4e-4668-a894-a80e66efd742</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:authorid" sv:type="String">
+          <sv:value>superuser</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2006-03-28T16:32:00.154+08:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+          <sv:value>2006-06-15T11:35:02.024+02:00</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+          <sv:value>false</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+          <sv:value>2006-06-15T11:35:01.832+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activatorid" sv:type="String">
           <sv:value>superuser</sv:value>
