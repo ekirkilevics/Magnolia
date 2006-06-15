@@ -20,7 +20,7 @@
       <div id="frame">
         <div id="logo">
           <img src="${pageContext.request.contextPath}/.resources/loginForm/logo.gif" 
-            title="magnolia Content Management Suite" alt="magnolia Content Management Suite" />
+            title="Magnolia Enterprise Content Management" alt="Magnolia Enterprise Content Management" />
         </div>
         <div id="form">
           <div class="form">
@@ -40,7 +40,7 @@
             &amp;copy; Copyright 2003-2006 <a href="http://www.magnolia.info" target="_blank">Magnolia International Ltd.</a>  Maiengasse 30, 4056 Basel, Switzerland
             Tel +41 61 228 9000 (9AM-5PM GMT+1) <a href="mailto:info@magnolia.info">info@magnolia.info</a>
             <br/>
-            Magnolia is a trademark of Magnolia International Ltd.
+            Magnolia is a registered trademark of Magnolia International Ltd.
         </div>
       </div>
     </body>
