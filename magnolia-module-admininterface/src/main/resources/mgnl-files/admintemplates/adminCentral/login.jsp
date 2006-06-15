@@ -36,7 +36,12 @@
             </form>
           </div>
         </div>
-        <div id="copyright">&amp;copy; Copyright 2000-2006 obinary ag, Basel, Switzerland - All rights reserved.</div>
+        <div id="copyright" style="text-align: center">
+            &amp;copy; Copyright 2003-2006 <a href="http://www.magnolia.info" target="_blank">Magnolia International Ltd.</a>  Maiengasse 30, 4056 Basel, Switzerland
+            Tel +41 61 228 9000 (9AM-5PM GMT+1) <a href="mailto:info@magnolia.info">info@magnolia.info</a>
+            <br/>
+            Magnolia is a trademark of Magnolia International Ltd.
+        </div>
       </div>
     </body>
   </html>

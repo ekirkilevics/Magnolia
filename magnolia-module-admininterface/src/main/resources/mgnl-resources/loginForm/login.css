@@ -48,8 +48,11 @@ br {
 	width: auto;
 }
 
-#copyright {
+#copyright, #copyright a {
+    margin-top: 5px;
 	font-size: 10px;
 	color: #999;
 	clear: left;
+    text-align: center;
 }
+
