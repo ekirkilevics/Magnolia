@@ -9,11 +9,6 @@
             <name>adminInterface</name>
             <version>3.0</version>
         </dependency>
-		<dependency>
-            <name>workflow</name>
-            <version>3.0</version>
-            <optional>true</optional>
-        </dependency>
     </dependencies>
     <bootstrap-files>
         <bootstrap-file>config.modules.adminInterface.config.menu.dms.xml</bootstrap-file>

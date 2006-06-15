@@ -71,7 +71,7 @@ public class DMSModule extends AbstractAdminModule {
         // move menu point
         Content menu = ContentUtil.getContent(ContentRepository.CONFIG, "/modules/adminInterface/config/menu");
         try {
-            menu.orderBefore("dms", "inbox");
+            menu.orderBefore("dms", "security");
             menu.save();
         }
         catch (RepositoryException e) {
