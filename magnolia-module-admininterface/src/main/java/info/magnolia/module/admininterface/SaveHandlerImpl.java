@@ -240,12 +240,15 @@ public class SaveHandlerImpl implements SaveHandler {
     }
 
     protected void processDate(Content node, String name, int type, int valueType, int encoding, String[] values) {
-        if(StringUtils.isEmpty(values[0]))
-            return;
         try {
-            Calendar utc = DateUtil.getUTCCalendarFromDialogString(values[0]);
-            NodeDataUtil.getOrCreate(node,name).setValue(utc);
-        } catch (Exception e) {
+            if(StringUtils.isEmpty(values[0])) {
+                if(log.isDebugEnabled())
+                    log.debug("Date has no value. Deleting node data"+name);
+                node.deleteNodeData(name);
+            } else {
+                Calendar utc = DateUtil.getUTCCalendarFromDialogString(values[0]);
+                NodeDataUtil.getOrCreate(node,name).setValue(utc);
+            } }catch (Exception e) {
             log.error("Could not update date value of node:"+node.getHandle()+" of property:"+name);
         }
     }
