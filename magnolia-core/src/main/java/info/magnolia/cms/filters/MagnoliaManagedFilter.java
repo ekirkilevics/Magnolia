@@ -1,6 +1,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.security.SecurityFilter;
+import info.magnolia.cms.cache.CacheFilter;
 
 import java.io.IOException;
 
@@ -36,6 +37,7 @@ public class MagnoliaManagedFilter implements Filter {
         new ContentTypeFilter(),
         new MultipartRequestFilter(),
         new SecurityFilter(),
+        new CacheFilter(),    
         new UnsetContextFilter()};
 
     public void destroy() {
