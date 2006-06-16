@@ -54,6 +54,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
     private static Logger log = LoggerFactory.getLogger(JCRExpressionStore.class.getName());
 
+    static final Object HM_LOCK = new Object();
+
     HierarchyManager hm;
 
     public void init(final String serviceName, final ApplicationContext context, final java.util.Map serviceParams)
@@ -70,7 +72,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public synchronized void storeExpression(FlowExpression fe) throws PoolException {
         try {
-            synchronized (hm) {
+            synchronized (HM_LOCK) {
                 Content ct = findExpression(fe);
                 if (log.isDebugEnabled())
                     log.debug("Handle for store expression" + ct.getHandle());
@@ -83,6 +85,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 if (log.isDebugEnabled())
                     log.debug("id_value=" + value);
                 serializeExpressionAsXml(ct, fe);
+                ct.save();
                 hm.save();
             }
         } catch (Exception e) {
@@ -105,7 +108,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         try {
             Content ret = findExpression(fe);
             if (ret != null) {
-                synchronized (hm) {
+                synchronized (HM_LOCK) {
                     ret.delete();
                     hm.save();
                 }
@@ -173,8 +176,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         InputStream s = ret.getNodeData(WorkflowConstants.NODEDATA_VALUE).getStream();
         final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
         Document doc = builder.build(s);
-        final FlowExpression decode = (FlowExpression) XmlCoder.decode(doc);
-        return decode;
+        return (FlowExpression) XmlCoder.decode(doc);
     }
 
     /**

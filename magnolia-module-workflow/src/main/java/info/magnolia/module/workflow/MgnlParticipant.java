@@ -107,7 +107,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             if (log.isDebugEnabled()) {
                 log.debug("storage = " + this.storage);
             }
-            this.storage.storeWorkItem("", (InFlowWorkItem) wi);
+            this.storage.storeWorkItem(StringUtils.EMPTY, (InFlowWorkItem) wi);
         }
 
         if (log.isDebugEnabled()) {
