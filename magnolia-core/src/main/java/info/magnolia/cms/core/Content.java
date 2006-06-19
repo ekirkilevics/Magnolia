@@ -1140,7 +1140,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException if an error occurs
      */
     public void save() throws RepositoryException {
-        this.node.getSession().save();
+        this.node.save();
     }
 
     /**
