@@ -124,17 +124,18 @@ public class JCRWorkItemAPI {
         Document doc = builder.build(s);
         wi = (InFlowWorkItem) XmlCoder.decode(doc);
 
-        Iterator itt = wi.getAttributes().alphaStringIterator();
-        while (itt.hasNext()) {
-            Object o = itt.next();
-            String name1 = (String) o;
-            if (log.isDebugEnabled()) {
+        if(log.isDebugEnabled()) {
+            Iterator itt = wi.getAttributes().alphaStringIterator();
+            while (itt.hasNext()) {
+                Object o = itt.next();
+                String name1 = (String) o;
                 log.debug(name1 + "=" + wi.getAttribute(name1).toString());
             }
         }
+
         return wi;
     }
-
+    
     /**
      * retrieve a work item by participant name
      * @param participant the full participant name (for example, user-superuser)
@@ -207,7 +208,7 @@ public class JCRWorkItemAPI {
      */
     public String createPathFromId(FlowExpressionId eid) {
 		String wlInstId = eid.getWorkflowInstanceId();
-        // FIXME someone who knows the code better should have a look
+        //TODO someone who knows the code better should have a look
 		String groupString = StringUtils.right(StringUtils.substringBefore(wlInstId, "."),3);
 		int groupNumber = Integer.parseInt(groupString) % 100;
 		StringBuffer buffer = new StringBuffer(eid.getWorkflowDefinitionName());
