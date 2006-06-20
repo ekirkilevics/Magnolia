@@ -169,9 +169,17 @@ public class SaveHandlerImpl implements SaveHandler {
                     String saveInfo = saveInfos[i];
                     processSaveInfo(node, saveInfo);
                 }
+
+                // deleting all documents
+                Map docs = getForm().getDocuments();
+                Iterator iter = docs.keySet().iterator();
+                while(iter.hasNext())
+                    ((Document)iter.next()).delete();
+
                 if (log.isDebugEnabled()) {
                     log.debug("Saving {}", path); //$NON-NLS-1$
                 }
+
                 hm.save();
             }
             catch (RepositoryException re) {
@@ -898,7 +906,9 @@ public class SaveHandlerImpl implements SaveHandler {
                     IOUtils.closeQuietly(raf);
                 }
 
-                doc.delete();
+                //TODO: check this
+                //deleting all the documents in the form AFTER the complete save is done, since some other field save could need the same file.
+                //doc.delete();
             }
         }
 
