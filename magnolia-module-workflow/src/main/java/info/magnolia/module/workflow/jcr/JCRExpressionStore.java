@@ -85,7 +85,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 if (log.isDebugEnabled())
                     log.debug("id_value=" + value);
                 serializeExpressionAsXml(ct, fe);
-                ct.save();
                 hm.save();
             }
         } catch (Exception e) {
