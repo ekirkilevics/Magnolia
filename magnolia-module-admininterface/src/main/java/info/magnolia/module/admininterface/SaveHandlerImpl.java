@@ -168,10 +168,15 @@ public class SaveHandlerImpl implements SaveHandler {
                 }
 
                 // deleting all documents
-                Map docs = getForm().getDocuments();
-                Iterator iter = docs.keySet().iterator();
-                while(iter.hasNext())
-                    ((Document)iter.next()).delete();
+                try {
+                    MultipartForm form = getForm();
+                    Map docs = form.getDocuments();
+                    Iterator iter = docs.keySet().iterator();
+                    while(iter.hasNext())
+                        form.getDocument((String)iter.next()).delete();
+                } catch(Exception e) {
+                    log.error("Could not delete temp documents from form");
+                }
 
                 if (log.isDebugEnabled()) {
                     log.debug("Saving {}", path); //$NON-NLS-1$
