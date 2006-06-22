@@ -7,340 +7,374 @@
   xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
   xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
   xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
-  <sv:property sv:name="jcr:primaryType" sv:type="Name">
-    <sv:value>mgnl:role</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-    <sv:value>mix:versionable</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>d98728c7-b80f-444d-bfda-b54b28dc240c</sv:value>
-  </sv:property>
-  <sv:node sv:name="MetaData">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:metaData</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>2764ae1b-b62a-4373-a9eb-4f9e586b14eb</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:authorid" sv:type="String">
-      <sv:value>superuser</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-      <sv:value>2006-05-04T17:05:39.645+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-05-31T11:05:27.342+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-      <sv:value>false</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:template" sv:type="String">
-      <sv:value/>
-    </sv:property>
-    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-      <sv:value>2006-05-04T17:05:45.177+02:00</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:activatorid" sv:type="String">
-      <sv:value>superuser</sv:value>
-    </sv:property>
-  </sv:node>
-  <sv:node sv:name="acl_owfe">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>2cd764c4-ae42-41c6-a995-18fbafaa7e71</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>a50e5ca2-a22d-4cff-aa75-3fa1f5b08dba</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-04T17:06:43.971+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="acl_website">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>d589a891-4263-402f-a488-9f0c41418e50</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>4a7b9380-f988-49f5-9e7b-626564e5812f</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-31T11:05:27.830+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-    <sv:node sv:name="0">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>6ccd7882-80f6-43b0-afd3-36ee3834f2ef</sv:value>
-      </sv:property>
-      <sv:property sv:name="path" sv:type="String">
-        <sv:value>/*</sv:value>
-      </sv:property>
-      <sv:property sv:name="permissions" sv:type="Long">
-        <sv:value>8</sv:value>
-      </sv:property>
-      <sv:node sv:name="MetaData">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:metaData</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>40b13609-713c-466d-9d1d-3343b4898072</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-          <sv:value>2006-05-31T11:05:27.834+02:00</sv:value>
-        </sv:property>
-      </sv:node>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="acl_users">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>25aefa9b-9b1b-4b83-8b57-45c524f8ea1d</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>c25c17f3-545c-441a-9bbc-40d7093bb6c6</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-31T11:05:29.344+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="acl_mgnlVersion">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>862b8caa-94c6-41c1-9838-88a116292665</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>bb696444-4c41-47d2-a4d0-ae278f983807</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-31T11:05:29.888+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="acl_config">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>a9f50400-485e-4613-8816-2146a126717a</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>ac248471-8161-40ac-a84e-7576ab145615</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-31T11:05:30.256+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="acl_userroles">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>703b2dbd-1308-4e14-b9e4-439a33dad18d</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>d205f5fe-e526-4863-ba5f-03ec732575eb</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-31T11:05:31.040+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="acl_mgnlSystem">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>0c7b7929-1628-419f-bd65-6aec9f932631</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>878acd52-ce56-4d8b-9476-ad586088d1f0</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-31T11:05:31.587+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="acl_Store">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>85af70e6-b4c0-4d70-9cdb-03159d343a31</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>e8c015e9-c4de-4a3d-9efb-5bda428d1d14</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-31T11:05:32.072+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="acl_Expressions">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>38ce996e-15e2-463f-8e7a-c4dc46ecc38e</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>b769bb44-9c1a-4dfb-af1a-803f739cf8b8</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-31T11:05:32.358+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="acl_dms">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>529466fb-a529-4f0f-83b2-fa859b82c059</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>83d48b57-c5e7-4c9f-9378-a84c4f6c8bb5</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-31T11:05:32.641+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-    <sv:node sv:name="0">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>d8e5a4ba-f461-4a0e-af2b-e7174c6ee549</sv:value>
-      </sv:property>
-      <sv:property sv:name="path" sv:type="String">
-        <sv:value>/*</sv:value>
-      </sv:property>
-      <sv:property sv:name="permissions" sv:type="Long">
-        <sv:value>8</sv:value>
-      </sv:property>
-      <sv:node sv:name="MetaData">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-          <sv:value>mgnl:metaData</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>06daacb4-e119-4813-8ecb-675fe399ad3d</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-          <sv:value>2006-05-31T11:05:32.646+02:00</sv:value>
-        </sv:property>
-      </sv:node>
-    </sv:node>
-  </sv:node>
-  <sv:node sv:name="acl_usergroups">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>a0f3a51a-55d0-41be-b35b-9dc7b31c9c8c</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>cd98c054-9724-440e-a1a5-db53e398ff5e</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-05-31T11:05:33.205+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
+	<sv:property sv:name="jcr:primaryType" sv:type="Name">
+		<sv:value>mgnl:role</sv:value>
+	</sv:property>
+	<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+		<sv:value>mix:versionable</sv:value>
+	</sv:property>
+	<sv:property sv:name="jcr:uuid" sv:type="String">
+		<sv:value>d98728c7-b80f-444d-bfda-b54b28dc240c</sv:value>
+	</sv:property>
+	<sv:node sv:name="MetaData">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:metaData</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>81ba8221-504f-4141-97ec-3abd612bea1f</sv:value>
+		</sv:property>
+		<sv:property sv:name="mgnl:authorid" sv:type="String">
+			<sv:value>superuser</sv:value>
+		</sv:property>
+		<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+			<sv:value>2006-05-04T17:05:39.645+02:00</sv:value>
+		</sv:property>
+		<sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+			<sv:value>2006-06-22T11:02:17.818+09:00</sv:value>
+		</sv:property>
+		<sv:property sv:name="mgnl:activated" sv:type="Boolean">
+			<sv:value>false</sv:value>
+		</sv:property>
+		<sv:property sv:name="mgnl:template" sv:type="String">
+			<sv:value/>
+		</sv:property>
+		<sv:property sv:name="mgnl:lastaction" sv:type="Date">
+			<sv:value>2006-05-04T17:05:45.177+02:00</sv:value>
+		</sv:property>
+		<sv:property sv:name="mgnl:activatorid" sv:type="String">
+			<sv:value>superuser</sv:value>
+		</sv:property>
+	</sv:node>
+	<sv:node sv:name="acl_website">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:contentNode</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+			<sv:value>mix:versionable</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>0bd19cc3-fc3b-4954-bbbb-9403adaf4439</sv:value>
+		</sv:property>
+		<sv:node sv:name="MetaData">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:metaData</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>9d966457-6436-4448-84d3-76d1dd6f0b21</sv:value>
+			</sv:property>
+			<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+				<sv:value>2006-06-22T11:02:17.850+09:00</sv:value>
+			</sv:property>
+		</sv:node>
+		<sv:node sv:name="0">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:contentNode</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+				<sv:value>mix:versionable</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>135493e8-97a3-4b05-beb2-dda9e704339d</sv:value>
+			</sv:property>
+			<sv:property sv:name="path" sv:type="String">
+				<sv:value>/*</sv:value>
+			</sv:property>
+			<sv:property sv:name="permissions" sv:type="Long">
+				<sv:value>8</sv:value>
+			</sv:property>
+			<sv:node sv:name="MetaData">
+				<sv:property sv:name="jcr:primaryType" sv:type="Name">
+					<sv:value>mgnl:metaData</sv:value>
+				</sv:property>
+				<sv:property sv:name="jcr:uuid" sv:type="String">
+					<sv:value>594473dc-b06d-44ef-a246-f432220bba3d</sv:value>
+				</sv:property>
+				<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+					<sv:value>2006-06-22T11:02:17.852+09:00</sv:value>
+				</sv:property>
+			</sv:node>
+		</sv:node>
+	</sv:node>
+	<sv:node sv:name="acl_users">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:contentNode</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+			<sv:value>mix:versionable</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>8c7ee353-07d6-4a60-ada1-0377e41d5bfa</sv:value>
+		</sv:property>
+		<sv:node sv:name="MetaData">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:metaData</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>5494d870-b86b-4d16-94d8-5678cd020414</sv:value>
+			</sv:property>
+			<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+				<sv:value>2006-06-22T11:02:18.320+09:00</sv:value>
+			</sv:property>
+		</sv:node>
+	</sv:node>
+	<sv:node sv:name="acl_mgnlVersion">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:contentNode</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+			<sv:value>mix:versionable</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>69dfd3f6-ebea-45db-93a0-5ebc9a8bd70d</sv:value>
+		</sv:property>
+		<sv:node sv:name="MetaData">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:metaData</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>856c89ee-2405-4da1-86a6-addb8e67c2e3</sv:value>
+			</sv:property>
+			<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+				<sv:value>2006-06-22T11:02:18.627+09:00</sv:value>
+			</sv:property>
+		</sv:node>
+	</sv:node>
+	<sv:node sv:name="acl_config">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:contentNode</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+			<sv:value>mix:versionable</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>1ce72813-0e3b-4701-af54-4f2050173a06</sv:value>
+		</sv:property>
+		<sv:node sv:name="MetaData">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:metaData</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>d062d468-8d4e-418e-9db9-deac8248ba85</sv:value>
+			</sv:property>
+			<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+				<sv:value>2006-06-22T11:02:18.765+09:00</sv:value>
+			</sv:property>
+		</sv:node>
+	</sv:node>
+	<sv:node sv:name="acl_userroles">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:contentNode</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+			<sv:value>mix:versionable</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>db94d5cc-fcfd-4600-bd74-9c668e0aa1fc</sv:value>
+		</sv:property>
+		<sv:node sv:name="MetaData">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:metaData</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>515931c5-70bf-4976-add7-4e0ecd73b24e</sv:value>
+			</sv:property>
+			<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+				<sv:value>2006-06-22T11:02:18.904+09:00</sv:value>
+			</sv:property>
+		</sv:node>
+	</sv:node>
+	<sv:node sv:name="acl_mgnlSystem">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:contentNode</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+			<sv:value>mix:versionable</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>8d329a2a-e6f1-4300-8c66-abf121508a61</sv:value>
+		</sv:property>
+		<sv:node sv:name="MetaData">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:metaData</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>16f462aa-2a9c-4bcd-9bd9-1fa11ba95331</sv:value>
+			</sv:property>
+			<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+				<sv:value>2006-06-22T11:02:19.093+09:00</sv:value>
+			</sv:property>
+		</sv:node>
+	</sv:node>
+	<sv:node sv:name="acl_Store">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:contentNode</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+			<sv:value>mix:versionable</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>50567e9d-21ff-4ed0-80d6-99a797833cbe</sv:value>
+		</sv:property>
+		<sv:node sv:name="MetaData">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:metaData</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>a1321f88-7f51-4424-9fa2-56cf1921e3bc</sv:value>
+			</sv:property>
+			<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+				<sv:value>2006-06-22T11:02:19.242+09:00</sv:value>
+			</sv:property>
+		</sv:node>
+		<sv:node sv:name="0">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:contentNode</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+				<sv:value>mix:versionable</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>394d9ef8-745e-48fc-8804-23cf3ef91aee</sv:value>
+			</sv:property>
+			<sv:property sv:name="path" sv:type="String">
+				<sv:value>/*</sv:value>
+			</sv:property>
+			<sv:property sv:name="permissions" sv:type="Long">
+				<sv:value>8</sv:value>
+			</sv:property>
+			<sv:node sv:name="MetaData">
+				<sv:property sv:name="jcr:primaryType" sv:type="Name">
+					<sv:value>mgnl:metaData</sv:value>
+				</sv:property>
+				<sv:property sv:name="jcr:uuid" sv:type="String">
+					<sv:value>a9813e3a-4a74-4c88-9a24-5ad544a58114</sv:value>
+				</sv:property>
+				<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+					<sv:value>2006-06-22T11:02:19.244+09:00</sv:value>
+				</sv:property>
+			</sv:node>
+		</sv:node>
+	</sv:node>
+	<sv:node sv:name="acl_Expressions">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:contentNode</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+			<sv:value>mix:versionable</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>7cbecb94-939e-49b7-8636-8651426367c9</sv:value>
+		</sv:property>
+		<sv:node sv:name="MetaData">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:metaData</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>55ab560b-f9d7-4b07-b545-66eaefb5c57d</sv:value>
+			</sv:property>
+			<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+				<sv:value>2006-06-22T11:02:19.692+09:00</sv:value>
+			</sv:property>
+		</sv:node>
+		<sv:node sv:name="0">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:contentNode</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+				<sv:value>mix:versionable</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>243b75eb-d382-44b6-97f8-5c5d72ea3d90</sv:value>
+			</sv:property>
+			<sv:property sv:name="path" sv:type="String">
+				<sv:value>/*</sv:value>
+			</sv:property>
+			<sv:property sv:name="permissions" sv:type="Long">
+				<sv:value>8</sv:value>
+			</sv:property>
+			<sv:node sv:name="MetaData">
+				<sv:property sv:name="jcr:primaryType" sv:type="Name">
+					<sv:value>mgnl:metaData</sv:value>
+				</sv:property>
+				<sv:property sv:name="jcr:uuid" sv:type="String">
+					<sv:value>1b1931eb-d4c7-4bce-a600-8de1483455ec</sv:value>
+				</sv:property>
+				<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+					<sv:value>2006-06-22T11:02:19.694+09:00</sv:value>
+				</sv:property>
+			</sv:node>
+		</sv:node>
+	</sv:node>
+	<sv:node sv:name="acl_dms">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:contentNode</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+			<sv:value>mix:versionable</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>51db7d40-c71e-4933-bacc-d21f5f921754</sv:value>
+		</sv:property>
+		<sv:node sv:name="MetaData">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:metaData</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>92dd8958-c5e5-44b5-8bd5-afb70f79a7a4</sv:value>
+			</sv:property>
+			<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+				<sv:value>2006-06-22T11:02:19.959+09:00</sv:value>
+			</sv:property>
+		</sv:node>
+		<sv:node sv:name="0">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:contentNode</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+				<sv:value>mix:versionable</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>2b0e3d7f-b607-4b24-8b79-4b3c0d1615b3</sv:value>
+			</sv:property>
+			<sv:property sv:name="path" sv:type="String">
+				<sv:value>/*</sv:value>
+			</sv:property>
+			<sv:property sv:name="permissions" sv:type="Long">
+				<sv:value>8</sv:value>
+			</sv:property>
+			<sv:node sv:name="MetaData">
+				<sv:property sv:name="jcr:primaryType" sv:type="Name">
+					<sv:value>mgnl:metaData</sv:value>
+				</sv:property>
+				<sv:property sv:name="jcr:uuid" sv:type="String">
+					<sv:value>2f1f972e-f88d-4838-8f1a-16125347fc30</sv:value>
+				</sv:property>
+				<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+					<sv:value>2006-06-22T11:02:19.962+09:00</sv:value>
+				</sv:property>
+			</sv:node>
+		</sv:node>
+	</sv:node>
+	<sv:node sv:name="acl_usergroups">
+		<sv:property sv:name="jcr:primaryType" sv:type="Name">
+			<sv:value>mgnl:contentNode</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+			<sv:value>mix:versionable</sv:value>
+		</sv:property>
+		<sv:property sv:name="jcr:uuid" sv:type="String">
+			<sv:value>025e3281-76c4-4928-8743-39abfd65747c</sv:value>
+		</sv:property>
+		<sv:node sv:name="MetaData">
+			<sv:property sv:name="jcr:primaryType" sv:type="Name">
+				<sv:value>mgnl:metaData</sv:value>
+			</sv:property>
+			<sv:property sv:name="jcr:uuid" sv:type="String">
+				<sv:value>bb7ab708-08f4-4387-bbf2-b70b78a14962</sv:value>
+			</sv:property>
+			<sv:property sv:name="mgnl:creationdate" sv:type="Date">
+				<sv:value>2006-06-22T11:02:20.303+09:00</sv:value>
+			</sv:property>
+		</sv:node>
+	</sv:node>
 </sv:node>
