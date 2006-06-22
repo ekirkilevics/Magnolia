@@ -98,7 +98,7 @@ public class WorkItemContext extends ContextDecorator {
         if(scope == Context.LOCAL_SCOPE){
             this.workItem.removeAttribute(name);
         }
-        this.removeAttribute(name, scope);
+        super.removeAttribute(name, scope);
     }
     
     /**
