@@ -340,9 +340,11 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
         String xmlName = repository + StringUtils.replace(handle, "/", ".") + ".xml";
 
-        FileOutputStream fos = new FileOutputStream(new File(Path.getAbsoluteFileSystemPath(rootdir), repository
-            + "/"
-            + xmlName));
+        // create necessary parent directories
+        File folder = new File(Path.getAbsoluteFileSystemPath(rootdir), repository);
+        folder.mkdirs();
+        File xmlFile = new File(folder.getAbsoluteFile(),xmlName);
+        FileOutputStream fos = new FileOutputStream(xmlFile);
         try {
             DataTransporter.executeExport(fos, false, true, session, handle, repository, DataTransporter.XML);
         }
