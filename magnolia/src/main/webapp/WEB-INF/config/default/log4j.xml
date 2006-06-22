@@ -96,6 +96,10 @@
   <category name="openwfe">
     <priority value="WARN" />
   </category>
+  <category name="openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant">
+      <priority value="INFO"/>
+  </category>
+
   <category name="info.magnolia.cms.exchange" additivity="false">
     <priority value="info" />
     <appender-ref ref="log-activation" />
