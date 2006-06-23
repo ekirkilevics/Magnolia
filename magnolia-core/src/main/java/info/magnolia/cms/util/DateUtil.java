@@ -84,8 +84,16 @@ public class DateUtil {
      * Convert a local date time to a UTC calendar
      */
     public static Calendar getUTCCalendarFromLocalDate(Date date) {
-        Calendar instance = Calendar.getInstance(UTC_TIME_ZONE);
+        Calendar instance = getCurrentUTCCalendar();
         instance.setTimeInMillis(date.getTime());
         return instance;
+    }
+
+
+    /**
+     * Get UTC Calendar for current time
+     */
+    public static Calendar getCurrentUTCCalendar() {
+        return Calendar.getInstance(UTC_TIME_ZONE);
     }
 }

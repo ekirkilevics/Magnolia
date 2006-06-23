@@ -37,11 +37,11 @@ public class ActivationFlowCommand extends FlowCommand {
     private static final String WEB_SCHEDULED_ACTIVATION = "activation";
 
     private static final Logger log = LoggerFactory.getLogger(ActivationFlowCommand.class);
-    
+
     public ActivationFlowCommand() {
         setWorkflowName(WEB_SCHEDULED_ACTIVATION);
     }
-    
+
     /**
      * Set the start and end date for this page
      */
@@ -64,6 +64,7 @@ public class ActivationFlowCommand extends FlowCommand {
 
     /**
      * Set a date stored in the repository into the list of attributes of the launch item.
+     * Ignore past activation dates
      *
      * <ul>
      * <li>get utc calendar from repository</li>
@@ -76,14 +77,22 @@ public class ActivationFlowCommand extends FlowCommand {
         final SimpleDateFormat sdf = new SimpleDateFormat(WorkflowConstants.OPENWFE_DATE_FORMAT);
         try {
             if(node.hasNodeData(attributeName)) {
-                Calendar cd = node.getNodeData(attributeName).getDate();
-                cd = DateUtil.getLocalCalendarFromUTC(cd);
-                String date = sdf.format(new Date(cd.getTimeInMillis()));
-                launchItem.getAttributes().puts(attributeName, date);
+                Calendar cd = node.getNodeData(attributeName).getDate(); // utc calendar from repository
+                Calendar now = DateUtil.getCurrentUTCCalendar();
+                if(cd.before(now) && isActivationDate(attributeName)) {
+                    log.info("Ignoring past activation date:"+attributeName+" from node:"+node.getHandle());
+                } else {
+                    String date = sdf.format(new Date(DateUtil.getLocalCalendarFromUTC(cd).getTimeInMillis()));
+                    launchItem.getAttributes().puts(attributeName, date);
+                }
             }
         } catch (Exception e) {
             log.warn("cannot set date:"+attributeName+" for node" + node.getHandle(), e);
         }
+    }
+
+    private boolean isActivationDate(String attributeName) {
+        return ((attributeName.equals(WorkflowConstants.ATTRIBUTE_START_DATE))||(attributeName.equals(WorkflowConstants.ATTRIBUTE_END_DATE)));
     }
 
 }
