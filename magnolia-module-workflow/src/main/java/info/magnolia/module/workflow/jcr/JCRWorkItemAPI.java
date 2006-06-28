@@ -55,9 +55,9 @@ public class JCRWorkItemAPI {
     public JCRWorkItemAPI() throws Exception {
         this.hm = ContentRepository.getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
         if (this.hm == null) {
-        	Exception e = new Exception("Can't get HierarchyManager Object for workitems repository");
+            Exception e = new Exception("Can't get HierarchyManager Object for workitems repository");
             log.error(e.getMessage(),e);
-        	throw e;
+            throw e;
         }
     }
 
@@ -135,7 +135,7 @@ public class JCRWorkItemAPI {
 
         return wi;
     }
-    
+
     /**
      * retrieve a work item by participant name
      * @param participant the full participant name (for example, user-superuser)
@@ -143,7 +143,7 @@ public class JCRWorkItemAPI {
     public Content getWorkItemByParticipant(String participant) {
         String queryString = "//*[@participant=\"" + participant + "\"]";
         if(log.isDebugEnabled())
-        log.debug("xpath query string = " + queryString);
+            log.debug("xpath query string = " + queryString);
         List list = doQuery(queryString);
         if (list != null && list.size() > 0) {
             return (Content) list.get(0);
@@ -207,33 +207,33 @@ public class JCRWorkItemAPI {
      * @param eid
      */
     public String createPathFromId(FlowExpressionId eid) {
-		String wlInstId = eid.getWorkflowInstanceId();
+        String wlInstId = eid.getWorkflowInstanceId();
         //TODO someone who knows the code better should have a look
-		String groupString = StringUtils.right(StringUtils.substringBefore(wlInstId, "."),3);
-		int groupNumber = Integer.parseInt(groupString) % 100;
-		StringBuffer buffer = new StringBuffer(eid.getWorkflowDefinitionName());
-		buffer.append(WorkflowConstants.SLASH);
-		buffer.append(eid.getWorkflowDefinitionRevision());
-		buffer.append(WorkflowConstants.SLASH);
-		buffer.append(groupNumber);
-		buffer.append(WorkflowConstants.SLASH);
-		buffer.append(eid.getWorkflowInstanceId());
-		buffer.append(WorkflowConstants.SLASH);
-		buffer.append(eid.getExpressionName());
-		buffer.append(WorkflowConstants.SLASH);
-		buffer.append(eid.getExpressionId());
+        String groupString = StringUtils.right(StringUtils.substringBefore(wlInstId, "."),3);
+        int groupNumber = Integer.parseInt(groupString) % 100;
+        StringBuffer buffer = new StringBuffer(eid.getWorkflowDefinitionName());
+        buffer.append(WorkflowConstants.SLASH);
+        buffer.append(eid.getWorkflowDefinitionRevision());
+        buffer.append(WorkflowConstants.SLASH);
+        buffer.append(groupNumber);
+        buffer.append(WorkflowConstants.SLASH);
+        buffer.append(eid.getWorkflowInstanceId());
+        buffer.append(WorkflowConstants.SLASH);
+        buffer.append(eid.getExpressionName());
+        buffer.append(WorkflowConstants.SLASH);
+        buffer.append(eid.getExpressionId());
 
-		return convertPath(buffer.toString());
-	}
+        return convertPath(buffer.toString());
+    }
 
     /**
-	 * store work Item
-	 * 
-	 * @param arg0
-	 * @param wi
-	 *            the work item intends to be stored
-	 * @throws StoreException
-	 */
+     * store work Item
+     *
+     * @param arg0
+     * @param wi
+     *            the work item intends to be stored
+     * @throws StoreException
+     */
     public void storeWorkItem(String arg0, InFlowWorkItem wi) throws StoreException {
         try {
 
@@ -246,7 +246,7 @@ public class JCRWorkItemAPI {
             // create path from work item id
             String path = createPathFromId(wi.getId());
             if(log.isDebugEnabled())
-            	log.debug("storing workitem with path = " + path);
+                log.debug("storing workitem with path = " + path);
 
             Content newc = ContentUtil.createPath(this.hm, path, ItemType.WORKITEM);
 
@@ -255,12 +255,12 @@ public class JCRWorkItemAPI {
 
             newc.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(sId));
             newc.createNodeData(WorkflowConstants.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
-            
+
             if(log.isDebugEnabled()){
-            	log.debug("ID=" + sId);
+                log.debug("ID=" + sId);
                 log.debug("participant = " + wi.getParticipantName());
             }
-            
+
             StringAttribute assignTo = (StringAttribute) wi.getAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO);
             if (assignTo != null) {
                 String s = assignTo.toString();
@@ -295,41 +295,54 @@ public class JCRWorkItemAPI {
     public List doQuery(String queryString) {
         ArrayList list = new ArrayList();
         if(log.isDebugEnabled())
-        log.debug("xpath query string: " + queryString);
+            log.debug("xpath query string: " + queryString);
         try {
-			final QueryManager queryManager = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_STORE);
-			final Query q = queryManager.createQuery(queryString, Query.XPATH); //$NON-NLS-1$
+            final QueryManager queryManager = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_STORE);
+            final Query q = queryManager.createQuery(queryString, Query.XPATH); //$NON-NLS-1$
 
-			QueryResult result = q.execute();
-			if (result == null) {
-				log.info("query result was null");
-				return null;
-			}
+            QueryResult result = q.execute();
+            if (result == null) {
+                log.info("query result was null");
+                return null;
+            }
 
-			Iterator it = result.getContent(WorkflowConstants.NODENAME_WORKITEM).iterator();
-			while (it.hasNext()) {
-				Content ct = (Content) it.next();
-				String title = ct.getTitle();
-				String sname = ct.getName();
+            Iterator it = result.getContent(WorkflowConstants.NODENAME_WORKITEM).iterator();
+            while (it.hasNext()) {
+                Content ct = (Content) it.next();
 
-				if (log.isDebugEnabled()) {
-					log.debug("title=" + title);
-					log.debug("name=" + sname);
-				}
+                // check for stale data.
+                try {
+                    if(!hm.isExist(ct.getHandle())) {
+                        if (log.isDebugEnabled()) {
+                            log.debug(ct.getHandle()+ " does not exist anymore.");
+                        }
+                        continue;
+                    }
+                } catch(Exception e) {
+                    log.error("SKipping strange node");
+                }
 
-				InFlowWorkItem wi = loadWorkItem(ct);
-				if (wi == null) {
-					log.error("can not load found workitem");
-					continue;
-				}
-				if (log.isDebugEnabled())
-					log.debug("added workitem to return list ok");
-				list.add(wi);
-			}
-		} catch (Exception e) {
-			log.error("query flow failed", e);
-			return null;
-		}
+                String title = ct.getTitle();
+                String sname = ct.getName();
+
+                if (log.isDebugEnabled()) {
+                    log.debug("title=" + title);
+                    log.debug("name=" + sname);
+                }
+
+                InFlowWorkItem wi = loadWorkItem(ct);
+                if (wi == null) {
+                    log.error("can not load found workitem");
+                    continue;
+                }
+                if (log.isDebugEnabled())
+                    log.debug("added workitem to return list ok");
+                list.add(wi);
+            }
+        } catch (Exception e) {
+            log.error("query flow failed", e);
+            return null;
+        }
         return list;
 
     }
