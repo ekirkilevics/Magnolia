@@ -88,7 +88,8 @@ public final class CopyUtil {
             root = this.getHierarchyManager().getContentByUUID(source.getUUID());
             // copy root properties
             //this.updateProperties(source, root);
-            root.save();
+            // save parent node since this node is newly created
+            getHierarchyManager().getRoot().save();
         }
         // copy all child nodes
         Iterator children = source.getChildren(filter).iterator();
