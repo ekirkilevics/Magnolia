@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+	<name>data</name>
+	<class>info.magnolia.module.data.DataModule</class>
+	<version>3.0</version>
+    <dependencies>
+        <dependency>
+            <name>adminInterface</name>
+            <version>3.0</version>
+        </dependency>
+    </dependencies>
+    <bootstrap-files>
+        <bootstrap-file>config.modules.adminInterface.config.menu.data.xml</bootstrap-file>
+    </bootstrap-files>
+    <repositories>
+        <repository>
+            <name>magnolia</name>
+			<workspaces>
+				<workspace>data</workspace>
+			</workspaces>
+        </repository>
+    </repositories>
+</module>
