@@ -164,10 +164,10 @@ public final class ItemType implements Serializable {
     private String systemName;
 
     /**
-     * Can't be instantiated.
+     * Ctor.
      * @param systemName jcr system name
      */
-    ItemType(String systemName) {
+    public ItemType(String systemName) {
         this.systemName = systemName;
     }
 

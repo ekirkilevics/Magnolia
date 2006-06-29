@@ -91,7 +91,8 @@ public class ModuleRegistration {
     private boolean restartNeeded = false;
 
     /**
-     * Don't instantiate!
+     * Don't instantiate! 
+     * Warum dann nicht private?????
      */
     public ModuleRegistration() {
     }

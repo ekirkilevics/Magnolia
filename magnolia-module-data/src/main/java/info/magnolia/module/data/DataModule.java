@@ -1,5 +1,8 @@
 package info.magnolia.module.data;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.beans.config.ContentRepository;
@@ -8,6 +11,8 @@ import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.admininterface.AbstractAdminModule;
+import info.magnolia.module.admininterface.DialogHandlerManager;
+import info.magnolia.module.admininterface.TreeHandlerManager;
 
 public class DataModule extends AbstractAdminModule {
 
@@ -18,7 +23,22 @@ public class DataModule extends AbstractAdminModule {
 	}
 	
 	protected void onInit() throws InitializationException {
-		
+		Content cfgNode = getConfigNode();
+		Collection types = cfgNode.getChildByName("types").getChildren();
+		for(Iterator it = types.iterator(); it.hasNext();){
+			Content type = (Content)it.next();
+            Content node;
+            // register the dialogs
+            node = ContentUtil.getCaseInsensitive(type, "dialogs");
+            if (node != null) {
+                DialogHandlerManager.getInstance().register(node);
+            }
+			// register trees
+            node = ContentUtil.getCaseInsensitive(type, "trees");
+            if (node != null) {
+                TreeHandlerManager.getInstance().register(node);
+            }
+		}
 	}
     /**
      * Make some specific configuration.

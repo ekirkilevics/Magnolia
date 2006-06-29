@@ -53,7 +53,7 @@ public class DataAdminTreeConfig implements AdminTreeConfiguration {
         TreeColumn colTitle = new TreeColumn(tree.getJavascriptTree(), request);
         colTitle.setWidth(1);
         colTitle.setName("title");
-        // column0.setIsLabel(true);
+        colTitle.setIsLabel(true);
         colTitle.setWidth(3);
         colTitle.setTitle(msgs.get("data.list.title"));
 

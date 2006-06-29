@@ -128,7 +128,7 @@ public class ProviderImpl implements Provider {
      * @see info.magnolia.repository.Provider#init(info.magnolia.repository.RepositoryMapping)
      */
     public void init(RepositoryMapping repositoryMapping) throws RepositoryNotInitializedException {
-        checkXmlSettings();
+        checkXmlSettings(); 
 
         this.repositoryMapping = repositoryMapping;
         /* connect to repository */

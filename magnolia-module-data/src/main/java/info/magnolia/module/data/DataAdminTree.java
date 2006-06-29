@@ -59,6 +59,7 @@ public class DataAdminTree extends AdminTreeMVCHandler {
          */
         Rule rule = new Rule();
         rule.addAllowType(ItemType.CONTENTNODE.getSystemName());
+        rule.addAllowType(ItemType.CONTENT.getSystemName());
         rule.addAllowType(ItemType.NT_METADATA);
         rule.addAllowType(ItemType.NT_RESOURCE);
 

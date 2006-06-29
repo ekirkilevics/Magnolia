@@ -136,8 +136,6 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
 
     public AdminTreeMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
-
-        setTree(new Tree(name, getRepository(), request));
         path = this.getRequest().getParameter("path"); //$NON-NLS-1$
         if (StringUtils.isEmpty(path)) {
             path = "/"; //$NON-NLS-1$
@@ -147,7 +145,11 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         pathSelected = this.getRequest().getParameter("pathSelected"); //$NON-NLS-1$
 
         this.setBrowseMode(StringUtils.equals(this.getRequest().getParameter("browseMode"), "true"));
+		setTree(new Tree(super.getName(), getRepository(), super.getRequest()));
     }
+
+	protected void initialize() {
+	}
 
     /**
      * Depending on the request it is generating a logical command name
