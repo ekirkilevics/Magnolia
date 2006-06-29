@@ -242,35 +242,39 @@ public class ProviderImpl implements Provider {
      * @see info.magnolia.repository.Provider#registerNodeTypes(String)
      */
     public void registerNodeTypes() throws RepositoryException {
-        registerNodeTypes(null);
+        registerNodeTypes(StringUtils.EMPTY);
     }
 
     /**
      * @see info.magnolia.repository.Provider#registerNodeTypes(java.lang.String)
      */
     public void registerNodeTypes(String configuration) throws RepositoryException {
+        if (StringUtils.isEmpty(configuration)) {
+            configuration = (String) this.repositoryMapping.getParameters().get(CUSTOM_NODETYPES);
+        }
 
-        // check if workspace already exists
+        InputStream xml = getNodeTypeDefinition(configuration);
+        this.registerNodeTypes(xml);
+    }
+
+    /**
+     * @see info.magnolia.repository.Provider#registerNodeTypes(java.io.InputStream)
+     */
+    public void registerNodeTypes(InputStream xmlStream) throws RepositoryException {
         SimpleCredentials credentials = new SimpleCredentials(
                 ContentRepository.REPOSITORY_USER,
                 ContentRepository.REPOSITORY_PSWD.toCharArray());
         Session jcrSession = this.repository.login(credentials);
         Workspace workspace = jcrSession.getWorkspace();
 
-        if (configuration == null) {
-            configuration = (String) this.repositoryMapping.getParameters().get(CUSTOM_NODETYPES);
-        }
-
-        InputStream xml = getNodeTypeDefinition(configuration);
-
         // should never happen
-        if (xml == null) {
+        if (xmlStream == null) {
             throw new MissingNodetypesException();
         }
 
         NodeTypeDef[] types;
         try {
-            types = NodeTypeReader.read(xml);
+            types = NodeTypeReader.read(xmlStream);
         }
         catch (InvalidNodeTypeDefException e) {
             throw new RepositoryException(e.getMessage(), e);
@@ -279,7 +283,7 @@ public class ProviderImpl implements Provider {
             throw new RepositoryException(e.getMessage(), e);
         }
         finally {
-            IOUtils.closeQuietly(xml);
+            IOUtils.closeQuietly(xmlStream);
         }
 
         NodeTypeManager ntMgr = workspace.getNodeTypeManager();
@@ -307,6 +311,7 @@ public class ProviderImpl implements Provider {
 
         }
     }
+
 
     /**
      * @param configuration
