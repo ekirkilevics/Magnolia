@@ -15,6 +15,7 @@ package info.magnolia.repository;
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
+import java.io.InputStream;
 
 
 /**
@@ -66,6 +67,13 @@ public interface Provider {
      * @throws RepositoryException
      */
     void registerNodeTypes(String configuration) throws RepositoryException;
+
+    /**
+     * Node type registration is entirely dependent on the implementation. Refer JSR-170 specifications.
+     * @param stream , stream type depends on the implementation of this method
+     * @throws RepositoryException
+     */
+    void registerNodeTypes(InputStream stream) throws RepositoryException;
 
     /**
      * Register a new workspace in the current repository
