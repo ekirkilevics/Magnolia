@@ -17,7 +17,7 @@
     <sv:value>646ca129-d37f-4576-bcc6-55e2b8a2378d</sv:value>
   </sv:property>
   <sv:property sv:name="toURI" sv:type="String">
-    <sv:value>/admintemplates/adminCentral/adminCentral.jsp</sv:value>
+    <sv:value>redirect:/.magnolia/pages/adminCentral.html</sv:value>
   </sv:property>
   <sv:property sv:name="fromURI" sv:type="String">
     <sv:value>/.magnolia/adminCentral.html</sv:value>
