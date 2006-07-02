@@ -131,12 +131,14 @@ public class MgnlUser implements User {
                     if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
                         return true;
                     }
-                } catch(ItemNotFoundException e) {
+                }
+                catch (ItemNotFoundException e) {
                     if (log.isDebugEnabled())
-                        log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
-                } catch (IllegalArgumentException e) {
+                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
+                }
+                catch (IllegalArgumentException e) {
                     if (log.isDebugEnabled())
-                        log.debug(nodeData.getHandle()+" has invalid value");
+                        log.debug(nodeData.getHandle() + " has invalid value");
                 }
             }
         }
@@ -167,12 +169,14 @@ public class MgnlUser implements User {
                     if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
                         nodeData.delete();
                     }
-                } catch(ItemNotFoundException e) {
+                }
+                catch (ItemNotFoundException e) {
                     if (log.isDebugEnabled())
-                        log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
-                } catch (IllegalArgumentException e) {
+                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
+                }
+                catch (IllegalArgumentException e) {
                     if (log.isDebugEnabled())
-                        log.debug(nodeData.getHandle()+" has invalid value");
+                        log.debug(nodeData.getHandle() + " has invalid value");
                 }
             }
             userNode.save();
@@ -197,15 +201,16 @@ public class MgnlUser implements User {
                 Content node = userNode.getContent(nodeName);
                 // add corresponding ID
                 try {
-                    String value = hm.getContent("/"+name).getUUID(); // assuming that there is a flat hierarchy
+                    String value = hm.getContent("/" + name).getUUID(); // assuming that there is a flat hierarchy
                     // used only to get the unique label
                     HierarchyManager usersHM = ContentRepository.getHierarchyManager(ContentRepository.USERS);
                     String newName = Path.getUniqueLabel(usersHM, node.getHandle(), "0");
                     node.createNodeData(newName).setValue(value);
                     userNode.save();
-                } catch(PathNotFoundException e) {
+                }
+                catch (PathNotFoundException e) {
                     if (log.isDebugEnabled())
-                        log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
+                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
                 }
             }
         }
@@ -322,7 +327,7 @@ public class MgnlUser implements User {
             }
         }
         catch (RepositoryException e) {
-            log.error(
+            log.debug(
                 "Unable to set the last access date due to a " + e.getClass().getName() + " - " + e.getMessage(),
                 e);
         }
