@@ -54,8 +54,10 @@ public class PageMVCServlet extends MVCServlet {
             if (StringUtils.isEmpty(pageName)) {
                 pageName = request.getRequestURI();
             }
-            pageName = StringUtils.replaceOnce(StringUtils.substringAfterLast(pageName, "/pages/"), ".html", //$NON-NLS-1$ //$NON-NLS-2$
-                StringUtils.EMPTY);
+            pageName = StringUtils.substringAfterLast(pageName, "/pages/"); //$NON-NLS-1$
+
+            // strip any extension
+            pageName = StringUtils.substringBeforeLast(pageName, ".");
         }
 
         PageMVCHandler handler = null;
@@ -72,7 +74,7 @@ public class PageMVCServlet extends MVCServlet {
         else {
             log.error("no dialogpage name passed"); //$NON-NLS-1$
         }
-        
+
         return handler;
     }
 

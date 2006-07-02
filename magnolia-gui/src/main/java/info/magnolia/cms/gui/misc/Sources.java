@@ -41,7 +41,7 @@ public class Sources {
 
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admintemplates/js/admincentral.jsp\"></script>"); //$NON-NLS-1$
+        html.append("/.magnolia/pages/javascript.js\"></script>"); //$NON-NLS-1$
 
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
