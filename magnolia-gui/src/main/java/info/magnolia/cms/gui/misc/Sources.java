@@ -38,12 +38,19 @@ public class Sources {
 
     public String getHtmlJs() {
         StringBuffer html = new StringBuffer();
+
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
         html.append("/admintemplates/js/admincentral.jsp\"></script>"); //$NON-NLS-1$
+
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
-        html.append("/admintemplates/js/dialogs.jsp\"></script>"); //$NON-NLS-1$
+        html.append("/.resources/admin-js/dialogs/dialogs.js\"></script>"); //$NON-NLS-1$
+
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
+        html.append(contextPath);
+        html.append("/.resources/admin-js/dialogs/calendar.js\"></script>"); //$NON-NLS-1$
+
         return html.toString();
     }
 

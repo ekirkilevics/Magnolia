@@ -2,14 +2,15 @@
 <html>
     <head>
         <script type="text/javascript" src="${contextPath}/admintemplates/js/admincentral.jsp"></script>
-        <script type="text/javascript" src="${contextPath}/admintemplates/js/dialogs.jsp"></script>
+        <script type="text/javascript" src="${contextPath}/.resources/admin-js/dialogs/dialogs.js"></script>
+        <script type="text/javascript" src="${contextPath}/.resources/admin-js/dialogs/calendar.js"></script>
         <script type="text/javascript" src="${contextPath}/.resources/js-libs/json/json.js"></script>
-        <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/admin-css/admin-all.css">
-        <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/pro-css/search.css">
-    
+        <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/admin-css/admin-all.css" />
+        <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/pro-css/search.css" />
+
         <script type="text/javascript">
             var functionBar;
-            
+
             function mgnlListResize(){
                 // set the size of the list div
                 var height = MgnlDHTMLUtil.getWindowSize().h;
@@ -23,7 +24,7 @@
                 }
                 $('${this.list.name}Div').style.width = width + "px";
             }
-            
+
             MgnlDHTMLUtil.addOnLoad(function(){
                 functionBar = $('mgnlFunctionBarDiv');
                 if(functionBar){
@@ -31,7 +32,7 @@
                 }
                 mgnlListResize();
             });
-            
+
             MgnlDHTMLUtil.addOnResize(mgnlListResize);
         </script>
     </head>
@@ -41,21 +42,21 @@
             <input type="hidden" id="command" name="command" value="show"/>
             <!--  used by subclasses mainly to add additional hiddenfields or js -->
             ${this.onRender()}
-            
+
             <div id="${this.list.name}Div" style="position:absolute;">
                 ${this.list.render()}
             </div>
 
-            <#if this.functionBar.menuItems?has_content>
+            [#if this.functionBar.menuItems?has_content]
                 ${this.functionBar.html}
                 <script>
                     ${this.functionBar.javascript}
                 </script>
-            </#if>
-            
-            <#if message?exists>
+            [/#if]
+
+            [#if message?exists]
                 <script>MgnlDHTMLUtil.addOnLoad(function(){alert("${message}")});</script>
-            </#if>
+            [/#if]
         </form>
 
     </body>
