@@ -150,8 +150,11 @@ public class SimpleMailTag extends TagSupport {
 
         while (it.hasNext()) {
             Content node = (Content) it.next();
-            if (request.getParameterValues("field_" + node.getName()) != null) {
-                String[] values = request.getParameterValues("field_" + node.getName());
+            String[] values = request.getParameterValues("field_" + node.getName());
+            if (values == null) {
+                values = request.getParameterValues(node.getName());
+            }
+            if (values != null) {
                 body.append(node.getNodeData("title").getString() + "\n");
                 for (int i = 0; i < values.length; i++) {
                     body.append(values[i] + "\n");
