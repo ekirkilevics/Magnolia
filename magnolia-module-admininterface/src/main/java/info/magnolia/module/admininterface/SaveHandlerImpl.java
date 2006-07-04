@@ -15,15 +15,43 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.*;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Digester;
-import info.magnolia.cms.util.*;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.DateUtil;
+import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.cms.util.LinkUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.TimeZone;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+import javax.jcr.ValueFactory;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -33,15 +61,6 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.devlib.schmidt.imageinfo.ImageInfo;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 /**
@@ -172,9 +191,10 @@ public class SaveHandlerImpl implements SaveHandler {
                     MultipartForm form = getForm();
                     Map docs = form.getDocuments();
                     Iterator iter = docs.keySet().iterator();
-                    while(iter.hasNext())
-                        form.getDocument((String)iter.next()).delete();
-                } catch(Exception e) {
+                    while (iter.hasNext())
+                        form.getDocument((String) iter.next()).delete();
+                }
+                catch (Exception e) {
                     log.error("Could not delete temp documents from form");
                 }
 
@@ -240,7 +260,7 @@ public class SaveHandlerImpl implements SaveHandler {
             else if (isRichEditValue != ControlImpl.RICHEDIT_NONE) {
                 processRichEdit(node, name, type, isRichEditValue, encoding, values);
             }
-            else if(type == PropertyType.DATE) {
+            else if (type == PropertyType.DATE) {
                 processDate(node, name, type, valueType, encoding, values);
             }
             else {
@@ -251,15 +271,18 @@ public class SaveHandlerImpl implements SaveHandler {
 
     protected void processDate(Content node, String name, int type, int valueType, int encoding, String[] values) {
         try {
-            if(StringUtils.isEmpty(values[0])) {
-                if(log.isDebugEnabled())
-                    log.debug("Date has no value. Deleting node data"+name);
+            if (StringUtils.isEmpty(values[0])) {
+                if (log.isDebugEnabled())
+                    log.debug("Date has no value. Deleting node data" + name);
                 node.deleteNodeData(name);
-            } else {
+            }
+            else {
                 Calendar utc = DateUtil.getUTCCalendarFromDialogString(values[0]);
-                NodeDataUtil.getOrCreate(node,name).setValue(utc);
-            } }catch (Exception e) {
-            log.error("Could not update date value of node:"+node.getHandle()+" of property:"+name);
+                NodeDataUtil.getOrCreate(node, name).setValue(utc);
+            }
+        }
+        catch (Exception e) {
+            log.error("Could not update date value of node:" + node.getHandle() + " of property:" + name);
         }
     }
 
@@ -276,13 +299,13 @@ public class SaveHandlerImpl implements SaveHandler {
      * @throws AccessDeniedException
      */
     protected void processRichEdit(Content node, String name, int type, int isRichEditValue, int encoding,
-                                   String[] values) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        String[] values) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         String valueStr = StringUtils.EMPTY;
         if (values != null) {
             valueStr = values[0]; // values is null when the expected field would not exis, e.g no
         }
 
-        valueStr = cleanLineBreaks(valueStr,isRichEditValue);
+        valueStr = cleanLineBreaks(valueStr, isRichEditValue);
 
         if (isRichEditValue == ControlImpl.RICHEDIT_FCK) {
             valueStr = updateLinks(node, name, valueStr);
@@ -313,7 +336,7 @@ public class SaveHandlerImpl implements SaveHandler {
         valueStr = StringUtils.replace(valueStr, "<P><br />", "<P>"); //$NON-NLS-1$ //$NON-NLS-2$
 
         // replace <P>
-        if(isRichEditValue != ControlImpl.RICHEDIT_FCK)
+        if (isRichEditValue != ControlImpl.RICHEDIT_FCK)
             valueStr = replacePByBr(valueStr, "p"); //$NON-NLS-1$
         return valueStr;
     }
@@ -372,9 +395,10 @@ public class SaveHandlerImpl implements SaveHandler {
                     log.error("can't delete tmp file [" + Path.getTempDirectory() + "/fckeditor/" + uuid + "]");
                 }
             }
-
             // make internal links relative
-            else if (src.startsWith(MgnlContext.getContextPath())) {
+            // note MgnlContext.getContextPath() can be empty and url may be absolute (http:// ftp:// mailto: ...)
+            // @todo this only handles links to children pages
+            else if (src.startsWith(MgnlContext.getContextPath() + this.getPath())) {
                 link = pageName + StringUtils.removeStart(src, MgnlContext.getContextPath() + this.getPath());
             }
 
@@ -479,7 +503,7 @@ public class SaveHandlerImpl implements SaveHandler {
         throws AccessDeniedException, RepositoryException {
         Value value = this.getValue(valueStr, type);
         if (null != value) {
-            NodeData data = NodeDataUtil.getOrCreate(node,name);
+            NodeData data = NodeDataUtil.getOrCreate(node, name);
             data.setValue(value);
         }
     }
@@ -516,7 +540,7 @@ public class SaveHandlerImpl implements SaveHandler {
             }
             for (int j = 0; j < values.length; j++) {
                 String valueStr = values[j];
-                if(StringUtils.isNotEmpty(valueStr)) {
+                if (StringUtils.isNotEmpty(valueStr)) {
                     Value value = this.getValue(valueStr, type);
                     multiNode.createNodeData(Integer.toString(j)).setValue(value);
                 }
@@ -863,8 +887,8 @@ public class SaveHandlerImpl implements SaveHandler {
             if (!data.isExist()) {
                 data = node.createNodeData(name, PropertyType.BINARY);
 
-                    log.debug("creating under - {}", node.getHandle()); //$NON-NLS-1$
-                    log.debug("creating node data for binary store - {}", name); //$NON-NLS-1$
+                log.debug("creating under - {}", node.getHandle()); //$NON-NLS-1$
+                log.debug("creating node data for binary store - {}", name); //$NON-NLS-1$
 
             }
             data.setValue(doc.getStream());
@@ -908,9 +932,10 @@ public class SaveHandlerImpl implements SaveHandler {
                     IOUtils.closeQuietly(raf);
                 }
 
-                //TODO: check this
-                //deleting all the documents in the form AFTER the complete save is done, since some other field save could need the same file.
-                //doc.delete();
+                // TODO: check this
+                // deleting all the documents in the form AFTER the complete save is done, since some other field save
+                // could need the same file.
+                // doc.delete();
             }
         }
 
