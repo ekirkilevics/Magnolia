@@ -343,10 +343,12 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         // create necessary parent directories
         File folder = new File(Path.getAbsoluteFileSystemPath(rootdir), repository);
         folder.mkdirs();
-        File xmlFile = new File(folder.getAbsoluteFile(),xmlName);
+        File xmlFile = new File(folder.getAbsoluteFile(), xmlName);
         FileOutputStream fos = new FileOutputStream(xmlFile);
+
+        boolean format = !StringUtils.equals(repository, ContentRepository.WEBSITE);
         try {
-            DataTransporter.executeExport(fos, false, true, session, handle, repository, DataTransporter.XML);
+            DataTransporter.executeExport(fos, false, format, session, handle, repository, DataTransporter.XML);
         }
         finally {
             IOUtils.closeQuietly(fos);
