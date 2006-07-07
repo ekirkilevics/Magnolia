@@ -13,7 +13,7 @@
 <!ELEMENT dependency (name,version)>
 
 <!-- servlet to register -->
-<!ELEMENT servlets (servlet)>
+<!ELEMENT servlets (servlet+)>
 <!ELEMENT servlet (class,mappings,name,comment?,params?)>
 <!ELEMENT mapping (#PCDATA)>
 <!ELEMENT mappings (mapping+)>
@@ -23,6 +23,6 @@
 <!ELEMENT value (#PCDATA)>
 
 <!-- repositories to register -->
-<!ELEMENT repositories (repository)>
+<!ELEMENT repositories (repository+)>
 <!ELEMENT repository (name,nodeTypeFile)>
 <!ELEMENT nodeTypeFile EMPTY>
