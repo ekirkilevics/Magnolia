@@ -59,11 +59,17 @@ public final class Server {
 
     private static long uptime = System.currentTimeMillis();
 
-    /**
-     * Utility class, don't instantiate.
-     */
+    private static Server instance;
+
     private Server() {
-        // unused
+        // only used internally
+    }
+
+    public static Server getInstance() {
+        if (instance == null) {
+            instance = new Server();
+        }
+        return instance;
     }
 
     /**

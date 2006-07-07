@@ -12,10 +12,18 @@
  */
 package info.magnolia.module.admininterface.pages;
 
+import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ShutdownManager;
+import info.magnolia.cms.beans.config.VirtualURIManager;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.security.SecureURI;
+import info.magnolia.module.admininterface.TemplatedMVCHandler;
+
+import java.util.List;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import info.magnolia.module.admininterface.TemplatedMVCHandler;
 
 
 /**
@@ -32,6 +40,30 @@ public class ConfigurationPage extends TemplatedMVCHandler {
      */
     public ConfigurationPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
+    }
+
+    public Server getServer() {
+        return Server.getInstance();
+    }
+
+    public Set getVirtualUriMappings() {
+        return VirtualURIManager.getInstance().getURIMappings().entrySet();
+    }
+
+    public List getShutdownTasks() {
+        return ShutdownManager.listShutdownTasks();
+    }
+
+    public Set getSecureURIs() {
+        return SecureURI.listSecureURIs().keySet();
+    }
+
+    public Set getUnsecureURIs() {
+        return SecureURI.listUnsecureURIs().keySet();
+    }
+
+    public Set getSystemProperties() {
+        return SystemProperty.getPropertyList().entrySet();
     }
 
 }
