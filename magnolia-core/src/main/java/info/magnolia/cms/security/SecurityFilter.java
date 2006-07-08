@@ -143,7 +143,8 @@ public class SecurityFilter implements Filter {
                     httpsession.invalidate();
                 }
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                if (StringUtils.equalsIgnoreCase(this.filterConfig.getInitParameter(AUTH_TYPE), AUTH_TYPE_BASIC)) {
+                if (StringUtils.equalsIgnoreCase(this.filterConfig.getInitParameter(AUTH_TYPE), AUTH_TYPE_BASIC)
+                    || StringUtils.equals(request.getParameter(AUTH_TYPE), AUTH_TYPE_BASIC)) {
                     doBasicAuthentication(response);
                 }
                 else {
@@ -152,6 +153,7 @@ public class SecurityFilter implements Filter {
                     log.debug("Using login url: {}", loginUrl);
 
                     request.getRequestDispatcher(loginUrl).include(request, response);
+
                 }
                 return false;
             }
