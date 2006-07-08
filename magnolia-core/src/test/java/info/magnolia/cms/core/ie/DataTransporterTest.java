@@ -31,7 +31,7 @@ public class DataTransporterTest extends XMLTestCase {
 
     /**
      * Test method for
-     * {@link info.magnolia.cms.core.ie.DataTransporter#parseAndFormat(java.io.OutputStream, org.xml.sax.XMLReader, java.lang.String, java.lang.String, boolean, boolean, javax.jcr.Session)}.
+     * {@link info.magnolia.cms.core.ie.DataTransporter#parseAndFormat(java.io.OutputStream, org.xml.sax.XMLReader, java.lang.String, java.lang.String, javax.jcr.Session)}.
      */
     public void testParseAndFormat() throws Exception {
 
@@ -41,7 +41,7 @@ public class DataTransporterTest extends XMLTestCase {
 
         XMLReader reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
 
-        DataTransporter.readFormatted(reader, inputFile, outputStream, true);
+        DataTransporter.readFormatted(reader, inputFile, outputStream);
 
         IOUtils.closeQuietly(outputStream);
 

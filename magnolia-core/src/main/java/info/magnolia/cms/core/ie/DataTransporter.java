@@ -242,7 +242,7 @@ public class DataTransporter {
                     session.exportSystemView(basepath, outputStream, false, false);
                 }
                 else {
-                    parseAndFormat(outputStream, null, repository, basepath, format, true, session);
+                    parseAndFormat(outputStream, null, repository, basepath, session);
                 }
             }
             else {
@@ -250,7 +250,7 @@ public class DataTransporter {
                 // file
                 XMLReader reader = new VersionFilter(XMLReaderFactory
                     .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
-                parseAndFormat(outputStream, reader, repository, basepath, format, true, session);
+                parseAndFormat(outputStream, reader, repository, basepath, session);
             }
         }
         catch (Exception e) {
@@ -274,13 +274,11 @@ public class DataTransporter {
      * a default one
      * @param repository the repository to export
      * @param basepath the basepath in the repository
-     * @param format should we format the xml
-     * @param noRecurse true if only the given node (excluding hierarchy) needs to be migrated
      * @param session the session to use to export the data from the repository
      * @throws Exception if anything goes wrong ...
      */
     public static void parseAndFormat(OutputStream stream, XMLReader reader, String repository, String basepath,
-        boolean format, boolean noRecurse, Session session) throws Exception {
+        Session session) throws Exception {
 
         if (reader == null) {
             reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
@@ -291,13 +289,13 @@ public class DataTransporter {
         OutputStream fileStream = new FileOutputStream(tempFile);
 
         try {
-            session.exportSystemView(basepath, fileStream, false, noRecurse);
+            session.exportSystemView(basepath, fileStream, false, false);
         }
         finally {
             IOUtils.closeQuietly(fileStream);
         }
 
-        readFormatted(reader, tempFile, stream, format);
+        readFormatted(reader, tempFile, stream);
 
         if (!tempFile.delete()) {
             log.warn("Could not delete temporary export file {}", tempFile.getAbsolutePath()); //$NON-NLS-1$
@@ -308,15 +306,14 @@ public class DataTransporter {
      * @param reader
      * @param inputFile
      * @param outputStream
-     * @param formatFull
      * @throws FileNotFoundException
      * @throws IOException
      * @throws SAXException
      */
-    protected static void readFormatted(XMLReader reader, File inputFile, OutputStream outputStream, boolean formatFull)
+    protected static void readFormatted(XMLReader reader, File inputFile, OutputStream outputStream)
         throws FileNotFoundException, IOException, SAXException {
         InputStream fileInputStream = new FileInputStream(inputFile);
-        readFormatted(reader, fileInputStream, outputStream, formatFull);
+        readFormatted(reader, fileInputStream, outputStream);
         IOUtils.closeQuietly(fileInputStream);
     }
 
@@ -324,22 +321,20 @@ public class DataTransporter {
      * @param reader
      * @param fileToRead
      * @param outputStream
-     * @param formatFull
      * @throws FileNotFoundException
      * @throws IOException
      * @throws SAXException
      */
-    protected static void readFormatted(XMLReader reader, InputStream inputStream, OutputStream outputStream,
-        boolean formatFull) throws FileNotFoundException, IOException, SAXException {
+    protected static void readFormatted(XMLReader reader, InputStream inputStream, OutputStream outputStream)
+        throws FileNotFoundException, IOException, SAXException {
 
         OutputFormat outputFormat = new OutputFormat();
-        outputFormat.setIndenting(false);
+
         outputFormat.setPreserveSpace(false); // this is ok, doesn't affect text nodes??
-        if (formatFull) {
-            outputFormat.setIndenting(true);
-            outputFormat.setIndent(INDENT_VALUE);
-            outputFormat.setLineWidth(120); // need to be set after setIndenting()!
-        }
+        outputFormat.setIndenting(true);
+        outputFormat.setIndent(INDENT_VALUE);
+        outputFormat.setLineWidth(120); // need to be set after setIndenting()!
+
         reader.setContentHandler(new XMLSerializer(outputStream, outputFormat));
         reader.parse(new InputSource(inputStream));
 
