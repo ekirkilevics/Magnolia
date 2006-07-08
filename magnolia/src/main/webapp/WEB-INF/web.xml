@@ -216,12 +216,14 @@
     <listener-class>info.magnolia.cms.beans.config.ShutdownManager</listener-class>
   </listener>
   <!-- for error-code definitions see http://www.w3.org/Protocols/rfc2616/rfc2616-sec10.html -->
-  <error-page>
+  <!--
+    <error-page>
     <error-code>500</error-code>
     <location>/admintemplates/error.jsp</location>
-  </error-page>
-  <error-page>
+    </error-page>
+    <error-page>
     <error-code>400</error-code>
     <location>/admintemplates/error.jsp</location>
-  </error-page>
+    </error-page>
+  -->
 </web-app>
