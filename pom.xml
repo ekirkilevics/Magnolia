@@ -4,7 +4,7 @@
   <artifactId>magnolia-root</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-root</name>
-  <version>3.0-rc2-SNAPSHOT</version>
+  <version>3.0-rc3-SNAPSHOT</version>
   <description>Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
     java content repositories (JCR).</description>
   <url>http://magnolia.sourceforge.net</url>
