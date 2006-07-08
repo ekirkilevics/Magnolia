@@ -15,18 +15,7 @@ package info.magnolia.cms.core.ie;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.output.Format;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -35,10 +24,23 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.jdom.Document;
+import org.jdom.Element;
+import org.jdom.output.Format;
+import org.jdom.output.Format.TextMode;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This utility class provides static methods for turning a content [node] into an XML document.
- *
  * @author Mettraux John (john.mettraux &gt;at&lt; openwfe.org)
  * @version 0.1 $Id :$
  */
@@ -188,7 +190,8 @@ public class XmlExport implements ExportHandler {
 
                 if (this.binaryAsLink) {
                     sContent = property.getPath();
-                } else {
+                }
+                else {
                     StringBuffer stringBuffer = new StringBuffer();
                     try {
                         InputStream is = property.getStream();
@@ -200,14 +203,16 @@ public class XmlExport implements ExportHandler {
                         IOUtils.closeQuietly(is);
                     }
                     catch (Exception e) {
-                        log.error("Failed to read input stream",e);
+                        log.error("Failed to read input stream", e);
                     }
 
                     sContent = new String(Base64.encodeBase64(stringBuffer.toString().getBytes()));
                 }
-            } else if (property.getType() == PropertyType.DATE) {
+            }
+            else if (property.getType() == PropertyType.DATE) {
                 sContent = property.getDate().getTime().toString();
-            } else {
+            }
+            else {
                 sContent = property.getString();
             }
         }
@@ -226,6 +231,7 @@ public class XmlExport implements ExportHandler {
     private org.jdom.output.XMLOutputter getXMLOutputter(String encoding) {
         Format format = Format.getPrettyFormat();
         format.setEncoding(encoding);
+        format.setTextMode(TextMode.PRESERVE);
         return new org.jdom.output.XMLOutputter(format);
     }
 

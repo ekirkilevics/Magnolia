@@ -11,6 +11,7 @@ import info.magnolia.context.MgnlContext;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,6 +39,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
@@ -102,13 +104,16 @@ public class DataTransporter {
     private static InputStream getInputStreamForFile(String fileName, File xmlfile) throws IOException {
         InputStream in;
         // looks like the zip one is buggy. It throws exception when trying to use it
-        if (fileName.endsWith(ZIP))
+        if (fileName.endsWith(ZIP)) {
             in = new ZipInputStream((new FileInputStream(xmlfile)));
-        else if (fileName.endsWith(GZ))
+        }
+        else if (fileName.endsWith(GZ)) {
             in = new GZIPInputStream((new FileInputStream(xmlfile)));
-        else
+        }
+        else {
             // if(fileName.endsWith(".xml"))
             in = new FileInputStream(xmlfile);
+        }
         return in;
     }
 
@@ -141,9 +146,10 @@ public class DataTransporter {
         HierarchyManager hr = MgnlContext.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("Importing content into repository: [{}] from File: [{}] into path: {}", //$NON-NLS-1$
                 new Object[]{repository, fileName, basepath});
+        }
 
         if (!hr.isExist(basepath) && createBasepathIfNotExist) {
             try {
@@ -206,8 +212,9 @@ public class DataTransporter {
         }
 
         try {
-            if (saveAfterImport)
+            if (saveAfterImport) {
                 session.save();
+            }
         }
         catch (RepositoryException e) {
             log.error(MessageFormat.format(
@@ -220,10 +227,12 @@ public class DataTransporter {
     public static void executeExport(OutputStream baseOutputStream, boolean keepVersionHistory, boolean format,
         Session session, String basepath, String repository, String ext) throws IOException {
         OutputStream outputStream = baseOutputStream;
-        if (ext.endsWith(ZIP))
+        if (ext.endsWith(ZIP)) {
             outputStream = new ZipOutputStream(baseOutputStream);
-        else if (ext.endsWith(GZ))
+        }
+        else if (ext.endsWith(GZ)) {
             outputStream = new GZIPOutputStream(baseOutputStream);
+        }
 
         try {
             if (keepVersionHistory) {
@@ -233,7 +242,7 @@ public class DataTransporter {
                     session.exportSystemView(basepath, outputStream, false, false);
                 }
                 else {
-                    parseAndFormat(outputStream, null, repository, basepath, format, false, session);
+                    parseAndFormat(outputStream, null, repository, basepath, format, true, session);
                 }
             }
             else {
@@ -241,7 +250,7 @@ public class DataTransporter {
                 // file
                 XMLReader reader = new VersionFilter(XMLReaderFactory
                     .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
-                parseAndFormat(outputStream, reader, repository, basepath, format, false, session);
+                parseAndFormat(outputStream, reader, repository, basepath, format, true, session);
             }
         }
         catch (Exception e) {
@@ -250,8 +259,9 @@ public class DataTransporter {
 
         // finish the stream properly if zip stream
         // this is not done by the IOUtils
-        if (outputStream instanceof DeflaterOutputStream)
+        if (outputStream instanceof DeflaterOutputStream) {
             ((DeflaterOutputStream) outputStream).finish();
+        }
 
         baseOutputStream.flush();
         IOUtils.closeQuietly(baseOutputStream);
@@ -272,8 +282,9 @@ public class DataTransporter {
     public static void parseAndFormat(OutputStream stream, XMLReader reader, String repository, String basepath,
         boolean format, boolean noRecurse, Session session) throws Exception {
 
-        if (reader == null)
+        if (reader == null) {
             reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
+        }
 
         // write to a temp file and then re-read it to remove version history
         File tempFile = File.createTempFile("export-" + repository + session.getUserID(), "xml"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -286,21 +297,53 @@ public class DataTransporter {
             IOUtils.closeQuietly(fileStream);
         }
 
-        InputStream fileInputStream = new FileInputStream(tempFile);
-
-        OutputFormat forma = new OutputFormat();
-        if (format) {
-            forma.setIndenting(true);
-            forma.setIndent(INDENT_VALUE);
-        }
-        reader.setContentHandler(new XMLSerializer(stream, forma));
-        reader.parse(new InputSource(fileInputStream));
-
-        IOUtils.closeQuietly(fileInputStream);
+        readFormatted(reader, tempFile, stream, format);
 
         if (!tempFile.delete()) {
             log.warn("Could not delete temporary export file {}", tempFile.getAbsolutePath()); //$NON-NLS-1$
         }
+    }
+
+    /**
+     * @param reader
+     * @param inputFile
+     * @param outputStream
+     * @param formatFull
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws SAXException
+     */
+    protected static void readFormatted(XMLReader reader, File inputFile, OutputStream outputStream, boolean formatFull)
+        throws FileNotFoundException, IOException, SAXException {
+        InputStream fileInputStream = new FileInputStream(inputFile);
+        readFormatted(reader, fileInputStream, outputStream, formatFull);
+        IOUtils.closeQuietly(fileInputStream);
+    }
+
+    /**
+     * @param reader
+     * @param fileToRead
+     * @param outputStream
+     * @param formatFull
+     * @throws FileNotFoundException
+     * @throws IOException
+     * @throws SAXException
+     */
+    protected static void readFormatted(XMLReader reader, InputStream inputStream, OutputStream outputStream,
+        boolean formatFull) throws FileNotFoundException, IOException, SAXException {
+
+        OutputFormat outputFormat = new OutputFormat();
+        outputFormat.setIndenting(false);
+        outputFormat.setPreserveSpace(false); // this is ok, doesn't affect text nodes??
+        if (formatFull) {
+            outputFormat.setIndenting(true);
+            outputFormat.setIndent(INDENT_VALUE);
+            outputFormat.setLineWidth(120); // need to be set after setIndenting()!
+        }
+        reader.setContentHandler(new XMLSerializer(outputStream, outputFormat));
+        reader.parse(new InputSource(inputStream));
+
+        IOUtils.closeQuietly(inputStream);
     }
 
 }

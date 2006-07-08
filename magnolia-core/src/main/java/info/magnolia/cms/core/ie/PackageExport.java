@@ -141,7 +141,7 @@ public class PackageExport implements ExportHandler {
         }
 
         public String getZipFileName() {
-            return zipFileName;
+            return this.zipFileName;
         }
 
         public void setZipFileName(String zipFileName) {
@@ -149,7 +149,7 @@ public class PackageExport implements ExportHandler {
         }
 
         public File getZipFile() {
-            return zipFile;
+            return this.zipFile;
         }
 
         public void setZipFile(File zipFile) {
@@ -157,7 +157,7 @@ public class PackageExport implements ExportHandler {
         }
 
         public ZipOutputStream getOutputStream() {
-            return outputStream;
+            return this.outputStream;
         }
 
         public void setOutputStream(ZipOutputStream outputStream) {
