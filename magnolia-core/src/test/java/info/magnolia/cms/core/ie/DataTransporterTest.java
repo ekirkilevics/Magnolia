@@ -52,6 +52,10 @@ public class DataTransporterTest extends XMLTestCase {
 
         DetailedDiff xmlDiff = new DetailedDiff(new Diff(expectedReader, actualReader));
 
+        IOUtils.closeQuietly(expectedReader);
+        IOUtils.closeQuietly(actualReader);
+        outputFile.delete();
+
         for (Iterator iter = xmlDiff.getAllDifferences().iterator(); iter.hasNext();) {
             Difference difference = (Difference) iter.next();
 
