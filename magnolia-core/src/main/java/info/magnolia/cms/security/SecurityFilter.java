@@ -64,15 +64,15 @@ public class SecurityFilter implements Filter {
     private static final String AUTH_TYPE_BASIC = "Basic";
 
     /**
-     * filter config
+     * Authentication type Form
      */
-    private FilterConfig filterConfig;
+    private static final String AUTH_TYPE_FORM = "Form";
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.filterConfig = filterConfig;
+        // unused
     }
 
     /**
@@ -132,29 +132,37 @@ public class SecurityFilter implements Filter {
      */
     private boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
         try {
-            if (Path.getURI(request).startsWith(this.filterConfig.getInitParameter(UNSECURED_URI))) {
-                return true;
+
+            String unsecuredUri = (String) Server.getInstance().getLoginConfig().get(UNSECURED_URI);
+
+            if (unsecuredUri != null) {
+                if (Path.getURI(request).startsWith(unsecuredUri)) {
+                    return true;
+                }
             }
+
             if (!Authenticator.authenticate(request)) {
                 // invalidate previous session
+
+                String authType = (String) Server.getInstance().getLoginConfig().get(AUTH_TYPE);
 
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession != null) {
                     httpsession.invalidate();
                 }
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-                if (StringUtils.equalsIgnoreCase(this.filterConfig.getInitParameter(AUTH_TYPE), AUTH_TYPE_BASIC)
-                    || StringUtils.equals(request.getParameter(AUTH_TYPE), AUTH_TYPE_BASIC)) {
-                    doBasicAuthentication(response);
+
+                if (StringUtils.equalsIgnoreCase(authType, AUTH_TYPE_FORM)
+                    && !StringUtils.equals(request.getParameter(AUTH_TYPE), AUTH_TYPE_BASIC)) { // override
+
+                    String loginUrl = (String) Server.getInstance().getLoginConfig().get(LOGIN_FORM);
+                    log.debug("Using login url: {}", loginUrl);
+                    request.getRequestDispatcher(loginUrl).include(request, response);
                 }
                 else {
-                    String loginUrl = this.filterConfig.getInitParameter(LOGIN_FORM);
-
-                    log.debug("Using login url: {}", loginUrl);
-
-                    request.getRequestDispatcher(loginUrl).include(request, response);
-
+                    doBasicAuthentication(response);
                 }
+
                 return false;
             }
         }

@@ -21,7 +21,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
@@ -42,8 +41,6 @@ public final class Server {
 
     public static final String CONFIG_PAGE = "server"; //$NON-NLS-1$
 
-    public static final String[] MAIL_SETTINGS = {"smtpServer", "smtpPort", "smtpUser", "smtpPassword"};
-
     /**
      * Logger.
      */
@@ -56,6 +53,8 @@ public final class Server {
     private static Map cachedCacheableURIMapping = new Hashtable();
 
     private static Map cachedMailSettings = new Hashtable();
+
+    private static Map loginSettings = new Hashtable();
 
     private static long uptime = System.currentTimeMillis();
 
@@ -89,12 +88,14 @@ public final class Server {
         Server.cachedURImapping.clear();
         Server.cachedCacheableURIMapping.clear();
         Server.cachedMailSettings.clear();
+        Server.loginSettings.clear();
         try {
             log.info("Config : loading Server"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
             cacheServerConfiguration(startPage);
             cacheSecureURIList(startPage);
-            cacheMailSettings();
+            cacheMailSettings(startPage);
+            cacheLoginSettings(startPage);
             log.info("Config : Server config loaded"); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
@@ -103,46 +104,12 @@ public final class Server {
         }
     }
 
-    private static void cacheMailSettings() {
-
-        Content mailContent;
-        try {
-            mailContent = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(
-                CONFIG_PAGE + "/mail");
-        }
-        catch (PathNotFoundException e) {
-            log.debug("Mail settings not initialized, configuration not found");
-            return;
-        }
-        catch (RepositoryException e) {
-            log.error("Mail settings not initialized, an error occurred", e);
-            return;
-        }
-
-        Iterator iter = mailContent.getNodeDataCollection().iterator();
-        while (iter.hasNext()) {
-            NodeData data = (NodeData) iter.next();
-            addPossiblyNullKeyToMap(data.getName(), data.getString(), cachedMailSettings, false);
-        }
-
-        if (log.isDebugEnabled()) {
-            for (int i = 0; i < MAIL_SETTINGS.length; i++) {
-                if (cachedMailSettings.containsKey(MAIL_SETTINGS[i])) {
-                    log.debug("Mail setting:{}={}", MAIL_SETTINGS[i], cachedMailSettings.get(MAIL_SETTINGS[i]));
-                }
-            }
-        }
+    private static void cacheMailSettings(Content page) {
+        childrenToMap(page.getChildByName("mail"), cachedMailSettings);
     }
 
-    private static void addPossiblyNullKeyToMap(String key, String value, Map map, boolean putKeyIfNull) {
-        try {
-            map.put(key, value);
-        }
-        catch (Exception e) {
-            if (putKeyIfNull) {
-                map.put(key, StringUtils.EMPTY);
-            }
-        }
+    private static void cacheLoginSettings(Content page) {
+        childrenToMap(page.getChildByName("login"), loginSettings);
     }
 
     /**
@@ -249,28 +216,62 @@ public final class Server {
         }
 
         // secure URI list
+        addEventListener(new EventListener() {
+
+            public void onEvent(EventIterator iterator) {
+                try {
+                    reload();
+                }
+                catch (ConfigurationException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+        }, "/secureURIList");
+
+        // unsecure URI list
+        addEventListener(new EventListener() {
+
+            public void onEvent(EventIterator iterator) {
+                try {
+                    reload();
+                }
+                catch (ConfigurationException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+        }, "/unsecureURIList");
+
+        // login
+        addEventListener(new EventListener() {
+
+            public void onEvent(EventIterator iterator) {
+                try {
+                    reload();
+                }
+                catch (ConfigurationException e) {
+                    log.error(e.getMessage(), e);
+                }
+            }
+        }, "/login");
+
+    }
+
+    /**
+     * @param eventListener
+     * @param path
+     */
+    private static void addEventListener(EventListener eventListener, String path) {
         try {
             ObservationManager observationManager = ContentRepository
                 .getHierarchyManager(ContentRepository.CONFIG)
                 .getWorkspace()
                 .getObservationManager();
 
-            observationManager.addEventListener(new EventListener() {
-
-                public void onEvent(EventIterator iterator) {
-                    // reload everything
-                    try {
-                        reload();
-                    }
-                    catch (ConfigurationException e) {
-                        log.error(e.getMessage(), e);
-                    }
-                }
-            }, Event.NODE_ADDED
+            observationManager.addEventListener(eventListener, Event.NODE_ADDED
                 | Event.NODE_REMOVED
                 | Event.PROPERTY_ADDED
                 | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/secureURIList", true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$
+                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + path, true, null, null, false); //$NON-NLS-1$
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
@@ -349,6 +350,26 @@ public final class Server {
      */
     public static long getUptime() {
         return uptime;
+    }
+
+    public Map getLoginConfig() {
+        return loginSettings;
+    }
+
+    /**
+     * @param content
+     * @param configMap
+     */
+    private static void childrenToMap(Content content, Map configMap) {
+        if (content == null) {
+            return;
+        }
+
+        Iterator iter = content.getNodeDataCollection().iterator();
+        while (iter.hasNext()) {
+            NodeData data = (NodeData) iter.next();
+            configMap.put(data.getName(), data.getString());
+        }
     }
 
 }
