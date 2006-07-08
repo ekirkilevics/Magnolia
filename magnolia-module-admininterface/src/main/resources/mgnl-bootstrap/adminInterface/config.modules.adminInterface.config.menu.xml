@@ -1281,7 +1281,7 @@
         <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
-        <sv:value>MgnlAdminCentral.showContent('/.magnolia/adminCentral/configuration.html');</sv:value>
+        <sv:value>MgnlAdminCentral.showContent('/.magnolia/pages/configuration.html');</sv:value>
       </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>menu.tools.info</sv:value>
