@@ -1,65 +1,59 @@
-<jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
-  xmlns:cms="urn:jsptld:cms-taglib" xmlns:fmt="urn:jsptld:http://java.sun.com/jsp/jstl/fmt">
-  <jsp:directive.page contentType="text/html; charset=UTF-8" />
-  <jsp:text>
-    <![CDATA[<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
-    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"> ]]>
-  </jsp:text>
-  <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
-    <head>
-      <title>Login Form</title>
-      <style type="text/css">
-        <![CDATA[
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en">
+  <head>
+    <title>Login Form</title>
+    <style type="text/css">
+
+     /*   <![CDATA[ */
 html, body {
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    font-family: verdana, arial, "sans serif";
-    font-size: 12px;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: verdana, arial, "sans serif";
+  font-size: 12px;
 }
 #frame {
-    margin-left: auto;
-    margin-right: auto;
-    width: 450px;
-    margin-top: 20px;
-    padding-top: 10px;
-    border: 1px #669900 solid;
+  margin-left: auto;
+  margin-right: auto;
+  width: 450px;
+  margin-top: 20px;
+  padding-top: 10px;
+  border: 1px #669900 solid;
 }
 form {
-    width: 280px;
-    text-align: center;
-    margin-left: auto;
-    margin-right: auto;
+  width: 280px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
 }
 label,input {
-    display: block;
-    width: 150px;
-    float: left;
-    margin-bottom: 10px;
+  display: block;
+  width: 150px;
+  float: left;
+  margin-bottom: 10px;
 }
 label {
-    text-align: right;
-    width: 75px;
-    padding-right: 20px;
-    clear: left;
+  text-align: right;
+  width: 75px;
+  padding-right: 20px;
+  clear: left;
 }
 .button {
-    width: auto;
+  width: auto;
 }
-      ]]>
+      /*  ]]> */
       </style>
-    </head>
-    <body>
-      <div id="frame">
-        <form name="loginForm" action="${referer}" method="post">
-          <label for="username">Username</label>
-          <input id="username" name="mgnlUserId" />
-          <label for="mgnlUserPSWD">Password</label>
-          <input id="mgnlUserPSWD" name="mgnlUserPSWD" type="password" />
-          <label for="submitButton"><!--  --></label>
-          <input id="submitButton" type="submit" value="login" class="button" />
-        </form>
-      </div>
-    </body>
-  </html>
-</jsp:root>
+  </head>
+  <body>
+    <div id="frame">
+      <form name="loginForm" action="" method="post">
+        <label for="username">Username</label>
+        <input id="username" name="mgnlUserId" />
+        <label for="mgnlUserPSWD">Password</label>
+        <input id="mgnlUserPSWD" name="mgnlUserPSWD" type="password" />
+        <label for="submitButton"><!--  --></label>
+        <input id="submitButton" type="submit" value="login" class="button" />
+      </form>
+    </div>
+  </body>
+</html>
