@@ -1,20 +1,22 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.util.ClasspathResourcesUtil;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Hashtable;
+import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Hashtable;
-import java.util.Map;
+
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -23,7 +25,6 @@ import java.util.Map;
  * <code>/.resources/*</code>. This servlet should be used for authoring-only resources, like rich editor images and
  * scripts. It's not suggested for public website resources. Content length and last modification date are not set on
  * files returned from the classpath.
- *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -46,21 +47,33 @@ public class ClasspathSpool extends HttpServlet {
 
     /**
      * All static resource requests are handled here.
-     *
-     * @param request  HttpServletRequest
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @throws IOException for error in accessing the resource or the servlet output stream
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String filePath = request.getPathInfo();
+        // handle includes
+        String filePath = (String) request.getAttribute("javax.servlet.include.path_info");
+
+        // handle forwards
+        if (StringUtils.isEmpty(filePath)) {
+            filePath = (String) request.getAttribute("javax.servlet.forward.path_info");
+        }
+
+        // standard request
+        if (StringUtils.isEmpty(filePath)) {
+            filePath = request.getPathInfo();
+        }
 
         if (StringUtils.contains(filePath, "*")) {
             streamMultipleFile(response, filePath);
-        } else if (StringUtils.contains(filePath, "|")) {
+        }
+        else if (StringUtils.contains(filePath, "|")) {
             String[] paths = StringUtils.split(filePath, "|");
             streamMultipleFile(response, paths);
-        } else {
+        }
+        else {
             streamSingleFile(response, filePath);
         }
     }
@@ -86,7 +99,6 @@ public class ClasspathSpool extends HttpServlet {
     /**
      * Join and strem multiple files, using a "regexp-like" pattern. Only a single "*" is allowed as keyword in the
      * request URI.
-     *
      * @param response
      * @param filePath
      * @throws IOException
@@ -163,10 +175,10 @@ public class ClasspathSpool extends HttpServlet {
         }
 
         if (in == null) {
-			if (!response.isCommitted())
-				response.sendError(HttpServletResponse.SC_NOT_FOUND);
-			return;
-		}
+            if (!response.isCommitted())
+                response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            return;
+        }
 
         try {
             ServletOutputStream out = response.getOutputStream();

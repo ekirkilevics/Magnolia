@@ -144,12 +144,14 @@ public class SecurityFilter implements Filter {
                 }
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 if (StringUtils.equalsIgnoreCase(this.filterConfig.getInitParameter(AUTH_TYPE), AUTH_TYPE_BASIC)) {
-                    response.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
+                    doBasicAuthentication(response);
                 }
                 else {
-                    request.getRequestDispatcher(this.filterConfig.getInitParameter(LOGIN_FORM)).include(
-                        request,
-                        response);
+                    String loginUrl = this.filterConfig.getInitParameter(LOGIN_FORM);
+
+                    log.debug("Using login url: {}", loginUrl);
+
+                    request.getRequestDispatcher(loginUrl).include(request, response);
                 }
                 return false;
             }
@@ -160,6 +162,13 @@ public class SecurityFilter implements Filter {
         }
 
         return true;
+    }
+
+    /**
+     * @param response
+     */
+    private void doBasicAuthentication(HttpServletResponse response) {
+        response.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
     }
 
 }
