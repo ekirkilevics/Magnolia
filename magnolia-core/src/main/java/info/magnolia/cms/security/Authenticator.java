@@ -12,6 +12,10 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.security.auth.Base64CallbackHandler;
+import info.magnolia.cms.security.auth.CredentialsCallbackHandler;
+import info.magnolia.cms.security.auth.PlainTextCallbackHandler;
+
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
@@ -22,9 +26,6 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import info.magnolia.cms.security.auth.CredentialsCallbackHandler;
-import info.magnolia.cms.security.auth.Base64CallbackHandler;
-import info.magnolia.cms.security.auth.PlainTextCallbackHandler;
 
 
 /**
@@ -32,6 +33,11 @@ import info.magnolia.cms.security.auth.PlainTextCallbackHandler;
  * @version 2.0
  */
 public final class Authenticator {
+
+    /**
+     * 
+     */
+    private static final String MGNL_LOGIN_ERROR = "mgnlLoginError";
 
     /**
      * Logger.
@@ -88,9 +94,10 @@ public final class Authenticator {
                 // select login module to use if user is authenticated against the container
                 if (request.getUserPrincipal() != null) {
                     loginModuleToInitialize = "magnolia_authorization";
-                    callbackHandler
-                            = new PlainTextCallbackHandler(request.getUserPrincipal().getName(), "".toCharArray());
-                } else {
+                    callbackHandler = new PlainTextCallbackHandler(request.getUserPrincipal().getName(), ""
+                        .toCharArray());
+                }
+                else {
                     // invalid auth request
                     return false;
                 }
@@ -111,8 +118,12 @@ public final class Authenticator {
             httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
         }
         catch (LoginException le) {
-            if (log.isDebugEnabled())
+
+            request.setAttribute(MGNL_LOGIN_ERROR, Boolean.TRUE);
+
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught", le);
+            }
 
             HttpSession httpsession = request.getSession(false);
             if (httpsession != null) {
