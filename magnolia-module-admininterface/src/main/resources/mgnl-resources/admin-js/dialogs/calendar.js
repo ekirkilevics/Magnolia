@@ -1,3 +1,12 @@
+/**
+
+please kill me and replace me with http://webfx.eae.net/dhtml/datepicker/datepicker.html
+
+webfx datepicker is now Licensed under the Apache Software License!
+
+*/
+
+
 /* ###################################
 ### calendar.js
 ### open and draw the calendar dialog
