@@ -15,6 +15,7 @@ package info.magnolia.module.admininterface.lists;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListControlRenderer;
 
+
 /**
  * Show the context menu if existing.
  * @author Philipp Bracher

@@ -37,17 +37,17 @@ import org.apache.commons.lang.StringUtils;
  * Select one of the supported lanuge
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class LanguageSelect extends DialogSelect {
 
-
     /**
-     * @see info.magnolia.cms.gui.dialog.DialogSelect#init(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, info.magnolia.cms.core.Content, info.magnolia.cms.core.Content)
+     * @see info.magnolia.cms.gui.dialog.DialogSelect#init(javax.servlet.http.HttpServletRequest,
+     * javax.servlet.http.HttpServletResponse, info.magnolia.cms.core.Content, info.magnolia.cms.core.Content)
      */
-    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode) throws RepositoryException {
+    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+        throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
-    
+
         List options = new ArrayList();
 
         Collection col = MessagesManager.getAvailableLocales();

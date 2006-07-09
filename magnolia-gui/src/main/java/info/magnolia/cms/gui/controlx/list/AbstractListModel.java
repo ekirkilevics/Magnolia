@@ -29,7 +29,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles $Id$
  */
 public abstract class AbstractListModel implements ListModel {
-    
+
     private static Logger log = LoggerFactory.getLogger(AbstractListModel.class);
 
     /**
@@ -67,29 +67,29 @@ public abstract class AbstractListModel implements ListModel {
      * @return Iterator over found records
      * @see ListModelIterator
      */
-    public ListModelIterator iterator(){
+    public ListModelIterator iterator() {
         try {
             return createIterator(getResult());
-        } catch (Exception re) {
+        }
+        catch (Exception re) {
             log.error("can't create the list model iterator, will return an empty list", re);
             return new ListModelIteratorImpl(new ArrayList(), this.getGroupBy());
         }
     }
-    
+
     /**
      * @return the collection of the items passed to the iterator
      */
     protected abstract Collection getResult() throws Exception;
-    
+
     /**
      * Create the iterator
      * @param items
      * @return
      */
     protected ListModelIterator createIterator(Collection items) {
-        return new ListModelIteratorImpl((List)this.doSort(items), this.getGroupBy());
+        return new ListModelIteratorImpl((List) this.doSort(items), this.getGroupBy());
     }
-
 
     /**
      * set sort by field
@@ -186,7 +186,6 @@ public abstract class AbstractListModel implements ListModel {
         }
         return collection;
     }
-    
 
     /**
      * Does simple or sub ordering
@@ -208,7 +207,8 @@ public abstract class AbstractListModel implements ListModel {
         public int compare(Object object, Object object1) {
             if (StringUtils.isNotEmpty(this.sortBy) && StringUtils.isEmpty(this.preSort)) {
                 return this.sort(object, object1);
-            } else if (StringUtils.isNotEmpty(this.sortBy) && StringUtils.isNotEmpty(this.preSort)) {
+            }
+            else if (StringUtils.isNotEmpty(this.sortBy) && StringUtils.isNotEmpty(this.preSort)) {
                 return this.subSort(object, object1);
             }
             return 0;

@@ -12,13 +12,12 @@
  */
 package info.magnolia.cms.gui.controlx;
 
-
 /**
  * Renders a control
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public interface Renderer {
+
     public String render(Control control);
 }

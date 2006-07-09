@@ -34,8 +34,11 @@ public class DateUtil {
      * Default date format.
      */
     public static final String FORMAT_DEFAULTPATTERN = "yyyy-MM-dd'T'HH:mm:ss.SZ"; //$NON-NLS-1$
+
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
+
     public static final String YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ss";
+
     public static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone("UTC");
 
     public String getFormattedDate(Date date) {
@@ -56,9 +59,9 @@ public class DateUtil {
      */
     public static String formatDateTime(Object val) {
         FastDateFormat format = FastDateFormat.getDateTimeInstance(
-                FastDateFormat.SHORT,
-                FastDateFormat.SHORT,
-                MgnlContext.getLocale());
+            FastDateFormat.SHORT,
+            FastDateFormat.SHORT,
+            MgnlContext.getLocale());
         return format.format(val);
     }
 
@@ -76,7 +79,9 @@ public class DateUtil {
      * Convert a string date from a dialog date to a UTC calendar ready to be stored in the repository
      */
     public static Calendar getUTCCalendarFromDialogString(String dateString) throws ParseException {
-        SimpleDateFormat sdf = (dateString.length()>YYYY_MM_DD.length()) ? new SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS) : new SimpleDateFormat(YYYY_MM_DD) ;
+        SimpleDateFormat sdf = (dateString.length() > YYYY_MM_DD.length())
+            ? new SimpleDateFormat(YYYY_MM_DD_T_HH_MM_SS)
+            : new SimpleDateFormat(YYYY_MM_DD);
         return getUTCCalendarFromLocalDate(sdf.parse(dateString));
     }
 
@@ -88,7 +93,6 @@ public class DateUtil {
         instance.setTimeInMillis(date.getTime());
         return instance;
     }
-
 
     /**
      * Get UTC Calendar for current time

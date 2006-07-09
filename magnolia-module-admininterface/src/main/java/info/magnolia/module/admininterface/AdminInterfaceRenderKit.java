@@ -23,11 +23,11 @@ import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
  * The default render kit for the admin interface
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class AdminInterfaceRenderKit extends RenderKitImpl {
+
     /**
-     * Register the default renderers used in the admin interface 
+     * Register the default renderers used in the admin interface
      */
     public AdminInterfaceRenderKit() {
         this.register(ListColumn.RENDER_TYPE, new ListColumnRenderer());

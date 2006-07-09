@@ -30,17 +30,16 @@ import org.slf4j.LoggerFactory;
  * This context wrapps a workitem and delegates the most of the methods to the inner context.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class WorkItemContext extends ContextDecorator {
-    
+
     private static Logger log = LoggerFactory.getLogger(WorkItemContext.class);
 
     /**
      * The wrapped workitem
      */
     private WorkItem workItem;
-    
+
     /**
      * 
      */
@@ -48,38 +47,38 @@ public class WorkItemContext extends ContextDecorator {
         super(ctx);
         this.workItem = workItem;
     }
-    
+
     /**
      * Use work item if request scope
      */
     public Object getAttribute(String name, int scope) {
-        if(scope == Context.LOCAL_SCOPE){
+        if (scope == Context.LOCAL_SCOPE) {
             Attribute attr = this.workItem.getAttribute(name);
-            if(attr != null){
+            if (attr != null) {
                 Object obj = AttributeUtils.owfe2java(attr);
-                if(obj != null){
+                if (obj != null) {
                     return obj;
                 }
             }
         }
         return super.getAttribute(name, scope);
     }
-    
+
     /**
      * Use work item if request scope
      */
     public Map getAttributes(int scope) {
-        if(scope == Context.LOCAL_SCOPE){
+        if (scope == Context.LOCAL_SCOPE) {
             return AttributeUtils.map2java(this.workItem.getAttributes());
         }
         return super.getAttributes(scope);
     }
-    
+
     /**
      * Use work item if request scope
      */
     public void setAttribute(String name, Object value, int scope) {
-        if(scope == Context.LOCAL_SCOPE){
+        if (scope == Context.LOCAL_SCOPE) {
             Attribute attr = AttributeUtils.java2owfe(value);
             try {
                 this.workItem.addAttribute(name, attr);
@@ -90,24 +89,24 @@ public class WorkItemContext extends ContextDecorator {
         }
         super.setAttribute(name, value, scope);
     }
-    
+
     /**
      * Use work item if request scope
      */
     public void removeAttribute(String name, int scope) {
-        if(scope == Context.LOCAL_SCOPE){
+        if (scope == Context.LOCAL_SCOPE) {
             this.workItem.removeAttribute(name);
         }
         super.removeAttribute(name, scope);
     }
-    
+
     /**
      * @return Returns the workItem.
      */
     public WorkItem getWorkItem() {
         return this.workItem;
     }
-    
+
     /**
      * @param workItem The workItem to set.
      */

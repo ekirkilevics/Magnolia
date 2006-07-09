@@ -133,7 +133,7 @@ public final class MessagesManager {
      */
     private static void intiLRUMap() {
         // FIXME use LRU
-        //Map map = new LRUMap(20);
+        // Map map = new LRUMap(20);
         Map map = new HashMap();
         map = LazyMap.decorate(map, new Transformer() {
 
@@ -243,13 +243,13 @@ public final class MessagesManager {
 
     /**
      * Reload i18n configuration.
-     * @throws Exception 
+     * @throws Exception
      */
-    public static void reload(){
-        try{
+    public static void reload() {
+        try {
             reloadBundles();
         }
-        catch(Exception e){
+        catch (Exception e) {
             log.error("can't reload i18n messages", e);
         }
         load();
@@ -264,7 +264,7 @@ public final class MessagesManager {
     }
 
     public static Messages getMessages(String basename, Locale locale) {
-        if(StringUtils.isEmpty(basename)){
+        if (StringUtils.isEmpty(basename)) {
             basename = MessagesManager.DEFAULT_BASENAME;
         }
         return (Messages) messages.get(new MessagesID(basename, locale));
@@ -389,7 +389,7 @@ public final class MessagesManager {
             this.basename = basename;
             this.locale = locale;
         }
-        
+
         /**
          * @see java.lang.Object#hashCode()
          */

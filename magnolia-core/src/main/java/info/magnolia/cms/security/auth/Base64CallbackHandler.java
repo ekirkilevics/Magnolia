@@ -15,23 +15,23 @@ package info.magnolia.cms.security.auth;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 
+
 /**
  * Base 64 callback handler supporting Basic authentication
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class Base64CallbackHandler extends CredentialsCallbackHandler {
 
     /**
      * default
-     * */
+     */
     public Base64CallbackHandler() {
         // do not instanciate with this constructor
     }
 
     /**
      * @param credentials Base64 encoded string
-     * */
+     */
     public Base64CallbackHandler(String credentials) {
         credentials = getDecodedCredentials(credentials.substring(6).trim());
         this.name = StringUtils.substringBefore(credentials, ":");

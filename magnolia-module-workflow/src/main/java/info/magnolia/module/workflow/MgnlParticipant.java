@@ -76,7 +76,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             }
 
             try {
-                String name =  StringUtils.removeStart(parName, WorkflowConstants.PARTICIPANT_PREFIX_COMMAND);
+                String name = StringUtils.removeStart(parName, WorkflowConstants.PARTICIPANT_PREFIX_COMMAND);
                 Command c = CommandsManager.getInstance().getCommand(name);
                 if (c != null) {
                     log.info("Command has been found through the magnolia catalog:" + c.getClass().getName());
@@ -86,7 +86,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                     // since we are processing within the workflow enviroment
                     // TODO: fix this by using a proper workflow context
                     Context context = MgnlContext.getSystemContext();
-                    
+
                     context = new WorkItemContext(context, wi);
 
                     // execute

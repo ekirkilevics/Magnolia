@@ -14,16 +14,16 @@ package info.magnolia.cms.gui.controlx.list;
 
 import java.util.Iterator;
 
+
 /**
- * @author Sameer Charles
- * $Id:ListModelIterator.java 2544 2006-04-04 12:47:32Z philipp $
+ * @author Sameer Charles $Id:ListModelIterator.java 2544 2006-04-04 12:47:32Z philipp $
  */
 public interface ListModelIterator extends Iterator {
 
     /**
      * get named value
      * @param name its a key to which value is attached in this record
-     * */
+     */
     public Object getValue(String name);
 
     /**
@@ -31,22 +31,22 @@ public interface ListModelIterator extends Iterator {
      * @return the object.
      */
     public Object getValueObject();
-    
+
     /**
      * get group name
      * @return name of the group of the current record
-     * */
+     */
     public String getGroupName();
 
     /**
      * jump to next group
-     * */
+     */
     public Object nextGroup();
 
     /**
      * checks if there are more records in the current group
      * @return true if not EOF
-     * */
+     */
     public boolean hasNextInGroup();
-    
+
 }

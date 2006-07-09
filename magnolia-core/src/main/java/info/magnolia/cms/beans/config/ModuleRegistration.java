@@ -91,8 +91,7 @@ public class ModuleRegistration {
     private boolean restartNeeded = false;
 
     /**
-     * Don't instantiate! 
-     * Warum dann nicht private?????
+     * Don't instantiate! Warum dann nicht private?????
      */
     public ModuleRegistration() {
     }
@@ -397,8 +396,8 @@ public class ModuleRegistration {
         for (Iterator iter = def.getDependencies().iterator(); iter.hasNext();) {
             DependencyDefinition dep = (DependencyDefinition) iter.next();
             ModuleDefinition depDef = this.getModuleDefinition(dep.getName());
-            if(depDef == null) {
-                throw new RuntimeException("Missing definition for module:"+dep.getName());
+            if (depDef == null) {
+                throw new RuntimeException("Missing definition for module:" + dep.getName());
             }
             dependencyLevels.add(new Integer(calcDependencyLevel(depDef)));
         }

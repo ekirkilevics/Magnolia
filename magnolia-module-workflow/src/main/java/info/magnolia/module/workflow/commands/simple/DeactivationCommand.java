@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
  * @author jackie
  */
 public class DeactivationCommand extends MgnlCommand {
-    
+
     private static Logger log = LoggerFactory.getLogger(DeactivationCommand.class);
 
     public boolean execute(Context ctx) {

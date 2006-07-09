@@ -21,9 +21,9 @@ import info.magnolia.context.MgnlContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class MgnlGroupManager implements GroupManager {
 
@@ -31,7 +31,6 @@ public class MgnlGroupManager implements GroupManager {
 
     /**
      * Create a group
-     *
      * @param name
      * @return newly created group
      * @throws UnsupportedOperationException if the implementation does not support writing
@@ -51,7 +50,6 @@ public class MgnlGroupManager implements GroupManager {
 
     /**
      * Get group by the given name
-     *
      * @param name
      * @return group
      * @throws UnsupportedOperationException if the implementation does not support writing

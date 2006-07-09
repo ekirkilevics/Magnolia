@@ -19,15 +19,13 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 
+
 /**
- * this filter converts frozen nodes to mimic actual state of a node, this is only meant
- * to be used while activation
+ * this filter converts frozen nodes to mimic actual state of a node, this is only meant to be used while activation
  * Taken from:
- * @see info.magnolia.cms.core.ie.filters.VersionFilter
- * $Id$
+ * @see info.magnolia.cms.core.ie.filters.VersionFilter $Id$
  */
 class FrozenElementFilter extends VersionFilter {
-
 
     /**
      * if != 0 we are in the middle of a filtered element.
@@ -36,7 +34,7 @@ class FrozenElementFilter extends VersionFilter {
 
     /**
      * original node name
-     * */
+     */
     private String nodeName;
 
     /**
@@ -73,7 +71,7 @@ class FrozenElementFilter extends VersionFilter {
             super.characters(ch, start, length);
         }
     }
-    
+
     /**
      * @see org.xml.sax.helpers.XMLFilterImpl#startElement(String, String, String, org.xml.sax.Attributes)
      */
@@ -87,35 +85,39 @@ class FrozenElementFilter extends VersionFilter {
             String attName = atts.getValue("sv:name"); //$NON-NLS-1$
             if (attName != null) {
                 if ("jcr:predecessors".equals(attName)
-                        || "jcr:baseVersion".equals(attName)
-                        || "jcr:primaryType".equals(attName)
-                        || "jcr:uuid".equals(attName)
-                        || "jcr:mixinTypes".equals(attName)
-                        || "jcr:isCheckedOut".equals(attName)
-                        || "jcr:created".equals(attName)
-                        || "mgnl:sequenceposition".equals(attName)
-                        || "jcr:versionHistory" //$NON-NLS-1$ 
+                    || "jcr:baseVersion".equals(attName)
+                    || "jcr:primaryType".equals(attName)
+                    || "jcr:uuid".equals(attName)
+                    || "jcr:mixinTypes".equals(attName)
+                    || "jcr:isCheckedOut".equals(attName)
+                    || "jcr:created".equals(attName)
+                    || "mgnl:sequenceposition".equals(attName)
+                    || "jcr:versionHistory" //$NON-NLS-1$ 
                     .equals(attName)) {
                     inVersionElement++;
                     return;
-                } else if ("jcr:frozenPrimaryType".equals(attName)) {
+                }
+                else if ("jcr:frozenPrimaryType".equals(attName)) {
                     AttributesImpl attributesImpl = new AttributesImpl(atts);
                     int index = attributesImpl.getIndex("sv:name");
                     attributesImpl.setValue(index, "jcr:primaryType");
                     atts = attributesImpl;
-                } else if ("jcr:frozenMixinTypes".equals(attName)) {
+                }
+                else if ("jcr:frozenMixinTypes".equals(attName)) {
                     AttributesImpl attributesImpl = new AttributesImpl(atts);
                     int index = attributesImpl.getIndex("sv:name");
                     attributesImpl.setValue(index, "jcr:mixinTypes");
                     atts = attributesImpl;
-                } else if ("jcr:frozenUuid".equals(attName)) {
+                }
+                else if ("jcr:frozenUuid".equals(attName)) {
                     AttributesImpl attributesImpl = new AttributesImpl(atts);
                     int index = attributesImpl.getIndex("sv:name");
                     attributesImpl.setValue(index, "jcr:uuid");
                     atts = attributesImpl;
                 }
             }
-        } else if ("sv:node".equals(qName)) {
+        }
+        else if ("sv:node".equals(qName)) {
             String attName = atts.getValue("sv:name");
             if (attName != null) {
                 if ("jcr:frozenNode".equals(attName)) {

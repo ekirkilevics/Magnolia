@@ -20,41 +20,41 @@ import java.util.NoSuchElementException;
 
 import org.apache.commons.lang.StringUtils;
 
+
 /**
- * @author Sameer Charles
- * $Id:ListModelIteratorImpl.java 2492 2006-03-30 08:30:43Z scharles $
+ * @author Sameer Charles $Id:ListModelIteratorImpl.java 2492 2006-03-30 08:30:43Z scharles $
  */
 public class ListModelIteratorImpl implements ListModelIterator {
 
     /**
      * list holding all objects/records
-     * */
+     */
     private final List list;
 
     /**
-     *  next position
-     * */
+     * next position
+     */
     private int pos;
 
     /**
      * next content object (prefetched)
-     * */
+     */
     private Object next;
 
     /**
      * object on current pointer
-     * */
+     */
     private Object current;
 
     /**
-     *  key name on which provided list is grouped
-     * */
+     * key name on which provided list is grouped
+     */
     private String groupKey;
 
     /**
      * creates a new ListModelIterator
      * @param list of content objects
-     * */
+     */
     public ListModelIteratorImpl(List list, String groupKey) {
         this.list = new ArrayList(list);
         this.groupKey = groupKey;
@@ -65,8 +65,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
 
     /**
      * prefetch object for the list
-     *
-     * */
+     */
     private void prefetchNext() {
         this.next = null;
         while (this.next == null && this.pos < this.list.size()) {
@@ -76,7 +75,6 @@ public class ListModelIteratorImpl implements ListModelIterator {
 
     /**
      * get named value
-     *
      * @param name its a key to which value is attached in this record
      */
     public Object getValue(String name) {
@@ -87,7 +85,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * get value from a specified object
      * @param name its a key to which value is attached in this record
      * @param node
-     * */
+     */
     protected Object getValue(String name, Object node) {
         return ValueProvider.getInstance().getValue(name, node);
     }
@@ -101,7 +99,6 @@ public class ListModelIteratorImpl implements ListModelIterator {
 
     /**
      * get group name
-     *
      * @return name of the group of the current record
      */
     public String getGroupName() {
@@ -138,7 +135,6 @@ public class ListModelIteratorImpl implements ListModelIterator {
 
     /**
      * checks if there is next record
-     *
      * @return true if not EOF
      */
     public boolean hasNext() {
@@ -147,7 +143,6 @@ public class ListModelIteratorImpl implements ListModelIterator {
 
     /**
      * checks if there are more records in the current group
-     *
      * @return true if not EOF
      */
     public boolean hasNextInGroup() {
@@ -160,7 +155,8 @@ public class ListModelIteratorImpl implements ListModelIterator {
                 String nextValue = (String) this.getValue(this.groupKey, this.next);
                 return StringUtils.equalsIgnoreCase(currentValue, nextValue);
             }
-        } else {
+        }
+        else {
             return false;
         }
         return true;

@@ -22,13 +22,11 @@ import info.magnolia.cms.gui.controlx.list.ListControlRenderer;
  * A simple implementation returning the simplest possible html for testing reasons.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class TestRenderKit extends RenderKitImpl {
-    
-    
+
     /**
-     * Init the special renderers 
+     * Init the special renderers
      */
     public TestRenderKit() {
         this.register(ListColumn.RENDER_TYPE, new ListColumnRenderer());

@@ -17,19 +17,21 @@ import javax.jcr.Value;
 
 import org.apache.commons.lang.StringUtils;
 
+
 public class UUIDConversionSaveHandler extends SaveHandlerImpl implements DialogAwareSaveHandler {
 
-	protected Dialog dialog;
-	
-	public Dialog getDialog() {
-		return dialog;
-	}
+    protected Dialog dialog;
 
-	public void setDialog(Dialog dialog) {
-		this.dialog = dialog;
-	}
+    public Dialog getDialog() {
+        return dialog;
+    }
 
-	protected void processMultiple(Content node, String name, int type, String[] values) throws RepositoryException, PathNotFoundException, AccessDeniedException {
+    public void setDialog(Dialog dialog) {
+        this.dialog = dialog;
+    }
+
+    protected void processMultiple(Content node, String name, int type, String[] values) throws RepositoryException,
+        PathNotFoundException, AccessDeniedException {
         // remove entire content node and (re-)write each
         try {
             node.delete(name);
@@ -52,7 +54,7 @@ public class UUIDConversionSaveHandler extends SaveHandlerImpl implements Dialog
             }
             for (int j = 0; j < values.length; j++) {
                 String valueStr = values[j];
-                if(StringUtils.isNotEmpty(valueStr)) {
+                if (StringUtils.isNotEmpty(valueStr)) {
                     if (dialog.getSub(name) instanceof UUIDConversionControl && type == PropertyType.STRING) {
                         try {
                             HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
@@ -71,6 +73,6 @@ public class UUIDConversionSaveHandler extends SaveHandlerImpl implements Dialog
                 }
             }
         }
-	}
+    }
 
 }

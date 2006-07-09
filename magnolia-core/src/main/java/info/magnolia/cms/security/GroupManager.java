@@ -13,8 +13,7 @@
 package info.magnolia.cms.security;
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public interface GroupManager {
 
@@ -35,6 +34,5 @@ public interface GroupManager {
      * @throws AccessDeniedException if logged in repository user does not sufficient rights
      */
     public Group getGroup(String name) throws UnsupportedOperationException, AccessDeniedException;
-
 
 }

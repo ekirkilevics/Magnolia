@@ -44,18 +44,16 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
 
     private static ShutdownManager instance = new ShutdownManager();
 
-
     public static ShutdownManager getInstance() {
         return instance;
     }
 
     /**
-     * Adds a new <code>ShutdownTask</code>.
-     * Most recently added task will be executed first
+     * Adds a new <code>ShutdownTask</code>. Most recently added task will be executed first
      * @param task ShutdownTask implementation
      */
     public static void addShutdownTask(ShutdownTask task) {
-        coreTasks.add(0,task);
+        coreTasks.add(0, task);
     }
 
     /**
@@ -65,7 +63,7 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
     public static List listShutdownTasks() {
         List allTasks = new ArrayList();
         allTasks.addAll(coreTasks);
-        allTasks.addAll(0,customTasks);
+        allTasks.addAll(0, customTasks);
         return allTasks;
     }
 
@@ -102,10 +100,10 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
     protected void onRegister(Content node) {
         Catalog mrc = new MgnlRepositoryCatalog(node);
         Iterator iter = mrc.getNames();
-        while(iter.hasNext()) {
+        while (iter.hasNext()) {
             Object element = iter.next();
-            log.info("Adding shutdown task:"+element.toString());
-            customTasks.add(0,mrc.getCommand((String)element)); // Last Registered First Executed
+            log.info("Adding shutdown task:" + element.toString());
+            customTasks.add(0, mrc.getCommand((String) element)); // Last Registered First Executed
         }
 
     }

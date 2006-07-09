@@ -36,9 +36,9 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision$ ($Author$)
  */
 public class DataAdminTreeConfig implements AdminTreeConfiguration {
-    
+
     protected Messages msgs = MessagesUtil.chainWithDefault("info.magnolia.module.data.messages");
-    
+
     /**
      * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareTree(info.magnolia.cms.gui.control.Tree,
      * boolean, javax.servlet.http.HttpServletRequest)
@@ -96,26 +96,28 @@ public class DataAdminTreeConfig implements AdminTreeConfiguration {
             + tree.getJavascriptTree()
             + ",'.magnolia/dialogs/typeDialog.html');");
         menuEditType.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
-//
-//        ContextMenuItem menuDownloadDocument = new ContextMenuItem("download");
-//        menuDownloadDocument.setLabel(msgs.get("dms.menu.download"));
-//        menuDownloadDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_download.gif");
-//        menuDownloadDocument.setOnclick("mgnl.dms.DMS.downloadFile(" + tree.getJavascriptTree() + ".selectedNode.id);");
-//        menuDownloadDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
-//            + tree.getJavascriptTree()
-//            + ")");
-//        menuDownloadDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-//            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
-//
-//        ContextMenuItem menuUploadZip = new ContextMenuItem("zipUplaod");
-//        menuUploadZip.setLabel(msgs.get("dms.menu.uploadZip"));
-//        menuUploadZip.setIcon(request.getContextPath() + "/.resources/icons/16/package.gif");
-//        menuUploadZip.setOnclick("mgnl.dms.DMS.uploadZip(" + tree.getJavascriptTree() + ".selectedNode.id);");
-//        menuUploadZip.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode("
-//            + tree.getJavascriptTree()
-//            + ")");
-//
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
+        //
+        // ContextMenuItem menuDownloadDocument = new ContextMenuItem("download");
+        // menuDownloadDocument.setLabel(msgs.get("dms.menu.download"));
+        // menuDownloadDocument.setIcon(request.getContextPath() + "/.resources/icons/16/document_download.gif");
+        // menuDownloadDocument.setOnclick("mgnl.dms.DMS.downloadFile(" + tree.getJavascriptTree() +
+        // ".selectedNode.id);");
+        // menuDownloadDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContent("
+        // + tree.getJavascriptTree()
+        // + ")");
+        // menuDownloadDocument.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+        // + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+        //
+        // ContextMenuItem menuUploadZip = new ContextMenuItem("zipUplaod");
+        // menuUploadZip.setLabel(msgs.get("dms.menu.uploadZip"));
+        // menuUploadZip.setIcon(request.getContextPath() + "/.resources/icons/16/package.gif");
+        // menuUploadZip.setOnclick("mgnl.dms.DMS.uploadZip(" + tree.getJavascriptTree() + ".selectedNode.id);");
+        // menuUploadZip.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode("
+        // + tree.getJavascriptTree()
+        // + ")");
+        //
         ContextMenuItem menuVersions = new ContextMenuItem("versions");
         menuVersions.setLabel(msgs.get("data.menu.versions"));
         menuVersions.setIcon(request.getContextPath() + "/.resources/icons/16/elements1.gif");
@@ -124,63 +126,70 @@ public class DataAdminTreeConfig implements AdminTreeConfiguration {
             + tree.getJavascriptTree()
             + ")");
 
-//        ContextMenuItem menuDelete = new ContextMenuItem("delete");
-//        menuDelete.setLabel(msgs.get("tree.config.menu.delete"));
-//        menuDelete.setIcon(request.getContextPath() + "/.resources/icons/16/delete2.gif");
-//        menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
-//        menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
-//            + tree.getJavascriptTree()
-//            + ")");
-//
-//        ContextMenuItem menuCopy = new ContextMenuItem("copy");
-//        menuCopy.setLabel(msgs.get("tree.config.menu.copy"));
-//        menuCopy.setIcon(request.getContextPath() + "/.resources/icons/16/copy.gif");
-//        menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
-//            + tree.getJavascriptTree()
-//            + ")");
-//        menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
-//            + tree.getJavascriptTree()
-//            + ")");
-//        menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
-//
-//        ContextMenuItem menuCut = new ContextMenuItem("move");
-//        menuCut.setLabel(msgs.get("tree.config.menu.move"));
-//        menuCut.setIcon(request.getContextPath() + "/.resources/icons/16/up_down.gif");
-//        menuCut
-//            .addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" + tree.getJavascriptTree() + ")");
-//        menuCut.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
-//            + tree.getJavascriptTree()
-//            + ")");
-//        menuCut.setOnclick(tree.getJavascriptTree() + ".cutNode();");
-//
+        // ContextMenuItem menuDelete = new ContextMenuItem("delete");
+        // menuDelete.setLabel(msgs.get("tree.config.menu.delete"));
+        // menuDelete.setIcon(request.getContextPath() + "/.resources/icons/16/delete2.gif");
+        // menuDelete.setOnclick(tree.getJavascriptTree() + ".deleteNode();");
+        // menuDelete.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+        // + tree.getJavascriptTree()
+        // + ")");
+        //
+        // ContextMenuItem menuCopy = new ContextMenuItem("copy");
+        // menuCopy.setLabel(msgs.get("tree.config.menu.copy"));
+        // menuCopy.setIcon(request.getContextPath() + "/.resources/icons/16/copy.gif");
+        // menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot("
+        // + tree.getJavascriptTree()
+        // + ")");
+        // menuCopy.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
+        // + tree.getJavascriptTree()
+        // + ")");
+        // menuCopy.setOnclick(tree.getJavascriptTree() + ".copyNode();");
+        //
+        // ContextMenuItem menuCut = new ContextMenuItem("move");
+        // menuCut.setLabel(msgs.get("tree.config.menu.move"));
+        // menuCut.setIcon(request.getContextPath() + "/.resources/icons/16/up_down.gif");
+        // menuCut
+        // .addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" + tree.getJavascriptTree() + ")");
+        // menuCut.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData("
+        // + tree.getJavascriptTree()
+        // + ")");
+        // menuCut.setOnclick(tree.getJavascriptTree() + ".cutNode();");
+        //
         ContextMenuItem menuActivateExcl = new ContextMenuItem("activate");
         menuActivateExcl.setLabel(msgs.get("tree.config.menu.activate")); //$NON-NLS-1$
         menuActivateExcl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green.gif"); //$NON-NLS-1$
         menuActivateExcl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",false);"); //$NON-NLS-1$ //$NON-NLS-2$
         menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
         menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
 
         ContextMenuItem menuActivateIncl = new ContextMenuItem("activateIncl");
         menuActivateIncl.setLabel(msgs.get("tree.config.menu.activateInclSubs")); //$NON-NLS-1$
         menuActivateIncl.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_right_green_double.gif"); //$NON-NLS-1$
         menuActivateIncl.setOnclick(tree.getJavascriptTree() + ".activateNode(" + Tree.ACTION_ACTIVATE + ",true);"); //$NON-NLS-1$ //$NON-NLS-2$
         menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
         menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
         menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotContentNode(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
 
         ContextMenuItem menuDeActivate = new ContextMenuItem("deactivate");
         menuDeActivate.setLabel(msgs.get("tree.config.menu.deactivate")); //$NON-NLS-1$
         menuDeActivate.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_left_red.gif"); //$NON-NLS-1$
         menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
         menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
         menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
-            + tree.getJavascriptTree() + ")"); //$NON-NLS-1$
+            + tree.getJavascriptTree()
+            + ")"); //$NON-NLS-1$
 
         if (!Subscriber.isSubscribersEnabled()) {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
@@ -206,21 +215,21 @@ public class DataAdminTreeConfig implements AdminTreeConfiguration {
 
         tree.addMenuItem(menuNewType);
         tree.addMenuItem(menuEditType);
-//        tree.addMenuItem(null); // line
-//        tree.addMenuItem(menuDownloadDocument);
-//        tree.addMenuItem(null); // line
-//        tree.addMenuItem(menuDelete);
-//        tree.addMenuItem(null); // line
-//        tree.addMenuItem(menuCut);
-//        tree.addMenuItem(menuCopy);
-//        tree.addMenuItem(null); // line
+        // tree.addMenuItem(null); // line
+        // tree.addMenuItem(menuDownloadDocument);
+        // tree.addMenuItem(null); // line
+        // tree.addMenuItem(menuDelete);
+        // tree.addMenuItem(null); // line
+        // tree.addMenuItem(menuCut);
+        // tree.addMenuItem(menuCopy);
+        // tree.addMenuItem(null); // line
         tree.addMenuItem(menuVersions);
         tree.addSeparator();
         tree.addMenuItem(menuActivateExcl);
         tree.addMenuItem(menuActivateIncl);
         tree.addMenuItem(menuDeActivate);
         tree.addMenuItem(null); // line
-//        tree.addMenuItem(menuUploadZip);
+        // tree.addMenuItem(menuUploadZip);
         tree.addMenuItem(menuImport);
         tree.addMenuItem(menuExport);
         tree.addMenuItem(null); // line
@@ -236,12 +245,12 @@ public class DataAdminTreeConfig implements AdminTreeConfiguration {
         ContextMenu menu = tree.getMenu();
         bar.setSearchable(true);
         bar.setOnSearchFunction("mgnl.dms.DMS.simpleSearch");
-        
+
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("newType")));
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("edit")));
-//        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("download")));
-//        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("delete")));
-//        bar.addMenuItem(null);
+        // bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("download")));
+        // bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("delete")));
+        // bar.addMenuItem(null);
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("activate")));
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("deactivate")));
 

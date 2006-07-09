@@ -13,8 +13,7 @@
 package info.magnolia.cms.security.auth;
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public interface RoleList extends GroupList {
 

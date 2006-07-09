@@ -29,7 +29,7 @@ public class SimpleMailHandler implements MgnlMailHandler {
     }
 
     public synchronized void sendMail(MgnlEmail email) throws Exception {
-            Transport.send(email);
-            log.info("Mail has been sent to: {}", Arrays.asList(email.getAllRecipients()));
+        Transport.send(email);
+        log.info("Mail has been sent to: {}", Arrays.asList(email.getAllRecipients()));
     }
 }

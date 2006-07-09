@@ -24,10 +24,9 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class SelectSearchControlDefinition extends SearchControlDefinition {
-    
+
     /**
      * @param name
      * @param label
@@ -57,15 +56,14 @@ public class SelectSearchControlDefinition extends SearchControlDefinition {
         return str;
     }
 
-    
     /**
      * @return Returns the options.
      */
     public OrderedMap getOptions() {
         return this.options;
     }
-    
-    public void addOption(String value, String label){
+
+    public void addOption(String value, String label) {
         this.getOptions().put(value, label);
     }
 }

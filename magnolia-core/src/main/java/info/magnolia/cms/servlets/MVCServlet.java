@@ -99,8 +99,8 @@ public abstract class MVCServlet extends ContextSensitiveServlet {
             log.error("no handler found"); //$NON-NLS-1$
             return;
         }
-        
-        try{
+
+        try {
             handler.init();
         }
         catch (Exception e) {

@@ -2,10 +2,10 @@ package info.magnolia.cms.gui.controlx.search;
 
 import java.util.Collection;
 
+
 /**
  * Defines the advanced search. Fields, ...
  * @author philipp
- *
  */
 public interface SearchConfig {
 
@@ -17,5 +17,5 @@ public interface SearchConfig {
     public void addControlDefinition(SearchControlDefinition def);
 
     public SearchControlDefinition getControlDefinition(String field);
-    
+
 }

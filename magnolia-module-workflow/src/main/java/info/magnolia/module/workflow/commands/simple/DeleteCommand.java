@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 public class DeleteCommand extends MgnlCommand {
 
     private static Logger log = LoggerFactory.getLogger(DeleteCommand.class);
-    
+
     public boolean execute(Context ctx) {
         String path = (String) ctx.get(Context.ATTRIBUTE_PATH);
         try {

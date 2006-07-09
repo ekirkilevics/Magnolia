@@ -91,11 +91,10 @@ public class SearchControl extends AbstractControl {
      */
     public SearchQueryExpression getExpression() {
         String value = this.getValue().toString();
-        if(StringUtils.isNotEmpty(value)){
+        if (StringUtils.isNotEmpty(value)) {
             return new StringSearchQueryParameter(this.getDefinition().getColumn(), value, this.getConstraint());
         }
         return null;
     }
-
 
 }

@@ -56,7 +56,7 @@ public class JCRWorkItemAPI {
         this.hm = ContentRepository.getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
         if (this.hm == null) {
             Exception e = new Exception("Can't get HierarchyManager Object for workitems repository");
-            log.error(e.getMessage(),e);
+            log.error(e.getMessage(), e);
             throw e;
         }
     }
@@ -124,7 +124,7 @@ public class JCRWorkItemAPI {
         Document doc = builder.build(s);
         wi = (InFlowWorkItem) XmlCoder.decode(doc);
 
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             Iterator itt = wi.getAttributes().alphaStringIterator();
             while (itt.hasNext()) {
                 Object o = itt.next();
@@ -142,7 +142,7 @@ public class JCRWorkItemAPI {
      */
     public Content getWorkItemByParticipant(String participant) {
         String queryString = "//*[@participant=\"" + participant + "\"]";
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("xpath query string = " + queryString);
         }
         List list = doQuery(queryString);
@@ -176,7 +176,7 @@ public class JCRWorkItemAPI {
     public boolean hasWorkItem(FlowExpressionId fei) throws AccessDeniedException, RepositoryException {
         String path = createPathFromId(fei);
         if (StringUtils.isNotEmpty(path) && StringUtils.indexOf(path, "/") != 0) {
-            path  = "/" + path;
+            path = "/" + path;
         }
         return this.hm.isExist(path);
     }
@@ -200,7 +200,10 @@ public class JCRWorkItemAPI {
      * @param id
      */
     public final String convertPath(String id) {
-        return StringUtils.replace(StringUtils.replace(id, WorkflowConstants.BAR, StringUtils.EMPTY), WorkflowConstants.COLON, WorkflowConstants.DOT);
+        return StringUtils.replace(
+            StringUtils.replace(id, WorkflowConstants.BAR, StringUtils.EMPTY),
+            WorkflowConstants.COLON,
+            WorkflowConstants.DOT);
     }
 
     /**
@@ -209,8 +212,8 @@ public class JCRWorkItemAPI {
      */
     public String createPathFromId(FlowExpressionId eid) {
         String wlInstId = eid.getWorkflowInstanceId();
-        //TODO someone who knows the code better should have a look
-        String groupString = StringUtils.right(StringUtils.substringBefore(wlInstId, "."),3);
+        // TODO someone who knows the code better should have a look
+        String groupString = StringUtils.right(StringUtils.substringBefore(wlInstId, "."), 3);
         int groupNumber = Integer.parseInt(groupString) % 100;
         StringBuffer buffer = new StringBuffer(eid.getWorkflowDefinitionName());
         buffer.append(WorkflowConstants.SLASH);
@@ -229,10 +232,8 @@ public class JCRWorkItemAPI {
 
     /**
      * store work Item
-     *
      * @param arg0
-     * @param wi
-     *            the work item intends to be stored
+     * @param wi the work item intends to be stored
      * @throws StoreException
      */
     public void storeWorkItem(String arg0, InFlowWorkItem wi) throws StoreException {
@@ -246,7 +247,7 @@ public class JCRWorkItemAPI {
 
             // create path from work item id
             String path = createPathFromId(wi.getId());
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("storing workitem with path = " + path);
             }
 
@@ -258,7 +259,7 @@ public class JCRWorkItemAPI {
             newc.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(sId));
             newc.createNodeData(WorkflowConstants.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
 
-            if(log.isDebugEnabled()){
+            if (log.isDebugEnabled()) {
                 log.debug("ID=" + sId);
                 log.debug("participant = " + wi.getParticipantName());
             }
@@ -269,7 +270,7 @@ public class JCRWorkItemAPI {
                 if (s.length() > 0) {
                     newc.createNodeData(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, vf.createValue(s));
                 }
-                if(log.isDebugEnabled()) {
+                if (log.isDebugEnabled()) {
                     log.debug("assignTo=" + s);
                 }
             }
@@ -280,13 +281,13 @@ public class JCRWorkItemAPI {
             String s = XmlUtils.toString(doc, null);
             newc.createNodeData(WorkflowConstants.NODEDATA_VALUE, vf.createValue(s));
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("store work item: value=" + s);
             }
 
             this.hm.save();
 
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("store work item ok. ");
             }
         }
@@ -302,12 +303,13 @@ public class JCRWorkItemAPI {
      */
     public List doQuery(String queryString) {
         ArrayList list = new ArrayList();
-        if(log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("xpath query string: " + queryString);
         }
         try {
-            final QueryManager queryManager = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_STORE);
-            final Query q = queryManager.createQuery(queryString, Query.XPATH); 
+            final QueryManager queryManager = MgnlContext.getSystemContext().getQueryManager(
+                WorkflowConstants.WORKSPACE_STORE);
+            final Query q = queryManager.createQuery(queryString, Query.XPATH);
 
             QueryResult result = q.execute();
             if (result == null) {
@@ -321,13 +323,14 @@ public class JCRWorkItemAPI {
 
                 // check for stale data.
                 try {
-                    if(!hm.isExist(ct.getHandle())) {
+                    if (!hm.isExist(ct.getHandle())) {
                         if (log.isDebugEnabled()) {
-                            log.debug(ct.getHandle()+ " does not exist anymore.");
+                            log.debug(ct.getHandle() + " does not exist anymore.");
                         }
                         continue;
                     }
-                } catch(Exception e) {
+                }
+                catch (Exception e) {
                     log.error("SKipping strange node");
                 }
 
@@ -349,7 +352,8 @@ public class JCRWorkItemAPI {
                 }
                 list.add(wi);
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("query flow failed", e);
             return null;
         }

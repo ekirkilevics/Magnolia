@@ -261,7 +261,7 @@ public final class ContentRepository {
                 while (wspIterator.hasNext()) {
                     Element workspace = (Element) wspIterator.next();
                     String wspName = workspace.getAttributeValue(ATTRIBUTE_NAME);
-                    log.info("Loading workspace:"+wspName);
+                    log.info("Loading workspace:" + wspName);
                     map.addWorkspace(wspName);
                 }
             }
@@ -322,7 +322,7 @@ public final class ContentRepository {
      * Load hierarchy manager for the specified repository and workspace
      * @param repository
      * @param wspID
-     * @param map 
+     * @param map
      * @param provider
      */
     private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map,

@@ -29,15 +29,15 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class MgnlGroup implements Group {
 
     /**
      * Logger
-     * */
+     */
     public static Logger log = LoggerFactory.getLogger(MgnlGroup.class);
 
     /**
@@ -49,7 +49,7 @@ public class MgnlGroup implements Group {
 
     /**
      * group node
-     * */
+     */
     private Content groupNode;
 
     /**
@@ -61,7 +61,6 @@ public class MgnlGroup implements Group {
 
     /**
      * get name of this node
-     *
      * @return group name
      */
     public String getName() {
@@ -70,7 +69,6 @@ public class MgnlGroup implements Group {
 
     /**
      * add role to this group
-     *
      * @param roleName
      * @throws UnsupportedOperationException if the implementation does not support writing
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
@@ -81,11 +79,9 @@ public class MgnlGroup implements Group {
 
     /**
      * add subgroup to this group
-     *
      * @param groupName
      * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException
-     *                                       if loggen in repository user does not sufficient rights
+     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
      */
     public void addGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException {
         this.add(groupName, NODE_GROUPS);
@@ -93,7 +89,6 @@ public class MgnlGroup implements Group {
 
     /**
      * remove role from this group
-     *
      * @param roleName
      * @throws UnsupportedOperationException if the implementation does not support writing
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
@@ -104,11 +99,9 @@ public class MgnlGroup implements Group {
 
     /**
      * remove subgroup from this group
-     *
      * @param groupName
      * @throws UnsupportedOperationException if the implementation does not support writing
-     * @throws AccessDeniedException
-     *                                       if loggen in repository user does not sufficient rights
+     * @throws AccessDeniedException if loggen in repository user does not sufficient rights
      */
     public void removeGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException {
         this.remove(groupName, NODE_GROUPS);
@@ -116,7 +109,6 @@ public class MgnlGroup implements Group {
 
     /**
      * returns true if role exist in this group
-     *
      * @param roleName
      * @throws UnsupportedOperationException if the implementation does not exist
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
@@ -148,13 +140,15 @@ public class MgnlGroup implements Group {
                     if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
                         return true;
                     }
-                } catch(ItemNotFoundException e) {
+                }
+                catch (ItemNotFoundException e) {
                     if (log.isDebugEnabled()) {
-                        log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
+                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
                     }
-                } catch (IllegalArgumentException e) {
+                }
+                catch (IllegalArgumentException e) {
                     if (log.isDebugEnabled()) {
-                        log.debug(nodeData.getHandle()+" has invalid value");
+                        log.debug(nodeData.getHandle() + " has invalid value");
                     }
                 }
             }
@@ -188,13 +182,15 @@ public class MgnlGroup implements Group {
                     if (hm.getContentByUUID(nodeData.getString()).getName().equalsIgnoreCase(name)) {
                         nodeData.delete();
                     }
-                } catch(ItemNotFoundException e) {
+                }
+                catch (ItemNotFoundException e) {
                     if (log.isDebugEnabled()) {
-                        log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
+                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
                     }
-                } catch (IllegalArgumentException e) {
+                }
+                catch (IllegalArgumentException e) {
                     if (log.isDebugEnabled()) {
-                        log.debug(nodeData.getHandle()+" has invalid value");
+                        log.debug(nodeData.getHandle() + " has invalid value");
                     }
                 }
             }
@@ -222,15 +218,16 @@ public class MgnlGroup implements Group {
                 Content node = groupNode.getContent(nodeName);
                 // add corresponding ID
                 try {
-                    String value = hm.getContent("/"+name).getUUID(); // assuming that there is a flat hierarchy
+                    String value = hm.getContent("/" + name).getUUID(); // assuming that there is a flat hierarchy
                     // used only to get the unique label
                     HierarchyManager usersHM = ContentRepository.getHierarchyManager(ContentRepository.USERS);
                     String newName = Path.getUniqueLabel(usersHM, node.getHandle(), "0");
                     node.createNodeData(newName).setValue(value);
                     groupNode.save();
-                } catch(PathNotFoundException e) {
+                }
+                catch (PathNotFoundException e) {
                     if (log.isDebugEnabled()) {
-                        log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
+                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
                     }
                 }
             }
@@ -239,7 +236,6 @@ public class MgnlGroup implements Group {
             log.error("failed to add " + name + " to user [" + this.getName() + "]", e);
         }
     }
-
 
     /**
      * return the role HierarchyManager

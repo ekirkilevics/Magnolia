@@ -294,12 +294,12 @@ public class MgnlContext {
 
         return context;
     }
-    
+
     /**
      * Used to check if an instance is already set since getInstance() will always return a context.
      * @return true if an instance was set
      */
-    public static boolean hasInstance(){
+    public static boolean hasInstance() {
         return localContext.get() != null;
     }
 

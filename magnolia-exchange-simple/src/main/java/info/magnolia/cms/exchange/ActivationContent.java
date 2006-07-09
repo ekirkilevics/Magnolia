@@ -19,8 +19,7 @@ import java.util.Map;
 
 /**
  * This class holds all content needed to be activated
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class ActivationContent {
 

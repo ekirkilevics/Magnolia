@@ -13,31 +13,30 @@
 package info.magnolia.cms.gui.query;
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public abstract class SearchQueryParameter extends AbstractExpressionImpl {
 
     /**
      * parameter name
-     * */
+     */
     protected String name;
 
     /**
      * parameter value, this could be either String or Date
-     * */
+     */
     protected Object value;
 
     /**
      * constraint for this parameter
-     * */
+     */
     protected String constraint;
 
     /**
      * @param name of this parameter
      * @param value
      * @param constraint check constraint constants
-     * */
+     */
     public SearchQueryParameter(String name, Object value, String constraint) {
         this.name = name;
         this.value = value;
@@ -47,7 +46,7 @@ public abstract class SearchQueryParameter extends AbstractExpressionImpl {
     /**
      * get name of the parameter field
      * @return name
-     * */
+     */
     public String getName() {
         return name;
     }
@@ -55,7 +54,7 @@ public abstract class SearchQueryParameter extends AbstractExpressionImpl {
     /**
      * set parameter field name
      * @param name
-     * */
+     */
     public void setName(String name) {
         this.name = name;
     }
@@ -63,7 +62,7 @@ public abstract class SearchQueryParameter extends AbstractExpressionImpl {
     /**
      * get constraint name
      * @return constraint
-     * */
+     */
     public String getConstraint() {
         return constraint;
     }
@@ -71,7 +70,7 @@ public abstract class SearchQueryParameter extends AbstractExpressionImpl {
     /**
      * set constraint
      * @param constraint
-     * */
+     */
     public void setConstraint(String constraint) {
         this.constraint = constraint;
     }

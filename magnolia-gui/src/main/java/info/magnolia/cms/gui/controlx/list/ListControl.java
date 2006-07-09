@@ -21,13 +21,14 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+
 /**
  * A list. Can sort or group data.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class ListControl extends AbstractControl {
+
     /**
      * The type used for rendering
      */
@@ -42,35 +43,34 @@ public class ListControl extends AbstractControl {
      * The underlaying model
      */
     private ListModel model;
-    
+
     /**
      * The context menu used
      */
     private ContextMenu contextMenu;
-    
+
     /**
      * Fields on which you can sort
      */
     private List sortableFields = new ArrayList();
-    
+
     /**
      * Fields you can group
      */
     private List groupableFields = new ArrayList();
-    
+
     /**
      * Max rows shown per group
      */
     private int maxRowsPerGroup = 5;
-    
+
     /**
      * Constructor. Setting the render type.
-     *
      */
     public ListControl() {
         this.setRenderType(RENDER_TYPE);
     }
-    
+
     public ListModel getModel() {
         return this.model;
     }
@@ -78,20 +78,20 @@ public class ListControl extends AbstractControl {
     public void setModel(ListModel model) {
         this.model = model;
     }
-    
+
     /**
      * @see info.magnolia.cms.gui.controlx.list.ListControl#addColumn(info.magnolia.cms.gui.controlx.list.ListColumn)
      */
     public void addColumn(ListColumn column) {
         this.addChild(column);
     }
-    
+
     /**
      * Layzy bound iterator.
      * @return Returns the iterator.
      */
     public ListModelIterator getIterator() {
-        if(this.iterator == null){
+        if (this.iterator == null) {
             this.iterator = this.getModel().iterator();
         }
         return iterator;
@@ -108,7 +108,7 @@ public class ListControl extends AbstractControl {
 
     /**
      * Get the current object (not the value) in the current iterator.
-     * @return the object. corresponds to a row. 
+     * @return the object. corresponds to a row.
      */
     public Object getIteratorValueObject() {
         return this.getIterator().getValueObject();
@@ -116,17 +116,15 @@ public class ListControl extends AbstractControl {
 
     /**
      * Restart the iterator.
-     *
      */
-    public void resetIterator(){
+    public void resetIterator() {
         this.iterator = null;
     }
 
-    
     public ContextMenu getContextMenu() {
         return this.contextMenu;
     }
-    
+
     public void setContextMenu(ContextMenu contextMenu) {
         this.contextMenu = contextMenu;
     }
@@ -189,24 +187,24 @@ public class ListControl extends AbstractControl {
     public void setGroupBy(String name) {
         this.model.setGroupBy(name, this.model.getGroupByOrder());
     }
-    
+
     /**
      * @see info.magnolia.cms.gui.controlx.list.ListModel#setGroupBy(java.lang.String)
      */
     public void setGroupByOrder(String order) {
         this.model.setGroupBy(this.model.getGroupBy(), order);
     }
-    
+
     /**
-     * Get the lable of a specific 
+     * Get the lable of a specific
      * @param name
      * @return
      */
-    public String getColumnLabel(String name){
+    public String getColumnLabel(String name) {
         ListColumn column = (ListColumn) this.getChild(name);
         return column.getLabel();
     }
-    
+
     /**
      * @see info.magnolia.cms.gui.controlx.list.ListModel#setSortBy(java.lang.String)
      */
@@ -219,4 +217,3 @@ public class ListControl extends AbstractControl {
     }
 
 }
-

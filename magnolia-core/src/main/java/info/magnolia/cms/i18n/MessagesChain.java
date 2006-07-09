@@ -20,19 +20,19 @@ import java.util.Set;
 
 import org.apache.commons.collections.IteratorUtils;
 
+
 /**
  * Chains messages
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
-public class MessagesChain extends  AbstractMessagesImpl {
-    
+public class MessagesChain extends AbstractMessagesImpl {
+
     /**
      * The chain
      */
     private List chain = new ArrayList();
-    
+
     /**
      * Create a chain passing the wrapped head of the chain
      */
@@ -40,13 +40,13 @@ public class MessagesChain extends  AbstractMessagesImpl {
         super(head.getBasename(), head.getLocale());
         chain.add(head);
     }
-    
+
     /**
      * Append messages to the chain
      * @param messages
      * @return the chain itself
      */
-    public Messages chain(Messages messages){
+    public Messages chain(Messages messages) {
         chain.add(messages);
         return this;
     }
@@ -58,7 +58,7 @@ public class MessagesChain extends  AbstractMessagesImpl {
         for (Iterator iter = chain.iterator(); iter.hasNext();) {
             Messages msgs = (Messages) iter.next();
             String str = msgs.get(key);
-            if(!str.startsWith("???")){
+            if (!str.startsWith("???")) {
                 return str;
             }
         }

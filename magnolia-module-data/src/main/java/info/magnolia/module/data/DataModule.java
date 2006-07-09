@@ -14,39 +14,41 @@ import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 
+
 public class DataModule extends AbstractAdminModule {
 
-	protected String repository;
-	
-	public DataModule(){
-        setRepository("data"); //warum hier noch mal ?!?
-	}
-	
-	protected void onInit() throws InitializationException {
-		Content cfgNode = getConfigNode();
-		Collection types = cfgNode.getChildByName("types").getChildren();
-		for(Iterator it = types.iterator(); it.hasNext();){
-			Content type = (Content)it.next();
+    protected String repository;
+
+    public DataModule() {
+        setRepository("data"); // warum hier noch mal ?!?
+    }
+
+    protected void onInit() throws InitializationException {
+        Content cfgNode = getConfigNode();
+        Collection types = cfgNode.getChildByName("types").getChildren();
+        for (Iterator it = types.iterator(); it.hasNext();) {
+            Content type = (Content) it.next();
             Content node;
             // register the dialogs
             node = ContentUtil.getCaseInsensitive(type, "dialogs");
             if (node != null) {
                 DialogHandlerManager.getInstance().register(node);
             }
-			// register trees
+            // register trees
             node = ContentUtil.getCaseInsensitive(type, "trees");
             if (node != null) {
                 TreeHandlerManager.getInstance().register(node);
             }
-		}
-	}
+        }
+    }
+
     /**
      * Make some specific configuration.
      */
     public void onRegister(int registerState) {
         configureMenu();
         ModuleUtil.subscribeRepository(this.getRepository());
-        ModuleUtil.grantRepositoryToSuperuser(this.getRepository()); 
+        ModuleUtil.grantRepositoryToSuperuser(this.getRepository());
     }
 
     /**
@@ -71,13 +73,11 @@ public class DataModule extends AbstractAdminModule {
         return repository;
     }
 
-    
     /**
      * @param repository The repository to set.
      */
     protected void setRepository(String repository) {
         this.repository = repository;
     }
-
 
 }

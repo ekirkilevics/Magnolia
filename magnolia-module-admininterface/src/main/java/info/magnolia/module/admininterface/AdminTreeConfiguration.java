@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletRequest;
  * Used by the tree handler to configure the tree
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public interface AdminTreeConfiguration {
 

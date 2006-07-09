@@ -39,25 +39,27 @@ public class DataTreeControl extends Tree {
      */
     public DataTreeControl(String repository, HttpServletRequest request, HttpServletResponse response) {
         super(repository, repository, request);
-        setIndentionWidth(0);  
+        setIndentionWidth(0);
     }
 
     protected String getIcon(Content node, NodeData nodedata, String itemType) {
-    	return super.getIcon(node, nodedata, itemType);
+        return super.getIcon(node, nodedata, itemType);
     }
 
     public String getPath() {
-    	return "/modules/data/config/types";
+        return "/modules/data/config/types";
     }
-    
+
     protected boolean hasSub(Content c, String type) {
         try {
-			return c.getLevel() < 5;
-		} catch (PathNotFoundException e) {
-			throw new RuntimeException(e);
-		} catch (RepositoryException e) {
-			throw new RuntimeException(e);
-		}
+            return c.getLevel() < 5;
+        }
+        catch (PathNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        catch (RepositoryException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 }

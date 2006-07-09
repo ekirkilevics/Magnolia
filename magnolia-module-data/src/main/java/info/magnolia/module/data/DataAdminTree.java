@@ -32,7 +32,6 @@ import org.apache.log4j.Logger;
  * Data tree
  * @author Christoph Hoffmann (BeagleSoft GmbH)
  * @version $Revision$ ($Author$)
- *
  */
 public class DataAdminTree extends AdminTreeMVCHandler {
 
@@ -49,8 +48,8 @@ public class DataAdminTree extends AdminTreeMVCHandler {
         setConfiguration(new DataAdminTreeConfig());
     }
 
-    //TODO: check if this really works [cho]
-	public Syndicator getActivationSyndicator(String path) {
+    // TODO: check if this really works [cho]
+    public Syndicator getActivationSyndicator(String path) {
         /*
          * Here rule defines which content types to collect, its a resposibility of the caller ro set this, it will be
          * different in every hierarchy, for instance - in website tree recursive activation : rule will allow
@@ -68,6 +67,6 @@ public class DataAdminTree extends AdminTreeMVCHandler {
             .getRepository()), rule);
 
         return syndicator;
-	}
+    }
 
 }

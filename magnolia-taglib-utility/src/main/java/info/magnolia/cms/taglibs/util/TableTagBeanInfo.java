@@ -27,8 +27,7 @@ import org.apache.commons.lang.UnhandledException;
  * @author Fabrizio Giustina
  * @version $Revision: 2985 $ ($Author: fgiust $)
  */
-public class TableTagBeanInfo extends SimpleBeanInfo
-{
+public class TableTagBeanInfo extends SimpleBeanInfo {
 
     /**
      * List of exposed properties.
@@ -38,22 +37,18 @@ public class TableTagBeanInfo extends SimpleBeanInfo
     /**
      * @see java.beans.BeanInfo#getPropertyDescriptors()
      */
-    public PropertyDescriptor[] getPropertyDescriptors()
-    {
+    public PropertyDescriptor[] getPropertyDescriptors() {
 
-        try
-        {
+        try {
             List proplist = new ArrayList();
-            for (int j = 0; j < properties.length; j++)
-            {
+            for (int j = 0; j < properties.length; j++) {
                 proplist.add(createPropertyDescriptor(properties[j]));
             }
             PropertyDescriptor[] result = new PropertyDescriptor[proplist.size()];
             return ((PropertyDescriptor[]) proplist.toArray(result));
 
         }
-        catch (IntrospectionException ex)
-        {
+        catch (IntrospectionException ex) {
             // should never happen
             throw new UnhandledException(ex.getMessage(), ex);
         }
@@ -66,8 +61,7 @@ public class TableTagBeanInfo extends SimpleBeanInfo
      * @return property descriptor
      * @throws IntrospectionException if the given property is not valid
      */
-    private PropertyDescriptor createPropertyDescriptor(String propertyName) throws IntrospectionException
-    {
+    private PropertyDescriptor createPropertyDescriptor(String propertyName) throws IntrospectionException {
         return new PropertyDescriptor(propertyName, TableTag.class, null, "set" + StringUtils.capitalize(propertyName));
     }
 

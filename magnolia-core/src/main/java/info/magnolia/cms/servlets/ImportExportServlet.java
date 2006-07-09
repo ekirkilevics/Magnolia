@@ -31,7 +31,6 @@ import org.apache.commons.lang.math.NumberUtils;
 
 /**
  * Simple servlet used to import/export data from jcr using the standard jcr import/export features.
- *
  * @author Fabrizio Giustina
  * @version $Id$
  */
@@ -83,8 +82,11 @@ public class ImportExportServlet extends ContextSensitiveServlet {
     private static final String PARAM_EXPORT_ACTION = "exportxml"; //$NON-NLS-1$
 
     private static final String PARAM_EXTENSION = "ext";
+
     public static final String MIME_TEXT_XML = "text/xml";
+
     public static final String MIME_GZIP = "application/x-gzip";
+
     public static final String MIME_APPLICATION_ZIP = "application/zip";
 
     /**
@@ -113,7 +115,6 @@ public class ImportExportServlet extends ContextSensitiveServlet {
             extension = DataTransporter.XML;
         }
 
-
         boolean keepVersionHistory = BooleanUtils.toBoolean(request.getParameter(PARAM_KEEPVERSIONS));
         boolean format = BooleanUtils.toBoolean(request.getParameter(PARAM_FORMAT));
 
@@ -125,23 +126,23 @@ public class ImportExportServlet extends ContextSensitiveServlet {
             }
 
             throw new ServletException(new AccessDeniedException(
-                    "Write permission needed for export. User not allowed to WRITE path [" //$NON-NLS-1$
-                            + basepath
-                            + "]")); //$NON-NLS-1$
+                "Write permission needed for export. User not allowed to WRITE path [" //$NON-NLS-1$
+                    + basepath
+                    + "]")); //$NON-NLS-1$
         }
 
         if (StringUtils.contains(request.getRequestURI(), "import")) { //$NON-NLS-1$
             displayImportForm(response.getWriter(), repository, basepath);
-        } else {
+        }
+        else {
             displayExportForm(response.getWriter(), repository, basepath);
         }
     }
 
     /**
      * Display a simple form for importing/exporting data.
-     *
      * @param repository selected repository
-     * @param basepath   base path in repository (extracted from request parameter or default)
+     * @param basepath base path in repository (extracted from request parameter or default)
      */
     private void displayExportForm(PrintWriter out, String repository, String basepath) {
 
@@ -162,19 +163,18 @@ public class ImportExportServlet extends ContextSensitiveServlet {
         writeExtensionField(out);
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
-                + PARAM_EXPORT_ACTION
-                + "\" value=\"" //$NON-NLS-1$
-                + MessagesManager.get("importexport.export") //$NON-NLS-1$
-                + "\" />"); //$NON-NLS-1$
+            + PARAM_EXPORT_ACTION
+            + "\" value=\"" //$NON-NLS-1$
+            + MessagesManager.get("importexport.export") //$NON-NLS-1$
+            + "\" />"); //$NON-NLS-1$
 
         out.println("</form></body></html>"); //$NON-NLS-1$
     }
 
     /**
      * Display a simple form for importing/exporting data.
-     *
      * @param repository selected repository
-     * @param basepath   base path in repository (extracted from request parameter or default)
+     * @param basepath base path in repository (extracted from request parameter or default)
      */
     private void displayImportForm(PrintWriter out, String repository, String basepath) {
 
@@ -192,37 +192,37 @@ public class ImportExportServlet extends ContextSensitiveServlet {
         writeBasePathField(out, basepath);
         writeKeepVersionField(out);
         out.println(MessagesManager.get("importexport.file") //$NON-NLS-1$
-                + " <input type=\"file\" name=\"" + PARAM_FILE + "\" /><br/>"); //$NON-NLS-1$//$NON-NLS-2$
+            + " <input type=\"file\" name=\"" + PARAM_FILE + "\" /><br/>"); //$NON-NLS-1$//$NON-NLS-2$
 
         out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
-                + PARAM_UUID_BEHAVIOR
-                + "\" value=\"" //$NON-NLS-1$
-                + ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW
-                + "\">"); //$NON-NLS-1$
+            + PARAM_UUID_BEHAVIOR
+            + "\" value=\"" //$NON-NLS-1$
+            + ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW
+            + "\">"); //$NON-NLS-1$
         out.println(MessagesManager.get("importexport.createnew")); //$NON-NLS-1$
         out.println("<br/>"); //$NON-NLS-1$
 
         out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
-                + PARAM_UUID_BEHAVIOR
-                + "\" value=\"" //$NON-NLS-1$
-                + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING
-                + "\">"); //$NON-NLS-1$
+            + PARAM_UUID_BEHAVIOR
+            + "\" value=\"" //$NON-NLS-1$
+            + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING
+            + "\">"); //$NON-NLS-1$
         out.println(MessagesManager.get("importexport.removeexisting")); //$NON-NLS-1$
         out.println("<br/>"); //$NON-NLS-1$
 
         out.println("<input type=\"radio\" name=\"" //$NON-NLS-1$
-                + PARAM_UUID_BEHAVIOR
-                + "\" value=\"" //$NON-NLS-1$
-                + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING
-                + "\">"); //$NON-NLS-1$
+            + PARAM_UUID_BEHAVIOR
+            + "\" value=\"" //$NON-NLS-1$
+            + ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING
+            + "\">"); //$NON-NLS-1$
         out.println(MessagesManager.get("importexport.replaceexisting")); //$NON-NLS-1$
         out.println("<br/>"); //$NON-NLS-1$
 
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$
-                + PARAM_EXPORT_ACTION
-                + "\" value=\"" //$NON-NLS-1$
-                + MessagesManager.get("importexport.import") //$NON-NLS-1$
-                + "\" />"); //$NON-NLS-1$
+            + PARAM_EXPORT_ACTION
+            + "\" value=\"" //$NON-NLS-1$
+            + MessagesManager.get("importexport.import") //$NON-NLS-1$
+            + "\" />"); //$NON-NLS-1$
 
         out.println("</form></body></html>"); //$NON-NLS-1$
     }
@@ -233,11 +233,11 @@ public class ImportExportServlet extends ContextSensitiveServlet {
      */
     private void writeBasePathField(PrintWriter out, String basepath) {
         out.println(MessagesManager.get("importexport.basepath") //$NON-NLS-1$
-                + " <input name=\"" //$NON-NLS-1$
-                + PARAM_PATH
-                + "\" value=\"" //$NON-NLS-1$
-                + basepath
-                + "\" /><br/>"); //$NON-NLS-1$
+            + " <input name=\"" //$NON-NLS-1$
+            + PARAM_PATH
+            + "\" value=\"" //$NON-NLS-1$
+            + basepath
+            + "\" /><br/>"); //$NON-NLS-1$
     }
 
     /**
@@ -245,9 +245,9 @@ public class ImportExportServlet extends ContextSensitiveServlet {
      */
     private void writeKeepVersionField(PrintWriter out) {
         out.println(MessagesManager.get("importexport.keepversions") //$NON-NLS-1$
-                + " <input name=\"" //$NON-NLS-1$
-                + PARAM_KEEPVERSIONS
-                + "\" value=\"true\" type=\"checkbox\"/><br/>"); //$NON-NLS-1$
+            + " <input name=\"" //$NON-NLS-1$
+            + PARAM_KEEPVERSIONS
+            + "\" value=\"true\" type=\"checkbox\"/><br/>"); //$NON-NLS-1$
     }
 
     /**
@@ -255,16 +255,16 @@ public class ImportExportServlet extends ContextSensitiveServlet {
      */
     private void writeFormatField(PrintWriter out) {
         out.println(MessagesManager.get("importexport.format") //$NON-NLS-1$
-                + " <input name=\"" //$NON-NLS-1$
-                + PARAM_FORMAT
-                + "\" value=\"true\" type=\"checkbox\"/><br/>"); //$NON-NLS-1$
+            + " <input name=\"" //$NON-NLS-1$
+            + PARAM_FORMAT
+            + "\" value=\"true\" type=\"checkbox\"/><br/>"); //$NON-NLS-1$
     }
 
     private void writeExtensionField(PrintWriter out) {
         out.println(MessagesManager.get("importexport.extension") //$NON-NLS-1$
-                + " <select name=\"" //$NON-NLS-1$
-                + PARAM_EXTENSION
-                + "\">"); //$NON-NLS-1$
+            + " <select name=\"" //$NON-NLS-1$
+            + PARAM_EXTENSION
+            + "\">"); //$NON-NLS-1$
         out.println("<option selected=\"selected\" value=\"" + DataTransporter.XML + "\">Xml</option>");
         out.println("<option value=\"" + DataTransporter.ZIP + "\">Zip</option>");
         out.println("<option value=\"" + DataTransporter.GZ + "\">Gzip</option>");
@@ -278,9 +278,9 @@ public class ImportExportServlet extends ContextSensitiveServlet {
      */
     private void writeRepositoryField(PrintWriter out, String repository) {
         out.println(MessagesManager.get("importexport.repository") //$NON-NLS-1$
-                + " <select name=\"" //$NON-NLS-1$
-                + PARAM_REPOSITORY
-                + "\">"); //$NON-NLS-1$
+            + " <select name=\"" //$NON-NLS-1$
+            + PARAM_REPOSITORY
+            + "\">"); //$NON-NLS-1$
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
             String name = (String) repositoryNames.next();
@@ -298,7 +298,6 @@ public class ImportExportServlet extends ContextSensitiveServlet {
 
     /**
      * A post request is usually an import request.
-     *
      * @see javax.servlet.http.HttpServlet#doPost(HttpServletRequest, HttpServletResponse)
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
@@ -337,37 +336,38 @@ public class ImportExportServlet extends ContextSensitiveServlet {
         if (checkPermissions(request, repository, basepath, Permission.WRITE)) {
             DataTransporter.executeImport(basepath, repository, xmlFile, keepVersionHistory, uuidBehavior, true);
             log.info("Import done"); //$NON-NLS-1$
-        } else {
+        }
+        else {
             throw new ServletException(new AccessDeniedException(
-                    "Write permission needed for import. User not allowed to WRITE path [" //$NON-NLS-1$
-                            + basepath
-                            + "]")); //$NON-NLS-1$
+                "Write permission needed for import. User not allowed to WRITE path [" //$NON-NLS-1$
+                    + basepath
+                    + "]")); //$NON-NLS-1$
         }
 
         String redirectPage = form.getParameter(PARAM_REDIRECT);
         if (StringUtils.isNotBlank(redirectPage)) {
             if (log.isInfoEnabled()) {
                 log.info(MessageFormat.format("Redirecting to [{0}]", //$NON-NLS-1$
-                        new Object[]{redirectPage}));
+                    new Object[]{redirectPage}));
             }
             response.sendRedirect(redirectPage);
-        } else {
+        }
+        else {
             doGet(request, response);
         }
     }
 
     /**
      * Actually perform export. The generated file is sent to the client.
-     *
-     * @param response           HttpServletResponse
-     * @param repository         selected repository
-     * @param basepath           base path in repository
-     * @param format             should we format the resulting xml
+     * @param response HttpServletResponse
+     * @param repository selected repository
+     * @param basepath base path in repository
+     * @param format should we format the resulting xml
      * @param keepVersionHistory if <code>false</code> version info will be stripped from the exported document
      * @throws IOException for errors while accessing the servlet output stream
      */
-    private void executeExport(HttpServletResponse response, String repository,
-                               String basepath, boolean format, boolean keepVersionHistory, String ext) throws IOException {
+    private void executeExport(HttpServletResponse response, String repository, String basepath, boolean format,
+        boolean keepVersionHistory, String ext) throws IOException {
         HierarchyManager hr = MgnlContext.getHierarchyManager(repository);
         Workspace ws = hr.getWorkspace();
         Session session = ws.getSession();
@@ -379,7 +379,7 @@ public class ImportExportServlet extends ContextSensitiveServlet {
             response.setContentType(MIME_GZIP);
         }
         else {
-            response.setContentType(MIME_TEXT_XML); 
+            response.setContentType(MIME_TEXT_XML);
             response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
         }
 
@@ -393,15 +393,13 @@ public class ImportExportServlet extends ContextSensitiveServlet {
         DataTransporter.executeExport(baseOutputStream, keepVersionHistory, format, session, basepath, repository, ext);
     }
 
-
     /**
      * Uses access manager to authorise this request.
-     *
      * @param request HttpServletRequest as received by the service method
      * @return boolean true if read access is granted
      */
     protected boolean checkPermissions(HttpServletRequest request, String repository, String basePath,
-                                       long permissionType) {
+        long permissionType) {
         if (MgnlContext.getAccessManager(repository) != null) {
             if (!MgnlContext.getAccessManager(ContentRepository.WEBSITE).isGranted(basePath, permissionType)) {
                 return false;

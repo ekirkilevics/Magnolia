@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * @version 3.0
  */
 public class WorkflowModule extends AbstractAdminModule {
-    
+
     /**
      * 
      */
@@ -55,7 +55,7 @@ public class WorkflowModule extends AbstractAdminModule {
      * The current used engine
      */
     private static JCRPersistedEngine wfEngine;
-    
+
     /**
      * @see info.magnolia.module.admininterface.AbstractAdminModule#onRegister(int)
      */
@@ -76,14 +76,14 @@ public class WorkflowModule extends AbstractAdminModule {
     protected void onInit() {
         registerCommands();
         startEngine();
-	}
+    }
 
     /**
      * Register in the workflow module configured commands
      */
     private void registerCommands() {
         Content node = ContentUtil.getContent(ContentRepository.CONFIG, COMMANDS_CATALOG_PATH);
-        if(node != null){
+        if (node != null) {
             for (Iterator iter = node.getChildren(ItemType.CONTENT).iterator(); iter.hasNext();) {
                 Content catalog = (Content) iter.next();
                 CommandsManager.getInstance().register(catalog);
@@ -96,23 +96,24 @@ public class WorkflowModule extends AbstractAdminModule {
      */
     private void startEngine() {
         try {
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug("create worklist...");
             }
             wfEngine = new JCRPersistedEngine();
-            
+
             wfEngine.registerParticipant(new MgnlParticipant("user-.*"));
             wfEngine.registerParticipant(new MgnlParticipant("group-.*"));
             wfEngine.registerParticipant(new MgnlParticipant("role-.*"));
             wfEngine.registerParticipant(new MgnlParticipant("command-.*"));
-		} catch (Exception e) {
-			log.error("An exception arised when creating the workflow engine",e);
-		}
+        }
+        catch (Exception e) {
+            log.error("An exception arised when creating the workflow engine", e);
+        }
     }
 
     public void destroy() {
         JCRPersistedEngine engine = getEngine();
-		if (engine!=null && engine.isRunning()) {
+        if (engine != null && engine.isRunning()) {
             log.info("Stopping workflow engine..");
             try {
                 // before try to stop purge and scheduling tasks

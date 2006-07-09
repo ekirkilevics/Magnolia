@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 public class VersionCommand extends MgnlCommand {
 
     private static Logger log = LoggerFactory.getLogger(VersionCommand.class);
-    
+
     /**
      * @see info.magnolia.commands.MgnlCommand#exec(java.util.HashMap, org.apache.commons.chain.Context)
      */

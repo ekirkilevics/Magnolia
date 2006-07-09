@@ -26,35 +26,34 @@ import javax.servlet.http.HttpServletResponse;
  * Used to redeploy the files in the classpath (jsps and stuff).
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class DeploymentUtilsPage extends TemplatedMVCHandler {
-    
+
     /**
      * The interval of the deamon
      */
     private int seconds;
-    
-    class RedeployDeamon extends Thread{
-        
+
+    class RedeployDeamon extends Thread {
+
         int seconds;
-        
+
         public RedeployDeamon(int seconds) {
             this.seconds = seconds;
             this.setDaemon(true);
         }
-        
+
         /**
          * @see java.lang.Thread#run()
          */
         public void run() {
-            try{
-                while(true){
+            try {
+                while (true) {
                     redeployFiles();
                     sleep(seconds * 1000);
                 }
             }
-            catch(Exception e){
+            catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -68,8 +67,8 @@ public class DeploymentUtilsPage extends TemplatedMVCHandler {
     public DeploymentUtilsPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
-    
-    public String redeploy(){
+
+    public String redeploy() {
         try {
             redeployFiles();
             AlertUtil.setMessage("Redeployed");
@@ -85,23 +84,24 @@ public class DeploymentUtilsPage extends TemplatedMVCHandler {
      */
     private static void redeployFiles() throws Exception {
         String[] moduleFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+
             public boolean accept(String name) {
                 return name.startsWith("/mgnl-files/");
             }
         });
-        
+
         ModuleUtil.installFiles(moduleFiles, "/mgnl-files/");
     }
-    
-    public String startDeamon(){
+
+    public String startDeamon() {
         Thread deamon = new RedeployDeamon(this.getSeconds());
         deamon.setDaemon(true);
         deamon.start();
         AlertUtil.setMessage("Deamon started!");
         return this.show();
     }
-    
-    public String reloadI18nMessages(){
+
+    public String reloadI18nMessages() {
         try {
             MessagesManager.reload();
             AlertUtil.setMessage("AbstractMessagesImpl reloaded!");
@@ -110,11 +110,10 @@ public class DeploymentUtilsPage extends TemplatedMVCHandler {
             e.printStackTrace();
             AlertUtil.setMessage("Can't reload", e);
         }
-        
-        return this.show();        
+
+        return this.show();
     }
 
-    
     /**
      * @return Returns the seconds.
      */
@@ -122,7 +121,6 @@ public class DeploymentUtilsPage extends TemplatedMVCHandler {
         return this.seconds;
     }
 
-    
     /**
      * @param seconds The seconds to set.
      */

@@ -26,10 +26,9 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public abstract class AbstractSimpleSearchList extends AbstractList {
-    
+
     /**
      * @param name
      * @param request
@@ -40,7 +39,7 @@ public abstract class AbstractSimpleSearchList extends AbstractList {
     }
 
     private String searchStr = "";
-    
+
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#onRender()
      */
@@ -63,15 +62,15 @@ public abstract class AbstractSimpleSearchList extends AbstractList {
     public void setSearchStr(String searchStr) {
         this.searchStr = searchStr;
     }
-    
+
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#configureList(info.magnolia.cms.gui.controlx.list.ListControl)
      */
     public void initList(ListControl list) {
         super.initList(list);
-        ((SearchableListModel)list.getModel()).setQuery(this.getQuery());
+        ((SearchableListModel) list.getModel()).setQuery(this.getQuery());
     }
-    
+
     /**
      * @return
      */

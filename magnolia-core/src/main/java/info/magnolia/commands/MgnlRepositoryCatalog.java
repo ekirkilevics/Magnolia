@@ -16,18 +16,18 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- * A command catalog using a repository node as a configuration. Chains are supported.
- * Date: Mar 27, 2006 Time: 10:58:22 AM
+ * A command catalog using a repository node as a configuration. Chains are supported. Date: Mar 27, 2006 Time: 10:58:22
+ * AM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class MgnlRepositoryCatalog extends CatalogBase {
 
-    private static Logger log = LoggerFactory.getLogger(MgnlRepositoryCatalog.class); 
-    
+    private static Logger log = LoggerFactory.getLogger(MgnlRepositoryCatalog.class);
+
     static final String CLASS_NODE_DATA = "impl";
 
-    
     /**
      * Initialize this catalog based on the configuration found in the repository
      */
@@ -43,12 +43,13 @@ public class MgnlRepositoryCatalog extends CatalogBase {
             if (impl != null && impl.getString() != null && !(impl.getString().equals(StringUtils.EMPTY))) {
 
                 Command command;
-				try {
-					command = createCommand(actionNode);
-	                this.addCommand(actionName, command);
-				} catch (Exception e) {
-					log.error("can't initialize command [" + actionName + "]", e);
-				}
+                try {
+                    command = createCommand(actionNode);
+                    this.addCommand(actionName, command);
+                }
+                catch (Exception e) {
+                    log.error("can't initialize command [" + actionName + "]", e);
+                }
                 // continue with next action
             }
             else {
@@ -89,7 +90,6 @@ public class MgnlRepositoryCatalog extends CatalogBase {
 
     }
 
-
     /**
      * Create a command object based on a node
      * @param commandNode
@@ -98,14 +98,15 @@ public class MgnlRepositoryCatalog extends CatalogBase {
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-	private Command createCommand(Content commandNode) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
-		String className;
-		className = commandNode.getNodeData(CLASS_NODE_DATA).getString();
+    private Command createCommand(Content commandNode) throws ClassNotFoundException, InstantiationException,
+        IllegalAccessException {
+        String className;
+        className = commandNode.getNodeData(CLASS_NODE_DATA).getString();
 
-		log.debug("Found class {} for action {}", className, commandNode.getName());
-		Class klass = Class.forName(className);
-		Command command = (Command)klass.newInstance();
-		ContentUtil.setProperties(command, commandNode);
-		return command;
-	}
+        log.debug("Found class {} for action {}", className, commandNode.getName());
+        Class klass = Class.forName(className);
+        Command command = (Command) klass.newInstance();
+        ContentUtil.setProperties(command, commandNode);
+        return command;
+    }
 }

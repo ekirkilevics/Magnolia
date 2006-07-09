@@ -43,7 +43,7 @@ public class CommandsManager extends ObservedManager {
     protected void onRegister(Content node) {
         Catalog catalog = new MgnlRepositoryCatalog(node);
         String name = getCatalogName(node);
-        if(log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("registering catalog {}", name);
         }
         CatalogFactory.getInstance().addCatalog(name, catalog);

@@ -28,17 +28,17 @@ public class FunctionBar extends ContextMenu {
      * Name to reference this object in js
      */
     private String javascriptName;
-    
+
     /**
      * True if the search field is showed
      */
     private boolean searchable = false;
-    
+
     /**
      * Javascript called if Enter is pressed in the field
      */
     private String onSearchFunction = "function(val){alert(val)}";
-    
+
     /**
      * String already present in the search field
      */
@@ -91,7 +91,6 @@ public class FunctionBar extends ContextMenu {
         this.javascriptName = javascriptName;
     }
 
-    
     /**
      * @return Returns the searchable.
      */
@@ -99,7 +98,6 @@ public class FunctionBar extends ContextMenu {
         return this.searchable;
     }
 
-    
     /**
      * @param searchable The searchable to set.
      */
@@ -107,7 +105,6 @@ public class FunctionBar extends ContextMenu {
         this.searchable = searchable;
     }
 
-    
     /**
      * @return Returns the onSearchFunction.
      */
@@ -115,7 +112,6 @@ public class FunctionBar extends ContextMenu {
         return this.onSearchFunction;
     }
 
-    
     /**
      * @param onSearchFunction The onSearchFunction to set.
      */
@@ -123,7 +119,6 @@ public class FunctionBar extends ContextMenu {
         this.onSearchFunction = onSearch;
     }
 
-    
     /**
      * @return Returns the searchStr.
      */
@@ -131,7 +126,6 @@ public class FunctionBar extends ContextMenu {
         return this.searchStr;
     }
 
-    
     /**
      * @param searchStr The searchStr to set.
      */

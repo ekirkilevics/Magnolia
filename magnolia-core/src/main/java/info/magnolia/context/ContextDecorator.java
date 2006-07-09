@@ -24,10 +24,9 @@ import java.util.Map;
  * Subclass this context if you like to decorate an other context
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class ContextDecorator extends AbstractContext {
-    
+
     protected Context ctx;
 
     /**

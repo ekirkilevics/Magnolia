@@ -162,10 +162,9 @@ public class FlowDefServlet extends javax.servlet.http.HttpServlet implements ja
         String query = request.getParameter("query");
         String method = request.getParameter("method");
 
-        if(query!=null || method !=null) {
+        if (query != null || method != null) {
             sb.append("<hr><p>result<p>");
         }
-
 
         if (query != null && query.length() > 0) {
             try {

@@ -13,38 +13,36 @@
 package info.magnolia.cms.gui.query;
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class StringSearchQueryParameter extends SearchQueryParameter {
 
     /**
      * sql constraint "CONTAINS"
-     * */
+     */
     public static final String CONTAINS = "contains";
 
     public static final String CONTAINS_NOT = "not";
-    
+
     public static final String IS = "is";
-    
+
     public static final String IS_NOT = "isNot";
 
     /**
      * sql constraint "STARTS"
-     * */
+     */
     public static final String STARTS = "starts";
 
     /**
      * sql constraint "ENDS"
-     * */
+     */
     public static final String ENDS = "ends";
-
 
     /**
      * @param name of this parameter
      * @param value
      * @param constraint check SearchQueryParameter constants
-     * */
+     */
     public StringSearchQueryParameter(String name, String value, String constraint) {
         super(name, value, constraint);
     }
@@ -52,7 +50,7 @@ public class StringSearchQueryParameter extends SearchQueryParameter {
     /**
      * get value
      * @return String value
-     * */
+     */
     public String getValue() {
         return (String) this.value;
     }
@@ -60,7 +58,7 @@ public class StringSearchQueryParameter extends SearchQueryParameter {
     /**
      * set value
      * @param value
-     * */
+     */
     public void setValue(String value) {
         this.value = value;
     }

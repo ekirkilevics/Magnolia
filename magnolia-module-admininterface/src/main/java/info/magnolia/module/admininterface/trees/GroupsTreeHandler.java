@@ -23,11 +23,11 @@ import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /**
  * Set the propery repository to use.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class GroupsTreeHandler extends AdminTreeMVCHandler {
 

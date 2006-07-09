@@ -28,16 +28,15 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class SimpleSearchUtil {
-    
+
     public static SearchQuery getSimpleSearchQuery(String searchStr, SearchConfig config) {
         SearchQuery query = new SearchQuery();
         query.setRootExpression(getSimpleSearchExpression(searchStr, config));
         return query;
     }
-    
+
     /**
      * Return the expression build by a simple search
      */
@@ -53,11 +52,11 @@ public class SimpleSearchUtil {
             }
             return chainExpressions(expressions, SearchQueryOperator.OR);
         }
-        else{
+        else {
             return null;
         }
     }
-    
+
     public static SearchQueryExpression chainExpressions(Collection expressions, String operator) {
         SearchQueryExpression expr = null;
         for (Iterator iter = expressions.iterator(); iter.hasNext();) {

@@ -34,7 +34,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Default implementation of the Context interface
- *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -54,7 +53,7 @@ public abstract class AbstractContext implements Context {
      * The locale for this context
      */
     private Locale locale;
-    
+
     /**
      * Get attribute value
      * @param name to which value is associated to
@@ -70,11 +69,11 @@ public abstract class AbstractContext implements Context {
         }
         return value;
     }
-    
+
     /**
      * Merge the scopes maps
      */
-    public Map getAttributes(){
+    public Map getAttributes() {
         Map map = new HashMap();
         map.putAll(this.getAttributes(Context.LOCAL_SCOPE));
         map.putAll(this.getAttributes(Context.SESSION_SCOPE));
@@ -84,7 +83,6 @@ public abstract class AbstractContext implements Context {
 
     /**
      * Set user instance for this context
-     *
      * @param user
      */
     public void setUser(User user) {
@@ -94,7 +92,6 @@ public abstract class AbstractContext implements Context {
 
     /**
      * Get user as initialized
-     *
      * @return User
      * @see info.magnolia.cms.security.User
      */
@@ -108,7 +105,6 @@ public abstract class AbstractContext implements Context {
 
     /**
      * If not yet set try to get the locale of the user. Else use the locale of the system context
-     *
      * @see Context#getLocale()
      */
     public Locale getLocale() {
@@ -148,7 +144,7 @@ public abstract class AbstractContext implements Context {
     public QueryManager getQueryManager(String repositoryId) {
         return this.getQueryManager(repositoryId, ContentRepository.getDefaultWorkspace(repositoryId));
     }
-    
+
     /**
      * Map implemenation
      */
@@ -163,7 +159,7 @@ public abstract class AbstractContext implements Context {
         this.setAttribute(key.toString(), value, Context.LOCAL_SCOPE);
         return value;
     }
-    
+
     /**
      * Map implementation
      */
@@ -171,7 +167,7 @@ public abstract class AbstractContext implements Context {
         for (Iterator iter = this.getAttributes().keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             this.removeAttribute(key, Context.LOCAL_SCOPE);
-            
+
         }
         throw new UnsupportedOperationException("you can not clear a magnolia context");
     }
@@ -236,13 +232,12 @@ public abstract class AbstractContext implements Context {
     public boolean containsKey(Object arg0) {
         return this.getAttributes().containsKey(arg0);
     }
-    
+
     /**
      * Map implementation
      */
     public int size() {
         return this.getAttributes().size();
     }
-
 
 }

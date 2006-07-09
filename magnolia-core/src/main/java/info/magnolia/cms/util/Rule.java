@@ -77,7 +77,7 @@ public class Rule implements Serializable {
      */
     public void addAllowType(String nodeType) {
         if (nodeType != null) {
-            this.allowedTypes = (String []) ArrayUtils.add(allowedTypes, nodeType);
+            this.allowedTypes = (String[]) ArrayUtils.add(allowedTypes, nodeType);
         }
     }
 
@@ -89,7 +89,7 @@ public class Rule implements Serializable {
         if (nodeType != null) {
             for (int j = 0; j < allowedTypes.length; j++) {
                 if (nodeType.equals(allowedTypes[j])) {
-                    this.allowedTypes = (String []) ArrayUtils.remove(allowedTypes, j);
+                    this.allowedTypes = (String[]) ArrayUtils.remove(allowedTypes, j);
                     break;
                 }
             }

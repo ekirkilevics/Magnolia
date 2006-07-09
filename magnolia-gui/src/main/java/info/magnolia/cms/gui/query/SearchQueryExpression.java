@@ -13,51 +13,50 @@
 package info.magnolia.cms.gui.query;
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public interface SearchQueryExpression {
 
     /**
      * get left expression
      * @return object on left
-     * */
+     */
     public SearchQueryExpression getLeft();
 
     /**
      * set left expression
      * @param left object on left
-     * */
+     */
     public void setleft(SearchQueryExpression left);
 
     /**
      * checks if has left
      * @return true if left object exist
-     * */
+     */
     public boolean hasLeft();
 
     /**
      * get right expression
      * @return object on right
-     * */
+     */
     public SearchQueryExpression getRight();
 
     /**
      * set right expression
      * @param right object on right
-     * */
+     */
     public void setRight(SearchQueryExpression right);
 
     /**
      * checks if has right
      * @return true if right object exist
-     * */
+     */
     public boolean hasRight();
 
     /**
      * get string representation
      * @return string representation if this expression
-     * */
+     */
     public String toString();
 
 }

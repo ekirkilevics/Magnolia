@@ -26,24 +26,23 @@ import javax.jcr.version.VersionIterator;
 
 
 /**
- * @author Sameer Charles
- * $Id:VersionListModel.java 2544 2006-04-04 12:47:32Z philipp $
+ * @author Sameer Charles $Id:VersionListModel.java 2544 2006-04-04 12:47:32Z philipp $
  */
 public class VersionListModel extends AbstractListModel {
 
     /**
      * versioned node
-     * */
+     */
     private Content content;
 
     /**
      * search query to be used by sub implementation
-     * */
+     */
     protected SearchQuery query;
 
     /**
      * constructor
-     * */
+     */
     public VersionListModel(Content content) {
         this.content = content;
     }
@@ -51,7 +50,7 @@ public class VersionListModel extends AbstractListModel {
     /**
      * get all versions
      * @return all versions in a collection
-     * */
+     */
     protected Collection getResult() throws RepositoryException {
         Collection allVersions = new ArrayList();
         VersionHistory versionHistory = this.content.getVersionHistory();

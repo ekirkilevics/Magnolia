@@ -22,10 +22,9 @@ import javax.servlet.http.HttpServletResponse;
  * This is a simple default implementation. Overwrite the render method to process the page.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public abstract class SimplePageMVCHandler extends PageMVCHandler {
-    
+
     /**
      * @param name
      * @param request
@@ -45,7 +44,7 @@ public abstract class SimplePageMVCHandler extends PageMVCHandler {
                 render(getRequest(), getResponse());
             }
             catch (Exception e) {
-                log.error("Exception during rendering the page",e);
+                log.error("Exception during rendering the page", e);
                 e.printStackTrace(getResponse().getWriter());
             }
         }

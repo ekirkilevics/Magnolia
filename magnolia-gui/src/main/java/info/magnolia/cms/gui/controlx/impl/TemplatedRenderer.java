@@ -59,7 +59,7 @@ public class TemplatedRenderer implements Renderer {
 
     /**
      * Get the message from the renderer. Uses getMessages().
-     * @param key 
+     * @param key
      * @return the string found, or the key if not found
      */
     public String getMessage(String key) {

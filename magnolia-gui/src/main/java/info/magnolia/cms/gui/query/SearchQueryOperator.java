@@ -13,34 +13,33 @@
 package info.magnolia.cms.gui.query;
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class SearchQueryOperator extends AbstractExpressionImpl {
 
     /**
      * Operator value AND
-     * */
+     */
     public static final String AND = "and";
 
     /**
      * Operator value OR
-     * */
+     */
     public static final String OR = "or";
 
     /**
      * Operator value NOT
-     * */
+     */
     public static final String NOT = "not";
 
     /**
      * operator
-     * */
+     */
     private String operator;
 
     /**
      * @param operator
-     * */
+     */
     public SearchQueryOperator(String operator) {
         this.operator = operator;
     }
@@ -48,7 +47,7 @@ public class SearchQueryOperator extends AbstractExpressionImpl {
     /**
      * get operator name
      * @return String
-     * */
+     */
     public String getOperator() {
         return operator;
     }
@@ -56,7 +55,7 @@ public class SearchQueryOperator extends AbstractExpressionImpl {
     /**
      * set operator name
      * @param operator
-     * */
+     */
     public void setOperator(String operator) {
         this.operator = operator;
     }

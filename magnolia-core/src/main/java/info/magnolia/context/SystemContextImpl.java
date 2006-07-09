@@ -59,22 +59,29 @@ public class SystemContextImpl extends AbstractMapBasedContext implements System
     }
 
     public void setAttribute(String name, Object value, int scope) {
-        if(scope == Context.LOCAL_SCOPE || scope == Context.SESSION_SCOPE){
-            log.warn("you should not set an attribute in the system context in request or session scope. You are setting {}={}", name, value);
+        if (scope == Context.LOCAL_SCOPE || scope == Context.SESSION_SCOPE) {
+            log
+                .warn(
+                    "you should not set an attribute in the system context in request or session scope. You are setting {}={}",
+                    name,
+                    value);
         }
         super.setAttribute(name, value, scope);
     }
 
     public void removeAttribute(String name, Object value, int scope) {
-        if(scope == Context.LOCAL_SCOPE || scope == Context.SESSION_SCOPE){
-            log.warn("you should not manipulate an attribute in the system context in request or session scope. You are setting {}={}", name, value);
+        if (scope == Context.LOCAL_SCOPE || scope == Context.SESSION_SCOPE) {
+            log
+                .warn(
+                    "you should not manipulate an attribute in the system context in request or session scope. You are setting {}={}",
+                    name,
+                    value);
         }
         super.removeAttribute(name, scope);
     }
 
     /**
      * Get System user
-     *
      * @return User
      * @see info.magnolia.cms.security.User
      */

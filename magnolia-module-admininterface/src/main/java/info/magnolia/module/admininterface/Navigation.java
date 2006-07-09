@@ -77,18 +77,18 @@ public class Navigation {
         for (Iterator iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
             Content mp = (Content) iter.next();
             // check permission
-            if(isMenuPointRendered(mp)){
+            if (isMenuPointRendered(mp)) {
                 str.append(MessageFormat.format(nodePattern, new Object[]{
                     jsName,
                     mp.getUUID(),
                     getLabel(mp),
                     NodeDataUtil.getString(mp, "onclick"),
                     NodeDataUtil.getString(mp, "icon")}));
-    
+
                 // sub menupoints (2 level only)
                 for (Iterator iterator = mp.getChildren(ItemType.CONTENTNODE).iterator(); iterator.hasNext();) {
                     Content sub = (Content) iterator.next();
-                    if(isMenuPointRendered(sub)){
+                    if (isMenuPointRendered(sub)) {
                         str.append(MessageFormat.format(subPattern, new Object[]{
                             jsName,
                             mp.getUUID(),
@@ -131,7 +131,7 @@ public class Navigation {
     private String getFirstId(Content node) {
         for (Iterator iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
             Content sub = (Content) iter.next();
-            if(isMenuPointRendered(sub)){
+            if (isMenuPointRendered(sub)) {
                 if (StringUtils.isNotEmpty(NodeDataUtil.getString(sub, "onclick"))) {
                     return sub.getUUID();
                 }

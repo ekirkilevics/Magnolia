@@ -35,8 +35,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * User: sameercharles Date: Sept 23, 2004 Time: 1:42:48 PM
- * @author Sameer Charles
- * $Id:HierarchyManager.java 2719 2006-04-27 14:38:44Z scharles $
+ * @author Sameer Charles $Id:HierarchyManager.java 2719 2006-04-27 14:38:44Z scharles $
  */
 public class HierarchyManager {
 
@@ -132,7 +131,7 @@ public class HierarchyManager {
     /**
      * Get access manager
      * @return accessmanager attached to this hierarchy
-     * */
+     */
     public AccessManager getAccessManager() {
         return this.accessManager;
     }
@@ -180,11 +179,7 @@ public class HierarchyManager {
      */
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
         RepositoryException, AccessDeniedException {
-        Content newPage = new Content(
-            this.startPage,
-            this.getNodePath(path, label),
-            contentType,
-            this.accessManager);
+        Content newPage = new Content(this.startPage, this.getNodePath(path, label), contentType, this.accessManager);
         setMetaData(newPage.getMetaData());
         return newPage;
     }
@@ -386,8 +381,8 @@ public class HierarchyManager {
     /**
      * Checks if the requested resource is a page (hierarchy Node).
      * @param path of the requested content
-     * @return boolean true is the requested content is a Hierarchy Node
-     * todo remove this method, instead use (getContent(PATH) is NodeType)
+     * @return boolean true is the requested content is a Hierarchy Node todo remove this method, instead use
+     * (getContent(PATH) is NodeType)
      */
     public boolean isPage(String path) throws AccessDeniedException {
         Access.isGranted(this.accessManager, path, Permission.READ);

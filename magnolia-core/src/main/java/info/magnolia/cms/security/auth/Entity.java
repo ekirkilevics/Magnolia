@@ -17,8 +17,7 @@ import java.security.Principal;
 
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public interface Entity extends Principal, Serializable {
 

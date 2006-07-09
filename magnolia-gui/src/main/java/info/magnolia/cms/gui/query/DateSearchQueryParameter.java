@@ -17,47 +17,47 @@ import java.util.Date;
 
 import org.apache.log4j.Logger;
 
+
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class DateSearchQueryParameter extends SearchQueryParameter {
 
     /**
      * Logger
-     * */
+     */
     private static Logger log = Logger.getLogger(DateSearchQueryParameter.class);
 
     /**
      * sql constraint "TODAY"
-     * */
+     */
     public static final String TODAY = "today";
 
     /**
      * sql constraint "AFTER"
-     * */
+     */
     public static final String AFTER = "after";
 
     /**
      * sql constraint "BEFORE"
-     * */
+     */
     public static final String BEFORE = "before";
 
     /**
      * sql constraint "IS"
-     * */
+     */
     public static final String IS = "is";
 
     /**
      * default date format
-     * */
+     */
     private SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * @param name of this parameter
      * @param value
      * @param constraint check SearchQueryParameter constants
-     * */
+     */
     public DateSearchQueryParameter(String name, Date value, String constraint) {
         super(name, value, constraint);
     }
@@ -65,7 +65,7 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
     /**
      * get value
      * @return Date
-     * */
+     */
     public Date getValue() {
         return (Date) this.value;
     }
@@ -73,7 +73,7 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
     /**
      * set value
      * @param value Date
-     * */
+     */
     public void setValue(Date value) {
         this.value = value;
     }
@@ -81,7 +81,7 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
     /**
      * set date format
      * @param format
-     * */
+     */
     public void setDateFormat(SimpleDateFormat format) {
         this.format = format;
     }
@@ -89,7 +89,7 @@ public class DateSearchQueryParameter extends SearchQueryParameter {
     /**
      * get date format
      * @return date format, either the one which has been set or default "yyyy-MM-dd"
-     * */
+     */
     public SimpleDateFormat getDateFormat() {
         return this.format;
     }

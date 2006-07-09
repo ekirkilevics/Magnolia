@@ -105,11 +105,13 @@ public class RequestInterceptor extends HttpServlet {
                     HttpSession httpsession = request.getSession(true);
                     if (BooleanUtils.toBoolean(preview)) {
                         httpsession.setAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
-                    } else {
+                    }
+                    else {
                         httpsession.removeAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE);
                     }
                 }
-            } else if (action.equals(ACTION_NODE_DELETE)) {
+            }
+            else if (action.equals(ACTION_NODE_DELETE)) {
                 // delete paragraph
                 try {
                     String path = request.getParameter(PARAM_PATH);
@@ -121,7 +123,8 @@ public class RequestInterceptor extends HttpServlet {
                 catch (RepositoryException e) {
                     log.error("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
                 }
-            } else if (action.equals(ACTION_NODE_SORT)) {
+            }
+            else if (action.equals(ACTION_NODE_SORT)) {
                 // sort paragrpahs
                 try {
                     String pathSelected = request.getParameter(PARAM_PATH_SELECTED);
@@ -152,7 +155,7 @@ public class RequestInterceptor extends HttpServlet {
      * @throws AccessDeniedException
      */
     private void updatePageMetaData(HttpServletRequest request, HierarchyManager hm) throws PathNotFoundException,
-            RepositoryException, AccessDeniedException {
+        RepositoryException, AccessDeniedException {
         String pagePath = StringUtils.substringBeforeLast(Path.getURI(request), "."); //$NON-NLS-1$
         Content page = hm.getContent(pagePath);
         page.updateMetaData();

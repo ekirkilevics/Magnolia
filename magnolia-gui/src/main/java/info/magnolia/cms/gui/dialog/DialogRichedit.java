@@ -165,7 +165,7 @@ public class DialogRichedit extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
-            throws RepositoryException {
+        throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
         setOptionsToolboxLinkTargets(configNode);
         setOptionsToolboxLinkCssClasses(configNode);
@@ -180,7 +180,7 @@ public class DialogRichedit extends DialogBox {
 
         this.drawHtmlPre(out);
         if (this.getRichE().equals("true") //$NON-NLS-1$
-                || (StringUtils.isEmpty(this.getRichE()) && this
+            || (StringUtils.isEmpty(this.getRichE()) && this
                 .getTopParent()
                 .getConfigValue("richE", StringUtils.EMPTY).equals("true"))) { //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -208,22 +208,21 @@ public class DialogRichedit extends DialogBox {
             if (StringUtils.isEmpty(toolboxPasteType)) {
                 toolboxPasteType = this.getTopParent().getConfigValue("richEPaste", "false"); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            if (this.getConfigValue("toolboxPaste", "true").equals("true") && !toolboxPasteType.equals("false"))
-            { 
+            if (this.getConfigValue("toolboxPaste", "true").equals("true") && !toolboxPasteType.equals("false")) {
                 // win only; clipboard on mac is clean already
                 out.write(line.getHtml("100%")); //$NON-NLS-1$
                 out.write("<div class=\"" //$NON-NLS-1$
-                        + CssConstants.CSSCLASS_RICHETOOLBOXLABEL
-                        + "\">" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.cleancopypast") //$NON-NLS-1$
-                        + "</div>"); //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_RICHETOOLBOXLABEL
+                    + "\">" //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.cleancopypast") //$NON-NLS-1$
+                    + "</div>"); //$NON-NLS-1$
                 if (toolboxPasteType.equals("button")) { //$NON-NLS-1$
                     // ie/win
                     out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
                     out.write(msgs.get("dialog.richedit.pasteUsingThisButton")); //$NON-NLS-1$
                     out.write("<br/><a href=javascript:mgnlDialogRichEPasteCleanHelp();>" //$NON-NLS-1$
-                            + msgs.get("dialog.richedit.info") //$NON-NLS-1$
-                            + "</a>"); //$NON-NLS-1$
+                        + msgs.get("dialog.richedit.info") //$NON-NLS-1$
+                        + "</a>"); //$NON-NLS-1$
                     out.write("</div>"); //$NON-NLS-1$
                     out.write(Spacer.getHtml(6, 6));
                     Button pastePaste = new Button();
@@ -231,20 +230,21 @@ public class DialogRichedit extends DialogBox {
                     pastePaste.setSmall(true);
                     pastePaste.setOnclick("mgnlDialogRichEPasteClean('" + this.getName() + "',true);"); //$NON-NLS-1$ //$NON-NLS-2$
                     out.write(pastePaste.getHtml());
-                } else {
+                }
+                else {
                     // mozilla/win
                     out.write("<div class=\"" + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
                     out.write(msgs.get("dialog.richedit.pastetext")); //$NON-NLS-1$
                     out.write("<br/><a href=javascript:mgnlDialogRichEPasteCleanHelp();>" //$NON-NLS-1$
-                            + msgs.get("dialog.richedit.info") //$NON-NLS-1$
-                            + "</a>"); //$NON-NLS-1$
+                        + msgs.get("dialog.richedit.info") //$NON-NLS-1$
+                        + "</a>"); //$NON-NLS-1$
                     out.write("</div>"); //$NON-NLS-1$
                     out.write(Spacer.getHtml(3, 3));
                     out.write("<textarea class=\"" //$NON-NLS-1$
-                            + CssConstants.CSSCLASS_EDIT
-                            + "\" name=\"" //$NON-NLS-1$
-                            + this.getName()
-                            + "-paste\" rows=\"2\" style=\"width:100%;\"></textarea>"); //$NON-NLS-1$
+                        + CssConstants.CSSCLASS_EDIT
+                        + "\" name=\"" //$NON-NLS-1$
+                        + this.getName()
+                        + "-paste\" rows=\"2\" style=\"width:100%;\"></textarea>"); //$NON-NLS-1$
                     out.write(Spacer.getHtml(3, 3));
                     Button pasteAppend = new Button();
                     pasteAppend.setLabel(msgs.get("dialog.richedit.append")); //$NON-NLS-1$
@@ -264,10 +264,10 @@ public class DialogRichedit extends DialogBox {
             if (this.getConfigValue("toolboxLink", "true").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 out.write(line.getHtml("100%")); //$NON-NLS-1$
                 out.write("<div class=\"" //$NON-NLS-1$
-                        + CssConstants.CSSCLASS_RICHETOOLBOXLABEL
-                        + "\">" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.link") //$NON-NLS-1$
-                        + "</div>"); //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_RICHETOOLBOXLABEL
+                    + "\">" //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.link") //$NON-NLS-1$
+                    + "</div>"); //$NON-NLS-1$
                 // link: edit control (href)
                 String linkEditName = "kupu-link-input"; //$NON-NLS-1$
                 Edit linkEdit = new Edit(linkEditName, StringUtils.EMPTY);
@@ -282,22 +282,22 @@ public class DialogRichedit extends DialogBox {
                 String extension = this.getConfigValue("toolboxLinkExtension", "html"); //$NON-NLS-1$ //$NON-NLS-2$
                 String repository = this.getConfigValue("toolboxLinkRepository", ContentRepository.WEBSITE); //$NON-NLS-1$
                 linkButtonBrowse.setOnclick("mgnlDialogLinkOpenBrowser('" //$NON-NLS-1$
-                        + linkEditName
-                        + "','" //$NON-NLS-1$
-                        + repository
-                        + "','" //$NON-NLS-1$
-                        + extension
-                        + "',false);"); //$NON-NLS-1$
+                    + linkEditName
+                    + "','" //$NON-NLS-1$
+                    + repository
+                    + "','" //$NON-NLS-1$
+                    + extension
+                    + "',false);"); //$NON-NLS-1$
                 linkButtonBrowse.setSmall(true);
                 linkButtonBrowse.setLabel(msgs.get("dialog.richedit.internallink")); //$NON-NLS-1$
                 out.write(linkButtonBrowse.getHtml());
                 // link: target
                 if (this.getOptionsToolboxLinkTargets().size() > 1) {
                     out.write("<div class=\"" //$NON-NLS-1$
-                            + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL
-                            + "\">" //$NON-NLS-1$
-                            + msgs.get("dialog.richedit.target") //$NON-NLS-1$
-                            + "</div>"); //$NON-NLS-1$
+                        + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL
+                        + "\">" //$NON-NLS-1$
+                        + msgs.get("dialog.richedit.target") //$NON-NLS-1$
+                        + "</div>"); //$NON-NLS-1$
                     Select control = new Select();
                     control.setName("kupu-link-input-target"); //$NON-NLS-1$
                     control.setSaveInfo(false);
@@ -309,10 +309,10 @@ public class DialogRichedit extends DialogBox {
                 // link: css class
                 if (this.getOptionsToolboxLinkCssClasses().size() > 1) {
                     out.write("<div class=\"" //$NON-NLS-1$
-                            + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL
-                            + "\">" //$NON-NLS-1$
-                            + msgs.get("dialog.richedit.style") //$NON-NLS-1$
-                            + "</div>"); //$NON-NLS-1$
+                        + CssConstants.CSSCLASS_RICHETOOLBOXSUBLABEL
+                        + "\">" //$NON-NLS-1$
+                        + msgs.get("dialog.richedit.style") //$NON-NLS-1$
+                        + "</div>"); //$NON-NLS-1$
                     Select control = new Select();
                     control.setName("kupu-link-input-css"); //$NON-NLS-1$
                     control.setSaveInfo(false);
@@ -341,10 +341,10 @@ public class DialogRichedit extends DialogBox {
             if (this.getConfigValue("toolboxStyle", "false").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 out.write(line.getHtml("100%")); //$NON-NLS-1$
                 out.write("<div class=\"" //$NON-NLS-1$
-                        + CssConstants.CSSCLASS_RICHETOOLBOXLABEL
-                        + "\">" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.textstyle") //$NON-NLS-1$
-                        + "</div>"); //$NON-NLS-1$
+                    + CssConstants.CSSCLASS_RICHETOOLBOXLABEL
+                    + "\">" //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.textstyle") //$NON-NLS-1$
+                    + "</div>"); //$NON-NLS-1$
                 if (this.getOptionsToolboxStyleCssClasses().size() > 1) {
                     Select control = new Select();
                     control.setName(this.getName() + "-css-input-css"); //$NON-NLS-1$
@@ -382,67 +382,63 @@ public class DialogRichedit extends DialogBox {
             out.write("<span class=\"kupu-tb-buttongroup\">"); //$NON-NLS-1$
             if (this.getConfigValue("toolbarBold", "true").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 out.write("<button type=\"button\" class=\"kupu-bold\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.bold") //$NON-NLS-1$
-                        + "\" onclick=\"kupuui.basicButtonHandler('bold');\">&nbsp;</button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.bold") //$NON-NLS-1$
+                    + "\" onclick=\"kupuui.basicButtonHandler('bold');\">&nbsp;</button>"); //$NON-NLS-1$
             }
             if (this.getConfigValue("toolbarItalic", "true").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 out.write("<button type=\"button\" class=\"kupu-italic\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.italic") //$NON-NLS-1$
-                        + "\" onclick=\"kupuui.basicButtonHandler('italic');\">&nbsp;</button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.italic") //$NON-NLS-1$
+                    + "\" onclick=\"kupuui.basicButtonHandler('italic');\">&nbsp;</button>"); //$NON-NLS-1$
             }
-            if (this.getConfigValue("toolbarUnderline", "false").equals("true"))
-            { 
+            if (this.getConfigValue("toolbarUnderline", "false").equals("true")) {
                 out.write("<button type=\"button\" class=\"kupu-underline\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.underline") //$NON-NLS-1$
-                        + "\" onclick=\"kupuui.basicButtonHandler('underline');\">&nbsp;</button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.underline") //$NON-NLS-1$
+                    + "\" onclick=\"kupuui.basicButtonHandler('underline');\">&nbsp;</button>"); //$NON-NLS-1$
             }
             out.write("</span>"); //$NON-NLS-1$
             out.write("<span class=\"kupu-tb-buttongroup\">"); //$NON-NLS-1$
-            if (this.getConfigValue("toolbarSubscript", "false").equals("true"))
-            { 
+            if (this.getConfigValue("toolbarSubscript", "false").equals("true")) {
                 out.write("<button type=\"button\" class=\"kupu-subscript\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.subscript") //$NON-NLS-1$
-                        + "\" onclick=\"kupuui.basicButtonHandler('subscript');\">&nbsp;</button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.subscript") //$NON-NLS-1$
+                    + "\" onclick=\"kupuui.basicButtonHandler('subscript');\">&nbsp;</button>"); //$NON-NLS-1$
             }
-            if (this.getConfigValue("toolbarSuperscript", "false").equals("true"))
-            { 
+            if (this.getConfigValue("toolbarSuperscript", "false").equals("true")) {
                 out.write("<button type=\"button\" class=\"kupu-superscript\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.superscript") //$NON-NLS-1$
-                        + "\" onclick=\"kupuui.basicButtonHandler('superscript');\">&nbsp;</button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.superscript") //$NON-NLS-1$
+                    + "\" onclick=\"kupuui.basicButtonHandler('superscript');\">&nbsp;</button>"); //$NON-NLS-1$
             }
             out.write("</span>"); //$NON-NLS-1$
-            if (this.getConfigValue("toolbarColors", "false").equals("true"))
-            { 
+            if (this.getConfigValue("toolbarColors", "false").equals("true")) {
                 // kupu note: the event handlers are attached to these buttons dynamically, like for tools
                 // mozilla (1.5) does not support font background color yet!
                 out.write("<span class=\"kupu-tb-buttongroup\">"); //$NON-NLS-1$
                 out.write("<button type=\"button\" class=\"kupu-forecolor\" id=\"kupu-forecolor\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.textcolor") //$NON-NLS-1$
-                        + "\">&nbsp;</button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.textcolor") //$NON-NLS-1$
+                    + "\">&nbsp;</button>"); //$NON-NLS-1$
                 out.write("<button type=\"button\" class=\"kupu-hilitecolor\" id=\"kupu-hilitecolor\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.backgroundcolor") //$NON-NLS-1$
-                        + "\">&nbsp;</button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.backgroundcolor") //$NON-NLS-1$
+                    + "\">&nbsp;</button>"); //$NON-NLS-1$
                 out.write("</span>"); //$NON-NLS-1$
             }
             if (this.getConfigValue("toolbarUndo", "true").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 out.write(" <span class=\"kupu-tb-buttongroup\">"); //$NON-NLS-1$
                 out.write("<button type=\"button\" class=\"kupu-undo\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.undo") //$NON-NLS-1$
-                        + "\" onclick=\"kupuui.basicButtonHandler('undo');\"></button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.undo") //$NON-NLS-1$
+                    + "\" onclick=\"kupuui.basicButtonHandler('undo');\"></button>"); //$NON-NLS-1$
                 out.write("<button type=\"button\" class=\"kupu-redo\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.redo") //$NON-NLS-1$
-                        + "\" onclick=\"kupuui.basicButtonHandler('redo');\"></button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.redo") //$NON-NLS-1$
+                    + "\" onclick=\"kupuui.basicButtonHandler('redo');\"></button>"); //$NON-NLS-1$
                 out.write(" </span>"); //$NON-NLS-1$
             }
             if (this.getConfigValue("toolbarLists", "true").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
                 out.write("<span class=\"kupu-tb-buttongroup\">"); //$NON-NLS-1$
                 // kupu note: list button events are set on the list tool
                 out.write("<button type=\"button\" class=\"kupu-insertorderedlist\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.numberedlist") //$NON-NLS-1$
-                        + "\" id=\"kupu-list-ol-addbutton\"></button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.numberedlist") //$NON-NLS-1$
+                    + "\" id=\"kupu-list-ol-addbutton\"></button>"); //$NON-NLS-1$
                 out.write("<button type=\"button\" class=\"kupu-insertunorderedlist\" title=\"" //$NON-NLS-1$
-                        + msgs.get("dialog.richedit.unorderedlist") //$NON-NLS-1$
-                        + "\" id=\"kupu-list-ul-addbutton\"></button>"); //$NON-NLS-1$
+                    + msgs.get("dialog.richedit.unorderedlist") //$NON-NLS-1$
+                    + "\" id=\"kupu-list-ul-addbutton\"></button>"); //$NON-NLS-1$
                 out.write("</span>"); //$NON-NLS-1$
                 out.write("<select id=\"kupu-ulstyles\" class=\"" + CssConstants.CSSCLASS_SELECT + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
                 out.write("  <option value=\"disc\">Disc</option>"); //$NON-NLS-1$
@@ -465,7 +461,7 @@ public class DialogRichedit extends DialogBox {
             // #################
             // color palette
             out
-                    .write("<div id=\"kupu-colorchooser\" style=\"position: fixed; border-style: solid; border-color: #666666; border-width: 1px;\"> </div>"); //$NON-NLS-1$
+                .write("<div id=\"kupu-colorchooser\" style=\"position: fixed; border-style: solid; border-color: #666666; border-width: 1px;\"> </div>"); //$NON-NLS-1$
             // #################
             // iframe
             // #################
@@ -476,14 +472,14 @@ public class DialogRichedit extends DialogBox {
             }
             out.write(" frameborder=\"0\""); //$NON-NLS-1$
             out.write(" src=\"" //$NON-NLS-1$
-                    + this.getRequest().getContextPath()
-                    + "/.magnolia/pages/richEIFrame.html?" //$NON-NLS-1$
-                    + SESSION_ATTRIBUTENAME_DIALOGOBJECT
-                    + "=" //$NON-NLS-1$
-                    + this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT)
-                    + "&amp;mgnlCK=" //$NON-NLS-1$
-                    + new Date().getTime()
-                    + "\""); //$NON-NLS-1$
+                + this.getRequest().getContextPath()
+                + "/.magnolia/pages/richEIFrame.html?" //$NON-NLS-1$
+                + SESSION_ATTRIBUTENAME_DIALOGOBJECT
+                + "=" //$NON-NLS-1$
+                + this.getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT)
+                + "&amp;mgnlCK=" //$NON-NLS-1$
+                + new Date().getTime()
+                + "\""); //$NON-NLS-1$
             out.write(" reloadsrc=\"0\""); //$NON-NLS-1$
             out.write(" usecss=\"1\""); //$NON-NLS-1$
             out.write(" strict_output=\"1\""); //$NON-NLS-1$
@@ -507,7 +503,8 @@ public class DialogRichedit extends DialogBox {
             out.write(hiddenTextarea.getHtml());
             out.write("</div>"); //$NON-NLS-1$
 
-        } else {
+        }
+        else {
             // rich edit not supported: draw textarea
             Edit control = new Edit(this.getName(), this.getValue());
             control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
@@ -546,7 +543,7 @@ public class DialogRichedit extends DialogBox {
         out.write("</style>"); //$NON-NLS-1$
         if (this.getConfigValue("cssFile", null) != null) { //$NON-NLS-1$
             out.write("<link href=\"" //$NON-NLS-1$
-                    + this.getConfigValue("cssFile") + "\" rel=\"stylesheet\" type=\"text/css\"/>"); //$NON-NLS-1$ //$NON-NLS-2$
+                + this.getConfigValue("cssFile") + "\" rel=\"stylesheet\" type=\"text/css\"/>"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         out.write("<script type=\"text/javascript\">\n"); //$NON-NLS-1$
         out.write("document.insertText=function(value)\n"); //$NON-NLS-1$
@@ -572,9 +569,11 @@ public class DialogRichedit extends DialogBox {
 
         if (value != null) {
             return value.replaceAll("\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
-        } else if (this.getWebsiteNode() != null) {
+        }
+        else if (this.getWebsiteNode() != null) {
             return this.getWebsiteNode().getNodeData(this.getName()).getString(lineBreak);
-        } else {
+        }
+        else {
             return StringUtils.EMPTY;
         }
     }

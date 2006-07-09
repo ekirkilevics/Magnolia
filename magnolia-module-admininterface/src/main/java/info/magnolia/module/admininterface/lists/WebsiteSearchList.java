@@ -24,7 +24,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 public class WebsiteSearchList extends AbstractSimpleSearchList {
-    
+
     protected Messages msgs = MessagesManager.getMessages();
 
     public WebsiteSearchList(String name, HttpServletRequest request, HttpServletResponse response) {
@@ -37,13 +37,14 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
 
     public void configureList(ListControl list) {
         list.setRenderer(new AdminListControlRenderer() {
+
             public String onSelect(ListControl list, Integer index) {
                 String js = "mgnl.admininterface.WebsiteSearchList.selected = '" + list.getIteratorValue("path") + "';";
                 js += super.onSelect(list, index);
                 return js;
             }
         });
-        
+
         // show the icon by the name
         list.addColumn(new ListColumn() {
 
@@ -71,20 +72,22 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
 
         list.addGroupableField("mgnl:authorid");
     }
-    
+
     protected void configureContextMenu(ContextMenu menu) {
         ContextMenuItem open = new ContextMenuItem("open");
         open.setLabel(msgs.get("tree.web.menu.open")); //$NON-NLS-1$
         open.setIcon(request.getContextPath() + "/.resources/icons/16/document_plain_earth.gif"); //$NON-NLS-1$
         open.setOnclick("mgnl.admininterface.WebsiteSearchList.show();"); //$NON-NLS-1$ 
-        open.addJavascriptCondition("{test: function(){return mgnl.admininterface.WebsiteSearchList.selected != null}}");
+        open
+            .addJavascriptCondition("{test: function(){return mgnl.admininterface.WebsiteSearchList.selected != null}}");
 
         ContextMenuItem navigate = new ContextMenuItem("navigate");
         navigate.setLabel(msgs.get("tree.menu.navigate")); //$NON-NLS-1$
         navigate.setIcon(request.getContextPath() + "/.resources/icons/16/compass.gif"); //$NON-NLS-1$
         navigate.setOnclick("mgnl.admininterface.WebsiteSearchList.navigate();"); //$NON-NLS-1$ 
-        navigate.addJavascriptCondition("{test: function(){return mgnl.admininterface.WebsiteSearchList.selected != null}}");
-        
+        navigate
+            .addJavascriptCondition("{test: function(){return mgnl.admininterface.WebsiteSearchList.selected != null}}");
+
         menu.addMenuItem(open);
         menu.addMenuItem(null);
         menu.addMenuItem(navigate);
@@ -94,7 +97,7 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
         bar.setSearchable(true);
         bar.setSearchStr(this.getSearchStr());
         bar.setOnSearchFunction("mgnl.admininterface.WebsiteSearchList.search");
-        
+
         ContextMenu menu = this.getContextMenu();
 
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("open")));
@@ -107,19 +110,21 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
      */
     public SearchQuery getQuery() {
         SearchQuery query = new SearchQuery();
-        if(StringUtils.isNotEmpty(this.getSearchStr())){
-            SearchQueryExpression exp = new StringSearchQueryParameter("*", this.getSearchStr(),StringSearchQueryParameter.CONTAINS);
+        if (StringUtils.isNotEmpty(this.getSearchStr())) {
+            SearchQueryExpression exp = new StringSearchQueryParameter(
+                "*",
+                this.getSearchStr(),
+                StringSearchQueryParameter.CONTAINS);
             query.setRootExpression(exp);
         }
         return query;
     }
-    
+
     /**
      * Not used in this context
      */
     public SearchConfig getSearchConfig() {
         return null;
     }
-
 
 }

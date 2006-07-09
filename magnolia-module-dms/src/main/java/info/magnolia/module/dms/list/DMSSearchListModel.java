@@ -24,7 +24,6 @@ import java.util.Iterator;
 import java.util.List;
 
 
-
 /**
  * Returns only contenNodes which are documents.
  * @author Philipp Bracher

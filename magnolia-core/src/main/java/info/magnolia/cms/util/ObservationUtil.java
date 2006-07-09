@@ -26,7 +26,6 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class ObservationUtil {
 
@@ -34,7 +33,7 @@ public class ObservationUtil {
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(ObservationUtil.class);
-    
+
     /**
      * Register a single event listener, bound to the given path.
      * @param repository
@@ -43,19 +42,19 @@ public class ObservationUtil {
      */
     public static void registerChangeListener(String repository, String observationPath, EventListener listener) {
         log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$ 
-    
+
         try {
-    
+
             ObservationManager observationManager = ContentRepository
                 .getHierarchyManager(repository)
                 .getWorkspace()
                 .getObservationManager();
-    
+
             observationManager.addEventListener(listener, Event.NODE_ADDED
-                    | Event.NODE_REMOVED
-                    | Event.PROPERTY_ADDED
-                    | Event.PROPERTY_CHANGED
-                    | Event.PROPERTY_REMOVED, observationPath, true, null, null, false);
+                | Event.NODE_REMOVED
+                | Event.PROPERTY_ADDED
+                | Event.PROPERTY_CHANGED
+                | Event.PROPERTY_REMOVED, observationPath, true, null, null, false);
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$

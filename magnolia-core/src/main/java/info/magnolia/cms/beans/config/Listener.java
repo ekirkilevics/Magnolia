@@ -75,7 +75,7 @@ public final class Listener {
 
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
             Content configNode = startPage.getContent("IPConfig");
-            children = configNode.getChildren(ItemType.CONTENTNODE); 
+            children = configNode.getChildren(ItemType.CONTENTNODE);
         }
         catch (RepositoryException re) {
             log.error("Config : Failed to load Listener info"); //$NON-NLS-1$

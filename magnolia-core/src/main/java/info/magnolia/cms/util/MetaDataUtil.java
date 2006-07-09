@@ -52,22 +52,22 @@ public class MetaDataUtil {
     }
 
     /**
-     * <p/>
-     * Returns the representation of the value as a String:
+     * <p/> Returns the representation of the value as a String:
      * </p>
-     *
      * @return String
      */
     public String getPropertyValueString(String propertyName, String dateFormat) {
         try {
             if (propertyName.equals(MetaData.CREATION_DATE)
-                    || propertyName.equals(MetaData.LAST_MODIFIED)
-                    || propertyName.equals(MetaData.LAST_ACTION)) {
+                || propertyName.equals(MetaData.LAST_MODIFIED)
+                || propertyName.equals(MetaData.LAST_ACTION)) {
                 Date date = this.getContent().getMetaData().getDateProperty(propertyName).getTime();
                 return new DateUtil().getFormattedDate(date, dateFormat);
-            } else if (propertyName.equals(MetaData.ACTIVATED)) {
+            }
+            else if (propertyName.equals(MetaData.ACTIVATED)) {
                 return Boolean.toString(this.getContent().getMetaData().getBooleanProperty(propertyName));
-            } else {
+            }
+            else {
                 return this.getContent().getMetaData().getStringProperty(propertyName);
             }
         }

@@ -19,7 +19,6 @@ import org.apache.commons.chain.Context;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public abstract class MgnlCommand implements Command {
 
@@ -27,9 +26,9 @@ public abstract class MgnlCommand implements Command {
      * Make sure that the context is castable to a magnolia context
      */
     public boolean execute(Context context) throws Exception {
-        return execute((info.magnolia.context.Context)context);
+        return execute((info.magnolia.context.Context) context);
     }
-    
+
     public abstract boolean execute(info.magnolia.context.Context context) throws Exception;
 
 }

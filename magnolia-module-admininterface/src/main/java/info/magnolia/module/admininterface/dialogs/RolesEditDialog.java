@@ -72,10 +72,8 @@ public class RolesEditDialog extends ConfiguredDialog {
         Dialog dialog = super.createDialog(configNode, storageNode);
 
         dialog.setJavascriptSources(request.getContextPath() + "/.resources/admin-js/dialogs/DynamicTable.js"); //$NON-NLS-1$
-        dialog.setJavascriptSources(request.getContextPath()
-            + "/.resources/admin-js/dialogs/pages/rolesACLPage.js"); //$NON-NLS-1$
-        dialog.setCssSources(request.getContextPath()
-            + "/.resources/admin-css/dialogs/pages/rolesEditPage.css"); //$NON-NLS-1$
+        dialog.setJavascriptSources(request.getContextPath() + "/.resources/admin-js/dialogs/pages/rolesACLPage.js"); //$NON-NLS-1$
+        dialog.setCssSources(request.getContextPath() + "/.resources/admin-css/dialogs/pages/rolesEditPage.css"); //$NON-NLS-1$
         return dialog;
     }
 
@@ -143,11 +141,11 @@ public class RolesEditDialog extends ConfiguredDialog {
 
                         if (StringUtils.isNotEmpty(path)) {
                             if (path.equals("/")) { //$NON-NLS-1$
-                                accessType = RolesACLPage.TYPE_SUBS; 
+                                accessType = RolesACLPage.TYPE_SUBS;
                                 path = StringUtils.EMPTY;
                             }
 
-                            if((accessType & RolesACLPage.TYPE_THIS) != 0){
+                            if ((accessType & RolesACLPage.TYPE_THIS) != 0) {
                                 try {
                                     String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
                                     Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
@@ -158,8 +156,8 @@ public class RolesEditDialog extends ConfiguredDialog {
                                     log.error(e.getMessage(), e);
                                 }
                             }
-                            
-                            if((accessType & RolesACLPage.TYPE_SUBS) != 0){
+
+                            if ((accessType & RolesACLPage.TYPE_SUBS) != 0) {
                                 try {
                                     String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
                                     Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);

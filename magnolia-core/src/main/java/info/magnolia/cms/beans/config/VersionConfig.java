@@ -51,8 +51,7 @@ public class VersionConfig {
     public static final String ACTIVE = "active";
 
     /**
-     * boolean governing if versioning is actively used
-     * NOT USED FOR THE TIME BEING
+     * boolean governing if versioning is actively used NOT USED FOR THE TIME BEING
      */
     private static boolean isActive;
 

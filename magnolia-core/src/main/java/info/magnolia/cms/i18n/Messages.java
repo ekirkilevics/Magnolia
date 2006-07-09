@@ -19,7 +19,6 @@ import java.util.Locale;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public interface Messages {
 
@@ -65,7 +64,7 @@ public interface Messages {
      * @return message
      */
     public String getWithDefault(String key, Object[] args, String defaultMsg);
-    
+
     /**
      * Iterate over the keys
      * @return iterator

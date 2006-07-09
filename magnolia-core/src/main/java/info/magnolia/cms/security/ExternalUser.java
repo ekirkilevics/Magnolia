@@ -121,7 +121,7 @@ public class ExternalUser implements User {
      */
 
     public String getLanguage() {
-        return (String) this.userDetails.getProperty(Entity.LANGUAGE); 
+        return (String) this.userDetails.getProperty(Entity.LANGUAGE);
     }
 
     /*
@@ -129,7 +129,7 @@ public class ExternalUser implements User {
      * @see info.magnolia.cms.security.UserInterface#getName()
      */
     public String getName() {
-        return (String) this.userDetails.getProperty(Entity.NAME); 
+        return (String) this.userDetails.getProperty(Entity.NAME);
     }
 
     /**

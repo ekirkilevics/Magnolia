@@ -13,22 +13,24 @@ import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 public class GenericDataTree extends AdminTreeMVCHandler {
 
-	private String dialogName;
-	
-	public GenericDataTree(String name, HttpServletRequest request, HttpServletResponse response) {
-		super(name, request, response);
-	}
-	
-	protected void initialize() {
-		super.initialize();
-        setConfiguration(new DialogBasedTreeConfig((ConfiguredDialog)DialogHandlerManager.getInstance().getDialogHandler(getDialogName(), request, response), getRepository()));
-	}
-	
+    private String dialogName;
 
-    //TODO: check if this really works [cho]
-	public Syndicator getActivationSyndicator(String path) {
+    public GenericDataTree(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
+    }
+
+    protected void initialize() {
+        super.initialize();
+        setConfiguration(new DialogBasedTreeConfig((ConfiguredDialog) DialogHandlerManager
+            .getInstance()
+            .getDialogHandler(getDialogName(), request, response), getRepository()));
+    }
+
+    // TODO: check if this really works [cho]
+    public Syndicator getActivationSyndicator(String path) {
         /*
          * Here rule defines which content types to collect, its a resposibility of the caller ro set this, it will be
          * different in every hierarchy, for instance - in website tree recursive activation : rule will allow
@@ -46,13 +48,13 @@ public class GenericDataTree extends AdminTreeMVCHandler {
             .getRepository()), rule);
 
         return syndicator;
-	}
+    }
 
-	public String getDialogName() {
-		return dialogName;
-	}
+    public String getDialogName() {
+        return dialogName;
+    }
 
-	public void setDialogName(String dialogName) {
-		this.dialogName = dialogName;
-	}
+    public void setDialogName(String dialogName) {
+        this.dialogName = dialogName;
+    }
 }

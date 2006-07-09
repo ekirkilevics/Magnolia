@@ -21,7 +21,6 @@ import org.apache.commons.collections.map.ListOrderedMap;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class SearchConfigImpl implements SearchConfig {
 
@@ -35,7 +34,7 @@ public class SearchConfigImpl implements SearchConfig {
     }
 
     public void addControlDefinition(SearchControlDefinition def) {
-        controlDefinitions.put(def.getName(), def); 
+        controlDefinitions.put(def.getName(), def);
     }
 
     /**

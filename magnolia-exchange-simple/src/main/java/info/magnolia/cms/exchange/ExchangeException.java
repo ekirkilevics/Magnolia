@@ -18,8 +18,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class ExchangeException extends BaseException {
 

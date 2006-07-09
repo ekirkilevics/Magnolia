@@ -98,23 +98,20 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
                 Paragraph paragraphInfo = ParagraphManager.getInstance().getInfo(pars[i]);
 
                 // prevent NPEs
-                if (paragraphInfo == null)
-                {
+                if (paragraphInfo == null) {
                     log.error("Unable to load paragraph {}", pars[i]);
                     continue;
                 }
                 Button button = new Button(c1.getName(), paragraphInfo.getName());
                 StringBuffer label = new StringBuffer();
-                
+
                 Messages msgs = TemplateMessagesUtil.getMessages();
-                if (StringUtils.isNotEmpty(paragraphInfo.getI18nBasename())){
+                if (StringUtils.isNotEmpty(paragraphInfo.getI18nBasename())) {
                     msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
                 }
-                
+
                 label.append("<strong>" //$NON-NLS-1$
-                    + msgs.getWithDefault(
-                        paragraphInfo.getTitle(),
-                        paragraphInfo.getTitle())
+                    + msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle())
                     + "</strong><br />"); //$NON-NLS-1$
 
                 String description = paragraphInfo.getDescription();

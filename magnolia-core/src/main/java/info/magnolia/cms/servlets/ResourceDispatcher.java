@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 /**
  * Class ResourceDispatcher is responsible to gather data from the <strong>HttpServletRequest </strong> and write back
  * the requested resource on the <strong>ServletOutputStream </strong>.
- *
  * @author Sameer Charles
  * @version 1.0
  */
@@ -65,7 +64,6 @@ public class ResourceDispatcher extends HttpServlet {
 
     /**
      * Get the requested resource and copy it to the ServletOutputStream, bit by bit.
-     *
      * @param req HttpServletRequest as given by the servlet container
      * @param res HttpServletResponse as given by the servlet container
      * @throws IOException standard servlet exception
@@ -95,7 +93,8 @@ public class ResourceDispatcher extends HttpServlet {
                 // don't log at error level since tomcat tipically throws a
                 // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
                 if (log.isDebugEnabled()) {
-                    log.debug("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                    log.debug(
+                        "Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
             catch (Exception e) {
@@ -111,7 +110,8 @@ public class ResourceDispatcher extends HttpServlet {
 
         if (!res.isCommitted()) {
             res.sendError(HttpServletResponse.SC_NOT_FOUND);
-        } else {
+        }
+        else {
             log.info("Unable to redirect to 404 page, response is already committed"); //$NON-NLS-1$
         }
 
@@ -119,8 +119,7 @@ public class ResourceDispatcher extends HttpServlet {
 
     /**
      * Send data as is.
-     *
-     * @param is  Input stream for the resource
+     * @param is Input stream for the resource
      * @param res HttpServletResponse as received by the service method
      * @throws IOException standard servlet exception
      */
@@ -137,8 +136,8 @@ public class ResourceDispatcher extends HttpServlet {
 
     /**
      * @param path path for nodedata in jcr repository
-     * @param hm   Hierarchy manager
-     * @param res  HttpServletResponse
+     * @param hm Hierarchy manager
+     * @param res HttpServletResponse
      * @return InputStream or <code>null</code> if nodeData is not found
      */
     private InputStream getNodedataAstream(String path, HierarchyManager hm, HttpServletResponse res) {

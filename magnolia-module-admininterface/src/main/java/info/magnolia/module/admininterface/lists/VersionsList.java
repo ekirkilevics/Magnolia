@@ -36,25 +36,25 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public abstract class VersionsList extends AbstractList {
-    
+
     private static Logger log = LoggerFactory.getLogger(VersionsList.class);
-    
+
     /**
      * The repository
      */
     private String repository;
-    
+
     /**
      * The path of the node
      */
     protected String path;
-    
+
     /**
      * If the command is restore, this defines the label of the version to restore.
      */
@@ -64,7 +64,7 @@ public abstract class VersionsList extends AbstractList {
      * @param name
      * @param request
      * @param response
-     * @throws Exception 
+     * @throws Exception
      */
     public VersionsList(String name, HttpServletRequest request, HttpServletResponse response) throws Exception {
         super(name, request, response);
@@ -74,21 +74,22 @@ public abstract class VersionsList extends AbstractList {
      * @see info.magnolia.module.admininterface.lists.AbstractList#getModel()
      */
     public ListModel getModel() {
-        try{
+        try {
             Content node = getNode();
             return new VersionListModel(node);
         }
-        catch(Exception e){
+        catch (Exception e) {
             log.error("can't find node for version list {}", this.path);
         }
         return null;
     }
-    
+
     public void configureList(ListControl list) {
         // set onselect
         list.setRenderer(new AdminListControlRenderer() {
+
             public String onSelect(ListControl list, Integer index) {
-                String js =  super.onSelect(list, index);
+                String js = super.onSelect(list, index);
                 js += "mgnlVersionsList.currentVersionLabel = '" + list.getIteratorValue("versionLabel") + "';";
                 return js;
             }
@@ -97,19 +98,19 @@ public abstract class VersionsList extends AbstractList {
                 return "mgnlVersionsList.showItem()";
             }
         });
-        
+
         list.addGroupableField("userName");
         list.addSortableField("created");
-        list.addColumn(new ListColumn("name","Name","150", true));
-        list.addColumn(new ListColumn("created","Date","100", true));
-        list.addColumn(new ListColumn("userName","User","100", true));
+        list.addColumn(new ListColumn("name", "Name", "150", true));
+        list.addColumn(new ListColumn("created", "Date", "100", true));
+        list.addColumn(new ListColumn("userName", "User", "100", true));
     }
-    
+
     /**
      * The script executed on a show link
      */
     public abstract String getOnShowFunction();
-    
+
     protected void configureContextMenu(ContextMenu menu) {
         ContextMenuItem show = new ContextMenuItem("show");
         show.setLabel(MessagesManager.get("versions.show"));
@@ -132,7 +133,7 @@ public abstract class VersionsList extends AbstractList {
         bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("show")));
         bar.addMenuItem(new FunctionBarItem(this.getContextMenu().getMenuItemByName("restore")));
     }
-    
+
     /**
      * @return
      * @throws PathNotFoundException
@@ -144,8 +145,8 @@ public abstract class VersionsList extends AbstractList {
         Content node = hm.getContent(this.getPath());
         return node;
     }
-    
-    public String restore(){
+
+    public String restore() {
         try {
             Content node = this.getNode();
             node.addVersion();
@@ -158,7 +159,7 @@ public abstract class VersionsList extends AbstractList {
         }
         return show();
     }
-    
+
     /**
      * @return Returns the path.
      */
@@ -166,7 +167,6 @@ public abstract class VersionsList extends AbstractList {
         return this.path;
     }
 
-    
     /**
      * @param path The path to set.
      */
@@ -174,7 +174,6 @@ public abstract class VersionsList extends AbstractList {
         this.path = path;
     }
 
-    
     /**
      * @return Returns the repository.
      */
@@ -182,14 +181,13 @@ public abstract class VersionsList extends AbstractList {
         return this.repository;
     }
 
-    
     /**
      * @param repository The repository to set.
      */
     public void setRepository(String repository) {
         this.repository = repository;
     }
-    
+
     /**
      * @see com.obinary.magnolia.professional.lists.AbstractAdvancedSearchList#onRender()
      */
@@ -197,7 +195,6 @@ public abstract class VersionsList extends AbstractList {
         return FreeMarkerUtil.process(VersionsList.class, this);
     }
 
-    
     /**
      * @return Returns the versionLabel.
      */
@@ -205,7 +202,6 @@ public abstract class VersionsList extends AbstractList {
         return this.versionLabel;
     }
 
-    
     /**
      * @param versionLabel The versionLabel to set.
      */

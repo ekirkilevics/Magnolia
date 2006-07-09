@@ -20,19 +20,19 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /**
  * Renders the static link useable for download.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class DMSDialogSaticLinkControl extends DialogStatic {
 
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
- 
+
         super.init(request, response, websiteNode, configNode);
-        if(websiteNode != null){
+        if (websiteNode != null) {
             Document doc = Document.getCurrent(request);
             this.setValue(doc.getStaticLink());
         }

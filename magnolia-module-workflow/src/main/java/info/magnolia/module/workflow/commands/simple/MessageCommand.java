@@ -26,23 +26,22 @@ import org.apache.commons.lang.StringUtils;
  * A command setting a message using the AlertUtil
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class MessageCommand extends MgnlCommand {
-    
+
     /**
      * The message
      */
     private String message = "";
-    
+
     private String i18nBasename = MessagesManager.DEFAULT_BASENAME;
-    
+
     /**
      * @see info.magnolia.commands.MgnlCommand#execute(info.magnolia.context.Context)
      */
     public boolean execute(Context context) throws Exception {
         String msg = this.getMessage(context);
-        if(StringUtils.isNotEmpty(msg)){
+        if (StringUtils.isNotEmpty(msg)) {
             Messages msgs = MessagesUtil.chainWithDefault(this.getI18nBasename());
             AlertUtil.setMessage(msgs.getWithDefault(msg, msg));
         }
@@ -53,9 +52,9 @@ public class MessageCommand extends MgnlCommand {
      * @return Returns the message.
      */
     public String getMessage(Context context) {
-        return StringUtils.defaultIfEmpty((String)context.getAttribute(Context.ATTRIBUTE_MESSAGE), this.getMessage());
+        return StringUtils.defaultIfEmpty((String) context.getAttribute(Context.ATTRIBUTE_MESSAGE), this.getMessage());
     }
-    
+
     /**
      * @return Returns the message.
      */
@@ -70,7 +69,6 @@ public class MessageCommand extends MgnlCommand {
         this.message = message;
     }
 
-    
     /**
      * @return Returns the i18nBasename.
      */
@@ -78,7 +76,6 @@ public class MessageCommand extends MgnlCommand {
         return this.i18nBasename;
     }
 
-    
     /**
      * @param basename The i18nBasename to set.
      */

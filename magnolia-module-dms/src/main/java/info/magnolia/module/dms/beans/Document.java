@@ -276,7 +276,7 @@ public class Document {
         this.fileNode.setAttribute(FileProperties.PROPERTY_SIZE, Long.toString(size));
         String mimetype = StringUtils.defaultIfEmpty(MIMEMapping.getMIMEType(extension), "application/octet-stream");
         this.fileNode.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, mimetype);
-        
+
         // set time flag
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
         this.fileNode.setAttribute(FileProperties.PROPERTY_LASTMODIFIES, value);
@@ -286,25 +286,25 @@ public class Document {
 
     public void updateMetaData() {
         try {
-            NodeDataUtil.getOrCreate(node,"title").setValue(this.getFileName());
-            NodeDataUtil.getOrCreate(node,"type").setValue(this.getFileExtension().toLowerCase());
-            NodeDataUtil.getOrCreate(node,"name").setValue(node.getName());
+            NodeDataUtil.getOrCreate(node, "title").setValue(this.getFileName());
+            NodeDataUtil.getOrCreate(node, "type").setValue(this.getFileExtension().toLowerCase());
+            NodeDataUtil.getOrCreate(node, "name").setValue(node.getName());
 
             // store the file type (for sorting)
-            NodeDataUtil.getOrCreate(node,"type").setValue(this.getFileExtension().toLowerCase());
+            NodeDataUtil.getOrCreate(node, "type").setValue(this.getFileExtension().toLowerCase());
 
             // store a sortable date
-            NodeDataUtil.getOrCreate(node,"creationDate").setValue(node.getMetaData().getCreationDate());
-            NodeDataUtil.getOrCreate(node,"modificationDate").setValue(node.getMetaData().getModificationDate());
+            NodeDataUtil.getOrCreate(node, "creationDate").setValue(node.getMetaData().getCreationDate());
+            NodeDataUtil.getOrCreate(node, "modificationDate").setValue(node.getMetaData().getModificationDate());
 
-            if (StringUtils.isEmpty(NodeDataUtil.getOrCreate(node,"creator").getString())) {
+            if (StringUtils.isEmpty(NodeDataUtil.getOrCreate(node, "creator").getString())) {
                 node.getNodeData("creator").setValue(node.getMetaData().getAuthorId());
             }
 
-            NodeDataUtil.getOrCreate(node,"modifier").setValue(node.getMetaData().getAuthorId());
+            NodeDataUtil.getOrCreate(node, "modifier").setValue(node.getMetaData().getAuthorId());
 
             // store the node name in the name field
-            NodeDataUtil.getOrCreate(node,"title").setValue(this.getFileName());
+            NodeDataUtil.getOrCreate(node, "title").setValue(this.getFileName());
 
             node.save();
 

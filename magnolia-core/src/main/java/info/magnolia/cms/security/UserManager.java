@@ -36,7 +36,7 @@ public interface UserManager {
 
     /**
      * Anonymous user
-     * */
+     */
     public static final String ANONYMOUS_USER = "anonymous";
 
     /**
@@ -49,13 +49,13 @@ public interface UserManager {
     /**
      * Get system user, this user must always exist in magnolia repository.
      * @return system user
-     * */
+     */
     public User getSystemUser();
 
     /**
      * Get Anonymous user, this user must always exist in magnolia repository.
      * @return anonymous user
-     * */
+     */
     public User getAnonymousUser();
 
     /**

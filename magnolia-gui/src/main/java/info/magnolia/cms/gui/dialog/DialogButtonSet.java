@@ -61,8 +61,8 @@ public class DialogButtonSet extends DialogBox {
         List options = new ArrayList();
         try {
             Iterator it = configNode.getContent("options") //$NON-NLS-1$
-                    .getChildren(ItemType.CONTENTNODE.getSystemName())
-                    .iterator();
+                .getChildren(ItemType.CONTENTNODE.getSystemName())
+                .iterator();
             while (it.hasNext()) {
                 Content n = ((Content) it.next());
                 String value = n.getNodeData("value").getString(); //$NON-NLS-1$
@@ -113,7 +113,7 @@ public class DialogButtonSet extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
-            throws RepositoryException {
+        throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
 
         // confignode can be null if instantiated directly
@@ -128,11 +128,13 @@ public class DialogButtonSet extends DialogBox {
             if (controlType.equals("radio")) { //$NON-NLS-1$
                 setButtonType(ControlImpl.BUTTONTYPE_RADIO);
                 setOptions(configNode, true);
-            } else if (controlType.equals("checkbox")) { //$NON-NLS-1$
+            }
+            else if (controlType.equals("checkbox")) { //$NON-NLS-1$
                 setButtonType(ControlImpl.BUTTONTYPE_CHECKBOX);
                 setOptions(configNode, false);
                 setConfig("valueType", "multiple"); //$NON-NLS-1$ //$NON-NLS-2$
-            } else if (controlType.equals("checkboxSwitch")) { //$NON-NLS-1$
+            }
+            else if (controlType.equals("checkboxSwitch")) { //$NON-NLS-1$
                 setButtonType(ControlImpl.BUTTONTYPE_CHECKBOX);
                 setOption(configNode);
             }
@@ -165,10 +167,12 @@ public class DialogButtonSet extends DialogBox {
             // checkbox
             control = new ButtonSet(this.getName(), this.getValues());
             control.setValueType(ControlImpl.VALUETYPE_MULTIPLE);
-        } else if (this.getButtonType() == ControlImpl.BUTTONTYPE_CHECKBOX) {
+        }
+        else if (this.getButtonType() == ControlImpl.BUTTONTYPE_CHECKBOX) {
             // checkboxSwitch
             control = new ButtonSet(this.getName() + "_SWITCH", this.getValue()); //$NON-NLS-1$
-        } else {
+        }
+        else {
             // radio
             control = new ButtonSet(this.getName(), this.getValue());
         }
@@ -196,14 +200,15 @@ public class DialogButtonSet extends DialogBox {
                 Button b = (Button) this.getOptions().get(i);
                 if (item == 1) {
                     b.setHtmlPre("<td><table cellpadding=\"0\" cellspacing=\"0\" border=\"0\">" //$NON-NLS-1$
-                            + control.getButtonHtmlPre());
+                        + control.getButtonHtmlPre());
                 }
                 if (item == itemsPerCol) {
                     b.setHtmlPost(control.getButtonHtmlPost() + "</table></td><td class=\"" //$NON-NLS-1$
-                            + CssConstants.CSSCLASS_BUTTONSETINTERCOL
-                            + "\"></td>"); //$NON-NLS-1$
+                        + CssConstants.CSSCLASS_BUTTONSETINTERCOL
+                        + "\"></td>"); //$NON-NLS-1$
                     item = 1;
-                } else {
+                }
+                else {
                     item++;
                 }
             }
@@ -220,13 +225,14 @@ public class DialogButtonSet extends DialogBox {
         control.setButtons(this.getOptions());
         out.write(control.getHtml());
         if (control.getButtonType() == ControlImpl.BUTTONTYPE_CHECKBOX
-                && control.getValueType() != ControlImpl.VALUETYPE_MULTIPLE) {
+            && control.getValueType() != ControlImpl.VALUETYPE_MULTIPLE) {
             // checkboxSwitch: value is stored in a hidden field (allows default selecting)
             String value = this.getValue();
             if (StringUtils.isEmpty(value)) {
                 if (this.getConfigValue("selected").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$
                     value = "true"; //$NON-NLS-1$
-                } else {
+                }
+                else {
                     value = "false"; //$NON-NLS-1$
                 }
             }

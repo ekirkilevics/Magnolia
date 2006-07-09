@@ -134,8 +134,10 @@ public class Dialog extends DialogControlImpl {
         out.write("<head>"); //$NON-NLS-1$
         this.drawHtmlPreSubsHead(out);
         // alert if a message was set
-        if(AlertUtil.isMessageSet()){
-            out.write("<script>mgnl.util.DHTMLUtil.addOnLoad(function(){alert('" + AlertUtil.getMessage() + "');})</script>");
+        if (AlertUtil.isMessageSet()) {
+            out.write("<script>mgnl.util.DHTMLUtil.addOnLoad(function(){alert('"
+                + AlertUtil.getMessage()
+                + "');})</script>");
         }
         out.write("<script>mgnl.util.DHTMLUtil.addOnLoad(mgnlDialogInit);</script>");
 
@@ -268,9 +270,9 @@ public class Dialog extends DialogControlImpl {
         Button save = new Button();
         String saveOnclick = this.getConfigValue("saveOnclick", "mgnlDialogFormSubmit();");
         String saveLabel = this.getConfigValue("saveLabel", msgs.get("buttons.save"));
-        if(StringUtils.isNotEmpty(saveOnclick) && StringUtils.isNotEmpty("saveLabel")){
-            save.setOnclick(saveOnclick); 
-            save.setLabel(saveLabel); 
+        if (StringUtils.isNotEmpty(saveOnclick) && StringUtils.isNotEmpty("saveLabel")) {
+            save.setOnclick(saveOnclick);
+            save.setLabel(saveLabel);
             out.write(save.getHtml());
         }
         Button cancel = new Button();

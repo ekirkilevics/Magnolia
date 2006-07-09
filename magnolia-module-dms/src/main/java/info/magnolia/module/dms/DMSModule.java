@@ -28,25 +28,23 @@ import org.apache.log4j.Logger;
  * The module. Configures users and roles. Most of the code will disapeare.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class DMSModule extends AbstractAdminModule {
 
     public static Logger log = Logger.getLogger(DMSModule.class);
 
     private static DMSModule instance;
-    
+
     /**
      * The repository name used by this dms
      */
     private String repository;
-    
+
     /**
      * The dialog used to edit a document, also used to build the search interface
      */
     private String baseDialog;
 
-    
     /**
      * Configure the DMS module
      */
@@ -54,14 +52,14 @@ public class DMSModule extends AbstractAdminModule {
         setRepository("dms");
         setBaseDialog("/modules/dms/dialogs/dmsEdit");
     }
-    
+
     /**
      * Make some specific configuration.
      */
     public void onRegister(int registerState) {
         configureMenu();
         ModuleUtil.subscribeRepository(this.getRepository());
-        ModuleUtil.grantRepositoryToSuperuser(this.getRepository()); 
+        ModuleUtil.grantRepositoryToSuperuser(this.getRepository());
     }
 
     /**
@@ -97,7 +95,6 @@ public class DMSModule extends AbstractAdminModule {
         return repository;
     }
 
-    
     /**
      * @param repository The repository to set.
      */
@@ -105,7 +102,6 @@ public class DMSModule extends AbstractAdminModule {
         this.repository = repository;
     }
 
-    
     /**
      * @return Returns the baseDialog.
      */
@@ -113,7 +109,6 @@ public class DMSModule extends AbstractAdminModule {
         return this.baseDialog;
     }
 
-    
     /**
      * @param baseDialog The baseDialog to set.
      */

@@ -480,7 +480,8 @@ public class Content extends ContentHandler implements Cloneable {
         try {
             nodeData = new NodeData(this.node, name, this.accessManager);
             nodeData.setValue(value);
-        } catch (PathNotFoundException e) {
+        }
+        catch (PathNotFoundException e) {
             nodeData = new NodeData(this.node, name, value, this.accessManager);
         }
         return nodeData;
@@ -684,8 +685,7 @@ public class Content extends ContentHandler implements Cloneable {
         while (nodeIterator.hasNext()) {
             Node subNode = (Node) nodeIterator.next();
             try {
-                if (contentType == null
-                    || this.isNodeType(subNode, contentType)) {
+                if (contentType == null || this.isNodeType(subNode, contentType)) {
                     children.add(new Content(subNode, this.accessManager));
                 }
             }
@@ -1129,7 +1129,7 @@ public class Content extends ContentHandler implements Cloneable {
      * removes all versions of this node and associated version graph
      * @throws AccessDeniedException If not allowed to do write operations on this node
      * @throws RepositoryException if unable to remove versions from version store
-     * */
+     */
     public void removeVersionHistory() throws AccessDeniedException, RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(node.getPath()), Permission.WRITE);
         VersionManager.getInstance().removeVersionHistory(this.node.getUUID());

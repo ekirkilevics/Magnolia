@@ -48,7 +48,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
      * The function bar shown at the bottom
      */
     private FunctionBar functionBar;
-    
+
     private ContextMenu contextMenu;
 
     /**
@@ -59,14 +59,14 @@ public abstract class AbstractList extends TemplatedMVCHandler {
     public AbstractList(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
-    
+
     /**
      * Don't use the class name.
      */
     protected String getTemplateName(String viewName) {
         return FreeMarkerUtil.createTemplateName(AbstractList.class, "html");
     }
-    
+
     /**
      * @see com.obinary.magnolia.professional.PageMVCHandler#show()
      */
@@ -82,7 +82,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
      * @param list
      */
     public abstract void configureList(ListControl list);
-    
+
     /**
      * @param list
      */
@@ -96,7 +96,6 @@ public abstract class AbstractList extends TemplatedMVCHandler {
         list.setGroupBy(this.getGroupBy());
         list.setGroupByOrder(this.getGroupByOrder());
     }
-
 
     /**
      * Returns the model used by this list
@@ -121,7 +120,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
     }
 
     public ContextMenu getContextMenu() {
-        if(this.contextMenu == null){
+        if (this.contextMenu == null) {
             this.contextMenu = new ContextMenu("contextMenu");
             configureContextMenu(this.contextMenu);
         }
@@ -129,7 +128,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
     }
 
     /**
-     * Override to configure the menu 
+     * Override to configure the menu
      */
     protected void configureContextMenu(ContextMenu menu) {
     }
@@ -145,7 +144,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
      * @return Returns the functionBar.
      */
     public FunctionBar getFunctionBar() {
-        if(this.functionBar == null){
+        if (this.functionBar == null) {
             this.functionBar = new FunctionBar("functionBar");
             configureFunctionBar(this.functionBar);
         }

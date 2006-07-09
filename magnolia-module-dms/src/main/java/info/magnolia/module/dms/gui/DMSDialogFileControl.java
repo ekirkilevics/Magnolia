@@ -137,7 +137,8 @@ public class DMSDialogFileControl extends DialogFile {
 
     public String getHtmlRemove(String additionalOnclick) {
         Button control1 = new Button();
-        control1.setLabel(MessagesManager.getMessages("info.magnolia.module.dms.messages").get("dms.edit.uploadNewVersion")); //$NON-NLS-1$
+        control1.setLabel(MessagesManager
+            .getMessages("info.magnolia.module.dms.messages").get("dms.edit.uploadNewVersion")); //$NON-NLS-1$
         control1.setCssClass("mgnlControlButtonSmall"); //$NON-NLS-1$
         control1.setOnclick(additionalOnclick + "mgnlControlFileRemove('" + this.getName() + "')"); //$NON-NLS-1$ //$NON-NLS-2$
         return control1.getHtml();

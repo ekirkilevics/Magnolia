@@ -38,7 +38,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Util to find resources in the classpath (WEB-INF/lib and WEB-INF/classes).
- *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -53,7 +52,6 @@ public class ClasspathResourcesUtil {
 
     /**
      * Filter for filtering the resources.
-     *
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
@@ -64,7 +62,6 @@ public class ClasspathResourcesUtil {
 
     /**
      * Return a collection containing the resource names which passed the filter.
-     *
      * @param filter
      * @return
      * @throws IOException
@@ -86,7 +83,8 @@ public class ClasspathResourcesUtil {
                 File tofile = new File(url.getFile());
                 collectFiles(resources, tofile, filter);
             }
-        } else {
+        }
+        else {
 
             // no way, we have to assume a standard war structure and look in the WEB-INF/lib and WEB-INF/classes dirs
 
@@ -114,10 +112,9 @@ public class ClasspathResourcesUtil {
 
     /**
      * Load resources from jars or directories
-     *
      * @param resources found resources will be added to this collection
-     * @param jarOrDir  a File, can be a jar or a directory
-     * @param filter    used to filter resources
+     * @param jarOrDir a File, can be a jar or a directory
+     * @param filter used to filter resources
      */
     private static void collectFiles(Collection resources, File jarOrDir, Filter filter) {
 
@@ -148,7 +145,8 @@ public class ClasspathResourcesUtil {
                     resources.add(name);
                 }
             }
-        } else if (jarOrDir.getName().endsWith(".jar")) {
+        }
+        else if (jarOrDir.getName().endsWith(".jar")) {
             if (log.isDebugEnabled()) {
                 log.debug("looking in jar {}", jarOrDir.getAbsolutePath());
             }
@@ -162,13 +160,14 @@ public class ClasspathResourcesUtil {
             }
             for (Enumeration em = jar.entries(); em.hasMoreElements();) {
                 JarEntry entry = (JarEntry) em.nextElement();
-                if(!entry.isDirectory()){
+                if (!entry.isDirectory()) {
                     if (filter.accept("/" + entry.getName())) {
                         resources.add("/" + entry.getName());
                     }
                 }
             }
-        } else {
+        }
+        else {
             if (log.isDebugEnabled()) {
                 log.debug("Unknown (not jar) file in classpath: {}, skipping.", jarOrDir.getName());
             }
@@ -179,10 +178,9 @@ public class ClasspathResourcesUtil {
     public static InputStream getStream(String name) throws IOException {
         return getStream(name, cache);
     }
-    
+
     /**
      * Checks last modified and returns the new content if changed and the cache flag is not set to true.
-     *
      * @param name
      * @return the input stream
      * @throws IOException
@@ -191,14 +189,14 @@ public class ClasspathResourcesUtil {
         if (cache) {
             return ClasspathResourcesUtil.class.getResourceAsStream(name);
         }
-        else{
+        else {
             // TODO use the last modified attribute
             URL url = ClasspathResourcesUtil.class.getResource(name);
             if (url != null) {
                 return url.openStream();
             }
         }
-        if (log.isDebugEnabled()){
+        if (log.isDebugEnabled()) {
             log.debug("Can't find {}", name);
         }
         return null;

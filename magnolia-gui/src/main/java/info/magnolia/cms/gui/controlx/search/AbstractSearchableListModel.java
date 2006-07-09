@@ -19,19 +19,18 @@ import info.magnolia.cms.gui.query.SearchQuery;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public abstract class AbstractSearchableListModel extends AbstractListModel implements SearchableListModel {
 
     /**
      * search query to be used by sub implementation
-     * */
+     */
     protected SearchQuery query;
 
     /**
      * set Query
      * @param query
-     * */
+     */
     public void setQuery(SearchQuery query) {
         this.query = query;
     }
@@ -39,10 +38,9 @@ public abstract class AbstractSearchableListModel extends AbstractListModel impl
     /**
      * get query
      * @return query
-     * */
+     */
     public SearchQuery getQuery() {
         return this.query;
     }
-
 
 }

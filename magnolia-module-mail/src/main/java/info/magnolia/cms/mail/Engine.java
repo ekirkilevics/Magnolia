@@ -22,7 +22,6 @@ public class Engine extends AbstractModule {
 
     static final Logger log = LoggerFactory.getLogger(Engine.class);
 
-
     /**
      * Init cache manager
      */

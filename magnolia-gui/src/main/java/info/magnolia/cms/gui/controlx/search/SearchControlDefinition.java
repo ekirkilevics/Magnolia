@@ -18,15 +18,14 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class SearchControlDefinition {
-    
+
     /**
      * The name of the definition
      */
     private String name;
-    
+
     /**
      * Normaly the same as the name of the field, but used to build the query
      */
@@ -36,14 +35,14 @@ public class SearchControlDefinition {
      * Display name
      */
     private String label;
-    
+
     /**
      * Used for the rendering in javascript.
      */
     private String type;
 
     /**
-     * Default type is edit. 
+     * Default type is edit.
      */
     public SearchControlDefinition() {
         setType("edit");
@@ -69,17 +68,16 @@ public class SearchControlDefinition {
             + this.getType()
             + "'}";
     }
-    
-    public SearchControl getSearchControlInstance(String value, String constraint){
-        if(this.type.equals("date")){
+
+    public SearchControl getSearchControlInstance(String value, String constraint) {
+        if (this.type.equals("date")) {
             return new DateSearchControl(this, value, constraint);
         }
-        else{
+        else {
             return new SearchControl(this, value, constraint);
         }
     }
 
-    
     /**
      * @return Returns the type.
      */
@@ -87,7 +85,6 @@ public class SearchControlDefinition {
         return this.type;
     }
 
-    
     /**
      * @param type The type to set.
      */
@@ -95,7 +92,6 @@ public class SearchControlDefinition {
         this.type = type;
     }
 
-    
     /**
      * @return Returns the label.
      */
@@ -103,7 +99,6 @@ public class SearchControlDefinition {
         return this.label;
     }
 
-    
     /**
      * @param label The label to set.
      */
@@ -111,7 +106,6 @@ public class SearchControlDefinition {
         this.label = label;
     }
 
-    
     /**
      * @return Returns the name.
      */
@@ -119,19 +113,17 @@ public class SearchControlDefinition {
         return this.name;
     }
 
-    
     /**
      * @param name The name to set.
      */
     public void setName(String name) {
-        if(StringUtils.isEmpty(this.getColumn())){
+        if (StringUtils.isEmpty(this.getColumn())) {
             this.setColumn(name);
         }
         // avoid broken javascripts
         this.name = StringUtils.replace(name, ":", "_");
     }
 
-    
     /**
      * @return Returns the column.
      */
@@ -139,7 +131,6 @@ public class SearchControlDefinition {
         return this.column;
     }
 
-    
     /**
      * @param column The column to set.
      */

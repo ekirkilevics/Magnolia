@@ -175,7 +175,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
      * @return close view name
      */
     public String save() {
-        if(!validate()){
+        if (!validate()) {
             return onValidationFailed();
         }
         SaveHandler saveHandler = getSaveHandler();
@@ -197,12 +197,12 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     }
 
     protected boolean validate() {
-        if(!this.getDialog().validate()){
+        if (!this.getDialog().validate()) {
             return false;
         }
         SaveHandler saveHandler = this.getSaveHandler();
-        if(saveHandler instanceof ValidatingSaveHandler){
-            if(!((ValidatingSaveHandler)saveHandler).validate()){
+        if (saveHandler instanceof ValidatingSaveHandler) {
+            if (!((ValidatingSaveHandler) saveHandler).validate()) {
                 return false;
             }
         }

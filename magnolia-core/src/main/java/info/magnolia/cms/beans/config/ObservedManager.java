@@ -53,7 +53,8 @@ public abstract class ObservedManager {
     /**
      * milli second the Reloader Thread sleeps
      */
-	private static final long SLEEP_MILLIS = 1000;
+    private static final long SLEEP_MILLIS = 1000;
+
     /**
      * UUIDs of the registered main nodes. They will get registered again after a change.
      */
@@ -139,88 +140,86 @@ public abstract class ObservedManager {
      * Sets the reloading flag
      * @param reloading boolean
      */
-	private void setReloading(boolean reloading) {
-		this.reloading = reloading;
-	}
+    private void setReloading(boolean reloading) {
+        this.reloading = reloading;
+    }
 
     /**
-     *
      * @return Returns the reloadRequestCount
      */
-	protected int getReloadRequestCount() {
-		return reloadRequestCount;
-	}
+    protected int getReloadRequestCount() {
+        return reloadRequestCount;
+    }
 
-	/**
-	 * Reloading is done in a separate thread. The thread sleeps for SLEEP_MILLIS milliseconds and
-	 * checks if the  reloadRequestCount of the observedManager has changed. If true it will remain
-	 * sleeping. If false the real reloading starts.
-	 *
-	 *
-	 * @author Ralf Hirning
-	 *
-	 */
+    /**
+     * Reloading is done in a separate thread. The thread sleeps for SLEEP_MILLIS milliseconds and checks if the
+     * reloadRequestCount of the observedManager has changed. If true it will remain sleeping. If false the real
+     * reloading starts.
+     * @author Ralf Hirning
+     */
     private class Reloader implements Runnable {
-    	/**
-    	 *  reloadRequestCount before sleeping
-    	 */
-    	private int lastReloadRequestCount = 0;
 
-    	/**
-    	 * the ObservedManager
-    	 */
-    	private ObservedManager observedManager;
+        /**
+         * reloadRequestCount before sleeping
+         */
+        private int lastReloadRequestCount = 0;
 
-    	/**
-    	 * Constructor
-    	 *
-    	 * @param observedManager ObservedManager
-    	 * @param reloadRequestCount reloadRequestCount of the observedManager
-    	 */
-    	private Reloader(ObservedManager observedManager, int reloadRequestCount) {
-    		this.observedManager = observedManager;
-    		this.lastReloadRequestCount = reloadRequestCount;
-    	}
+        /**
+         * the ObservedManager
+         */
+        private ObservedManager observedManager;
 
-    	/**
-    	 * The Reloader thread's run method
-    	 */
-		public void run() {
-			while (true) {
-				try {
-					Thread.sleep(SLEEP_MILLIS);
-				} catch (InterruptedException e) {
-					// ok, go on
-					;
-				}
+        /**
+         * Constructor
+         * @param observedManager ObservedManager
+         * @param reloadRequestCount reloadRequestCount of the observedManager
+         */
+        private Reloader(ObservedManager observedManager, int reloadRequestCount) {
+            this.observedManager = observedManager;
+            this.lastReloadRequestCount = reloadRequestCount;
+        }
 
-				// check if the  reloadRequestCount of the observedManager has changed
-				int currentReloadRequestCount = this.observedManager.getReloadRequestCount();
-				if (currentReloadRequestCount > lastReloadRequestCount) {
-					lastReloadRequestCount = currentReloadRequestCount;
-				} else {
-					// allow creation of a new Reloader
-					this.observedManager.setReloading(false);
+        /**
+         * The Reloader thread's run method
+         */
+        public void run() {
+            while (true) {
+                try {
+                    Thread.sleep(SLEEP_MILLIS);
+                }
+                catch (InterruptedException e) {
+                    // ok, go on
+                    ;
+                }
 
-					// Call onClear and reregister the nodes by calling onRegister
-			        this.observedManager.onClear();
+                // check if the reloadRequestCount of the observedManager has changed
+                int currentReloadRequestCount = this.observedManager.getReloadRequestCount();
+                if (currentReloadRequestCount > lastReloadRequestCount) {
+                    lastReloadRequestCount = currentReloadRequestCount;
+                }
+                else {
+                    // allow creation of a new Reloader
+                    this.observedManager.setReloading(false);
 
-			        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+                    // Call onClear and reregister the nodes by calling onRegister
+                    this.observedManager.onClear();
 
-			        for (Iterator iter = this.observedManager.registeredUUIDs.iterator(); iter.hasNext();) {
-			            String uuid = (String) iter.next();
-			            try {
-			                Content node = hm.getContentByUUID(uuid);
-			                reload(node);
-			            }
-			            catch (Exception e) {
-			            	this.observedManager.registeredUUIDs.remove(uuid);
-			                log.warn("can't reload the the node [" + uuid + "]");
-			            }
-			        }
-			        return;
-				}
-			}
-		}
+                    HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+
+                    for (Iterator iter = this.observedManager.registeredUUIDs.iterator(); iter.hasNext();) {
+                        String uuid = (String) iter.next();
+                        try {
+                            Content node = hm.getContentByUUID(uuid);
+                            reload(node);
+                        }
+                        catch (Exception e) {
+                            this.observedManager.registeredUUIDs.remove(uuid);
+                            log.warn("can't reload the the node [" + uuid + "]");
+                        }
+                    }
+                    return;
+                }
+            }
+        }
     }
 }

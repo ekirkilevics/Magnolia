@@ -32,19 +32,19 @@ public class ParagraphManager extends ObservedManager {
 
     private static final String ND_I18N_BASENAME = "i18nBasename";
 
-	private static final String ND_DESCRIPTION = "description";
+    private static final String ND_DESCRIPTION = "description";
 
-	private static final String ND_TITLE = "title";
+    private static final String ND_TITLE = "title";
 
-	private static final String ND_TYPE = "type";
+    private static final String ND_TYPE = "type";
 
-	private static final String ND_DIALOG_PATH = "dialogPath";
+    private static final String ND_DIALOG_PATH = "dialogPath";
 
-	private static final String ND_TEMPLATE_PATH = "templatePath";
+    private static final String ND_TEMPLATE_PATH = "templatePath";
 
-	private static final String ND_DIALOG = "dialog";
+    private static final String ND_DIALOG = "dialog";
 
-	private static final String ND_NAME = "name";
+    private static final String ND_NAME = "name";
 
     /**
      * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
@@ -122,12 +122,12 @@ public class ParagraphManager extends ObservedManager {
         }
         pi.setDialog(dialog);
 
-        pi.setTemplatePath(c.getNodeData(ND_TEMPLATE_PATH).getString()); 
-        pi.setDialogPath(c.getNodeData(ND_DIALOG_PATH).getString()); 
-        pi.setTemplateType(c.getNodeData(ND_TYPE).getString()); 
-        pi.setTitle(c.getNodeData(ND_TITLE).getString()); 
-        pi.setDescription(c.getNodeData(ND_DESCRIPTION).getString()); 
-        pi.setI18nBasename(c.getNodeData(ND_I18N_BASENAME).getString()); 
+        pi.setTemplatePath(c.getNodeData(ND_TEMPLATE_PATH).getString());
+        pi.setDialogPath(c.getNodeData(ND_DIALOG_PATH).getString());
+        pi.setTemplateType(c.getNodeData(ND_TYPE).getString());
+        pi.setTitle(c.getNodeData(ND_TITLE).getString());
+        pi.setDescription(c.getNodeData(ND_DESCRIPTION).getString());
+        pi.setI18nBasename(c.getNodeData(ND_I18N_BASENAME).getString());
         if (Paragraph.log.isDebugEnabled()) {
             Paragraph.log.debug("Registering paragraph [{}]", pi.getName()); //$NON-NLS-1$ 
         }

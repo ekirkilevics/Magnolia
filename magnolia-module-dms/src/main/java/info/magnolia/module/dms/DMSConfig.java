@@ -10,20 +10,18 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
- 
-package info.magnolia.module.dms;
 
+package info.magnolia.module.dms;
 
 /**
  * Some usefull constants. Will get removed.
  * @author philipp
  * @deprecated
- *
  */
 public class DMSConfig {
 
     /**
-     * Every dms user must be granted to this role 
+     * Every dms user must be granted to this role
      */
     public static String LICENSE_ROLE = "dmslicense";
 
@@ -31,7 +29,7 @@ public class DMSConfig {
      * Sets some needed permissions
      */
     public static String ROLE = "dmsuser";
-    
+
     /**
      * The default dms user
      */
@@ -41,13 +39,12 @@ public class DMSConfig {
      * The name of the repository
      */
     public static String REPOSITORY = "dms";
-    
+
     /**
      * The date format used by the DMS
      */
     private static String dateFormat;
 
-    
     /**
      * @return Returns the dateFormat.
      */
@@ -55,7 +52,6 @@ public class DMSConfig {
         return dateFormat;
     }
 
-    
     /**
      * @param dateFormat The dateFormat to set.
      */

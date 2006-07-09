@@ -27,7 +27,7 @@ public class DependencyDefinition {
      * The version of the module
      */
     private String version;
-    
+
     /**
      * If this dependency is optional but should get loaded before this module
      */
@@ -61,7 +61,6 @@ public class DependencyDefinition {
         this.version = version;
     }
 
-    
     /**
      * @return Returns the optional.
      */
@@ -69,7 +68,6 @@ public class DependencyDefinition {
         return this.optional;
     }
 
-    
     /**
      * @param optional The optional to set.
      */

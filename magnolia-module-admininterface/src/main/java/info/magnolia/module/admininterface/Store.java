@@ -30,8 +30,8 @@ public class Store {
     protected static Logger log = LoggerFactory.getLogger(Store.class);
 
     private static Store store = new Store();
-    
-	public static Store getInstance() {
+
+    public static Store getInstance() {
         return Store.store;
     }
 

@@ -48,7 +48,7 @@ public final class LicenseFileExtractor {
     public static final String PROVIDER_ADDRESS = "ProviderAddress"; //$NON-NLS-1$
 
     public static final String PRIVIDER_EMAIL = "ProviderEmail"; //$NON-NLS-1$
-    
+
     public static final String EDITION = "Edition"; //$NON-NLS-1$
 
     public static final String PRODUCT_DOMAIN = "ProductDomain"; //$NON-NLS-1$

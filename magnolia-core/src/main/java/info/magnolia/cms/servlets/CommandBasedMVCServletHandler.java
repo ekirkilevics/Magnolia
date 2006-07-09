@@ -71,12 +71,12 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
 
             // now prepare the context
             Context ctx = getCommandContext(commandName);
-            
+
             // execute the command
-            try{
+            try {
                 command.execute(ctx);
             }
-            catch(Exception e){
+            catch (Exception e) {
                 log.error("can't execute command", e);
             }
             return getViewNameAfterExecution(commandName, ctx);

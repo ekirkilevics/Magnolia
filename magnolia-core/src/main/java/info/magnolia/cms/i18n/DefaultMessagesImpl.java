@@ -29,7 +29,6 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class DefaultMessagesImpl extends AbstractMessagesImpl {
 
@@ -87,7 +86,7 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
                         + StringUtils.replace(basename, ".", "/")
                         + ".properties", false);
                 }
-    
+
                 if (stream != null) {
                     bundle = new PropertyResourceBundle(stream);
                 }

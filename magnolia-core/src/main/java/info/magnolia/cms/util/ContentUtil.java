@@ -69,7 +69,7 @@ public class ContentUtil {
             return null;
         }
     }
-    
+
     /**
      * Get the node or null if not exists
      * @param node
@@ -287,7 +287,7 @@ public class ContentUtil {
         }
         return bean;
     }
-    
+
     /**
      * Takes a nodes data and and sets the beans properties which follow the naming of the nodes nodedatas.
      * @param bean the bean you like to populate
@@ -297,12 +297,10 @@ public class ContentUtil {
      */
     public static Object setProperties(Object bean, String repository, String path) {
         Content node = getContent(repository, path);
-        if(node != null){
+        if (node != null) {
             setProperties(bean, node);
         }
         return bean;
     }
 
-
-    
 }

@@ -81,7 +81,7 @@ public class DialogSelect extends DialogBox {
      * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
-            throws RepositoryException {
+        throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
         if (configNode != null) {
             setOptions(configNode);

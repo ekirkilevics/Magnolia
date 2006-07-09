@@ -102,7 +102,6 @@ public class IfEmpty extends ConditionalTagSupport {
 
     /**
      * Set the actpage.
-     *
      * @param set
      */
     public void setActpage(boolean set) {
@@ -118,7 +117,7 @@ public class IfEmpty extends ConditionalTagSupport {
         if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
             try {
                 this.contentNodeCollection = Resource.getCurrentActivePage(req).getContent(
-                        this.contentNodeCollectionName);
+                    this.contentNodeCollectionName);
             }
             catch (RepositoryException e) {
                 if (log.isDebugEnabled()) {
@@ -165,8 +164,8 @@ public class IfEmpty extends ConditionalTagSupport {
                 this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
 
                 if ((this.nodeData == null)
-                        || !this.nodeData.isExist()
-                        || StringUtils.isEmpty(this.nodeData.getString())) {
+                    || !this.nodeData.isExist()
+                    || StringUtils.isEmpty(this.nodeData.getString())) {
                     return true;
                 }
             }
@@ -176,7 +175,8 @@ public class IfEmpty extends ConditionalTagSupport {
         else if (StringUtils.isEmpty(this.contentNodeName) && StringUtils.isNotEmpty(this.nodeDataName)) {
             if (this.actpage) {
                 this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
-            } else {
+            }
+            else {
                 this.contentNode = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
                 if (this.contentNode == null) {
                     this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
@@ -190,8 +190,8 @@ public class IfEmpty extends ConditionalTagSupport {
                 this.nodeData = this.contentNode.getNodeData(this.nodeDataName);
 
                 if ((this.nodeData == null)
-                        || !this.nodeData.isExist()
-                        || StringUtils.isEmpty(this.nodeData.getString())) {
+                    || !this.nodeData.isExist()
+                    || StringUtils.isEmpty(this.nodeData.getString())) {
                     return true;
                 }
             }

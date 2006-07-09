@@ -40,7 +40,7 @@ public final class Paragraph {
     private String templateType;
 
     private String description;
-    
+
     private String i18nBasename;
 
     /**
@@ -147,7 +147,6 @@ public final class Paragraph {
             .toString();
     }
 
-    
     /**
      * @return Returns the i18nBasename.
      */
@@ -155,7 +154,6 @@ public final class Paragraph {
         return this.i18nBasename;
     }
 
-    
     /**
      * @param basename The i18nBasename to set.
      */

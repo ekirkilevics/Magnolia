@@ -30,7 +30,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Use this servlet to spool static resources from the servlet context.
- *
  * @author Sameer Charles
  * @version 2.1
  */
@@ -48,7 +47,6 @@ public class Spool extends HttpServlet {
 
     /**
      * This makes browser and proxy caches work more effectively, reducing the load on server and network resources.
-     *
      * @param request HttpServletRequest
      * @return last modified time in miliseconds since 1st Jan 1970 GMT
      */
@@ -62,8 +60,7 @@ public class Spool extends HttpServlet {
 
     /**
      * All static resource requests are handled here.
-     *
-     * @param request  HttpServletRequest
+     * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @throws IOException for error in accessing the resource or the servlet output stream
      */
@@ -115,7 +112,6 @@ public class Spool extends HttpServlet {
 
     /**
      * Set content length. content type is set by the filters as defined in server/MIMEMappings.
-     *
      * @param resource File to be returned to the client
      * @param response HttpServletResponse
      */

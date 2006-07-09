@@ -139,11 +139,11 @@ public class WorkflowUtil {
     }
 
     public static void reject(String id, String comment) {
-        proceed(id,WorkflowConstants.ACTION_REJECT,comment);
+        proceed(id, WorkflowConstants.ACTION_REJECT, comment);
     }
 
     public static void cancel(String id, String comment) {
-        proceed(id,WorkflowConstants.ACTION_CANCEL,comment);
+        proceed(id, WorkflowConstants.ACTION_CANCEL, comment);
     }
 
     /**
@@ -205,17 +205,17 @@ public class WorkflowUtil {
             queryString.append(" or (@participant=\"group-");
             queryString.append(group);
             // FIXME
-            //queryString.append("\" and @assignTo!=\"");
-            //queryString.append(userName);
+            // queryString.append("\" and @assignTo!=\"");
+            // queryString.append(userName);
             queryString.append("\") ");
         }
         for (Iterator iter = roles.iterator(); iter.hasNext();) {
             Object role = iter.next();
-            //FIXME
+            // FIXME
             queryString.append(" or (@participant=\"role-");
             queryString.append(role);
-            //queryString.append("\" and @assignTo!=\"");
-            //queryString.append(userName);
+            // queryString.append("\" and @assignTo!=\"");
+            // queryString.append(userName);
             queryString.append("\") ");
         }
         queryString.append("]");

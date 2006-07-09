@@ -20,9 +20,10 @@ import info.magnolia.cms.gui.query.SearchQuery;
  * A model allowing queries.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public interface SearchableListModel extends ListModel {
+
     public SearchQuery getQuery();
+
     public void setQuery(SearchQuery query);
 }

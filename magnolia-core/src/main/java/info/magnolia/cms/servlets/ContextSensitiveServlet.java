@@ -27,7 +27,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Servlet which sets the context properly.
- *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -39,14 +38,16 @@ public abstract class ContextSensitiveServlet extends HttpServlet {
     Logger log = LoggerFactory.getLogger(ContextSensitiveServlet.class);
 
     /**
-     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
+     * javax.servlet.http.HttpServletResponse)
      */
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         initializeContext(req);
     }
 
     /**
-     * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest,
+     * javax.servlet.http.HttpServletResponse)
      */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         initializeContext(req);
@@ -55,13 +56,13 @@ public abstract class ContextSensitiveServlet extends HttpServlet {
     /**
      * Initialize Magnolia context. It creates a context and initialize the user only if these do not exist yet. <b>Note</b>:
      * the implementation may get changed
-     *
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {
         if (!MgnlContext.hasInstance()) {
             MgnlContext.initAsWebContext(request);
-        } else {
+        }
+        else {
             // this will happen if a virtual uri mapping is pointing again to a virtual uri
             if (log.isDebugEnabled()) {
                 log.debug("context of thread was already set");

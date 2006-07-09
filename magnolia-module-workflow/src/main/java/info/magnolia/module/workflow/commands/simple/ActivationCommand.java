@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
  * @author jackie
  */
 public class ActivationCommand extends MgnlCommand {
-    
+
     private static Logger log = LoggerFactory.getLogger(ActivationCommand.class);
 
     public boolean execute(Context ctx) {
@@ -44,12 +44,12 @@ public class ActivationCommand extends MgnlCommand {
             log.debug("recursive = " + recursive);
             log.debug("user = " + (ctx).getUser().getName());
         }
-        
+
         try {
             doActivate(repository, path, recursive);
         }
         catch (Exception e) {
-            log.error("cannot do activate:"+ e.getMessage());
+            log.error("cannot do activate:" + e.getMessage());
             return true;
         }
         log.info("exec successfully.");
@@ -72,8 +72,7 @@ public class ActivationCommand extends MgnlCommand {
         }
 
         Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), repository, ContentRepository
-            .getDefaultWorkspace(repository), rule);
+        syndicator.init(MgnlContext.getUser(), repository, ContentRepository.getDefaultWorkspace(repository), rule);
 
         String parentPath = StringUtils.substringBeforeLast(path, "/");
         if (StringUtils.isEmpty(parentPath)) {

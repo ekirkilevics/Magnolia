@@ -81,7 +81,8 @@ public class WebContextImpl extends AbstractContext implements WebContext {
             if (Authenticator.getSubject(request) == null) {
                 log.debug("JAAS Subject is null, returning Anonymous user");
                 this.user = Security.getUserManager().getUser(UserManager.ANONYMOUS_USER);
-            } else {
+            }
+            else {
                 this.user = Security.getUserManager().getUser(Authenticator.getSubject(request));
             }
         }
@@ -171,10 +172,10 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * @return parameter values
      */
     public Map getParameters() {
-        //getParameterMap() is returning multiple values!
+        // getParameterMap() is returning multiple values!
         Map map = new HashMap();
         Enumeration paramEnum = this.request.getParameterNames();
-        while(paramEnum.hasMoreElements()){
+        while (paramEnum.hasMoreElements()) {
             String name = (String) paramEnum.nextElement();
             map.put(name, this.request.getParameter(name));
         }
@@ -226,7 +227,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         switch (scope) {
             case Context.LOCAL_SCOPE:
                 Object obj = this.request.getAttribute(name);
-                if(obj == null){
+                if (obj == null) {
                     obj = this.getParameter(name);
                 }
                 return obj;
@@ -243,7 +244,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 return null;
         }
     }
-    
 
     /**
      * Remove an attribute.
@@ -266,11 +266,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 log.error("no illegal scope passed");
         }
     }
-    
+
     /**
      * Get a map represenation of the scope
      */
-    public final Map getAttributes(int scope){
+    public final Map getAttributes(int scope) {
         Map map = new HashMap();
         Enumeration keysEnum;
         switch (scope) {
@@ -279,7 +279,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 map.putAll(this.getParameters());
                 // attributes have higher priority
                 keysEnum = this.request.getAttributeNames();
-                while(keysEnum.hasMoreElements()){
+                while (keysEnum.hasMoreElements()) {
                     String key = (String) keysEnum.nextElement();
                     Object value = getAttribute(key, scope);
                     map.put(key, value);
@@ -291,7 +291,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                     return null;
                 }
                 keysEnum = httpsession.getAttributeNames();
-                while(keysEnum.hasMoreElements()){
+                while (keysEnum.hasMoreElements()) {
                     String key = (String) keysEnum.nextElement();
                     Object value = getAttribute(key, scope);
                     map.put(key, value);
@@ -305,7 +305,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         }
 
     }
-    
 
     /**
      * Avoid the call to this method where ever possible.

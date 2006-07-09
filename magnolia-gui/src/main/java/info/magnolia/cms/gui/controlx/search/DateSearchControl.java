@@ -12,12 +12,13 @@ import java.util.Date;
 
 import org.apache.commons.lang.time.FastDateFormat;
 
+
 /**
  * Special Date Search Control
  * @author philipp
  */
 public class DateSearchControl extends SearchControl {
-    
+
     /**
      * 
      */
@@ -29,7 +30,7 @@ public class DateSearchControl extends SearchControl {
     public DateSearchControl() {
         this.setRenderType(RENDER_TYPE);
     }
-    
+
     /**
      * @param definition
      * @param value
@@ -48,7 +49,7 @@ public class DateSearchControl extends SearchControl {
         if (this.getConstraint().equals(DateSearchQueryParameter.TODAY)) {
             date = new Date();
         }
-        else{
+        else {
             String value = getValue();
             try {
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
@@ -56,7 +57,7 @@ public class DateSearchControl extends SearchControl {
                 date = format.parse(value);
             }
             catch (ParseException e) {
-                try{
+                try {
                     DateFormat format = DateFormat.getDateInstance(FastDateFormat.SHORT, MgnlContext.getLocale());
                     date = format.parse(value);
                 }

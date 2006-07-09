@@ -62,8 +62,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class SimpleExchangeServlet extends HttpServlet {
 
@@ -183,7 +182,8 @@ public class SimpleExchangeServlet extends HttpServlet {
                 this.removeChildren(content, filter);
                 // import all child nodes
                 this.importOnExisting(topContentElement, data, hm, content);
-            } catch (ItemNotFoundException e) {
+            }
+            catch (ItemNotFoundException e) {
                 importFresh(topContentElement, data, hm, parentPath);
             }
         }
@@ -289,8 +289,7 @@ public class SimpleExchangeServlet extends HttpServlet {
         try {
             while (fileListIterator.hasNext()) {
                 Element fileElement = (Element) fileListIterator.next();
-                importResource(data, fileElement, hierarchyManager, existingContent
-                    .getHandle());
+                importResource(data, fileElement, hierarchyManager, existingContent.getHandle());
             }
             // use temporary transient store to extract top level node and copy properties
             hierarchyManager.createContent("/", uuid, ItemType.CONTENTNODE.toString());
@@ -332,8 +331,10 @@ public class SimpleExchangeServlet extends HttpServlet {
         String fileName = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
         // do actual import
         GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
-        hm.getWorkspace().getSession()
-                .importXML(parentPath, inputStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+        hm.getWorkspace().getSession().importXML(
+            parentPath,
+            inputStream,
+            ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         IOUtils.closeQuietly(inputStream);
         Iterator fileListIterator = resourceElement
             .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)

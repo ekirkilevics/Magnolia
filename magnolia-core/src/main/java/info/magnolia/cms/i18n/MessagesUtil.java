@@ -95,7 +95,7 @@ public class MessagesUtil {
         Messages msgs1 = MessagesManager.getMessages(basename);
         return chain(msgs1, msgs2);
     }
-    
+
     /**
      * @param string
      * @return
@@ -111,7 +111,7 @@ public class MessagesUtil {
      * @return
      */
     public static String javaScriptString(String msg) {
-        return StringUtils.replace(StringUtils.replace(msg, "'", "\\'"),"\n","\\n");
+        return StringUtils.replace(StringUtils.replace(msg, "'", "\\'"), "\n", "\\n");
     }
 
 }

@@ -27,6 +27,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /**
  * @author Vinzenz Wyser
  * @version $Revision$ ($Author$)
@@ -66,8 +67,7 @@ public class DialogEditWithButton extends DialogBox {
         return this.buttons;
     }
 
-   
-   /**
+    /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {

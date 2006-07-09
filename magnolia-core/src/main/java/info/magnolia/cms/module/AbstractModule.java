@@ -182,7 +182,7 @@ public abstract class AbstractModule implements Module {
      * @see info.magnolia.cms.module.Module#destroy()
      */
     public void destroy() {
-        
+
     }
 
     /**

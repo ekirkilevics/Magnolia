@@ -89,7 +89,7 @@ public class DialogMultiSelect extends DialogBox {
         if (StringUtils.isNotEmpty(chooseOnclick)) {
             Button choose = new Button();
             choose.setLabel(this.getMessage("buttons.choose")); //$NON-NLS-1$
-            choose.setOnclick(chooseOnclick); 
+            choose.setOnclick(chooseOnclick);
 
             choose.setSmall(true);
             return choose.getHtml();
@@ -163,9 +163,9 @@ public class DialogMultiSelect extends DialogBox {
     }
 
     public String getSaveInfo() {
-        Boolean renderSaveInfo =  BooleanUtils.toBooleanObject(this.getConfigValue("saveInfo"));
-        if(BooleanUtils.toBooleanDefaultIfNull(renderSaveInfo, true)){
-            ControlImpl dummy = new ControlImpl(this.getName(), (String)null);
+        Boolean renderSaveInfo = BooleanUtils.toBooleanObject(this.getConfigValue("saveInfo"));
+        if (BooleanUtils.toBooleanDefaultIfNull(renderSaveInfo, true)) {
+            ControlImpl dummy = new ControlImpl(this.getName(), (String) null);
             if (!isSaveAsList() && !isSaveAsJSON()) {
                 dummy.setValueType(ControlImpl.VALUETYPE_MULTIPLE);
             }

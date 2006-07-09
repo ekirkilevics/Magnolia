@@ -25,17 +25,17 @@ import info.magnolia.cms.security.User;
  * @version $Revision$ ($Author$)
  */
 public class SimpleContext extends AbstractMapBasedContext {
-    
+
     /**
      * The context used to get hierarchy managers or similar.
      */
     private Context ctx;
-    
+
     /**
      * Using the threads locale context for getting hierarchy managers or similar
      */
     public SimpleContext() {
-       this(MgnlContext.getInstance()); 
+        this(MgnlContext.getInstance());
     }
 
     /**

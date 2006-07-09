@@ -77,17 +77,17 @@ public abstract class PageMVCHandler extends MVCServletHandlerImpl {
         setParams(new RequestFormUtil(request, getForm()));
         setMsgs(MessagesManager.getMessages());
     }
-    
+
     /**
      * @see info.magnolia.cms.servlets.MVCServletHandlerImpl#init()
      */
     public void init() {
         super.init();
-        if(StringUtils.isEmpty(this.getCommand())){
+        if (StringUtils.isEmpty(this.getCommand())) {
             this.setCommand(COMMAND_SHOW);
         }
     }
-    
+
     /**
      * This is an empty implementation return the default show view.
      * @return the view name

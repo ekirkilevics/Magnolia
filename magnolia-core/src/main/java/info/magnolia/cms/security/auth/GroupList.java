@@ -16,11 +16,11 @@ import java.io.Serializable;
 import java.security.Principal;
 import java.util.Collection;
 
+
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
-public interface GroupList extends Principal, Serializable  {
+public interface GroupList extends Principal, Serializable {
 
     /**
      * Get name given to this principal
@@ -51,6 +51,5 @@ public interface GroupList extends Principal, Serializable  {
      * @param name
      */
     public boolean has(String name);
-
 
 }

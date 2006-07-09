@@ -36,8 +36,7 @@ import org.slf4j.LoggerFactory;
  * Class Aggregator is responsible to identify the request and gather content for the requested <code>Content </code>
  * object. its also a responsibilty of this class to place the aggregated object to the proper place in this context its
  * a HttpServletRequest which will hold this Content object for further processing.
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class Aggregator {
 
@@ -92,9 +91,10 @@ public class Aggregator {
                 // get versioned state
                 try {
                     requestedPage = requestedPage.getVersionedContent(request.getParameter(VERSION_NUMBER));
-                } catch (RepositoryException re) {
+                }
+                catch (RepositoryException re) {
                     log.debug(re.getMessage(), re);
-                    log.error("Unable to get versioned state, rendering current state of "+uri);
+                    log.error("Unable to get versioned state, rendering current state of " + uri);
                 }
             }
 

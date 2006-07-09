@@ -38,10 +38,10 @@ import org.apache.log4j.Logger;
 
 
 /**
- * DMS tree uses type contentNode as document. Type content is used as folder. The mime-type is used to render the documents icon.
+ * DMS tree uses type contentNode as document. Type content is used as folder. The mime-type is used to render the
+ * documents icon.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class DMSAdminTree extends AdminTreeMVCHandler {
 
@@ -70,7 +70,7 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
 
             view = super.saveValue();
             String saveName = request.getParameter("saveName"); //$NON-NLS-1$
-            
+
             if (saveName.equals("title")) {
                 String title = StringUtils.defaultString(request.getParameter("saveValue")); //$NON-NLS-1$
                 // set filename if this is a document
@@ -85,7 +85,7 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
                     log.error("can't set filename", e);
                 }
             }
-            
+
             // add a new version if this is a document
             if (node.isNodeType(ItemType.CONTENTNODE.getSystemName())) {
                 Document doc = new Document(node);
@@ -118,7 +118,7 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
             String name = super.rename(value);
 
             if (node.getNodeType().getName().equals(ItemType.CONTENTNODE.getSystemName())) {
-                NodeDataUtil.getOrCreate(node,"name").setValue(name);
+                NodeDataUtil.getOrCreate(node, "name").setValue(name);
                 node.save();
             }
 
@@ -178,6 +178,5 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
 
         return syndicator;
     }
-
 
 }

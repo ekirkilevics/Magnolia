@@ -14,14 +14,13 @@ package info.magnolia.cms.security.auth;
 
 /**
  * Plain text callback handler supporting Form based authentication
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class PlainTextCallbackHandler extends CredentialsCallbackHandler {
 
     /**
      * default
-     * */
+     */
     public PlainTextCallbackHandler() {
         // do not instanciate with this constructor
     }
@@ -29,7 +28,7 @@ public class PlainTextCallbackHandler extends CredentialsCallbackHandler {
     /**
      * @param name
      * @param pswd
-     * */
+     */
     public PlainTextCallbackHandler(String name, char[] pswd) {
         super(name, pswd);
     }

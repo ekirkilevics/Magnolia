@@ -13,15 +13,14 @@
 package info.magnolia.cms.security;
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public interface Group {
 
     /**
      * get name of this node
      * @return group name
-     * */
+     */
     public String getName();
 
     /**
@@ -29,7 +28,7 @@ public interface Group {
      * @param roleName
      * @throws UnsupportedOperationException if the implementation does not support writing
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
-     * */
+     */
     public void addRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
@@ -37,7 +36,7 @@ public interface Group {
      * @param groupName
      * @throws UnsupportedOperationException if the implementation does not support writing
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
-     * */
+     */
     public void addGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
@@ -45,7 +44,7 @@ public interface Group {
      * @param roleName
      * @throws UnsupportedOperationException if the implementation does not support writing
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
-     * */
+     */
     public void removeRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
@@ -53,7 +52,7 @@ public interface Group {
      * @param groupName
      * @throws UnsupportedOperationException if the implementation does not support writing
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
-     * */
+     */
     public void removeGroup(String groupName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
@@ -61,7 +60,7 @@ public interface Group {
      * @param roleName
      * @throws UnsupportedOperationException if the implementation does not exist
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
-     * */
+     */
     public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
 }

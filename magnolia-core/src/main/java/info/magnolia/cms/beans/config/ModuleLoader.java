@@ -166,7 +166,7 @@ public final class ModuleLoader {
             ShutdownManager.addShutdownTask(new ShutdownTask() {
 
                 public boolean execute(info.magnolia.context.Context context) {
-                	log.info("Shutting down module: "+m.getName());
+                    log.info("Shutting down module: " + m.getName());
                     m.destroy();
                     return true;
                 }
@@ -195,8 +195,8 @@ public final class ModuleLoader {
      */
     public Content getModulesNode() throws PathNotFoundException, RepositoryException, AccessDeniedException {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-        if(!hm.isExist("/"+MODULES_NODE)) {
-            hm.createContent("/",MODULES_NODE, ItemType.CONTENTNODE.getSystemName());
+        if (!hm.isExist("/" + MODULES_NODE)) {
+            hm.createContent("/", MODULES_NODE, ItemType.CONTENTNODE.getSystemName());
         }
         Content modulesNode = hm.getContent(MODULES_NODE);
         return modulesNode;

@@ -44,9 +44,9 @@ public class MailCommand implements Command {
             MgnlMailHandler handler = factory.getEmailHandler();
             log.info(MgnlContext.getParameters().toString());
 
-            String template = (String)ctx.get(MailConstants.ATTRIBUTE_TEMPLATE);
-            String to = (String)ctx.get(MailConstants.ATTRIBUTE_TO);
-            String cc = (String)ctx.get(MailConstants.ATTRIBUTE_CC);
+            String template = (String) ctx.get(MailConstants.ATTRIBUTE_TEMPLATE);
+            String to = (String) ctx.get(MailConstants.ATTRIBUTE_TO);
+            String cc = (String) ctx.get(MailConstants.ATTRIBUTE_CC);
 
             if (StringUtils.isNotEmpty(template)) {
                 log.info("Command using mail template: " + template);
@@ -57,11 +57,11 @@ public class MailCommand implements Command {
             }
             else {
                 log.info("command using static parameters");
-                String from = (String)ctx.get(MailConstants.ATTRIBUTE_FROM);
-                String type = (String)ctx.get(MailConstants.ATTRIBUTE_TYPE);
-                String subject = (String)ctx.get(MailConstants.ATTRIBUTE_SUBJECT);
-                String text = (String)ctx.get(MailConstants.ATTRIBUTE_TEXT);
-                MailAttachment attachment = (MailAttachment)ctx.get(MailConstants.ATTRIBUTE_ATTACHMENT);
+                String from = (String) ctx.get(MailConstants.ATTRIBUTE_FROM);
+                String type = (String) ctx.get(MailConstants.ATTRIBUTE_TYPE);
+                String subject = (String) ctx.get(MailConstants.ATTRIBUTE_SUBJECT);
+                String text = (String) ctx.get(MailConstants.ATTRIBUTE_TEXT);
+                MailAttachment attachment = (MailAttachment) ctx.get(MailConstants.ATTRIBUTE_ATTACHMENT);
 
                 MgnlEmail email = factory.getEmailFromType(type);
                 email.setFrom(from);
@@ -78,7 +78,7 @@ public class MailCommand implements Command {
             log.info("send mail successfully to:" + to);
         }
         catch (Exception e) {
-            log.error("Could not send email:"+e.getMessage());
+            log.error("Could not send email:" + e.getMessage());
         }
 
         return false;

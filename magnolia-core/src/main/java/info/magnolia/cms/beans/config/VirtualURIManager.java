@@ -91,9 +91,9 @@ public final class VirtualURIManager extends ObservedManager {
             Iterator it = list.iterator();
             while (it.hasNext()) {
                 Content container = (Content) it.next();
-                NodeData fromURI = NodeDataUtil.getOrCreate(container,"fromURI"); //$NON-NLS-1$
+                NodeData fromURI = NodeDataUtil.getOrCreate(container, "fromURI"); //$NON-NLS-1$
                 UrlPattern p = new SimpleUrlPattern(fromURI.getString());
-                cachedURImapping.put(p, new String[]{NodeDataUtil.getString(container,"toURI"),fromURI.getString()}); //$NON-NLS-1$
+                cachedURImapping.put(p, new String[]{NodeDataUtil.getString(container, "toURI"), fromURI.getString()}); //$NON-NLS-1$
             }
             log.info("Config : VirtualMap loaded - " + node.getHandle()); //$NON-NLS-1$
         }

@@ -74,7 +74,6 @@ public class IfExisting extends ConditionalTagSupport {
 
     /**
      * Set the actpage.
-     *
      * @param set
      */
     public void setActpage(boolean set) {
@@ -139,7 +138,8 @@ public class IfExisting extends ConditionalTagSupport {
         else if (StringUtils.isEmpty(this.contentNodeName) && StringUtils.isNotEmpty(this.nodeDataName)) {
             if (this.actpage) {
                 this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
-            } else {
+            }
+            else {
                 this.contentNode = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
                 if (this.contentNode == null) {
                     this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());

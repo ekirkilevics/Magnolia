@@ -115,7 +115,7 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
 
     /**
      * go through all roles and set ACL
-     * */
+     */
     private void addRoles(Content node, PrincipalCollection principalList, RoleList roleList) {
         HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
         try {
@@ -126,12 +126,14 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 Content role;
                 try {
                     role = rolesHierarchy.getContentByUUID(roleUUID);
-                } catch (ItemNotFoundException e) {
+                }
+                catch (ItemNotFoundException e) {
                     if (log.isDebugEnabled()) {
                         log.debug("Role does not exist", e);
                     }
                     continue;
-                } catch (IllegalArgumentException e) {
+                }
+                catch (IllegalArgumentException e) {
                     // this can happen if the roleUUID is not a valid uuid string
                     if (log.isDebugEnabled()) {
                         log.debug("Exception caught", e);
@@ -141,18 +143,21 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 roleList.add(role.getName());
                 this.setACL(role, principalList);
             }
-        } catch (PathNotFoundException e) {
+        }
+        catch (PathNotFoundException e) {
             log.debug(e.getMessage(), e);
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             log.error(re.getMessage(), re);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
 
     /**
      * go through all roles and set ACL
-     * */
+     */
     private void addGroups(Content node, PrincipalCollection principalList, GroupList groupList, RoleList roleList) {
         HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_GROUPS);
         try {
@@ -170,7 +175,8 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                     if (groupList.has(group.getName())) {
                         continue;
                     }
-                } catch (ItemNotFoundException e) {
+                }
+                catch (ItemNotFoundException e) {
                     if (log.isDebugEnabled()) {
                         log.debug("Group does not exist", e);
                     }
@@ -181,11 +187,14 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 // check for any sub groups
                 this.addGroups(group, principalList, groupList, roleList);
             }
-        } catch (PathNotFoundException e) {
+        }
+        catch (PathNotFoundException e) {
             log.debug(e.getMessage(), e);
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             log.error(re.getMessage(), re);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
         }
     }
@@ -240,7 +249,8 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                     acl.addPermission(permission);
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error(e.getMessage(), e);
         }
 

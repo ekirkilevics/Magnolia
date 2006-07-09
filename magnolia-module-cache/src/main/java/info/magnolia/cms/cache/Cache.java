@@ -27,7 +27,7 @@ public interface Cache {
     long getCreationTime(CacheKey key);
 
     void remove(CacheKey key);
-    
+
     void flush();
 
 }

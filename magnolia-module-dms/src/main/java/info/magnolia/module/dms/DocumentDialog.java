@@ -38,11 +38,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+
 /**
  * Handles the document upload and adds some special properties (for searching)
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class DocumentDialog extends ConfiguredDialog {
 
@@ -73,7 +73,8 @@ public class DocumentDialog extends ConfiguredDialog {
         Document.setCurrent(request, doc);
 
         // execute the js init code
-        Dialog dialog = new Dialog(){
+        Dialog dialog = new Dialog() {
+
             protected void drawHtmlPreSubsHead(Writer out) throws IOException {
                 super.drawHtmlPreSubsHead(out);
                 out.write("<script>");
@@ -82,13 +83,14 @@ public class DocumentDialog extends ConfiguredDialog {
             };
         };
 
-        if(StringUtils.isNotEmpty(this.version)){
+        if (StringUtils.isNotEmpty(this.version)) {
             storageNode = storageNode.getVersionedContent(this.version);
         }
-        
+
         dialog.init(request, response, storageNode, configNode);
 
-        dialog.addSub(new DialogControlImpl(){
+        dialog.addSub(new DialogControlImpl() {
+
             public void drawHtml(Writer out) throws IOException {
                 String str = "";
                 try {
@@ -101,7 +103,7 @@ public class DocumentDialog extends ConfiguredDialog {
             }
         });
 
-        if(StringUtils.isNotEmpty(this.version)){
+        if (StringUtils.isNotEmpty(this.version)) {
             dialog.setConfig("cancelLabel", "Close");
         }
 
@@ -115,7 +117,7 @@ public class DocumentDialog extends ConfiguredDialog {
         // check if this is a creation
         this.create = handler.getPath().endsWith("/mgnlNew");
 
-        if(this.create){
+        if (this.create) {
             // get the new name of the node
             info.magnolia.cms.beans.runtime.Document documentMaybeNull = form.getDocument("document");
             String name = documentMaybeNull != null ? documentMaybeNull.getFileName() : "file";
@@ -148,7 +150,7 @@ public class DocumentDialog extends ConfiguredDialog {
 
         try {
             // update the extension if changed
-            if(!form.getParameter("document_" + FileProperties.PROPERTY_EXTENSION).equals(doc.getFileExtension())){
+            if (!form.getParameter("document_" + FileProperties.PROPERTY_EXTENSION).equals(doc.getFileExtension())) {
                 doc.setFileExtension(form.getParameter("document_" + FileProperties.PROPERTY_EXTENSION));
             }
             doc.updateMetaData();
@@ -191,7 +193,8 @@ public class DocumentDialog extends ConfiguredDialog {
             super.renderHtml(view);
             // do not show the save button if this is an old version
             // or a not writeable node
-            if(StringUtils.isNotEmpty(this.version) || !(this.path.endsWith("mgnlNew") || this.getStorageNode().isGranted(Permission.WRITE))){
+            if (StringUtils.isNotEmpty(this.version)
+                || !(this.path.endsWith("mgnlNew") || this.getStorageNode().isGranted(Permission.WRITE))) {
                 // if this is view only
                 out.println("<script>mgnl.dms.DMSDialog.hideSaveButton()</script>");
             }

@@ -72,9 +72,11 @@ public class MgnlMailFactory extends ObservedManager {
     private static MgnlMailFactory factory = new MgnlMailFactory();
 
     private Map mailParameters;
+
     private List templates;
 
     private static Class mailHandlerClass;
+
     private String templatePath;
 
     private MgnlMailFactory() {
@@ -151,11 +153,12 @@ public class MgnlMailFactory extends ObservedManager {
     }
 
     protected void onRegister(Content node) {
-        if(node.getHandle().endsWith("templates")) {
-            log.info("Loading mail templates from node:"+node.getHandle());
+        if (node.getHandle().endsWith("templates")) {
+            log.info("Loading mail templates from node:" + node.getHandle());
             templates = listTemplatesFromRepository(node);
-        } else if(node.getHandle().endsWith("smtp")) {
-            log.info("Loading mail smptp settings from node:"+node.getHandle());
+        }
+        else if (node.getHandle().endsWith("smtp")) {
+            log.info("Loading mail smptp settings from node:" + node.getHandle());
             initMailParameter(node);
         }
 
@@ -195,7 +198,6 @@ public class MgnlMailFactory extends ObservedManager {
         return this.templates;
     }
 
-
     /**
      * List the templates stored in the repository
      * @return <code>ArrayList</code> of <code>String</code> containing the template name
@@ -208,7 +210,7 @@ public class MgnlMailFactory extends ObservedManager {
             while (iter.hasNext()) {
                 Content temp = (Content) iter.next();
                 String templateName = temp.getName();
-                log.info("Loading template:"+templateName);
+                log.info("Loading template:" + templateName);
                 list.add(templateName);
             }
         }
@@ -239,13 +241,13 @@ public class MgnlMailFactory extends ObservedManager {
 
                 protected PasswordAuthentication getPasswordAuthentication() {
                     return new PasswordAuthentication(
-                            (String) MgnlMailFactory.this.mailParameters.get(SMTP_USER),
-                            (String) MgnlMailFactory.this.mailParameters.get(SMTP_PASSWORD));
+                        (String) MgnlMailFactory.this.mailParameters.get(SMTP_USER),
+                        (String) MgnlMailFactory.this.mailParameters.get(SMTP_PASSWORD));
                 }
             };
         }
         props.put("mail.smtp.sendpartial", StringUtils.defaultString((String) this.mailParameters
-                .get(SMTP_SEND_PARTIAL)));
+            .get(SMTP_SEND_PARTIAL)));
         return Session.getInstance(props, auth);
     }
 

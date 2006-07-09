@@ -177,15 +177,15 @@ public abstract class DialogControlImpl implements DialogControl {
                 this.value = this.getWebsiteNode().getNodeData(this.getName()).getString();
             }
             RequestFormUtil params = new RequestFormUtil(request);
-            if(params.getParameter(this.getName()) != null){
+            if (params.getParameter(this.getName()) != null) {
                 this.value = params.getParameter(this.getName());
             }
-            
+
             if (this.value == null && StringUtils.isNotEmpty(getConfigValue("defaultValue"))) {
                 return this.getMessage(this.getConfigValue("defaultValue"));
             }
 
-            if(this.value == null){
+            if (this.value == null) {
                 this.value = StringUtils.EMPTY;
             }
         }
@@ -314,8 +314,8 @@ public abstract class DialogControlImpl implements DialogControl {
                 if (StringUtils.equals(((DialogControlImpl) control).getName(), name)) {
                     return (DialogControlImpl) control;
                 }
-                found = ((DialogControlImpl)control).getSub(name);
-                if(found != null){
+                found = ((DialogControlImpl) control).getSub(name);
+                if (found != null) {
                     return found;
                 }
             }
@@ -361,18 +361,18 @@ public abstract class DialogControlImpl implements DialogControl {
                         this.values.add(data.getString());
                     }
                 }
-                catch(PathNotFoundException e){
+                catch (PathNotFoundException e) {
                     // not yet existing: OK
                 }
                 catch (RepositoryException re) {
                     log.error("can't set values", re);
                 }
             }
-            
-            if(request != null){
+
+            if (request != null) {
                 RequestFormUtil params = new RequestFormUtil(request);
                 String[] values = params.getParameterValues(this.getName());
-                if(values != null && values.length > 0){
+                if (values != null && values.length > 0) {
                     this.values.clear();
                     for (int i = 0; i < values.length; i++) {
                         String value = values[i];
@@ -451,11 +451,8 @@ public abstract class DialogControlImpl implements DialogControl {
             if (log.isDebugEnabled()) {
                 log.debug("Loading control \"" + controlType + "\" for " + configNode.getHandle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
-            DialogControl dialogControl = DialogFactory.loadDialog(
-                request,
-                response,
-                this.getWebsiteNode(),
-                configNode);
+            DialogControl dialogControl = DialogFactory
+                .loadDialog(request, response, this.getWebsiteNode(), configNode);
             this.addSub(dialogControl);
         }
     }
@@ -507,14 +504,14 @@ public abstract class DialogControlImpl implements DialogControl {
     public String getMessage(String key, Object[] args) {
         return this.getMessages().getWithDefault(key, args, key);
     }
-    
+
     /**
      * If the validation fails the code will set a message in the context using the AlertUtil.
      * @return true if valid
      */
-    public boolean validate(){
-        if(this.isRequired()){
-            if(StringUtils.isEmpty(this.getValue()) && this.getValues().size() == 0){
+    public boolean validate() {
+        if (this.isRequired()) {
+            if (StringUtils.isEmpty(this.getValue()) && this.getValues().size() == 0) {
                 String name = this.getMessage(this.getLabel());
                 AlertUtil.setMessage(this.getMessage("dialogs.validation.required", new Object[]{name}));
                 return false;
@@ -522,12 +519,12 @@ public abstract class DialogControlImpl implements DialogControl {
         }
         for (Iterator iter = this.getSubs().iterator(); iter.hasNext();) {
             DialogControl sub = (DialogControl) iter.next();
-            if(sub instanceof DialogControlImpl){
-                if(!((DialogControlImpl)sub).validate()){
+            if (sub instanceof DialogControlImpl) {
+                if (!((DialogControlImpl) sub).validate()) {
                     return false;
                 }
             }
-            
+
         }
         return true;
     }
@@ -537,15 +534,14 @@ public abstract class DialogControlImpl implements DialogControl {
      * @return
      */
     public boolean isRequired() {
-        if(BooleanUtils.toBoolean(this.getConfigValue("required"))){
+        if (BooleanUtils.toBoolean(this.getConfigValue("required"))) {
             return true;
         }
         return false;
     }
-    
+
     public void setRequired(boolean required) {
         this.setConfig("required", BooleanUtils.toStringTrueFalse(required));
     }
-    
 
 }

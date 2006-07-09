@@ -49,6 +49,7 @@ import org.apache.log4j.Logger;
 import org.apache.tools.zip.ZipEntry;
 import org.apache.tools.zip.ZipFile;
 
+
 /**
  * Upload a zip file
  * @author philipp
@@ -208,9 +209,9 @@ public class ZipUploadView {
         InputStream stream = zip.getInputStream(entry);
         long size = entry.getSize();
 
-        log.info("import:" + node.getHandle() + " free memory: " + Runtime.getRuntime().freeMemory()/1024 + "k");
+        log.info("import:" + node.getHandle() + " free memory: " + Runtime.getRuntime().freeMemory() / 1024 + "k");
 
-        try{
+        try {
             info.magnolia.module.dms.beans.Document doc = new info.magnolia.module.dms.beans.Document(node);
             // set all the information
             doc.setFile(label, extension, stream, size);
@@ -219,7 +220,7 @@ public class ZipUploadView {
             // add version (first)
             doc.addVersion();
         }
-        catch(Throwable e){
+        catch (Throwable e) {
             // FIXME
             // this is done for debuging reasons: we continou the execution to see if it heals
             log.error("can't import file", e);

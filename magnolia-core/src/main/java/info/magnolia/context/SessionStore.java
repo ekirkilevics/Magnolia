@@ -122,7 +122,7 @@ final class SessionStore {
             try {
                 hm.init(getSession(request, repositoryID, workspaceID).getRootNode());
                 AccessManager am = getAccessManager(request, repositoryID, workspaceID);
-                hm.setAccessManager(am); 
+                hm.setAccessManager(am);
 
                 if (httpSession != null) {
                     httpSession.setAttribute(ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID, hm); //$NON-NLS-1$

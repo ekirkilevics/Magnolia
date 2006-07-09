@@ -14,6 +14,7 @@ package info.magnolia.cms.module;
 
 import org.apache.commons.lang.exception.NestableException;
 
+
 /**
  * If the ModuleFactory can't register a module
  * @author philipp
@@ -26,19 +27,19 @@ public class RegisterException extends NestableException {
      */
     private static final long serialVersionUID = 222L;
 
-	public RegisterException() {
-		super();
-	}
+    public RegisterException() {
+        super();
+    }
 
-	public RegisterException(String arg0, Throwable arg1) {
-		super(arg0, arg1);
-	}
+    public RegisterException(String arg0, Throwable arg1) {
+        super(arg0, arg1);
+    }
 
-	public RegisterException(String arg0) {
-		super(arg0);
-	}
+    public RegisterException(String arg0) {
+        super(arg0);
+    }
 
-	public RegisterException(Throwable arg0) {
-		super(arg0);
-	}
+    public RegisterException(Throwable arg0) {
+        super(arg0);
+    }
 }

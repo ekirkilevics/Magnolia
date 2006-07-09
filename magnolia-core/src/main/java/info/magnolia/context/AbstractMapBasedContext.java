@@ -15,47 +15,47 @@ package info.magnolia.context;
 import java.util.HashMap;
 import java.util.Map;
 
+
 /**
  * This is a simple Map based implementation. Ignores scopes!
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public abstract class AbstractMapBasedContext extends AbstractContext {
-    
+
     /**
      * The map containing the values
      */
     private Map map = new HashMap();
-    
+
     /**
      * Use the Map.put()
      */
     public void setAttribute(String name, Object value, int scope) {
         this.map.put(name, value);
     }
-    
+
     /**
      * Use the Map.get()
      */
     public Object getAttribute(String name, int scope) {
         return this.map.get(name);
     }
-    
+
     /**
      * use the Map.remove()
      */
     public void removeAttribute(String name, int scope) {
         this.map.remove(name);
     }
-    
+
     /**
      * Ignore scope and return the inner map
      */
     public Map getAttributes(int scope) {
         return this.getAttributes();
     }
-    
+
     /**
      * Returns the inner map
      */

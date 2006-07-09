@@ -44,7 +44,7 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision$ ($Author$)
  */
 public class DMSSearchList extends AbstractSimpleSearchList {
-    
+
     protected Messages msgs = MessagesUtil.chainWithDefault("info.magnolia.module.dms.messages");
 
     /**
@@ -72,32 +72,37 @@ public class DMSSearchList extends AbstractSimpleSearchList {
         String repository = DMSModule.getInstance().getRepository();
         return new DMSSearchListModel(repository);
     }
-    
+
     /**
      * @see com.obinary.magnolia.professional.lists.AbstractAdvancedSearchList#configureList(info.magnolia.cms.gui.controlx.list.ListControl)
      */
     public void configureList(ListControl list) {
 
         // all this should be read from the dialog
-        list.addColumn(new ListColumn(){
+        list.addColumn(new ListColumn() {
+
             {
                 setName("name");
                 setColumnName("name");
                 setLabel(msgs.get("dms.list.url"));
-                setWidth("200");        
+                setWidth("200");
             }
-            
+
             public String getIcon() {
                 Document doc = new Document((Content) this.getListControl().getIteratorValueObject());
                 return doc.getMimeTypeIcon();
             }
 
             public String render() {
-                return "<span style=\"vertical-align: middle\"><img src=\"" + MgnlContext.getContextPath() + this.getIcon() + "\"/></span>" + this.getValue();
+                return "<span style=\"vertical-align: middle\"><img src=\""
+                    + MgnlContext.getContextPath()
+                    + this.getIcon()
+                    + "\"/></span>"
+                    + this.getValue();
             }
-            
+
         });
-        
+
         list.addColumn(new ListColumn("type", msgs.get("dms.list.type"), "200", true));
         list.addColumn(new ListColumn("title", msgs.get("dms.list.title"), "200", true));
         list.addColumn(new ListColumn("modificationDate", msgs.get("dms.list.date"), "200", true));
@@ -110,7 +115,9 @@ public class DMSSearchList extends AbstractSimpleSearchList {
         list.setRenderer(new AdminListControlRenderer() {
 
             public String onSelect(ListControl list, Integer index) {
-                String str = "mgnl.dms.DMS.selectedPath = '" + ((Content)list.getIteratorValueObject()).getHandle() + "';";
+                String str = "mgnl.dms.DMS.selectedPath = '"
+                    + ((Content) list.getIteratorValueObject()).getHandle()
+                    + "';";
                 str += "mgnl.dms.DMS.selectedIsFolder = false;";
                 str += super.onSelect(list, index);
                 return str;
@@ -123,25 +130,28 @@ public class DMSSearchList extends AbstractSimpleSearchList {
      */
     public SearchQuery getQuery() {
         SearchQuery query = new SearchQuery();
-        if(StringUtils.isNotEmpty(this.getSearchStr())){
-            SearchQueryExpression exp = new StringSearchQueryParameter("*", this.getSearchStr(),StringSearchQueryParameter.CONTAINS);
+        if (StringUtils.isNotEmpty(this.getSearchStr())) {
+            SearchQueryExpression exp = new StringSearchQueryParameter(
+                "*",
+                this.getSearchStr(),
+                StringSearchQueryParameter.CONTAINS);
             query.setRootExpression(exp);
         }
         return query;
     }
-    
+
     /**
      * Used for the advanced search only
      */
     public SearchConfig getSearchConfig() {
         return null;
     }
-    
+
     /**
      * The very basic context menu used in the list.
      */
     public void configureContextMenu(ContextMenu menu) {
-        
+
         ContextMenuItem menuEditDocument = new ContextMenuItem("edit");
         menuEditDocument.setLabel(msgs.get("dms.menu.edit"));
         menuEditDocument.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/document_edit.gif");
@@ -167,7 +177,7 @@ public class DMSSearchList extends AbstractSimpleSearchList {
         menu.addMenuItem(null); // line
         menu.addMenuItem(menuVersions);
     }
-    
+
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#configureFunctionBar(info.magnolia.cms.gui.control.FunctionBar)
      */
@@ -176,12 +186,12 @@ public class DMSSearchList extends AbstractSimpleSearchList {
         bar.setSearchable(true);
         bar.setSearchStr(this.getSearchStr());
         bar.setOnSearchFunction("mgnl.dms.DMS.simpleSearch");
-        
+
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("edit")));
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("navigate")));
         bar.addMenuItem(null);
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("versions")));
-        
+
     }
 
 }

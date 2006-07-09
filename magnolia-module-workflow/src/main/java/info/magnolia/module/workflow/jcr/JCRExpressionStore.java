@@ -43,9 +43,9 @@ import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * the expresion store using JCR
- * 
  * @author jackie
  */
 public class JCRExpressionStore extends AbstractExpressionStore {
@@ -59,7 +59,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     HierarchyManager hm;
 
     public void init(final String serviceName, final ApplicationContext context, final java.util.Map serviceParams)
-            throws ServiceException {
+        throws ServiceException {
         super.init(serviceName, context, serviceParams);
         this.hm = ContentRepository.getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
         if (this.hm == null) {
@@ -89,7 +89,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 serializeExpressionAsXml(ct, fe);
                 hm.save();
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("store exception failed,", e);
         }
     }
@@ -114,7 +115,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                     hm.save();
                 }
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("unstore exception failed,", e);
         }
 
@@ -168,7 +170,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 decode.setApplicationContext(getContext());
                 return decode;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             // ignore. The expression cannot be found. This is reported to the
             // calling method
         }
@@ -190,7 +193,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     public synchronized Iterator contentIterator(Class assignClass) {
         try {
             return new StoreIterator(assignClass);
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Could not get a content iterator");
             return null;
         }
@@ -206,20 +210,21 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             Query query = qm.createQuery(WorkflowConstants.STORE_ITERATOR_QUERY, Query.SQL);
             QueryResult qr = query.execute();
             return qr.getContent().size();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             log.error("Error while getting the size of the expression store:" + e.getMessage());
             return -1;
         }
     }
 
     /**
-     * 'lightweight' storeIterator. The previous version were stuffing all the
-     * expression within a collection and returning an iterator on it.
+     * 'lightweight' storeIterator. The previous version were stuffing all the expression within a collection and
+     * returning an iterator on it.
      * <p>
-     * The remainaing question is : what's behind Magnolia's Content.iterator()
-     * method ?
+     * The remainaing question is : what's behind Magnolia's Content.iterator() method ?
      */
     protected final class StoreIterator implements Iterator {
+
         //
         // FIELDS
 
@@ -268,7 +273,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
                 return fe;
 
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 return null;
             }
         }

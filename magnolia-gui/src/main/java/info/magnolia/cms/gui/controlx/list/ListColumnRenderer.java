@@ -19,21 +19,21 @@ import info.magnolia.cms.util.DateUtil;
 import java.util.Calendar;
 import java.util.Date;
 
+
 /**
  * Renders a column in a list.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class ListColumnRenderer implements Renderer {
 
     public String render(Control control) {
         ListColumn column = (ListColumn) control;
         Object val = column.getValue();
-        if(val instanceof Calendar || val instanceof Date){
+        if (val instanceof Calendar || val instanceof Date) {
             return DateUtil.formatDateTime(val);
         }
-        else{
+        else {
             return val.toString();
         }
     }

@@ -130,7 +130,7 @@ public class ProviderImpl implements Provider {
      * @see info.magnolia.repository.Provider#init(info.magnolia.repository.RepositoryMapping)
      */
     public void init(RepositoryMapping repositoryMapping) throws RepositoryNotInitializedException {
-        checkXmlSettings(); 
+        checkXmlSettings();
 
         this.repositoryMapping = repositoryMapping;
         /* connect to repository */
@@ -183,6 +183,7 @@ public class ProviderImpl implements Provider {
 
         if (addShutdownTask) {
             ShutdownManager.addShutdownTask(new ShutdownTask() {
+
                 public boolean execute(info.magnolia.context.Context context) {
                     log.info("Shutting down repository bound to '{}'", bindName);
 
@@ -226,10 +227,10 @@ public class ProviderImpl implements Provider {
             workspace.getNamespaceRegistry().getURI(namespacePrefix);
         }
         catch (NamespaceException e) {
-        	if (log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.debug(e.getMessage());
             }
-			log.info("registering prefix [{}] with uri {}", namespacePrefix, uri); //$NON-NLS-1$
+            log.info("registering prefix [{}] with uri {}", namespacePrefix, uri); //$NON-NLS-1$
             workspace.getNamespaceRegistry().registerNamespace(namespacePrefix, uri);
         }
     }
@@ -265,8 +266,8 @@ public class ProviderImpl implements Provider {
      */
     public void registerNodeTypes(InputStream xmlStream) throws RepositoryException {
         SimpleCredentials credentials = new SimpleCredentials(
-                ContentRepository.REPOSITORY_USER,
-                ContentRepository.REPOSITORY_PSWD.toCharArray());
+            ContentRepository.REPOSITORY_USER,
+            ContentRepository.REPOSITORY_PSWD.toCharArray());
         Session jcrSession = this.repository.login(credentials);
         Workspace workspace = jcrSession.getWorkspace();
 
@@ -314,7 +315,6 @@ public class ProviderImpl implements Provider {
 
         }
     }
-
 
     /**
      * @param configuration
@@ -395,8 +395,8 @@ public class ProviderImpl implements Provider {
     public boolean registerWorkspace(String workspaceName) throws RepositoryException {
         // check if workspace already exists
         SimpleCredentials credentials = new SimpleCredentials(
-                ContentRepository.REPOSITORY_USER,
-                ContentRepository.REPOSITORY_PSWD.toCharArray());
+            ContentRepository.REPOSITORY_USER,
+            ContentRepository.REPOSITORY_PSWD.toCharArray());
         Session jcrSession = this.repository.login(credentials);
         WorkspaceImpl defaultWorkspace = (WorkspaceImpl) jcrSession.getWorkspace();
         String[] workspaceNames = defaultWorkspace.getAccessibleWorkspaceNames();

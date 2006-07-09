@@ -46,11 +46,11 @@ public class DialogHandlerManager extends ObservedManager {
 
     private static final String PARAGRAPH_EDIT_DIALOG = "info.magnolia.module.admininterface.dialogs.ParagraphEditDialog";
 
-	private static final String CLASS = "class";
+    private static final String CLASS = "class";
 
-	private static final String ND_NAME = "name";
+    private static final String ND_NAME = "name";
 
-	/**
+    /**
      * Logger
      */
     private Logger log = LoggerFactory.getLogger(DialogHandlerManager.class);
@@ -77,10 +77,8 @@ public class DialogHandlerManager extends ObservedManager {
             // if this paragraph is used from a dialog register it under the name of the paragraph
             registerAsParagraphDialog(node.getHandle(), dialog);
 
-            String name = dialog.getNodeData(ND_NAME).getString(); 
-            String className = NodeDataUtil.getString(
-                dialog,
-                CLASS, PARAGRAPH_EDIT_DIALOG); 
+            String name = dialog.getNodeData(ND_NAME).getString();
+            String className = NodeDataUtil.getString(dialog, CLASS, PARAGRAPH_EDIT_DIALOG);
             try {
                 // there are paragraphs dialogs without a name!
                 if (StringUtils.isNotEmpty(name)) {
@@ -115,7 +113,7 @@ public class DialogHandlerManager extends ObservedManager {
                 || StringUtils.equals(paragraphDialogName, dialogName)) {
                 Class handler = ParagraphEditDialog.class;
 
-                String className = dialog.getNodeData(CLASS).getString(); 
+                String className = dialog.getNodeData(CLASS).getString();
                 if (StringUtils.isNotEmpty(className)) {
                     try {
                         handler = Class.forName(className);
@@ -136,10 +134,10 @@ public class DialogHandlerManager extends ObservedManager {
     }
 
     protected void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
-    	if (log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Registering dialog handler [{}]", name); //$NON-NLS-1$ 
         }
-		// remember the uuid for a reload
+        // remember the uuid for a reload
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
     }
 

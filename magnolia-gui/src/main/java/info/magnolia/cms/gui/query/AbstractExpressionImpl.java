@@ -13,25 +13,24 @@
 package info.magnolia.cms.gui.query;
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public abstract class AbstractExpressionImpl implements SearchQueryExpression {
 
     /**
      * previous pointer
-     * */
+     */
     private SearchQueryExpression left;
 
     /**
      * next pointer
-     * */
+     */
     private SearchQueryExpression right;
 
     /**
      * get left expression
      * @return object on left
-     * */
+     */
     public SearchQueryExpression getLeft() {
         return this.left;
     }
@@ -39,7 +38,7 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
     /**
      * set left expression
      * @param left object on left
-     * */
+     */
     public void setleft(SearchQueryExpression left) {
         this.left = left;
     }
@@ -47,15 +46,15 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
     /**
      * checks if has left
      * @return true if left object exist
-     * */
+     */
     public boolean hasLeft() {
-        return (this.getLeft()!=null);
+        return (this.getLeft() != null);
     }
 
     /**
      * get right expression
      * @return object on right
-     * */
+     */
     public SearchQueryExpression getRight() {
         return this.right;
     }
@@ -63,7 +62,7 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
     /**
      * set right expression
      * @param right object on right
-     * */
+     */
     public void setRight(SearchQueryExpression right) {
         this.right = right;
     }
@@ -71,9 +70,9 @@ public abstract class AbstractExpressionImpl implements SearchQueryExpression {
     /**
      * checks if has right
      * @return true if right object exist
-     * */
+     */
     public boolean hasRight() {
-        return (this.getRight()!=null);
+        return (this.getRight() != null);
     }
 
 }

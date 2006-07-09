@@ -13,65 +13,64 @@
 package info.magnolia.cms.gui.controlx.list;
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public interface ListModel {
 
     /**
      * get ListModelIterator
      * @return iterator
-     * */
+     */
     public ListModelIterator iterator();
 
     /**
      * set sort on field name
      * @param name
-     * */
+     */
     public void setSortBy(String name);
 
     /**
      * set sort on field name
      * @param name
      * @param order
-     * */
+     */
     public void setSortBy(String name, String order);
 
     /**
      * set group on field name
      * @param name
-     * */
+     */
     public void setGroupBy(String name);
 
     /**
      * set group on field name
      * @param name
      * @param order
-     * */
+     */
     public void setGroupBy(String name, String order);
 
     /**
      * get sort on field name
      * @return String field name
-     * */
+     */
     public String getSortBy();
 
     /**
      * get sort by ordering
      * @return order ('ASCENDING' | 'DESCENDING')
-     * */
+     */
     public String getSortByOrder();
 
     /**
      * get group on field name
      * @return String field name
-     * */
+     */
     public String getGroupBy();
 
     /**
      * get group by ordering
      * @return order ('ASCENDING' | 'DESCENDING')
-     * */
+     */
     public String getGroupByOrder();
 
 }

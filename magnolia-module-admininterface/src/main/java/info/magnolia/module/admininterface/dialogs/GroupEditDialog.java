@@ -17,9 +17,9 @@ import info.magnolia.cms.core.Content;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class GroupEditDialog extends UserEditDialog {
 
@@ -40,7 +40,6 @@ public class GroupEditDialog extends UserEditDialog {
 
     /**
      * Write ACL entries under the given node
-     *
      * @param node under which ACL for all workspaces needs to be created
      */
     protected void writeACL(Content node) {

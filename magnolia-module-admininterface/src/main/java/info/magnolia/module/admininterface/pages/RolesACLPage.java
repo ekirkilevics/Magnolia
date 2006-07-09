@@ -38,8 +38,10 @@ import org.apache.commons.lang.StringUtils;
  */
 public class RolesACLPage extends SimplePageMVCHandler {
 
-    public static int TYPE_ALL = 3;  // 11 : subs and this
+    public static int TYPE_ALL = 3; // 11 : subs and this
+
     public static int TYPE_SUBS = 2; // 10
+
     public static int TYPE_THIS = 1; // 01
 
     /**
@@ -50,7 +52,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
     /**
      * Do not show this repositories in the dialog. A module may change this list
      */
-    public static List excludedRepositories = new ArrayList(Arrays.asList(new String[] {"mgnlVersion", "mgnlSystem"}));
+    public static List excludedRepositories = new ArrayList(Arrays.asList(new String[]{"mgnlVersion", "mgnlSystem"}));
 
     // todo: permission global available somewhere
     private static final long PERMISSION_ALL = Permission.ALL;
@@ -87,7 +89,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
             accessType.setOptions(escapeJs(msgs.get("roles.edit.subPages")), String.valueOf(TYPE_SUBS)); //$NON-NLS-1$ 
         }
         else {
-            if(repository.equals(ContentRepository.CONFIG)){
+            if (repository.equals(ContentRepository.CONFIG)) {
                 accessType.setOptions(escapeJs(msgs.get("roles.edit.thisNode")), String.valueOf(TYPE_THIS)); //$NON-NLS-1$ 
             }
             accessType.setOptions(escapeJs(msgs.get("roles.edit.thisAndSubNodes")), String.valueOf(TYPE_ALL)); //$NON-NLS-1$ 
@@ -117,14 +119,18 @@ public class RolesACLPage extends SimplePageMVCHandler {
         // tr
         html.append("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-            + accessRight.getHtml() + "</td>"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON
+            + "\">" //$NON-NLS-1$
+            + accessRight.getHtml()
+            + "</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"mgnlDialogBoxInput\"></td>"); //$NON-NLS-1$
 
         if (!repository.equals(ContentRepository.USERS) && !repository.equals(ContentRepository.USER_ROLES)) {
             html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-                + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-                + accessType.getHtml() + "</td>"); //$NON-NLS-1$
+                + CssConstants.CSSCLASS_EDITWITHBUTTON
+                + "\">" //$NON-NLS-1$
+                + accessType.getHtml()
+                + "</td>"); //$NON-NLS-1$
             html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         }
         else {
@@ -133,16 +139,22 @@ public class RolesACLPage extends SimplePageMVCHandler {
         }
 
         html.append("<td width=\"100%\"class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-            + path.getHtml() + "</td>"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON
+            + "\">" //$NON-NLS-1$
+            + path.getHtml()
+            + "</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-            + choose.getHtml() + "</td>"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON
+            + "\">" //$NON-NLS-1$
+            + choose.getHtml()
+            + "</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">" //$NON-NLS-1$
-            + delete.getHtml() + "</td>"); //$NON-NLS-1$
+            + CssConstants.CSSCLASS_EDITWITHBUTTON
+            + "\">" //$NON-NLS-1$
+            + delete.getHtml()
+            + "</td>"); //$NON-NLS-1$
         html.append("</tr></table>"); //$NON-NLS-1$
 
         return html.toString();
@@ -231,9 +243,12 @@ public class RolesACLPage extends SimplePageMVCHandler {
 
         // create the dynamicTable
         out.println(dynamicTableName + " = new MgnlDynamicTable('" //$NON-NLS-1$
-            + tableName + "',document.mgnlFormMain." //$NON-NLS-1$
-            + hiddenFieldName + ", aclGetNewPermissionObject, aclGetPermissionObject, acl" //$NON-NLS-1$
-            + repository + "RenderFunction, null);"); //$NON-NLS-1$
+            + tableName
+            + "',document.mgnlFormMain." //$NON-NLS-1$
+            + hiddenFieldName
+            + ", aclGetNewPermissionObject, aclGetPermissionObject, acl" //$NON-NLS-1$
+            + repository
+            + "RenderFunction, null);"); //$NON-NLS-1$
 
         // add existing acls to table (by js, so the same mechanism as at
         // adding rows can be used)
@@ -249,13 +264,13 @@ public class RolesACLPage extends SimplePageMVCHandler {
     private void addExistingAclToTable(PrintWriter out, Content role, String dynamicTableName, String repository) {
         // keeps acls per path
         ACLS acls = new ACLS();
-        
+
         Content aclsNode = ContentUtil.getContent(role, "acl_" + repository); //$NON-NLS-1$
         if (aclsNode == null || aclsNode.getChildren().size() == 0) {
             out.println(dynamicTableName + ".addNew();"); //$NON-NLS-1$
             return;
         }
-        
+
         Iterator it = aclsNode.getChildren().iterator();
         while (it.hasNext()) {
             Content c = (Content) it.next();
@@ -263,13 +278,16 @@ public class RolesACLPage extends SimplePageMVCHandler {
             String accessRight = c.getNodeData("permissions").getString(); //$NON-NLS-1$
             acls.register(path, Integer.valueOf(accessRight).intValue());
         }
-        
+
         for (Iterator iter = acls.values().iterator(); iter.hasNext();) {
             ACL acl = (ACL) iter.next();
             out.println(dynamicTableName + ".add({accessRight:" //$NON-NLS-1$
-                + acl.accessRight + ",accessType:'" //$NON-NLS-1$
-                + acl.type + "',path:'" //$NON-NLS-1$
-                + acl.path + "'});"); //$NON-NLS-1$
+                + acl.accessRight
+                + ",accessType:'" //$NON-NLS-1$
+                + acl.type
+                + "',path:'" //$NON-NLS-1$
+                + acl.path
+                + "'});"); //$NON-NLS-1$
         }
     }
 
@@ -300,36 +318,40 @@ public class RolesACLPage extends SimplePageMVCHandler {
     private static String escapeJs(String value) {
         return StringUtils.replace(value, "'", "\\'");
     }
-    
+
     /**
      * A concrete gui acl
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
-    private class ACL{
+    private class ACL {
+
         int type = 0;
+
         String path;
+
         int accessRight;
-        
-        void registerEntry(String path){
-            if(path.equals("/*")){
+
+        void registerEntry(String path) {
+            if (path.equals("/*")) {
                 type = TYPE_ALL;
             }
-            else if(path.endsWith("/*")){
+            else if (path.endsWith("/*")) {
                 type = type | TYPE_SUBS;
             }
-            else{
+            else {
                 type = type | TYPE_THIS;
             }
         }
     }
-    
+
     /**
      * Used to create the gui values out of the entries in the repository
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
-    private class ACLS extends ListOrderedMap{
+    private class ACLS extends ListOrderedMap {
+
         /**
          * 
          */
@@ -340,20 +362,20 @@ public class RolesACLPage extends SimplePageMVCHandler {
          * @param path the not cleaned path
          * @param accessRight the access right
          */
-        void register(String path, int accessRight){
+        void register(String path, int accessRight) {
             String cleanPath = StringUtils.removeEnd(path, "/*");
-            if(StringUtils.isEmpty(cleanPath)){
+            if (StringUtils.isEmpty(cleanPath)) {
                 cleanPath = "/";
             }
-            String key =  cleanPath + ":" + accessRight;
-            if(!this.containsKey(key)){
+            String key = cleanPath + ":" + accessRight;
+            if (!this.containsKey(key)) {
                 ACL acl = new ACL();
                 acl.path = cleanPath;
                 acl.accessRight = accessRight;
                 this.put(key, acl);
             }
-           ((ACL) this.get(key)).registerEntry(path);
+            ((ACL) this.get(key)).registerEntry(path);
         }
     }
-        
+
 }

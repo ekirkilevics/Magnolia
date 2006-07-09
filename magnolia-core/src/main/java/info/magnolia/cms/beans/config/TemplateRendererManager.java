@@ -22,9 +22,9 @@ public class TemplateRendererManager extends ObservedManager {
 
     private static final String ND_RENDERER = "renderer";
 
-	private static final String ND_TYPE = "type";
+    private static final String ND_TYPE = "type";
 
-	private Map renderers = new HashMap();
+    private Map renderers = new HashMap();
 
     /**
      * The current implementation of the TemplateManager. Defined in magnolia.properties.
@@ -76,9 +76,9 @@ public class TemplateRendererManager extends ObservedManager {
             }
 
             if (log.isDebugEnabled()) {
-                log.debug("Registering template render [{}] for type {}",rendererClass, type);
+                log.debug("Registering template render [{}] for type {}", rendererClass, type);
             }
-			registerTemplateRenderer(type, renderer);
+            registerTemplateRenderer(type, renderer);
         }
 
     }

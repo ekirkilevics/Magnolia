@@ -57,7 +57,7 @@ public class DialogDate extends DialogEditWithButton {
         if (this.getWebsiteNode() != null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
             Calendar valueCalendar = this.getWebsiteNode().getNodeData(this.getName()).getDate();
 
-            // valueCalendar is in UTC  turn it back into the current timezone
+            // valueCalendar is in UTC turn it back into the current timezone
             if (valueCalendar != null) {
                 Calendar local = DateUtil.getLocalCalendarFromUTC(valueCalendar);
                 this.setValue(DateFormatUtils.format(local.getTime(), format));

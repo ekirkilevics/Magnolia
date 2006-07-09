@@ -18,8 +18,7 @@ import java.util.Collection;
 
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public interface PrincipalCollection extends Principal, Serializable {
 

@@ -13,7 +13,6 @@
 
 package info.magnolia.cms.i18n;
 
-
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -24,9 +23,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Provides localized strings. You should uses the ContextMessages class if you can provide a request object. AbstractMessagesImpl
- * will do the job as good as possible without to know the session (user) and all the other contextual things. Endusers
- * will use the MessageManager to resolve messages.
+ * Provides localized strings. You should uses the ContextMessages class if you can provide a request object.
+ * AbstractMessagesImpl will do the job as good as possible without to know the session (user) and all the other
+ * contextual things. Endusers will use the MessageManager to resolve messages.
  * @author Philipp Bracher
  */
 
@@ -54,7 +53,6 @@ public abstract class AbstractMessagesImpl implements Messages {
      */
     protected ResourceBundle bundle;
 
-   
     /**
      * @param basename name of the bundle
      * @param locale the locale
@@ -118,9 +116,10 @@ public abstract class AbstractMessagesImpl implements Messages {
      * True if the basename and the locale are the same
      */
     public boolean equals(Object arg0) {
-        return StringUtils.equals(((AbstractMessagesImpl) arg0).basename, this.basename) && this.locale.equals(((AbstractMessagesImpl)arg0).locale);
+        return StringUtils.equals(((AbstractMessagesImpl) arg0).basename, this.basename)
+            && this.locale.equals(((AbstractMessagesImpl) arg0).locale);
     }
-    
+
     /**
      * Nice string
      */

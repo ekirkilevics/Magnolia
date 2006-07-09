@@ -13,20 +13,19 @@
 package info.magnolia.cms.gui.query;
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public class SearchQuery {
 
     /**
      * root espression
-     * */
+     */
     private SearchQueryExpression rootExpression;
 
     /**
      * get root expression
      * @return root expression
-     * */
+     */
     public SearchQueryExpression getRootExpression() {
         return rootExpression;
     }
@@ -34,7 +33,7 @@ public class SearchQuery {
     /**
      * set root expression
      * @param rootExpression
-     * */
+     */
     public void setRootExpression(SearchQueryExpression rootExpression) {
         this.rootExpression = rootExpression;
     }

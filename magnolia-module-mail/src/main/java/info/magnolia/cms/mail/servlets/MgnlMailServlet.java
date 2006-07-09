@@ -78,7 +78,7 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
     private static final String NONE = "<none>";
 
     protected void doPost(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         super.doPost(httpServletRequest, httpServletResponse);
 
         RequestFormUtil request = new RequestFormUtil(httpServletRequest);
@@ -98,9 +98,8 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
 
             if (doc != null) {
                 MailAttachment attachment = new MailAttachment(doc.getFile().toURL(), ATT_ID);
-                ctx.put(MailConstants.ATTRIBUTE_ATTACHMENT,attachment);
+                ctx.put(MailConstants.ATTRIBUTE_ATTACHMENT, attachment);
             }
-
 
             // add all possible parameters to the context
             String template = request.getParameter(TEMPLATE);
@@ -108,41 +107,42 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
             String to = request.getParameter(TORECIPIENTS);
             String cc = request.getParameter(CCRECIPIENTS);
 
-            if (to!=null) {
-                ctx.put(MailConstants.ATTRIBUTE_TO,to);
+            if (to != null) {
+                ctx.put(MailConstants.ATTRIBUTE_TO, to);
             }
-            if (cc!=null) {
-                ctx.put(MailConstants.ATTRIBUTE_CC,cc);
+            if (cc != null) {
+                ctx.put(MailConstants.ATTRIBUTE_CC, cc);
             }
 
             // convert optional parameters and add them to the context
-            if(log.isDebugEnabled()) {
+            if (log.isDebugEnabled()) {
                 log.info(ctx.getAttributes().toString());
             }
             HashMap map = convertToMap(parameters);
             ctx.putAll(map);
 
-            if (isTemplate(template))  {
+            if (isTemplate(template)) {
                 // this is a template based email, just add the template
-                ctx.put(MailConstants.ATTRIBUTE_TEMPLATE,template);
-            } else {
+                ctx.put(MailConstants.ATTRIBUTE_TEMPLATE, template);
+            }
+            else {
                 // this is a static email, add all parameters
                 String type = request.getParameter(TYPE);
                 String subject = request.getParameter(SUBJECT);
                 String from = request.getParameter(FROM);
                 String text = request.getParameter(TEXT);
 
-                if (type!=null) {
-                    ctx.put(MailConstants.ATTRIBUTE_TYPE,type);
+                if (type != null) {
+                    ctx.put(MailConstants.ATTRIBUTE_TYPE, type);
                 }
-                if (subject!=null) {
-                    ctx.put(MailConstants.ATTRIBUTE_SUBJECT,subject);
+                if (subject != null) {
+                    ctx.put(MailConstants.ATTRIBUTE_SUBJECT, subject);
                 }
-                if (from!=null) {
-                    ctx.put(MailConstants.ATTRIBUTE_FROM,from);
+                if (from != null) {
+                    ctx.put(MailConstants.ATTRIBUTE_FROM, from);
                 }
-                if (text!=null) {
-                    ctx.put(MailConstants.ATTRIBUTE_TEXT,text);
+                if (text != null) {
+                    ctx.put(MailConstants.ATTRIBUTE_TEXT, text);
                 }
             }
 
@@ -165,7 +165,7 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
     }
 
     private void setMessage(boolean error, Exception e, String message, HttpServletResponse response)
-            throws IOException {
+        throws IOException {
         PrintWriter writer = response.getWriter();
         writer.write("<h1>Message</h1>");
         if (!error) {
@@ -208,28 +208,28 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
     private String getServletStyle() {
         StringBuffer buffer = new StringBuffer();
         buffer
-                .append(""
-                        + "<style type=\"text/css\">\n"
-                        + "<!--\n "
-                        + "body    { background-color: rgb(255,255,255); color: rgb(0,0,0); margin: 0px 0px; font-size: 10pt ; font-family: verdana}"
-                        + "p.error       { font-size: 8pt; color: red; }"
-                        + "p.success { font-size: 8pt; color: green; }"
-                        + "p.comments { font-size: 7pt; }"
-                        + "textArea {color: blue }"
-                        + "input {background-color:white ; font-size: 10pt ; width: 400px}"
-                        + "textarea {background-color:white ; font-size: 10pt ; width: 400px}"
-                        + "table {font-size: 10pt ; width: 90%}"
-                        + "tr {font-size: 10pt}"
-                        + "td {font-size: 10pt}"
-                        + "h1 {font-family: verdana ; font-size : 12pt}"
-                        + "-->\n "
-                        + "</style>"
-                        + "");
+            .append(""
+                + "<style type=\"text/css\">\n"
+                + "<!--\n "
+                + "body    { background-color: rgb(255,255,255); color: rgb(0,0,0); margin: 0px 0px; font-size: 10pt ; font-family: verdana}"
+                + "p.error       { font-size: 8pt; color: red; }"
+                + "p.success { font-size: 8pt; color: green; }"
+                + "p.comments { font-size: 7pt; }"
+                + "textArea {color: blue }"
+                + "input {background-color:white ; font-size: 10pt ; width: 400px}"
+                + "textarea {background-color:white ; font-size: 10pt ; width: 400px}"
+                + "table {font-size: 10pt ; width: 90%}"
+                + "tr {font-size: 10pt}"
+                + "td {font-size: 10pt}"
+                + "h1 {font-family: verdana ; font-size : 12pt}"
+                + "-->\n "
+                + "</style>"
+                + "");
         return buffer.toString();
     }
 
     protected void doGet(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
-            throws ServletException, IOException {
+        throws ServletException, IOException {
         super.doGet(httpServletRequest, httpServletResponse);
         StringBuffer sb = displayForm();
 
@@ -255,17 +255,18 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
         sb.append("<table>");
         addSection("To", TORECIPIENTS, HTML_TEXT, "The main recipients of the email", sb);
         addSection(
-                "Parameters",
-                PARAMETERS,
-                HTML_TEXT_AREA,
-                "Parameters that can be used when processing the email",
-                sb);
+            "Parameters",
+            PARAMETERS,
+            HTML_TEXT_AREA,
+            "Parameters that can be used when processing the email",
+            sb);
         addSection(
-                "Template",
-                TEMPLATE,
-                HTML_SELECT,
-                "If a template is set, the type of the mail, the content and subject are retrieved from the repository.<br>"
-                        +"The configuration for template us under the following node (/modules/mail/config/templates)",sb);
+            "Template",
+            TEMPLATE,
+            HTML_SELECT,
+            "If a template is set, the type of the mail, the content and subject are retrieved from the repository.<br>"
+                + "The configuration for template us under the following node (/modules/mail/config/templates)",
+            sb);
         sb.append("</table>");
 
         sb.append("<h1>Options for statically defined emails</h1>");
@@ -273,21 +274,21 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
         addSection("From", FROM, HTML_TEXT, "The sender of the email", sb);
         addSection("Subject", SUBJECT, HTML_TEXT, "The subject of the email", sb);
         addSection(
-                "Text",
-                TEXT,
-                HTML_BIG_TEXT_AREA,
-                "The content of the email. Note that this is not used if a template is set",
-                sb);
+            "Text",
+            TEXT,
+            HTML_BIG_TEXT_AREA,
+            "The content of the email. Note that this is not used if a template is set",
+            sb);
         addSection("Cc", CCRECIPIENTS, HTML_TEXT, "The cc recipients of the email", sb);
         addSection("Attach", FILE, HTML_FILE, "The attachment has a default id of '"
-                + ATT_ID
-                + "'. This is only limited in the servlet", sb);
+            + ATT_ID
+            + "'. This is only limited in the servlet", sb);
         addSection(
-                "Email Type",
-                TYPE,
-                HTML_SELECT,
-                "This define the format of the email. In the future more implementation can be added",
-                sb);
+            "Email Type",
+            TYPE,
+            HTML_SELECT,
+            "This define the format of the email. In the future more implementation can be added",
+            sb);
         sb.append("</table>");
         sb.append("<center><input type=\"submit\" value=\"send\"/></center>");
         sb.append("</form>");
@@ -315,10 +316,7 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
             sb.append(getSelectBox(name));
         }
         else if (htmlInputType.equals(HTML_BIG_TEXT_AREA)) {
-            sb
-                    .append("<textArea  cols=\"80\" width=\"80%\"rows=\"5\"  name=\"")
-                    .append(name)
-                    .append("\"/></textArea>");
+            sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"5\"  name=\"").append(name).append("\"/></textArea>");
         }
         else if (htmlInputType.equals(HTML_TEXT_AREA)) {
             sb.append("<textArea  cols=\"80\" width=\"80%\"rows=\"4\"  name=\"").append(name).append("\"/></textArea>");

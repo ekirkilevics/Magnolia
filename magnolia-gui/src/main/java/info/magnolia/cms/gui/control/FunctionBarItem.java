@@ -35,7 +35,7 @@ public class FunctionBarItem extends ContextMenuItem {
     public FunctionBarItem(ContextMenuItem item) {
         this.setName(item.getName());
         this.setLabel(item.getLabel());
-        if (item.getIcon() != null){
+        if (item.getIcon() != null) {
             this.setIcon(item.getIcon().replaceFirst("/16/", "/24/"));
         }
         this.setJavascriptMenuName(item.getJavascriptMenuName());

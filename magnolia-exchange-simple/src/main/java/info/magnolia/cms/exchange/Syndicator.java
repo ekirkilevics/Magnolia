@@ -21,11 +21,10 @@ import javax.jcr.RepositoryException;
 
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public interface Syndicator {
-    
+
     /**
      * Set up the syndicator
      * @param user the user to use for the conection to the subscriber

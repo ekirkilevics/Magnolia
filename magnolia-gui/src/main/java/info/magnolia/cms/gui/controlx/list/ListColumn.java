@@ -16,13 +16,14 @@ import info.magnolia.cms.gui.controlx.impl.AbstractControl;
 
 import org.apache.commons.lang.StringUtils;
 
+
 /**
  * This represents a column in a list.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
-public class ListColumn extends AbstractControl{
+public class ListColumn extends AbstractControl {
+
     /**
      * 
      */
@@ -32,17 +33,17 @@ public class ListColumn extends AbstractControl{
      * The columnName of the column.
      */
     private String columnName;
-    
+
     /**
-     * The label showed 
+     * The label showed
      */
     private String label;
-    
+
     /**
      * Width of the table
      */
     private String width;
-    
+
     /**
      * Show a separator after this column
      */
@@ -75,7 +76,7 @@ public class ListColumn extends AbstractControl{
      * Get the list control this column belongs to.
      * @return the list control
      */
-    public ListControl getListControl(){
+    public ListControl getListControl() {
         return (ListControl) this.getParent();
     }
 
@@ -83,20 +84,19 @@ public class ListColumn extends AbstractControl{
      * @return Returns the label.
      */
     public String getLabel() {
-        if(StringUtils.isEmpty(this.label)){
+        if (StringUtils.isEmpty(this.label)) {
             return this.getName();
         }
         return this.label;
     }
 
-    
     /**
      * @param label The label to set.
      */
     public void setLabel(String label) {
         this.label = label;
     }
-    
+
     /**
      * @return Returns the separator.
      */
@@ -104,7 +104,6 @@ public class ListColumn extends AbstractControl{
         return this.separator;
     }
 
-    
     /**
      * @param separator The separator to set.
      */
@@ -112,7 +111,6 @@ public class ListColumn extends AbstractControl{
         this.separator = separator;
     }
 
-    
     /**
      * @return Returns the width.
      */
@@ -120,7 +118,6 @@ public class ListColumn extends AbstractControl{
         return this.width;
     }
 
-    
     /**
      * @param width The width to set.
      */
@@ -132,11 +129,10 @@ public class ListColumn extends AbstractControl{
      * Called by the renderer
      * @return the object to render
      */
-    public Object getValue(){
+    public Object getValue() {
         return this.getListControl().getIteratorValue(this.getColumnName());
     }
 
-    
     /**
      * @return Returns the columnName.
      */
@@ -144,7 +140,6 @@ public class ListColumn extends AbstractControl{
         return this.columnName;
     }
 
-    
     /**
      * @param columnName The columnName to set.
      */

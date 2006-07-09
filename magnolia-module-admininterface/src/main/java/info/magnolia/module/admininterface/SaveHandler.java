@@ -15,19 +15,19 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.ItemType;
 
+
 /**
- * This class handels the saving in the dialogs. 
+ * This class handels the saving in the dialogs.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public interface SaveHandler {
-    
+
     /**
-     * Initialize this SaveHandler 
+     * Initialize this SaveHandler
      */
     public void init(MultipartForm form);
-    
+
     /**
      * Save the data passed by init. Returns true if the save method succeeded
      */
@@ -96,7 +96,7 @@ public interface SaveHandler {
      * @param path The path to set.
      */
     public abstract void setPath(String path);
-    
+
     /**
      * set the name of the repository saving to
      * @param repository the name of the repository

@@ -78,9 +78,9 @@ public class UUIDRequestDispatcher extends HttpServlet {
         }
         try {
             String handle = ContentRepository
-                    .getHierarchyManager(repositoryName, workspaceName)
-                    .getContentByUUID(uuid)
-                    .getHandle();
+                .getHierarchyManager(repositoryName, workspaceName)
+                .getContentByUUID(uuid)
+                .getHandle();
             handle = (handle + "." + extension);
             RequestDispatcher dispatcher = request.getRequestDispatcher(handle);
             dispatcher.forward(request, response);

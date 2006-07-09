@@ -24,18 +24,17 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
+
 /**
  * Handles the document upload and adds some special properties (for searching)
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class DataDialog extends ConfiguredDialog {
 
     private static Logger log = Logger.getLogger(DataDialog.class);
 
     private boolean create;
-
 
     /**
      * @param name
@@ -54,7 +53,7 @@ public class DataDialog extends ConfiguredDialog {
         // check if this is a creation
         this.create = handler.getPath().endsWith("/mgnlNew");
 
-        if(this.create){
+        if (this.create) {
             handler.setCreate(true);
 
             String path = StringUtils.substringBeforeLast(handler.getPath(), "/");
@@ -68,8 +67,8 @@ public class DataDialog extends ConfiguredDialog {
             name = Path.getUniqueLabel(hm, path, name);
             this.path = path + "/" + name;
             handler.setPath(this.path);
-        	final String itemType = getConfigNode().getNodeData("itemType").getString();
-        	handler.setCreationItemType(new ItemType(itemType));
+            final String itemType = getConfigNode().getNodeData("itemType").getString();
+            handler.setCreationItemType(new ItemType(itemType));
         }
         return true;
     }

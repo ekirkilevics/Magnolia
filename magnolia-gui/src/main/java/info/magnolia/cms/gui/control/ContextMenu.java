@@ -66,10 +66,10 @@ public class ContextMenu extends ControlImpl {
      * @return the item
      */
     public ContextMenuItem getMenuItemByName(String name) {
-        java.util.List menuItems = this.getMenuItems ();
+        java.util.List menuItems = this.getMenuItems();
         for (Iterator iter = menuItems.iterator(); iter.hasNext();) {
             ContextMenuItem menuItem = (ContextMenuItem) iter.next();
-            if (menuItem != null && menuItem.getName() != null && menuItem.getName() == name){
+            if (menuItem != null && menuItem.getName() != null && menuItem.getName() == name) {
                 return menuItem;
             }
         }
@@ -90,7 +90,8 @@ public class ContextMenu extends ControlImpl {
      */
     public String getHtml() {
         StringBuffer html = new StringBuffer();
-        html.append("<div id=\"" + getName() + "_DivMenu\" class=\"mgnlTreeMenu\" onmouseover=\"" + getName() + ".keepShowing();\" onmouseout=\"" + getName() + ".hide();\" >"); //$NON-NLS-1$ //$NON-NLS-2$
+        html
+            .append("<div id=\"" + getName() + "_DivMenu\" class=\"mgnlTreeMenu\" onmouseover=\"" + getName() + ".keepShowing();\" onmouseout=\"" + getName() + ".hide();\" >"); //$NON-NLS-1$ //$NON-NLS-2$
         int counter = 0;
 
         for (int i = 0; i < this.getMenuItems().size(); i++) {

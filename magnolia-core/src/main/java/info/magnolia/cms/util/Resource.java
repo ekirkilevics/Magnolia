@@ -219,7 +219,8 @@ public final class Resource {
         // first check if its set in request scope
         if (req.getParameter(MGNL_PREVIEW_ATTRIBUTE) != null) {
             return BooleanUtils.toBoolean(req.getParameter(MGNL_PREVIEW_ATTRIBUTE));
-        } else {
+        }
+        else {
             HttpSession httpsession = req.getSession(false);
             if (httpsession != null) {
                 return BooleanUtils.toBoolean((Boolean) httpsession.getAttribute(MGNL_PREVIEW_ATTRIBUTE));

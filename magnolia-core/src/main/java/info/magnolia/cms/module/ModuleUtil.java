@@ -654,35 +654,35 @@ public final class ModuleUtil {
 
         return changed;
     }
-    
+
     /**
      * Grant the superuser role by default
      */
-    public static void grantRepositoryToSuperuser(String repository){
+    public static void grantRepositoryToSuperuser(String repository) {
         Role superuser = Security.getRoleManager().getRole("superuser");
         superuser.addPermission(repository, "/*", Permission.ALL);
     }
-    
+
     /**
      * Register the repository to get used for activation
      * @param repository
      */
-    public static void subscribeRepository(String repository){
+    public static void subscribeRepository(String repository) {
         Content subscribers = ContentUtil.getContent(ContentRepository.CONFIG, "/subscribers/SubscriberConfig");
-        if(subscribers == null){
+        if (subscribers == null) {
             return;
         }
         for (Iterator iter = subscribers.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
             Content subscriber = (Content) iter.next();
             Content context = ContentUtil.getCaseInsensitive(subscriber, "Context");
-            try{
-                if(context != null && ! context.hasContent(repository)){
+            try {
+                if (context != null && !context.hasContent(repository)) {
                     Content rep = context.createContent(repository, ItemType.CONTENTNODE);
                     Content entry = rep.createContent("0001", ItemType.CONTENTNODE);
                     entry.createNodeData("subscribedURI").setValue("/");
                 }
             }
-            catch(RepositoryException e){
+            catch (RepositoryException e) {
                 log.error("wasn't able to subscribe repository [" + repository + "]", e);
             }
         }

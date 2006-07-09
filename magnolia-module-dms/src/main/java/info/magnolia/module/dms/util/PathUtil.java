@@ -30,7 +30,7 @@ public class PathUtil {
         else {
             res = path + "/" + label;
         }
-        return addLeadingSlash(res); 
+        return addLeadingSlash(res);
     }
 
     public static String addLeadingSlash(String path) {

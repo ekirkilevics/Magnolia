@@ -611,20 +611,11 @@ public class SimpleSyndicator implements Syndicator {
          * nt:file node type has mandatory sub nodes
          */
         if (content.isNodeType(ItemType.NT_FILE)) {
-            DataTransporter.parseAndFormat(
-                gzipOutputStream,
-                elementfilter,
-                "",
-                content.getHandle(),
-                session);
+            DataTransporter.parseAndFormat(gzipOutputStream, elementfilter, "", content.getHandle(), session);
         }
         else {
-            DataTransporter.parseAndFormat(
-                gzipOutputStream,
-                elementfilter,
-                "",
-                content.getJCRNode().getPath(),
-                session);
+            DataTransporter
+                .parseAndFormat(gzipOutputStream, elementfilter, "", content.getJCRNode().getPath(), session);
         }
         IOUtils.closeQuietly(gzipOutputStream);
         // add file entry in mapping.xml

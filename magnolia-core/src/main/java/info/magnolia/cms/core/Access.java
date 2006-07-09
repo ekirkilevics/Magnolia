@@ -20,8 +20,7 @@ import java.text.MessageFormat;
 
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public final class Access {
 

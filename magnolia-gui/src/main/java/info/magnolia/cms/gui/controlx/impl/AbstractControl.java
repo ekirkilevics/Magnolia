@@ -44,7 +44,7 @@ public class AbstractControl implements Control {
      * The name of the renderer to use.
      */
     private String renderType;
-    
+
     /**
      * The renderer used. If not set the renderType is used to get the renderer from the RenderKit
      */
@@ -147,7 +147,6 @@ public class AbstractControl implements Control {
         this.renderType = renderType;
     }
 
-    
     /**
      * @return Returns the renderer.
      */
@@ -159,7 +158,6 @@ public class AbstractControl implements Control {
         return this.renderer;
     }
 
-    
     /**
      * @param renderer The renderer to set.
      */

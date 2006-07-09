@@ -36,10 +36,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Wrapper class for a jcr property.
- *
  * @author Sameer Charles
- * @version 2.0
- * $Id$
+ * @version 2.0 $Id$
  */
 public class NodeData extends ContentHandler {
 
@@ -68,15 +66,14 @@ public class NodeData extends ContentHandler {
     /**
      * Constructor. Create nodeData object to work-on based on existing <code>Property</code> or
      * <code>nt:resource</code>
-     *
      * @param workingNode current active <code>Node</code>
-     * @param name        <code>NodeData</code> name to be retrieved
-     * @param manager     Access manager to be used for this object
+     * @param name <code>NodeData</code> name to be retrieved
+     * @param manager Access manager to be used for this object
      */
     protected NodeData(Node workingNode, String name, AccessManager manager)
-            throws PathNotFoundException,
-            RepositoryException,
-            AccessDeniedException {
+        throws PathNotFoundException,
+        RepositoryException,
+        AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
         this.init(workingNode, name);
         this.setAccessManager(manager);
@@ -84,23 +81,23 @@ public class NodeData extends ContentHandler {
 
     /**
      * Constructor. Creates a new initialized NodeData of given type
-     *
      * @param workingNode current active <code>Node</code>
-     * @param name        <code>NodeData</code> name to be created
+     * @param name <code>NodeData</code> name to be created
      * @param type
-     * @param createNew   if true create a new Item
-     * @param manager     Access manager to be used for this object
+     * @param createNew if true create a new Item
+     * @param manager Access manager to be used for this object
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
     protected NodeData(Node workingNode, String name, int type, boolean createNew, AccessManager manager)
-            throws PathNotFoundException,
-            RepositoryException,
-            AccessDeniedException {
+        throws PathNotFoundException,
+        RepositoryException,
+        AccessDeniedException {
         if (createNew) {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
             this.init(workingNode, name, type, null);
-        } else {
+        }
+        else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
             this.init(workingNode, name);
         }
@@ -109,17 +106,16 @@ public class NodeData extends ContentHandler {
 
     /**
      * Constructor. Creates a new initialized NodeData
-     *
      * @param workingNode current active <code>Node</code>
-     * @param name        <code>NodeData</code> name to be created
-     * @param value       Value to be set
+     * @param name <code>NodeData</code> name to be created
+     * @param value Value to be set
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
     protected NodeData(Node workingNode, String name, Value value, AccessManager manager)
-            throws PathNotFoundException,
-            RepositoryException,
-            AccessDeniedException {
+        throws PathNotFoundException,
+        RepositoryException,
+        AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
         this.init(workingNode, name, value.getType(), value);
         this.setAccessManager(manager);
@@ -127,13 +123,12 @@ public class NodeData extends ContentHandler {
 
     /**
      * Constructor. Creates a new initialized NodeData
-     *
      * @param node <code>Node</code> of type nt:resource
      */
     public NodeData(Node node, AccessManager manager)
-            throws PathNotFoundException,
-            RepositoryException,
-            AccessDeniedException {
+        throws PathNotFoundException,
+        RepositoryException,
+        AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(node.getPath()), Permission.READ);
         this.node = node;
         this.property = this.node.getProperty(ItemType.JCR_DATA);
@@ -142,13 +137,12 @@ public class NodeData extends ContentHandler {
 
     /**
      * Constructor. Creates a new initialized NodeData
-     *
      * @param property
      */
     public NodeData(Property property, AccessManager manager)
-            throws PathNotFoundException,
-            RepositoryException,
-            AccessDeniedException {
+        throws PathNotFoundException,
+        RepositoryException,
+        AccessDeniedException {
         this.property = property;
         Access.isGranted(manager, Path.getAbsolutePath(this.property.getPath()), Permission.READ);
         this.setAccessManager(manager);
@@ -156,23 +150,24 @@ public class NodeData extends ContentHandler {
 
     /**
      * create a new nt:resource node
-     *
      * @param workingNode
      * @param name
      * @param type
      * @param value
      */
     private void init(Node workingNode, String name, int type, Value value) throws PathNotFoundException,
-            RepositoryException, AccessDeniedException {
+        RepositoryException, AccessDeniedException {
         if (PropertyType.BINARY == type) {
             this.node = workingNode.addNode(name, ItemType.NT_RESOURCE);
             if (null != value) {
                 this.property = this.node.setProperty(ItemType.JCR_DATA, value, value.getType());
             }
-        } else {
+        }
+        else {
             if (null == value) {
                 this.property = workingNode.setProperty(name, StringUtils.EMPTY);
-            } else {
+            }
+            else {
                 this.property = workingNode.setProperty(name, value, value.getType());
             }
         }
@@ -180,13 +175,12 @@ public class NodeData extends ContentHandler {
 
     /**
      * initialize this object based on existing property or nt:resource node
-     *
      * @param workingNode
      * @param name
      * @throws RepositoryException
      */
     private void init(Node workingNode, String name) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException {
+        AccessDeniedException {
         try {
             this.property = workingNode.getProperty(name);
         }
@@ -195,7 +189,8 @@ public class NodeData extends ContentHandler {
                 // this node data should wrap nt:resource
                 this.node = workingNode.getNode(name);
                 this.property = this.node.getProperty(ItemType.JCR_DATA);
-            } else {
+            }
+            else {
                 throw e;
             }
         }
@@ -212,7 +207,6 @@ public class NodeData extends ContentHandler {
      * <li><code>PropertyType.LONG</code></li>
      * <li><code>PropertyType.BOOLEAN</code></li>
      * </ul>
-     *
      * @return Value
      */
     public Value getValue() {
@@ -230,7 +224,6 @@ public class NodeData extends ContentHandler {
     /**
      * Returns the <code>String</code> representation of the value: decodes like breaks with the specified regular
      * expression.
-     *
      * @param lineBreak , regular expession
      * @return String
      */
@@ -245,7 +238,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * Returns the <code>String</code> representation of the value.
-     *
      * @return String
      */
     public String getString() {
@@ -259,7 +251,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * Returns the <code>long</code> representation of the value:
-     *
      * @return long
      */
     public long getLong() {
@@ -273,7 +264,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * Returns the <code>double</code> representation of the value:
-     *
      * @return double
      */
     public double getDouble() {
@@ -287,7 +277,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * Returns the <code>Calendar</code> representation of the value:
-     *
      * @return Calendar
      */
     public Calendar getDate() {
@@ -301,7 +290,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * Returns the <code>boolean</code> representation of the value.
-     *
      * @return boolean
      */
     public boolean getBoolean() {
@@ -315,7 +303,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * Returns the <code>InputStream</code> representation of the value:
-     *
      * @return boolean
      */
     public InputStream getStream() {
@@ -338,7 +325,6 @@ public class NodeData extends ContentHandler {
      * <li><code>PropertyType.LONG</code></li>
      * <li><code>PropertyType.BOOLEAN</code></li>
      * </ul>
-     *
      * @return PropertyType
      */
     public int getType() {
@@ -372,7 +358,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * returns size in bytes
-     *
      * @return content length
      */
     public long getContentLength() {
@@ -387,7 +372,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * Access to property at the JCR level. Available only to be available, should not be used in normal circumstances!
-     *
      * @return Property
      */
     public Property getJCRProperty() {
@@ -396,7 +380,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * set value of type <code>String</code>
-     *
      * @param value , string to be set
      * @throws RepositoryException
      */
@@ -407,7 +390,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * set value of type <code>int</code>
-     *
      * @param value , int value to be set
      * @throws RepositoryException
      */
@@ -418,7 +400,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * set value of type <code>long</code>
-     *
      * @param value , long value to be set
      * @throws RepositoryException
      */
@@ -429,7 +410,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * set value of type <code>InputStream</code>
-     *
      * @param value , InputStream to be set
      * @throws RepositoryException
      */
@@ -437,14 +417,14 @@ public class NodeData extends ContentHandler {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         if (this.node != null) {
             this.property = this.node.setProperty(ItemType.JCR_DATA, value);
-        } else {
+        }
+        else {
             log.error("This is not a valid Binary type, Binary NodeData must be created with PropertyType.BINARY");
         }
     }
 
     /**
      * set value of type <code>double</code>
-     *
      * @param value , double value to be set
      * @throws RepositoryException
      */
@@ -455,7 +435,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * set value of type <code>boolean</code>
-     *
      * @param value , boolean value to be set
      * @throws RepositoryException
      */
@@ -466,7 +445,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * set value of type <code>Calendar</code>
-     *
      * @param value , Calendar value to be set
      * @throws RepositoryException
      */
@@ -477,7 +455,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * set value of type <code>Value</code>
-     *
      * @param value
      * @throws RepositoryException
      */
@@ -488,7 +465,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * set attribute, available only if NodeData is of type <code>Binary</code>
-     *
      * @param name
      * @param value
      * @throws RepositoryException
@@ -496,7 +472,7 @@ public class NodeData extends ContentHandler {
      * @throws UnsupportedOperationException if its not a Binary type
      */
     public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException,
-            UnsupportedOperationException {
+        UnsupportedOperationException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         if (null == this.node) {
             throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
@@ -506,7 +482,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * set attribute, available only if NodeData is of type <code>Binary</code>
-     *
      * @param name
      * @param value
      * @throws RepositoryException
@@ -514,7 +489,7 @@ public class NodeData extends ContentHandler {
      * @throws UnsupportedOperationException if its not a Binary type
      */
     public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException,
-            UnsupportedOperationException {
+        UnsupportedOperationException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
         if (null == this.node) {
             throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
@@ -524,7 +499,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * get attribute, available only if NodeData is of type <code>Binary</code>
-     *
      * @param name
      * @return string value
      */
@@ -545,7 +519,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * get all attribute names
-     *
      * @return collection of attrubute names
      * @throws RepositoryException
      */
@@ -569,7 +542,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * checks if the atom exists in the repository
-     *
      * @return boolean
      */
     public boolean isExist() {
@@ -578,7 +550,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * get a handle representing path relative to the content repository
-     *
      * @return String representing path (handle) of the content
      */
     public String getHandle() {
@@ -597,7 +568,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * Persists all changes to the repository if valiation succeds
-     *
      * @throws RepositoryException
      */
     public void save() throws RepositoryException {
@@ -606,7 +576,6 @@ public class NodeData extends ContentHandler {
 
     /**
      * checks for the allowed access rights
-     *
      * @param permissions as defined in javax.jcr.Permission
      * @return true is the current user has specified access on this node.
      */
@@ -623,21 +592,20 @@ public class NodeData extends ContentHandler {
 
     /**
      * Remove this path
-     *
      * @throws RepositoryException
      */
     public void delete() throws RepositoryException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.property.getPath()), Permission.REMOVE);
         if (null != this.node) {
             this.node.remove();
-        } else {
+        }
+        else {
             this.property.remove();
         }
     }
 
     /**
      * Refreshes current node keeping all changes
-     *
      * @throws RepositoryException
      * @see javax.jcr.Node#refresh(boolean)
      */

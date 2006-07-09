@@ -68,19 +68,19 @@ public class ValueProvider {
                 Content node = (Content) obj;
                 if (node.hasNodeData(name)) {
                     NodeData nd = node.getNodeData(name);
-                    if(nd.getType() == PropertyType.DATE){
+                    if (nd.getType() == PropertyType.DATE) {
                         value = nd.getDate();
                     }
-                    else{
+                    else {
                         value = nd.getString();
                     }
                 }
-                
-                if(value == null){
-                    try{
+
+                if (value == null) {
+                    try {
                         value = PropertyUtils.getProperty(node.getMetaData(), name);
                     }
-                    catch(NoSuchMethodException e){
+                    catch (NoSuchMethodException e) {
                         value = node.getMetaData().getStringProperty(name);
                         if (StringUtils.isEmpty((String) value)) {
                             value = null;

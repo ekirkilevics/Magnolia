@@ -32,7 +32,7 @@ public class ExternalUserManager implements UserManager {
 
     /**
      * Logger
-     * */
+     */
     public static Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
     public User getUser(String name) throws UnsupportedOperationException {
@@ -58,7 +58,6 @@ public class ExternalUserManager implements UserManager {
 
     /**
      * Get system user, this user must always exist in magnolia repository.
-     *
      * @return system user
      */
     public User getSystemUser() {
@@ -75,7 +74,7 @@ public class ExternalUserManager implements UserManager {
     /**
      * Get Anonymous user, this user must always exist in magnolia repository.
      * @return anonymous user
-     * */
+     */
     public User getAnonymousUser() {
         try {
             return new MgnlUser(getHierarchyManager().getContent(UserManager.ANONYMOUS_USER));

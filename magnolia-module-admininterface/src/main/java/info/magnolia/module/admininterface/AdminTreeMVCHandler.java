@@ -148,11 +148,11 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         pathSelected = this.getRequest().getParameter("pathSelected"); //$NON-NLS-1$
 
         this.setBrowseMode(StringUtils.equals(this.getRequest().getParameter("browseMode"), "true"));
-		setTree(new Tree(super.getName(), getRepository(), super.getRequest()));
+        setTree(new Tree(super.getName(), getRepository(), super.getRequest()));
     }
 
-	protected void initialize() {
-	}
+    protected void initialize() {
+    }
 
     /**
      * Depending on the request it is generating a logical command name
@@ -218,7 +218,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
 
         return context;
     }
-    
+
     /**
      * Show the tree after execution of a command
      */
@@ -324,7 +324,6 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         deleteNode(parentPath, label);
     }
 
-
     public String delete() {
         String deleteNode = this.getRequest().getParameter("deleteNode"); //$NON-NLS-1$
         try {
@@ -367,8 +366,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
      * @param path
      * @param recursive
      */
-    public void activateNode(String path, boolean recursive) throws ExchangeException,
-        RepositoryException {
+    public void activateNode(String path, boolean recursive) throws ExchangeException, RepositoryException {
 
         String parentPath = StringUtils.substringBeforeLast(path, "/");
         if (StringUtils.isEmpty(parentPath)) {
@@ -385,8 +383,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
     }
 
     /**
-     * recursive activation
-     * Override this method to provide tree specific node recursion
+     * recursive activation Override this method to provide tree specific node recursion
      * @param syndicator
      * @param parentPath
      * @param path
@@ -401,8 +398,8 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
     }
 
     /**
-     * Create the <code>Syndicator</code> to activate the specified path.
-     * method implementation will make sure that proper node collection Rule and Sysdicator is used
+     * Create the <code>Syndicator</code> to activate the specified path. method implementation will make sure that
+     * proper node collection Rule and Sysdicator is used
      * @param path node path to be activated
      * @return the <code>Syndicator</code> used to activate
      */
@@ -489,7 +486,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         newLabel = Path.getValidatedLabel(newLabel);
 
         // don't rename if it uses the same name as the current
-        if(this.getPath().endsWith("/" + newLabel)){
+        if (this.getPath().endsWith("/" + newLabel)) {
             return newLabel;
         }
 

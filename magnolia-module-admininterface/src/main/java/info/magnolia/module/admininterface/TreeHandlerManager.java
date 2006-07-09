@@ -26,11 +26,11 @@ public class TreeHandlerManager extends ObservedManager {
 
     private static final String ND_CLASS = "class";
 
-	private static final String ND_REPOSITORY = "repository";
+    private static final String ND_REPOSITORY = "repository";
 
-	private static final String ND_NAME = "name";
+    private static final String ND_NAME = "name";
 
-	/**
+    /**
      * Logger
      */
     private static Logger log = LoggerFactory.getLogger(TreeHandlerManager.class);
@@ -70,10 +70,13 @@ public class TreeHandlerManager extends ObservedManager {
                 String.class,
                 HttpServletRequest.class,
                 HttpServletResponse.class});
-            AdminTreeMVCHandler newInstance = (AdminTreeMVCHandler) constructor.newInstance(new Object[]{repository, request, response});
+            AdminTreeMVCHandler newInstance = (AdminTreeMVCHandler) constructor.newInstance(new Object[]{
+                repository,
+                request,
+                response});
             ContentUtil.setProperties(newInstance, th.getTreeDefinition());
             newInstance.initialize();
-			return newInstance;
+            return newInstance;
         }
         catch (Exception e) {
             throw new InvalidTreeHandlerException(name, e);
@@ -89,14 +92,14 @@ public class TreeHandlerManager extends ObservedManager {
         Collection trees = defNode.getChildren(ItemType.CONTENTNODE.getSystemName());
         for (Iterator iter = trees.iterator(); iter.hasNext();) {
             Content tree = (Content) iter.next();
-            String name = tree.getNodeData(ND_NAME).getString(); 
+            String name = tree.getNodeData(ND_NAME).getString();
 
             if (StringUtils.isEmpty(name)) {
                 name = tree.getName();
             }
 
-            String repository = tree.getNodeData(ND_REPOSITORY).getString(); 
-            String className = tree.getNodeData(ND_CLASS).getString(); 
+            String repository = tree.getNodeData(ND_REPOSITORY).getString();
+            String className = tree.getNodeData(ND_CLASS).getString();
 
             if (StringUtils.isEmpty(repository)) {
                 repository = name;
@@ -108,10 +111,10 @@ public class TreeHandlerManager extends ObservedManager {
             catch (ClassNotFoundException e) {
                 log.error("Can't register tree handler [{}]: class [{}] not found", name, className);
             }
-            
+
             // register commands if defined
             try {
-                if(tree.hasContent("commands")){
+                if (tree.hasContent("commands")) {
                     Content commands = tree.getContent("commands");
                     CommandsManager.getInstance().register(commands);
                 }
@@ -141,7 +144,7 @@ public class TreeHandlerManager extends ObservedManager {
         private Class handler;
 
         private String repository;
-        
+
         private Content treeDefinition;
 
         TreeHandlerConfig(Class handler, String repository, Content treeDefinition) {
@@ -157,9 +160,9 @@ public class TreeHandlerManager extends ObservedManager {
         public String getRepository() {
             return this.repository;
         }
-        
-        public Content getTreeDefinition(){
-        	return treeDefinition;
+
+        public Content getTreeDefinition() {
+            return treeDefinition;
         }
     }
 

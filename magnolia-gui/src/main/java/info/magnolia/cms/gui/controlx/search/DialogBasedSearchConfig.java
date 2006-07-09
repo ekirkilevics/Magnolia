@@ -27,24 +27,23 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
 /**
  * Configers the search based on the dialog.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class DialogBasedSearchConfig extends SearchConfigImpl {
+
     Logger log = LoggerFactory.getLogger(DialogBasedSearchConfig.class);
 
     /**
      * @param dialogPath
      */
     public DialogBasedSearchConfig(Content dialogNode) {
-        try{
+        try {
             init(dialogNode);
         }
-        catch(Exception e){
+        catch (Exception e) {
             log.error("can't configure the search", e);
         }
     }
@@ -56,7 +55,7 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
     protected void init(Content dialogNode) throws Exception {
         // ordered definition
         SortedMap sortMap = new TreeMap();
-        
+
         // for all tabs
         Collection tabNodes = dialogNode.getChildren(ItemType.CONTENTNODE);
 
@@ -70,9 +69,9 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
 
                 if (controlNode.hasNodeData("searchable")) {
                     String searchable = NodeDataUtil.getString(controlNode, "searchable");
-                   
+
                     SearchControlDefinition def = createSearchControl(controlNode);
-                    
+
                     sortMap.put(searchable, def);
                 }
             }
@@ -89,21 +88,21 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
         String type = controlNode.getNodeData("searchType").getString();
         String name = controlNode.getNodeData("name").getString();
         String label = controlNode.getNodeData("label").getString();
-        
+
         if (type.equals("select")) {
             SelectSearchControlDefinition select = new SelectSearchControlDefinition(name, label);
             configureSelect(select, controlNode);
             return select;
         }
-        else{
+        else {
             return new SearchControlDefinition(name, label, type);
         }
     }
-    
-    public void configureSelect(SelectSearchControlDefinition def, Content node) throws RepositoryException{
+
+    public void configureSelect(SelectSearchControlDefinition def, Content node) throws RepositoryException {
         Collection optionNodes = node.getContent("options").getChildren();
 
-        for(Iterator iter = optionNodes.iterator(); iter.hasNext();){
+        for (Iterator iter = optionNodes.iterator(); iter.hasNext();) {
             Content optionNode = (Content) iter.next();
             String value = optionNode.getNodeData("value").getString();
             String label = optionNode.getNodeData("value").getString();

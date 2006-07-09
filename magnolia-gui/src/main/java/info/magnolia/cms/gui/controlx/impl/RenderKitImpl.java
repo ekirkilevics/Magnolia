@@ -21,27 +21,28 @@ import java.util.Map;
 import org.apache.commons.collections.Factory;
 import org.apache.commons.collections.MapUtils;
 
+
 /**
  * If a not registered render type is passed a TemplatedRenderer instance is returned.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class RenderKitImpl implements RenderKit {
-    
+
     /**
      * The renderers registered.
      */
     protected Map renderers;
-    
+
     /**
-     * Init the layzy map. 
+     * Init the layzy map.
      */
     public RenderKitImpl() {
-        renderers = MapUtils.lazyMap(new HashMap(), new Factory(){
+        renderers = MapUtils.lazyMap(new HashMap(), new Factory() {
+
             public Object create() {
                 return new TemplatedRenderer();
-            } 
+            }
         });
     }
 

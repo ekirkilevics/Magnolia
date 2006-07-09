@@ -21,7 +21,6 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
- *
  */
 public class WebsiteVersionsList extends VersionsList {
 
@@ -44,6 +43,5 @@ public class WebsiteVersionsList extends VersionsList {
         String url = MgnlContext.getContextPath() + path + ".html?mgnlVersion=";
         return "function(versionLabel){open('" + url + "'+versionLabel, '');}";
     }
-    
 
 }

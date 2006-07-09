@@ -23,8 +23,7 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Sameer Charles
- * @version 2.0
- * $Id$
+ * @version 2.0 $Id$
  */
 public final class Path {
 

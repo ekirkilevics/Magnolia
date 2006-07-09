@@ -34,28 +34,25 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * <p/>
- * A simple tag which allows searching in all the site content with a "natural language" query. It simply strips all the
- * reserved chars from input string, build an xpath query and feed Magnolia QueryManager.
+ * <p/> A simple tag which allows searching in all the site content with a "natural language" query. It simply strips
+ * all the reserved chars from input string, build an xpath query and feed Magnolia QueryManager.
+ * </p>
+ * <p/> By defaults search terms are ANDed, but it also supports using the AND or OR keywords in the query string.
+ * Search is not case sensitive and it's performed on any non-binary property.
+ * </p>
+ * <p/> A collection on Content (page) objects is added to the specified scope with the specified name.
+ * </p>
+ * <p/> Tipical usage:
  * </p>
  * <p/>
- * By defaults search terms are ANDed, but it also supports using the AND or OR keywords in the query string. Search is
- * not case sensitive and it's performed on any non-binary property.
- * </p>
- * <p/>
- * A collection on Content (page) objects is added to the specified scope with the specified name.
- * </p>
- * <p/>
- * Tipical usage:
- * </p>
- * <p/>
+ * 
  * <pre>
  *   &lt;cmsu:simplesearch query="${param.search}" startLevel="3" var="results" />
  *   &lt;c:forEach items="${results}">
  *     &lt;a href="${pageContext.request.contextPath}${node.handle}.html">${node.title}&lt;/a>
  *   &lt;/c:forEach>
  * </pre>
- *
+ * 
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -104,7 +101,6 @@ public class SimpleSearchTag extends TagSupport {
 
     /**
      * Setter for <code>query</code>.
-     *
      * @param query The query to set.
      */
     public void setQuery(String query) {
@@ -113,7 +109,6 @@ public class SimpleSearchTag extends TagSupport {
 
     /**
      * Setter for <code>var</code>.
-     *
      * @param var The var to set.
      */
     public void setVar(String var) {
@@ -122,17 +117,19 @@ public class SimpleSearchTag extends TagSupport {
 
     /**
      * Setter for <code>scope</code>.
-     *
      * @param scope The scope to set.
      */
     public void setScope(String scope) {
         if ("request".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.REQUEST_SCOPE;
-        } else if ("session".equalsIgnoreCase(scope)) { //$NON-NLS-1$
+        }
+        else if ("session".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.SESSION_SCOPE;
-        } else if ("application".equalsIgnoreCase(scope)) { //$NON-NLS-1$
+        }
+        else if ("application".equalsIgnoreCase(scope)) { //$NON-NLS-1$
             this.scope = PageContext.APPLICATION_SCOPE;
-        } else {
+        }
+        else {
             // default
             this.scope = PageContext.PAGE_SCOPE;
         }
@@ -140,7 +137,6 @@ public class SimpleSearchTag extends TagSupport {
 
     /**
      * Setter for <code>startLevel</code>.
-     *
      * @param startLevel The startLevel to set.
      */
     public void setStartLevel(int startLevel) {
@@ -167,9 +163,7 @@ public class SimpleSearchTag extends TagSupport {
 
         Query q;
         try {
-            q = MgnlContext.getQueryManager(ContentRepository.WEBSITE).createQuery(
-                    queryString,
-                    "xpath"); //$NON-NLS-1$
+            q = MgnlContext.getQueryManager(ContentRepository.WEBSITE).createQuery(queryString, "xpath"); //$NON-NLS-1$
 
             QueryResult result = q.execute();
 
@@ -177,8 +171,8 @@ public class SimpleSearchTag extends TagSupport {
         }
         catch (Exception e) {
             log.error(MessageFormat.format(
-                    "{0} caught while parsing query for search term [{1}] - query is [{2}]: {3}", //$NON-NLS-1$
-                    new Object[]{e.getClass().getName(), this.query, queryString, e.getMessage()}), e);
+                "{0} caught while parsing query for search term [{1}] - query is [{2}]: {3}", //$NON-NLS-1$
+                new Object[]{e.getClass().getName(), this.query, queryString, e.getMessage()}), e);
         }
 
         return EVAL_PAGE;
@@ -187,7 +181,6 @@ public class SimpleSearchTag extends TagSupport {
     /**
      * Split search terms and build an xpath query in the form:
      * <code>//*[@jcr:primaryType='mgnl:content']/\*\/\*[jcr:contains(., 'first') or jcr:contains(., 'second')]</code>
-     *
      * @return valid xpath expression or null if the given query doesn't contain at least one valid search term
      */
     protected String generateXPathQuery() {
@@ -209,9 +202,9 @@ public class SimpleSearchTag extends TagSupport {
 
         // strip reserved chars and split
         String[] tokens = StringUtils.split(StringUtils.lowerCase(StringUtils.replaceChars(
-                this.query,
-                RESERVED_CHARS,
-                null)));
+            this.query,
+            RESERVED_CHARS,
+            null)));
 
         // null input string?
         if (tokens == null) {
@@ -231,7 +224,8 @@ public class SimpleSearchTag extends TagSupport {
             String tkn = tokens[j];
             if (ArrayUtils.contains(KEYWORDS, tkn)) {
                 joinOperator = tkn;
-            } else {
+            }
+            else {
                 if (!emptyQuery) {
                     xpath.append(" "); //$NON-NLS-1$
                     xpath.append(joinOperator);

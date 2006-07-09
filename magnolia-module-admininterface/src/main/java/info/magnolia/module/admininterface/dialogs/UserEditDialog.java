@@ -91,7 +91,6 @@ public class UserEditDialog extends ConfiguredDialog {
 
     /**
      * Is called during showDialog(). Here can you create/ add controls for the dialog.
-     *
      * @param configNode
      * @param storageNode
      * @throws javax.jcr.RepositoryException
@@ -107,7 +106,7 @@ public class UserEditDialog extends ConfiguredDialog {
         DialogControlImpl control = dialog.getSub("groups");
         HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
         List values = control.getValues();
-        for (int index=0; index < values.size(); index++) {
+        for (int index = 0; index < values.size(); index++) {
             // replace uuid with path
             String uuid = (String) values.get(index);
             if (StringUtils.isEmpty(uuid)) {
@@ -115,17 +114,17 @@ public class UserEditDialog extends ConfiguredDialog {
             }
             try {
                 values.set(index, groupsHM.getContentByUUID(uuid).getHandle());
-            } catch (ItemNotFoundException e) {
+            }
+            catch (ItemNotFoundException e) {
                 // remove invalid ID
                 values.remove(index);
             }
         }
 
-
         control = dialog.getSub("roles");
         HierarchyManager rolesHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
         values = control.getValues();
-        for (int index=0; index < values.size(); index++) {
+        for (int index = 0; index < values.size(); index++) {
             // replace uuid with path
             String uuid = (String) values.get(index);
             if (StringUtils.isEmpty(uuid)) {
@@ -133,7 +132,8 @@ public class UserEditDialog extends ConfiguredDialog {
             }
             try {
                 values.set(index, rolesHM.getContentByUUID(uuid).getHandle());
-            } catch (ItemNotFoundException e) {
+            }
+            catch (ItemNotFoundException e) {
                 // remove invalid ID
                 values.remove(index);
             }
@@ -144,7 +144,7 @@ public class UserEditDialog extends ConfiguredDialog {
     /**
      * Write ACL entries under the given user node
      * @param node under which ACL for all workspaces needs to be created
-     * */
+     */
     protected void writeACL(Content node) {
         // remove existing
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
@@ -186,36 +186,39 @@ public class UserEditDialog extends ConfiguredDialog {
 
         Content groups = null;
         try {
-            HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
+            HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(
+                ContentRepository.USER_GROUPS);
             groups = node.getContent("groups");
             // remove existing roles, leave the node as is
             Iterator existingRoles = groups.getNodeDataCollection().iterator();
             while (existingRoles.hasNext()) {
-                ((NodeData)existingRoles.next()).delete();
+                ((NodeData) existingRoles.next()).delete();
             }
             List values = getDialog().getSub("groups").getValues();
             for (int index = 0; index < values.size(); index++) {
                 String rolePath = (String) values.get(index);
-                if(StringUtils.isNotEmpty(rolePath)) {
+                if (StringUtils.isNotEmpty(rolePath)) {
                     groups.createNodeData(Integer.toString(index)).setValue(groupsHM.getContent(rolePath).getUUID());
                 }
             }
             groups.save();
-        } catch (PathNotFoundException e) {
+        }
+        catch (PathNotFoundException e) {
             // it might happen if all groups are deleted via dialog
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             // revert transient changes
             if (groups != null) {
                 try {
                     groups.refresh(false);
-                } catch (RepositoryException e) {
+                }
+                catch (RepositoryException e) {
                     // should never come here
                     re = e;
                 }
             }
             log.error("Failed to update groups", re);
         }
-
 
         Content roles = null;
         try {
@@ -224,32 +227,33 @@ public class UserEditDialog extends ConfiguredDialog {
             // remove existing roles, leave the node as is
             Iterator existingRoles = roles.getNodeDataCollection().iterator();
             while (existingRoles.hasNext()) {
-                ((NodeData)existingRoles.next()).delete();
+                ((NodeData) existingRoles.next()).delete();
             }
             List values = getDialog().getSub("roles").getValues();
             for (int index = 0; index < values.size(); index++) {
                 String rolePath = (String) values.get(index);
-                if(StringUtils.isNotEmpty(rolePath)) {
+                if (StringUtils.isNotEmpty(rolePath)) {
                     roles.createNodeData(Integer.toString(index)).setValue(rolesHM.getContent(rolePath).getUUID());
                 }
             }
             roles.save();
-        } catch (PathNotFoundException e) {
+        }
+        catch (PathNotFoundException e) {
             // it might happen if all roles are deleted via dialog
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             // revert transient changes
             if (roles != null) {
                 try {
                     roles.refresh(false);
-                } catch (RepositoryException e) {
+                }
+                catch (RepositoryException e) {
                     // should never come here
                     re = e;
                 }
             }
             log.error("Failed to update roles", re);
         }
-
-
 
         // ######################
         // # write users and roles acl

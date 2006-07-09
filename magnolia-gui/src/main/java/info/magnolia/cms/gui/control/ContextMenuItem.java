@@ -34,7 +34,7 @@ public class ContextMenuItem extends ControlImpl {
 
     public ContextMenuItem() {
     }
- 
+
     public ContextMenuItem(String name) {
         this.setName(name);
     }

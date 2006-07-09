@@ -122,14 +122,16 @@ public class FileSrc extends TagSupport {
                 writeSrc(StringUtils.EMPTY);
                 return SKIP_BODY;
             }
-        } else {
+        }
+        else {
             this.contentNode = Resource.getLocalContentNode(request);
             if (this.contentNode == null) {
                 this.contentNode = Resource.getGlobalContentNode(request);
             }
             if (this.contentNode != null) {
                 this.contentNodeName = this.contentNode.getName();
-            } else {
+            }
+            else {
                 writeSrc(StringUtils.EMPTY);
                 return SKIP_BODY;
             }
@@ -152,7 +154,7 @@ public class FileSrc extends TagSupport {
         setFileProperties();
 
         String contentNodeCollectionName = (String) pageContext.getAttribute("contentNodeCollectionName", //$NON-NLS-1$
-                PageContext.REQUEST_SCOPE);
+            PageContext.REQUEST_SCOPE);
         if (this.fileNameOnly.equals("true")) { //$NON-NLS-1$
             try {
                 writeSrc(this.fileExtendedName);
@@ -162,26 +164,28 @@ public class FileSrc extends TagSupport {
                     log.debug(e.getMessage());
                 }
             }
-        } else {
+        }
+        else {
             if (contentNodeCollectionName == null) {
                 // we are not in a loop
                 try {
                     writeSrc(this.contentNode.getHandle() + "/" //$NON-NLS-1$
-                            + this.nodeDataName
-                            + this.slash
-                            + this.fileExtendedName);
+                        + this.nodeDataName
+                        + this.slash
+                        + this.fileExtendedName);
                 }
                 catch (Exception e) {
                     if (log.isDebugEnabled()) {
                         log.debug(e.getMessage());
                     }
                 }
-            } else {
+            }
+            else {
                 try {
                     writeSrc(Resource.getLocalContentNode(request).getHandle() + "/" //$NON-NLS-1$
-                            + this.nodeDataName
-                            + this.slash
-                            + this.fileExtendedName);
+                        + this.nodeDataName
+                        + this.slash
+                        + this.fileExtendedName);
                 }
                 catch (Exception e) {
                     if (log.isDebugEnabled()) {
@@ -212,7 +216,7 @@ public class FileSrc extends TagSupport {
         this.fileExtension = Server.getDefaultExtension();
         Content properties = null;
         String contentNodeCollectionName = (String) pageContext.getAttribute("contentNodeCollectionName", //$NON-NLS-1$
-                PageContext.REQUEST_SCOPE);
+            PageContext.REQUEST_SCOPE);
         if (contentNodeCollectionName == null) {
             // we are not in a loop
             try {
@@ -223,7 +227,8 @@ public class FileSrc extends TagSupport {
                     log.debug(e.getMessage());
                 }
             }
-        } else {
+        }
+        else {
             try {
                 properties = Resource.getLocalContentNode(this.request).getContent(this.nodeDataName + "_properties"); //$NON-NLS-1$
             }
@@ -238,7 +243,8 @@ public class FileSrc extends TagSupport {
             this.fileExtension = properties.getNodeData("extension").getString(); //$NON-NLS-1$
             if (StringUtils.isEmpty(this.fileName)) {
                 this.fileExtendedName = "." + this.fileExtension; //$NON-NLS-1$
-            } else {
+            }
+            else {
                 this.slash = "/"; //$NON-NLS-1$
                 this.fileExtendedName = this.fileName;
                 int posLastDot = this.fileName.lastIndexOf("."); //$NON-NLS-1$

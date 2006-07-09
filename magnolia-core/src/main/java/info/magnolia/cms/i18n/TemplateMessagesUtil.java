@@ -43,6 +43,8 @@ public final class TemplateMessagesUtil {
      * @return
      */
     public static Messages getMessages() {
-        return MessagesUtil.chain(new String[]{TemplateMessagesUtil.CUSTOM_BASENAME, TemplateMessagesUtil.DEFAULT_BASENAME});
+        return MessagesUtil.chain(new String[]{
+            TemplateMessagesUtil.CUSTOM_BASENAME,
+            TemplateMessagesUtil.DEFAULT_BASENAME});
     }
 }

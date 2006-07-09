@@ -22,30 +22,27 @@ import java.util.Date;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 
+
 /**
- * @author Sameer Charles
- * $Id$
- *
- * package private helper class
- * Implement this class if you need any further operations in future
- * <b>NOTE</b> : its a very simple in-order binary traversal, order of operation is not preserved
+ * @author Sameer Charles $Id$ package private helper class Implement this class if you need any further operations in
+ * future <b>NOTE</b> : its a very simple in-order binary traversal, order of operation is not preserved
  */
 class QueryBuilder {
 
     /**
      * statement
-     * */
+     */
     private StringBuffer statement = new StringBuffer();
 
     /**
      * search model using which query will be created
-     * */
+     */
     private RepositorySearchListModel model;
 
     /**
      * package private
      * @param model
-     * */
+     */
     protected QueryBuilder(RepositorySearchListModel model) {
         this.model = model;
         this.build(this.model.getQuery().getRootExpression());
@@ -55,14 +52,14 @@ class QueryBuilder {
     /**
      * get SQL statement based on SearchQuery
      * @return SQL statement
-     * */
+     */
     protected String getSQLStatement() {
         return this.statement.toString();
     }
 
     /**
      * prepend select statement
-     * */
+     */
     private void addSelect() {
         StringBuffer select = new StringBuffer("select * from ");
         select.append(this.model.getNodeType());
@@ -74,42 +71,29 @@ class QueryBuilder {
         if (this.statement.length() > 0) {
             select.append(" where");
         }
-        this.statement.insert(0,select.toString());
+        this.statement.insert(0, select.toString());
     }
 
     /**
-     *
      * add orgering
-     * */
+     */
     /*
-    private void addOrder() {
-        if (StringUtils.isNotEmpty(this.model.getGroupBy()) && StringUtils.isNotEmpty(this.model.getSortBy())) {
-            statement.append(" order by ");
-            statement.append(this.model.getGroupBy());
-            statement.append(" ");
-            statement.append(this.model.getGroupByOrder());
-            statement.append(", ");
-            statement.append(this.model.getSortBy());
-            statement.append(" ");
-            statement.append(this.model.getSortByOrder());
-        } else if (StringUtils.isNotEmpty(this.model.getGroupBy()) && StringUtils.isEmpty(this.model.getSortBy())) {
-            statement.append(" order by ");
-            statement.append(this.model.getGroupBy());
-            statement.append(" ");
-            statement.append(this.model.getGroupByOrder());
-        } else if (StringUtils.isEmpty(this.model.getGroupBy()) && StringUtils.isNotEmpty(this.model.getSortBy())) {
-            statement.append(" order by ");
-            statement.append(this.model.getSortBy());
-            statement.append(" ");
-            statement.append(this.model.getSortByOrder());
-        }
-    }
-    */
+     * private void addOrder() { if (StringUtils.isNotEmpty(this.model.getGroupBy()) &&
+     * StringUtils.isNotEmpty(this.model.getSortBy())) { statement.append(" order by ");
+     * statement.append(this.model.getGroupBy()); statement.append(" "); statement.append(this.model.getGroupByOrder());
+     * statement.append(", "); statement.append(this.model.getSortBy()); statement.append(" ");
+     * statement.append(this.model.getSortByOrder()); } else if (StringUtils.isNotEmpty(this.model.getGroupBy()) &&
+     * StringUtils.isEmpty(this.model.getSortBy())) { statement.append(" order by ");
+     * statement.append(this.model.getGroupBy()); statement.append(" "); statement.append(this.model.getGroupByOrder()); }
+     * else if (StringUtils.isEmpty(this.model.getGroupBy()) && StringUtils.isNotEmpty(this.model.getSortBy())) {
+     * statement.append(" order by "); statement.append(this.model.getSortBy()); statement.append(" ");
+     * statement.append(this.model.getSortByOrder()); } }
+     */
 
     /**
      * NOTE : its a very simple in-order binary traversal, order of operation is not preserved
      * @param expression
-     * */
+     */
     private void build(SearchQueryExpression expression) {
         if (expression == null) {
             return;
@@ -119,22 +103,22 @@ class QueryBuilder {
         this.statement.append(toJCRExpression(expression));
         this.build(expression.getRight());
     }
-    
+
     /**
      * Make a jcr expression out of the expression
      * @param expression
      * @return the expression as string
      */
-    private String toJCRExpression(SearchQueryExpression expression){
-        if(expression instanceof SearchQueryOperator ){
+    private String toJCRExpression(SearchQueryExpression expression) {
+        if (expression instanceof SearchQueryOperator) {
             // operator is 1:1 usable in jcr
-            return StringUtils.defaultString(((SearchQueryOperator)expression).getOperator());
+            return StringUtils.defaultString(((SearchQueryOperator) expression).getOperator());
         }
-        else if(expression instanceof StringSearchQueryParameter){
-            return toStringJCRExpression((StringSearchQueryParameter)expression);
+        else if (expression instanceof StringSearchQueryParameter) {
+            return toStringJCRExpression((StringSearchQueryParameter) expression);
         }
-        else if(expression instanceof DateSearchQueryParameter){
-            return getDateJCRExpression( (DateSearchQueryParameter)expression);
+        else if (expression instanceof DateSearchQueryParameter) {
+            return getDateJCRExpression((DateSearchQueryParameter) expression);
         }
         return StringUtils.EMPTY;
     }
@@ -146,20 +130,22 @@ class QueryBuilder {
      */
     private String getDateJCRExpression(DateSearchQueryParameter param) {
         Date date = param.getValue();
-        if(param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.TODAY)){
+        if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.TODAY)) {
             date = new Date();
         }
-        
+
         StringBuffer buffer = new StringBuffer();
         buffer.append(param.getName());
         if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.BEFORE)) {
             buffer.append(" <= TIMESTAMP '");
-        } else if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.AFTER)) {
+        }
+        else if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.AFTER)) {
             buffer.append(" >= TIMESTAMP '");
-        } else if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.IS)) {
+        }
+        else if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.IS)) {
             buffer.append(" = TIMESTAMP '");
         }
-        buffer.append(DateFormatUtils.format(date,"yyyy-MM-dd"));
+        buffer.append(DateFormatUtils.format(date, "yyyy-MM-dd"));
         buffer.append("T00:00:00.000Z'");
         return buffer.toString();
     }
@@ -170,27 +156,27 @@ class QueryBuilder {
      */
     private String toStringJCRExpression(StringSearchQueryParameter param) {
         if (param.getConstraint().equals(StringSearchQueryParameter.CONTAINS)) {
-            return "contains(" + param.getName() +",'*" + param.getValue() + "*')";
+            return "contains(" + param.getName() + ",'*" + param.getValue() + "*')";
         }
-        
+
         else if (param.getConstraint().equals(StringSearchQueryParameter.CONTAINS_NOT)) {
-            return "not contains(" + param.getName() +",'*" + param.getValue() + "*')";
+            return "not contains(" + param.getName() + ",'*" + param.getValue() + "*')";
         }
 
         else if (param.getConstraint().equals(StringSearchQueryParameter.ENDS)) {
-            return "contains(" + param.getName() +",'*" + param.getValue() + "')";
+            return "contains(" + param.getName() + ",'*" + param.getValue() + "')";
         }
-        
+
         else if (param.getConstraint().equals(StringSearchQueryParameter.STARTS)) {
-            return "contains(" + param.getName() +",'" + param.getValue() + "*')";
+            return "contains(" + param.getName() + ",'" + param.getValue() + "*')";
         }
-        
+
         else if (param.getConstraint().equals(StringSearchQueryParameter.IS)) {
             return param.getName() + " = '" + param.getValue() + "'";
         }
-        
+
         else if (param.getConstraint().equals(StringSearchQueryParameter.IS_NOT)) {
-            return param.getName() + " <> '" +param.getValue() + "'";
+            return param.getName() + " <> '" + param.getValue() + "'";
         }
         return StringUtils.EMPTY;
     }

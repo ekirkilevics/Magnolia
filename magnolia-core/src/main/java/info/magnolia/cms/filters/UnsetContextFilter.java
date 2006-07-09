@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 
+
 /**
  * A filter which unsets the context instance of the current thread after the request returns.
  * @author Philipp Bracher

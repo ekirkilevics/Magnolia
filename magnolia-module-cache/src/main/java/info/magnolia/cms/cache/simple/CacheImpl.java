@@ -59,7 +59,7 @@ public class CacheImpl implements Cache {
                 file.getParentFile().mkdirs();
                 file.createNewFile();
             }
-            
+
             // write anyway
             out = new FileOutputStream(file);
             out.write(entry.getOut());
@@ -98,7 +98,7 @@ public class CacheImpl implements Cache {
             if (cacheDir.exists() && cacheDir.isDirectory()) {
                 cacheDir.delete();
             }
-            
+
             // this will create cache start directory again
             if (cacheDir.exists() && cacheDir.isDirectory()) {
                 // FileUtils.deleteDirectory(cacheDir);
@@ -243,7 +243,7 @@ public class CacheImpl implements Cache {
      * Empties the cache for the specified resource. Currenty it expects the entire path, including cache location.
      * @param uri request URI
      */
-     public void remove(CacheKey key) {
+    public void remove(CacheKey key) {
         File file = this.getFile(key, false);
         try {
             if (file.isDirectory()) {

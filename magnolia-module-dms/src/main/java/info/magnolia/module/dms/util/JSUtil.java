@@ -16,10 +16,10 @@ package info.magnolia.module.dms.util;
 /**
  * Util for Javascript stuff. escaping, ...
  * @author philipp
- *
  */
 public final class JSUtil {
-    public static String javaToJSON(){
+
+    public static String javaToJSON() {
         return "";
     }
 }

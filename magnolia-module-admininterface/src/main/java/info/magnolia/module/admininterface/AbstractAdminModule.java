@@ -103,8 +103,8 @@ public abstract class AbstractAdminModule extends AbstractModule {
             }
 
             // register shutdown tasks
-            node = ContentUtil.getCaseInsensitive(moduleNode,"shutdown");
-            if(node!=null) {
+            node = ContentUtil.getCaseInsensitive(moduleNode, "shutdown");
+            if (node != null) {
                 ShutdownManager.getInstance().register(node);
             }
 

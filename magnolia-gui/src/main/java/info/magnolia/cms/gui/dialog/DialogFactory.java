@@ -61,7 +61,7 @@ public final class DialogFactory {
         // @todo check if dialogClass is a valid dialog
         // @todo synchronize
 
-    	if (log.isDebugEnabled()) {
+        if (log.isDebugEnabled()) {
             log.debug("Registering control [{}]", name); //$NON-NLS-1$ 
         }
 
@@ -79,7 +79,7 @@ public final class DialogFactory {
         Content storageNode, Content configNode) throws RepositoryException {
         String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
 
-        return getDialogControlInstanceByName(request,response,storageNode, configNode, controlType);
+        return getDialogControlInstanceByName(request, response, storageNode, configNode, controlType);
     }
 
     public static Dialog getDialogInstance(HttpServletRequest request, HttpServletResponse response,

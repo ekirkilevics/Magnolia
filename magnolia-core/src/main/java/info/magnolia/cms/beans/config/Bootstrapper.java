@@ -95,7 +95,7 @@ public final class Bootstrapper {
                     public boolean accept(File dir, String name) {
                         return name.endsWith(DataTransporter.XML)
                             || name.endsWith(DataTransporter.ZIP)
-                            || name.endsWith(DataTransporter.GZ); 
+                            || name.endsWith(DataTransporter.GZ);
                     }
                 });
 
