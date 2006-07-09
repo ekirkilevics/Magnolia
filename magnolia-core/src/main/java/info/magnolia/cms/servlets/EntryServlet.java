@@ -282,10 +282,10 @@ public class EntryServlet extends HttpServlet {
     /**
      * @param path path for nodedata in jcr repository
      * @param hm Hierarchy manager
-     * @param response HttpServletResponse
+     * @param res HttpServletResponse
      * @return InputStream or <code>null</code> if nodeData is not found
      */
-    private InputStream getNodedataAstream(String path, HierarchyManager hm, HttpServletResponse response) {
+    private InputStream getNodedataAstream(String path, HierarchyManager hm, HttpServletResponse res) {
 
         log.debug("getNodedataAstream for path \"{}\"", path); //$NON-NLS-1$
 
@@ -296,7 +296,7 @@ public class EntryServlet extends HttpServlet {
 
                     String sizeString = atom.getAttribute("size"); //$NON-NLS-1$
                     if (NumberUtils.isNumber(sizeString)) {
-                        response.setContentLength(Integer.parseInt(sizeString));
+                        res.setContentLength(Integer.parseInt(sizeString));
                     }
                 }
 
