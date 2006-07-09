@@ -10,6 +10,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,7 +39,8 @@ public class MagnoliaManagedFilter implements Filter {
         new SecurityFilter(),
         new MgnlContextFilter(),
         new MgnlVirtualUriFilter(),
-        new MgnlInterceptFilter()};
+        new MgnlInterceptFilter(),
+        new MgnlCmsFilter()};
 
     public void destroy() {
         for (int j = 0; j < filterChain.length; j++) {
@@ -51,6 +53,15 @@ public class MagnoliaManagedFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
         ServletException {
         FilterChain fullchain = new CustomFilterChain(chain, filterChain);
+
+        if (log.isDebugEnabled()) {
+            String pathInfo = ((HttpServletRequest) request).getPathInfo();
+            String requestURI = ((HttpServletRequest) request).getRequestURI();
+
+            if (pathInfo == null || !requestURI.startsWith("/.")) {
+                log.debug("handling: {}   path info: {}", requestURI, pathInfo);
+            }
+        }
 
         fullchain.doFilter(request, response);
     }

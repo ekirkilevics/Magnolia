@@ -97,9 +97,13 @@
     <priority value="WARN" />
   </category>
   <category name="openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant">
-      <priority value="INFO"/>
+    <priority value="INFO" />
   </category>
-
+  <category name="info.magnolia.cms.filters.MagnoliaManagedFilter">
+    <priority value="DEBUG" />
+    <!--  debug  -->
+    <appender-ref ref="console" />
+  </category>
   <category name="info.magnolia.cms.exchange" additivity="false">
     <priority value="info" />
     <appender-ref ref="log-activation" />
