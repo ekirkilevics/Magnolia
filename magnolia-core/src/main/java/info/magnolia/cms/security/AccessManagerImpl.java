@@ -15,6 +15,8 @@ package info.magnolia.cms.security;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -22,6 +24,11 @@ import org.apache.commons.lang.StringUtils;
  * @version $Revision:2558 $ ($Author:scharles $)
  */
 public class AccessManagerImpl implements AccessManager {
+
+    /**
+     * logger.
+     */
+    private static Logger log = LoggerFactory.getLogger(AccessManagerImpl.class);
 
     /**
      *
@@ -36,9 +43,17 @@ public class AccessManagerImpl implements AccessManager {
      */
     public boolean isGranted(String path, long permissions) {
         if (StringUtils.isEmpty(path)) {
-            return (getPermissions("/") & permissions) == permissions; //$NON-NLS-1$
+            path = "/"; //$NON-NLS-1$
         }
-        return (getPermissions(path) & permissions) == permissions;
+
+        long currentPermission = getPermissions(path);
+        boolean granted = (currentPermission & permissions) == permissions;
+
+        if (log.isDebugEnabled()) {
+            log.debug("Path: " + path + " -" + currentPermission + "-" + permissions + "=" + granted);
+        }
+
+        return granted;
     }
 
     /**
@@ -64,7 +79,8 @@ public class AccessManagerImpl implements AccessManager {
      */
     public long getPermissions(String path) {
         if (userPermissions == null) {
-            return Permission.ALL;
+            log.info("userPermissions not set, returning Permission.READ", new Exception());
+            return Permission.READ;
         }
         long permission = 0;
         int patternLength = 0;

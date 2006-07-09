@@ -288,7 +288,7 @@ public class MgnlContext {
 
         // @todo temporary patch to avoid NPEs
         if (context == null) {
-            log.error("Context is not set, defaulting to System Context");
+            log.warn("Context is not set, defaulting to System Context", new Exception()); // log call stack
             return MgnlContext.getSystemContext();
         }
 

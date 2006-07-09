@@ -54,8 +54,8 @@ public abstract class ContextSensitiveServlet extends HttpServlet {
     }
 
     /**
-     * Initialize Magnolia context. It creates a context and initialize the user only if these do not exist yet. <b>Note</b>:
-     * the implementation may get changed
+     * Initialize Magnolia context. It creates a context and initialize the user only if these do not exist yet.
+     * <strong>Note</strong>: the implementation may get changed
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {

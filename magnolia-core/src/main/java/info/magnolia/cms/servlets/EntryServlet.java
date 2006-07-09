@@ -12,29 +12,39 @@
  */
 package info.magnolia.cms.servlets;
 
-import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ModuleRegistration;
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
-import info.magnolia.cms.beans.config.VirtualURIManager;
+import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
+import info.magnolia.cms.core.Aggregator;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
+import java.io.InputStream;
 
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 import javax.servlet.ServletException;
+import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -44,14 +54,9 @@ import org.slf4j.LoggerFactory;
  * requests according to their nature -- all resource requests will go to ResourceDispatcher -- all page requests will
  * be handed over to the defined JSP or Servlet (template). Updated to allow caching of virtual URI's
  * @author Sameer Charles
- * @version 2.1
+ * @version 3.0
  */
 public class EntryServlet extends ContextSensitiveServlet {
-
-    /**
-     * Request parameter: the INTERCEPT holds the name of an administrative action to perform.
-     */
-    public static final String INTERCEPT = "mgnlIntercept"; //$NON-NLS-1$
 
     /**
      * Stable serialVersionUID.
@@ -64,14 +69,11 @@ public class EntryServlet extends ContextSensitiveServlet {
     private static Logger log = LoggerFactory.getLogger(EntryServlet.class);
 
     /**
-     * The default request interceptor path, defined in web.xml.
+     *
      */
-    private static final String REQUEST_INTERCEPTOR = "/RequestInterceptor"; //$NON-NLS-1$
+    private static final String NODE_DATA_TEMPLATE = "nodeDataTemplate";
 
-    /**
-     * The default request dispatcher.
-     */
-    private static final String DIRECT_REQUEST_RECEIVER = "/ResourceDispatcher"; //$NON-NLS-1$
+    private static final String VERSION_NUMBER = "mgnlVersion"; //$NON-NLS-1$
 
     /**
      * Allow caching of this specific resource. This method always returns <code>true</code>, and it's here to allow
@@ -88,39 +90,39 @@ public class EntryServlet extends ContextSensitiveServlet {
 
     /**
      * All HTTP/s requests are handled here.
-     * @param req HttpServletRequest
-     * @param res HttpServletResponse
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
      * @throws IOException can be thrown when the servlet is unable to write to the response stream
      * @throws ServletException
      */
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException, ServletException {
+    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
         // Initialize magnolia context
-        super.doGet(req, res);
+        initializeContext(request);
 
         if (ConfigLoader.isBootstrapping()) {
             // @todo a nice page, with the log content...
-            res.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs"); //$NON-NLS-1$
+            response.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs"); //$NON-NLS-1$
             return;
         }
 
         if (ModuleRegistration.getInstance().isRestartNeeded()) {
-            res.sendRedirect(req.getContextPath() + "/.magnolia/pages/restart.html");
+            response.sendRedirect(request.getContextPath() + "/.magnolia/pages/restart.html");
         }
 
-        try {
-            if (isAuthorized(req, res)) {
+        if (isAuthorized(request, response)) {
 
-                if (redirect(req, res)) {
+            // redirect: moved to a filter
 
-                    return;
-                }
-                intercept(req, res);
+            // intercept: moved to a filter
+
+            try {
                 // aggregate content
-                boolean success = Aggregator.collect(req);
+                boolean success = collect(request);
+
                 if (success) {
 
-                    Template template = (Template) req.getAttribute(Aggregator.TEMPLATE);
+                    Template template = (Template) request.getAttribute(Aggregator.TEMPLATE);
 
                     if (template != null) {
                         try {
@@ -130,51 +132,49 @@ public class EntryServlet extends ContextSensitiveServlet {
                             if (renderer == null) {
                                 throw new RuntimeException("No renderer found for type " + type);
                             }
-                            renderer.renderTemplate(template, req, res);
+                            renderer.renderTemplate(template, request, response);
                         }
                         catch (Exception e) {
                             // @todo better handling of rendering exception
                             log.error(e.getMessage(), e);
-                            if (!res.isCommitted()) {
-                                res.reset();
-                                res.setContentType("text/html");
+                            if (!response.isCommitted()) {
+                                response.reset();
+                                response.setContentType("text/html");
                             }
                             throw new NestableRuntimeException(e);
                         }
                     }
                     else {
                         // direct request
-                        req.getRequestDispatcher(DIRECT_REQUEST_RECEIVER).forward(req, res);
+                        handleResourceRequest(request, response);
                     }
 
                 }
                 else {
                     if (log.isDebugEnabled()) {
-                        log.debug("Resource not found, redirecting request for [{}] to 404 URI", req.getRequestURI()); //$NON-NLS-1$
+                        log.debug(
+                            "Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI()); //$NON-NLS-1$
                     }
 
-                    if (!res.isCommitted()) {
-                        res.sendError(HttpServletResponse.SC_NOT_FOUND);
+                    if (!response.isCommitted()) {
+                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
                     }
                     else {
                         log.info("Unable to redirect to 404 page, response is already committed. URI was {}", //$NON-NLS-1$
-                            req.getRequestURI());
+                            request.getRequestURI());
                     }
                 }
             }
+            catch (AccessDeniedException e) {
+                // don't log AccessDenied as errors, it can happen...
+                log.warn(e.getMessage());
+            }
+            catch (RepositoryException e) {
+                log.error(e.getMessage(), e);
+                throw new ServletException(e.getMessage(), e);
+            }
         }
-        catch (AccessDeniedException e) {
-            // don't log AccessDenied as errors, it can happen...
-            log.warn(e.getMessage());
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-            throw new ServletException(e.getMessage(), e);
-        }
-        catch (RuntimeException e) {
-            log.error(e.getMessage(), e);
-            throw new ServletException(e.getMessage(), e);
-        }
+
     }
 
     /**
@@ -206,71 +206,220 @@ public class EntryServlet extends ContextSensitiveServlet {
     }
 
     /**
-     * Redirect based on the mapping in config/server/.node.xml
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @return <code>true</code> if request has been redirected, <code>false</code> otherwise
+     * Get the requested resource and copy it to the ServletOutputStream, bit by bit.
+     * @param request HttpServletRequest as given by the servlet container
+     * @param response HttpServletResponse as given by the servlet container
+     * @throws IOException standard servlet exception
      */
-    private boolean redirect(HttpServletRequest request, HttpServletResponse response) {
-        String uri = this.getURIMap(request);
-        if (StringUtils.isNotEmpty(uri)) {
-            if (!response.isCommitted()) {
+    private void handleResourceRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-                if (uri.startsWith("redirect:")) {
-                    try {
-                        response.sendRedirect(request.getContextPath() + StringUtils.substringAfter(uri, "redirect:"));
-                    }
-                    catch (IOException e) {
-                        log.error("Failed to redirect to {}:{}", //$NON-NLS-1$
-                            new Object[]{uri, e.getMessage()});
+        String resourceHandle = (String) request.getAttribute(Aggregator.HANDLE);
+
+        log.debug("handleResourceRequest, resourceHandle=\"{}\"", resourceHandle); //$NON-NLS-1$
+
+        if (StringUtils.isNotEmpty(resourceHandle)) {
+
+            HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+
+            InputStream is = null;
+            try {
+                is = getNodedataAstream(resourceHandle, hm, response);
+                if (null != is) {
+                    // todo find better way to discover if resource could be compressed, implement as in "cache"
+                    // browsers will always send header saying either it can decompress or not, but
+                    // resources like jpeg which is already compressed should be not be written on
+                    // zipped stream otherwise some browsers takes a long time to render
+                    sendUnCompressed(is, response);
+                    IOUtils.closeQuietly(is);
+                    return;
+                }
+            }
+            catch (IOException e) {
+                // don't log at error level since tomcat tipically throws a
+                // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
+                if (log.isDebugEnabled()) {
+                    log.debug(
+                        "Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                }
+            }
+            catch (Exception e) {
+                log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            finally {
+                IOUtils.closeQuietly(is);
+            }
+        }
+        if (log.isDebugEnabled()) {
+            log.debug("Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI()); //$NON-NLS-1$
+        }
+
+        if (!response.isCommitted()) {
+            response.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+        else {
+            log.info("Unable to redirect to 404 page, response is already committed"); //$NON-NLS-1$
+        }
+
+    }
+
+    /**
+     * Send data as is.
+     * @param is Input stream for the resource
+     * @param res HttpServletResponse as received by the service method
+     * @throws IOException standard servlet exception
+     */
+    private void sendUnCompressed(InputStream is, HttpServletResponse res) throws IOException {
+        ServletOutputStream os = res.getOutputStream();
+        byte[] buffer = new byte[8192];
+        int read = 0;
+        while ((read = is.read(buffer)) > 0) {
+            os.write(buffer, 0, read);
+        }
+        os.flush();
+        IOUtils.closeQuietly(os);
+    }
+
+    /**
+     * @param path path for nodedata in jcr repository
+     * @param hm Hierarchy manager
+     * @param res HttpServletResponse
+     * @return InputStream or <code>null</code> if nodeData is not found
+     */
+    private InputStream getNodedataAstream(String path, HierarchyManager hm, HttpServletResponse res) {
+
+        log.debug("getNodedataAstream for path \"{}\"", path); //$NON-NLS-1$
+
+        try {
+            NodeData atom = hm.getNodeData(path);
+            if (atom != null) {
+                if (atom.getType() == PropertyType.BINARY) {
+
+                    String sizeString = atom.getAttribute("size"); //$NON-NLS-1$
+                    if (NumberUtils.isNumber(sizeString)) {
+                        res.setContentLength(Integer.parseInt(sizeString));
                     }
                 }
-                else {
 
+                Value value = atom.getValue();
+                if (value != null) {
+                    return value.getStream();
+                }
+            }
+
+            log.warn("Resource not found: [{}]", path); //$NON-NLS-1$
+
+        }
+        catch (PathNotFoundException e) {
+            log.warn("Resource not found: [{}]", path); //$NON-NLS-1$
+        }
+        catch (RepositoryException e) {
+            log.error("RepositoryException while reading Resource [" + path + "]", e); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        return null;
+    }
+
+    /**
+     * Collect content from the pre configured repository and attach it to the HttpServletRequest.
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     */
+    protected boolean collect(HttpServletRequest request) throws PathNotFoundException, RepositoryException {
+
+        String uri = StringUtils.substringBeforeLast(Path.getURI(request), "."); //$NON-NLS-1$
+        String extension = StringUtils.substringAfterLast(Path.getURI(request), "."); //$NON-NLS-1$
+
+        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+
+        Content requestedPage = null;
+        NodeData requestedData = null;
+        Template template = null;
+
+        if (hierarchyManager.isPage(uri)) {
+            requestedPage = hierarchyManager.getContent(uri);
+
+            // check if its a request for a versioned page
+            if (request.getParameter(VERSION_NUMBER) != null) {
+                // get versioned state
+                try {
+                    requestedPage = requestedPage.getVersionedContent(request.getParameter(VERSION_NUMBER));
+                }
+                catch (RepositoryException re) {
+                    log.debug(re.getMessage(), re);
+                    log.error("Unable to get versioned state, rendering current state of {}", uri);
+                }
+            }
+
+            String templateName = requestedPage.getMetaData().getTemplate();
+
+            if (StringUtils.isBlank(templateName)) {
+                log.error("No template configured for page [{}].", requestedPage.getHandle()); //$NON-NLS-1$
+            }
+
+            template = TemplateManager.getInstance().getInfo(templateName, extension);
+
+            if (template == null) {
+                log.error("Template [{}] for page [{}] not found.", //$NON-NLS-1$
+                    templateName,
+                    requestedPage.getHandle());
+            }
+        }
+        else {
+            if (hierarchyManager.isNodeData(uri)) {
+                requestedData = hierarchyManager.getNodeData(uri);
+            }
+            else {
+                // check again, resource might have different name
+                int lastIndexOfSlash = uri.lastIndexOf("/"); //$NON-NLS-1$
+
+                if (lastIndexOfSlash > 0) {
+
+                    uri = StringUtils.substringBeforeLast(uri, "/"); //$NON-NLS-1$
                     try {
-                        request.getRequestDispatcher(uri).forward(request, response);
+                        requestedData = hierarchyManager.getNodeData(uri);
+
+                        // this is needed for binary nodedata, e.g. images are found using the path:
+                        // /features/integration/headerImage instead of /features/integration/headerImage/header30_2
+
                     }
-                    catch (Exception e) {
-                        log.error("Failed to forward to {} - {}:{}", //$NON-NLS-1$
-                            new Object[]{uri, ClassUtils.getShortClassName(e.getClass()), e.getMessage()});
+                    catch (PathNotFoundException e) {
+                        // no page available
+                        return false;
                     }
+                    catch (RepositoryException e) {
+                        log.debug(e.getMessage(), e);
+                        return false;
+                    }
+                }
+            }
+
+            if (requestedData != null) {
+                String templateName = requestedData.getAttribute(NODE_DATA_TEMPLATE); //$NON-NLS-1$
+
+                if (!StringUtils.isEmpty(templateName)) {
+                    template = TemplateManager.getInstance().getInfo(templateName, extension);
                 }
             }
             else {
-                log.warn("Response is already committed, cannot forward to {} (original URI was {})",//$NON-NLS-1$
-                    uri,
-                    request.getRequestURI());
-            }
-
-            return true;
-        }
-        return false;
-    }
-
-    /**
-     * Attach Interceptor servlet if interception needed
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     */
-    private void intercept(HttpServletRequest request, HttpServletResponse response) {
-        if (request.getParameter(INTERCEPT) != null) {
-            try {
-                request.getRequestDispatcher(REQUEST_INTERCEPTOR).include(request, response);
-            }
-            catch (Exception e) {
-                log.error("Failed to Intercept"); //$NON-NLS-1$
-                log.error(e.getMessage(), e);
+                return false;
             }
         }
-    }
 
-    /**
-     * @return URI mapping as in ServerInfo
-     * @param request HttpServletRequest
-     */
-    private String getURIMap(HttpServletRequest request) {
-        return VirtualURIManager.getInstance().getURIMapping(
-            StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()));
+        // Attach all collected information to the HttpServletRequest.
+        if (requestedPage != null) {
+            request.setAttribute(Aggregator.ACTPAGE, requestedPage);
+            request.setAttribute(Aggregator.CURRENT_ACTPAGE, requestedPage);
+        }
+        if ((requestedData != null) && (requestedData.getType() == PropertyType.BINARY)) {
+            File file = new File();
+            file.setProperties(requestedData);
+            file.setNodeData(requestedData);
+            request.setAttribute(Aggregator.FILE, file);
+        }
+
+        request.setAttribute(Aggregator.HANDLE, uri);
+        request.setAttribute(Aggregator.TEMPLATE, template);
+
+        return true;
     }
 
 }

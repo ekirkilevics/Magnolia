@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.context.MgnlContext;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -20,6 +22,7 @@ import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -34,8 +37,14 @@ public class MgnlContextFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
         ServletException {
-        // unused
+
+        if (!MgnlContext.hasInstance()) {
+            MgnlContext.initAsWebContext((HttpServletRequest) request);
+        }
+
         chain.doFilter(request, response);
+
+        MgnlContext.setInstance(null);
     }
 
     public void destroy() {

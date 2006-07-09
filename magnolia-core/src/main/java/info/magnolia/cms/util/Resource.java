@@ -12,11 +12,13 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.Aggregator;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
@@ -96,7 +98,7 @@ public final class Resource {
      * @see info.magnolia.cms.security.SessionAccessControl#getHierarchyManager(javax.servlet.http.HttpServletRequest)
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest req) {
-        return (HierarchyManager) req.getAttribute(Aggregator.HIERARCHY_MANAGER);
+        return MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
     }
 
     /**

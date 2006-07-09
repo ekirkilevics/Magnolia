@@ -8,7 +8,7 @@
     <display-name>Magnolia global filters</display-name>
     <filter-name>magnoliaFilterChain</filter-name>
     <filter-class>info.magnolia.cms.filters.MagnoliaManagedFilter</filter-class>
-    <!-- 
+    <!--
       login configuration is now in config jcr, path: /server/config/login
     -->
   </filter>
@@ -29,18 +29,6 @@
     <display-name>magnolia EntryServlet</display-name>
     <servlet-name>magnolia</servlet-name>
     <servlet-class>info.magnolia.cms.servlets.EntryServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <description>Request interceptor servlet</description>
-    <display-name>magnolia RequestInterceptor</display-name>
-    <servlet-name>RequestInterceptor</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.RequestInterceptor</servlet-class>
-  </servlet>
-  <servlet>
-    <description>The resource dispatcher servlet</description>
-    <display-name>magnolia ResourceDispatcher</display-name>
-    <servlet-name>ResourceDispatcher</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.ResourceDispatcher</servlet-class>
   </servlet>
   <servlet>
     <description>Activation handler servlet</description>
@@ -127,14 +115,6 @@
   <servlet-mapping>
     <servlet-name>magnolia</servlet-name>
     <url-pattern>/</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>RequestInterceptor</servlet-name>
-    <url-pattern>/RequestInterceptor</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ResourceDispatcher</servlet-name>
-    <url-pattern>/ResourceDispatcher</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>ActivationHandler</servlet-name>

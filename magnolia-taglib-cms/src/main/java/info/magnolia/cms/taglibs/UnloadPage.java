@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.Aggregator;
+import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.util.Resource;
 
 import javax.servlet.http.HttpServletRequest;

@@ -12,8 +12,8 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.Resource;

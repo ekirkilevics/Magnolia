@@ -36,7 +36,9 @@ public class MagnoliaManagedFilter implements Filter {
         new ContentTypeFilter(),
         new MultipartRequestFilter(),
         new SecurityFilter(),
-        new UnsetContextFilter()};
+        new MgnlContextFilter(),
+        new MgnlVirtualUriFilter(),
+        new MgnlInterceptFilter()};
 
     public void destroy() {
         for (int j = 0; j < filterChain.length; j++) {

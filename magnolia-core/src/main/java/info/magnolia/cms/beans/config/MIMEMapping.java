@@ -12,9 +12,9 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
 
@@ -154,10 +154,10 @@ public final class MIMEMapping {
         if (MIMEMapping.cachedContent.containsKey(loweredKey)) {
             return ((MIMEMappingItem) MIMEMapping.cachedContent.get(loweredKey)).mime;
         }
-        else {
-            // this is expected by the caller getMIMEType(HttpServletRequest)
-            return null;
-        }
+
+        // this is expected by the caller getMIMEType(HttpServletRequest)
+        return null;
+
     }
 
     /**
@@ -166,7 +166,9 @@ public final class MIMEMapping {
      * @return MIME type
      */
     public static String getMIMEType(HttpServletRequest request) {
-        String extension = (String) request.getAttribute(Aggregator.EXTENSION);
+
+        String extension = StringUtils.substringAfterLast(Path.getURI(request), "."); //$NON-NLS-1$
+
         if (StringUtils.isEmpty(extension)) {
             // the . could be in the middle of the url
             extension = StringUtils.substringAfterLast(request.getRequestURI(), "/");
