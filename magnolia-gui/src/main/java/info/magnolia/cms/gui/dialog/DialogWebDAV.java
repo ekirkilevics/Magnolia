@@ -28,6 +28,7 @@ import java.net.URLDecoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Hashtable;
@@ -695,12 +696,12 @@ public class DialogWebDAV extends DialogBox {
         int bytes = (new Integer(fileSize)).intValue();
         int size = (bytes / 1024);
         if (size == 0) {
-            return (bytes + " bytes"); //$NON-NLS-1$ 
+            return (bytes + " bytes"); //$NON-NLS-1$
         }
         else if (size >= 1024) {
-            return ((size / 1024) + " mb"); //$NON-NLS-1$ 
+            return ((size / 1024) + " mb"); //$NON-NLS-1$
         }
-        return (size + " kb"); //$NON-NLS-1$ 
+        return (size + " kb"); //$NON-NLS-1$
     }
 
     public String getFormattedDate(String date, String format) {
@@ -723,4 +724,14 @@ public class DialogWebDAV extends DialogBox {
         return new Hidden(SESSION_ATTRIBUTENAME_DIALOGOBJECT_REMOVE, this
             .getConfigValue(SESSION_ATTRIBUTENAME_DIALOGOBJECT), false).getHtml();
     }
+
+    class DialogWebDAVComparator implements Comparator {
+
+        public int compare(Object o, Object o1) throws ClassCastException {
+            String s1 = ((String) ((Hashtable) o).get("name")).toLowerCase(); //$NON-NLS-1$
+            String s2 = ((String) ((Hashtable) o1).get("name")).toLowerCase(); //$NON-NLS-1$
+            return s1.compareTo(s2);
+        }
+    }
+
 }
