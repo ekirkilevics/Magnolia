@@ -112,8 +112,9 @@ public class SecurityFilter implements Filter {
         else if (Authenticator.isAuthenticated(req)) {
             return true;
         }
-        else if (SecureURI.isUnsecure(Path.getURI(req)))
+        else if (SecureURI.isUnsecure(Path.getURI(req))) {
             return true;
+        }
         else if (SecureURI.isProtected(Path.getURI(req))) {
             return authenticate(req, res);
         }
@@ -127,7 +128,7 @@ public class SecurityFilter implements Filter {
     /**
      * Authenticate on basic headers.
      * @param request HttpServletRequest
-     * @param response HttpServletResponst
+     * @param response HttpServletResponse
      * @return <code>true</code> if the user is authenticated
      */
     private boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
