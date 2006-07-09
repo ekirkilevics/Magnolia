@@ -38,6 +38,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -56,7 +57,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version 3.0
  */
-public class EntryServlet extends ContextSensitiveServlet {
+public class EntryServlet extends HttpServlet {
 
     /**
      * Stable serialVersionUID.
@@ -97,8 +98,7 @@ public class EntryServlet extends ContextSensitiveServlet {
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        // Initialize magnolia context
-        initializeContext(request);
+        // context initialization: moved to a filter
 
         if (ConfigLoader.isBootstrapping()) {
             // @todo a nice page, with the log content...
@@ -265,11 +265,11 @@ public class EntryServlet extends ContextSensitiveServlet {
     /**
      * Send data as is.
      * @param is Input stream for the resource
-     * @param res HttpServletResponse as received by the service method
+     * @param response HttpServletResponse as received by the service method
      * @throws IOException standard servlet exception
      */
-    private void sendUnCompressed(InputStream is, HttpServletResponse res) throws IOException {
-        ServletOutputStream os = res.getOutputStream();
+    private void sendUnCompressed(InputStream is, HttpServletResponse response) throws IOException {
+        ServletOutputStream os = response.getOutputStream();
         byte[] buffer = new byte[8192];
         int read = 0;
         while ((read = is.read(buffer)) > 0) {
@@ -282,10 +282,10 @@ public class EntryServlet extends ContextSensitiveServlet {
     /**
      * @param path path for nodedata in jcr repository
      * @param hm Hierarchy manager
-     * @param res HttpServletResponse
+     * @param response HttpServletResponse
      * @return InputStream or <code>null</code> if nodeData is not found
      */
-    private InputStream getNodedataAstream(String path, HierarchyManager hm, HttpServletResponse res) {
+    private InputStream getNodedataAstream(String path, HierarchyManager hm, HttpServletResponse response) {
 
         log.debug("getNodedataAstream for path \"{}\"", path); //$NON-NLS-1$
 
@@ -296,7 +296,7 @@ public class EntryServlet extends ContextSensitiveServlet {
 
                     String sizeString = atom.getAttribute("size"); //$NON-NLS-1$
                     if (NumberUtils.isNumber(sizeString)) {
-                        res.setContentLength(Integer.parseInt(sizeString));
+                        response.setContentLength(Integer.parseInt(sizeString));
                     }
                 }
 
