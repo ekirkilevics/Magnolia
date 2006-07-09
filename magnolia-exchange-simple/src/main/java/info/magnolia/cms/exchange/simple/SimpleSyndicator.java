@@ -612,8 +612,6 @@ public class SimpleSyndicator implements Syndicator {
                 elementfilter,
                 "",
                 content.getHandle(),
-                false,
-                false,
                 session);
         }
         else {
@@ -622,8 +620,6 @@ public class SimpleSyndicator implements Syndicator {
                 elementfilter,
                 "",
                 content.getJCRNode().getPath(),
-                false,
-                true,
                 session);
         }
         IOUtils.closeQuietly(gzipOutputStream);
