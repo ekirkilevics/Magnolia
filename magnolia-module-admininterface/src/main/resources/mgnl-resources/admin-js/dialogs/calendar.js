@@ -5,7 +5,6 @@
 
 var weekend = [0,6];
 var weekendColor = "#f6f6f6";
-var nullGif= contextPath + "/admindocroot/0.gif";
 var buttonEvents="onmousedown=mgnlShiftPushButtonDown(this); onmouseout=mgnlShiftPushButtonOut(this);"
 
 var selectedTime;
@@ -123,33 +122,32 @@ Calendar.prototype.getMonthlyCalendarCode = function() {
     var vData_Code = "";
 
     // Begin Table Drawing code here..
-    //vCode = vCode + "<table cellpadding='2' cellspacing='1' bgcolor=\"" + this.gBGColor + "\">";
-    vCode = vCode + "<table cellpadding=0 cellspacing=0 border=0>";
+    vCode = vCode + '<table cellpadding="0" cellspacing="0" border="0" class="mgnlcalendar">';
 
     vHeader_Code = this.cal_header();
     vData_Code = this.cal_data();
 
-    vCode = vCode + "<tr>";
-    vCode = vCode + "<td><img src="+nullGif+" width=33 height=1></td>";
-    vCode = vCode + "<td><img src="+nullGif+" width=33 height=1></td>";
-    vCode = vCode + "<td><img src="+nullGif+" width=33 height=1></td>";
-    vCode = vCode + "<td><img src="+nullGif+" width=33 height=1></td>";
-    vCode = vCode + "<td><img src="+nullGif+" width=33 height=1></td>";
-    vCode = vCode + "<td><img src="+nullGif+" width=33 height=1></td>";
-    vCode = vCode + "<td><img src="+nullGif+" width=33 height=1></td>";
+    vCode = vCode + '<tr>';
+    vCode = vCode + '<td style="width:33px;height:1px"></td>';
+    vCode = vCode + '<td style="width:33px;height:1px"></td>';
+    vCode = vCode + '<td style="width:33px;height:1px"></td>';
+    vCode = vCode + '<td style="width:33px;height:1px"></td>';
+    vCode = vCode + '<td style="width:33px;height:1px"></td>';
+    vCode = vCode + '<td style="width:33px;height:1px"></td>';
+    vCode = vCode + '<td style="width:33px;height:1px"></td>';
     vCode = vCode + "</tr>";
 
-    vCode = vCode + "<tr><td class=mgnlDialogBoxLine colspan=7><img src="+nullGif+" width=1 height=1></td></tr>";
+    vCode = vCode + '<tr><td class="mgnlDialogBoxLine" colspan="7"></td></tr>';
 
     vCode = vCode + vHeader_Code;
 
-    vCode = vCode + "<tr><td class=mgnlDialogBoxLine colspan=7><img src="+nullGif+" width=1 height=1></td></tr>";
+    vCode = vCode + '<tr><td class="mgnlDialogBoxLine" colspan="7"></td></tr>';
 
     vCode = vCode + vData_Code;
 
-    vCode = vCode + "<tr><td class=mgnlDialogBoxLine colspan=7><img src="+nullGif+" width=1 height=1></td></tr>";
+    vCode = vCode + '<tr><td class="mgnlDialogBoxLine" colspan="7"></td></tr>';
 
-    vCode = vCode + "</table>";
+    vCode = vCode + '</table>';
 
     return vCode;
 }
@@ -217,8 +215,8 @@ Calendar.prototype.show = function() {
 
     this.wwrite("<table width='1%' border='0' cellspacing='0' cellpadding='0'>");
     this.wwrite("<tr>");
-    this.wwrite("<td><img src="+nullGif+" width=3 height=11></td>");
-    this.wwrite("<td><img src="+nullGif+" width=231 height=1></td>");
+    this.wwrite('<td style="width:3px;height:11px"></td>');
+    this.wwrite('<td style="width:231px;height:1px"></td>');
 
     this.wwrite("<tr><td></td><td>");
 
@@ -233,7 +231,7 @@ Calendar.prototype.show = function() {
 
     this.wwrite("<table width='100%' border='0' cellspacing='0' cellpadding='0'><tr>");
 
-    this.wwrite("<tr><td class=mgnlDialogBoxLine colspan=3><img src="+nullGif+" width=1 height=1></td></tr>");
+    this.wwrite('<tr><td class="mgnlDialogBoxLine" colspan="3"></td></tr>');
     this.wwrite("<tr><td height=4></td></tr>");
 
     this.wwrite("<td width='1%' align='center'>");
@@ -253,7 +251,7 @@ Calendar.prototype.show = function() {
     this.wwrite("<table width='100%' border='0' cellspacing='0' cellpadding='0'>");
 
     this.wwrite("<tr><td><br></td></tr>");
-    this.wwrite("<tr><td class=mgnlDialogBoxLine colspan=3><img src="+nullGif+" width=1 height=1></td></tr>");
+    this.wwrite('<tr><td class="mgnlDialogBoxLine" colspan="3"></td></tr>');
     this.wwrite("<tr><td height=4></td></tr>");
 
     this.wwrite("<tr><td width='1%' align='center'>");
@@ -270,8 +268,7 @@ Calendar.prototype.show = function() {
         "\">&nbsp;&raquo;&nbsp;</span><\/a></td></tr></table>");
 
     this.wwrite("</td></tr>");
-    this.wwrite("<tr><td colspan='2'><img src='"+nullGif+"' width='1' height='15'>");
-    this.wwrite("</td></tr>")
+    this.wwrite('<tr><td colspan="2" style="height:15px"></td></tr>')
     this.wwrite("<tr><td></td><td>");
 
 
@@ -279,7 +276,7 @@ Calendar.prototype.show = function() {
     vCode = this.getMonthlyCalendarCode();
     this.wwrite(vCode);
 
-    this.wwrite("</td><td width='1'><img src='"+nullGif+"' width='1' height='155'></td></tr>");
+    this.wwrite('</td><td style="width:1px;height:155px"></td></tr>');
 
     this.wwrite("<tr><td></td><td><br>");
     this.wwrite("<form name=mgnlFormMain>");
@@ -296,8 +293,8 @@ Calendar.prototype.show = function() {
 
     if (this.gShowTime==true)
         {
-        this.wwriteA("<tr><td></td><td class=mgnlDialogBoxLine><img src="+nullGif+" width=1 height=1></td></tr>");
-        this.wwrite("<tr><td height=3></td></tr>");
+        this.wwriteA('<tr><td></td><td class="mgnlDialogBoxLine"></td></tr>');
+        this.wwrite('<tr><td height="3"></td></tr>');
         this.wwrite("<tr><td></td><td>");
 
         this.wwrite("<span class=description>Time: </span>");
@@ -354,9 +351,9 @@ Calendar.prototype.show = function() {
     this.wwriteA("<tr><td colspan='2'><br></td></tr>");
 
 
-    if (navigator.platform == "MacPPC") this.wwriteA("<tr><td colspan='2'><img src="+nullGif+" width='1' height='5'></td></tr>");
+    if (navigator.platform == "MacPPC") this.wwriteA('<tr><td colspan="2" style="width:1px;height:5px"></td></tr>');
 
-    this.wwriteA("<tr><td></td><td class=mgnlDialogBoxLine><img src="+nullGif+" width=1 height=1></td></tr>");
+    this.wwriteA('<tr><td></td><td class="mgnlDialogBoxLine" style="width:1px;height:1px"></td></tr>');
     this.wwriteA("<tr><td height=4></td></tr>");
 
     this.wwriteA("<tr><td></td><td align=right><span onclick='javascript:saveData()' class='mgnlControlButton' "+buttonEvents+">&nbsp;&nbsp;&nbsp;&nbsp;Ok&nbsp;&nbsp;&nbsp;&nbsp;</span>");
@@ -581,7 +578,7 @@ function show_calendar() {
 
     p_month = new String(gNow.getMonth());
     p_year = new String(gNow.getFullYear().toString());
-    vWinCal = window.open("/admindocroot/0.gif", "Calendar","width=275,height=400,status=no,resizable=no");
+    vWinCal = window.open("about:blank", "Calendar","width=275,height=400,status=no,resizable=no");
     vWinCal.opener = self;
     ggWinCal = vWinCal;
     selectedTime =
