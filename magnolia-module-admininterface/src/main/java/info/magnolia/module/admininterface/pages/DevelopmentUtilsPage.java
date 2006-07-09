@@ -213,12 +213,12 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
                 if (templates) {
                     exportChildren(ContentRepository.CONFIG, session, moduleroot, "templates", new ItemType[]{
                         ItemType.CONTENT,
-                        ItemType.CONTENTNODE});
+                        ItemType.CONTENTNODE}, false);
                 }
                 if (paragraphs) {
                     exportChildren(ContentRepository.CONFIG, session, moduleroot, "paragraphs", new ItemType[]{
                         ItemType.CONTENT,
-                        ItemType.CONTENTNODE});
+                        ItemType.CONTENTNODE}, false);
                 }
                 if (dialogs) {
                     exportChildren(
@@ -226,7 +226,8 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
                         session,
                         moduleroot,
                         "dialogs",
-                        new ItemType[]{ItemType.CONTENT});
+                        new ItemType[]{ItemType.CONTENT},
+                        true);
                 }
                 AlertUtil.setMessage("Backup done!");
             }
@@ -239,6 +240,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
         if (secure) {
             backupChildren(ContentRepository.CONFIG, "/server/secureURIList");
+            backupChildren(ContentRepository.CONFIG, "/server/unsecureURIList");
         }
 
         if (website) {
@@ -308,6 +310,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     /**
      * @param session
      * @param moduleroot
+     * @param exportContentContainingContentNodes
      * @throws PathNotFoundException
      * @throws RepositoryException
      * @throws AccessDeniedException
@@ -315,14 +318,15 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
      * @throws IOException
      */
     private void exportChildren(String repository, Session session, Content moduleroot, String path,
-        ItemType[] itemTypes) throws PathNotFoundException, RepositoryException, AccessDeniedException,
-        FileNotFoundException, IOException {
+        ItemType[] itemTypes, boolean exportContentContainingContentNodes) throws PathNotFoundException,
+        RepositoryException, AccessDeniedException, FileNotFoundException, IOException {
         Content templateRoot = moduleroot.getContent(path);
 
         Iterator children = ContentUtil.collectAllChildren(templateRoot, itemTypes).iterator();
         while (children.hasNext()) {
             Content exported = (Content) children.next();
-            if (!exported.getNodeDataCollection().isEmpty()) { // ignore "directories"
+            if (!exported.getNodeDataCollection().isEmpty() // ignore "directories"
+                || (exportContentContainingContentNodes && exported.hasChildren(ItemType.CONTENTNODE.getSystemName()))) {
                 exportNode(repository, session, exported);
             }
         }

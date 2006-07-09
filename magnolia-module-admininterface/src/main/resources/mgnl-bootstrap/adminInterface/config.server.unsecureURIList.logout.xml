@@ -13,6 +13,6 @@
     <sv:value>2fe1f6f6-8814-4256-ba0c-eab575509a7f</sv:value>
   </sv:property>
   <sv:property sv:name="URI" sv:type="String">
-    <sv:value>.magnolia/pages/logout.html</sv:value>
+    <sv:value>/.magnolia/pages/logout.html</sv:value>
   </sv:property>
 </sv:node>
