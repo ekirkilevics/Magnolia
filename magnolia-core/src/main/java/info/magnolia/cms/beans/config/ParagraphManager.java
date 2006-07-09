@@ -108,7 +108,7 @@ public class ParagraphManager extends ObservedManager {
     protected Paragraph addParagraphToCache(Content c) {
         Paragraph pi = new Paragraph();
 
-        String name = c.getNodeData(ND_NAME).getString();//$NON-NLS-1$
+        String name = c.getNodeData(ND_NAME).getString();
         if (StringUtils.isEmpty(name)) {
             name = c.getName();
         }
@@ -116,20 +116,20 @@ public class ParagraphManager extends ObservedManager {
         pi.setName(name);
 
         // by default just use the dialog with the same name of the paragraph
-        String dialog = c.getNodeData(ND_DIALOG).getString();//$NON-NLS-1$
+        String dialog = c.getNodeData(ND_DIALOG).getString();
         if (StringUtils.isEmpty(dialog)) {
             dialog = c.getName();
         }
         pi.setDialog(dialog);
 
-        pi.setTemplatePath(c.getNodeData(ND_TEMPLATE_PATH).getString()); //$NON-NLS-1$
-        pi.setDialogPath(c.getNodeData(ND_DIALOG_PATH).getString()); //$NON-NLS-1$
-        pi.setTemplateType(c.getNodeData(ND_TYPE).getString()); //$NON-NLS-1$
-        pi.setTitle(c.getNodeData(ND_TITLE).getString()); //$NON-NLS-1$
-        pi.setDescription(c.getNodeData(ND_DESCRIPTION).getString()); //$NON-NLS-1$
-        pi.setI18nBasename(c.getNodeData(ND_I18N_BASENAME).getString()); //$NON-NLS-1$
+        pi.setTemplatePath(c.getNodeData(ND_TEMPLATE_PATH).getString()); 
+        pi.setDialogPath(c.getNodeData(ND_DIALOG_PATH).getString()); 
+        pi.setTemplateType(c.getNodeData(ND_TYPE).getString()); 
+        pi.setTitle(c.getNodeData(ND_TITLE).getString()); 
+        pi.setDescription(c.getNodeData(ND_DESCRIPTION).getString()); 
+        pi.setI18nBasename(c.getNodeData(ND_I18N_BASENAME).getString()); 
         if (Paragraph.log.isDebugEnabled()) {
-            Paragraph.log.debug("Registering paragraph [{}]", pi.getName()); //$NON-NLS-1$ //$NON-NLS-2$
+            Paragraph.log.debug("Registering paragraph [{}]", pi.getName()); //$NON-NLS-1$ 
         }
 
         paragraphs.put(pi.getName(), pi);

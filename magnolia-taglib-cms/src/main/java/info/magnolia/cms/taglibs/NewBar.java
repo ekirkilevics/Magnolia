@@ -194,8 +194,9 @@ public class NewBar extends TagSupport implements BarTag {
                     bar.drawHtml(pageContext.getOut());
                 }
                 catch (Exception e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                    }
                 }
             }
         }

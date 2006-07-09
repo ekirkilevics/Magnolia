@@ -35,11 +35,9 @@ import javax.jcr.observation.EventListener;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 
 import org.apache.commons.collections.Transformer;
-import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.collections.map.LazyMap;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

@@ -12,21 +12,19 @@
  */
 package info.magnolia.cms.gui.controlx.list.util;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+
 import java.util.Calendar;
 import java.util.Date;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.NodeDataUtil;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
-
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.Value;
 
 
 /**

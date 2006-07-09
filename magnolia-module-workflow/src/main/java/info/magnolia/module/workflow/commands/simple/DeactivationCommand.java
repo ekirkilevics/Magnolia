@@ -37,7 +37,7 @@ public class DeactivationCommand extends MgnlCommand {
         String path;
         path = (String) ctx.get(Context.ATTRIBUTE_PATH);
         try {
-            doDeactivate(((info.magnolia.context.Context) ctx).getUser(), path);
+            doDeactivate((ctx).getUser(), path);
         }
         catch (Exception e) {
             log.error("cannot do deactivate", e);

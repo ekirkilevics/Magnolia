@@ -158,10 +158,12 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
         try {
             ArrayList list = MBeanServerFactory.findMBeanServer(null);
             MBeanServer mbeanServer;
-            if (list != null && list.size() > 0)
+            if (list != null && list.size() > 0) {
                 mbeanServer = (MBeanServer) list.get(0);
-            else
+            }
+            else {
                 mbeanServer = MBeanServerFactory.createMBeanServer();
+            }
             mbeanServer.registerMBean(this, new ObjectName(objectName));
         }
         catch (Exception e) {

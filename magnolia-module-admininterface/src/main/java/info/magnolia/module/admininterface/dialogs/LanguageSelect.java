@@ -12,6 +12,12 @@
  */
 package info.magnolia.module.admininterface.dialogs;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.gui.control.SelectOption;
+import info.magnolia.cms.gui.dialog.DialogSelect;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.context.MgnlContext;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -25,12 +31,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.control.SelectOption;
-import info.magnolia.cms.gui.dialog.DialogSelect;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.context.MgnlContext;
 
 
 /**

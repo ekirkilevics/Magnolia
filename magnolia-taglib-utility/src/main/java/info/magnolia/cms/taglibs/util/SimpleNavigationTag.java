@@ -324,7 +324,7 @@ public class SimpleNavigationTag extends TagSupport {
                 // self
                 showChildren = true;
                 self = true;
-                cssClasses.add(CSS_LI_ACTIVE); //$NON-NLS-1$
+                cssClasses.add(CSS_LI_ACTIVE); 
             }
             else if (!showChildren) {
                 showChildren = (child.getLevel() <= activePage.getAncestors().size() && activePage.getAncestor(

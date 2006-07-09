@@ -4,7 +4,6 @@ import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.mail.Session;

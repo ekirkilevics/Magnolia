@@ -12,12 +12,12 @@
  */
 package info.magnolia.module.admininterface.dialogs;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.gui.dialog.DialogStatic;
+
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.dialog.DialogStatic;
 
 
 /**

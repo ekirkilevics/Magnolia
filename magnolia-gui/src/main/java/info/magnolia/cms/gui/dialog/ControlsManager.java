@@ -61,7 +61,7 @@ public final class ControlsManager extends ObservedManager {
             Content controlNode = (Content) iterator.next();
 
             if (log.isDebugEnabled()) {
-                log.debug("Initializing control [{}]", controlNode); //$NON-NLS-1$ //$NON-NLS-2$
+                log.debug("Initializing control [{}]", controlNode); //$NON-NLS-1$ 
             }
 
             String classNodeData = controlNode.getNodeData(DATA_CONTROL_CLASS).getString();

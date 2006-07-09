@@ -230,13 +230,15 @@ public class SimpleSyndicator implements Syndicator {
             this.updateActivationDetails();
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.error("Activation failed for path:" + ((path != null) ? path : "[null]"), e);
+            }
             throw new ExchangeException(e);
         }
         finally {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Cleaning temporary files");
+            }
             cleanTemporaryStore(activationContent);
         }
     }
@@ -279,8 +281,9 @@ public class SimpleSyndicator implements Syndicator {
             throw new ExchangeException(e);
         }
         finally {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Cleaning temporary files");
+            }
             cleanTemporaryStore(activationContent);
         }
     }
@@ -354,8 +357,9 @@ public class SimpleSyndicator implements Syndicator {
      */
     private void cleanTemporaryStore(ActivationContent activationContent) {
         if (activationContent == null) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Clean temporary store - nothing to do");
+            }
             return;
         }
         Iterator keys = activationContent.getFiles().keySet().iterator();

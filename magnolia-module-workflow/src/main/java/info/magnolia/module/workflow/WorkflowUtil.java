@@ -220,8 +220,9 @@ public class WorkflowUtil {
         }
         queryString.append("]");
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.info("xpath query string = " + queryString);
+        }
 
         final List doQuery = storage.doQuery(queryString.toString());
         long end = System.currentTimeMillis();
@@ -295,8 +296,9 @@ public class WorkflowUtil {
         queryString.append(GroupName);
         queryString.append("\"]");
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("xpath query string = " + queryString);
+        }
         return storage.doQuery(queryString.toString());
 
     }
@@ -315,8 +317,9 @@ public class WorkflowUtil {
         queryString.append(roleName);
         queryString.append("\"]");
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("xpath query string = " + queryString);
+        }
         return storage.doQuery(queryString.toString());
     }
 

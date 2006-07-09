@@ -8,8 +8,8 @@ import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.dialog.DialogBox;
 import info.magnolia.cms.gui.dialog.DialogButton;
-import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
+import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -83,15 +83,15 @@ public class RolesACLPage extends SimplePageMVCHandler {
         accessType.setName("'+prefix+'AccessType"); //$NON-NLS-1$
         accessType.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
         if (repository.equals(ContentRepository.WEBSITE)) {
-            accessType.setOptions(escapeJs(msgs.get("roles.edit.thisAndSubPages")), String.valueOf(TYPE_ALL)); //$NON-NLS-1$ //$NON-NLS-2$
-            accessType.setOptions(escapeJs(msgs.get("roles.edit.subPages")), String.valueOf(TYPE_SUBS)); //$NON-NLS-1$ //$NON-NLS-2$
+            accessType.setOptions(escapeJs(msgs.get("roles.edit.thisAndSubPages")), String.valueOf(TYPE_ALL)); //$NON-NLS-1$ 
+            accessType.setOptions(escapeJs(msgs.get("roles.edit.subPages")), String.valueOf(TYPE_SUBS)); //$NON-NLS-1$ 
         }
         else {
             if(repository.equals(ContentRepository.CONFIG)){
-                accessType.setOptions(escapeJs(msgs.get("roles.edit.thisNode")), String.valueOf(TYPE_THIS)); //$NON-NLS-1$ //$NON-NLS-2$
+                accessType.setOptions(escapeJs(msgs.get("roles.edit.thisNode")), String.valueOf(TYPE_THIS)); //$NON-NLS-1$ 
             }
-            accessType.setOptions(escapeJs(msgs.get("roles.edit.thisAndSubNodes")), String.valueOf(TYPE_ALL)); //$NON-NLS-1$ //$NON-NLS-2$
-            accessType.setOptions(escapeJs(msgs.get("roles.edit.subNodes")), String.valueOf(TYPE_SUBS)); //$NON-NLS-1$ //$NON-NLS-2$
+            accessType.setOptions(escapeJs(msgs.get("roles.edit.thisAndSubNodes")), String.valueOf(TYPE_ALL)); //$NON-NLS-1$ 
+            accessType.setOptions(escapeJs(msgs.get("roles.edit.subNodes")), String.valueOf(TYPE_SUBS)); //$NON-NLS-1$ 
         }
         accessType.setValue("' + object.accessType + '"); //$NON-NLS-1$
 
@@ -175,7 +175,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
         }
 
         // out.print("<p>&nbsp;<p>&nbsp;<p>&nbsp;<input type=\"button\" onclick=\"aclChangeRepository('website')\">");
-        out.println("<script>aclChangeRepository('website');</script>"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.println("<script>aclChangeRepository('website');</script>"); //$NON-NLS-1$ 
 
     }
 
@@ -330,6 +330,11 @@ public class RolesACLPage extends SimplePageMVCHandler {
      * @version $Revision$ ($Author$)
      */
     private class ACLS extends ListOrderedMap{
+        /**
+         * 
+         */
+        private static final long serialVersionUID = 1L;
+
         /**
          * Register an entry
          * @param path the not cleaned path

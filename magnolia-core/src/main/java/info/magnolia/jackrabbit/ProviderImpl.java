@@ -12,9 +12,9 @@
  */
 package info.magnolia.jackrabbit;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.beans.config.ShutdownTask;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Path;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -109,14 +109,16 @@ public class ProviderImpl implements Provider {
         /*
          * Resolve if the path started with the suffix
          */
-        if (sysRepositoryHome != null && relocate)
+        if (sysRepositoryHome != null && relocate) {
             return sysRepositoryHome + File.separator + tmp;
+        }
 
         /*
          * This is apply to all repositories if the java property is set
          */
-        if (sysRepositoryHomes != null)
+        if (sysRepositoryHomes != null) {
             return sysRepositoryHomes + File.separator + tmp;
+        }
 
         /*
          * Return the same value as before if neither of the above applied
@@ -224,8 +226,9 @@ public class ProviderImpl implements Provider {
             workspace.getNamespaceRegistry().getURI(namespacePrefix);
         }
         catch (NamespaceException e) {
-        	if (log.isDebugEnabled())
-				log.debug(e.getMessage());
+        	if (log.isDebugEnabled()) {
+                log.debug(e.getMessage());
+            }
 			log.info("registering prefix [{}] with uri {}", namespacePrefix, uri); //$NON-NLS-1$
             workspace.getNamespaceRegistry().registerNamespace(namespacePrefix, uri);
         }

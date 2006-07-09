@@ -12,6 +12,10 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.gui.control.Button;
+import info.magnolia.cms.gui.control.ControlImpl;
+import info.magnolia.cms.util.FreeMarkerUtil;
+
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
@@ -23,10 +27,6 @@ import java.util.Map;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.gui.control.ControlImpl;
-import info.magnolia.cms.util.FreeMarkerUtil;
 
 
 /**
@@ -75,8 +75,8 @@ public class DialogMultiSelect extends DialogBox {
      */
     public String getAddButton() {
         Button add = new Button();
-        add.setLabel(getMessage("buttons.add")); //$NON-NLS-1$ //$NON-NLS-2$
-        add.setOnclick(this.getName() + "DynamicTable.addNew();"); //$NON-NLS-1$ //$NON-NLS-2$
+        add.setLabel(getMessage("buttons.add")); //$NON-NLS-1$ 
+        add.setOnclick(this.getName() + "DynamicTable.addNew();"); //$NON-NLS-1$ 
         add.setSmall(true);
         return add.getHtml();
     }
@@ -89,7 +89,7 @@ public class DialogMultiSelect extends DialogBox {
         if (StringUtils.isNotEmpty(chooseOnclick)) {
             Button choose = new Button();
             choose.setLabel(this.getMessage("buttons.choose")); //$NON-NLS-1$
-            choose.setOnclick(chooseOnclick); //$NON-NLS-1$ //$NON-NLS-2$
+            choose.setOnclick(chooseOnclick); 
 
             choose.setSmall(true);
             return choose.getHtml();

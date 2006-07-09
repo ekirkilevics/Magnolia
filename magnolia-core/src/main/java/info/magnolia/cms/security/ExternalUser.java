@@ -12,6 +12,10 @@
  */
 package info.magnolia.cms.security;
 
+import info.magnolia.cms.security.auth.Entity;
+import info.magnolia.cms.security.auth.GroupList;
+import info.magnolia.cms.security.auth.RoleList;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -20,9 +24,6 @@ import javax.security.auth.Subject;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import info.magnolia.cms.security.auth.Entity;
-import info.magnolia.cms.security.auth.RoleList;
-import info.magnolia.cms.security.auth.GroupList;
 
 
 /**
@@ -120,7 +121,7 @@ public class ExternalUser implements User {
      */
 
     public String getLanguage() {
-        return (String) this.userDetails.getProperty(Entity.LANGUAGE); //$NON-NLS-1$
+        return (String) this.userDetails.getProperty(Entity.LANGUAGE); 
     }
 
     /*
@@ -128,7 +129,7 @@ public class ExternalUser implements User {
      * @see info.magnolia.cms.security.UserInterface#getName()
      */
     public String getName() {
-        return (String) this.userDetails.getProperty(Entity.NAME); //$NON-NLS-1$
+        return (String) this.userDetails.getProperty(Entity.NAME); 
     }
 
     /**

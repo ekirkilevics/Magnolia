@@ -12,14 +12,14 @@
  */
 package info.magnolia.module.workflow.commands.simple;
 
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**

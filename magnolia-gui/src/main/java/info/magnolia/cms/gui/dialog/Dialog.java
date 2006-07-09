@@ -269,8 +269,8 @@ public class Dialog extends DialogControlImpl {
         String saveOnclick = this.getConfigValue("saveOnclick", "mgnlDialogFormSubmit();");
         String saveLabel = this.getConfigValue("saveLabel", msgs.get("buttons.save"));
         if(StringUtils.isNotEmpty(saveOnclick) && StringUtils.isNotEmpty("saveLabel")){
-            save.setOnclick(saveOnclick); //$NON-NLS-1$ //$NON-NLS-2$
-            save.setLabel(saveLabel); //$NON-NLS-1$ //$NON-NLS-2$
+            save.setOnclick(saveOnclick); 
+            save.setLabel(saveLabel); 
             out.write(save.getHtml());
         }
         Button cancel = new Button();

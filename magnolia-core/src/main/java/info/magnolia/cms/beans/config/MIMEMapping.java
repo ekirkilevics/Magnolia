@@ -151,11 +151,13 @@ public final class MIMEMapping {
         }
         // check that the cached content contains the key first to avoid NPE when accessing 'mime'
         String loweredKey = key.toLowerCase();
-        if (MIMEMapping.cachedContent.containsKey(loweredKey))
+        if (MIMEMapping.cachedContent.containsKey(loweredKey)) {
             return ((MIMEMappingItem) MIMEMapping.cachedContent.get(loweredKey)).mime;
-        else
+        }
+        else {
             // this is expected by the caller getMIMEType(HttpServletRequest)
             return null;
+        }
     }
 
     /**

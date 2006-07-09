@@ -12,18 +12,17 @@
  */
 package info.magnolia.cms.servlets;
 
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -64,8 +63,9 @@ public abstract class ContextSensitiveServlet extends HttpServlet {
             MgnlContext.initAsWebContext(request);
         } else {
             // this will happen if a virtual uri mapping is pointing again to a virtual uri
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("context of thread was already set");
+            }
         }
     }
 

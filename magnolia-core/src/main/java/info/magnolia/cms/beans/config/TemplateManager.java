@@ -130,8 +130,9 @@ public class TemplateManager extends ObservedManager {
                 visibleTemplates.add(ti);
             }
 
-            if(log.isDebugEnabled())
-            log.debug(MessageFormat.format("Registering template [{0}]", new Object[]{ti.getName()})); //$NON-NLS-1$
+            if(log.isDebugEnabled()) {
+                log.debug(MessageFormat.format("Registering template [{0}]", new Object[]{ti.getName()})); //$NON-NLS-1$
+            }
 
         }
     }

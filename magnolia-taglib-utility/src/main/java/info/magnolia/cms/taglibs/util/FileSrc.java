@@ -16,15 +16,16 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.Resource;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -157,8 +158,9 @@ public class FileSrc extends TagSupport {
                 writeSrc(this.fileExtendedName);
             }
             catch (Exception e) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug(e.getMessage());
+                }
             }
         } else {
             if (contentNodeCollectionName == null) {
@@ -170,8 +172,9 @@ public class FileSrc extends TagSupport {
                             + this.fileExtendedName);
                 }
                 catch (Exception e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug(e.getMessage());
+                    }
                 }
             } else {
                 try {
@@ -181,8 +184,9 @@ public class FileSrc extends TagSupport {
                             + this.fileExtendedName);
                 }
                 catch (Exception e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug(e.getMessage());
+                    }
                 }
             }
         }
@@ -195,8 +199,9 @@ public class FileSrc extends TagSupport {
             out.print(src);
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
     }
 
@@ -214,16 +219,18 @@ public class FileSrc extends TagSupport {
                 properties = Resource.getGlobalContentNode(this.request).getContent(this.nodeDataName + "_properties"); //$NON-NLS-1$
             }
             catch (Exception e) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug(e.getMessage());
+                }
             }
         } else {
             try {
                 properties = Resource.getLocalContentNode(this.request).getContent(this.nodeDataName + "_properties"); //$NON-NLS-1$
             }
             catch (Exception e) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                }
             }
         }
         if (properties != null) {

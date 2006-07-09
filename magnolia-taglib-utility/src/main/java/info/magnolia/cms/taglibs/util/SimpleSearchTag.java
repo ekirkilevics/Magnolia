@@ -19,17 +19,18 @@ import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.text.MessageFormat;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
-import java.text.MessageFormat;
+
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -154,8 +155,9 @@ public class SimpleSearchTag extends TagSupport {
         String queryString = generateXPathQuery();
 
         if (queryString == null) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("A valid query could not be built, skipping"); //$NON-NLS-1$
+            }
             return EVAL_PAGE;
         }
 

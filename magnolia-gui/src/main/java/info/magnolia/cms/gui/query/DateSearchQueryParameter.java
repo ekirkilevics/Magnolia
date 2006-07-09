@@ -12,12 +12,10 @@
  */
 package info.magnolia.cms.gui.query;
 
-import org.apache.log4j.Logger;
-
-import java.util.Calendar;
-import java.util.Date;
 import java.text.SimpleDateFormat;
-import java.text.ParseException;
+import java.util.Date;
+
+import org.apache.log4j.Logger;
 
 /**
  * @author Sameer Charles

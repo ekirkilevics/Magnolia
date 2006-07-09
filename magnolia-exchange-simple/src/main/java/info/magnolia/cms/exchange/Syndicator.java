@@ -13,9 +13,9 @@
 package info.magnolia.cms.exchange;
 
 import info.magnolia.cms.beans.config.Subscriber;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.cms.core.Content;
 
 import javax.jcr.RepositoryException;
 

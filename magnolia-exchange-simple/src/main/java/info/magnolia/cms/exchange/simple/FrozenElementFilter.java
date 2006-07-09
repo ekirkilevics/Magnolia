@@ -12,11 +12,12 @@
  */
 package info.magnolia.cms.exchange.simple;
 
-import org.xml.sax.helpers.AttributesImpl;
-import org.xml.sax.XMLReader;
-import org.xml.sax.SAXException;
-import org.xml.sax.Attributes;
 import info.magnolia.cms.core.ie.filters.VersionFilter;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
 
 /**
  * this filter converts frozen nodes to mimic actual state of a node, this is only meant
@@ -93,7 +94,7 @@ class FrozenElementFilter extends VersionFilter {
                         || "jcr:isCheckedOut".equals(attName)
                         || "jcr:created".equals(attName)
                         || "mgnl:sequenceposition".equals(attName)
-                        || "jcr:versionHistory" //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                        || "jcr:versionHistory" //$NON-NLS-1$ 
                     .equals(attName)) {
                     inVersionElement++;
                     return;

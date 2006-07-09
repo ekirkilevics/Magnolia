@@ -12,10 +12,6 @@
  */
 package info.magnolia.module.workflow;
 
-import java.util.Iterator;
-
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -24,6 +20,11 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
+
+import java.util.Iterator;
+
+import javax.jcr.RepositoryException;
+
 import openwfe.org.ServiceException;
 import openwfe.org.engine.impl.expool.SimpleExpressionPool;
 
@@ -95,7 +96,9 @@ public class WorkflowModule extends AbstractAdminModule {
      */
     private void startEngine() {
         try {
-            if(log.isDebugEnabled()) log.debug("create worklist...");
+            if(log.isDebugEnabled()) {
+                log.debug("create worklist...");
+            }
             wfEngine = new JCRPersistedEngine();
             
             wfEngine.registerParticipant(new MgnlParticipant("user-.*"));

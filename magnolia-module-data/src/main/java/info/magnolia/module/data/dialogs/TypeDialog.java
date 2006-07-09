@@ -12,9 +12,6 @@
  */
 package info.magnolia.module.data.dialogs;
 
-import java.io.ByteArrayInputStream;
-import java.text.MessageFormat;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -28,6 +25,9 @@ import info.magnolia.module.admininterface.TreeHandlerManager;
 import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
 import info.magnolia.module.data.GenericDataTree;
 import info.magnolia.module.data.save.UUIDConversionSaveHandler;
+
+import java.io.ByteArrayInputStream;
+import java.text.MessageFormat;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;

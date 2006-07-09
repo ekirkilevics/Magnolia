@@ -20,8 +20,6 @@ import java.io.Writer;
 
 import javax.jcr.PropertyType;
 
-import org.apache.commons.lang.StringUtils;
-
 
 /**
  * @author Vinzenz Wyser

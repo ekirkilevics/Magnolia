@@ -17,18 +17,20 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.misc.CssConstants;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -68,8 +70,9 @@ public class DialogSelect extends DialogBox {
             }
         }
         catch (RepositoryException e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         this.setOptions(options);
     }

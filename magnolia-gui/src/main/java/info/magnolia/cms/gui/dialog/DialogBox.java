@@ -16,8 +16,6 @@ import info.magnolia.cms.gui.misc.CssConstants;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Hashtable;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 

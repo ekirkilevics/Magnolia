@@ -68,8 +68,9 @@ public class FunctionBarItem extends ContextMenuItem {
      * @return the proper name
      */
     public String getInactiveIcon() {
-        if (super.getIcon() != null)
+        if (super.getIcon() != null) {
             return super.getIcon().replaceFirst(".gif", "_inactive.gif");
+        }
         return null;
     }
 }

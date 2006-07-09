@@ -12,6 +12,10 @@
  */
 package info.magnolia.cms.gui.controlx.search;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.NodeDataUtil;
+
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.SortedMap;
@@ -21,10 +25,6 @@ import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.NodeDataUtil;
 
 
 

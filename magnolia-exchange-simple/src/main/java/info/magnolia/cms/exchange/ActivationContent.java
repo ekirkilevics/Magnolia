@@ -74,8 +74,9 @@ public class ActivationContent {
      * @param value
      */
     public void addProperty(String key, String value) {
-        if (value == null)
+        if (value == null) {
             value = "";
+        }
         this.properties.put(key, value);
     }
 

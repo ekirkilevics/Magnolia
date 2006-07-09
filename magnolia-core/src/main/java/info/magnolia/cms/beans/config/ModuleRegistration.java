@@ -277,8 +277,9 @@ public class ModuleRegistration {
         // register the sorted defs
         for (Iterator iterator = modules.iterator(); iterator.hasNext();) {
             ModuleDefinition def = (ModuleDefinition) iterator.next();
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("add module definition [{}]", def.getName());
+            }
             this.moduleDefinitions.put(def.getName(), def);
         }
     }
@@ -396,8 +397,9 @@ public class ModuleRegistration {
         for (Iterator iter = def.getDependencies().iterator(); iter.hasNext();) {
             DependencyDefinition dep = (DependencyDefinition) iter.next();
             ModuleDefinition depDef = this.getModuleDefinition(dep.getName());
-            if(depDef == null)
+            if(depDef == null) {
                 throw new RuntimeException("Missing definition for module:"+dep.getName());
+            }
             dependencyLevels.add(new Integer(calcDependencyLevel(depDef)));
         }
         return ((Integer) Collections.max(dependencyLevels)).intValue() + 1;

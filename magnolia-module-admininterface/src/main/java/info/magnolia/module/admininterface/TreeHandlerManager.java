@@ -81,7 +81,7 @@ public class TreeHandlerManager extends ObservedManager {
     }
 
     protected void registerTreeHandler(String name, String repository, Class treeHandler, Content treeDefinition) {
-        log.info("Registering tree handler {}", name); //$NON-NLS-1$ //$NON-NLS-2$
+        log.info("Registering tree handler {}", name); //$NON-NLS-1$ 
         treeHandlers.put(name, new TreeHandlerConfig(treeHandler, repository, treeDefinition));
     }
 
@@ -89,14 +89,14 @@ public class TreeHandlerManager extends ObservedManager {
         Collection trees = defNode.getChildren(ItemType.CONTENTNODE.getSystemName());
         for (Iterator iter = trees.iterator(); iter.hasNext();) {
             Content tree = (Content) iter.next();
-            String name = tree.getNodeData(ND_NAME).getString(); //$NON-NLS-1$
+            String name = tree.getNodeData(ND_NAME).getString(); 
 
             if (StringUtils.isEmpty(name)) {
                 name = tree.getName();
             }
 
-            String repository = tree.getNodeData(ND_REPOSITORY).getString(); //$NON-NLS-1$
-            String className = tree.getNodeData(ND_CLASS).getString(); //$NON-NLS-1$
+            String repository = tree.getNodeData(ND_REPOSITORY).getString(); 
+            String className = tree.getNodeData(ND_CLASS).getString(); 
 
             if (StringUtils.isEmpty(repository)) {
                 repository = name;

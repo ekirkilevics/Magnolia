@@ -13,15 +13,15 @@
 
 package info.magnolia.module.dms;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.exchange.Syndicator;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.exchange.Syndicator;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.dms.beans.Document;

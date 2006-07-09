@@ -84,7 +84,7 @@ public class DMSDownloadServlet extends HttpServlet {
     public void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
         HierarchyManager hm = MgnlContext.getHierarchyManager(DMSModule.getInstance().getRepository());
         Document doc;
-        String versionName = (String) request.getParameter("mgnlVersion");
+        String versionName = request.getParameter("mgnlVersion");
 
         // pass all the informations to the ResourceDispatcher
         String path = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());

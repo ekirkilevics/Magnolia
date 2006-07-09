@@ -1,7 +1,7 @@
 package info.magnolia.module.admininterface.pages;
 
-import info.magnolia.cms.gui.dialog.DialogRichedit;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
+import info.magnolia.cms.gui.dialog.DialogRichedit;
 import info.magnolia.module.admininterface.SimplePageMVCHandler;
 
 import java.io.IOException;

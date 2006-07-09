@@ -12,12 +12,13 @@
  */
 package info.magnolia.cms.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -92,11 +93,13 @@ public final class Lock {
      */
     public static void resetSessionLock(HttpServletRequest request) {
         if (!Lock.isSessionLocked(request)) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("No Lock found to reset"); //$NON-NLS-1$
+            }
         } else {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Resetting session lock"); //$NON-NLS-1$
+            }
             Lock.isSystemLocked = false;
         }
         // @todo IMPORTANT remove use of http session

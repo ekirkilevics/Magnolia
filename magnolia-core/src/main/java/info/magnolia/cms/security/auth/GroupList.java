@@ -12,8 +12,8 @@
  */
 package info.magnolia.cms.security.auth;
 
-import java.security.Principal;
 import java.io.Serializable;
+import java.security.Principal;
 import java.util.Collection;
 
 /**

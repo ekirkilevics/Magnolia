@@ -1,17 +1,17 @@
 package info.magnolia.module.data.controls;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.gui.dialog.DialogMultiSelect;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.context.MgnlContext;
+
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.RepositoryException;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.gui.dialog.DialogMultiSelect;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.context.MgnlContext;
 
 public class ReferenceMultiSelect extends DialogMultiSelect implements UUIDConversionControl {
 

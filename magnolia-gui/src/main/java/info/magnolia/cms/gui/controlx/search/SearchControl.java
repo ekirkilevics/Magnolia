@@ -6,11 +6,11 @@
 
 package info.magnolia.cms.gui.controlx.search;
 
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.gui.controlx.impl.AbstractControl;
 import info.magnolia.cms.gui.query.SearchQueryExpression;
 import info.magnolia.cms.gui.query.StringSearchQueryParameter;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**

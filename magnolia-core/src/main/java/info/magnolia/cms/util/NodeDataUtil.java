@@ -92,8 +92,9 @@ public class NodeDataUtil {
             }
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         return StringUtils.EMPTY;
     }
@@ -122,8 +123,9 @@ public class NodeDataUtil {
             }
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         return null;
     }

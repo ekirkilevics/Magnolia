@@ -21,17 +21,17 @@ import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -136,8 +136,9 @@ public class RequestInterceptor extends HttpServlet {
                     hm.save();
                 }
                 catch (RepositoryException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                    }
                 }
             }
         }

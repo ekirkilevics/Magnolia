@@ -143,7 +143,7 @@ public class RolesEditDialog extends ConfiguredDialog {
 
                         if (StringUtils.isNotEmpty(path)) {
                             if (path.equals("/")) { //$NON-NLS-1$
-                                accessType = RolesACLPage.TYPE_SUBS; //$NON-NLS-1$
+                                accessType = RolesACLPage.TYPE_SUBS; 
                                 path = StringUtils.EMPTY;
                             }
 

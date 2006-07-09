@@ -23,17 +23,20 @@ import info.magnolia.cms.util.Rule;
 import java.util.Calendar;
 import java.util.Collection;
 
-import javax.jcr.*;
-import javax.jcr.nodetype.NodeType;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
+import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -79,8 +82,9 @@ public class ContentVersion extends Content {
      * @throws RepositoryException
      */
     public ContentVersion (Version thisVersion, Content base) throws RepositoryException {
-        if (thisVersion == null)
+        if (thisVersion == null) {
             throw new RepositoryException("Failed to get ContentVersion, version does not exist");
+        }
         this.state = thisVersion;
         this.base = base;
         this.init();

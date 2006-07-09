@@ -14,11 +14,12 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
+
+import java.util.Date;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
 
 
 /**
@@ -71,8 +72,9 @@ public class MetaDataUtil {
             }
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         return StringUtils.EMPTY;
     }

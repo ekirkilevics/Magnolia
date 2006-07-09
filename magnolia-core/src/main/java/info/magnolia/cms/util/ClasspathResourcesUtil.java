@@ -14,12 +14,6 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FilenameFilter;
@@ -33,6 +27,13 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -126,8 +127,9 @@ public class ClasspathResourcesUtil {
         }
 
         if (jarOrDir.isDirectory()) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("looking in dir {}", jarOrDir.getAbsolutePath());
+            }
 
             Collection files = FileUtils.listFiles(jarOrDir, new TrueFileFilter() {
             }, new TrueFileFilter() {
@@ -147,8 +149,9 @@ public class ClasspathResourcesUtil {
                 }
             }
         } else if (jarOrDir.getName().endsWith(".jar")) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("looking in jar {}", jarOrDir.getAbsolutePath());
+            }
             JarFile jar;
             try {
                 jar = new JarFile(jarOrDir);
@@ -166,8 +169,9 @@ public class ClasspathResourcesUtil {
                 }
             }
         } else {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Unknown (not jar) file in classpath: {}, skipping.", jarOrDir.getName());
+            }
         }
 
     }

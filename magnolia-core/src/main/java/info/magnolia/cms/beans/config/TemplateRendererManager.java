@@ -75,8 +75,9 @@ public class TemplateRendererManager extends ObservedManager {
                 continue;
             }
 
-            if (log.isDebugEnabled())
-				log.debug("Registering template render [{}] for type {}",rendererClass, type);
+            if (log.isDebugEnabled()) {
+                log.debug("Registering template render [{}] for type {}",rendererClass, type);
+            }
 			registerTemplateRenderer(type, renderer);
         }
 

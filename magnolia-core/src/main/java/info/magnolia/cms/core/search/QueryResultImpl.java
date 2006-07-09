@@ -17,17 +17,19 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Map;
+
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -73,8 +75,9 @@ public class QueryResultImpl implements QueryResult {
             }
             catch (RepositoryException re) {
                 log.error(re.getMessage());
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug(re.getMessage(), re);
+                }
             }
         }
     }

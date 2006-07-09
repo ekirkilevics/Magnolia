@@ -76,8 +76,9 @@ public class CacheGeneratorServlet extends HttpServlet {
         out.println("<h2>"); //$NON-NLS-1$
         out.println(MessagesManager.get("cacheservlet.title")); //$NON-NLS-1$
         out.println("</h2>"); //$NON-NLS-1$
-        if (Server.isAdmin())
+        if (Server.isAdmin()) {
             out.println("<h3 style=\"color:red;\">" + MessagesManager.get("cacheservlet.warning") + "</h3>");
+        }
 
         out.println("<form method=\"get\" action=\"\">"); //$NON-NLS-1$
         out.println("<input type=\"submit\" name=\"" //$NON-NLS-1$

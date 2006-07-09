@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.controlx.list.util.ValueProvider;
 
 import java.util.ArrayList;
@@ -106,7 +105,9 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * @return name of the group of the current record
      */
     public String getGroupName() {
-        if (StringUtils.isEmpty(this.groupKey)) return StringUtils.EMPTY;
+        if (StringUtils.isEmpty(this.groupKey)) {
+            return StringUtils.EMPTY;
+        }
         return (String) this.getValue(this.groupKey, this.current);
     }
 
@@ -150,7 +151,9 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * @return true if not EOF
      */
     public boolean hasNextInGroup() {
-        if (StringUtils.isEmpty(this.groupKey)) return this.hasNext(); // no group key defined, its all one group
+        if (StringUtils.isEmpty(this.groupKey)) {
+            return this.hasNext(); // no group key defined, its all one group
+        }
         else if (this.hasNext()) {
             if (this.current != null) {
                 String currentValue = (String) this.getValue(this.groupKey, this.current);

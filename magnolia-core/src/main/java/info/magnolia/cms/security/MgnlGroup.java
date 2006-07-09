@@ -12,17 +12,22 @@
  */
 package info.magnolia.cms.security;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
-import info.magnolia.cms.core.*;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 
-import javax.jcr.RepositoryException;
+import java.util.Iterator;
+
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
-import java.util.Iterator;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
@@ -128,10 +133,12 @@ public class MgnlGroup implements Group {
     private boolean hasAny(String name, String nodeName) {
         try {
             HierarchyManager hm;
-            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES))
+            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
-            else
+            }
+            else {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+            }
 
             Content node = groupNode.getContent(nodeName);
             for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
@@ -142,11 +149,13 @@ public class MgnlGroup implements Group {
                         return true;
                     }
                 } catch(ItemNotFoundException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
+                    }
                 } catch (IllegalArgumentException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug(nodeData.getHandle()+" has invalid value");
+                    }
                 }
             }
         }
@@ -164,10 +173,12 @@ public class MgnlGroup implements Group {
     private void remove(String name, String nodeName) {
         try {
             HierarchyManager hm;
-            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES))
+            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
-            else
+            }
+            else {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+            }
             Content node = groupNode.getContent(nodeName);
 
             for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
@@ -178,11 +189,13 @@ public class MgnlGroup implements Group {
                         nodeData.delete();
                     }
                 } catch(ItemNotFoundException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
+                    }
                 } catch (IllegalArgumentException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug(nodeData.getHandle()+" has invalid value");
+                    }
                 }
             }
             groupNode.save();
@@ -198,10 +211,12 @@ public class MgnlGroup implements Group {
     private void add(String name, String nodeName) {
         try {
             HierarchyManager hm;
-            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES))
+            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
-            else
+            }
+            else {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+            }
 
             if (!this.hasAny(name, nodeName)) {
                 Content node = groupNode.getContent(nodeName);
@@ -214,8 +229,9 @@ public class MgnlGroup implements Group {
                     node.createNodeData(newName).setValue(value);
                     groupNode.save();
                 } catch(PathNotFoundException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("Role [ "+name+" ] does not exist in the ROLES repository");
+                    }
                 }
             }
         }

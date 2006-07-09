@@ -142,8 +142,9 @@ public class JCRWorkItemAPI {
      */
     public Content getWorkItemByParticipant(String participant) {
         String queryString = "//*[@participant=\"" + participant + "\"]";
-        if(log.isDebugEnabled())
+        if(log.isDebugEnabled()) {
             log.debug("xpath query string = " + queryString);
+        }
         List list = doQuery(queryString);
         if (list != null && list.size() > 0) {
             return (Content) list.get(0);
@@ -245,8 +246,9 @@ public class JCRWorkItemAPI {
 
             // create path from work item id
             String path = createPathFromId(wi.getId());
-            if(log.isDebugEnabled())
+            if(log.isDebugEnabled()) {
                 log.debug("storing workitem with path = " + path);
+            }
 
             Content newc = ContentUtil.createPath(this.hm, path, ItemType.WORKITEM);
 
@@ -267,7 +269,9 @@ public class JCRWorkItemAPI {
                 if (s.length() > 0) {
                     newc.createNodeData(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, vf.createValue(s));
                 }
-                if(log.isDebugEnabled()) log.debug("assignTo=" + s);
+                if(log.isDebugEnabled()) {
+                    log.debug("assignTo=" + s);
+                }
             }
 
             // convert to xml string
@@ -276,11 +280,15 @@ public class JCRWorkItemAPI {
             String s = XmlUtils.toString(doc, null);
             newc.createNodeData(WorkflowConstants.NODEDATA_VALUE, vf.createValue(s));
 
-            if(log.isDebugEnabled()) log.debug("store work item: value=" + s);
+            if(log.isDebugEnabled()) {
+                log.debug("store work item: value=" + s);
+            }
 
             this.hm.save();
 
-            if(log.isDebugEnabled()) log.debug("store work item ok. ");
+            if(log.isDebugEnabled()) {
+                log.debug("store work item ok. ");
+            }
         }
         catch (Exception e) {
             log.error("store work item failed", e);
@@ -294,11 +302,12 @@ public class JCRWorkItemAPI {
      */
     public List doQuery(String queryString) {
         ArrayList list = new ArrayList();
-        if(log.isDebugEnabled())
+        if(log.isDebugEnabled()) {
             log.debug("xpath query string: " + queryString);
+        }
         try {
             final QueryManager queryManager = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_STORE);
-            final Query q = queryManager.createQuery(queryString, Query.XPATH); //$NON-NLS-1$
+            final Query q = queryManager.createQuery(queryString, Query.XPATH); 
 
             QueryResult result = q.execute();
             if (result == null) {
@@ -335,8 +344,9 @@ public class JCRWorkItemAPI {
                     log.error("can not load found workitem");
                     continue;
                 }
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("added workitem to return list ok");
+                }
                 list.add(wi);
             }
         } catch (Exception e) {

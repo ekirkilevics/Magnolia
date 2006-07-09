@@ -393,7 +393,9 @@ public class HierarchyManager {
         Access.isGranted(this.accessManager, path, Permission.READ);
 
         String nodePath = getNodePath(path);
-        if (StringUtils.isEmpty(nodePath)) return false;
+        if (StringUtils.isEmpty(nodePath)) {
+            return false;
+        }
 
         try {
             Node n = this.startPage.getNode(nodePath);

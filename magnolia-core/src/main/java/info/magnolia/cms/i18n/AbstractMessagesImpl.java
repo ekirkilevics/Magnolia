@@ -15,14 +15,9 @@ package info.magnolia.cms.i18n;
 
 
 import java.text.MessageFormat;
-import java.util.Collections;
-import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.Locale;
 import java.util.ResourceBundle;
-import java.util.Set;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -12,15 +12,15 @@
  */
 package info.magnolia.module.admininterface.lists;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.search.SearchConfig;
 import info.magnolia.cms.gui.controlx.search.SearchableListModel;
 import info.magnolia.cms.gui.controlx.search.SimpleSearchUtil;
 import info.magnolia.cms.gui.query.SearchQuery;
 import info.magnolia.cms.util.FreeMarkerUtil;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**

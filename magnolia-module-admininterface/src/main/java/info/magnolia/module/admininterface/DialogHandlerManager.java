@@ -77,10 +77,10 @@ public class DialogHandlerManager extends ObservedManager {
             // if this paragraph is used from a dialog register it under the name of the paragraph
             registerAsParagraphDialog(node.getHandle(), dialog);
 
-            String name = dialog.getNodeData(ND_NAME).getString(); //$NON-NLS-1$
+            String name = dialog.getNodeData(ND_NAME).getString(); 
             String className = NodeDataUtil.getString(
                 dialog,
-                CLASS, PARAGRAPH_EDIT_DIALOG); //$NON-NLS-1$
+                CLASS, PARAGRAPH_EDIT_DIALOG); 
             try {
                 // there are paragraphs dialogs without a name!
                 if (StringUtils.isNotEmpty(name)) {
@@ -115,7 +115,7 @@ public class DialogHandlerManager extends ObservedManager {
                 || StringUtils.equals(paragraphDialogName, dialogName)) {
                 Class handler = ParagraphEditDialog.class;
 
-                String className = dialog.getNodeData(CLASS).getString(); //$NON-NLS-1$
+                String className = dialog.getNodeData(CLASS).getString(); 
                 if (StringUtils.isNotEmpty(className)) {
                     try {
                         handler = Class.forName(className);
@@ -136,8 +136,9 @@ public class DialogHandlerManager extends ObservedManager {
     }
 
     protected void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
-    	if (log.isDebugEnabled())
-			log.debug("Registering dialog handler [{}]", name); //$NON-NLS-1$ 
+    	if (log.isDebugEnabled()) {
+            log.debug("Registering dialog handler [{}]", name); //$NON-NLS-1$ 
+        }
 		// remember the uuid for a reload
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
     }

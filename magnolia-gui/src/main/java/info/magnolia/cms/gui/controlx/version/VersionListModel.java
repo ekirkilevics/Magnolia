@@ -21,8 +21,8 @@ import java.util.Collection;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
-import javax.jcr.version.VersionIterator;
 import javax.jcr.version.VersionHistory;
+import javax.jcr.version.VersionIterator;
 
 
 /**

@@ -95,7 +95,7 @@ public final class Subscriber {
         try {
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
             Content subscriberConfig = startPage.getContent("SubscriberConfig");
-            children = subscriberConfig.getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
+            children = subscriberConfig.getChildren(ItemType.CONTENTNODE); 
         }
         catch (PathNotFoundException re) {
             log.info("No subscribers configured"); //$NON-NLS-1$

@@ -13,29 +13,32 @@
 
 package info.magnolia.module.admininterface;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.core.*;
-import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.Rule;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.util.Iterator;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -463,8 +466,9 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
             newContent.getMetaData().setUnActivated();
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         newContent.save();
         return newContent;

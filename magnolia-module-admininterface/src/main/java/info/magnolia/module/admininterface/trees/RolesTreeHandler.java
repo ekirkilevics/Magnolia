@@ -12,13 +12,13 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import info.magnolia.module.admininterface.AdminTreeMVCHandler;
-import info.magnolia.cms.exchange.Syndicator;
-import info.magnolia.cms.util.Rule;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.exchange.Syndicator;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

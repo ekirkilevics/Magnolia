@@ -12,10 +12,6 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.ItemType;
@@ -28,6 +24,10 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.admininterface.AdminTreeConfiguration;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**

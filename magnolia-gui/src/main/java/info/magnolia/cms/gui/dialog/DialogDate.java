@@ -16,16 +16,10 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.DateUtil;
 
 import java.util.Calendar;
-import java.util.Date;
-import java.util.TimeZone;
 
 import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.commons.lang.time.DateUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**

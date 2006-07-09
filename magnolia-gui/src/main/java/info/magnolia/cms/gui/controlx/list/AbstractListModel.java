@@ -12,20 +12,17 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
+import info.magnolia.cms.gui.controlx.list.util.ValueProvider;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
-
-import javax.jcr.RepositoryException;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.controlx.list.util.ValueProvider;
 
 
 /**
@@ -225,10 +222,12 @@ public abstract class AbstractListModel implements ListModel {
         private int sort(Object object, Object object1) {
             Comparable firstKey = (Comparable) this.valueProvider.getValue(this.sortBy, object);
             Comparable secondKey = (Comparable) this.valueProvider.getValue(this.sortBy, object1);
-            if (this.getOrder().equalsIgnoreCase(ASCENDING))
+            if (this.getOrder().equalsIgnoreCase(ASCENDING)) {
                 return firstKey.compareTo(secondKey);
-            else
+            }
+            else {
                 return secondKey.compareTo(firstKey);
+            }
         }
 
         /**
@@ -242,10 +241,12 @@ public abstract class AbstractListModel implements ListModel {
             Comparable subSortFirstKey = (Comparable) this.valueProvider.getValue(this.sortBy, object);
             Comparable subSortSecondKey = (Comparable) this.valueProvider.getValue(this.sortBy, object1);
             if (firstKey.equalsIgnoreCase(secondKey)) {
-                if (this.getOrder().equalsIgnoreCase(ASCENDING))
+                if (this.getOrder().equalsIgnoreCase(ASCENDING)) {
                     return subSortFirstKey.compareTo(subSortSecondKey);
-                else
+                }
+                else {
                     return subSortSecondKey.compareTo(subSortFirstKey);
+                }
             }
             return -1;
         }
@@ -267,8 +268,9 @@ public abstract class AbstractListModel implements ListModel {
         }
 
         public String getOrder() {
-            if (order == null)
+            if (order == null) {
                 return ASCENDING;
+            }
             return order;
         }
 

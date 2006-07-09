@@ -42,7 +42,7 @@ public class ActivationCommand extends MgnlCommand {
 
         if (log.isDebugEnabled()) {
             log.debug("recursive = " + recursive);
-            log.debug("user = " + ((info.magnolia.context.Context) ctx).getUser().getName());
+            log.debug("user = " + (ctx).getUser().getName());
         }
         
         try {

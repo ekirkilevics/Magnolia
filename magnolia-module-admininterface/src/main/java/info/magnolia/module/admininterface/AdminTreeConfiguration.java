@@ -12,9 +12,9 @@
  */
 package info.magnolia.module.admininterface;
 
-import javax.servlet.http.HttpServletRequest;
-
 import info.magnolia.cms.gui.control.Tree;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**

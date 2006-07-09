@@ -12,9 +12,6 @@
  */
 package info.magnolia.module.admininterface.lists;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.FunctionBar;
 import info.magnolia.cms.gui.controlx.RenderKit;
@@ -23,6 +20,9 @@ import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
 import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**

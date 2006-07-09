@@ -2,8 +2,9 @@ package info.magnolia.cms.mail.templates.impl;
 
 import info.magnolia.cms.mail.templates.MgnlEmail;
 
-import javax.mail.Session;
 import java.util.Map;
+
+import javax.mail.Session;
 
 
 /**

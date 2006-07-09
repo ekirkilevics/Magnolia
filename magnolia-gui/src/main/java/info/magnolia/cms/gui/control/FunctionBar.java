@@ -12,10 +12,10 @@
  */
 package info.magnolia.cms.gui.control;
 
+import info.magnolia.cms.util.FreeMarkerUtil;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import info.magnolia.cms.util.FreeMarkerUtil;
 
 
 /**

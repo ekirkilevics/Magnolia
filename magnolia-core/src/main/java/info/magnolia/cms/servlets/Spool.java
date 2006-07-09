@@ -13,17 +13,19 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.core.Path;
-import org.apache.commons.io.IOUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -100,8 +102,9 @@ public class Spool extends HttpServlet {
         catch (IOException e) {
             // only log at debug level, tomcat usually throws a ClientAbortException anytime the user stop loading the
             // page
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Unable to spool resource due to a " + e.getClass().getName() + " exception", e); //$NON-NLS-1$ //$NON-NLS-2$
+            }
             return false;
         }
         finally {

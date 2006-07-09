@@ -15,15 +15,15 @@ package info.magnolia.cms.exchange.simple;
 import info.magnolia.cms.exchange.ActivationContent;
 import info.magnolia.cms.exchange.ExchangeException;
 
-import org.apache.commons.lang.ClassUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.net.URLConnection;
 import java.util.Iterator;
+
+import org.apache.commons.lang.ClassUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**

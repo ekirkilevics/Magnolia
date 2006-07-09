@@ -2,8 +2,8 @@ package info.magnolia.cms.cache.noop;
 
 import info.magnolia.cms.cache.Cache;
 import info.magnolia.cms.cache.CacheConfig;
-import info.magnolia.cms.cache.CacheableEntry;
 import info.magnolia.cms.cache.CacheKey;
+import info.magnolia.cms.cache.CacheableEntry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

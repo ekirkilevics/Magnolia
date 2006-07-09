@@ -11,9 +11,11 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.text.MessageFormat;
+import java.util.Iterator;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Session;
@@ -21,11 +23,10 @@ import javax.jcr.Workspace;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.text.MessageFormat;
-import java.util.Iterator;
+
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
 
 
 /**
@@ -303,8 +304,9 @@ public class ImportExportServlet extends ContextSensitiveServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         super.doPost(request, response);
 
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("Import request received."); //$NON-NLS-1$
+        }
 
         MultipartForm form = Resource.getPostedForm(request);
         if (form == null) {
@@ -370,12 +372,14 @@ public class ImportExportServlet extends ContextSensitiveServlet {
         Workspace ws = hr.getWorkspace();
         Session session = ws.getSession();
 
-        if (ext.equalsIgnoreCase(DataTransporter.ZIP))
+        if (ext.equalsIgnoreCase(DataTransporter.ZIP)) {
             response.setContentType(MIME_APPLICATION_ZIP);
-        else if (ext.equalsIgnoreCase(DataTransporter.GZ))
+        }
+        else if (ext.equalsIgnoreCase(DataTransporter.GZ)) {
             response.setContentType(MIME_GZIP);
+        }
         else {
-            response.setContentType(MIME_TEXT_XML); //$NON-NLS-1$
+            response.setContentType(MIME_TEXT_XML); 
             response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
         }
 
@@ -384,7 +388,7 @@ public class ImportExportServlet extends ContextSensitiveServlet {
             // root node
             pathName = StringUtils.EMPTY;
         }
-        response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + ext); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        response.setHeader("content-disposition", "attachment; filename=" + repository + pathName + ext); //$NON-NLS-1$ //$NON-NLS-2$ 
         OutputStream baseOutputStream = response.getOutputStream();
         DataTransporter.executeExport(baseOutputStream, keepVersionHistory, format, session, basepath, repository, ext);
     }
@@ -398,9 +402,11 @@ public class ImportExportServlet extends ContextSensitiveServlet {
      */
     protected boolean checkPermissions(HttpServletRequest request, String repository, String basePath,
                                        long permissionType) {
-        if (MgnlContext.getAccessManager(repository) != null)
-            if (!MgnlContext.getAccessManager(ContentRepository.WEBSITE).isGranted(basePath, permissionType))
+        if (MgnlContext.getAccessManager(repository) != null) {
+            if (!MgnlContext.getAccessManager(ContentRepository.WEBSITE).isGranted(basePath, permissionType)) {
                 return false;
+            }
+        }
         return true;
     }
 }

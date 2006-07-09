@@ -14,27 +14,27 @@ package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
-import info.magnolia.module.admininterface.SaveHandler;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admininterface.SaveHandler;
 
 import java.util.Iterator;
 import java.util.List;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -99,7 +99,9 @@ public class UserEditDialog extends ConfiguredDialog {
     protected Dialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
         Dialog dialog = super.createDialog(configNode, storageNode);
         // dont do anythig if command is "save"
-        if (this.getCommand().equalsIgnoreCase(COMMAND_SAVE)) return dialog;
+        if (this.getCommand().equalsIgnoreCase(COMMAND_SAVE)) {
+            return dialog;
+        }
 
         // replace UUID with Path for groups and roles
         DialogControlImpl control = dialog.getSub("groups");
@@ -108,7 +110,9 @@ public class UserEditDialog extends ConfiguredDialog {
         for (int index=0; index < values.size(); index++) {
             // replace uuid with path
             String uuid = (String) values.get(index);
-            if (StringUtils.isEmpty(uuid)) continue;
+            if (StringUtils.isEmpty(uuid)) {
+                continue;
+            }
             try {
                 values.set(index, groupsHM.getContentByUUID(uuid).getHandle());
             } catch (ItemNotFoundException e) {
@@ -124,7 +128,9 @@ public class UserEditDialog extends ConfiguredDialog {
         for (int index=0; index < values.size(); index++) {
             // replace uuid with path
             String uuid = (String) values.get(index);
-            if (StringUtils.isEmpty(uuid)) continue;
+            if (StringUtils.isEmpty(uuid)) {
+                continue;
+            }
             try {
                 values.set(index, rolesHM.getContentByUUID(uuid).getHandle());
             } catch (ItemNotFoundException e) {

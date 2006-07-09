@@ -12,16 +12,16 @@
  */
 package info.magnolia.commands;
 
+import info.magnolia.cms.beans.config.ObservedManager;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.FactoryUtil;
+
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
 import org.apache.commons.chain.Command;
 import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
 
 
 /**

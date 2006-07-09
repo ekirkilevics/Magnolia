@@ -17,18 +17,25 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 
-import javax.jcr.*;
-import javax.jcr.nodetype.ConstraintViolationException;
-import java.util.Iterator;
 import java.io.File;
-import java.io.IOException;
-import java.io.FileOutputStream;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.Property;
+import javax.jcr.PropertyIterator;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.nodetype.ConstraintViolationException;
+
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
@@ -130,7 +137,9 @@ public final class CopyUtil {
         while (children.hasNext()) {
             Content child = (Content) children.next();
             // check if this child exist in source, if not remove it
-            if (child.getJCRNode().getDefinition().isAutoCreated()) continue;
+            if (child.getJCRNode().getDefinition().isAutoCreated()) {
+                continue;
+            }
             try {
                 source.getJCRNode().getSession().getNodeByUUID(child.getUUID());
                 // if exist its ok, recursively remove all sub nodes
@@ -271,9 +280,13 @@ public final class CopyUtil {
         while (properties.hasNext()) {
             Property property = properties.nextProperty();
             // exclude system property Rule and Version specific properties which were created on version
-            if (property.getName().equalsIgnoreCase(VersionManager.PROPERTY_RULE)) continue;
+            if (property.getName().equalsIgnoreCase(VersionManager.PROPERTY_RULE)) {
+                continue;
+            }
             try {
-                if (property.getDefinition().isProtected()) continue;
+                if (property.getDefinition().isProtected()) {
+                    continue;
+                }
                 if (property.getType() == PropertyType.REFERENCE) {
                     // first check for the referenced node existence
                     try {
@@ -282,7 +295,9 @@ public final class CopyUtil {
                     } catch (ItemNotFoundException e) {
                         if (!StringUtils.equalsIgnoreCase(
                                 destination.getWorkspace().getName(),
-                                VersionManager.VERSION_WORKSPACE)) throw e;
+                                VersionManager.VERSION_WORKSPACE)) {
+                            throw e;
+                        }
                         // get referenced node under temporary store
                         // use jcr import, there is no other way to get a node without sub hierarchy
                         Content referencedNode = getHierarchyManager(source.getWorkspace().getName())

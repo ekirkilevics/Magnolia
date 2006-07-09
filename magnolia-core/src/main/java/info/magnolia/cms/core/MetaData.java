@@ -16,18 +16,20 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -161,8 +163,9 @@ public class MetaData {
             return this.node.getName();
         }
         catch (NullPointerException e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
+            }
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);

@@ -116,8 +116,9 @@ public class DumperUtil {
             if (p.getDefinition().isMultiple()) {
                 Value[] values = p.getValues();
                 for (int i = 0; i < values.length; i++) {
-                    if (i > 0)
+                    if (i > 0) {
                         out.println(",");
+                    }
                     out.println(values[i].getString());
                 }
             }

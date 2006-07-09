@@ -14,14 +14,10 @@ package info.magnolia.module.data.dialogs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
 
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 

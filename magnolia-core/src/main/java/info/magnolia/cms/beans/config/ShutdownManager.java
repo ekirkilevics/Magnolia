@@ -3,18 +3,20 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.commands.MgnlRepositoryCatalog;
 import info.magnolia.context.MgnlContext;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 
 /**

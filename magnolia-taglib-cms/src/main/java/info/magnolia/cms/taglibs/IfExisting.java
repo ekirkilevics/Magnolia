@@ -14,14 +14,15 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -115,8 +116,9 @@ public class IfExisting extends ConditionalTagSupport {
                 this.contentNode = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
             }
             catch (RepositoryException re) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Repository exception while reading " + this.contentNodeName + ": " + re.getMessage()); //$NON-NLS-1$ //$NON-NLS-2$
+                }
             }
             if (this.contentNode == null) {
                 return false;

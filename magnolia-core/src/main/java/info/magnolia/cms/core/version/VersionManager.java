@@ -12,25 +12,39 @@
  */
 package info.magnolia.cms.core.version;
 
-import info.magnolia.cms.core.*;
+import info.magnolia.cms.beans.config.VersionConfig;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
-import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.context.MgnlContext;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.util.List;
+
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.version.Version;
+import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
-import javax.jcr.version.VersionException;
-import javax.jcr.*;
 
+import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.io.IOUtils;
-
-import java.io.*;
-import java.util.List;
 
 /**
  * Singleton class which should be used for any operation related to versioning
@@ -188,26 +202,34 @@ public final class VersionManager {
             objectOut.close();
             NodeData nodeData;
             // PROPERTY_RULE is not a part of MetaData to allow versioning of node types which does NOT support MetaData
-            if (!systemInfo.hasNodeData(PROPERTY_RULE))
+            if (!systemInfo.hasNodeData(PROPERTY_RULE)) {
                 nodeData = systemInfo.createNodeData(PROPERTY_RULE);
-            else
+            }
+            else {
                 nodeData = systemInfo.getNodeData(PROPERTY_RULE);
+            }
             nodeData.setValue(out.toString());
         } catch (IOException e) {
             throw new RepositoryException("Unable to add serialized Rule to the versioned content");
         }
         // temp fix, MgnlContext should always have user either logged-in or anonymous
         String userName = "";
-        if (MgnlContext.getUser() != null) userName = MgnlContext.getUser().getName();
+        if (MgnlContext.getUser() != null) {
+            userName = MgnlContext.getUser().getName();
+        }
         // add all system properties for this version
-        if (!systemInfo.hasNodeData(ContentVersion.VERSION_USER))
+        if (!systemInfo.hasNodeData(ContentVersion.VERSION_USER)) {
             systemInfo.createNodeData(ContentVersion.VERSION_USER).setValue(userName);
-        else
+        }
+        else {
             systemInfo.getNodeData(ContentVersion.VERSION_USER).setValue(userName);
-        if (!systemInfo.hasNodeData(ContentVersion.NAME))
+        }
+        if (!systemInfo.hasNodeData(ContentVersion.NAME)) {
             systemInfo.createNodeData(ContentVersion.NAME).setValue(node.getName());
-        else
+        }
+        else {
             systemInfo.getNodeData(ContentVersion.NAME).setValue(node.getName());
+        }
 
         versionedNode.save();
         // add version

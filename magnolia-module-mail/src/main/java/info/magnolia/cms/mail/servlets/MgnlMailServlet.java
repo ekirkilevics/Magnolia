@@ -10,13 +10,7 @@ import info.magnolia.cms.servlets.ContextSensitiveServlet;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -24,6 +18,14 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -106,12 +108,17 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
             String to = request.getParameter(TORECIPIENTS);
             String cc = request.getParameter(CCRECIPIENTS);
 
-            if (to!=null) ctx.put(MailConstants.ATTRIBUTE_TO,to);
-            if (cc!=null) ctx.put(MailConstants.ATTRIBUTE_CC,cc);
+            if (to!=null) {
+                ctx.put(MailConstants.ATTRIBUTE_TO,to);
+            }
+            if (cc!=null) {
+                ctx.put(MailConstants.ATTRIBUTE_CC,cc);
+            }
 
             // convert optional parameters and add them to the context
-            if(log.isDebugEnabled())
+            if(log.isDebugEnabled()) {
                 log.info(ctx.getAttributes().toString());
+            }
             HashMap map = convertToMap(parameters);
             ctx.putAll(map);
 
@@ -125,10 +132,18 @@ public class MgnlMailServlet extends ContextSensitiveServlet {
                 String from = request.getParameter(FROM);
                 String text = request.getParameter(TEXT);
 
-                if (type!=null) ctx.put(MailConstants.ATTRIBUTE_TYPE,type);
-                if (subject!=null) ctx.put(MailConstants.ATTRIBUTE_SUBJECT,subject);
-                if (from!=null) ctx.put(MailConstants.ATTRIBUTE_FROM,from);
-                if (text!=null) ctx.put(MailConstants.ATTRIBUTE_TEXT,text);
+                if (type!=null) {
+                    ctx.put(MailConstants.ATTRIBUTE_TYPE,type);
+                }
+                if (subject!=null) {
+                    ctx.put(MailConstants.ATTRIBUTE_SUBJECT,subject);
+                }
+                if (from!=null) {
+                    ctx.put(MailConstants.ATTRIBUTE_FROM,from);
+                }
+                if (text!=null) {
+                    ctx.put(MailConstants.ATTRIBUTE_TEXT,text);
+                }
             }
 
             // execute the command

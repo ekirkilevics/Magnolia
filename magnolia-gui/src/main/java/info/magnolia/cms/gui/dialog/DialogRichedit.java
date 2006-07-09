@@ -154,8 +154,9 @@ public class DialogRichedit extends DialogBox {
             }
         }
         catch (RepositoryException e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         return options;
     }
@@ -208,7 +209,7 @@ public class DialogRichedit extends DialogBox {
                 toolboxPasteType = this.getTopParent().getConfigValue("richEPaste", "false"); //$NON-NLS-1$ //$NON-NLS-2$
             }
             if (this.getConfigValue("toolboxPaste", "true").equals("true") && !toolboxPasteType.equals("false"))
-            { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+            { 
                 // win only; clipboard on mac is clean already
                 out.write(line.getHtml("100%")); //$NON-NLS-1$
                 out.write("<div class=\"" //$NON-NLS-1$
@@ -390,7 +391,7 @@ public class DialogRichedit extends DialogBox {
                         + "\" onclick=\"kupuui.basicButtonHandler('italic');\">&nbsp;</button>"); //$NON-NLS-1$
             }
             if (this.getConfigValue("toolbarUnderline", "false").equals("true"))
-            { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            { 
                 out.write("<button type=\"button\" class=\"kupu-underline\" title=\"" //$NON-NLS-1$
                         + msgs.get("dialog.richedit.underline") //$NON-NLS-1$
                         + "\" onclick=\"kupuui.basicButtonHandler('underline');\">&nbsp;</button>"); //$NON-NLS-1$
@@ -398,20 +399,20 @@ public class DialogRichedit extends DialogBox {
             out.write("</span>"); //$NON-NLS-1$
             out.write("<span class=\"kupu-tb-buttongroup\">"); //$NON-NLS-1$
             if (this.getConfigValue("toolbarSubscript", "false").equals("true"))
-            { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            { 
                 out.write("<button type=\"button\" class=\"kupu-subscript\" title=\"" //$NON-NLS-1$
                         + msgs.get("dialog.richedit.subscript") //$NON-NLS-1$
                         + "\" onclick=\"kupuui.basicButtonHandler('subscript');\">&nbsp;</button>"); //$NON-NLS-1$
             }
             if (this.getConfigValue("toolbarSuperscript", "false").equals("true"))
-            { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            { 
                 out.write("<button type=\"button\" class=\"kupu-superscript\" title=\"" //$NON-NLS-1$
                         + msgs.get("dialog.richedit.superscript") //$NON-NLS-1$
                         + "\" onclick=\"kupuui.basicButtonHandler('superscript');\">&nbsp;</button>"); //$NON-NLS-1$
             }
             out.write("</span>"); //$NON-NLS-1$
             if (this.getConfigValue("toolbarColors", "false").equals("true"))
-            { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            { 
                 // kupu note: the event handlers are attached to these buttons dynamically, like for tools
                 // mozilla (1.5) does not support font background color yet!
                 out.write("<span class=\"kupu-tb-buttongroup\">"); //$NON-NLS-1$

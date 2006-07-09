@@ -61,8 +61,9 @@ public final class DialogFactory {
         // @todo check if dialogClass is a valid dialog
         // @todo synchronize
 
-    	if (log.isDebugEnabled())
-			log.debug("Registering control [{}]", name); //$NON-NLS-1$ 
+    	if (log.isDebugEnabled()) {
+            log.debug("Registering control [{}]", name); //$NON-NLS-1$ 
+        }
 
         controls.put(name, dialogClass);
     }

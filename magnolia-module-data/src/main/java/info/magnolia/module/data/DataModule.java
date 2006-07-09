@@ -1,10 +1,5 @@
 package info.magnolia.module.data;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.InitializationException;
@@ -13,6 +8,11 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.admininterface.DialogHandlerManager;
 import info.magnolia.module.admininterface.TreeHandlerManager;
+
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.jcr.RepositoryException;
 
 public class DataModule extends AbstractAdminModule {
 

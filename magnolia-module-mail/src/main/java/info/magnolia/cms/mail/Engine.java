@@ -1,17 +1,12 @@
 package info.magnolia.cms.mail;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.module.RegisterException;
-import info.magnolia.cms.module.AbstractModule;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.module.admininterface.AbstractAdminModule;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.lang.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

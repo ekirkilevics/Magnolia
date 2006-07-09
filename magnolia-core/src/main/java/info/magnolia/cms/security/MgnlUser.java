@@ -25,10 +25,10 @@ import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
@@ -118,10 +118,12 @@ public class MgnlUser implements User {
     private boolean hasAny(String name, String nodeName) {
         try {
             HierarchyManager hm;
-            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES))
+            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
-            else
+            }
+            else {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+            }
 
             Content node = userNode.getContent(nodeName);
             for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
@@ -133,12 +135,14 @@ public class MgnlUser implements User {
                     }
                 }
                 catch (ItemNotFoundException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
+                    }
                 }
                 catch (IllegalArgumentException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug(nodeData.getHandle() + " has invalid value");
+                    }
                 }
             }
         }
@@ -156,10 +160,12 @@ public class MgnlUser implements User {
     private void remove(String name, String nodeName) {
         try {
             HierarchyManager hm;
-            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES))
+            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
-            else
+            }
+            else {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+            }
             Content node = userNode.getContent(nodeName);
 
             for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
@@ -171,12 +177,14 @@ public class MgnlUser implements User {
                     }
                 }
                 catch (ItemNotFoundException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
+                    }
                 }
                 catch (IllegalArgumentException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug(nodeData.getHandle() + " has invalid value");
+                    }
                 }
             }
             userNode.save();
@@ -192,10 +200,12 @@ public class MgnlUser implements User {
     private void add(String name, String nodeName) {
         try {
             HierarchyManager hm;
-            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES))
+            if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
-            else
+            }
+            else {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+            }
 
             if (!this.hasAny(name, nodeName)) {
                 Content node = userNode.getContent(nodeName);
@@ -209,8 +219,9 @@ public class MgnlUser implements User {
                     userNode.save();
                 }
                 catch (PathNotFoundException e) {
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
+                    }
                 }
             }
         }

@@ -15,8 +15,6 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;

@@ -12,9 +12,9 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.gui.controlx.impl.AbstractControl;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * This represents a column in a list.

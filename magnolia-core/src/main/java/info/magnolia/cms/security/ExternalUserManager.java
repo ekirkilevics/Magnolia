@@ -12,12 +12,13 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.HierarchyManager;
 
 import java.util.Collection;
 
 import javax.security.auth.Subject;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

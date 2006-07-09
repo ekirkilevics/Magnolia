@@ -2,9 +2,9 @@ package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.NodeDataUtil;
 

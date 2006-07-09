@@ -21,19 +21,25 @@ import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.*;
+
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -236,8 +242,9 @@ public abstract class DialogControlImpl implements DialogControl {
             }
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("removeSessionAttribute() for " + name + " failed because this.request is null"); //$NON-NLS-1$ //$NON-NLS-2$
+            }
         }
     }
 

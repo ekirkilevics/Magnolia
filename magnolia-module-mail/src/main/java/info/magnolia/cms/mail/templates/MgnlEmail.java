@@ -1,9 +1,13 @@
 package info.magnolia.cms.mail.templates;
 
 import info.magnolia.cms.mail.MailException;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.Map;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Address;
@@ -12,12 +16,10 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**

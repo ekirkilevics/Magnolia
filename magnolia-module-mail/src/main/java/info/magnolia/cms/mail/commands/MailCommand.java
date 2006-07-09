@@ -15,8 +15,8 @@ package info.magnolia.cms.mail.commands;
 import info.magnolia.cms.mail.MailConstants;
 import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
-import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.cms.mail.templates.MailAttachment;
+import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.context.MgnlContext;
 
 import org.apache.commons.chain.Command;

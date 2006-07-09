@@ -20,15 +20,17 @@ import info.magnolia.cms.module.ModuleDefinition;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.OrderedMapIterator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import java.util.HashMap;
-import java.util.Map;
 
 
 /**
@@ -135,7 +137,7 @@ public final class ModuleLoader {
                     this.addModuleInstance(def.getName(), module);
                 }
                 catch (InstantiationException ie) {
-                    log.error("Module {} failed to load", moduleNode.getName()); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    log.error("Module {} failed to load", moduleNode.getName()); //$NON-NLS-1$ 
                     log.error(ie.getMessage());
                 }
                 catch (IllegalAccessException ae) {
@@ -193,8 +195,9 @@ public final class ModuleLoader {
      */
     public Content getModulesNode() throws PathNotFoundException, RepositoryException, AccessDeniedException {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-        if(!hm.isExist("/"+MODULES_NODE))
+        if(!hm.isExist("/"+MODULES_NODE)) {
             hm.createContent("/",MODULES_NODE, ItemType.CONTENTNODE.getSystemName());
+        }
         Content modulesNode = hm.getContent(MODULES_NODE);
         return modulesNode;
     }

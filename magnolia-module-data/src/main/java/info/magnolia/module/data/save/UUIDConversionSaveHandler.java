@@ -1,13 +1,5 @@
 package info.magnolia.module.data.save;
 
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.Value;
-
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -17,6 +9,13 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.DialogAwareSaveHandler;
 import info.magnolia.module.admininterface.SaveHandlerImpl;
 import info.magnolia.module.data.controls.UUIDConversionControl;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+
+import org.apache.commons.lang.StringUtils;
 
 public class UUIDConversionSaveHandler extends SaveHandlerImpl implements DialogAwareSaveHandler {
 
@@ -36,8 +35,9 @@ public class UUIDConversionSaveHandler extends SaveHandlerImpl implements Dialog
             node.delete(name);
         }
         catch (PathNotFoundException e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         if (values != null && values.length != 0) {
             Content multiNode = node.createContent(name, ItemType.CONTENTNODE);
@@ -46,8 +46,9 @@ public class UUIDConversionSaveHandler extends SaveHandlerImpl implements Dialog
                 multiNode.deleteNodeData("creationdate"); //$NON-NLS-1$
             }
             catch (RepositoryException re) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Exception caught: " + re.getMessage(), re); //$NON-NLS-1$
+                }
             }
             for (int j = 0; j < values.length; j++) {
                 String valueStr = values[j];
@@ -60,8 +61,9 @@ public class UUIDConversionSaveHandler extends SaveHandlerImpl implements Dialog
                             valueStr = referencedNode.getUUID();
                         }
                         catch (RepositoryException re) {
-                            if (log.isDebugEnabled())
+                            if (log.isDebugEnabled()) {
                                 log.debug("Cannot retrieve the referenced node by UUID: " + valueStr, re);
+                            }
                         }
                     }
                     Value value = this.getValue(valueStr, type);

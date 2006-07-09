@@ -74,16 +74,18 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         try {
             synchronized (HM_LOCK) {
                 Content ct = findExpression(fe);
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Handle for store expression" + ct.getHandle());
+                }
 
                 // set expressionId as attribte id
                 ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
                 String value = fe.getId().toParseableString();
                 ct.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(value));
 
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("id_value=" + value);
+                }
                 serializeExpressionAsXml(ct, fe);
                 hm.save();
             }
@@ -125,8 +127,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         buffer.append(WorkflowConstants.SLASH);
         buffer.append(engineId);
         // engine storage
-        if (engineId.equals(ENGINE_ID))
+        if (engineId.equals(ENGINE_ID)) {
             return buffer.toString();
+        }
 
         buffer.append(WorkflowConstants.SLASH);
         buffer.append(fei.getWorkflowDefinitionName());
@@ -143,12 +146,15 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
     private Content findExpression(FlowExpressionId fei) throws Exception {
         String local = toXPathFriendlyString(fei);
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("accessing expresion: expression id = " + fei.toParseableString());
-        if (hm.isExist(local))
+        }
+        if (hm.isExist(local)) {
             return hm.getContent(local);
-        else
+        }
+        else {
             return ContentUtil.createPath(hm, local, ItemType.EXPRESSION);
+        }
     }
 
     /**
@@ -230,8 +236,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             this.assignClass = assignClass;
             QueryManager qm = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_EXPRESSION);
             Query query = qm.createQuery(WorkflowConstants.STORE_ITERATOR_QUERY, Query.SQL);
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("xx-->query executed:" + query.getStatement());
+            }
             QueryResult qr = query.execute();
             this.rootIterator = qr.getContent().iterator();
             this.next = fetchNext();
@@ -246,8 +253,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
         public FlowExpression fetchNext() {
 
-            if (!this.rootIterator.hasNext())
+            if (!this.rootIterator.hasNext()) {
                 return null;
+            }
 
             final Content content = (Content) this.rootIterator.next();
             try {
@@ -269,8 +277,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
             final FlowExpression current = this.next;
 
-            if (current == null)
+            if (current == null) {
                 throw new java.util.NoSuchElementException();
+            }
 
             this.next = fetchNext();
 

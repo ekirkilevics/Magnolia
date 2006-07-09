@@ -510,8 +510,9 @@ public class Tree extends ControlImpl {
             }
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         return returnValue;
     }
@@ -565,8 +566,9 @@ public class Tree extends ControlImpl {
             // return PropertyType.nameFromValue(node.getType());
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         return StringUtils.EMPTY;
     }
@@ -617,8 +619,9 @@ public class Tree extends ControlImpl {
             permissionWrite = root.isGranted(info.magnolia.cms.security.Permission.WRITE);
         }
         catch (RepositoryException e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
 
         // lineInter: line between nodes, to allow set cursor between nodes
@@ -659,8 +662,9 @@ public class Tree extends ControlImpl {
             }
         }
         catch (RepositoryException e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         return html.toString();
     }
@@ -969,8 +973,9 @@ public class Tree extends ControlImpl {
             }
         }
         catch (RepositoryException e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         return html.toString();
     }
@@ -1029,8 +1034,9 @@ public class Tree extends ControlImpl {
      * @param item FunctionBarItem
      */
     public void addFunctionBarItem(FunctionBarItem item) {
-        if (item != null)
+        if (item != null) {
             item.setJavascriptMenuName(functionBar.getJavascriptName());
+        }
         functionBar.addMenuItem(item);
     }
 

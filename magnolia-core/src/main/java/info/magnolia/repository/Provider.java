@@ -12,10 +12,11 @@
  */
 package info.magnolia.repository;
 
+import java.io.InputStream;
+
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
-import java.io.InputStream;
 
 
 /**

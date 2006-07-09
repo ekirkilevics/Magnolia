@@ -157,7 +157,7 @@ public final class ModuleUtil {
             String name = StringUtils.removeEnd(StringUtils.substringAfterLast(resourceName, "/"), ".xml");
 
             String repository = StringUtils.substringBefore(name, ".");
-            String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), "."); //$NON-NLS-1$ //$NON-NLS-1$ //$NON-NLS-1$
+            String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), "."); //$NON-NLS-1$ 
             String nodeName = StringUtils.substringAfterLast(name, ".");
             String fullPath;
             if (StringUtils.isEmpty(pathName)) {
@@ -173,8 +173,9 @@ public final class ModuleUtil {
             try {
                 if (hm.isExist(fullPath)) {
                     hm.delete(fullPath);
-                    if (log.isDebugEnabled())
+                    if (log.isDebugEnabled()) {
                         log.debug("already existing node [{}] deleted", fullPath);
+                    }
                 }
 
                 // if the parent path not exists just create it

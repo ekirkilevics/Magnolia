@@ -104,8 +104,9 @@ public class ClasspathSpool extends HttpServlet {
      * @throws IOException
      */
     private void streamMultipleFile(HttpServletResponse response, String filePath) throws IOException {
-        if (log.isDebugEnabled())
+        if (log.isDebugEnabled()) {
             log.debug("aggregating files for request {}", filePath);
+        }
 
         String[] paths = (String[]) multipleFilePathsCache.get(filePath);
         if (paths == null) {
@@ -175,8 +176,9 @@ public class ClasspathSpool extends HttpServlet {
         }
 
         if (in == null) {
-            if (!response.isCommitted())
+            if (!response.isCommitted()) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
+            }
             return;
         }
 
@@ -189,8 +191,9 @@ public class ClasspathSpool extends HttpServlet {
         catch (IOException e) {
             // only log at debug level
             // tomcat usually throws a ClientAbortException anytime the user stop loading the page
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Unable to spool resource due to a {} exception", e.getClass().getName()); //$NON-NLS-1$
+            }
             if (!response.isCommitted()) {
                 response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             }

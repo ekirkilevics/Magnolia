@@ -1,18 +1,7 @@
 package info.magnolia.module.data;
 
-import java.util.Collection;
-import java.util.Iterator;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-import org.jdom.filter.ContentFilter;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
@@ -21,12 +10,20 @@ import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
-import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AdminTreeConfiguration;
 import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
+
+import java.util.Collection;
+import java.util.Iterator;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 
 public class DialogBasedTreeConfig implements AdminTreeConfiguration {
 

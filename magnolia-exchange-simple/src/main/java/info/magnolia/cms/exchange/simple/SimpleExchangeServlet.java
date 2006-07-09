@@ -39,7 +39,13 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.zip.GZIPInputStream;
 
-import javax.jcr.*;
+import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 import javax.jcr.lock.LockException;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -437,8 +443,9 @@ public class SimpleExchangeServlet extends HttpServlet {
         }
         catch (LockException le) {
             // either repository does not support locking OR this node never locked
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug(le.getMessage());
+            }
         }
         catch (RepositoryException re) {
             // should never come here
@@ -476,13 +483,15 @@ public class SimpleExchangeServlet extends HttpServlet {
         }
         catch (LockException le) {
             // either repository does not support locking OR this node never locked
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug(le.getMessage());
+            }
         }
         catch (RepositoryException re) {
             // should never come here
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught", re);
+            }
         }
     }
 

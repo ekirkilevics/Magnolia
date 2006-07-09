@@ -14,11 +14,11 @@ package info.magnolia.cms.util;
 
 import info.magnolia.context.MgnlContext;
 
-import java.util.Date;
-import java.util.Calendar;
-import java.util.TimeZone;
-import java.text.SimpleDateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.TimeZone;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.FastDateFormat;

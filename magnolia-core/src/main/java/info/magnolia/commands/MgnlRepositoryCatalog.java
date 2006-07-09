@@ -5,6 +5,9 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
 
+import java.util.Collection;
+import java.util.Iterator;
+
 import org.apache.commons.chain.Chain;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.impl.CatalogBase;
@@ -12,9 +15,6 @@ import org.apache.commons.chain.impl.ChainBase;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * A command catalog using a repository node as a configuration. Chains are supported.

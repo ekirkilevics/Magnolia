@@ -13,33 +13,33 @@
 package info.magnolia.jaas.sp.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.auth.PrincipalCollection;
-import info.magnolia.cms.security.auth.ACL;
-import info.magnolia.cms.security.auth.GroupList;
-import info.magnolia.cms.security.auth.RoleList;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.util.UrlPattern;
+import info.magnolia.cms.security.auth.ACL;
+import info.magnolia.cms.security.auth.GroupList;
+import info.magnolia.cms.security.auth.PrincipalCollection;
+import info.magnolia.cms.security.auth.RoleList;
 import info.magnolia.cms.util.SimpleUrlPattern;
-import info.magnolia.jaas.principal.RoleListImpl;
-import info.magnolia.jaas.principal.PrincipalCollectionImpl;
+import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.jaas.principal.ACLImpl;
 import info.magnolia.jaas.principal.GroupListImpl;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.ItemNotFoundException;
-import javax.security.auth.login.LoginException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
+import info.magnolia.jaas.principal.PrincipalCollectionImpl;
+import info.magnolia.jaas.principal.RoleListImpl;
 
 import java.util.Iterator;
+
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.security.auth.login.LoginException;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -156,7 +156,9 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
     private void addGroups(Content node, PrincipalCollection principalList, GroupList groupList, RoleList roleList) {
         HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_GROUPS);
         try {
-            if (!node.hasContent("groups")) return;
+            if (!node.hasContent("groups")) {
+                return;
+            }
             Content groupNode = node.getContent("groups");
             Iterator children = groupNode.getNodeDataCollection().iterator();
             while (children.hasNext()) {
@@ -165,7 +167,9 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 try {
                     group = groupsHierarchy.getContentByUUID(groupUUID);
                     // ignore if this groups is already in a list to avoid infinite recursion
-                    if (groupList.has(group.getName())) continue;
+                    if (groupList.has(group.getName())) {
+                        continue;
+                    }
                 } catch (ItemNotFoundException e) {
                     if (log.isDebugEnabled()) {
                         log.debug("Group does not exist", e);

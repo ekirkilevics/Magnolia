@@ -16,7 +16,13 @@ import info.magnolia.cms.mail.templates.impl.VelocityEmail;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;

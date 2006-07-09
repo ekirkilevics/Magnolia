@@ -129,8 +129,9 @@ public class BaseContentTag extends TagSupport {
 
             }
             catch (RepositoryException re) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug(re.getMessage());
+                }
             }
         }
         else {

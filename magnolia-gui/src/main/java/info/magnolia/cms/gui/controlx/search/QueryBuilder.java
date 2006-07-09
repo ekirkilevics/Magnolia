@@ -12,12 +12,12 @@
  */
 package info.magnolia.cms.gui.controlx.search;
 
-import java.util.Date;
-
 import info.magnolia.cms.gui.query.DateSearchQueryParameter;
 import info.magnolia.cms.gui.query.SearchQueryExpression;
 import info.magnolia.cms.gui.query.SearchQueryOperator;
 import info.magnolia.cms.gui.query.StringSearchQueryParameter;
+
+import java.util.Date;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -111,8 +111,9 @@ class QueryBuilder {
      * @param expression
      * */
     private void build(SearchQueryExpression expression) {
-        if (expression == null)
+        if (expression == null) {
             return;
+        }
         this.build(expression.getLeft());
         this.statement.append(" ");
         this.statement.append(toJCRExpression(expression));

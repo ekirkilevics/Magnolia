@@ -1,10 +1,5 @@
 package info.magnolia.module.admininterface.lists;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
@@ -15,14 +10,17 @@ import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
 import info.magnolia.cms.gui.controlx.search.RepositorySearchListModel;
 import info.magnolia.cms.gui.controlx.search.SearchConfig;
-import info.magnolia.cms.gui.controlx.search.SearchConfigImpl;
-import info.magnolia.cms.gui.controlx.search.SearchControlDefinition;
 import info.magnolia.cms.gui.query.SearchQuery;
 import info.magnolia.cms.gui.query.SearchQueryExpression;
 import info.magnolia.cms.gui.query.StringSearchQueryParameter;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
 
 
 public class WebsiteSearchList extends AbstractSimpleSearchList {
@@ -78,13 +76,13 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
         ContextMenuItem open = new ContextMenuItem("open");
         open.setLabel(msgs.get("tree.web.menu.open")); //$NON-NLS-1$
         open.setIcon(request.getContextPath() + "/.resources/icons/16/document_plain_earth.gif"); //$NON-NLS-1$
-        open.setOnclick("mgnl.admininterface.WebsiteSearchList.show();"); //$NON-NLS-1$ //$NON-NLS-2$
+        open.setOnclick("mgnl.admininterface.WebsiteSearchList.show();"); //$NON-NLS-1$ 
         open.addJavascriptCondition("{test: function(){return mgnl.admininterface.WebsiteSearchList.selected != null}}");
 
         ContextMenuItem navigate = new ContextMenuItem("navigate");
         navigate.setLabel(msgs.get("tree.menu.navigate")); //$NON-NLS-1$
         navigate.setIcon(request.getContextPath() + "/.resources/icons/16/compass.gif"); //$NON-NLS-1$
-        navigate.setOnclick("mgnl.admininterface.WebsiteSearchList.navigate();"); //$NON-NLS-1$ //$NON-NLS-2$
+        navigate.setOnclick("mgnl.admininterface.WebsiteSearchList.navigate();"); //$NON-NLS-1$ 
         navigate.addJavascriptCondition("{test: function(){return mgnl.admininterface.WebsiteSearchList.selected != null}}");
         
         menu.addMenuItem(open);

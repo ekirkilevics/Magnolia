@@ -7,9 +7,10 @@ import freemarker.template.Configuration;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.Template;
 
-import javax.mail.Session;
 import java.io.StringWriter;
 import java.util.Map;
+
+import javax.mail.Session;
 
 
 /**

@@ -15,7 +15,11 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.*;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.cms.util.StringComparator;
+import info.magnolia.cms.util.UrlPattern;
 
 import java.util.Collection;
 import java.util.Collections;

@@ -1154,8 +1154,9 @@ public class Content extends ContentHandler implements Cloneable {
             return true;
         }
         catch (RepositoryException re) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug(this.getHandle() + " says: no access"); //$NON-NLS-1$
+            }
         }
         return false;
     }
@@ -1203,8 +1204,9 @@ public class Content extends ContentHandler implements Cloneable {
             }
         }
         catch (RepositoryException e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("isNodeData(): " + e.getMessage()); //$NON-NLS-1$
+            }
         }
         return result;
     }

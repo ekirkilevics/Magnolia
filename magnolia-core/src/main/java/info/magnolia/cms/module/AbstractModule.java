@@ -14,7 +14,6 @@ package info.magnolia.cms.module;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
-import info.magnolia.cms.beans.config.ShutdownManager;
 
 import java.io.File;
 import java.io.IOException;

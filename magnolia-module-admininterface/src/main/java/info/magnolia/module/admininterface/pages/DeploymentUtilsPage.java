@@ -12,14 +12,14 @@
  */
 package info.magnolia.module.admininterface.pages;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**

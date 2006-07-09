@@ -191,8 +191,9 @@ public class SaveHandlerImpl implements SaveHandler {
                     MultipartForm form = getForm();
                     Map docs = form.getDocuments();
                     Iterator iter = docs.keySet().iterator();
-                    while (iter.hasNext())
+                    while (iter.hasNext()) {
                         form.getDocument((String) iter.next()).delete();
+                    }
                 }
                 catch (Exception e) {
                     log.error("Could not delete temp documents from form");
@@ -272,8 +273,9 @@ public class SaveHandlerImpl implements SaveHandler {
     protected void processDate(Content node, String name, int type, int valueType, int encoding, String[] values) {
         try {
             if (StringUtils.isEmpty(values[0])) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Date has no value. Deleting node data" + name);
+                }
                 node.deleteNodeData(name);
             }
             else {
@@ -336,8 +338,9 @@ public class SaveHandlerImpl implements SaveHandler {
         valueStr = StringUtils.replace(valueStr, "<P><br />", "<P>"); //$NON-NLS-1$ //$NON-NLS-2$
 
         // replace <P>
-        if (isRichEditValue != ControlImpl.RICHEDIT_FCK)
+        if (isRichEditValue != ControlImpl.RICHEDIT_FCK) {
             valueStr = replacePByBr(valueStr, "p"); //$NON-NLS-1$
+        }
         return valueStr;
     }
 
@@ -525,8 +528,9 @@ public class SaveHandlerImpl implements SaveHandler {
             node.delete(name);
         }
         catch (PathNotFoundException e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
         if (values != null && values.length != 0) {
             Content multiNode = node.createContent(name, ItemType.CONTENTNODE);
@@ -535,8 +539,9 @@ public class SaveHandlerImpl implements SaveHandler {
                 multiNode.deleteNodeData("creationdate"); //$NON-NLS-1$
             }
             catch (RepositoryException re) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Exception caught: " + re.getMessage(), re); //$NON-NLS-1$
+                }
             }
             for (int j = 0; j < values.length; j++) {
                 String valueStr = values[j];
@@ -564,8 +569,9 @@ public class SaveHandlerImpl implements SaveHandler {
                 node.deleteNodeData(name);
             }
             catch (RepositoryException re) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Exception caught: " + re.getMessage(), re); //$NON-NLS-1$
+                }
             }
         }
         else {
@@ -676,8 +682,9 @@ public class SaveHandlerImpl implements SaveHandler {
                 value = valueFactory.createValue(date);
             }
             catch (Exception e) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+                }
             }
         }
         else if (type == PropertyType.REFERENCE) {
@@ -687,8 +694,9 @@ public class SaveHandlerImpl implements SaveHandler {
                 value = valueFactory.createValue(referencedNode);
             }
             catch (RepositoryException re) {
-                if (log.isDebugEnabled())
+                if (log.isDebugEnabled()) {
                     log.debug("Cannot retrieve the referenced node by UUID: " + valueStr, re);
+                }
             }
         }
 
@@ -892,8 +900,9 @@ public class SaveHandlerImpl implements SaveHandler {
 
             }
             data.setValue(doc.getStream());
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Node data updated"); //$NON-NLS-1$
+            }
         }
         if (data != null) {
             if (fileName == null || fileName.equals(StringUtils.EMPTY)) {

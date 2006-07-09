@@ -12,10 +12,10 @@
  */
 package info.magnolia.module.admininterface.lists;
 
+import info.magnolia.context.MgnlContext;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import info.magnolia.context.MgnlContext;
 
 
 /**

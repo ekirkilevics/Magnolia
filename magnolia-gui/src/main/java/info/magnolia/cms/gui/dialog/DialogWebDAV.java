@@ -20,6 +20,26 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.gui.misc.Spacer;
 import info.magnolia.cms.i18n.MessagesManager;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
+import java.io.Writer;
+import java.net.URLDecoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 import org.apache.commons.httpclient.HttpURL;
 import org.apache.commons.lang.StringUtils;
 import org.apache.webdav.lib.Property;
@@ -27,17 +47,6 @@ import org.apache.webdav.lib.WebdavResource;
 import org.apache.webdav.lib.methods.XMLResponseMethodBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.io.Writer;
-import java.net.URLDecoder;
-import java.text.SimpleDateFormat;
-import java.util.*;
 
 
 /**
@@ -441,7 +450,7 @@ public class DialogWebDAV extends DialogBox {
                 }
                 if (name.startsWith(".") //$NON-NLS-1$
                         && !this.getConfigValue("showHiddenFiles", "false").equals("true"))
-                { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                { 
                     continue;
                 }
                 properties.put("name", name); //$NON-NLS-1$
@@ -489,8 +498,9 @@ public class DialogWebDAV extends DialogBox {
             out.write("</body></html>"); //$NON-NLS-1$
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
         }
     }
 
@@ -684,8 +694,9 @@ public class DialogWebDAV extends DialogBox {
             // return sdf.format(x);
         }
         catch (Exception e) {
-            if (log.isDebugEnabled())
+            if (log.isDebugEnabled()) {
                 log.debug(e.getMessage(), e);
+            }
             return date;
         }
     }
