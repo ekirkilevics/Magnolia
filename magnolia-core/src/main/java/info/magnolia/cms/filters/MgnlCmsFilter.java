@@ -47,7 +47,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.commons.lang.math.NumberUtils;
@@ -63,11 +62,16 @@ import org.slf4j.LoggerFactory;
 public class MgnlCmsFilter implements Filter {
 
     /**
+     * 
+     */
+    private static final String BYPASS_PARAM = "bypass";
+
+    /**
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(MgnlCmsFilter.class);
 
-    private static String[] excludes = new String[]{"/ActivationHandler"};
+    private String[] bypass;
 
     /**
      * @see javax.servlet.Filter#destroy()
@@ -80,7 +84,7 @@ public class MgnlCmsFilter implements Filter {
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        // unused
+        this.bypass = StringUtils.split(filterConfig.getInitParameter(BYPASS_PARAM), ",");
     }
 
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException,
@@ -92,7 +96,7 @@ public class MgnlCmsFilter implements Filter {
         String requestURI = request.getRequestURI();
         String pathInfo = request.getPathInfo();
 
-        if (pathInfo == null && !ArrayUtils.contains(excludes, requestURI)) {
+        if (pathInfo == null && !startsWithAny(bypass, requestURI)) {
             if (handle(request, response)) {
                 return;
             }
@@ -428,6 +432,16 @@ public class MgnlCmsFilter implements Filter {
         request.setAttribute(Aggregator.TEMPLATE, template);
 
         return true;
+    }
+
+    boolean startsWithAny(String[] array, String check) {
+        for (int j = 0; j < array.length; j++) {
+            String string = array[j];
+            if (check.startsWith(string)) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }
