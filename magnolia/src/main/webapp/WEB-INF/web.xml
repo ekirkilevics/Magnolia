@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee     http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4"
   id="WebApp">
   <description>Magnolia</description>
   <display-name>magnolia</display-name>
@@ -11,8 +11,12 @@
     <!--
       login configuration is now in config jcr, path: /server/config/login
     -->
+    <init-param>
+      <param-name>bypass</param-name>
+      <param-value>/docroot/,/admindocroot/,/tmp/fckeditor/,/ActivationHandler</param-value>
+    </init-param>
   </filter>
-  <!-- 
+  <!--
     <filter>
     <filter-name>CacheFilter</filter-name>
     <filter-class>info.magnolia.cms.cache.CacheFilter</filter-class>
@@ -22,7 +26,7 @@
     <filter-name>magnoliaFilterChain</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <!-- 
+  <!--
     <filter-mapping>
     <filter-name>CacheFilter</filter-name>
     <servlet-name>magnolia</servlet-name>
@@ -45,12 +49,6 @@
     <display-name>magnolia ImportExportServlet</display-name>
     <servlet-name>ImportExportServlet</servlet-name>
     <servlet-class>info.magnolia.cms.servlets.ImportExportServlet</servlet-class>
-  </servlet>
-  <servlet>
-    <description>Spool servlet</description>
-    <display-name>spool</display-name>
-    <servlet-name>Spool</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.Spool</servlet-class>
   </servlet>
   <servlet>
     <description>Classpath Spool servlet</description>
@@ -117,19 +115,6 @@
   <servlet-mapping>
     <servlet-name>classpathspool</servlet-name>
     <url-pattern>/.resources/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Spool</servlet-name>
-    <url-pattern>/docroot/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>Spool</servlet-name>
-    <url-pattern>/admindocroot/*</url-pattern>
-  </servlet-mapping>
-  <!-- used for the fck image upload -->
-  <servlet-mapping>
-    <servlet-name>Spool</servlet-name>
-    <url-pattern>/tmp/fckeditor/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>AdminTreeServlet</servlet-name>
