@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>Magnolia</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+  </head>
+  <body id="mgnl" class="mgnlBgLight mgnlImportExport">
+    <h2>${this.messages.get("importexport.import")}</h2>
+    <form method="get" action="">
+      <div class="formelement">
+        <label for="mgnlRepository">${this.messages.get("importexport.repository")}</label>
+        <select name="mgnlRepository">
+          [#list this.repositories as item]
+          <option>${item}</option>
+          [/#list]
+        </select>
+      </div>
+      <div class="formelement">
+        <label for="mgnlPath">${this.messages.get("importexport.basepath")}</label>
+        <input name="mgnlPath" value="/" />
+      </div>
+      <div class="formelement">
+        <label for="mgnlKeepVersions">${this.messages.get("importexport.keepversions")}</label>
+        <input name="" value="true" type="checkbox" />
+      </div>
+      <div class="formelement">
+        <label for="mgnlFormat">${this.messages.get("importexport.file")}</label>
+        <input type="file" name="mgnlFileImport" />
+      </div>
+      <div class="formelement">
+        <label for="mgnlUuidBehavior">UUIDs</label>
+        <div>
+          <select name="mgnlUuidBehavior">
+            <option value="0">${this.messages.get("importexport.createnew")}</option>
+            <option value="1">${this.messages.get("importexport.removeexisting")}</option>
+            <option value="2">${this.messages.get("importexport.replaceexisting")}</option>
+          </select>
+        </div>
+      </div>
+      <input type="hidden" name="command" value="importxml" />
+      <input type="submit" name="importxml" value='${this.messages.get("importexport.import")}' />
+    </form>
+  </body>
+</html>
