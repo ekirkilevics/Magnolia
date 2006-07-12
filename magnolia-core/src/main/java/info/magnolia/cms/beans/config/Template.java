@@ -63,6 +63,10 @@ public class Template implements Serializable {
             parameters.put("name", c.getName());
         }
 
+        if (getLocation() == null) {
+            parameters.put("location", c.getHandle());
+        }
+
         this.visible = c.getNodeData("visible").getBoolean(); //$NON-NLS-1$
 
         addAlternativePaths(c);
