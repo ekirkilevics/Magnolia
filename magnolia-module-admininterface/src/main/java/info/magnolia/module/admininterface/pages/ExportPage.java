@@ -6,6 +6,7 @@ import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
@@ -168,7 +169,7 @@ public class ExportPage extends TemplatedMVCHandler {
             ext = DataTransporter.XML;
         }
 
-        if (checkPermissions(request, mgnlRepository, mgnlPath, Permission.WRITE)) {
+        if (!checkPermissions(request, mgnlRepository, mgnlPath, Permission.WRITE)) {
 
             throw new ServletException(new AccessDeniedException(
                 "Write permission needed for export. User not allowed to WRITE path [" //$NON-NLS-1$
@@ -198,15 +199,22 @@ public class ExportPage extends TemplatedMVCHandler {
         }
         response.setHeader("content-disposition", "attachment; filename=" + mgnlRepository + pathName + ext); //$NON-NLS-1$ //$NON-NLS-2$
         OutputStream baseOutputStream = response.getOutputStream();
-        DataTransporter.executeExport(
-            baseOutputStream,
-            mgnlKeepVersions,
-            mgnlFormat,
-            session,
-            mgnlPath,
-            mgnlRepository,
-            ext);
 
+        try {
+            DataTransporter.executeExport(
+                baseOutputStream,
+                mgnlKeepVersions,
+                mgnlFormat,
+                session,
+                mgnlPath,
+                mgnlRepository,
+                ext);
+        }
+        catch (RuntimeException e) {
+            response.setContentType("text/html; charset=UTF-8");
+            response.setHeader("content-disposition", "inline"); //$NON-NLS-1$ //$NON-NLS-2$
+            throw e;
+        }
 
         return null;
     }
@@ -218,8 +226,10 @@ public class ExportPage extends TemplatedMVCHandler {
      */
     protected boolean checkPermissions(HttpServletRequest request, String repository, String basePath,
         long permissionType) {
-        if (MgnlContext.getAccessManager(repository) != null) {
-            if (!MgnlContext.getAccessManager(ContentRepository.WEBSITE).isGranted(basePath, permissionType)) {
+
+        AccessManager accessManager = MgnlContext.getAccessManager(repository);
+        if (accessManager != null) {
+            if (!accessManager.isGranted(basePath, permissionType)) {
                 return false;
             }
         }
