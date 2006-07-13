@@ -10,7 +10,7 @@ rem ---------------------------------------------------------------------------
 rem Magnolia needs extra memory
 rem ---------------------------------------------------------------------------
 
-set CATALINA_OPTS=%CATALINA_OPTS% -ms64M -mx512M
+set CATALINA_OPTS=%CATALINA_OPTS% -Xms64M -Xmx512M
 
 rem Guess CATALINA_HOME if not defined
 set CURRENT_DIR=%cd%

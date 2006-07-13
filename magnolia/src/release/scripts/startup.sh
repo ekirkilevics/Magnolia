@@ -9,7 +9,7 @@
 # Magnolia needs extra memory
 # -----------------------------------------------------------------------------
 
-export CATALINA_OPTS="$CATALINA_OPTS -ms64M -mx512M"
+export CATALINA_OPTS="$CATALINA_OPTS -Xms64M -Xmx512M"
 
 # resolve links - $0 may be a softlink
 PRG="$0"
