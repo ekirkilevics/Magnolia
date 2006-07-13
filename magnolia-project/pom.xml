@@ -114,7 +114,7 @@
             </goals>
             <configuration>
               <name>magnolia.currentDate</name>
-              <valueProvider implementation="info.magnolia.maven.CurrentDateValueProvider">
+              <valueProvider implementation="info.magnolia.maven.setproperty.CurrentDateValueProvider">
                 <format>d. MMMM yyyy</format>
               </valueProvider>
             </configuration>
@@ -142,7 +142,7 @@
             </goals>
             <configuration>
               <name>magnolia.version</name>
-              <defaultValueProvider implementation="info.magnolia.maven.VersionNameValueProvider">
+              <defaultValueProvider implementation="info.magnolia.maven.setproperty.VersionNameValueProvider">
                 <!-- dummy property (maven does not initialize this object otherwise) -->
                 <dummy>dummy</dummy>
               </defaultValueProvider>
