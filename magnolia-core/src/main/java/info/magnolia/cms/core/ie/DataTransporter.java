@@ -26,6 +26,7 @@ import java.util.zip.ZipOutputStream;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
@@ -253,7 +254,13 @@ public class DataTransporter {
                 parseAndFormat(outputStream, reader, repository, basepath, session);
             }
         }
-        catch (Exception e) {
+        catch (IOException e) {
+            throw new NestableRuntimeException(e);
+        }
+        catch (SAXException e) {
+            throw new NestableRuntimeException(e);
+        }
+        catch (RepositoryException e) {
             throw new NestableRuntimeException(e);
         }
 
@@ -275,10 +282,13 @@ public class DataTransporter {
      * @param repository the repository to export
      * @param basepath the basepath in the repository
      * @param session the session to use to export the data from the repository
-     * @throws Exception if anything goes wrong ...
+     * @throws IOException
+     * @throws SAXException
+     * @throws RepositoryException
+     * @throws PathNotFoundException
      */
     public static void parseAndFormat(OutputStream stream, XMLReader reader, String repository, String basepath,
-        Session session) throws Exception {
+        Session session) throws IOException, SAXException, PathNotFoundException, RepositoryException {
 
         if (reader == null) {
             reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
