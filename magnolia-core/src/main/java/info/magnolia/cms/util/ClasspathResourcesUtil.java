@@ -70,7 +70,7 @@ public class ClasspathResourcesUtil {
 
         Collection resources = new ArrayList();
 
-        ClassLoader cl = ClasspathResourcesUtil.class.getClassLoader();
+        ClassLoader cl = getCurrentClassLoader();
 
         // if the classloader is an URLClassloader we have a better method for discovering resources
         // whis will also fetch files from jars outside WEB-INF/lib, useful during development
@@ -187,11 +187,11 @@ public class ClasspathResourcesUtil {
      */
     public static InputStream getStream(String name, boolean cache) throws IOException {
         if (cache) {
-            return ClasspathResourcesUtil.class.getResourceAsStream(name);
+            return getCurrentClassLoader().getResourceAsStream(StringUtils.removeStart(name, "/"));
         }
         else {
             // TODO use the last modified attribute
-            URL url = ClasspathResourcesUtil.class.getResource(name);
+            URL url = getResource(name);
             if (url != null) {
                 return url.openStream();
             }
@@ -200,6 +200,23 @@ public class ClasspathResourcesUtil {
             log.debug("Can't find {}", name);
         }
         return null;
+    }
+
+    /**
+     * Get the class loader of the current Thread
+     * @return
+     */
+    private static ClassLoader getCurrentClassLoader() {
+        return Thread.currentThread().getContextClassLoader();
+    }
+
+    /**
+     * Get the resource using the current class laoder. The leading / is removed as the call to class.getResource() would do.
+     * @param name
+     * @return the resource
+     */
+    public static URL getResource(String name) {
+        return getCurrentClassLoader().getResource(StringUtils.removeStart(name, "/"));
     }
 
 }
