@@ -529,7 +529,7 @@
             {
 
             keepVersions = keepVersions!=null ? keepVersions: false;
-            var url= contextPath + "/.magnolia/mgnl-export/file.xml?exportxml=true&mgnlFormat=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id + "&mgnlKeepVersions=" + keepVersions;
+            var url= contextPath + "/.magnolia/pages/export.xml?exportxml=true&mgnlFormat=true&mgnlRepository=" + this.repository + "&mgnlPath=" + this.selectedNode.id + "&mgnlKeepVersions=" + keepVersions;
 
             location.href=url;
             }

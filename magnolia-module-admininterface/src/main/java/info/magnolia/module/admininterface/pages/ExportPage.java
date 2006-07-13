@@ -59,6 +59,8 @@ public class ExportPage extends TemplatedMVCHandler {
 
     private String ext;
 
+    private boolean exportxml;
+
     /**
      * Getter for <code>ext</code>.
      * @return Returns the ext.
@@ -140,12 +142,38 @@ public class ExportPage extends TemplatedMVCHandler {
     }
 
     /**
+     * Getter for <code>exportxml</code>.
+     * @return Returns the exportxml.
+     */
+    public boolean isExportxml() {
+        return this.exportxml;
+    }
+
+    /**
+     * Setter for <code>exportxml</code>.
+     * @param exportxml The exportxml to set.
+     */
+    public void setExportxml(boolean exportxml) {
+        this.exportxml = exportxml;
+    }
+
+    /**
      * @param name
      * @param request
      * @param response
      */
     public ExportPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
+    }
+
+    /**
+     * @see info.magnolia.cms.servlets.MVCServletHandlerImpl#getCommand()
+     */
+    public String getCommand() {
+        if (this.exportxml) {
+            return "exportxml";
+        }
+        return super.getCommand();
     }
 
     /**
