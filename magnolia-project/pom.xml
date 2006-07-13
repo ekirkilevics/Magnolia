@@ -99,6 +99,70 @@
           <target>1.4</target>
         </configuration>
       </plugin>
+      
+      <plugin>
+        <groupId>info.magnolia</groupId>
+        <artifactId>maven-setproperty-plugin</artifactId>
+        <version>1.0-SNAPSHOT</version>
+        <executions>
+          <!-- set the current date -->
+          <execution>
+            <phase>generate-resources</phase>
+            <id>currentDate</id>
+            <goals>
+              <goal>set-property</goal>
+            </goals>
+            <configuration>
+              <name>magnolia.currentDate</name>
+              <valueProvider implementation="info.magnolia.maven.CurrentDateValueProvider">
+                <format>d. MMMM yyyy</format>
+              </valueProvider>
+            </configuration>
+          </execution>
+
+          <!-- set the release date (default current) -->
+          <execution>
+            <phase>generate-resources</phase>
+            <id>releasDate</id>
+            <goals>
+              <goal>set-property</goal>
+            </goals>
+            <configuration>
+              <name>magnolia.releaseDate</name>
+              <defaultValue>${magnolia.currentDate}</defaultValue>
+            </configuration>
+          </execution>
+
+          <!-- make a nice version name out of pom.version -->
+          <execution>
+            <phase>generate-resources</phase>
+            <id>version</id>
+            <goals>
+              <goal>set-property</goal>
+            </goals>
+            <configuration>
+              <name>magnolia.version</name>
+              <defaultValueProvider implementation="info.magnolia.maven.VersionNameValueProvider">
+                <!-- dummy property (maven does not initialize this object otherwise) -->
+                <dummy>dummy</dummy>
+              </defaultValueProvider>
+            </configuration>
+          </execution>
+
+          <execution>
+            <phase>generate-resources</phase>
+            <id>edition</id>
+            <goals>
+              <goal>set-property</goal>
+            </goals>
+            <configuration>
+              <name>magnolia.edition</name>
+              <defaultValue>Community Edition</defaultValue>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+
       <!--
         <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
