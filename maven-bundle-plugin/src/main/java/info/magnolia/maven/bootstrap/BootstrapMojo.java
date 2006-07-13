@@ -73,8 +73,13 @@ public class BootstrapMojo extends AbstractMojo {
      */
     public String[] loadByOrgClassLoaderPatterns = {
         "java.*",
+        "javax.xml.*",
         "org.apache.commons.logging.*",
         "org.apache.log4j.*",
+        "org.w3c.dom.*",
+        "org.apache.xerces.*",
+        "org.xml.sax.*",
+        "com.sun.org.apache.xalan.*",
         "info.magnolia.maven.bootstrap.BootstrapMojo"
     };
 
@@ -158,7 +163,7 @@ public class BootstrapMojo extends AbstractMojo {
     
         if (this.getLog().isDebugEnabled()) {
             this.getLog().debug(
-                "jars loaded by the maven class loader:" + StringUtils.join((customLoader).getURLs(), "\n"));
+                "jars loaded by the custom class loader:" + StringUtils.join((customLoader).getURLs(), "\n"));
         }
         return customLoader;
     }
@@ -191,6 +196,10 @@ public class BootstrapMojo extends AbstractMojo {
         }
     
         try {
+        	// use this if MethodUtils couldn't get used
+        	// Method executeMethod = klass.getMethod("execute", new Class[]{this.getClass()});
+            // executeMethod.invoke(innerMojo, new Object[]{this});
+        	// introduce a dependency to log4j here
             MethodUtils.invokeMethod(innerMojo, "execute", new Object[]{this});
         }
         catch (Exception e) {

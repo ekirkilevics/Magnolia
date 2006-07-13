@@ -30,13 +30,8 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>3.0-rc2-SNAPSHOT</version>
+      <version>3.0-rc3-SNAPSHOT</version>
       <scope>provided</scope>
-    </dependency>
-    <dependency>
-      <groupId>org.apache.jackrabbit</groupId>
-      <artifactId>jackrabbit-index-filters</artifactId>
-      <version>1.0</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -44,6 +39,11 @@
       <version>2.4</version>
       <!-- can't be provided since the plugin is executed in maven and not in a J2EE container -->
       <!--<scope>provided</scope>-->
+    </dependency>
+    <dependency>
+      <groupId>log4j</groupId>
+      <artifactId>log4j</artifactId>
+      <version>1.2.13</version>
     </dependency>
     <dependency>
       <groupId>ant</groupId>
@@ -69,12 +69,6 @@
       <groupId>commons-beanutils</groupId>
       <artifactId>commons-beanutils</artifactId>
       <version>1.7.0</version>
-    </dependency>
-    <dependency>
-      <groupId>junit</groupId>
-      <artifactId>junit</artifactId>
-      <version>3.8.1</version>
-      <scope>test</scope>
     </dependency>
   </dependencies>
   <reporting>
