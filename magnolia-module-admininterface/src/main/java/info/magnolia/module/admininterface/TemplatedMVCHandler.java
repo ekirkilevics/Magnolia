@@ -15,6 +15,7 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.util.FreeMarkerUtil;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +56,17 @@ public class TemplatedMVCHandler extends PageMVCHandler {
         Map data = new HashMap();
         data.put("this", this);
 
-        FreeMarkerUtil.process(this.getTemplateName(view), data, getResponse().getWriter());
+        PrintWriter writer;
+
+        try {
+            writer = getResponse().getWriter();
+        }
+        catch (IllegalStateException e) {
+            // getResponse().getOutputStream() has already been called
+            writer = new PrintWriter(getResponse().getOutputStream());
+        }
+
+        FreeMarkerUtil.process(this.getTemplateName(view), data, writer);
     }
 
 }
