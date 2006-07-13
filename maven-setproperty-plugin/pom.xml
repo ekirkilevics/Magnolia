@@ -5,7 +5,7 @@
   <artifactId>maven-setproperty-plugin</artifactId>
   <name>maven-setproperty-plugin</name>
   <packaging>maven-plugin</packaging>
-  <version>1.0</version>
+  <version>1.0-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>org.apache.maven</groupId>
