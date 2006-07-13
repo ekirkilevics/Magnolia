@@ -13,7 +13,7 @@
     -->
     <init-param>
       <param-name>bypass</param-name>
-      <param-value>/docroot/,/admindocroot/,/tmp/fckeditor/,/ActivationHandler</param-value>
+      <param-value>/.,/docroot/,/admindocroot/,/tmp/fckeditor/,/ActivationHandler</param-value>
     </init-param>
   </filter>
   <!--
