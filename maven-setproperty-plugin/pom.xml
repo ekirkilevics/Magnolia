@@ -41,4 +41,16 @@
       </plugin>
     </plugins>
   </reporting>
+  <distributionManagement>
+    <repository>
+      <id>magnolia</id>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/m2repo</url>
+    </repository>
+    <site>
+      <id>magnolia</id>
+      <name>magnolia</name>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30</url>
+    </site>
+    <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
+  </distributionManagement>
 </project>
