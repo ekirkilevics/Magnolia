@@ -62,7 +62,7 @@ import org.slf4j.LoggerFactory;
 public class MgnlCmsFilter implements Filter {
 
     /**
-     * 
+     *
      */
     private static final String BYPASS_PARAM = "bypass";
 
@@ -93,7 +93,7 @@ public class MgnlCmsFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
 
-        String requestURI = request.getRequestURI();
+        String requestURI = Path.getURI(request);
         String pathInfo = request.getPathInfo();
 
         if (pathInfo == null && !startsWithAny(bypass, requestURI)) {
