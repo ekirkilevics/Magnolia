@@ -1,6 +1,6 @@
 ===============================================
 3rd party disclaimers of the
-libraries used in magnolia 3.0
+libraries used in magnolia ${magnolia.version}
 ===============================================
 
 
