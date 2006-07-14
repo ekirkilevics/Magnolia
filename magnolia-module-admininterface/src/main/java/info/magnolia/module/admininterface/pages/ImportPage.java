@@ -1,13 +1,11 @@
 package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Resource;
 
-import java.io.File;
 import java.text.MessageFormat;
 
 import javax.servlet.ServletException;
@@ -35,7 +33,7 @@ public class ImportPage extends ExportPage {
      */
     private static Logger log = LoggerFactory.getLogger(ImportPage.class);
 
-    private File mgnlFileImport;
+    private Document mgnlFileImport;
 
     private String mgnlRedirect;
 
@@ -51,10 +49,20 @@ public class ImportPage extends ExportPage {
     }
 
     /**
+     * @see info.magnolia.module.admininterface.pages.ExportPage#getCommand()
+     */
+    public String getCommand() {
+        if ("POST".equals(getRequest().getMethod())) {
+            return "importxml"; // a post request is an import request, preserve the behaviour from the servlet
+        }
+        return super.getCommand();
+    }
+
+    /**
      * Getter for <code>mgnlFileImport</code>.
      * @return Returns the mgnlFileImport.
      */
-    public File getMgnlFileImport() {
+    public Document getMgnlFileImport() {
         return this.mgnlFileImport;
     }
 
@@ -62,7 +70,7 @@ public class ImportPage extends ExportPage {
      * Setter for <code>mgnlFileImport</code>.
      * @param mgnlFileImport The mgnlFileImport to set.
      */
-    public void setMgnlFileImport(File mgnlFileImport) {
+    public void setMgnlFileImport(Document mgnlFileImport) {
         this.mgnlFileImport = mgnlFileImport;
     }
 
@@ -107,12 +115,6 @@ public class ImportPage extends ExportPage {
             log.debug("Import request received."); //$NON-NLS-1$
         }
 
-        MultipartForm form = Resource.getPostedForm(request);
-        if (form == null) {
-            log.error("Missing form."); //$NON-NLS-1$
-            return null;
-        }
-
         if (StringUtils.isEmpty(mgnlRepository)) {
             mgnlRepository = ContentRepository.WEBSITE;
         }
@@ -120,23 +122,22 @@ public class ImportPage extends ExportPage {
             mgnlPath = "/"; //$NON-NLS-1$
         }
 
-        if (checkPermissions(request, mgnlRepository, mgnlPath, Permission.WRITE)) {
-            DataTransporter.executeImport(
-                mgnlPath,
-                mgnlRepository,
-                mgnlFileImport,
-                mgnlKeepVersions,
-                mgnlUuidBehavior,
-                true,
-                true);
-            log.info("Import done"); //$NON-NLS-1$
-        }
-        else {
+        if (!checkPermissions(request, mgnlRepository, mgnlPath, Permission.WRITE)) {
             throw new ServletException(new AccessDeniedException(
                 "Write permission needed for import. User not allowed to WRITE path [" //$NON-NLS-1$
                     + mgnlPath
                     + "]")); //$NON-NLS-1$
         }
+
+        DataTransporter.executeImport(
+            mgnlPath,
+            mgnlRepository,
+            mgnlFileImport,
+            mgnlKeepVersions,
+            mgnlUuidBehavior,
+            true);
+
+        log.info("Import done"); //$NON-NLS-1$
 
         if (StringUtils.isNotBlank(mgnlRedirect)) {
             if (log.isInfoEnabled()) {

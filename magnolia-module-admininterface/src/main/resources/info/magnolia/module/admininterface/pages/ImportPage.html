@@ -7,7 +7,7 @@
   </head>
   <body id="mgnl" class="mgnlBgLight mgnlImportExport">
     <h2>${this.messages.get("importexport.import")}</h2>
-    <form method="get" action="">
+    <form method="post" action="" enctype="multipart/form-data">
       <div class="formelement">
         <label for="mgnlRepository">${this.messages.get("importexport.repository")}</label>
         <select name="mgnlRepository">
