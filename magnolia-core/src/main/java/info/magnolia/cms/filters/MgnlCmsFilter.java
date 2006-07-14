@@ -337,9 +337,22 @@ public class MgnlCmsFilter implements Filter {
      */
     protected boolean collect(HttpServletRequest request) throws PathNotFoundException, RepositoryException {
 
-        String uri = StringUtils.substringBeforeLast(Path.getURI(request), "."); //$NON-NLS-1$
-        String extension = StringUtils.substringAfterLast(Path.getURI(request), "."); //$NON-NLS-1$
-
+    	String path = Path.getURI(request);
+    	int firstDotPos = StringUtils.indexOf(path, '.', StringUtils.lastIndexOf(path, '/'));
+    	String uri;
+    	String selector;
+        String extension; 
+    	if (firstDotPos > -1) {
+	    	int lastDotPos = StringUtils.lastIndexOf(path, '.');
+	    	uri = StringUtils.substring(path, 0, firstDotPos);
+	    	selector = StringUtils.substring(path, firstDotPos + 1, lastDotPos);
+	        extension = StringUtils.substring(path, lastDotPos);
+    	} else {
+    		// no dots (and no extension)
+	    	uri = path;
+	    	selector = "";
+	        extension = "";
+    	}
         HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
 
         Content requestedPage = null;
@@ -429,6 +442,7 @@ public class MgnlCmsFilter implements Filter {
         }
 
         request.setAttribute(Aggregator.HANDLE, uri);
+        request.setAttribute(Aggregator.SELECTOR, selector);
         request.setAttribute(Aggregator.TEMPLATE, template);
 
         return true;

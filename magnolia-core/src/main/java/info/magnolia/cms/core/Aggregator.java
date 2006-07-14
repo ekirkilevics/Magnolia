@@ -22,6 +22,8 @@ public class Aggregator {
 
     public static final String CURRENT_ACTPAGE = "actpage"; //$NON-NLS-1$
 
+    public static final String SELECTOR = "selector"; //$NON-NLS-1$
+
     public static final String FILE = "file"; //$NON-NLS-1$
 
     public static final String HANDLE = "handle"; //$NON-NLS-1$

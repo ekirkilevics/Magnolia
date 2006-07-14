@@ -64,6 +64,17 @@ public final class Resource {
 
     /**
      * <p>
+     * get selector as requested from the URI. The selector is the part between the handle and the 
+     * extension. selector("http://server/a.x.1.f.4.html") = "x.1.f.4"
+     * </p>
+     * @param req HttpServletRequest as received in JSP or servlet
+     * @return selector String as requested from the URI
+     */
+    public static String getSelector(HttpServletRequest req) {
+        return (String) req.getAttribute(Aggregator.SELECTOR);
+    }
+    /**
+     * <p>
      * get file object associated with the requested atom
      * </p>
      * @param req HttpServletRequest as received in JSP or servlet
