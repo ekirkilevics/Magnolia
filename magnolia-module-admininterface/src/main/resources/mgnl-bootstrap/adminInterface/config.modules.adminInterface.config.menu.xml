@@ -938,7 +938,7 @@
         <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
-        <sv:value>MgnlAdminCentral.showContent('/.magnolia/mgnl-export');</sv:value>
+        <sv:value>MgnlAdminCentral.showContent('/.magnolia/pages/export.html');</sv:value>
       </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>menu.tools.export</sv:value>
@@ -987,7 +987,7 @@
         <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
-        <sv:value>MgnlAdminCentral.showContent('/.magnolia/mgnl-import');</sv:value>
+        <sv:value>MgnlAdminCentral.showContent('/.magnolia/pages/import.html');</sv:value>
       </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>menu.tools.import</sv:value>

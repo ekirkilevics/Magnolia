@@ -541,13 +541,13 @@
             // create new uuid
             uuidBehavior = uuidBehavior!=null ? uuidBehavior: 0;
 
-            var strDiv ='<form method="post" enctype="multipart/form-data" action="' + contextPath + '/.magnolia/mgnl-import/import.html">';
+            var strDiv ='<form method="post" enctype="multipart/form-data" action="' + contextPath + '/.magnolia/pages/import.html">';
             strDiv +='<input type="hidden" name="mgnlRepository" value="' + this.repository + '">';
             strDiv +='<input type="hidden" name="mgnlPath" value="' + this.selectedNode.id + '">';
             strDiv +='<input type="hidden" name="mgnlKeepVersions" id="mgnlKeepVersions" value="'+keepVersions+'"/>';
             strDiv +='<input type="hidden" name="mgnlUuidBehavior" id="mgnlUuidBehavior" value="'+uuidBehavior+'"/>';
 
-            strDiv +='<input type="hidden" name="mgnlRedirect" value="' + contextPath + '/.magnolia/trees/' + this.handlerName + '.html">';
+            strDiv +='<input type="hidden" name="mgnlRedirect" value="' + contextPath + '/.magnolia/trees/' + this.handlerName + '.html?pathSelected=' + this.selectedNode.id + '&pathOpen=' + this.selectedNode.id + '">';
             strDiv +='<input type="file" name="mgnlFileImport" id="mgnlFileImport" /><br/>';
 
             strDiv +='<input type="submit" class="mgnlImportButton" name="importxml" value="' + mgnlMessages.get('import.button.js') + '" />';
