@@ -16,6 +16,8 @@ import info.magnolia.cms.util.RequestFormUtil;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -55,8 +57,14 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
     }
 
     public void init() {
+
+        RequestFormUtil requestFormUtil = new RequestFormUtil(this.getRequest());
+        Map parameters = new HashMap(); // needed, can't directly modify the map returned by request.getParameterMap()
+        parameters.putAll(requestFormUtil.getParameters());
+        parameters.putAll(requestFormUtil.getDocuments()); // handle uploaded files too
+
         try {
-            BeanUtils.populate(this, RequestFormUtil.getParameters(this.getRequest()));
+            BeanUtils.populate(this, parameters);
         }
         catch (Exception e) {
             log.error("can't set properties on the handler", e);
