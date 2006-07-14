@@ -62,8 +62,6 @@ public class MgnlServletDispatcherFilter implements Filter {
         addServlet("/.magnolia/trees/", "info.magnolia.module.admininterface.AdminTreeMVCServlet", null);
         addServlet("/.magnolia/dialogs/", "info.magnolia.module.admininterface.DialogMVCServlet", null);
         addServlet("/.magnolia/pages/", "info.magnolia.module.admininterface.PageMVCServlet", null);
-        addServlet("/.magnolia/mgnl-export/", "info.magnolia.cms.servlets.ImportExportServlet", null);
-        addServlet("/.magnolia/mgnl-import/", "info.magnolia.cms.servlets.ImportExportServlet", null);
         addServlet("/.magnolia/log4j/", "it.openutils.log4j.Log4jConfigurationServlet", null);
         addServlet(
             "/admintemplates/dialogs/fileThumbnail.jsp",

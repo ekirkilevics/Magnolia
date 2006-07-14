@@ -45,12 +45,6 @@
     <servlet-class>info.magnolia.module.admininterface.AdminTreeMVCServlet</servlet-class>
   </servlet>
   <servlet>
-    <description>ImportExportServlet</description>
-    <display-name>magnolia ImportExportServlet</display-name>
-    <servlet-name>ImportExportServlet</servlet-name>
-    <servlet-class>info.magnolia.cms.servlets.ImportExportServlet</servlet-class>
-  </servlet>
-  <servlet>
     <description>Classpath Spool servlet</description>
     <display-name>classpathspool</display-name>
     <servlet-name>classpathspool</servlet-name>
@@ -119,14 +113,6 @@
   <servlet-mapping>
     <servlet-name>AdminTreeServlet</servlet-name>
     <url-pattern>/.magnolia/trees/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ImportExportServlet</servlet-name>
-    <url-pattern>/.magnolia/mgnl-export/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>ImportExportServlet</servlet-name>
-    <url-pattern>/.magnolia/mgnl-import/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>DialogServlet</servlet-name>
