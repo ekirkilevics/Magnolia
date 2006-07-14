@@ -4,6 +4,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admininterface.PageMVCHandler;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -14,7 +15,6 @@ import java.io.InputStream;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,7 +30,7 @@ import com.sun.image.codec.jpeg.JPEGImageEncoder;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class FileThumbnailDialogPage extends HttpServlet {
+public class FileThumbnailDialogPage extends PageMVCHandler {
 
     /**
      * Stable serialVersionUID.
@@ -42,14 +42,45 @@ public class FileThumbnailDialogPage extends HttpServlet {
      */
     private static Logger log = LoggerFactory.getLogger(FileThumbnailDialogPage.class);
 
-    /**
-     * @see javax.servlet.http.HttpServlet#doGet(HttpServletRequest, HttpServletResponse)
-     */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        response.setContentType("image/jpeg"); //$NON-NLS-1$
+    private String src;
 
-        String src = request.getParameter("src"); //$NON-NLS-1$
-        String size = request.getParameter("size"); //$NON-NLS-1$
+    private String size;
+
+    /**
+     * @param name
+     * @param request
+     * @param response
+     */
+    public FileThumbnailDialogPage(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
+    }
+
+    /**
+     * Setter for <code>size</code>.
+     * @param size The size to set.
+     */
+    public void setSize(String size) {
+        this.size = size;
+    }
+
+    /**
+     * Setter for <code>src</code>.
+     * @param src The src to set.
+     */
+    public void setSrc(String src) {
+        this.src = src;
+    }
+
+    /**
+     * @see info.magnolia.cms.servlets.MVCServletHandler#renderHtml(java.lang.String)
+     */
+    public void renderHtml(String view) throws IOException {
+
+        if (src == null) {
+            return;
+        }
+
+        response.setContentType("image/jpeg"); //$NON-NLS-1$
 
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
 
@@ -113,7 +144,6 @@ public class FileThumbnailDialogPage extends HttpServlet {
 
         encoder.setJPEGEncodeParam(param);
         encoder.encode(thumbImage);
-
     }
 
 }

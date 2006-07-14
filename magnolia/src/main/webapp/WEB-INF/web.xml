@@ -61,10 +61,6 @@
     <servlet-class>info.magnolia.module.admininterface.PageMVCServlet</servlet-class>
   </servlet>
   <servlet>
-    <servlet-name>fileThumbnail</servlet-name>
-    <servlet-class>info.magnolia.module.admininterface.pages.FileThumbnailDialogPage</servlet-class>
-  </servlet>
-  <servlet>
     <servlet-name>log4j</servlet-name>
     <servlet-class>it.openutils.log4j.Log4jConfigurationServlet</servlet-class>
   </servlet>
@@ -121,10 +117,6 @@
   <servlet-mapping>
     <servlet-name>PageServlet</servlet-name>
     <url-pattern>/.magnolia/pages/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>fileThumbnail</servlet-name>
-    <url-pattern>/admintemplates/dialogs/fileThumbnail.jsp</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>log4j</servlet-name>

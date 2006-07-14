@@ -63,10 +63,6 @@ public class MgnlServletDispatcherFilter implements Filter {
         addServlet("/.magnolia/dialogs/", "info.magnolia.module.admininterface.DialogMVCServlet", null);
         addServlet("/.magnolia/pages/", "info.magnolia.module.admininterface.PageMVCServlet", null);
         addServlet("/.magnolia/log4j/", "it.openutils.log4j.Log4jConfigurationServlet", null);
-        addServlet(
-            "/admintemplates/dialogs/fileThumbnail.jsp",
-            "info.magnolia.module.admininterface.pages.FileThumbnailDialogPage",
-            null);
         addServlet("/uuid/", "info.magnolia.cms.servlets.UUIDRequestDispatcher", null);
         addServlet("/.magnolia/cache-all/", "info.magnolia.cms.cache.CacheGeneratorServlet", null);
         addServlet("/dms/", "info.magnolia.module.dms.DMSDownloadServlet", null);
