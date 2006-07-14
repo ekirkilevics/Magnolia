@@ -192,7 +192,7 @@ public class HierarchyManager {
     }
 
     private String getNodePath(String path) {
-        if (path.startsWith("/")) { //$NON-NLS-1$
+        if (path != null && path.startsWith("/")) { //$NON-NLS-1$
             return path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
         }
         return path;
