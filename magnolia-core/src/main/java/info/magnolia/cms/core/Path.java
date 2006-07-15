@@ -36,6 +36,8 @@ public final class Path {
 
     private static final String JAVAX_FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path"; //$NON-NLS-1$
 
+    private static final String MGNL_REQUEST_URI_DECODED = "mgnl.request.uri.decoded"; //$NON-NLS-1$
+
     /**
      * Utility class, don't instantiate.
      */
@@ -124,7 +126,15 @@ public final class Path {
      * @return request URI without servlet context
      */
     public static String getURI(HttpServletRequest req) {
-        return getDecodedURI(req);
+
+        String uri = (String) req.getAttribute(MGNL_REQUEST_URI_DECODED);
+        if (uri == null) {
+            uri = getDecodedURI(req);
+            // cache decoded uri
+            req.setAttribute(MGNL_REQUEST_URI_DECODED, uri);
+        }
+
+        return uri;
     }
 
     public static String getOriginalURI(HttpServletRequest req) {
