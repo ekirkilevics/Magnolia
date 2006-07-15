@@ -79,6 +79,18 @@
       </plugin>
     </plugins>
   </reporting>
+  <scm>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/maven-bundle-plugin</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/maven-bundle-plugin</developerConnection>
+    <url>http://svn.magnolia.info/view/magnolia/trunk/maven-bundle-plugin</url>
+  </scm>
+  <ciManagement>
+    <notifiers>
+      <notifier>
+        <address>svn@magnolia.info</address>
+      </notifier>
+    </notifiers>
+  </ciManagement>
   <distributionManagement>
     <repository>
       <id>magnolia</id>

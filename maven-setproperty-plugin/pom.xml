@@ -41,6 +41,18 @@
       </plugin>
     </plugins>
   </reporting>
+  <scm>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/maven-setproperty-plugin</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/maven-setproperty-plugin</developerConnection>
+    <url>http://svn.magnolia.info/view/magnolia/trunk/maven-setproperty-plugin</url>
+  </scm>
+  <ciManagement>
+    <notifiers>
+      <notifier>
+        <address>svn@magnolia.info</address>
+      </notifier>
+    </notifiers>
+  </ciManagement>
   <distributionManagement>
     <repository>
       <id>magnolia</id>
