@@ -283,7 +283,11 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     }
 
     protected boolean onSave(SaveHandler control) {
-        return control.save();
+        boolean result = control.save();
+        if(result){
+        	this.nodeName = control.getNodeName();
+        }
+        return result;
     }
 
     protected boolean onPostSave(SaveHandler control) {
