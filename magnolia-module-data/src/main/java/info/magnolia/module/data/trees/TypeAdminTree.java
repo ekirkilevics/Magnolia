@@ -11,7 +11,7 @@
  *
  */
 
-package info.magnolia.module.data;
+package info.magnolia.module.data.trees;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
@@ -20,36 +20,34 @@ import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
-import info.magnolia.module.data.gui.DataTreeControl;
+import info.magnolia.module.data.Constants;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
  * Data tree
  * @author Christoph Hoffmann (BeagleSoft GmbH)
  * @version $Revision$ ($Author$)
+ *
  */
-public class DataAdminTree extends AdminTreeMVCHandler {
-
-    private static Logger log = Logger.getLogger(DataAdminTree.class);
+public class TypeAdminTree extends AdminTreeMVCHandler {
 
     /**
      * @param name
      * @param request
      * @param response
      */
-    public DataAdminTree(String name, HttpServletRequest request, HttpServletResponse response) {
+    public TypeAdminTree(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
-        setTree(new DataTreeControl(getRepository(), request, response));
-        setConfiguration(new DataAdminTreeConfig());
+        setCatalogueName("moduleDataType");
+        setConfiguration(new TypeAdminTreeConfig());
     }
-
-    // TODO: check if this really works [cho]
-    public Syndicator getActivationSyndicator(String path) {
+    
+	public Syndicator getActivationSyndicator(String path) {
         /*
          * Here rule defines which content types to collect, its a resposibility of the caller ro set this, it will be
          * different in every hierarchy, for instance - in website tree recursive activation : rule will allow
@@ -67,6 +65,15 @@ public class DataAdminTree extends AdminTreeMVCHandler {
             .getRepository()), rule);
 
         return syndicator;
-    }
-
+	}
+	
+	public String getCommand() {
+        if (StringUtils.isNotEmpty(this.getRequest().getParameter(Constants.TYPE_COMMAND_PARAM))) { 
+        	String action = this.getRequest().getParameter(Constants.TYPE_COMMAND_PARAM);
+        	if(action.equals(Constants.TYPE_COMMAND_IMPORT)){
+        		return action;
+        	}
+        }
+		return super.getCommand();
+	}
 }

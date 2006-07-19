@@ -10,6 +10,7 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
+
 package info.magnolia.module.data.dialogs;
 
 import info.magnolia.cms.core.Content;
@@ -22,19 +23,17 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
-
 
 /**
  * Handles the document upload and adds some special properties (for searching)
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
+ *
  */
 public class DataDialog extends ConfiguredDialog {
 
-    private static Logger log = Logger.getLogger(DataDialog.class);
-
     private boolean create;
+
 
     /**
      * @param name
@@ -53,22 +52,28 @@ public class DataDialog extends ConfiguredDialog {
         // check if this is a creation
         this.create = handler.getPath().endsWith("/mgnlNew");
 
-        if (this.create) {
+        if(this.create){
             handler.setCreate(true);
 
             String path = StringUtils.substringBeforeLast(handler.getPath(), "/");
 
+        	final String itemType;
+			try {
+				itemType = getConfigNode().getParent().getParent().getName();
+			} catch (Exception e) {
+				throw new RuntimeException("cannot get the type of the data item to create.", e);
+			}
+
             String name = form.getParameter("title");
-            name = Path.getValidatedLabel(name);
-            if (name.matches("^-*$")) {
-                name = "data";
+            if(name == null || name.trim().length() < 1){
+            	name = itemType;
             }
+            name = Path.getValidatedLabel(name);
 
             name = Path.getUniqueLabel(hm, path, name);
             this.path = path + "/" + name;
             handler.setPath(this.path);
-            final String itemType = getConfigNode().getNodeData("itemType").getString();
-            handler.setCreationItemType(new ItemType(itemType));
+        	handler.setCreationItemType(new ItemType(itemType));
         }
         return true;
     }

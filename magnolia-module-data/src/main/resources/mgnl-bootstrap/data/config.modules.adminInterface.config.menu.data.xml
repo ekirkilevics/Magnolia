@@ -19,18 +19,18 @@
   <sv:property sv:name="icon" sv:type="String">
     <sv:value>/.resources/icons/24/folders.gif</sv:value>
   </sv:property>
-  <sv:property sv:name="label" sv:type="String">
-    <sv:value>menu.data</sv:value>
-  </sv:property>
   <sv:property sv:name="onclick" sv:type="String">
-    <sv:value>MgnlAdminCentral.showTree('data')</sv:value>
+    <sv:value>MgnlAdminCentral.showTree('moduleDataType')</sv:value>
+  </sv:property>
+  <sv:property sv:name="label" sv:type="String">
+    <sv:value>module.data.menu.label</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>97d9dbc4-2eac-4837-b5b3-03abe12a5876</sv:value>
+      <sv:value>e2866355-b940-49bf-8050-4b1813562fad</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -39,7 +39,7 @@
       <sv:value>2005-05-16T20:45:54.530+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-04-19T14:45:45.948+02:00</sv:value>
+      <sv:value>2006-07-11T13:29:58.226+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
