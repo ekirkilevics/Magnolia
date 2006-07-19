@@ -11,14 +11,9 @@
  *
  */
  
-classDef("mgnl.data.TypeTree", {
+classDef("mgnl.data.DataTree", {
 
-    edit : function(tree){
-    	mgnlTreeMenuOpenDialog(tree,'.magnolia/dialogs/moduleDataType.html');
-    },
-
-    create: function(path){
-        
+    create: function(path, dialog){
         // a not existing node is created
         if(path != "/"){
             path +=  "/";
@@ -27,15 +22,40 @@ classDef("mgnl.data.TypeTree", {
         // this indicates to create this node
         path +=  "mgnlNew";
     
-        mgnlOpenWindow(".magnolia/dialogs/moduleDataType.html?mgnlPath=" + path  + "&mgnlRepository=config");
+        mgnlOpenWindow(".magnolia/dialogs/"+dialog+".html?mgnlPath=" + path  + "&mgnlRepository=data"); 
     },
     
-    importData : function(tree){
+    edit : function(tree, dialog){
+    	mgnlTreeMenuOpenDialog(tree,".magnolia/dialogs/" + dialog + ".html");
+    },
+
+    deleteAll : function(tree){
         var rootPath=tree.path;
         var nodeToReload=tree.getNode(rootPath);
+
 	    var params=new Object();
-        params.typeAction='importData';
         params.forceReload=true;
+        params.dataAction='deleteAll';
+        nodeToReload.expand(params);
+    },
+
+    activateAll : function(tree){
+        var rootPath=tree.path;
+        var nodeToReload=tree.getNode(rootPath);
+
+	    var params=new Object();
+        params.forceReload=true;
+        params.dataAction='activateAll';
+        nodeToReload.expand(params);
+    },
+
+    deactivateAll : function(tree){
+        var rootPath=tree.path;
+        var nodeToReload=tree.getNode(rootPath);
+
+	    var params=new Object();
+        params.forceReload=true;
+        params.dataAction='deactivateAll';
         nodeToReload.expand(params);
     }
     
