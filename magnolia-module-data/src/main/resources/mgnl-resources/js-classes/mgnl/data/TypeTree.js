@@ -11,6 +11,7 @@
  *
  */
  
+
 classDef("mgnl.data.TypeTree", {
 
     edit : function(tree){
