@@ -225,6 +225,12 @@
       <url>http://magnolia.sourceforge.net/m2repo</url>
     </repository>
   </repositories>
+  <pluginRepositories>
+    <pluginRepository>
+      <id>magnolia</id>
+      <url>http://magnolia.sourceforge.net/m2repo</url>
+    </pluginRepository>
+  </pluginRepositories>
   <reporting>
     <plugins>
       <plugin>
