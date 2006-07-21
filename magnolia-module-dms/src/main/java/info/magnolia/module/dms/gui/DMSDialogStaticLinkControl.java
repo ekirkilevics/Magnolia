@@ -26,7 +26,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class DMSDialogSaticLinkControl extends DialogStatic {
+public class DMSDialogStaticLinkControl extends DialogStatic {
 
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {

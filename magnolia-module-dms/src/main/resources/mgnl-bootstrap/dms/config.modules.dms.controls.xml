@@ -93,7 +93,7 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.module.dms.gui.DMSDialogSaticLinkControl</sv:value>
+      <sv:value>info.magnolia.module.dms.gui.DMSDialogStaticLinkControl</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
       <sv:value>2006-05-01T18:55:08.644+02:00</sv:value>
