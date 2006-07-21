@@ -94,7 +94,7 @@ public abstract class BaseCacheManager implements CacheManager {
      * Return true only if it has been inited AND the config is active
      */
     public boolean isEnabled() {
-        return this.initialized && this.config.isActive();
+        return this.initialized && this.config != null && this.config.isActive();
     }
 
     public final boolean isInitialized() {
