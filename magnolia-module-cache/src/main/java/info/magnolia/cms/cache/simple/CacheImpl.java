@@ -18,8 +18,8 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -94,16 +94,13 @@ public class CacheImpl implements Cache {
 
     public void flush() {
         try {
-            File cacheDir = Path.getCacheDirectory();
+            File cacheDir = getCacheDirectory();
             if (cacheDir.exists() && cacheDir.isDirectory()) {
-                cacheDir.delete();
+                FileUtils.deleteDirectory(cacheDir);
             }
 
             // this will create cache start directory again
-            if (cacheDir.exists() && cacheDir.isDirectory()) {
-                // FileUtils.deleteDirectory(cacheDir);
-                cacheDir.mkdirs();
-            }
+            cacheDir.mkdirs();
 
             // clear in-memory cache also
             clearCachedURIList();
@@ -125,7 +122,7 @@ public class CacheImpl implements Cache {
     public void start(CacheConfig config) {
         this.config = config;
 
-        File cacheDir = Path.getCacheDirectory();
+        File cacheDir = getCacheDirectory();
 
         if (!cacheDir.exists()) {
             boolean result = cacheDir.mkdirs();
@@ -213,33 +210,6 @@ public class CacheImpl implements Cache {
     }
 
     /**
-     * Recursively deletes all files under the specified directory
-     * @param directory directory where files should be deleted
-     */
-    private void emptyDirectory(File directory) {
-        File[] children = directory.listFiles();
-
-        // children can be null if File is not a directory or if it has been already deleted
-        if (children != null) {
-            for (int i = 0; i < children.length; i++) {
-                if ((children[i] != null) && children[i].isDirectory()) {
-                    emptyDirectory(children[i]);
-                    children[i].delete();
-                }
-                else {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Flushing {}", children[i].getPath()); // $NON-NLS-1$
-                    }
-
-                    String key = StringUtils.substringAfter(children[i].getPath(), Path.getCacheDirectoryPath());
-                    removeFromCachedURIList(new CacheKey(key));
-                    children[i].delete();
-                }
-            }
-        }
-    }
-
-    /**
      * Empties the cache for the specified resource. Currenty it expects the entire path, including cache location.
      * @param uri request URI
      */
@@ -247,8 +217,7 @@ public class CacheImpl implements Cache {
         File file = this.getFile(key, false);
         try {
             if (file.isDirectory()) {
-                emptyDirectory(file);
-                file.delete();
+                FileUtils.deleteDirectory(file);
             }
             else {
                 if (log.isDebugEnabled()) {
@@ -281,10 +250,10 @@ public class CacheImpl implements Cache {
         String fileName = key.toString();
         File cacheFile;
         if (compressed) {
-            cacheFile = new File(Path.getCacheDirectoryPath(), fileName + ".gzip");
+            cacheFile = new File(getCacheDirectory(), fileName + ".gzip");
         }
         else {
-            cacheFile = new File(Path.getCacheDirectoryPath(), fileName);
+            cacheFile = new File(getCacheDirectory(), fileName);
         }
         return cacheFile;
     }
@@ -306,6 +275,13 @@ public class CacheImpl implements Cache {
      */
     private void removeFromCachedURIList(CacheKey key) {
         this.cachedURIList.remove(key);
+    }
+
+    private File getCacheDirectory() {
+
+        // add a fixed "mgnl-cache" subdir: the cache dir is removed on flush and if the user choose an existing
+        // and not empty dir we should be sure to not remove everything!
+        return new File(Path.getCacheDirectory(), "mgnl-cache");
     }
 
     private static class CachedItem {
