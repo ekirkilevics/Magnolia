@@ -18,7 +18,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.workflow.WorkflowConstants;
-import info.magnolia.module.workflow.servlets.FlowDefServlet;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -47,7 +46,7 @@ public class JCRFlowDefinition {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(FlowDefServlet.class);
+    private static Logger log = LoggerFactory.getLogger(JCRFlowDefinition.class);
 
     /**
      * find one flow node by flow name
