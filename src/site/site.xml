@@ -2,14 +2,13 @@
 <project name="Magnolia">
   <bannerLeft>
     <name>Magnolia</name>
-    <src>http://magnolia.sf.net/22/images/magnolia-logo.png</src>
+    <src>http://magnolia.sf.net/30/images/magnolia-logo.png</src>
     <href>http://magnolia.sourceforge.net</href>
   </bannerLeft>
   <body>
     <links>
-      <item name="Magnolia community" href="http://www.magnolia.info/en/community.html" />
-      <item name="Magnolia International" href="http://www.magnolia.info/en/international.html" />
-      <item name="Wiki" href="http://wiki.magnolia.info" />
+      <item name="magnolia.info" href="http://www.magnolia.info" />
+      <item name="wiki" href="http://wiki.magnolia.info" />
     </links>
     <menu name="Documentation">
       <item name="Home" href="index.html" />
@@ -31,11 +30,6 @@
           <item name="7. Paragraphs 3" href="/qs/07_firstparagraph.html" />
           <item name="8. Where to go" href="/qs/08_wheretogo.html" />
         </item>
-        <!--
-          <item name="Templates" href="/templating/templates.html" />
-          <item name="Paragraphs" href="/templating/paragraphs.html" />
-          <item name="Dialogs" href="/templating/dialogs.html" />
-        -->
         <item name="Controls" href="/templating/controls.html" />
         <item name="I18N" href="/templating/i18n.html" />
       </item>
@@ -63,13 +57,6 @@
       <item name="Glossary" href="/glossary/glossary.html" />
       <item name="Jira report" href="/magnolia/jira-report.html" />
     </menu>
-    <!--
-      <menu name="Downloadable docs">
-      <item name="User Manual (2.0)" href="/pdf/magnolia-user-manual.pdf" />
-      <item name="Templater's Quickstart (2.0)" href="/pdf/magnolia-templaters-quickstart.pdf" />
-      <item name="Developer Documentation" href="/magnolia.pdf" />
-      </menu>
-    -->
     <menu name="Lists">
       <item name="News Letter" href="/lists/news-list.html" />
       <item name="User List" href="/lists/user-list.html" />
@@ -79,7 +66,6 @@
     <menu name="Download">
       <item name="Releases (sourceforge)" href="http://sourceforge.net/project/showfiles.php?group_id=86297"
         target="_blank" />
-      <!-- <item name="Nightly builds" href="/nightly" />-->
     </menu>
     <menu name="Developers">
       <item name="Maven goals" href="/developer/mavengoals.html" />

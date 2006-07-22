@@ -3,7 +3,7 @@
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
     <version>3.0-rc3-SNAPSHOT</version>
-    <relativePath>../magnolia-project/pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-workflow</artifactId>

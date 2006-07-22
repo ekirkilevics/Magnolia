@@ -3,7 +3,7 @@
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
     <version>3.0-rc3-SNAPSHOT</version>
-    <relativePath>../magnolia-project/pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-exchange-simple</artifactId>
@@ -46,11 +46,4 @@
       <artifactId>commons-httpclient</artifactId>
     </dependency>
   </dependencies>
-  <distributionManagement>
-    <site>
-      <id>magnolia</id>
-      <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30/magnolia-exchange-simple</url>
-    </site>
-  </distributionManagement>
 </project>

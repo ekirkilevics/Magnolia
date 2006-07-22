@@ -3,22 +3,13 @@
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
     <version>3.0-rc3-SNAPSHOT</version>
-    <relativePath>../magnolia-project/pom.xml</relativePath>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-dms</artifactId>
   <name>magnolia DMS</name>
   <version>3.0-rc3-SNAPSHOT</version>
   <url>http://www.magnolia.info</url>
-  <build>
-    <sourceDirectory>src/main/java</sourceDirectory>
-  </build>
-  <repositories>
-    <repository>
-      <id>magnolia</id>
-      <url>http://magnolia.sourceforge.net/m2repo</url>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>com.metaparadigm</groupId>
