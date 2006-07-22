@@ -35,10 +35,10 @@ public class MagnoliaManagedFilter implements Filter {
     // private Filter[] filterChain = new Filter[0];
     private Filter[] filterChain = new Filter[]{
         new ContentTypeFilter(),
+        new MgnlVirtualUriFilter(),
         new MultipartRequestFilter(),
         new SecurityFilter(),
         new MgnlContextFilter(),
-        new MgnlVirtualUriFilter(),
         new MgnlInterceptFilter(),
         new MgnlCmsFilter()};
 
