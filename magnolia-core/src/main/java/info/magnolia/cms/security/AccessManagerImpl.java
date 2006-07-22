@@ -50,7 +50,14 @@ public class AccessManagerImpl implements AccessManager {
         boolean granted = (currentPermission & permissions) == permissions;
 
         if (log.isDebugEnabled()) {
-            log.debug("Path: " + path + " -" + currentPermission + "-" + permissions + "=" + granted);
+            log.debug("Path: "
+                + path
+                + " -"
+                + PermissionImpl.getPermissionAsName(currentPermission)
+                + "-"
+                + PermissionImpl.getPermissionAsName(permissions)
+                + "="
+                + granted);
         }
 
         return granted;
@@ -79,8 +86,8 @@ public class AccessManagerImpl implements AccessManager {
      */
     public long getPermissions(String path) {
         if (userPermissions == null) {
-            log.info("userPermissions not set, returning Permission.READ", new Exception());
-            return Permission.READ;
+            log.info("userPermissions not set, returning Permission.ALL", new Exception());
+            return Permission.ALL;
         }
         long permission = 0;
         int patternLength = 0;
