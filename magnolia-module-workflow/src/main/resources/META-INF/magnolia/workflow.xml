@@ -10,24 +10,7 @@
       <name>adminInterface</name>
       <version>3.0</version>
     </dependency>
-      <!--
-    <dependency>
-       <name>dms</name>
-        <version>3.0</version>
-        <optional>true</optional>
-    </dependency>
-    -->
   </dependencies>
-  <servlets>
-    <servlet>
-      <class>info.magnolia.module.workflow.servlets.FlowDefServlet</class>
-      <mappings>
-        <mapping>/.magnolia/flows</mapping>
-      </mappings>
-      <name>FlowsDefinitions</name>
-      <comment>Servlet to see flow definition.</comment>
-    </servlet>
-  </servlets>
   <repositories>
     <repository>
       <name>magnolia</name>

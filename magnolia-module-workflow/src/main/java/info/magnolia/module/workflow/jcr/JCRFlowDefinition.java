@@ -17,22 +17,27 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.module.workflow.WorkflowConstants;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.jcr.ValueFactory;
 import javax.servlet.http.HttpServletRequest;
 
 import org.jdom.Document;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,29 +57,28 @@ public class JCRFlowDefinition {
      * find one flow node by flow name
      * @param name
      * @return Content node in JCR store for specified flow definition
+     * @throws RepositoryException
+     * @throws PathNotFoundException
+     * @throws AccessDeniedException
      */
-    public Content findFlowDef(String name) {
+    public Content findFlowDef(String name) throws RepositoryException {
         if (name == null) {
             return null;
         }
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
 
-        try {
-            Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
-            Collection c = root.getChildren(ItemType.CONTENT);
-            Iterator it = c.iterator();
-            while (it.hasNext()) {
-                Content ct = (Content) it.next();
+        Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
+        Collection c = root.getChildren(ItemType.CONTENT);
+        Iterator it = c.iterator();
+        while (it.hasNext()) {
+            Content ct = (Content) it.next();
 
-                String sname = ct.getName();
-                if (sname.equals(name)) {
-                    return ct;
-                }
+            String sname = ct.getName();
+            if (sname.equals(name)) {
+                return ct;
             }
         }
-        catch (Exception e) {
-            log.error("Error while finding flow definition:" + e, e);
-        }
+
         return null;
     }
 
@@ -82,8 +86,9 @@ public class JCRFlowDefinition {
      * get flow definition as string of xml
      * @param flowName
      * @return the string defining the flow in xml format
+     * @throws RepositoryException
      */
-    public String getflowDefAsString(String flowName) {
+    public String getflowDefAsString(String flowName) throws RepositoryException {
         Content node = findFlowDef(flowName);
         if (node == null) {
             return null;
@@ -92,66 +97,57 @@ public class JCRFlowDefinition {
     }
 
     /**
-     * get all flows' url
+     * get all flows' names
      * @param request
-     * @return a list of string representing the URL of each workflow
+     * @return a list of string representing the name of each workflow
+     * @throws RepositoryException
      */
-    public List getFlows(HttpServletRequest request) {
+    public List getFlows(HttpServletRequest request) throws RepositoryException {
 
-        String url_base = "http://";
-        if (request.isSecure()) {
-            url_base = "https://";
-        }
-        url_base += request.getServerName() + ":" + request.getServerPort() + request.getRequestURI();
         ArrayList list = new ArrayList();
-        log.info(url_base);
-        try {
-            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-            Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
-            Collection c = root.getChildren(ItemType.CONTENT);
-            Iterator it = c.iterator();
-            while (it.hasNext()) {
-                String name = ((Content) (it.next())).getName();
-                if (name != null) {
-                    list.add(url_base + "?name=" + name);
-                }
+
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+        Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
+        Collection c = root.getChildren(ItemType.CONTENT);
+        Iterator it = c.iterator();
+        while (it.hasNext()) {
+            String name = ((Content) (it.next())).getName();
+            if (name != null) {
+                list.add(name);
             }
         }
-        catch (Exception e) {
-            log.error("error", e);
-        }
+
         return list;
     }
 
     /**
      * export all flows to xml
      * @param xmlFileName
+     * @throws RepositoryException
+     * @throws PathNotFoundException
      */
-    public void exportAll(String xmlFileName) {
+    public void exportAll(String xmlFileName) throws IOException, RepositoryException {
         if (xmlFileName == null || xmlFileName.length() == 0) {
             return;
         }
-        try {
-            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-            File outputFile = new File(xmlFileName);
-            FileOutputStream out = new FileOutputStream(outputFile);
-            hm.getWorkspace().getSession().exportSystemView("/", out, false, false);
 
-            log.info("exorpt flow def ok");
-        }
-        catch (Exception e) {
-            log.error("exorpt flow failed", e);
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+        File outputFile = new File(xmlFileName);
+        FileOutputStream out = new FileOutputStream(outputFile);
+        hm.getWorkspace().getSession().exportSystemView("/", out, false, false);
 
-        }
     }
 
     /**
      * add one flow definition to JCR store
      * @param flowDef
      * @return
+     * @throws IOException
+     * @throws JDOMException
+     * @throws RepositoryException
      * @throws Exception
      */
-    public List addFlow(String flowDef) throws Exception {
+    public List addFlow(String flowDef) throws JDOMException, IOException, RepositoryException {
         if (flowDef == null) {
             return null;
         }
@@ -162,37 +158,33 @@ public class JCRFlowDefinition {
         Element process_definition = doc.getRootElement();
         name = process_definition.getAttribute("name").getValue();
 
-        try {
-            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-            Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+        Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
 
-            // check if the node already exist, and if it does update the value of the the NodeData FLOW_VALUE with the
-            // new flow. This is to allow duplication of flow node.
+        // check if the node already exist, and if it does update the value of the the NodeData FLOW_VALUE with the
+        // new flow. This is to allow duplication of flow node.
 
-            boolean exist = hm.isExist(root.getHandle() + "/" + name);
-            Content c;
-            if (exist) {
-                c = hm.getContent(root.getHandle() + "/" + name);
-            }
-            else {
-                c = root.createContent(name, ItemType.CONTENT);
-            }
-
-            ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
-            Value value = vf.createValue(flowDef);
-            if (!exist) {
-                c.createNodeData(WorkflowConstants.FLOW_VALUE, value);
-            }
-            else {
-                ((NodeData) c.getNodeDataCollection(WorkflowConstants.FLOW_VALUE).iterator().next()).setValue(value);
-            }
-
-            hm.save();
-            log.info("new flow added");
+        boolean exist = hm.isExist(root.getHandle() + "/" + name);
+        Content c;
+        if (exist) {
+            c = hm.getContent(root.getHandle() + "/" + name);
         }
-        catch (Exception e) {
-            log.error("add flow failed", e);
+        else {
+            c = root.createContent(name, ItemType.CONTENT);
         }
+
+        ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
+        Value value = vf.createValue(flowDef);
+        if (!exist) {
+            c.createNodeData(WorkflowConstants.FLOW_VALUE, value);
+        }
+        else {
+            ((NodeData) c.getNodeDataCollection(WorkflowConstants.FLOW_VALUE).iterator().next()).setValue(value);
+        }
+
+        hm.save();
+        log.info("new flow added");
+
         return null;
     }
 

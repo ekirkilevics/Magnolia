@@ -98,12 +98,11 @@ public class WorkflowUtil {
     public static void launchFlow(LaunchItem li, String flowName) {
         li.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
 
-        // Retrieve and add the flow definition to the LaunchItem
-        String flowDef = new JCRFlowDefinition().getflowDefAsString(flowName);
-        li.getAttributes().puts(WorkflowConstants.ATTRIBUTE_DEFINITION, flowDef);
-        JCRPersistedEngine engine = WorkflowModule.getEngine();
-
         try {
+            // Retrieve and add the flow definition to the LaunchItem
+            String flowDef = new JCRFlowDefinition().getflowDefAsString(flowName);
+            li.getAttributes().puts(WorkflowConstants.ATTRIBUTE_DEFINITION, flowDef);
+            JCRPersistedEngine engine = WorkflowModule.getEngine();
             // Launch the item
             engine.launch(li, true);
         }
