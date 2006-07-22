@@ -23,7 +23,7 @@ import org.apache.maven.project.MavenProject;
  * @author philipp
  * @version $Revision$ ($Author$)
  */
-public class CurrentDateValueProvider implements ValueProvider {
+public class CurrentDateValueProvider extends ValueProviderImpl {
 
     /**
      * Rerturn String value
@@ -35,15 +35,14 @@ public class CurrentDateValueProvider implements ValueProvider {
      */
     private String format = "dd.mm.yyyy";
 
-
     public Object getValue(MavenProject project, MavenSession session) {
         Date date = new Date();
         if (this.isAsString()) {
             return DateFormatUtils.format(date, format);
         }
-        else {
-            return date;
-        }
+
+        return date;
+
     }
 
     public boolean isAsString() {
@@ -54,11 +53,9 @@ public class CurrentDateValueProvider implements ValueProvider {
         this.asString = asString;
     }
 
-
     public String getFormat() {
         return format;
     }
-
 
     public void setFormat(String format) {
         this.format = format;

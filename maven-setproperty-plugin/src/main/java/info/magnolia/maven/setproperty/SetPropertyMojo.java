@@ -44,44 +44,26 @@ public class SetPropertyMojo extends AbstractMojo {
     public static final String SCOPE_SYSTEM = "system";
 
     /**
-     * Define the scope in which you like to set the property. session, project or system.
-     * @parameter default-value="project"
-     * @required
-     */
-    protected String scope;
-
-    /**
-     * Define the scope in which you like to set the property
-     * @parameter expression="${propertyName}"
-     * @required
-     */
-    protected String name;
-
-    /**
-     * This value gets only set if the property is not set yet
-     * @parameter expression="${propertyDefaultValue}"
-     */
-    protected String defaultValue;
-
-    /**
-     * The value to set. The value is optional if you use defaultValue or a ValueProvider
-     * @parameter expression="${propertyValue}"
-     */
-    protected String value;
-
-    /**
      * Use a value provider if you need to set calculated values. You define the implementation with an implementation
-     * attribute in the pom.xml
+     * attribute in the pom.xml. Example:
+     * 
+     * <pre>
+     *   &lt;configuration>
+     *     &lt;properties>
+     *       &lt;property implementation="info.magnolia.maven.setproperty.CurrentDateValueProvider">
+     *          &lt;name>magnolia.currentDate&lt;/name>
+     *          &lt;format>d. MMMM yyyy&lt;/format>
+     *        &lt;/property>
+     *        &lt;property implementation="info.magnolia.maven.setproperty.VersionNameValueProvider">
+     *          &lt;name>magnolia.version&lt;/name>
+     *        &lt;/property>
+     *     &lt;/properties>
+     *   &lt;/configuration>
+     * </pre>
+     * 
      * @parameter
      */
-    protected ValueProvider valueProvider;
-
-    /**
-     * Use a value provider if you need to set calculated values. You define the implementation with an implementation
-     * attribute in the pom.xml
-     * @parameter
-     */
-    protected ValueProvider defaultValueProvider;
+    protected ValueProvider[] properties;
 
     /**
      * @parameter expression="${session}"
@@ -98,50 +80,48 @@ public class SetPropertyMojo extends AbstractMojo {
      * Set the property
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        Properties properties = getProperties();
 
-        Object valueObj = value;
-        Object defaultValueObj = defaultValue;
+        for (int j = 0; j < properties.length; j++) {
+            ValueProvider provider = properties[j];
+            String scope = StringUtils.defaultString(provider.getScope(), SCOPE_PROJECT);
+            Properties properties = getProperties(scope);
+            Object valueObj = provider.getValue(project, session);
 
-        // use the value poviders if defined
-        if (this.valueProvider != null) {
-            valueObj = this.valueProvider.getValue(project, session);
+            if (valueObj == null && provider.getDefaultValue() != null && !properties.containsKey(provider.getName())) {
+                properties.put(provider.getName(), provider.getDefaultValue());
+                this.getLog().info(
+                    "property "
+                        + provider.getName()
+                        + " set to default value "
+                        + provider.getDefaultValue()
+                        + " (scope: "
+                        + scope
+                        + ")");
+            }
+
+            if (valueObj != null) {
+                properties.put(provider.getName(), valueObj);
+                this.getLog().info(
+                    "property " + provider.getName() + " set to value " + valueObj + " (scope: " + scope + ")");
+            }
         }
 
-        // use the value poviders if defined
-        if (this.defaultValueProvider != null) {
-            defaultValueObj = this.defaultValueProvider.getValue(project, session);
-        }
-
-        if (valueObj == null && defaultValueObj != null && !properties.containsKey(this.name)) {
-            properties.put(this.name, defaultValueObj);
-            this.getLog().info("property " + this.name + " set to default value " + defaultValueObj + " (scope: " + this.scope + ")");
-        }
-
-        if (valueObj != null) {
-            properties.put(this.name, valueObj);
-            this.getLog().info("property " + this.name + " set to value " + valueObj + " (scope: " + this.scope + ")");
-        }
     }
 
     /**
      * Get the properties form the specified scope
      * @return the properties
-     * @throws MojoExecutionException
      */
-    protected Properties getProperties() throws MojoExecutionException {
+    protected Properties getProperties(String scope) {
         Properties properties;
-        if (StringUtils.equals(this.scope, SCOPE_SESSION)) {
+        if (StringUtils.equals(scope, SCOPE_SESSION)) {
             properties = session.getExecutionProperties();
         }
-        else if (StringUtils.equals(this.scope, SCOPE_PROJECT)) {
-            properties = project.getProperties();
-        }
-        else if (StringUtils.equals(this.scope, SCOPE_SYSTEM)) {
+        else if (StringUtils.equals(scope, SCOPE_SYSTEM)) {
             properties = System.getProperties();
         }
         else {
-            throw new MojoExecutionException(this.scope + " is not a valid scope");
+            properties = project.getProperties();
         }
         return properties;
     }
