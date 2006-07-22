@@ -29,9 +29,11 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.fileupload.DiskFileUpload;
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.disk.DiskFileItemFactory;
+import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload.servlet.ServletRequestContext;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -91,7 +93,9 @@ public class CommonsFileUploadMultipartRequestFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
         ServletException {
         if (request instanceof HttpServletRequest) {
-            boolean isMultipartContent = FileUploadBase.isMultipartContent((HttpServletRequest) request);
+
+            boolean isMultipartContent = FileUploadBase.isMultipartContent(new ServletRequestContext(
+                (HttpServletRequest) request));
             if (isMultipartContent) {
                 try {
                     parseRequest((HttpServletRequest) request);
@@ -114,7 +118,8 @@ public class CommonsFileUploadMultipartRequestFilter implements Filter {
     private void parseRequest(HttpServletRequest request) throws Exception {
         MultipartForm form = new MultipartForm();
 
-        DiskFileUpload upload = newDiskFileUpload();
+        ServletFileUpload upload = newServletFileUpload();
+
         List fileItems = upload.parseRequest(request);
 
         for (Iterator fileItemIterator = fileItems.iterator(); fileItemIterator.hasNext();) {
@@ -133,10 +138,12 @@ public class CommonsFileUploadMultipartRequestFilter implements Filter {
     /**
      * Create a new <code>DiskFileUpload</code>.
      */
-    private DiskFileUpload newDiskFileUpload() {
-        DiskFileUpload upload = new DiskFileUpload();
+    private ServletFileUpload newServletFileUpload() {
+        ServletFileUpload upload = new ServletFileUpload();
         upload.setSizeMax(this.maxFileSize);
-        upload.setRepositoryPath(Path.getTempDirectoryPath());
+        DiskFileItemFactory fif = new DiskFileItemFactory();
+        fif.setRepository(Path.getTempDirectory());
+        upload.setFileItemFactory(fif);
 
         return upload;
     }
