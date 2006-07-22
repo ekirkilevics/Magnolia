@@ -53,20 +53,24 @@ public class TemplatedMVCHandler extends PageMVCHandler {
      * Renders the template. The handlers is passed with the name 'this'.
      */
     public void renderHtml(String view) throws IOException {
-        Map data = new HashMap();
-        data.put("this", this);
 
-        PrintWriter writer;
+        String template = this.getTemplateName(view);
+        if (template != null) {
 
-        try {
-            writer = getResponse().getWriter();
+            Map data = new HashMap();
+            data.put("this", this);
+
+            PrintWriter writer;
+
+            try {
+                writer = getResponse().getWriter();
+            }
+            catch (IllegalStateException e) {
+                // getResponse().getOutputStream() has already been called
+                writer = new PrintWriter(getResponse().getOutputStream());
+            }
+            FreeMarkerUtil.process(template, data, writer);
         }
-        catch (IllegalStateException e) {
-            // getResponse().getOutputStream() has already been called
-            writer = new PrintWriter(getResponse().getOutputStream());
-        }
-
-        FreeMarkerUtil.process(this.getTemplateName(view), data, writer);
     }
 
 }

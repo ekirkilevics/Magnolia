@@ -14,6 +14,8 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.util.RequestFormUtil;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -44,6 +46,8 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
     protected HttpServletRequest request;
 
     protected HttpServletResponse response;
+
+    protected Throwable exception;
 
     private String name;
 
@@ -94,9 +98,11 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
         }
         catch (InvocationTargetException e) {
             log.error("can't call command: " + command, e.getTargetException()); //$NON-NLS-1$
+            exception = e.getTargetException();
         }
         catch (Exception e) {
             log.error("can't call command: " + command, e); //$NON-NLS-1$
+            exception = e;
         }
 
         return view;
@@ -142,5 +148,26 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
      */
     public void setCommand(String command) {
         this.command = command;
+    }
+
+    /**
+     * Getter for <code>exception</code>.
+     * @return Returns the exception.
+     */
+    public Throwable getException() {
+        return this.exception;
+    }
+
+    /**
+     * Returns the stacktrace from the exception as a String
+     * @return
+     */
+    public String getExceptionStackTrace() {
+        if (this.exception == null) {
+            return null;
+        }
+        StringWriter writer = new StringWriter();
+        this.exception.printStackTrace(new PrintWriter(writer));
+        return writer.toString();
     }
 }
