@@ -26,7 +26,6 @@ import java.util.Collection;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
-import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.NodeType;
@@ -662,22 +661,6 @@ public class ContentVersion extends Content {
      */
     public boolean isLocked() throws RepositoryException {
         throw new AccessDeniedException("Lock not supported on version preview");
-    }
-
-    /**
-     * get workspace to which this node attached to
-     * @throws javax.jcr.RepositoryException if unable to get this node session
-     */
-    public Workspace getWorkspace() throws RepositoryException {
-        return super.getWorkspace();
-    }
-
-    /**
-     * checks if this node has a sub node with name MetaData
-     * @return true if MetaData exists
-     */
-    public boolean hasMetaData() {
-        return super.hasMetaData();
     }
 
     /**

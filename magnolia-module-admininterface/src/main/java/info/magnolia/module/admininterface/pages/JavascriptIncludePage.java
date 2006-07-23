@@ -154,15 +154,15 @@ public class JavascriptIncludePage extends PageMVCHandler {
 
     }
 
-    private class Definition {
+    protected class Definition {
 
-        private boolean proceed = false;
+        protected boolean proceed = false;
 
-        private String content;
+        protected String content;
 
-        private String name;
+        protected String name;
 
-        private List imports = new ArrayList();
+        protected List imports = new ArrayList();
     }
 
 }

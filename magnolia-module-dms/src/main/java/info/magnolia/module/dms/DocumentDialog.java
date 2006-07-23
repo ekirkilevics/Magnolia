@@ -46,7 +46,7 @@ import org.apache.log4j.Logger;
  */
 public class DocumentDialog extends ConfiguredDialog {
 
-    private static Logger log = Logger.getLogger(DocumentDialog.class);
+    protected static Logger log = Logger.getLogger(DocumentDialog.class);
 
     private boolean create;
 
@@ -80,7 +80,7 @@ public class DocumentDialog extends ConfiguredDialog {
                 out.write("<script>");
                 out.write("mgnl.dms.DMSDialog.init();");
                 out.write("</script>");
-            };
+            }
         };
 
         if (StringUtils.isNotEmpty(this.version)) {

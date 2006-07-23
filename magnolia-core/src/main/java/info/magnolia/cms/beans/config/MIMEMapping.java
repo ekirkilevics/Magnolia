@@ -40,6 +40,11 @@ import org.slf4j.LoggerFactory;
 public final class MIMEMapping {
 
     /**
+     * 
+     */
+    private static final String DEFAULT_ICON = "/.resources/file-icons/general.png";
+
+    /**
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(MIMEMapping.class);
@@ -51,13 +56,13 @@ public final class MIMEMapping {
     /**
      * Used to keep the configuration in memory
      */
-    private static class MIMEMappingItem {
+    protected static class MIMEMappingItem {
 
-        private String ext;
+        protected String ext;
 
-        private String mime;
+        protected String mime;
 
-        private String icon;
+        protected String icon;
     }
 
     public static final String ICONS_PATH = "/.resources/file-icons/"; //$NON-NLS-1$
@@ -180,7 +185,7 @@ public final class MIMEMapping {
         String mimeType = getMIMEType(extension);
 
         if (mimeType == null && StringUtils.isNotEmpty(extension)) {
-            log.info("Cannot find MIME type for extension \"" + extension + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            log.info("Cannot find MIME type for extension \"{}\"", extension); //$NON-NLS-1$ 
             mimeType = ((MIMEMappingItem) MIMEMapping.cachedContent.get(Server.getDefaultExtension())).mime;
         }
         return mimeType;
@@ -210,10 +215,10 @@ public final class MIMEMapping {
     public static String getMIMETypeIcon(String extension) {
         MIMEMappingItem item = (MIMEMappingItem) MIMEMapping.cachedContent.get(extension.toLowerCase());
         if (item != null) {
-            return StringUtils.defaultIfEmpty(item.icon, "/.resources/file-icons/general.png");
+            return StringUtils.defaultIfEmpty(item.icon, DEFAULT_ICON);
         }
-        else {
-            return "/.resources/file-icons/general.png";
-        }
+
+        return DEFAULT_ICON;
+
     }
 }

@@ -90,9 +90,8 @@ public class CommandsManager extends ObservedManager {
         if (catalog != null) {
             return catalog.getCommand(commandName);
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
 
     /**

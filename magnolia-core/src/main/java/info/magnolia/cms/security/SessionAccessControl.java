@@ -31,6 +31,8 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Sameer Charles
  * @version 2.0
+ * @deprecated all the methods are now available in <code>MgnlContext</code>
+ * @see info.magnolia.context.MgnlContext
  */
 public final class SessionAccessControl {
 

@@ -140,26 +140,25 @@ public class DialogMultiSelect extends DialogBox {
         if (this.isSaveAsJSON()) {
             return this.getValue();
         }
-        else {
-            List values;
-            if (this.isSaveAsList()) {
-                values = Arrays.asList(this.getValue().split(","));
-            }
-            else {
-                values = this.getValues();
-            }
 
-            if (values.size() == 0) {
-                return "[{value:''}]";
-            }
-
-            List objects = new ArrayList();
-            for (Iterator iter = values.iterator(); iter.hasNext();) {
-                String value = (String) iter.next();
-                objects.add("{value: '" + value + "'}");
-            }
-            return "[" + StringUtils.join(objects.iterator(), ",") + "]";
+        List values;
+        if (this.isSaveAsList()) {
+            values = Arrays.asList(this.getValue().split(","));
         }
+        else {
+            values = this.getValues();
+        }
+
+        if (values.size() == 0) {
+            return "[{value:''}]";
+        }
+
+        List objects = new ArrayList();
+        for (Iterator iter = values.iterator(); iter.hasNext();) {
+            String value = (String) iter.next();
+            objects.add("{value: '" + value + "'}");
+        }
+        return "[" + StringUtils.join(objects.iterator(), ",") + "]";
     }
 
     public String getSaveInfo() {
@@ -192,9 +191,8 @@ public class DialogMultiSelect extends DialogBox {
         if (this.isSaveAsList()) {
             return this.getName();
         }
-        else {
-            return this.getName() + "Persisted";
-        }
+
+        return this.getName() + "Persisted";
     }
 
 }

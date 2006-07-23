@@ -264,9 +264,9 @@ public class ModuleRegistration {
                     return dif;
                 }
                 // rest is ordered alphabetically
-                else {
-                    return def1.getName().compareTo(def2.getName());
-                }
+
+                return def1.getName().compareTo(def2.getName());
+
             }
         });
 
@@ -388,7 +388,7 @@ public class ModuleRegistration {
      * @param def module definition
      * @return the level
      */
-    private int calcDependencyLevel(ModuleDefinition def) {
+    protected int calcDependencyLevel(ModuleDefinition def) {
         if (def.getDependencies() == null || def.getDependencies().size() == 0) {
             return 0;
         }

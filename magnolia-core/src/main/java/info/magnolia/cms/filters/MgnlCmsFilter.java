@@ -418,7 +418,7 @@ public class MgnlCmsFilter implements Filter {
             }
 
             if (requestedData != null) {
-                String templateName = requestedData.getAttribute(NODE_DATA_TEMPLATE); //$NON-NLS-1$
+                String templateName = requestedData.getAttribute(NODE_DATA_TEMPLATE); 
 
                 if (!StringUtils.isEmpty(templateName)) {
                     template = TemplateManager.getInstance().getInfo(templateName, extension);

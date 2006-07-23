@@ -82,7 +82,7 @@ public class DeploymentUtilsPage extends TemplatedMVCHandler {
     /**
      * @throws Exception
      */
-    private static void redeployFiles() throws Exception {
+    protected static void redeployFiles() throws Exception {
         String[] moduleFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 
             public boolean accept(String name) {

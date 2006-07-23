@@ -33,8 +33,7 @@ public class ListColumnRenderer implements Renderer {
         if (val instanceof Calendar || val instanceof Date) {
             return DateUtil.formatDateTime(val);
         }
-        else {
-            return val.toString();
-        }
+
+        return val.toString();
     }
 }

@@ -52,7 +52,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
     private static final String ENGINE_ID = "ee";
 
-    private static Logger log = LoggerFactory.getLogger(JCRExpressionStore.class.getName());
+    protected static Logger log = LoggerFactory.getLogger(JCRExpressionStore.class.getName());
 
     static final Object HM_LOCK = new Object();
 
@@ -154,9 +154,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         if (hm.isExist(local)) {
             return hm.getContent(local);
         }
-        else {
-            return ContentUtil.createPath(hm, local, ItemType.EXPRESSION);
-        }
+
+        return ContentUtil.createPath(hm, local, ItemType.EXPRESSION);
     }
 
     /**
@@ -180,7 +179,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         throw new PoolException("can not get this expression (id=" + fei.asStringId() + ")");
     }
 
-    private FlowExpression deserializeExpressionAsXml(Content ret) throws Exception {
+    protected FlowExpression deserializeExpressionAsXml(Content ret) throws Exception {
         InputStream s = ret.getNodeData(WorkflowConstants.NODEDATA_VALUE).getStream();
         final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
         Document doc = builder.build(s);

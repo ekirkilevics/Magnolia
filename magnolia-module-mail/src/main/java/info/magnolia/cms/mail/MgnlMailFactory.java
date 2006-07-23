@@ -71,7 +71,7 @@ public class MgnlMailFactory extends ObservedManager {
 
     private static MgnlMailFactory factory = new MgnlMailFactory();
 
-    private Map mailParameters;
+    protected Map mailParameters;
 
     private List templates;
 

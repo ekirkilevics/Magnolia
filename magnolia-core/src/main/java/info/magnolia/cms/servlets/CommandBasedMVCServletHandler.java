@@ -64,23 +64,22 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
             }
             return super.execute(commandName);
         }
-        else {
-            if (log.isDebugEnabled()) {
-                log.debug("found command for " + commandName + ": " + command);
-            }
 
-            // now prepare the context
-            Context ctx = getCommandContext(commandName);
-
-            // execute the command
-            try {
-                command.execute(ctx);
-            }
-            catch (Exception e) {
-                log.error("can't execute command", e);
-            }
-            return getViewNameAfterExecution(commandName, ctx);
+        if (log.isDebugEnabled()) {
+            log.debug("found command for " + commandName + ": " + command);
         }
+
+        // now prepare the context
+        Context ctx = getCommandContext(commandName);
+
+        // execute the command
+        try {
+            command.execute(ctx);
+        }
+        catch (Exception e) {
+            log.error("can't execute command", e);
+        }
+        return getViewNameAfterExecution(commandName, ctx);
     }
 
     /**

@@ -81,9 +81,8 @@ public class TemplatedRenderer implements Renderer {
         if (this.templateName == null) {
             return "/" + StringUtils.replace(control.getClass().getName(), ".", "/") + ".html";
         }
-        else {
-            return this.templateName;
-        }
+
+        return this.templateName;
     }
 
     /**

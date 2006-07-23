@@ -64,8 +64,8 @@ public final class Resource {
 
     /**
      * <p>
-     * get selector as requested from the URI. The selector is the part between the handle and the 
-     * extension. selector("http://server/a.x.1.f.4.html") = "x.1.f.4"
+     * get selector as requested from the URI. The selector is the part between the handle and the extension.
+     * selector("http://server/a.x.1.f.4.html") = "x.1.f.4"
      * </p>
      * @param req HttpServletRequest as received in JSP or servlet
      * @return selector String as requested from the URI
@@ -73,6 +73,7 @@ public final class Resource {
     public static String getSelector(HttpServletRequest req) {
         return (String) req.getAttribute(Aggregator.SELECTOR);
     }
+
     /**
      * <p>
      * get file object associated with the requested atom
@@ -233,12 +234,12 @@ public final class Resource {
         if (req.getParameter(MGNL_PREVIEW_ATTRIBUTE) != null) {
             return BooleanUtils.toBoolean(req.getParameter(MGNL_PREVIEW_ATTRIBUTE));
         }
-        else {
-            HttpSession httpsession = req.getSession(false);
-            if (httpsession != null) {
-                return BooleanUtils.toBoolean((Boolean) httpsession.getAttribute(MGNL_PREVIEW_ATTRIBUTE));
-            }
+
+        HttpSession httpsession = req.getSession(false);
+        if (httpsession != null) {
+            return BooleanUtils.toBoolean((Boolean) httpsession.getAttribute(MGNL_PREVIEW_ATTRIBUTE));
         }
+
         return false;
     }
 

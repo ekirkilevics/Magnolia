@@ -94,9 +94,7 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
             configureSelect(select, controlNode);
             return select;
         }
-        else {
-            return new SearchControlDefinition(name, label, type);
-        }
+        return new SearchControlDefinition(name, label, type);
     }
 
     public void configureSelect(SelectSearchControlDefinition def, Content node) throws RepositoryException {

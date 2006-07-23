@@ -339,9 +339,8 @@ public final class VersionManager {
         if (versionedNode != null) {
             return versionedNode.getJCRNode().getBaseVersion();
         }
-        else {
-            throw new RepositoryException("Node " + node.getHandle() + " was never versioned");
-        }
+
+        throw new RepositoryException("Node " + node.getHandle() + " was never versioned");
     }
 
     /**

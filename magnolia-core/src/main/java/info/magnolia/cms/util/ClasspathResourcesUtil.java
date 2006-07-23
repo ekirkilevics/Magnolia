@@ -189,13 +189,13 @@ public class ClasspathResourcesUtil {
         if (cache) {
             return getCurrentClassLoader().getResourceAsStream(StringUtils.removeStart(name, "/"));
         }
-        else {
-            // TODO use the last modified attribute
-            URL url = getResource(name);
-            if (url != null) {
-                return url.openStream();
-            }
+
+        // TODO use the last modified attribute
+        URL url = getResource(name);
+        if (url != null) {
+            return url.openStream();
         }
+
         if (log.isDebugEnabled()) {
             log.debug("Can't find {}", name);
         }
@@ -211,7 +211,8 @@ public class ClasspathResourcesUtil {
     }
 
     /**
-     * Get the resource using the current class laoder. The leading / is removed as the call to class.getResource() would do.
+     * Get the resource using the current class laoder. The leading / is removed as the call to class.getResource()
+     * would do.
      * @param name
      * @return the resource
      */

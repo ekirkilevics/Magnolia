@@ -225,9 +225,8 @@ public abstract class AbstractListModel implements ListModel {
             if (this.getOrder().equalsIgnoreCase(ASCENDING)) {
                 return firstKey.compareTo(secondKey);
             }
-            else {
-                return secondKey.compareTo(firstKey);
-            }
+
+            return secondKey.compareTo(firstKey);
         }
 
         /**
@@ -244,9 +243,7 @@ public abstract class AbstractListModel implements ListModel {
                 if (this.getOrder().equalsIgnoreCase(ASCENDING)) {
                     return subSortFirstKey.compareTo(subSortSecondKey);
                 }
-                else {
-                    return subSortSecondKey.compareTo(subSortFirstKey);
-                }
+                return subSortSecondKey.compareTo(subSortFirstKey);
             }
             return -1;
         }

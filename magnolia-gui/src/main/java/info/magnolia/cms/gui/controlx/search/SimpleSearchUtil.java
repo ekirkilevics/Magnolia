@@ -52,9 +52,8 @@ public class SimpleSearchUtil {
             }
             return chainExpressions(expressions, SearchQueryOperator.OR);
         }
-        else {
-            return null;
-        }
+
+        return null;
     }
 
     public static SearchQueryExpression chainExpressions(Collection expressions, String operator) {

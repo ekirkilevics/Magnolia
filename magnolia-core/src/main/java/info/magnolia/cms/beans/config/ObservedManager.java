@@ -106,7 +106,7 @@ public abstract class ObservedManager {
      * Reload a specifig node
      * @param node
      */
-    private final void reload(Content node) {
+    protected final void reload(Content node) {
         onRegister(node);
     }
 
@@ -140,7 +140,7 @@ public abstract class ObservedManager {
      * Sets the reloading flag
      * @param reloading boolean
      */
-    private void setReloading(boolean reloading) {
+    protected void setReloading(boolean reloading) {
         this.reloading = reloading;
     }
 
@@ -174,7 +174,7 @@ public abstract class ObservedManager {
          * @param observedManager ObservedManager
          * @param reloadRequestCount reloadRequestCount of the observedManager
          */
-        private Reloader(ObservedManager observedManager, int reloadRequestCount) {
+        protected Reloader(ObservedManager observedManager, int reloadRequestCount) {
             this.observedManager = observedManager;
             this.lastReloadRequestCount = reloadRequestCount;
         }
@@ -189,7 +189,6 @@ public abstract class ObservedManager {
                 }
                 catch (InterruptedException e) {
                     // ok, go on
-                    ;
                 }
 
                 // check if the reloadRequestCount of the observedManager has changed

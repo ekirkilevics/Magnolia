@@ -73,9 +73,8 @@ public class SearchControlDefinition {
         if (this.type.equals("date")) {
             return new DateSearchControl(this, value, constraint);
         }
-        else {
-            return new SearchControl(this, value, constraint);
-        }
+
+        return new SearchControl(this, value, constraint);
     }
 
     /**

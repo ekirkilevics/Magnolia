@@ -41,7 +41,7 @@ public final class ModuleLoader {
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(ModuleLoader.class);
+    protected static Logger log = LoggerFactory.getLogger(ModuleLoader.class);
 
     /**
      * The instance of the loader

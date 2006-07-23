@@ -324,7 +324,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
-    private class ACL {
+    protected class ACL {
 
         int type = 0;
 
@@ -350,7 +350,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
-    private class ACLS extends ListOrderedMap {
+    protected class ACLS extends ListOrderedMap {
 
         /**
          * 
