@@ -113,7 +113,7 @@ public class NodeDataUtil {
                 case (PropertyType.LONG):
                     return new Long(nd.getLong());
                 case (PropertyType.BOOLEAN):
-                    return new Boolean(nd.getBoolean());
+                    return Boolean.valueOf(nd.getBoolean());
                 case (PropertyType.DATE):
                     return nd.getDate().getTime();
                 case (PropertyType.BINARY):
