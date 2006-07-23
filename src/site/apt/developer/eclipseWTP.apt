@@ -9,14 +9,12 @@
 
 Install maven 2.0 (mvn)
 
- You can download maven 2 from {{{http://maven.apache.org}}}. Note that maven 2 is deeply different from maven 1, and
+ You can download maven 2 from {{{http://maven.apache.org}}}.
 
 Installing eclipse and required plugins
 
- First of all, you will need to install {{{http://www.eclipse.org/downloads/index.php}Eclipse 3.1}}.
- Then you have to install the Eclipse Web Tools Project (WTP) and its prerequisites by following the steps {{{http://www.eclipse.org/webtools/development/updatesite/updatesite.html}here}}.
- Don't install any release of wtp > M7 (M8 has a critical performance bug and you will have to patch your copy manually
- in order to make it usable and recent I builds (near to M9) have a new project descript format.
+ First of all, you will need to install Eclipse and WTP (web tols project), plus its prerequisites.
+ You can find more informations on the {{{http://www.eclipse.org/callisto/}Callisto}} website.
 
 
  Once installed, start Eclipse and install the subversion plugin using the eclipse update manager:
@@ -31,15 +29,19 @@ Installing eclipse and required plugins
 
    []
 
-Checkout magnolia from subversion
+Checkout magnolia from subversion and create eclipse projects
 
-   * Select Window / Open Perspective / Other.. / SVN Repository Exploring
+   * You need to checkout the whole http://svn.magnolia.info/svn/magnolia/trunk directory from outside eclipse (you can't
+     use the SVN repository exploring perspective since you are not checking out single eclipse projects, sorry) and
+     place it outside the eclipse workspace (important)
 
-   * Add the repository (the url is http://svn.magnolia.info/svn/magnolia )
+   * Open a shell into the trunk directory and run "mvn -Declipse.downloadSources=true -Dwtpversion=1.0 eclipse:eclipse".
+     This will create the eclipse configuration for all the modules
 
-   * expand the /trunk directory
+   * In eclipse register the classpath variable M2_REPO. It must point to the mvn repository (Preferences / Java /Build Path / Classpath variables)
 
-   * checkout all the subfolders (right click -> "checkout as a project" for each directory under trunk). You should end up with a bunch of new projects in your workspace.
+   * In Eclipse select File / Import /Existing project from workspace. Browse to the directory where you checked out trunk.
+     Eclipse should automatically discover all the modules and load them as projects.
 
    []
 
@@ -54,19 +56,6 @@ Register a Tomcat Server
 
    []
 
-Convert the non Java Project to a Dynamic Web Project
-
-   * Register the classpath variable M2_REPO. It must point to the mvn repository (Preferences / Java /Build Path / Classpath variables)
-
-   * Close Eclipse
-
-   * Open a shell into the magnolia-project directory and run "mvn -Declipse.downloadSources=true eclipse:eclipse"
-
-   * This creates all the project files needed for the WTP plugin
-
-   * Open Eclipse and refresh the projects
-
-   []
 
 Running the server
  Compile the projects [CTRL+B], then:

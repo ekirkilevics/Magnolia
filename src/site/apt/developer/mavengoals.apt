@@ -9,9 +9,8 @@
 
 Intro
 
- The root project for a multiproject build is "magnolia-project".
- Running a goal in the magnolia-project directory will execute the same goal for any other module.
- magnolia-project also contains all the documentation published to the magnolia website.
+ The root pom for a multiproject build is in the root (/trunk) directory.
+ Running a goal in the trunk directory will execute the same goal for any module.
 
 
 
@@ -19,11 +18,11 @@ Build
 
 +--------------------------------+
 
-/magnolia-project > mvn install
+mvn install
 
 +--------------------------------+
 
- Run mvn install from magnolia-project. All the modules will be built as separate jars and then assembled into
+ Run mvn install from the root dir. All the modules will be built as separate jars and then assembled into
  the magnolia web application (/magnolia/target/magnolia-[version].war
 
 
@@ -33,28 +32,32 @@ Generating documentation
 
 +--------------------------------+
 
-/magnolia-project > mvn site:site
+mvn site:site
 
 +--------------------------------+
 
- Run mvn site from magnolia-project. This will generate the documentation for each modules into the target/site
- directory. The most useful documentation can be found directly into the magnolia-project/target/site directory.
+ Run mvn site from the root dir. This will generate the documentation for each modules into the target/site
+ directory.
 
- WARNING: at this moment maven 2 doesn't aggregate documentation from multiple modules.
- This means that modules need to be linked manually in site.xml and deployed separately.
++--------------------------------+
+
+mvn site:stage -DstagingDirectory=C:\fullsite
+
++--------------------------------+
+
+ This will assemble the documentation from all the modules in "stagingDirectory"
 
 
 
 Creating configuration for eclipse/WTP
 
- Run the following command for configuring magnolia. You will need the maven eclipse plugin version 2.1 installed.
- You can use "R7" or "1.0" for the wtpversion parameter, depending of the version of WTP you are using (be sure to check
- the eclipse plugin documentation for more details, and read the warning about the 1.0 release of WTP, which will not
- work properly)
+ Run the following command for configuring magnolia. You will need at list the maven eclipse plugin version 2.1 installed.
+ You need to pass the wtpversion parameter, depending of the version of WTP you are using (at the moment the suggested
+ version of WTP is 1.5 - the Callisto release)
 
 +--------------------------------+
 
-/magnolia-project > mvn -Dwtpversion=1.0 -DdownloadSources=true eclipse:eclipse
+mvn -Dwtpversion=1.0 -DdownloadSources=true eclipse:eclipse
 
 +--------------------------------+
 
@@ -66,7 +69,7 @@ Deploying the magnolia site to sourceforge [developers only]
 
 +--------------------------------+
 
-/magnolia-project > mvn site:deploy
+mvn site:deploy
 
 +--------------------------------+
 
@@ -81,12 +84,14 @@ Deploying the magnolia site to sourceforge [developers only]
       <username>[your sourceforge username]</username>
       <privateKey>[path to rsa key]</privateKey>
       <passphrase>[optional passphrase]</passphrase>
+      <directoryPermissions>775</directoryPermissions>
+      <filePermissions>664</filePermissions>
     </server>
   </servers>
 </settings>
 +--------------------------------+
 
- Currently the mvn-generated site is deployed to {{{http://magnolia.sourceforge.net/m2site/}}} for testing
+ Currently the mvn-generated site is deployed to {{{http://magnolia.sourceforge.net/30/}}}
 
 
 
@@ -94,18 +99,18 @@ Deploy
 
 +--------------------------------+
 
-/magnolia-project > mvn deploy
+mvn deploy
 
 +--------------------------------+
 
 
 Release
 
- Prepare a release (WARNING: the current version of the release plugin doesn't properly handle the magnolia project layout!):
+ Prepare a release:
 
 +--------------------------------+
 
-/magnolia-project > mvn release:prepare
+mvn release:prepare
 
 +--------------------------------+
 
@@ -115,7 +120,7 @@ Release
 
 +--------------------------------+
 
-/magnolia-project > mvn release:perform
+mvn release:perform
 
 +--------------------------------+
 
