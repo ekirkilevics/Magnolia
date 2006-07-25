@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
+import java.util.Date;
 
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.io.FileUtils;
@@ -27,6 +28,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
+import org.apache.maven.project.MavenProjectHelper;
 
 
 /**
@@ -34,36 +36,23 @@ import org.apache.maven.plugin.MojoFailureException;
  * BootstrapInnerMojo is created using the custom classloader. This garanties that the magnolia code will find the
  * resources.
  * @goal bootstrap
+ * @phase package
  * @author philipp
  */
 public class BootstrapMojo extends AbstractMojo {
 
     /**
-     * @parameter expression="${basedir}/target/${project.name}-${project.version}"
+     * @parameter expression="${project.build.directory}/${project.build.finalName}"
      */
     public String webappDir = System.getProperty("user.dir");
 
     /**
-     * @parameter expression="${basedir}/target/${project.name}-${project.version}/WEB-INF/config/default/repositories.xml"
+     * @parameter default="WEB-INF/config/default/magnolia.properties"
      */
-    public String repositoryConfigFile = webappDir + "/WEB-INF/config/default/repositories.xml";
+    public String configFile = "WEB-INF/config/default/magnolia.properties";
 
     /**
-     * @parameter default-value="WEB-INF/bootstrap/author WEB-INF/bootstrap/common WEB-INF/bootstrap/samples"
-     */
-    public String bootstrapDir = "WEB-INF/bootstrap/author WEB-INF/bootstrap/common WEB-INF/bootstrap/samples";
-
-    /**
-     * @parameter default-value = "admin"
-     */
-    public String repositoryUser = "admin";
-
-    /**
-     * @parameter default-value = "admin"
-     */
-    public String repositoryPassword = "admin";
-
-    /**
+     * The class name for a post bootstrap configurator. This can't be 
      * @parameter
      */
     public String postBootstrapConfigurator;

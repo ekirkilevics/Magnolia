@@ -55,18 +55,15 @@ public class BootstrapInnerMojo {
             }
         }
 
-        // configure the properties
-        /*
-         * Map config = new HashMap(); config.put("magnolia.repositories.config", mojo.repositoryConfigFile);
-         * config.put("magnolia.bootstrap.dir", mojo.bootstrapDir);
-         * SystemProperty.setProperty("magnolia.connection.jcr.userId", mojo.repositoryUser);
-         * SystemProperty.setProperty("magnolia.connection.jcr.password", mojo.repositoryPassword);
-         */
-
         // create the mock context
         MockServletContext context = new MockServletContext();
         context.setRealPath(StringUtils.EMPTY, mojo.webappDir);
+        
+        // configure the properties
+        context.setInitParameter(PropertyInitializer.MAGNOLIA_INITIALIZATION_FILE, mojo.configFile);
+        
 
+        
         ServletContextEvent event = new ServletContextEvent(context);
 
         ServletContextListener propertyInitializer = new PropertyInitializer();
@@ -74,10 +71,11 @@ public class BootstrapInnerMojo {
 
         boolean restart = true;
         while (restart) {
-            restart = ModuleRegistration.getInstance().isRestartNeeded();
-
             propertyInitializer.contextInitialized(event);
             shutdownManager.contextInitialized(event);
+
+            restart = ModuleRegistration.getInstance().isRestartNeeded();
+            ModuleRegistration.getInstance().setRestartNeeded(false);
 
             if (restart) {
                 shutdownManager.contextDestroyed(event);
