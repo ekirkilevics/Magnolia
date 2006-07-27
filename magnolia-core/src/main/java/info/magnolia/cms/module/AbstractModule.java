@@ -19,6 +19,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,7 @@ public abstract class AbstractModule implements Module {
 
         if (registerState == REGISTER_STATE_INSTALLATION || registerState == REGISTER_STATE_NEW_VERSION) {
             try {
-
+            	
                 final String moduleName = this.getName();
 
                 bootstrap(moduleName);
@@ -86,7 +87,7 @@ public abstract class AbstractModule implements Module {
         }
     }
 
-    /**
+	/**
      * @see info.magnolia.cms.module.Module#unregister(info.magnolia.cms.module.ModuleDefinition,
      * info.magnolia.cms.core.Content)
      */
@@ -196,7 +197,7 @@ public abstract class AbstractModule implements Module {
         String[] moduleFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
 
             public boolean accept(String name) {
-                return name.startsWith("/mgnl-files/");
+                return name.startsWith("/mgnl-files/") && StringUtils.contains(name, "/" + moduleName + "/");
             }
         });
 
@@ -259,6 +260,8 @@ public abstract class AbstractModule implements Module {
             this.setRestartNeeded(true);
         }
     }
+    
+    
 
     /**
      * Bootsrap the files in mgnl-bootsrap/modulename directory

@@ -165,23 +165,22 @@ public class ConfigLoader {
         else {
             log.warn("Repositories are not initialized (no content found)."); //$NON-NLS-1$
 
-            String bootdirProperty = SystemProperty.getProperty(SystemProperty.MAGNOLIA_BOOTSTRAP_ROOTDIR);
-            if (StringUtils.isEmpty(bootdirProperty)) {
-                enterListeningMode();
-                return;
-            }
+            String[] bootDirs = Bootstrapper.getBootstrapDirs();
+            
+    		if (bootDirs.length == 0) {
+    		    enterListeningMode();
+    		    return;
+    		}
 
-            bootstrapping = true;
-
-            String[] bootDirs = StringUtils.split(bootdirProperty);
-
-            // converts to absolute paths
-            for (int j = 0; j < bootDirs.length; j++) {
-                bootDirs[j] = Path.getAbsoluteFileSystemPath(bootDirs[j]);
-            }
+    		bootstrapping = true;
 
             // a bootstrap directory is configured, trying to initialize repositories
-            Bootstrapper.bootstrapRepositories(bootDirs);
+            Bootstrapper.bootstrapRepositories(bootDirs, new Bootstrapper.BootstrapFilter(){
+            	// do not import modules configuration files yet. the module will do it after the registration process
+            	public boolean accept(String filename) {
+            		return !filename.startsWith("config.modules");
+            	}
+            });
         }
 
         log.info("Set system context"); //$NON-NLS-1$
@@ -218,7 +217,7 @@ public class ConfigLoader {
 
     }
 
-    /**
+	/**
      * Print version info to console.
      * @param license loaded License
      */

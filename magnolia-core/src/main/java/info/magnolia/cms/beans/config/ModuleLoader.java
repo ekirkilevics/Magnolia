@@ -196,7 +196,7 @@ public final class ModuleLoader {
     public Content getModulesNode() throws PathNotFoundException, RepositoryException, AccessDeniedException {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         if (!hm.isExist("/" + MODULES_NODE)) {
-            hm.createContent("/", MODULES_NODE, ItemType.CONTENTNODE.getSystemName());
+            hm.createContent("/", MODULES_NODE, ItemType.CONTENT.getSystemName());
         }
         Content modulesNode = hm.getContent(MODULES_NODE);
         return modulesNode;

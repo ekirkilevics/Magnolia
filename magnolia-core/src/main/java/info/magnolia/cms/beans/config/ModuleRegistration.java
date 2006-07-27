@@ -343,12 +343,18 @@ public class ModuleRegistration {
                 if (module.isRestartNeeded()) {
                     this.restartNeeded = true;
                 }
+                
 
                 if (registerState == Module.REGISTER_STATE_NEW_VERSION) {
                     moduleNode.createNodeData("version").setValue(def.getVersion()); //$NON-NLS-1$
                 }
                 modulesNode.save();
 
+                // execute now the post bootstrap if module specific configuration files found
+                if(registerState == Module.REGISTER_STATE_INSTALLATION){
+                    postBootstrapModule(def.getName());
+                }
+                
                 log.info("Registration of module {} completed in {} second(s)", def.getName(), Long.toString((System
                     .currentTimeMillis() - startTime) / 1000));
 
@@ -381,7 +387,7 @@ public class ModuleRegistration {
         }
     }
 
-    /**
+	/**
      * Calculates the level of dependency. 0 means no dependency. If no of the dependencies has itself dependencies is
      * this level 1. If one or more of the dependencies has a dependencies has a dependency it would return 2. And so on
      * ...
@@ -445,6 +451,18 @@ public class ModuleRegistration {
         outputter.output(doc, writer);
         return writer.toString();
     }
+
+    /**
+     * Bootstrap module specifig bootstrap file after the registration to load custom settings
+     * @param moduleName
+     */
+    protected void postBootstrapModule(final String moduleName) {
+    	Bootstrapper.bootstrapRepository(ContentRepository.CONFIG, new Bootstrapper.BootstrapFilter(){
+    		public boolean accept(String filename) {
+    			return filename.startsWith("config.modules." + moduleName);
+    		}
+    	});
+	}
 
     /**
      * @return Returns the restartNeeded.
