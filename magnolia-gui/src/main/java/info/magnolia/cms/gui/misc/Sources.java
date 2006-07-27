@@ -47,9 +47,28 @@ public class Sources {
         html.append(contextPath);
         html.append("/.resources/admin-js/dialogs/dialogs.js\"></script>"); //$NON-NLS-1$
 
+        /*
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
         html.append("/.resources/admin-js/dialogs/calendar.js\"></script>"); //$NON-NLS-1$
+        */
+
+        html.append("<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"");
+        html.append(contextPath);
+        html.append("/.resources/calendar/skins/aqua/theme.css\" title=\"Aqua\" />");
+
+        html.append("<script type=\"text/javascript\" src=\"");
+        html.append(contextPath);
+        html.append("/.resources/calendar/calendar.js\"></script>\n");
+
+        html.append("<script type=\"text/javascript\" src=\"");
+        html.append(contextPath);
+        html.append("/.resources/calendar/lang/calendar-en.js\"></script>\n");
+
+        html.append("<script type=\"text/javascript\" src=\"");
+        html.append(contextPath);
+        html.append("/.resources/calendar/calendar-setup.js\"></script>\n");
+
 
         return html.toString();
     }

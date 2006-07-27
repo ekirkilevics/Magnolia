@@ -16,10 +16,14 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.DateUtil;
 
 import java.util.Calendar;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.jcr.PropertyType;
 
 import org.apache.commons.lang.time.DateFormatUtils;
+import org.slf4j.LoggerFactory;
+import org.slf4j.Logger;
 
 
 /**
@@ -27,6 +31,8 @@ import org.apache.commons.lang.time.DateFormatUtils;
  * @version $Revision$ ($Author$)
  */
 public class DialogDate extends DialogEditWithButton {
+
+    Logger log = LoggerFactory.getLogger(DialogDate.class);
 
     /**
      * Empty constructor should only be used by DialogFactory.
@@ -41,18 +47,35 @@ public class DialogDate extends DialogEditWithButton {
     protected void doBeforeDrawHtml() {
         super.doBeforeDrawHtml();
 
-        // set buttonlabel in config
         this.getButton().setLabel(MessagesManager.get("dialog.date.select")); //$NON-NLS-1$
         this.getButton().setSaveInfo(false);
-        this.getButton().setOnclick(
-            "mgnlDialogOpenCalendar('" + this.getName() + "'," + this.getConfigValue("time", "false") + ");"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$
+        this.getButton().setOnclick("Calendar.show()");
+
         String format = "yyyy-MM-dd"; //$NON-NLS-1$
-        String pattern = "XXXX-XX-XX"; //$NON-NLS-1$
-        if (!this.getConfigValue("time", "false").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            format += "'T'HH:mm:ss"; //$NON-NLS-1$
-            pattern += "TXX:XX:XX"; //$NON-NLS-1$
+        String jsFormat = "%Y-%m-%d"; //$NON-NLS-1$
+        boolean displayTime = !this.getConfigValue("time", "false").equals("false");
+        boolean singleClick = this.getConfigValue("doubleClick", "false").equals("false");
+        if (displayTime) {
+            format += "' 'HH:mm:ss";
+            jsFormat += " %k:%M:%S";
         }
-        this.setConfig("onchange", "mgnlDialogDatePatternCheck(this,'" + pattern + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+
+        String inputFieldId = this.getName();
+        String buttonId = this.getButton().getId();
+
+        final String calendarScript = "<script type=\"text/javascript\">" +
+                "            Calendar.setup({\n" +
+                "                inputField     :    \""+inputFieldId+"\"," +
+                "                ifFormat       :    \""+jsFormat+"\"," +
+                "                showsTime      :    "+String.valueOf(displayTime)+"," +
+                "                timeFormat     :    \"24\"," +
+                "                cache          :    true,"+
+                "                button         :    \""+buttonId+"\"," +
+                "                singleClick    :    \""+String.valueOf(singleClick)+"\"," +
+                "                step           :    1" +
+                "            });</script>";
+
+        this.getButton().setHtmlPost(calendarScript);
 
         if (this.getWebsiteNode() != null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
             Calendar valueCalendar = this.getWebsiteNode().getNodeData(this.getName()).getDate();
@@ -60,8 +83,9 @@ public class DialogDate extends DialogEditWithButton {
             // valueCalendar is in UTC turn it back into the current timezone
             if (valueCalendar != null) {
                 Calendar local = DateUtil.getLocalCalendarFromUTC(valueCalendar);
-                this.setValue(DateFormatUtils.format(local.getTime(), format));
-
+                String value = DateFormatUtils.format(local.getTime(), format);
+                log.info(value);
+                this.setValue(value);
             }
         }
         // check this!

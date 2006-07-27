@@ -37,7 +37,7 @@ public class DateUtil {
 
     public static final String YYYY_MM_DD = "yyyy-MM-dd";
 
-    public static final String YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd'T'HH:mm:ss";
+    public static final String YYYY_MM_DD_T_HH_MM_SS = "yyyy-MM-dd' 'HH:mm:ss";
 
     public static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone("UTC");
 
