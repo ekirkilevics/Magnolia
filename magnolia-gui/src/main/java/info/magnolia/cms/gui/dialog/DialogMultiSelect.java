@@ -137,7 +137,7 @@ public class DialogMultiSelect extends DialogBox {
      * JS function used to create an object out of the input fields
      */
     public String getGetObjectFunction() {
-        return "function(prefix, index){return {value: $(prefix).value }}";
+        return "function(prefix, index){return {value: $(prefix + '_" + this.getName() + "').value }}";
     }
 
     /**

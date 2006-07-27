@@ -4,7 +4,7 @@
     <#assign name= this.name />
 </#if>
 
-<input onchange="${this.name}DynamicTable.persist();" type="text" id="${r"${prefix}"}" name="${name}" value="${r"${obj.value}"}" class="mgnlDialogControlEdit"/>
+<input onchange="${this.name}DynamicTable.persist();" type="text" id="${r"${prefix}"}_${this.name}" name="${name}" value="${r"${obj.value}"}" class="mgnlDialogControlEdit"/>
 
 ${this.chooseButton}
 ${this.deleteButton}
