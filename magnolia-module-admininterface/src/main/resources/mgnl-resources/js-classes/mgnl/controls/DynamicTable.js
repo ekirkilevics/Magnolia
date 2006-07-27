@@ -181,7 +181,7 @@ MgnlDynamicTable.prototype.render = function (update){
     for(i=0; i < this.objects.length; i++){
         var row = table.insertRow(table.rows.length);
         var cell = row.insertCell(0);
-        cell.setAttribute("id", this.tableName + i);
+        cell.setAttribute("id", this.tableName + i + "Cell");
         this.renderObject(cell, this.tableName + i, i, this.objects[i]);
     }
 }
