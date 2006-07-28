@@ -14,16 +14,12 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.DateUtil;
-
-import java.util.Calendar;
-import java.util.Map;
-import java.util.HashMap;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PropertyType;
-
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.slf4j.LoggerFactory;
-import org.slf4j.Logger;
+import java.util.Calendar;
 
 
 /**
@@ -49,7 +45,7 @@ public class DialogDate extends DialogEditWithButton {
 
         this.getButton().setLabel(MessagesManager.get("dialog.date.select")); //$NON-NLS-1$
         this.getButton().setSaveInfo(false);
-        this.getButton().setOnclick("Calendar.show()");
+
 
         String format = "yyyy-MM-dd"; //$NON-NLS-1$
         String jsFormat = "%Y-%m-%d"; //$NON-NLS-1$
@@ -61,10 +57,13 @@ public class DialogDate extends DialogEditWithButton {
         }
 
         String inputFieldId = this.getName();
+        getButton().setId("butt_"+inputFieldId);
         String buttonId = this.getButton().getId();
+        String calId = "cal_"+buttonId;
+        getButton().setOnclick(calId+".show()");
 
         final String calendarScript = "<script type=\"text/javascript\">" +
-                "            Calendar.setup({\n" +
+                "            var "+calId+" = Calendar.setup({\n" +
                 "                inputField     :    \""+inputFieldId+"\"," +
                 "                ifFormat       :    \""+jsFormat+"\"," +
                 "                showsTime      :    "+String.valueOf(displayTime)+"," +
@@ -72,6 +71,7 @@ public class DialogDate extends DialogEditWithButton {
                 "                cache          :    true,"+
                 "                button         :    \""+buttonId+"\"," +
                 "                singleClick    :    \""+String.valueOf(singleClick)+"\"," +
+                //"                eventName      :    \"focus\", "+
                 "                step           :    1" +
                 "            });</script>";
 
@@ -84,11 +84,10 @@ public class DialogDate extends DialogEditWithButton {
             if (valueCalendar != null) {
                 Calendar local = DateUtil.getLocalCalendarFromUTC(valueCalendar);
                 String value = DateFormatUtils.format(local.getTime(), format);
-                log.info(value);
                 this.setValue(value);
             }
         }
-        // check this!
+
         this.setConfig("type", this.getConfigValue("type", PropertyType.TYPENAME_DATE)); //$NON-NLS-1$ //$NON-NLS-2$
     }
 }
