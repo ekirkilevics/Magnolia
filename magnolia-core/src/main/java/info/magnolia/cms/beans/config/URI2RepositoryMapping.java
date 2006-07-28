@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.Path;
+
 import org.apache.commons.lang.StringUtils;
 
 /**
@@ -48,7 +50,6 @@ public class URI2RepositoryMapping{
     }
     
     public URI2RepositoryMapping() {
-        // TODO Auto-generated constructor stub
     }
 
     public boolean matches(String uri){
@@ -59,8 +60,17 @@ public class URI2RepositoryMapping{
         String handle;
         handle = StringUtils.removeStart(uri, this.uriPrefix);
         if(StringUtils.isNotEmpty(this.handlePrefix)){
+            StringUtils.removeStart(handle, "/");
             handle = this.handlePrefix + "/" + handle;
         }
+        return cleanHandle(handle);
+    }
+
+    private String cleanHandle(String handle) {
+        if(!handle.startsWith("/")){
+            handle = "/" + handle;
+        }
+        handle = StringUtils.replace(handle, "//", "/");
         return handle;
     }
 
@@ -71,7 +81,7 @@ public class URI2RepositoryMapping{
         if(StringUtils.isNotEmpty(this.uriPrefix)){
             handle = this.uriPrefix + "/" + handle;
         }
-        return handle;
+        return cleanHandle(handle);
     }
     
     public String getHandlePrefix() {
