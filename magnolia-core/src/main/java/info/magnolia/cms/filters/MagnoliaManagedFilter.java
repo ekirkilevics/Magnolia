@@ -1,6 +1,6 @@
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.security.SecurityFilter;
+import info.magnolia.cms.beans.config.FilterManager;
 
 import java.io.IOException;
 
@@ -17,9 +17,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A single filter that in turn executed a chain of other filters not configured in web.xml. At the momoent it simply
- * delegates to a list of filters hardcoded here, but it could be modified in order to read filter definions from the
- * config jcr (avoid clutter in user's web.xml, easier update to new versions...).
+ * A single filter that in turn executed a chain of other filters not configured in web.xml.
  * @author fgiust
  * @version $Revision: $ ($Author: $)
  */
@@ -32,19 +30,11 @@ public class MagnoliaManagedFilter implements Filter {
 
     private FilterConfig filterConfig;
 
-    // private Filter[] filterChain = new Filter[0];
-    private Filter[] filterChain = new Filter[]{
-        new ContentTypeFilter(),
-        new MgnlVirtualUriFilter(),
-        new MultipartRequestFilter(),
-        new SecurityFilter(),
-        new MgnlContextFilter(),
-        new MgnlInterceptFilter(),
-        new MgnlCmsFilter()};
+    private FilterManager filterManager = FilterManager.getInstance();
 
     public void destroy() {
-        for (int j = 0; j < filterChain.length; j++) {
-            Filter filter = filterChain[j];
+        for (int j = 0; j < filterManager.getFilters().length; j++) {
+            Filter filter = filterManager.getFilters()[j];
             filter.destroy();
 
         }
@@ -52,7 +42,7 @@ public class MagnoliaManagedFilter implements Filter {
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
         ServletException {
-        FilterChain fullchain = new CustomFilterChain(chain, filterChain);
+        FilterChain fullchain = new CustomFilterChain(chain, filterManager.getFilters());
 
         if (log.isDebugEnabled()) {
             String pathInfo = ((HttpServletRequest) request).getPathInfo();
@@ -69,8 +59,8 @@ public class MagnoliaManagedFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
 
-        for (int j = 0; j < filterChain.length; j++) {
-            Filter filter = filterChain[j];
+        for (int j = 0; j < filterManager.getFilters().length; j++) {
+            Filter filter = filterManager.getFilters()[j];
             filter.init(filterConfig);
         }
     }

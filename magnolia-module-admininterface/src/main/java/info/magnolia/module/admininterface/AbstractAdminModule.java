@@ -13,6 +13,8 @@
 
 package info.magnolia.module.admininterface;
 
+import info.magnolia.cms.beans.config.FilterManager;
+import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.beans.config.TemplateManager;
@@ -52,61 +54,17 @@ public abstract class AbstractAdminModule extends AbstractModule {
     public final void init(Content configNode) throws InitializationException {
         this.setConfigNode(configNode);
         try {
-            Content node;
 
-            // register uri mappings
-            node = ContentUtil.getCaseInsensitive(moduleNode, "virtualURIMapping");
-            if (node != null) {
-                VirtualURIManager.getInstance().register(node);
-            }
-
-            // register templates
-            node = ContentUtil.getCaseInsensitive(moduleNode, "templates");
-            if (node != null) {
-                TemplateManager.getInstance().register(node);
-            }
-
-            // register renderers
-            node = ContentUtil.getCaseInsensitive(moduleNode, "renderers");
-            if (node != null) {
-                TemplateRendererManager.getInstance().register(node);
-            }
-
-            // register paragraphs
-            node = ContentUtil.getCaseInsensitive(moduleNode, "paragraphs");
-            if (node != null) {
-                ParagraphManager.getInstance().register(node);
-            }
-
-            // register the dialogs
-            node = ContentUtil.getCaseInsensitive(moduleNode, "dialogs");
-            if (node != null) {
-                DialogHandlerManager.getInstance().register(node);
-            }
-
-            // register controls
-            node = ContentUtil.getCaseInsensitive(moduleNode, "controls");
-            if (node != null) {
-                ControlsManager.getInstance().register(node);
-            }
-
-            // register pages
-            node = ContentUtil.getCaseInsensitive(moduleNode, "pages");
-            if (node != null) {
-                PageHandlerManager.getInstance().register(node);
-            }
-
-            // register trees
-            node = ContentUtil.getCaseInsensitive(moduleNode, "trees");
-            if (node != null) {
-                TreeHandlerManager.getInstance().register(node);
-            }
-
-            // register shutdown tasks
-            node = ContentUtil.getCaseInsensitive(moduleNode, "shutdown");
-            if (node != null) {
-                ShutdownManager.getInstance().register(node);
-            }
+            initEntry("virtualURIMapping", VirtualURIManager.getInstance());
+            initEntry("templates", TemplateManager.getInstance());
+            initEntry("renderers", TemplateRendererManager.getInstance());
+            initEntry("paragraphs", ParagraphManager.getInstance());
+            initEntry("dialogs", DialogHandlerManager.getInstance());
+            initEntry("controls", ControlsManager.getInstance());
+            initEntry("pages", PageHandlerManager.getInstance());
+            initEntry("trees", TreeHandlerManager.getInstance());
+            initEntry("shutdown", ShutdownManager.getInstance());
+            initEntry("filters", FilterManager.getInstance());
 
             onInit();
 
@@ -114,6 +72,17 @@ public abstract class AbstractAdminModule extends AbstractModule {
         }
         catch (Exception e) {
             throw new InitializationException("can't initialize module [" + this.getName() + "]", e);
+        }
+    }
+
+    /**
+     * @param nodeName
+     * @param manager
+     */
+    private void initEntry(String nodeName, ObservedManager manager) {
+        Content node = ContentUtil.getCaseInsensitive(moduleNode, nodeName);
+        if (node != null) {
+            manager.register(node);
         }
     }
 
