@@ -58,7 +58,7 @@
   <distributionManagement>
     <repository>
       <id>magnolia</id>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/m2repo</url>
+      <url>scp://svn.magnolia.info/usr/local/apache/htdocs/maven/m2</url>
     </repository>
     <snapshotRepository>
       <id>magnolia</id>
