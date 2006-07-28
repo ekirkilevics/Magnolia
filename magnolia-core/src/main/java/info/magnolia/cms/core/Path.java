@@ -136,7 +136,21 @@ public final class Path {
 
         return uri;
     }
-
+    
+    /**
+     * Returns the URI of the current request, but uses the uri to repository mapping to remove any prefix.
+     * @param req request
+     * @return request URI without servlet context and without repository mapping prefix
+     */
+    public static String getHandle(HttpServletRequest req) {
+        return (String) req.getAttribute(Aggregator.HANDLE);
+    }
+    
+    /**
+     * If you forward a request, this will return the original requests uri.
+     * @param req
+     * @return
+     */
     public static String getOriginalURI(HttpServletRequest req) {
         return (String) req.getAttribute(JAVAX_FORWARD_SERVLET_PATH);
     }
@@ -159,7 +173,12 @@ public final class Path {
     }
 
     public static String getExtension(HttpServletRequest req) {
-        return StringUtils.substringAfterLast(req.getRequestURI(), "."); //$NON-NLS-1$
+        String ext = (String) req.getAttribute(Aggregator.EXTENSION);
+        if (ext == null) {
+            ext = StringUtils.substringAfterLast(req.getRequestURI(), ".");
+            req.setAttribute(Aggregator.EXTENSION, ext);
+        }
+        return ext;
     }
 
     public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent, String label) {

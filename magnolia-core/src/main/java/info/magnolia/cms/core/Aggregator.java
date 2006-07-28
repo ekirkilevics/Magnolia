@@ -30,6 +30,12 @@ public class Aggregator {
 
     public static final String TEMPLATE = "mgnl_Template"; //$NON-NLS-1$
 
+    public static final String EXTENSION = "extension";
+
+    public static final String MAPPING = "mapping";
+
+    public static final String REPOSITORY = "repository";
+
     /**
      * Don't instantiate.
      */

@@ -13,11 +13,12 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ModuleRegistration;
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
+import info.magnolia.cms.beans.config.URI2RepositoryMapping;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Aggregator;
@@ -131,6 +132,8 @@ public class MgnlCmsFilter implements Filter {
         if (ModuleRegistration.getInstance().isRestartNeeded()) {
             response.sendRedirect(request.getContextPath() + "/.magnolia/pages/restart.html");
         }
+        
+        setHandleAndMapping(request);
 
         if (isAuthorized(request, response)) {
 
@@ -201,6 +204,40 @@ public class MgnlCmsFilter implements Filter {
     }
 
     /**
+     * Sets the proper handle, selector and extension into the request variables
+     * @param request
+     */
+    protected void setHandleAndMapping(HttpServletRequest request) {
+        String uri = Path.getURI(request);
+        int firstDotPos = StringUtils.indexOf(uri, '.', StringUtils.lastIndexOf(uri, '/'));
+        String handle;
+        String selector;
+        String extension; 
+        if (firstDotPos > -1) {
+            int lastDotPos = StringUtils.lastIndexOf(uri, '.');
+            handle = StringUtils.substring(uri, 0, firstDotPos);
+            selector = StringUtils.substring(uri, firstDotPos + 1, lastDotPos);
+            extension = StringUtils.substring(uri, lastDotPos);
+        } else {
+            // no dots (and no extension)
+            handle = uri;
+            selector = "";
+            extension = "";
+        }
+        
+        URI2RepositoryMapping mapping = URI2RepositoryManager.getInstance().getMapping(uri);
+        
+        // remove prefix if any
+        handle = mapping.getHandle(handle);
+
+        request.setAttribute(Aggregator.REPOSITORY, mapping.getRepository());
+        request.setAttribute(Aggregator.MAPPING, mapping);
+        request.setAttribute(Aggregator.HANDLE, handle);
+        request.setAttribute(Aggregator.SELECTOR, selector);
+        request.setAttribute(Aggregator.EXTENSION, extension);
+    }
+
+    /**
      * Uses access manager to authorise this request.
      * @param req HttpServletRequest as received by the service method
      * @param res HttpServletResponse as received by the service method
@@ -208,13 +245,22 @@ public class MgnlCmsFilter implements Filter {
      * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
     protected boolean isAuthorized(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        if (MgnlContext.getAccessManager(ContentRepository.WEBSITE) != null) {
-            String path = StringUtils.substringBefore(Path.getURI(req), "."); //$NON-NLS-1$
-            if (!MgnlContext.getAccessManager(ContentRepository.WEBSITE).isGranted(path, Permission.READ)) {
+        if (MgnlContext.getAccessManager(getRepository(req)) != null) {
+            String handle = Path.getHandle(req); //$NON-NLS-1$
+            
+            if (!MgnlContext.getAccessManager(getRepository(req)).isGranted(handle, Permission.READ)) {
                 res.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
         }
         return true;
+    }
+
+    /**
+     * Return the repository used for this request. This uses a url to repository mapping.
+     * @return
+     */
+    protected String getRepository(HttpServletRequest req) {
+        return (String) req.getAttribute(Aggregator.REPOSITORY);
     }
 
     /**
@@ -223,7 +269,7 @@ public class MgnlCmsFilter implements Filter {
      * @param response HttpServletResponse as given by the servlet container
      * @throws IOException standard servlet exception
      */
-    private void handleResourceRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void handleResourceRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String resourceHandle = (String) request.getAttribute(Aggregator.HANDLE);
 
@@ -231,7 +277,7 @@ public class MgnlCmsFilter implements Filter {
 
         if (StringUtils.isNotEmpty(resourceHandle)) {
 
-            HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+            HierarchyManager hm = MgnlContext.getHierarchyManager(getRepository(request));
 
             InputStream is = null;
             try {
@@ -336,31 +382,17 @@ public class MgnlCmsFilter implements Filter {
      * @throws RepositoryException
      */
     protected boolean collect(HttpServletRequest request) throws PathNotFoundException, RepositoryException {
-
-    	String path = Path.getURI(request);
-    	int firstDotPos = StringUtils.indexOf(path, '.', StringUtils.lastIndexOf(path, '/'));
-    	String uri;
-    	String selector;
-        String extension; 
-    	if (firstDotPos > -1) {
-	    	int lastDotPos = StringUtils.lastIndexOf(path, '.');
-	    	uri = StringUtils.substring(path, 0, firstDotPos);
-	    	selector = StringUtils.substring(path, firstDotPos + 1, lastDotPos);
-	        extension = StringUtils.substring(path, lastDotPos);
-    	} else {
-    		// no dots (and no extension)
-	    	uri = path;
-	    	selector = "";
-	        extension = "";
-    	}
-        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+        String handle = Path.getHandle(request);
+        String extension = Path.getExtension(request);
+        String repository = getRepository(request);
+        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(repository);
 
         Content requestedPage = null;
         NodeData requestedData = null;
         Template template = null;
 
-        if (hierarchyManager.isPage(uri)) {
-            requestedPage = hierarchyManager.getContent(uri);
+        if (hierarchyManager.isPage(handle)) {
+            requestedPage = hierarchyManager.getContent(handle);
 
             // check if its a request for a versioned page
             if (request.getParameter(VERSION_NUMBER) != null) {
@@ -370,7 +402,7 @@ public class MgnlCmsFilter implements Filter {
                 }
                 catch (RepositoryException re) {
                     log.debug(re.getMessage(), re);
-                    log.error("Unable to get versioned state, rendering current state of {}", uri);
+                    log.error("Unable to get versioned state, rendering current state of {}", handle);
                 }
             }
 
@@ -389,18 +421,21 @@ public class MgnlCmsFilter implements Filter {
             }
         }
         else {
-            if (hierarchyManager.isNodeData(uri)) {
-                requestedData = hierarchyManager.getNodeData(uri);
+            if (hierarchyManager.isNodeData(handle)) {
+                requestedData = hierarchyManager.getNodeData(handle);
             }
             else {
                 // check again, resource might have different name
-                int lastIndexOfSlash = uri.lastIndexOf("/"); //$NON-NLS-1$
+                int lastIndexOfSlash = handle.lastIndexOf("/"); //$NON-NLS-1$
 
                 if (lastIndexOfSlash > 0) {
 
-                    uri = StringUtils.substringBeforeLast(uri, "/"); //$NON-NLS-1$
+                    handle = StringUtils.substringBeforeLast(handle, "/"); //$NON-NLS-1$
+
                     try {
-                        requestedData = hierarchyManager.getNodeData(uri);
+                        requestedData = hierarchyManager.getNodeData(handle);
+                        // set the new handle pointing to the real node
+                        request.setAttribute(Aggregator.HANDLE, handle);
 
                         // this is needed for binary nodedata, e.g. images are found using the path:
                         // /features/integration/headerImage instead of /features/integration/headerImage/header30_2
@@ -441,8 +476,6 @@ public class MgnlCmsFilter implements Filter {
             request.setAttribute(Aggregator.FILE, file);
         }
 
-        request.setAttribute(Aggregator.HANDLE, uri);
-        request.setAttribute(Aggregator.SELECTOR, selector);
         request.setAttribute(Aggregator.TEMPLATE, template);
 
         return true;
