@@ -56,7 +56,7 @@ public class JavascriptIncludePage extends PageMVCHandler {
         "general.js",
         "controls.js",
         "tree.js",
-        "i18n.js",
+        //"i18n.js", moved alone since it must be initialized first
         "contextmenu.js",
         "inline.js"};
 
@@ -102,12 +102,15 @@ public class JavascriptIncludePage extends PageMVCHandler {
 
         out.println("var contextPath = '" + contextPath + "';");
 
+        prepareI18n(out);
+
+
         for (int i = 0; i < includes.length; i++) {
             InputStream in = ClasspathResourcesUtil.getStream("/mgnl-resources/admin-js/" + includes[i]);
             IOUtils.copy(in, out);
+            in.close();
         }
 
-        out.println(MessagesUtil.generateJavaScript(MessagesManager.getMessages()));
 
         // finding files in classpath is too expensive, just cache the list of paths!
         if (files == null || nocache) {
@@ -152,6 +155,13 @@ public class JavascriptIncludePage extends PageMVCHandler {
 
         out.println("MgnlRuntime.loadingOn=true;");
 
+    }
+
+    private void prepareI18n(PrintWriter out) throws IOException {
+        InputStream in = ClasspathResourcesUtil.getStream("/mgnl-resources/admin-js/i18n.js");
+        IOUtils.copy(in, out);
+        out.println(MessagesUtil.generateJavaScript(MessagesManager.getMessages()));
+        in.close();
     }
 
     protected class Definition {
