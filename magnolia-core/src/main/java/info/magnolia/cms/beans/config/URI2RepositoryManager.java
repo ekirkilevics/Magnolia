@@ -22,7 +22,6 @@ import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.derby.iapi.store.raw.Compensation;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -31,6 +30,7 @@ import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
+
 
 /**
  * Mapps uri prefixes to repositories
@@ -48,27 +48,36 @@ public class URI2RepositoryManager {
      * The mappings
      */
     private List mappings = new ArrayList();
-    
+
+    /**
+     * Mapping used if none configured
+     */
     private URI2RepositoryMapping defaultMapping = new URI2RepositoryMapping("", ContentRepository.WEBSITE, "");
-    
+
+    /**
+     * First initialization and starting observation of the config node.
+     */
     public URI2RepositoryManager() {
         init();
-        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, SERVER_REPOSITORY_URIMAPPING, new EventListener(){
-            public void onEvent(EventIterator arg0) {
-                MgnlContext.setInstance(MgnlContext.getSystemContext());
-                init();
-            }
-        });
+        ObservationUtil.registerChangeListener(
+            ContentRepository.CONFIG,
+            SERVER_REPOSITORY_URIMAPPING,
+            new EventListener() {
+
+                public void onEvent(EventIterator arg0) {
+                    MgnlContext.setInstance(MgnlContext.getSystemContext());
+                    init();
+                }
+            });
     }
-    
+
     /**
      * Add the mappings found in the config repository
-     *
      */
     public void init() {
         this.mappings.clear();
         Content node = ContentUtil.getContent(ContentRepository.CONFIG, SERVER_REPOSITORY_URIMAPPING);
-        if(node != null){
+        if (node != null) {
             for (Iterator iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
                 Content mappingNode = (Content) iter.next();
                 URI2RepositoryMapping mapping = new URI2RepositoryMapping();
@@ -78,17 +87,16 @@ public class URI2RepositoryManager {
                 this.addMapping(mapping);
             }
         }
-        
+
         // check first the longer prefixes
-        Collections.sort(this.mappings, new Comparator(){
+        Collections.sort(this.mappings, new Comparator() {
+
             public int compare(Object arg0, Object arg1) {
                 URI2RepositoryMapping m0 = (URI2RepositoryMapping) arg0;
                 URI2RepositoryMapping m1 = (URI2RepositoryMapping) arg1;
                 return m1.getUriPrefix().length() - m0.getUriPrefix().length();
             }
         });
-        
-        System.out.println(this.mappings);
     }
 
     /**
@@ -97,42 +105,42 @@ public class URI2RepositoryManager {
     public URI2RepositoryMapping getMapping(String uri) {
         for (Iterator iter = mappings.iterator(); iter.hasNext();) {
             URI2RepositoryMapping mapping = (URI2RepositoryMapping) iter.next();
-            if(mapping.matches(uri)){
+            if (mapping.matches(uri)) {
                 return mapping;
             }
         }
         return this.defaultMapping;
     }
-    
+
     /**
      * Get the handle for this uri
      * @param uri
-     * @return 
+     * @return
      */
-    public String getHandle(String uri){
+    public String getHandle(String uri) {
         return this.getMapping(uri).getHandle(uri);
     }
-    
+
     /**
      * Get the repository to use for this uri
      * @param uri
      * @return
      */
-    public String getRepository(String uri){
+    public String getRepository(String uri) {
         return this.getMapping(uri).getRepository();
     }
-    
+
     /**
      * Get the uri to use for this handle
      * @param repository
      * @param handle
      * @return
      */
-    public String getURI(String repository, String handle){
+    public String getURI(String repository, String handle) {
         for (Iterator iter = mappings.iterator(); iter.hasNext();) {
             URI2RepositoryMapping mapping = (URI2RepositoryMapping) iter.next();
-            if(StringUtils.equals(mapping.getRepository(), repository) && handle.startsWith(mapping.getHandlePrefix())){
-                return mapping.getURI(handle);    
+            if (StringUtils.equals(mapping.getRepository(), repository) && handle.startsWith(mapping.getHandlePrefix())) {
+                return mapping.getURI(handle);
             }
         }
         return handle;
@@ -141,7 +149,7 @@ public class URI2RepositoryManager {
     public void addMapping(URI2RepositoryMapping mapping) {
         mappings.add(mapping);
     }
-    
+
     public static URI2RepositoryManager getInstance() {
         return instance;
     }
