@@ -17,27 +17,27 @@
       </thead>
       <tr>
         <td>Server up since...</td>
-        <td>this.server.uptime</td>
+        <td>${this.server.getUptime()}</td>
       </tr>
       <tr>
         <td>Is admin server</td>
-        <td>this.server.admin</td>
+        <td>${this.server.isAdmin()?string}</td>
       </tr>
       <tr>
         <td>Default Mail Server</td>
-        <td>this.server.defaultMailServer</td>
+        <td>this.server.getDefaultMailServer()</td>
       </tr>
       <tr>
         <td>Visible to Obinary</td>
-        <td>this.server.visibleToObinary</td>
+        <td>${this.server.isVisibleToObinary()?string}</td>
       </tr>
       <tr>
         <td>Basic Realm</td>
-        <td>this.server.basicRealm</td>
+        <td>${this.server.getBasicRealm()}</td>
       </tr>
       <tr>
         <td>404 URI</td>
-        <td>this.server.404URI</td>
+        <td>${this.server.get404URI()}</td>
       </tr>
     </table>
     <h3>General Magnolia System Data</h3>
@@ -48,10 +48,11 @@
           <th scope="col">Value</th>
         </tr>
       </thead>
-      [#list this.systemProperties as item]
+        [#assign keys = this.systemProperties?keys]
+        [#list keys as key]
       <tr>
-        <th scope="row">${item}</th>
-        <td>${item}</td>
+        <th align="left" scope="row">${key}</th>
+        <td>${this.systemProperties[key]}</td>
       </tr>
       [/#list]
     </table>
@@ -63,10 +64,11 @@
           <th scope="col">To URI</th>
         </tr>
       </thead>
-      [#list this.virtualUriMappings as item]
+
+      [#list this.virtualUriMappings as mapping]
       <tr>
-        <th scope="row">${item}</th>
-        <td>${item}</td>
+        <th align="left" width="300" scope="row">${mapping[1]}</th>
+        <td width="50%" >${mapping[0]}</td>
       </tr>
       [/#list]
     </table>
@@ -74,22 +76,26 @@
     <table cellspacing="0" summary="Secure/Unsecure URIs">
       <thead>
         <tr>
-          <th scope="col">URL pattern</th>
-          <th scope="col">Secure</th>
-          <th scope="col">Unsecure</th>
+          <th width="300" scope="col">URL pattern</th>
+          <th width="20%" scope="col">Secure</th>
+          <th width="20%" scope="col">Unsecure</th>
         </tr>
       </thead>
-      [#list this.secureURIs as item]
-      <tr>
-        <th scope="row">${item}</th>
-        <td>x</td>
-        <td></td>
+        [#assign keys = this.secureURIs?keys]
+        [#list keys as key]
+        <tr>
+        <th width="60%" align="left" scope="row">${key}<!--   ${this.secureURIs[key]} --></th>
+        <td width="20%" align="center">x</td>
+        <td width="20%"></td>
       </tr>
-      [/#list] [#list this.unsecureURIs as item]
+        [/#list]
+
+        [#assign keys = this.unsecureURIs?keys]
+        [#list keys as key]
       <tr>
-        <th scope="row">${item}</th>
-        <td></td>
-        <td>x</td>
+        <th width="60%" align="left" scope="row">${key}</th>
+        <td width="20%"></td>
+        <td width="20%" align="center">x</td>
       </tr>
       [/#list]
     </table>

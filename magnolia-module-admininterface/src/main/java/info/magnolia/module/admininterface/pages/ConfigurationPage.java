@@ -21,6 +21,8 @@ import info.magnolia.module.admininterface.TemplatedMVCHandler;
 
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.Collection;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -46,24 +48,24 @@ public class ConfigurationPage extends TemplatedMVCHandler {
         return Server.getInstance();
     }
 
-    public Set getVirtualUriMappings() {
-        return VirtualURIManager.getInstance().getURIMappings().entrySet();
+    public Collection getVirtualUriMappings() {
+        return VirtualURIManager.getInstance().getURIMappings().values();
     }
 
     public List getShutdownTasks() {
         return ShutdownManager.listShutdownTasks();
     }
 
-    public Set getSecureURIs() {
-        return SecureURI.listSecureURIs().keySet();
+    public Map getSecureURIs() {
+        return SecureURI.listSecureURIs();
     }
 
-    public Set getUnsecureURIs() {
-        return SecureURI.listUnsecureURIs().keySet();
+    public Map getUnsecureURIs() {
+        return SecureURI.listUnsecureURIs();
     }
 
-    public Set getSystemProperties() {
-        return SystemProperty.getPropertyList().entrySet();
+    public Map getSystemProperties() {
+        return SystemProperty.getPropertyList();
     }
 
 }

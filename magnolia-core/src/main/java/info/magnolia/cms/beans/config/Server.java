@@ -320,7 +320,8 @@ public final class Server {
      * @return default mail server
      */
     public static String getDefaultMailServer() {
-        return (String) Server.cachedMailSettings.get("smtpServer");
+        String mailServer = (String) Server.cachedMailSettings.get("smtpServer");
+        return mailServer != null ? mailServer : StringUtils.EMPTY;
     }
 
     /**
@@ -349,7 +350,7 @@ public final class Server {
      * @return
      */
     public static long getUptime() {
-        return uptime;
+        return System.currentTimeMillis() - uptime;
     }
 
     public Map getLoginConfig() {
