@@ -172,8 +172,12 @@
   </properties>
   <repositories>
     <repository>
-      <id>magnolia</id>
+      <id>magnolia.sf</id>
       <url>http://magnolia.sourceforge.net/m2repo</url>
+    </repository>
+    <repository>
+      <id>magnolia.basel</id>
+      <url>http://svn.magnolia.info/maven/m2</url>
     </repository>
   </repositories>
   <reporting>
