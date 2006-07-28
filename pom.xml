@@ -172,11 +172,7 @@
   </properties>
   <repositories>
     <repository>
-      <id>magnolia.sf</id>
-      <url>http://magnolia.sourceforge.net/m2repo</url>
-    </repository>
-    <repository>
-      <id>magnolia.basel</id>
+      <id>magnolia</id>
       <url>http://svn.magnolia.info/maven/m2</url>
     </repository>
   </repositories>
@@ -505,16 +501,23 @@
   <distributionManagement>
     <repository>
       <id>magnolia</id>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/m2repo</url>
+      <url>scp://svn.magnolia.info/usr/local/apache/htdocs/maven/m2</url>
     </repository>
     <site>
-      <id>magnolia</id>
+      <id>magnolia.sf</id>
       <name>magnolia</name>
       <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30</url>
     </site>
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
   </distributionManagement>
   <pluginRepositories>
+    <pluginRepository>
+      <id>magnolia</id>
+      <url>http://svn.magnolia.info/maven/m2</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>      
+    </pluginRepository>
     <pluginRepository>
       <!-- temporary, till the jdepend maven plugin release is out -->
       <id>codehaus-snapshots</id>
