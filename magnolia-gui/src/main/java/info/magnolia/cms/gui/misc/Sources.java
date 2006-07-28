@@ -12,6 +12,9 @@
  */
 package info.magnolia.cms.gui.misc;
 
+import info.magnolia.context.MgnlContext;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Vinzenz Wyser
  * @version 2.0
@@ -47,12 +50,6 @@ public class Sources {
         html.append(contextPath);
         html.append("/.resources/admin-js/dialogs/dialogs.js\"></script>"); //$NON-NLS-1$
 
-        /*
-        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
-        html.append(contextPath);
-        html.append("/.resources/admin-js/dialogs/calendar.js\"></script>"); //$NON-NLS-1$
-        */
-
         html.append("<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"");
         html.append(contextPath);
         html.append("/.resources/calendar/skins/aqua/theme.css\" title=\"Aqua\" />");
@@ -63,7 +60,9 @@ public class Sources {
 
         html.append("<script type=\"text/javascript\" src=\"");
         html.append(contextPath);
-        html.append("/.resources/calendar/lang/calendar-en.js\"></script>\n");
+        html.append("/.resources/calendar/lang/calendar-");
+        html.append(MgnlContext.getLocale().getLanguage());
+        html.append(".js\"></script>\n");
 
         html.append("<script type=\"text/javascript\" src=\"");
         html.append(contextPath);
