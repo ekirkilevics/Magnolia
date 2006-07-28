@@ -503,6 +503,10 @@
       <id>magnolia</id>
       <url>scp://svn.magnolia.info/usr/local/apache/htdocs/maven/m2</url>
     </repository>
+    <snapshotRepository>
+      <id>magnolia</id>
+      <url>scp://svn.magnolia.info/usr/local/apache/htdocs/maven/snapshots</url>
+    </snapshotRepository>
     <site>
       <id>magnolia.sf</id>
       <name>magnolia</name>
@@ -515,8 +519,15 @@
       <id>magnolia</id>
       <url>http://svn.magnolia.info/maven/m2</url>
       <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </pluginRepository>
+    <pluginRepository>
+      <id>magnolia</id>
+      <url>http://svn.magnolia.info/maven/snapshots</url>
+      <snapshots>
         <enabled>true</enabled>
-      </snapshots>      
+      </snapshots>
     </pluginRepository>
     <pluginRepository>
       <!-- temporary, till the jdepend maven plugin release is out -->

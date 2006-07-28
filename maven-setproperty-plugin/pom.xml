@@ -17,7 +17,7 @@
       <artifactId>maven-core</artifactId>
       <version>2.0.4</version>
     </dependency>
-     <dependency>
+    <dependency>
       <groupId>org.apache.maven</groupId>
       <artifactId>maven-project</artifactId>
       <version>2.0.4</version>
@@ -43,7 +43,9 @@
   </reporting>
   <scm>
     <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/maven-setproperty-plugin</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/maven-setproperty-plugin</developerConnection>
+    <developerConnection>
+      scm:svn:http://svn.magnolia.info/svn/magnolia/trunk/maven-setproperty-plugin
+    </developerConnection>
     <url>http://svn.magnolia.info/view/magnolia/trunk/maven-setproperty-plugin</url>
   </scm>
   <ciManagement>
@@ -58,10 +60,14 @@
       <id>magnolia</id>
       <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/m2repo</url>
     </repository>
+    <snapshotRepository>
+      <id>magnolia</id>
+      <url>scp://svn.magnolia.info/usr/local/apache/htdocs/maven/snapshots</url>
+    </snapshotRepository>
     <site>
       <id>magnolia</id>
       <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30</url>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30/maven-setproperty-plugin</url>
     </site>
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
   </distributionManagement>
