@@ -97,6 +97,8 @@
         <configuration>
           <source>1.4</source>
           <target>1.4</target>
+          <optimize>true</optimize>
+          <debug>false</debug>
         </configuration>
       </plugin>
       <plugin>
