@@ -139,8 +139,7 @@ public final class MessagesManager {
 
             public Object transform(Object input) {
                 MessagesID id = (MessagesID) input;
-                Messages msgs = new DefaultMessagesImpl(id.basename, id.locale);
-                return msgs;
+                return new DefaultMessagesImpl(id.basename, id.locale);
             }
         });
         messages = Collections.synchronizedMap(map);
@@ -151,8 +150,8 @@ public final class MessagesManager {
      */
     public static void load() {
 
-        // reading the configuration from the repository
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        // reading the configuration from the repository, no need for context
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
             intiLRUMap();
 
@@ -243,7 +242,6 @@ public final class MessagesManager {
 
     /**
      * Reload i18n configuration.
-     * @throws Exception
      */
     public static void reload() {
         try {
