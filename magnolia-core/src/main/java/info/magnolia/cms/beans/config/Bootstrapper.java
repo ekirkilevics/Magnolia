@@ -83,71 +83,70 @@ public final class Bootstrapper {
 
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
-            String repository = (String) repositoryNames.next();
+            String repositoryName = (String) repositoryNames.next();
 
-            if (!bootstrapRepository(repository, filter, bootdirs)) {
+            if (!bootstrapRepository(repositoryName, filter, bootdirs)) {
                 // exeption was already logged
                 break;
             }
 
-            log.info("Repository [{}] has been initialized.", repository); //$NON-NLS-1$
+            log.info("Repository [{}] has been initialized.", repositoryName); //$NON-NLS-1$
         }
     }
 
     /**
      * Bootstrap a repository using the default bootstrap directories
-     * @param repository
+     * @param repositoryName
      * @param filter
      * @return true if succeeded
      */
-    public static boolean bootstrapRepository(String repository, BootstrapFilter filter) {
-        return bootstrapRepository(repository, filter, getBootstrapDirs());
+    public static boolean bootstrapRepository(String repositoryName, BootstrapFilter filter) {
+        return bootstrapRepository(repositoryName, filter, getBootstrapDirs());
     }
 
     /**
      * Bootstrap a specific repository
-     * @param repository
+     * @param repositoryName
      * @param filter
      * @param bootdirs
      * @return
      */
-    public static boolean bootstrapRepository(String repository, BootstrapFilter filter, String[] bootdirs) {
-        Set xmlfileset = getBootstrapFiles(bootdirs, repository, filter);
+    public static boolean bootstrapRepository(String repositoryName, BootstrapFilter filter, String[] bootdirs) {
+        Set xmlfileset = getBootstrapFiles(bootdirs, repositoryName, filter);
 
         if (xmlfileset.isEmpty()) {
-            log.info("No bootstrap files found in directory [{}], skipping...", repository); //$NON-NLS-1$
+            log.info("No bootstrap files found in directory [{}], skipping...", repositoryName); //$NON-NLS-1$
             return true;
         }
 
-        log
-            .info(
-                "Trying to import content from {} files into repository [{}]", Integer.toString(xmlfileset.size()), repository); //$NON-NLS-1$
+        log.info("Trying to import content from {} files into repository [{}]", //$NON-NLS-1$
+                Integer.toString(xmlfileset.size()), repositoryName);
 
-        return bootstrapFiles(repository, xmlfileset);
+        return bootstrapFiles(repositoryName, xmlfileset);
     }
 
     /**
      * Bootstrap the passed set of files
-     * @param repository
+     * @param repositoryName
      * @param filesSet
      * @return
      */
-    public static boolean bootstrapFiles(String repository, Set filesSet) {
+    public static boolean bootstrapFiles(String repositoryName, Set filesSet) {
         File[] files = (File[]) filesSet.toArray(new File[filesSet.size()]);
-        return bootstrapFiles(repository, files);
+        return bootstrapFiles(repositoryName, files);
     }
 
     /**
      * Bootstrap the array of files
-     * @param repository
+     * @param repositoryName
      * @param files
      * @return
      */
-    public static boolean bootstrapFiles(String repository, File[] files) {
+    public static boolean bootstrapFiles(String repositoryName, File[] files) {
         try {
             for (int k = 0; k < files.length; k++) {
-                File xmlfile = files[k];
-                DataTransporter.executeBootstrapImport(xmlfile, repository);
+                File xmlFile = files[k];
+                DataTransporter.executeBootstrapImport(xmlFile, repositoryName);
             }
         }
         catch (IOException ioe) {
@@ -156,11 +155,10 @@ public final class Bootstrapper {
         catch (OutOfMemoryError e) {
             int maxMem = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
             int needed = Math.max(256, maxMem + 128);
-            log
-                .error(
-                    "Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
-                        + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n" //$NON-NLS-1$
-                        + "You will need to completely remove the magnolia webapp before trying again", Integer.toString(maxMem), Integer.toString(needed)); //$NON-NLS-1$
+            log.error("Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
+                    + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n" //$NON-NLS-1$
+                    + "You will need to completely remove the magnolia webapp before trying again", //$NON-NLS-1$
+                    Integer.toString(maxMem), Integer.toString(needed));
             return false;
         }
         return true;
@@ -171,11 +169,11 @@ public final class Bootstrapper {
      * bootstrap dir. The set is returned sorted, so that the execution fo the import will import the upper most nodes
      * first. This is done using the filelength.
      * @param bootdirs
-     * @param repository
+     * @param repositoryName
      * @param filter
      * @return the sorted set
      */
-    public static SortedSet getBootstrapFiles(String[] bootdirs, final String repository, final BootstrapFilter filter) {
+    public static SortedSet getBootstrapFiles(String[] bootdirs, final String repositoryName, final BootstrapFilter filter) {
         SortedSet xmlfileset = new TreeSet(new Comparator() {
 
             // remove file with the same name in different dirs
@@ -205,7 +203,7 @@ public final class Bootstrapper {
                     return accept(file.getParentFile(), file.getName());
                 }
                 public boolean accept(File dir, String name) {
-                    return name.startsWith(repository + ".")
+                    return name.startsWith(repositoryName + ".")
                         && filter.accept(name)
                         && (name.endsWith(DataTransporter.XML) || name.endsWith(DataTransporter.ZIP) || name
                             .endsWith(DataTransporter.GZ));

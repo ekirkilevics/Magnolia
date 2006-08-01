@@ -30,6 +30,9 @@ import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -42,18 +45,20 @@ import org.xml.sax.ContentHandler;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.XMLFilter;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
- * Export import data into/from magnolia
+ * imports and exports XML data
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
+ * @author Oliver Lietz
  */
 public class DataTransporter {
 
     private static final int INDENT_VALUE = 2;
 
-    static Logger log = LoggerFactory.getLogger(DataTransporter.class.getName());
+    private static Logger log = LoggerFactory.getLogger(DataTransporter.class.getName());
 
     final static int bootstrapImportMode = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
 
@@ -70,94 +75,102 @@ public class DataTransporter {
     public static final String JCR_ROOT = "jcr:root";
 
     /**
-     * Perform import.
-     * @param repository selected repository
+     * Document -> File
+     * @param xmlDocument uploaded file
+     * @param repositoryName selected repository
      * @param basepath base path in repository
-     * @param xmlFile uploaded file
      * @param keepVersionHistory if <code>false</code> version info will be stripped before importing the document
      * @param importMode a valid value for ImportUUIDBehavior
-     * @see ImportUUIDBehavior
-     */
-    public static synchronized void executeImport(String basepath, String repository, Document xmlFile,
-        boolean keepVersionHistory, int importMode, boolean saveAfterImport) throws IOException {
-
-        String fileName = xmlFile.getFileName();
-        InputStream in = getInputStreamForFile(fileName, xmlFile.getFile());
-        executeImport(basepath, repository, in, fileName, keepVersionHistory, importMode, saveAfterImport, true);
-    }
-
-    public static synchronized void executeImport(String basepath, String repository, File xmlfile,
-        boolean keepVersionHistory, int importMode, boolean saveAfterImport, boolean createBasepathIfNotExist)
-        throws IOException {
-        String fileName = xmlfile.getName();
-        InputStream in = getInputStreamForFile(fileName, xmlfile);
-        executeImport(
-            basepath,
-            repository,
-            in,
-            fileName,
-            keepVersionHistory,
-            importMode,
-            saveAfterImport,
-            createBasepathIfNotExist);
-    }
-
-    private static InputStream getInputStreamForFile(String fileName, File xmlfile) throws IOException {
-        InputStream in;
-        // looks like the zip one is buggy. It throws exception when trying to use it
-        if (fileName.endsWith(ZIP)) {
-            in = new ZipInputStream((new FileInputStream(xmlfile)));
-        }
-        else if (fileName.endsWith(GZ)) {
-            in = new GZIPInputStream((new FileInputStream(xmlfile)));
-        }
-        else {
-            // if(fileName.endsWith(".xml"))
-            in = new FileInputStream(xmlfile);
-        }
-        return in;
-    }
-
-    public static void executeBootstrapImport(File xmlfile, String repository) throws IOException {
-        String filenameWithoutExt = StringUtils.substringBeforeLast(xmlfile.getName(), DOT);
-        if (filenameWithoutExt.endsWith(XML)) {
-            // if file ends in .xml.gz or .xml.zip
-            // need to keep the .xml to be able to view it after decompression
-            filenameWithoutExt = StringUtils.substringBeforeLast(xmlfile.getName(), DOT);
-        }
-        String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(filenameWithoutExt, DOT), DOT);
-        pathName = SLASH + StringUtils.replace(pathName, DOT, SLASH);
-        DataTransporter.executeImport(pathName, repository, xmlfile, false, bootstrapImportMode, true, true);
-    }
-
-    /**
-     * Perform import
-     * @param repository selected repository
-     * @param basepath base path in repository
-     * @param xmlStream an imput stream reading a
-     * @param keepVersionHistory if <code>false</code> version info will be stripped before importing the document
-     * @param importMode a valid value for ImportUUIDBehavior
+     * @param saveAfterImport
+     * @param createBasepathIfNotExist
      * @throws IOException
      * @see ImportUUIDBehavior
      */
-    public static synchronized void executeImport(String basepath, String repository, InputStream xmlStream,
-        String fileName, boolean keepVersionHistory, int importMode, boolean saveAfterImport,
-        boolean createBasepathIfNotExist) throws IOException {
+    public static synchronized void importDocument(Document xmlDocument, String repositoryName, String basepath,
+                                                   boolean keepVersionHistory, int importMode, boolean saveAfterImport,
+                                                   boolean createBasepathIfNotExist)
+            throws IOException {
+        File xmlFile = xmlDocument.getFile();
+        importFile(xmlFile, basepath, repositoryName, keepVersionHistory, importMode, saveAfterImport,
+                createBasepathIfNotExist);
+    }
 
-        HierarchyManager hr = MgnlContext.getHierarchyManager(repository);
-        Workspace ws = hr.getWorkspace();
+    /**
+     * File -> InputStream
+     * @param xmlFile (zipped/gzipped) XML file to import
+     * @param repositoryName selected repository
+     * @param basepath base path in repository
+     * @param keepVersionHistory if <code>false</code> version info will be stripped before importing the document
+     * @param importMode a valid value for ImportUUIDBehavior
+     * @param saveAfterImport
+     * @param createBasepathIfNotExist
+     * @throws IOException
+     * @see ImportUUIDBehavior
+     */
+    public static synchronized void importFile(File xmlFile, String repositoryName, String basepath,
+                                               boolean keepVersionHistory, int importMode, boolean saveAfterImport,
+                                               boolean createBasepathIfNotExist)
+            throws IOException {
+        String name = xmlFile.getAbsolutePath();
+        InputStream xmlStream = getInputStreamForFile(xmlFile);
+        importXmlStream(xmlStream, repositoryName, basepath, name, keepVersionHistory, importMode, saveAfterImport,
+                createBasepathIfNotExist);
+    }
+
+    /**
+     * @param xmlFile
+     * @param repositoryName
+     * @throws IOException
+     */
+    public static void executeBootstrapImport(File xmlFile, String repositoryName) throws IOException {
+        String filenameWithoutExt = StringUtils.substringBeforeLast(xmlFile.getName(), DOT);
+        if (filenameWithoutExt.endsWith(XML)) {
+            // if file ends in .xml.gz or .xml.zip
+            // need to keep the .xml to be able to view it after decompression
+            filenameWithoutExt = StringUtils.substringBeforeLast(xmlFile.getName(), DOT);
+        }
+        String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(filenameWithoutExt, DOT), DOT);
+        String basepath = SLASH + StringUtils.replace(pathName, DOT, SLASH);
+        DataTransporter.importFile(xmlFile, repositoryName, basepath, false, bootstrapImportMode, true, true);
+    }
+
+    /**
+     * imports XML stream into repository<p/>
+     * XML is filtered by <code>MagnoliaV2Filter</code>, <code>VersionFilter</code> and <code>ImportXmlRootFilter</code>
+     * if <code>keepVersionHistory</code> is set to <code>false</code>
+     * @param xmlStream XML stream to import
+     * @param repositoryName selected repository
+     * @param basepath base path in repository
+     * @param name (absolute path of <code>File</code>)
+     * @param keepVersionHistory if <code>false</code> version info will be stripped before importing the document
+     * @param importMode a valid value for ImportUUIDBehavior
+     * @param saveAfterImport
+     * @param createBasepathIfNotExist
+     * @throws IOException
+     * @see ImportUUIDBehavior
+     * @see ImportXmlRootFilter
+     * @see VersionFilter
+     * @see MagnoliaV2Filter
+     */
+    public static synchronized void importXmlStream(InputStream xmlStream, String repositoryName, String basepath,
+                                                    String name, boolean keepVersionHistory, int importMode,
+                                                    boolean saveAfterImport, boolean createBasepathIfNotExist)
+            throws IOException {
+
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
+        Workspace ws = hm.getWorkspace();
 
         if (log.isDebugEnabled()) {
-            log.debug("Importing content into repository: [{}] from File: [{}] into path: {}", //$NON-NLS-1$
-                new Object[]{repository, fileName, basepath});
+            log.debug("Importing content into repository: [{}] from: [{}] into path: [{}]", //$NON-NLS-1$
+                    new Object[]{repositoryName, name, basepath});
         }
 
-        if (!hr.isExist(basepath) && createBasepathIfNotExist) {
+        if (!hm.isExist(basepath) && createBasepathIfNotExist) {
             try {
-                ContentUtil.createPath(hr, basepath, ItemType.CONTENT);
+                ContentUtil.createPath(hm, basepath, ItemType.CONTENT);
             }
             catch (RepositoryException e) {
-                log.error("can't create path [{}]", basepath);
+                log.error("can't create path [{}]", basepath); //$NON-NLS-1$
             }
         }
 
@@ -169,21 +182,41 @@ public class DataTransporter {
                 session.importXML(basepath, xmlStream, importMode);
             }
             else {
-                ContentHandler handler = session.getImportContentHandler(basepath, importMode);
-                //
-                XMLReader filteredReader = new ImportXmlRootFilter(new VersionFilter(new MagnoliaV2Filter(
-                    XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()))));
-                filteredReader.setContentHandler(handler);
+                // create readers/filters and chain
+                XMLReader initialReader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
 
-                // import it
+                XMLFilter magnoliaV2Filter = null;
+
+                // if stream is from regular file, test for belonging XSL file to apply XSL transformation to XML
+                if (new File(name).isFile()) {
+                    InputStream xslStream  = getXslStreamForXmlFile(new File(name));
+                    if (xslStream != null) {
+                        Source xslSource = new StreamSource(xslStream);
+                        SAXTransformerFactory saxTransformerFactory = (SAXTransformerFactory) SAXTransformerFactory.newInstance();
+                        XMLFilter xslFilter = saxTransformerFactory.newXMLFilter(xslSource);
+                        magnoliaV2Filter = new MagnoliaV2Filter(xslFilter);
+                    }
+                }
+
+                if (magnoliaV2Filter == null) {
+                    magnoliaV2Filter = new MagnoliaV2Filter(initialReader);
+                }
+
+                XMLFilter versionFilter = new VersionFilter(magnoliaV2Filter);
+                XMLReader finalReader = new ImportXmlRootFilter(versionFilter);
+
+                ContentHandler handler = session.getImportContentHandler(basepath, importMode);
+                finalReader.setContentHandler(handler);
+
+                // parse XML, import is done by handler from session
                 try {
-                    filteredReader.parse(new InputSource(xmlStream));
+                    finalReader.parse(new InputSource(xmlStream));
                 }
                 finally {
                     IOUtils.closeQuietly(xmlStream);
                 }
 
-                if (((ImportXmlRootFilter) filteredReader).rootNodeFound) {
+                if (((ImportXmlRootFilter) finalReader).rootNodeFound) {
                     String path = basepath;
                     if (!path.endsWith(SLASH)) {
                         path += SLASH;
@@ -219,14 +252,55 @@ public class DataTransporter {
         }
         catch (RepositoryException e) {
             log.error(MessageFormat.format(
-                "Unable to save changes to the [{0}] repository due to a {1} Exception: {2}.", //$NON-NLS-1$
-                new Object[]{repository, e.getClass().getName(), e.getMessage()}), e);
+                    "Unable to save changes to the [{0}] repository due to a {1} Exception: {2}.", //$NON-NLS-1$
+                    new Object[]{repositoryName, e.getClass().getName(), e.getMessage()}), e);
             throw new IOException(e.getMessage());
         }
     }
 
+    /**
+     * @param file
+     * @return XSL stream for Xml file or <code>null</code>
+     */
+    protected static InputStream getXslStreamForXmlFile(File file) {
+        InputStream xslStream = null;
+        String xlsFilename = StringUtils.substringBeforeLast(file.getAbsolutePath(), ".") + ".xsl"; //$NON-NLS-1$
+        File xslFile = new File(xlsFilename);
+        if (xslFile.exists()) {
+            try {
+                xslStream = new FileInputStream(xslFile);
+                log.info("XSL file for [" + file.getName() + "] found (" + xslFile.getName() + ")"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            } catch (FileNotFoundException e) { // should never happen (xslFile.exists())
+                e.printStackTrace();
+            }
+        }
+        return xslStream;
+    }
+
+    /**
+     * creates a stream from the (zipped/gzipped) XML file
+     * @param xmlFile
+     * @return stream of the file
+     * @throws IOException
+     */
+    private static InputStream getInputStreamForFile(File xmlFile) throws IOException {
+        InputStream xmlStream = null;
+        // looks like the zip one is buggy. It throws exception when trying to use it
+        if (xmlFile.getName().endsWith(ZIP)) {
+            xmlStream = new ZipInputStream((new FileInputStream(xmlFile)));
+        }
+        else if (xmlFile.getName().endsWith(GZ)) {
+            xmlStream = new GZIPInputStream((new FileInputStream(xmlFile)));
+        }
+        else { // if(fileName.endsWith(XML))
+            xmlStream = new FileInputStream(xmlFile);
+        }
+        return xmlStream;
+    }
+
+
     public static void executeExport(OutputStream baseOutputStream, boolean keepVersionHistory, boolean format,
-        Session session, String basepath, String repository, String ext) throws IOException {
+                                     Session session, String basepath, String repository, String ext) throws IOException {
         OutputStream outputStream = baseOutputStream;
         if (ext.endsWith(ZIP)) {
             outputStream = new ZipOutputStream(baseOutputStream);
@@ -250,7 +324,7 @@ public class DataTransporter {
                 // use XMLSerializer and a SAXFilter in order to rewrite the
                 // file
                 XMLReader reader = new VersionFilter(XMLReaderFactory
-                    .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
+                        .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
                 parseAndFormat(outputStream, reader, repository, basepath, session);
             }
         }
@@ -288,7 +362,7 @@ public class DataTransporter {
      * @throws PathNotFoundException
      */
     public static void parseAndFormat(OutputStream stream, XMLReader reader, String repository, String basepath,
-        Session session) throws IOException, SAXException, PathNotFoundException, RepositoryException {
+                                      Session session) throws IOException, SAXException, PathNotFoundException, RepositoryException {
 
         if (reader == null) {
             reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
@@ -321,7 +395,7 @@ public class DataTransporter {
      * @throws SAXException
      */
     protected static void readFormatted(XMLReader reader, File inputFile, OutputStream outputStream)
-        throws FileNotFoundException, IOException, SAXException {
+            throws FileNotFoundException, IOException, SAXException {
         InputStream fileInputStream = new FileInputStream(inputFile);
         readFormatted(reader, fileInputStream, outputStream);
         IOUtils.closeQuietly(fileInputStream);
@@ -329,14 +403,14 @@ public class DataTransporter {
 
     /**
      * @param reader
-     * @param fileToRead
+     * @param inputStream
      * @param outputStream
      * @throws FileNotFoundException
      * @throws IOException
      * @throws SAXException
      */
     protected static void readFormatted(XMLReader reader, InputStream inputStream, OutputStream outputStream)
-        throws FileNotFoundException, IOException, SAXException {
+            throws FileNotFoundException, IOException, SAXException {
 
         OutputFormat outputFormat = new OutputFormat();
 

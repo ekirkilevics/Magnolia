@@ -127,6 +127,11 @@
       <artifactId>servlet-api</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>ostermiller</groupId>
+      <artifactId>ostermillerutils</artifactId>
+      <version>1.05.00</version>
+    </dependency>
   </dependencies>
   <build>
     <resources>

@@ -157,7 +157,7 @@ public final class ModuleUtil {
             String name = StringUtils.removeEnd(StringUtils.substringAfterLast(resourceName, "/"), ".xml");
 
             String repository = StringUtils.substringBefore(name, ".");
-            String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), "."); //$NON-NLS-1$ 
+            String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), "."); //$NON-NLS-1$
             String nodeName = StringUtils.substringAfterLast(name, ".");
             String fullPath;
             if (StringUtils.isEmpty(pathName)) {
@@ -187,10 +187,10 @@ public final class ModuleUtil {
                 throw new RegisterException("can't register bootstrap file: [" + name + "]", e);
             }
             InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
-            DataTransporter.executeImport(
-                pathName,
-                repository,
+            DataTransporter.importXmlStream(
                 stream,
+                repository,
+                pathName,
                 name,
                 false,
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,

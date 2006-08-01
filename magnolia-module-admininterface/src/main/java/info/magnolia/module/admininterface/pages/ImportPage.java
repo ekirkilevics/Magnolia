@@ -129,12 +129,13 @@ public class ImportPage extends ExportPage {
                     + "]")); //$NON-NLS-1$
         }
 
-        DataTransporter.executeImport(
-            mgnlPath,
-            mgnlRepository,
+        DataTransporter.importDocument(
             mgnlFileImport,
+            mgnlRepository,
+            mgnlPath,
             mgnlKeepVersions,
             mgnlUuidBehavior,
+            true,
             true);
 
         log.info("Import done"); //$NON-NLS-1$
