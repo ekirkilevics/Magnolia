@@ -525,7 +525,7 @@
       </snapshots>
     </pluginRepository>
     <pluginRepository>
-      <id>magnolia</id>
+      <id>magnolia.snapshots</id>
       <url>http://svn.magnolia.info/maven/snapshots</url>
       <snapshots>
         <enabled>true</enabled>
