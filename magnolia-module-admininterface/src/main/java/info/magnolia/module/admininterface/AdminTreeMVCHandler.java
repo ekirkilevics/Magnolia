@@ -456,7 +456,6 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
             // copy
             getHierarchyManager().copyTo(source, destination);
         }
-        // SessionAccessControl.invalidateUser(this.getRequest());
         Content newContent = getHierarchyManager().getContent(destination);
         try {
             newContent.updateMetaData();
@@ -529,6 +528,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
             // now set at the same place as before
             if (placedBefore != null) {
                 parent.orderBefore(newLabel, placedBefore);
+                parent.save();
             }
         }
 
@@ -659,16 +659,39 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
                 String nameOrigin = StringUtils.substringAfterLast(pathOrigin, "/"); //$NON-NLS-1$
                 Content tomove = getHierarchyManager().getContent(pathOrigin);
                 Content selected = getHierarchyManager().getContent(pathSelected);
-                if (tomove.getParent().getUUID().equals(selected.getParent().getUUID())) {
-                    tomove.getParent().orderBefore(nameOrigin, nameSelected);
-                    tomove.getParent().save();
+                // ordering inside a node?
+                // do not check the uuid since this is not working on the root node !!
+                if (tomove.getParent().getHandle().equals(selected.getParent().getHandle())) {
+                    // if move just set the new ordering
+                    if(move){
+                        tomove.getParent().orderBefore(nameOrigin, nameSelected);
+                        tomove.getParent().save();
+                    }
+                    else{
+                        Content newNode = this.copyMoveNode(pathOrigin, pathOrigin, move);
+                        tomove.getParent().orderBefore(newNode.getName(), nameSelected);
+                        tomove.getParent().save();
+                    }
+                    
                 }
                 else {
                     String newOrigin = selected.getParent().getHandle() + "/" + nameOrigin;
-                    getHierarchyManager().moveTo(pathOrigin, newOrigin);
-                    Content newNode = getHierarchyManager().getContent(newOrigin);
+                    // clean the newOrigin if we move/copy to the root
+                    if(newOrigin.startsWith("//")){
+                        newOrigin = StringUtils.removeStart(newOrigin, "/");
+                    }
+                    Content newNode;
+                    if(move){
+                        getHierarchyManager().moveTo(pathOrigin, newOrigin);
+                        newNode = getHierarchyManager().getContent(newOrigin);
+                    }
+                    else{
+                        newNode = this.copyMoveNode(pathOrigin, newOrigin, move);
+                    }
+                    
                     if (pasteType == Tree.PASTETYPE_ABOVE) {
-                        newNode.getParent().orderBefore(nameOrigin, nameSelected);
+                        newNode.getParent().orderBefore(newNode.getName(), nameSelected);
+                        newNode.getParent().save();
                     }
                 }
                 return tomove.getHandle();
