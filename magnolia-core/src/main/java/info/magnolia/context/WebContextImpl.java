@@ -23,6 +23,7 @@ import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
+import info.magnolia.cms.util.DumperUtil;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -104,7 +105,27 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * @return hierarchy manager
      */
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        return SessionStore.getHierarchyManager(this.request, repositoryId, workspaceId);
+        HierarchyManager hm = SessionStore.getHierarchyManager(this.request, repositoryId, workspaceId);
+
+        //TODO remove this after we found the session refreshing issues
+        // check only once per session
+        if(this.request.getAttribute("jcr.session. " + repositoryId + ".checked")==null){
+            this.request.setAttribute("jcr.session. " + repositoryId + ".checked", "true");
+            try {
+                if(hm.getWorkspace().getSession().hasPendingChanges()){
+                    log.error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
+                    if(log.isDebugEnabled()){
+                        DumperUtil.dumpChanges(hm);
+                    }
+                    log.warn("will refresh (cleanup) the session");
+                    hm.getWorkspace().getSession().refresh(false);
+                }
+            }
+            catch (RepositoryException e) {
+                log.error("wasn't able to check pending changes on the session", e);
+            }
+        }
+        return hm;
     }
 
     /**
