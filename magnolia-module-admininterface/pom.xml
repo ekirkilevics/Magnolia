@@ -10,7 +10,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-admininterface</artifactId>
   <name>magnolia-module-admininterface</name>
-  <version>3.0-irbridge-5677</version>
+  <version>3.0-rc3-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
@@ -20,7 +20,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>3.0-irbridge-5677</version>
+      <version>3.0-rc3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -55,7 +55,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-exchange-simple</artifactId>
-      <version>3.0-irbridge-5677</version>
+      <version>3.0-rc3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>jug</groupId>
@@ -64,7 +64,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>3.0-irbridge-5677</version>
+      <version>3.0-rc3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
@@ -77,7 +77,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-jaas</artifactId>
-      <version>3.0-irbridge-5677</version>
+      <version>3.0-rc3-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
