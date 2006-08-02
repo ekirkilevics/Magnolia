@@ -1,5 +1,6 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="urn:jsptld:cms-taglib"
   xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
+  <jsp:directive.page import="org.apache.commons.lang.StringUtils"/>
   <jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
   <jsp:directive.page import="info.magnolia.cms.util.Resource" />
   <jsp:directive.page import="info.magnolia.cms.core.HierarchyManager" />
@@ -7,7 +8,10 @@
   <jsp:directive.page import="info.magnolia.cms.beans.config.ContentRepository" />
   <jsp:directive.page import="info.magnolia.context.MgnlContext" />
   <jsp:directive.page import="javax.jcr.RepositoryException" />
+  <jsp:directive.page import="info.magnolia.cms.util.LinkUtil"/>
+
   <jsp:scriptlet>
+  
     <![CDATA[
 
     String link=Resource.getLocalContentNode(request).getNodeData("link").getString();
@@ -31,15 +35,22 @@
             else html.append(link);
         }
         else {
+            // convert to uuid
+            link = StringUtils.defaultString(LinkUtil.makeAbsolutePathFromUUID(link), link);
             html.append(request.getContextPath());
             html.append(link+".html\">");
             if (!text.equals("")) html.append(text);
             else {
                 try {
                     // get title of linked page
-                    HierarchyManager hm=MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-                    Content destinationPage=hm.getContent(link);
-                    html.append(destinationPage.getNodeData("title").getString());
+		            HierarchyManager hm=MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+		            if(hm.isExist(link)){
+                    	Content destinationPage=hm.getContent(link);
+                    	html.append(destinationPage.getNodeData("title").getString());
+                   	}
+                   	else{
+                    	html.append(link);
+                    }
                 }
                 catch (RepositoryException re) {
                     html.append(link);

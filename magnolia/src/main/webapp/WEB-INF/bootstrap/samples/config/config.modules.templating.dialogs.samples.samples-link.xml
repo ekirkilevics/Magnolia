@@ -155,7 +155,7 @@
         <sv:value>2006-05-06T16:44:15.862+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>link</sv:value>
+        <sv:value>uuidLink</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
