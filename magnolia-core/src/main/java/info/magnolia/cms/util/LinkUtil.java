@@ -166,8 +166,9 @@ public final class LinkUtil {
         }
 
         // then the old mgnl:uuid
+        // TODO remove this in later versions
         catch (Exception e) {
-            log.error("Was not able to get the page by the jcr:uuid. will try the old mgnl:uuid");
+            log.info("Was not able to get the page by the jcr:uuid. will try the old mgnl:uuid");
 
             QueryManager qmanager = hm.getQueryManager();
 
