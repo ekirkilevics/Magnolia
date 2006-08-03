@@ -44,9 +44,9 @@
       <artifactId>commons-collections</artifactId>
     </dependency>
     <dependency>
-      <groupId>dumbster</groupId>
-      <artifactId>dumbster</artifactId>
-      <version>1.6</version>
+      <groupId>org.subethamail</groupId>
+      <artifactId>subetha-wiser</artifactId>
+      <version>1.0.1</version>
       <scope>test</scope>
     </dependency>
     <dependency>

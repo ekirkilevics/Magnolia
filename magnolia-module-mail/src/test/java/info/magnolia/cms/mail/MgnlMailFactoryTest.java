@@ -1,7 +1,7 @@
 package info.magnolia.cms.mail;
 
 /**
- * 
+ *
  * Date: Mar 31, 2006
  * Time: 9:14:00 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
@@ -11,8 +11,7 @@ import info.magnolia.cms.mail.templates.MgnlEmail;
 
 import java.util.Iterator;
 
-import com.dumbster.smtp.SmtpMessage;
-
+import org.subethamail.wiser.WiserMessage;
 
 public class MgnlMailFactoryTest extends AbstractMailTest {
 
@@ -25,10 +24,10 @@ public class MgnlMailFactoryTest extends AbstractMailTest {
         email.setFrom(TEST_SENDER);
         handler.prepareAndSendMail(email);
 
-        assertTrue(server.getReceivedEmailSize() == 1);
-        Iterator emailIter = server.getReceivedEmail();
-        SmtpMessage message = (SmtpMessage) emailIter.next();
-        assertTrue(message.getHeaderValue("Subject").equals(subject));
+        assertTrue(wiser.getMessages().size() == 1);
+        Iterator emailIter = wiser.getMessages().iterator();
+        WiserMessage message = (WiserMessage) emailIter.next();
+        assertTrue(message.getMimeMessage().getSubject().equals(subject));
     }
 
 }

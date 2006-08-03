@@ -3,13 +3,14 @@ package info.magnolia.cms.mail;
 import info.magnolia.cms.mail.handlers.SimpleMailHandler;
 
 import java.io.File;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 import junit.framework.TestCase;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.dumbster.smtp.SimpleSmtpServer;
+import org.subethamail.wiser.Wiser;
 
 
 /**
@@ -37,7 +38,7 @@ public abstract class AbstractMailTest extends TestCase {
 
     protected SimpleMailHandler handler;
 
-    protected SimpleSmtpServer server;
+    protected Wiser wiser = new Wiser();
 
     public File getResourceFile(String filename) {
         return new File(getClass().getResource("/" + filename).getFile());
@@ -57,15 +58,29 @@ public abstract class AbstractMailTest extends TestCase {
         factory.initParam(MgnlMailFactory.SMTP_SERVER, "localhost");
         factory.initParam(MgnlMailFactory.SMTP_PORT, Integer.toString(SMTP_PORT));
 
-        server = SimpleSmtpServer.start(SMTP_PORT);
+        wiser.setPort(SMTP_PORT);
+        wiser.start();
     }
 
     /**
      * @see junit.framework.TestCase#tearDown()
      */
     protected void tearDown() throws Exception {
-        server.stop();
+        wiser.stop();
         super.tearDown();
+    }
+
+    /**
+     * this test will fail when subject is not US-ASCII
+     * TODO: replace with mail parser or handle encoding and improve pattern
+     * @param message
+     * @param subject
+     * @return true is <code>message</code>'s subject equals <code>subject</code>
+     */
+    protected boolean hasMatchingSubject(String message, String subject) {
+        Pattern pattern = Pattern.compile("Subject: " + subject);
+        Matcher matcher = pattern.matcher(message);
+        return matcher.find();
     }
 
 }

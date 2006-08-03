@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import com.dumbster.smtp.SmtpMessage;
+import org.subethamail.wiser.WiserMessage;
 
 
 /**
@@ -27,11 +27,10 @@ public class HtmlMailTest extends AbstractMailTest {
 
         handler.prepareAndSendMail(email);
 
-        assertTrue(server.getReceivedEmailSize() == 1);
-        Iterator emailIter = server.getReceivedEmail();
-        SmtpMessage message = (SmtpMessage) emailIter.next();
-        assertTrue(message.getHeaderValue("Subject").equals(subject));
-
+        assertTrue(wiser.getMessages().size() == 1);
+        Iterator emailIter = wiser.getMessages().iterator();
+        WiserMessage message = (WiserMessage) emailIter.next();
+        assertTrue(message.getMimeMessage().getSubject().equals(subject));
     }
 
     public void testHtmlMailWithImageFile() throws Exception {
@@ -45,10 +44,10 @@ public class HtmlMailTest extends AbstractMailTest {
 
         handler.prepareAndSendMail(email);
 
-        assertTrue(server.getReceivedEmailSize() == 1);
-        Iterator emailIter = server.getReceivedEmail();
-        SmtpMessage message = (SmtpMessage) emailIter.next();
-        assertTrue(message.getHeaderValue("Subject").equals(subject));
+        assertTrue(wiser.getMessages().size() == 1);
+        Iterator emailIter = wiser.getMessages().iterator();
+        WiserMessage message = (WiserMessage) emailIter.next();
+        assertTrue(message.getMimeMessage().getSubject().equals(subject));
     }
 
     public void testHtmlMailWithTwoEmbeddedContent() throws Exception {
@@ -66,10 +65,10 @@ public class HtmlMailTest extends AbstractMailTest {
 
         handler.prepareAndSendMail(email);
 
-        assertTrue(server.getReceivedEmailSize() == 1);
-        Iterator emailIter = server.getReceivedEmail();
-        SmtpMessage message = (SmtpMessage) emailIter.next();
-        assertTrue(message.getHeaderValue("Subject").equals(subject));
+        assertTrue(wiser.getMessages().size() == 1);
+        Iterator emailIter = wiser.getMessages().iterator();
+        WiserMessage message = (WiserMessage) emailIter.next();
+        assertTrue(message.getMimeMessage().getSubject().equals(subject));
     }
 
     public void testHtmlMailWithPdf() throws Exception {
@@ -83,9 +82,10 @@ public class HtmlMailTest extends AbstractMailTest {
 
         handler.prepareAndSendMail(email);
 
-        assertTrue(server.getReceivedEmailSize() == 1);
-        Iterator emailIter = server.getReceivedEmail();
-        SmtpMessage message = (SmtpMessage) emailIter.next();
-        assertTrue(message.getHeaderValue("Subject").equals(subject));
+        assertTrue(wiser.getMessages().size() == 1);
+        Iterator emailIter = wiser.getMessages().iterator();
+        WiserMessage message = (WiserMessage) emailIter.next();
+        assertTrue(message.getMimeMessage().getSubject().equals(subject));
     }
+
 }
