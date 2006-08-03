@@ -86,8 +86,8 @@ public class AccessManagerImpl implements AccessManager {
      */
     public long getPermissions(String path) {
         if (userPermissions == null) {
-            log.info("userPermissions not set, returning 0", new Exception());
-            return 0;
+            log.info("userPermissions not set, returning Permission.ALL", new Exception());
+            return Permission.ALL;
         }
         long permission = 0;
         int patternLength = 0;
