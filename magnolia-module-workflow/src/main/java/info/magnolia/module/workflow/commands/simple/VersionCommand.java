@@ -14,6 +14,7 @@ package info.magnolia.module.workflow.commands.simple;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -38,7 +39,7 @@ public class VersionCommand extends MgnlCommand {
         String path = (String) ctx.get(Context.ATTRIBUTE_PATH);
         String repository = (String) ctx.get(Context.ATTRIBUTE_REPOSITORY);
         try {
-            Content node = MgnlContext.getHierarchyManager(repository).getContent(path);
+            Content node = MgnlContext.getSystemContext().getHierarchyManager(repository).getContent(path);
             node.addVersion();
         }
         catch (Exception e) {
