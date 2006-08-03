@@ -25,10 +25,13 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
+
 
 /**
  * the command for sending mail
  * @author jackie
+ * @authro niko
  */
 public class MailCommand implements Command {
 
@@ -42,7 +45,9 @@ public class MailCommand implements Command {
         try {
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
-            log.info(MgnlContext.getParameters().toString());
+
+            if(log.isDebugEnabled())
+                log.debug(Arrays.asList(ctx.entrySet().toArray()).toString());
 
             String template = (String) ctx.get(MailConstants.ATTRIBUTE_TEMPLATE);
             String to = (String) ctx.get(MailConstants.ATTRIBUTE_TO);
