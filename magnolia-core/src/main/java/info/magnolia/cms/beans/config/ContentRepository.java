@@ -198,22 +198,34 @@ public final class ContentRepository {
         Iterator repositoryNames = getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
             String repository = (String) repositoryNames.next();
-            if (log.isDebugEnabled()) {
-                log.debug("Checking [" + repository + "] repository."); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-            HierarchyManager hm = getHierarchyManager(repository);
-
-            if (hm == null) {
-                throw new RuntimeException("Repository [" + repository + "] not loaded"); //$NON-NLS-1$ //$NON-NLS-2$
-            }
-
-            Content startPage = hm.getRoot();
-            if (startPage.getChildren(ItemType.CONTENT).size() > 0) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Content found in [" + repository + "]."); //$NON-NLS-1$ //$NON-NLS-2$
-                }
+            if(checkIfInitialized(repository)){
                 return true;
             }
+        }
+        return false;
+    }
+
+    /**
+     * @param repository
+     * @throws RepositoryException
+     * @throws AccessDeniedException
+     */
+    public static boolean checkIfInitialized(String repository) throws RepositoryException, AccessDeniedException {
+        if (log.isDebugEnabled()) {
+            log.debug("Checking [" + repository + "] repository."); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        HierarchyManager hm = getHierarchyManager(repository);
+
+        if (hm == null) {
+            throw new RuntimeException("Repository [" + repository + "] not loaded"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+
+        Content startPage = hm.getRoot();
+        if (startPage.getChildren(ItemType.CONTENT).size() > 0) {
+            if (log.isDebugEnabled()) {
+                log.debug("Content found in [" + repository + "]."); //$NON-NLS-1$ //$NON-NLS-2$
+            }
+            return true;
         }
         return false;
     }
