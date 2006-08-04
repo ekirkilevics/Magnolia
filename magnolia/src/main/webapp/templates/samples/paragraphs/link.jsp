@@ -46,7 +46,12 @@
 		            HierarchyManager hm=MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
 		            if(hm.isExist(link)){
                     	Content destinationPage=hm.getContent(link);
-                    	html.append(destinationPage.getNodeData("title").getString());
+                    	// if title is empty take the name
+                    	if (destinationPage.getNodeData("title").getString().equals("")) {
+                    		html.append(destinationPage.getName());
+                    	} else {
+                    		html.append(destinationPage.getNodeData("title").getString());
+                    	}                    	
                    	}
                    	else{
                     	html.append(link);
