@@ -42,6 +42,14 @@ import org.slf4j.LoggerFactory;
  */
 public class ConfigLoader {
 
+    public final class BootstrapFileFilter implements Bootstrapper.BootstrapFilter {
+
+        // do not import modules configuration files yet. the module will do it after the registration process
+        public boolean accept(String filename) {
+            return !filename.startsWith("config.modules");
+        }
+    }
+
     /**
      * 
      */
@@ -148,43 +156,12 @@ public class ConfigLoader {
         log.info("Init content repositories"); //$NON-NLS-1$
         ContentRepository.init();
 
-        // check for initialized repositories
-        boolean initialized;
-
-        try {
-            initialized = ContentRepository.checkIfInitialized();
-        }
-        catch (RepositoryException re) {
-            log.error("Unable to initialize repositories. Magnolia can't start.", re); //$NON-NLS-1$
-            return;
-        }
-
-        if (initialized) {
-            log.info("Repositories are initialized (some content found). Loading configuration"); //$NON-NLS-1$
-        }
-        else {
-            log.warn("Repositories are not initialized (no content found)."); //$NON-NLS-1$
-
-            String[] bootDirs = Bootstrapper.getBootstrapDirs();
-            
-    		if (bootDirs.length == 0) {
-    		    enterListeningMode();
-    		    return;
-    		}
-
-    		bootstrapping = true;
-
-            // a bootstrap directory is configured, trying to initialize repositories
-            Bootstrapper.bootstrapRepositories(bootDirs, new Bootstrapper.BootstrapFilter(){
-            	// do not import modules configuration files yet. the module will do it after the registration process
-            	public boolean accept(String filename) {
-            		return !filename.startsWith("config.modules");
-            	}
-            });
-        }
-
         log.info("Set system context"); //$NON-NLS-1$
         MgnlContext.setInstance(MgnlContext.getSystemContext());
+
+        if (!bootstrap()) {
+            return;
+        }
 
         log.info("Init i18n"); //$NON-NLS-1$
         MessagesManager.init(context);
@@ -217,7 +194,63 @@ public class ConfigLoader {
 
     }
 
-	/**
+    /**
+     * Bootstrap the system
+     */
+    protected boolean bootstrap() {
+        // check for initialized repositories
+        boolean initialized;
+
+        try {
+            initialized = ContentRepository.checkIfInitialized();
+        }
+        catch (RepositoryException re) {
+            log.error("Unable to initialize repositories. Magnolia can't start.", re); //$NON-NLS-1$
+            return false;
+        }
+
+        String[] bootDirs = Bootstrapper.getBootstrapDirs();
+
+        if (initialized) {
+            // define the system property to (re)bootstrap a singel repository
+            String bootstrapIfEmpty = SystemProperty.getProperty(SystemProperty.BOOTSTRAP_IF_EMPTY);
+            if (StringUtils.isNotEmpty(bootstrapIfEmpty)) {
+                String[] repositories = bootstrapIfEmpty.split(",");
+                for (int i = 0; i < repositories.length; i++) {
+                    String repository = repositories[i];
+                    try {
+                        if (!ContentRepository.checkIfInitialized(repository)) {
+                            log.info(
+                                "will bootstrap the repository {} because the property {} is set",
+                                repository,
+                                SystemProperty.BOOTSTRAP_IF_EMPTY);
+                            Bootstrapper.bootstrapRepository(repository, new BootstrapFileFilter(), bootDirs);
+                        }
+                    }
+                    catch (Exception e) {
+                        // should never be the case since initialized was true
+                        log.error("can't bootstrap repository " + repository, e);
+                    }
+                }
+            }
+        }
+        else {
+            log.warn("Repositories are not initialized (no content found)."); //$NON-NLS-1$
+
+            if (bootDirs.length == 0) {
+                enterListeningMode();
+                return false;
+            }
+
+            bootstrapping = true;
+
+            // a bootstrap directory is configured, trying to initialize repositories
+            Bootstrapper.bootstrapRepositories(bootDirs, new BootstrapFileFilter());
+        }
+        return true;
+    }
+
+    /**
      * Print version info to console.
      * @param license loaded License
      */
