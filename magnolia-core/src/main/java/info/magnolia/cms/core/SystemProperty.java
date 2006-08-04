@@ -34,6 +34,12 @@ public final class SystemProperty {
 
     public static final String MAGNOLIA_BOOTSTRAP_ROOTDIR = "magnolia.bootstrap.dir"; //$NON-NLS-1$
 
+    /**
+     * If this repository/workspace is empty bootstrap this repository. This will be the config repository in the most
+     * cases.
+     */
+    public static final String BOOTSTRAP_IF_EMPTY = "magnolia.bootstrap.ifEmpty";
+
     private static Map properties = new Hashtable();
 
     /**
