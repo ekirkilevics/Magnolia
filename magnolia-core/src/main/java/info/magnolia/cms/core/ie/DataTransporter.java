@@ -91,7 +91,7 @@ public class DataTransporter {
                                                    boolean createBasepathIfNotExist)
             throws IOException {
         File xmlFile = xmlDocument.getFile();
-        importFile(xmlFile, basepath, repositoryName, keepVersionHistory, importMode, saveAfterImport,
+        importFile(xmlFile, repositoryName, basepath, keepVersionHistory, importMode, saveAfterImport,
                 createBasepathIfNotExist);
     }
 
