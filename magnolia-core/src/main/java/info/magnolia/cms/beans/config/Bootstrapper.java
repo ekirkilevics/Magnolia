@@ -39,7 +39,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public final class Bootstrapper {
-
+    
     /**
      * Logger.
      */
@@ -78,8 +78,6 @@ public final class Bootstrapper {
             }
             log.info("-----------------------------------------------------------------"); //$NON-NLS-1$
         }
-
-        MgnlContext.setInstance(MgnlContext.getSystemContext());
 
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
