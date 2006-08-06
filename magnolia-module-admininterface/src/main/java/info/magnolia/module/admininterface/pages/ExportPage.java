@@ -45,6 +45,11 @@ public class ExportPage extends TemplatedMVCHandler {
     public static final String MIME_APPLICATION_ZIP = "application/zip";
 
     /**
+     * View value for the export file stream (won't render anything)
+     */
+    public static final String VIEW_EXPORT="export";
+    
+    /**
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(ExportPage.class);
@@ -244,7 +249,7 @@ public class ExportPage extends TemplatedMVCHandler {
             throw e;
         }
 
-        return null;
+        return VIEW_EXPORT;
     }
 
     /**
@@ -262,6 +267,14 @@ public class ExportPage extends TemplatedMVCHandler {
             }
         }
         return true;
+    }
+    
+    public void renderHtml(String view) throws IOException {
+        // if we are exporing the file, everything is already done --> do not render
+        if(view == VIEW_EXPORT){
+            return;
+        }
+        super.renderHtml(view);
     }
 
     public Messages getMessages() {
