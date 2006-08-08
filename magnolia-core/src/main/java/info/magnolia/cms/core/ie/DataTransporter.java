@@ -317,7 +317,7 @@ public class DataTransporter {
                     session.exportSystemView(basepath, outputStream, false, false);
                 }
                 else {
-                    parseAndFormat(outputStream, null, repository, basepath, session);
+                    parseAndFormat(outputStream, null, repository, basepath, session, false);
                 }
             }
             else {
@@ -325,7 +325,7 @@ public class DataTransporter {
                 // file
                 XMLReader reader = new VersionFilter(XMLReaderFactory
                         .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
-                parseAndFormat(outputStream, reader, repository, basepath, session);
+                parseAndFormat(outputStream, reader, repository, basepath, session, false);
             }
         }
         catch (IOException e) {
@@ -356,13 +356,15 @@ public class DataTransporter {
      * @param repository the repository to export
      * @param basepath the basepath in the repository
      * @param session the session to use to export the data from the repository
+     * @param noRecurse
      * @throws IOException
      * @throws SAXException
      * @throws RepositoryException
      * @throws PathNotFoundException
      */
     public static void parseAndFormat(OutputStream stream, XMLReader reader, String repository, String basepath,
-                                      Session session) throws IOException, SAXException, PathNotFoundException, RepositoryException {
+                                      Session session, boolean noRecurse)
+            throws IOException, SAXException, PathNotFoundException, RepositoryException {
 
         if (reader == null) {
             reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
@@ -373,7 +375,7 @@ public class DataTransporter {
         OutputStream fileStream = new FileOutputStream(tempFile);
 
         try {
-            session.exportSystemView(basepath, fileStream, false, false);
+            session.exportSystemView(basepath, fileStream, false, noRecurse);
         }
         finally {
             IOUtils.closeQuietly(fileStream);
