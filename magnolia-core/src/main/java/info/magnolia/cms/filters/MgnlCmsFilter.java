@@ -217,7 +217,7 @@ public class MgnlCmsFilter implements Filter {
             int lastDotPos = StringUtils.lastIndexOf(uri, '.');
             handle = StringUtils.substring(uri, 0, firstDotPos);
             selector = StringUtils.substring(uri, firstDotPos + 1, lastDotPos);
-            extension = StringUtils.substring(uri, lastDotPos);
+            extension = StringUtils.substring(uri, lastDotPos+1);
         } else {
             // no dots (and no extension)
             handle = uri;
@@ -257,7 +257,7 @@ public class MgnlCmsFilter implements Filter {
 
     /**
      * Return the repository used for this request. This uses a url to repository mapping.
-     * @return
+     * @return repository name
      */
     protected String getRepository(HttpServletRequest req) {
         return (String) req.getAttribute(Aggregator.REPOSITORY);
@@ -329,7 +329,7 @@ public class MgnlCmsFilter implements Filter {
     private void sendUnCompressed(InputStream is, HttpServletResponse response) throws IOException {
         ServletOutputStream os = response.getOutputStream();
         byte[] buffer = new byte[8192];
-        int read = 0;
+        int read;
         while ((read = is.read(buffer)) > 0) {
             os.write(buffer, 0, read);
         }
