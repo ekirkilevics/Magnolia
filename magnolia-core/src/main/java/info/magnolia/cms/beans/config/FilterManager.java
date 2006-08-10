@@ -13,40 +13,59 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.filters.ContentTypeFilter;
-import info.magnolia.cms.filters.MgnlCmsFilter;
-import info.magnolia.cms.filters.MgnlContextFilter;
-import info.magnolia.cms.filters.MgnlInterceptFilter;
-import info.magnolia.cms.filters.MgnlVirtualUriFilter;
-import info.magnolia.cms.filters.MultipartRequestFilter;
-import info.magnolia.cms.security.SecurityFilter;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Map;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.servlet.Filter;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.EventIterator;
 
 import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
-public class FilterManager extends ObservedManager {
+public class FilterManager {
 
+    /**
+     * config path
+     * */
+    public static final String SERVER_FILTERS = "/server/filters";
+
+    /**
+     * Logger
+     * */
+    protected Logger log = LoggerFactory.getLogger(getClass());
+
+    /**
+     * singleton instance
+     * */
     private static FilterManager instance = new FilterManager();
 
-    private Filter[] filterChain = new Filter[]{ //
-    new ContentTypeFilter(), // 100
-        new MgnlVirtualUriFilter(), // 200
-        new MultipartRequestFilter(), // 300
-        new SecurityFilter(), // 400
-        new MgnlContextFilter(), // 500
-        new MgnlInterceptFilter(), // 600
-        new MgnlCmsFilter()}; // 700
+    private Filter[] filterChain;
 
     private FilterManager() {
-        // private constructor
+        init();
+        ObservationUtil.registerChangeListener(
+            ContentRepository.CONFIG,
+            SERVER_FILTERS,
+            new EventListener() {
+                public void onEvent(EventIterator arg0) {
+                    MgnlContext.setInstance(MgnlContext.getSystemContext());
+                    init();
+                }
+            });
     }
 
     public static FilterManager getInstance() {
@@ -56,27 +75,43 @@ public class FilterManager extends ObservedManager {
         return instance;
     }
 
+    /**
+     * @return array of filters as configured
+     * */
     public Filter[] getFilters() {
         return filterChain;
     }
 
     /**
-     * @see info.magnolia.cms.beans.config.ObservedManager#onClear()
-     */
-    protected void onClear() {
-        // @todo clean filters?
-
+     * initialized filter chain
+     * */
+    protected void init() {
+        Content node = ContentUtil.getContent(ContentRepository.CONFIG, SERVER_FILTERS);
+        if (node != null) {
+            Collection children = node.getChildren(ItemType.CONTENT);
+            this.filterChain = new Filter[children.size()];
+            Iterator childIterator = children.iterator();
+            int index = 0;
+            while (childIterator.hasNext()) {
+                Content child = (Content) childIterator.next();
+                // ignore priority since all filters are under server config
+                String classPath = child.getNodeData("class").getString();
+                if (StringUtils.isNotEmpty(classPath)) {
+                    if (log.isDebugEnabled()) {
+                        log.debug(new StringBuffer().append("Adding filter [ ")
+                                .append(classPath)
+                                .append(" ] to managed filter list").toString());
+                    }
+                    try {
+                        this.filterChain[index++] = (Filter) Class.forName(classPath).newInstance();
+                    } catch (Throwable e) {
+                        log.error("Failed to add filter [ "+classPath+" ]", e);
+                    }
+                }
+            }
+        }
     }
 
-    /**
-     * @see info.magnolia.cms.beans.config.ObservedManager#onRegister(info.magnolia.cms.core.Content)
-     */
-    protected void onRegister(Content node) {
-        // @todo load filters
-
-        log.info("Config: loading Filters from {}", node.getHandle()); //$NON-NLS-1$
-
-    }
 
     class FilterDefinition implements Comparable {
 
