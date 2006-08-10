@@ -13,7 +13,6 @@
 
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.FilterManager;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.beans.config.ShutdownManager;
@@ -64,7 +63,6 @@ public abstract class AbstractAdminModule extends AbstractModule {
             initEntry("pages", PageHandlerManager.getInstance());
             initEntry("trees", TreeHandlerManager.getInstance());
             initEntry("shutdown", ShutdownManager.getInstance());
-            initEntry("filters", FilterManager.getInstance());
 
             onInit();
 
