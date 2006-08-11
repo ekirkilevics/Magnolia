@@ -60,7 +60,6 @@ public class DialogSelect extends DialogBox {
                 String label = null;
                 if (n.getNodeData("label").isExist()) { //$NON-NLS-1$
                     label = n.getNodeData("label").getString(); //$NON-NLS-1$
-                    label = this.getMessage(label);
                 }
                 SelectOption option = new SelectOption(label, value);
                 if (n.getNodeData("selected").getBoolean()) { //$NON-NLS-1$
@@ -99,7 +98,13 @@ public class DialogSelect extends DialogBox {
         }
         control.setCssClass(CssConstants.CSSCLASS_SELECT);
         control.setCssStyles("width", this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        control.setOptions(this.getOptions());
+        
+        // translate (not possible in init since not a sub of the tab then)
+        for (Iterator iter = this.getOptions().iterator(); iter.hasNext();) {
+            SelectOption option = (SelectOption) iter.next();
+            control.setOptions(this.getMessage(option.getLabel()), option.getValue());
+        }
+
         this.drawHtmlPre(out);
         out.write(control.getHtml());
         this.drawHtmlPost(out);
