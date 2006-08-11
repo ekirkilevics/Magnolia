@@ -123,7 +123,7 @@ public class DialogFile extends DialogBox {
                     // flash movie
                     out.write("<object type=\"application/x-shockwave-flash\" data=\"");
                     out.write(this.getRequest().getContextPath());
-                    out.write(control.getHandle());
+                    out.write(getFileURI(control));
                     out.write("\" title=\"");
                     out.write(control.getFileName());
                     out.write("\" ");
@@ -133,7 +133,7 @@ public class DialogFile extends DialogBox {
 
                     out.write("<param name=\"movie\" value=\"");
                     out.write(this.getRequest().getContextPath());
-                    out.write(control.getHandle());
+                    out.write(getFileURI(control));
                     out.write("\"/>");
 
                     out.write("</object>\n");
@@ -148,9 +148,24 @@ public class DialogFile extends DialogBox {
                     // class=\""+CSSCLASS_FILEIMAGE+"\">");
                     // tmp workaround: resize in html ...
 
-                    out.write("<img width=\"150\" src=\""); //$NON-NLS-1$
+                    int imgwidth = 150;
+                    int imgheight = 150;
+
+                    try{
+                        imgwidth = Integer.parseInt(control.getImageWidth());
+                        imgheight = Integer.parseInt(control.getImageHeight());
+                    }
+                    catch(NumberFormatException e){
+                        // ignore (is 150)
+                    }
+                    int bigger = Math.max(imgwidth,imgheight);
+                    if(bigger > 150){
+                        imgwidth=150;
+                    }
+
+                    out.write("<img width=\"" + imgwidth + "\" src=\""); //$NON-NLS-1$
                     out.write(this.getRequest().getContextPath());
-                    out.write(control.getHandle());
+                    out.write(getFileURI(control));
                     out.write("\" class=\""); //$NON-NLS-1$
                     out.write(CssConstants.CSSCLASS_FILEIMAGE);
                     out.write("\" alt=\""); //$NON-NLS-1$
@@ -159,12 +174,12 @@ public class DialogFile extends DialogBox {
                     out.write(control.getFileName());
                     out.write("\" />\n"); //$NON-NLS-1$
 
-                    String imgwidth = control.getImageWidth();
-                    if (StringUtils.isNotEmpty(imgwidth)) {
+
+                    if (StringUtils.isNotEmpty(control.getImageWidth())) {
                         out.write("<em style='white-space:nowrap'>"); //$NON-NLS-1$
 
                         out.write("width: "); //$NON-NLS-1$
-                        out.write(imgwidth);
+                        out.write(control.getImageWidth());
 
                         out.write(" height: "); //$NON-NLS-1$
                         out.write(control.getImageHeight());
@@ -213,6 +228,16 @@ public class DialogFile extends DialogBox {
     }
 
     /**
+     * Get the uri of the file (used to show images)
+     * @param control
+     * @return
+     */
+    protected String getFileURI(File control) {
+        return control.getHandle();
+    }
+
+    /**
+     * Configures the inner file upload control
      */
     protected File getFileControl() {
         File control = new File(this.getName(), this.getWebsiteNode());
