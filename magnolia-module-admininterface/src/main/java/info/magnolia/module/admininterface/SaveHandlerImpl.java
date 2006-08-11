@@ -108,7 +108,7 @@ public class SaveHandlerImpl implements SaveHandler {
      */
     private boolean create;
 
-    private ItemType creationItemType = ItemType.CONTENT;
+    private ItemType creationItemType = ItemType.CONTENTNODE;
 
     /**
      * The name of the repository to store the data. Website is default.
@@ -867,7 +867,7 @@ public class SaveHandlerImpl implements SaveHandler {
                 if (this.getNodeName().equals("mgnlNew")) { //$NON-NLS-1$
                     this.setNodeName(Path.getUniqueLabel(hm, nodeCollection.getHandle(), "0")); //$NON-NLS-1$
                 }
-                node = nodeCollection.createContent(this.getNodeName(), ItemType.CONTENTNODE);
+                node = nodeCollection.createContent(this.getNodeName(), this.getCreationItemType());
             }
         }
         else {
