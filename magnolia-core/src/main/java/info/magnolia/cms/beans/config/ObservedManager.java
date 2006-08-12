@@ -17,13 +17,17 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -204,12 +208,15 @@ public abstract class ObservedManager {
                     this.observedManager.onClear();
 
                     HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+                    
+                    // copy to avoid ConcurrentModificationException since the list get changed during iteration
+                    List uuids = new ArrayList(this.observedManager.registeredUUIDs);
 
-                    for (Iterator iter = this.observedManager.registeredUUIDs.iterator(); iter.hasNext();) {
+                    for (Iterator iter = uuids.iterator(); iter.hasNext();) {
                         String uuid = (String) iter.next();
                         try {
                             Content node = hm.getContentByUUID(uuid);
-                            reload(node);
+                            this.observedManager.reload(node);
                         }
                         catch (Exception e) {
                             this.observedManager.registeredUUIDs.remove(uuid);
