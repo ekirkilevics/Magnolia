@@ -71,10 +71,6 @@
       <artifactId>log4j</artifactId>
     </dependency>
     <dependency>
-      <groupId>excalibur-sourceresolve</groupId>
-      <artifactId>excalibur-sourceresolve</artifactId>
-    </dependency>
-    <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-jaas</artifactId>
       <version>3.0-rc3-SNAPSHOT</version>

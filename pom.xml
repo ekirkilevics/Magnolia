@@ -15,6 +15,12 @@
     <system>Jira</system>
     <url>http://jira.magnolia.info/browse/MAGNOLIA</url>
   </issueManagement>
+  <licenses>
+    <license>
+      <name>LGPL</name>
+      <url>http://svn.magnolia.info/svn/magnolia/trunk/LICENSE.txt</url>
+    </license>
+  </licenses>
   <ciManagement>
     <notifiers>
       <notifier>
@@ -373,11 +379,6 @@
         <groupId>slide</groupId>
         <artifactId>webdavlib</artifactId>
         <version>2.0</version>
-      </dependency>
-      <dependency>
-        <groupId>excalibur-sourceresolve</groupId>
-        <artifactId>excalibur-sourceresolve</artifactId>
-        <version>20020820</version>
       </dependency>
       <dependency>
         <groupId>net.sourceforge.openutils</groupId>
