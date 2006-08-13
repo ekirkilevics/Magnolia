@@ -66,34 +66,22 @@ public class DialogMVCServlet extends MVCServlet {
         }
 
         DialogMVCHandler handler = null;
-
+        
         if (StringUtils.isNotBlank(dialogName)) {
             // try to get a registered handler
             try {
                 handler = DialogHandlerManager.getInstance().getDialogHandler(dialogName, request, response);
             }
             catch (InvalidDialogHandlerException e) {
-                log.info("can't find handler will try to load directly from the config", e); //$NON-NLS-1$
-                Content configNode = ConfiguredDialog.getConfigNode(request, dialogName);
-                // try to find a class property or return a ConfiguredDialog
-                if (configNode != null) {
-                    handler = ConfiguredDialog.getConfiguredDialog(dialogName, configNode, request, response);
-                }
-                else {
-                    log.error("no config node found for dialog : " + dialogName); //$NON-NLS-1$
-                }
+                log.error("no dialog registered for name: " + dialogName);
+                throw new ConfigurationException("no dialog registered for name: " + dialogName); //$NON-NLS-1$
             }
         }
 
         if (handler == null) {
-            log.error(MessageFormat.format("Missing configuration for {0}. Check node {1}{0}", //$NON-NLS-1$
-                new Object[]{dialogName, "/modules/templating/Paragraphs/"})); //$NON-NLS-1$
-
-            throw new ConfigurationException(MessageFormat.format("Missing configuration for {0}. Check node {1}{0}", //$NON-NLS-1$
-                new Object[]{dialogName, "/modules/templating/Paragraphs/"})); //$NON-NLS-1$
-
+            throw new ConfigurationException("no dialog registered for name: " + dialogName); //$NON-NLS-1$
         }
-
+        
         return handler;
     }
 
