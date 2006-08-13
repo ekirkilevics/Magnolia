@@ -154,6 +154,29 @@ function mgnlTreeMenuItemConditionSelectedNotRoot(tree){
     }
 }
 
+function mgnlTreeMenuItemConditionSelectedNotItemType(tree, itemType){
+    this.tree = tree;
+    this.itemType = itemType;
+
+    this.test = function(){
+        if (this.tree.selectedNode.itemType!=this.itemType) 
+        	return true;
+        else 
+        	return false;
+    }
+}
+
+function mgnlTreeMenuItemConditionSelectedItemType(tree, itemType){
+    this.tree = tree;
+    this.itemType = itemType;
+
+    this.test = function(){
+        if (this.tree.selectedNode.itemType==this.itemType) 
+        	return true;
+        else 
+        	return false;
+    }
+}
 
 function mgnlTreeMenuItemConditionSelectedNotNodeData(tree)
     {
