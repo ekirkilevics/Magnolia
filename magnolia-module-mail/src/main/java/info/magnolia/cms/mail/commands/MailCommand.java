@@ -17,15 +17,14 @@ import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
-import info.magnolia.context.MgnlContext;
+
+import java.util.Arrays;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Arrays;
 
 
 /**
@@ -46,7 +45,7 @@ public class MailCommand implements Command {
             MgnlMailFactory factory = MgnlMailFactory.getInstance();
             MgnlMailHandler handler = factory.getEmailHandler();
 
-            if(log.isDebugEnabled())
+            if (log.isDebugEnabled())
                 log.debug(Arrays.asList(ctx.entrySet().toArray()).toString());
 
             String template = (String) ctx.get(MailConstants.ATTRIBUTE_TEMPLATE);

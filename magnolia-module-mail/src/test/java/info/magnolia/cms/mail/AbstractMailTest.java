@@ -3,8 +3,8 @@ package info.magnolia.cms.mail;
 import info.magnolia.cms.mail.handlers.SimpleMailHandler;
 
 import java.io.File;
-import java.util.regex.Pattern;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
@@ -51,8 +51,12 @@ public abstract class AbstractMailTest extends TestCase {
     /**
      * @see junit.framework.TestCase#setUp()
      */
-    protected void setUp() throws Exception {
+    public void setUp() throws Exception {
         super.setUp();
+
+        // server port is not closed properly between tests on windows, need to use a different port for each test
+        SMTP_PORT++;
+
         handler = new SimpleMailHandler();
         factory = MgnlMailFactory.getInstance();
         factory.initParam(MgnlMailFactory.SMTP_SERVER, "localhost");
@@ -65,14 +69,14 @@ public abstract class AbstractMailTest extends TestCase {
     /**
      * @see junit.framework.TestCase#tearDown()
      */
-    protected void tearDown() throws Exception {
+    public void tearDown() throws Exception {
         wiser.stop();
         super.tearDown();
     }
 
     /**
-     * this test will fail when subject is not US-ASCII
-     * TODO: replace with mail parser or handle encoding and improve pattern
+     * this test will fail when subject is not US-ASCII TODO: replace with mail parser or handle encoding and improve
+     * pattern
      * @param message
      * @param subject
      * @return true is <code>message</code>'s subject equals <code>subject</code>
