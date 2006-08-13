@@ -57,7 +57,6 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
         this.name = name;
         this.setRequest(request);
         this.setResponse(response);
-        init();
     }
 
     public void init() {
