@@ -12,16 +12,12 @@
  */
 package info.magnolia.module.admininterface.dialogs;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
 import java.lang.reflect.Constructor;
 import java.text.MessageFormat;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -50,25 +46,6 @@ public class ConfiguredDialog extends DialogMVCHandler {
      */
     public Content getConfigNode() {
         return configNode;
-    }
-
-    public static Content getConfigNode(HttpServletRequest request, String name) {
-
-        if (name == null) {
-            // should never happen
-            log.error("getConfigNode called with a null name."); //$NON-NLS-1$
-            return null;
-        }
-
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
-        try {
-            return hm.getContent(name);
-        }
-        catch (RepositoryException e) {
-            log.error(MessageFormat.format("Missing configuration for {0}. Check node {1}{0}", //$NON-NLS-1$
-                new Object[]{name, "/modules/templating/Paragraphs/"})); //$NON-NLS-1$
-        }
-        return null;
     }
 
     public static ConfiguredDialog getConfiguredDialog(String name, Content configNode, HttpServletRequest request,
