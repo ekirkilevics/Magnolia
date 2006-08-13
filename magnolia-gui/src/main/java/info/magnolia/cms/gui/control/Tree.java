@@ -34,6 +34,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
@@ -672,8 +673,6 @@ public class Tree extends ControlImpl {
     public String getHtmlChildrenOfOneType(Content parentNode, String itemType) {
         StringBuffer html = new StringBuffer();
         try {
-            // todo: parentNode - level of this.getPath
-            int left = (parentNode.getLevel()) * this.getIndentionWidth();
             Iterator it;
             if (itemType.equalsIgnoreCase(ITEM_TYPE_NODEDATA)) {
                 List nodeDatas = new ArrayList(parentNode.getNodeDataCollection());
@@ -798,16 +797,14 @@ public class Tree extends ControlImpl {
                 html.append(idPre);
                 html.append("_DivMain\" style=\"position:relative;top:0;left:0;width:100%;height:18px;\">");
                 html.append("&nbsp;"); // do not remove! //$NON-NLS-1$
-                int paddingLeft = left + 8;
-                if (paddingLeft < 8) {
-                    paddingLeft = 8;
-                }
+
                 html.append("<span id=\"");
                 html.append(idPre);
                 html.append("_Column0Outer\" class=\"mgnlTreeColumn ");
                 html.append(this.javascriptTree);
                 html.append("CssClassColumn0\" style=\"padding-left:");
-                html.append(paddingLeft);
+                
+                html.append(getPaddingLeft(parentNode));
                 html.append("px;\">");
                 if (this.getDrawShifter()) {
                     String shifter = StringUtils.EMPTY;
@@ -978,6 +975,15 @@ public class Tree extends ControlImpl {
             }
         }
         return html.toString();
+    }
+
+    protected int getPaddingLeft(Content parentNode) throws RepositoryException {
+        int left = parentNode.getLevel() * this.getIndentionWidth();
+        int paddingLeft = left + 8;
+        if (paddingLeft < 8) {
+            paddingLeft = 8;
+        }
+        return paddingLeft;
     }
 
     protected boolean hasSub(Content c, String type) {
