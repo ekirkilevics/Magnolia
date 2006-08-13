@@ -139,6 +139,11 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
 
     public AdminTreeMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
+    }
+
+    public void init() {
+        super.init();
+        
         path = this.getRequest().getParameter("path"); //$NON-NLS-1$
         if (StringUtils.isEmpty(path)) {
             path = "/"; //$NON-NLS-1$
@@ -148,10 +153,6 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         pathSelected = this.getRequest().getParameter("pathSelected"); //$NON-NLS-1$
 
         this.setBrowseMode(StringUtils.equals(this.getRequest().getParameter("browseMode"), "true"));
-        setTree(new Tree(super.getName(), getRepository(), super.getRequest()));
-    }
-
-    protected void initialize() {
     }
 
     /**
@@ -806,6 +807,9 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
     }
 
     protected Tree getTree() {
+        if(tree == null){
+            tree = new Tree(super.getName(), getRepository(), super.getRequest());
+        }
         return tree;
     }
 
