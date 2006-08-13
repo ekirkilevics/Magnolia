@@ -44,12 +44,7 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
     }
 
     public void flush() {
-        try {
-            this.ehcache.removeAll();
-        }
-        catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.ehcache.removeAll();
     }
 
     /**
