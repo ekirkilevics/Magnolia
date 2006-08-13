@@ -53,7 +53,6 @@ public class DateSearchControl extends SearchControl {
             String value = getValue();
             try {
                 DateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                System.out.println(format.format(new Date()));
                 date = format.parse(value);
             }
             catch (ParseException e) {
