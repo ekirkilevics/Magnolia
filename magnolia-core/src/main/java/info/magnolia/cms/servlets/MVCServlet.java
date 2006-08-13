@@ -104,7 +104,7 @@ public abstract class MVCServlet extends ContextSensitiveServlet {
             handler.init();
         }
         catch (Exception e) {
-            log.error("can't initialize handler [{}]", handler.getName(), e); //$NON-NLS-1$
+            log.error("can't initialize handler [" + handler.getName() + "]", e); //$NON-NLS-1$
         }
 
         String command = handler.getCommand();
