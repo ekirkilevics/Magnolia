@@ -74,16 +74,17 @@ public class DialogHandlerManager extends ObservedManager {
         List dialogs = ContentUtil.collectAllChildren(node, ItemType.CONTENT);
         for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
             Content dialog = (Content) iter.next();
-            // if this paragraph is used from a dialog register it under the name of the paragraph
+            // if this paragraph is used from a dialog register it under the name of the paragraph too
             registerAsParagraphDialog(node.getHandle(), dialog);
 
             String name = dialog.getNodeData(ND_NAME).getString();
+            if(StringUtils.isEmpty(name)){
+                name = dialog.getName();
+            }
             String className = NodeDataUtil.getString(dialog, CLASS, PARAGRAPH_EDIT_DIALOG);
             try {
                 // there are paragraphs dialogs without a name!
-                if (StringUtils.isNotEmpty(name)) {
-                    registerDialogHandler(name, Class.forName(className), dialog);
-                }
+                registerDialogHandler(name, Class.forName(className), dialog);
             }
             catch (ClassNotFoundException e) {
                 log.warn("can't find dialog handler class " + className, e); //$NON-NLS-1$
@@ -167,7 +168,7 @@ public class DialogHandlerManager extends ObservedManager {
                         HttpServletRequest.class,
                         HttpServletResponse.class,
                         Content.class});
-                    return (DialogMVCHandler) constructor
+                     return (DialogMVCHandler) constructor
                         .newInstance(new Object[]{name, request, response, configNode});
                 }
                 catch (NoSuchMethodException e) {
