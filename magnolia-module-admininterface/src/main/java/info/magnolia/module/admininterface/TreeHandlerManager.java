@@ -75,7 +75,6 @@ public class TreeHandlerManager extends ObservedManager {
                 request,
                 response});
             ContentUtil.setProperties(newInstance, th.getTreeDefinition());
-            newInstance.initialize();
             return newInstance;
         }
         catch (Exception e) {
