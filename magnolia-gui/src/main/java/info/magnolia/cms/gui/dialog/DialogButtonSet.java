@@ -67,7 +67,7 @@ public class DialogButtonSet extends DialogBox {
                 Content n = ((Content) it.next());
                 String value = n.getNodeData("value").getString(); //$NON-NLS-1$
                 String label = n.getNodeData("label").getString(); //$NON-NLS-1$
-                label = this.getMessage(label);
+                //label = this.getMessage(label);
                 Button button = new Button(this.getName(), value);
                 // if (n.getNodeData("label").isExist()) button.setLabel(n.getNodeData("label").getString());
                 button.setLabel(label);
@@ -96,7 +96,7 @@ public class DialogButtonSet extends DialogBox {
         List options = new ArrayList();
         Button button = new Button(this.getName() + "_dummy", StringUtils.EMPTY); //$NON-NLS-1$
         String label = configNode.getNodeData("buttonLabel").getString(); //$NON-NLS-1$
-        label = this.getMessage(label);
+        //label = this.getMessage(label);
         button.setLabel(label);
 
         if (configNode.getNodeData("selected").getBoolean()) { //$NON-NLS-1$
@@ -162,6 +162,13 @@ public class DialogButtonSet extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
+        
+        // translate
+        for (int i = 0; i < this.getOptions().size(); i++) {
+            Button b = (Button) this.getOptions().get(i);
+            b.setLabel(this.getMessage(b.getLabel()));
+        }
+        
         ButtonSet control;
         if (this.getConfigValue("valueType").equals("multiple")) { //$NON-NLS-1$ //$NON-NLS-2$
             // checkbox
