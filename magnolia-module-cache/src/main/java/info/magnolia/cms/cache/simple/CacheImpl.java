@@ -155,7 +155,7 @@ public class CacheImpl implements Cache {
         try {
             File file = getFile(key, canCompress);
 
-            if (!file.exists() || file.length() < 4) {
+            if (!file.exists() || file.isDirectory() || file.length() < 4) {
                 return false;
             }
 
