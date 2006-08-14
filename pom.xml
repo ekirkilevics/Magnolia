@@ -542,14 +542,6 @@
         <enabled>true</enabled>
       </snapshots>
     </pluginRepository>
-    <pluginRepository>
-      <!-- temporary, till the jdepend maven plugin release is out -->
-      <id>codehaus-snapshots</id>
-      <url>http://snapshots.repository.codehaus.org</url>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </pluginRepository>
   </pluginRepositories>
   <modules>
     <module>magnolia-core</module>
