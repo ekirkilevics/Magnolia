@@ -805,7 +805,14 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException if an error occurs
      */
     public boolean hasNodeData(String name) throws RepositoryException {
-        return this.node.hasProperty(name);
+        if (this.node.hasProperty(name)) {
+            return true;
+        } else { // check for mgnl:resource node
+            if (getNodeData(name).getType() == PropertyType.BINARY) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
