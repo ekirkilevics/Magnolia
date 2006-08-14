@@ -6,6 +6,7 @@
   <tlib-version>2.1</tlib-version>
   <jsp-version>1.2</jsp-version>
   <short-name>cms</short-name>
+  <display-name>cms taglib</display-name>
   <uri>cms-taglib</uri>
   <description>Core tag library for CMS</description>
   <tag>
@@ -204,6 +205,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>small</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
       <description></description>
     </attribute>
   </tag>
@@ -510,6 +512,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>value</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
+      <type>java.lang.Object</type>
       <description></description>
     </attribute>
   </tag>
@@ -868,6 +871,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>anonymous</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
       <description>
         Display anonymous users as "anonymous". Default to false (variable will not be set for anonymous users)
       </description>

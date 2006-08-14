@@ -118,8 +118,8 @@ public class ContentNodeIterator extends TagSupport {
     /**
      * @param index index to begin with
      */
-    public void setBegin(String index) {
-        this.begin = (new Integer(index)).intValue();
+    public void setBegin(int index) {
+        this.begin = index;
     }
 
     /**
