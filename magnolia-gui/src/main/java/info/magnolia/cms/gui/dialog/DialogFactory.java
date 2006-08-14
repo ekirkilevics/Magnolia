@@ -13,6 +13,7 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.ClassUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -164,7 +165,7 @@ public final class DialogFactory {
 
         if (dialogClass == null) {
             try {
-                dialogClass = Class.forName(controlType);
+                dialogClass = ClassUtil.classForName(controlType);
             }
             catch (ClassNotFoundException e) {
                 throw new IllegalArgumentException("Unknown control type: \"" + controlType + "\""); //$NON-NLS-1$ //$NON-NLS-2$

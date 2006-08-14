@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.core.ie;
 
+import info.magnolia.cms.util.ClassUtil;
+
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -48,7 +50,7 @@ public final class ContentImporter {
      */
     private ContentImporter() {
         try {
-            ImportHandler defaultImporter = (ImportHandler) Class.forName(DEFAULT_HANDLER_CLASS).newInstance();
+            ImportHandler defaultImporter = (ImportHandler) ClassUtil.newInstance(DEFAULT_HANDLER_CLASS);
             this.addImportHandler(DEFAULT_HANDLER, defaultImporter);
         }
         catch (Exception e) {

@@ -15,6 +15,7 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.lang.reflect.Constructor;
@@ -109,7 +110,7 @@ public class PageHandlerManager extends ObservedManager {
 
                 String className = page.getNodeData(ND_CLASS).getString();
                 try {
-                    registerPageHandler(name, Class.forName(className));
+                    registerPageHandler(name, ClassUtil.classForName(className));
                 }
                 catch (ClassNotFoundException e) {
                     log.warn("can't find dialogpage handler class " + className, e); //$NON-NLS-1$

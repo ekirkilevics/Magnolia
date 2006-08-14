@@ -17,6 +17,7 @@ import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -78,13 +79,13 @@ public class DialogHandlerManager extends ObservedManager {
             registerAsParagraphDialog(node.getHandle(), dialog);
 
             String name = dialog.getNodeData(ND_NAME).getString();
-            if(StringUtils.isEmpty(name)){
+            if (StringUtils.isEmpty(name)) {
                 name = dialog.getName();
             }
             String className = NodeDataUtil.getString(dialog, CLASS, PARAGRAPH_EDIT_DIALOG);
             try {
                 // there are paragraphs dialogs without a name!
-                registerDialogHandler(name, Class.forName(className), dialog);
+                registerDialogHandler(name, ClassUtil.classForName(className), dialog);
             }
             catch (ClassNotFoundException e) {
                 log.warn("can't find dialog handler class " + className, e); //$NON-NLS-1$
@@ -117,7 +118,7 @@ public class DialogHandlerManager extends ObservedManager {
                 String className = dialog.getNodeData(CLASS).getString();
                 if (StringUtils.isNotEmpty(className)) {
                     try {
-                        handler = Class.forName(className);
+                        handler = ClassUtil.classForName(className);
                     }
                     catch (ClassNotFoundException e) {
                         log.error("Registering paragraph: class [" + className + "] not found", e); //$NON-NLS-1$ //$NON-NLS-2$
@@ -168,7 +169,7 @@ public class DialogHandlerManager extends ObservedManager {
                         HttpServletRequest.class,
                         HttpServletResponse.class,
                         Content.class});
-                     return (DialogMVCHandler) constructor
+                    return (DialogMVCHandler) constructor
                         .newInstance(new Object[]{name, request, response, configNode});
                 }
                 catch (NoSuchMethodException e) {

@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.core.ie;
 
+import info.magnolia.cms.util.ClassUtil;
+
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -49,7 +51,7 @@ public final class ContentExporter {
      */
     private ContentExporter() {
         try {
-            ExportHandler defaultExporter = (ExportHandler) Class.forName(DEFAULT_HANDLER_CLASS).newInstance();
+            ExportHandler defaultExporter = (ExportHandler) ClassUtil.newInstance(DEFAULT_HANDLER_CLASS);
             this.addExportHandler(DEFAULT_HANDLER, defaultExporter);
         }
         catch (Exception e) {

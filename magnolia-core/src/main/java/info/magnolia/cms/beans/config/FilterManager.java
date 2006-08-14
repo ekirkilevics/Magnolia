@@ -14,11 +14,9 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
-
 import info.magnolia.cms.util.FactoryUtil;
-
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
 
@@ -135,7 +133,7 @@ public final class FilterManager {
         for (int j = 0; j < filterDefinitions.length; j++) {
             FilterDefinition definition = filterDefinitions[j];
             try {
-                Filter filter = (Filter) Class.forName(definition.getClassName()).newInstance();
+                Filter filter = (Filter) ClassUtil.newInstance(definition.getClassName());
                 this.filterChain[j] = filter;
             }
             catch (Throwable e) {

@@ -3,6 +3,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.text.MessageFormat;
@@ -64,7 +65,7 @@ public class TemplateRendererManager extends ObservedManager {
             TemplateRenderer renderer;
 
             try {
-                renderer = (TemplateRenderer) Class.forName(rendererClass).newInstance();
+                renderer = (TemplateRenderer) ClassUtil.newInstance(rendererClass);
             }
             catch (Exception e) {
                 log.warn(

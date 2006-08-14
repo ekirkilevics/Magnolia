@@ -3,6 +3,7 @@ package info.magnolia.cms.cache;
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.cache.noop.NoOpCache;
+import info.magnolia.cms.util.ClassUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -122,8 +123,7 @@ public class DefaultCacheManager extends BaseCacheManager {
 
     private Cache newCache(String cacheImplementation) throws ConfigurationException {
         try {
-            Class cacheClass = Class.forName(cacheImplementation);
-            return (Cache) cacheClass.newInstance();
+            return (Cache) ClassUtil.newInstance(cacheImplementation);
         }
         catch (ClassNotFoundException e) {
             throw new ConfigurationException("Cache class not found!", e);

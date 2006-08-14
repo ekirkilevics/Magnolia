@@ -13,6 +13,7 @@
 package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.util.ClassUtil;
 
 import java.io.IOException;
 
@@ -64,7 +65,7 @@ public class ServletTemplateRenderer extends JspTemplateRenderer {
         // use className
         HttpServlet servlet;
         try {
-            servlet = (HttpServlet) Class.forName(className).newInstance();
+            servlet = (HttpServlet) ClassUtil.newInstance(className);
         }
         catch (Exception e) {
             // simply retrow to the client for now...

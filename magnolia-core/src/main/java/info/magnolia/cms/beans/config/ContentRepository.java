@@ -23,6 +23,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -198,7 +199,7 @@ public final class ContentRepository {
         Iterator repositoryNames = getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
             String repository = (String) repositoryNames.next();
-            if(checkIfInitialized(repository)){
+            if (checkIfInitialized(repository)) {
                 return true;
             }
         }
@@ -315,7 +316,7 @@ public final class ContentRepository {
     public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
         InstantiationException, IllegalAccessException, ClassNotFoundException {
         log.info("System : loading JCR {}", map.getName()); //$NON-NLS-1$
-        Provider handlerClass = (Provider) Class.forName(map.getProvider()).newInstance();
+        Provider handlerClass = (Provider) ClassUtil.newInstance(map.getProvider());
         handlerClass.init(map);
         Repository repository = handlerClass.getUnderlineRepository();
         ContentRepository.repositories.put(map.getName(), repository);

@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.cms.util.ClassUtil;
+
 import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -136,7 +138,7 @@ public class MgnlServletDispatcherFilter implements Filter {
     private void addServlet(String path, String className, Map params) {
 
         try {
-            HttpServlet servlet = (HttpServlet) Class.forName(className).newInstance();
+            HttpServlet servlet = (HttpServlet) ClassUtil.newInstance(className);
             servlet.init();
             servletMap.put(path, servlet);
 

@@ -23,6 +23,7 @@ import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.RequestFormUtil;
@@ -239,7 +240,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             String className = NodeDataUtil.getString(configNode, "saveHandler");
             if (StringUtils.isNotEmpty(className)) {
                 try {
-                    Class saveHandlerClass = Class.forName(className);
+                    Class saveHandlerClass = ClassUtil.classForName(className);
                     try {
                         this.saveHandler = (SaveHandler) saveHandlerClass.newInstance();
                     }
@@ -284,8 +285,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     protected boolean onSave(SaveHandler control) {
         boolean result = control.save();
-        if(result){
-        	this.nodeName = control.getNodeName();
+        if (result) {
+            this.nodeName = control.getNodeName();
         }
         return result;
     }

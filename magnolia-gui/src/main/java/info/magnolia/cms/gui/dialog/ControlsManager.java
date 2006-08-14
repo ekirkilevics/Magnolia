@@ -14,6 +14,7 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.util.Iterator;
@@ -79,7 +80,7 @@ public final class ControlsManager extends ObservedManager {
             Class controlClass = null;
 
             try {
-                controlClass = Class.forName(classNodeData);
+                controlClass = ClassUtil.classForName(classNodeData);
             }
             catch (ClassNotFoundException e) {
                 log.error("Config : Failed to load dialog control with class [" + classNodeData + "]", e); //$NON-NLS-1$

@@ -80,7 +80,18 @@ public class ClasspathResourcesUtil {
 
             for (int j = 0; j < urls.length; j++) {
                 URL url = urls[j];
-                File tofile = new File(url.getFile());
+                String fileUrl = url.getFile();
+
+                // needed for Resin
+                if (fileUrl.startsWith("file:/")) {
+                    fileUrl = StringUtils.substringAfter(fileUrl, "file:/");
+                }
+                if (fileUrl.endsWith("!/")) {
+                    fileUrl = StringUtils.substringBeforeLast(fileUrl, "!/");
+                }
+
+                File tofile = new File(fileUrl);
+
                 collectFiles(resources, tofile, filter);
             }
         }

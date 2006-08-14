@@ -13,6 +13,7 @@
 package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
 import java.lang.reflect.Constructor;
@@ -70,7 +71,7 @@ public class ConfiguredDialog extends DialogMVCHandler {
             try {
                 className = configNode.getNodeData("class").getString(); //$NON-NLS-1$
                 if (StringUtils.isNotEmpty(className)) {
-                    handlerClass = Class.forName(className);
+                    handlerClass = ClassUtil.classForName(className);
                 }
             }
             catch (Exception e) {

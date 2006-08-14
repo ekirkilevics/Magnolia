@@ -18,6 +18,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleDefinition;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 
@@ -133,7 +134,7 @@ public final class ModuleLoader {
                 try {
                     String moduleClassName = moduleNode.getNodeData("class").getString(); //$NON-NLS-1$
 
-                    module = (Module) Class.forName(moduleClassName).newInstance();
+                    module = (Module) ClassUtil.newInstance(moduleClassName);
                     this.addModuleInstance(def.getName(), module);
                 }
                 catch (InstantiationException ie) {

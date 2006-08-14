@@ -3,6 +3,7 @@ package info.magnolia.commands;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 
 import java.util.Collection;
@@ -104,7 +105,7 @@ public class MgnlRepositoryCatalog extends CatalogBase {
         className = commandNode.getNodeData(CLASS_NODE_DATA).getString();
 
         log.debug("Found class {} for action {}", className, commandNode.getName());
-        Class klass = Class.forName(className);
+        Class klass = ClassUtil.classForName(className);
         Command command = (Command) klass.newInstance();
         ContentUtil.setProperties(command, commandNode);
         return command;

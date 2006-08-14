@@ -136,7 +136,7 @@ public final class Path {
 
         return uri;
     }
-    
+
     /**
      * Returns the URI of the current request, but uses the uri to repository mapping to remove any prefix.
      * @param req request
@@ -145,7 +145,7 @@ public final class Path {
     public static String getHandle(HttpServletRequest req) {
         return (String) req.getAttribute(Aggregator.HANDLE);
     }
-    
+
     /**
      * If you forward a request, this will return the original requests uri.
      * @param req
@@ -191,7 +191,7 @@ public final class Path {
         return label;
     }
 
-    private static boolean isAbsolute(String path) {
+    protected static boolean isAbsolute(String path) {
         if (path == null) {
             return false;
         }
