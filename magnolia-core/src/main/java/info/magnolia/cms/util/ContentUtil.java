@@ -129,6 +129,9 @@ public class ContentUtil {
      * @return
      */
     public static Content getCaseInsensitive(Content node, String name, ItemType type) {
+        if (name == null || node == null) {
+            return null;
+        }
         name = name.toLowerCase();
         for (Iterator iter = node.getChildren(type).iterator(); iter.hasNext();) {
             Content child = (Content) iter.next();
@@ -248,11 +251,12 @@ public class ContentUtil {
      * @throws PathNotFoundException
      * @throws AccessDeniedException
      */
-    public static Content createPath(Content node, String path, ItemType type) throws RepositoryException, PathNotFoundException, AccessDeniedException {
+    public static Content createPath(Content node, String path, ItemType type) throws RepositoryException,
+        PathNotFoundException, AccessDeniedException {
         // remove leading /
         path = StringUtils.removeStart(path, "/");
-        
-        if(StringUtils.isEmpty(path)){
+
+        if (StringUtils.isEmpty(path)) {
             return node;
         }
 
@@ -321,19 +325,19 @@ public class ContentUtil {
         return bean;
     }
 
-    public static void setNodeDatas(Content node, Object obj) throws RepositoryException  {
-            try {
-                setNodeDatas(node, BeanUtils.describe(obj));
-            }
-            catch (InvocationTargetException e) {
-                log.error("can't persist", e);
-            }
-            catch (NoSuchMethodException e) {
-                log.error("can't persist", e);
-            }
-            catch (IllegalAccessException e) {
-                log.error("can't persist", e);
-            }
+    public static void setNodeDatas(Content node, Object obj) throws RepositoryException {
+        try {
+            setNodeDatas(node, BeanUtils.describe(obj));
+        }
+        catch (InvocationTargetException e) {
+            log.error("can't persist", e);
+        }
+        catch (NoSuchMethodException e) {
+            log.error("can't persist", e);
+        }
+        catch (IllegalAccessException e) {
+            log.error("can't persist", e);
+        }
     }
 
     public static void setNodeDatas(Content node, Map map) throws RepositoryException {
