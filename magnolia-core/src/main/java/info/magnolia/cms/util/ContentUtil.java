@@ -230,16 +230,34 @@ public class ContentUtil {
 
     public static Content createPath(HierarchyManager hm, String path) throws AccessDeniedException,
         PathNotFoundException, RepositoryException {
-        return ContentUtil.createPath(hm, path, ItemType.CONTENTNODE);
+        return ContentUtil.createPath(hm, path, ItemType.CONTENT);
     }
 
     public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
         PathNotFoundException, RepositoryException {
+        Content node = hm.getRoot();
+        return createPath(node, path, type);
+    }
+
+    /**
+     * @param node
+     * @param path
+     * @param type
+     * @return
+     * @throws RepositoryException
+     * @throws PathNotFoundException
+     * @throws AccessDeniedException
+     */
+    public static Content createPath(Content node, String path, ItemType type) throws RepositoryException, PathNotFoundException, AccessDeniedException {
         // remove leading /
         path = StringUtils.removeStart(path, "/");
+        
+        if(StringUtils.isEmpty(path)){
+            return node;
+        }
 
         String[] names = path.split("/"); //$NON-NLS-1$
-        Content node = hm.getRoot();
+
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
             if (node.hasContent(name)) {
@@ -301,6 +319,28 @@ public class ContentUtil {
             setProperties(bean, node);
         }
         return bean;
+    }
+
+    public static void setNodeDatas(Content node, Object obj) throws RepositoryException  {
+            try {
+                setNodeDatas(node, BeanUtils.describe(obj));
+            }
+            catch (InvocationTargetException e) {
+                log.error("can't persist", e);
+            }
+            catch (NoSuchMethodException e) {
+                log.error("can't persist", e);
+            }
+            catch (IllegalAccessException e) {
+                log.error("can't persist", e);
+            }
+    }
+
+    public static void setNodeDatas(Content node, Map map) throws RepositoryException {
+        for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
+            String name = (String) iter.next();
+            NodeDataUtil.getOrCreate(node, name).setValue(map.get(name).toString());
+        }
     }
 
 }
