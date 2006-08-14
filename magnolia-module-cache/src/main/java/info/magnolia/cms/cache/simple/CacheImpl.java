@@ -53,6 +53,11 @@ public class CacheImpl implements Cache {
 
             File file = getFile(key, false);
 
+            if (file.isDirectory()) {
+                // additional check, if file name is something like "/"
+                return;
+            }
+
             log.info("creating file {}", file.getAbsolutePath());
 
             if (!file.exists()) {
