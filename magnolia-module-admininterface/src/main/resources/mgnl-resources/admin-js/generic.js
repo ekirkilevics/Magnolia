@@ -6,9 +6,11 @@
 /**
  * Simple shortcut for document.getElementById()
  */
-function $(element)
-{
-    return document.getElementById(element);
+if (typeof $ != 'function') {
+    function $(element)
+    {
+        return document.getElementById(element);
+    }
 }
 
 /**
@@ -98,11 +100,11 @@ function mgnlIsKeyEscape(event){
 }
 
 function mgnlIsKey(event,keyCode){
-    if (window.event && window.event.keyCode == keyCode) 
+    if (window.event && window.event.keyCode == keyCode)
         return true;
-    else if 
+    else if
         (navigator.appName=="Netscape" && event.which==keyCode) return true;
-    else 
+    else
         return false;
 }
 
@@ -191,19 +193,19 @@ function mgnlRemoveParameter(href,name)
             }
         }
     }
-        
+
     if(query.length > 0) {
         newHref += "?";
-            
+
         for(var i=0; i < query.length; i++) {
             newHref += query[i];
-                
+
             if(i + 1 < query.length) {
                 newHref += "&";
             }
         }
     }
-    
+
     return newHref;
 }
 
