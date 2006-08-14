@@ -115,7 +115,6 @@
     <url-pattern>/.magnolia/fckeditor/upload</url-pattern>
   </servlet-mapping>
   <listener>
-    <display-name>propertyInitializer</display-name>
     <listener-class>info.magnolia.cms.servlets.PropertyInitializer</listener-class>
   </listener>
   <context-param>
@@ -131,7 +130,6 @@
     </param-value>
   </context-param>
   <listener>
-    <display-name>ShutdownManager</display-name>
     <listener-class>info.magnolia.cms.beans.config.ShutdownManager</listener-class>
   </listener>
 </web-app>
