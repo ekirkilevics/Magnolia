@@ -597,7 +597,6 @@ This page has no content and it will redirect to
       <name>altNodeDataName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>boolean</type>
       <description>
         Name of the node data holding the alt text for the image. If not set the default is nodeDataName + "Alt". The
         same value is added to the "title" attribute, if not null.
@@ -607,35 +606,30 @@ This page has no content and it will redirect to
       <name>class</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>boolean</type>
       <description>html pass through attribute</description>
     </attribute>
     <attribute>
       <name>style</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>boolean</type>
       <description>html pass through attribute</description>
     </attribute>
     <attribute>
       <name>id</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>boolean</type>
       <description>html pass through attribute</description>
     </attribute>
     <attribute>
       <name>width</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>boolean</type>
       <description>html pass through attribute</description>
     </attribute>
     <attribute>
       <name>height</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>boolean</type>
       <description>html pass through attribute</description>
     </attribute>
   </tag>
@@ -649,7 +643,7 @@ This page has no content and it will redirect to
       <name>header</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>int</type>
+      <type>boolean</type>
       <description>Use first row as column headers</description>
     </attribute>
     <attribute>
