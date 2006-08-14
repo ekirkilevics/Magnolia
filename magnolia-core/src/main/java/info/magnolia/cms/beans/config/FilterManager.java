@@ -14,112 +14,209 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.ObservationUtil;
+
 import info.magnolia.cms.util.ContentUtil;
+
+import info.magnolia.cms.util.FactoryUtil;
+
+import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
 
-import java.util.Map;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
-import javax.servlet.Filter;
-import javax.jcr.observation.EventListener;
+import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.servlet.Filter;
 
-import org.apache.commons.lang.builder.CompareToBuilder;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.CompareToBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * @author fgiust
+ * Manages configuration of webapp filters, stored in jcr. Configured filters are loaded and used by
+ * {@link info.magnolia.cms.filters.MagnoliaManagedFilter}.
+ * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class FilterManager {
+public final class FilterManager {
+
+    /**
+     * Name for the config node that contains filter initialization parameters.
+     */
+    private static final String PARAM_CONFIG = "config";
+
+    /**
+     * Name for the parameters that contains the priority.
+     */
+    private static final String PARAM_PRIORITY = "priority";
+
+    /**
+     * Name for the parameters that contains the filter class.
+     */
+    private static final String PARAM_FILTERCLASS = "class";
 
     /**
      * config path
-     * */
-    public static final String SERVER_FILTERS = "/server/filters";
-
-    /**
-     * Logger
-     * */
-    protected Logger log = LoggerFactory.getLogger(getClass());
+     */
+    private static final String SERVER_FILTERS = "/server/filters";
 
     /**
      * singleton instance
-     * */
-    private static FilterManager instance = (FilterManager) FactoryUtil.getSingleton(FilterManager.class);;
+     */
+    private static FilterManager instance = (FilterManager) FactoryUtil.getSingleton(FilterManager.class);
+
+    /**
+     * Logger
+     */
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     private Filter[] filterChain;
+
+    /**
+     * Array of filter definitions.
+     */
+    private FilterDefinition[] filterDefinitions;
 
     /**
      * Do not instantiate yourself
      */
     public FilterManager() {
         init();
-        ObservationUtil.registerChangeListener(
-            ContentRepository.CONFIG,
-            SERVER_FILTERS,
-            new EventListener() {
-                public void onEvent(EventIterator arg0) {
-                    MgnlContext.setInstance(MgnlContext.getSystemContext());
-                    init();
-                }
-            });
+        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, SERVER_FILTERS, new EventListener() {
+
+            public void onEvent(EventIterator arg0) {
+                MgnlContext.setInstance(MgnlContext.getSystemContext());
+                init();
+            }
+        });
     }
 
+    /**
+     * Returns the FilterManager instance.
+     * @return FilterManager instance.
+     */
     public static FilterManager getInstance() {
         return instance;
     }
 
     /**
      * @return array of filters as configured
-     * */
+     */
     public Filter[] getFilters() {
         return filterChain;
     }
 
     /**
+     * Getter for <code>filterDefinitions</code>.
+     * @return Returns the filterDefinitions.
+     */
+    public FilterDefinition[] getFilterDefinitions() {
+        return this.filterDefinitions;
+    }
+
+    /**
      * initialized filter chain
-     * */
+     */
     protected void init() {
-        Content node = ContentUtil.getContent(ContentRepository.CONFIG, SERVER_FILTERS);
-        if (node != null) {
-            Collection children = node.getChildren(ItemType.CONTENT);
-            this.filterChain = new Filter[children.size()];
-            Iterator childIterator = children.iterator();
-            int index = 0;
-            while (childIterator.hasNext()) {
-                Content child = (Content) childIterator.next();
-                // ignore priority since all filters are under server config
-                String classPath = child.getNodeData("class").getString();
-                if (StringUtils.isNotEmpty(classPath)) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(new StringBuffer().append("Adding filter [ ")
-                                .append(classPath)
-                                .append(" ] to managed filter list").toString());
-                    }
-                    try {
-                        this.filterChain[index++] = (Filter) Class.forName(classPath).newInstance();
-                    } catch (Throwable e) {
-                        log.error("Failed to add filter [ "+classPath+" ]", e);
-                    }
-                }
+
+        extractDefinitions();
+
+        this.filterChain = new Filter[filterDefinitions.length];
+
+        for (int j = 0; j < filterDefinitions.length; j++) {
+            FilterDefinition definition = filterDefinitions[j];
+            try {
+                Filter filter = (Filter) Class.forName(definition.getClassName()).newInstance();
+                this.filterChain[j] = filter;
+            }
+            catch (Throwable e) {
+                log.error("Failed to instantiate filter [ " + definition.getClassName() + " ]", e);
+
+                // remove definition!
+                filterDefinitions = (FilterDefinition[]) ArrayUtils.remove(filterDefinitions, j);
+                j--;
             }
         }
     }
 
+    /**
+     *
+     */
+    private void extractDefinitions() {
+        List definitionList = new ArrayList();
 
-    class FilterDefinition implements Comparable {
+        Content node = ContentUtil.getContent(ContentRepository.CONFIG, SERVER_FILTERS);
 
+        if (node != null) {
+
+            Collection children = node.getChildren(ItemType.CONTENT);
+
+            Iterator childIterator = children.iterator();
+
+            while (childIterator.hasNext()) {
+                Content child = (Content) childIterator.next();
+
+                String filterClass = child.getNodeData(PARAM_FILTERCLASS).getString();
+
+                if (StringUtils.isNotEmpty(filterClass)) {
+                    FilterDefinition definition = new FilterDefinition();
+                    definition.setClassName(filterClass);
+                    definition.setPriority(child.getNodeData(PARAM_PRIORITY).getLong());
+
+                    try {
+                        if (child.hasContent(PARAM_CONFIG)) {
+                            Content config = child.getContent(PARAM_CONFIG);
+                            definition.setParameters(ContentUtil.toMap(config));
+                        }
+                    }
+                    catch (RepositoryException e) {
+                        log.error("Unable to read config parameters for filter {} due to a ", filterClass, e
+                            .getClass()
+                            .getName());
+                    }
+
+                    log.debug("Adding filter [{}] to managed filter list", filterClass);
+
+                    definitionList.add(definition);
+
+                }
+            }
+        }
+
+        Collections.sort(definitionList);
+
+        filterDefinitions = (FilterDefinition[]) definitionList.toArray(new FilterDefinition[definitionList.size()]);
+    }
+
+    /**
+     * Represents a configured filter.
+     * @author fgiust
+     * @version $Revision$ ($Author$)
+     */
+    public static class FilterDefinition implements Comparable {
+
+        /**
+         * Filter class name.
+         */
         private String className;
 
-        private int priority;
+        /**
+         * Priority, lower is first.
+         */
+        private long priority;
 
+        /**
+         * Optional parameters.
+         */
         private Map parameters;
 
         /**
@@ -158,7 +255,7 @@ public class FilterManager {
          * Getter for <code>priority</code>.
          * @return Returns the priority.
          */
-        public int getPriority() {
+        public long getPriority() {
             return this.priority;
         }
 
@@ -166,18 +263,16 @@ public class FilterManager {
          * Setter for <code>priority</code>.
          * @param priority The priority to set.
          */
-        public void setPriority(int priority) {
+        public void setPriority(long priority) {
             this.priority = priority;
         }
 
         /**
-         * @see java.lang.Comparable#compareTo(Object)
+         * {@inheritDoc}
          */
         public int compareTo(Object object) {
             FilterDefinition myClass = (FilterDefinition) object;
-            return new CompareToBuilder().append(this.parameters, myClass.parameters).append(
-                this.className,
-                myClass.className).append(this.priority, myClass.priority).toComparison();
+            return new CompareToBuilder().append(this.priority, myClass.priority).toComparison();
         }
 
     }

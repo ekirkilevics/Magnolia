@@ -1,12 +1,18 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.FilterManager;
+import info.magnolia.cms.beans.config.FilterManager.FilterDefinition;
 
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
+import java.util.Map;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -28,10 +34,19 @@ public class MagnoliaManagedFilter implements Filter {
      */
     private static Logger log = LoggerFactory.getLogger(ContentTypeFilter.class);
 
+    /**
+     * FilterConfig. ServletContext will be passed over to managed filters.
+     */
     private FilterConfig filterConfig;
 
+    /**
+     * FilterManager instance. Holds filter configuration.
+     */
     private FilterManager filterManager = FilterManager.getInstance();
 
+    /**
+     * @see javax.servlet.Filter#destroy()
+     */
     public void destroy() {
         for (int j = 0; j < filterManager.getFilters().length; j++) {
             Filter filter = filterManager.getFilters()[j];
@@ -59,9 +74,13 @@ public class MagnoliaManagedFilter implements Filter {
     public void init(FilterConfig filterConfig) throws ServletException {
         this.filterConfig = filterConfig;
 
-        for (int j = 0; j < filterManager.getFilters().length; j++) {
-            Filter filter = filterManager.getFilters()[j];
-            filter.init(filterConfig);
+        for (int j = 0; j < filterManager.getFilterDefinitions().length; j++) {
+            FilterDefinition filter = filterManager.getFilterDefinitions()[j];
+            CustomFilterConfig customFilterConfig = new CustomFilterConfig(filterConfig, filter.getParameters());
+
+            filterManager.getFilters()[j].init(customFilterConfig);
+
+            log.info("Initializing filter {}", filter.getClassName());
         }
     }
 
@@ -69,7 +88,7 @@ public class MagnoliaManagedFilter implements Filter {
 
         private Filter[] filters;
 
-        private int position = 0;
+        private int position;
 
         private FilterChain originalChain;
 
@@ -87,5 +106,55 @@ public class MagnoliaManagedFilter implements Filter {
                 filters[position - 1].doFilter(request, response, this);
             }
         }
+    }
+
+    private class CustomFilterConfig implements FilterConfig {
+
+        private Map parameters;
+
+        private FilterConfig parent;
+
+        /**
+         * @param parameters
+         */
+        public CustomFilterConfig(FilterConfig parent, Map parameters) {
+            super();
+            this.parent = parent;
+            if (parameters != null) {
+                this.parameters = parameters;
+            }
+            else {
+                this.parameters = new HashMap();
+            }
+        }
+
+        /**
+         * @see javax.servlet.FilterConfig#getFilterName()
+         */
+        public String getFilterName() {
+            return parent.getFilterName();
+        }
+
+        /**
+         * @see javax.servlet.FilterConfig#getInitParameter(java.lang.String)
+         */
+        public String getInitParameter(String name) {
+            return (String) parameters.get(name);
+        }
+
+        /**
+         * @see javax.servlet.FilterConfig#getInitParameterNames()
+         */
+        public Enumeration getInitParameterNames() {
+            return new Hashtable(parameters).keys();
+        }
+
+        /**
+         * @see javax.servlet.FilterConfig#getServletContext()
+         */
+        public ServletContext getServletContext() {
+            return parent.getServletContext();
+        }
+
     }
 }

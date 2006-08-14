@@ -14,10 +14,10 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ModuleRegistration;
-import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.URI2RepositoryMapping;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
@@ -86,6 +86,9 @@ public class MgnlCmsFilter implements Filter {
      */
     public void init(FilterConfig filterConfig) throws ServletException {
         this.bypass = StringUtils.split(filterConfig.getInitParameter(BYPASS_PARAM), ",");
+        if (this.bypass == null) {
+            this.bypass = new String[0];
+        }
     }
 
     public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException,
@@ -132,7 +135,7 @@ public class MgnlCmsFilter implements Filter {
         if (ModuleRegistration.getInstance().isRestartNeeded()) {
             response.sendRedirect(request.getContextPath() + "/.magnolia/pages/restart.html");
         }
-        
+
         setHandleAndMapping(request);
 
         if (isAuthorized(request, response)) {
@@ -212,21 +215,22 @@ public class MgnlCmsFilter implements Filter {
         int firstDotPos = StringUtils.indexOf(uri, '.', StringUtils.lastIndexOf(uri, '/'));
         String handle;
         String selector;
-        String extension; 
+        String extension;
         if (firstDotPos > -1) {
             int lastDotPos = StringUtils.lastIndexOf(uri, '.');
             handle = StringUtils.substring(uri, 0, firstDotPos);
             selector = StringUtils.substring(uri, firstDotPos + 1, lastDotPos);
-            extension = StringUtils.substring(uri, lastDotPos+1);
-        } else {
+            extension = StringUtils.substring(uri, lastDotPos + 1);
+        }
+        else {
             // no dots (and no extension)
             handle = uri;
             selector = "";
             extension = "";
         }
-        
+
         URI2RepositoryMapping mapping = URI2RepositoryManager.getInstance().getMapping(uri);
-        
+
         // remove prefix if any
         handle = mapping.getHandle(handle);
 
@@ -247,7 +251,7 @@ public class MgnlCmsFilter implements Filter {
     protected boolean isAuthorized(HttpServletRequest req, HttpServletResponse res) throws IOException {
         if (MgnlContext.getAccessManager(getRepository(req)) != null) {
             String handle = Path.getHandle(req); //$NON-NLS-1$
-            
+
             if (!MgnlContext.getAccessManager(getRepository(req)).isGranted(handle, Permission.READ)) {
                 res.sendError(HttpServletResponse.SC_FORBIDDEN);
             }
@@ -453,7 +457,7 @@ public class MgnlCmsFilter implements Filter {
             }
 
             if (requestedData != null) {
-                String templateName = requestedData.getAttribute(NODE_DATA_TEMPLATE); 
+                String templateName = requestedData.getAttribute(NODE_DATA_TEMPLATE);
 
                 if (!StringUtils.isEmpty(templateName)) {
                     template = TemplateManager.getInstance().getInfo(templateName, extension);

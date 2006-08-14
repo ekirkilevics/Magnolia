@@ -54,9 +54,6 @@ public abstract class AbstractMailTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        // server port is not closed properly between tests on windows, need to use a different port for each test
-        SMTP_PORT++;
-
         handler = new SimpleMailHandler();
         factory = MgnlMailFactory.getInstance();
         factory.initParam(MgnlMailFactory.SMTP_SERVER, "localhost");
