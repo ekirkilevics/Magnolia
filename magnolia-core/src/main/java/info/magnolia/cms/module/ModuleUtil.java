@@ -129,7 +129,7 @@ public final class ModuleUtil {
 
             String name = StringUtils.substringAfterLast(key, "."); //$NON-NLS-1$
             String path = StringUtils.substringBeforeLast(key, ".").replace('.', '/'); //$NON-NLS-1$
-            Content node = ContentUtil.createPath(hm, path);
+            Content node = ContentUtil.createPath(hm, path, ItemType.CONTENT);
             node.createNodeData(name).setValue(value);
         }
     }
