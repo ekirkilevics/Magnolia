@@ -36,7 +36,7 @@ public class TemplatedMVCHandler extends PageMVCHandler {
      * @param request
      * @param response
      */
-    protected TemplatedMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
+    public TemplatedMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
 
