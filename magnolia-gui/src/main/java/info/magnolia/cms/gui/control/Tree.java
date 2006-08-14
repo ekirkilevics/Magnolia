@@ -27,6 +27,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -40,6 +41,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Value;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -55,6 +57,14 @@ public class Tree extends ControlImpl {
     public static final String DOCROOT = "/.resources/controls/tree/"; //$NON-NLS-1$
 
     public static final String ICONDOCROOT = "/.resources/icons/16/"; //$NON-NLS-1$
+    
+    public static final String DEFAULT_ICON = ICONDOCROOT + "cubes.gif";
+
+    public static final String DEFAULT_ICON_CONTENT = ICONDOCROOT + "document_plain_earth.gif";
+
+    public static final String DEFAULT_ICON_CONTENTNODE = DEFAULT_ICON;
+    
+    public static final String DEFAULT_ICON_NODEDATA = ICONDOCROOT + "cube_green.gif";
 
     public static final String ITEM_TYPE_NODEDATA = "mgnl:nodeData";
 
@@ -92,12 +102,8 @@ public class Tree extends ControlImpl {
     private List itemTypes = new ArrayList();
 
     private int height = 400;
-
-    private String iconPage = ICONDOCROOT + "document_plain_earth.gif"; //$NON-NLS-1$
-
-    private String iconContentNode = ICONDOCROOT + "cubes.gif"; //$NON-NLS-1$
-
-    private String iconNodeData = ICONDOCROOT + "cube_green.gif"; //$NON-NLS-1$
+    
+    private Map icons = new HashMap();
 
     private String iconOndblclick;
 
@@ -114,6 +120,8 @@ public class Tree extends ControlImpl {
     private List columns = new ArrayList();
 
     private ContextMenu menu;
+    
+    private Comparator sortComparator;
 
     /**
      * the bar at the bottom of the page holding some function buttons
@@ -145,6 +153,11 @@ public class Tree extends ControlImpl {
         this.setFunctionBar(new FunctionBar(this.getJavascriptTree()));
 
         this.setHierarchyManager(MgnlContext.getHierarchyManager(this.getRepository()));
+        
+        // set default icons
+        this.setIcon(ItemType.CONTENT.getSystemName(), DEFAULT_ICON_CONTENT);
+        this.setIcon(ItemType.CONTENTNODE.getSystemName(), DEFAULT_ICON_CONTENTNODE);
+        this.setIcon(ITEM_TYPE_NODEDATA, DEFAULT_ICON_NODEDATA);
     }
 
     /**
@@ -239,11 +252,11 @@ public class Tree extends ControlImpl {
      * @param src source of the image
      */
     public void setIconPage(String src) {
-        this.iconPage = src;
+        this.setIcon(ItemType.CONTENT.getSystemName(), src);
     }
 
     public String getIconPage() {
-        return this.iconPage;
+        return this.getIcon(ItemType.CONTENT.getSystemName());
     }
 
     /**
@@ -251,11 +264,11 @@ public class Tree extends ControlImpl {
      * @param src source of the image
      */
     public void setIconContentNode(String src) {
-        this.iconContentNode = src;
+        this.setIcon(ItemType.CONTENTNODE.getSystemName(), src);
     }
 
     public String getIconContentNode() {
-        return this.iconContentNode;
+        return this.getIcon(ItemType.CONTENTNODE.getSystemName());
     }
 
     /**
@@ -263,11 +276,26 @@ public class Tree extends ControlImpl {
      * @param src source of the image
      */
     public void setIconNodeData(String src) {
-        this.iconNodeData = src;
+        this.setIcon(ITEM_TYPE_NODEDATA, src);
     }
 
     public String getIconNodeData() {
-        return this.iconNodeData;
+        return this.getIcon(ITEM_TYPE_NODEDATA);
+    }
+
+    protected String getIcon(String itemType) {
+        return (String) icons.get(itemType);
+    }
+
+    protected String getIcon(Content node, NodeData nodedata, String itemType) {
+        if(icons.containsKey(itemType)){
+            return (String) icons.get(itemType);
+        }
+        return DEFAULT_ICON;
+    }
+
+    public void setIcon(String typeName, String icon) {
+        icons.put(typeName, icon);
     }
 
     /**
@@ -686,7 +714,14 @@ public class Tree extends ControlImpl {
                 it = nodeDatas.iterator();
             }
             else {
-                it = parentNode.getChildren(itemType).iterator();
+                Collection nodes = parentNode.getChildren(itemType);
+                Comparator comp = this.getSortComparator();
+                if(comp != null){
+                    List sortedNodes = new ArrayList(nodes);
+                    Collections.sort(sortedNodes, comp);
+                    nodes = sortedNodes;
+                }
+                it = nodes.iterator();
             }
             while (it.hasNext()) {
                 Object o = it.next();
@@ -1009,27 +1044,6 @@ public class Tree extends ControlImpl {
     }
 
     /**
-     * The current nodedata or node is passed
-     * @param nodedata can be null
-     * @param node can be null
-     * @param itemType
-     * @return the icon
-     */
-    protected String getIcon(Content node, NodeData nodedata, String itemType) {
-        String icon;
-        if (itemType.equals(ItemType.CONTENTNODE.getSystemName())) {
-            icon = this.getIconContentNode();
-        }
-        else if (itemType.equals(ITEM_TYPE_NODEDATA)) {
-            icon = this.getIconNodeData();
-        }
-        else {
-            icon = this.getIconPage();
-        }
-        return icon;
-    }
-
-    /**
      * @param item ContextMenuItem
      */
     public void addMenuItem(ContextMenuItem item) {
@@ -1101,5 +1115,15 @@ public class Tree extends ControlImpl {
      */
     private void setHierarchyManager(HierarchyManager hm) {
         this.hm = hm;
+    }
+
+    
+    public Comparator getSortComparator() {
+        return sortComparator;
+    }
+
+    
+    public void setSortComparator(Comparator sortComperator) {
+        this.sortComparator = sortComperator;
     }
 }
