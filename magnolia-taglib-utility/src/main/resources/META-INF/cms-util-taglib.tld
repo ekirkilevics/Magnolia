@@ -476,7 +476,7 @@ This page has no content and it will redirect to
   </tag>
   <tag>
     <name>scaleImage</name>
-    <tag-class>info.magnolia.cms.taglib.util.ScaleImageTag</tag-class>
+    <tag-class>info.magnolia.cms.taglibs.util.ScaleImageTag</tag-class>
     <body-content>EMPTY</body-content>
     <description>Creates a scaled copy of an image.</description>
     <attribute>
