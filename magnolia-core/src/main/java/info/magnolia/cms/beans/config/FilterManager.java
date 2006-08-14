@@ -14,6 +14,7 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
@@ -51,11 +52,14 @@ public class FilterManager {
     /**
      * singleton instance
      * */
-    private static FilterManager instance = new FilterManager();
+    private static FilterManager instance = (FilterManager) FactoryUtil.getSingleton(FilterManager.class);;
 
     private Filter[] filterChain;
 
-    private FilterManager() {
+    /**
+     * Do not instantiate yourself
+     */
+    public FilterManager() {
         init();
         ObservationUtil.registerChangeListener(
             ContentRepository.CONFIG,
@@ -69,9 +73,6 @@ public class FilterManager {
     }
 
     public static FilterManager getInstance() {
-        if (instance == null) {
-            instance = new FilterManager();
-        }
         return instance;
     }
 
