@@ -103,8 +103,6 @@
         <configuration>
           <source>1.4</source>
           <target>1.4</target>
-          <optimize>true</optimize>
-          <debug>false</debug>
         </configuration>
       </plugin>
       <plugin>
@@ -127,23 +125,14 @@
                 </property>
                 <property implementation="info.magnolia.maven.setproperty.VersionNameValueProvider">
                   <name>magnolia.version</name>
+                </property><!-- set the release date (default current) -->
+                <property implementation="info.magnolia.maven.setproperty.CurrentDateValueProvider">
+                  <name>magnolia.releaseDate</name>
+                  <format>d. MMMM yyyy</format>
                 </property>
               </properties>
             </configuration>
           </execution>
-          <!-- set the release date (default current) -->
-          <!-- <execution>
-            <phase>generate-resources</phase>
-            <id>releaseDate</id>
-            <goals>
-            <goal>set-property</goal>
-            </goals>
-            <configuration>
-            <name>magnolia.releaseDate</name>
-            <defaultValue>${magnolia.currentDate}</defaultValue>
-            </configuration>
-            </execution>
-          -->
         </executions>
       </plugin>
       <plugin>
@@ -208,6 +197,9 @@
       </plugin>
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
+        <configuration>
+          <dependencyLocationsEnabled>true</dependencyLocationsEnabled>
+        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-jxr-plugin</artifactId>
@@ -348,12 +340,12 @@
       <dependency>
         <groupId>xerces</groupId>
         <artifactId>xercesImpl</artifactId>
-        <version>2.6.2</version>
+        <version>2.8.0</version>
       </dependency>
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.1</version>
+        <version>1.1.1</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>
@@ -388,16 +380,24 @@
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
       </dependency>
       <dependency>
         <groupId>commons-chain</groupId>
         <artifactId>commons-chain</artifactId>
-        <version>1.0</version>
+        <version>1.1</version>
         <exclusions>
           <exclusion>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>javax.portlet</groupId>
+            <artifactId>portlet-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>myfaces</groupId>
+            <artifactId>myfaces-api</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
