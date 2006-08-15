@@ -627,67 +627,8 @@ public class SaveHandlerImpl implements SaveHandler {
         }
 
         Value value = null;
-        if (type == PropertyType.STRING) {
-            value = valueFactory.createValue(valueStr);
-        }
-        else if (type == PropertyType.BOOLEAN) {
-            value = valueFactory.createValue(BooleanUtils.toBoolean(valueStr));
-        }
-        else if (type == PropertyType.DOUBLE) {
-            try {
-                value = valueFactory.createValue(Double.parseDouble(valueStr));
-            }
-            catch (NumberFormatException e) {
-                value = valueFactory.createValue(0d);
-            }
-        }
-        else if (type == PropertyType.LONG) {
-            try {
-                value = valueFactory.createValue(Long.parseLong(valueStr));
-            }
-            catch (NumberFormatException e) {
-                value = valueFactory.createValue(0L);
-            }
-        }
-        else if (type == PropertyType.DATE) {
-            try {
-                Calendar date = new GregorianCalendar();
-                try {
-                    String newDateAndTime = valueStr;
-                    String[] dateAndTimeTokens = newDateAndTime.split("T"); //$NON-NLS-1$
-                    String newDate = dateAndTimeTokens[0];
-                    String[] dateTokens = newDate.split("-"); //$NON-NLS-1$
-                    int hour = 0;
-                    int minute = 0;
-                    int second = 0;
-                    int year = Integer.parseInt(dateTokens[0]);
-                    int month = Integer.parseInt(dateTokens[1]) - 1;
-                    int day = Integer.parseInt(dateTokens[2]);
-                    if (dateAndTimeTokens.length > 1) {
-                        String newTime = dateAndTimeTokens[1];
-                        String[] timeTokens = newTime.split(":"); //$NON-NLS-1$
-                        hour = Integer.parseInt(timeTokens[0]);
-                        minute = Integer.parseInt(timeTokens[1]);
-                        second = Integer.parseInt(timeTokens[2]);
-                    }
-                    date.set(year, month, day, hour, minute, second);
-                    // this is used in the searching
-                    date.set(Calendar.MILLISECOND, 0);
-                    date.setTimeZone(TimeZone.getTimeZone("GMT"));
-                }
-                // todo time zone??
-                catch (Exception e) {
-                    // ignore, it sets the current date / time
-                }
-                value = valueFactory.createValue(date);
-            }
-            catch (Exception e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-                }
-            }
-        }
-        else if (type == PropertyType.REFERENCE) {
+        
+        if (type == PropertyType.REFERENCE) {
             try {
                 Node referencedNode = hm.getWorkspace().getSession().getNodeByUUID(valueStr);
 
@@ -698,6 +639,9 @@ public class SaveHandlerImpl implements SaveHandler {
                     log.debug("Cannot retrieve the referenced node by UUID: " + valueStr, re);
                 }
             }
+        }
+        else {
+            value = NodeDataUtil.getValue(valueStr, type, valueFactory);
         }
 
         return value;
