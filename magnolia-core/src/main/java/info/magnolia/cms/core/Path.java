@@ -15,12 +15,12 @@ package info.magnolia.cms.core;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.UUID;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
+import org.doomdark.uuid.UUIDGenerator;
 
 
 /**
@@ -195,12 +195,12 @@ public final class Path {
 
     public static String getUniqueLabel(Content parent, String label) {
         try {
-            while (parent.hasContent(label) || parent.hasNodeData(label)){ //$NON-NLS-1$
+            while (parent.hasContent(label) || parent.hasNodeData(label)) { //$NON-NLS-1$
                 label = createUniqueName(label);
             }
         }
         catch (RepositoryException e) {
-            label = UUID.randomUUID().toString();
+            label = UUIDGenerator.getInstance().generateRandomBasedUUID().toString();
         }
         return label;
     }
