@@ -89,7 +89,7 @@ public class QueryResultImpl implements QueryResult {
         /**
          * All custom node types
          */
-        if (node.isNodeType(nodeType)) {
+        if ((node.isNodeType(nodeType) || StringUtils.isEmpty(nodeType)) && !node.isNodeType(ItemType.NT_RESOURCE)) {
             if (this.dirtyHandles.get(node.getPath()) == null) {
                 boolean isAllowed = this.accessManager.isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
                 if (isAllowed) {
