@@ -118,10 +118,6 @@
     <listener-class>info.magnolia.cms.servlets.PropertyInitializer</listener-class>
   </listener>
   <context-param>
-    <param-name>magnolia.cache.startdir</param-name>
-    <param-value>cache</param-value>
-  </context-param>
-  <context-param>
     <param-name>magnolia.initialization.file</param-name>
     <param-value>
       WEB-INF/config/${servername}/${webapp}/magnolia.properties, WEB-INF/config/${servername}/magnolia.properties,
