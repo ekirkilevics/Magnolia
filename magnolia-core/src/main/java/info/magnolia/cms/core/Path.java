@@ -15,7 +15,9 @@ package info.magnolia.cms.core;
 import java.io.File;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
+import java.util.UUID;
 
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -191,7 +193,20 @@ public final class Path {
         return label;
     }
 
+    public static String getUniqueLabel(Content parent, String label) {
+        try {
+            while (parent.hasContent(label) || parent.hasNodeData(label)){ //$NON-NLS-1$
+                label = createUniqueName(label);
+            }
+        }
+        catch (RepositoryException e) {
+            label = UUID.randomUUID().toString();
+        }
+        return label;
+    }
+
     protected static boolean isAbsolute(String path) {
+
         if (path == null) {
             return false;
         }
