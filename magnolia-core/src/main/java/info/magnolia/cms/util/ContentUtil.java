@@ -17,6 +17,9 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Content.ContentFilter;
+import info.magnolia.cms.core.search.Query;
+import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 
@@ -35,7 +38,6 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Some easy to use methods to handle with Content objects.
@@ -344,6 +346,26 @@ public class ContentUtil {
         for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
             String name = (String) iter.next();
             NodeDataUtil.getOrCreate(node, name).setValue(map.get(name).toString());
+        }
+    }
+
+    public static void setNodeDatas(Content node, Object bean, String[] excludes) throws RepositoryException {
+        try {
+            Map properties = BeanUtils.describe(bean);
+            for (int i = 0; i < excludes.length; i++) {
+                String exclude = excludes[i];
+                properties.remove(exclude);
+            }
+            setNodeDatas(node, properties);
+        }
+        catch (InvocationTargetException e) {
+            log.error("can't persist", e);
+        }
+        catch (NoSuchMethodException e) {
+            log.error("can't persist", e);
+        }
+        catch (IllegalAccessException e) {
+            log.error("can't persist", e);
         }
     }
 
