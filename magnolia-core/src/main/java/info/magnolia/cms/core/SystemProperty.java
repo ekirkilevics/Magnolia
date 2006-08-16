@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.core;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -62,6 +64,18 @@ public final class SystemProperty {
      */
     public static String getProperty(String name) {
         return (String) SystemProperty.properties.get(name);
+    }
+
+    /**
+     * @param name
+     * @param defaultValue
+     */
+    public static String getProperty(String name, String defaultValue) {
+        String value = getProperty(name);
+        if (StringUtils.isEmpty(value)) {
+            return defaultValue;
+        }
+        return value;
     }
 
     /**

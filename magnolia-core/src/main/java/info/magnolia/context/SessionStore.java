@@ -245,7 +245,8 @@ final class SessionStore {
                 ContentRepository.REPOSITORY_USER,
                 ContentRepository.REPOSITORY_PSWD.toCharArray());
 
-            jcrSession = ContentRepository.getRepository(repositoryID).login(sc, workspaceID);
+            jcrSession = ContentRepository.getRepository(repositoryID).login(sc,
+                    ContentRepository.getRegisteredWorkspaceName(workspaceID));
 
             if (httpSession != null) {
                 httpSession.setAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryID + "_" + workspaceID, //$NON-NLS-1$

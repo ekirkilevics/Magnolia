@@ -15,6 +15,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.SecureURI;
 
 import java.util.Hashtable;
@@ -35,11 +36,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
- * @version 1.1
+ * $Id$
  */
 public final class Server {
 
     public static final String CONFIG_PAGE = "server"; //$NON-NLS-1$
+
+    /**
+     * server properties
+     * */
+    private static final String PROPERTY_SERVER_ID = "magnolia.server.id";
 
     /**
      * Logger.
@@ -47,10 +53,6 @@ public final class Server {
     protected static Logger log = LoggerFactory.getLogger(Server.class);
 
     private static Map cachedContent = new Hashtable();
-
-    private static Map cachedURImapping = new Hashtable();
-
-    private static Map cachedCacheableURIMapping = new Hashtable();
 
     private static Map cachedMailSettings = new Hashtable();
 
@@ -85,8 +87,6 @@ public final class Server {
      */
     public static void load() throws ConfigurationException {
         Server.cachedContent.clear();
-        Server.cachedURImapping.clear();
-        Server.cachedCacheableURIMapping.clear();
         Server.cachedMailSettings.clear();
         Server.loginSettings.clear();
         try {
@@ -134,11 +134,6 @@ public final class Server {
 
         String basicRealm = page.getNodeData("basicRealm").getString(); //$NON-NLS-1$
         Server.cachedContent.put("basicRealm", basicRealm); //$NON-NLS-1$
-
-        Server.cachedContent.put("404URI", page.getNodeData("ResourceNotAvailableURIMapping").getString()); //$NON-NLS-1$ //$NON-NLS-2$
-
-        boolean visibleToObinary = page.getNodeData("visibleToObinary").getBoolean(); //$NON-NLS-1$
-        Server.cachedContent.put("visibleToObinary", BooleanUtils.toBooleanObject(visibleToObinary)); //$NON-NLS-1$
 
     }
 
@@ -292,20 +287,6 @@ public final class Server {
     }
 
     /**
-     * @return resource not available URI mapping as specifies in serverInfo, else /
-     */
-    public static String get404URI() {
-        String uri = (String) Server.cachedContent.get("404URI"); //$NON-NLS-1$
-        if (StringUtils.isEmpty(uri)) {
-            return "/"; //$NON-NLS-1$
-        }
-        if (log.isDebugEnabled()) {
-            log.debug("404URI is \"" + uri + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        return uri;
-    }
-
-    /**
      * @return default URL extension as configured
      */
     public static String getDefaultExtension() {
@@ -339,15 +320,7 @@ public final class Server {
     }
 
     /**
-     *
-     */
-    public static boolean isVisibleToObinary() {
-        return Boolean.TRUE.equals(Server.cachedContent.get("visibleToObinary")); //$NON-NLS-1$
-    }
-
-    /**
      * Time in ms since the server was started
-     * @return
      */
     public static long getUptime() {
         return System.currentTimeMillis() - uptime;
@@ -355,6 +328,14 @@ public final class Server {
 
     public Map getLoginConfig() {
         return loginSettings;
+    }
+
+    /**
+     * get server ID
+     * @return server id as configured in magnolia.properties
+     * */
+    public static String getServerId() {
+        return SystemProperty.getProperty(PROPERTY_SERVER_ID);
     }
 
     /**

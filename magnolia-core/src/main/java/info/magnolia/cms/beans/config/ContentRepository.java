@@ -45,6 +45,7 @@ import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 
 import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
@@ -54,7 +55,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author Sameer Charles $Id :$
+ * @author Sameer Charles
+ * $Id$
  */
 public final class ContentRepository {
 
@@ -275,11 +277,11 @@ public final class ContentRepository {
                     Element workspace = (Element) wspIterator.next();
                     String wspName = workspace.getAttributeValue(ATTRIBUTE_NAME);
                     log.info("Loading workspace:" + wspName);
-                    map.addWorkspace(wspName);
+                    map.addWorkspace(getRegisteredWorkspaceName(wspName));
                 }
             }
             else {
-                map.addWorkspace(DEFAULT_WORKSPACE);
+                map.addWorkspace(getRegisteredWorkspaceName(DEFAULT_WORKSPACE));
             }
             ContentRepository.repositoryMapping.put(name, map);
             try {
@@ -342,15 +344,16 @@ public final class ContentRepository {
         Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
-            Session session = repository.login(sc, wspID);
+            Session session = repository.login(sc, getRegisteredWorkspaceName(wspID));
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             provider.registerNodeTypes();
             AccessManagerImpl accessManager = getAccessManager();
             HierarchyManager hierarchyManager = new HierarchyManager(REPOSITORY_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
-            ContentRepository.hierarchyManagers.put(map.getName() + "_" + wspID, hierarchyManager); //$NON-NLS-1$
-
+            ContentRepository.hierarchyManagers.put(map.getName()
+                    + "_"
+                    + getInternalWorkspaceName(wspID), hierarchyManager); //$NON-NLS-1$
             try {
                 QueryManager queryManager = SearchFactory.getAccessControllableQueryManager(hierarchyManager
                     .getWorkspace()
@@ -422,7 +425,6 @@ public final class ContentRepository {
      * Add a mapped repository name
      * @param name
      * @param repositoryName
-     * @return mapped name as in repositories.xml RepositoryMapping element
      */
     public static void addMappedRepositoryName(String name, String repositoryName) {
         ContentRepository.repositoryNameMap.put(name, repositoryName);
@@ -439,7 +441,7 @@ public final class ContentRepository {
             return DEFAULT_WORKSPACE;
         }
         Collection workspaces = mapping.getWorkspaces();
-        if (workspaces.contains(repositoryId)) {
+        if (workspaces.contains(getRegisteredWorkspaceName(repositoryId))) {
             return repositoryId;
         }
         return DEFAULT_WORKSPACE;
@@ -510,6 +512,33 @@ public final class ContentRepository {
      */
     public static Iterator getAllRepositoryNames() {
         return ContentRepository.repositoryNameMap.keySet().iterator();
+    }
+
+
+    /**
+     * get registered workspace name
+     * @param workspaceName
+     * @return workspace name as registered with the repository
+     * */
+    public static String getRegisteredWorkspaceName(String workspaceName) {
+        String prefix = SystemProperty.getProperty("magnolia.workspace.prefix","");
+        if (StringUtils.contains(workspaceName,prefix)) {
+            return workspaceName;
+        }
+        return prefix+workspaceName;
+    }
+
+    /**
+     * get internal workspace name
+     * @param workspaceName
+     * @return workspace name as configured in magnolia repositories.xml
+     * */
+    public static String getInternalWorkspaceName(String workspaceName) {
+        String prefix = SystemProperty.getProperty("magnolia.workspace.prefix","");
+        if (StringUtils.contains(workspaceName,prefix)) {
+            return StringUtils.substringAfter(workspaceName,prefix);
+        }
+        return workspaceName;
     }
 
 }
