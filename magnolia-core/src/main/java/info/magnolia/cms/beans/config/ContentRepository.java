@@ -55,8 +55,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author Sameer Charles
- * $Id$
+ * @author Sameer Charles $Id$
  */
 public final class ContentRepository {
 
@@ -83,6 +82,16 @@ public final class ContentRepository {
     public static final String NAMESPACE_PREFIX = "mgnl"; //$NON-NLS-1$
 
     public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl"; //$NON-NLS-1$
+
+    /**
+     * repository user.
+     */
+    public static final String REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+
+    /**
+     * repository default password
+     */
+    public static final String REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
 
     /**
      * Logger.
@@ -112,16 +121,6 @@ public final class ContentRepository {
     private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
 
     private static final String ATTRIBUTE_REPOSITORY_NAME = "repositoryName"; //$NON-NLS-1$
-
-    /**
-     * repository user.
-     */
-    public static final String REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
-
-    /**
-     * repository default password
-     */
-    public static final String REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
 
     /**
      * All available repositories store.
@@ -351,9 +350,9 @@ public final class ContentRepository {
             HierarchyManager hierarchyManager = new HierarchyManager(REPOSITORY_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
-            ContentRepository.hierarchyManagers.put(map.getName()
-                    + "_"
-                    + getInternalWorkspaceName(wspID), hierarchyManager); //$NON-NLS-1$
+            ContentRepository.hierarchyManagers.put(
+                map.getName() + "_" + getInternalWorkspaceName(wspID),
+                hierarchyManager); //$NON-NLS-1$
             try {
                 QueryManager queryManager = SearchFactory.getAccessControllableQueryManager(hierarchyManager
                     .getWorkspace()
@@ -502,8 +501,19 @@ public final class ContentRepository {
         if (name != null && ContentRepository.repositoryMapping.containsKey(name)) {
             return (RepositoryMapping) ContentRepository.repositoryMapping.get(getMappedRepositoryName(repositoryID));
         }
-        log.warn("no mapping for the repository [{}]", repositoryID);
+        log.warn("no mapping for the repository [" + repositoryID + "]");
         return null;
+    }
+
+    /**
+     * Returns <code>true</code> if a mapping for the given repository name does exist.
+     */
+    public static boolean hasRepositoryMapping(String repositoryID) {
+        String name = getMappedRepositoryName(repositoryID);
+        if (name != null && ContentRepository.repositoryMapping.containsKey(name)) {
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -514,29 +524,28 @@ public final class ContentRepository {
         return ContentRepository.repositoryNameMap.keySet().iterator();
     }
 
-
     /**
      * get registered workspace name
      * @param workspaceName
      * @return workspace name as registered with the repository
-     * */
+     */
     public static String getRegisteredWorkspaceName(String workspaceName) {
-        String prefix = SystemProperty.getProperty("magnolia.workspace.prefix","");
-        if (StringUtils.contains(workspaceName,prefix)) {
+        String prefix = SystemProperty.getProperty("magnolia.workspace.prefix", "");
+        if (StringUtils.contains(workspaceName, prefix)) {
             return workspaceName;
         }
-        return prefix+workspaceName;
+        return prefix + workspaceName;
     }
 
     /**
      * get internal workspace name
      * @param workspaceName
      * @return workspace name as configured in magnolia repositories.xml
-     * */
+     */
     public static String getInternalWorkspaceName(String workspaceName) {
-        String prefix = SystemProperty.getProperty("magnolia.workspace.prefix","");
-        if (StringUtils.contains(workspaceName,prefix)) {
-            return StringUtils.substringAfter(workspaceName,prefix);
+        String prefix = SystemProperty.getProperty("magnolia.workspace.prefix", "");
+        if (StringUtils.contains(workspaceName, prefix)) {
+            return StringUtils.substringAfter(workspaceName, prefix);
         }
         return workspaceName;
     }

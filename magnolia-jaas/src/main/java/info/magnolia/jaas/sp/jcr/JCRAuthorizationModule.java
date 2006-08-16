@@ -213,11 +213,16 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 String repositoryName;
                 String workspaceName;
                 if (!StringUtils.contains(name, "_")) {
-                    workspaceName = ContentRepository.getDefaultWorkspace(StringUtils.substringBefore(name, "_"));
+
                     repositoryName = name;
-                    name += ("_" + workspaceName); // default workspace
-                    // must be added to the
-                    // name
+                    if (!ContentRepository.hasRepositoryMapping(repositoryName)) {
+                        // may be: default users may have permissions for the workflow or dms repositories, but
+                        // if the optional modules are not installed no ACL should be set
+                        continue;
+                    }
+                    workspaceName = ContentRepository.getDefaultWorkspace(name);
+
+                    name += ("_" + workspaceName); // default workspace must be added to the name
                 }
                 else {
                     String[] tokens = StringUtils.split(name, "_");
