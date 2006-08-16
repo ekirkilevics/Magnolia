@@ -162,6 +162,14 @@ public class MgnlCmsFilter implements Filter {
                             }
                             renderer.renderTemplate(template, request, response);
                         }
+                        catch (IOException e) {
+                            log.error(e.getMessage(), e);
+                            throw e;
+                        }
+                        catch (ServletException e) {
+                            log.error(e.getMessage(), e);
+                            throw e;
+                        }
                         catch (Exception e) {
                             // @todo better handling of rendering exception
                             log.error(e.getMessage(), e);
