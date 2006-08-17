@@ -116,7 +116,7 @@ public class File extends ControlImpl {
     }
 
     public String getNodeDataTemplate() {
-        return getPropertyString(FileProperties.PROPERTY_TEMPLATE);
+        return this.nodeDataTemplate;
     }
 
     public String getExtension() {
