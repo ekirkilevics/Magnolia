@@ -122,15 +122,13 @@ public class ModuleRegistration {
 
     /**
      * @param xmlUrl
-     * @return
+     * @return module root
      */
     protected File getModuleRoot(URL xmlUrl) {
         String xmlString = xmlUrl.getFile();
-        String protocol = xmlUrl.getProtocol();
-
         File moduleRoot = null;
 
-        if ("jar".equals(protocol)) {
+        if (StringUtils.contains(xmlString, ".jar!")) {
             xmlString = StringUtils.substringBefore(xmlString, ".jar!") + ".jar";
             try {
                 moduleRoot = new File(new URI(xmlString));
@@ -174,7 +172,6 @@ public class ModuleRegistration {
             // parse the xml files
             for (int j = 0; j < defResources.length; j++) {
                 String name = defResources[j];
-
                 File moduleRoot = getModuleRoot(name);
 
                 log.info("Parsing module file {} for module @ {}", name, moduleRoot.getAbsolutePath());
@@ -214,7 +211,6 @@ public class ModuleRegistration {
 
     /**
      * Check if the dependencies are ok
-     * @return true if so
      * @throws MissingDependencyException
      */
     private void checkDependencies() throws MissingDependencyException {
