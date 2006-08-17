@@ -63,8 +63,7 @@ public class ClasspathResourcesUtil {
     /**
      * Return a collection containing the resource names which passed the filter.
      * @param filter
-     * @return
-     * @throws IOException
+     * @return string array of found resources
      */
     public static String[] findResources(Filter filter) {
 
@@ -96,7 +95,6 @@ public class ClasspathResourcesUtil {
             }
         }
         else {
-
             // no way, we have to assume a standard war structure and look in the WEB-INF/lib and WEB-INF/classes dirs
 
             // read the jars in the lib dir
@@ -115,7 +113,10 @@ public class ClasspathResourcesUtil {
             }
 
             // read files in WEB-INF/classes
-            collectFiles(resources, new File(Path.getAbsoluteFileSystemPath("WEB-INF/classes")), filter);
+            File classFileDir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/classes"));
+            if (classFileDir.exists()) {
+                collectFiles(resources, classFileDir, filter);
+            }
         }
 
         return (String[]) resources.toArray(new String[resources.size()]);
@@ -215,7 +216,7 @@ public class ClasspathResourcesUtil {
 
     /**
      * Get the class loader of the current Thread
-     * @return
+     * @return current classloader
      */
     private static ClassLoader getCurrentClassLoader() {
         return Thread.currentThread().getContextClassLoader();
