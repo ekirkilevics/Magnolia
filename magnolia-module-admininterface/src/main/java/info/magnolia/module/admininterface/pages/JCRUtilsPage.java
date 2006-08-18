@@ -50,7 +50,10 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
     }
 
     public String query(){
+        long start = System.currentTimeMillis();
         Collection nodes = QueryUtil.query(repository, statement, language, this.itemType);
+        this.result +=(System.currentTimeMillis() - start) + "ms\n";
+        
         for (Iterator iter = nodes.iterator(); iter.hasNext();) {
             Content node = (Content) iter.next();
             this.result += node.getHandle() + "\n";
