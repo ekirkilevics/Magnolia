@@ -178,7 +178,9 @@ class QueryBuilder {
         else if (param.getConstraint().equals(StringSearchQueryParameter.IS_NOT)) {
             return param.getName() + " <> '" + param.getValue() + "'";
         }
-        return StringUtils.EMPTY;
+        else{
+            return param.getName() + " " + param.getConstraint() + " '" + param.getValue() + "'";
+        }
     }
 
 }
