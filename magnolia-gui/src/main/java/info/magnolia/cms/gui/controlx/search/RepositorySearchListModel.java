@@ -50,6 +50,8 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
      */
     private String nodeType = "nt:base";
 
+    private String resultNodeType = "mgnl:content";
+    
     /**
      * search path (optional)
      */
@@ -89,6 +91,9 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
      */
     protected Collection getResult() throws Exception {
         String query = buildQuery();
+        if(log.isDebugEnabled()){
+            log.debug("query: " + query);
+        }
         QueryResult result = this.getResult(query);
         Collection items = getResult(result);
         return items;
@@ -98,7 +103,7 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
      * Gets the items from the query (possibility to post filter)
      */
     protected Collection getResult(QueryResult result) {
-        Collection items = result.getContent();
+        Collection items = result.getContent(this.getResultNodeType());
         return items;
     }
 
@@ -180,6 +185,14 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
      */
     public SearchQuery getQuery() {
         return this.query;
+    }
+
+    public void setResultNodeType(String resultNodeType) {
+        this.resultNodeType = resultNodeType;
+    }
+
+    public String getResultNodeType() {
+        return resultNodeType;
     }
 
 }
