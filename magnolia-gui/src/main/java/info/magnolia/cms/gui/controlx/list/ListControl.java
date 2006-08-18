@@ -92,7 +92,7 @@ public class ListControl extends AbstractControl {
      */
     public ListModelIterator getIterator() {
         if (this.iterator == null) {
-            this.iterator = this.getModel().iterator();
+            this.iterator = this.getModel().getListModelIterator();
         }
         return iterator;
     }

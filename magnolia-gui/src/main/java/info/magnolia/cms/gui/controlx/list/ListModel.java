@@ -12,16 +12,24 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
+import java.util.Iterator;
+
 /**
  * @author Sameer Charles $Id$
  */
-public interface ListModel {
+public interface ListModel extends Iterable {
 
     /**
-     * get ListModelIterator
+     * implement Iterable
      * @return iterator
      */
-    public ListModelIterator iterator();
+    public Iterator iterator();
+    
+    /**
+     * Return the list model iterator
+     * @return
+     */
+    public ListModelIterator getListModelIterator();
 
     /**
      * set sort on field name
