@@ -223,7 +223,15 @@ public final class ContentRepository {
         }
 
         Content startPage = hm.getRoot();
-        if (startPage.getChildren(ItemType.CONTENT).size() > 0) {
+        
+        // return any kind of children
+        Collection children = startPage.getChildren(new Content.ContentFilter(){
+            public boolean accept(Content content) {
+                return !content.getName().startsWith("jcr:");
+            }
+        });
+        
+        if (!children.isEmpty()) {
             if (log.isDebugEnabled()) {
                 log.debug("Content found in [" + repository + "]."); //$NON-NLS-1$ //$NON-NLS-2$
             }
