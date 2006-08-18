@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
@@ -67,7 +68,7 @@ public abstract class AbstractListModel implements ListModel {
      * @return Iterator over found records
      * @see ListModelIterator
      */
-    public ListModelIterator iterator() {
+    public ListModelIterator getListModelIterator() {
         try {
             return createIterator(getResult());
         }
@@ -75,6 +76,10 @@ public abstract class AbstractListModel implements ListModel {
             log.error("can't create the list model iterator, will return an empty list", re);
             return new ListModelIteratorImpl(new ArrayList(), this.getGroupBy());
         }
+    }
+    
+    public Iterator iterator() {
+        return getListModelIterator();
     }
 
     /**
