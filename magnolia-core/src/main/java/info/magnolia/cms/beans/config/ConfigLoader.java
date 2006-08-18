@@ -215,7 +215,7 @@ public class ConfigLoader {
             // define the system property to (re)bootstrap a singel repository
             String bootstrapIfEmpty = SystemProperty.getProperty(SystemProperty.BOOTSTRAP_IF_EMPTY);
             if (StringUtils.isNotEmpty(bootstrapIfEmpty)) {
-                String[] repositories = bootstrapIfEmpty.split(",");
+                String[] repositories = StringUtils.split(bootstrapIfEmpty,", ");
                 for (int i = 0; i < repositories.length; i++) {
                     String repository = repositories[i];
                     try {
