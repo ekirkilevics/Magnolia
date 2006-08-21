@@ -5,7 +5,8 @@
 <!ELEMENT Map (#PCDATA)>
 <!ATTLIST Map
     name CDATA #REQUIRED
-    repositoryName CDATA #REQUIRED>
+    repositoryName CDATA #REQUIRED
+    workspaceName CDATA #REQUIRED>
 <!ELEMENT JCR (RepositoryMapping|Repository)*>
 <!ELEMENT param (#PCDATA)>
 <!ATTLIST param
@@ -70,13 +71,13 @@
 
     -->
     <RepositoryMapping>
-        <Map name="website" repositoryName="magnolia" />
-        <Map name="config" repositoryName="magnolia" />
-        <Map name="users" repositoryName="magnolia" />
-        <Map name="userroles" repositoryName="magnolia" />
-        <Map name="usergroups" repositoryName="magnolia"/>
-        <Map name="mgnlSystem" repositoryName="magnolia"/> <!-- System internal data -->
-        <Map name="mgnlVersion" repositoryName="magnolia"/> <!-- magnolia version workspace -->
+        <Map name="website" repositoryName="magnolia" workspaceName="website" />
+        <Map name="config" repositoryName="magnolia" workspaceName="config" />
+        <Map name="users" repositoryName="magnolia" workspaceName="users" />
+        <Map name="userroles" repositoryName="magnolia" workspaceName="userroles" />
+        <Map name="usergroups" repositoryName="magnolia" workspaceName="usergroups" />
+        <Map name="mgnlSystem" repositoryName="magnolia" workspaceName="mgnlSystem" /> <!-- System internal data -->
+        <Map name="mgnlVersion" repositoryName="magnolia" workspaceName="mgnlVersion" /> <!-- magnolia version workspace -->
     </RepositoryMapping>
 
     <!-- magnolia default repository -->

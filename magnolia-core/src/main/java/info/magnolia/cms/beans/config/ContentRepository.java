@@ -14,7 +14,6 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.search.QueryManager;
@@ -28,6 +27,7 @@ import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
+import info.magnolia.repository.RepositoryNameMap;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -55,7 +55,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author Sameer Charles $Id$
+ * @author Sameer Charles
+ * $Id$
  */
 public final class ContentRepository {
 
@@ -82,16 +83,6 @@ public final class ContentRepository {
     public static final String NAMESPACE_PREFIX = "mgnl"; //$NON-NLS-1$
 
     public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl"; //$NON-NLS-1$
-
-    /**
-     * repository user.
-     */
-    public static final String REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
-
-    /**
-     * repository default password
-     */
-    public static final String REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
 
     /**
      * Logger.
@@ -121,6 +112,18 @@ public final class ContentRepository {
     private static final String ATTRIBUTE_VALUE = "value"; //$NON-NLS-1$
 
     private static final String ATTRIBUTE_REPOSITORY_NAME = "repositoryName"; //$NON-NLS-1$
+
+    private static final String ATTRIBUTE_WORKSPACE_NAME = "workspaceName"; //$NON-NLS-1$
+
+    /**
+     * repository user.
+     */
+    public static final String REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+
+    /**
+     * repository default password
+     */
+    public static final String REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
 
     /**
      * All available repositories store.
@@ -157,7 +160,7 @@ public final class ContentRepository {
 
     /**
      * loads all configured repository using ID as Key, as configured in repositories.xml.
-     * 
+     *
      * <pre>
      * &lt;Repository name="website"
      *                id="website"
@@ -223,14 +226,14 @@ public final class ContentRepository {
         }
 
         Content startPage = hm.getRoot();
-        
+
         // return any kind of children
         Collection children = startPage.getChildren(new Content.ContentFilter(){
             public boolean accept(Content content) {
                 return !content.getName().startsWith("jcr:");
             }
         });
-        
+
         if (!children.isEmpty()) {
             if (log.isDebugEnabled()) {
                 log.debug("Content found in [" + repository + "]."); //$NON-NLS-1$ //$NON-NLS-2$
@@ -284,11 +287,11 @@ public final class ContentRepository {
                     Element workspace = (Element) wspIterator.next();
                     String wspName = workspace.getAttributeValue(ATTRIBUTE_NAME);
                     log.info("Loading workspace:" + wspName);
-                    map.addWorkspace(getRegisteredWorkspaceName(wspName));
+                    map.addWorkspace(wspName);
                 }
             }
             else {
-                map.addWorkspace(getRegisteredWorkspaceName(DEFAULT_WORKSPACE));
+                map.addWorkspace(DEFAULT_WORKSPACE);
             }
             ContentRepository.repositoryMapping.put(name, map);
             try {
@@ -309,8 +312,10 @@ public final class ContentRepository {
         Iterator children = repositoryMapping.getChildren().iterator();
         while (children.hasNext()) {
             Element nameMap = (Element) children.next();
-            addMappedRepositoryName(nameMap.getAttributeValue(ATTRIBUTE_NAME), nameMap
-                .getAttributeValue(ATTRIBUTE_REPOSITORY_NAME));
+            addMappedRepositoryName(
+                    nameMap.getAttributeValue(ATTRIBUTE_NAME),
+                    nameMap.getAttributeValue(ATTRIBUTE_REPOSITORY_NAME),
+                    nameMap.getAttributeValue(ATTRIBUTE_WORKSPACE_NAME));
         }
     }
 
@@ -351,16 +356,16 @@ public final class ContentRepository {
         Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
-            Session session = repository.login(sc, getRegisteredWorkspaceName(wspID));
+            Session session = repository.login(sc, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             provider.registerNodeTypes();
             AccessManagerImpl accessManager = getAccessManager();
             HierarchyManager hierarchyManager = new HierarchyManager(REPOSITORY_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
-            ContentRepository.hierarchyManagers.put(
-                map.getName() + "_" + getInternalWorkspaceName(wspID),
-                hierarchyManager); //$NON-NLS-1$
+            ContentRepository.hierarchyManagers.put(map.getName()
+                    + "_"
+                    + getInternalWorkspaceName(wspID), hierarchyManager); //$NON-NLS-1$
             try {
                 QueryManager queryManager = SearchFactory.getAccessControllableQueryManager(hierarchyManager
                     .getWorkspace()
@@ -425,7 +430,18 @@ public final class ContentRepository {
      * @return mapped name as in repositories.xml RepositoryMapping element
      */
     public static String getMappedRepositoryName(String name) {
-        return (String) ContentRepository.repositoryNameMap.get(name);
+        RepositoryNameMap nameMap = (RepositoryNameMap) ContentRepository.repositoryNameMap.get(name);
+        return nameMap.getRepositoryName();
+    }
+
+    /**
+     * Get mapped workspace name
+     * @param name
+     * @return mapped name as in repositories.xml RepositoryMapping element
+     */
+    public static String getMappedWorkspaceName(String name) {
+        RepositoryNameMap nameMap = (RepositoryNameMap) ContentRepository.repositoryNameMap.get(name);
+        return nameMap.getWorkspaceName();
     }
 
     /**
@@ -434,7 +450,19 @@ public final class ContentRepository {
      * @param repositoryName
      */
     public static void addMappedRepositoryName(String name, String repositoryName) {
-        ContentRepository.repositoryNameMap.put(name, repositoryName);
+        addMappedRepositoryName(name, repositoryName, null);
+    }
+
+    /**
+     * Add a mapped repository name
+     * @param name
+     * @param repositoryName
+     * @param workspaceName
+     */
+    public static void addMappedRepositoryName(String name, String repositoryName, String workspaceName) {
+        if (StringUtils.isEmpty(workspaceName)) workspaceName = name;
+        RepositoryNameMap nameMap = new RepositoryNameMap(repositoryName, workspaceName);
+        ContentRepository.repositoryNameMap.put(name, nameMap);
     }
 
     /**
@@ -448,7 +476,7 @@ public final class ContentRepository {
             return DEFAULT_WORKSPACE;
         }
         Collection workspaces = mapping.getWorkspaces();
-        if (workspaces.contains(getRegisteredWorkspaceName(repositoryId))) {
+        if (workspaces.contains(getMappedWorkspaceName(repositoryId))) {
             return repositoryId;
         }
         return DEFAULT_WORKSPACE;
@@ -518,10 +546,7 @@ public final class ContentRepository {
      */
     public static boolean hasRepositoryMapping(String repositoryID) {
         String name = getMappedRepositoryName(repositoryID);
-        if (name != null && ContentRepository.repositoryMapping.containsKey(name)) {
-            return true;
-        }
-        return false;
+        return name != null;
     }
 
     /**
@@ -533,28 +558,18 @@ public final class ContentRepository {
     }
 
     /**
-     * get registered workspace name
-     * @param workspaceName
-     * @return workspace name as registered with the repository
-     */
-    public static String getRegisteredWorkspaceName(String workspaceName) {
-        String prefix = SystemProperty.getProperty("magnolia.workspace.prefix", "");
-        if (StringUtils.contains(workspaceName, prefix)) {
-            return workspaceName;
-        }
-        return prefix + workspaceName;
-    }
-
-    /**
      * get internal workspace name
      * @param workspaceName
      * @return workspace name as configured in magnolia repositories.xml
-     */
-    public static String getInternalWorkspaceName(String workspaceName) {
-        String prefix = SystemProperty.getProperty("magnolia.workspace.prefix", "");
-        if (StringUtils.contains(workspaceName, prefix)) {
-            return StringUtils.substringAfter(workspaceName, prefix);
+     * */
+    private static String getInternalWorkspaceName(String workspaceName) {
+        Iterator keys = repositoryNameMap.keySet().iterator();
+        while (keys.hasNext()) {
+            String key = (String) keys.next();
+            RepositoryNameMap nameMap = (RepositoryNameMap) repositoryNameMap.get(key);
+            if (nameMap.getWorkspaceName().equalsIgnoreCase(workspaceName)) return key;
         }
+        log.error("No Repository/Workspace name mapping defined for "+workspaceName);
         return workspaceName;
     }
 
