@@ -50,7 +50,8 @@ import org.slf4j.LoggerFactory;
 /**
  * Singleton class which should be used for any operation related to versioning VersionManager synchronizes all
  * operations like add version, restore version and remove version but it does not synchronize between operations
- * @author Sameer Charles $Id$
+ * @author Sameer Charles
+ * $Id$
  */
 public final class VersionManager {
 
@@ -245,7 +246,7 @@ public final class VersionManager {
         return newVersion;
     }
 
-    /*******************************************************************************************************************
+    /**
      * get node from version store
      * @param node
      */
@@ -253,7 +254,7 @@ public final class VersionManager {
         return getVersionedNode(node.getUUID());
     }
 
-    /*******************************************************************************************************************
+    /**
      * get node from version store
      * @param uuid
      */

@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * $Id$
  */
 public class ContentVersion extends Content {
 

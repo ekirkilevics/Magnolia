@@ -39,8 +39,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @author Sameer Charles $Id$ Utility class to copy nodes using
- * specified Roles to the magnolia specific version store
+ * @author Sameer Charles
+ * $Id$
+ * Utility class to copy nodes using specified Roles to the magnolia specific version store
  */
 public final class CopyUtil {
 
