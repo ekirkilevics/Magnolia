@@ -20,7 +20,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.ie.DataTransporter;
-import info.magnolia.cms.core.ie.filters.VersionFilter;
 import info.magnolia.cms.exchange.ActivationContent;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
@@ -595,28 +594,32 @@ public class SimpleSyndicator implements Syndicator {
         File file = File.createTempFile("exchange" + content.getName(), "", Path.getTempDirectory());
         GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
-        XMLReader elementfilter;
         if (content.getWorkspace().getName().equalsIgnoreCase(ContentRepository.VERSION_STORE)) {
-            elementfilter = new FrozenElementFilter(XMLReaderFactory
+            XMLReader elementfilter = new FrozenElementFilter(XMLReaderFactory
                 .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
             ((FrozenElementFilter) elementfilter).setNodeName(content.getName());
-        }
-        else {
-            // use default filter
-            elementfilter = new VersionFilter(XMLReaderFactory
-                .createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName()));
+            /**
+             * nt:file node type has mandatory sub nodes
+             */
+            if (content.isNodeType(ItemType.NT_FILE)) {
+                DataTransporter.parseAndFormat(gzipOutputStream, elementfilter, "", content.getJCRNode().getPath(), session, false);
+            }
+            else {
+                DataTransporter
+                    .parseAndFormat(gzipOutputStream, elementfilter, "", content.getJCRNode().getPath(), session, true);
+            }
+        } else {
+            /**
+             * nt:file node type has mandatory sub nodes
+             */
+            if (content.isNodeType(ItemType.NT_FILE)) {
+                session.exportSystemView(content.getJCRNode().getPath(), gzipOutputStream, false, false);
+            }
+            else {
+                session.exportSystemView(content.getJCRNode().getPath(), gzipOutputStream, false, true);
+            }
         }
 
-        /**
-         * nt:file node type has mandatory sub nodes
-         */
-        if (content.isNodeType(ItemType.NT_FILE)) {
-            DataTransporter.parseAndFormat(gzipOutputStream, elementfilter, "", content.getHandle(), session, true);
-        }
-        else {
-            DataTransporter
-                .parseAndFormat(gzipOutputStream, elementfilter, "", content.getJCRNode().getPath(), session, true);
-        }
         IOUtils.closeQuietly(gzipOutputStream);
         // add file entry in mapping.xml
         Element element = new Element(RESOURCE_MAPPING_FILE_ELEMENT);
