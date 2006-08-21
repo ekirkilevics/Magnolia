@@ -29,6 +29,7 @@ import org.slf4j.LoggerFactory;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
+ * $Id$
  */
 public class CacheImpl implements Cache {
 
@@ -43,7 +44,9 @@ public class CacheImpl implements Cache {
 
     /**
      * Cache this request in default and optimized stores
-     * @param request duplicate request created for cache
+     * @param key
+     * @param entry
+     * @param canCompress
      */
     public void cacheRequest(CacheKey key, CacheableEntry entry, boolean canCompress) {
 
@@ -150,13 +153,12 @@ public class CacheImpl implements Cache {
      * any request parameter, else it wont write anything on the output stream.
      * @param key HttpServletRequest
      * @param response HttpServletResponse
-     * @throws IOException
      * @return <code>true</code> is successful
-     * @throws IOException
      */
     public boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
 
         FileInputStream fin = null;
+        OutputStream out = null;
         try {
             File file = getFile(key, canCompress);
 
@@ -169,7 +171,7 @@ public class CacheImpl implements Cache {
             }
 
             fin = new FileInputStream(file);
-            OutputStream out = response.getOutputStream();
+            out = response.getOutputStream();
             if (canCompress) {
                 response.setContentLength(getCompressedSize(key));
                 response.setHeader("Content-Encoding", "gzip");
@@ -180,13 +182,13 @@ public class CacheImpl implements Cache {
                 IOUtils.copy(fin, out);
             }
             out.flush();
-            IOUtils.closeQuietly(out);
         }
         catch (IOException e) {
             log.error("Error while reading cache for: '" + key + "'.", e);
             return false;
         }
         finally {
+            IOUtils.closeQuietly(out);
             IOUtils.closeQuietly(fin);
         }
 
@@ -194,7 +196,6 @@ public class CacheImpl implements Cache {
     }
 
     /**
-     * @param uri request URI
      * @param lastModified last modification time (ms from 1970)
      * @param size original size
      * @param compressedSize compressed size
@@ -216,7 +217,6 @@ public class CacheImpl implements Cache {
 
     /**
      * Empties the cache for the specified resource. Currenty it expects the entire path, including cache location.
-     * @param uri request URI
      */
     public void remove(CacheKey key) {
         File file = this.getFile(key, false);
@@ -276,7 +276,7 @@ public class CacheImpl implements Cache {
     }
 
     /**
-     * @param uri request URI
+     * @param key
      */
     private void removeFromCachedURIList(CacheKey key) {
         this.cachedURIList.remove(key);
