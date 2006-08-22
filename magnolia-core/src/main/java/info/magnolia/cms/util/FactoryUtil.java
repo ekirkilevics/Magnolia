@@ -14,8 +14,10 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.SystemProperty;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Properties;
 
+import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.discovery.tools.DiscoverClass;
 import org.apache.commons.discovery.tools.DiscoverSingleton;
 import org.slf4j.Logger;
@@ -53,16 +55,38 @@ public class FactoryUtil {
         }
         return null;
     }
+    /**
+     * This method does not use discovery! It is a util method for easy instantiating. In any case of an exception null is returned.
+     * @param className
+     * @return
+     */
+    public static Object getInstanceWithoutDiscovery(String className, Object [] args){
+        Class clazz;
+        try {
+            clazz = ClassUtil.classForName(className);
+        }
+        catch (ClassNotFoundException e) {
+            log.error("can't find class: " + className, e);
+            return null;
+        }
+        try {
+            return ConstructorUtils.invokeConstructor(clazz, args);
+        }
+        catch (Exception e) {
+            log.error("can't instantiate: " + className, e);
+        }
+        return null;
+    }
+
+    public static Object getInstanceWithoutDiscovery(String className){
+        return getInstanceWithoutDiscovery(className, new Object[]{});
+    }
 
     public static Object getSingleton(Class interf) {
         return DiscoverSingleton.find(interf, props);
     }
 
     public static void setDefaultImplementation(Class interf, String impl) {
-        props.setProperty(interf.getName(), impl);
-    }
-
-    public static void setImplementation(Class interf, String impl) {
         props.setProperty(interf.getName(), impl);
     }
 }
