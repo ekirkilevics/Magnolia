@@ -104,7 +104,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
     /**
      * The class to instantiate a tree control
      */
-    private String treeClass;
+    private String treeClass = Tree.class.getName();
     
     /**
      * The class used to instantiate a AdminTreeConfiguration if not provided.
