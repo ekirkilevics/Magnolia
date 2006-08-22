@@ -42,6 +42,8 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -98,6 +100,17 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
      * name of the tree (not the repository)
      */
     protected Tree tree;
+    
+    /**
+     * The class to instantiate a tree control
+     */
+    private String treeClass;
+    
+    /**
+     * The class used to instantiate a AdminTreeConfiguration if not provided.
+     * This can get configured in the trees configuration node
+     */
+    private String configurationClass;
 
     /**
      * The configuration used to configure the tree
@@ -808,7 +821,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
 
     protected Tree getTree() {
         if(tree == null){
-            tree = new Tree(super.getName(), getRepository(), super.getRequest());
+            tree = (Tree) FactoryUtil.getInstanceWithoutDiscovery(this.getTreeClass(), new Object[]{super.getName(), getRepository(), super.getRequest()});
         }
         return tree;
     }
@@ -839,6 +852,9 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
      * @return Returns the configuration.
      */
     public AdminTreeConfiguration getConfiguration() {
+        if(this.configuration == null){
+            this.configuration = (AdminTreeConfiguration) FactoryUtil.getInstanceWithoutDiscovery(this.getConfigurationClass(), new Object[]{});
+        }
         return this.configuration;
     }
 
@@ -847,6 +863,26 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
      */
     public void setConfiguration(AdminTreeConfiguration configuration) {
         this.configuration = configuration;
+    }
+
+    
+    public String getConfigurationClass() {
+        return configurationClass;
+    }
+
+    
+    public void setConfigurationClass(String configClass) {
+        this.configurationClass = configClass;
+    }
+
+    
+    public String getTreeClass() {
+        return treeClass;
+    }
+
+    
+    public void setTreeClass(String treeClass) {
+        this.treeClass = treeClass;
     }
 
 }
