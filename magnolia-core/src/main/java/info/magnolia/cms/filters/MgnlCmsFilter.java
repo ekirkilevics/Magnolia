@@ -85,7 +85,7 @@ public class MgnlCmsFilter implements Filter {
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        this.bypass = StringUtils.split(filterConfig.getInitParameter(BYPASS_PARAM), ",");
+        this.bypass = StringUtils.split(filterConfig.getInitParameter(BYPASS_PARAM), ", ");
         if (this.bypass == null) {
             this.bypass = new String[0];
         }
