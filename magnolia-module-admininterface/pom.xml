@@ -58,8 +58,9 @@
       <version>3.0-rc3-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>jug</groupId>
+      <groupId>org.safehaus.jug</groupId>
       <artifactId>jug</artifactId>
+      <classifier>asl</classifier>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>

@@ -20,7 +20,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
-import org.doomdark.uuid.UUIDGenerator;
+import org.safehaus.uuid.UUIDGenerator;
 
 
 /**

@@ -33,7 +33,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.io.IOUtils;
-import org.doomdark.uuid.UUIDGenerator;
+import org.safehaus.uuid.UUIDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
