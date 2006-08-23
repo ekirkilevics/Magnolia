@@ -123,7 +123,7 @@ public class DumperUtil {
                 }
             }
             else if (p.getType() == PropertyType.BINARY) {
-                out.print("Binary");
+                out.print("binary");
             }
             else {
                 out.print(p.getString());
@@ -132,11 +132,15 @@ public class DumperUtil {
         }
 
         level--;
-        if (level > 0) {
-            NodeIterator nit = n.getNodes();
-            while (nit.hasNext()) {
-                Node cn = nit.nextNode();
+
+        NodeIterator nit = n.getNodes();
+        while (nit.hasNext()) {
+            Node cn = nit.nextNode();
+            if (level > 0) {
                 dump(cn, level, out);
+            }
+            else{
+                out.println(cn.getPath() + "[" + cn.getPrimaryNodeType().getName()  + "]");
             }
         }
     }
