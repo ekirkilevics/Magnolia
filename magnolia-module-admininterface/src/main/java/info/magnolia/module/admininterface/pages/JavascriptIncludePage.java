@@ -131,8 +131,9 @@ public class JavascriptIncludePage extends PageMVCHandler {
             def.name = StringUtils.substringAfterLast(def.name, "/js-classes/");
             def.name = StringUtils.removeEnd(def.name, ".js");
             def.name = StringUtils.replace(def.name, "/", ".");
-
-            def.content = IOUtils.toString(ClasspathResourcesUtil.getStream(name));
+            InputStream stream = ClasspathResourcesUtil.getStream(name);
+            def.content = IOUtils.toString(stream);
+            stream.close();
             Matcher matcher = importPattern.matcher(def.content);
             while (matcher.find()) {
                 String importName = matcher.group(1);
