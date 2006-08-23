@@ -178,6 +178,12 @@ public class ClasspathResourcesUtil {
                     }
                 }
             }
+            try {
+                jar.close();
+            } catch (IOException e) {
+                log.error("Failed to close jar file : "+e.getMessage());
+                log.debug("Failed to close jar file",e);
+            }
         }
         else {
             if (log.isDebugEnabled()) {
