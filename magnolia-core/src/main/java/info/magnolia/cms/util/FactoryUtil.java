@@ -20,6 +20,7 @@ import java.util.Properties;
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.discovery.tools.DiscoverClass;
 import org.apache.commons.discovery.tools.DiscoverSingleton;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -61,6 +62,11 @@ public class FactoryUtil {
      * @return
      */
     public static Object getInstanceWithoutDiscovery(String className, Object [] args){
+        
+        if(StringUtils.isEmpty(className)){
+            return null;
+        }
+        
         Class clazz;
         try {
             clazz = ClassUtil.classForName(className);
