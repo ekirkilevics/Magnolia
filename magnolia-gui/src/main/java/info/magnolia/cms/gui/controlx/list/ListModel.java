@@ -17,14 +17,14 @@ import java.util.Iterator;
 /**
  * @author Sameer Charles $Id$
  */
-public interface ListModel extends Iterable {
+public interface ListModel { // extends Iterable { // jdl 1.5!
 
     /**
      * implement Iterable
      * @return iterator
      */
     public Iterator iterator();
-    
+
     /**
      * Return the list model iterator
      * @return
