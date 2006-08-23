@@ -24,6 +24,7 @@ import java.util.ResourceBundle;
 
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.io.IOUtils;
 
 
 /**
@@ -59,8 +60,9 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
      */
     protected ResourceBundle getBundle() {
         if (bundle == null) {
+            InputStream stream = null;
             try {
-                InputStream stream = ClasspathResourcesUtil.getStream("/"
+                stream = ClasspathResourcesUtil.getStream("/"
                     + StringUtils.replace(basename, ".", "/")
                     + "_"
                     + getLocale().getLanguage()
@@ -96,6 +98,8 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
             }
             catch (IOException e) {
                 log.error("can't load messages for " + basename);
+            } finally {
+                IOUtils.closeQuietly(stream);
             }
         }
         return bundle;
