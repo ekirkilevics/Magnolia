@@ -197,9 +197,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-project-info-reports-plugin</artifactId>
-        <configuration>
-          <dependencyLocationsEnabled>true</dependencyLocationsEnabled>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-jxr-plugin</artifactId>
@@ -219,6 +216,12 @@
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-core</artifactId>
         <version>1.0.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>jsr170</groupId>
+            <artifactId>jcr</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
@@ -318,7 +321,7 @@
         <version>1.4</version>
       </dependency>
       <dependency>
-        <groupId>jsr170</groupId>
+        <groupId>javax.jcr</groupId>
         <artifactId>jcr</artifactId>
         <version>1.0</version>
       </dependency>

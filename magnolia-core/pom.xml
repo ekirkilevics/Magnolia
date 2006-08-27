@@ -30,7 +30,7 @@
       <artifactId>commons-collections</artifactId>
     </dependency>
     <dependency>
-      <groupId>jsr170</groupId>
+      <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
     </dependency>
     <dependency>
