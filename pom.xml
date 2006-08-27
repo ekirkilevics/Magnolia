@@ -167,12 +167,6 @@
   <properties>
     <magnolia.edition>Community Edition</magnolia.edition>
   </properties>
-  <repositories>
-    <repository>
-      <id>magnolia</id>
-      <url>http://svn.magnolia.info/maven/m2</url>
-    </repository>
-  </repositories>
   <reporting>
     <plugins>
       <plugin>
@@ -531,6 +525,25 @@
     </site>
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
   </distributionManagement>
+  <repositories>
+    <repository>
+      <id>magnolia</id>
+      <url>http://svn.magnolia.info/maven/m2</url>
+      <snapshots>
+        <enabled>false</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>magnolia.snapshots</id>
+      <url>http://svn.magnolia.info/maven/snapshots</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
+    </repository>
+  </repositories>
   <pluginRepositories>
     <pluginRepository>
       <id>magnolia</id>
@@ -545,6 +558,9 @@
       <snapshots>
         <enabled>true</enabled>
       </snapshots>
+      <releases>
+        <enabled>false</enabled>
+      </releases>
     </pluginRepository>
   </pluginRepositories>
   <modules>
