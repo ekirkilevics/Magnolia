@@ -40,11 +40,6 @@
       <version>3.0-rc3-SNAPSHOT</version>
     </dependency>
     <dependency>
-      <groupId>org.openwfe</groupId>
-      <artifactId>openwfe-worklist-actions</artifactId>
-      <version>1.7.2pre4</version>
-    </dependency>
-    <dependency>
       <groupId>jaxen</groupId>
       <artifactId>jaxen</artifactId>
       <version>1.1-beta-4</version>
