@@ -1,15 +1,11 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <properties>
-      <magnolia.version>3.0-rc3-SNAPSHOT</magnolia.version>
-      <magnolia.edition>Community Edition</magnolia.edition>
-  </properties>
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>${magnolia.version}</version>
+  <version>3.0-rc3-SNAPSHOT</version>
   <description>
     Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
     java content repositories (JCR).
@@ -168,6 +164,9 @@
       </plugin>
     </plugins>
   </build>
+  <properties>
+    <magnolia.edition>Community Edition</magnolia.edition>
+  </properties>
   <reporting>
     <plugins>
       <plugin>
