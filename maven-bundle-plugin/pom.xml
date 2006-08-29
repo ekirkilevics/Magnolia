@@ -40,7 +40,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>3.0-rc3-SNAPSHOT</version>
+      <version>${magnolia.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
