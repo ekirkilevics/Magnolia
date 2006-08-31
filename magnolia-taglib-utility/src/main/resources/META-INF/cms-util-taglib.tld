@@ -542,6 +542,12 @@ This page has no content and it will redirect to
       <description>Mail "bcc" field</description>
     </attribute>
     <attribute>
+      <name>replyTo</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Mail "replyTo" field</description>
+    </attribute>
+    <attribute>
       <name>from</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
@@ -558,6 +564,12 @@ This page has no content and it will redirect to
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>Page to redirect to after a successfull submission</description>
+    </attribute>
+    <attribute>
+      <name>trackMail</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Track this mail.</description>
     </attribute>
   </tag>
   <tag>

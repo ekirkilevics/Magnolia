@@ -2,7 +2,7 @@
   xmlns:cmsu="urn:jsptld:cms-util-taglib" xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core">
   <jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
   <cms:setNode var="par" />
-  <jsp:scriptlet>pageContext.setAttribute("newline", "\n");</jsp:scriptlet>
+  <jsp:scriptlet>pageContext.setAttribute("newline", "\r\n");</jsp:scriptlet>
   <div class="formelement">
     <c:if test="${!empty(par.title)}">
       <label for="${contentObj.name}">

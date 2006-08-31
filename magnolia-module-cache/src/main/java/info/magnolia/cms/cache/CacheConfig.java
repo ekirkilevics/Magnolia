@@ -2,6 +2,7 @@ package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.SimpleUrlPattern;
@@ -27,7 +28,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
- * @version $Id: $
+ * @version $Id$
  */
 public class CacheConfig {
 
@@ -111,7 +112,7 @@ public class CacheConfig {
      * todo refactor
      */
     private Map cacheCacheableURIMappings(Content nodeList, Map mappings, boolean allow) {
-        for (Iterator it = nodeList.getChildren().iterator(); it.hasNext();) {
+        for (Iterator it = nodeList.getChildren(ItemType.CONTENTNODE).iterator(); it.hasNext();) {
             Content container = (Content) it.next();
             NodeData uri = container.getNodeData("URI");
             UrlPattern p = new SimpleUrlPattern(uri.getString());

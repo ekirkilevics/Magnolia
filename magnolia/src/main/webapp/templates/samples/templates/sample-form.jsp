@@ -6,7 +6,7 @@
   <cms:setNode var="pageProperties" />
   <c:if test="${!empty(param.sendmail)}">
     <cmsu:simpleMail to="${pageProperties.to}" from="${pageProperties.from}" cc="${pageProperties.cc}"
-      bcc="${pageProperties.cc}" redirect="${pageProperties.redirect}" subject="${pageProperties.subject}"
+      bcc="${pageProperties.cc}" replyTo="${pageProperties.replyTo}" trackMail="${pageProperties.trackMail}" redirect="${pageProperties.redirect}" subject="${pageProperties.subject}"
       nodeCollectionName="mainColumnParagraphs" />
   </c:if>
   <jsp:text>
