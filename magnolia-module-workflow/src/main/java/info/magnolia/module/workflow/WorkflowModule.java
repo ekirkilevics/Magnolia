@@ -90,14 +90,14 @@ public class WorkflowModule extends AbstractAdminModule {
     private void registerCacheUrl() {
         Content node = ContentUtil.getContent(ContentRepository.CONFIG, CACHE_URL_DEFINITION);
         try {
-            if(node.hasNodeData("serverURL")) {
+            if(node!=null && node.hasNodeData("serverURL")) {
                 String serverURL = node.getNodeData("serverURL").getString();
                 if(serverURL !=null) {
                     cacheURL = serverURL;
                     log.info("Cache server base url for flows is set to:"+cacheURL);
                 }
             }
-        } catch (RepositoryException e) {
+        } catch (Exception e) {
 
         }
     }
