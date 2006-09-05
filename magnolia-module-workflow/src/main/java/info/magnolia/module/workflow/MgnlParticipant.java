@@ -19,6 +19,7 @@ import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.WorkItem;
+import openwfe.org.engine.workitem.CancelItem;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.lang.StringUtils;
@@ -50,6 +51,16 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             log.debug("storage = " + this.storage);
         }
     }
+
+
+    public void cancel(CancelItem cancelItem) throws Exception {
+        if(log.isDebugEnabled())
+            if(cancelItem!=null && cancelItem.getId()!=null)
+                log.debug("Cancelling "+cancelItem.getId().toParseableString());
+            else
+                log.debug("Calling cancel on participant with null cancel item");
+    }
+
 
     /**
      * @see openwfe.org.embed.engine.EmbeddedParticipant#consume(openwfe.org.engine.workitem.WorkItem)

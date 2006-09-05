@@ -16,6 +16,7 @@ import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContextImpl;
+import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.WorkflowUtil;
 import openwfe.org.engine.workitem.AttributeUtils;
 import openwfe.org.engine.workitem.LaunchItem;
@@ -24,12 +25,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
-import java.io.Serializable;
 import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Map;
+import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Iterator;
+import java.util.Map;
 
 
 public class FlowCommand extends MgnlCommand {
@@ -42,14 +43,12 @@ public class FlowCommand extends MgnlCommand {
     private static Logger log = LoggerFactory.getLogger(FlowCommand.class);
 
     public boolean execute(Context ctx) {
-
         try {
             // Get the references
             LaunchItem li = new LaunchItem();
             prepareLaunchItem(ctx, li);
             setFlowDefinitionURL(li);
             WorkflowUtil.launchFlow(li, getWorkflowName());
-
         }
         catch (Exception e) {
             log.error("Launching failed", e);
@@ -59,28 +58,37 @@ public class FlowCommand extends MgnlCommand {
     }
 
     private void setFlowDefinitionURL(LaunchItem li) {
+        InputStream is = null;
         try {
             WebContextImpl impl = (WebContextImpl) MgnlContext.getInstance();
             HttpServletRequest request = impl.getRequest();
-            String remoteAddr = request.getRemoteAddr();
-            StringBuffer baseurl = new StringBuffer("http");
-            if(request.isSecure())
-                baseurl.append("s");
-            baseurl.append("://");
-            baseurl.append(request.getServerName());
-            baseurl.append(":");
-            baseurl.append(request.getServerPort());
+            String cacheURL = WorkflowModule.getCacheURL();
+            StringBuffer baseurl = new StringBuffer();
+            if(cacheURL!=null)
+                baseurl.append(cacheURL);
+            else {
+                baseurl.append("http");
+                if(request.isSecure())
+                    baseurl.append("s");
+                baseurl.append("://");
+                baseurl.append(request.getServerName());
+                baseurl.append(":");
+                baseurl.append(request.getServerPort());
+            }
             baseurl.append(impl.getContextPath());
-            baseurl.append("/.magnolia/pages/flows.html?command=showFlow&flowName=");
-            baseurl.append(this.getWorkflowName());
-            URL url = new URL(baseurl.toString());
+            baseurl.append("/.magnolia/pages/flows.html");
+            baseurl.append("?command=showFlow&flowName=");
+            baseurl.append(getWorkflowName());
+            String surl = baseurl.toString();
+            URL url = new URL(surl);
             URLConnection connection = url.openConnection();
             connection.connect();
-            InputStream is = connection.getInputStream();
-            is.close();
-            li.setWorkflowDefinitionUrl(baseurl.toString());
+            is = connection.getInputStream();
+            li.setWorkflowDefinitionUrl(surl);
         } catch(Exception e) {
-            log.info("Could not set workflow definition url:"+e.getMessage());
+            log.info("Could not set workflow definition url:"+e.getMessage(),e);
+        } finally {
+            try {if(is!=null) is.close();} catch(Exception e) {/*just try to close any open stream*/}
         }
     }
 

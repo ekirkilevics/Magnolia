@@ -40,6 +40,7 @@ import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import openwfe.org.engine.launch.LaunchException;
 
 
 /**
@@ -86,13 +87,13 @@ public class JCRFlowDefinition {
      * get flow definition as string of xml
      * @param flowName
      * @return the string defining the flow in xml format
-     * @throws RepositoryException
+     * @throws RepositoryException if error why accessing the repository
+     * @throws LaunchException if the node for that flowName does not exist
      */
-    public String getflowDefAsString(String flowName) throws RepositoryException {
+    public String getflowDefAsString(String flowName) throws LaunchException,RepositoryException {
         Content node = findFlowDef(flowName);
-        if (node == null) {
-            return null;
-        }
+        if (node == null)
+            throw new LaunchException("Could not access the node definition for flowName:"+flowName);
         return node.getNodeData("value").getString();
     }
 
@@ -145,7 +146,6 @@ public class JCRFlowDefinition {
      * @throws IOException
      * @throws JDOMException
      * @throws RepositoryException
-     * @throws Exception
      */
     public List addFlow(String flowDef) throws JDOMException, IOException, RepositoryException {
         if (flowDef == null) {
@@ -164,7 +164,7 @@ public class JCRFlowDefinition {
         // check if the node already exist, and if it does update the value of the the NodeData FLOW_VALUE with the
         // new flow. This is to allow duplication of flow node.
 
-        boolean exist = hm.isExist(root.getHandle() + "/" + name);
+        final boolean exist = hm.isExist(root.getHandle() + "/" + name);
         Content c;
         if (exist) {
             c = hm.getContent(root.getHandle() + "/" + name);

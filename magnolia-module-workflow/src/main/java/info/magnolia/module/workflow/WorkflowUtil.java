@@ -28,6 +28,7 @@ import openwfe.org.engine.workitem.InFlowItem;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
+import openwfe.org.engine.launch.LaunchException;
 import openwfe.org.worklist.store.StoreException;
 
 import org.apache.commons.lang.StringUtils;

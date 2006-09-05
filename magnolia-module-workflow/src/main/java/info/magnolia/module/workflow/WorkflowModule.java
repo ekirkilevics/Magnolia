@@ -17,6 +17,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
@@ -46,6 +47,8 @@ public class WorkflowModule extends AbstractAdminModule {
      */
     public static final String COMMANDS_CATALOG_PATH = "/modules/workflow/config/commands";
 
+    public static final String CACHE_URL_DEFINITION = "/modules/workflow/config/cache";
+
     /**
      * Logger.
      */
@@ -55,6 +58,7 @@ public class WorkflowModule extends AbstractAdminModule {
      * The current used engine
      */
     private static JCRPersistedEngine wfEngine;
+    private static String cacheURL;
 
     /**
      * @see info.magnolia.module.admininterface.AbstractAdminModule#onRegister(int)
@@ -75,7 +79,27 @@ public class WorkflowModule extends AbstractAdminModule {
      */
     protected void onInit() {
         registerCommands();
+        registerCacheUrl();
         startEngine();
+    }
+
+    public static String getCacheURL() {
+        return cacheURL;
+    }
+
+    private void registerCacheUrl() {
+        Content node = ContentUtil.getContent(ContentRepository.CONFIG, CACHE_URL_DEFINITION);
+        try {
+            if(node.hasNodeData("serverURL")) {
+                String serverURL = node.getNodeData("serverURL").getString();
+                if(serverURL !=null) {
+                    cacheURL = serverURL;
+                    log.info("Cache server base url for flows is set to:"+cacheURL);
+                }
+            }
+        } catch (RepositoryException e) {
+
+        }
     }
 
     /**
@@ -96,11 +120,8 @@ public class WorkflowModule extends AbstractAdminModule {
      */
     private void startEngine() {
         try {
-            if (log.isDebugEnabled()) {
-                log.debug("create worklist...");
-            }
+            log.info("Starting openwfe engine");
             wfEngine = new JCRPersistedEngine();
-
             wfEngine.registerParticipant(new MgnlParticipant("user-.*"));
             wfEngine.registerParticipant(new MgnlParticipant("group-.*"));
             wfEngine.registerParticipant(new MgnlParticipant("role-.*"));
