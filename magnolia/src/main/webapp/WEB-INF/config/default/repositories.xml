@@ -82,14 +82,14 @@
 
     <!-- magnolia default repository -->
     <Repository name="magnolia" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
-        <param name="configFile" value="WEB-INF/config/repo-conf/jackrabbit-derby-search.xml" />
-        <param name="repositoryHome" value="repositories/magnolia" />
+        <param name="configFile" value="${magnolia.repositories.jackrabbit.config}" />
+        <param name="repositoryHome" value="${magnolia.repositories.home}/${magnolia.webapp}/magnolia" />
         <!-- the default node types are loaded automatically
 			<param name="customNodeTypes" value="WEB-INF/config/repo-conf/nodetypes/magnolia_nodetypes.xml" />
 		-->
         <param name="contextFactoryClass" value="org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory" />
         <param name="providerURL" value="localhost" />
-        <param name="bindName" value="magnoliaAuthor" />
+        <param name="bindName" value="magnolia${magnolia.webapp}" />
         <workspace name="website" />
         <workspace name="config" />
         <workspace name="users" />
