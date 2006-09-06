@@ -571,6 +571,16 @@ This page has no content and it will redirect to
       <rtexprvalue>true</rtexprvalue>
       <description>Track this mail.</description>
     </attribute>
+    <attribute>
+      <name>type</name>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Mail type. used to get the mail from the factory</description>
+    </attribute>
+    <attribute>
+      <name>template</name>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Instead of the mail type you can define a template to use. This template must be registered in the mail module</description>
+    </attribute>
   </tag>
   <tag>
     <name>img</name>
