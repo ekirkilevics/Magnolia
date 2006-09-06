@@ -12,20 +12,25 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ButtonSet;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.misc.CssConstants;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -60,13 +65,15 @@ public class DialogButtonSet extends DialogBox {
         // therefor do only use for radio, not for checkbox
         List options = new ArrayList();
         try {
-            Iterator it = configNode.getContent("options") //$NON-NLS-1$
-                .getChildren(ItemType.CONTENTNODE.getSystemName())
-                .iterator();
+            Iterator it = getOptionNodes(configNode).iterator();
             while (it.hasNext()) {
                 Content n = ((Content) it.next());
-                String value = n.getNodeData("value").getString(); //$NON-NLS-1$
-                String label = n.getNodeData("label").getString(); //$NON-NLS-1$
+                String valueNodeData = this.getConfigValue("valueNodeData", "value");
+                String labelNodeData = this.getConfigValue("labelNodeData", "label");
+
+                String value = NodeDataUtil.getString(n, valueNodeData);//$NON-NLS-1$
+                String label = NodeDataUtil.getString(n, labelNodeData);//$NON-NLS-1$
+
                 //label = this.getMessage(label);
                 Button button = new Button(this.getName(), value);
                 // if (n.getNodeData("label").isExist()) button.setLabel(n.getNodeData("label").getString());
@@ -89,6 +96,26 @@ public class DialogButtonSet extends DialogBox {
             }
         }
         this.setOptions(options);
+    }
+
+    protected Collection getOptionNodes(Content configNode) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        Content optionsNode = null;
+        
+        if(configNode.hasContent("options")){
+            optionsNode = configNode.getContent("options"); //$NON-NLS-1$
+        }
+        else{
+            String repository = this.getConfigValue("repository", ContentRepository.WEBSITE);
+            String path = this.getConfigValue("path");
+            if(StringUtils.isNotEmpty(path)){
+                optionsNode = ContentUtil.getContent(repository, path);
+            }
+        }
+        
+        if(optionsNode != null){
+            return ContentUtil.getAllChildren(optionsNode);
+        }
+        return new ArrayList();
     }
 
     public void setOption(Content configNode) {
@@ -118,7 +145,7 @@ public class DialogButtonSet extends DialogBox {
 
         // confignode can be null if instantiated directly
         if (configNode != null) {
-            String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
+            String controlType = this.getConfigValue("selectType",this.getConfigValue("controlType")); //$NON-NLS-1$
 
             if (log.isDebugEnabled()) {
                 log.debug("Init DialogButtonSet with type=" + controlType); //$NON-NLS-1$
