@@ -6,17 +6,21 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 import java.util.Map;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Address;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Session;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,6 +63,10 @@ public abstract class MgnlEmail extends MimeMessage {
     }
 
     public abstract void setBody(String body, Map _parameters) throws Exception;
+    
+    public void setSubject(String arg0) throws MessagingException {
+        this.setSubject(arg0, "UTF8");
+    }
 
     public void setTemplate(String _template) {
         this.template = _template;
@@ -112,28 +120,39 @@ public abstract class MgnlEmail extends MimeMessage {
         }
     }
 
-    public void setToList(String to) throws Exception {
-        setListByString(to, Message.RecipientType.TO);
+    public void setToList(String list) throws Exception {
+        setRecipients(Message.RecipientType.TO, createAdressList(list));
     }
 
-    public void setCcList(String to) throws Exception {
-        setListByString(to, Message.RecipientType.CC);
+    public void setCcList(String list) throws Exception {
+        setRecipients(Message.RecipientType.CC, createAdressList(list));
     }
 
-    public void setBccList(String to) throws Exception {
-        setListByString(to, Message.RecipientType.BCC);
+    public void setBccList(String list) throws Exception {
+        setRecipients(Message.RecipientType.BCC, createAdressList(list));
+    }
+    
+    public void setReplyToList(String list) throws Exception {
+        setReplyTo(createAdressList(list));
     }
 
-    private void setListByString(String to, Message.RecipientType type) throws Exception {
-        if (to == null || to.equals(StringUtils.EMPTY)) {
-            return;
+    private Address[] createAdressList(String adresses) throws AddressException {
+        if (adresses == null || adresses.equals(StringUtils.EMPTY)) {
+            return new Address[0];
         }
-        String[] toObj = to.split("\n");
+        String[] toObj = adresses.split("\n");
         Address[] ato = new Address[toObj.length];
         for (int i = 0; i < toObj.length; i++) {
-            ato[i] = new InternetAddress(toObj[i]);
+            try {
+                ato[i] = new InternetAddress(toObj[i]);
+            } catch (AddressException e) {
+                log.warn("Error while parsing address.", e);
+                ArrayUtils.remove(ato, i);
+                ArrayUtils.remove(toObj, i);
+                i--;
+            }
         }
-        this.setRecipients(type, ato);
+        return ato;
     }
 
     public void setAttachments(ArrayList list) throws MailException {
