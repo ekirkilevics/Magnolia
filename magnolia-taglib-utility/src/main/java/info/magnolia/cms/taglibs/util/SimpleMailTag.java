@@ -19,39 +19,22 @@ import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Resource;
 
-import java.io.BufferedOutputStream;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.FileWriter;
 import java.io.IOException;
-import java.io.OutputStream;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.lang.reflect.Array;
 import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Locale;
+import java.util.Map;
 
 import javax.jcr.RepositoryException;
-import javax.mail.Address;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.print.attribute.standard.PageRanges;
-import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.slf4j.Logger;
@@ -87,6 +70,11 @@ public class SimpleMailTag extends TagSupport {
     private String redirect;
 
     private String type;
+    
+    /**
+     * Alternatively to the type you can use a template to render the email dynamically.
+     */
+    private String template;
 
     private boolean trackMail;
 
@@ -166,6 +154,21 @@ public class SimpleMailTag extends TagSupport {
     public void setType(String type) {
         this.type = type;
     }
+    
+    public void setTrackMail(boolean trackMail) {
+        this.trackMail = trackMail;
+    }
+
+    
+    public String getTemplate() {
+        return template;
+    }
+
+    
+    public void setTemplate(String template) {
+        this.template = template;
+    }
+
 
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#doEndTag()
@@ -176,9 +179,11 @@ public class SimpleMailTag extends TagSupport {
 
         StringBuffer body = new StringBuffer(); // build and send email
         
-        // tracking mail
+        // tracking mail: Excel friendly csv format
         StringBuffer mailTitles = new StringBuffer();
-        StringBuffer mailValues = new StringBuffer(DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()))).append('\t');
+        StringBuffer mailValues = new StringBuffer();
+        // timestamp
+        mailValues.append(DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()))).append(';');
         
         Content activePage = Resource.getActivePage(request);
         Iterator it;
@@ -197,16 +202,17 @@ public class SimpleMailTag extends TagSupport {
             }
             if (values != null) {
                 body.append(node.getNodeData("title").getString()).append('\n');
-//                mailTitles.append(node.getNodeData("title").getString()).append('\t');
+                mailTitles.append(excelCSVFormat(node.getNodeData("title").getString())).append(';');
+                StringBuffer csvValue = new StringBuffer();
                 for (int i = 0; i < values.length; i++) {
                     body.append(values[i]).append('\n');
-                    if(i > 0){
-                    	mailValues.append(",");
+                    csvValue.append(values[i]);
+                    if(i < values.length-1){
+                    	csvValue.append('\n');
                     }
-                    mailValues.append(values[i]);
                 }
+                mailValues.append(excelCSVFormat(csvValue.toString())).append(';');
                 body.append("\n");
-                mailValues.append('\t');
             }
         }
 
@@ -215,20 +221,28 @@ public class SimpleMailTag extends TagSupport {
         }
         
         String mailType = type;
-        if (mailType == null) {
+        if (StringUtils.isEmpty(mailType)) {
             mailType = MailConstants.MAIL_TEMPLATE_TEXT;
         }
 
         MgnlEmail email;
         try {
-            email = MgnlMailFactory.getInstance().getEmailFromType(mailType);
+            // TODO: avoid those kinds of redundacies in the mail system
+            if(StringUtils.isEmpty(template)){
+                email = MgnlMailFactory.getInstance().getEmailFromType(mailType);
+                email.setBody(body.toString(), null);
+            }
+            else{
+                Map parameters = new HashMap(request.getParameterMap());
+                parameters.put("all", body.toString());
+                email = MgnlMailFactory.getInstance().getEmailFromTemplate(template, parameters);
+            }
             email.setToList(to);
             email.setCcList(cc);
             email.setBccList(bcc);
-            email.setReplyTo(getReplyToArray(replyTo));
+            email.setReplyToList(replyTo);
             email.setFrom(from);
             email.setSubject(subject);
-            email.setBody(body.toString(), null);
             MgnlMailFactory.getInstance().getEmailHandler().prepareAndSendMail(email);
         }
         catch (Exception e) {
@@ -250,31 +264,12 @@ public class SimpleMailTag extends TagSupport {
         return super.doEndTag();
     }
 
-    /**
-     * Returns the replyTo string as Address array.
-     * 
-     * @param replyTo the replyTo string "\n" seperated
-     * @return the replyTo string as Address array
-     */
-    protected Address[] getReplyToArray(String replyTo){
-	    if (replyTo == null || replyTo.equals(StringUtils.EMPTY)) {
-	        return null;
-	    }
-	    String[] toObj = replyTo.split("\n");
-	    Address[] ato = new Address[toObj.length];
-	    for (int i = 0; i < toObj.length; i++) {
-	        try {
-				ato[i] = new InternetAddress(toObj[i]);
-			} catch (AddressException e) {
-				log.warn("Error while parsing replyTo address.", e);
-				ArrayUtils.remove(ato, i);
-				ArrayUtils.remove(toObj, i);
-				i--;
-			}
-	    }
-	    return ato;
+    protected String excelCSVFormat(String str) {
+        if(!StringUtils.containsNone(str, "\n;")){
+            return "\"" + StringUtils.replace(str, "\"","\"\"") + "\"";
+        }
+        return str;
     }
-
     
     protected void trackMail(HttpServletRequest request, String activePagePath, StringBuffer titles, StringBuffer values){
     	activePagePath = StringUtils.removeStart(activePagePath, "/");
@@ -291,19 +286,18 @@ public class SimpleMailTag extends TagSupport {
 	    	
 	    	try {
 	    		FileOutputStream out = new FileOutputStream(file, true);
-
-//	    		if(!exists){
-//	        		titles.replace(titles.length()-1, titles.length()-1, "\n");
-//	        		out.write(titles.toString().getBytes());
-//	        	}
-
-	    		values.replace(values.length()-1, values.length()-1, "\n");
-	        	out.write(values.toString().getBytes());
+	    		if(!exists){
+	        		out.write("Timestamp;".toString().getBytes("UTF8"));
+                    titles.replace(titles.length()-1, titles.length(), "\n");
+	        		out.write(titles.toString().getBytes("UTF8"));
+	        	}
+	    		values.replace(values.length()-1, values.length(), "\n");
+	        	out.write(values.toString().getBytes("UTF8"));
 	        	out.flush();
 	        	out.close();
 	        	
 			} catch (Exception e) {
-				log.warn("Exception while tracking mail [{0}].", e.getMessage());
+				log.error("Exception while tracking mail", e);
 			} 
 		} 
     }
@@ -319,11 +313,9 @@ public class SimpleMailTag extends TagSupport {
         this.bcc = null;
         this.subject = null;
         this.type = null;
+        this.template = null;
         super.release();
     }
 
-	public void setTrackMail(boolean trackMail) {
-		this.trackMail = trackMail;
-	}
 
 }
