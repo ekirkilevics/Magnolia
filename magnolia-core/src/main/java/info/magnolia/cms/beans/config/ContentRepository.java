@@ -23,6 +23,7 @@ import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -30,6 +31,7 @@ import info.magnolia.repository.RepositoryNotInitializedException;
 import info.magnolia.repository.RepositoryNameMap;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -277,7 +279,8 @@ public final class ContentRepository {
             Map parameters = new Hashtable();
             while (params.hasNext()) {
                 Element param = (Element) params.next();
-                parameters.put(param.getAttributeValue(ATTRIBUTE_NAME), param.getAttributeValue(ATTRIBUTE_VALUE));
+                String value = param.getAttributeValue(ATTRIBUTE_VALUE);
+                parameters.put(param.getAttributeValue(ATTRIBUTE_NAME), value);
             }
             map.setParameters(parameters);
             List workspaces = element.getChildren(ELEMENT_WORKSPACE);
@@ -420,8 +423,8 @@ public final class ContentRepository {
             throw new FileNotFoundException("Failed to locate magnolia repositories config file at " //$NON-NLS-1$
                 + source.getAbsolutePath());
         }
-        SAXBuilder builder = new SAXBuilder();
-        return builder.build(source);
+        
+        return ConfigUtil.string2JDOM(ConfigUtil.replaceTokens(new FileInputStream(source)));
     }
 
     /**
@@ -431,6 +434,9 @@ public final class ContentRepository {
      */
     public static String getMappedRepositoryName(String name) {
         RepositoryNameMap nameMap = (RepositoryNameMap) ContentRepository.repositoryNameMap.get(name);
+        if(nameMap==null){
+            return name;
+        }
         return nameMap.getRepositoryName();
     }
 
