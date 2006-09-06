@@ -1,36 +1,22 @@
 package info.magnolia.logging;
 
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ConfigUtil;
 
-import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringBufferInputStream;
-import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
-import java.util.ResourceBundle;
 
 import javax.servlet.ServletContext;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
-import org.apache.log4j.xml.Log4jEntityResolver;
-import org.apache.log4j.xml.SAXErrorHandler;
 import org.w3c.dom.Document;
-import org.xml.sax.ErrorHandler;
-import org.xml.sax.SAXException;
-
-import sun.tools.tree.ThisExpression;
 
 
 /**
