@@ -45,7 +45,7 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
 
         tree.setDrawShifter(false);
 
-        tree.setIconPage(Tree.ICONDOCROOT + "group.gif"); //$NON-NLS-1$
+        tree.setIcon(ItemType.GROUP.getSystemName(), Tree.ICONDOCROOT + "group.gif"); //$NON-NLS-1$
         tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
             + tree.getJavascriptTree()
             + ",'.magnolia/dialogs/groupedit.html');"); //$NON-NLS-1$

@@ -45,7 +45,7 @@ public class UsersTreeConfiguration implements AdminTreeConfiguration {
 
         tree.setDrawShifter(false);
         // context path is already added by Tree
-        tree.setIconPage(Tree.ICONDOCROOT + "pawn_glass_yellow.gif"); //$NON-NLS-1$
+        tree.setIcon(ItemType.USER.getSystemName(), Tree.ICONDOCROOT + "pawn_glass_yellow.gif"); //$NON-NLS-1$
         tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" + tree.getJavascriptTree() //$NON-NLS-1$
             // + ",'.magnolia/adminCentral/users/dialog.html');");
             + ",'.magnolia/dialogs/useredit.html');"); //$NON-NLS-1$

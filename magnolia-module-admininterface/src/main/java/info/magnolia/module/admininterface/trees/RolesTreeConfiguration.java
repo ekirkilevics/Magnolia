@@ -45,7 +45,7 @@ public class RolesTreeConfiguration implements AdminTreeConfiguration {
 
         tree.setDrawShifter(false);
 
-        tree.setIconPage(Tree.ICONDOCROOT + "hat_white.gif"); //$NON-NLS-1$
+        tree.setIcon(ItemType.ROLE.getSystemName(), Tree.ICONDOCROOT + "hat_white.gif"); //$NON-NLS-1$
         tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" //$NON-NLS-1$
             + tree.getJavascriptTree()
             + ",'.magnolia/dialogs/roleedit.html');"); //$NON-NLS-1$
