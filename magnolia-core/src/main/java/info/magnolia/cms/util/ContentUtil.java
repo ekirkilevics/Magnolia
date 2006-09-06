@@ -50,10 +50,19 @@ public class ContentUtil {
     /**
      * Content filter accepting everything
      */
-    private static ContentFilter allwaysTrueContentFilter = new ContentFilter() {
+    public static ContentFilter ALL_NODES_CONTENT_FILTER = new ContentFilter() {
 
         public boolean accept(Content content) {
             return true;
+        }
+    };
+    
+    /**
+     * Content filter accepting everything
+     */
+    public static ContentFilter EXCLUDE_META_DATA_CONTENT_FILTER = new ContentFilter() {
+        public boolean accept(Content content) {
+            return !content.isNodeType(ItemType.NT_METADATA);
         }
     };
 
@@ -109,33 +118,18 @@ public class ContentUtil {
     }
 
     /**
-     * Get a subnode case insensitive. It ignores the type of the subnode.
-     * @param node
-     * @param name
-     * @return the node or null if not found.
-     */
-    public static Content getCaseInsensitive(Content node, String name) {
-        Content res = null;
-        res = getCaseInsensitive(node, name, ItemType.CONTENT);
-        if (res == null) {
-            res = getCaseInsensitive(node, name, ItemType.CONTENTNODE);
-        }
-        return res;
-    }
-
-    /**
      * Get a subnode case insensitive.
      * @param node
      * @param name
      * @param type
      * @return
      */
-    public static Content getCaseInsensitive(Content node, String name, ItemType type) {
+    public static Content getCaseInsensitive(Content node, String name) {
         if (name == null || node == null) {
             return null;
         }
         name = name.toLowerCase();
-        for (Iterator iter = node.getChildren(type).iterator(); iter.hasNext();) {
+        for (Iterator iter = node.getChildren(ALL_NODES_CONTENT_FILTER).iterator(); iter.hasNext();) {
             Content child = (Content) iter.next();
             if (child.getName().toLowerCase().equals(name)) {
                 return child;
@@ -179,7 +173,7 @@ public class ContentUtil {
         }
 
         // get all children to find recursively
-        Collection allChildren = node.getChildren(allwaysTrueContentFilter);
+        Collection allChildren = node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER);
 
         // recursion
         for (Iterator iter = allChildren.iterator(); iter.hasNext();) {
@@ -199,6 +193,15 @@ public class ContentUtil {
     public static List collectAllChildren(Content node, ItemType type) {
         List nodes = new ArrayList();
         return collectAllChildren(nodes, node, new ItemType[]{type});
+    }
+    
+    /**
+     * Returns all children (not recursively) indpendent of there type
+     * @param node
+     * @return
+     */
+    public static Collection getAllChildren(Content node){
+        return node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER);
     }
 
     /**
@@ -367,6 +370,21 @@ public class ContentUtil {
         catch (IllegalAccessException e) {
             log.error("can't persist", e);
         }
+    }
+    
+    public static String uuid2path(String repository, String uuid){
+        if(StringUtils.isNotEmpty(uuid)){
+            HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+            try {
+                Content node = hm.getContentByUUID(uuid);
+                return node.getHandle();
+            }
+            catch (Exception e) {
+                // return the uuid
+            }
+            
+        }
+        return uuid;
     }
 
 }
