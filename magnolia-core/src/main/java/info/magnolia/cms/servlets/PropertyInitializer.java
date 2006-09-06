@@ -13,6 +13,7 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.logging.Log4jConfigurer;
 
 import java.io.File;
@@ -22,6 +23,8 @@ import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.MessageFormat;
+import java.util.Iterator;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -165,14 +168,64 @@ public class PropertyInitializer implements ServletContextListener {
 
         try {
             servername = StringUtils.lowerCase(InetAddress.getLocalHost().getHostName());
+            envProperties.put(SystemProperty.MAGNOLIA_SERVERNAME, servername);
         }
         catch (UnknownHostException e) {
             log.error(e.getMessage());
         }
 
         String rootPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+        envProperties.put(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootPath);
+        
+        // system property initialization
+        String magnoliaRootSysproperty = (String) envProperties.get(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
+        if (StringUtils.isNotEmpty(magnoliaRootSysproperty)) {
+            System.setProperty(magnoliaRootSysproperty, rootPath);
+            log.info("Setting the magnolia root system property: [" + magnoliaRootSysproperty + "] to [" + rootPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
+        
         String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
+        envProperties.put(SystemProperty.MAGNOLIA_WEBAPP, webapp);
 
+        createApplicationDirectories(webapp);
+
+        if (log.isDebugEnabled()) {
+            log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$ 
+        }
+
+        boolean found = false;
+
+        for (int j = propertiesLocation.length-1; j >= 0; j--) {
+            String location = StringUtils.trim(propertiesLocation[j]);
+            location = StringUtils.replace(location, "${servername}", servername); //$NON-NLS-1$
+            location = StringUtils.replace(location, "${webapp}", webapp); //$NON-NLS-1$
+
+            if(loadPropertiesFile(rootPath, location)){
+                found = true;
+            }
+        }
+        
+        overloadWithSystemProperties();
+        
+        if(!found){
+            log
+            .error(MessageFormat
+                .format(
+                    "No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", //$NON-NLS-1$
+                    new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath}));
+            return;
+        }
+        
+        Log4jConfigurer.initLogging(context);
+
+        new ConfigLoader(context);
+
+    }
+
+    /**
+     * Crate the tmp and log directory
+     */
+    private void createApplicationDirectories(String webapp) {
         File logs = new File(webapp + File.separator + "logs");
         File tmp = new File(webapp + File.separator + "tmp");
         if (!logs.exists()) {
@@ -184,61 +237,62 @@ public class PropertyInitializer implements ServletContextListener {
             tmp.mkdir();
             log.debug("Creating " + tmp.getAbsoluteFile() + " folder");
         }
+    }
 
-        if (log.isDebugEnabled()) {
-            log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$ 
-        }
+    /**
+     * Try to load a magnolia.properties file
+     * @param rootPath
+     * @param location
+     * @return
+     */
+    protected boolean loadPropertiesFile(String rootPath, String location) {
+        File initFile = new File(rootPath, location);
 
-        for (int j = 0; j < propertiesLocation.length; j++) {
-            String location = StringUtils.trim(propertiesLocation[j]);
-            location = StringUtils.replace(location, "${servername}", servername); //$NON-NLS-1$
-            location = StringUtils.replace(location, "${webapp}", webapp); //$NON-NLS-1$
-
-            File initFile = new File(rootPath, location);
-
-            if (!initFile.exists() || initFile.isDirectory()) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Configuration file not found with path [{}]", //$NON-NLS-1$
-                        initFile.getAbsolutePath());
-                }
-                continue;
-            }
-
-            InputStream fileStream;
-            try {
-                fileStream = new FileInputStream(initFile);
-            }
-            catch (FileNotFoundException e1) {
+        if (!initFile.exists() || initFile.isDirectory()) {
+            if (log.isDebugEnabled()) {
                 log.debug("Configuration file not found with path [{}]", //$NON-NLS-1$
                     initFile.getAbsolutePath());
-                return;
             }
-
-            try {
-                envProperties.load(fileStream);
-
-                log.info("Loading configuration at {}", initFile.getAbsolutePath());//$NON-NLS-1$
-
-                Log4jConfigurer.initLogging(context, envProperties);
-
-                new ConfigLoader(context, envProperties);
-
-            }
-            catch (Exception e) {
-                log.error(e.getMessage(), e);
-            }
-            finally {
-                IOUtils.closeQuietly(fileStream);
-            }
-            return;
-
+            return false;
         }
 
-        log
-            .error(MessageFormat
-                .format(
-                    "No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", //$NON-NLS-1$
-                    new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath}));
+        InputStream fileStream=null;
+        try {
+            fileStream = new FileInputStream(initFile);
+        }
+        catch (FileNotFoundException e1) {
+            log.debug("Configuration file not found with path [{}]", //$NON-NLS-1$
+                initFile.getAbsolutePath());
+            return false;
+        }
 
+        try {
+            envProperties.load(fileStream);
+            log.info("Loading configuration at {}", initFile.getAbsolutePath());//$NON-NLS-1$
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            return false;
+        }
+        finally {
+            IOUtils.closeQuietly(fileStream);
+        }
+        return true;
+    }
+
+    /**
+     * Overload the properties with set system properties
+     */
+    protected void overloadWithSystemProperties() {
+        Iterator it = envProperties.entrySet().iterator();
+        while (it.hasNext()) {
+            Map.Entry param = (Map.Entry) it.next();
+            String value = (String)param.getValue();
+            if(System.getProperties().containsKey(param.getKey())){
+                log.info("system property found: {}", param.getKey());
+                value = (String) System.getProperty((String)param.getKey());
+            }
+            SystemProperty.setProperty((String) param.getKey(), value);
+        }
     }
 }
