@@ -14,6 +14,7 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ContentUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -94,8 +95,13 @@ public final class Subscriber {
 
         try {
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
-            Content subscriberConfig = startPage.getContent("SubscriberConfig");
-            children = subscriberConfig.getChildren(ItemType.CONTENTNODE);
+            // since 3.0
+            children = startPage.getChildren(ItemType.CONTENTNODE);
+            // 2.1 or older
+            if(children.size()==0){
+                Content subscriberConfig = ContentUtil.getCaseInsensitive(startPage,"subscriberConfig");
+                children = subscriberConfig.getChildren(ItemType.CONTENTNODE);
+            }
         }
         catch (PathNotFoundException re) {
             log.info("No subscribers configured"); //$NON-NLS-1$
@@ -189,7 +195,7 @@ public final class Subscriber {
      */
     private static void addContext(Subscriber subscriberInfo, Content contentNode) throws RepositoryException {
         subscriberInfo.context = new Hashtable();
-        Content contextList = contentNode.getContent("Context"); //$NON-NLS-1$
+        Content contextList = ContentUtil.getCaseInsensitive(contentNode,"context"); //$NON-NLS-1$
         Iterator it = contextList.getChildren().iterator();
         while (it.hasNext()) {
             Content context = (Content) it.next();
