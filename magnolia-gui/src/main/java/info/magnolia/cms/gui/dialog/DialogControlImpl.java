@@ -19,6 +19,7 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 
 import java.io.IOException;
@@ -174,7 +175,11 @@ public abstract class DialogControlImpl implements DialogControl {
     public String getValue() {
         if (this.value == null) {
             if (this.getWebsiteNode() != null) {
-                this.value = this.getWebsiteNode().getNodeData(this.getName()).getString();
+                this.value = readValue();
+                if(this instanceof UUIDDialogControl){
+                    String repository = ((UUIDDialogControl)this).getRepository();
+                    this.value = ContentUtil.uuid2path(repository, this.value);
+                }
             }
             RequestFormUtil params = new RequestFormUtil(request);
             if (params.getParameter(this.getName()) != null) {
@@ -190,6 +195,10 @@ public abstract class DialogControlImpl implements DialogControl {
             }
         }
         return this.value;
+    }
+
+    protected String readValue() {
+        return this.getWebsiteNode().getNodeData(this.getName()).getString();
     }
 
     public void setSaveInfo(boolean b) {
@@ -352,21 +361,17 @@ public abstract class DialogControlImpl implements DialogControl {
 
     public List getValues() {
         if (this.values == null) {
-            this.values = new ArrayList();
-            if (this.getWebsiteNode() != null) {
-                try {
-                    Iterator it = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().iterator();
-                    while (it.hasNext()) {
-                        NodeData data = (NodeData) it.next();
-                        this.values.add(data.getString());
-                    }
+            this.values = readValues();
+            
+            if(this instanceof UUIDDialogControl){
+                String repository = ((UUIDDialogControl)this).getRepository();
+                List pathes = new ArrayList(); 
+                for (Iterator iter = this.values.iterator(); iter.hasNext();) {
+                    String uuid = (String) iter.next();
+                    String path = ContentUtil.uuid2path(repository, uuid);
+                    pathes.add(path);
                 }
-                catch (PathNotFoundException e) {
-                    // not yet existing: OK
-                }
-                catch (RepositoryException re) {
-                    log.error("can't set values", re);
-                }
+                this.values = pathes;
             }
 
             if (request != null) {
@@ -383,6 +388,26 @@ public abstract class DialogControlImpl implements DialogControl {
         }
 
         return this.values;
+    }
+
+    protected List readValues() {
+        List values = new ArrayList();
+        if (this.getWebsiteNode() != null) {
+            try {
+                Iterator it = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().iterator();
+                while (it.hasNext()) {
+                    NodeData data = (NodeData) it.next();
+                    values.add(data.getString());
+                }
+            }
+            catch (PathNotFoundException e) {
+                // not yet existing: OK
+            }
+            catch (RepositoryException re) {
+                log.error("can't set values", re);
+            }
+        }
+        return values;
     }
 
     /**
