@@ -668,7 +668,7 @@ public final class ModuleUtil {
      * @param repository
      */
     public static void subscribeRepository(String repository) {
-        Content subscribers = ContentUtil.getContent(ContentRepository.CONFIG, "/subscribers/SubscriberConfig");
+        Content subscribers = ContentUtil.getContent(ContentRepository.CONFIG, "/subscribers");
         if (subscribers == null) {
             return;
         }
