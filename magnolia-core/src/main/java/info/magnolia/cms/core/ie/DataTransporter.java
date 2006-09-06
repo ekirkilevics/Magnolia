@@ -1,12 +1,15 @@
 package info.magnolia.cms.core.ie;
 
 import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.ie.filters.ImportXmlRootFilter;
 import info.magnolia.cms.core.ie.filters.MagnoliaV2Filter;
 import info.magnolia.cms.core.ie.filters.VersionFilter;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.File;
@@ -18,6 +21,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.MessageFormat;
 import java.util.Iterator;
+import java.util.Properties;
 import java.util.zip.DeflaterOutputStream;
 import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
@@ -68,6 +72,8 @@ public class DataTransporter {
 
     public static final String XML = ".xml";
 
+    public static final String PROPERTIES = ".properties";
+    
     public static final String DOT = ".";
 
     public static final String SLASH = "/";
@@ -112,6 +118,7 @@ public class DataTransporter {
                                                boolean createBasepathIfNotExist)
             throws IOException {
         String name = xmlFile.getAbsolutePath();
+
         InputStream xmlStream = getInputStreamForFile(xmlFile);
         importXmlStream(xmlStream, repositoryName, basepath, name, keepVersionHistory, importMode, saveAfterImport,
                 createBasepathIfNotExist);
@@ -131,7 +138,41 @@ public class DataTransporter {
         }
         String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(filenameWithoutExt, DOT), DOT);
         String basepath = SLASH + StringUtils.replace(pathName, DOT, SLASH);
-        DataTransporter.importFile(xmlFile, repositoryName, basepath, false, bootstrapImportMode, true, true);
+
+        if(xmlFile.getName().endsWith(PROPERTIES)){
+            Properties properties = new Properties();
+            properties.load(new FileInputStream(xmlFile));
+            importProperties(properties , repositoryName);
+        }
+        else{
+            DataTransporter.importFile(xmlFile, repositoryName, basepath, false, bootstrapImportMode, true, true);
+        }
+    }
+
+    /**
+     * Overwrite or set single values
+     * @param properties
+     * @param repositoryName
+     */
+    public static void importProperties(Properties properties, String repositoryName) {
+        for (Iterator iter = properties.keySet().iterator(); iter.hasNext();) {
+            String key = (String) iter.next();
+            String value = (String) properties.get(key);
+
+            String name = StringUtils.substringAfterLast(key, "."); //$NON-NLS-1$
+            String path = StringUtils.substringBeforeLast(key, ".").replace('.', '/'); //$NON-NLS-1$
+            Content node = ContentUtil.getContent(repositoryName, path);
+            if(node != null){
+                try {
+                    NodeDataUtil.getOrCreate(node, name).setValue(value);
+                    node.save();
+                }
+                catch (RepositoryException e) {
+                    log.error("can't set property " + key , e);
+                }
+            }
+        }
+        
     }
 
     /**

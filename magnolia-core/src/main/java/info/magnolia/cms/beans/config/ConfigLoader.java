@@ -77,14 +77,7 @@ public class ConfigLoader {
      * @param config contains initialization parameters
      * @see SystemProperty
      */
-    public ConfigLoader(ServletContext context, Map config) {
-
-        String rootDir = context.getRealPath(StringUtils.EMPTY);
-
-        if (log.isInfoEnabled()) {
-            log.info("Assuming paths relative to {}", rootDir); //$NON-NLS-1$
-        }
-        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootDir);
+    public ConfigLoader(ServletContext context) {
 
         // load mgnl-beans.properties first
         InputStream mgnlbeansStream = getClass().getResourceAsStream(MGNL_BEANS_PROPERTIES);
@@ -111,12 +104,6 @@ public class ConfigLoader {
                 .warn(
                     "{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.",
                     MGNL_BEANS_PROPERTIES);
-        }
-
-        Iterator it = config.entrySet().iterator();
-        while (it.hasNext()) {
-            Map.Entry param = (Map.Entry) it.next();
-            SystemProperty.setProperty((String) param.getKey(), (String) param.getValue());
         }
 
         if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config"))) { //$NON-NLS-1$
@@ -170,8 +157,8 @@ public class ConfigLoader {
         SecureURI.init();
 
         try {
-            Server.init();
             ModuleRegistration.getInstance().init();
+            Server.init();
             ModuleLoader.getInstance().init();
             Listener.init();
             Subscriber.init();

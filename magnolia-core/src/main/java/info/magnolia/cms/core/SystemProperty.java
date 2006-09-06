@@ -36,6 +36,10 @@ public final class SystemProperty {
 
     public static final String MAGNOLIA_BOOTSTRAP_ROOTDIR = "magnolia.bootstrap.dir"; //$NON-NLS-1$
 
+    public static final String MAGNOLIA_WEBAPP = "magnolia.webapp";
+
+    public static final String MAGNOLIA_SERVERNAME = "magnolia.servername";
+    
     /**
      * If this repository/workspace is empty bootstrap this repository. This will be the config repository in the most
      * cases.
@@ -43,6 +47,11 @@ public final class SystemProperty {
     public static final String BOOTSTRAP_IF_EMPTY = "magnolia.bootstrap.ifEmpty";
 
     private static Map properties = new Hashtable();
+
+    /**
+     * Web app root key parameter at the servlet context level (i.e. a context-param in web.xml): "webAppRootKey".
+     */
+    public static final String MAGNOLIA_ROOT_SYSPROPERTY = "magnolia.root.sysproperty"; //$NON-NLS-1$
 
     /**
      * Utility class, don't instantiate.

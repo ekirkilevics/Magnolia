@@ -144,6 +144,9 @@ public final class Bootstrapper {
         try {
             for (int k = 0; k < files.length; k++) {
                 File xmlFile = files[k];
+                if(log.isDebugEnabled()){
+                    log.debug("execute importfile {}", xmlFile);
+                }
                 DataTransporter.executeBootstrapImport(xmlFile, repositoryName);
             }
         }
@@ -179,14 +182,31 @@ public final class Bootstrapper {
                 File file1 = (File) file1obj;
                 File file2 = (File) file2obj;
 
-                String name1 = StringUtils.substringBeforeLast(((File) file1).getName(), "."); //$NON-NLS-1$
-                String name2 = StringUtils.substringBeforeLast(((File) file2).getName(), "."); //$NON-NLS-1$
-                // a simple way to detect nested nodes
-                if (name1.length() != name2.length()) {
-                    return name1.length() - name2.length();
+                String name1 = getName(file1); //$NON-NLS-1$
+                String name2 = getName(file2); //$NON-NLS-1$
+                
+                String ext1 = getExtension(file1);
+                String ext2 = getExtension(file2);
+                
+                if(StringUtils.equals(ext1, ext2)){
+                    // a simple way to detect nested nodes
+                    if (name1.length() != name2.length()) {
+                        return name1.length() - name2.length();
+                    }
                 }
+                else{
+                    // import xml first
+                    if(ext1.equalsIgnoreCase("xml")){
+                        return -1;
+                    }
+                    else if(ext2.equalsIgnoreCase("properties")){
+                        return 1;
+                    }
+                }
+                
                 return name1.compareTo(name2);
             }
+            
         });
 
         for (int j = 0; j < bootdirs.length; j++) {
@@ -204,16 +224,32 @@ public final class Bootstrapper {
                     return name.startsWith(repositoryName + ".")
                         && filter.accept(name)
                         && (name.endsWith(DataTransporter.XML) || name.endsWith(DataTransporter.ZIP) || name
-                            .endsWith(DataTransporter.GZ));
+                            .endsWith(DataTransporter.GZ) || name.endsWith(DataTransporter.PROPERTIES));
                 }
             }, FileFilterUtils.trueFileFilter());
 
             xmlfileset.addAll(files);
-
         }
+        
         return xmlfileset;
     }
 
+    private static String getExtension(File file){
+        String ext = StringUtils.substringAfterLast(file.getName(),".");
+        if(("." + ext).equals(DataTransporter.GZ) || ("." + ext).equals(DataTransporter.ZIP)){
+            ext = StringUtils.substringAfterLast(StringUtils.substringBeforeLast(file.getName(), "."), ".");
+        }
+        return ext;
+    }
+
+    private static String getName(File file){
+        String name = StringUtils.substringBeforeLast(file.getName(),".");
+        if(name.endsWith(DataTransporter.XML) || name.endsWith(DataTransporter.PROPERTIES)){
+            name = StringUtils.substringBeforeLast(file.getName(),".");
+        }
+        return name;
+    }
+    
     /**
      * Return the standard bootstrap dirs defined in the magnolia.properies file
      * @return Array of directory names
