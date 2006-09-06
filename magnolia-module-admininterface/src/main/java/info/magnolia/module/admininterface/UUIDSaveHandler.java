@@ -65,7 +65,7 @@ public class UUIDSaveHandler extends SaveHandlerImpl implements DialogAwareSaveH
             if (values != null && values.length != 0) {
                 String[] uuidValues = new String[values.length];
                 for (int i = 0; i < values.length; i++) {
-
+                    uuidValues[i] = getUUID(name, values[i]);
                 }
                 values = uuidValues;
             }
