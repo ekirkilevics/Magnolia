@@ -70,12 +70,12 @@ public abstract class AbstractModule implements Module {
             	
                 final String moduleName = this.getName();
 
-                bootstrap(moduleName);
-
                 registerServlets(def);
 
                 registerRepositories(def);
 
+                bootstrap(moduleName);
+                
                 installFiles(moduleName, def.getModuleRoot());
 
                 // let the module do it's stuff
