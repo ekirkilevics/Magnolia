@@ -141,6 +141,7 @@ public final class Server {
      * Cache server content from the config repository.
      */
     private static void cacheSecureURIList(Content page) {
+        SecureURI.init();
         try {
             addToSecureList(page.getContent("secureURIList")); //$NON-NLS-1$
         }
