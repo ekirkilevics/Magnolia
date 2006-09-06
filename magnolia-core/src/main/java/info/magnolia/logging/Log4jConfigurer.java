@@ -1,16 +1,36 @@
 package info.magnolia.logging;
 
-import java.io.File;
-import java.net.MalformedURLException;
-import java.net.URL;
+import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.cms.util.ConfigUtil;
+
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringBufferInputStream;
+import java.io.StringReader;
+import java.util.HashMap;
 import java.util.Map;
+import java.util.Properties;
+import java.util.ResourceBundle;
 
 import javax.servlet.ServletContext;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.PropertyConfigurator;
 import org.apache.log4j.xml.DOMConfigurator;
+import org.apache.log4j.xml.Log4jEntityResolver;
+import org.apache.log4j.xml.SAXErrorHandler;
+import org.w3c.dom.Document;
+import org.xml.sax.ErrorHandler;
+import org.xml.sax.SAXException;
+
+import sun.tools.tree.ThisExpression;
 
 
 /**
@@ -46,11 +66,6 @@ public abstract class Log4jConfigurer {
     public static final String LOG4J_CONFIG = "log4j.config"; //$NON-NLS-1$
 
     /**
-     * Web app root key parameter at the servlet context level (i.e. a context-param in web.xml): "webAppRootKey".
-     */
-    public static final String MAGNOLIA_ROOT_SYSPROPERTY = "magnolia.root.sysproperty"; //$NON-NLS-1$
-
-    /**
      * Utility class, don't instantiate.
      */
     private Log4jConfigurer() {
@@ -63,56 +78,63 @@ public abstract class Log4jConfigurer {
      * @param parameters parameter map, containing the <code>MAGNOLIA_ROOT_SYSPROPERTY</code> and
      * <code>LOG4J_CONFIG</code> properties
      */
-    public static void initLogging(ServletContext servletContext, Map parameters) {
+    public static void initLogging(ServletContext servletContext) {
 
         // can't use log4j yet
         log("Initializing Log4J"); //$NON-NLS-1$
 
-        // system property initialization
-        String magnoliaRootSysproperty = (String) parameters.get(MAGNOLIA_ROOT_SYSPROPERTY);
-        if (StringUtils.isNotEmpty(magnoliaRootSysproperty)) {
-            String root = servletContext.getRealPath("/"); //$NON-NLS-1$
-            if (StringUtils.isNotEmpty(root)) {
-                System.setProperty(magnoliaRootSysproperty, root);
-                log("Setting the magnolia root system property: [" + magnoliaRootSysproperty + "] to [" + root + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-            }
-        }
-
-        String log4jFileName = (String) parameters.get(LOG4J_CONFIG);
+        String log4jFileName = (String) SystemProperty.getProperty(LOG4J_CONFIG);
         if (StringUtils.isNotEmpty(log4jFileName)) {
             boolean isXml = log4jFileName.toLowerCase().endsWith(".xml"); //$NON-NLS-1$
 
             log("Initializing Log4J from [" + log4jFileName + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-            File log4jFile = new File(servletContext.getRealPath(StringUtils.EMPTY), log4jFileName);
-            if (log4jFile.exists()) {
-                URL url;
+            
+            InputStream stream = ConfigUtil.getConfigFile(log4jFileName);
+            
+            String config;
+            try {
+                config = ConfigUtil.replaceTokens(stream);
+            }
+            catch (IOException e) {
+                log("Unable to initialize Log4J from [" //$NON-NLS-1$
+                    + log4jFileName
+                    + "], got a IOException " //$NON-NLS-1$
+                    + e.getMessage());
+                return;
+            }
+
+            // classpath?
+            if (isXml) {
+                Document document;
                 try {
-                    url = new URL("file:" + log4jFile.getAbsolutePath()); //$NON-NLS-1$
+                    Map dtds = new HashMap();
+                    dtds.put("log4j.dtd", "/org/apache/log4j/xml/log4j.dtd");
+                    document = ConfigUtil.string2DOM(config, dtds);
                 }
-                catch (MalformedURLException e) {
+                catch (Exception e) {
                     log("Unable to initialize Log4J from [" //$NON-NLS-1$
                         + log4jFileName
-                        + "], got a MalformedURLException: " //$NON-NLS-1$
+                        + "], got an Exception during reading the xml file " //$NON-NLS-1$
                         + e.getMessage());
                     return;
                 }
-
-                if (isXml) {
-                    DOMConfigurator.configure(url);
-                }
-                else {
-                    PropertyConfigurator.configure(url);
-                }
+                DOMConfigurator.configure(document.getDocumentElement());
             }
             else {
-                // classpath?
-                if (isXml) {
-                    DOMConfigurator.configure(log4jFileName);
+                Properties properties = new Properties();
+                try {
+                    properties.load(IOUtils.toInputStream(config));
                 }
-                else {
-                    PropertyConfigurator.configure(log4jFileName);
+                catch (IOException e) {
+                    log("Unable to initialize Log4J from [" //$NON-NLS-1$
+                        + log4jFileName
+                        + "], got an Exception during reading the properties file " //$NON-NLS-1$
+                        + e.getMessage());
+                    return;
                 }
+                PropertyConfigurator.configure(log4jFileName);
             }
+
         }
     }
 
@@ -127,7 +149,7 @@ public abstract class Log4jConfigurer {
         }
         finally {
             // Remove the web app root system property.
-            String param = (String) parameters.get(MAGNOLIA_ROOT_SYSPROPERTY);
+            String param = (String) parameters.get(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
             if (StringUtils.isNotEmpty(param)) {
                 System.getProperties().remove(param);
             }
@@ -138,7 +160,7 @@ public abstract class Log4jConfigurer {
      * Handy System.out method to use when logging isn't configured yet.
      * @param message log message
      */
-    private static void log(String message) {
+    public static void log(String message) {
         System.out.println(message);
     }
 
