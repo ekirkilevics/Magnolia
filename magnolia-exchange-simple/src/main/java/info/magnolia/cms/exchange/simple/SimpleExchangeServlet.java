@@ -37,6 +37,7 @@ import info.magnolia.context.WebContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
+import java.util.List;
 import java.util.zip.GZIPInputStream;
 
 import javax.jcr.ImportUUIDBehavior;
@@ -170,8 +171,8 @@ public class SimpleExchangeServlet extends HttpServlet {
             InputStream documentInputStream = resourceDocument.getStream();
             org.jdom.Document jdomDocument = builder.build(documentInputStream);
             IOUtils.closeQuietly(documentInputStream);
-            Element topContentElement = jdomDocument.getRootElement().getChild(
-                SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT);
+            Element rootElement = jdomDocument.getRootElement();
+            Element topContentElement = rootElement.getChild(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT);
             try {
                 String uuid = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_UUID_ATTRIBUTE);
                 Content content = hm.getContentByUUID(uuid);
@@ -185,6 +186,28 @@ public class SimpleExchangeServlet extends HttpServlet {
             }
             catch (ItemNotFoundException e) {
                 importFresh(topContentElement, data, hm, parentPath);
+            }
+
+            // order imported node
+            String name = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
+            Content parent = hm.getContent(parentPath);
+            List siblings = rootElement.getChild(SimpleSyndicator.SIBLINGS_ROOT_ELEMENT)
+                    .getChildren(SimpleSyndicator.SIBLINGS_ELEMENT);
+            Iterator siblingsIterator = siblings.iterator();
+            while (siblingsIterator.hasNext()) {
+                Element sibling = (Element) siblingsIterator.next();
+                // check for existence and order
+                try {
+                    Content beforeContent = hm.getContentByUUID(sibling.getAttributeValue(SimpleSyndicator.SIBLING_UUID));
+                    parent.orderBefore(name, beforeContent.getName());
+                    parent.save();
+                    break;
+                } catch (ItemNotFoundException e) {
+                    // ignore
+                } catch (RepositoryException re) {
+                    log.warn("Failed to order node");
+                    log.debug("Failed to order node", re);
+                }
             }
         }
     }
@@ -285,14 +308,15 @@ public class SimpleExchangeServlet extends HttpServlet {
             .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)
             .iterator();
         String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
-        String transientStore = "/" + uuid;
+        String transientStore = existingContent.getHandle() + "/" + uuid;
         try {
             while (fileListIterator.hasNext()) {
                 Element fileElement = (Element) fileListIterator.next();
                 importResource(data, fileElement, hierarchyManager, existingContent.getHandle());
             }
             // use temporary transient store to extract top level node and copy properties
-            hierarchyManager.createContent("/", uuid, ItemType.CONTENTNODE.toString());
+            existingContent.createContent(uuid, ItemType.CONTENTNODE.toString());
+            //hierarchyManager.createContent("/", uuid, ItemType.CONTENTNODE.toString());
             String fileName = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
             GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
             hierarchyManager.getWorkspace().getSession().importXML(

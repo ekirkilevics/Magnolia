@@ -42,6 +42,8 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -90,6 +92,23 @@ public class SimpleSyndicator implements Syndicator {
      * resource reading sequence
      */
     public static final String RESOURCE_MAPPING_FILE = "mgnlExchangeResourceMappingFile";
+
+    /**
+     * resource file, Siblings element
+     * siblings element will contain all siglings of the same node type which are "before"
+     * this node
+     */
+    public static final String SIBLINGS_ROOT_ELEMENT = "NodeSiblings";
+
+    /**
+     * sibling
+     * */
+    public static final String SIBLINGS_ELEMENT = "sibling";
+
+    /**
+     * sibling UUID
+     * */
+    public static final String SIBLING_UUID = "UUID";
 
     /**
      * resource file, File element
@@ -569,6 +588,9 @@ public class SimpleSyndicator implements Syndicator {
         Document document = new Document();
         Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
         document.setRootElement(root);
+        // collect exact order of this node within its same nodeType siblings
+        addOrderingInfo(root, node);
+
         this.addResources(root, node.getWorkspace().getSession(), node, this.contentFilter, activationContent);
         File resourceFile = File.createTempFile("resources", "", Path.getTempDirectory());
         XMLOutputter outputter = new XMLOutputter();
@@ -577,6 +599,41 @@ public class SimpleSyndicator implements Syndicator {
         activationContent.addFile("resources.xml", resourceFile);
 
         return activationContent;
+    }
+
+    /**
+     * add ardering info to the resource file mapping
+     * @param root element of the resource file under which ordering info must be added
+     * @param node whose ordering info will be added
+     * */
+    private void addOrderingInfo(Element root, Content node) {
+        //do not use magnolia Content class since these objects are only meant for a single use to read UUID
+        Element siblingRoot = new Element(SIBLINGS_ROOT_ELEMENT);
+        Node thisNode = node.getJCRNode();
+        try {
+            String thisNodeType = node.getNodeTypeName();
+            String thisNodeUUID = node.getUUID();
+            NodeIterator nodeIterator = thisNode.getParent().getNodes();
+            while (nodeIterator.hasNext()) { // only collect elements after this node
+                Node sibling = nodeIterator.nextNode();
+                // skip till the actual position
+                if (sibling.isNodeType(thisNodeType)) {
+                    if (thisNodeUUID.equalsIgnoreCase(sibling.getUUID())) break;
+                }
+            }
+            while (nodeIterator.hasNext()) {
+                Node sibling = nodeIterator.nextNode();
+                if (sibling.isNodeType(thisNodeType)) {
+                    Element e = new Element(SIBLINGS_ELEMENT);
+                    e.setAttribute(SIBLING_UUID, sibling.getUUID());
+                    siblingRoot.addContent(e);
+                }
+            }
+            root.addContent(siblingRoot);
+        } catch (RepositoryException re) {
+            // do not throw this exception, if it fails simply do not add any ordering info
+            log.error("Failed to add Ordering info", re);
+        }
     }
 
     /**
