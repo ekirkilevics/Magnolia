@@ -2,6 +2,9 @@
     <div id="${lineId}" class="mgnlTreeLineInter mgnlLineEnabled" onmouseover="${tree.javascriptTree}.moveNodeHighlightLine('${lineId}');" onmouseout="${tree.javascriptTree}.moveNodeResetLine('${lineId}');"
         onmousedown="${tree.javascriptTree}.pasteNode('${tree.path}',${PASTETYPE_SUB},${permissionWrite?string},'${lineId}');"></div>
     
+    <!-- this is needed for IE else you can't scroll. Do not ask me why! -->
+    <div style="position:absolute;" >&nbsp;</div>
+    
     <!-- do we have write permission on the root? -->
     <input type="hidden" name="${tree.javascriptTree}_${tree.path}_PermissionWrite" id="${tree.javascriptTree}_${tree.path}_PermissionWrite" value="${permissionWrite?string}" />
 
