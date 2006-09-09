@@ -144,7 +144,11 @@ public class NewBar extends TagSupport implements BarTag {
     private String getPath() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         try {
-            return Resource.getCurrentActivePage(request).getHandle();
+            // Detect if the new bar is being displayed from inside a paragraph and use that instead.
+            if (Resource.getLocalContentNode(request) != null)
+                return Resource.getLocalContentNode(request).getHandle();
+            else
+                return Resource.getCurrentActivePage(request).getHandle();
         }
         catch (Exception re) {
             return StringUtils.EMPTY;

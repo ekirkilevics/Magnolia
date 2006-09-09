@@ -37,6 +37,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Sameer Charles
  * @author Fabrizio Giustina
+ * @author David Smith
  * @version $Revision $ ($Author $)
  */
 public class ContentNodeIterator extends TagSupport {
@@ -108,6 +109,21 @@ public class ContentNodeIterator extends TagSupport {
 
     private LoopTagStatus status;
 
+    /** Size info from outer node iterator, if one exists. */
+    private Integer outerSize = null;
+
+    /** Current index the outer node iterator is at. */
+    private Integer outerCurrIdx = null;
+
+    /** Collection iterated over by the outer node iterator */
+    private String outerCollName = null;
+
+    /** Resource.getLocalContentNodeCollectionName() value set by outer node iterator. */
+    private String outerResCollName = null;
+
+    /** Resource.getLocalContentNode set by the outer node iterator. */
+    private Content outerLocalContentNode = null;
+
     /**
      * @param name content node name on which this tag will iterate
      */
@@ -166,7 +182,13 @@ public class ContentNodeIterator extends TagSupport {
             return this.items;
         }
         else if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
-            Content page = Resource.getCurrentActivePage(request);
+            // If this is a nested iterator, the collection should be from the local content node.
+            Content page = null;
+            if (Resource.getLocalContentNode(request) != null)
+                page = Resource.getLocalContentNode(request);
+            else
+                page = Resource.getCurrentActivePage(request);
+
             return page.getContent(this.contentNodeCollectionName).getChildren(ItemType.CONTENTNODE);
         }
 
@@ -246,6 +268,8 @@ public class ContentNodeIterator extends TagSupport {
 
         this.size = children.size();
 
+        this.savePrevState();
+
         pageContext.setAttribute(ContentNodeIterator.SIZE, new Integer(size), PageContext.REQUEST_SCOPE);
 
         pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, new Integer(this.index), PageContext.REQUEST_SCOPE);
@@ -306,14 +330,7 @@ public class ContentNodeIterator extends TagSupport {
      */
     public int doEndTag() {
 
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-
-        Resource.removeLocalContentNode(request);
-        Resource.removeLocalContentNodeCollectionName(request);
-
-        pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
-        pageContext.removeAttribute(ContentNodeIterator.SIZE);
-        pageContext.removeAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME);
+        this.restorePrevState();
 
         this.size = 0;
         this.index = 0;
@@ -340,7 +357,49 @@ public class ContentNodeIterator extends TagSupport {
         this.varStatus = null;
         this.status = null;
         this.items = null;
+
+        this.outerCollName = null;
+        this.outerCurrIdx = null;
+        this.outerLocalContentNode = null;
+        this.outerResCollName = null;
+        this.outerSize = null;
+
         super.release();
+    }
+
+    /** Checks if a content node iterator tag is already in operation and saves it's state. */
+    private void savePrevState() {
+        HttpServletRequest req = (HttpServletRequest) this.pageContext.getRequest();
+        if (req.getAttribute(ContentNodeIterator.SIZE) != null) {
+            this.outerSize = (Integer) pageContext.getAttribute(ContentNodeIterator.SIZE, PageContext.REQUEST_SCOPE);
+            this.outerCollName = (String) pageContext.getAttribute(
+                ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
+                PageContext.REQUEST_SCOPE);
+            this.outerCurrIdx = (Integer) pageContext.getAttribute(
+                ContentNodeIterator.CURRENT_INDEX,
+                PageContext.REQUEST_SCOPE);
+            this.outerLocalContentNode = Resource.getLocalContentNode(req);
+            this.outerResCollName = Resource.getLocalContentNodeCollectionName(req);
+        }
+
+    }
+
+    private void restorePrevState() {
+        HttpServletRequest req = (HttpServletRequest) this.pageContext.getRequest();
+        if (this.outerSize != null) {
+            pageContext.setAttribute(ContentNodeIterator.SIZE, this.outerSize);
+            pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, this.outerCurrIdx);
+            pageContext.setAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME, this.outerCollName);
+            Resource.setLocalContentNode(req, this.outerLocalContentNode);
+            Resource.setLocalContentNodeCollectionName(req, this.outerResCollName);
+        }
+        else {
+            Resource.removeLocalContentNode(req);
+            Resource.removeLocalContentNodeCollectionName(req);
+            pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
+            pageContext.removeAttribute(ContentNodeIterator.SIZE);
+            pageContext.removeAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME);
+        }
     }
 
 }
