@@ -88,8 +88,7 @@ public class MgnlRepositoryCatalog extends CatalogBase {
                 }
             }
         }
-
-    }
+   }
 
     /**
      * Create a command object based on a node
@@ -99,15 +98,23 @@ public class MgnlRepositoryCatalog extends CatalogBase {
      * @throws InstantiationException
      * @throws IllegalAccessException
      */
-    private Command createCommand(Content commandNode) throws ClassNotFoundException, InstantiationException,
+    private Command createCommand(Content commandNode) throws InstantiationException,
         IllegalAccessException {
+        Command command = null;
         String className;
         className = commandNode.getNodeData(CLASS_NODE_DATA).getString();
 
         log.debug("Found class {} for action {}", className, commandNode.getName());
-        Class klass = ClassUtil.classForName(className);
-        Command command = (Command) klass.newInstance();
-        ContentUtil.setProperties(command, commandNode);
-        return command;
+        try{
+            Class klass = ClassUtil.classForName(className);
+            command = (Command) klass.newInstance();
+            ContentUtil.setProperties(command, commandNode);
+            return command;
+        }
+        // asume it is a qualified command name
+        catch(ClassNotFoundException e){
+            // this will get the command at runtime from an other catalogue
+            return new DelegateCommand(className);
+        }
     }
 }
