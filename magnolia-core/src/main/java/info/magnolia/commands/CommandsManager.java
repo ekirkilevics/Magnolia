@@ -12,8 +12,11 @@
  */
 package info.magnolia.commands;
 
+import java.util.Iterator;
+
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.FactoryUtil;
 
 import javax.jcr.RepositoryException;
@@ -41,6 +44,21 @@ public class CommandsManager extends ObservedManager {
      * Register this catalogue
      */
     protected void onRegister(Content node) {
+        // is this a catalog or a collection of catalogs?
+        if(node.getChildren(ItemType.CONTENT).size() == 0){
+            registerCatalog(node);            
+        }
+        else{
+            for (Iterator iter = node.getChildren(ItemType.CONTENT).iterator(); iter.hasNext();) {
+                onRegister((Content) iter.next());
+            }
+        }
+    }
+
+    /**
+     * @param node
+     */
+    protected void registerCatalog(Content node) {
         Catalog catalog = new MgnlRepositoryCatalog(node);
         String name = getCatalogName(node);
         if (log.isDebugEnabled()) {
