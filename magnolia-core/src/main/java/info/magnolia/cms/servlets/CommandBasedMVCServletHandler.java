@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.servlets;
 
+import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -78,6 +79,7 @@ public abstract class CommandBasedMVCServletHandler extends MVCServletHandlerImp
         }
         catch (Exception e) {
             log.error("can't execute command", e);
+            AlertUtil.setException(e);
         }
         return getViewNameAfterExecution(commandName, ctx);
     }
