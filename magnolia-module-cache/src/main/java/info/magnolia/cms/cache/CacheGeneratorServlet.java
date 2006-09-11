@@ -63,9 +63,8 @@ public class CacheGeneratorServlet extends HttpServlet {
 
     /**
      * Display a simple form for importing/exporting data.
-     * @param response HttpServletResponse
-     * @param repository selected repository
-     * @param basepath base path in repository (extracted from request parameter or default)
+     * @param request
+     * @param out
      */
     private void displayCacheForm(HttpServletRequest request, PrintWriter out) {
 

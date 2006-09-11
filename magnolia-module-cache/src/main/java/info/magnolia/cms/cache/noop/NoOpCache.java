@@ -21,14 +21,12 @@ public class NoOpCache implements Cache {
      * Does nothing.
      */
     public void cacheRequest(HttpServletRequest request) {
-        return;
     }
 
     /**
      * Does nothing.
      */
     public void flush() {
-        return;
     }
 
     /**
@@ -43,7 +41,6 @@ public class NoOpCache implements Cache {
      * Does nothing.
      */
     public void start(CacheConfig config) {
-        return;
     }
 
     /**
@@ -58,7 +55,6 @@ public class NoOpCache implements Cache {
      * Does nothing.
      */
     public void stop() {
-        return;
     }
 
     /**

@@ -15,6 +15,7 @@ import org.slf4j.LoggerFactory;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
+ * $Id$
  */
 public abstract class BaseCacheManager implements CacheManager {
 
@@ -240,7 +241,9 @@ public abstract class BaseCacheManager implements CacheManager {
     }
 
     public final boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
-        log.info("Streaming from cache {}, {}", key, canCompress ? "compressed" : "not compressed");
+        if (log.isDebugEnabled()) {
+            log.debug("Streaming from cache {}, {}", key, canCompress ? "compressed" : "not compressed");
+        }
         try {
             return doStreamFromCache(key, response, canCompress);
         }
