@@ -24,6 +24,7 @@ import info.magnolia.cms.gui.dialog.ControlsManager;
 import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.commands.CommandsManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,6 +63,7 @@ public abstract class AbstractAdminModule extends AbstractModule {
             initEntry("controls", ControlsManager.getInstance());
             initEntry("pages", PageHandlerManager.getInstance());
             initEntry("trees", TreeHandlerManager.getInstance());
+            initEntry("commands", CommandsManager.getInstance());
             initEntry("shutdown", ShutdownManager.getInstance());
 
             onInit();
