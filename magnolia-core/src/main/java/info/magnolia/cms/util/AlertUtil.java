@@ -35,11 +35,13 @@ public class AlertUtil {
     /**
      * Store the message. Does not overwrite an already existing message.
      * @param msg
-     * @param request
      */
-
     public static void setMessage(String msg) {
-        if (!isMessageSet()) {
+        setMessage(msg, MgnlContext.getInstance());
+    }
+
+    public static void setMessage(String msg, Context ctx) {
+        if (!isMessageSet(ctx)) {
             MgnlContext.setAttribute(Context.ATTRIBUTE_MESSAGE, msg);
         }
     }
@@ -50,7 +52,20 @@ public class AlertUtil {
      * @param e
      */
     public static void setMessage(String msg, Exception e) {
-        setMessage(msg + " : " + getExceptionMessage(e));
+        setMessage(msg, e, MgnlContext.getInstance());
+    }
+
+    public static void setMessage(String msg, Exception e, Context ctx) {
+        setMessage(msg + " : " + getExceptionMessage(e), ctx);
+    }
+
+    public static void setException(String msg, Exception e) {
+        setException(msg, e, MgnlContext.getInstance());
+    }
+
+    public static void setException(String msg, Exception e, Context ctx) {
+        setMessage(msg + " : " + getExceptionMessage(e), ctx);
+        setException(e, ctx);
     }
 
     /**
@@ -58,8 +73,40 @@ public class AlertUtil {
      * @param request
      * @return true if set
      */
+
     public static boolean isMessageSet() {
+        return isMessageSet(MgnlContext.getInstance());
+    }
+
+    public static boolean isMessageSet(Context ctx) {
         return StringUtils.isNotEmpty((String) MgnlContext.getAttribute(Context.ATTRIBUTE_MESSAGE));
+    }
+
+    /**
+     * Store the exception. Does not overwrite an already existing one.
+     */
+    public static void setException(Exception e) {
+        setException(e, MgnlContext.getInstance());
+    }
+
+    public static void setException(Exception e, Context ctx) {
+        if (!isExceptionSet(ctx)) {
+            MgnlContext.setAttribute(Context.ATTRIBUTE_EXCEPTION, e);
+            // has only an effect if not yet set
+            setMessage(getExceptionMessage(e), ctx);
+        }
+    }
+
+    /**
+     * Checks if there is a message set
+     * @return true if set
+     */
+    public static boolean isExceptionSet() {
+        return isExceptionSet(MgnlContext.getInstance());
+    }
+
+    public static boolean isExceptionSet(Context ctx) {
+        return MgnlContext.getAttribute(Context.ATTRIBUTE_EXCEPTION) != null;
     }
 
     /**
@@ -68,6 +115,10 @@ public class AlertUtil {
      * @return the message
      */
     public static String getMessage() {
+        return getMessage(MgnlContext.getInstance());
+    }
+
+    public static String getMessage(Context ctx) {
         return (String) MgnlContext.getAttribute(Context.ATTRIBUTE_MESSAGE);
     }
 
