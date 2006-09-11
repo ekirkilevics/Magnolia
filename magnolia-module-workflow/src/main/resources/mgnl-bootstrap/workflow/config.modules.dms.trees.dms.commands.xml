@@ -135,7 +135,7 @@
         <sv:value>workflow.started</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>info.magnolia.module.workflow.commands.simple.MessageCommand</sv:value>
+        <sv:value>info.magnolia.module.admininterface.commands.MessageCommand</sv:value>
       </sv:property>
       <sv:property sv:name="i18nBasename" sv:type="String">
         <sv:value>info.magnolia.module.workflow.messages</sv:value>

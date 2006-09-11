@@ -89,7 +89,7 @@
         <sv:value>d8fc6026-fa85-45af-b3f1-1f50c2b60745</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>info.magnolia.module.workflow.commands.simple.VersionCommand</sv:value>
+        <sv:value>info.magnolia.module.admininterface.commands.VersionCommand</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -175,7 +175,7 @@
         <sv:value>workflow.started</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>info.magnolia.module.workflow.commands.simple.MessageCommand</sv:value>
+        <sv:value>info.magnolia.module.admininterface.commands.MessageCommand</sv:value>
       </sv:property>
       <sv:property sv:name="i18nBasename" sv:type="String">
         <sv:value>info.magnolia.module.workflow.messages</sv:value>
