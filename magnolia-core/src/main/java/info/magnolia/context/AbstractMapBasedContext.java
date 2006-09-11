@@ -27,6 +27,15 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
      * The map containing the values
      */
     private Map map = new HashMap();
+    
+
+    public AbstractMapBasedContext() {
+    }    
+
+    public AbstractMapBasedContext(Map map) {
+        super();
+        this.map = map;
+    }
 
     /**
      * Use the Map.put()
@@ -61,6 +70,16 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
      */
     public Map getAttributes() {
         return this.map;
+    }
+
+    
+    public Map getMap() {
+        return map;
+    }
+
+    
+    public void setMap(Map map) {
+        this.map = map;
     }
 
 }
