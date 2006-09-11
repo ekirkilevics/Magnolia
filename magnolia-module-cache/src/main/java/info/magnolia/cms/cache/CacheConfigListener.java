@@ -1,8 +1,5 @@
 package info.magnolia.cms.cache;
 
-import info.magnolia.cms.core.Content;
-
-import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
@@ -11,23 +8,24 @@ import javax.jcr.observation.EventListener;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
+ * $Id$
  */
 class CacheConfigListener implements EventListener {
 
     private CacheManager cacheManager;
 
-    private Content content;
+    private CacheConfig cacheConfig;
 
-    protected CacheConfigListener(CacheManager cacheManager, Content content) {
+    protected CacheConfigListener(CacheManager cacheManager, CacheConfig cacheConfig) {
         this.cacheManager = cacheManager;
-        this.content = content;
+        this.cacheConfig = cacheConfig;
     }
 
     public void onEvent(EventIterator events) {
         try {
-            this.content.refresh(false);
+            this.cacheConfig.reload();
         }
-        catch (RepositoryException e) {
+        catch (Exception e) {
             throw new RuntimeException(e);
         }
 

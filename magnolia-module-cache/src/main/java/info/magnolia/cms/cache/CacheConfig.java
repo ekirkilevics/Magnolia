@@ -28,7 +28,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
- * @version $Id$
+ * @version $Id:CacheConfig.java 6314 2006-09-11 08:24:51Z scharles $
  */
 public class CacheConfig {
 
@@ -149,11 +149,15 @@ public class CacheConfig {
 
     }
 
+    protected void reload() throws ConfigurationException {
+        this.loadConfig();
+    }
+
     private void registerEventListener() throws ConfigurationException {
         try {
             Node node = this.content.getJCRNode();
             ObservationManager observationManager = node.getSession().getWorkspace().getObservationManager();
-            EventListener listener = new CacheConfigListener(this.cacheManager, this.content);
+            EventListener listener = new CacheConfigListener(this.cacheManager, this);
             int events = Event.NODE_ADDED
                 | Event.NODE_REMOVED
                 | Event.PROPERTY_ADDED
