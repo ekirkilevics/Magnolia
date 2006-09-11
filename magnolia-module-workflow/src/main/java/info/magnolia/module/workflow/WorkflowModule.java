@@ -78,7 +78,6 @@ public class WorkflowModule extends AbstractAdminModule {
      * register commands and start OWFE engine
      */
     protected void onInit() {
-        registerCommands();
         registerCacheUrl();
         startEngine();
     }
@@ -99,19 +98,6 @@ public class WorkflowModule extends AbstractAdminModule {
             }
         } catch (Exception e) {
 
-        }
-    }
-
-    /**
-     * Register in the workflow module configured commands
-     */
-    private void registerCommands() {
-        Content node = ContentUtil.getContent(ContentRepository.CONFIG, COMMANDS_CATALOG_PATH);
-        if (node != null) {
-            for (Iterator iter = node.getChildren(ItemType.CONTENT).iterator(); iter.hasNext();) {
-                Content catalog = (Content) iter.next();
-                CommandsManager.getInstance().register(catalog);
-            }
         }
     }
 
