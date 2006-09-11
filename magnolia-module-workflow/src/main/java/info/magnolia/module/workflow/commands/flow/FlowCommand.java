@@ -52,9 +52,9 @@ public class FlowCommand extends MgnlCommand {
         }
         catch (Exception e) {
             log.error("Launching failed", e);
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 
     private void setFlowDefinitionURL(LaunchItem li) {
