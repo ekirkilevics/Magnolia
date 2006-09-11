@@ -83,7 +83,7 @@
     <!-- magnolia default repository -->
     <Repository name="magnolia" provider="info.magnolia.jackrabbit.ProviderImpl" loadOnStartup="true">
         <param name="configFile" value="${magnolia.repositories.jackrabbit.config}" />
-        <param name="repositoryHome" value="${magnolia.repositories.home}/${magnolia.webapp}/magnolia" />
+        <param name="repositoryHome" value="${magnolia.repositories.home}/magnolia" />
         <!-- the default node types are loaded automatically
 			<param name="customNodeTypes" value="WEB-INF/config/repo-conf/nodetypes/magnolia_nodetypes.xml" />
 		-->
