@@ -13,7 +13,6 @@
 
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.Content;
@@ -30,9 +29,10 @@ import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.Rule;
+import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admininterface.commands.BaseActivationCommand;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -42,8 +42,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.beanutils.ConstructorUtils;
+import org.apache.commons.chain.Command;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -229,8 +228,22 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         // set general parameters (repository, path, ..)
         context.put(Context.ATTRIBUTE_REPOSITORY, this.getRepository());
         context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
+        if(commandName.equals("activate")){
+            context.put(BaseActivationCommand.ATTRIBUTE_SYNDICATOR, getActivationSyndicator(this.pathSelected));
+        }
 
         return context;
+    }
+    
+    /**
+     * Allow default catalogue
+     */
+    protected Command findCommand(String commandName) {
+        Command cmd = super.findCommand(commandName);
+        if(cmd == null){
+            cmd = CommandsManager.getInstance().getCommand(CommandsManager.DEFAULT_CATALOG, commandName);
+        }
+        return cmd;
     }
 
     /**
@@ -352,94 +365,39 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         return VIEW_TREE;
     }
 
-    public String activate() {
-        boolean recursive = (this.getRequest().getParameter("recursive") != null); //$NON-NLS-1$
-        // by default every CONTENTNODE under the specified CONTENT node is activated
-        try {
-            activateNode(pathSelected, recursive);
-        }
-        catch (Exception e) {
-            log.error("can't activate", e);
-            AlertUtil.setMessage(MessagesManager.get("tree.error.activate") + " " + AlertUtil.getExceptionMessage(e));
-        }
-        return VIEW_TREE;
-    }
-
-    public String deactivate() {
-        try {
-            deActivateNode(pathSelected);
-        }
-        catch (Exception e) {
-            log.error("can't deactivate", e);
-            AlertUtil.setMessage(MessagesManager.get("tree.error.deactivate") + " " + AlertUtil.getExceptionMessage(e));
-        }
-        return VIEW_TREE;
-    }
-
-    /**
-     * @param path
-     * @param recursive
-     */
-    public void activateNode(String path, boolean recursive) throws ExchangeException, RepositoryException {
-
-        String parentPath = StringUtils.substringBeforeLast(path, "/");
-        if (StringUtils.isEmpty(parentPath)) {
-            parentPath = "/";
-        }
-
-        Syndicator syndicator = getActivationSyndicator(path);
-        if (recursive) {
-            activateNodeRecursive(syndicator, parentPath, path);
-        }
-        else {
-            syndicator.activate(parentPath, path);
-        }
-    }
-
-    /**
-     * recursive activation Override this method to provide tree specific node recursion
-     * @param syndicator
-     * @param parentPath
-     * @param path
-     */
-    public void activateNodeRecursive(Syndicator syndicator, String parentPath, String path) throws ExchangeException,
-        RepositoryException {
-        syndicator.activate(parentPath, path);
-        Iterator children = this.getTree().getHierarchyManager().getContent(path).getChildren().iterator();
-        while (children.hasNext()) {
-            this.activateNodeRecursive(syndicator, path, ((Content) children.next()).getHandle());
-        }
-    }
-
     /**
      * Create the <code>Syndicator</code> to activate the specified path. method implementation will make sure that
      * proper node collection Rule and Sysdicator is used
      * @param path node path to be activated
      * @return the <code>Syndicator</code> used to activate
      */
-    public abstract Syndicator getActivationSyndicator(String path);
-
-    public void deActivateNode(String path) throws ExchangeException, RepositoryException {
-        // do not deactivate node datas
-        if (this.getTree().getHierarchyManager().isNodeData(path)) {
-            return;
-        }
-
-        Syndicator syndicator = getDeactivationSyndicator(path);
-        syndicator.deActivate(path);
+    public Syndicator getActivationSyndicator(String path){
+        // use command configuration
+        return null;
     }
 
     /**
-     * Create the <code>Syndicator</code> to deactivate the specified path.
-     * @param path node path to be deactivated
-     * @return the <code>Syndicator</code> used to deactivate
+     * Execute the deactivation command
+     * @param path
+     * @throws ExchangeException
+     * @throws RepositoryException
      */
-    protected Syndicator getDeactivationSyndicator(String path) {
-        Rule rule = new Rule();
-        Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-        syndicator.init(MgnlContext.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this
-            .getRepository()), rule);
-        return syndicator;
+    public void deActivateNode(String path) throws ExchangeException, RepositoryException {
+        CommandsManager cm = CommandsManager.getInstance();
+        Command cmd = cm.getCommand(this.getName(), "deactivate");
+        if(cmd == null){
+            cmd = cm.getCommand(CommandsManager.DEFAULT_CATALOG, "deactivate");
+        }
+        
+        Context ctx = this.getCommandContext("deactivate");
+        
+        try {
+            cmd.execute(ctx);
+        }
+        catch (Exception e) {
+            throw new ExchangeException(e);
+        }
+      
     }
 
     public Content copyMoveNode(String source, String destination, boolean move) throws ExchangeException,
