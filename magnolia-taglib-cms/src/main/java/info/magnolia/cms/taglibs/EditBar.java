@@ -127,46 +127,48 @@ public class EditBar extends TagSupport {
             if (Server.isAdmin() && Resource.getActivePage(request).isGranted(Permission.SET)) {
                 try {
                     BarEdit bar = new BarEdit((HttpServletRequest) this.pageContext.getRequest());
+                    
+                    Content localContentNode = Resource.getLocalContentNode((HttpServletRequest) this.pageContext
+                        .getRequest());
+                    
+                    if (this.paragraph == null) {
+                        Content contentParagraph = localContentNode;
+                        if (contentParagraph != null) {
+                            this.paragraph = contentParagraph.getMetaData().getTemplate();
+                        }
+                    }
+                    bar.setParagraph(this.paragraph);
+
+                    if (this.nodeCollectionName == null) {
+                        this.nodeCollectionName = StringUtils.defaultString(Resource
+                            .getLocalContentNodeCollectionName((HttpServletRequest) this.pageContext.getRequest()));
+                    }
+                    bar.setNodeCollectionName(this.nodeCollectionName);
+
+                    if (this.nodeName == null) {
+                        if (localContentNode != null) {
+                            this.nodeName = localContentNode.getName();
+                        }
+                    }
+                    bar.setNodeName(this.nodeName);
 
                     try {
-                        bar.setPath(Resource
-                            .getCurrentActivePage((HttpServletRequest) this.pageContext.getRequest())
-                            .getHandle());
+                        String path;
+                        if (localContentNode != null){
+                            path = localContentNode.getHandle();
+                            if(path.endsWith(this.nodeCollectionName + "/" + this.nodeName )){
+                                path = StringUtils.removeEnd(path, "/" + this.nodeCollectionName + "/" + this.nodeName);
+                            }
+                        }
+                        else{
+                            path = Resource.getCurrentActivePage((HttpServletRequest) this.pageContext.getRequest()).getHandle();
+                        }
+                        bar.setPath(path);
                     }
                     catch (Exception re) {
                         bar.setPath(StringUtils.EMPTY);
                     }
-
-                    if (this.paragraph == null) {
-                        Content contentParagraph = Resource.getLocalContentNode((HttpServletRequest) this.pageContext
-                            .getRequest());
-                        if (contentParagraph != null) {
-                            bar.setParagraph(contentParagraph.getMetaData().getTemplate());
-                        }
-                    }
-                    else {
-                        bar.setParagraph(this.paragraph);
-                    }
-
-                    if (this.nodeCollectionName == null) {
-                        bar.setNodeCollectionName(StringUtils.defaultString(Resource
-                            .getLocalContentNodeCollectionName((HttpServletRequest) this.pageContext.getRequest())));
-                    }
-                    else {
-                        bar.setNodeCollectionName(this.nodeCollectionName);
-                    }
-
-                    if (this.nodeName == null) {
-                        Content localContentNode = Resource.getLocalContentNode((HttpServletRequest) this.pageContext
-                            .getRequest());
-                        if (localContentNode != null) {
-                            bar.setNodeName(localContentNode.getName());
-                        }
-                    }
-                    else {
-                        bar.setNodeName(this.nodeName);
-                    }
-
+                    
                     bar.setDefaultButtons();
 
                     if (this.editLabel != null) {
@@ -203,6 +205,8 @@ public class EditBar extends TagSupport {
                 }
             }
         }
+        release();
+        
         return EVAL_PAGE;
     }
 
