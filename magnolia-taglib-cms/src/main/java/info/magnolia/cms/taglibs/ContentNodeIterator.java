@@ -124,6 +124,9 @@ public class ContentNodeIterator extends TagSupport {
     /** Resource.getLocalContentNode set by the outer node iterator. */
     private Content outerLocalContentNode = null;
 
+    /** Flag indicating the previous node state should be restored. */
+    private boolean restorePreviousState = false ;
+
     /**
      * @param name content node name on which this tag will iterate
      */
@@ -331,7 +334,7 @@ public class ContentNodeIterator extends TagSupport {
     public int doEndTag() {
 
         this.restorePrevState();
-
+        this.restorePreviousState = false;
         this.size = 0;
         this.index = 0;
         this.current = null;
@@ -370,6 +373,10 @@ public class ContentNodeIterator extends TagSupport {
     /** Checks if a content node iterator tag is already in operation and saves it's state. */
     private void savePrevState() {
         HttpServletRequest req = (HttpServletRequest) this.pageContext.getRequest();
+
+        // savePrevState() was invoked.  Enable restorePrevState()
+        this.restorePreviousState = true ;
+
         if (req.getAttribute(ContentNodeIterator.SIZE) != null) {
             this.outerSize = (Integer) pageContext.getAttribute(ContentNodeIterator.SIZE, PageContext.REQUEST_SCOPE);
             this.outerCollName = (String) pageContext.getAttribute(
@@ -385,20 +392,22 @@ public class ContentNodeIterator extends TagSupport {
     }
 
     private void restorePrevState() {
-        HttpServletRequest req = (HttpServletRequest) this.pageContext.getRequest();
-        if (this.outerSize != null) {
-            pageContext.setAttribute(ContentNodeIterator.SIZE, this.outerSize);
-            pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, this.outerCurrIdx);
-            pageContext.setAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME, this.outerCollName);
-            Resource.setLocalContentNode(req, this.outerLocalContentNode);
-            Resource.setLocalContentNodeCollectionName(req, this.outerResCollName);
-        }
-        else {
-            Resource.removeLocalContentNode(req);
-            Resource.removeLocalContentNodeCollectionName(req);
-            pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
-            pageContext.removeAttribute(ContentNodeIterator.SIZE);
-            pageContext.removeAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME);
+        if ( this.restorePreviousState ) {
+            HttpServletRequest req = (HttpServletRequest) this.pageContext.getRequest();
+            if (this.outerSize != null) {
+                pageContext.setAttribute(ContentNodeIterator.SIZE, this.outerSize);
+                pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, this.outerCurrIdx);
+                pageContext.setAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME, this.outerCollName);
+                Resource.setLocalContentNode(req, this.outerLocalContentNode);
+                Resource.setLocalContentNodeCollectionName(req, this.outerResCollName);
+            }
+            else {
+                Resource.removeLocalContentNode(req);
+                Resource.removeLocalContentNodeCollectionName(req);
+                pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
+                pageContext.removeAttribute(ContentNodeIterator.SIZE);
+                pageContext.removeAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME);
+            }
         }
     }
 
