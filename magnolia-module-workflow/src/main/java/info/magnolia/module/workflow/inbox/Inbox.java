@@ -90,7 +90,7 @@ public class Inbox extends AbstractList {
         });
 
         list.addSortableField("lastModified");
-        list.addColumn(new ListColumn("pathSelected", "Page", "150", true));
+        list.addColumn(new ListColumn("path", "Page", "150", true));
         list.addColumn(new ListColumn("lastModified", "Date", "150", true));
         list.addColumn(new ListColumn("comment", "Comment", "150", true));
 
