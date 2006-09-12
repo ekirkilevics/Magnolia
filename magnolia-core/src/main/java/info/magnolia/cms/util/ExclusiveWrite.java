@@ -14,7 +14,7 @@ package info.magnolia.cms.util;
 
 /**
  * @author Sameer Charles
- * @version $Revision: 2027 $ ($Author: scharles $)
+ * @version $Revision$ ($Author$)
  */
 public class ExclusiveWrite {
 

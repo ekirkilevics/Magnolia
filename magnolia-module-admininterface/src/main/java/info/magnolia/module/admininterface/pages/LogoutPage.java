@@ -26,7 +26,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Fabrizio Giustina
- * @version $Revision: 3255 $ ($Author: philipp $)
+ * @version $Revision$ ($Author$)
  */
 public class LogoutPage extends PageMVCHandler {
 

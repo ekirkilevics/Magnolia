@@ -30,7 +30,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
- * @version $Revision: 1831 $ ($Author: scharles $)
+ * @version $Revision$ ($Author$)
  */
 public class UUIDRequestDispatcher extends HttpServlet {
 

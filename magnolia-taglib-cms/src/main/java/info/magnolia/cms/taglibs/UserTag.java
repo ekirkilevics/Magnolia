@@ -10,7 +10,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * @author fgiust
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class UserTag extends TagSupport {
 

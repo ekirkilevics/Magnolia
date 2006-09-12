@@ -1,1 +1,171 @@
-Modules    A module is a magnolia component. The AdminCental itself is a module for example. For convenience exist abstract default implementations. When ever possible a custom module should extend one of them.* Installation    Drop the jar containing the module into the WEB-INF/libs directory and restart the container (webapp). Some modules will require a restart of the webapp. A restart page is shown in this case.  If you drag a new version the module is responsible to update the entries.* Definition ** Descriptor  The module has an xml descriptor found in <<<META-INF/magnolia/[modulename].xml>>>. The descriptor defines the name, class to load, dependencies, servlets and repositories to register.  For more details see the <<<module.dtd>>> in the <<<info.magnolia.cms.module package>>>---<module>    <name>workflow</name>    <displayName>Workflow</displayName>    <description>Workflow using OpenWFE</description>    <class>info.magnolia.module.owfe.Engine</class>    <version>1.0</version>    <dependencies>        <dependency>            <name>adminInterface</name>            <version>3.0</version>        </dependency>    </dependencies>    <servlets>        <servlet>            <class>info.magnolia.module.owfe.servlets.FlowDefServlet</class>            <mappings>                <mapping>/FlowDef</mapping>            </mappings>            <name>FlowDef</name>            <comment>Servlet to see flow definition.</comment>            <params>                <!--              <param></param> -->            </params>        </servlet>    </servlets></module>---  Info: The descriptor is read using the commons betwixt project. A object tree representation of this is passed to the modules register() method.** Configuration  Each module has a node in the <<<config>>> repository under the <<<modules>>> node. Where it defines its name and the class to load. Each module has a subnode called <<<config>>> under which the module specific configuration is done.  A good example is a mailing list module needing properties lieke servername, port, ...** Informal constraints  A module should:  * Tie all it's content together. For example it shouldn't register a template in any different place than in its own config node. The same is obviously true for dialogs, controls, paragraphs and trees.  * The module should only extract files which the end-user needs to read or to change. This are mainly files in the <<<templates>>> and <<<docroot>>> directories.* Lifecycle** Registration  The <<<ModuleRegistration>>> calls the Modules method register(). The current ModuleDefinition read from the xml descriptor is passed to this method as well the node created for this module. In addition a register state constant is passed to define the state of this registration (new installation, new version, none). Where none means the module is already installed.---    /**     * No registration needed. Same version is already registered     */    int REGISTER_STATE_NONE = 0;    /**     * First installation. Node didn't exist in the repository     */    int REGISTER_STATE_INSTALLATION = 1;    /**     * New version of a already registered module     */    int REGISTER_STATE_NEW_VERSION = 2;---  A Moduel can request a restart of the webapp after the registration. It will set the restartNeeded flag. If this flag is set the module is not initialized and a restart page is showed to the user if he tries to access magnolia.  Attention: the method is always called (even if already registered). This gives the module a chance to register in multiple steps, to update its data ...   Before a registration is started all the dependencies are checked.** Initialization  The Modules method init() is called after the registration of all the modules. Here you will instantiate module specifig objects, add  objects to the managers (like dialogs, paragraphs, ...)** Unregister  The Modules unregister method has to undo all the tasks done during the registration process. All the nodes created through the bootstrap are deleted as well the files extracted. After the call of the unregister method the jar is moved to libs/uninstalled to avoid a reinstall by a system restart. * Default Implementation    For convenience we made two abstract classes.** Registration  The abstract class <<<AbstractModule>>> processes this default registration  * create the modules node with the default properties (name, class, ...)  * bootstrap all the files under mgnl-bootstrap/modulename/*.xml. The naming of the bootstrap files is following the shema: [repository].[path dot separated].xml  * register servlets defined in the descriptor  * register repositories defined in the descriptor  * extract the files in the following folders to the filesystem    * mgnl-files/templates/[modulename]       * mgnl-files/docroot/[modulename]       * mgnl-files/adminemplates/[modulename]         []    []  If a bootstrap file tries to import into an already existing path, the path is deleted in advance. In the case the the parent path is not existing it is created using the node type <<<CONTENT>>>.   If the module needs additional tasks to do, it can overwrite the onRegistration() method. If so overwrite the onUnRegister() to.** Initialization  Some modules needs to register dialogs, paragraphs, tress,... by the responding managers. It is best practice to extend the <<<AbstractAdminModule>>> of the admin interface package class, which does the following default initialization  * register the virtual URI mappings in the modules subnode virtualURIMapping  * register the dialogs in the modules subnode dialogs  * register the controls in the modules subnode controls  * register the trees in the modules subnode trees  * register the paragraphs in the modules subnode paragraphs  * register the templates in the modules subnode templates  The the module can overwrite the onInit() method to execute additional tasks.* Good to now** ModuleUtil  The most of the tasks in the default implementation is done in the using the <<<ModuleUtil>>> of the module package. If you want extract files, bootstrap content, register servlets, ... it's wise to check the existence of a method in the ModuleUtil.** Resources  The most admin interface modules has some javascript files or css files which an end-user shouldn't change. To avoid extracting this files we have mapped the path <<<.resources/*>>> to a servlet which streams the resources from the classpath. The files must be in the <<<mgnl-resources>>> directory.** Development  You can set the <<<magnolia.develop>>> property to true. All the resources are read in each request afterward.  To develop the templates jsp which are in common in <<<WEB-INF/classes/mgnl-files/templates>>> you can create links to this folder, so that the tomcat can see immediate changes.
+Modules
+  
+  A module is a magnolia component. The AdminCental itself is a module for example. For convenience exist abstract default implementations. When ever possible a custom module should extend one of them.
+
+
+* Installation
+  
+  Drop the jar containing the module into the WEB-INF/libs directory and restart the container (webapp). Some modules will require a restart of the webapp. A restart page is shown in this case.
+
+  If you drag a new version the module is responsible to update the entries.
+
+* Definition 
+
+** Descriptor
+
+  The module has an xml descriptor found in <<<META-INF/magnolia/[modulename].xml>>>. The descriptor defines the name, class to load, dependencies, servlets and repositories to register.
+
+  For more details see the <<<module.dtd>>> in the <<<info.magnolia.cms.module package>>>
+
+---
+<module>
+    <name>workflow</name>
+    <displayName>Workflow</displayName>
+    <description>Workflow using OpenWFE</description>
+    <class>info.magnolia.module.owfe.Engine</class>
+    <version>1.0</version>
+    <dependencies>
+        <dependency>
+            <name>adminInterface</name>
+            <version>3.0</version>
+        </dependency>
+    </dependencies>
+    <servlets>
+        <servlet>
+            <class>info.magnolia.module.owfe.servlets.FlowDefServlet</class>
+            <mappings>
+                <mapping>/FlowDef</mapping>
+            </mappings>
+            <name>FlowDef</name>
+            <comment>Servlet to see flow definition.</comment>
+            <params>
+                <!--              <param></param> -->
+            </params>
+        </servlet>
+    </servlets>
+</module>
+---
+
+  Info: The descriptor is read using the commons betwixt project. A object tree representation of this is passed to the modules register() method.
+
+
+** Configuration
+
+  Each module has a node in the <<<config>>> repository under the <<<modules>>> node. Where it defines its name and the class to load. Each module has a subnode called <<<config>>> under which the module specific configuration is done.
+
+  A good example is a mailing list module needing properties lieke servername, port, ...
+
+
+** Informal constraints
+
+  A module should:
+
+  * Tie all it's content together. For example it shouldn't register a template in any different place than in its own config node. The same is obviously true for dialogs, controls, paragraphs and trees.
+
+  * The module should only extract files which the end-user needs to read or to change. This are mainly files in the <<<templates>>> and <<<docroot>>> directories.
+
+* Lifecycle
+
+** Registration
+
+  The <<<ModuleRegistration>>> calls the Modules method register(). The current ModuleDefinition read from the xml descriptor is passed to this method as well the node created for this module. In addition a register state constant is passed to define the state of this registration (new installation, new version, none). Where none means the module is already installed.
+
+---
+    /**
+     * No registration needed. Same version is already registered
+     */
+    int REGISTER_STATE_NONE = 0;
+
+    /**
+     * First installation. Node didn't exist in the repository
+     */
+    int REGISTER_STATE_INSTALLATION = 1;
+
+    /**
+     * New version of a already registered module
+     */
+    int REGISTER_STATE_NEW_VERSION = 2;
+---
+
+  A Moduel can request a restart of the webapp after the registration. It will set the restartNeeded flag. If this flag is set the module is not initialized and a restart page is showed to the user if he tries to access magnolia.
+
+  Attention: the method is always called (even if already registered). This gives the module a chance to register in multiple steps, to update its data ... 
+
+  Before a registration is started all the dependencies are checked.
+
+** Initialization
+
+  The Modules method init() is called after the registration of all the modules. Here you will instantiate module specifig objects, add  objects to the managers (like dialogs, paragraphs, ...)
+
+
+** Unregister
+
+  The Modules unregister method has to undo all the tasks done during the registration process. All the nodes created through the bootstrap are deleted as well the files extracted. After the call of the unregister method the jar is moved to libs/uninstalled to avoid a reinstall by a system restart. 
+
+
+* Default Implementation
+  
+  For convenience we made two abstract classes.
+
+** Registration
+
+  The abstract class <<<AbstractModule>>> processes this default registration
+
+  * create the modules node with the default properties (name, class, ...)
+
+  * bootstrap all the files under mgnl-bootstrap/modulename/*.xml. The naming of the bootstrap files is following the shema: [repository].[path dot separated].xml
+
+  * register servlets defined in the descriptor
+
+  * register repositories defined in the descriptor
+
+  * extract the files in the following folders to the filesystem
+
+    * mgnl-files/templates/[modulename] 
+  
+    * mgnl-files/docroot/[modulename] 
+  
+    * mgnl-files/adminemplates/[modulename] 
+    
+    []
+  
+  []
+
+  If a bootstrap file tries to import into an already existing path, the path is deleted in advance. In the case the the parent path is not existing it is created using the node type <<<CONTENT>>>. 
+
+  If the module needs additional tasks to do, it can overwrite the onRegistration() method. If so overwrite the onUnRegister() to.
+
+** Initialization
+
+  Some modules needs to register dialogs, paragraphs, tress,... by the responding managers. It is best practice to extend the <<<AbstractAdminModule>>> of the admin interface package class, which does the following default initialization
+
+  * register the virtual URI mappings in the modules subnode virtualURIMapping
+
+  * register the dialogs in the modules subnode dialogs
+
+  * register the controls in the modules subnode controls
+
+  * register the trees in the modules subnode trees
+
+  * register the paragraphs in the modules subnode paragraphs
+
+  * register the templates in the modules subnode templates
+
+  The the module can overwrite the onInit() method to execute additional tasks.
+
+
+* Good to now
+
+** ModuleUtil
+
+  The most of the tasks in the default implementation is done in the using the <<<ModuleUtil>>> of the module package. If you want extract files, bootstrap content, register servlets, ... it's wise to check the existence of a method in the ModuleUtil.
+
+** Resources
+
+  The most admin interface modules has some javascript files or css files which an end-user shouldn't change. To avoid extracting this files we have mapped the path <<<.resources/*>>> to a servlet which streams the resources from the classpath. The files must be in the <<<mgnl-resources>>> directory.
+
+** Development
+
+  You can set the <<<magnolia.develop>>> property to true. All the resources are read in each request afterward.
+
+  To develop the templates jsp which are in common in <<<WEB-INF/classes/mgnl-files/templates>>> you can create links to this folder, so that the tomcat can see immediate changes.

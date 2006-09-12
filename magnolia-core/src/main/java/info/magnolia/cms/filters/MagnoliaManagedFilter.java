@@ -25,7 +25,7 @@ import org.slf4j.LoggerFactory;
 /**
  * A single filter that in turn executed a chain of other filters not configured in web.xml.
  * @author fgiust
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class MagnoliaManagedFilter implements Filter {
 

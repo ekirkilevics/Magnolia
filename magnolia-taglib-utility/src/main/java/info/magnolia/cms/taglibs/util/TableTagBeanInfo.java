@@ -25,7 +25,7 @@ import org.apache.commons.lang.UnhandledException;
 /**
  * Bean info, needed for the "class" attribute.
  * @author Fabrizio Giustina
- * @version $Revision: 2985 $ ($Author: fgiust $)
+ * @version $Revision$ ($Author$)
  */
 public class TableTagBeanInfo extends SimpleBeanInfo {
 

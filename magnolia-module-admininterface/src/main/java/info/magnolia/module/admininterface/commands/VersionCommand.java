@@ -24,7 +24,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Creates a version for the passed path in the website repository.
  * @author Philipp Bracher
- * @version $Revision: 5717 $ ($Author: nicolas $)
+ * @version $Revision$ ($Author$)
  */
 public class VersionCommand extends BaseRepositoryCommand {
 

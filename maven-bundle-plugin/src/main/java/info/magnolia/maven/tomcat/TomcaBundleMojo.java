@@ -32,7 +32,7 @@ import org.apache.tools.tar.TarInputStream;
  * Run <code>mvn info.magnolia:maven-tomcatbundle-plugin:bundle</code>
  * @goal tomcat
  * @author Fabrizio Giustina
- * @version $Id: TomcaBundleMojo.java 1809 2005-11-21 21:57:22Z fgiust $
+ * @version $Id$
  */
 public class TomcaBundleMojo extends AbstractMojo {
 
