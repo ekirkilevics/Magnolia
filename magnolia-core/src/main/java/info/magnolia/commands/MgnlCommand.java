@@ -34,6 +34,11 @@ import org.apache.commons.pool.impl.StackObjectPool;
 public abstract class MgnlCommand implements Command {
 
     /**
+     * The default properties. Lazy bound.
+     */
+    private Map defaultProperties;
+
+    /**
      * Create clones
      * @author Philipp Bracher
      * @version $Id$
@@ -44,11 +49,6 @@ public abstract class MgnlCommand implements Command {
          * The prototype we clone for faster execution
          */
         private MgnlCommand prototype;
-
-        /**
-         * The default properties. Lazy bound.
-         */
-        private Map defaultProperties;
 
         /**
          * @param prototype
@@ -64,24 +64,7 @@ public abstract class MgnlCommand implements Command {
         public void activateObject(Object arg0) throws Exception {
             super.activateObject(arg0);
             // set default properties
-            BeanUtils.populate(arg0, this.getDefaultProperties());
-        }
-
-        /**
-         * Get them before we clone the first time. This ensures that the default properties are set
-         * @return
-         */
-        private Map getDefaultProperties() {
-            if (this.defaultProperties == null) {
-                try {
-                    this.defaultProperties = BeanUtils.describe(prototype);
-                }
-                catch (Exception e) {
-                    this.defaultProperties = Collections.EMPTY_MAP;
-                }
-            }
-
-            return this.defaultProperties;
+            BeanUtils.populate(arg0, defaultProperties);
         }
 
     }
@@ -90,6 +73,11 @@ public abstract class MgnlCommand implements Command {
      * Pool of inner commands
      */
     private StackObjectPool pool;
+    
+    /**
+     * True if we can use object pooling. Else we synchronize the execution.
+     */
+    private boolean pooling = true;
 
     public MgnlCommand() {
         pool = new StackObjectPool(new MgnlCommandFactory(this));
@@ -103,23 +91,69 @@ public abstract class MgnlCommand implements Command {
             throw new IllegalArgumentException("context must be of type " + info.magnolia.context.Context.class);
         }
         
-        MgnlCommand cmd = (MgnlCommand) pool.borrowObject();
-        boolean ret = true; // break execution
+        if (this.defaultProperties == null) {
+            setDefaultProperties();
+        }
+        
+        MgnlCommand cmd;
+        
+        if(pooling){
+            try{
+                // try to use the pool
+                cmd = (MgnlCommand) pool.borrowObject();
+            }
+            // this happens if the commans constructor is not public: anonymous classes for example
+            catch(InstantiationException e){
+                pooling = false;
+                // start again
+                return execute(ctx);
+            }
+        }
+        else{
+            cmd = this;
+        }
+        
+        return executePooledOrSynchronized(ctx, cmd);
+    }
+
+    private boolean executePooledOrSynchronized(Context ctx, MgnlCommand cmd) throws Exception {
+        boolean success = false; // break execution
 
         try {
-            // populate the command
-            BeanUtils.populate(cmd, ctx);
-            // convert the confusing true false behavior and cast to mgnl context class
-            ret = !cmd.execute((info.magnolia.context.Context) ctx);
+            // populate the command if we are using a pool
+            if(pooling ){
+                BeanUtils.populate(cmd, ctx);
+                // cast to mgnl context class
+                success = cmd.execute((info.magnolia.context.Context) ctx);
+            }
+            else{
+                synchronized(this){
+                    BeanUtils.populate(cmd, ctx);
+                    // cast to mgnl context class
+                    success = cmd.execute((info.magnolia.context.Context) ctx);
+                    BeanUtils.populate(cmd, defaultProperties);                    
+                }
+            }
         }
         catch(Exception e){
             AlertUtil.setException(e, (info.magnolia.context.Context)ctx);
         }
         finally {
-            pool.returnObject(cmd);
+            if(pooling){
+                pool.returnObject(cmd);
+            }
         }
+        // convert the confusing true false behavior
+        return !success;
+    }
 
-        return ret;
+    private void setDefaultProperties() {
+        try {
+            this.defaultProperties = BeanUtils.describe(this);
+        }
+        catch (Exception e) {
+            this.defaultProperties = Collections.EMPTY_MAP;
+        }
     }
 
     public abstract boolean execute(info.magnolia.context.Context context) throws Exception;
