@@ -13,6 +13,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.VirtualURIManager;
+import info.magnolia.cms.core.Path;
 
 import java.io.IOException;
 
@@ -43,6 +44,12 @@ public class MgnlVirtualUriFilter implements Filter {
      */
     private static Logger log = LoggerFactory.getLogger(MgnlVirtualUriFilter.class);
 
+    private static final int REDIRECT = 1;
+
+    private static final int INCLUDE = 2;
+
+    private static final int NO_ACTION = 3;
+
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
@@ -67,10 +74,12 @@ public class MgnlVirtualUriFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) resp;
 
-        if (redirect(request, response)) {
+        int result = redirect(request, response);
+        if (result == REDIRECT) {
             return;
+        } else if (result == INCLUDE) {
+            ((MagnoliaManagedFilter.CustomFilterChain)filterChain).reset();
         }
-
         filterChain.doFilter(req, resp);
     }
 
@@ -80,7 +89,7 @@ public class MgnlVirtualUriFilter implements Filter {
      * @param response HttpServletResponse
      * @return <code>true</code> if request has been redirected, <code>false</code> otherwise
      */
-    private boolean redirect(HttpServletRequest request, HttpServletResponse response) {
+    private int redirect(HttpServletRequest request, HttpServletResponse response) {
         String uri = this.getURIMap(request);
         if (StringUtils.isNotEmpty(uri)) {
             if (!response.isCommitted()) {
@@ -88,21 +97,24 @@ public class MgnlVirtualUriFilter implements Filter {
                 if (uri.startsWith("redirect:")) {
                     try {
                         response.sendRedirect(request.getContextPath() + StringUtils.substringAfter(uri, "redirect:"));
+                        return REDIRECT;
                     }
                     catch (IOException e) {
                         log.error("Failed to redirect to {}:{}", //$NON-NLS-1$
                             new Object[]{uri, e.getMessage()});
                     }
-                }
-                else {
-
+                } else if (uri.startsWith("forward:")) {
+                    uri = StringUtils.substringAfter(uri, "forward:");
                     try {
                         request.getRequestDispatcher(uri).forward(request, response);
-                    }
-                    catch (Exception e) {
+                        return REDIRECT;
+                    } catch (Exception e) {
                         log.error("Failed to forward to {} - {}:{}", //$NON-NLS-1$
                             new Object[]{uri, ClassUtils.getShortClassName(e.getClass()), e.getMessage()});
                     }
+                } else {
+                    Path.setURI(uri, request);
+                    return INCLUDE;
                 }
             }
             else {
@@ -111,9 +123,9 @@ public class MgnlVirtualUriFilter implements Filter {
                     request.getRequestURI());
             }
 
-            return true;
+            //return true;
         }
-        return false;
+        return NO_ACTION;
     }
 
     /**
@@ -121,8 +133,7 @@ public class MgnlVirtualUriFilter implements Filter {
      * @param request HttpServletRequest
      */
     private String getURIMap(HttpServletRequest request) {
-        return VirtualURIManager.getInstance().getURIMapping(
-            StringUtils.substringAfter(request.getRequestURI(), request.getContextPath()));
+        return VirtualURIManager.getInstance().getURIMapping(Path.getURI(request));
     }
 
 }

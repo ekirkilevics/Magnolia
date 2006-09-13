@@ -139,6 +139,10 @@ public final class Path {
         return uri;
     }
 
+    public static void setURI(String uri, HttpServletRequest req) {
+        req.setAttribute(MGNL_REQUEST_URI_DECODED, uri);
+    }
+
     /**
      * Returns the URI of the current request, but uses the uri to repository mapping to remove any prefix.
      * @param req request
@@ -151,7 +155,6 @@ public final class Path {
     /**
      * If you forward a request, this will return the original requests uri.
      * @param req
-     * @return
      */
     public static String getOriginalURI(HttpServletRequest req) {
         return (String) req.getAttribute(JAVAX_FORWARD_SERVLET_PATH);
@@ -255,7 +258,6 @@ public final class Path {
 
     /**
      * @param baseName
-     * @return
      */
     private static String createUniqueName(String baseName) {
         int pos;

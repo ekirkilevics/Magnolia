@@ -84,7 +84,7 @@ public class MagnoliaManagedFilter implements Filter {
         }
     }
 
-    private class CustomFilterChain implements FilterChain {
+    public class CustomFilterChain implements FilterChain {
 
         private Filter[] filters;
 
@@ -105,6 +105,10 @@ public class MagnoliaManagedFilter implements Filter {
                 position++;
                 filters[position - 1].doFilter(request, response, this);
             }
+        }
+
+        public void reset() {
+            position = 0;
         }
     }
 

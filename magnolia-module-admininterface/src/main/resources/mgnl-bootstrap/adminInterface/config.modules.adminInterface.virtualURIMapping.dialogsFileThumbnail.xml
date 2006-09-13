@@ -18,7 +18,7 @@
     <sv:value>81cd2b2b-4972-495b-81ac-a3fa13b551b6</sv:value>
   </sv:property>
   <sv:property sv:name="toURI" sv:type="String">
-    <sv:value>/admintemplates/dialogs/fileThumbnail.jsp</sv:value>
+    <sv:value>forward:/admintemplates/dialogs/fileThumbnail.jsp</sv:value>
   </sv:property>
   <sv:property sv:name="fromURI" sv:type="String">
     <sv:value>/.magnolia/dialogs/fileThumbnail.jpg</sv:value>
