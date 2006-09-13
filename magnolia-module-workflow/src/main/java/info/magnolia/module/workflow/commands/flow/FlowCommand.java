@@ -31,6 +31,8 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 
 public class FlowCommand extends MgnlCommand {
@@ -99,14 +101,20 @@ public class FlowCommand extends MgnlCommand {
      */
     public void prepareLaunchItem(Context context, LaunchItem launchItem) {
         Map map = context.getAttributes(Context.LOCAL_SCOPE);
-        // remove not serializable objects
+        // find and remove all non serializable objects
+        List unsupportedEntries = new ArrayList();
         for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             Object val = map.get(key);
             if (!(val instanceof Serializable)) {
-                map.remove(key);
+                unsupportedEntries.add(key);
             }
         }
+        for (Iterator iter = unsupportedEntries.iterator(); iter.hasNext();) {
+            String key = (String) iter.next();
+            map.remove(key);
+        }
+
         StringMapAttribute attrs = AttributeUtils.java2attributes(map);
         launchItem.setAttributes(attrs);
     }
