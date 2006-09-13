@@ -181,7 +181,9 @@ function mgnlOpenWindow(url,width,height)
     //dialog window is resized in  dialog itself (window.resize)
     if (!width) width=800;
     if (!height) height=100;
-    url = contextPath + "/" + url;
+    if(contextPath.length != 0){
+    	url = contextPath + "/" + url;
+    }
     if(url.indexOf('?')>=0){
         url+="&";
     }
@@ -189,7 +191,7 @@ function mgnlOpenWindow(url,width,height)
         url+="?";
     }
     url+="mgnlCK="+mgnlGetCacheKiller();
-
+	alert(url);
     var w=window.open(url,"mgnlDialog"+mgnlGetCacheKiller(),"width="+width+",height="+height+"scrollbars=no,status=yes,resizable=yes");
     if (w) w.focus();
     }
