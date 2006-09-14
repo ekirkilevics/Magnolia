@@ -29,10 +29,7 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 
 public class FlowCommand extends MgnlCommand {
@@ -101,21 +98,16 @@ public class FlowCommand extends MgnlCommand {
      */
     public void prepareLaunchItem(Context context, LaunchItem launchItem) {
         Map map = context.getAttributes(Context.LOCAL_SCOPE);
-        // find and remove all non serializable objects
-        List unsupportedEntries = new ArrayList();
+        // create map for workflowItem with all serializable entries from the context
+        Map serializableMap = new HashMap();
         for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
-            String key = (String) iter.next();
+            Object key = iter.next();
             Object val = map.get(key);
-            if (!(val instanceof Serializable)) {
-                unsupportedEntries.add(key);
+            if (val instanceof Serializable) {
+                serializableMap.put(key, val);
             }
         }
-        for (Iterator iter = unsupportedEntries.iterator(); iter.hasNext();) {
-            String key = (String) iter.next();
-            map.remove(key);
-        }
-
-        StringMapAttribute attrs = AttributeUtils.java2attributes(map);
+        StringMapAttribute attrs = AttributeUtils.java2attributes(serializableMap);
         launchItem.setAttributes(attrs);
     }
 
