@@ -205,15 +205,12 @@ public class EditBar extends TagSupport {
                 }
             }
         }
-        release();
+        reset();
         
         return EVAL_PAGE;
     }
-
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
-    public void release() {
+    
+    protected void reset(){
         this.nodeName = null;
         this.nodeCollectionName = null;
         this.paragraph = null;
@@ -221,6 +218,6 @@ public class EditBar extends TagSupport {
         this.deleteLabel = null;
         this.moveLabel = null;
         this.adminOnly = false;
-        super.release();
     }
+
 }
