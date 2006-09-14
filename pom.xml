@@ -548,6 +548,10 @@
         <enabled>false</enabled>
       </releases>
     </repository>
+    <repository>
+        <id>maven.openwfe.org</id>
+        <url>http://maven.openwfe.org/repo</url>
+    </repository>
   </repositories>
   <pluginRepositories>
     <pluginRepository>
