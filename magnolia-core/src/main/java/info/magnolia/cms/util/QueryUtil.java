@@ -11,6 +11,7 @@ import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,7 +66,7 @@ public class QueryUtil {
             log.error("can't query, will return empty collection", e);
         }
         
-        return new ArrayList();
+        return Collections.EMPTY_LIST;
     }
     
 }
