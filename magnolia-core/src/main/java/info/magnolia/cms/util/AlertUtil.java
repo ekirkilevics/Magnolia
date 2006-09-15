@@ -42,7 +42,7 @@ public class AlertUtil {
 
     public static void setMessage(String msg, Context ctx) {
         if (!isMessageSet(ctx)) {
-            MgnlContext.setAttribute(Context.ATTRIBUTE_MESSAGE, msg);
+            ctx.setAttribute(Context.ATTRIBUTE_MESSAGE, msg, Context.LOCAL_SCOPE);
         }
     }
 
@@ -79,7 +79,7 @@ public class AlertUtil {
     }
 
     public static boolean isMessageSet(Context ctx) {
-        return StringUtils.isNotEmpty((String) MgnlContext.getAttribute(Context.ATTRIBUTE_MESSAGE));
+        return StringUtils.isNotEmpty((String) ctx.getAttribute(Context.ATTRIBUTE_MESSAGE));
     }
 
     /**
@@ -91,7 +91,7 @@ public class AlertUtil {
 
     public static void setException(Exception e, Context ctx) {
         if (!isExceptionSet(ctx)) {
-            MgnlContext.setAttribute(Context.ATTRIBUTE_EXCEPTION, e);
+            ctx.setAttribute(Context.ATTRIBUTE_EXCEPTION, e, Context.LOCAL_SCOPE);
             // has only an effect if not yet set
             setMessage(getExceptionMessage(e), ctx);
         }
@@ -106,7 +106,7 @@ public class AlertUtil {
     }
 
     public static boolean isExceptionSet(Context ctx) {
-        return MgnlContext.getAttribute(Context.ATTRIBUTE_EXCEPTION) != null;
+        return ctx.getAttribute(Context.ATTRIBUTE_EXCEPTION) != null;
     }
 
     /**
@@ -119,7 +119,7 @@ public class AlertUtil {
     }
 
     public static String getMessage(Context ctx) {
-        return (String) MgnlContext.getAttribute(Context.ATTRIBUTE_MESSAGE);
+        return (String) ctx.getAttribute(Context.ATTRIBUTE_MESSAGE);
     }
 
     /**
@@ -138,5 +138,13 @@ public class AlertUtil {
             }
         }
         return message;
+    }
+
+    public static Exception getException() {
+        return getException(MgnlContext.getInstance());
+    }
+
+    public static Exception getException(Context ctx) {
+        return (Exception) ctx.getAttribute(Context.ATTRIBUTE_EXCEPTION);
     }
 }
