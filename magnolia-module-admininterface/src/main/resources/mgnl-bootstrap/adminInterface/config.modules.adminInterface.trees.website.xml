@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="website" xmlns:jcr="http://www.jcp.org/jcr/1.0"
-  xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
-  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
-  xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
-  xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
-  xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
+<sv:node sv:name="website" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
+  xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
@@ -14,23 +10,23 @@
     <sv:value>mix:versionable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>da5968dd-421a-4203-8a81-837f2fc6ec52</sv:value>
+    <sv:value>ed61f4e9-8e9e-4cf5-b43b-e39f4c76f253</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.trees.WebsiteTreeHandler</sv:value>
+    <sv:value>info.magnolia.module.admininterface.AdminTreeMVCHandler</sv:value>
   </sv:property>
   <sv:property sv:name="repository" sv:type="String">
     <sv:value>website</sv:value>
   </sv:property>
-  <sv:property sv:name="name" sv:type="String">
-    <sv:value>website</sv:value>
+  <sv:property sv:name="configurationClass" sv:type="String">
+    <sv:value>info.magnolia.module.admininterface.trees.WebsiteTreeConfiguration</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>615f28d2-d14b-4169-b30c-594855389de4</sv:value>
+      <sv:value>c3ecdab3-200c-4569-8eb2-b975f87dd252</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -39,7 +35,7 @@
       <sv:value>2005-05-06T16:18:38.686+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-05-23T19:56:35.342+02:00</sv:value>
+      <sv:value>2006-09-15T10:45:50.714+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
@@ -48,7 +44,7 @@
       <sv:value>MetaData</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-      <sv:value>2006-02-13T22:31:36.466+08:00</sv:value>
+      <sv:value>2006-09-15T10:44:49.675+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activatorid" sv:type="String">
       <sv:value>superuser</sv:value>
