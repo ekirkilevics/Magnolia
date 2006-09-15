@@ -51,16 +51,16 @@ public class ActivationCommand extends BaseActivationCommand {
         }
 
         try {
-            String parentPath = StringUtils.substringBeforeLast(path, "/");
+            String parentPath = StringUtils.substringBeforeLast(getPath(), "/");
             if (StringUtils.isEmpty(parentPath)) {
                 parentPath = "/";
             }
             // make multiple activations instead of a big bulp
             if (recursive) {
-                activateRecursive(parentPath, path);
+                activateRecursive(parentPath, getPath());
             }
             else {
-                getSyndicator().activate(parentPath, path);
+                getSyndicator().activate(parentPath, getPath());
             }
         }
         catch (Exception e) {
@@ -86,7 +86,7 @@ public class ActivationCommand extends BaseActivationCommand {
         getSyndicator().activate(parentPath, path);
 
         // proceed recursively
-        Content node = MgnlContext.getHierarchyManager(repository).getContent(path);
+        Content node = MgnlContext.getHierarchyManager(this.getRepository()).getContent(path);
         Iterator children = node.getChildren(new Content.ContentFilter() {
 
             public boolean accept(Content content) {

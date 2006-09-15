@@ -35,8 +35,8 @@ public class DeactivationCommand extends BaseRepositoryCommand {
     public boolean execute(Context ctx) throws Exception {
         try{
             Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
-            syndicator.init(ctx.getUser(), repository, ContentRepository.getDefaultWorkspace(repository), new Rule());
-            syndicator.deActivate(path);
+            syndicator.init(ctx.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this.getRepository()), new Rule());
+            syndicator.deActivate(getPath());
         }
         catch(Exception e){
             AlertUtil.setException(MessagesManager.get("tree.error.deactivate"), e, ctx);

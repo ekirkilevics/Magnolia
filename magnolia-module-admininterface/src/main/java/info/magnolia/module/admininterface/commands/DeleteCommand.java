@@ -32,16 +32,10 @@ public class DeleteCommand extends BaseRepositoryCommand {
 
     public boolean execute(Context ctx) {
         try {
-            String parentPath = StringUtils.substringBeforeLast(path, "/");
-            String label = StringUtils.substringAfterLast(path, "/");
+            String parentPath = StringUtils.substringBeforeLast(getPath(), "/");
+            String label = StringUtils.substringAfterLast(getPath(), "/");
             
-            Content parentNode = MgnlContext.getHierarchyManager(repository).getContent(parentPath);
-            if (!parentPath.equals("/")) {
-                path = parentPath + "/" + label;
-            }
-            else {
-                path = "/" + label;
-            }
+            Content parentNode = MgnlContext.getHierarchyManager(this.getRepository()).getContent(parentPath);
             parentNode.delete(label);
             parentNode.save();
         }

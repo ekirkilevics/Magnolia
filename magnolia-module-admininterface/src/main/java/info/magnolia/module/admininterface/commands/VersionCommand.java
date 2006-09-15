@@ -35,7 +35,7 @@ public class VersionCommand extends BaseRepositoryCommand {
      */
     public boolean execute(Context ctx) {
         try {
-            Content node = MgnlContext.getSystemContext().getHierarchyManager(repository).getContent(path);
+            Content node = MgnlContext.getSystemContext().getHierarchyManager(this.getRepository()).getContent(this.getPath());
             node.addVersion();
         }
         catch (Exception e) {

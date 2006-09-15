@@ -17,9 +17,9 @@ import info.magnolia.commands.MgnlCommand;
 
 public abstract class BaseRepositoryCommand extends MgnlCommand {
 
-    protected String path;
+    private String path = "/";
 
-    protected String repository;
+    private String repository;
 
     /**
      * @return the repository

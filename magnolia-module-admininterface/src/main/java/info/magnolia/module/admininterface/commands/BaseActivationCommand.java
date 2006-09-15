@@ -40,8 +40,8 @@ public abstract class BaseActivationCommand extends BaseRepositoryCommand {
             syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
             syndicator.init(
                 MgnlContext.getUser(),
-                repository,
-                ContentRepository.getDefaultWorkspace(repository),
+                this.getRepository(),
+                ContentRepository.getDefaultWorkspace(this.getRepository()),
                 getSyndicatorRule());
         }
         return syndicator;
