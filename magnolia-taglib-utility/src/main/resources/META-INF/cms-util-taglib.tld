@@ -519,9 +519,9 @@ This page has no content and it will redirect to
     <description>Sends a simple mail generated with all the fields found in nodeCollectionName.</description>
     <attribute>
       <name>nodeCollectionName</name>
-      <required>true</required>
+      <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Collection (paragraphs) that holds the configured form fields.</description>
+      <description>Collection (paragraphs) that holds the configured form fields. If not set the current collection is used.</description>
     </attribute>
     <attribute>
       <name>to</name>
