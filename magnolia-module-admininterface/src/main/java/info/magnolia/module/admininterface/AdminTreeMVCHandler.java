@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  */
 
-public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
+public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
     /**
      * this are the used actions
