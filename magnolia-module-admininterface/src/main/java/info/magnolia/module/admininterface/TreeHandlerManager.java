@@ -72,7 +72,7 @@ public class TreeHandlerManager extends ObservedManager {
                 HttpServletRequest.class,
                 HttpServletResponse.class});
             AdminTreeMVCHandler newInstance = (AdminTreeMVCHandler) constructor.newInstance(new Object[]{
-                repository,
+                name,
                 request,
                 response});
             ContentUtil.setProperties(newInstance, th.getTreeDefinition());
