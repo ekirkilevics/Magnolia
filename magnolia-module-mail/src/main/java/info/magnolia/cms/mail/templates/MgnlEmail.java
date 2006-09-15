@@ -6,8 +6,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.net.URL;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.activation.MimetypesFileTypeMap;
@@ -141,18 +141,15 @@ public abstract class MgnlEmail extends MimeMessage {
             return new Address[0];
         }
         String[] toObj = adresses.split("\n");
-        Address[] ato = new Address[toObj.length];
+        List atos = new ArrayList();
         for (int i = 0; i < toObj.length; i++) {
             try {
-                ato[i] = new InternetAddress(toObj[i]);
+                atos.add(new InternetAddress(toObj[i]));
             } catch (AddressException e) {
                 log.warn("Error while parsing address.", e);
-                ArrayUtils.remove(ato, i);
-                ArrayUtils.remove(toObj, i);
-                i--;
             }
         }
-        return ato;
+        return (Address[]) atos.toArray(new Address[atos.size()]);
     }
 
     public void setAttachments(ArrayList list) throws MailException {
