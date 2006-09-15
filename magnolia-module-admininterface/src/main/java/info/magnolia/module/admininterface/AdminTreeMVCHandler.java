@@ -128,6 +128,8 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
     protected String displayValue;
 
     protected String newPath;
+    
+    private String repository;
 
     /**
      * Used to display the same tree in the linkbrowser
@@ -138,8 +140,15 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
      * Override this method if you are not using the same name for the tree and the repository
      * @return name of the repository
      */
-    protected String getRepository() {
-        return getName();
+    public String getRepository() {
+        if(repository == null){
+            repository = this.getName();
+        }
+        return repository;
+    }
+       
+    public void setRepository(String repository) {
+        this.repository = repository;
     }
 
     /**
@@ -383,7 +392,11 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
      * @throws RepositoryException
      */
     public void deActivateNode(String path) throws ExchangeException, RepositoryException {
-        CommandsManager cm = CommandsManager.getInstance();
+        if(MgnlContext.getHierarchyManager(this.getRepository()).isNodeData(path)){
+            return;
+        }
+        CommandsManager cm = CommandsManager.getInstance();;
+
         Command cmd = cm.getCommand(this.getName(), "deactivate");
         if(cmd == null){
             cmd = cm.getCommand(CommandsManager.DEFAULT_CATALOG, "deactivate");
@@ -397,7 +410,7 @@ public abstract class AdminTreeMVCHandler extends CommandBasedMVCServletHandler 
         catch (Exception e) {
             throw new ExchangeException(e);
         }
-      
+ 
     }
 
     public Content copyMoveNode(String source, String destination, boolean move) throws ExchangeException,
