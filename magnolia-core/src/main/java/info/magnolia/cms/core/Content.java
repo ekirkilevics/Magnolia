@@ -318,9 +318,10 @@ public class Content extends ContentHandler implements Cloneable {
      * @return NodeData requested <code>NodeData</code> object
      */
 
-    public NodeData getNodeData(String name) {
-        try {
-            return (new NodeData(this.node, name, this.accessManager));
+    public NodeData getNodeData(String name) {        
+       NodeData nodeData = null;
+       try {
+           nodeData = new NodeData(this.node, name, this.accessManager);
         }
         catch (PathNotFoundException e) {
             if (log.isDebugEnabled()) {
@@ -335,8 +336,18 @@ public class Content extends ContentHandler implements Cloneable {
                     log.debug("Path not found for property [" + name + "] in node " + nodepath); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
-
-            return (new NodeData());
+        }
+        catch (AccessDeniedException e) {
+           if (log.isDebugEnabled()) {
+               String nodepath = null;
+               try {
+                   nodepath = this.node.getPath();
+               }
+               catch (RepositoryException e1) {
+                   // ignore, debug only
+               }
+               log.debug("Access denied while trying to read property [" + name + "] for node " + nodepath); //$NON-NLS-1$ //$NON-NLS-2$
+           }
         }
         catch (RepositoryException re) {
             String nodepath = null;
@@ -347,8 +358,10 @@ public class Content extends ContentHandler implements Cloneable {
                 // ignore, debug only
             }
             log.warn("Repository exception while trying to read property [" + name + "] for node " + nodepath, re); //$NON-NLS-1$ //$NON-NLS-2$
-            return (new NodeData());
+            nodeData = new NodeData();
         }
+        
+        return (nodeData != null) ? nodeData : new NodeData();
     }
 
     /**
