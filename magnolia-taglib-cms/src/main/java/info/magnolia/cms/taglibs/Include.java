@@ -131,8 +131,10 @@ public class Include extends BodyTagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
+        boolean localContentNodeSet = false;
         try {
             HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
+            
             // get content
             Content content = this.contentNode;
             if (content == null) {
@@ -141,6 +143,7 @@ public class Include extends BodyTagSupport {
                     content = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
                     if (content != null) {
                         Resource.setLocalContentNode(req, content);
+                        localContentNodeSet = true;
                     }
                 }
                 // use current (first local then global)
@@ -150,6 +153,7 @@ public class Include extends BodyTagSupport {
                         content = Resource.getGlobalContentNode(req);
                         if (content != null) {
                             Resource.setLocalContentNode(req, content);
+                            localContentNodeSet = true;
                         }
                     }
                 }
@@ -191,11 +195,13 @@ public class Include extends BodyTagSupport {
             log.error(e.getMessage(), e);
         }
 
-        // finally {
-        // commented out because the node should be present after the tag
-        // following tags are else not able to get the current node
-        // Resource.removeLocalContentNode((HttpServletRequest) pageContext.getRequest());
-        // }
+        finally {
+            // if we set the local content node we have to reset it again else we keep the node
+            if(localContentNodeSet){
+                Resource.removeLocalContentNode((HttpServletRequest) pageContext.getRequest());
+                
+            }
+        }
 
         this.removeAttributes();
         return EVAL_PAGE;
