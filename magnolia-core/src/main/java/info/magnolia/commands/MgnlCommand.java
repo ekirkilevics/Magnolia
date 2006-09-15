@@ -20,6 +20,7 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
+import org.apache.commons.lang.exception.NestableException;
 import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.apache.commons.pool.impl.StackObjectPool;
 
@@ -137,6 +138,7 @@ public abstract class MgnlCommand implements Command {
         }
         catch(Exception e){
             AlertUtil.setException(e, (info.magnolia.context.Context)ctx);
+            throw new NestableException("exception during executing command",e);
         }
         finally {
             if(pooling){
