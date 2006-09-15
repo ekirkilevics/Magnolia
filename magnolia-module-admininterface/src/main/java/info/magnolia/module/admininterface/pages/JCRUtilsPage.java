@@ -36,7 +36,7 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
 
     private String language = Query.SQL;
 
-    private String itemType = ItemType.CONTENT.getSystemName();
+    private String itemType = "nt:base";
 
     public String dump(){
         if(StringUtils.isNotEmpty(repository) && StringUtils.isNotEmpty(path)){
