@@ -185,10 +185,22 @@ public class SimpleMailTag extends TagSupport {
         // timestamp
         mailValues.append(DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()))).append(';');
         
+        if(nodeCollectionName == null){
+            this.nodeCollectionName = Resource.getLocalContentNodeCollectionName(request);
+        }
+        
         Content activePage = Resource.getActivePage(request);
+        Content fieldsNode = null;
         Iterator it;
         try {
-            it = activePage.getContent(nodeCollectionName).getChildren().iterator();
+            Content localContentNode = Resource.getLocalContentNode(request);
+            if(localContentNode != null && localContentNode.hasContent(nodeCollectionName)){
+                fieldsNode = localContentNode.getContent(nodeCollectionName);
+            }
+            else{
+                fieldsNode = activePage.getContent(nodeCollectionName);
+            }
+            it = fieldsNode.getChildren().iterator();
         }
         catch (RepositoryException e) {
             throw new NestableRuntimeException(e);
@@ -260,7 +272,7 @@ public class SimpleMailTag extends TagSupport {
                 log.error(e.getMessage(), e);
             }
         }
-
+        release();
         return super.doEndTag();
     }
 
