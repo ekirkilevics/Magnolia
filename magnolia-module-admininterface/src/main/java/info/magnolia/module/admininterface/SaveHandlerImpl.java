@@ -55,7 +55,6 @@ import javax.jcr.ValueFactory;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.devlib.schmidt.imageinfo.ImageInfo;
@@ -153,8 +152,15 @@ public class SaveHandlerImpl implements SaveHandler {
      * @see info.magnolia.module.admininterface.SaveHandler#save()
      */
     public boolean save() {
+
+        String[] saveInfos = getForm().getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode
+
+        if (saveInfos == null) {
+            log.info("Nothing to save, mgnlSaveInfo parameter not found.");
+            return true;
+        }
+
         synchronized (ExclusiveWrite.getInstance()) {
-            String[] saveInfos = getForm().getParameterValues("mgnlSaveInfo"); // name,type,propertyOrNode
             // //$NON-NLS-1$
             String path = this.getPath();
 
@@ -627,7 +633,7 @@ public class SaveHandlerImpl implements SaveHandler {
         }
 
         Value value = null;
-        
+
         if (type == PropertyType.REFERENCE) {
             try {
                 Node referencedNode = hm.getWorkspace().getSession().getNodeByUUID(valueStr);
