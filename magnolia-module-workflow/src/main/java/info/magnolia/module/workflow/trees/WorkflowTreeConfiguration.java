@@ -15,6 +15,7 @@ public class WorkflowTreeConfiguration extends ConfigTreeConfiguration {
         super.prepareTree(tree,browseMode,request);
         tree.addItemType(ItemType.WORKITEM);
         tree.addItemType(ItemType.NT_UNSTRUCTRUED);
+        tree.addItemType(ItemType.EXPRESSION);
     }
 
 }
