@@ -80,4 +80,5 @@ public final class WorkflowConstants {
 
     public static final String OPENWFE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ssZ";
 
+    public static final String NODEDATA_WORKITEM = "wi";
 }

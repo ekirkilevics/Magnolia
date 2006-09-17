@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.workflow.jcr;
 
+import info.magnolia.beancoder.MgnlNode;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -23,27 +24,20 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
-
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.ValueFactory;
-
+import info.magnolia.module.workflow.beancoder.OwfeJcrBeanCoder;
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.StringAttribute;
 import openwfe.org.worklist.store.StoreException;
-import openwfe.org.xml.XmlCoder;
-import openwfe.org.xml.XmlUtils;
-
 import org.apache.commons.lang.StringUtils;
-import org.jdom.Document;
-import org.jdom.Element;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.ValueFactory;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 
 public class JCRWorkItemAPI {
@@ -115,25 +109,8 @@ public class JCRWorkItemAPI {
      * @throws Exception
      */
     public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
-        InFlowWorkItem wi;
-        InputStream s = ct.getNodeData(WorkflowConstants.NODEDATA_VALUE).getStream();
-        if (log.isDebugEnabled()) {
-            log.debug("retrieve work item: value = " + s.toString());
-        }
-        final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
-        Document doc = builder.build(s);
-        wi = (InFlowWorkItem) XmlCoder.decode(doc);
-
-        if (log.isDebugEnabled()) {
-            Iterator itt = wi.getAttributes().alphaStringIterator();
-            while (itt.hasNext()) {
-                Object o = itt.next();
-                String name1 = (String) o;
-                log.debug(name1 + "=" + wi.getAttribute(name1).toString());
-            }
-        }
-
-        return wi;
+        OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null,new MgnlNode(ct.getContent(WorkflowConstants.NODEDATA_VALUE)));
+        return (InFlowWorkItem)coder.decode();
     }
 
     /**
@@ -201,9 +178,9 @@ public class JCRWorkItemAPI {
      */
     public final String convertPath(String id) {
         return StringUtils.replace(
-            StringUtils.replace(id, WorkflowConstants.BAR, StringUtils.EMPTY),
-            WorkflowConstants.COLON,
-            WorkflowConstants.DOT);
+                StringUtils.replace(id, WorkflowConstants.BAR, StringUtils.EMPTY),
+                WorkflowConstants.COLON,
+                WorkflowConstants.DOT);
     }
 
     /**
@@ -259,33 +236,18 @@ public class JCRWorkItemAPI {
             newc.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(sId));
             newc.createNodeData(WorkflowConstants.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
 
-            if (log.isDebugEnabled()) {
-                log.debug("ID=" + sId);
-                log.debug("participant = " + wi.getParticipantName());
-            }
-
             StringAttribute assignTo = (StringAttribute) wi.getAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO);
             if (assignTo != null) {
                 String s = assignTo.toString();
                 if (s.length() > 0) {
                     newc.createNodeData(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, vf.createValue(s));
                 }
-                if (log.isDebugEnabled()) {
-                    log.debug("assignTo=" + s);
-                }
             }
 
             // convert to xml string
-            Element encoded = XmlCoder.encode(wi);
-            final org.jdom.Document doc = new org.jdom.Document(encoded);
-            String s = XmlUtils.toString(doc, null);
-            newc.createNodeData(WorkflowConstants.NODEDATA_VALUE, vf.createValue(s));
-
-            if (log.isDebugEnabled()) {
-                log.debug("store work item: value=" + s);
-            }
-
-            this.hm.save();
+            OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null,new MgnlNode(newc),WorkflowConstants.NODEDATA_VALUE);
+            coder.encode(wi);
+            hm.save();
 
             if (log.isDebugEnabled()) {
                 log.debug("store work item ok. ");
@@ -308,7 +270,7 @@ public class JCRWorkItemAPI {
         }
         try {
             final QueryManager queryManager = MgnlContext.getSystemContext().getQueryManager(
-                WorkflowConstants.WORKSPACE_STORE);
+                    WorkflowConstants.WORKSPACE_STORE);
             final Query q = queryManager.createQuery(queryString, Query.XPATH);
 
             QueryResult result = q.execute();
