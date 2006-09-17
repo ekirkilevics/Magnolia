@@ -194,4 +194,16 @@ public class MgnlNode implements Node {
             return new MgnlProperty(new MgnlNode(mnode),(NodeData)internalIterator.next());
         }
     }
+
+    /**
+     * @see openwfe.org.jcr.Node#setProperty(java.lang.String, java.lang.String, int)
+     */
+    public Property setProperty(String propertyName, String value, int noideaofwhatisthis) throws JcrException {
+        // @todo added to make this compile with openwfe-jcr 1.7.2pre8 "second edition".
+        // looks like two different jars have been deployed as openwfe-jcr-1.7.2pre8.jar to the repo, so build fails for
+        // anybody who didn't download the first copy (this method has been added only to the second release)
+        // please avoid this: use snapshots or increment the release number
+        // ... and please, also deploy sources to the repo using "mvn source:jar deploy"
+        return setProperty(propertyName, value);
+    }
 }
