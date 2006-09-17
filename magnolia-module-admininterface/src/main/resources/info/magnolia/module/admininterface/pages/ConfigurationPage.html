@@ -24,20 +24,16 @@
         <td>${this.server.isAdmin()?string}</td>
       </tr>
       <tr>
-        <td>Default Mail Server</td>
-        <td>this.server.getDefaultMailServer()</td>
+        <td>Server ID</td>
+        <td>${this.serverId}</td>
       </tr>
       <tr>
-        <td>Visible to Obinary</td>
-        <td>${this.server.isVisibleToObinary()?string}</td>
+        <td>Default Mail Server</td>
+        <td>${this.defaultMailServer}</td>
       </tr>
       <tr>
         <td>Basic Realm</td>
         <td>${this.server.getBasicRealm()}</td>
-      </tr>
-      <tr>
-        <td>404 URI</td>
-        <td>${this.server.get404URI()}</td>
       </tr>
     </table>
     <h3>General Magnolia System Data</h3>

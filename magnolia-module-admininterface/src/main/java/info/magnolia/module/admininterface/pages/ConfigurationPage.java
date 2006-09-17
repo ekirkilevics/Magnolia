@@ -48,6 +48,14 @@ public class ConfigurationPage extends TemplatedMVCHandler {
         return Server.getInstance();
     }
 
+    public String getDefaultMailServer() {
+        return Server.getDefaultMailServer();
+    }
+
+    public String getServerId() {
+        return Server.getServerId();
+    }
+
     public Collection getVirtualUriMappings() {
         return VirtualURIManager.getInstance().getURIMappings().values();
     }
