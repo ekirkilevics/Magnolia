@@ -13,10 +13,13 @@
     <sv:value>e387b861-82dd-42c7-9c47-74834bdd40b3</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.workflow.trees.WorkflowTreeHandler</sv:value>
+    <sv:value>info.magnolia.module.admininterface.AdminTreeMVCHandler</sv:value>
   </sv:property>
   <sv:property sv:name="repository" sv:type="String">
     <sv:value>Store</sv:value>
+  </sv:property>
+  <sv:property sv:name="configurationClass" sv:type="String">
+    <sv:value>info.magnolia.module.workflow.trees.WorkflowTreeConfiguration</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

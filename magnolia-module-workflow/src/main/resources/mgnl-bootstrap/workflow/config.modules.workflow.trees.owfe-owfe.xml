@@ -20,13 +20,16 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.trees.ConfigTreeHandler</sv:value>
+    <sv:value>info.magnolia.module.admininterface.AdminTreeMVCHandler</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
     <sv:value>2006-05-06T13:06:28.842+02:00</sv:value>
   </sv:property>
   <sv:property sv:name="repository" sv:type="String">
     <sv:value>owfe</sv:value>
+  </sv:property>
+  <sv:property sv:name="configurationClass" sv:type="String">
+    <sv:value>info.magnolia.module.workflow.trees.WorkflowTreeConfiguration</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
