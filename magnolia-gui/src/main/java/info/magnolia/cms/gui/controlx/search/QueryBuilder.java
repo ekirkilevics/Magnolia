@@ -24,7 +24,9 @@ import org.apache.commons.lang.time.DateFormatUtils;
 
 
 /**
- * @author Sameer Charles $Id$ package private helper class Implement this class if you need any further operations in
+ * @author Sameer Charles
+ * $Id$
+ * package private helper class Implement this class if you need any further operations in
  * future <b>NOTE</b> : its a very simple in-order binary traversal, order of operation is not preserved
  */
 class QueryBuilder {
@@ -152,11 +154,11 @@ class QueryBuilder {
 
     /**
      * @param param
-     * @return
+     * @return jcr search expression
      */
     private String toStringJCRExpression(StringSearchQueryParameter param) {
         if (param.getConstraint().equals(StringSearchQueryParameter.CONTAINS)) {
-            return "contains(" + param.getName() + ",'*" + param.getValue() + "*')";
+            return "contains(" + param.getName() + ",'" + param.getValue() + "*')";
         }
 
         else if (param.getConstraint().equals(StringSearchQueryParameter.CONTAINS_NOT)) {
