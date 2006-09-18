@@ -28,8 +28,9 @@ import org.slf4j.LoggerFactory;
  * A <code>Cache</code> implementation based on the Magnolia 2.x filesystem cache.
  * @author Andreas Brenk
  * @author Fabrizio Giustina
+ * @author Sameer Charles
  * @since 3.0
- * $Id$
+ * $Id:CacheImpl.java 6314 2006-09-11 08:24:51Z scharles $
  */
 public class CacheImpl implements Cache {
 
@@ -49,55 +50,58 @@ public class CacheImpl implements Cache {
      * @param canCompress
      */
     public void cacheRequest(CacheKey key, CacheableEntry entry, boolean canCompress) {
-
-        FileOutputStream out = null;
         int compressedSize = 0;
-        try {
+        File file = getFile(key, false);
 
-            File file = getFile(key, false);
+        if (file.isDirectory()) {
+            // additional check, if file name is something like "/"
+            return;
+        }
 
-            if (file.isDirectory()) {
-                // additional check, if file name is something like "/"
-                return;
+        // it should not cache again if the resource already existing
+        // its a responsibility of a cache manager to call remove or flush if resource needs to be
+        // invalidated
+        if (!file.exists()) {
+            FileOutputStream out = null;
+            if (log.isDebugEnabled()) {
+                log.debug("creating file {}", file.getAbsolutePath());
             }
-
-            log.info("creating file {}", file.getAbsolutePath());
-
-            if (!file.exists()) {
+            try {
                 file.getParentFile().mkdirs();
                 file.createNewFile();
+
+                out = new FileOutputStream(file);
+                out.write(entry.getOut());
+                out.flush();
+            } catch (Exception e) {
+                log.error("Failed to cache "+key.toString(), e);
+            } finally {
+                IOUtils.closeQuietly(out);
             }
+        }
 
-            // write anyway
-            out = new FileOutputStream(file);
-            out.write(entry.getOut());
-            out.flush();
-            out.close();
-
-            if (canCompress) {
-                File gzipFile = getFile(key, true);
-                if (!gzipFile.exists()) {
+        if (canCompress) {
+            File gzipFile = getFile(key, true);
+            if (!gzipFile.exists()) {
+                GZIPOutputStream gzipOut = null;
+                try {
                     gzipFile.getParentFile().mkdirs();
                     gzipFile.createNewFile();
+                    FileOutputStream out = new FileOutputStream(gzipFile);
+                    gzipOut = new GZIPOutputStream(out);
+                    gzipOut.write(entry.getOut());
+                    gzipOut.flush();
+                } catch (Exception e) {
+                    log.error("Failed to create compressed entry for "+key.toString(), e);
+                } finally {
+                    IOUtils.closeQuietly(gzipOut);
                 }
-                // write anyway
-                out = new FileOutputStream(gzipFile);
-                GZIPOutputStream gzipOut = new GZIPOutputStream(out);
-                gzipOut.write(entry.getOut());
-                gzipOut.flush();
-                gzipOut.close();
-
-                compressedSize = (new Long(gzipFile.length())).intValue();
             }
 
-            addToCachedURIList(key, new Date().getTime(), (int) file.length(), compressedSize);
+            compressedSize = (new Long(gzipFile.length())).intValue();
         }
-        catch (IOException e) {
-            log.error(e.getMessage(), e);
-        }
-        finally {
-            IOUtils.closeQuietly(out);
-        }
+
+        addToCachedURIList(key, new Date().getTime(), (int) file.length(), compressedSize);
     }
 
     public void flush() {
@@ -145,7 +149,8 @@ public class CacheImpl implements Cache {
     }
 
     public void stop() {
-        flush();
+        // NOTE: it should not flush the cache here. otherwise on server stop all filesystem
+        // cache is removed
     }
 
     /**
@@ -217,12 +222,14 @@ public class CacheImpl implements Cache {
 
     /**
      * Empties the cache for the specified resource. Currenty it expects the entire path, including cache location.
+     * This is never used for simple cache since there are no way to find out how to flush related items
      */
     public void remove(CacheKey key) {
         File file = this.getFile(key, false);
         try {
             if (file.isDirectory()) {
                 FileUtils.deleteDirectory(file);
+                clearCachedURIList();
             }
             else {
                 if (log.isDebugEnabled()) {
