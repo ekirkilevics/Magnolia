@@ -286,6 +286,10 @@ public class MgnlMailFactory extends ObservedManager {
      */
     public String convertEmailList(String mailTo) {
         StringBuffer ret = new StringBuffer();
+        if(StringUtils.isEmpty(mailTo)){
+            return "";
+        }
+        
         String[] list = mailTo.split(";");
         if (list == null) {
             return "";
