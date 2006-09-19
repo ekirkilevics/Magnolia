@@ -12,6 +12,10 @@ import openwfe.org.jcr.Node;
 import openwfe.org.jcr.Property;
 
 import javax.jcr.RepositoryException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
@@ -20,6 +24,11 @@ import java.util.Iterator;
  * Magnolia wrapper for a node.
  */
 public class MgnlNode implements Node {
+    /**
+     * Logger
+     */
+    private static Logger log = LoggerFactory.getLogger(MgnlNode.class);
+    
     Content mnode;
 
     public MgnlNode(Content mnode)  {
@@ -205,5 +214,11 @@ public class MgnlNode implements Node {
         // please avoid this: use snapshots or increment the release number
         // ... and please, also deploy sources to the repo using "mvn source:jar deploy"
         return setProperty(propertyName, value);
+    }
+
+    public void remove() throws JcrException {
+        // FIXME What should this method do? Please implement it.
+        log.error("FIXME: implement this method");
+        
     }
 }
