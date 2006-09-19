@@ -27,15 +27,7 @@ classDef("mgnl.dms.DMS", {
     },
 
     createNew: function(path){
-        // a not existing node is created
-        if(path != "/"){
-            path +=  "/";
-        }
-    
-        // this indicates to create this node
-        path +=  "mgnlNew";
-    
-        mgnlOpenWindow(".magnolia/dialogs/dmsEdit.html?mgnlPath=" + path  + "&mgnlRepository=dms"); 
+        mgnlOpenWindow(".magnolia/dialogs/dmsEdit.html?mgnlPath=" + path  + "&mgnlNode=mgnlNew&mgnlRepository=dms"); 
     },
 
     // check if it is a folder

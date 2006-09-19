@@ -115,13 +115,12 @@ public class DocumentDialog extends ConfiguredDialog {
      */
     protected boolean onPreSave(SaveHandler handler) {
         // check if this is a creation
-        this.create = handler.getPath().endsWith("/mgnlNew");
+        this.create = this.nodeName.equals("mgnlNew");
 
         if (this.create) {
             // get the new name of the node
             info.magnolia.cms.beans.runtime.Document documentMaybeNull = form.getDocument("document");
             String name = documentMaybeNull != null ? documentMaybeNull.getFileName() : "file";
-            String path = PathUtil.getFolder(handler.getPath());
 
             name = Path.getValidatedLabel(name);
             if (name.matches("^-*$")) {
@@ -129,11 +128,9 @@ public class DocumentDialog extends ConfiguredDialog {
             }
 
             name = Path.getUniqueLabel(hm, path, name);
-            handler.setPath(PathUtil.createPath(path, name));
+            handler.setNodeName(name);
             handler.setCreate(true);
             handler.setCreationItemType(ItemType.CONTENTNODE);
-
-            this.path = PathUtil.createPath(path, name);
         }
         return true;
     }
