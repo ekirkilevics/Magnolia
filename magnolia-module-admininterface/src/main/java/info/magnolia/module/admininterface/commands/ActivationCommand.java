@@ -73,9 +73,6 @@ public class ActivationCommand extends BaseActivationCommand {
 
     /**
      * Activate recursively. This is done one by one to send only small peaces (memory friendly).
-     * @param syndicator
-     * @param syndicatorRule
-     * @param repository
      * @param parentPath
      * @param path
      * @throws ExchangeException
@@ -87,11 +84,12 @@ public class ActivationCommand extends BaseActivationCommand {
 
         // proceed recursively
         Content node = MgnlContext.getHierarchyManager(this.getRepository()).getContent(path);
+
         Iterator children = node.getChildren(new Content.ContentFilter() {
 
             public boolean accept(Content content) {
                 try {
-                    return !getSyndicatorRule().isAllowed(content.getNodeTypeName());
+                    return !getRule().isAllowed(content.getNodeTypeName());
                 }
                 catch (RepositoryException e) {
                     log.error("can't get nodetype", e);

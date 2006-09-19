@@ -20,23 +20,33 @@ import info.magnolia.context.MgnlContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
+import java.util.Iterator;
+
 
 /**
  * Creates a version for the passed path in the website repository.
  * @author Philipp Bracher
- * @version $Revision$ ($Author$)
+ * @version $Id$
  */
-public class VersionCommand extends BaseRepositoryCommand {
+public class VersionCommand extends RuleBasedCommand {
 
     private static Logger log = LoggerFactory.getLogger(VersionCommand.class);
 
+    private boolean recursive;
+
     /**
-     * @see info.magnolia.commands.MgnlCommand#exec(java.util.HashMap, org.apache.commons.chain.Context)
+     * @see info.magnolia.commands.MgnlCommand#execute(org.apache.commons.chain.Context) 
      */
     public boolean execute(Context ctx) {
         try {
-            Content node = MgnlContext.getSystemContext().getHierarchyManager(this.getRepository()).getContent(this.getPath());
-            node.addVersion();
+            Content node
+                    = MgnlContext.getSystemContext().getHierarchyManager(this.getRepository()).getContent(this.getPath());
+            if (isRecursive()) {
+                versionRecursively(node);
+            } else {
+                node.addVersion(getRule());
+            }
         }
         catch (Exception e) {
             log.error("can't version", e);
@@ -44,6 +54,42 @@ public class VersionCommand extends BaseRepositoryCommand {
             return false;
         }
         return true;
+    }
+
+    private void versionRecursively(Content node) throws RepositoryException {
+        node.addVersion(getRule());
+        Content.ContentFilter filter = new Content.ContentFilter() {
+            public boolean accept(Content content) {
+                try {
+                    return !getRule().isAllowed(content.getNodeTypeName());
+                }
+                catch (RepositoryException e) {
+                    log.error("can't get nodetype", e);
+                    return false;
+                }
+            }
+        };
+
+        Iterator children = node.getChildren(filter).iterator();
+
+        while (children.hasNext()) {
+            versionRecursively((Content) children.next());
+        }
+
+    }
+
+    /**
+     * @return is recursive versioning
+     */
+    public boolean isRecursive() {
+        return recursive;
+    }
+
+    /**
+     * @param recursive
+     */
+    public void setRecursive(boolean recursive) {
+        this.recursive = recursive;
     }
 
 }
