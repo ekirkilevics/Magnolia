@@ -140,7 +140,7 @@ public class RequestFormUtil {
         return map;
     }
 
-    public MultipartForm getFrom() {
+    public MultipartForm getForm() {
         return form;
     }
 
