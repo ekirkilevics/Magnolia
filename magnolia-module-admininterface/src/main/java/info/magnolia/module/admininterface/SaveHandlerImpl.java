@@ -282,7 +282,9 @@ public class SaveHandlerImpl implements SaveHandler {
                 if (log.isDebugEnabled()) {
                     log.debug("Date has no value. Deleting node data" + name);
                 }
-                node.deleteNodeData(name);
+                if(node.hasNodeData(name)){
+                    node.deleteNodeData(name);
+                }
             }
             else {
                 Calendar utc = DateUtil.getUTCCalendarFromDialogString(values[0]);
@@ -290,7 +292,7 @@ public class SaveHandlerImpl implements SaveHandler {
             }
         }
         catch (Exception e) {
-            log.error("Could not update date value of node:" + node.getHandle() + " of property:" + name);
+            log.error("Could not update date value of node:" + node.getHandle() + " of property:" + name, e);
         }
     }
 
