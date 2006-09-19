@@ -306,7 +306,7 @@ public class Document {
             // store the node name in the name field
             NodeDataUtil.getOrCreate(node, "title").setValue(this.getFileName());
 
-            node.save();
+            //node.save();
 
         }
         catch (Exception e) {

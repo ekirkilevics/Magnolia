@@ -17,6 +17,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.filters.MultipartRequestFilter;
 import info.magnolia.cms.gui.control.SelectOption;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogBox;
@@ -40,6 +41,10 @@ import java.util.Enumeration;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
+import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -87,6 +92,20 @@ public class ZipUploadView {
      */
     public void process(HttpServletRequest request) {
         MgnlContext.initAsWebContext(request);
+
+        if(request.getMethod().equals("POST")){
+            // TODO find a better solution
+            try {
+                new MultipartRequestFilter().doFilter(request, null, new FilterChain(){
+                    public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
+                        // do nothing
+                    }
+                });
+            }
+            catch (Exception e) {
+                log.error("can't create multipartform", e);
+            }
+        }
         this.form = new RequestFormUtil(request);
         this.setPath(form.getParameter("path"));
         this.setEncoding(form.getParameter("encoding"));
@@ -95,10 +114,10 @@ public class ZipUploadView {
     }
 
     private boolean _process() {
-        if (form.getFrom() == null) {
+        if(form.getForm() == null){
             return false;
         }
-
+        
         Document doc = form.getDocument("file");
         if (doc != null) {
             try {
@@ -197,6 +216,7 @@ public class ZipUploadView {
         path = StringUtils.replace(path, "________backslash________", "/");
 
         createPath(hm, path, utf8Path, ItemType.CONTENT);
+        hm.save();
 
         label = StringUtils.substringBeforeLast(label, ".");
         String name = Path.getValidatedLabel(label);
@@ -209,14 +229,14 @@ public class ZipUploadView {
         InputStream stream = zip.getInputStream(entry);
         long size = entry.getSize();
 
-        log.info("import:" + node.getHandle() + " free memory: " + Runtime.getRuntime().freeMemory() / 1024 + "k");
+        log.debug("import:" + node.getHandle() + " free memory: " + Runtime.getRuntime().freeMemory() / 1024 + "k");
 
         try {
             info.magnolia.module.dms.beans.Document doc = new info.magnolia.module.dms.beans.Document(node);
             // set all the information
             doc.setFile(label, extension, stream, size);
             // save it
-            node.save();
+            node.getParent().save();
             // add version (first)
             doc.addVersion();
         }
@@ -314,7 +334,9 @@ public class ZipUploadView {
 
     public void render(HttpServletRequest request, HttpServletResponse response) throws RepositoryException,
         IOException {
+        
         Dialog dialog = DialogFactory.getDialogInstance(request, response, null, null);
+        dialog.setAction(request.getContextPath() + Path.getURI(request));
         dialog.setConfig("width", 500);
         dialog.setConfig("height", 300);
 

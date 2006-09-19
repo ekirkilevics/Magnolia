@@ -191,7 +191,7 @@ public class DocumentDialog extends ConfiguredDialog {
             // do not show the save button if this is an old version
             // or a not writeable node
             if (StringUtils.isNotEmpty(this.version)
-                || !(this.path.endsWith("mgnlNew") || this.getStorageNode().isGranted(Permission.WRITE))) {
+                || !(this.nodeName.equals("mgnlNew") || this.getStorageNode().isGranted(Permission.WRITE))) {
                 // if this is view only
                 out.println("<script>mgnl.dms.DMSDialog.hideSaveButton()</script>");
             }
