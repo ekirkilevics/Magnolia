@@ -86,8 +86,9 @@ public class WorkItemContext extends ContextDecorator {
             catch (AttributeException e) {
                 log.error("can't set value {}", name, e);
             }
+        } else {
+            super.setAttribute(name, value, scope);
         }
-        super.setAttribute(name, value, scope);
     }
 
     /**
@@ -96,8 +97,9 @@ public class WorkItemContext extends ContextDecorator {
     public void removeAttribute(String name, int scope) {
         if (scope == Context.LOCAL_SCOPE) {
             this.workItem.removeAttribute(name);
+        } else {
+            super.removeAttribute(name, scope);
         }
-        super.removeAttribute(name, scope);
     }
 
     /**

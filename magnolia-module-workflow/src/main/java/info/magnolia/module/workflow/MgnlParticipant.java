@@ -99,7 +99,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                     Context context = MgnlContext.getSystemContext();
 
                     context = new WorkItemContext(context, wi);
-
+                    MgnlContext.setInstance(context);
                     // execute
                     c.execute(context);
 
