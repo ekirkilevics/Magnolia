@@ -129,7 +129,7 @@ public final class MessagesManager {
     }
 
     /**
-     * The lazzy LRU Map creates messages objects with a fault back to the default locale.
+     * The lazzy LRU Map creates messages objects with a faul back to the default locale.
      */
     private static void intiLRUMap() {
         // FIXME use LRU
@@ -139,7 +139,13 @@ public final class MessagesManager {
 
             public Object transform(Object input) {
                 MessagesID id = (MessagesID) input;
-                return new DefaultMessagesImpl(id.basename, id.locale);
+                // check http://jira.magnolia.info/browse/MAGNOLIA-1060
+                // We are now chaining current user (LOCALE) messages with system default messages
+                // so that it fallsback to default locale if string is not found instead of displaying broken
+                // ???LABELS???
+                MessagesChain chain = new MessagesChain(new DefaultMessagesImpl(id.basename, id.locale));
+                chain.chain(new DefaultMessagesImpl(DEFAULT_BASENAME, new Locale(FALLBACK_LOCALE)));
+                return chain;
             }
         });
         messages = Collections.synchronizedMap(map);
