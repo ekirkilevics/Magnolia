@@ -43,6 +43,7 @@ import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -207,7 +208,7 @@ public final class VersionManager {
             else {
                 nodeData = systemInfo.getNodeData(PROPERTY_RULE);
             }
-            nodeData.setValue(out.toString());
+            nodeData.setValue(new String(Base64.encodeBase64(out.toByteArray())));
         }
         catch (IOException e) {
             throw new RepositoryException("Unable to add serialized Rule to the versioned content");
@@ -455,7 +456,7 @@ public final class VersionManager {
         ByteArrayInputStream inStream = null;
         try {
             String ruleString = this.getSystemNode(versionedNode).getNodeData(PROPERTY_RULE).getString();
-            inStream = new ByteArrayInputStream(ruleString.getBytes());
+            inStream = new ByteArrayInputStream(Base64.decodeBase64(ruleString.getBytes()));
             ObjectInput objectInput = new ObjectInputStream(inStream);
             return (Rule) objectInput.readObject();
         }
@@ -465,7 +466,7 @@ public final class VersionManager {
         catch (ClassNotFoundException e) {
             throw e;
         }
-        finally {
+            finally {
             IOUtils.closeQuietly(inStream);
         }
     }
