@@ -17,10 +17,13 @@ import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.version.Version;
+
 import java.util.Iterator;
 
 
@@ -43,9 +46,10 @@ public class VersionCommand extends RuleBasedCommand {
             Content node
                     = MgnlContext.getSystemContext().getHierarchyManager(this.getRepository()).getContent(this.getPath());
             if (isRecursive()) {
-                versionRecursively(node);
+                versionRecursively(node, ctx);
             } else {
-                node.addVersion(getRule());
+                Version version = node.addVersion(getRule());
+                ctx.setAttribute(Context.ATTRIBUTE_VERSION, version.getName(), Context.LOCAL_SCOPE);
             }
         }
         catch (Exception e) {
@@ -56,8 +60,11 @@ public class VersionCommand extends RuleBasedCommand {
         return true;
     }
 
-    private void versionRecursively(Content node) throws RepositoryException {
-        node.addVersion(getRule());
+    private void versionRecursively(Content node, Context ctx) throws RepositoryException {
+        Version version = node.addVersion(getRule());
+        if(StringUtils.isEmpty((String)ctx.getAttribute(Context.ATTRIBUTE_VERSION))){
+            ctx.setAttribute(Context.ATTRIBUTE_VERSION, version.getName(), Context.LOCAL_SCOPE);
+        }
         Content.ContentFilter filter = new Content.ContentFilter() {
             public boolean accept(Content content) {
                 try {
@@ -73,7 +80,7 @@ public class VersionCommand extends RuleBasedCommand {
         Iterator children = node.getChildren(filter).iterator();
 
         while (children.hasNext()) {
-            versionRecursively((Content) children.next());
+            versionRecursively((Content) children.next(), ctx);
         }
 
     }
