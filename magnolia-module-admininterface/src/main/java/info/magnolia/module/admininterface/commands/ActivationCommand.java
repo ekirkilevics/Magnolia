@@ -17,11 +17,15 @@ import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
 
 import java.util.Iterator;
+import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -31,6 +35,7 @@ import org.slf4j.LoggerFactory;
 /**
  * the activation command which do real activation
  * @author jackie
+ * $Id$
  */
 public class ActivationCommand extends BaseActivationCommand {
 
@@ -40,6 +45,10 @@ public class ActivationCommand extends BaseActivationCommand {
     private static Logger log = LoggerFactory.getLogger(ActivationCommand.class);
 
     private boolean recursive;
+
+    private String versionNumber;
+
+    private Map versionMap;
 
     /**
      * Execute the activation
@@ -51,16 +60,36 @@ public class ActivationCommand extends BaseActivationCommand {
         }
 
         try {
-            String parentPath = StringUtils.substringBeforeLast(getPath(), "/");
+            Content thisState;
+            if (StringUtils.isNotEmpty(getUuid())) {
+                thisState = ctx.getHierarchyManager(getRepository()).getContentByUUID(getUuid());
+            } else {
+                thisState = ctx.getHierarchyManager(getRepository()).getContent(getPath());
+            }
+            String parentPath = StringUtils.substringBeforeLast(thisState.getHandle(), "/");
             if (StringUtils.isEmpty(parentPath)) {
                 parentPath = "/";
             }
+            // get ordering info now since this object might point to the version store later
+            List orderInfo= getOrderingInfo(thisState);
+            if (StringUtils.isNotEmpty(getVersion())) {
+                try {
+                    thisState = thisState.getVersionedContent(getVersion());
+                } catch (RepositoryException re) {
+                    log.error("Failed to get version "+getVersion()+" for "+thisState.getHandle(), re);
+                }
+            }
             // make multiple activations instead of a big bulp
             if (recursive) {
-                activateRecursive(parentPath, getPath());
+                Map versionMap = getVersionMap();
+                if (versionMap == null) {
+                    activateRecursive(parentPath, thisState, orderInfo, ctx);
+                } else {
+                    activateRecursive(ctx, orderInfo, versionMap);
+                }
             }
             else {
-                getSyndicator().activate(parentPath, getPath());
+                getSyndicator().activate(parentPath, thisState, orderInfo);
             }
         }
         catch (Exception e) {
@@ -75,17 +104,17 @@ public class ActivationCommand extends BaseActivationCommand {
     /**
      * Activate recursively. This is done one by one to send only small peaces (memory friendly).
      * @param parentPath
-     * @param path
+     * @param node
+     * @param orderInfo
      * @throws ExchangeException
      * @throws RepositoryException
      */
-    protected void activateRecursive(String parentPath, String path) throws ExchangeException, RepositoryException {
+    protected void activateRecursive(String parentPath, Content node, List orderInfo ,Context ctx)
+            throws ExchangeException, RepositoryException {
         // activate this node using the rules
-        getSyndicator().activate(parentPath, path);
+        getSyndicator().activate(parentPath, node, orderInfo);
 
         // proceed recursively
-        Content node = MgnlContext.getHierarchyManager(this.getRepository()).getContent(path);
-
         Iterator children = node.getChildren(new Content.ContentFilter() {
 
             public boolean accept(Content content) {
@@ -100,8 +129,73 @@ public class ActivationCommand extends BaseActivationCommand {
         }).iterator();
 
         while (children.hasNext()) {
-            this.activateRecursive(path, ((Content) children.next()).getHandle());
+            // note: recursive activation does not need to set ordering info, except for the first node in a tree
+            this.activateRecursive(parentPath, ((Content) children.next()), new ArrayList(),ctx);
         }
+    }
+
+    /**
+     * @param ctx
+     * @param orderInfo
+     * @param versionMap
+     * */
+    protected void activateRecursive(Context ctx, List orderInfo, Map versionMap)
+            throws ExchangeException, RepositoryException {
+        // activate all uuid's present in versionMap
+        Iterator keys = versionMap.keySet().iterator();
+        while (keys.hasNext()) {
+            String uuid = (String) keys.next();
+            if (StringUtils.equalsIgnoreCase("class", uuid)) {
+                // todo , this should not happen in between the serialized list, somewhere a bug
+                // for the moment simply ignore it
+                orderInfo = new ArrayList();
+                continue;
+            }
+            String versionNumber = (String) versionMap.get(uuid);
+            try {
+                Content content = ctx.getHierarchyManager(getRepository()).getContentByUUID(uuid);
+                String parentPath = content.getParent().getHandle();
+                content = content.getVersionedContent(versionNumber);
+                // add order info for the first node as it represents the parent in a tree
+                getSyndicator().activate(parentPath, content, orderInfo);
+            } catch (RepositoryException re) {
+                log.error(re.getMessage());
+            }
+            // for rest of the nodes there is no need to set order since they will be activated as they were collected
+            orderInfo = new ArrayList();
+        }
+    }
+
+    /**
+     * gets ordering info for the fiven node
+     * @param node
+     * */
+    private List getOrderingInfo(Content node) {
+        //do not use magnolia Content class since these objects are only meant for a single use to read UUID
+        List siblings = new ArrayList();
+        Node thisNode = node.getJCRNode();
+        try {
+            String thisNodeType = node.getNodeTypeName();
+            String thisNodeUUID = node.getUUID();
+            NodeIterator nodeIterator = thisNode.getParent().getNodes();
+            while (nodeIterator.hasNext()) { // only collect elements after this node
+                Node sibling = nodeIterator.nextNode();
+                // skip till the actual position
+                if (sibling.isNodeType(thisNodeType)) {
+                    if (thisNodeUUID.equalsIgnoreCase(sibling.getUUID())) break;
+                }
+            }
+            while (nodeIterator.hasNext()) {
+                Node sibling = nodeIterator.nextNode();
+                if (sibling.isNodeType(thisNodeType)) {
+                    siblings.add(sibling.getUUID());
+                }
+            }
+        } catch (RepositoryException re) {
+            // do not throw this exception, if it fails simply do not add any ordering info
+            log.error("Failed to get Ordering info", re);
+        }
+        return siblings;
     }
 
     /**
@@ -117,5 +211,34 @@ public class ActivationCommand extends BaseActivationCommand {
     public void setRecursive(boolean recursive) {
         this.recursive = recursive;
     }
+
+    /**
+     * @param number version number to be set for activation
+     * */
+    public void setVersion(String number) {
+        this.versionNumber = number;
+    }
+
+    /**
+     * @return version number
+     * */
+    public String getVersion() {
+        return this.versionNumber;
+    }
+
+    /**
+     * @param versionMap version map to be set for activation
+     * */
+    public void setVersionMap(Map versionMap) {
+        this.versionMap = versionMap;
+    }
+
+    /**
+     * @return version map
+     * */
+    public Map getVersionMap() {
+        return this.versionMap;
+    }
+
 
 }

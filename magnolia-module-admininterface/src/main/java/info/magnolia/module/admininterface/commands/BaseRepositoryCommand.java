@@ -21,6 +21,8 @@ public abstract class BaseRepositoryCommand extends MgnlCommand {
 
     private String repository;
 
+    private String uuid;
+
     /**
      * @return the repository
      */
@@ -47,6 +49,20 @@ public abstract class BaseRepositoryCommand extends MgnlCommand {
      */
     public void setPath(String path) {
         this.path = path;
+    }
+
+    /**
+     * @return the uuid
+     */
+    public String getUuid() {
+        return this.uuid;
+    }
+
+    /**
+     * @param uuid the uuid to set
+     */
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
 }

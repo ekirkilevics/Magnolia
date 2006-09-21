@@ -15,7 +15,6 @@ package info.magnolia.module.admininterface.commands;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -25,6 +24,8 @@ import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 
 import java.util.Iterator;
+import java.util.Map;
+import java.util.HashMap;
 
 
 /**
@@ -39,14 +40,21 @@ public class VersionCommand extends RuleBasedCommand {
     private boolean recursive;
 
     /**
-     * @see info.magnolia.commands.MgnlCommand#execute(org.apache.commons.chain.Context) 
+     * @see info.magnolia.commands.MgnlCommand#execute(org.apache.commons.chain.Context)
      */
     public boolean execute(Context ctx) {
         try {
-            Content node
-                    = MgnlContext.getSystemContext().getHierarchyManager(this.getRepository()).getContent(this.getPath());
+            Content node;
+            if (StringUtils.isNotEmpty(getUuid())) {
+                node = ctx.getHierarchyManager(this.getRepository()).getContentByUUID(this.getUuid());
+            } else {
+                node = ctx.getHierarchyManager(this.getRepository()).getContent(this.getPath());
+            }
             if (isRecursive()) {
-                versionRecursively(node, ctx);
+                // set versionMap and version name for this node
+                Map versionMap = new HashMap();
+                versionRecursively(node, ctx, versionMap);
+                ctx.setAttribute(Context.ATTRIBUTE_VERSION_MAP, versionMap, Context.LOCAL_SCOPE);
             } else {
                 Version version = node.addVersion(getRule());
                 ctx.setAttribute(Context.ATTRIBUTE_VERSION, version.getName(), Context.LOCAL_SCOPE);
@@ -60,8 +68,9 @@ public class VersionCommand extends RuleBasedCommand {
         return true;
     }
 
-    private void versionRecursively(Content node, Context ctx) throws RepositoryException {
+    private void versionRecursively(Content node, Context ctx, Map versionMap) throws RepositoryException {
         Version version = node.addVersion(getRule());
+        versionMap.put(node.getUUID(), version.getName());
         if(StringUtils.isEmpty((String)ctx.getAttribute(Context.ATTRIBUTE_VERSION))){
             ctx.setAttribute(Context.ATTRIBUTE_VERSION, version.getName(), Context.LOCAL_SCOPE);
         }
@@ -80,7 +89,7 @@ public class VersionCommand extends RuleBasedCommand {
         Iterator children = node.getChildren(filter).iterator();
 
         while (children.hasNext()) {
-            versionRecursively((Content) children.next(), ctx);
+            versionRecursively((Content) children.next(), ctx, versionMap);
         }
 
     }

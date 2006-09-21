@@ -25,7 +25,7 @@ import org.apache.commons.lang.StringUtils;
 /**
  * A command setting a message using the AlertUtil
  * @author Philipp Bracher
- * @version $Revision$ ($Author$)
+ * @version $Revision:6423 $ ($Author:scharles $)
  */
 public class MessageCommand extends MgnlCommand {
 

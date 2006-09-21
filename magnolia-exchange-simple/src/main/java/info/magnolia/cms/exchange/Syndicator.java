@@ -18,10 +18,12 @@ import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
 
 import javax.jcr.RepositoryException;
+import java.util.List;
 
 
 /**
- * @author Sameer Charles $Id$
+ * @author Sameer Charles
+ * $Id$
  */
 public interface Syndicator {
 
@@ -42,8 +44,11 @@ public interface Syndicator {
      * @param path page to be activated
      * @throws RepositoryException
      * @throws ExchangeException
+     * @deprecated use Syndicator.activate(String parent, Content content)
+     * @see Syndicator#activate(String, info.magnolia.cms.core.Content)
      */
-    public void activate(String parent, String path) throws ExchangeException, RepositoryException;
+    public void activate(String parent, String path)
+            throws ExchangeException, RepositoryException;
 
     /**
      * <p>
@@ -54,20 +59,21 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void activate(String parent, Content content) throws ExchangeException, RepositoryException;
+    public void activate(String parent, Content content)
+            throws ExchangeException, RepositoryException;
 
     /**
      * <p>
-     * this will activate specifies page (sub pages) to the specified subscribers
+     * this will activate specified node to all configured subscribers
      * </p>
-     * @param subscriber
      * @param parent parent under which this page will be activated
-     * @param path page to be activated
+     * @param content to be activated
+     * @param orderBefore List of UUID to be used by the implementation to order this node after activation
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void activate(Subscriber subscriber, String parent, String path) throws ExchangeException,
-        RepositoryException;
+    public void activate(String parent, Content content, List orderBefore)
+            throws ExchangeException, RepositoryException;
 
     /**
      * <p>
@@ -79,15 +85,30 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void activate(Subscriber subscriber, String parent, Content content) throws ExchangeException,
-        RepositoryException;
+    public void activate(Subscriber subscriber, String parent, Content content)
+            throws ExchangeException, RepositoryException;
+
+    /**
+     * <p>
+     * this will activate specifies node to the specified subscribers
+     * </p>
+     * @param subscriber
+     * @param parent parent under which this page will be activated
+     * @param content to be activated
+     * @param orderBefore List of UUID to be used by the subscriber to order this node after activation
+     * @throws RepositoryException
+     * @throws ExchangeException
+     */
+    public void activate(Subscriber subscriber, String parent, Content content, List orderBefore)
+            throws ExchangeException, RepositoryException;
 
     /**
      * @param path , to deactivate
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void deActivate(String path) throws ExchangeException, RepositoryException;
+    public void deActivate(String path)
+            throws ExchangeException, RepositoryException;
 
     /**
      * @param path , to deactivate
@@ -95,6 +116,7 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void deActivate(Subscriber subscriber, String path) throws ExchangeException, RepositoryException;
+    public void deActivate(Subscriber subscriber, String path)
+            throws ExchangeException, RepositoryException;
 
 }

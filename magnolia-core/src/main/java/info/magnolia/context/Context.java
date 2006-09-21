@@ -52,6 +52,8 @@ public interface Context extends org.apache.commons.chain.Context {
 
     final static public String ATTRIBUTE_VERSION = "version";
 
+    final static public String ATTRIBUTE_VERSION_MAP = "versionMap";
+
     final static public String ATTRIBUTE_UUID = "uuid";
 
     final static public String ATTRIBUTE_RECURSIVE = "recursive";

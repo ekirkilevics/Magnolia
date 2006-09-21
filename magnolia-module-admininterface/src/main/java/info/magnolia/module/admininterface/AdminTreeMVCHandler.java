@@ -237,6 +237,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         // set general parameters (repository, path, ..)
         context.put(Context.ATTRIBUTE_REPOSITORY, this.getRepository());
         context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
+
         if(commandName.equals("activate")){
             context.put(BaseActivationCommand.ATTRIBUTE_SYNDICATOR, getActivationSyndicator(this.pathSelected));
         }
@@ -395,7 +396,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         if(MgnlContext.getHierarchyManager(this.getRepository()).isNodeData(path)){
             return;
         }
-        CommandsManager cm = CommandsManager.getInstance();;
+        CommandsManager cm = CommandsManager.getInstance();
 
         Command cmd = cm.getCommand(this.getName(), "deactivate");
         if(cmd == null){

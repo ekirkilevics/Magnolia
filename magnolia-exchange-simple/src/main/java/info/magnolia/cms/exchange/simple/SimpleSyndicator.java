@@ -42,8 +42,6 @@ import java.util.zip.GZIPOutputStream;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Node;
-import javax.jcr.NodeIterator;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
@@ -226,6 +224,7 @@ public class SimpleSyndicator implements Syndicator {
      * @throws ExchangeException
      */
     public synchronized void activate(String parent, String path) throws ExchangeException, RepositoryException {
+        log.info("Method activate(String, String) is deprecated, use Syndicator#activate(String, info.magnolia.cms.core.Content)");
         HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
         this.activate(parent, hm.getContent(path));
     }
@@ -239,11 +238,28 @@ public class SimpleSyndicator implements Syndicator {
      * @throws info.magnolia.cms.exchange.ExchangeException
      */
     public void activate(String parent, Content content) throws ExchangeException, RepositoryException {
+        this.activate(parent, content, null);
+    }
+
+    /**
+     * <p/>
+     * this will activate specified node to all configured subscribers
+     * </p>
+     *
+     * @param parent parent under which this page will be activated
+     * @param content to be activated
+     * @param orderBefore List of UUID to be used by the implementation to order this node after activation
+     * @throws javax.jcr.RepositoryException
+     * @throws info.magnolia.cms.exchange.ExchangeException
+     *
+     */
+    public void activate(String parent, Content content, List orderBefore)
+            throws ExchangeException, RepositoryException {
         this.parent = parent;
         this.path = content.getHandle();
         ActivationContent activationContent = null;
         try {
-            activationContent = this.collect(content);
+            activationContent = this.collect(content, orderBefore);
             this.activate(activationContent);
             this.updateActivationDetails();
         }
@@ -266,32 +282,34 @@ public class SimpleSyndicator implements Syndicator {
      * </p>
      * @param subscriber
      * @param parent parent under which this page will be activated
-     * @param path page to be activated
-     * @throws RepositoryException
-     * @throws ExchangeException
-     */
-    public synchronized void activate(Subscriber subscriber, String parent, String path) throws ExchangeException,
-        RepositoryException {
-        HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
-        this.activate(subscriber, parent, hm.getContent(path));
-    }
-
-    /**
-     * <p/> this will activate specifies page (sub pages) to the specified subscribers
-     * </p>
-     * @param subscriber
-     * @param parent parent under which this page will be activated
      * @param content to be activated
      * @throws javax.jcr.RepositoryException
      * @throws info.magnolia.cms.exchange.ExchangeException
      */
-    public void activate(Subscriber subscriber, String parent, Content content) throws ExchangeException,
-        RepositoryException {
+    public void activate(Subscriber subscriber, String parent, Content content)
+            throws ExchangeException, RepositoryException {
+        this.activate(subscriber, parent, content, null);
+    }
+
+    /**
+     * <p/>
+     * this will activate specifies node to the specified subscribers
+     * </p>
+     *
+     * @param subscriber
+     * @param parent      parent under which this page will be activated
+     * @param content     to be activated
+     * @param orderBefore List of UUID to be used by the subscriber to order this node after activation
+     * @throws javax.jcr.RepositoryException
+     * @throws info.magnolia.cms.exchange.ExchangeException
+     *
+     */
+    public void activate(Subscriber subscriber, String parent, Content content, List orderBefore) throws ExchangeException, RepositoryException {
         this.parent = parent;
         this.path = content.getHandle();
         ActivationContent activationContent = null;
         try {
-            activationContent = this.collect(content);
+            activationContent = this.collect(content, orderBefore);
             this.activate(subscriber, activationContent);
             this.updateActivationDetails();
         }
@@ -574,7 +592,7 @@ public class SimpleSyndicator implements Syndicator {
      * Collect Activation content
      * @throws Exception
      */
-    private ActivationContent collect(Content node) throws Exception {
+    private ActivationContent collect(Content node, List orderBefore) throws Exception {
         ActivationContent activationContent = new ActivationContent();
         // add global properties true for this path/hierarchy
         activationContent.addProperty(PARENT_PATH, this.parent);
@@ -589,7 +607,7 @@ public class SimpleSyndicator implements Syndicator {
         Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
         document.setRootElement(root);
         // collect exact order of this node within its same nodeType siblings
-        addOrderingInfo(root, node);
+        addOrderingInfo(root, orderBefore);
 
         this.addResources(root, node.getWorkspace().getSession(), node, this.contentFilter, activationContent);
         File resourceFile = File.createTempFile("resources", "", Path.getTempDirectory());
@@ -604,36 +622,19 @@ public class SimpleSyndicator implements Syndicator {
     /**
      * add ardering info to the resource file mapping
      * @param root element of the resource file under which ordering info must be added
-     * @param node whose ordering info will be added
+     * @param orderBefore
      * */
-    private void addOrderingInfo(Element root, Content node) {
+    private void addOrderingInfo(Element root, List orderBefore) {
         //do not use magnolia Content class since these objects are only meant for a single use to read UUID
         Element siblingRoot = new Element(SIBLINGS_ROOT_ELEMENT);
-        Node thisNode = node.getJCRNode();
-        try {
-            String thisNodeType = node.getNodeTypeName();
-            String thisNodeUUID = node.getUUID();
-            NodeIterator nodeIterator = thisNode.getParent().getNodes();
-            while (nodeIterator.hasNext()) { // only collect elements after this node
-                Node sibling = nodeIterator.nextNode();
-                // skip till the actual position
-                if (sibling.isNodeType(thisNodeType)) {
-                    if (thisNodeUUID.equalsIgnoreCase(sibling.getUUID())) break;
-                }
-            }
-            while (nodeIterator.hasNext()) {
-                Node sibling = nodeIterator.nextNode();
-                if (sibling.isNodeType(thisNodeType)) {
-                    Element e = new Element(SIBLINGS_ELEMENT);
-                    e.setAttribute(SIBLING_UUID, sibling.getUUID());
-                    siblingRoot.addContent(e);
-                }
-            }
-            root.addContent(siblingRoot);
-        } catch (RepositoryException re) {
-            // do not throw this exception, if it fails simply do not add any ordering info
-            log.error("Failed to add Ordering info", re);
+        Iterator siblings = orderBefore.iterator();
+        while (siblings.hasNext()) {
+            String uuid = (String) siblings.next();
+            Element e = new Element(SIBLINGS_ELEMENT);
+            e.setAttribute(SIBLING_UUID, uuid);
+            siblingRoot.addContent(e);
         }
+        root.addContent(siblingRoot);
     }
 
     /**
