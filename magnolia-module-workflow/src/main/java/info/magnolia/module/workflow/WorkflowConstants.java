@@ -26,6 +26,8 @@ public final class WorkflowConstants {
 
     final static public String PARTICIPANT_PREFIX_COMMAND = "command-";
 
+    public static final String ATTRIBUTE_USERNAME = "userName";
+
     final static public String ATTRIBUTE_ACTION = "action";
 
     public static final String ATTRIBUTE_ASSIGN_TO = "assignTo";
@@ -33,6 +35,8 @@ public final class WorkflowConstants {
     public static final String ATTRIBUTE_START_DATE = "startDate";
 
     public static final String ATTRIBUTE_END_DATE = "endDate";
+
+    public static final String ATTRIBUTE_EDIT_DIALOG = "editDialog";
 
     final static public String ATTRIBUTE_WORKFLOW_DEFINITION_URL = "field:__definition__";
 
@@ -81,4 +85,7 @@ public final class WorkflowConstants {
     public static final String OPENWFE_DATE_FORMAT = "yyyy-MM-dd HH:mm:ssZ";
 
     public static final String NODEDATA_WORKITEM = "wi";
+
+    public static final String DEFAULT_EDIT_DIALOG = "editWorkItem";
+
 }
