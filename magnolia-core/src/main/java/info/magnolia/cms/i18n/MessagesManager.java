@@ -143,9 +143,11 @@ public final class MessagesManager {
                 // We are now chaining current user (LOCALE) messages with system default messages
                 // so that it fallsback to default locale if string is not found instead of displaying broken
                 // ???LABELS???
-                MessagesChain chain = new MessagesChain(new DefaultMessagesImpl(id.basename, id.locale));
-                chain.chain(new DefaultMessagesImpl(DEFAULT_BASENAME, new Locale(FALLBACK_LOCALE)));
-                return chain;
+                Messages msgs = new DefaultMessagesImpl(id.basename, id.locale);
+                if(!MessagesManager.getDefaultLocale().equals(id.locale)){
+                    msgs = new MessagesChain(msgs).chain(MessagesManager.getMessages(id.basename, MessagesManager.getDefaultLocale()));
+                }
+                return msgs;
             }
         });
         messages = Collections.synchronizedMap(map);
