@@ -94,7 +94,7 @@ public class ActivationCommand extends BaseActivationCommand {
         }
         catch (Exception e) {
             log.error("can't activate", e);
-            AlertUtil.setException(MessagesManager.get("tree.error.deactivate"), e, ctx);
+            AlertUtil.setException(MessagesManager.get("tree.error.activate"), e, ctx);
             return false;
         }
         log.info("exec successfully.");
