@@ -159,6 +159,7 @@ public class ActivationCommand extends BaseActivationCommand {
                 // add order info for the first node as it represents the parent in a tree
                 getSyndicator().activate(parentPath, content, orderInfo);
             } catch (RepositoryException re) {
+                log.error("Failed to activate node with UUID : "+uuid);
                 log.error(re.getMessage());
             }
             // for rest of the nodes there is no need to set order since they will be activated as they were collected
