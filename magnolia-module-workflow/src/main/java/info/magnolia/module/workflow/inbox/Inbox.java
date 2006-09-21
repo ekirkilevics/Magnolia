@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.workflow.inbox;
 
+import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBar;
@@ -19,19 +20,32 @@ import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.controlx.list.ListColumn;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.DateUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.lists.AbstractList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
 import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.WorkflowUtil;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.DateUtils;
 
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.StringMapAttribute;
@@ -58,6 +72,8 @@ public class Inbox extends AbstractList {
      */
     private boolean debug = false;
 
+    private Messages msgs = MessagesManager.getMessages("info.magnolia.module.workflow.messages");
+
     /**
      * @param name
      * @param request
@@ -83,59 +99,134 @@ public class Inbox extends AbstractList {
         list.setRenderer(new AdminListControlRenderer() {
 
             public String onSelect(ListControl list, Integer index) {
-                String js = super.onSelect(list, index);
-                js += "mgnl.owfe.Inbox.currentId = '" + list.getIteratorValue("id") + "';";
-                return js;
+                String editDialog = StringUtils.defaultIfEmpty((String) list
+                    .getIteratorValue(WorkflowConstants.ATTRIBUTE_EDIT_DIALOG), WorkflowConstants.DEFAULT_EDIT_DIALOG);
+                String repository = "" + list.getIteratorValue("repository");
+                String path = "" + list.getIteratorValue("path");
+
+                StringBuffer js = new StringBuffer();
+                js.append("mgnl.owfe.Inbox.current = {");
+                js.append("id : '").append(list.getIteratorValue("id")).append("',");
+                js.append("path : '").append(path).append("',");
+                js.append("version : '").append(list.getIteratorValue("version")).append("',");
+                js.append("repository : '").append(repository).append("',");
+                js.append("workItemPath : '").append(list.getIteratorValue("workItemPath")).append("',");
+                js.append("editDialog : '").append(editDialog).append("'");
+                js.append("};");
+                js.append("mgnl.owfe.Inbox.show = ").append(getShowJSFunction(repository, path)).append(";");
+                js.append(super.onSelect(list, index));
+                return js.toString();
+            }
+
+            public String onDblClick(ListControl list, Integer index) {
+                return "mgnl.owfe.Inbox.edit();";
             }
         });
 
         list.addSortableField("lastModified");
-        list.addColumn(new ListColumn("path", "Page", "150", true));
-        list.addColumn(new ListColumn("lastModified", "Date", "150", true));
-        list.addColumn(new ListColumn("comment", "Comment", "150", true));
+        list.addGroupableField("repository");
+        list.addGroupableField("workflow");
+        
+        list.addColumn(new ListColumn() {
 
-        if (this.isDebug()) {
+            {
+                setName("icon");
+                setLabel("");
+                setWidth("25px");
+                setSeparator(false);
+            }
 
-            list.addColumn(new ListColumn() {
+            public Object getValue() {
+                String path = "" + this.getListControl().getIteratorValue("path");
+                String repository = "" + this.getListControl().getIteratorValue("repository");
+                return "<img src=\""
+                    + MgnlContext.getContextPath()
+                    + "/"
+                    + getIcon(repository, path)
+                    + "\" border=\"0\" />";
+            }
+        });
+        list.addColumn(new ListColumn("name", msgs.get("inbox.item"), "100px", true));
+        list.addColumn(new ListColumn("repository", msgs.get("inbox.repository"), "100", true));
+        list.addColumn(new ListColumn("workflow", msgs.get("inbox.workflow"), "100", true));
+        list.addColumn(new ListColumn("comment", msgs.get("inbox.comment"), "200", true));
+        list.addColumn( new ListColumn(){
+            {
+                setName("lastModified");
+                setLabel(msgs.get("inbox.date"));
+                setWidth("100");
+            }
+            public Object getValue() {
+                String str = (String)super.getValue();
+                Date date= null;
+                try {
+                    date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").parse(str);
+                    return DateUtil.formatDateTime(date);
 
-                {
-                    setName("attributes");
-                    setLabel("Attributes");
                 }
-
-                public Object getValue() {
-                    String str = "";
-                    InFlowWorkItem item = (InFlowWorkItem) this.getListControl().getIteratorValueObject();
-                    StringMapAttribute attributes = item.getAttributes();
-                    for (Iterator iter = attributes.alphaStringIterator(); iter.hasNext();) {
-                        String key = (String) iter.next();
-                        str += key + "=" + attributes.sget(key) + "<br/>";
-                    }
-                    return str;
+                catch (ParseException e) {
+                    return StringUtils.EMPTY;
                 }
-            });
+            }
+        });
+
+    }
+
+    protected String getIcon(String repository, String path) {
+        if (StringUtils.equals(repository, "website")) {
+            return ".resources/icons/16/document_plain_earth.gif";
         }
+        if (StringUtils.equals(repository, "dms")) {
+            String type = NodeDataUtil.getString(repository, path +"/type");
+            return MIMEMapping.getMIMETypeIcon(type);
+        }
+        else {
+            return ".resources/icons/16/mail.gif";
+        }
+    }
+
+    protected String getShowJSFunction(String repository, String path) {
+        return "mgnl.owfe.Inbox.showFunctions."+ repository;
     }
 
     /**
      * @see info.magnolia.module.admininterface.lists.AbstractList#getContextMenu()
      */
     public void configureContextMenu(ContextMenu menu) {
+        ContextMenuItem edit = new ContextMenuItem("edit");
+        edit.setLabel(msgs.get("inbox.edit"));
+        edit.setOnclick("mgnl.owfe.Inbox.edit();");
+        edit.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/mail_write.gif");
+        edit.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
+        
+        ContextMenuItem show = new ContextMenuItem("show");
+        show.setLabel(msgs.get("inbox.show"));
+        show.setOnclick("mgnl.owfe.Inbox.show();");
+        show.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/note_view.gif");
+        show.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
+
         ContextMenuItem proceed = new ContextMenuItem("proceed");
-        proceed.setLabel(MessagesManager.get("inbox.proceed"));
+        proceed.setLabel(msgs.get("inbox.proceed"));
         proceed.setOnclick("mgnl.owfe.Inbox.proceed();");
         proceed.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/navigate_right2_green.gif");
+        proceed.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
 
         ContextMenuItem reject = new ContextMenuItem("reject");
-        reject.setLabel(MessagesManager.get("inbox.reject"));
+        reject.setLabel(msgs.get("inbox.reject"));
         reject.setOnclick("mgnl.owfe.Inbox.reject();");
         reject.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/navigate_left2_red.gif");
+        reject.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
 
         ContextMenuItem cancel = new ContextMenuItem("cancel");
-        cancel.setLabel(MessagesManager.get("buttons.cancel"));
+        cancel.setLabel(msgs.get("inbox.cancel"));
         cancel.setOnclick("mgnl.owfe.Inbox.cancel();");
         cancel.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/delete2.gif");
+        cancel.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
 
+        menu.addMenuItem(edit);
+        menu.addMenuItem(null);
+        menu.addMenuItem(show);
+        menu.addMenuItem(null);
         menu.addMenuItem(proceed);
         menu.addMenuItem(reject);
         menu.addMenuItem(null);
@@ -147,6 +238,10 @@ public class Inbox extends AbstractList {
      */
     public void configureFunctionBar(FunctionBar bar) {
         ContextMenu menu = this.getContextMenu();
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("edit")));
+        bar.addMenuItem(null);
+        bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("show")));
+        bar.addMenuItem(null);
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("reject")));
         bar.addMenuItem(new FunctionBarItem(menu.getMenuItemByName("proceed")));
         bar.addMenuItem(null);
