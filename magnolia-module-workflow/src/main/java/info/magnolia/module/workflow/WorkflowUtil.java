@@ -131,8 +131,16 @@ public class WorkflowUtil {
             return;
         }
         wi.touch();
-
+        // remove old exception
+        if(wi.containsAttribute(Context.ATTRIBUTE_EXCEPTION)){
+            wi.removeAttribute(Context.ATTRIBUTE_EXCEPTION);
+        }
+        if(wi.containsAttribute(Context.ATTRIBUTE_MESSAGE)){
+            wi.removeAttribute(Context.ATTRIBUTE_MESSAGE);
+        }
         wi.getAttributes().puts(WorkflowConstants.ATTRIBUTE_ACTION, action);
+        wi.getAttributes().puts(WorkflowConstants.ATTRIBUTE_USERNAME, MgnlContext.getUser().getName());
+        
         if (StringUtils.isNotEmpty(comment)) {
             wi.getAttributes().puts(Context.ATTRIBUTE_COMMENT, comment);
         }
@@ -178,6 +186,10 @@ public class WorkflowUtil {
         return wi;
     }
 
+    public static String getPath(String id){
+        return storage.createPathFromId(FlowExpressionId.fromParseableString(id));
+    }
+    
     /**
      * get all work items for the user
      * @param userName
