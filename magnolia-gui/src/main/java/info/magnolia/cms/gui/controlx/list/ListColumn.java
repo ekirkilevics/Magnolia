@@ -84,7 +84,7 @@ public class ListColumn extends AbstractControl {
      * @return Returns the label.
      */
     public String getLabel() {
-        if (StringUtils.isEmpty(this.label)) {
+        if (this.label == null) {
             return this.getName();
         }
         return this.label;
@@ -137,6 +137,9 @@ public class ListColumn extends AbstractControl {
      * @return Returns the columnName.
      */
     public String getColumnName() {
+        if(this.columnName == null){
+            return this.getName();
+        }
         return this.columnName;
     }
 
