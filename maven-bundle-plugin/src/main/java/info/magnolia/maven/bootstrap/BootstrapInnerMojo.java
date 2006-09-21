@@ -44,16 +44,7 @@ public class BootstrapInnerMojo {
      * Execute the bootstrapping now. Use the passed mojo to get the parameters
      * @param mojo
      */
-    public void execute(BootstrapMojo mojo) {
-        // delete the repositories
-        if (new File(mojo.webappDir + "/repositories").exists()) {
-            try {
-                FileUtils.deleteDirectory(new File(mojo.webappDir + "/repositories"));
-            }
-            catch (IOException e) {
-                mojo.getLog().error("can't delete repositories directory");
-            }
-        }
+    public boolean execute(BootstrapMojo mojo) {
 
         // create the mock context
         MockServletContext context = new MockServletContext();
@@ -69,21 +60,12 @@ public class BootstrapInnerMojo {
         ServletContextListener propertyInitializer = new PropertyInitializer();
         ServletContextListener shutdownManager = new ShutdownManager();
 
-        boolean restart = true;
-        while (restart) {
-            propertyInitializer.contextInitialized(event);
-            shutdownManager.contextInitialized(event);
+        propertyInitializer.contextInitialized(event);
+        shutdownManager.contextInitialized(event);
+        
+        boolean restart = ModuleRegistration.getInstance().isRestartNeeded();
 
-            restart = ModuleRegistration.getInstance().isRestartNeeded();
-            ModuleRegistration.getInstance().setRestartNeeded(false);
-
-            if (restart) {
-                shutdownManager.contextDestroyed(event);
-                propertyInitializer.contextDestroyed(event);
-            }
-        }
-
-        if (StringUtils.isNotEmpty(mojo.postBootstrapConfigurator)) {
+        if (!restart && StringUtils.isNotEmpty(mojo.postBootstrapConfigurator)) {
             try {
                 Class postConfigClass = this.getClass().getClassLoader().loadClass(mojo.postBootstrapConfigurator);
 
@@ -105,7 +87,7 @@ public class BootstrapInnerMojo {
 
         shutdownManager.contextDestroyed(event);
         propertyInitializer.contextDestroyed(event);
-
+        return restart;
     }
 
 }

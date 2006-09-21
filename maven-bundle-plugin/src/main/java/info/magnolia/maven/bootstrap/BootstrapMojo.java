@@ -11,6 +11,8 @@
  */
 package info.magnolia.maven.bootstrap;
 
+import info.magnolia.maven.util.DelegateableClassLoader;
+
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -36,7 +38,7 @@ import org.apache.maven.project.MavenProjectHelper;
  * BootstrapInnerMojo is created using the custom classloader. This garanties that the magnolia code will find the
  * resources.
  * @goal bootstrap
- * @phase package
+ * @execute phase=package
  * @author philipp
  */
 public class BootstrapMojo extends AbstractMojo {
@@ -76,6 +78,25 @@ public class BootstrapMojo extends AbstractMojo {
      * Create the custom class loader and create the inner mojo object using it.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
+        
+        // delete the repositories
+        if (new File(webappDir + "/repositories").exists()) {
+            try {
+                FileUtils.deleteDirectory(new File(webappDir + "/repositories"));
+            }
+            catch (IOException e) {
+                getLog().error("can't delete repositories directory");
+            }
+        }
+        
+        boolean restart = bootstrap();
+        
+        while(restart){
+            restart = bootstrap();
+        }
+    }
+
+    protected boolean bootstrap() throws MojoExecutionException {
         URLClassLoader customLoader;
         URLClassLoader orgLoader = (URLClassLoader) this.getClass().getClassLoader();
 
@@ -84,10 +105,12 @@ public class BootstrapMojo extends AbstractMojo {
         // make the custom loader gernal available
         Thread.currentThread().setContextClassLoader(customLoader);
 
-        executeInnerMojo(customLoader);
+        boolean restart = executeInnerMojo(customLoader);
 
         // set again the original class loader
         Thread.currentThread().setContextClassLoader(orgLoader);
+        
+        return restart;
     }
 
     /**
@@ -162,7 +185,7 @@ public class BootstrapMojo extends AbstractMojo {
      * @param customLoader the custom loader to use for instantiating the inner mojo
      * @throws MojoExecutionException
      */
-    private void executeInnerMojo(URLClassLoader customLoader) throws MojoExecutionException {
+    private boolean executeInnerMojo(URLClassLoader customLoader) throws MojoExecutionException {
         // create the inner mojo using the custom loader
         Class klass;
         Object innerMojo;
@@ -189,7 +212,9 @@ public class BootstrapMojo extends AbstractMojo {
         	// Method executeMethod = klass.getMethod("execute", new Class[]{this.getClass()});
             // executeMethod.invoke(innerMojo, new Object[]{this});
         	// introduce a dependency to log4j here
-            MethodUtils.invokeMethod(innerMojo, "execute", new Object[]{this});
+            Boolean res = (Boolean) MethodUtils.invokeMethod(innerMojo, "execute", new Object[]{this});
+            return res.booleanValue();
+            
         }
         catch (Exception e) {
             throw new MojoExecutionException("can't call execute() method on the inner mojo", e);
