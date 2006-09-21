@@ -7,7 +7,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.ie.filters.ImportXmlRootFilter;
 import info.magnolia.cms.core.ie.filters.MagnoliaV2Filter;
 import info.magnolia.cms.core.ie.filters.VersionFilter;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
@@ -325,7 +324,7 @@ public class DataTransporter {
      * @throws IOException
      */
     private static InputStream getInputStreamForFile(File xmlFile) throws IOException {
-        InputStream xmlStream = null;
+        InputStream xmlStream;
         // looks like the zip one is buggy. It throws exception when trying to use it
         if (xmlFile.getName().endsWith(ZIP)) {
             xmlStream = new ZipInputStream((new FileInputStream(xmlFile)));

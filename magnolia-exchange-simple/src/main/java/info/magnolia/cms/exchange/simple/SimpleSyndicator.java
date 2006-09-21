@@ -19,7 +19,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.exchange.ActivationContent;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
@@ -29,9 +28,6 @@ import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -39,6 +35,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPOutputStream;
+import java.io.*;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -46,6 +43,8 @@ import javax.jcr.Session;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.output.XMLOutputter;
@@ -53,6 +52,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.InputSource;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 
@@ -659,13 +659,8 @@ public class SimpleSyndicator implements Syndicator {
             /**
              * nt:file node type has mandatory sub nodes
              */
-            if (content.isNodeType(ItemType.NT_FILE)) {
-                DataTransporter.parseAndFormat(gzipOutputStream, elementfilter, "", content.getJCRNode().getPath(), session, false);
-            }
-            else {
-                DataTransporter
-                    .parseAndFormat(gzipOutputStream, elementfilter, "", content.getJCRNode().getPath(), session, true);
-            }
+            boolean noRecurse = !content.isNodeType(ItemType.NT_FILE);
+            exportAndParse(session, content, elementfilter, gzipOutputStream, noRecurse);
         } else {
             /**
              * nt:file node type has mandatory sub nodes
@@ -692,6 +687,44 @@ public class SimpleSyndicator implements Syndicator {
         while (children.hasNext()) {
             Content child = (Content) children.next();
             this.addResources(element, session, child, filter, activationContent);
+        }
+    }
+
+    /**
+     * @param session
+     * @param content
+     * @param elementfilter
+     * @param os
+     * @param noRecurse
+     * */
+    private void exportAndParse(Session session,
+                           Content content,
+                           XMLReader elementfilter,
+                           OutputStream os,
+                           boolean noRecurse) throws Exception {
+        File tempFile = File.createTempFile("Frozen_"+content.getName(), "xml"); //$NON-NLS-1$ //$NON-NLS-2$
+        OutputStream tmpFileOutStream = null;
+        FileInputStream tmpFileInStream = null;
+        try {
+            tmpFileOutStream = new FileOutputStream(tempFile);
+            session.exportSystemView(content.getJCRNode().getPath(), tmpFileOutStream, false, noRecurse);
+            tmpFileOutStream.flush();
+            tmpFileOutStream.close();
+
+            OutputFormat outputFormat = new OutputFormat();
+            outputFormat.setPreserveSpace(false);
+
+            tmpFileInStream = new FileInputStream(tempFile);
+            elementfilter.setContentHandler(new XMLSerializer(os, outputFormat));
+            elementfilter.parse(new InputSource(tmpFileInStream));
+            tmpFileInStream.close();
+        } catch (Throwable t) {
+            log.error("Failed to parse XML using FrozenElementFilter",t);
+            throw new Exception(t);
+        } finally {
+            IOUtils.closeQuietly(tmpFileInStream);
+            IOUtils.closeQuietly(tmpFileOutStream);
+            tempFile.delete();
         }
     }
 
