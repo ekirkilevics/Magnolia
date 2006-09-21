@@ -16,6 +16,7 @@ import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContextImpl;
+import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.WorkflowUtil;
 import openwfe.org.engine.workitem.AttributeUtils;
@@ -107,6 +108,7 @@ public class FlowCommand extends MgnlCommand {
                 serializableMap.put(key, val);
             }
         }
+        serializableMap.put(WorkflowConstants.ATTRIBUTE_USERNAME, context.getUser().getName());
         StringMapAttribute attrs = AttributeUtils.java2attributes(serializableMap);
         launchItem.setAttributes(attrs);
     }
