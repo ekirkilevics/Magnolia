@@ -12,24 +12,65 @@
  */
  
 classDef("mgnl.owfe.Inbox", {
+    /**
+     * Some default show functions
+     */
+	showFunctions:{
+		website: function(){
+			var url = this.current.path;
+
+		    if(contextPath.length != 0){
+    			url = contextPath + url;
+    		}
+			url += ".html";
+			if(this.current.version != null && this.current.version.length >0){
+				url += "?mgnlVersion=" + this.current.version;
+			}
+			var w = window.open(url);
+			w.focus();
+		},
+		
+		dms: function(){
+			if(this.current.version != null && this.current.version.length >0){
+				mgnl.dms.DMS.showVersion(this.current.path, this.current.version);
+			}
+			else{
+				mgnl.dms.DMS.show(this.current.path);
+			}
+		}
+	},
 
     /**
-     * The currently selected id.
+     * The currently selected objects.
      */
-    currentId: null,
+    current: {
+    	id:null, 
+    	path:null, 
+    	repository: null,
+    	workItemPath: null,
+    	editDialog: 'inboxComment'
+    },
     
-    proceed: function(id){
-        id = id==null ? this.currentId : id;
-        $('flowItemId').value = id;
+    /**
+     * The inbox will override this function depending on what you select
+     */
+	show: function(){},
+	
+    edit: function(){
+    	mgnlOpenDialog(this.current.workItemPath + '/value/attributes','','',this.current.editDialog, 'Store');
+    },
+    
+    proceed: function(){
+        $('flowItemId').value = this.current.id;
         $('command').value = "proceed";
-        this.openCommentDialog();
+        document.mgnlForm.submit();
     },
     
     reject: function(id){
         id = id==null ? this.currentId : id;
         $('flowItemId').value = id;
         $('command').value = "reject";
-        this.openCommentDialog();
+        document.mgnlForm.submit();
     },
 
     cancel: function(id){
@@ -37,15 +78,6 @@ classDef("mgnl.owfe.Inbox", {
         $('flowItemId').value = id;
         $('command').value = "cancel";
         document.mgnlForm.submit();
-    },
-    
-    afterSaveComment: function(comment){
-        $('comment').value = comment;
-        document.mgnlForm.submit();
-    },
-
-    openCommentDialog: function(){
-        mgnlOpenDialog('','','','inboxComment','');
     }
     
 });
