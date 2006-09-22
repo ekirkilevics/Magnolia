@@ -549,8 +549,8 @@
       </releases>
     </repository>
     <repository>
-        <id>maven.openwfe.org</id>
-        <url>http://maven.openwfe.org/repo</url>
+        <id>maven.openwfe.org.prereleases</id>
+        <url>http://maven.openwfe.org/prereleases</url>
     </repository>
   </repositories>
   <pluginRepositories>
