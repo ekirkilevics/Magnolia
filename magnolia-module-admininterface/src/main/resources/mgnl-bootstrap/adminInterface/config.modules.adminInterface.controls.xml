@@ -630,43 +630,6 @@
       </sv:property>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="webDAV">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>01772c36-2258-4e4a-a755-0143593cc42e</sv:value>
-    </sv:property>
-    <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.cms.gui.dialog.DialogWebDAV</sv:value>
-    </sv:property>
-    <sv:property sv:name="name" sv:type="String">
-      <sv:value>webDAV</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>052bbf2c-212b-43e5-85a9-99d8b4826ca4</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-06-08T17:10:04.392+02:00</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
   <sv:node sv:name="hidden">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>

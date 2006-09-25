@@ -75,7 +75,7 @@
     <developer>
       <id>fgiust</id>
       <name>Fabrizio Giustina</name>
-      <email>fgiust(at)users.sourceforge.net</email>
+      <email>fgiust(at)openmindonline.it</email>
       <organization>openmind</organization>
       <timezone>+1</timezone>
     </developer>
@@ -371,11 +371,6 @@
         <classifier>asl</classifier>
       </dependency>
       <dependency>
-        <groupId>slide</groupId>
-        <artifactId>webdavlib</artifactId>
-        <version>2.0</version>
-      </dependency>
-      <dependency>
         <groupId>net.sourceforge.openutils</groupId>
         <artifactId>openutils-log4j</artifactId>
         <version>1.0</version>
@@ -549,8 +544,8 @@
       </releases>
     </repository>
     <repository>
-        <id>maven.openwfe.org.prereleases</id>
-        <url>http://maven.openwfe.org/prereleases</url>
+      <id>maven.openwfe.org.prereleases</id>
+      <url>http://maven.openwfe.org/prereleases</url>
     </repository>
   </repositories>
   <pluginRepositories>
