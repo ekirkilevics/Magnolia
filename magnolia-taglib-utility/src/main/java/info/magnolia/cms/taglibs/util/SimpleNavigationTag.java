@@ -170,6 +170,11 @@ public class SimpleNavigationTag extends TagSupport {
     private String expandAll = EXPAND_NONE;
 
     /**
+     * Name for a page property which will be written to the css class attribute.
+     */
+    private String classProperty;
+
+    /**
      * Setter for the <code>startLevel</code> tag attribute.
      * @param startLevel the start level for navigation, defaults to <code>0</code>.
      */
@@ -223,6 +228,14 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
+     * Setter for <code>classProperty</code> tag attribute.
+     * @param classProperty name for a page property which will be written to the css class attribute.
+     */
+    public void setClassProperty(String classProperty) {
+        this.classProperty = classProperty;
+    }
+
+    /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() throws JspException {
@@ -259,6 +272,7 @@ public class SimpleNavigationTag extends TagSupport {
         this.hideInNav = null;
         this.openMenu = null;
         this.style = null;
+        this.classProperty = null;
         this.expandAll = EXPAND_NONE;
         super.release();
     }
@@ -346,6 +360,10 @@ public class SimpleNavigationTag extends TagSupport {
             if (child.getLevel() < activePage.getLevel()
                 && activePage.getAncestor(child.getLevel()).getHandle().equals(child.getHandle())) {
                 cssClasses.add(CSS_LI_TRAIL);
+            }
+
+            if (StringUtils.isNotEmpty(classProperty) && child.hasNodeData(classProperty)) {
+                cssClasses.add(child.getNodeData(classProperty).getString(StringUtils.EMPTY));
             }
 
             StringBuffer css = new StringBuffer(cssClasses.size() * 10);

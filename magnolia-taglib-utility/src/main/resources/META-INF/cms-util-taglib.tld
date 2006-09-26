@@ -153,6 +153,12 @@
       <description>displayed between the page names, e.g. ">"</description>
     </attribute>
     <attribute>
+      <name>hideProperty</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Name for a page property which, if set, will make the page hidden in the breadcrumb.</description>
+    </attribute>
+    <attribute>
       <name>excludeCurrent</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
@@ -261,6 +267,14 @@
       <description>
         Name for the "hide in nav" nodeData. If a page contains a boolean property with this name and it is set to true,
         the page is not shown in navigation. Defaults to "hideInNav"
+      </description>
+    </attribute>
+    <attribute>
+      <name>classProperty</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Name for a page property that will hold a css class name which will be added to the html class attribute.
       </description>
     </attribute>
     <attribute>
@@ -521,7 +535,9 @@ This page has no content and it will redirect to
       <name>nodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Collection (paragraphs) that holds the configured form fields. If not set the current collection is used.</description>
+      <description>
+        Collection (paragraphs) that holds the configured form fields. If not set the current collection is used.
+      </description>
     </attribute>
     <attribute>
       <name>to</name>
@@ -584,14 +600,17 @@ This page has no content and it will redirect to
     <attribute>
       <name>loggingFilename</name>
       <required>false</required>
-      <description>Name for the file (without extension). If not set, the pages path is used to create a file</description>
+      <description>
+        Name for the file (without extension). If not set, the pages path is used to create a file
+      </description>
     </attribute>
     <attribute>
       <name>loggingExtension</name>
       <required>false</required>
-      <description>The file extension to use for new files. Default is log. Use csv for easy opening with Excel</description>
+      <description>
+        The file extension to use for new files. Default is log. Use csv for easy opening with Excel
+      </description>
     </attribute>
-    
     <attribute>
       <name>type</name>
       <rtexprvalue>true</rtexprvalue>
@@ -600,7 +619,9 @@ This page has no content and it will redirect to
     <attribute>
       <name>template</name>
       <rtexprvalue>true</rtexprvalue>
-      <description>Instead of the mail type you can define a template to use. This template must be registered in the mail module</description>
+      <description>
+        Instead of the mail type you can define a template to use. This template must be registered in the mail module
+      </description>
     </attribute>
   </tag>
   <tag>

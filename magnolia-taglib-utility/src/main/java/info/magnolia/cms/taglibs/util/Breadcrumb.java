@@ -69,6 +69,11 @@ public class Breadcrumb extends TagSupport {
     private boolean link = true;
 
     /**
+     * Name for a page property which, if set, will make the page hidden in the breadcrumb.
+     */
+    private String hideProperty;
+
+    /**
      * Setter for the <code>delimeter</code> tag attribute.
      * @param delimiter delimeter between links
      */
@@ -85,6 +90,10 @@ public class Breadcrumb extends TagSupport {
         if (this.startLevel < 1) {
             this.startLevel = 1;
         }
+    }
+
+    public void setHideProperty(String hideProperty) {
+        this.hideProperty = hideProperty;
     }
 
     /**
@@ -119,17 +128,23 @@ public class Breadcrumb extends TagSupport {
             }
 
             JspWriter out = pageContext.getOut();
-            for (int i = this.startLevel; i <= endLevel; i++) {
-                if (i != this.startLevel) {
+            for (int j = this.startLevel; j <= endLevel; j++) {
+                Content page = actpage.getAncestor(j);
+
+                if (StringUtils.isNotEmpty(hideProperty) && page.getNodeData(hideProperty).getBoolean()) {
+                    continue;
+                }
+
+                if (j != this.startLevel) {
                     out.print(StringUtils.defaultString(this.delimiter, " > ")); //$NON-NLS-1$
                 }
                 if (this.link) {
                     out.print("<a href=\""); //$NON-NLS-1$
                     out.print(request.getContextPath());
-                    out.print(actpage.getAncestor(i).getHandle() + "." + Server.getDefaultExtension());
+                    out.print(page.getHandle() + "." + Server.getDefaultExtension());
                     out.print("\">"); //$NON-NLS-1$
                 }
-                out.print(actpage.getAncestor(i).getTitle());
+                out.print(page.getTitle());
                 if (this.link) {
                     out.print("</a>"); //$NON-NLS-1$
                 }
@@ -153,6 +168,7 @@ public class Breadcrumb extends TagSupport {
         this.delimiter = null;
         this.excludeCurrent = false;
         this.link = true;
+        this.hideProperty = null;
         super.release();
     }
 
