@@ -76,8 +76,31 @@ public class SimpleMailTag extends TagSupport {
      */
     private String template;
 
-    private boolean trackMail;
+    /**
+     * log the mails
+     */
+    private boolean logging;
 
+    /**
+     * encoding of the log file 
+     */
+    private String loggingEncoding = "UTF8";
+
+    /**
+     * directory to place the log files
+     */
+    private String loggingDirectory = "/mailtracking";
+
+    /**
+     * The extension for the log files
+     */
+    private String loggingExtension = "log";
+    
+    /**
+     * Name of the file. Prefix only.
+     */
+    private String loggingFilename;
+    
     /**
      * Logger.
      */
@@ -155,8 +178,8 @@ public class SimpleMailTag extends TagSupport {
         this.type = type;
     }
     
-    public void setTrackMail(boolean trackMail) {
-        this.trackMail = trackMail;
+    public void setLogging(boolean trackMail) {
+        this.logging = trackMail;
     }
 
     
@@ -228,7 +251,7 @@ public class SimpleMailTag extends TagSupport {
             }
         }
 
-        if(trackMail){
+        if(logging){
         	trackMail(request, activePage.getHandle(), mailTitles, mailValues);
         }
         
@@ -284,10 +307,14 @@ public class SimpleMailTag extends TagSupport {
     }
     
     protected void trackMail(HttpServletRequest request, String activePagePath, StringBuffer titles, StringBuffer values){
-    	activePagePath = StringUtils.removeStart(activePagePath, "/");
-   		String fileName = StringUtils.replace(activePagePath, "/", "_");
-    	fileName = fileName + "_" + new GregorianCalendar().get(GregorianCalendar.WEEK_OF_YEAR) + ".log";
-    	String folder = pageContext.getServletContext().getRealPath("/mailtracking"); 
+        String fileName =  this.getLoggingFilename();
+        if(StringUtils.isEmpty(fileName)){
+            activePagePath = StringUtils.removeStart(activePagePath, "/");
+            fileName = StringUtils.replace(activePagePath, "/", "_");
+        }
+        
+    	fileName = fileName + "_" + new GregorianCalendar().get(GregorianCalendar.WEEK_OF_YEAR) + "." + getLoggingExtension();
+    	String folder = pageContext.getServletContext().getRealPath(this.getLoggingDirectory()); 
     	
     	synchronized (ExclusiveWrite.getInstance()) {
 	    	new File(folder).mkdirs();
@@ -299,12 +326,12 @@ public class SimpleMailTag extends TagSupport {
 	    	try {
 	    		FileOutputStream out = new FileOutputStream(file, true);
 	    		if(!exists){
-	        		out.write("Timestamp;".toString().getBytes("UTF8"));
+	        		out.write("Timestamp;".toString().getBytes(this.getLoggingEncoding()));
                     titles.replace(titles.length()-1, titles.length(), "\n");
-	        		out.write(titles.toString().getBytes("UTF8"));
+	        		out.write(titles.toString().getBytes(this.getLoggingEncoding()));
 	        	}
 	    		values.replace(values.length()-1, values.length(), "\n");
-	        	out.write(values.toString().getBytes("UTF8"));
+	        	out.write(values.toString().getBytes(this.getLoggingEncoding()));
 	        	out.flush();
 	        	out.close();
 	        	
@@ -327,6 +354,47 @@ public class SimpleMailTag extends TagSupport {
         this.type = null;
         this.template = null;
         super.release();
+    }
+
+    
+    public String getLoggingDirectory() {
+        return loggingDirectory;
+    }
+
+    
+    public void setLoggingDirectory(String loggingDirectory) {
+        this.loggingDirectory = loggingDirectory;
+    }
+
+    
+    public String getLoggingEncoding() {
+        return loggingEncoding;
+    }
+
+    
+    public void setLoggingEncoding(String loggingEncoding) {
+        this.loggingEncoding = loggingEncoding;
+    }
+
+    
+    public boolean isLogging() {
+        return logging;
+    }
+
+    public void setLoggingExtension(String loggingExtension) {
+        this.loggingExtension = loggingExtension;
+    }
+
+    public String getLoggingExtension() {
+        return loggingExtension;
+    }
+
+    public void setLoggingFilename(String loggingFilename) {
+        this.loggingFilename = loggingFilename;
+    }
+
+    public String getLoggingFilename() {
+        return loggingFilename;
     }
 
 

@@ -566,11 +566,32 @@ This page has no content and it will redirect to
       <description>Page to redirect to after a successfull submission</description>
     </attribute>
     <attribute>
-      <name>trackMail</name>
+      <name>logging</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Track this mail.</description>
+      <description>Log all the information sent by the mail.</description>
     </attribute>
+    <attribute>
+      <name>loggingEncoding</name>
+      <required>false</required>
+      <description>Encoding of the log file. Default is UTF8. For windows excel use ISO-8859-1</description>
+    </attribute>
+    <attribute>
+      <name>loggingDirectory</name>
+      <required>false</required>
+      <description>Where to log to. For each page the log is created separately on a weekly base</description>
+    </attribute>
+    <attribute>
+      <name>loggingFilename</name>
+      <required>false</required>
+      <description>Name for the file (without extension). If not set, the pages path is used to create a file</description>
+    </attribute>
+    <attribute>
+      <name>loggingExtension</name>
+      <required>false</required>
+      <description>The file extension to use for new files. Default is log. Use csv for easy opening with Excel</description>
+    </attribute>
+    
     <attribute>
       <name>type</name>
       <rtexprvalue>true</rtexprvalue>
