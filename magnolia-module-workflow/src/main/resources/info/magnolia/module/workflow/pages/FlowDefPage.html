@@ -53,10 +53,14 @@
       <h3>Launch flow</h3>
       <form action="" method="get">
         <input type="hidden" name="command" value="launchFlow" />
-        path:
-        <input name="path" />
         Flow name:
-        <input name="flowName" />
+        <select name="flowName">
+          [#list this.flowList as item]
+          <option>${item}</option>
+          [/#list]
+        </select>
+        Path:
+        <input name="path" />
         Repository name:
         <input name="repository" />
         workspace name:
