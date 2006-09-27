@@ -1,5 +1,5 @@
 <div id="mgnlFunctionBarDiv" class="mgnlFunctionBar">
-  <table cellpadding="0" cellspacing="0" border="0" width="100%" border="0">
+  <table cellpadding="0" cellspacing="0" border="0" width="100%">
     <tr>
       <td>
         <table cellpadding="0" cellspacing="0" style="empty-cells: show; height: 42px;" border="0">
@@ -7,7 +7,7 @@
 <#if functionBar.hasMenuItems()>
   <#list functionBar.menuItems as item>
     <#if item?exists>
-            <td class="mgnlFunctionBarButtonInactive" id="${functionBar.javascriptName}_${item.name}">				
+            <td class="mgnlFunctionBarButtonInactive" id="${functionBar.javascriptName}_${item.name}">
               <div><a href="javascript:void(0);" class="mgnlFunctionBarAnchor" onclick="${functionBar.javascriptName}.clicked ('${item.name}')" id="${functionBar.javascriptName}_${item.name}_div">
               <#if item.icon?exists><img src="${item.icon}" id="${functionBar.javascriptName}_${item.name}_img" border="0" alt="" /><br/></#if>
               ${item.label}</a></div>
