@@ -99,4 +99,12 @@ public class ContextDecorator extends AbstractContext {
         this.ctx.removeAttribute(name, scope);
     }
 
+    /**
+     * Returns the context wrapped by this decorator.
+     * @return wrapped context
+     */
+    public Context getWrappedContext() {
+        return this.ctx;
+    }
+
 }

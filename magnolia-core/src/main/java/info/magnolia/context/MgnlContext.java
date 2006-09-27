@@ -27,6 +27,7 @@ import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -164,9 +165,10 @@ public class MgnlContext {
      * @return content object
      */
     public static Content getActivePage() {
-        Context ctx = getInstance();
-        if (ctx instanceof WebContext) {
-            return ((WebContext) ctx).getActivePage();
+
+        WebContext ctx = getWebContextIfExisting(getInstance());
+        if (ctx != null) {
+            return ctx.getActivePage();
         }
         return null;
     }
@@ -176,9 +178,9 @@ public class MgnlContext {
      * @return file object
      */
     public static File getFile() {
-        Context ctx = getInstance();
-        if (ctx instanceof WebContext) {
-            return ((WebContext) ctx).getFile();
+        WebContext ctx = getWebContextIfExisting(getInstance());
+        if (ctx != null) {
+            return ctx.getFile();
         }
         return null;
     }
@@ -188,9 +190,9 @@ public class MgnlContext {
      * @return multipart form object
      */
     public static MultipartForm getPostedForm() {
-        Context ctx = getInstance();
-        if (ctx instanceof WebContext) {
-            return ((WebContext) ctx).getPostedForm();
+        WebContext ctx = getWebContextIfExisting(getInstance());
+        if (ctx != null) {
+            return ctx.getPostedForm();
         }
         return null;
     }
@@ -201,9 +203,9 @@ public class MgnlContext {
      * @return parameter value
      */
     public static String getParameter(String name) {
-        Context ctx = getInstance();
-        if (ctx instanceof WebContext) {
-            return ((WebContext) ctx).getParameter(name);
+        WebContext ctx = getWebContextIfExisting(getInstance());
+        if (ctx != null) {
+            return ctx.getParameter(name);
         }
         return null;
 
@@ -214,9 +216,9 @@ public class MgnlContext {
      * @return parameter values
      */
     public static Map getParameters() {
-        Context ctx = getInstance();
-        if (ctx instanceof WebContext) {
-            return ((WebContext) ctx).getParameters();
+        WebContext ctx = getWebContextIfExisting(getInstance());
+        if (ctx != null) {
+            return ctx.getParameters();
         }
         return null;
     }
@@ -225,11 +227,11 @@ public class MgnlContext {
      * @return the context path
      */
     public static String getContextPath() {
-        Context ctx = getInstance();
-        if (ctx instanceof WebContext) {
-            return ((WebContext) ctx).getContextPath();
+        WebContext ctx = getWebContextIfExisting(getInstance());
+        if (ctx != null) {
+            return ctx.getContextPath();
         }
-        return "";
+        return StringUtils.EMPTY;
     }
 
     /**
@@ -319,5 +321,20 @@ public class MgnlContext {
         WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
         ctx.init(request);
         setInstance(ctx);
+    }
+
+    /**
+     * Returns the web context, also if eventually wrapped in a ContextDecorator.
+     * @param original web context
+     * @return WebContext instance or null if no web context is set
+     */
+    private static WebContext getWebContextIfExisting(Context ctx) {
+        if (ctx instanceof WebContext) {
+            return (WebContext) ctx;
+        }
+        else if (ctx instanceof ContextDecorator) {
+            return getWebContextIfExisting(((ContextDecorator) ctx).getWrappedContext());
+        }
+        return null;
     }
 }
