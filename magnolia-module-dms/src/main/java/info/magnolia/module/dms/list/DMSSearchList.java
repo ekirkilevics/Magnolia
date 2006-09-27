@@ -61,7 +61,7 @@ public class DMSSearchList extends AbstractSimpleSearchList {
      */
     public String onRender() {
         String str = super.onRender();
-        str += "<script>mgnl.dms.DMS.searchView = true;</script>";
+        str += "<script type=\"text/javascript\">mgnl.dms.DMS.searchView = true;</script>";
         return str;
     }
 

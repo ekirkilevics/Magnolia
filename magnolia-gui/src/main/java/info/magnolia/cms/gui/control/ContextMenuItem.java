@@ -78,7 +78,7 @@ public class ContextMenuItem extends ControlImpl {
         if (StringUtils.isNotEmpty(this.getIcon())) {
             label = "<img src=\"" //$NON-NLS-1$
                 + this.getIcon()
-                + "\"> <span style=\"position:relative;top:-3px\">" //$NON-NLS-1$
+                + "\" alt=\"\" /> <span style=\"position:relative;top:-3px\">" //$NON-NLS-1$
                 + label
                 + "</span>"; //$NON-NLS-1$
         }

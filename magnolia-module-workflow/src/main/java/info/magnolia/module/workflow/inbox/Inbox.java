@@ -126,7 +126,7 @@ public class Inbox extends AbstractList {
         list.addSortableField("lastModified");
         list.addGroupableField("repository");
         list.addGroupableField("workflow");
-        
+
         list.addColumn(new ListColumn() {
 
             {
@@ -143,7 +143,7 @@ public class Inbox extends AbstractList {
                     + MgnlContext.getContextPath()
                     + "/"
                     + getIcon(repository, path)
-                    + "\" border=\"0\" />";
+                    + "\" alt=\"\" border=\"0\" />";
             }
         });
         list.addColumn(new ListColumn("name", msgs.get("inbox.item"), "100px", true));
@@ -198,7 +198,7 @@ public class Inbox extends AbstractList {
         edit.setOnclick("mgnl.owfe.Inbox.edit();");
         edit.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/mail_write.gif");
         edit.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
-        
+
         ContextMenuItem show = new ContextMenuItem("show");
         show.setLabel(msgs.get("inbox.show"));
         show.setOnclick("mgnl.owfe.Inbox.show();");

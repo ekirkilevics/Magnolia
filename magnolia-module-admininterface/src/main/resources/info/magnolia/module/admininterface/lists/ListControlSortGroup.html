@@ -1,22 +1,22 @@
-<#if this.groupableFields?has_content>
-	<div class="mgnlListSortGroupTitle">${renderer.getMessage("list.groupby")}:</div>
-	<#list this.groupableFields as field>
-		<div class="${renderer.getGroupLinkCSSClass(this, field)}">
-			<a href="javascript:${this.name}.group('${field}','${renderer.nextGroupByOrder(this, field)}');">${this.getColumnLabel(field)}</a>
-		</div>
-	</#list>
-</#if>
+[#if this.groupableFields?has_content]
+    <div class="mgnlListSortGroupTitle">${renderer.getMessage("list.groupby")}:</div>
+    [#list this.groupableFields as field]
+        <div class="${renderer.getGroupLinkCSSClass(this, field)}">
+            <a href="javascript:${this.name}.group('${field}','${renderer.nextGroupByOrder(this, field)}');">${this.getColumnLabel(field)}</a>
+        </div>
+    [/#list]
+[/#if]
 
-<#if this.sortableFields?has_content>
-	<#if this.groupableFields?has_content>
-		<div class="mgnlListSortGroupLine">hallo</div>
-	</#if>
+[#if this.sortableFields?has_content]
+    [#if this.groupableFields?has_content]
+        <div class="mgnlListSortGroupLine">hallo</div>
+    [/#if]
 
-	<div class="mgnlListSortGroupTitle">${renderer.getMessage("list.sortby")}:</div>
-	<#list this.sortableFields as field>
-		<div class="${renderer.getSortLinkCSSClass(this, field)}">
-			<a href="javascript:${this.name}.sort('${field}','${renderer.nextSortByOrder(this, field)}');">${this.getColumnLabel(field)}</a>
-		</div>
-	</#list>
-</#if>
+    <div class="mgnlListSortGroupTitle">${renderer.getMessage("list.sortby")}:</div>
+    [#list this.sortableFields as field]
+        <div class="${renderer.getSortLinkCSSClass(this, field)}">
+            <a href="javascript:${this.name}.sort('${field}','${renderer.nextSortByOrder(this, field)}');">${this.getColumnLabel(field)}</a>
+        </div>
+    [/#list]
+[/#if]
 

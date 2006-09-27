@@ -77,7 +77,7 @@ public class DocumentDialog extends ConfiguredDialog {
 
             protected void drawHtmlPreSubsHead(Writer out) throws IOException {
                 super.drawHtmlPreSubsHead(out);
-                out.write("<script>");
+                out.write("<script type=\"text/javascript\">");
                 out.write("mgnl.dms.DMSDialog.init();");
                 out.write("</script>");
             }
@@ -193,7 +193,7 @@ public class DocumentDialog extends ConfiguredDialog {
             if (StringUtils.isNotEmpty(this.version)
                 || !(this.nodeName.equals("mgnlNew") || this.getStorageNode().isGranted(Permission.WRITE))) {
                 // if this is view only
-                out.println("<script>mgnl.dms.DMSDialog.hideSaveButton()</script>");
+                out.println("<script type=\"text/javascript\">mgnl.dms.DMSDialog.hideSaveButton()</script>");
             }
         }
     }

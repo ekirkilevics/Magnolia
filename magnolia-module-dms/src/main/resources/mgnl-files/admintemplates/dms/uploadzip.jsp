@@ -18,7 +18,7 @@
 </jsp:scriptlet>
 
 <c:if test="${zipUpload.success}">
-    <script>
+    <script type="text/javascript">
         window.close();
         opener.mgnl.dms.DMS.showInTree('${zipUpload.path}');
     </script>
@@ -30,7 +30,7 @@
         </jsp:scriptlet>
 
         <c:if test="${not empty zipUpload.msg}">
-            <script>
+            <script type="text/javascript">
                 alert('${zipUpload.msg}');
             </script>
         </c:if>
