@@ -99,15 +99,15 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      * name of the tree (not the repository)
      */
     protected Tree tree;
-    
+
     /**
      * The class to instantiate a tree control
      */
     private String treeClass = Tree.class.getName();
-    
+
     /**
-     * The class used to instantiate a AdminTreeConfiguration if not provided.
-     * This can get configured in the trees configuration node
+     * The class used to instantiate a AdminTreeConfiguration if not provided. This can get configured in the trees
+     * configuration node
      */
     private String configurationClass;
 
@@ -128,7 +128,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     protected String displayValue;
 
     protected String newPath;
-    
+
     private String repository;
 
     /**
@@ -141,12 +141,12 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      * @return name of the repository
      */
     public String getRepository() {
-        if(repository == null){
+        if (repository == null) {
             repository = this.getName();
         }
         return repository;
     }
-       
+
     public void setRepository(String repository) {
         this.repository = repository;
     }
@@ -164,7 +164,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
     public void init() {
         super.init();
-        
+
         path = this.getRequest().getParameter("path"); //$NON-NLS-1$
         if (StringUtils.isEmpty(path)) {
             path = "/"; //$NON-NLS-1$
@@ -238,19 +238,19 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         context.put(Context.ATTRIBUTE_REPOSITORY, this.getRepository());
         context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
 
-        if(commandName.equals("activate")){
+        if (commandName.equals("activate")) {
             context.put(BaseActivationCommand.ATTRIBUTE_SYNDICATOR, getActivationSyndicator(this.pathSelected));
         }
 
         return context;
     }
-    
+
     /**
      * Allow default catalogue
      */
     protected Command findCommand(String commandName) {
         Command cmd = super.findCommand(commandName);
-        if(cmd == null){
+        if (cmd == null) {
             cmd = CommandsManager.getInstance().getCommand(CommandsManager.DEFAULT_CATALOG, commandName);
         }
         return cmd;
@@ -381,7 +381,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      * @param path node path to be activated
      * @return the <code>Syndicator</code> used to activate
      */
-    public Syndicator getActivationSyndicator(String path){
+    public Syndicator getActivationSyndicator(String path) {
         // use command configuration
         return null;
     }
@@ -393,25 +393,30 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      * @throws RepositoryException
      */
     public void deActivateNode(String path) throws ExchangeException, RepositoryException {
-        if(MgnlContext.getHierarchyManager(this.getRepository()).isNodeData(path)){
+        if (MgnlContext.getHierarchyManager(this.getRepository()).isNodeData(path)) {
             return;
         }
         CommandsManager cm = CommandsManager.getInstance();
 
         Command cmd = cm.getCommand(this.getName(), "deactivate");
-        if(cmd == null){
+        if (cmd == null) {
             cmd = cm.getCommand(CommandsManager.DEFAULT_CATALOG, "deactivate");
         }
-        
+
+        if (cmd == null) {
+            log.error("deactivate command not found, deactivation will not be performed");
+            return;
+        }
+
         Context ctx = this.getCommandContext("deactivate");
-        
+
         try {
             cmd.execute(ctx);
         }
         catch (Exception e) {
             throw new ExchangeException(e);
         }
- 
+
     }
 
     public Content copyMoveNode(String source, String destination, boolean move) throws ExchangeException,
@@ -649,32 +654,32 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
                 // do not check the uuid since this is not working on the root node !!
                 if (tomove.getParent().getHandle().equals(selected.getParent().getHandle())) {
                     // if move just set the new ordering
-                    if(move){
+                    if (move) {
                         tomove.getParent().orderBefore(nameOrigin, nameSelected);
                         tomove.getParent().save();
                     }
-                    else{
+                    else {
                         Content newNode = this.copyMoveNode(pathOrigin, pathOrigin, move);
                         tomove.getParent().orderBefore(newNode.getName(), nameSelected);
                         tomove.getParent().save();
                     }
-                    
+
                 }
                 else {
                     String newOrigin = selected.getParent().getHandle() + "/" + nameOrigin;
                     // clean the newOrigin if we move/copy to the root
-                    if(newOrigin.startsWith("//")){
+                    if (newOrigin.startsWith("//")) {
                         newOrigin = StringUtils.removeStart(newOrigin, "/");
                     }
                     Content newNode;
-                    if(move){
+                    if (move) {
                         getHierarchyManager().moveTo(pathOrigin, newOrigin);
                         newNode = getHierarchyManager().getContent(newOrigin);
                     }
-                    else{
+                    else {
                         newNode = this.copyMoveNode(pathOrigin, newOrigin, move);
                     }
-                    
+
                     if (pasteType == Tree.PASTETYPE_ABOVE) {
                         newNode.getParent().orderBefore(newNode.getName(), nameSelected);
                         newNode.getParent().save();
@@ -748,7 +753,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
             html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); //$NON-NLS-1$
             renderHeaderIncludes(html);
             html.append("<title>Magnolia</title>"); //$NON-NLS-1$
-            html.append("<script>window.onresize = mgnlTreeResize;</script>"); //$NON-NLS-1$
+            html.append("<script type=\"text/javascript\">window.onresize = mgnlTreeResize;</script>"); //$NON-NLS-1$
             html.append("</head>"); //$NON-NLS-1$
             html.append("<body class=\"mgnlBgDark\" onload=\"");
             html.append(tree.getJavascriptTree());
@@ -792,8 +797,11 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     }
 
     protected Tree getTree() {
-        if(tree == null){
-            tree = (Tree) FactoryUtil.getInstanceWithoutDiscovery(this.getTreeClass(), new Object[]{super.getName(), getRepository(), super.getRequest()});
+        if (tree == null) {
+            tree = (Tree) FactoryUtil.getInstanceWithoutDiscovery(this.getTreeClass(), new Object[]{
+                super.getName(),
+                getRepository(),
+                super.getRequest()});
         }
         return tree;
     }
@@ -824,8 +832,9 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      * @return Returns the configuration.
      */
     public AdminTreeConfiguration getConfiguration() {
-        if(this.configuration == null){
-            this.configuration = (AdminTreeConfiguration) FactoryUtil.getInstanceWithoutDiscovery(this.getConfigurationClass(), new Object[]{});
+        if (this.configuration == null) {
+            this.configuration = (AdminTreeConfiguration) FactoryUtil.getInstanceWithoutDiscovery(this
+                .getConfigurationClass(), new Object[]{});
         }
         return this.configuration;
     }
@@ -837,22 +846,18 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         this.configuration = configuration;
     }
 
-    
     public String getConfigurationClass() {
         return configurationClass;
     }
 
-    
     public void setConfigurationClass(String configClass) {
         this.configurationClass = configClass;
     }
 
-    
     public String getTreeClass() {
         return treeClass;
     }
 
-    
     public void setTreeClass(String treeClass) {
         this.treeClass = treeClass;
     }
