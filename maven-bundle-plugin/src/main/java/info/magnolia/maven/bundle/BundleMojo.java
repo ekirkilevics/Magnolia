@@ -1,5 +1,13 @@
 package info.magnolia.maven.bundle;
 
+import info.magnolia.maven.util.ExecUtil;
+
+import java.io.File;
+import java.io.IOException;
+
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
 import org.apache.maven.execution.MavenSession;
@@ -13,54 +21,76 @@ import org.apache.maven.plugin.PluginManagerException;
 import org.apache.maven.plugin.descriptor.MojoDescriptor;
 import org.apache.maven.plugin.descriptor.PluginDescriptor;
 import org.apache.maven.plugin.resources.ResourcesMojo;
+import org.apache.maven.plugins.release.exec.ForkedMavenExecutor;
+import org.apache.maven.plugins.release.exec.MavenExecutor;
+import org.apache.maven.plugins.release.exec.MavenExecutorException;
 import org.apache.maven.project.MavenProject;
 import org.apache.maven.project.artifact.InvalidDependencyVersionException;
+import org.codehaus.plexus.archiver.ArchiverException;
+import org.codehaus.plexus.archiver.jar.JarArchiver;
 
 /**
  * @goal bundle
- * @execute goal=wars,tomcat
+ * @requiresProject false
+ * @execute goal=tomcat
  * @author philipp
  *
  */
 public class BundleMojo extends AbstractMojo {
 
-	/**
-	 * @parameter experssion="${plugin}"
-	 */
-	private PluginDescriptor plugin;
+    /**
+     * @parameter expression="${basedir}/magnolia"
+     * @required
+     * @readonly
+     */
+    private File magnoliaWarProjectDirectory;
+    
+    /**
+     * @parameter expression="target/release"
+     * @required
+     */
+    private File releaseDest;
 
-	/**
-	 * @parameter experssion="${project}"
-	 */
-	private MavenProject project;
-
-	/**
-	 * @parameter experssion="${session}"
-	 */
-	private MavenSession session;
-	
-	/**
-	 * @component
-	 */
-	private PluginManager manager;
-
+    /**
+     * @parameter expression="${basedir}/magnolia/target/magnolia-${project.version}"
+     * @required
+     * @readonly
+     */
+    private File magnoliaWarExplodedDirectory;
+    
+    /**
+     * @parameter expression="${basedir}/magnolia/target/magnolia-${project.version}.war"
+     * @required
+     * @readonly
+     */
+    private File magnoliaWarFile;
+    
 	public void execute() throws MojoExecutionException, MojoFailureException {
-		// execute tomcat bundel first
-		/*MojoDescriptor mojo = plugin.getMojo("tomcat");
-		MojoExecution execution = new MojoExecution(mojo);
-		try {
-			manager.executeMojo(project, execution , session);
-		} catch (Exception e) {
-			throw new MojoExecutionException("can't call tomcat download goal", e);
-		}
-		
-		// filter the resources
-		ResourcesMojo resourcesMojo = new ResourcesMojo();
-		
-		resourcesMojo.execute();
-		resourcesMojo.
-		*/
-		
+        createWebapp("author");
+        createWebapp("public");
 	}
+
+    protected void createWebapp(String name) throws MojoExecutionException {
+        ExecUtil.execGoal("info.magnolia:maven-bundle-plugin:bootstrap -P" + name, this.getLog(), magnoliaWarProjectDirectory);
+          
+        // copy it
+        try {
+            File dest = new File(this.releaseDest, "bundle/tomcat/webapps/magnolia" + StringUtils.capitalize(name));
+            FileUtils.deleteDirectory(new File(this.magnoliaWarExplodedDirectory, "logs"));
+            FileUtils.copyDirectory(this.magnoliaWarExplodedDirectory, dest);
+            
+            // create war
+            JarArchiver archiver = new JarArchiver();
+            archiver.setDestFile(new File(this.releaseDest, "wars/magnolia" + StringUtils.capitalize(name) + ".war"));
+            archiver.addDirectory(this.magnoliaWarExplodedDirectory);
+            archiver.createArchive();
+        }
+        catch (IOException e) {
+            throw new MojoExecutionException("can't copy webapp to bundle directory", e);
+        }
+        catch (ArchiverException e) {
+            throw new MojoExecutionException("can't create war file", e);
+        }
+    }
 
 }

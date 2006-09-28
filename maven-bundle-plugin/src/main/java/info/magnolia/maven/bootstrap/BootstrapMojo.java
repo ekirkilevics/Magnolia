@@ -38,7 +38,6 @@ import org.apache.maven.project.MavenProjectHelper;
  * BootstrapInnerMojo is created using the custom classloader. This garanties that the magnolia code will find the
  * resources.
  * @goal bootstrap
- * @execute phase=package
  * @author philipp
  */
 public class BootstrapMojo extends AbstractMojo {

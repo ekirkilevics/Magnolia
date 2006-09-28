@@ -33,6 +33,11 @@
     	<version>2.0.4</version>
     </dependency>
     <dependency>
+      <groupId>org.apache.maven.plugins</groupId>
+      <artifactId>maven-release-plugin</artifactId>
+      <version>2.0-beta-4</version>
+    </dependency>
+    <dependency>
     	<groupId>org.apache.maven.plugins</groupId>
     	<artifactId>maven-resources-plugin</artifactId>
     	<version>2.2</version>
@@ -104,12 +109,16 @@
   <distributionManagement>
     <repository>
       <id>magnolia</id>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/m2repo</url>
+      <url>scp://svn.magnolia.info/usr/local/apache/htdocs/maven/m2</url>
     </repository>
+    <snapshotRepository>
+      <id>magnolia</id>
+      <url>scp://svn.magnolia.info/usr/local/apache/htdocs/maven/snapshots</url>
+    </snapshotRepository>
     <site>
       <id>magnolia</id>
       <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30</url>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30/maven-bundle-plugin</url>
     </site>
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
   </distributionManagement>

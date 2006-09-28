@@ -50,10 +50,8 @@ public class BootstrapInnerMojo {
         MockServletContext context = new MockServletContext();
         context.setRealPath(StringUtils.EMPTY, mojo.webappDir);
         
-        // configure the properties
+        // configure the config files
         context.setInitParameter(PropertyInitializer.MAGNOLIA_INITIALIZATION_FILE, mojo.configFile);
-        
-
         
         ServletContextEvent event = new ServletContextEvent(context);
 

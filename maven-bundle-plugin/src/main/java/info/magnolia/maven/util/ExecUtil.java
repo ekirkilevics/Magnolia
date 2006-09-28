@@ -1,6 +1,7 @@
 package info.magnolia.maven.util;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.InputStreamReader;
 
 import org.apache.maven.plugin.logging.Log;
@@ -8,10 +9,11 @@ import org.apache.maven.plugin.logging.Log;
 
 public class ExecUtil {
 
-    public static int exec(String cmd, Log log) {
+    public static int exec(String cmd, Log log, File workingDirectory) {
         try {
             String line;
-            Process p = Runtime.getRuntime().exec(cmd);
+           
+            Process p = Runtime.getRuntime().exec(cmd, null, workingDirectory);
             BufferedReader input = new BufferedReader(new InputStreamReader(p.getInputStream()));
             while ((line = input.readLine()) != null) {
                 log.info(line);
@@ -26,7 +28,7 @@ public class ExecUtil {
         return -1;
     }
 
-    public static void execGoal(String goal, Log log) {
-        exec("mvn " + goal, log);
+    public static void execGoal(String goal, Log log, File workingDirectory) {
+        exec("mvn " + goal, log, workingDirectory);
     }
 }

@@ -31,6 +31,7 @@ import org.apache.tools.tar.TarInputStream;
 /**
  * Run <code>mvn info.magnolia:maven-tomcatbundle-plugin:bundle</code>
  * @goal tomcat
+ * @requiresProject false
  * @author Fabrizio Giustina
  * @version $Id$
  */
@@ -43,7 +44,7 @@ public class TomcaBundleMojo extends AbstractMojo {
     private URL tomcatDownloadUrl;
 
     /**
-     * @parameter expression="${basedir}/release/tomcat"
+     * @parameter expression="${basedir}/src/release/tomcat"
      * @required
      */
     private File tomcatdir;
@@ -55,16 +56,9 @@ public class TomcaBundleMojo extends AbstractMojo {
     private File releaseDest;
 
     /**
-     * @parameter expression="${basedir}/src/release/scripts"
-     * @required
-     */
-    private File releaseSrc;
-
-    /**
      * @see org.apache.maven.plugin.Mojo#execute()
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-
         String tomcatDistributionName = StringUtils.substringAfterLast(tomcatDownloadUrl.toString(), "/");
 
         File tomcatFile = new File(tomcatdir, tomcatDistributionName);
@@ -94,11 +88,23 @@ public class TomcaBundleMojo extends AbstractMojo {
         getLog().info("untarring to " + releaseDest.getAbsolutePath());
         try {
             untar(tomcatFile, releaseDest);
+            // rename to 'tomcat'
+            File extracted = new File(releaseDest, StringUtils.removeEnd(tomcatFile.getName(), ".tar.gz"));
+            File renamed = new File(releaseDest, "tomcat");
+            if(renamed.exists()){
+                FileUtils.deleteDirectory(renamed);
+            }
+            extracted.renameTo(renamed);
+            // replace some scripts
+            FileUtils.copyDirectory(new File(tomcatdir, "bin"), new File(renamed, "bin"));
+            // delete not delivered tomcat documentation
+            FileUtils.deleteDirectory(new File(renamed, "webapps/tomcat-docs"));
+            FileUtils.deleteDirectory(new File(renamed, "webapps/jsp-examples"));
+            FileUtils.deleteDirectory(new File(renamed, "webapps/servlets-examples"));
         }
         catch (IOException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-
     }
 
     private void untar(File tarFile, File untarDir) throws IOException {
