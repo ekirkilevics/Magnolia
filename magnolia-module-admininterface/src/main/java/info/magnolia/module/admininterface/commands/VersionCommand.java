@@ -23,9 +23,7 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 
 /**
@@ -52,7 +50,7 @@ public class VersionCommand extends RuleBasedCommand {
             }
             if (isRecursive()) {
                 // set versionMap and version name for this node
-                Map versionMap = new HashMap();
+                List versionMap = new ArrayList();
                 versionRecursively(node, ctx, versionMap);
                 ctx.setAttribute(Context.ATTRIBUTE_VERSION_MAP, versionMap, Context.LOCAL_SCOPE);
             } else {
@@ -68,9 +66,12 @@ public class VersionCommand extends RuleBasedCommand {
         return true;
     }
 
-    private void versionRecursively(Content node, Context ctx, Map versionMap) throws RepositoryException {
+    private void versionRecursively(Content node, Context ctx, List versionMap) throws RepositoryException {
         Version version = node.addVersion(getRule());
-        versionMap.put(node.getUUID(), version.getName());
+        Map entry = new HashMap();
+        entry.put("version", version.getName());
+        entry.put("uuid", node.getUUID());
+        versionMap.add(entry);
         if(StringUtils.isEmpty((String)ctx.getAttribute(Context.ATTRIBUTE_VERSION))){
             ctx.setAttribute(Context.ATTRIBUTE_VERSION, version.getName(), Context.LOCAL_SCOPE);
         }

@@ -18,10 +18,7 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.Context;
 
-import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
-import java.util.ArrayList;
+import java.util.*;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Node;
@@ -48,7 +45,7 @@ public class ActivationCommand extends BaseActivationCommand {
 
     private String versionNumber;
 
-    private Map versionMap;
+    private List versionMap;
 
     /**
      * Execute the activation
@@ -81,7 +78,7 @@ public class ActivationCommand extends BaseActivationCommand {
             }
             // make multiple activations instead of a big bulp
             if (recursive) {
-                Map versionMap = getVersionMap();
+                List versionMap = getVersionMap();
                 if (versionMap == null) {
                     activateRecursive(parentPath, thisState, orderInfo, ctx);
                 } else {
@@ -139,19 +136,20 @@ public class ActivationCommand extends BaseActivationCommand {
      * @param orderInfo
      * @param versionMap
      * */
-    protected void activateRecursive(Context ctx, List orderInfo, Map versionMap)
+    protected void activateRecursive(Context ctx, List orderInfo, List versionMap)
             throws ExchangeException, RepositoryException {
         // activate all uuid's present in versionMap
-        Iterator keys = versionMap.keySet().iterator();
-        while (keys.hasNext()) {
-            String uuid = (String) keys.next();
+        Iterator entries = versionMap.iterator();
+        while (entries.hasNext()) {
+            Map entry = (Map) entries.next();
+            String uuid = (String) entry.get("uuid");
+            String versionNumber = (String) entry.get("version");
             if (StringUtils.equalsIgnoreCase("class", uuid)) {
                 // todo , this should not happen in between the serialized list, somewhere a bug
                 // for the moment simply ignore it
                 orderInfo = new ArrayList();
                 continue;
             }
-            String versionNumber = (String) versionMap.get(uuid);
             try {
                 Content content = ctx.getHierarchyManager(getRepository()).getContentByUUID(uuid);
                 String parentPath = content.getParent().getHandle();
@@ -230,14 +228,14 @@ public class ActivationCommand extends BaseActivationCommand {
     /**
      * @param versionMap version map to be set for activation
      * */
-    public void setVersionMap(Map versionMap) {
+    public void setVersionMap(List versionMap) {
         this.versionMap = versionMap;
     }
 
     /**
      * @return version map
      * */
-    public Map getVersionMap() {
+    public List getVersionMap() {
         return this.versionMap;
     }
 
