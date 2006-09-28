@@ -17,7 +17,7 @@
     <!ELEMENT VersionPageHandle (#PCDATA)>]>
 <License>
     <Meta>
-        <VersionNumber>${magnolia.version}</VersionNumber>
+        <VersionNumber>${magnolia.niceVersion}</VersionNumber>
         <Edition>${magnolia.edition}</Edition>
         <BuildNumber>${magnolia.releaseDate}</BuildNumber>
         <Provider>${pom.organization.name}</Provider>
