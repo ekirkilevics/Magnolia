@@ -130,7 +130,7 @@ public class ActivationCommand extends BaseActivationCommand {
 
         while (children.hasNext()) {
             // note: recursive activation does not need to set ordering info, except for the first node in a tree
-            this.activateRecursive(parentPath, ((Content) children.next()), new ArrayList(),ctx);
+            this.activateRecursive(node.getHandle(), ((Content) children.next()), new ArrayList(),ctx);
         }
     }
 
