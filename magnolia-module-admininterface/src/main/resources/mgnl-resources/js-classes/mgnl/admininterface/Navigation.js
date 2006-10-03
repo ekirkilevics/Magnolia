@@ -284,7 +284,7 @@ function MgnlNavigation (id, title, action, icon, parent, depth) {
             f ();
         }
     }
-    
+
     this.mouseOver = function (idOver) {
         if (n = this.getNode (idOver)) {
             if (this.getActiveNode () == null || this.getActiveNode () != n) {
@@ -293,7 +293,7 @@ function MgnlNavigation (id, title, action, icon, parent, depth) {
             }
         }
     }
-    
+
     this.mouseOut = function (idOut) {
         if (idOut && this.getDepth () == 0) this.removeHoverNodes ();
         else {
@@ -339,24 +339,27 @@ MgnlNavigation.prototype.create = function (container) {
         var inner = document.createElement ('div');
         // table
         table = document.createElement ('table');
-        table.id = this.getId ();
         // get the navigation object an put it into this closure to pass it in the functions
         var myNavigation = this.getNavigation();
-        table.onmouseover = function () { myNavigation.mouseOver (this.id); };
-        table.onmouseout = function () { myNavigation.mouseOut (this.id); };
-        table.onclick = function () { myNavigation.mouseClick (this.id); };
         table.className = 'mgnlNavigation' + this.getDepth () + 'Inactive';
         table.appendChild (document.createElement ('tbody'));
         table.firstChild.appendChild (document.createElement ('tr'));
-        table.firstChild.firstChild.appendChild (document.createElement ('td'));
-        table.firstChild.firstChild.firstChild.className = 'mgnlNavigation' + this.getDepth () + 'Cell';
-        if (this.hasIcon ()) table.firstChild.firstChild.firstChild.style.backgroundImage = 'url(' + this.getIcon () + ')';
-        // link
-        var a = document.createElement ('a');
-        a.className = 'mgnlNavigationText';
-        a.innerHTML = this.getTitle ();
-        // <<todo>> add href!
-        table.firstChild.firstChild.firstChild.appendChild (a);
+
+        var cell = document.createElement ('td');
+        cell.className = 'mgnlNavigation' + this.getDepth () + 'Cell mgnlNavigationText';
+        if (this.hasIcon ()) 
+        	cell.style.backgroundImage = 'url(' + this.getIcon () + ')';
+
+        cell.id = this.getId ();
+
+        cell.onmouseover = function () { myNavigation.mouseOver (this.id); };
+        cell.onmouseout = function () { myNavigation.mouseOut (this.id); };
+        cell.onclick = function () { myNavigation.mouseClick (this.id); };
+        
+        cell.innerText = this.getTitle();
+
+        table.firstChild.firstChild.appendChild (cell);
+
         inner.appendChild (table);
         wrapper.appendChild (inner);
         container.appendChild (wrapper);
