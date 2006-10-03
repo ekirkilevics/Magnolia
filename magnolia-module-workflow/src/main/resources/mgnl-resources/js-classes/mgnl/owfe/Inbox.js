@@ -67,14 +67,14 @@ classDef("mgnl.owfe.Inbox", {
     },
     
     reject: function(id){
-        id = id==null ? this.currentId : id;
+        id = id==null ? this.current.id : id;
         $('flowItemId').value = id;
         $('command').value = "reject";
         document.mgnlForm.submit();
     },
 
     cancel: function(id){
-        id = id==null ? this.currentId : id;
+        id = id==null ? this.current.id : id;
         $('flowItemId').value = id;
         $('command').value = "cancel";
         document.mgnlForm.submit();
