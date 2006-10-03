@@ -5,7 +5,7 @@ div.mgnlAdminCentralButtonsDiv {
 }
 
 /** navigation styles **/
-a.mgnlNavigationText {
+.mgnlNavigationText {
     color: black;
     font-size: 11px;
     text-align: left;
