@@ -356,7 +356,7 @@ MgnlNavigation.prototype.create = function (container) {
         cell.onmouseout = function () { myNavigation.mouseOut (this.id); };
         cell.onclick = function () { myNavigation.mouseClick (this.id); };
         
-        cell.innerText = this.getTitle();
+        cell.innerHTML = this.getTitle();
 
         table.firstChild.firstChild.appendChild (cell);
 
