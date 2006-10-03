@@ -627,6 +627,8 @@ public class SimpleSyndicator implements Syndicator {
     private void addOrderingInfo(Element root, List orderBefore) {
         //do not use magnolia Content class since these objects are only meant for a single use to read UUID
         Element siblingRoot = new Element(SIBLINGS_ROOT_ELEMENT);
+        root.addContent(siblingRoot);
+        if (orderBefore == null) return;
         Iterator siblings = orderBefore.iterator();
         while (siblings.hasNext()) {
             String uuid = (String) siblings.next();
@@ -634,7 +636,6 @@ public class SimpleSyndicator implements Syndicator {
             e.setAttribute(SIBLING_UUID, uuid);
             siblingRoot.addContent(e);
         }
-        root.addContent(siblingRoot);
     }
 
     /**
