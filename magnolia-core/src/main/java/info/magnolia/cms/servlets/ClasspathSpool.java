@@ -4,6 +4,8 @@ import info.magnolia.cms.util.ClasspathResourcesUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -45,6 +47,21 @@ public class ClasspathSpool extends HttpServlet {
      */
     private static Logger log = LoggerFactory.getLogger(Spool.class);
 
+    protected long getLastModified(HttpServletRequest req) {
+        String filePath = this.getFilePath(req);
+        long lastModified;
+        try {
+            URL url = ClasspathResourcesUtil.getResource(MGNL_RESOURCES_ROOT + filePath);
+            URLConnection connection = url.openConnection();
+            lastModified = connection.getLastModified();
+        }
+        catch (IOException e) {
+            lastModified =  -1;
+        }
+
+        return lastModified;
+    }
+    
     /**
      * All static resource requests are handled here.
      * @param request HttpServletRequest
@@ -53,6 +70,21 @@ public class ClasspathSpool extends HttpServlet {
      */
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
+        String filePath = getFilePath(request);
+        
+        if (StringUtils.contains(filePath, "*")) {
+            streamMultipleFile(response, filePath);
+        }
+        else if (StringUtils.contains(filePath, "|")) {
+            String[] paths = StringUtils.split(filePath, "|");
+            streamMultipleFile(response, paths);
+        }
+        else {
+            streamSingleFile(response, filePath);
+        }
+    }
+
+    protected String getFilePath(HttpServletRequest request) {
         // handle includes
         String filePath = (String) request.getAttribute("javax.servlet.include.path_info");
 
@@ -65,17 +97,7 @@ public class ClasspathSpool extends HttpServlet {
         if (StringUtils.isEmpty(filePath)) {
             filePath = request.getPathInfo();
         }
-
-        if (StringUtils.contains(filePath, "*")) {
-            streamMultipleFile(response, filePath);
-        }
-        else if (StringUtils.contains(filePath, "|")) {
-            String[] paths = StringUtils.split(filePath, "|");
-            streamMultipleFile(response, paths);
-        }
-        else {
-            streamSingleFile(response, filePath);
-        }
+        return filePath;
     }
 
     private Map multipleFilePathsCache;
