@@ -23,7 +23,6 @@ import info.magnolia.context.MgnlContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.jcr.RepositoryException;
@@ -247,6 +246,7 @@ public class ConfigLoader {
         System.out.println("---------------------------------------------"); //$NON-NLS-1$
         System.out.println("Version number : " + license.get(LicenseFileExtractor.VERSION_NUMBER)); //$NON-NLS-1$
         System.out.println("Build          : " + license.get(LicenseFileExtractor.BUILD_NUMBER)); //$NON-NLS-1$
+        System.out.println("Edition        : " + license.get(LicenseFileExtractor.EDITION)); //$NON-NLS-1$
         System.out.println("Provider       : " //$NON-NLS-1$
             + license.get(LicenseFileExtractor.PROVIDER)
             + " (" //$NON-NLS-1$
