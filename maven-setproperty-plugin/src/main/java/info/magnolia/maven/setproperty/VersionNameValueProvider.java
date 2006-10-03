@@ -63,7 +63,7 @@ public class VersionNameValueProvider extends ValueProviderImpl {
         niceVersion = niceVersion.toUpperCase();
         if (niceVersion.endsWith("SNAPSHOT")) {
             niceVersion = StringUtils.removeEnd(niceVersion, "SNAPSHOT");
-            niceVersion += "(Snapshot: " + DateFormatUtils.format(new Date(), "dd.MM.yyyy hh:mm:ss") + ")";
+            niceVersion += "(Snapshot: " + DateFormatUtils.format(new Date(), "dd.MM.yyyy HH:mm:ss") + ")";
         }
         return niceVersion;
     }
