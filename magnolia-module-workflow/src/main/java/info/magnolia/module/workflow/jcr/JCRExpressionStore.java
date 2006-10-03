@@ -12,7 +12,6 @@
  */
 package info.magnolia.module.workflow.jcr;
 
-import info.magnolia.beancoder.MgnlNode;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -23,113 +22,234 @@ import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
-import info.magnolia.module.workflow.beancoder.OwfeJcrBeanCoder;
+
+import java.io.InputStream;
+import java.util.Iterator;
+
+import javax.jcr.ValueFactory;
+
 import openwfe.org.ApplicationContext;
 import openwfe.org.ServiceException;
-import openwfe.org.xml.XmlUtils;
-import openwfe.org.util.beancoder.XmlBeanCoder;
 import openwfe.org.engine.expool.PoolException;
 import openwfe.org.engine.expressions.FlowExpression;
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.impl.expool.AbstractExpressionStore;
 import openwfe.org.engine.impl.expool.ExpoolUtils;
+import openwfe.org.util.beancoder.XmlBeanCoder;
+import openwfe.org.xml.XmlUtils;
+
+import org.jdom.Document;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.jdom.Document;
-
-import javax.jcr.ValueFactory;
-import java.util.Iterator;
-import java.io.InputStream;
 
 
 /**
- * the expresion store using JCR
- * @author jackie
+ * The JCR implementation of the expression store.
+ * @author Jackie Ju
+ * @author Nicolas Modrzyk
+ * @author John Mettraux
  */
 public class JCRExpressionStore extends AbstractExpressionStore {
+
+    //
+    // CONSTANTS & co
 
     private static final String ENGINE_ID = "ee";
 
     protected static Logger log = LoggerFactory.getLogger(JCRExpressionStore.class.getName());
 
-    static final Object HM_LOCK = new Object();
+    // private static final Object HM_LOCK = new Object();
 
-    HierarchyManager hm;
+    //
+    // FIELDS
+
+    private HierarchyManager hierarchyManager = null;
+
+    //
+    // CONSTRUCTORS
 
     public void init(final String serviceName, final ApplicationContext context, final java.util.Map serviceParams)
-            throws ServiceException {
+        throws ServiceException {
+
         super.init(serviceName, context, serviceParams);
-        this.hm = ContentRepository.getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
-        if (this.hm == null) {
+        this.hierarchyManager = ContentRepository.getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
+
+        if (this.hierarchyManager == null) {
             throw new ServiceException("Can't access HierarchyManager for workitems");
         }
     }
 
+    //
+    // METHODS from ExpressionStore
+
+    //
+    // METHODS
+
     /**
-     * stroe one expresion
+     * Stores one expresion
      */
-    public synchronized void storeExpression(FlowExpression fe) throws PoolException {
+    public synchronized void storeExpression(final FlowExpression fe) throws PoolException {
+
         try {
-            synchronized (HM_LOCK) {
-                Content ct = findExpression(fe);
+            synchronized (this.getClass()) {
+
+                Content cExpression = findExpression(fe);
+
                 if (log.isDebugEnabled()) {
-                    log.debug("Handle for store expression" + ct.getHandle());
+
+                    log.debug("storeExpression() handle is " + cExpression.getHandle());
                 }
 
                 // set expressionId as attribte id
-                ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
-                String value = fe.getId().toParseableString();
-                ct.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(value));
 
-                //serializeExpressionWithBeanCoder(ct, fe);
-                serializeExpressionAsXml(ct,fe);
-                hm.save();
+                ValueFactory vf = cExpression.getJCRNode().getSession().getValueFactory();
+                String value = fe.getId().toParseableString();
+
+                cExpression.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(value));
+
+                // serializeExpressionWithBeanCoder(ct, fe);
+
+                serializeExpressionAsXml(cExpression, fe);
+
+                this.hierarchyManager.save();
             }
         }
-        catch (Exception e) {
-            log.error("store exception failed,", e);
+        catch (final Exception e) {
+
+            log.error("storeExpression() store exception failed", e);
+
+            throw new PoolException("storeExpression() store exception failed", e);
         }
     }
 
+    /**
+     * Removes the expression from the JCR storage.
+     */
+    public synchronized void unstoreExpression(final FlowExpression fe) throws PoolException {
+
+        try {
+            Content cExpression = findExpression(fe);
+
+            if (cExpression != null) {
+
+                synchronized (this.getClass()) {
+
+                    cExpression.delete();
+
+                    this.hierarchyManager.save();
+                }
+            }
+            else {
+                log.info("unstoreExpression() " + "didn't find content node for fe " + fe.getId().toParseableString());
+            }
+        }
+        catch (final Exception e) {
+
+            log.error("unstoreExpression() unstore exception failed", e);
+
+            throw new PoolException("unstoreExpression() unstore exception failed", e);
+        }
+    }
+
+    /**
+     * Returns an iterator on the content of that expression store.
+     */
+    public synchronized Iterator contentIterator(final Class assignClass) {
+
+        try {
+            return new StoreIterator(assignClass);
+        }
+        catch (final Throwable t) {
+            log.error("contentIterator() failed to set up an iterator", t);
+        }
+
+        // return null;
+        return new java.util.ArrayList(0).iterator();
+    }
+
+    /**
+     * Loads an expression given its id.
+     */
+    public FlowExpression loadExpression(final FlowExpressionId fei) throws PoolException {
+
+        try {
+
+            Content cExpression = findExpression(fei);
+
+            if (cExpression != null) {
+
+                final FlowExpression expression = deserializeExpressionAsXml(cExpression);
+
+                expression.setApplicationContext(getContext());
+
+                return expression;
+            }
+        }
+        catch (final Exception e) {
+
+            log.debug("loadExpression() failed for " + fei.asStringId(), e);
+
+            throw new PoolException("loadExpression() failed for " + fei.asStringId(), e);
+        }
+
+        if (log.isDebugEnabled()) {
+
+            log.debug("loadExpression() " + "didn't find expression " + fei.asStringId() + " in the repository");
+        }
+
+        throw new PoolException("loadExpression() "
+            + "didn't find expression "
+            + fei.asStringId()
+            + " in the repository");
+
+    }
+
+    /**
+     * Returns the number of expressions currently stored in that store.
+     */
+    public int size() {
+
+        try {
+
+            QueryManager qm = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_EXPRESSION);
+
+            Query q = qm.createQuery(WorkflowConstants.STORE_ITERATOR_QUERY, Query.SQL);
+            QueryResult qr = q.execute();
+
+            return qr.getContent().size();
+        }
+        catch (final Exception e) {
+
+            log.error("size() failed", e);
+
+            return -1;
+        }
+    }
+
+    //
+    // METHODS
 
     private void serializeExpressionAsXml(Content c, FlowExpression fe) throws Exception {
+
         final org.jdom.Document doc = XmlBeanCoder.xmlEncode(fe);
         String s = XmlUtils.toString(doc, null);
         ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
         c.createNodeData(WorkflowConstants.NODEDATA_VALUE, vf.createValue(s));
     }
 
-
-    private void serializeExpressionWithBeanCoder(Content c,FlowExpression fr) throws Exception {
-        OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null,new MgnlNode(c),WorkflowConstants.NODEDATA_VALUE);
-        coder.encode(fr);
-    }
-
-    /**
-     * remove one expresion
+    /*
+     * private void serializeExpressionWithBeanCoder(Content c,FlowExpression fr) throws Exception { OwfeJcrBeanCoder
+     * coder = new OwfeJcrBeanCoder(null,new MgnlNode(c),WorkflowConstants.NODEDATA_VALUE); coder.encode(fr); }
      */
-    public synchronized void unstoreExpression(FlowExpression fe) throws PoolException {
-        try {
-            Content ret = findExpression(fe);
-            if (ret != null) {
-                synchronized (HM_LOCK) {
-                    ret.delete();
-                    hm.save();
-                }
-            }
-        }
-        catch (Exception e) {
-            log.error("unstore exception failed,", e);
-        }
-
-    }
 
     public final String toXPathFriendlyString(final FlowExpressionId fei) {
+
         final StringBuffer buffer = new StringBuffer();
         final String engineId = fei.getEngineId();
 
         buffer.append(WorkflowConstants.SLASH);
         buffer.append(engineId);
+
         // engine storage
         if (engineId.equals(ENGINE_ID)) {
             return buffer.toString();
@@ -137,96 +257,72 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
         buffer.append(WorkflowConstants.SLASH);
         buffer.append(fei.getWorkflowDefinitionName());
+
         buffer.append(WorkflowConstants.SLASH);
         buffer.append(fei.getWorkflowInstanceId());
+
         buffer.append(WorkflowConstants.SLASH);
-        buffer.append(fei.getExpressionId());
+        buffer.append(fei.getExpressionId()).append("__").append(fei.getExpressionName());
+
         return buffer.toString();
     }
 
-    private Content findExpression(FlowExpression fe) throws Exception {
+    private Content findExpression(final FlowExpression fe) throws Exception {
+
         return findExpression(fe.getId());
     }
 
-    private Content findExpression(FlowExpressionId fei) throws Exception {
+    private Content findExpression(final FlowExpressionId fei) throws Exception {
+
         if (log.isDebugEnabled()) {
-            log.debug("accessing expresion: expression id = " + fei.toParseableString());
+            log.debug("findExpression() looking for " + fei.toParseableString());
         }
-        String local = toXPathFriendlyString(fei);
-        return (hm.isExist(local)) ? hm.getContent(local) : ContentUtil.createPath(hm, local, ItemType.EXPRESSION);
+
+        final String path = toXPathFriendlyString(fei);
+
+        if (this.hierarchyManager.isExist(path)) {
+            return this.hierarchyManager.getContent(path);
+        }
+        else {
+            return ContentUtil.createPath(this.hierarchyManager, path, ItemType.EXPRESSION);
+        }
     }
 
-    /**
-     * load expreson by id
-     */
-    public FlowExpression loadExpression(FlowExpressionId fei) throws PoolException {
-        try {
-            Content ret = findExpression(fei);
-            if (ret != null) {
-                //final FlowExpression decode = deserializeExpressionAsXml(ret);
-                final FlowExpression decode = deserializeExpressionAsXml(ret);//deserializeExpressionWithBeanCoder(ret);
-                decode.setApplicationContext(getContext());
-                return decode;
-            }
-        }
-        catch (Exception e) {
-            // ignore. The expression cannot be found. This is reported to the
-            // calling method
-        }
+    private FlowExpression deserializeExpressionAsXml(final Content c) throws Exception {
 
-        // no expression found. Throw an exception ?
-        throw new PoolException("can not get this expression (id=" + fei.asStringId() + ")");
-    }
+        final InputStream is = c.getNodeData(WorkflowConstants.NODEDATA_VALUE).getStream();
 
+        if (is == null)
+            return null;
+        //
+        // not an expression
 
-    private FlowExpression deserializeExpressionAsXml(Content ret) throws Exception {
-        InputStream s = ret.getNodeData(WorkflowConstants.NODEDATA_VALUE).getStream();
         final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
-        Document doc = builder.build(s);
+
+        final Document doc = builder.build(is);
+
         return (FlowExpression) XmlBeanCoder.xmlDecode(doc);
     }
 
-
-    protected FlowExpression deserializeExpressionWithBeanCoder(Content ret) throws Exception {
-        OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null, new MgnlNode(ret.getContent(WorkflowConstants.NODEDATA_VALUE)));
-        return (FlowExpression)coder.decode();
-    }
-
-    /**
-     * return a iterator of content
+    /*
+     * could be useful once again later... private void debugNodeData(final Content c) throws Exception { final
+     * InputStream is = c .getNodeData(WorkflowConstants.NODEDATA_VALUE) .getStream(); if (is == null) return; final
+     * java.io.ByteArrayOutputStream baos = new java.io.ByteArrayOutputStream(); final byte[] buffer = new byte[70];
+     * final int i = is.read(buffer); if (i > -1) { baos.write(buffer); baos.flush(); } log.warn
+     * ("deserializeExpressionAsXml() nodeData is >"+baos.toString()+"<"); }
      */
-    public synchronized Iterator contentIterator(Class assignClass) {
-        try {
-            return new StoreIterator(assignClass);
-        }
-        catch (Exception e) {
-            log.error("Could not get a content iterator");
-            return null;
-        }
 
-    }
-
-    /**
-     * //TODO what's this suppose to do ? return size of expresion
+    /*
+     * protected FlowExpression deserializeExpressionWithBeanCoder(Content ret) throws Exception { OwfeJcrBeanCoder
+     * coder = new OwfeJcrBeanCoder(null, new MgnlNode(ret.getContent(WorkflowConstants.NODEDATA_VALUE))); return
+     * (FlowExpression)coder.decode(); }
      */
-    public int size() {
-        try {
-            QueryManager qm = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_EXPRESSION);
-            Query query = qm.createQuery(WorkflowConstants.STORE_ITERATOR_QUERY, Query.SQL);
-            QueryResult qr = query.execute();
-            return qr.getContent().size();
-        }
-        catch (Exception e) {
-            log.error("Error while getting the size of the expression store:" + e.getMessage());
-            return -1;
-        }
-    }
 
     /**
      * 'lightweight' storeIterator. The previous version were stuffing all the expression within a collection and
      * returning an iterator on it.
      * <p>
-     * The remainaing question is : what's behind Magnolia's Content.iterator() method ?
+     * The remaining question is : what's behind Magnolia's Content.iterator() method ?
      */
     protected final class StoreIterator implements Iterator {
 
@@ -243,14 +339,24 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         // CONSTRUCTORS
 
         public StoreIterator(final Class assignClass) throws Exception {
+
+            super();
+
             this.assignClass = assignClass;
-            QueryManager qm = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_EXPRESSION);
-            Query query = qm.createQuery(WorkflowConstants.STORE_ITERATOR_QUERY, Query.SQL);
+
+            final QueryManager qm = MgnlContext.getSystemContext().getQueryManager(
+                WorkflowConstants.WORKSPACE_EXPRESSION);
+
+            final Query query = qm.createQuery(WorkflowConstants.STORE_ITERATOR_QUERY, Query.SQL);
+
+            final QueryResult qr = query.execute();
+
             if (log.isDebugEnabled()) {
-                log.debug("xx-->query executed:" + query.getStatement());
+                log.debug("() query found " + qr.getContent("expression").size() + " elements");
             }
-            QueryResult qr = query.execute();
-            this.rootIterator = qr.getContent().iterator();
+
+            this.rootIterator = qr.getContent("expression").iterator();
+
             this.next = fetchNext();
         }
 
@@ -258,6 +364,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         // METHODS
 
         public boolean hasNext() {
+
             return (this.next != null);
         }
 
@@ -270,16 +377,23 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             final Content content = (Content) this.rootIterator.next();
             try {
 
-                final FlowExpression fe = deserializeExpressionAsXml(content); //deserializeExpressionWithBeanCoder(content);
+                final FlowExpression fe = deserializeExpressionAsXml(content);
+
+                if (fe == null) {
+                    return fetchNext();
+                }
+
+                fe.setApplicationContext(JCRExpressionStore.this.getContext());
 
                 if (!ExpoolUtils.isAssignableFromClass(fe, this.assignClass)) {
                     return fetchNext();
                 }
 
                 return fe;
-
             }
-            catch (Exception e) {
+            catch (final Exception e) {
+
+                log.error("fetchNext() problem", e);
                 return null;
             }
         }
@@ -293,6 +407,10 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             }
 
             this.next = fetchNext();
+
+            if (log.isDebugEnabled()) {
+                log.debug("next() is  " + this.next.getId());
+            }
 
             return current;
         }
