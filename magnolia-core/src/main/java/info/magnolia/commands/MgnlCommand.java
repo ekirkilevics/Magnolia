@@ -80,10 +80,6 @@ public abstract class MgnlCommand implements Command {
      */
     private boolean pooling = true;
 
-    public MgnlCommand() {
-        pool = new StackObjectPool(new MgnlCommandFactory(this));
-    }
-
     /**
      * Make sure that the context is castable to a magnolia context
      */
@@ -99,6 +95,12 @@ public abstract class MgnlCommand implements Command {
         MgnlCommand cmd;
         
         if(pooling){
+            // do not instantiate until the pool is really needed
+            // means: do not create a pool for command objects created in the pool itself
+            if(pool == null){
+                pool = new StackObjectPool(new MgnlCommandFactory(this));
+            }
+            
             try{
                 // try to use the pool
                 cmd = (MgnlCommand) pool.borrowObject();
