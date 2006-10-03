@@ -23,7 +23,6 @@ classDef("mgnl.util.Debug", {
      */
     contextes : {
         "mgnl.Runtime": true,
-        "mgnl.controls.List": true,
         tree: true,
         dialog: true,
         acl: true,
@@ -38,21 +37,22 @@ classDef("mgnl.util.Debug", {
         
         if(context && context._class)
             context=context._class;
-        
+            
         // is the context in debug mode?
         if(context != null && (this.contextes[context] == null || !this.contextes[context]))
             return;
             
         var console = this.getRootWindow().mgnlDebugConsole;
+
         var doc = null;
         // create new window if not allready done
         if(console == null){
             console = window.open('','mgnlDebugConsole');
             this.getRootWindow().mgnlDebugConsole = console;
             doc = console.document;
-            doc.write('<input type="button" value="Clear" onclick="document.getElementById(\'consoleDiv\').innerHTML=\'\';" > <p>');
+            doc.write('<html><body><input type="button" value="Clear" onclick="document.getElementById(\'consoleDiv\').innerHTML=\'\';" > <p>');
             doc.write('<div id="consoleDiv" style="font-family: sans-serif; font-size: 10pt">');
-            doc.write('</div>');
+            doc.write('</div></body></html>');
             doc.close();
             
             // reset the focus
@@ -74,8 +74,9 @@ classDef("mgnl.util.Debug", {
         
         if(context != null)
             msg = context + ": " + msg;
-        div.appendChild(document.createTextNode(msg));
-        div.appendChild(document.createElement("br"));
+            
+        div.appendChild(doc.createTextNode(msg));
+        div.appendChild(doc.createElement("br"));
     },
     
     /**
