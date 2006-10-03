@@ -28,11 +28,11 @@ div.mgnlFunctionBar td.separator {
 
 td.mgnlFunctionBarButton {
     padding: 0 15px 0 5px;
+    text-align: center;
 }
 
 td.mgnlFunctionBarButton a {
     padding: 2px;
-    text-align: center;
     font-size: 10px;
     cursor: pointer;
     display: table-cell;
@@ -53,6 +53,7 @@ td.mgnlFunctionBarButton a:hover {
 /* inactive stuff */
 td.mgnlFunctionBarButtonInactive {
     padding: 0 15px 0 5px;
+    text-align: center; 
 }
 
 td.mgnlFunctionBarButtonInactive a {
