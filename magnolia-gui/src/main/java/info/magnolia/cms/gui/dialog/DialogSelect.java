@@ -66,7 +66,7 @@ public class DialogSelect extends DialogBox {
                 String labelNodeData = this.getConfigValue("labelNodeData", "label");
 
                 String value = NodeDataUtil.getString(n, valueNodeData);//$NON-NLS-1$
-                String label = NodeDataUtil.getString(n, labelNodeData);//$NON-NLS-1$
+                String label = NodeDataUtil.getString(n, labelNodeData, value);//$NON-NLS-1$
 
                 SelectOption option = new SelectOption(label, value);
                 if (n.getNodeData("selected").getBoolean()) { //$NON-NLS-1$
