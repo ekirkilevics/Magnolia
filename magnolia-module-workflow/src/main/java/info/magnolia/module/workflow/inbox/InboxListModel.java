@@ -34,6 +34,7 @@ public class InboxListModel extends AbstractListModel {
     public InboxListModel(String userName) {
         super();
         this.userName = userName;
+        this.setValueProvider(new InboxValueProvider());
     }
 
     /**
@@ -41,13 +42,6 @@ public class InboxListModel extends AbstractListModel {
      */
     protected Collection getResult() throws Exception {
         return WorkflowUtil.getUserInbox(this.userName);
-    }
-
-    /**
-     * @see info.magnolia.cms.gui.controlx.list.AbstractListModel#createIterator(java.util.Collection)
-     */
-    protected ListModelIterator createIterator(Collection items) {
-        return new InboxListModelIterator((List) items, this.getGroupBy());
     }
 
     /**

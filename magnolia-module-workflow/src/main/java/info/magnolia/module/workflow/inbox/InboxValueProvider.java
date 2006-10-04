@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.workflow.inbox;
 
+import info.magnolia.cms.gui.controlx.list.DefaultValueProvider;
 import info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl;
 import info.magnolia.context.Context;
 import info.magnolia.module.workflow.WorkflowUtil;
@@ -20,6 +21,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import openwfe.org.engine.workitem.Attribute;
 import openwfe.org.engine.workitem.InFlowItem;
 import openwfe.org.engine.workitem.StringAttribute;
 
@@ -28,23 +30,15 @@ import openwfe.org.engine.workitem.StringAttribute;
  * @author Philipp Bracher
  * @version $Revision:3416 $ ($Author:philipp $)
  */
-public class InboxListModelIterator extends ListModelIteratorImpl {
-
-    /**
-     * @param list
-     * @param groupKey
-     */
-    public InboxListModelIterator(List list, String groupKey) {
-        super(list, groupKey);
-    }
+public class InboxValueProvider extends DefaultValueProvider {
 
     /**
      * @see info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl#getValue(java.lang.String, java.lang.Object)
      */
-    protected Object getValue(String name, Object obj) {
+    public Object getValue(String name, Object obj) {
         InFlowItem item = (InFlowItem) obj;
         if (name.equalsIgnoreCase("name")){
-            StringAttribute path = (StringAttribute) getValue("path", obj);
+            String path = (String) getValue("path", obj);
             if(path != null){
                 return StringUtils.substringAfterLast(path.toString(), "/");
             }
@@ -71,7 +65,11 @@ public class InboxListModelIterator extends ListModelIteratorImpl {
             return WorkflowUtil.getPath(WorkflowUtil.getId(item));
         }
         if (item.containsAttribute(name)) {
-            return item.getAttribute(name);
+            Attribute attribute = item.getAttribute(name);
+            if(attribute instanceof StringAttribute){
+                return ((StringAttribute)attribute).toString();
+            }
+            return attribute;
         }
         else {
             return super.getValue(name, obj);
