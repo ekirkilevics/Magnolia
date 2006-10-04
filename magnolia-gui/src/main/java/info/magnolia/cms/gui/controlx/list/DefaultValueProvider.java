@@ -10,7 +10,7 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.controlx.list.util;
+package info.magnolia.cms.gui.controlx.list;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
@@ -30,22 +30,22 @@ import org.apache.log4j.Logger;
 /**
  * @author Sameer Charles $Id$
  */
-public class ValueProvider {
+public class DefaultValueProvider implements ValueProvider {
 
     /**
      * Logger
      */
-    private static final Logger log = Logger.getLogger(ValueProvider.class);
+    private static final Logger log = Logger.getLogger(DefaultValueProvider.class);
 
     /**
      * singleton
      */
-    private static ValueProvider thisInstance = new ValueProvider();
+    private static ValueProvider thisInstance = new DefaultValueProvider();
 
     /**
      * Not allowed to be instanciated outside the scope of this class
      */
-    private ValueProvider() {
+    protected DefaultValueProvider() {
     }
 
     /**
@@ -55,11 +55,8 @@ public class ValueProvider {
         return thisInstance;
     }
 
-    /**
-     * get value - first check for property in this object - then look for the getter for this name - else search in
-     * MetaData
-     * @param name
-     * @param obj
+    /* (non-Javadoc)
+     * @see info.magnolia.cms.gui.controlx.list.util.ValueProvider#getValue(java.lang.String, java.lang.Object)
      */
     public Object getValue(String name, Object obj) {
         Object value = null;

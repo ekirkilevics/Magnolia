@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
-import info.magnolia.cms.gui.controlx.list.util.ValueProvider;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -62,6 +61,11 @@ public abstract class AbstractListModel implements ListModel {
      * group by order
      */
     protected String groupByOrder;
+    
+    /**
+     * Used to get values out of the nodes/objects handled by the list
+     */
+    private ValueProvider valueProvider;
 
     /**
      * this must be implemented by implementing classes
@@ -93,7 +97,7 @@ public abstract class AbstractListModel implements ListModel {
      * @return
      */
     protected ListModelIterator createIterator(Collection items) {
-        return new ListModelIteratorImpl((List) this.doSort(items), this.getGroupBy());
+        return new ListModelIteratorImpl((List) this.doSort(items), this.getGroupBy(), this.getValueProvider());
     }
 
     /**
@@ -193,6 +197,23 @@ public abstract class AbstractListModel implements ListModel {
     }
 
     /**
+     * @param valueProvider the valueProvider to set
+     */
+    public void setValueProvider(ValueProvider valueProvider) {
+        this.valueProvider = valueProvider;
+    }
+
+    /**
+     * @return the valueProvider
+     */
+    public ValueProvider getValueProvider() {
+        if (valueProvider == null) {
+            valueProvider = DefaultValueProvider.getInstance();
+        }
+        return valueProvider;
+    }
+
+    /**
      * Does simple or sub ordering
      */
     protected class ListComparator implements Comparator {
@@ -202,12 +223,6 @@ public abstract class AbstractListModel implements ListModel {
         private String sortBy;
 
         private String order;
-
-        private ValueProvider valueProvider;
-
-        ListComparator() {
-            this.valueProvider = ValueProvider.getInstance();
-        }
 
         public int compare(Object object, Object object1) {
             if (StringUtils.isNotEmpty(this.sortBy) && StringUtils.isEmpty(this.preSort)) {
@@ -225,8 +240,8 @@ public abstract class AbstractListModel implements ListModel {
          * @param object1 to be compared
          */
         private int sort(Object object, Object object1) {
-            Comparable firstKey = (Comparable) this.valueProvider.getValue(this.sortBy, object);
-            Comparable secondKey = (Comparable) this.valueProvider.getValue(this.sortBy, object1);
+            Comparable firstKey = (Comparable) getValueProvider().getValue(this.sortBy, object);
+            Comparable secondKey = (Comparable) getValueProvider().getValue(this.sortBy, object1);
             if (this.getOrder().equalsIgnoreCase(ASCENDING)) {
                 return firstKey.compareTo(secondKey);
             }
@@ -240,10 +255,10 @@ public abstract class AbstractListModel implements ListModel {
          * @param object1 to be compared
          */
         private int subSort(Object object, Object object1) {
-            String firstKey = (String) this.valueProvider.getValue(this.preSort, object);
-            String secondKey = (String) this.valueProvider.getValue(this.preSort, object1);
-            Comparable subSortFirstKey = (Comparable) this.valueProvider.getValue(this.sortBy, object);
-            Comparable subSortSecondKey = (Comparable) this.valueProvider.getValue(this.sortBy, object1);
+            String firstKey = (String) getValueProvider().getValue(this.preSort, object);
+            String secondKey = (String) getValueProvider().getValue(this.preSort, object1);
+            Comparable subSortFirstKey = (Comparable) getValueProvider().getValue(this.sortBy, object);
+            Comparable subSortSecondKey = (Comparable) getValueProvider().getValue(this.sortBy, object1);
             if (firstKey.equalsIgnoreCase(secondKey)) {
                 if (this.getOrder().equalsIgnoreCase(ASCENDING)) {
                     return subSortFirstKey.compareTo(subSortSecondKey);

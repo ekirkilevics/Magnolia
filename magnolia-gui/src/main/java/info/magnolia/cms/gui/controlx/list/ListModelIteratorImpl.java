@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
-import info.magnolia.cms.gui.controlx.list.util.ValueProvider;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,17 +49,25 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * key name on which provided list is grouped
      */
     private String groupKey;
+    
+    private ValueProvider valueProvider;
+
+    public ListModelIteratorImpl(List list, String groupKey, ValueProvider valueProvider) {
+        this.list = new ArrayList(list);
+        this.groupKey = groupKey;
+        this.pos = 0;
+        this.setValueProvider(valueProvider);
+
+        // prefetch next object
+        prefetchNext();
+    }
 
     /**
      * creates a new ListModelIterator
      * @param list of content objects
      */
     public ListModelIteratorImpl(List list, String groupKey) {
-        this.list = new ArrayList(list);
-        this.groupKey = groupKey;
-        this.pos = 0;
-        // prefetch next object
-        prefetchNext();
+        this(list, groupKey, DefaultValueProvider.getInstance());
     }
 
     /**
@@ -87,7 +94,7 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * @param node
      */
     protected Object getValue(String name, Object node) {
-        return ValueProvider.getInstance().getValue(name, node);
+        return this.getValueProvider().getValue(name, node);
     }
 
     /**
@@ -167,6 +174,14 @@ public class ListModelIteratorImpl implements ListModelIterator {
      */
     public void remove() {
         // not implemented
+    }
+
+    public void setValueProvider(ValueProvider valueProvider) {
+        this.valueProvider = valueProvider;
+    }
+
+    public ValueProvider getValueProvider() {
+        return valueProvider;
     }
 
 }
