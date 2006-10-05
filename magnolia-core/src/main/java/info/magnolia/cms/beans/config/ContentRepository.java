@@ -354,7 +354,13 @@ public final class ContentRepository {
      * */
     public static void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
         log.info("System : loading workspace {}", workspaceId); //$NON-NLS-1$
+        if(!repositoryNameMap.containsKey(workspaceId)){
+            addMappedRepositoryName(workspaceId, repositoryId, workspaceId);
+        }
         RepositoryMapping map = getRepositoryMapping(repositoryId);
+        if(!map.getWorkspaces().contains(workspaceId)){
+            map.addWorkspace(workspaceId);
+        }
         Provider provider = getRepositoryProvider(repositoryId);
         provider.registerWorkspace(workspaceId);
         loadHierarchyManager(getRepository(repositoryId),  workspaceId, map, provider);
