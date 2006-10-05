@@ -20,7 +20,6 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;

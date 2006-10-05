@@ -12,23 +12,15 @@
 
 package info.magnolia.maven.bootstrap;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ModuleRegistration;
 import info.magnolia.cms.beans.config.ShutdownManager;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.servlets.PropertyInitializer;
-import info.magnolia.context.MgnlContext;
 
-import java.io.File;
-import java.io.IOException;
-
-import javax.jcr.RepositoryException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.MethodUtils;
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.MojoExecutionException;
 
