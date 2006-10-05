@@ -49,17 +49,18 @@ public class ClasspathSpool extends HttpServlet {
 
     protected long getLastModified(HttpServletRequest req) {
         String filePath = this.getFilePath(req);
-        long lastModified;
         try {
             URL url = ClasspathResourcesUtil.getResource(MGNL_RESOURCES_ROOT + filePath);
-            URLConnection connection = url.openConnection();
-            lastModified = connection.getLastModified();
+            if(url != null){
+                URLConnection connection = url.openConnection();
+                return connection.getLastModified();
+            }
         }
         catch (IOException e) {
-            lastModified =  -1;
+            // just ignore
         }
 
-        return lastModified;
+        return -1;
     }
     
     /**
