@@ -26,8 +26,11 @@ import javax.jcr.RepositoryException;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.maven.plugin.MojoExecutionException;
 
 import com.mockrunner.mock.web.MockServletContext;
 
@@ -43,8 +46,9 @@ public class BootstrapInnerMojo {
     /**
      * Execute the bootstrapping now. Use the passed mojo to get the parameters
      * @param mojo
+     * @throws MojoExecutionException 
      */
-    public boolean execute(BootstrapMojo mojo) {
+    public boolean execute(BootstrapMojo mojo) throws MojoExecutionException {
 
         // create the mock context
         MockServletContext context = new MockServletContext();
@@ -62,24 +66,21 @@ public class BootstrapInnerMojo {
         shutdownManager.contextInitialized(event);
         
         boolean restart = ModuleRegistration.getInstance().isRestartNeeded();
-
-        if (!restart && StringUtils.isNotEmpty(mojo.postBootstrapConfigurator)) {
-            try {
-                Class postConfigClass = this.getClass().getClassLoader().loadClass(mojo.postBootstrapConfigurator);
-
-                PostBootstrapConfigurator postConfig = (PostBootstrapConfigurator) postConfigClass.newInstance();
-                HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
-
-                postConfig.configure(mojo.webappDir, hm);
+        
+        if (!restart) {
+            for (int i = 0; i < mojo.postBootstrappers.length; i++) {
+                PostBootstrapper postBootstrapper = mojo.postBootstrappers[i];
                 try {
-                    hm.save();
+                    // clone the bootstrapper but use the custom classloader
+                    Class klass = this.getClass().forName(postBootstrapper.getClass().getName());
+                    Object obj = klass.newInstance();
+                    BeanUtils.copyProperties(obj, postBootstrapper);
+                    MethodUtils.invokeExactMethod(obj, "execute", mojo.webappDir);
+                    mojo.getLog().info("executing post bootstrapper: " + postBootstrapper );
                 }
-                catch (RepositoryException e) {
-                    mojo.getLog().error("can't save changes of the post bootstrap configurator", e);
+                catch (Exception e) {
+                    throw new MojoExecutionException("can't execute post-bootstrapper", e);
                 }
-            }
-            catch (Exception e) {
-                mojo.getLog().error("can't instantiate post configurator", e);
             }
         }
 

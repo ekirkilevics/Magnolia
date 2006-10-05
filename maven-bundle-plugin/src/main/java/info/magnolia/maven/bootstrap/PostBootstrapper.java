@@ -11,20 +11,18 @@
  */
 package info.magnolia.maven.bootstrap;
 
-import info.magnolia.cms.core.HierarchyManager;
-
 /**
  * Executed after the bootstrap if define on the BootstrapMojo.
  * @author philipp
  * @version $Revision$ ($Author$)
  */
-public interface PostBootstrapConfigurator {
+public interface PostBootstrapper {
 
     /**
      * Configure the repository.
      * @param webappDir
-     * @param hm
+     * @throws Exception 
      */
-    void configure(String webappDir, HierarchyManager hm);
+    void execute(String webappDir) throws Exception;
 
 }

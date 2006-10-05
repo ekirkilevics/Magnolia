@@ -19,8 +19,8 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Collection;
-import java.util.Date;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFilterUtils;
@@ -30,7 +30,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
-import org.apache.maven.project.MavenProjectHelper;
 
 
 /**
@@ -56,7 +55,7 @@ public class BootstrapMojo extends AbstractMojo {
      * The class name for a post bootstrap configurator. This can't be 
      * @parameter
      */
-    public String postBootstrapConfigurator;
+    public PostBootstrapper[] postBootstrappers;
     
     /**
      * Load those classes from the original class loader
@@ -77,7 +76,7 @@ public class BootstrapMojo extends AbstractMojo {
      * Create the custom class loader and create the inner mojo object using it.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        
+
         // delete the repositories
         if (new File(webappDir + "/repositories").exists()) {
             try {
@@ -93,6 +92,7 @@ public class BootstrapMojo extends AbstractMojo {
         while(restart){
             restart = bootstrap();
         }
+
     }
 
     protected boolean bootstrap() throws MojoExecutionException {
