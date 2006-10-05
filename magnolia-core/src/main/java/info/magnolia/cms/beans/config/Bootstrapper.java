@@ -113,7 +113,7 @@ public final class Bootstrapper {
         Set xmlfileset = getBootstrapFiles(bootdirs, repositoryName, filter);
 
         if (xmlfileset.isEmpty()) {
-            log.info("No bootstrap files found in directory [{}], skipping...", repositoryName); //$NON-NLS-1$
+            log.info("No bootstrap files found for repository [{}], skipping...", repositoryName); //$NON-NLS-1$
             return true;
         }
 
