@@ -26,6 +26,7 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -253,7 +254,7 @@ public class DialogFckEdit extends DialogBox {
         out.write("fckInstance.BasePath = '" + this.getRequest().getContextPath() + FCKEDIT_PATH + "';"); //$NON-NLS-1$ //$NON-NLS-2$
 
         if (StringUtils.isNotEmpty(height)) {
-            out.write("fckInstance.Height = '" + escapeJsValue(this.getConfigValue("height")) + "';"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            out.write("fckInstance.Height = '" + this.getConfigValue("height") + "';"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         // now set the custom configuration path
@@ -382,28 +383,13 @@ public class DialogFckEdit extends DialogBox {
     }
 
     /**
-     * Replacements:
-     * 
-     * <pre>
-     *               ' -&gt; \'
-     *               &quot; -&gt; \&quot;
-     *               \r\n -&gt; \\r\\n
-     *               \n -&gt; \\n
-     *               \ -&gt; \\
-     * </pre>
-     * 
+     * Escapes the given String to make it javascript friendly.
+     * (escaping single quotes, double quotes, new lines, backslashes, ...)
      * @param src
      * @return escaped js String
+     * @see StringEscapeUtils#escapeJavaScript(String)
      */
-    public static String escapeJsValue(String src) {
-        if (src == null) {
-            return null;
-        }
-        String escapedSrc = src.replaceAll("'", "\\\\'"); //$NON-NLS-1$ //$NON-NLS-2$
-        escapedSrc = escapedSrc.replaceAll("\"", "\\\""); //$NON-NLS-1$ //$NON-NLS-2$
-        escapedSrc = escapedSrc.replaceAll("\\r\\n", "\\\\r\\\\n"); //$NON-NLS-1$ //$NON-NLS-2$
-        escapedSrc = escapedSrc.replaceAll("\\n", "\\\\n"); //$NON-NLS-1$ //$NON-NLS-2$
-
-        return escapedSrc;
+    protected String escapeJsValue(String src) {
+        return StringEscapeUtils.escapeJavaScript(src);
     }
 }
