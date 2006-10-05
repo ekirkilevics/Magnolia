@@ -51,7 +51,6 @@ import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -346,6 +345,19 @@ public final class ContentRepository {
                 loadHierarchyManager(repository, wspID, map, handlerClass);
             }
         }
+    }
+
+    /**
+     * @param repositoryId
+     * @param workspaceId
+     * @throws RepositoryException
+     * */
+    public static void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
+        log.info("System : loading workspace {}", workspaceId); //$NON-NLS-1$
+        RepositoryMapping map = getRepositoryMapping(repositoryId);
+        Provider provider = getRepositoryProvider(repositoryId);
+        provider.registerWorkspace(workspaceId);
+        loadHierarchyManager(getRepository(repositoryId),  workspaceId, map, provider);
     }
 
     /**
