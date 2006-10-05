@@ -17,9 +17,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Content.ContentFilter;
-import info.magnolia.cms.core.search.Query;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 
@@ -56,6 +53,15 @@ public class ContentUtil {
             return true;
         }
     };
+    
+    /**
+     * @author Philipp Bracher
+     * @version $Id$
+     *
+     */
+    public interface Visitor {
+        void visit(Content node) throws Exception;
+    }
     
     /**
      * Content filter accepting everything
@@ -234,6 +240,20 @@ public class ContentUtil {
             }
         }
         return nodes;
+    }
+    
+    public static void orderNodes(Content node, String[] nodes) throws RepositoryException{
+        for (int i = nodes.length - 1; i > 0; i--) {
+            node.orderBefore(nodes[i-1], nodes[i]);
+        }
+        node.save();
+    }
+    
+    public static void visit(Content node, Visitor visitor) throws Exception{
+        visitor.visit(node);
+        for (Iterator iter = getAllChildren(node).iterator(); iter.hasNext();) {
+            visit((Content) iter.next(), visitor);
+        }
     }
 
     public static Content createPath(HierarchyManager hm, String path) throws AccessDeniedException,
