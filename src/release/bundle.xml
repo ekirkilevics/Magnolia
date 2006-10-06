@@ -8,11 +8,21 @@
   <fileSets>
     <fileSet>
       <directory>target/release/bundle</directory>
+      <excludes>
+      	<exclude>target/release/bundle/tomcat/bin</exclude>
+      </excludes>
       <outputDirectory></outputDirectory>
+      <fileMode>644</fileMode>
     </fileSet>
+    <fileSet>
+      <directory>target/release/bundle/tomcat/bin</directory>
+      <outputDirectory>tomcat/bin</outputDirectory>
+      <fileMode>754</fileMode>
+    </fileSet>    
     <fileSet>
       <directory>src/release/tomcat/scripts</directory>
       <outputDirectory>tomcat/bin</outputDirectory>
+      <fileMode>754</fileMode>
     </fileSet>
   </fileSets>
   <files>
