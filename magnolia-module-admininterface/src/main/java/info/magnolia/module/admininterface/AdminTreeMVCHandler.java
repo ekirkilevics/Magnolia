@@ -579,14 +579,6 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         // if there was a displayValue passed show it instead of the written value
         displayValue = StringUtils.defaultString(this.getRequest().getParameter("displayValue"), value); //$NON-NLS-1$
 
-        // @todo should be handled in a better way but, at the moment, this is better than nothing
-        if (path.startsWith("/subscribers/")) { //$NON-NLS-1$
-            Subscriber.reload();
-        }
-        else if (path.startsWith("/server/MIMEMapping")) { //$NON-NLS-1$
-            MIMEMapping.reload();
-        }
-
         return VIEW_VALUE;
     }
 

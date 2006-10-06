@@ -291,7 +291,15 @@ public class ProviderImpl implements Provider {
         }
 
         NodeTypeManager ntMgr = workspace.getNodeTypeManager();
-        NodeTypeRegistry ntReg = ((NodeTypeManagerImpl) ntMgr).getNodeTypeRegistry();
+        NodeTypeRegistry ntReg;
+        try {
+            ntReg = ((NodeTypeManagerImpl) ntMgr).getNodeTypeRegistry();
+        } catch (ClassCastException e) {
+            // this could happen if the repository provider does not have proper Shared API for the
+            // application server like at the moment in Jackrabbit
+            log.debug("Failed to get  NodeTypeRegistry",e);
+            return;
+        }
 
         for (int j = 0; j < types.length; j++) {
             NodeTypeDef def = types[j];
@@ -398,16 +406,25 @@ public class ProviderImpl implements Provider {
             ContentRepository.REPOSITORY_USER,
             ContentRepository.REPOSITORY_PSWD.toCharArray());
         Session jcrSession = this.repository.login(credentials);
-        WorkspaceImpl defaultWorkspace = (WorkspaceImpl) jcrSession.getWorkspace();
-        String[] workspaceNames = defaultWorkspace.getAccessibleWorkspaceNames();
+        try {
+            WorkspaceImpl defaultWorkspace = (WorkspaceImpl) jcrSession.getWorkspace();
+            String[] workspaceNames = defaultWorkspace.getAccessibleWorkspaceNames();
 
-        boolean alreadyExists = ArrayUtils.contains(workspaceNames, workspaceName);
-        if (!alreadyExists) {
-            defaultWorkspace.createWorkspace(workspaceName);
+            boolean alreadyExists = ArrayUtils.contains(workspaceNames, workspaceName);
+            if (!alreadyExists) {
+                defaultWorkspace.createWorkspace(workspaceName);
+            }
+            jcrSession.logout();
+
+            return !alreadyExists;
+        } catch (ClassCastException e) {
+            // this could happen if the repository provider does not have proper Shared API for the
+            // application server like at the moment in Jackrabbit
+            log.debug("Unable to register workspace, will continue", e);
+        } catch (Throwable t) {
+            log.error("Unable to register workspace, will continue", t);
         }
-        jcrSession.logout();
-
-        return !alreadyExists;
+        return false;
     }
 
 }

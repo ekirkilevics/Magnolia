@@ -73,7 +73,6 @@ public class ConfigLoader {
      * Initialize a ConfigLoader instance. All the supplied parameters will be set in
      * <code>info.magnolia.cms.beans.runtime.SystemProperty</code>
      * @param context ServletContext
-     * @param config contains initialization parameters
      * @see SystemProperty
      */
     public ConfigLoader(ServletContext context) {
@@ -162,7 +161,6 @@ public class ConfigLoader {
             Listener.init();
             Subscriber.init();
             MIMEMapping.init();
-            VersionConfig.init();
 
             // finished
             setConfigured(true);

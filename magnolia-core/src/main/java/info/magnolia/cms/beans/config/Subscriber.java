@@ -15,11 +15,11 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.ObservationUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -27,6 +27,8 @@ import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.EventIterator;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -45,9 +47,11 @@ public final class Subscriber {
      */
     private static Logger log = LoggerFactory.getLogger(Subscriber.class);
 
-    private static final String START_PAGE = "subscribers"; //$NON-NLS-1$
+    private static final String START_PAGE = "subscriber"; //$NON-NLS-1$
 
     private static Hashtable cachedContent = new Hashtable();
+
+    private static final String SUBSCRIBER_NAME = "contentSubscriber";
 
     /**
      * <code>true</code> if at least one subscriber is configured and enabled.
@@ -87,6 +91,17 @@ public final class Subscriber {
      * </p>
      */
     public static void init() {
+        load();
+        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, "/"+START_PAGE, new EventListener() {
+
+            public void onEvent(EventIterator iterator) {
+                // reload everything
+                reload();
+            }
+        });
+    }
+
+    private static void load() {
         Subscriber.cachedContent.clear();
 
         log.info("Config : loading Subscribers"); //$NON-NLS-1$
@@ -94,13 +109,16 @@ public final class Subscriber {
         Collection children = Collections.EMPTY_LIST;
 
         try {
-            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
-            // since 3.0
-            children = startPage.getChildren(ItemType.CONTENTNODE);
-            // 2.1 or older
-            if(children.size()==0){
-                Content subscriberConfig = ContentUtil.getCaseInsensitive(startPage,"subscriberConfig");
-                children = subscriberConfig.getChildren(ItemType.CONTENTNODE);
+            Content startPage;
+            try {
+                startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
+                children = new ArrayList();
+                children.add(startPage);
+            } catch (PathNotFoundException e) {
+                System.out.println("Fall back");
+                log.warn("No new subscriber settings found, fall back to deprecated subscriber configuration");
+                startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent("subscribers");
+                children = startPage.getChildren(ItemType.CONTENTNODE);
             }
         }
         catch (PathNotFoundException re) {
@@ -114,14 +132,12 @@ public final class Subscriber {
         if (children != null) {
             Subscriber.cacheContent(children);
         }
-
         log.info("Config : Subscribers loaded"); //$NON-NLS-1$
-
     }
 
     public static void reload() {
         log.info("Config : re-loading Subscribers"); //$NON-NLS-1$
-        Subscriber.init();
+        Subscriber.load();
     }
 
     /**
@@ -129,13 +145,13 @@ public final class Subscriber {
      */
     private static void cacheContent(Collection subs) {
 
-        Iterator ipList = subs.iterator();
+        Iterator list = subs.iterator();
 
         // start by setting the subscribersEnabled property to false, will be reset when an active subscriber is found
         subscribersEnabled = false;
 
-        while (ipList.hasNext()) {
-            Content c = (Content) ipList.next();
+        if (list.hasNext()) {
+            Content c = (Content) list.next();
             Subscriber si = new Subscriber();
 
             si.url = c.getNodeData("URL").getString(); //$NON-NLS-1$
@@ -177,15 +193,9 @@ public final class Subscriber {
             }
 
             // all context info
-            try {
-                addContext(si, c);
-            }
-            catch (RepositoryException e) {
-                // valid
-            }
-            Subscriber.cachedContent.put(c.getName(), si);
+            addContext(si, c);
+            Subscriber.cachedContent.put(SUBSCRIBER_NAME, si);
         }
-        ipList = null;
     }
 
     /**
@@ -193,7 +203,7 @@ public final class Subscriber {
      * @param subscriberInfo
      * @param contentNode
      */
-    private static void addContext(Subscriber subscriberInfo, Content contentNode) throws RepositoryException {
+    private static void addContext(Subscriber subscriberInfo, Content contentNode) {
         subscriberInfo.context = new Hashtable();
         Content contextList = ContentUtil.getCaseInsensitive(contentNode,"context"); //$NON-NLS-1$
         Iterator it = contextList.getChildren().iterator();
@@ -210,11 +220,10 @@ public final class Subscriber {
     }
 
     /**
-     * Get list of all configured ip.
-     * @return Enumeration
-     */
-    public static Enumeration getList() {
-        return Subscriber.cachedContent.elements();
+     * @return configured subscriber
+     * */
+    public static Subscriber getSubscriber() {
+        return (Subscriber) Subscriber.cachedContent.get(SUBSCRIBER_NAME);
     }
 
     /**
