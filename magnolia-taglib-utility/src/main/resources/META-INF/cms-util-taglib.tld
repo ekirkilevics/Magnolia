@@ -702,7 +702,7 @@ This page has no content and it will redirect to
     <tag-class>info.magnolia.cms.taglibs.util.TableTag</tag-class>
     <body-content>JSP</body-content>
     <display-name>table</display-name>
-    <description></description>
+    <description>Table</description>
     <attribute>
       <name>header</name>
       <required>false</required>
