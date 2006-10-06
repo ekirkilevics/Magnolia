@@ -3,13 +3,13 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.0-rc3</version>
+    <version>3.0-rc4-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-admininterface</artifactId>
   <name>magnolia-module-admininterface</name>
-  <version>3.0-rc3</version>
+  <version>3.0-rc4-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>junit</groupId>
