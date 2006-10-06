@@ -27,6 +27,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+/**
+ * The Magnolia-specific workflow participant.
+ *
+ * @author Jackie Ju
+ * @author Philipp Bracher
+ * @author Nicolas Modrzyk
+ * @author John Mettraux
+ */
 public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
     /**
@@ -50,13 +58,20 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
     public void cancel(CancelItem cancelItem) throws Exception {
         if (log.isDebugEnabled()) {
-            if (cancelItem != null && cancelItem.getId() != null) {
+            if (cancelItem.getId() != null) {
                 log.debug("Cancelling {}", cancelItem.getId().toParseableString());
             }
-            else {
-                log.debug("Calling cancel on participant with null cancel item");
-            }
+
         }
+        String parName = cancelItem.getParticipantName();
+        if ( ! parName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND)) {
+            //
+            // remove workitem from inbox
+            this.storage.removeWorkItem(cancelItem.getId());
+        }
+        //else {
+        //    // ignore
+        //}
     }
 
     /**

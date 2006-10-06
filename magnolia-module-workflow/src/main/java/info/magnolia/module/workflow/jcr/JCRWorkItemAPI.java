@@ -40,11 +40,19 @@ import java.util.Iterator;
 import java.util.List;
 
 
+/**
+ * The Magnolia-specific workflow participant.
+ *
+ * @author Jackie Ju
+ * @author Philipp Bracher
+ * @author Nicolas Modrzyk
+ * @author John Mettraux
+ */
 public class JCRWorkItemAPI {
 
     public final static Logger log = LoggerFactory.getLogger(JCRWorkItemAPI.class.getName());
 
-    HierarchyManager hm;
+    private HierarchyManager hm;
 
     public JCRWorkItemAPI() throws Exception {
         this.hm = ContentRepository.getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
@@ -59,19 +67,21 @@ public class JCRWorkItemAPI {
      * remove one workItem by its ID
      */
     public void removeWorkItem(FlowExpressionId fei) throws StoreException {
-        try {
-            Content ct = getWorkItemById(fei);
-            if (ct != null) {
-                ct.delete();
-                this.hm.save();
-                if (log.isDebugEnabled()) {
-                    log.debug("work item removed");
+        synchronized (this.hm) {
+            try {
+                Content ct = getWorkItemById(fei);
+                if (ct != null) {
+                    ct.delete();
+                    this.hm.save();
+                    if (log.isDebugEnabled()) {
+                        log.debug("work item removed");
+                    }
                 }
-            }
 
-        }
-        catch (Exception e) {
-            log.error("exception:" + e);
+            }
+            catch (Exception e) {
+                log.error("exception:" + e);
+            }
         }
     }
 
@@ -214,50 +224,51 @@ public class JCRWorkItemAPI {
      * @throws StoreException
      */
     public void storeWorkItem(String arg0, InFlowWorkItem wi) throws StoreException {
-        try {
+        synchronized(this.hm) {
+            try {
 
-            // delete it if already exist
-            if (hasWorkItem(wi.getId())) {
-                // do not use removeWorkItem() since it persist changes immedietely
-                this.hm.delete(createPathFromId(wi.getId()));
-            }
+                // delete it if already exist
+                if (hasWorkItem(wi.getId())) {
+                    // do not use removeWorkItem() since it persist changes immedietely
+                    this.hm.delete(createPathFromId(wi.getId()));
+                }
 
-            // create path from work item id
-            String path = createPathFromId(wi.getId());
-            if (log.isDebugEnabled()) {
-                log.debug("storing workitem with path = " + path);
-            }
+                // create path from work item id
+                String path = createPathFromId(wi.getId());
+                if (log.isDebugEnabled()) {
+                    log.debug("storing workitem with path = " + path);
+                }
 
-            Content newc = ContentUtil.createPath(this.hm, path, ItemType.WORKITEM);
+                Content newc = ContentUtil.createPath(this.hm, path, ItemType.WORKITEM);
 
-            ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
-            String sId = wi.getLastExpressionId().toParseableString();
+                ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
+                String sId = wi.getLastExpressionId().toParseableString();
 
-            newc.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(sId));
-            newc.createNodeData(WorkflowConstants.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
+                newc.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(sId));
+                newc.createNodeData(WorkflowConstants.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
 
-            StringAttribute assignTo = (StringAttribute) wi.getAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO);
-            if (assignTo != null) {
-                String s = assignTo.toString();
-                if (s.length() > 0) {
-                    newc.createNodeData(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, vf.createValue(s));
+                StringAttribute assignTo = (StringAttribute) wi.getAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO);
+                if (assignTo != null) {
+                    String s = assignTo.toString();
+                    if (s.length() > 0) {
+                        newc.createNodeData(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, vf.createValue(s));
+                    }
+                }
+
+                // convert to xml string
+                OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null,new MgnlNode(newc),WorkflowConstants.NODEDATA_VALUE);
+                coder.encode(wi);
+                hm.save();
+
+                if (log.isDebugEnabled()) {
+                    log.debug("store work item ok. ");
                 }
             }
-
-            // convert to xml string
-            OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null,new MgnlNode(newc),WorkflowConstants.NODEDATA_VALUE);
-            coder.encode(wi);
-            hm.save();
-
-            if (log.isDebugEnabled()) {
-                log.debug("store work item ok. ");
+            catch (Exception e) {
+                log.error("store work item failed", e);
+                throw new StoreException(e.toString());
             }
         }
-        catch (Exception e) {
-            log.error("store work item failed", e);
-            throw new StoreException(e.toString());
-        }
-
     }
 
     /**
