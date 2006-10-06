@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>3.0-rc3-SNAPSHOT</version>
+  <version>3.0-rc3</version>
   <description>
     Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
     java content repositories (JCR).
@@ -88,9 +87,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
-    <url>http://svn.magnolia.info/view/magnolia/trunk/</url>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-project-3.0-rc3</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-project-3.0-rc3</developerConnection>
+    <url>http://svn.magnolia.info/view/magnolia/tags/magnolia-project-3.0-rc3</url>
   </scm>
   <organization>
     <name>Magnolia International</name>
@@ -108,7 +107,7 @@
       <plugin>
       	<groupId>info.magnolia</groupId>
       	<artifactId>maven-bundle-plugin</artifactId>
-      	<version>1.0-SNAPSHOT</version>
+      	<version>1.0-rc1</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -117,16 +116,16 @@
         <configuration>
           <finalName>magnolia-${project.version}</finalName> 
           <descriptors>
-            <descriptor>src/release/src.xml</descriptor>         
+            <!-- <descriptor>src/release/src.xml</descriptor>-->         
             <descriptor>src/release/bundle.xml</descriptor>
-            <descriptor>src/release/wars.xml</descriptor>
+            <!-- <descriptor>src/release/wars.xml</descriptor>-->
           </descriptors>
         </configuration>
       </plugin>          
       <plugin>
         <groupId>info.magnolia</groupId>
         <artifactId>maven-setproperty-plugin</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0</version>
         <executions>
           <!-- set the current date -->
           <execution>
