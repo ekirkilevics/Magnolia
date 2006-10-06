@@ -30,17 +30,19 @@
       <source>src/release/bundle/license.txt</source>
       <outputDirectory></outputDirectory>
       <filtered>true</filtered>
+      <lineEnding>crlf</lineEnding>
     </file>
     <file>
       <source>src/release/bundle/release notes.txt</source>
       <outputDirectory></outputDirectory>
       <filtered>true</filtered>
+      <lineEnding>crlf</lineEnding>
     </file>
     <file>
       <source>magnolia/src/release/license.3rdparty.txt</source>
       <outputDirectory></outputDirectory>
       <filtered>true</filtered>
+      <lineEnding>crlf</lineEnding>
     </file>
-  </files>
-  
+  </files>  
 </assembly>
