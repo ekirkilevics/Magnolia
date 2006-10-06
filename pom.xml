@@ -116,9 +116,9 @@
         <configuration>
           <finalName>magnolia-${project.version}</finalName> 
           <descriptors>
-            <!-- <descriptor>src/release/src.xml</descriptor>-->         
+            <descriptor>src/release/src.xml</descriptor>         
             <descriptor>src/release/bundle.xml</descriptor>
-            <!-- <descriptor>src/release/wars.xml</descriptor>-->
+            <descriptor>src/release/wars.xml</descriptor>
           </descriptors>
         </configuration>
       </plugin>          
