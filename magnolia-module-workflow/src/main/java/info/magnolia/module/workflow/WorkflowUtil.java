@@ -15,7 +15,6 @@ package info.magnolia.module.workflow;
 import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.workflow.jcr.JCRFlowDefinition;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
 
@@ -28,7 +27,6 @@ import openwfe.org.engine.workitem.InFlowItem;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
-import openwfe.org.engine.launch.LaunchException;
 import openwfe.org.worklist.store.StoreException;
 
 import org.apache.commons.lang.StringUtils;
@@ -68,51 +66,17 @@ public class WorkflowUtil {
     private WorkflowUtil() {
     }
 
-    /**
-     * Simply launch a flow for the specified node
-     */
-    public static void launchFlow(String repository, String path, String flowName) throws Exception {
+    public static void launchFlow(LaunchItem li) {
         try {
-            // Get the references
-            LaunchItem li = new LaunchItem();
-
-            // start activation
-            if (repository != null) {
-                li.addAttribute(Context.ATTRIBUTE_REPOSITORY, new StringAttribute(repository));
-            }
-            if (path != null) {
-                li.addAttribute(Context.ATTRIBUTE_PATH, new StringAttribute(path));
-            }
-            launchFlow(li, flowName);
-            // Launch the item
-        }
-        catch (Exception e) {
-            log.error("Launching flow " + flowName + " failed", e);
-        }
-    }
-
-    /**
-     * Start a flow
-     * @param li the prepared lunchItem
-     * @param flowName the flow to start
-     */
-    public static void launchFlow(LaunchItem li, String flowName) {
-        try {
-            if(li.getWorkflowDefinitionUrl()==null) {
-                li.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
-                // Retrieve and add the flow definition to the LaunchItem
-                String flowDef = new JCRFlowDefinition().getflowDefAsString(flowName);
-                li.getAttributes().puts(WorkflowConstants.ATTRIBUTE_DEFINITION, flowDef);
-            }
             JCRPersistedEngine engine = WorkflowModule.getEngine();
             // Launch the item
             engine.launch(li, true);
         }
         catch (Exception e) {
-            log.error("Launching flow " + flowName + " failed", e);
+            log.error("Launching flow failed", e);
         }
     }
-
+    
     /**
      * @param id
      */

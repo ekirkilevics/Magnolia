@@ -128,9 +128,6 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>6bc37b49-d4d5-49f1-8ff3-755f693c78ee</sv:value>
       </sv:property>
-      <sv:property sv:name="workflowName" sv:type="String">
-        <sv:value>activation</sv:value>
-      </sv:property>
       <sv:property sv:name="impl" sv:type="String">
         <sv:value>info.magnolia.module.workflow.commands.flow.ActivationFlowCommand</sv:value>
       </sv:property>
