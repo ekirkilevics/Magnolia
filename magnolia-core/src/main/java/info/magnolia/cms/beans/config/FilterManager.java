@@ -23,6 +23,9 @@ import info.magnolia.context.MgnlContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +34,9 @@ import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.servlet.Filter;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -83,6 +89,11 @@ public final class FilterManager {
      * Array of filter definitions.
      */
     private FilterDefinition[] filterDefinitions;
+
+    /**
+     * Filterconfig set by the *real* filter.
+     */
+    private FilterConfig filterConfig;
 
     /**
      * Do not instantiate yourself
@@ -144,6 +155,12 @@ public final class FilterManager {
                 j--;
             }
         }
+
+        // the first initialization is done by the filter, but this is needed for reload
+        // not quite a clean design, but working...
+        if (filterConfig != null) {
+            initFilters(filterConfig);
+        }
     }
 
     /**
@@ -193,6 +210,29 @@ public final class FilterManager {
         Collections.sort(definitionList);
 
         filterDefinitions = (FilterDefinition[]) definitionList.toArray(new FilterDefinition[definitionList.size()]);
+    }
+
+    /**
+     * @param filterConfig
+     * @throws ServletException
+     */
+    public void initFilters(FilterConfig filterConfig) {
+        this.filterConfig = filterConfig;
+        for (int j = 0; j < getFilterDefinitions().length; j++) {
+            FilterDefinition filter = getFilterDefinitions()[j];
+            FilterManager.CustomFilterConfig customFilterConfig = new FilterManager.CustomFilterConfig(
+                filterConfig,
+                filter.getParameters());
+
+            try {
+                getFilters()[j].init(customFilterConfig);
+            }
+            catch (ServletException e) {
+                log.error("Error initializing filter " + filter.getClassName(), e);
+            }
+
+            log.info("Initializing filter {}", filter.getClassName());
+        }
     }
 
     /**
@@ -274,4 +314,55 @@ public final class FilterManager {
         }
 
     }
+
+    public static class CustomFilterConfig implements FilterConfig {
+
+        private Map parameters;
+
+        private FilterConfig parent;
+
+        /**
+         * @param parameters
+         */
+        public CustomFilterConfig(FilterConfig parent, Map parameters) {
+            super();
+            this.parent = parent;
+            if (parameters != null) {
+                this.parameters = parameters;
+            }
+            else {
+                this.parameters = new HashMap();
+            }
+        }
+
+        /**
+         * @see javax.servlet.FilterConfig#getFilterName()
+         */
+        public String getFilterName() {
+            return parent.getFilterName();
+        }
+
+        /**
+         * @see javax.servlet.FilterConfig#getInitParameter(java.lang.String)
+         */
+        public String getInitParameter(String name) {
+            return (String) parameters.get(name);
+        }
+
+        /**
+         * @see javax.servlet.FilterConfig#getInitParameterNames()
+         */
+        public Enumeration getInitParameterNames() {
+            return new Hashtable(parameters).keys();
+        }
+
+        /**
+         * @see javax.servlet.FilterConfig#getServletContext()
+         */
+        public ServletContext getServletContext() {
+            return parent.getServletContext();
+        }
+
+    }
+
 }
