@@ -23,11 +23,9 @@ import info.magnolia.cms.gui.controlx.list.ListModel;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.DateUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.lists.AbstractList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
@@ -36,19 +34,13 @@ import info.magnolia.module.workflow.WorkflowUtil;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.commons.lang.time.DateUtils;
-
-import openwfe.org.engine.workitem.InFlowWorkItem;
-import openwfe.org.engine.workitem.StringMapAttribute;
 
 
 /**
@@ -72,7 +64,7 @@ public class Inbox extends AbstractList {
      */
     private boolean debug = false;
 
-    private Messages msgs = MessagesManager.getMessages("info.magnolia.module.workflow.messages");
+    protected Messages msgs = MessagesManager.getMessages("info.magnolia.module.workflow.messages");
 
     /**
      * @param name
@@ -99,10 +91,13 @@ public class Inbox extends AbstractList {
         list.setRenderer(new AdminListControlRenderer() {
 
             public String onSelect(ListControl list, Integer index) {
-                String editDialog = StringUtils.defaultIfEmpty((String) list
-                    .getIteratorValue(WorkflowConstants.ATTRIBUTE_EDIT_DIALOG), WorkflowConstants.DEFAULT_EDIT_DIALOG);
-                String repository = "" + list.getIteratorValue("repository");
-                String path = "" + list.getIteratorValue("path");
+
+                String customEditDialog = ObjectUtils.toString(list
+                    .getIteratorValue(WorkflowConstants.ATTRIBUTE_EDIT_DIALOG));
+
+                String editDialog = StringUtils.defaultIfEmpty(customEditDialog, WorkflowConstants.DEFAULT_EDIT_DIALOG);
+                String repository = ObjectUtils.toString(list.getIteratorValue("repository"));
+                String path = ObjectUtils.toString(list.getIteratorValue("path"));
 
                 StringBuffer js = new StringBuffer();
                 js.append("mgnl.owfe.Inbox.current = {");
@@ -150,15 +145,17 @@ public class Inbox extends AbstractList {
         list.addColumn(new ListColumn("repository", msgs.get("inbox.repository"), "100", true));
         list.addColumn(new ListColumn("workflow", msgs.get("inbox.workflow"), "100", true));
         list.addColumn(new ListColumn("comment", msgs.get("inbox.comment"), "200", true));
-        list.addColumn( new ListColumn(){
+        list.addColumn(new ListColumn() {
+
             {
                 setName("lastModified");
                 setLabel(msgs.get("inbox.date"));
                 setWidth("100");
             }
+
             public Object getValue() {
-                String str = (String)super.getValue();
-                Date date= null;
+                String str = (String) super.getValue();
+                Date date = null;
                 try {
                     date = new SimpleDateFormat("yyyy-MM-dd HH:mm:ssZ").parse(str);
                     return DateUtil.formatDateTime(date);
@@ -177,16 +174,15 @@ public class Inbox extends AbstractList {
             return ".resources/icons/16/document_plain_earth.gif";
         }
         if (StringUtils.equals(repository, "dms")) {
-            String type = NodeDataUtil.getString(repository, path +"/type");
+            String type = NodeDataUtil.getString(repository, path + "/type");
             return MIMEMapping.getMIMETypeIcon(type);
         }
-        else {
-            return ".resources/icons/16/mail.gif";
-        }
+
+        return ".resources/icons/16/mail.gif";
     }
 
     protected String getShowJSFunction(String repository, String path) {
-        return "mgnl.owfe.Inbox.showFunctions."+ repository;
+        return "mgnl.owfe.Inbox.showFunctions." + repository;
     }
 
     /**
