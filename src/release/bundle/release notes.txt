@@ -1,15 +1,13 @@
 ===============================================
 
               M A G N O L I A (TM)
-    Simple Enterprise Content Management
+     Simple Enterprise Content Management
 
               ${magnolia.currentDate}
            Release Notes v ${magnolia.niceVersion} 
-${project.version}
-${test}
-${magnolia.edition}
+               ${magnolia.edition}
 
-          http://www.magnolia.info/
+           http://www.magnolia.info/
 
 
 
