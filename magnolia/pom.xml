@@ -46,6 +46,13 @@
                   </repositories>
                   <activated>true</activated>
                 </postBootstrapper>
+                <postBootstrapper implementation="info.magnolia.maven.bootstrap.post.SetActivationStatus">
+                  <repositories>
+                    <repository>config</repository>
+                    <path>/modules/templating</path>
+                  </repositories>
+                  <activated>true</activated>
+                </postBootstrapper>
               </postBootstrappers>
             </configuration>
           </plugin>
