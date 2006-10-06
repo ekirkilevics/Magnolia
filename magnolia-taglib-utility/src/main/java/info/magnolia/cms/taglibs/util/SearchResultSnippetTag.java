@@ -131,9 +131,7 @@ public class SearchResultSnippetTag extends TagSupport {
      */
     public Collection getSnippets() {
 
-        if (log.isDebugEnabled()) {
-            log.debug("collecting snippets"); //$NON-NLS-1$
-        }
+        log.debug("collecting snippets"); //$NON-NLS-1$
 
         Collection snippets = new ArrayList();
         String[] searchTerms = StringUtils.split(this.query);
@@ -150,9 +148,7 @@ public class SearchResultSnippetTag extends TagSupport {
             while (parIterator.hasNext()) {
                 Content paragraph = (Content) parIterator.next();
 
-                if (log.isDebugEnabled()) {
-                    log.debug("Iterating on paragraph " + paragraph); //$NON-NLS-1$
-                }
+                log.debug("Iterating on paragraph {}", paragraph); //$NON-NLS-1$
 
                 Collection properties = paragraph.getNodeDataCollection();
 
@@ -163,10 +159,8 @@ public class SearchResultSnippetTag extends TagSupport {
 
                         String resultString = property.getString();
 
-                        if (log.isDebugEnabled()) {
-                            log.debug("Iterating on property " + property.getName()); //$NON-NLS-1$
-                            log.debug("Property value is " + resultString); //$NON-NLS-1$
-                        }
+                        log.debug("Iterating on property {}", property.getName()); //$NON-NLS-1$
+                        log.debug("Property value is {}", resultString); //$NON-NLS-1$
 
                         // a quick and buggy way to avoid configuration properties, we should allow the user to
                         // configure a list of nodeData to search for...
@@ -180,9 +174,7 @@ public class SearchResultSnippetTag extends TagSupport {
                             // exclude keywords and words with less than 2 chars
                             if (!ArrayUtils.contains(SimpleSearchTag.KEYWORDS, searchTerm) && searchTerm.length() > 2) {
 
-                                if (log.isDebugEnabled()) {
-                                    log.debug("Looking for search term [" + searchTerm + "] in [" + resultString + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                                }
+                                log.debug("Looking for search term [{}] in [{}]", searchTerm, resultString); //$NON-NLS-1$
 
                                 // first check, avoid using heavy string replaceAll operations if the search term is not
                                 // there
@@ -191,7 +183,7 @@ public class SearchResultSnippetTag extends TagSupport {
                                 }
 
                                 // strips out html tags using a regexp
-                                resultString = resultString.replaceAll("\\<.*?\\>", ""); //$NON-NLS-1$ //$NON-NLS-2$
+                                resultString = stripHtmlTags(resultString);
 
                                 // only get first matching keyword
                                 int pos = resultString.toLowerCase().indexOf(searchTerm);
@@ -223,17 +215,14 @@ public class SearchResultSnippetTag extends TagSupport {
                                         snippet.append("... "); //$NON-NLS-1$
                                     }
 
-                                    if (log.isDebugEnabled()) {
-                                        log.debug("Search term found, adding snippet " + snippet); //$NON-NLS-1$
-                                    }
+                                    log.debug("Search term found, adding snippet {}", snippet); //$NON-NLS-1$
 
                                     snippets.add(snippet);
                                     if (snippets.size() >= this.maxSnippets) {
-                                        if (log.isDebugEnabled()) {
-                                            log.debug("Maximum number of snippets (" //$NON-NLS-1$
-                                                + this.maxSnippets
-                                                + ") reached, exiting"); //$NON-NLS-1$
-                                        }
+
+                                        log.debug("Maximum number of snippets ({}) reached, exiting", //$NON-NLS-1$
+                                            Integer.toString(this.maxSnippets));
+
                                         break outer;
                                     }
                                 }
@@ -245,6 +234,14 @@ public class SearchResultSnippetTag extends TagSupport {
         }
 
         return snippets;
+    }
+
+    /**
+     * @param resultString
+     * @return
+     */
+    protected String stripHtmlTags(String resultString) {
+        return resultString.replaceAll("\\<(.*?\\s*)*\\>", StringUtils.EMPTY); //$NON-NLS-1$
     }
 
     /**
