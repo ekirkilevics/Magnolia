@@ -17,9 +17,9 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
+import openwfe.org.engine.workitem.CancelItem;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.WorkItem;
-import openwfe.org.engine.workitem.CancelItem;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.lang.StringUtils;
@@ -29,7 +29,6 @@ import org.slf4j.LoggerFactory;
 
 /**
  * The Magnolia-specific workflow participant.
- *
  * @author Jackie Ju
  * @author Philipp Bracher
  * @author Nicolas Modrzyk
@@ -64,14 +63,14 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
         }
         String parName = cancelItem.getParticipantName();
-        if ( ! parName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND)) {
+        if (!parName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND)) {
             //
             // remove workitem from inbox
             this.storage.removeWorkItem(cancelItem.getId());
         }
-        //else {
-        //    // ignore
-        //}
+        // else {
+        // // ignore
+        // }
     }
 
     /**
@@ -94,7 +93,10 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         {
             log.info("consume command {}...", parName);
 
-            log.debug("command name is {}", parName);
+            Context originalContext = null;
+            if (MgnlContext.hasInstance()) {
+                originalContext = MgnlContext.getInstance();
+            }
 
             try {
                 String name = StringUtils.removeStart(parName, WorkflowConstants.PARTICIPANT_PREFIX_COMMAND);
@@ -105,11 +107,11 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                     // set parameters in the context
                     // precise what we're talking about here: this is forced to be a System Context :
                     // since we are processing within the workflow enviroment
-                    // TODO: fix this by using a proper workflow context
-                    Context context = MgnlContext.getSystemContext();
+                    Context context = new WorkItemContext(MgnlContext.getSystemContext(), wi);
 
-                    context = new WorkItemContext(context, wi);
+                    // remember to reset it after execution
                     MgnlContext.setInstance(context);
+
                     // execute
                     c.execute(context);
 
@@ -125,6 +127,9 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             }
             catch (Exception e) {
                 log.error("consume command failed", e);
+            }
+            finally {
+                MgnlContext.setInstance(originalContext);
             }
         }
         else {
