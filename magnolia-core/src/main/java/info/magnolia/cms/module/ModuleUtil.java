@@ -419,7 +419,7 @@ public final class ModuleUtil {
 
         }
 
-        log.info("servlet mapping [{}] for servlet [{}] allready registered", urlPattern, name);
+        log.info("servlet mapping [{}] for servlet [{}] already registered", urlPattern, name);
         return false;
     }
 
@@ -619,9 +619,7 @@ public final class ModuleUtil {
     /**
      * @param repositoryName
      * @param workspaceName
-     * @throws RegisterException
-     * @throws IOException
-     * @throws JDOMException
+     * @throws RegisterException if the workspace could not be register
      */
     public static boolean registerWorkspace(final String repositoryName, final String workspaceName) throws RegisterException {
 
