@@ -6,8 +6,8 @@
   <tlib-version>2.1</tlib-version>
   <jsp-version>1.2</jsp-version>
   <short-name>cms</short-name>
-  <display-name>cms taglib</display-name>
   <uri>cms-taglib</uri>
+  <display-name>cms taglib</display-name>
   <description>Core tag library for CMS</description>
   <tag>
     <name>mainBar</name>
