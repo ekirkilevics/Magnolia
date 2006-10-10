@@ -295,7 +295,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      /**
       * @throws ExchangeException
       */
-     protected abstract void activate(ActivationContent activationContent) throws ExchangeException;
+     public abstract void activate(ActivationContent activationContent) throws ExchangeException;
 
 
      /**
@@ -304,7 +304,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @param activationContent
       * @throws ExchangeException
       */
-     protected abstract void activate(Subscriber subscriber, ActivationContent activationContent)
+     public abstract void activate(Subscriber subscriber, ActivationContent activationContent)
          throws ExchangeException;
 
      /**
@@ -376,14 +376,14 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      /**
       * @throws ExchangeException
       */
-     protected abstract void doDeActivate() throws ExchangeException;
+     public abstract void doDeActivate() throws ExchangeException;
 
      /**
       * deactivate from a specified subscriber
       * @param subscriber
       * @throws ExchangeException
       */
-     protected abstract void doDeActivate(Subscriber subscriber) throws ExchangeException;
+     public abstract void doDeActivate(Subscriber subscriber) throws ExchangeException;
 
      /**
       * get deactivation URL

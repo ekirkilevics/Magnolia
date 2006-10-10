@@ -210,13 +210,13 @@ public abstract class BaseVersionManager {
      /**
       * check if version index is set to negative number
       * */
-     protected abstract boolean isInvalidMaxVersions();
+     public abstract boolean isInvalidMaxVersions();
 
      /**
       * get node from version store
       * @param node
       */
-     protected synchronized Content getVersionedNode(Content node) throws RepositoryException {
+     public synchronized Content getVersionedNode(Content node) throws RepositoryException {
          return getVersionedNode(node.getUUID());
      }
 
@@ -246,7 +246,7 @@ public abstract class BaseVersionManager {
       * @param node
       * @throws RepositoryException if failed to get VersionHistory or fail to remove
       */
-     protected abstract void setMaxVersionHistory(Content node) throws RepositoryException;
+     public abstract void setMaxVersionHistory(Content node) throws RepositoryException;
 
      /**
       * get history of this node as recorded in the version store

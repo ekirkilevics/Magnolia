@@ -13,6 +13,8 @@
 package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.FactoryUtil;
+
 import javax.jcr.RepositoryException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
@@ -37,12 +39,12 @@ public final class VersionManager extends BaseVersionManager {
     /**
      * singleton
      */
-    private static final VersionManager thisInstance = new VersionManager();
+    private static final VersionManager thisInstance = (VersionManager) FactoryUtil.getSingleton(VersionManager.class);
 
     /**
      * do not instanciate
      */
-    private VersionManager() {
+    public VersionManager() {
         try {
             this.createInitialStructure();
         }
@@ -62,7 +64,7 @@ public final class VersionManager extends BaseVersionManager {
     /**
      * since version is set "only revert" always return true
      * */
-    protected boolean isInvalidMaxVersions() {
+    public boolean isInvalidMaxVersions() {
         return false;
     }
 
@@ -71,10 +73,10 @@ public final class VersionManager extends BaseVersionManager {
      * @param node
      * @throws RepositoryException if failed to get VersionHistory or fail to remove
      */
-    protected void setMaxVersionHistory(Content node) throws RepositoryException {
+    public void setMaxVersionHistory(Content node) throws RepositoryException {
         VersionHistory history = node.getJCRNode().getVersionHistory();
         VersionIterator versions = history.getAllVersions();
-        long indexToRemove = versions.getSize() - 2;
+        long indexToRemove = versions.getSize() - 3;
         if (indexToRemove > 0) {
             // skip root version
             versions.nextVersion();

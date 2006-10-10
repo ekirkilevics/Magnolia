@@ -17,13 +17,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.ObservationUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -115,8 +109,7 @@ public final class Subscriber {
                 children = new ArrayList();
                 children.add(startPage);
             } catch (PathNotFoundException e) {
-                System.out.println("Fall back");
-                log.warn("No new subscriber settings found, fall back to deprecated subscriber configuration");
+                log.debug("No new subscriber settings found, fall back to subscriber list configuration");
                 startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent("subscribers");
                 children = startPage.getChildren(ItemType.CONTENTNODE);
             }
@@ -150,7 +143,7 @@ public final class Subscriber {
         // start by setting the subscribersEnabled property to false, will be reset when an active subscriber is found
         subscribersEnabled = false;
 
-        if (list.hasNext()) {
+        while (list.hasNext()) {
             Content c = (Content) list.next();
             Subscriber si = new Subscriber();
 
@@ -217,6 +210,14 @@ public final class Subscriber {
             }
             subscriberInfo.context.put(context.getName(), list);
         }
+    }
+
+    /**
+     * Get list of all configured ip.
+     * @return Enumeration
+     */
+    public static Enumeration getList() {
+        return Subscriber.cachedContent.elements();
     }
 
     /**

@@ -271,7 +271,6 @@ public final class CopyUtil {
             ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
         IOUtils.closeQuietly(inStream);
         file.delete();
-        this.removeProperties(parent.getContent(node.getName()));
     }
 
     /**
@@ -311,6 +310,7 @@ public final class CopyUtil {
                             property.getString());
                         try {
                             this.importNode(getTemporaryPath(), referencedNode);
+                            this.removeProperties(getHierarchyManager().getContentByUUID(property.getString()));
                             getTemporaryPath().save();
                         }
                         catch (IOException ioe) {

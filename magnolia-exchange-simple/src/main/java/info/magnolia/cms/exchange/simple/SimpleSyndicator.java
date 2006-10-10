@@ -46,7 +46,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     /**
      * @throws ExchangeException
      */
-    protected synchronized void activate(ActivationContent activationContent) throws ExchangeException {
+    public synchronized void activate(ActivationContent activationContent) throws ExchangeException {
         Subscriber si = Subscriber.getSubscriber();
         if (si.isActive()) {
             activate(si, activationContent);
@@ -59,7 +59,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param activationContent
      * @throws ExchangeException
      */
-    protected synchronized void activate(Subscriber subscriber, ActivationContent activationContent)
+    public synchronized void activate(Subscriber subscriber, ActivationContent activationContent)
         throws ExchangeException {
         if (!isSubscribed(subscriber)) {
             if (log.isDebugEnabled()) {
@@ -106,7 +106,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     /**
      * @throws ExchangeException
      */
-    protected synchronized void doDeActivate() throws ExchangeException {
+    public synchronized void doDeActivate() throws ExchangeException {
         Subscriber si = Subscriber.getSubscriber();
         if (si.isActive()) {
             if (log.isDebugEnabled()) {
@@ -121,7 +121,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param subscriber
      * @throws ExchangeException
      */
-    protected synchronized void doDeActivate(Subscriber subscriber) throws ExchangeException {
+    public synchronized void doDeActivate(Subscriber subscriber) throws ExchangeException {
         if (!isSubscribed(subscriber)) {
             return;
         }
