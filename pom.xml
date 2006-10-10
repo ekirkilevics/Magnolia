@@ -96,6 +96,15 @@
     <url>http://www.magnolia.info</url>
   </organization>
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>info.magnolia</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>1.0-rc1</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
@@ -103,11 +112,6 @@
           <source>1.4</source>
           <target>1.4</target>
         </configuration>
-      </plugin>
-      <plugin>
-      	<groupId>info.magnolia</groupId>
-      	<artifactId>maven-bundle-plugin</artifactId>
-      	<version>1.0-rc1</version>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
