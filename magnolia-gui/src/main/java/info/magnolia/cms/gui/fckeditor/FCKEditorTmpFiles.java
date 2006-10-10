@@ -36,7 +36,6 @@ public class FCKEditorTmpFiles {
 
     /**
      * Get a saved document
-     * @param request
      * @param uuid
      * @return the document
      */
@@ -46,7 +45,6 @@ public class FCKEditorTmpFiles {
 
     /**
      * Add a document to the session
-     * @param request
      * @param doc
      * @param uuid
      */
@@ -56,7 +54,6 @@ public class FCKEditorTmpFiles {
 
     /**
      * Remove a document.
-     * @param request
      * @param uuid
      */
     public static void removeDocument(String uuid) {
@@ -65,7 +62,6 @@ public class FCKEditorTmpFiles {
 
     /**
      * Get the map holding the document objects
-     * @param request
      * @return the map
      */
     private static Map getTmpFiles() {
