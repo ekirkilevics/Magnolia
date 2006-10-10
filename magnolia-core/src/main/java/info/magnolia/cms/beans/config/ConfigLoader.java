@@ -20,15 +20,11 @@ import info.magnolia.cms.module.Module;
 import info.magnolia.cms.security.SecureURI;
 import info.magnolia.context.MgnlContext;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Iterator;
-import java.util.Properties;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.ServletContext;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,11 +44,6 @@ public class ConfigLoader {
             return !filename.startsWith("config.modules");
         }
     }
-
-    /**
-     * 
-     */
-    private static final String MGNL_BEANS_PROPERTIES = "/mgnl-beans.properties";
 
     /**
      * Logger.
@@ -76,33 +67,6 @@ public class ConfigLoader {
      * @see SystemProperty
      */
     public ConfigLoader(ServletContext context) {
-
-        // load mgnl-beans.properties first
-        InputStream mgnlbeansStream = getClass().getResourceAsStream(MGNL_BEANS_PROPERTIES);
-        if (mgnlbeansStream != null) {
-            Properties mgnlbeans = new Properties();
-            try {
-                mgnlbeans.load(mgnlbeansStream);
-            }
-            catch (IOException e) {
-                log.error("Unable to load {} due to an IOException: {}", MGNL_BEANS_PROPERTIES, e.getMessage());
-            }
-            finally {
-                IOUtils.closeQuietly(mgnlbeansStream);
-            }
-
-            for (Iterator iter = mgnlbeans.keySet().iterator(); iter.hasNext();) {
-                String key = (String) iter.next();
-                SystemProperty.setProperty(key, mgnlbeans.getProperty(key));
-            }
-
-        }
-        else {
-            log
-                .warn(
-                    "{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.",
-                    MGNL_BEANS_PROPERTIES);
-        }
 
         if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config"))) { //$NON-NLS-1$
             try {

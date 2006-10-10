@@ -19,6 +19,7 @@ import info.magnolia.logging.Log4jConfigurer;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -136,6 +137,11 @@ public class PropertyInitializer implements ServletContextListener {
         + "WEB-INF/config/magnolia.properties"; //$NON-NLS-1$
 
     /**
+     * The properties file containing the bean default implementations
+     */
+    private static final String MGNL_BEANS_PROPERTIES = "/mgnl-beans.properties";
+    
+    /**
      * Environment-specific properties.
      */
     protected Properties envProperties = new Properties();
@@ -152,6 +158,8 @@ public class PropertyInitializer implements ServletContextListener {
      */
     public void contextInitialized(ServletContextEvent sce) {
         final ServletContext context = sce.getServletContext();
+        
+        loadBeanProperties();
 
         String propertiesLocationString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
 
@@ -164,46 +172,21 @@ public class PropertyInitializer implements ServletContextListener {
 
         String[] propertiesLocation = StringUtils.split(propertiesLocationString, ',');
 
-        String servername = null;
+        String servername = initServername();
 
-        try {
-            servername = StringUtils.lowerCase(InetAddress.getLocalHost().getHostName());
-            envProperties.put(SystemProperty.MAGNOLIA_SERVERNAME, servername);
-        }
-        catch (UnknownHostException e) {
-            log.error(e.getMessage());
-        }
-
-        String rootPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-        envProperties.put(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootPath);
+        String rootPath = initRootPath(context);
         
-        // system property initialization
-        String magnoliaRootSysproperty = (String) envProperties.get(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
-        if (StringUtils.isNotEmpty(magnoliaRootSysproperty)) {
-            System.setProperty(magnoliaRootSysproperty, rootPath);
-            log.info("Setting the magnolia root system property: [" + magnoliaRootSysproperty + "] to [" + rootPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        }
-        
-        String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
-        envProperties.put(SystemProperty.MAGNOLIA_WEBAPP, webapp);
-
-        createApplicationDirectories(webapp);
+        String webapp = initWebappName(rootPath);
 
         if (log.isDebugEnabled()) {
             log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$ 
         }
 
+        createApplicationDirectories(webapp);
+
         boolean found = false;
 
-        for (int j = propertiesLocation.length-1; j >= 0; j--) {
-            String location = StringUtils.trim(propertiesLocation[j]);
-            location = StringUtils.replace(location, "${servername}", servername); //$NON-NLS-1$
-            location = StringUtils.replace(location, "${webapp}", webapp); //$NON-NLS-1$
-
-            if(loadPropertiesFile(rootPath, location)){
-                found = true;
-            }
-        }
+        found = loadPropertiesFiles(propertiesLocation, servername, rootPath, webapp, found);
         
         overloadWithSystemProperties();
         
@@ -220,6 +203,80 @@ public class PropertyInitializer implements ServletContextListener {
 
         new ConfigLoader(context);
 
+    }
+
+    protected boolean loadPropertiesFiles(String[] propertiesLocation, String servername, String rootPath, String webapp, boolean found) {
+        for (int j = propertiesLocation.length-1; j >= 0; j--) {
+            String location = StringUtils.trim(propertiesLocation[j]);
+            location = StringUtils.replace(location, "${servername}", servername); //$NON-NLS-1$
+            location = StringUtils.replace(location, "${webapp}", webapp); //$NON-NLS-1$
+
+            if(loadPropertiesFile(rootPath, location)){
+                found = true;
+            }
+        }
+        return found;
+    }
+
+    private String initWebappName(String rootPath) {
+        String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
+        envProperties.put(SystemProperty.MAGNOLIA_WEBAPP, webapp);
+        return webapp;
+    }
+
+    protected String initRootPath(final ServletContext context) {
+        String rootPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+        envProperties.put(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootPath);
+        
+        // system property initialization
+        String magnoliaRootSysproperty = (String) envProperties.get(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
+        if (StringUtils.isNotEmpty(magnoliaRootSysproperty)) {
+            System.setProperty(magnoliaRootSysproperty, rootPath);
+            log.info("Setting the magnolia root system property: [" + magnoliaRootSysproperty + "] to [" + rootPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
+        return rootPath;
+    }
+
+    protected String initServername() {
+        String servername = null;
+
+        try {
+            servername = StringUtils.lowerCase(InetAddress.getLocalHost().getHostName());
+            envProperties.put(SystemProperty.MAGNOLIA_SERVERNAME, servername);
+        }
+        catch (UnknownHostException e) {
+            log.error(e.getMessage());
+        }
+        return servername;
+    }
+
+    protected void loadBeanProperties() {
+        // load mgnl-beans.properties first
+        InputStream mgnlbeansStream = getClass().getResourceAsStream(MGNL_BEANS_PROPERTIES);
+        if (mgnlbeansStream != null) {
+            Properties mgnlbeans = new Properties();
+            try {
+                mgnlbeans.load(mgnlbeansStream);
+            }
+            catch (IOException e) {
+                log.error("Unable to load {} due to an IOException: {}", MGNL_BEANS_PROPERTIES, e.getMessage());
+            }
+            finally {
+                IOUtils.closeQuietly(mgnlbeansStream);
+            }
+
+            for (Iterator iter = mgnlbeans.keySet().iterator(); iter.hasNext();) {
+                String key = (String) iter.next();
+                SystemProperty.setProperty(key, mgnlbeans.getProperty(key));
+            }
+
+        }
+        else {
+            log
+                .warn(
+                    "{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.",
+                    MGNL_BEANS_PROPERTIES);
+        }
     }
 
     /**
