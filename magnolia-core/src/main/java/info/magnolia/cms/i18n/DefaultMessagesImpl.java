@@ -47,6 +47,9 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
      * @return message
      */
     public String get(String key) {
+        if(key == null){
+            return "??????";
+        }
         try {
             return getBundle().getString(key);
         }
