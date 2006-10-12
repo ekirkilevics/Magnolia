@@ -112,6 +112,19 @@
           <source>1.4</source>
           <target>1.4</target>
         </configuration>
+        <executions>
+          <execution>
+            <id>compile-tests</id>
+            <phase>process-test-sources</phase>
+            <goals>
+              <goal>testCompile</goal>
+            </goals>
+            <configuration>
+              <source>1.5</source>
+              <target>1.5</target>
+            </configuration>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
@@ -531,9 +544,9 @@
         <scope>test</scope>
       </dependency>
       <dependency>
-        <groupId>mockrunner</groupId>
-        <artifactId>mockrunner</artifactId>
-        <version>0.3.1</version>
+        <groupId>org.easymock</groupId>
+        <artifactId>easymock</artifactId>
+        <version>2.2</version>
         <scope>test</scope>
       </dependency>
     </dependencies>

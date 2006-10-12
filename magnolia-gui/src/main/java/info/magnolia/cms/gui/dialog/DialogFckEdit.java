@@ -350,7 +350,7 @@ public class DialogFckEdit extends DialogBox {
      * @param value
      * @return
      */
-    private String convertToView(String value) {
+    protected String convertToView(String value) {
         String tmp = value;
         if (tmp != null) {
             tmp = tmp.replaceAll("\r\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -366,7 +366,7 @@ public class DialogFckEdit extends DialogBox {
                 String src = matcher.group(4);
 
                 // process only internal and relative links
-                if (!Pattern.matches("^\\w*://.*", src) && !src.startsWith("/")) {
+                if (isInternalRelativeLink(src)) {
                     String link = this.getRequest().getContextPath()
                         + this.getTopParent().getConfigValue("path")
                         + "/"
@@ -380,6 +380,11 @@ public class DialogFckEdit extends DialogBox {
         }
 
         return StringUtils.EMPTY;
+    }
+
+    protected boolean isInternalRelativeLink(String href) {
+        // TODO : this could definitely be improved
+        return !Pattern.matches("^(\\w*://|mailto:).*", href) && !href.startsWith("/") && !href.startsWith("#");
     }
 
     /**
