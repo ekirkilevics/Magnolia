@@ -10,8 +10,6 @@ import openwfe.org.jcr.Item;
 import openwfe.org.jcr.JcrException;
 import openwfe.org.jcr.Node;
 import openwfe.org.jcr.Property;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import java.io.InputStream;
