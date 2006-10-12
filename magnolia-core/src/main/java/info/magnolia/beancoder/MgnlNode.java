@@ -10,12 +10,10 @@ import openwfe.org.jcr.Item;
 import openwfe.org.jcr.JcrException;
 import openwfe.org.jcr.Node;
 import openwfe.org.jcr.Property;
-
-import javax.jcr.RepositoryException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.Iterator;
@@ -24,11 +22,6 @@ import java.util.Iterator;
  * Magnolia wrapper for a node.
  */
 public class MgnlNode implements Node {
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(MgnlNode.class);
-    
     Content mnode;
 
     public MgnlNode(Content mnode)  {
@@ -217,8 +210,11 @@ public class MgnlNode implements Node {
     }
 
     public void remove() throws JcrException {
-        // FIXME What should this method do? Please implement it.
-        log.error("FIXME: implement this method");
-        
+        try {
+            this.mnode.delete();
+        } catch (RepositoryException e) {
+            throw new JcrException(e.getMessage(),e);
+        }
+
     }
 }
