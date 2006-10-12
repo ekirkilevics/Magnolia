@@ -48,7 +48,12 @@ public final class LinkUtil {
     /**
      * Pattern to find a link
      */
-    private static Pattern linkPattern = Pattern.compile("(<a[^>]+href[ ]*=[ ]*\")(/[^\"]*).html((#[^\"]*)?\"[^>]*>)"); //$NON-NLS-1$
+    private static final Pattern linkPattern = Pattern.compile("(<a[^>]+href[ ]*=[ ]*\")(/[^\"]*).html((#[^\"]*)?\"[^>]*>)"); //$NON-NLS-1$
+
+    /**
+     * Pattern that matches external and mailto: links.
+     */
+    private static final Pattern externalLinkPattern = Pattern.compile("^(\\w*://|mailto:).*");
 
     /**
      * Pattern to find a magnolia formatted link
@@ -62,6 +67,14 @@ public final class LinkUtil {
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(LinkUtil.class);
+
+    /**
+     * Determines if the given link is internal and relative.
+     */
+    public static boolean isInternalRelativeLink(String href) {
+        // TODO : this could definitely be improved
+        return !externalLinkPattern.matcher(href).matches() && !href.startsWith("/") && !href.startsWith("#");
+    }
 
     /**
      * Transforms all the links to the magnolia format. Used during storing.

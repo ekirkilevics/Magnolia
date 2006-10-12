@@ -366,7 +366,7 @@ public class DialogFckEdit extends DialogBox {
                 String src = matcher.group(4);
 
                 // process only internal and relative links
-                if (isInternalRelativeLink(src)) {
+                if (LinkUtil.isInternalRelativeLink(src)) {
                     String link = this.getRequest().getContextPath()
                         + this.getTopParent().getConfigValue("path")
                         + "/"
@@ -380,11 +380,6 @@ public class DialogFckEdit extends DialogBox {
         }
 
         return StringUtils.EMPTY;
-    }
-
-    protected boolean isInternalRelativeLink(String href) {
-        // TODO : this could definitely be improved
-        return !Pattern.matches("^(\\w*://|mailto:).*", href) && !href.startsWith("/") && !href.startsWith("#");
     }
 
     /**

@@ -15,8 +15,8 @@ package info.magnolia.cms.gui.dialog;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author gjoseph
@@ -112,31 +112,5 @@ public class DialogFckEditTest extends TestCase {
         assertEquals("<a href=\"mailto:lieutenant@columbo.net\">mail me !</a>", d.convertToView("<a href=\"mailto:lieutenant@columbo.net\">mail me !</a>"));
 
         verify(mockReq);
-    }
-
-    public void testInternalRelativeLinksAreProperlyDetermined() {
-        final DialogFckEdit d = new DialogFckEdit();
-        assertTrue(d.isInternalRelativeLink("foo"));
-        assertTrue(d.isInternalRelativeLink("foo/bar"));
-        assertTrue(d.isInternalRelativeLink("foo/bar.gif"));
-
-        assertFalse(d.isInternalRelativeLink("/foo"));
-        assertFalse(d.isInternalRelativeLink("/foo/bar"));
-        assertFalse(d.isInternalRelativeLink("/foo/bar.gif"));
-        
-        assertFalse(d.isInternalRelativeLink("http://foo.com/bar.gif"));
-        assertFalse(d.isInternalRelativeLink("http://foo.com/bar/baz.gif"));
-        assertFalse(d.isInternalRelativeLink("http://foo.com/bar/"));
-        assertFalse(d.isInternalRelativeLink("http://foo.com/bar"));
-        assertFalse(d.isInternalRelativeLink("http://foo.com/"));
-        assertFalse(d.isInternalRelativeLink("http://foo.com"));
-        assertFalse(d.isInternalRelativeLink("https://foo.com"));
-        assertFalse(d.isInternalRelativeLink("https://foo.com/bar"));
-        assertFalse(d.isInternalRelativeLink("ftp://user:pass@server.com/foo/bar"));
-
-        assertFalse(d.isInternalRelativeLink("mailto:murdock@a-team.org"));
-
-        assertFalse(d.isInternalRelativeLink("#anchor"));
-        assertFalse(d.isInternalRelativeLink("#another-anchor"));
     }
 }
