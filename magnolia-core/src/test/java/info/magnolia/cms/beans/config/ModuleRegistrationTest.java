@@ -7,20 +7,13 @@ import java.net.URL;
 
 import junit.framework.TestCase;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
 public class ModuleRegistrationTest extends TestCase {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ModuleRegistrationTest.class);
+    private static final File MGNL_CORE_ROOT = new File(ModuleRegistrationTest.class.getResource("/testresource.txt").getFile()).
+            getParentFile().getParentFile().getParentFile();
 
     /**
      * @see junit.framework.TestCase#setUp()
@@ -36,6 +29,7 @@ public class ModuleRegistrationTest extends TestCase {
 
         assertNotNull("Unable to find jar", moduleRoot);
         assertTrue("Jar " + moduleRoot.getAbsolutePath() + " does not exist", moduleRoot.exists());
+        assertEquals(MGNL_CORE_ROOT, moduleRoot);
     }
 
     public void testGetModuleRootJarWIthDot() {
@@ -44,6 +38,7 @@ public class ModuleRegistrationTest extends TestCase {
 
         assertNotNull("Unable to find jar", moduleRoot);
         assertTrue("Jar " + moduleRoot.getAbsolutePath() + " does not exist", moduleRoot.exists());
+        assertEquals(new File(MGNL_CORE_ROOT, "target"), moduleRoot);
     }
 
     public void testGetModuleRootDirectory() {
@@ -51,6 +46,7 @@ public class ModuleRegistrationTest extends TestCase {
 
         assertNotNull(moduleRoot);
         assertTrue(moduleRoot.exists());
+        assertEquals(MGNL_CORE_ROOT, moduleRoot);
     }
 
     public void testGetModuleRootDirectoryWithDot() {
@@ -58,6 +54,6 @@ public class ModuleRegistrationTest extends TestCase {
 
         assertNotNull(moduleRoot);
         assertTrue(moduleRoot.exists());
+        assertEquals(new File(MGNL_CORE_ROOT, "target"), moduleRoot);
     }
-
 }

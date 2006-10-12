@@ -26,8 +26,6 @@ import java.io.File;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -125,30 +123,17 @@ public class ModuleRegistration {
      * @return module root
      */
     protected File getModuleRoot(URL xmlUrl) {
-        String xmlString = xmlUrl.getFile();
-        File moduleRoot = null;
+        final String path = xmlUrl.getFile();
 
-        if (StringUtils.contains(xmlString, ".jar!")) {
-            xmlString = StringUtils.substringBefore(xmlString, ".jar!") + ".jar";
-            try {
-                moduleRoot = new File(new URI(xmlString));
-            }
-            catch (URISyntaxException e) {
-                // should never happen
-                log.error(e.getMessage(), e);
-            }
+        final boolean withinJar = StringUtils.contains(path, ".jar!");
+        if (withinJar) {
+            final String jarPath = StringUtils.substringBefore(path, ".jar!") + ".jar";
+            return new File(jarPath);
+        } else {
+            final File xmlFile = new File(path);
+            // module.jar!:META-INF/magnolia/module-name.xml
+            return xmlFile.getParentFile().getParentFile().getParentFile();
         }
-        else {
-            try {
-                File xmlFile = new File(new URI(xmlUrl.toString()));
-                moduleRoot = xmlFile.getParentFile().getParentFile().getParentFile();
-            }
-            catch (URISyntaxException e) {
-                // should never happen
-                log.error(e.getMessage(), e);
-            }
-        }
-        return moduleRoot;
     }
 
     /**
