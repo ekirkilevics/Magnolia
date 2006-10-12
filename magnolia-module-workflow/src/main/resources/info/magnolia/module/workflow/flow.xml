@@ -1,5 +1,7 @@
 <process-definition name="activation" revision="j0.0.2">
   <sequence>
+    <set field="activator" field-value="userName"/>
+
     <!--  go to publisher first -->
     <participant ref="group-publisher"/>
 
@@ -7,7 +9,6 @@
     <if test="${field:action} == reject">
       <revision-round/>
     </if>
-
 
     <log message="activate: ${field:action}"/>
 
@@ -19,7 +20,6 @@
 
   <process-definition name="revision-round">
     <loop>
-
       <while test="${field:action} == reject"/>
 
       <to-editor/>
@@ -38,7 +38,11 @@
   </process-definition>
 
   <process-definition name="to-editor">
-    <participant ref="group-editor"/>
+    <sequence>
+      <!-- assign back to the user who launched the activation -->
+      <set field="assignTo" field-value="activator"/>
+      <participant ref="group-editor"/>
+    </sequence>
   </process-definition>
 
   <process-definition name="activate">
