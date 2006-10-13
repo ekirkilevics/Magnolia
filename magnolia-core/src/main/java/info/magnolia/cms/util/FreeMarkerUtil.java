@@ -48,6 +48,7 @@ public class FreeMarkerUtil {
         cfg.setObjectWrapper(ObjectWrapper.DEFAULT_WRAPPER);
         cfg.setClassForTemplateLoading(FreeMarkerUtil.class, "/");
         cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
+        cfg.setDefaultEncoding("UTF8");
     }
 
     /**
