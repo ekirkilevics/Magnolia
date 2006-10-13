@@ -10,9 +10,6 @@
             <version>3.0</version>
         </dependency>
     </dependencies>
-    <bootstrap-files>
-        <bootstrap-file>config.modules.adminInterface.config.menu.dms.xml</bootstrap-file>
-    </bootstrap-files>
     <servlets>
         <servlet>
             <name>DMSDownloadServlet</name>
