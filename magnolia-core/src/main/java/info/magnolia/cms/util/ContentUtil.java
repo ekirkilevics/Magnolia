@@ -68,7 +68,7 @@ public class ContentUtil {
      */
     public static ContentFilter EXCLUDE_META_DATA_CONTENT_FILTER = new ContentFilter() {
         public boolean accept(Content content) {
-            return !content.isNodeType(ItemType.NT_METADATA);
+            return !content.getName().startsWith("jcr:") && !content.isNodeType(ItemType.NT_METADATA);
         }
     };
 
@@ -250,8 +250,12 @@ public class ContentUtil {
     }
     
     public static void visit(Content node, Visitor visitor) throws Exception{
+        visit(node, visitor, EXCLUDE_META_DATA_CONTENT_FILTER);
+    }
+    
+    public static void visit(Content node, Visitor visitor, ContentFilter filter) throws Exception{
         visitor.visit(node);
-        for (Iterator iter = getAllChildren(node).iterator(); iter.hasNext();) {
+        for (Iterator iter = node.getChildren(filter).iterator(); iter.hasNext();) {
             visit((Content) iter.next(), visitor);
         }
     }
