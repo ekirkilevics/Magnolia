@@ -28,13 +28,11 @@ public class FreemarkerEmail extends HtmlEmail {
     static {
         cfg.setObjectWrapper(new DefaultObjectWrapper());
         try {
-            // FileTemplateLoader ftl1 = new FileTemplateLoader(new File("/tmp/templates"));
-            // FileTemplateLoader ftl2 = new FileTemplateLoader(new File("/usr/data/templates"));
             ClassTemplateLoader ctl = new ClassTemplateLoader(FreemarkerEmail.class, "/");
-            // TemplateLoader[] loaders = new TemplateLoader[]{ftl1, ftl2, ctl};
             TemplateLoader[] loaders = new TemplateLoader[]{ctl};
             MultiTemplateLoader mtl = new MultiTemplateLoader(loaders);
             cfg.setTemplateLoader(mtl);
+            cfg.setDefaultEncoding("UTF8");
         }
         catch (Exception e) {
             log.error("Error while loading freemarker configuration", e);
