@@ -5,8 +5,8 @@
   <jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
   <cms:setNode var="pageProperties" />
   <c:if test="${!empty(param.sendmail)}">
-    <cmsu:simpleMail to="${pageProperties.to}" from="${pageProperties.from}" cc="${pageProperties.cc}"
-      bcc="${pageProperties.cc}" replyTo="${pageProperties.replyTo}" trackMail="${pageProperties.trackMail}" redirect="${pageProperties.redirect}" subject="${pageProperties.subject}"
+    <cmsu:simpleMail  to="${pageProperties.to}" from="${pageProperties.from}" cc="${pageProperties.cc}"
+      bcc="${pageProperties.cc}" replyTo="${pageProperties.replyTo}" logging="${pageProperties.trackMail}" redirect="${pageProperties.redirect}" subject="${pageProperties.subject}"
       nodeCollectionName="mainColumnParagraphs" />
   </c:if>
   <jsp:text>
