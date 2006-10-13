@@ -139,7 +139,7 @@
         <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
             <param name="path" value="${wsp.home}/default" />
         </FileSystem>
-        <PersistenceManager class="org.apache.jackrabbit.core.state.bdb.BerkeleyDBPersistenceManager" />
+        <PersistenceManager class="info.magnolia.state.berkeley.BerkeleyDBPersistenceManager" />
         <SearchIndex class="org.apache.jackrabbit.core.query.lucene.SearchIndex">
             <param name="textFilterClasses" value="org.apache.jackrabbit.core.query.MsExcelTextFilter,org.apache.jackrabbit.core.query.MsPowerPointTextFilter,org.apache.jackrabbit.core.query.MsWordTextFilter,org.apache.jackrabbit.core.query.PdfTextFilter,org.apache.jackrabbit.core.query.HTMLTextFilter,org.apache.jackrabbit.core.query.XMLTextFilter,org.apache.jackrabbit.core.query.RTFTextFilter" />
             <param name="path" value="${wsp.home}/index" />
@@ -155,6 +155,6 @@
         <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
             <param name="path" value="${rep.home}/workspaces/version" />
         </FileSystem>
-        <PersistenceManager class="org.apache.jackrabbit.core.state.bdb.BerkeleyDBPersistenceManager" />
+        <PersistenceManager class="info.magnolia.state.berkeley.BerkeleyDBPersistenceManager" />
     </Versioning>
 </Repository>
