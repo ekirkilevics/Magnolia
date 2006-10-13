@@ -9,6 +9,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Address;
@@ -39,6 +41,8 @@ public abstract class MgnlEmail extends MimeMessage {
     protected static final String TEXT_HTML_UTF = "text/html; charset=UTF-8";
 
     protected static final String CHARSET_HEADER_STRING = "charset=";
+    
+    protected static final Pattern EMAIL_WITH_PERSONAL_PATTERN = Pattern.compile("\"+(.*)\"+<(.*)>");
 
     public static Logger log = LoggerFactory.getLogger(MgnlEmail.class);
 
@@ -99,7 +103,17 @@ public abstract class MgnlEmail extends MimeMessage {
      */
     public void setFrom(String _from) {
         try {
-            this.setFrom(new InternetAddress(_from));
+        	InternetAddress address;
+        	Matcher matcher = MgnlEmail.EMAIL_WITH_PERSONAL_PATTERN.matcher(_from);
+        	if(matcher.matches()){
+           		String email = matcher.group(2);
+        		String personal = matcher.group(1);
+        		address = new InternetAddress(email, personal, "UTF8");
+        	}
+        	else{
+        		address = new InternetAddress(_from);
+        	}
+            this.setFrom(address);
         }
         catch (Exception e) {
             log.error("Could not set from field of email:" + e.getMessage());
