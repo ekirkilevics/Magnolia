@@ -457,7 +457,13 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             this.next = fetchNext();
 
             if (log.isDebugEnabled()) {
-                log.debug("next() is  "+this.next.getId());
+
+                if (this.next == null) {
+                    log.debug("next() is 'null'");
+                }
+                else {
+                    log.debug("next() is  "+this.next.getId());
+                }
             }
 
             return current;
