@@ -288,8 +288,10 @@ public class MgnlContext {
         Context context = (Context) localContext.get();
         // It should never fall back, We need to fix all false callers instead
         if (context == null) {
-            log.warn("MgnlContext is not set, returning null", new Exception()); // log call stack
-            return null;
+            log.error("MgnlContext is not initialized, This could happen if the request does not go through magnolia " +
+                    "default filters");
+            log.error("See : MgnlContext.setInstance(Content context)");
+            throw new IllegalStateException("MgnlContext is not set for this thread");
         }
         return context;
     }
