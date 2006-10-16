@@ -285,15 +285,12 @@ public class MgnlContext {
      * @return the context
      */
     public static Context getInstance() {
-
         Context context = (Context) localContext.get();
-
-        // @todo temporary patch to avoid NPEs
+        // It should never fall back, We need to fix all false callers instead
         if (context == null) {
-            log.warn("Context is not set, defaulting to System Context", new Exception()); // log call stack
-            return MgnlContext.getSystemContext();
+            log.warn("MgnlContext is not set, returning null", new Exception()); // log call stack
+            return null;
         }
-
         return context;
     }
 
@@ -325,7 +322,7 @@ public class MgnlContext {
 
     /**
      * Returns the web context, also if eventually wrapped in a ContextDecorator.
-     * @param original web context
+     * @param ctx
      * @return WebContext instance or null if no web context is set
      */
     private static WebContext getWebContextIfExisting(Context ctx) {
