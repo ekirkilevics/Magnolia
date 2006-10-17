@@ -107,7 +107,7 @@
         <sv:value>2006-03-21T17:04:13.824+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="value" sv:type="String">
-        <sv:value>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;&lt;process-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.openwfe.org/flowdef_r1.5.0.xsd" name="webActivation" revision="1.0"&gt;&lt;description language="default"&gt;worflow for web activation process.&lt;/description&gt;&lt;sequence&gt;&lt;participant ref="user-superuser" /&gt;&lt;participant ref="command-activate" /&gt;&lt;/sequence&gt;&lt;/process-definition&gt;</sv:value>
+        <sv:value>&lt;?xml version="1.0" encoding="UTF-8" ?&gt;&lt;process-definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://www.openwfe.org/flowdef.xsd" name="webActivation" revision="1.0"&gt;&lt;description language="default"&gt;worflow for web activation process.&lt;/description&gt;&lt;sequence&gt;&lt;participant ref="user-superuser" /&gt;&lt;participant ref="command-activate" /&gt;&lt;/sequence&gt;&lt;/process-definition&gt;</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
