@@ -41,6 +41,12 @@ public class CacheImpl implements Cache {
      */
     private Map cachedURIList = new Hashtable();
 
+    /**
+     * This is used to syncronize between cache flushing and creating
+     * We cannot use syncronized blocks here because it will block other threads even to cache simultaniusly
+     * */
+    private static boolean currentlyRemoving;
+
     private CacheConfig config;
 
     /**
@@ -50,6 +56,11 @@ public class CacheImpl implements Cache {
      * @param canCompress
      */
     public void cacheRequest(CacheKey key, CacheableEntry entry, boolean canCompress) {
+        // This implementation flushes entire cache, its safe to simply check on one flag, for other
+        // implementations we need to check and synchronize on CacheKey
+        if (currentlyRemoving) {
+            return; // simply ignore this cache request
+        }
         int compressedSize = 0;
         File file = getFile(key, false);
 
@@ -104,9 +115,10 @@ public class CacheImpl implements Cache {
         addToCachedURIList(key, new Date().getTime(), (int) file.length(), compressedSize);
     }
 
-    public void flush() {
+    public synchronized void flush() {
         try {
             File cacheDir = getCacheDirectory();
+            currentlyRemoving = true;
             if (cacheDir.exists() && cacheDir.isDirectory()) {
                 FileUtils.deleteDirectory(cacheDir);
             }
@@ -117,8 +129,10 @@ public class CacheImpl implements Cache {
             // clear in-memory cache also
             clearCachedURIList();
         }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
+        catch (Throwable t) {
+            log.error(t.getMessage(), t);
+        } finally {
+            currentlyRemoving = false;
         }
     }
 
