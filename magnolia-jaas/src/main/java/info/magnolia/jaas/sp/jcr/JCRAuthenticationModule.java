@@ -28,6 +28,7 @@ import javax.security.auth.callback.NameCallback;
 import javax.security.auth.callback.PasswordCallback;
 import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
+import javax.security.auth.login.FailedLoginException;
 
 import org.apache.commons.codec.binary.Base64;
 import org.slf4j.Logger;
@@ -84,7 +85,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
             throw new LoginException(ce.getCallback().toString() + " not available");
         }
         if (!this.success) {
-            throw new LoginException("failed to authenticate " + this.name);
+            throw new FailedLoginException("failed to authenticate " + this.name);
         }
 
         return this.success;

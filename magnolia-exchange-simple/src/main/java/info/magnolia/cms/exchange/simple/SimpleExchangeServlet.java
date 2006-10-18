@@ -412,7 +412,7 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @param request
      * @throws AccessDeniedException
      */
-    private void validateRequest(HttpServletRequest request) throws AccessDeniedException {
+    private void validateRequest(HttpServletRequest request) throws Exception {
         if (ConfigLoader.isConfigured() && (!Listener.isAllowed(request) || !Authenticator.authenticate(request))) {
             throw new AccessDeniedException("Either server not configured or user is not valid");
         }

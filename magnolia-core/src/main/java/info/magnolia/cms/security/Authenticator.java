@@ -19,6 +19,7 @@ import info.magnolia.cms.security.auth.PlainTextCallbackHandler;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
+import javax.security.auth.login.FailedLoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -76,7 +77,7 @@ public final class Authenticator {
      * @param request as received by the servlet engine
      * @return boolean
      */
-    public static boolean authenticate(HttpServletRequest request) {
+    public static boolean authenticate(HttpServletRequest request) throws Exception {
         String credentials = request.getHeader("Authorization");
         String userid;
         String pswd;
@@ -116,20 +117,18 @@ public final class Authenticator {
             // ok, we NEED a session here since the user has been authenticated
             HttpSession httpsession = request.getSession(true);
             httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
-        }
-        catch (LoginException le) {
-
+        } catch (FailedLoginException fle) {
             request.setAttribute(MGNL_LOGIN_ERROR, Boolean.TRUE);
-
             if (log.isDebugEnabled()) {
-                log.debug("Exception caught", le);
+                log.debug("Wrong credentials", fle);
             }
-
             HttpSession httpsession = request.getSession(false);
             if (httpsession != null) {
                 httpsession.invalidate();
             }
             return false;
+        } catch (LoginException le) {
+            throw le;
         }
 
         return true;
