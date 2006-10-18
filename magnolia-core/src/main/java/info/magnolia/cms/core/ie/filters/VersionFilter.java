@@ -26,12 +26,16 @@ public class VersionFilter extends XMLFilterImpl {
     }
 
     public static String[] FILTERED_PROPERTIES = new String[]{//
-    "jcr:predecessors", // version
+        "jcr:predecessors", // version
         "jcr:baseVersion", // version
         "jcr:versionHistory", // version
         "jcr:isCheckedOut", // useless
         "jcr:created", // useless
         "mgnl:sequenceposition" // old
+    };
+
+    public static String[] FILTERED_NODES = new String[]{//
+        "jcr:system", // jcr system
     };
 
     /**
@@ -66,7 +70,13 @@ public class VersionFilter extends XMLFilterImpl {
             inVersionElement++;
             return;
         }
-        if ("sv:property".equals(qName)) { //$NON-NLS-1$
+        if ("sv:node".equals(qName)) { //$NON-NLS-1$
+            String attName = atts.getValue("sv:name"); //$NON-NLS-1$
+            if (attName != null && ArrayUtils.contains(FILTERED_NODES, attName)) {
+                inVersionElement++;
+                return;
+            }
+        } else if ("sv:property".equals(qName)) { //$NON-NLS-1$
             String attName = atts.getValue("sv:name"); //$NON-NLS-1$
             if (attName != null && ArrayUtils.contains(FILTERED_PROPERTIES, attName)) {
                 inVersionElement++;
