@@ -37,37 +37,14 @@ To make things smoother :
   (you have to make sure there's no other 'java_home bin' in your PATH)
 
 
-* if for some reason, a test suite doesn't run, erase its test/ dir
-  (dirty workaround but may spare you time)
+* if for some reason, a test suite doesn't run, erase its test/ dir.
+  (dirty workaround but may spare you time) Please report this in Jira
+  and/or the developers mailing list.
 
 
-* sometimes only a Java 5 will do for building. Apart from the steps 
-  just listed, you have to modify the pom.xml to make it point
-  to java 5 :
-
----8<---
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.5</source>
-          <target>1.5</target>
-        </configuration>
-        <executions>
-          <execution>
-            <id>compile-tests</id>
-            <phase>process-test-sources</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-            <configuration>
-              <source>1.5</source>
-              <target>1.5</target>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
---->8---
-
+* Java 5 is required for building. The reason is we use it for unit tests.
+  This has no impact on production code, which is compiled for Java 1.4.
+  See the main pom.xml for details on how this is done.
 
 
 
