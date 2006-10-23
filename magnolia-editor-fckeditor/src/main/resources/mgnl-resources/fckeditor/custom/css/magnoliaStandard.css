@@ -22,13 +22,13 @@
 
 body {
     background-color: #fff;
-	padding: 5px 5px 5px 5px;
-	margin: 0px;
-	border-style: none;
-	background-color: white;
+    padding: 5px 5px 5px 5px;
+    margin: 0px;
+    border-style: none;
+    background-color: white;
 }
 
-body,p,div,h1,h2,td,ul,li {
+body, p, div, h1, h2, td, ul, li {
     font-family: Verdana, sans-serif;
     color: #000;
     font-size: 11px;
