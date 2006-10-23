@@ -1,6 +1,6 @@
 ﻿/*
  * FCKeditor - The text editor for internet
- * Copyright (C) 2003-2005 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2006 Frederico Caldeira Knabben
  * 
  * Licensed under the terms of the GNU Lesser General Public License:
  * 		http://www.opensource.org/licenses/lgpl-license.php
@@ -15,6 +15,7 @@
  * 
  * File Authors:
  * 		Frederico Caldeira Knabben (fredck@fckeditor.net)
+ * 		Dominik Pesch ?dom? (empty selection patch) (d.pesch@11com7.de)
  */
 
 var oEditor		= window.parent.InnerDialogLoaded() ;
@@ -43,6 +44,8 @@ function OnDialogTabChange( tabCode )
 	ShowE('divTarget'	, ( tabCode == 'Target' ) ) ;
 	ShowE('divUpload'	, ( tabCode == 'Upload' ) ) ;
 	ShowE('divAttribs'	, ( tabCode == 'Advanced' ) ) ;
+
+	window.parent.SetAutoSize( true ) ;
 }
 
 //#### Regular Expressions library.
@@ -175,12 +178,12 @@ function LoadAnchorNamesAndIds()
 	{
 		var sName = aAnchors[i].name ;
 		if ( sName && sName.length > 0 )
-			oEditor.FCKTools.AddSelectOption( document, GetE('cmbAnchorName'), sName, sName ) ;
+			oEditor.FCKTools.AddSelectOption( GetE('cmbAnchorName'), sName, sName ) ;
 	}
 
 	for ( var i = 0 ; i < aIds.length ; i++ )
 	{
-		oEditor.FCKTools.AddSelectOption( document, GetE('cmbAnchorId'), aIds[i], aIds[i] ) ;
+		oEditor.FCKTools.AddSelectOption( GetE('cmbAnchorId'), aIds[i], aIds[i] ) ;
 	}
 
 	ShowE( 'divSelAnchor'	, bHasAnchors ) ;
@@ -194,12 +197,10 @@ function LoadSelection()
 	var sType = 'url' ;
 
 	// Get the actual Link href.
-	var sHRef = oLink.getAttribute('href',2) + '' ;
-
-	// TODO: Wait stable version and remove the following commented lines.
-//	if ( sHRef.startsWith( FCK.BaseUrl ) )
-//		sHRef = sHRef.remove( 0, FCK.BaseUrl.length ) ;
-
+	var sHRef = oLink.getAttribute( '_fcksavedurl' ) ;
+	if ( sHRef == null )
+		sHRef = oLink.getAttribute( 'href' , 2 ) + '' ;
+	
 	// Look for a popup javascript link.
 	var oPopupMatch = oRegex.PopupUri.exec( sHRef ) ;
 	if( oPopupMatch )
@@ -236,7 +237,7 @@ function LoadSelection()
 			GetE('txtUrl').value = sUrl ;
 		}
 	}
-	else if ( sHRef.substr(0,1) == '#' && sHRef.length > 2 )	// It is an anchor link.
+	else if ( sHRef.substr(0,1) == '#' && sHRef.length > 1 )	// It is an anchor link.
 	{
 		sType = 'anchor' ;
 		GetE('cmbAnchorName').value = GetE('cmbAnchorId').value = sHRef.substr(1) ;
@@ -425,7 +426,7 @@ function FillPopupFields( windowName, features )
 //#### The OK button was hit.
 function Ok()
 {
-	var sUri ;
+	var sUri, sInnerHtml ;
 
 	switch ( GetE('cmbLinkType').value )
 	{
@@ -441,7 +442,16 @@ function Ok()
 			sUri = GetE('cmbLinkProtocol').value + sUri ;
 
 			if( GetE('cmbTarget').value == 'popup' )
+			{
+				// Check the window name, according to http://www.w3.org/TR/html4/types.html#type-frame-target (IE throw erros with spaces).
+				if ( /(^[^a-zA-Z])|(\s)/.test( GetE('txtPopupName').value ) )
+				{
+					alert( FCKLang.DlnLnkMsgInvPopName ) ;
+					return false ;
+				}
+				
 				sUri = BuildPopupUri( sUri ) ;
+			}
 
 			break ;
 
@@ -474,17 +484,50 @@ function Ok()
 			break ;
 	}
 
-	if ( oLink )	// Modifying an existent link.
-	{
-		oEditor.FCKUndo.SaveUndoStep() ;
-		oLink.href = sUri ;
-	}
-	else			// Creating a new link.
-	{
+	// No link selected, so try to create one.
+	if ( !oLink )
 		oLink = oEditor.FCK.CreateLink( sUri ) ;
-		if ( ! oLink )
-			return true ;
+	
+	if ( oLink )
+		sInnerHtml = oLink.innerHTML ;		// Save the innerHTML (IE changes it if it is like an URL).
+	else
+	{
+		// If no selection, use the uri as the link text (by dom, 2006-05-26)
+
+		sInnerHtml = sUri;
+
+		// Built a better text for empty links.
+		switch ( GetE('cmbLinkType').value )
+		{
+			// anchor: use old behavior --> return true
+			case 'anchor':
+				sInnerHtml = sInnerHtml.replace( /^#/, '' ) ;
+				break ;
+
+			// url: try to get path
+			case 'url':
+				var oLinkPathRegEx = new RegExp("//?([^?\"']+)([?].*)?$") ;
+				var asLinkPath = oLinkPathRegEx.exec( sUri ) ;
+				if (asLinkPath != null)
+					sInnerHtml = asLinkPath[1];  // use matched path
+				break ;
+
+			// mailto: try to get email address
+			case 'email':
+				sInnerHtml = GetE('txtEMailAddress').value ;
+				break ;
+		}
+
+		// Create a new (empty) anchor.
+		oLink = oEditor.FCK.CreateElement( 'a' ) ;
 	}
+
+	oEditor.FCKUndo.SaveUndoStep() ;
+
+	oLink.href = sUri ;
+	SetAttribute( oLink, '_fcksavedurl', sUri ) ;
+
+	oLink.innerHTML = sInnerHtml ;		// Set (or restore) the innerHTML
 
 	// Target
 	if( GetE('cmbTarget').value != 'popup' )
@@ -500,44 +543,29 @@ function Ok()
 	SetAttribute( oLink, 'accesskey', GetE('txtAttAccessKey').value ) ;
 	SetAttribute( oLink, 'tabindex'	, ( GetE('txtAttTabIndex').value > 0 ? GetE('txtAttTabIndex').value : null ) ) ;
 	SetAttribute( oLink, 'title'	, GetE('txtAttTitle').value ) ;
-	SetAttribute( oLink, 'class'	, GetE('txtAttClasses').value ) ;
 	SetAttribute( oLink, 'type'		, GetE('txtAttContentType').value ) ;
 	SetAttribute( oLink, 'charset'	, GetE('txtAttCharSet').value ) ;
 
 	if ( oEditor.FCKBrowserInfo.IsIE )
+	{
+		SetAttribute( oLink, 'className', GetE('txtAttClasses').value ) ;
 		oLink.style.cssText = GetE('txtAttStyle').value ;
+	}
 	else
+	{
+		SetAttribute( oLink, 'class', GetE('txtAttClasses').value ) ;
 		SetAttribute( oLink, 'style', GetE('txtAttStyle').value ) ;
+	}
 
+	// Select the link.
+	oEditor.FCKSelection.SelectNode(oLink);
+	
 	return true ;
 }
 
 function BrowseServer()
 {
-	// Set the browser window feature.
-	var iWidth	= FCKConfig.LinkBrowserWindowWidth ;
-	var iHeight	= FCKConfig.LinkBrowserWindowHeight ;
-
-	var iLeft = (FCKConfig.ScreenWidth  - iWidth) / 2 ;
-	var iTop  = (FCKConfig.ScreenHeight - iHeight) / 2 ;
-
-	var sOptions = "toolbar=no,status=no,resizable=yes,dependent=yes" ;
-	sOptions += ",width=" + iWidth ;
-	sOptions += ",height=" + iHeight ;
-	sOptions += ",left=" + iLeft ;
-	sOptions += ",top=" + iTop ;
-
-	if ( oEditor.FCKBrowserInfo.IsIE )
-	{
-		// The following change has been made otherwise IE will open the file 
-		// browser on a different server session (on some cases):
-		// http://support.microsoft.com/default.aspx?scid=kb;en-us;831678
-		// by Simone Chiaretta.
-		var oWindow = oEditor.window.open( FCKConfig.LinkBrowserURL, "FCKBrowseWindow", sOptions ) ;
-		oWindow.opener = window ;
-    }
-    else
-		window.open( FCKConfig.LinkBrowserURL, "FCKBrowseWindow", sOptions ) ;
+	OpenFileBrowser( FCKConfig.LinkBrowserURL, FCKConfig.LinkBrowserWindowWidth, FCKConfig.LinkBrowserWindowHeight ) ;
 }
 
 function SetUrl( url )

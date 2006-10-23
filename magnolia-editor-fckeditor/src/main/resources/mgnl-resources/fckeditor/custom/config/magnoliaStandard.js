@@ -7,7 +7,7 @@ var MgnlFCKConfig = window.parent.MgnlFCKConfigs[FCK.Name];
 // set the css to use in the editor
 FCKConfig.EditorAreaCSS = MgnlFCKConfig.contextPath + MgnlFCKConfig.css;
 
-// ower skin
+// our skin
 FCKConfig.SkinPath = MgnlFCKConfig.contextPath + "/.resources/fckeditor/custom/skin/";
 
 // i18n
@@ -113,9 +113,6 @@ FCKConfig.ImageBrowser = false ;
 FCKConfig.FlashBrowser = false ;
 
 // configure upload
-
-
-
 // pass parameters
 var params = "repository=" + MgnlFCKConfig.repository;
 params += "&path=" + MgnlFCKConfig.path;

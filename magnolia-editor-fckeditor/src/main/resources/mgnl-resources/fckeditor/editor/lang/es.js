@@ -1,6 +1,6 @@
 ﻿/*
  * FCKeditor - The text editor for internet
- * Copyright (C) 2003-2005 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2006 Frederico Caldeira Knabben
  * 
  * Licensed under the terms of the GNU Lesser General Public License:
  * 		http://www.opensource.org/licenses/lgpl-license.php
@@ -85,6 +85,8 @@ Find				: "Buscar",
 Replace				: "Reemplazar",
 SpellCheck			: "Ortografía",
 UniversalKeyboard	: "Teclado Universal",
+PageBreakLbl		: "Salto de Página",
+PageBreak			: "Insertar Salto de Página",
 
 Form			: "Formulario",
 Checkbox		: "Casilla de Verificación",
@@ -96,8 +98,13 @@ Button			: "Botón",
 SelectionField	: "Campo de Selección",
 ImageButton		: "Botón Imagen",
 
+FitWindow		: "Maximizar el tamaño del editor",
+
 // Context Menu
 EditLink			: "Editar Vínculo",
+CellCM				: "Celda",
+RowCM				: "Fila",
+ColumnCM			: "Columna",
 InsertRow			: "Insertar Fila",
 DeleteRows			: "Eliminar Filas",
 InsertColumn		: "Insertar Columna",
@@ -106,6 +113,7 @@ InsertCell			: "Insertar Celda",
 DeleteCells			: "Eliminar Celdas",
 MergeCells			: "Combinar Celdas",
 SplitCell			: "Dividir Celda",
+TableDelete			: "Eliminar Tabla",
 CellProperties		: "Propiedades de Celda",
 TableProperties		: "Propiedades de Tabla",
 ImageProperties		: "Propiedades de Imagen",
@@ -122,7 +130,7 @@ SelectionFieldProp	: "Propiedades de Campo de Selección",
 TextareaProp		: "Propiedades de Area de Texto",
 FormProp			: "Propiedades de Formulario",
 
-FontFormats			: "Normal;Formateado;Direccion;Encabezado 1;Encabezado 2;Encabezado 3;Encabezado 4;Encabezado 5;Encabezado 6",
+FontFormats			: "Normal;Con formato;Dirección;Encabezado 1;Encabezado 2;Encabezado 3;Encabezado 4;Encabezado 5;Encabezado 6;Normal (DIV)",
 
 // Alerts and Messages
 ProcessingXHTML		: "Procesando XHTML. Por favor, espere...",
@@ -133,7 +141,9 @@ UnknownToolbarItem	: "Item de barra desconocido \"%1\"",
 UnknownCommand		: "Nombre de comando desconocido \"%1\"",
 NotImplemented		: "Comando no implementado",
 UnknownToolbarSet	: "Nombre de barra \"%1\" no definido",
-NoActiveX			: "You browser's security settings could limit some features of the editor. You must enable the option \"Run ActiveX controls and plug-ins\". You may experience errors and notice missing features.",	//MISSING
+NoActiveX			: "La configuración de las opciones de seguridad de su navegador puede estar limitando algunas características del editor. Por favor active la opción \"Ejecutar controles y complementos de ActiveX \", de lo contrario puede experimentar errores o ausencia de funcionalidades.",
+BrowseServerBlocked : "La ventana de visualización del servidor no pudo ser abierta. Verifique que su navegador no esté bloqueando las ventanas emergentes (pop up).",
+DialogBlocked		: "No se ha podido abrir la ventana de diálogo. Verifique que su navegador no esté bloqueando las ventanas emergentes (pop up).",
 
 // Dialogs
 DlgBtnOK			: "OK",
@@ -141,12 +151,12 @@ DlgBtnCancel		: "Cancelar",
 DlgBtnClose			: "Cerrar",
 DlgBtnBrowseServer	: "Ver Servidor",
 DlgAdvancedTag		: "Avanzado",
-DlgOpOther			: "&lt;Otro&gt;",
+DlgOpOther			: "<Otro>",
 DlgInfoTab			: "Información",
 DlgAlertUrl			: "Inserte el URL",
 
 // General Dialogs Labels
-DlgGenNotSet		: "&lt;No definido&gt;",
+DlgGenNotSet		: "<No definido>",
 DlgGenId			: "Id",
 DlgGenLangDir		: "Orientación de idioma",
 DlgGenLangDirLtr	: "Izquierda a Derecha (LTR)",
@@ -210,12 +220,12 @@ DlgLnkTypeURL		: "URL",
 DlgLnkTypeAnchor	: "Referencia en esta página",
 DlgLnkTypeEMail		: "E-Mail",
 DlgLnkProto			: "Protocolo",
-DlgLnkProtoOther	: "&lt;otro&gt;",
+DlgLnkProtoOther	: "<otro>",
 DlgLnkURL			: "URL",
 DlgLnkAnchorSel		: "Seleccionar una referencia",
 DlgLnkAnchorByName	: "Por Nombre de Referencia",
 DlgLnkAnchorById	: "Por ID de elemento",
-DlgLnkNoAnchors		: "&lt;No hay referencias disponibles en el documento&gt;",
+DlgLnkNoAnchors		: "<No hay referencias disponibles en el documento>",
 DlgLnkEMail			: "Dirección de E-Mail",
 DlgLnkEMailSubject	: "Título del Mensaje",
 DlgLnkEMailBody		: "Cuerpo del Mensaje",
@@ -223,8 +233,8 @@ DlgLnkUpload		: "Cargar",
 DlgLnkBtnUpload		: "Enviar al Servidor",
 
 DlgLnkTarget		: "Destino",
-DlgLnkTargetFrame	: "&lt;marco&gt;",
-DlgLnkTargetPopup	: "&lt;ventana emergente&gt;",
+DlgLnkTargetFrame	: "<marco>",
+DlgLnkTargetPopup	: "<ventana emergente>",
 DlgLnkTargetBlank	: "Nueva Ventana(_blank)",
 DlgLnkTargetParent	: "Ventana Padre (_parent)",
 DlgLnkTargetSelf	: "Misma Ventana (_self)",
@@ -248,6 +258,7 @@ DlgLnkPopTop		: "Posición Derecha",
 DlnLnkMsgNoUrl		: "Por favor tipee el vínculo URL",
 DlnLnkMsgNoEMail	: "Por favor tipee la dirección de e-mail",
 DlnLnkMsgNoAnchor	: "Por favor seleccione una referencia",
+DlnLnkMsgInvPopName	: "The popup name must begin with an alphabetic character and must not contain spaces",	//MISSING
 
 // Color Dialog
 DlgColorTitle		: "Seleccionar Color",
@@ -278,6 +289,7 @@ DlgTableHeight		: "Altura",
 DlgTableCellSpace	: "Esp. e/celdas",
 DlgTableCellPad		: "Esp. interior",
 DlgTableCaption		: "Título",
+DlgTableSummary		: "Síntesis",
 
 // Table Cell Dialog
 DlgCellTitle		: "Propiedades de Celda",
@@ -331,8 +343,7 @@ PasteFromWord	: "Pegar desde Word",
 DlgPasteMsg2	: "Por favor pegue dentro del cuadro utilizando el teclado (<STRONG>Ctrl+V</STRONG>); luego presione <STRONG>OK</STRONG>.",
 DlgPasteIgnoreFont		: "Ignorar definiciones de fuentes",
 DlgPasteRemoveStyles	: "Remover definiciones de estilo",
-DlgPasteCleanBox		: "Clean Up Box",
-
+DlgPasteCleanBox		: "Borrar el contenido del cuadro",
 
 // Color Picker
 ColorAutomatic	: "Automático",
@@ -364,8 +375,11 @@ DlgSpellManyChanges		: "Control finalizado: se ha cambiado %1 palabras",
 IeSpellDownload			: "Módulo de Control de Ortografía no instalado. ¿Desea descargarlo ahora?",
 
 // Button Dialog
-DlgButtonText	: "Texto (Valor)",
-DlgButtonType	: "Tipo",
+DlgButtonText		: "Texto (Valor)",
+DlgButtonType		: "Tipo",
+DlgButtonTypeBtn	: "Button",	//MISSING
+DlgButtonTypeSbm	: "Submit",	//MISSING
+DlgButtonTypeRst	: "Reset",	//MISSING
 
 // Checkbox and Radio Button Dialogs
 DlgCheckboxName		: "Nombre",
@@ -414,9 +428,10 @@ DlgHiddenValue	: "Valor",
 // Bulleted List Dialog
 BulletedListProp	: "Propiedades de Viñetas",
 NumberedListProp	: "Propiedades de Numeraciones",
+DlgLstStart			: "Start",	//MISSING
 DlgLstType			: "Tipo",
 DlgLstTypeCircle	: "Círculo",
-DlgLstTypeDisc		: "Disc",	//MISSING
+DlgLstTypeDisc		: "Disco",
 DlgLstTypeSquare	: "Cuadrado",
 DlgLstTypeNumbers	: "Números (1, 2, 3)",
 DlgLstTypeLCase		: "letras en minúsculas (a, b, c)",
@@ -436,6 +451,15 @@ DlgDocLangDirLTR	: "Izq. a Derecha (LTR)",
 DlgDocLangDirRTL	: "Der. a Izquierda (RTL)",
 DlgDocLangCode		: "Código de Idioma",
 DlgDocCharSet		: "Codif. de Conjunto de Caracteres",
+DlgDocCharSetCE		: "Central European",	//MISSING
+DlgDocCharSetCT		: "Chinese Traditional (Big5)",	//MISSING
+DlgDocCharSetCR		: "Cyrillic",	//MISSING
+DlgDocCharSetGR		: "Greek",	//MISSING
+DlgDocCharSetJP		: "Japanese",	//MISSING
+DlgDocCharSetKR		: "Korean",	//MISSING
+DlgDocCharSetTR		: "Turkish",	//MISSING
+DlgDocCharSetUN		: "Unicode (UTF-8)",	//MISSING
+DlgDocCharSetWE		: "Western European",	//MISSING
 DlgDocCharSetOther	: "Otra Codificación",
 
 DlgDocDocType		: "Encabezado de Tipo de Documento",
@@ -465,10 +489,12 @@ DlgTemplatesTitle	: "Contenido de Plantillas",
 DlgTemplatesSelMsg	: "Por favor selecciona la plantilla a abrir en el editor<br>(el contenido actual se perderá):",
 DlgTemplatesLoading	: "Cargando lista de Plantillas. Por favor, aguarde...",
 DlgTemplatesNoTpl	: "(No hay plantillas definidas)",
+DlgTemplatesReplace	: "Replace actual contents",	//MISSING
 
 // About Dialog
 DlgAboutAboutTab	: "Acerca de",
 DlgAboutBrowserInfoTab	: "Información de Navegador",
+DlgAboutLicenseTab	: "Licencia",
 DlgAboutVersion		: "versión",
 DlgAboutLicense		: "Licenciado bajo los términos de GNU Lesser General Public License",
 DlgAboutInfo		: "Para mayor información por favor dirigirse a"
