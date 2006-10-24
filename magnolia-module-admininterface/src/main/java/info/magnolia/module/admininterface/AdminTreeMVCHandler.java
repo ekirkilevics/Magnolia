@@ -236,7 +236,11 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
         // set general parameters (repository, path, ..)
         context.put(Context.ATTRIBUTE_REPOSITORY, this.getRepository());
-        context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
+        if (this.pathSelected != null) {
+            // pathSelected is null in case of delete operation, it should be the responsibility of the caller
+            // to set the context attributes properly
+            context.put(Context.ATTRIBUTE_PATH, this.pathSelected);
+        }
 
         if (commandName.equals("activate")) {
             context.put(BaseActivationCommand.ATTRIBUTE_SYNDICATOR, getActivationSyndicator(this.pathSelected));
@@ -409,7 +413,9 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         }
 
         Context ctx = this.getCommandContext("deactivate");
-
+        // override/set path for deactivation
+        // Path is set to "/" if this is called via delete command and not directly through the tree handler
+        ctx.setAttribute(Context.ATTRIBUTE_PATH, path, Context.LOCAL_SCOPE);
         try {
             cmd.execute(ctx);
         }
