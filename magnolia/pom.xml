@@ -170,6 +170,10 @@
       <artifactId>jackrabbit-index-filters</artifactId>
     </dependency>
     <dependency>
+      <groupId>pdfbox</groupId>
+      <artifactId>pdfbox</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.derby</groupId>
       <artifactId>derby</artifactId>
     </dependency>

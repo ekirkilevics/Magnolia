@@ -262,6 +262,17 @@
                 <groupId>org.apache.jackrabbit</groupId>
                 <artifactId>jackrabbit-index-filters</artifactId>
                 <version>1.0.1</version>
+                <exclusions>
+                    <exclusion>
+                        <groupId>pdfbox</groupId>
+                        <artifactId>pdfbox</artifactId>
+                    </exclusion>
+                </exclusions>
+            </dependency>
+            <dependency>
+                <groupId>pdfbox</groupId>
+                <artifactId>pdfbox</artifactId>
+                <version>0.7.1</version>
             </dependency>
             <dependency>
                 <groupId>org.apache.derby</groupId>
