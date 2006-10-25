@@ -36,11 +36,6 @@ import org.slf4j.LoggerFactory;
 public final class Authenticator {
 
     /**
-     *
-     */
-    public static final String MGNL_LOGIN_ERROR = "mgnlLoginError";
-
-    /**
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(Authenticator.class);
@@ -118,7 +113,6 @@ public final class Authenticator {
             HttpSession httpsession = request.getSession(true);
             httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
         } catch (FailedLoginException fle) {
-            request.setAttribute(MGNL_LOGIN_ERROR, FailedLoginException.class.getName());
             if (log.isDebugEnabled()) {
                 log.debug("Wrong credentials", fle);
             }

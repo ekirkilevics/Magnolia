@@ -13,7 +13,7 @@
     <sv:value>c4bc0e18-f16e-4f7d-b15b-5fdf9f17b4aa</sv:value>
   </sv:property>
   <sv:property sv:name="LoginForm" sv:type="String">
-    <sv:value>/.resources/loginForm/login.html</sv:value>
+    <sv:value>/mgnl-resources/loginForm/login.html</sv:value>
   </sv:property>
   <sv:property sv:name="AuthType" sv:type="String">
     <sv:value>Form</sv:value>

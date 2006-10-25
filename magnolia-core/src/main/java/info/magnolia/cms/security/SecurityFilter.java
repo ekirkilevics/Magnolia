@@ -14,8 +14,14 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
+import java.util.HashMap;
 
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
@@ -30,6 +36,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import freemarker.template.Template;
 
 
 /**
@@ -155,14 +162,27 @@ public class SecurityFilter implements Filter {
 
                 if (StringUtils.equalsIgnoreCase(authType, AUTH_TYPE_FORM)
                     && !StringUtils.equals(request.getParameter(AUTH_TYPE), AUTH_TYPE_BASIC)) { // override
-                    if (request.getAttribute(Authenticator.MGNL_LOGIN_ERROR) != null) {
-                        log.debug("FailedLoginException, redirect to login form");
-                        // there is no other way to force login page again once it goes through jaas auth
-                        response.sendRedirect(request.getContextPath() + "/");
-                    } else {
-                        String loginUrl = (String) Server.getInstance().getLoginConfig().get(LOGIN_FORM);
-                        log.debug("Using login url: {}", loginUrl);
-                        request.getRequestDispatcher(loginUrl).include(request, response);
+                    String loginUrl = (String) Server.getInstance().getLoginConfig().get(LOGIN_FORM);
+                    log.debug("Using login url: {}", loginUrl);
+
+                    // Temporary check for conpatibility between dev builds, will be removed before RC4 release
+                    // todo remove this check
+                    if (StringUtils.equalsIgnoreCase(loginUrl, "/.resources/loginForm/login.html")) {
+                        loginUrl = "/mgnl-resources/loginForm/login.html";
+                        log.error("Incorrect login form", new Exception());
+                        log.error("config/server/LoginForm default value is changed to - /mgnl-resources/loginForm/login.html");
+                        log.error("Please bootstrap new config, or change the value manually ");
+                    }
+
+                    try {
+                        // we cannot use FreemarketUtil.process because MgnlContext is not set yet!
+                        Template tmpl = FreeMarkerUtil.getDefaultConfiguration().getTemplate(loginUrl);
+                        Map data = new HashMap();
+                        data.put("contextPath", request.getContextPath());
+                        tmpl.process(data, response.getWriter());
+                    }
+                    catch (Exception e) {
+                        log.error("exception while writing login template", e);
                     }
                 }
                 else {
