@@ -155,10 +155,15 @@ public class SecurityFilter implements Filter {
 
                 if (StringUtils.equalsIgnoreCase(authType, AUTH_TYPE_FORM)
                     && !StringUtils.equals(request.getParameter(AUTH_TYPE), AUTH_TYPE_BASIC)) { // override
-
-                    String loginUrl = (String) Server.getInstance().getLoginConfig().get(LOGIN_FORM);
-                    log.debug("Using login url: {}", loginUrl);
-                    request.getRequestDispatcher(loginUrl).include(request, response);
+                    if (request.getAttribute(Authenticator.MGNL_LOGIN_ERROR) != null) {
+                        log.debug("FailedLoginException, redirect to login form");
+                        // there is no other way to force login page again once it goes through jaas auth
+                        response.sendRedirect(request.getContextPath() + "/");
+                    } else {
+                        String loginUrl = (String) Server.getInstance().getLoginConfig().get(LOGIN_FORM);
+                        log.debug("Using login url: {}", loginUrl);
+                        request.getRequestDispatcher(loginUrl).include(request, response);
+                    }
                 }
                 else {
                     doBasicAuthentication(response);
