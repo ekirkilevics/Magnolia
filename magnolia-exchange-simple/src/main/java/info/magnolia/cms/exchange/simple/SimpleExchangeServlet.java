@@ -402,7 +402,7 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @param request the current request
      */
     protected void initializeContext(HttpServletRequest request) {
-        WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
+        WebContext ctx = (WebContext) FactoryUtil.newInstance(WebContext.class);
         ctx.init(request);
         MgnlContext.setInstance(ctx);
     }
