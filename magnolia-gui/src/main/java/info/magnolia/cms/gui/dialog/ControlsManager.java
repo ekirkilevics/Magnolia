@@ -36,11 +36,6 @@ public final class ControlsManager extends ObservedManager {
     private static Logger log = LoggerFactory.getLogger(ControlsManager.class);
 
     /**
-     * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
-     */
-    private static ControlsManager instance = (ControlsManager) FactoryUtil.getSingleton(ControlsManager.class);
-
-    /**
      * Node data name for control class.
      */
     private static final String DATA_CONTROL_CLASS = "class"; //$NON-NLS-1$
@@ -102,7 +97,7 @@ public final class ControlsManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static ControlsManager getInstance() {
-        return instance;
+        return (ControlsManager) FactoryUtil.getSingleton(ControlsManager.class);
     }
 
     protected void onClear() {
