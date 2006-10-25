@@ -96,7 +96,7 @@ public class JavascriptIncludePage extends PageMVCHandler {
         PrintWriter out = response.getWriter();
         String contextPath = request.getContextPath();
 
-        WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
+        WebContext ctx = (WebContext) FactoryUtil.newInstance(WebContext.class);
         ctx.init(request);
         MgnlContext.setInstance(ctx);
 

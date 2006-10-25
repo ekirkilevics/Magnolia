@@ -796,7 +796,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
     protected Tree getTree() {
         if (tree == null) {
-            tree = (Tree) FactoryUtil.getInstanceWithoutDiscovery(this.getTreeClass(), new Object[]{
+            tree = (Tree) FactoryUtil.newInstanceWithoutDiscovery(this.getTreeClass(), new Object[]{
                 super.getName(),
                 getRepository(),
                 super.getRequest()});
@@ -831,7 +831,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      */
     public AdminTreeConfiguration getConfiguration() {
         if (this.configuration == null) {
-            this.configuration = (AdminTreeConfiguration) FactoryUtil.getInstanceWithoutDiscovery(this
+            this.configuration = (AdminTreeConfiguration) FactoryUtil.newInstanceWithoutDiscovery(this
                 .getConfigurationClass(), new Object[]{});
         }
         return this.configuration;

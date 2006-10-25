@@ -37,12 +37,6 @@ public class TreeHandlerManager extends ObservedManager {
     private static Logger log = LoggerFactory.getLogger(TreeHandlerManager.class);
 
     /**
-     * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
-     */
-    private static TreeHandlerManager instance = (TreeHandlerManager) FactoryUtil
-        .getSingleton(TreeHandlerManager.class);
-
-    /**
      * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
      * <code>repository</code>, the corresponding handler will be used top display the admin tree.
      */
@@ -64,7 +58,6 @@ public class TreeHandlerManager extends ObservedManager {
         }
 
         Class treeHandlerClass = th.getHandler();
-        String repository = th.getRepository();
 
         try {
             Constructor constructor = treeHandlerClass.getConstructor(new Class[]{
@@ -129,7 +122,7 @@ public class TreeHandlerManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static TreeHandlerManager getInstance() {
-        return instance;
+        return (TreeHandlerManager) FactoryUtil.getSingleton(TreeHandlerManager.class);
     }
 
     /**

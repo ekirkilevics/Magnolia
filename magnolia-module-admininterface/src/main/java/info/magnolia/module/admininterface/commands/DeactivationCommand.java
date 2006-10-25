@@ -34,7 +34,7 @@ public class DeactivationCommand extends BaseRepositoryCommand {
 
     public boolean execute(Context ctx) throws Exception {
         try{
-            Syndicator syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
+            Syndicator syndicator = (Syndicator) FactoryUtil.newInstance(Syndicator.class);
             syndicator.init(ctx.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this.getRepository()), new Rule());
             syndicator.deActivate(getPath());
         }

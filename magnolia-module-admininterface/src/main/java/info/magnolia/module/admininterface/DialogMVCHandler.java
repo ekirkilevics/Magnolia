@@ -258,7 +258,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         }
 
         if (this.saveHandler == null) {
-            this.saveHandler = (SaveHandler) FactoryUtil.getInstance(SaveHandler.class);
+            this.saveHandler = (SaveHandler) FactoryUtil.newInstance(SaveHandler.class);
         }
     }
 

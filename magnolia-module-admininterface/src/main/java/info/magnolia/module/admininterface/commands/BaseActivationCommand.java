@@ -26,7 +26,7 @@ public abstract class BaseActivationCommand extends RuleBasedCommand {
     public Syndicator getSyndicator() {
         // lazy bound, but only if this is a clone
         if (syndicator == null && isClone()) {
-            syndicator = (Syndicator) FactoryUtil.getInstance(Syndicator.class);
+            syndicator = (Syndicator) FactoryUtil.newInstance(Syndicator.class);
             syndicator.init(
                 MgnlContext.getUser(),
                 this.getRepository(),

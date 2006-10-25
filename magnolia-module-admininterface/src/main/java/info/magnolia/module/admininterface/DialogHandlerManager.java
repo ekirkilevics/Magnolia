@@ -57,12 +57,6 @@ public class DialogHandlerManager extends ObservedManager {
     private Logger log = LoggerFactory.getLogger(DialogHandlerManager.class);
 
     /**
-     * The current implementation of the DialogManager. Defeined in magnolia.properties.
-     */
-    private static DialogHandlerManager instance = (DialogHandlerManager) FactoryUtil
-        .getSingleton(DialogHandlerManager.class);
-
-    /**
      * All handlers are registered here
      */
     private final Map dialogHandlers = new HashMap();
@@ -196,7 +190,7 @@ public class DialogHandlerManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static DialogHandlerManager getInstance() {
-        return instance;
+        return (DialogHandlerManager) FactoryUtil.getSingleton(DialogHandlerManager.class);
     }
 
 }

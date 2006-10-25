@@ -48,12 +48,6 @@ public class PageHandlerManager extends ObservedManager {
     private static Logger log = LoggerFactory.getLogger(PageHandlerManager.class);
 
     /**
-     * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
-     */
-    private static PageHandlerManager instance = (PageHandlerManager) FactoryUtil
-        .getSingleton(PageHandlerManager.class);
-
-    /**
      * The handlers
      */
     private final Map dialogPageHandlers = new HashMap();
@@ -126,7 +120,7 @@ public class PageHandlerManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static PageHandlerManager getInstance() {
-        return instance;
+        return (PageHandlerManager) FactoryUtil.getSingleton(PageHandlerManager.class);
     }
 
     protected void onClear() {
