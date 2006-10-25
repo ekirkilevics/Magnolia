@@ -342,14 +342,16 @@ public class ContentNodeIterator extends TagSupport {
         if (varStatus != null) {
             pageContext.removeAttribute(varStatus, PageContext.PAGE_SCOPE);
         }
-
+        
+        reset();
+        
         return EVAL_PAGE;
     }
 
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#release()
      */
-    public void release() {
+    public void reset() {
         this.contentNodeCollectionName = null;
         this.contentNodeIterator = null;
         this.begin = 0;
@@ -366,8 +368,6 @@ public class ContentNodeIterator extends TagSupport {
         this.outerLocalContentNode = null;
         this.outerResCollName = null;
         this.outerSize = null;
-
-        super.release();
     }
 
     /** Checks if a content node iterator tag is already in operation and saves it's state. */
