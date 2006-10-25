@@ -183,7 +183,8 @@ public class BarMain extends Bar {
     public void setButtonSiteAdmin(String path) {
         Button b = new Button();
         b.setLabel(MessagesManager.get("buttons.admincentral")); //$NON-NLS-1$
-        b.setOnclick("MgnlAdminCentral.showTree('website','" + path + "');"); //$NON-NLS-1$ //$NON-NLS-2$
+        String repository = (String) getRequest().getAttribute(info.magnolia.cms.core.Aggregator.REPOSITORY);
+        b.setOnclick("MgnlAdminCentral.showTree('"+repository+"','" + path + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         this.setButtonSiteAdmin(b);
     }
 

@@ -63,8 +63,8 @@ public class ButtonEdit extends Button {
         if (nodeName == null) {
             nodeName = StringUtils.EMPTY;
         }
-        // todo: dynamic repository
-        String repository = ContentRepository.WEBSITE;
+
+        String repository = (String) getRequest().getAttribute(info.magnolia.cms.core.Aggregator.REPOSITORY);
         this.setOnclick("mgnlOpenDialog('" //$NON-NLS-1$
             + this.getPath()
             + "','" //$NON-NLS-1$
