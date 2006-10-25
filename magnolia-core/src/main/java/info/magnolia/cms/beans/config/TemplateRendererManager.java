@@ -28,16 +28,10 @@ public class TemplateRendererManager extends ObservedManager {
     private Map renderers = new HashMap();
 
     /**
-     * The current implementation of the TemplateManager. Defined in magnolia.properties.
-     */
-    private static TemplateRendererManager instance = (TemplateRendererManager) FactoryUtil
-        .getSingleton(TemplateRendererManager.class);
-
-    /**
      * @return Returns the instance.
      */
     public static TemplateRendererManager getInstance() {
-        return instance;
+        return (TemplateRendererManager) FactoryUtil.getSingleton(TemplateRendererManager.class);
     }
 
     /**

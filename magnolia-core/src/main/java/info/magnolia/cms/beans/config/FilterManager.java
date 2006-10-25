@@ -74,11 +74,6 @@ public final class FilterManager {
     private static final String SERVER_FILTERS = "/server/filters";
 
     /**
-     * singleton instance
-     */
-    private static FilterManager instance = (FilterManager) FactoryUtil.getSingleton(FilterManager.class);
-
-    /**
      * Logger
      */
     protected Logger log = LoggerFactory.getLogger(getClass());
@@ -114,7 +109,7 @@ public final class FilterManager {
      * @return FilterManager instance.
      */
     public static FilterManager getInstance() {
-        return instance;
+    	return (FilterManager) FactoryUtil.getSingleton(FilterManager.class);
     }
 
     /**

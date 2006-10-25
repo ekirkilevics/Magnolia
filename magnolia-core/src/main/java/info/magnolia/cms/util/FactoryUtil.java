@@ -15,6 +15,8 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.core.SystemProperty;
 
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import org.apache.commons.beanutils.ConstructorUtils;
@@ -30,15 +32,35 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class FactoryUtil {
+    
+    public interface InstanceFactory{
+        public Object newInstance();
+    }
 
     /**
      * Logger.
      */
-    protected static Logger log = LoggerFactory.getLogger(FactoryUtil.class);
+    protected static Logger log;// = LoggerFactory.getLogger(FactoryUtil.class);
 
     private static Properties props = new Properties();
 
+    protected static DiscoverClass discovery = new DiscoverClass();
+    
+    /**
+     * Registered singleton instances
+     */
+    protected static Map instances = new HashMap();
+
+    /**
+     * Registered Prototypes used for new Instance
+     */
+    protected static Map factories = new HashMap();
+    
     static {
+        init();
+    }
+
+    private static void init() {
         // add the magnolia properties
         props.putAll(SystemProperty.getPropertyList());
     }
@@ -47,21 +69,42 @@ public class FactoryUtil {
 
     }
 
+    /**
+     * 
+     * @deprecated use newInstance
+     */
     public static Object getInstance(Class interf) {
+    	return newInstance(interf);
+    }
+    
+    public static Object newInstance(Class interf) {
         try {
-            return new DiscoverClass().newInstance(interf, props);
+        	if(factories.containsKey(interf)){
+        		return ((InstanceFactory)factories.get(interf)).newInstance();
+        	}
+            // make interf the default implementation
+            return discovery.newInstance(interf, props, interf.getName());
         }
         catch (Exception e) {
             log.error("can't instantiate an implementation of this class [" + interf.getName() + "]");
         }
         return null;
     }
+
+    /**
+     * 
+     * @deprecated use newInstance
+     */
+    public static Object getInstanceWithoutDiscovery(String className, Object [] args){
+    	return newInstanceWithoutDiscovery(className, args);
+    }
+    
     /**
      * This method does not use discovery! It is a util method for easy instantiating. In any case of an exception null is returned.
      * @param className
      * @return
      */
-    public static Object getInstanceWithoutDiscovery(String className, Object [] args){
+    public static Object newInstanceWithoutDiscovery(String className, Object [] args){
         
         if(StringUtils.isEmpty(className)){
             return null;
@@ -83,16 +126,67 @@ public class FactoryUtil {
         }
         return null;
     }
-
+    
+    /**
+     * @deprecated use newInstance
+     */
     public static Object getInstanceWithoutDiscovery(String className){
-        return getInstanceWithoutDiscovery(className, new Object[]{});
+    	return newInstanceWithoutDiscovery(className);
+    }
+
+    public static Object newInstanceWithoutDiscovery(String className){
+        return newInstanceWithoutDiscovery(className, new Object[]{});
     }
 
     public static Object getSingleton(Class interf) {
-        return DiscoverSingleton.find(interf, props);
+        Object instance = instances.get(interf);
+        if(instance == null){
+            if(factories.containsKey(interf)){
+                instance =  ((InstanceFactory)factories.get(interf)).newInstance();
+            }
+            else{
+                instance = DiscoverSingleton.find(interf, props, interf.getName());
+            }
+            instances.put(interf, instance);
+        }
+        return instance;
     }
 
+    public static void setDefaultImplementation(Class interf, Class impl) {
+        setDefaultImplementation(interf, impl.getName());
+    }
+    
+    /**
+     * @param interf
+     * @param impl
+     */
     public static void setDefaultImplementation(Class interf, String impl) {
         props.setProperty(interf.getName(), impl);
     }
+    
+    /**
+     * Register an instance which will be returned by getSingleton()
+     * @param interf
+     * @param instance
+     */
+    public static void setInstance(Class interf, Object instance){
+        instances.put(interf, instance);
+    }
+
+    /**
+     * newInstance will use this prototype for cloning a new object
+     * @param interf
+     * @param prototype
+     */
+    public static void setInstanceFactory(Class interf, InstanceFactory factory){
+    	factories.put(interf, factory);
+    }
+
+    public static void clear() {
+        factories.clear();
+        instances.clear();
+        DiscoverSingleton.release();
+        init();
+    }
+
 }

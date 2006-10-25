@@ -34,8 +34,6 @@ import org.apache.commons.lang.StringUtils;
  */
 public class CommandsManager extends ObservedManager {
 
-    private static CommandsManager instance = (CommandsManager) FactoryUtil.getSingleton(CommandsManager.class);
-
     public static final String DEFAULT_CATALOG = "default";
 
     public static final String COMMAND_DELIM = "-";
@@ -135,7 +133,7 @@ public class CommandsManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static CommandsManager getInstance() {
-        return instance;
+        return (CommandsManager) FactoryUtil.getSingleton(CommandsManager.class);
     }
 
 }

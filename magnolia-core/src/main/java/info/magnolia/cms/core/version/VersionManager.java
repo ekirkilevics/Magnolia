@@ -37,11 +37,6 @@ public final class VersionManager extends BaseVersionManager {
     private static Logger log = LoggerFactory.getLogger(VersionManager.class);
 
     /**
-     * singleton
-     */
-    private static final VersionManager thisInstance = (VersionManager) FactoryUtil.getSingleton(VersionManager.class);
-
-    /**
      * do not instanciate
      */
     public VersionManager() {
@@ -58,7 +53,7 @@ public final class VersionManager extends BaseVersionManager {
      * get instance
      */
     public static VersionManager getInstance() {
-        return thisInstance;
+        return (VersionManager) FactoryUtil.getSingleton(VersionManager.class);
     }
 
     /**

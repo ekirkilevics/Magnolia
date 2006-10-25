@@ -46,11 +46,6 @@ public final class VirtualURIManager extends ObservedManager {
     private static Logger log = LoggerFactory.getLogger(VirtualURIManager.class);
 
     /**
-     * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
-     */
-    private static VirtualURIManager instance = (VirtualURIManager) FactoryUtil.getSingleton(VirtualURIManager.class);
-
-    /**
      * Instantiated by the system.
      */
     public VirtualURIManager() {
@@ -114,6 +109,6 @@ public final class VirtualURIManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static VirtualURIManager getInstance() {
-        return instance;
+        return (VirtualURIManager) FactoryUtil.getSingleton(VirtualURIManager.class);
     }
 }

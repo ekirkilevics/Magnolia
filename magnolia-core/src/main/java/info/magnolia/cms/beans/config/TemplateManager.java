@@ -34,11 +34,6 @@ import java.util.Map;
 public class TemplateManager extends ObservedManager {
 
     /**
-     * The current implementation of the TemplateManager. Defined in magnolia.properties.
-     */
-    private static TemplateManager instance = (TemplateManager) FactoryUtil.getSingleton(TemplateManager.class);
-
-    /**
      * The cached templates
      */
     private Map cachedContent = new Hashtable();
@@ -204,7 +199,7 @@ public class TemplateManager extends ObservedManager {
      * @return Returns the instance.
      */
     public static TemplateManager getInstance() {
-        return instance;
+        return (TemplateManager) FactoryUtil.getSingleton(TemplateManager.class);
     }
 
 }

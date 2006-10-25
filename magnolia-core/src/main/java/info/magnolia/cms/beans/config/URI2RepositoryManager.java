@@ -41,9 +41,6 @@ public class URI2RepositoryManager {
 
     public static final String SERVER_REPOSITORY_URIMAPPING = "/server/URI2RepositoryMapping";
 
-    private static URI2RepositoryManager instance = (URI2RepositoryManager) FactoryUtil
-        .getSingleton(URI2RepositoryManager.class);
-
     /**
      * The mappings
      */
@@ -151,7 +148,7 @@ public class URI2RepositoryManager {
     }
 
     public static URI2RepositoryManager getInstance() {
-        return instance;
+        return (URI2RepositoryManager) FactoryUtil.getSingleton(URI2RepositoryManager.class);
     }
 
 }

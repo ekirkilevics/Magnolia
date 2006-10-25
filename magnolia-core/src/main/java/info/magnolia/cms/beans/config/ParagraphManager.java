@@ -47,11 +47,6 @@ public class ParagraphManager extends ObservedManager {
     private static final String ND_NAME = "name";
 
     /**
-     * The current implementation of the ParagraphManager. Defeined in magnolia.properties.
-     */
-    private static ParagraphManager instance = (ParagraphManager) FactoryUtil.getSingleton(ParagraphManager.class);
-
-    /**
      * Cached paragraphs
      */
     protected Map paragraphs = new Hashtable();
@@ -141,7 +136,7 @@ public class ParagraphManager extends ObservedManager {
      * @return
      */
     public static ParagraphManager getInstance() {
-        return instance;
+        return (ParagraphManager) FactoryUtil.getSingleton(ParagraphManager.class);
     }
 
     public void onClear() {

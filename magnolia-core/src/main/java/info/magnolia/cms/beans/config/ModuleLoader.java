@@ -37,17 +37,12 @@ import org.slf4j.LoggerFactory;
 /**
  * Initialise all configured modules.
  */
-public final class ModuleLoader {
+public class ModuleLoader {
 
     /**
      * Logger.
      */
     protected static Logger log = LoggerFactory.getLogger(ModuleLoader.class);
-
-    /**
-     * The instance of the loader
-     */
-    private static ModuleLoader instance = (ModuleLoader) FactoryUtil.getSingleton(ModuleLoader.class);
 
     /**
      * magnolia module specific keywords
@@ -73,7 +68,7 @@ public final class ModuleLoader {
      * @return Returns the instance.
      */
     public static ModuleLoader getInstance() {
-        return instance;
+        return (ModuleLoader) FactoryUtil.getSingleton(ModuleLoader.class);
     }
 
     /**

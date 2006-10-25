@@ -50,7 +50,7 @@ public class MgnlContext {
      */
     public static Logger log = LoggerFactory.getLogger(MgnlContext.class);
 
-    private static SystemContext systemContext = (SystemContext) FactoryUtil.getInstance(SystemContext.class);
+    private static SystemContext systemContext;
 
     /**
      * The thread local variable holding the current context
@@ -309,6 +309,9 @@ public class MgnlContext {
      * @return system context
      */
     public static Context getSystemContext() {
+    	if (systemContext == null) {
+			systemContext = (SystemContext) FactoryUtil.getSingleton(SystemContext.class);
+		}
         return systemContext;
     }
 
@@ -317,7 +320,7 @@ public class MgnlContext {
      * @param request
      */
     public static void initAsWebContext(HttpServletRequest request) {
-        WebContext ctx = (WebContext) FactoryUtil.getInstance(WebContext.class);
+        WebContext ctx = (WebContext) FactoryUtil.newInstance(WebContext.class);
         ctx.init(request);
         setInstance(ctx);
     }
