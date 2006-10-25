@@ -13,12 +13,17 @@
 package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.module.admininterface.PageMVCHandler;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
+import info.magnolia.cms.beans.config.ContentRepository;
 
 import java.io.IOException;
+import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.jcr.Session;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +55,18 @@ public class LogoutPage extends PageMVCHandler {
     public void renderHtml(String view) throws IOException {
         HttpSession session = getRequest().getSession(false);
         if (session != null) {
+            if (!(MgnlContext.getInstance() instanceof SystemContext)) {
+                Iterator configuredStores = ContentRepository.getAllRepositoryNames();
+                while (configuredStores.hasNext()) {
+                    String store = (String) configuredStores.next();
+                    try {
+                        Session jcrSession = MgnlContext.getHierarchyManager(store).getWorkspace().getSession();
+                        if (jcrSession.isLive()) jcrSession.logout();
+                    } catch (Throwable t) {
+                        log.debug("Failed to close JCR session",t);
+                    }
+                }
+            }
             session.invalidate();
             log.info("Logging out user");
         }
