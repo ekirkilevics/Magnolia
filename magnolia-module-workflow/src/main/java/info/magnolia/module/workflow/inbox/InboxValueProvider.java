@@ -13,17 +13,13 @@
 package info.magnolia.module.workflow.inbox;
 
 import info.magnolia.cms.gui.controlx.list.DefaultValueProvider;
-import info.magnolia.cms.gui.controlx.list.ListModelIteratorImpl;
 import info.magnolia.context.Context;
 import info.magnolia.module.workflow.WorkflowUtil;
-
-import java.util.List;
-
-import org.apache.commons.lang.StringUtils;
-
 import openwfe.org.engine.workitem.Attribute;
 import openwfe.org.engine.workitem.InFlowItem;
 import openwfe.org.engine.workitem.StringAttribute;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**

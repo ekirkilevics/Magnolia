@@ -14,15 +14,10 @@ package info.magnolia.module.workflow;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.commands.CommandsManager;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
-
-import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 

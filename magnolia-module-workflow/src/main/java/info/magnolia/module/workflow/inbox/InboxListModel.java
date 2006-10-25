@@ -13,11 +13,9 @@
 package info.magnolia.module.workflow.inbox;
 
 import info.magnolia.cms.gui.controlx.list.AbstractListModel;
-import info.magnolia.cms.gui.controlx.list.ListModelIterator;
 import info.magnolia.module.workflow.WorkflowUtil;
 
 import java.util.Collection;
-import java.util.List;
 
 
 /**
