@@ -132,4 +132,11 @@ public class FreeMarkerUtil {
         return "/" + StringUtils.replace(klass.getName(), ".", "/") + "." + ext;
     }
 
+    /**
+     * @return get default static freemarker configuration
+     * */
+    public static Configuration getDefaultConfiguration() {
+        return cfg;
+    }
+
 }
