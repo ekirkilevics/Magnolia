@@ -50,8 +50,6 @@ public class MgnlContext {
      */
     public static Logger log = LoggerFactory.getLogger(MgnlContext.class);
 
-    private static SystemContext systemContext;
-
     /**
      * The thread local variable holding the current context
      */
@@ -309,10 +307,7 @@ public class MgnlContext {
      * @return system context
      */
     public static Context getSystemContext() {
-    	if (systemContext == null) {
-			systemContext = (SystemContext) FactoryUtil.getSingleton(SystemContext.class);
-		}
-        return systemContext;
+        return (SystemContext) FactoryUtil.getSingleton(SystemContext.class);
     }
 
     /**
