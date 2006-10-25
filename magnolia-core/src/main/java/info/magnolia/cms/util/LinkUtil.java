@@ -53,7 +53,7 @@ public final class LinkUtil {
     /**
      * Pattern that matches external and mailto: links.
      */
-    private static final Pattern externalLinkPattern = Pattern.compile("^(\\w*://|mailto:).*");
+    private static final Pattern externalLinkPattern = Pattern.compile("^(\\w*://|mailto:|javascript:).*");
 
     /**
      * Pattern to find a magnolia formatted link

@@ -42,5 +42,8 @@ public class LinkUtilTest extends TestCase {
 
         assertFalse(LinkUtil.isInternalRelativeLink("#anchor"));
         assertFalse(LinkUtil.isInternalRelativeLink("#another-anchor"));
+
+        assertFalse(LinkUtil.isInternalRelativeLink("javascript:void(window.open('http://www.google.com','','resizable=no,location=no,menubar=no,scrollbars=no,status=no,toolbar=no,fullscreen=no,dependent=no,width=200,height=200'))"));
+        assertFalse(LinkUtil.isInternalRelativeLink("javascript:void(window.open('/foo/bar','','resizable=no,location=no,menubar=no,scrollbars=no,status=no,toolbar=no,fullscreen=no,dependent=no,width=200,height=200'))"));
     }
 }

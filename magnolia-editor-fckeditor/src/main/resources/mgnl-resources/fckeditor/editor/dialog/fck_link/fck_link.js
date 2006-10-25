@@ -66,6 +66,10 @@ oRegex.ReserveTarget.compile( '^_(blank|self|top|parent)$', 'i' ) ;
 
 oRegex.PopupUri = new RegExp('') ;
 oRegex.PopupUri.compile( "^javascript:void\\(\\s*window.open\\(\\s*'([^']+)'\\s*,\\s*(?:'([^']*)'|null)\\s*,\\s*'([^']*)'\\s*\\)\\s*\\)\\s*$" ) ;
+//Alfonso accesible popups
+oRegex.OnClickPopup = new RegExp('') ;
+//oRegex.OnClickPopup.compile( "^\\s*window.open\\(\\s*this\\.href\\s*,\\s*(?:'([^']*)'|null)\\s*,\\s*'([^']*)'\\s*\\)\\s*;\\s*return\\s*false;*\\s*$" ) ;
+oRegex.OnClickPopup.compile( "^\\s*onClick=\"\\s*window.open\\(\\s*this\\.href\\s*,\\s*(?:'([^']*)'|null)\\s*,\\s*'([^']*)'\\s*\\)\\s*;\\s*return\\s*false;*\\s*\"$" ) ;
 
 oRegex.PopupFeatures = new RegExp('') ;
 oRegex.PopupFeatures.compile( '(?:^|,)([^=]+)=(\\d+|yes|no)', 'gi' ) ;
@@ -209,6 +213,17 @@ function LoadSelection()
 		sHRef = oPopupMatch[1] ;
 		FillPopupFields( oPopupMatch[2], oPopupMatch[3] ) ;
 		SetTarget( 'popup' ) ;
+	}
+	//Alfonso  accesible popups
+	if (!oPopupMatch) {
+		var onclick=oLink.getAttribute('onClick_fckprotectedatt');
+		oPopupMatch = oRegex.OnClickPopup.exec( onclick ) ;
+		if( oPopupMatch )
+		{
+			GetE('cmbTarget').value = 'popup' ;
+			FillPopupFields( oPopupMatch[1], oPopupMatch[2] ) ;
+			SetTarget( 'popup' ) ;
+		}
 	}
 
 	// Search for the protocol.
@@ -390,6 +405,27 @@ function BuildPopupUri( uri )
 
 	return ( "javascript:void(window.open('" + uri + "'," + sWindowName + ",'" + sFeatures + "'))" ) ;
 }
+//Alfonso accesible popups
+function BuildOnClickPopup()
+{
+	var sWindowName = "'" + GetE('txtPopupName').value.replace(/\W/gi, "") + "'" ;
+
+	var sFeatures = '' ;
+	var aChkFeatures = document.getElementsByName('chkFeature') ;
+	for ( var i = 0 ; i < aChkFeatures.length ; i++ )
+	{
+		if ( i > 0 ) sFeatures += ',' ;
+		sFeatures += aChkFeatures[i].value + '=' + ( aChkFeatures[i].checked ? 'yes' : 'no' ) ;
+	}
+
+	if ( GetE('txtPopupWidth').value.length > 0 )	sFeatures += ',width=' + GetE('txtPopupWidth').value ;
+	if ( GetE('txtPopupHeight').value.length > 0 )	sFeatures += ',height=' + GetE('txtPopupHeight').value ;
+	if ( GetE('txtPopupLeft').value.length > 0 )	sFeatures += ',left=' + GetE('txtPopupLeft').value ;
+	if ( GetE('txtPopupTop').value.length > 0 )		sFeatures += ',top=' + GetE('txtPopupTop').value ;
+
+	if (sFeatures!='') sFeatures=sFeatures + ",status";
+	return ( "window.open(this.href," + sWindowName + ",'" + sFeatures + "'); return false" ) ;
+}
 
 //#### Fills all Popup related fields.
 function FillPopupFields( windowName, features )
@@ -441,6 +477,8 @@ function Ok()
 
 			sUri = GetE('cmbLinkProtocol').value + sUri ;
 
+//Alfonso accesible popups
+/*
 			if( GetE('cmbTarget').value == 'popup' )
 			{
 				// Check the window name, according to http://www.w3.org/TR/html4/types.html#type-frame-target (IE throw erros with spaces).
@@ -453,6 +491,7 @@ function Ok()
 				sUri = BuildPopupUri( sUri ) ;
 			}
 
+*/
 			break ;
 
 		case 'email' :
@@ -526,6 +565,16 @@ function Ok()
 
 	oLink.href = sUri ;
 	SetAttribute( oLink, '_fcksavedurl', sUri ) ;
+//Alfonso accesible popups
+	if( GetE('cmbTarget').value == 'popup' ) {
+		SetAttribute( oLink, 'onClick_fckprotectedatt', " onClick=\"" + BuildOnClickPopup() + "\"") ;
+	} else {
+		//check if the previous onclick was for a popup:
+		//in that case remove the onclick handler.
+		var onclick=oLink.getAttribute('onClick_fckprotectedatt');
+		if( oRegex.OnClickPopup.test( onclick ) )
+			SetAttribute( oLink, 'onClick_fckprotectedatt', '' ) ;
+	}
 
 	oLink.innerHTML = sInnerHtml ;		// Set (or restore) the innerHTML
 
