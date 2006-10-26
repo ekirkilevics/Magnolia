@@ -15,11 +15,8 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.FreeMarkerUtil;
-import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Map;
 import java.util.HashMap;
 
