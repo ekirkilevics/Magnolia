@@ -96,6 +96,31 @@
         <name>Magnolia International</name>
         <url>http://www.magnolia.info</url>
     </organization>
+    <!-- temporary sollution for the bundeling: we will make a submodule for the bundle -->
+    <profiles>
+      <profile>
+        <id>bundle</id>
+        <build>
+          <pluginManagement>
+              <plugins>
+                  <plugin>
+                      <groupId>org.apache.maven.plugins</groupId>
+                      <artifactId>maven-assembly-plugin</artifactId>
+                      <version>2.1.1-magnolia</version>
+                      <configuration>
+                          <finalName>magnolia-${project.version}</finalName>
+                          <descriptors>
+                              <descriptor>src/release/src.xml</descriptor>
+                              <descriptor>src/release/bundle.xml</descriptor>
+                              <descriptor>src/release/wars.xml</descriptor>
+                          </descriptors>
+                      </configuration>
+                  </plugin>
+              </plugins>
+          </pluginManagement>
+        </build>
+      </profile>
+    </profiles>
     <build>
         <pluginManagement>
             <plugins>
@@ -126,19 +151,6 @@
                         </configuration>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-assembly-plugin</artifactId>
-                <version>2.1.1-magnolia</version>
-                <configuration>
-                    <finalName>magnolia-${project.version}</finalName>
-                    <descriptors>
-                        <descriptor>src/release/src.xml</descriptor>
-                        <descriptor>src/release/bundle.xml</descriptor>
-                        <descriptor>src/release/wars.xml</descriptor>
-                    </descriptors>
-                </configuration>
             </plugin>
             <plugin>
                 <groupId>info.magnolia</groupId>
@@ -563,6 +575,12 @@
             <dependency>
                 <groupId>org.easymock</groupId>
                 <artifactId>easymock</artifactId>
+                <version>2.2</version>
+                <scope>test</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.easymock</groupId>
+                <artifactId>easymockclassextension</artifactId>
                 <version>2.2</version>
                 <scope>test</scope>
             </dependency>
