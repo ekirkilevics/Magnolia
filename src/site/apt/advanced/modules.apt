@@ -1,6 +1,6 @@
 Modules
   
-  A module is a magnolia component. The AdminCental itself is a module for example. For convenience exist abstract default implementations. When ever possible a custom module should extend one of them.
+  A module is a magnolia component. The AdminCentral itself is a module for example. For convenience, there are abstract default implementations. Whenever possible a custom module should extend one of them.
 
 
 * Installation
