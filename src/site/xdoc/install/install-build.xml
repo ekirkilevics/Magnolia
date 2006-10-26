@@ -6,12 +6,12 @@
     </properties>
     <body>
         <section name="Installing a plain Magnolia war (from svn or nightly build)">
-        		<p>
-        			If you download a nightly build or compile Magnolia from subversion using maven you will have a single
-        			war file. This file is configured as an admin instance and can be deployed to an existing application
-        			server following the same
-        			<a href="install-wars.html">instructions for the war distribution</a>.
-        		</p>
+                <p>
+                    If you download a nightly build or compile Magnolia from subversion using maven you will have a single
+                    war file. This file is configured as an admin instance and can be deployed to an existing application
+                    server following the same
+                    <a href="install-wars.html">instructions for the war distribution</a>.
+                </p>
         </section>
         <section name="Multiple installation and advanced configuration">
             <p>
