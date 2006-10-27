@@ -72,7 +72,8 @@ public final class VersionManager extends BaseVersionManager {
     public void setMaxVersionHistory(Content node) throws RepositoryException {
         VersionHistory history = node.getJCRNode().getVersionHistory();
         VersionIterator versions = history.getAllVersions();
-        long indexToRemove = (versions.getSize() - 1) - VersionConfig.getInstance().getMaxVersionAllowed();
+        // size - 2 to skip root version
+        long indexToRemove = (versions.getSize() - 2) - VersionConfig.getInstance().getMaxVersionAllowed();
         if (indexToRemove > 0) {
             // skip root version
             versions.nextVersion();
