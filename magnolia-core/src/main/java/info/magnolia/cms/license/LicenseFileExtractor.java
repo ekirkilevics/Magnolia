@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.license;
 
+import info.magnolia.cms.util.FactoryUtil;
+
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -68,12 +70,10 @@ public final class LicenseFileExtractor {
      */
     private static Logger log = LoggerFactory.getLogger(LicenseFileExtractor.class);
 
-    private static LicenseFileExtractor license = new LicenseFileExtractor();
-
-    private static Map values;
+    private Map values;
 
     public static LicenseFileExtractor getInstance() {
-        return license;
+        return (LicenseFileExtractor) FactoryUtil.getSingleton(LicenseFileExtractor.class);
     }
 
     public String get(String id) {
