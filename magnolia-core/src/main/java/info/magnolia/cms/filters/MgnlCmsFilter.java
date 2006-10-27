@@ -132,10 +132,6 @@ public class MgnlCmsFilter implements Filter {
             return false;
         }
 
-        if (ModuleRegistration.getInstance().isRestartNeeded()) {
-            response.sendRedirect(request.getContextPath() + "/.magnolia/pages/restart.html");
-        }
-
         setHandleAndMapping(request);
 
         if (isAuthorized(request, response)) {

@@ -18,9 +18,11 @@ import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleDefinition;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RegisterException;
+import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -458,6 +460,7 @@ public class ModuleRegistration {
      * @param b
      */
     public void setRestartNeeded(boolean b) {
+        AlertUtil.setMessage("system.restart", MgnlContext.getSystemContext());
         this.restartNeeded = b;
     }
 }

@@ -79,7 +79,7 @@ public class AlertUtil {
     }
 
     public static boolean isMessageSet(Context ctx) {
-        return StringUtils.isNotEmpty((String) ctx.getAttribute(Context.ATTRIBUTE_MESSAGE));
+        return StringUtils.isNotEmpty((String) ctx.getAttribute(Context.ATTRIBUTE_MESSAGE, Context.LOCAL_SCOPE));
     }
 
     /**
@@ -106,7 +106,7 @@ public class AlertUtil {
     }
 
     public static boolean isExceptionSet(Context ctx) {
-        return ctx.getAttribute(Context.ATTRIBUTE_EXCEPTION) != null;
+        return ctx.getAttribute(Context.ATTRIBUTE_EXCEPTION, Context.LOCAL_SCOPE) != null;
     }
 
     /**
@@ -119,7 +119,7 @@ public class AlertUtil {
     }
 
     public static String getMessage(Context ctx) {
-        return (String) ctx.getAttribute(Context.ATTRIBUTE_MESSAGE);
+        return (String) ctx.getAttribute(Context.ATTRIBUTE_MESSAGE, Context.LOCAL_SCOPE);
     }
 
     /**
@@ -145,6 +145,6 @@ public class AlertUtil {
     }
 
     public static Exception getException(Context ctx) {
-        return (Exception) ctx.getAttribute(Context.ATTRIBUTE_EXCEPTION);
+        return (Exception) ctx.getAttribute(Context.ATTRIBUTE_EXCEPTION, Context.LOCAL_SCOPE);
     }
 }
