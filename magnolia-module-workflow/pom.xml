@@ -5,13 +5,13 @@
    <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.0-rc4</version>
+    <version>3.0-rc5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-workflow</artifactId>
   <name>magnolia-module-workflow</name>
-  <version>3.0-rc4</version>
+  <version>3.0-rc5-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>org.openwfe</groupId>

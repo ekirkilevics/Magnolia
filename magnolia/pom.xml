@@ -3,7 +3,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.0-rc4</version>
+    <version>3.0-rc5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <profiles>
@@ -89,7 +89,7 @@
   <artifactId>magnolia</artifactId>
   <packaging>war</packaging>
   <name>magnolia</name>
-  <version>3.0-rc4</version>
+  <version>3.0-rc5-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
