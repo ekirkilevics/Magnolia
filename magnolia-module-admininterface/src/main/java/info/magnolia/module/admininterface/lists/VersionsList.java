@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.admininterface.lists;
 
+import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.control.ContextMenu;
@@ -76,12 +77,19 @@ public abstract class VersionsList extends AbstractList {
     public ListModel getModel() {
         try {
             Content node = getNode();
-            return new VersionListModel(node);
+            return new VersionListModel(node, this.getMaxShowedVersions());
         }
         catch (Exception e) {
             log.error("can't find node for version list {}", this.path);
         }
         return null;
+    }
+
+    /**
+     * Check the version rollover. The latest can not get restored therfore we don't show it.
+     */
+    protected int getMaxShowedVersions() {
+        return Math.min((int)VersionConfig.getInstance().getMaxVersionAllowed(), 50);
     }
 
     public void configureList(ListControl list) {
