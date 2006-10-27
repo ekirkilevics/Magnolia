@@ -19,7 +19,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>3.0-rc4</version>
+      <version>${version}</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -54,7 +54,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-exchange-simple</artifactId>
-      <version>3.0-rc4</version>
+      <version>${version}</version>
     </dependency>
     <dependency>
       <groupId>log4j</groupId>
