@@ -2,10 +2,29 @@ body.mgnlAdminMain {
 	overflow: hidden;
 }
 
-div.mgnlAdminCentralMessagesDiv {
+#mgnlAdminCentralMessageBoxDiv {
 	position: absolute;
-	left: 20px;
-	top: 60px;
+    text-align: center;
+    padding:2px;
+    padding-top: 9px;
+    font-family: verdana;
+    font-size: 10px;
+    border-top:1px solid #ccc;
+    height: 35px;
+    width: 161px;
+    visibility: hidden;
+}
+
+div.messageBoxError {
+	background-color: #FFD0DC;
+}
+
+div.messageBoxWarn {
+	background-color: #F6D082;
+}
+
+div.messageBoxInfo {
+    background-color: #EBEEDE;
 }
 
 div.mgnlAdminCentralMenuDiv {

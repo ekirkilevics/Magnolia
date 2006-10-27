@@ -14,8 +14,10 @@ package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.security.User;
+import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.Navigation;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
@@ -38,6 +40,7 @@ public class AdminCentralPage extends TemplatedMVCHandler {
      */
     public AdminCentralPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
+        AlertUtil.setMessage("restart", MgnlContext.getSystemContext());
     }
 
     public Navigation getNavigation() {
@@ -59,6 +62,23 @@ public class AdminCentralPage extends TemplatedMVCHandler {
 
     public Messages getMessages() {
         return MessagesManager.getMessages();
+    }
+    
+    public String getMessage(){
+        if(AlertUtil.isMessageSet(MgnlContext.getSystemContext())){
+            String msg = AlertUtil.getMessage(MgnlContext.getSystemContext());
+            return "<b>" + MessagesManager.getWithDefault(msg, msg) + "</b>";
+        }
+        return null;
+    }
+    
+    public String getMessageCSSClass(){
+        if(AlertUtil.isExceptionSet()){
+            return "messageBoxError";           
+        }
+        else{
+            return "messageBoxWarn";
+        }
     }
 
 }

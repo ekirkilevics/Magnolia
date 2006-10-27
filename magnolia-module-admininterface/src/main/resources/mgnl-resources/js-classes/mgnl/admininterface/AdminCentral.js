@@ -28,6 +28,7 @@ function MgnlAdminCentral(){
     this.divContent = $("mgnlAdminCentralContentDiv");
     this.divScrolledContent = $("mgnlAdminCentralScrolledContentDiv");
     this.divMenu = $("mgnlAdminCentralMenuDiv");
+    this.divMessageBox = $("mgnlAdminCentralMessageBoxDiv");
     this.divFooter =$('mgnlAdminCentralFooterDiv');
     this.iframeContent = $("mgnlAdminCentralContentIFrame");
     this.iframeScrolledContent = $("mgnlAdminCentralScrolledContentIFrame");
@@ -36,6 +37,20 @@ function MgnlAdminCentral(){
      * Used if this instance is called from an other window
      */
     this.window = window;
+    
+    /**
+     * Set message displayed below the menu
+     */
+    this.setMessage = function(msg, className){
+    	this.divMessageBox.innerHTML = msg;
+    	this.divMessageBox.className = className;
+    	MgnlDHTMLUtil.show(this.divMessageBox);
+    }
+
+    this.resetMessage = function(){
+    	this.divMessageBox.innerHTML = "";
+    	MgnlDHTMLUtil.hide(this.divMessageBox);
+    }
     
     /**
      * Resize
@@ -48,6 +63,7 @@ function MgnlAdminCentral(){
             var w=sizeObj.w-195-20;
     
             this.divMenu.style.height=h;
+            this.divMessageBox.style.top=h-47;
     
             this.divContent.style.width=w;
             this.divContent.style.height=h;

@@ -33,7 +33,7 @@
             configureNavigation();
 
             // init navigation
-            mgnlNavigation.create('mgnlAdminCentralMenuDiv');
+            mgnlNavigation.create('mgnlAdminCentralMenuInnerDiv');
 
             // call the onload method
             if (opener &&  opener.MgnlAdminCentral && opener.MgnlAdminCentral.onOpenedInNewWindow) {
@@ -46,7 +46,11 @@
 
             // resize
             mgnlAdminCentral.resize();
-
+            
+            [#if this.message?exists]
+            	mgnlAdminCentral.setMessage("${this.message?js_string}","${this.messageCSSClass}");
+			[/#if]
+            
             // on resize
             onresize = function() {
                 mgnlAdminCentral.resize()
@@ -71,10 +75,14 @@
     [/#if]
     <!-- Menu -->
     <div id="mgnlAdminCentralMenuDiv" class="mgnlAdminCentralMenuDiv">
-      <div class="mgnlAdminCentralMenu">
+      <div id="mgnlAdminCentralMenuInnerDiv" style="position: absolute;">
+        <!-- do not delete me -->
+      </div>
+      <div id="mgnlAdminCentralMessageBoxDiv">
         <!-- do not delete me -->
       </div>
     </div>
+
     <!-- Not scrolled content like the website tree -->
     <div id="mgnlAdminCentralContentDiv" class="mgnlAdminCentralContentDiv">
       <iframe id="mgnlAdminCentralContentIFrame" src="" scrolling="no" style="border: none; width:100%; height:100%"
