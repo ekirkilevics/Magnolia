@@ -50,27 +50,27 @@ public class SecurityFilter implements Filter {
     /**
      * filter config login form
      */
-    private static final String LOGIN_FORM = "LoginForm";
+    protected static final String LOGIN_FORM = "LoginForm";
 
     /**
      * filter config unsecured URI
      */
-    private static final String UNSECURED_URI = "UnsecuredPath";
+    protected static final String UNSECURED_URI = "UnsecuredPath";
 
     /**
      * Authentication type
      */
-    private static final String AUTH_TYPE = "AuthType";
+    protected static final String AUTH_TYPE = "AuthType";
 
     /**
      * Authentication type Basic
      */
-    private static final String AUTH_TYPE_BASIC = "Basic";
+    protected static final String AUTH_TYPE_BASIC = "Basic";
 
     /**
      * Authentication type Form
      */
-    private static final String AUTH_TYPE_FORM = "Form";
+    protected static final String AUTH_TYPE_FORM = "Form";
 
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
@@ -135,7 +135,7 @@ public class SecurityFilter implements Filter {
      * @param response HttpServletResponse
      * @return <code>true</code> if the user is authenticated
      */
-    private boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
+    protected boolean authenticate(HttpServletRequest request, HttpServletResponse response) {
         try {
 
             String unsecuredUri = (String) Server.getInstance().getLoginConfig().get(UNSECURED_URI);
