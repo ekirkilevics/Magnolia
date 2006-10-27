@@ -40,9 +40,6 @@ public class VersionConfig {
         // do not instantiate
     }
 
-    /**
-     * get instance
-     */
     public static VersionConfig getInstance() {
         return (VersionConfig) FactoryUtil.getSingleton(VersionConfig.class);
     }
