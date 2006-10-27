@@ -373,18 +373,19 @@ public abstract class BaseVersionManager {
          try {
              Content node = this.getVersionedNode(uuid);
              if (node != null) {
-                 VersionHistory history = node.getVersionHistory();
-                 VersionIterator versions = node.getAllVersions();
-                 if (versions != null) {
-                     // skip root version
-                     versions.nextVersion();
-                     while (versions.hasNext()) {
-                         history.removeVersion(versions.nextVersion().getName());
-                     }
-                 }
                  if (node.getJCRNode().getReferences().getSize() < 1) {
                      // remove node from the version store only if its not referenced
                      node.delete();
+                 } else { // remove all associated versions
+                     VersionHistory history = node.getVersionHistory();
+                     VersionIterator versions = node.getAllVersions();
+                     if (versions != null) {
+                         // skip root version
+                         versions.nextVersion();
+                         while (versions.hasNext()) {
+                             history.removeVersion(versions.nextVersion().getName());
+                         }
+                     }
                  }
              }
          }
