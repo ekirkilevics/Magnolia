@@ -3,13 +3,13 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.0-rc4-SNAPSHOT</version>
+    <version>3.0-rc4</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-exchange-simple</artifactId>
   <name>magnolia-exchange-simple</name>
-  <version>3.0-rc4-SNAPSHOT</version>
+  <version>3.0-rc4</version>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>
@@ -23,7 +23,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>3.0-rc4-SNAPSHOT</version>
+      <version>3.0-rc4</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -41,7 +41,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-cache</artifactId>
-      <version>3.0-rc4-SNAPSHOT</version>
+      <version>3.0-rc4</version>
     </dependency>
     <dependency>
       <groupId>commons-httpclient</groupId>
