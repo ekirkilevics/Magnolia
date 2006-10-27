@@ -40,7 +40,6 @@ public class AdminCentralPage extends TemplatedMVCHandler {
      */
     public AdminCentralPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
-        AlertUtil.setMessage("restart", MgnlContext.getSystemContext());
     }
 
     public Navigation getNavigation() {
