@@ -13,8 +13,10 @@
 package info.magnolia.module.workflow;
 
 import info.magnolia.cms.security.MgnlUser;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
 
@@ -52,6 +54,7 @@ public class WorkflowUtil {
     private static JCRWorkItemAPI storage;
 
     static {
+        
         try {
             storage = new JCRWorkItemAPI();
         }
@@ -74,6 +77,48 @@ public class WorkflowUtil {
         }
         catch (Exception e) {
             log.error("Launching flow failed", e);
+        }
+    }
+    
+    /**
+     * Simply launch a flow for the specified node
+     */
+    public static void launchFlow(String repository, String path, String flowName) throws Exception {
+        try {
+            // Get the references
+            LaunchItem li = new LaunchItem();
+
+            // start activation
+            if (repository != null) {
+                li.addAttribute(Context.ATTRIBUTE_REPOSITORY, new StringAttribute(repository));
+            }
+            if (path != null) {
+                li.addAttribute(Context.ATTRIBUTE_PATH, new StringAttribute(path));
+            }
+            launchFlow(li, flowName);
+            // Launch the item
+        }
+        catch (Exception e) {
+            log.error("Launching flow " + flowName + " failed", e);
+        }
+    }
+
+    /**
+     * Start a flow
+     * @param li the prepared lunchItem
+     * @param flowName the flow to start
+     */
+    public static void launchFlow(LaunchItem li, String flowName) {
+        try {
+            
+            FlowDefinitionManager configurator = (FlowDefinitionManager) FactoryUtil.getSingleton(FlowDefinitionManager.class);
+            
+            configurator.configure(li, flowName);
+            
+            launchFlow(li);
+        }
+        catch (Exception e) {
+            log.error("Launching flow " + flowName + " failed", e);
         }
     }
     

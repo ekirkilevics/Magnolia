@@ -88,4 +88,9 @@ public final class WorkflowConstants {
 
     public static final String DEFAULT_EDIT_DIALOG = "editWorkItem";
 
+    /**
+     * 
+     */
+    public static final String DEFAULT_WORKFLOW = "default";
+
 }

@@ -89,7 +89,7 @@
         <sv:value>c00c065f-ea57-4569-bd0a-02728ec894c6</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>info.magnolia.module.workflow.commands.flow.ActivationFlowCommand</sv:value>
+        <sv:value>info.magnolia.module.workflow.commands.ActivationFlowCommand</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
