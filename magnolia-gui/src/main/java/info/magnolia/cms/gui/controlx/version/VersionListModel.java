@@ -18,6 +18,7 @@ import info.magnolia.cms.gui.query.SearchQuery;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.version.Version;
@@ -36,9 +37,23 @@ public class VersionListModel extends AbstractListModel {
     private Content content;
 
     /**
+     * defines how many versions this model will return in maximum
+     */
+    private int max = -1;
+
+    /**
      * search query to be used by sub implementation
      */
     protected SearchQuery query;
+
+    /**
+     * @param content
+     * @param max
+     */
+    public VersionListModel(Content content, int max) {
+        this.content = content;
+        this.max = max;
+    }
 
     /**
      * constructor
@@ -52,11 +67,13 @@ public class VersionListModel extends AbstractListModel {
      * @return all versions in a collection
      */
     protected Collection getResult() throws RepositoryException {
-        Collection allVersions = new ArrayList();
+        List allVersions = new ArrayList();
+
         VersionHistory versionHistory = this.content.getVersionHistory();
         if (versionHistory == null) {
             return allVersions;
         }
+
         VersionIterator iterator = versionHistory.getAllVersions();
         // skip root version, its safe here since this list is only meant for presentation
         // and there is always a root version
@@ -65,6 +82,39 @@ public class VersionListModel extends AbstractListModel {
             Version version = iterator.nextVersion();
             allVersions.add(this.content.getVersionedContent(version));
         }
+        if (max != -1) {
+            while(allVersions.size() > max){
+                allVersions.remove(0);
+            }
+        }
         return allVersions;
+    }
+
+    /**
+     * @return the max
+     */
+    public int getMax() {
+        return this.max;
+    }
+
+    /**
+     * @param max the max to set
+     */
+    public void setMax(int max) {
+        this.max = max;
+    }
+
+    /**
+     * @return the content
+     */
+    public Content getContent() {
+        return this.content;
+    }
+
+    /**
+     * @param content the content to set
+     */
+    public void setContent(Content content) {
+        this.content = content;
     }
 }
