@@ -288,7 +288,7 @@ public class MgnlContext {
         if (context == null) {
             log.error("MgnlContext is not initialized, This could happen if the request does not go through magnolia " +
                     "default filters");
-            log.error("See : MgnlContext.setInstance(Content context)");
+            log.error("See : MgnlContext.setInstance(Context context)");
             throw new IllegalStateException("MgnlContext is not set for this thread");
         }
         return context;
