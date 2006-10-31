@@ -13,6 +13,9 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.beans.config.URI2RepositoryMapping;
+import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
@@ -121,11 +124,43 @@ public class MgnlInterceptFilter implements Filter {
         // @todo the isAuthorized method is duplicated from EntryServlet!
         if (isAuthorized(request, response)) {
             if (req.getParameter(INTERCEPT) != null) {
+            	MgnlInterceptFilter.setHandleAndMapping(request);
                 this.intercept(request, response);
             }
         }
 
         filterChain.doFilter(req, resp);
+    }
+
+    private static void setHandleAndMapping(HttpServletRequest request) {
+        String uri = Path.getURI(request);
+        int firstDotPos = StringUtils.indexOf(uri, '.', StringUtils.lastIndexOf(uri, '/'));
+        String handle;
+        String selector;
+        String extension;
+        if (firstDotPos > -1) {
+            int lastDotPos = StringUtils.lastIndexOf(uri, '.');
+            handle = StringUtils.substring(uri, 0, firstDotPos);
+            selector = StringUtils.substring(uri, firstDotPos + 1, lastDotPos);
+            extension = StringUtils.substring(uri, lastDotPos + 1);
+        }
+        else {
+            // no dots (and no extension)
+            handle = uri;
+            selector = "";
+            extension = "";
+        }
+
+        URI2RepositoryMapping mapping = URI2RepositoryManager.getInstance().getMapping(uri);
+
+        // remove prefix if any
+        handle = mapping.getHandle(handle);
+
+        request.setAttribute(Aggregator.REPOSITORY, mapping.getRepository());
+        request.setAttribute(Aggregator.MAPPING, mapping);
+        request.setAttribute(Aggregator.HANDLE, handle);
+        request.setAttribute(Aggregator.SELECTOR, selector);
+        request.setAttribute(Aggregator.EXTENSION, extension);
     }
 
     /**
@@ -135,16 +170,24 @@ public class MgnlInterceptFilter implements Filter {
     public void intercept(HttpServletRequest request, HttpServletResponse response) {
         String action = request.getParameter(INTERCEPT);
         String repository = request.getParameter(PARAM_REPOSITORY);
+        String nodePath = request.getParameter(PARAM_PATH);
+        String handle = (String) request.getAttribute(Aggregator.HANDLE);
+        
+        if (repository == null) {
+        	repository = (String) request.getAttribute(Aggregator.REPOSITORY);
+        }
+
         if (repository == null) {
             repository = ContentRepository.WEBSITE;
         }
+
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
         synchronized (ExclusiveWrite.getInstance()) {
             if (action.equals(ACTION_PREVIEW)) {
                 // preview mode (button in main bar)
                 String preview = request.getParameter(Resource.MGNL_PREVIEW_ATTRIBUTE);
                 if (preview != null) {
-
+                	
                     // @todo IMPORTANT remove use of http session
                     HttpSession httpsession = request.getSession(true);
                     if (BooleanUtils.toBoolean(preview)) {
@@ -158,10 +201,9 @@ public class MgnlInterceptFilter implements Filter {
             else if (action.equals(ACTION_NODE_DELETE)) {
                 // delete paragraph
                 try {
-                    String path = request.getParameter(PARAM_PATH);
-                    // deactivate
-                    updatePageMetaData(request, hm);
-                    hm.delete(path);
+					Content page = hm.getContent(handle);
+					page.updateMetaData();
+                    hm.delete(nodePath);
                     hm.save();
                 }
                 catch (RepositoryException e) {
@@ -189,20 +231,6 @@ public class MgnlInterceptFilter implements Filter {
                 }
             }
         }
-    }
-
-    /**
-     * @param request
-     * @param hm
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     * @throws AccessDeniedException
-     */
-    private void updatePageMetaData(HttpServletRequest request, HierarchyManager hm) throws PathNotFoundException,
-        RepositoryException, AccessDeniedException {
-        String pagePath = StringUtils.substringBeforeLast(Path.getURI(request), "."); //$NON-NLS-1$
-        Content page = hm.getContent(pagePath);
-        page.updateMetaData();
     }
 
     /**
