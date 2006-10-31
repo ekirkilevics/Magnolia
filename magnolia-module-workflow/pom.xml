@@ -26,7 +26,18 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>3.0-rc4</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-exchange-simple</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-gui</artifactId>
+    </dependency>  
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-admininterface</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -36,11 +47,6 @@
     <dependency>
       <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-admininterface</artifactId>
-      <version>3.0-rc4</version>
     </dependency>
     <dependency>
       <groupId>jaxen</groupId>
@@ -75,16 +81,6 @@
     <dependency>
       <groupId>commons-chain</groupId>
       <artifactId>commons-chain</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-exchange-simple</artifactId>
-      <version>3.0-rc4</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-gui</artifactId>
-      <version>3.0-rc4</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>

@@ -13,7 +13,10 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>3.0-rc4</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-admininterface</artifactId>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -26,11 +29,6 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-admininterface</artifactId>
-      <version>3.0-rc4</version>
     </dependency>
   </dependencies>
 </project>
