@@ -13,7 +13,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>${version}</version>
+      <version>3.0-rc4</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -30,7 +30,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
-      <version>${version}</version>
+      <version>3.0-rc4</version>
     </dependency>
   </dependencies>
 </project>

@@ -97,6 +97,28 @@
     </organization>
     <!-- temporary sollution for the bundeling: we will make a submodule for the bundle -->
     <profiles>
+        <profile>
+          	<id>enterprise</id>
+      		<modules>
+      			<module>magnolia-module-enterprise</module>
+      		</modules>
+      	</profile>
+      
+		<profile>
+      		<id>1.5</id>
+      	    <build>
+      	      	<plugins>
+	      	        <plugin>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+						    <source>1.5</source>
+						    <target>1.5</target>
+						</configuration>
+      	        	</plugin>
+		      	</plugins>
+      		</build>
+      	</profile>
+      
       <profile>
         <id>bundle</id>
         <build>
@@ -134,8 +156,8 @@
             <plugin>
                 <artifactId>maven-compiler-plugin</artifactId>
                 <configuration>
-                    <source>1.4</source>
-                    <target>1.4</target>
+                    <source>1.5</source>
+                    <target>1.5</target>
                 </configuration>
                 <executions>
                     <execution>
