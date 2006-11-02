@@ -248,7 +248,7 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         data.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, PROPERTIES_CONTENTTYPE_VALUE);
 
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
-        data.setAttribute(FileProperties.PROPERTY_LASTMODIFIES, value);
+        data.setAttribute(FileProperties.PROPERTY_LASTMODIFIED, value);
 
         data.setAttribute(FileProperties.PROPERTY_SIZE, Long.toString(imageFile.length()));
 

@@ -31,7 +31,7 @@ public class FileProperties {
 
     public static final String PROPERTY_ENCODING = "jcr:encoding"; //$NON-NLS-1$
 
-    public static final String PROPERTY_LASTMODIFIES = "jcr:lastModified"; //$NON-NLS-1$
+    public static final String PROPERTY_LASTMODIFIED = "jcr:lastModified"; //$NON-NLS-1$
 
     public static final String PROPERTY_SIZE = "size"; //$NON-NLS-1$
 

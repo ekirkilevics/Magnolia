@@ -279,7 +279,7 @@ public class Document {
 
         // set time flag
         Calendar value = new GregorianCalendar(TimeZone.getDefault());
-        this.fileNode.setAttribute(FileProperties.PROPERTY_LASTMODIFIES, value);
+        this.fileNode.setAttribute(FileProperties.PROPERTY_LASTMODIFIED, value);
 
         this.updateMetaData();
     }

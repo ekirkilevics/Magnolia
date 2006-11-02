@@ -865,7 +865,7 @@ public class SaveHandlerImpl implements SaveHandler {
                 data.setAttribute(FileProperties.PROPERTY_CONTENTTYPE, doc.getType());
 
                 Calendar value = new GregorianCalendar(TimeZone.getDefault());
-                data.setAttribute(FileProperties.PROPERTY_LASTMODIFIES, value);
+                data.setAttribute(FileProperties.PROPERTY_LASTMODIFIED, value);
 
                 data.setAttribute(FileProperties.PROPERTY_SIZE, Long.toString(doc.getLength()));
 
