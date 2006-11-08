@@ -332,6 +332,11 @@
         <artifactId>magnolia-editor-kupu</artifactId>
         <version>3.0-rc5-SNAPSHOT</version>
       </dependency>
+      <dependency>
+        <groupId>info.magnolia</groupId>
+        <artifactId>magnolia-module-samples</artifactId>
+        <version>3.0-rc5-SNAPSHOT</version>
+      </dependency>
 
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
@@ -737,6 +742,7 @@
     <module>magnolia-taglib-utility</module>
     <module>magnolia-editor-fckeditor</module>
     <module>magnolia-editor-kupu</module>
+    <module>magnolia-module-samples</module>
     <module>magnolia</module>
   </modules>
 </project>

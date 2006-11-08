@@ -102,4 +102,7 @@ public final class SimpleUrlPattern implements UrlPattern {
         return this.length;
     }
 
+    public String toString() {
+        return "SimpleUrlPattern{" + pattern + '}';
+    }
 }

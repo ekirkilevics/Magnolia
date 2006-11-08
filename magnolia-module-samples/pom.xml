@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
+    <artifactId>magnolia-project</artifactId>
+    <groupId>info.magnolia</groupId>
+    <version>3.0-rc5-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>magnolia-module-samples</artifactId>
+  <name>magnolia samples</name>
+  <version>3.0-rc5-SNAPSHOT</version>
+  <url>http://www.magnolia.info</url>
+  <dependencies>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-core</artifactId>
+      <version>3.0-rc5-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-log4j12</artifactId>
+    </dependency>
+  </dependencies>
+</project>

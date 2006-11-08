@@ -162,6 +162,10 @@
       <version>3.0-rc5-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-samples</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.apache.jackrabbit</groupId>
       <artifactId>jackrabbit-core</artifactId>
     </dependency>

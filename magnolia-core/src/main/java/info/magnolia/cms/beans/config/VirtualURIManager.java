@@ -39,6 +39,8 @@ import org.slf4j.LoggerFactory;
  * @version 2.0
  */
 public final class VirtualURIManager extends ObservedManager {
+    public static final String FROM_URI_NODEDATANAME = "fromURI";
+    public static final String TO_URI_NODEDATANAME = "toURI";
 
     /**
      * Logger.
@@ -52,7 +54,7 @@ public final class VirtualURIManager extends ObservedManager {
     }
 
     /**
-     * all cached data.
+     * all cached data. <UrlPattern, String[target, pattern]>
      */
     private Map cachedURImapping = new Hashtable();
 
@@ -82,13 +84,13 @@ public final class VirtualURIManager extends ObservedManager {
         try {
             log.info("Config : Loading VirtualMap - " + node.getHandle()); //$NON-NLS-1$
             Collection list = node.getChildren(ItemType.CONTENTNODE);
-            Collections.sort((List) list, new StringComparator("fromURI")); //$NON-NLS-1$
+            Collections.sort((List) list, new StringComparator(FROM_URI_NODEDATANAME)); //$NON-NLS-1$
             Iterator it = list.iterator();
             while (it.hasNext()) {
                 Content container = (Content) it.next();
-                NodeData fromURI = NodeDataUtil.getOrCreate(container, "fromURI"); //$NON-NLS-1$
+                NodeData fromURI = NodeDataUtil.getOrCreate(container, FROM_URI_NODEDATANAME); //$NON-NLS-1$
                 UrlPattern p = new SimpleUrlPattern(fromURI.getString());
-                cachedURImapping.put(p, new String[]{NodeDataUtil.getString(container, "toURI"), fromURI.getString()}); //$NON-NLS-1$
+                cachedURImapping.put(p, new String[]{NodeDataUtil.getString(container, TO_URI_NODEDATANAME), fromURI.getString()}); //$NON-NLS-1$
             }
             log.info("Config : VirtualMap loaded - " + node.getHandle()); //$NON-NLS-1$
         }
@@ -101,6 +103,7 @@ public final class VirtualURIManager extends ObservedManager {
         this.cachedURImapping.clear();
     }
 
+    // TODO : should this really be public ?
     public Map getURIMappings() {
         return cachedURImapping;
     }
