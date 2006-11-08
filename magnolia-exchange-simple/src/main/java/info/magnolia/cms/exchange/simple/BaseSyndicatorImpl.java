@@ -245,10 +245,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
              activationContent = this.collect(content, orderBefore);
              this.activate(activationContent);
              this.updateActivationDetails();
+             log.info("Exchange: activation succeeded [{}]", content.getHandle());
          }
          catch (Exception e) {
              if (log.isDebugEnabled()) {
-                 log.error("Activation failed for path:" + ((path != null) ? path : "[null]"), e);
+                 log.error("Excahnge: activation failed for path:" + ((path != null) ? path : "[null]"), e);
              }
              throw new ExchangeException(e);
          }

@@ -87,7 +87,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 throw new ExchangeException("Message received from subscriber: " + message);
             }
             urlConnection.getContent();
-            log.info("Exchange : activation request received by {}", subscriber.getName()); //$NON-NLS-1$
+            log.debug("Exchange : activation to subscriber {} succeeded", subscriber.getName()); //$NON-NLS-1$
         }
         catch (ExchangeException e) {
             throw e;
