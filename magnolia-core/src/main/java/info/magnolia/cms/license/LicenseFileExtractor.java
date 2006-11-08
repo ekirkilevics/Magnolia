@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version 1.1
  */
-public final class LicenseFileExtractor {
+public class LicenseFileExtractor {
 
     public static final String VERSION_NUMBER = "VersionNumber"; //$NON-NLS-1$
 
