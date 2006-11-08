@@ -13,7 +13,6 @@
 package info.magnolia.samples;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
