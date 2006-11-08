@@ -25,8 +25,8 @@
 
         if (linkType.equals("external")) {
             // if no protocol is defined, prepend http:// to link
-            if (html.indexOf("://")==-1) {
-            	html.append("http://"+link);
+            if (link.indexOf("://") < 0) {
+            	html.append("http://");
             }
 			// open all external protocols in new window
             html.append(link+"\" target=\"_blank\">");
