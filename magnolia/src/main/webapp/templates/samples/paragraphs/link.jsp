@@ -26,9 +26,9 @@
         if (linkType.equals("external")) {
             // if no protocol is defined, prepend http:// to link
             if (link.indexOf("://") < 0) {
-            	html.append("http://");
+                html.append("http://");
             }
-			// open all external protocols in new window
+            // open all external protocols in new window
             html.append(link+"\" target=\"_blank\">");
 
             if (!text.equals("")) html.append(text);
@@ -43,18 +43,18 @@
             else {
                 try {
                     // get title of linked page
-		            HierarchyManager hm=MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-		            if(hm.isExist(link)){
-                    	Content destinationPage=hm.getContent(link);
-                    	// if title is empty take the name
-                    	if (destinationPage.getNodeData("title").getString().equals("")) {
-                    		html.append(destinationPage.getName());
-                    	} else {
-                    		html.append(destinationPage.getNodeData("title").getString());
-                    	}                    	
-                   	}
-                   	else{
-                    	html.append(link);
+                    HierarchyManager hm=MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
+                    if(hm.isExist(link)){
+                        Content destinationPage=hm.getContent(link);
+                        // if title is empty take the name
+                        if (destinationPage.getNodeData("title").getString().equals("")) {
+                            html.append(destinationPage.getName());
+                        } else {
+                            html.append(destinationPage.getNodeData("title").getString());
+                        }
+                       }
+                       else{
+                        html.append(link);
                     }
                 }
                 catch (RepositoryException re) {
