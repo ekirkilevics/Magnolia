@@ -5,6 +5,14 @@
   <description>Workflow using OpenWFE</description>
   <class>info.magnolia.module.workflow.WorkflowModule</class>
   <version>3.0</version>
+  
+  <properties>
+    <property>
+      <name>info.magnolia.module.workflow.flows.FlowDefinitionManager</name>
+      <value>info.magnolia.module.workflow.flows.SimpleFlowDefinitionManager</value>
+    </property>
+  </properties>
+  
   <dependencies>
     <dependency>
       <name>adminInterface</name>
