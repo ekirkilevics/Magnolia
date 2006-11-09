@@ -73,7 +73,7 @@ public class ConfigurationPage extends TemplatedMVCHandler {
     }
 
     public Map getSystemProperties() {
-        return SystemProperty.getPropertyList();
+        return SystemProperty.getProperties();
     }
 
 }
