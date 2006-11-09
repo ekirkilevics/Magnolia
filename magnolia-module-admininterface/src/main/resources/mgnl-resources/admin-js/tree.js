@@ -500,7 +500,14 @@
 
     mgnlTree.prototype.deleteNode = function()
         {
-        var text=mgnlMessages.get('tree.deletenode.confirm.text.js', null, [this.selectedNode.id]);
+        var text;
+        if(this.getNode(this.selectedNode.id).isActivated){
+        	text = mgnlMessages.get('tree.deletenode.confirm.deactivation.text.js', null, [this.selectedNode.id]);
+        }
+        else{
+        	text = mgnlMessages.get('tree.deletenode.confirm.text.js', null, [this.selectedNode.id]);
+        }
+        
         var title=mgnlMessages.get('tree.deletenode.confirm.title.js');
         if (mgnlConfirm(text,title))
             {
@@ -593,14 +600,14 @@
             else if (this.clipboardMethod==1 && id.indexOf(this.clipboardNode.id)==0 && pasteType!=0){
                 //move into itself is not possible
                 mgnlAlert(mgnlMessages.get('tree.pastenode.itself.js'));
-             }
+            }
             else{
                 // confirm deactivation
 
-                var text=mgnlMessages.get('tree.movenode.confirm.text.js', null, [this.selectedNode.id]);
+                var text=mgnlMessages.get('tree.movenode.confirm.text.js', null, [this.clipboardNode.id]);
                 var title=mgnlMessages.get('tree.movenode.confirm.title.js');
 
-                if (!this.getNode(id).isActivated || this.clipboardMethod==1 || mgnlConfirm(text,title)){
+                if (!this.getNode(this.clipboardNode.id).isActivated || this.clipboardMethod==1 || mgnlConfirm(text,title)){
                     if (lineDivId){
                         //for last line on root level
                         var lineDiv=document.getElementById(lineDivId);
