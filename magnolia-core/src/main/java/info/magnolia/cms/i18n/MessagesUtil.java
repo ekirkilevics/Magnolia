@@ -113,5 +113,53 @@ public class MessagesUtil {
     public static String javaScriptString(String msg) {
         return StringUtils.replace(StringUtils.replace(msg, "'", "\\'"), "\n", "\\n");
     }
+    
+    public static String get(String key){
+        return MessagesManager.getMessages().get(key);
+    }
+
+    public static String get(String key,String[] args){
+        return MessagesManager.getMessages().get(key, args);
+    }
+
+    public static String getWithDefault(String key, String dflt){
+        return MessagesManager.getMessages().getWithDefault(key, dflt);
+    }
+
+    public static String getWithDefault(String key, String dflt, String[] args){
+        return MessagesManager.getMessages().getWithDefault(key, args, dflt);
+    }
+
+    public static String get(String key, String basename){
+        return MessagesManager.getMessages(basename).get(key);
+    }
+
+    public static String get(String key, String basename, String[] args){
+        return MessagesManager.getMessages(basename).get(key, args);
+    }
+
+    public static String getWithDefault(String key, String dflt, String basename){
+        return MessagesManager.getMessages(basename).getWithDefault(key, dflt);
+    }
+
+    public static String getWithDefault(String key, String dflt, String basename, String[] args){
+        return MessagesManager.getMessages(basename).getWithDefault(key, args, dflt);
+    }
+
+    public static String getChained(String key, String[] basenames){
+        return chain(basenames).get(key);
+    }
+
+    public static String getChained(String key, String[] basenames, String[] args){
+        return chain(basenames).get(key, args);
+    }
+
+    public static String getChainedWithDefault(String key, String dflt, String[] basenames){
+        return chain(basenames).getWithDefault(key, dflt);
+    }
+
+    public static String getChainedWithDefault(String key, String dflt, String[] basenames, String[] args){
+        return chain(basenames).getWithDefault(key, args, dflt);
+    }
 
 }
