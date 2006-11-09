@@ -109,7 +109,6 @@ public final class Subscriber {
                 children = new ArrayList();
                 children.add(startPage);
             } catch (PathNotFoundException e) {
-                log.debug("No new subscriber settings found, fall back to subscriber list configuration");
                 startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent("subscribers");
                 children = startPage.getChildren(ItemType.CONTENTNODE);
             }
