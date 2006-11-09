@@ -8,6 +8,8 @@ import info.magnolia.module.workflow.WorkflowConstants;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 
 import openwfe.org.engine.workitem.LaunchItem;
 
@@ -30,18 +32,19 @@ public class SimpleFlowDefinitionManager implements FlowDefinitionManager {
      */
     private static Logger log = LoggerFactory.getLogger(SimpleFlowDefinitionManager.class);
 
-    public void configure(LaunchItem launchItem, String workflowName) {
+    public void configure(LaunchItem launchItem, String workflowName) throws FlowDefinionException {
         if(!StringUtils.equals(workflowName, WorkflowConstants.DEFAULT_WORKFLOW)){
-            log.warn("only default workflow supported in Community Edition, will fallback to default flow");
+            throw new FlowDefinionException("only default workflow supported in Community Edition, will fallback to default flow");
         }
+        
         launchItem.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
         String flowDef = readDefinition(WorkflowConstants.DEFAULT_WORKFLOW);
         launchItem.getAttributes().puts(WorkflowConstants.ATTRIBUTE_DEFINITION, flowDef);
     }
 
-    public String readDefinition(String workflowName) {
+    public String readDefinition(String workflowName) throws FlowDefinionException{
         if(!StringUtils.equals(workflowName, WorkflowConstants.DEFAULT_WORKFLOW)){
-            log.warn("only default workflow supported in Community Edition, will fallback to default flow");
+            throw new FlowDefinionException("only default workflow supported in Community Edition, will fallback to default flow");
         }
 
         InputStream stream = null;
@@ -58,9 +61,13 @@ public class SimpleFlowDefinitionManager implements FlowDefinitionManager {
         return StringUtils.EMPTY;
     }
 
-    public void saveDefinition(String workflowName, String definition) {
-        if(StringUtils.equals(workflowName, WorkflowConstants.DEFAULT_WORKFLOW)){
-            log.warn("saving of workflow definitions is not supported in the Community Edition");
-        }
+    public void saveDefinition(String definition) throws FlowDefinionException {
+        throw new FlowDefinionException("saving of workflow definitions is not supported in the Community Edition");
+    }
+
+    public List getDefinitionNames() {
+        List list = new ArrayList();
+        list.add("default");
+        return list;
     }
 }
