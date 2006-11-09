@@ -26,6 +26,7 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.XMLReaderFactory;
 import info.magnolia.cms.core.*;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.cms.security.User;
@@ -467,11 +468,21 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          md.setActivatorId(this.user.getName());
          md.setLastActivationActionDate();
 
-         Iterator children = node.getChildren(this.contentFilter).iterator();
+         Iterator children;
+         if (type.equals(SimpleSyndicator.ACTIVATE)) {
+             // use syndicator rulebased filter
+             children = node.getChildren(this.contentFilter).iterator();
+         }
+         else {
+             // all childs
+             children = node.getChildren(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER).iterator();
+         }
+
          while (children.hasNext()) {
              Content child = (Content) children.next();
              this.updateMetaData(child, type);
          }
+
 
      }
 
