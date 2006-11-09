@@ -15,6 +15,7 @@ package info.magnolia.cms.module;
 import info.magnolia.cms.beans.config.Bootstrapper;
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -704,28 +705,35 @@ public final class ModuleUtil {
      * @param repository
      */
     public static void subscribeRepository(String repository) {
-        Content subscribers = ContentUtil.getContent(ContentRepository.CONFIG, "/subscribers");
-        if (subscribers == null) {
-            return;
+        List collectedNodes = new ArrayList();
+        
+        // singel subscriber schema
+        Content subscriberNode = ContentUtil.getContent(ContentRepository.CONFIG, "/" + Subscriber.SUBSCRIBER_NODE_NAME);
+        if(subscriberNode != null){
+            collectedNodes.add(subscriberNode);
         }
-        for (Iterator iter = subscribers.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
-            Content subscriber = (Content) iter.next();
-            Content context = ContentUtil.getCaseInsensitive(subscriber, "Context");
+        
+        // multiple subscriber schema
+        Content subscribersNode = ContentUtil.getContent(ContentRepository.CONFIG, "/" + Subscriber.SUBSCRIBERS_NODE_NAME);
+        if (subscribersNode != null) {
+            collectedNodes.addAll(subscribersNode.getChildren(ItemType.CONTENTNODE));
+        }
+        
+        for (Iterator iter = collectedNodes.iterator(); iter.hasNext();) {
+            Content node = (Content) iter.next();
+            Content context = ContentUtil.getCaseInsensitive(node, Subscriber.CONTEXT_NODE_NAME);
             try {
                 if (context != null && !context.hasContent(repository)) {
                     Content rep = context.createContent(repository, ItemType.CONTENTNODE);
                     Content entry = rep.createContent("0001", ItemType.CONTENTNODE);
                     entry.createNodeData("subscribedURI").setValue("/");
+                    node.save();
                 }
             }
             catch (RepositoryException e) {
                 log.error("wasn't able to subscribe repository [" + repository + "]", e);
             }
-        }
-        try {
-            subscribers.save();
-        }
-        catch (RepositoryException e) {
+
         }
     }
 }
