@@ -16,6 +16,7 @@ import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.workflow.flows.FlowDefinionException;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
@@ -107,19 +108,14 @@ public class WorkflowUtil {
      * Start a flow
      * @param li the prepared lunchItem
      * @param flowName the flow to start
+     * @throws FlowDefinionException 
      */
-    public static void launchFlow(LaunchItem li, String flowName) {
-        try {
-            
-            FlowDefinitionManager configurator = (FlowDefinitionManager) FactoryUtil.getSingleton(FlowDefinitionManager.class);
-            
-            configurator.configure(li, flowName);
-            
-            launchFlow(li);
-        }
-        catch (Exception e) {
-            log.error("Launching flow " + flowName + " failed", e);
-        }
+    public static void launchFlow(LaunchItem li, String flowName) throws FlowDefinionException {
+        FlowDefinitionManager configurator = WorkflowModule.getFlowDefinitionManager();
+        
+        configurator.configure(li, flowName);
+        
+        launchFlow(li);
     }
     
     /**
