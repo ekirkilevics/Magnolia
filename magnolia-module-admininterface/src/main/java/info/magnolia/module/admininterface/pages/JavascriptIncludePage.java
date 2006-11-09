@@ -96,14 +96,9 @@ public class JavascriptIncludePage extends PageMVCHandler {
         PrintWriter out = response.getWriter();
         String contextPath = request.getContextPath();
 
-        WebContext ctx = (WebContext) FactoryUtil.newInstance(WebContext.class);
-        ctx.init(request);
-        MgnlContext.setInstance(ctx);
-
         out.println("var contextPath = '" + contextPath + "';");
 
         prepareI18n(out);
-
 
         for (int i = 0; i < includes.length; i++) {
             InputStream in = ClasspathResourcesUtil.getStream("/mgnl-resources/admin-js/" + includes[i]);
