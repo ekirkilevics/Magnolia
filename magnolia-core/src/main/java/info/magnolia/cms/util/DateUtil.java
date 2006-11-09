@@ -14,6 +14,7 @@ package info.magnolia.cms.util;
 
 import info.magnolia.context.MgnlContext;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -64,7 +65,46 @@ public class DateUtil {
             MgnlContext.getLocale());
         return format.format(val);
     }
+    
+    /**
+     * Uses the current locale (user) to format the date
+     * @param val Date or Calendar
+     * @return the String
+     */
+    public static String formatDate(Object val) {
+        FastDateFormat format = FastDateFormat.getDateInstance(
+            FastDateFormat.SHORT,
+            MgnlContext.getLocale());
+        return format.format(val);
+    }
 
+    /**
+     * Uses the current locale (user) to parse the date and time
+     * @param val Date or Calendar
+     * @return the String
+     * @throws ParseException 
+     */
+    public static Date parseDateTime(String dateStr) throws ParseException {
+        DateFormat format = SimpleDateFormat.getDateTimeInstance(
+            FastDateFormat.SHORT,
+            FastDateFormat.SHORT,
+            MgnlContext.getLocale());
+        return (Date)format.parseObject(dateStr);
+    }
+    
+    /**
+     * Uses the current locale (user) to parse the date
+     * @param val Date or Calendar
+     * @return the String
+     * @throws ParseException 
+     */
+    public static Date parseDate(String dateStr) throws ParseException {
+        DateFormat format = SimpleDateFormat.getDateInstance(
+            FastDateFormat.SHORT,
+            MgnlContext.getLocale());
+        return format.parse(dateStr);
+    }
+    
     /**
      * Get the equivalent UTC calendar to a local calendar
      */
