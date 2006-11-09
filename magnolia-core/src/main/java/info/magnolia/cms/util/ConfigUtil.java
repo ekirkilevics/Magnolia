@@ -153,7 +153,7 @@ public class ConfigUtil {
      * @throws IOException
      */
     public static String replaceTokens(String config) throws IOException {
-        for (Iterator iter = SystemProperty.getPropertyList().keySet().iterator(); iter.hasNext();) {
+        for (Iterator iter = SystemProperty.getProperties().keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             config = StringUtils.replace(config, "${" + key + "}", SystemProperty.getProperty(key, ""));
             
