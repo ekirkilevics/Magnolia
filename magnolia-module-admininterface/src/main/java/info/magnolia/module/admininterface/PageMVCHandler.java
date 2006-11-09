@@ -15,7 +15,7 @@ package info.magnolia.module.admininterface;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.servlets.MVCServletHandlerImpl;
+import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.cms.util.Resource;
 
@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$
  */
 
-public abstract class PageMVCHandler extends MVCServletHandlerImpl {
+public abstract class PageMVCHandler extends CommandBasedMVCServletHandler {
 
     /**
      * Logger

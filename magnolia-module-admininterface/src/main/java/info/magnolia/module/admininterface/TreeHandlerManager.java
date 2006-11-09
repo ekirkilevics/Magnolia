@@ -108,12 +108,11 @@ public class TreeHandlerManager extends ObservedManager {
             // register commands if defined
             try {
                 if (tree.hasContent("commands")) {
-                    Content commands = tree.getContent("commands");
-                    CommandsManager.getInstance().register(commands);
+                    log.error("the definition of commands at the tree level is not longer supported. Move them to the modules commands node! [" + defNode.getHandle() + "]");
                 }
             }
             catch (RepositoryException e) {
-                log.error("can't register commands catalog for tree handler {}", name, e);
+                log.error("can't check commands node of the tree node [" + defNode.getHandle() + "]", e);
             }
         }
     }
