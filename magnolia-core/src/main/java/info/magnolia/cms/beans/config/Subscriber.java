@@ -36,16 +36,20 @@ import org.slf4j.LoggerFactory;
  */
 public final class Subscriber {
 
+    public static final String SUBSCRIBERS_NODE_NAME = "subscribers";
+
+    public static final String SUBSCRIBER_NODE_NAME = "subscriber"; //$NON-NLS-1$
+
+    public static final String DEFAULT_SUBSCRIBER_NAME = "default";
+
+    public static final String CONTEXT_NODE_NAME = "context";
+
     /**
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(Subscriber.class);
 
-    private static final String START_PAGE = "subscriber"; //$NON-NLS-1$
-
     private static Hashtable cachedContent = new Hashtable();
-
-    private static final String SUBSCRIBER_NAME = "contentSubscriber";
 
     /**
      * <code>true</code> if at least one subscriber is configured and enabled.
@@ -86,13 +90,23 @@ public final class Subscriber {
      */
     public static void init() {
         load();
-        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, "/"+START_PAGE, new EventListener() {
+        initObservation();
+    }
 
-            public void onEvent(EventIterator iterator) {
-                // reload everything
+    protected static void initObservation() {
+        EventListener listener = new EventListener(){
+            public void onEvent(EventIterator events) {
                 reload();
-            }
-        });
+            };  
+        };
+        
+        if(ContentUtil.getContent(ContentRepository.CONFIG, SUBSCRIBER_NODE_NAME)!= null){
+            ObservationUtil.registerChangeListener(ContentRepository.CONFIG, "/" + SUBSCRIBER_NODE_NAME, listener);
+        }
+
+        if(ContentUtil.getContent(ContentRepository.CONFIG, SUBSCRIBERS_NODE_NAME)!= null){
+            ObservationUtil.registerChangeListener(ContentRepository.CONFIG, "/" + SUBSCRIBERS_NODE_NAME, listener);
+        }
     }
 
     private static void load() {
@@ -100,16 +114,25 @@ public final class Subscriber {
 
         log.info("Config : loading Subscribers"); //$NON-NLS-1$
 
+        Collection children = getSubscriberNodes();
+
+        if (children != null) {
+            Subscriber.cacheContent(children);
+        }
+        log.info("Config : Subscribers loaded"); //$NON-NLS-1$
+    }
+
+    protected static Collection getSubscriberNodes() {
         Collection children = Collections.EMPTY_LIST;
 
         try {
             Content startPage;
             try {
-                startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
+                startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(SUBSCRIBER_NODE_NAME);
                 children = new ArrayList();
                 children.add(startPage);
             } catch (PathNotFoundException e) {
-                startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent("subscribers");
+                startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(SUBSCRIBERS_NODE_NAME);
                 children = startPage.getChildren(ItemType.CONTENTNODE);
             }
         }
@@ -120,11 +143,7 @@ public final class Subscriber {
             log.error("Config : Failed to load Subscribers"); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
-
-        if (children != null) {
-            Subscriber.cacheContent(children);
-        }
-        log.info("Config : Subscribers loaded"); //$NON-NLS-1$
+        return children;
     }
 
     public static void reload() {
@@ -168,6 +187,10 @@ public final class Subscriber {
             si.senderURL = c.getNodeData("senderURL").getString(); //$NON-NLS-1$
             si.requestConfirmation = c.getNodeData("requestConfirmation").getBoolean(); //$NON-NLS-1$
             si.name = c.getName();
+            
+            if(StringUtils.equals(si.name, SUBSCRIBER_NODE_NAME)){
+                si.name = DEFAULT_SUBSCRIBER_NAME;
+            }
 
             // don't use getBoolean since subscribers without an "active" node should be enabled by default
             String activeString = c.getNodeData("active").getString(); //$NON-NLS-1$
@@ -186,7 +209,8 @@ public final class Subscriber {
 
             // all context info
             addContext(si, c);
-            Subscriber.cachedContent.put(SUBSCRIBER_NAME, si);
+            
+            Subscriber.cachedContent.put(si.getName(), si);
         }
     }
 
@@ -197,7 +221,11 @@ public final class Subscriber {
      */
     private static void addContext(Subscriber subscriberInfo, Content contentNode) {
         subscriberInfo.context = new Hashtable();
-        Content contextList = ContentUtil.getCaseInsensitive(contentNode,"context"); //$NON-NLS-1$
+        Content contextList = ContentUtil.getCaseInsensitive(contentNode, CONTEXT_NODE_NAME); //$NON-NLS-1$
+        if(contextList == null){
+            log.warn("subscriber has no context node defined");
+            return;
+        }
         Iterator it = contextList.getChildren().iterator();
         while (it.hasNext()) {
             Content context = (Content) it.next();
@@ -221,9 +249,15 @@ public final class Subscriber {
 
     /**
      * @return configured subscriber
-     * */
+     **/
     public static Subscriber getSubscriber() {
-        return (Subscriber) Subscriber.cachedContent.get(SUBSCRIBER_NAME);
+        if(cachedContent.containsKey(DEFAULT_SUBSCRIBER_NAME)){
+            return (Subscriber) cachedContent.get(DEFAULT_SUBSCRIBER_NAME);
+        }
+        if(cachedContent.size() > 0){
+            return (Subscriber) cachedContent.entrySet().iterator().next();
+        }
+        return null;
     }
 
     /**
