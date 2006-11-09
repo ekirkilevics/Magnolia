@@ -22,6 +22,7 @@ import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.File;
@@ -63,17 +64,10 @@ import org.slf4j.LoggerFactory;
 public class ModuleRegistration {
 
     /**
-     * The instance of the registration
-     */
-    private static ModuleRegistration instance = new ModuleRegistration();
-
-    // (ModuleRegistration) FactoryUtil .getSingleton(ModuleRegistration.class);
-
-    /**
      * @return Returns the instance.
      */
     public static ModuleRegistration getInstance() {
-        return instance;
+        return (ModuleRegistration) FactoryUtil.getSingleton(ModuleRegistration.class);
     }
 
     /**
