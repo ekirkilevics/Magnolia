@@ -3,14 +3,12 @@
  */
 package info.magnolia.module.workflow.flows;
 
+import java.util.List;
+
 import openwfe.org.engine.workitem.LaunchItem;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
- * Configures the item to use a specifig flow.
+ * Manages flow definitions.Configures the item to use a specifig flow.
  * @author philipp
  * @version $Id$
  *
@@ -18,12 +16,23 @@ import org.slf4j.LoggerFactory;
 public interface FlowDefinitionManager {
 
     /**
-     * @param launchItem
-     * @param workflowName
+     * Configure the launchItem, so that it will use the workflow
      */
-    void configure(LaunchItem launchItem, String workflowName);
+    void configure(LaunchItem launchItem, String workflowName) throws FlowDefinionException;
     
-    void saveDefinition(String workflowName, String definition);
+    /**
+     * The flow name gets extracted out of the workflow definition.
+     * @param definition the workflow definition xml
+     */
+    void saveDefinition(String definition) throws FlowDefinionException;
     
-    String readDefinition(String workflowName);
+    /**
+     * Read the workflow definition stored with this name
+     */
+    String readDefinition(String workflowName) throws FlowDefinionException;
+
+    /**
+     * List all available workflow names
+     */
+    List getDefinitionNames() throws FlowDefinionException;
 }
