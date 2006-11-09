@@ -16,6 +16,7 @@ import org.apache.commons.lang.StringUtils;
 
 import java.util.Hashtable;
 import java.util.Map;
+import java.util.Properties;
 
 
 /**
@@ -46,7 +47,7 @@ public final class SystemProperty {
      */
     public static final String BOOTSTRAP_IF_EMPTY = "magnolia.bootstrap.ifEmpty";
 
-    private static Map properties = new Hashtable();
+    private static Properties properties = new Properties();
 
     /**
      * Web app root key parameter at the servlet context level (i.e. a context-param in web.xml): "webAppRootKey".
@@ -88,9 +89,14 @@ public final class SystemProperty {
     }
 
     /**
-     *
+     * @deprecated use getProperties() instead
      */
     public static Map getPropertyList() {
         return SystemProperty.properties;
     }
+
+    public static Properties getProperties() {
+        return SystemProperty.properties;
+    }
+    
 }
