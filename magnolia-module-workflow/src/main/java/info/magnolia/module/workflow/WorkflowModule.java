@@ -19,7 +19,6 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
-import info.magnolia.module.workflow.flows.SimpleFlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 
 import javax.jcr.RepositoryException;
@@ -78,7 +77,6 @@ public class WorkflowModule extends AbstractAdminModule {
     protected void onInit() {
         registerCacheUrl();
         startEngine();
-        FactoryUtil.setDefaultImplementation(FlowDefinitionManager.class, SimpleFlowDefinitionManager.class);
     }
 
     public static String getCacheURL() {
@@ -138,6 +136,10 @@ public class WorkflowModule extends AbstractAdminModule {
      */
     static public JCRPersistedEngine getEngine() {
         return wfEngine;
+    }
+    
+    public static FlowDefinitionManager getFlowDefinitionManager(){
+        return (FlowDefinitionManager) FactoryUtil.getSingleton(FlowDefinitionManager.class);
     }
 
 }
