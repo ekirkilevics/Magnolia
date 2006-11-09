@@ -13,7 +13,10 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
+import info.magnolia.cms.beans.config.ModuleRegistration;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.module.ModuleDefinition;
+import info.magnolia.cms.module.PropertyDefintion;
 import info.magnolia.logging.Log4jConfigurer;
 
 import java.io.File;
@@ -32,6 +35,8 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
+import org.apache.commons.collections.OrderedMap;
+import org.apache.commons.collections.OrderedMapIterator;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -110,7 +115,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class PropertyInitializer implements ServletContextListener {
-
+    
     /**
      * Stable serialVersionUID.
      */
@@ -160,6 +165,8 @@ public class PropertyInitializer implements ServletContextListener {
         final ServletContext context = sce.getServletContext();
         
         loadBeanProperties();
+        
+        loadModuleProperties();
 
         String propertiesLocationString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
 
@@ -203,6 +210,21 @@ public class PropertyInitializer implements ServletContextListener {
 
         new ConfigLoader(context);
 
+    }
+
+    /**
+     * Load the properties defined in the module descriptors. They can get overridden later in the properties files in WEB-INF
+     */
+    protected void loadModuleProperties() {
+        OrderedMap defs = ModuleRegistration.getInstance().getModuleDefinitions();
+        for (OrderedMapIterator iter = defs.orderedMapIterator(); iter.hasNext();) {
+            iter.next();
+            ModuleDefinition def = (ModuleDefinition) iter.getValue();
+            for (Iterator iter2 = def.getProperties().iterator(); iter2.hasNext();) {
+                PropertyDefintion property = (PropertyDefintion) iter2.next();
+                SystemProperty.setProperty(property.getName(), property.getValue());
+            }
+        }
     }
 
     protected boolean loadPropertiesFiles(String[] propertiesLocation, String servername, String rootPath, String webapp, boolean found) {
@@ -253,6 +275,7 @@ public class PropertyInitializer implements ServletContextListener {
     protected void loadBeanProperties() {
         // load mgnl-beans.properties first
         InputStream mgnlbeansStream = getClass().getResourceAsStream(MGNL_BEANS_PROPERTIES);
+        
         if (mgnlbeansStream != null) {
             Properties mgnlbeans = new Properties();
             try {

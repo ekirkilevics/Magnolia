@@ -17,7 +17,9 @@ import info.magnolia.cms.beans.config.ModuleRegistration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -43,6 +45,12 @@ public class ModuleDefinition {
      * The additional repostiories used by this module
      */
     private Collection repositories = new ArrayList();
+    
+    /**
+     * Properties to set in the magnolia system properties
+     */
+    private Collection properties = new ArrayList();
+    
 
     /**
      * The name of the module
@@ -249,5 +257,17 @@ public class ModuleDefinition {
      */
     public void setModuleRoot(File moduleRoot) {
         this.moduleRoot = moduleRoot;
+    }
+
+    
+    /**
+     * @return the properties
+     */
+    public Collection getProperties() {
+        return properties;
+    }
+    
+    public void addProperty(PropertyDefintion property){
+        properties.add(property);
     }
 }

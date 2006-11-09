@@ -119,7 +119,7 @@ public class ConfigLoader {
         SecureURI.init();
 
         try {
-            ModuleRegistration.getInstance().init();
+            ModuleRegistration.getInstance().registerModules();
             Server.init();
             ModuleLoader.getInstance().init();
             Listener.init();

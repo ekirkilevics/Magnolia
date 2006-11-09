@@ -18,11 +18,12 @@ import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleDefinition;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RegisterException;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.File;
@@ -39,6 +40,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.collections.MapIterator;
@@ -62,12 +64,22 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class ModuleRegistration {
+    
+    /**
+     * getInstance() used this flag to init the instance if not yet done.
+     */
+    private boolean initialized = false;
 
     /**
      * @return Returns the instance.
      */
     public static ModuleRegistration getInstance() {
-        return (ModuleRegistration) FactoryUtil.getSingleton(ModuleRegistration.class);
+        ModuleRegistration registration = (ModuleRegistration) FactoryUtil.getSingleton(ModuleRegistration.class);
+        if(!registration.initialized){
+            registration.initialized = true;
+            registration.init();
+        }
+        return registration;
     }
 
     /**
@@ -103,9 +115,6 @@ public class ModuleRegistration {
 
         // order them by dependency level
         sortByDependencyLevel();
-
-        // register the modules
-        registerModules();
     }
 
     protected File getModuleRoot(String magnoliaModuleXml) {
@@ -167,26 +176,36 @@ public class ModuleRegistration {
                 }
             }
 
-            // add adhoc definitions for already registered modules without an xml file (pseudo modules)
-            Content modulesNode = ModuleLoader.getInstance().getModulesNode();
-
-            for (Iterator iter = modulesNode.getChildren().iterator(); iter.hasNext();) {
-                Content moduleNode = (Content) iter.next();
-
-                String name = moduleNode.getName();
-                String version = NodeDataUtil.getString(moduleNode, "version", "");
-                String className = NodeDataUtil.getString(ContentRepository.CONFIG, moduleNode.getHandle()
-                    + "/Register/class", "");
-
-                if (!this.moduleDefinitions.containsKey(name)) {
-                    log.warn("no proper module definition file found for [{}]: will add an adhoc definition", name);
-                    ModuleDefinition def = new ModuleDefinition(name, version, className);
-                    this.moduleDefinitions.put(def.getName(), def);
-                }
-            }
         }
         catch (Exception e) {
             throw new ConfigurationException("can't read the module definition files.", e);
+        }
+    }
+
+    protected void addAdHocDefinitions() {
+        // add adhoc definitions for already registered modules without an xml file (pseudo modules)
+        Content modulesNode;
+        try {
+            modulesNode = ModuleLoader.getInstance().getModulesNode();
+        }
+        catch (RepositoryException e) {
+            log.error("can't add ad hoc module definitions", e);
+            return;
+        }
+
+        for (Iterator iter = modulesNode.getChildren().iterator(); iter.hasNext();) {
+            Content moduleNode = (Content) iter.next();
+
+            String name = moduleNode.getName();
+            String version = NodeDataUtil.getString(moduleNode, "version", "");
+            String className = NodeDataUtil.getString(ContentRepository.CONFIG, moduleNode.getHandle()
+                + "/Register/class", "");
+
+            if (!this.moduleDefinitions.containsKey(name)) {
+                log.warn("no proper module definition file found for [{}]: will add an adhoc definition", name);
+                ModuleDefinition def = new ModuleDefinition(name, version, className);
+                this.moduleDefinitions.put(def.getName(), def);
+            }
         }
     }
 
@@ -262,9 +281,12 @@ public class ModuleRegistration {
     }
 
     /**
-     * Register the modules
+     * Register the modules. This is separated of the init method to allow the usage of the descripors in advance.
      */
-    protected void registerModules() {
+    public void registerModules() {
+        
+        addAdHocDefinitions();
+        
         try {
             Content modulesNode = ModuleLoader.getInstance().getModulesNode();
 
