@@ -43,8 +43,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ClasspathResourcesUtil {
 
-    private static boolean cache = !BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.develop"));
-
     /**
      * logger
      */
@@ -56,8 +54,15 @@ public class ClasspathResourcesUtil {
      * @version $Revision$ ($Author$)
      */
     public static abstract class Filter {
-
         public abstract boolean accept(String name);
+    }
+
+    private static boolean isCache() {
+        String str = SystemProperty.getProperty("magnolia.develop");
+        if(str != null && str == "true"){
+            return true;
+        }
+        return false;
     }
 
     /**
@@ -194,7 +199,7 @@ public class ClasspathResourcesUtil {
     }
 
     public static InputStream getStream(String name) throws IOException {
-        return getStream(name, cache);
+        return getStream(name, isCache());
     }
 
     /**
