@@ -40,8 +40,6 @@ public class FactoryUtil {
      */
     protected static Logger log;// = LoggerFactory.getLogger(FactoryUtil.class);
 
-    private static Properties props = new Properties();
-
     protected static DiscoverClass discovery = new DiscoverClass();
 
     /**
@@ -53,15 +51,6 @@ public class FactoryUtil {
      * Registered Prototypes used for new Instance
      */
     protected static Map factories = new HashMap();
-
-    static {
-        init();
-    }
-
-    private static void init() {
-        // add the magnolia properties
-        props.putAll(SystemProperty.getPropertyList());
-    }
 
     private FactoryUtil() {
 
@@ -80,7 +69,7 @@ public class FactoryUtil {
                 return ((InstanceFactory) factories.get(interf)).newInstance();
             }
             // make interf the default implementation
-            return discovery.newInstance(interf, props, interf.getName());
+            return discovery.newInstance(interf, SystemProperty.getProperties(), interf.getName());
         }
         catch (Exception e) {
             log.error("can't instantiate an implementation of this class [" + interf.getName() + "]");
@@ -141,7 +130,7 @@ public class FactoryUtil {
             if (factories.containsKey(interf)) {
                 instance = ((InstanceFactory) factories.get(interf)).newInstance();
             } else {
-                instance = DiscoverSingleton.find(interf, props, interf.getName());
+                instance = DiscoverSingleton.find(interf, SystemProperty.getProperties(), interf.getName());
             }
             instances.put(interf, instance);
         }
@@ -157,8 +146,23 @@ public class FactoryUtil {
      * @param impl
      */
     public static void setDefaultImplementation(Class interf, String impl) {
-        props.setProperty(interf.getName(), impl);
+        if(SystemProperty.getProperties().containsKey(interf.getName())){
+            setImplementation(interf, impl);
+        }
     }
+    
+    public static void setImplementation(Class interf, Class impl) {
+        setDefaultImplementation(interf, impl.getName());
+    }
+
+    /**
+     * @param interf
+     * @param impl
+     */
+    public static void setImplementation(Class interf, String impl) {
+        SystemProperty.getProperties().setProperty(interf.getName(), impl);
+    }
+    
 
     /**
      * Register an instance which will be returned by getSingleton()
@@ -184,7 +188,6 @@ public class FactoryUtil {
         factories.clear();
         instances.clear();
         DiscoverSingleton.release();
-        init();
     }
 
 }
