@@ -20,6 +20,7 @@ import info.magnolia.context.WebContextImpl;
 import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.WorkflowUtil;
+import info.magnolia.module.workflow.flows.FlowDefinionException;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 
 import java.io.InputStream;
@@ -49,17 +50,11 @@ public class FlowCommand extends MgnlCommand {
 
     private static Logger log = LoggerFactory.getLogger(FlowCommand.class);
 
-    public boolean execute(Context ctx) {
-        try {
-            // Get the references
-            LaunchItem li = new LaunchItem();
-            prepareLaunchItem(ctx, li);
-            WorkflowUtil.launchFlow(li, getWorkflowName());
-        }
-        catch (Exception e) {
-            log.error("Launching failed", e);
-            return false;
-        }
+    public boolean execute(Context ctx) throws FlowDefinionException {
+        // Get the references
+        LaunchItem li = new LaunchItem();
+        prepareLaunchItem(ctx, li);
+        WorkflowUtil.launchFlow(li, getWorkflowName());
         return true;
     }
 
