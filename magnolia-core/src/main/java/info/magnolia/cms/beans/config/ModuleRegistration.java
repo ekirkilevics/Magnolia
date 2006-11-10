@@ -73,10 +73,9 @@ public class ModuleRegistration {
     /**
      * @return Returns the instance.
      */
-    public static ModuleRegistration getInstance() {
+    public synchronized static ModuleRegistration getInstance() {
         ModuleRegistration registration = (ModuleRegistration) FactoryUtil.getSingleton(ModuleRegistration.class);
-        if(!registration.initialized){
-            registration.initialized = true;
+        if(!registration.initialized) {
             registration.init();
         }
         return registration;
@@ -115,6 +114,8 @@ public class ModuleRegistration {
 
         // order them by dependency level
         sortByDependencyLevel();
+
+        initialized = true;
     }
 
     protected File getModuleRoot(String magnoliaModuleXml) {
