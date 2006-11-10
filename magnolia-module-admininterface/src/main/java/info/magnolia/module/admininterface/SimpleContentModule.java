@@ -10,50 +10,56 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.samples;
+package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.InitializationException;
-import info.magnolia.cms.module.InvalidConfigException;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 
 /**
+ * A simple module which just set a default URI in a public instance from the module definition's
+ * defaultPublicURI property.
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class SamplesModule extends AbstractModule {
+public class SimpleContentModule extends AbstractAdminModule {
     private static final String SERVER_ADMIN_NODEPATH = "/server/admin";
     private static final String DEFAULT_URI_NODEPATH = "/modules/adminInterface/virtualURIMapping/default";
-    private static final String DEFAULT_URI_VALUE = "redirect:/features.html";
+    private static final String DEFAULT_URI_PROPNAME = "defaultPublicURI";
+
+    protected void onInit() throws InitializationException {
+        // nothing to do ...
+    }
 
     protected void onRegister(int registerState) throws RegisterException {
         super.onRegister(registerState);
 
         // set the default URI to features.html if we're in a public instance
         if (isPublicInstance() && (registerState == REGISTER_STATE_INSTALLATION || registerState == REGISTER_STATE_NEW_VERSION)) {
-            setupDefaultUriForSamples();
+            final String defaultPublicURI = getModuleDefinition().getProperty(DEFAULT_URI_PROPNAME);
+            // TODO : inverse this check if this code is moved to AbstractAdminModule
+            if (defaultPublicURI == null) {
+                throw new RegisterException("Can't register module " + getName() + ", " + DEFAULT_URI_PROPNAME + " property is not set.");
+            }
+            setupDefaultPublicUri(defaultPublicURI);
         }
     }
 
-    private void setupDefaultUriForSamples() throws RegisterException {
+    private void setupDefaultPublicUri(final String defaultPublicURI) throws RegisterException {
         try {
             final Content defaultUriNode = ContentUtil.getContent(ContentRepository.CONFIG, DEFAULT_URI_NODEPATH);
             final NodeData toUriData = defaultUriNode.getNodeData(VirtualURIManager.TO_URI_NODEDATANAME);
-            toUriData.setValue(DEFAULT_URI_VALUE);
+            toUriData.setValue(defaultPublicURI);
             toUriData.save();
         } catch (javax.jcr.RepositoryException e) {
             throw new RegisterException("Could not change the default URI: " + e.getMessage(), e);
         }
-    }
-
-    public void init(Content configNode) throws InvalidConfigException, InitializationException {
-        // nothing to do ...
     }
 
     private boolean isPublicInstance() {

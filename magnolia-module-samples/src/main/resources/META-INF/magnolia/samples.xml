@@ -2,8 +2,14 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>samples</name>
-  <class>info.magnolia.samples.SamplesModule</class>
-  <version>3.0</version>
+  <class>info.magnolia.module.admininterface.SimpleContentModule</class>
+  <version>${project.version}</version>
+  <properties>
+    <property>
+      <name>defaultPublicURI</name>
+      <value>redirect:/features.html</value>
+    </property>
+  </properties>
   <dependencies>
     <dependency>
       <name>adminInterface</name>
