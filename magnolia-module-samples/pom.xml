@@ -8,7 +8,7 @@
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-samples</artifactId>
-  <name>magnolia samples</name>
+  <name>magnolia-module-samples</name>
   <version>3.0-rc5-SNAPSHOT</version>
   <url>http://www.magnolia.info</url>
   <dependencies>
