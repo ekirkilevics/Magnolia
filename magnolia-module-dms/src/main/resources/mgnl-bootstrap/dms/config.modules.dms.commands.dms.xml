@@ -125,7 +125,7 @@
         <sv:value>728ab272-ccae-486c-bb88-c780dcf97d83</sv:value>
       </sv:property>
       <sv:property sv:name="impl" sv:type="String">
-        <sv:value>default_activate</sv:value>
+        <sv:value>default-activate</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
