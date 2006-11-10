@@ -11,6 +11,14 @@ public class FactoryUtilTest extends TestCase {
        assertTrue(obj instanceof FactoryUtilTestImplementation);
    }
 
+    public void testDontRedefineTheDefaultImplementation(){
+        FactoryUtil.clear();
+        FactoryUtil.setDefaultImplementation(FactoryUtilTestInterface.class, FactoryUtilTestImplementation.class);
+        FactoryUtil.setDefaultImplementation(FactoryUtilTestInterface.class, "a.wrong.class.not.set");
+        Object obj = FactoryUtil.getSingleton(FactoryUtilTestInterface.class);
+        assertTrue(obj instanceof FactoryUtilTestImplementation);
+    }
+
    public void testDefaultImplementation(){
        FactoryUtil.clear();
        Object obj = FactoryUtil.getSingleton(FactoryUtilTestImplementation.class);
