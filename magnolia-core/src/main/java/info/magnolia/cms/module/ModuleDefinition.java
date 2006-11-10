@@ -43,12 +43,11 @@ public class ModuleDefinition {
      * The additional repostiories used by this module
      */
     private Collection repositories = new ArrayList();
-    
+
     /**
      * Properties to set in the magnolia system properties
      */
     private Collection properties = new ArrayList();
-    
 
     /**
      * The name of the module
@@ -257,15 +256,29 @@ public class ModuleDefinition {
         this.moduleRoot = moduleRoot;
     }
 
-    
     /**
      * @return the properties
      */
     public Collection getProperties() {
         return properties;
     }
-    
-    public void addProperty(PropertyDefinition property){
+
+    public void addProperty(PropertyDefinition property) {
         properties.add(property);
+    }
+
+    /**
+     * Convenience method which returns the value of the given property,
+     * or null if it does not exist.
+     */
+    public String getProperty(String propertyName) {
+        final Iterator it = properties.iterator();
+        while (it.hasNext()) {
+            final PropertyDefinition p = (PropertyDefinition) it.next();
+            if (propertyName.equals(p.getName())) {
+                return p.getValue();
+            }
+        }
+        return null;
     }
 }
