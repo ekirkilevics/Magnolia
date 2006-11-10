@@ -112,7 +112,7 @@ public class TreeHandlerManager extends ObservedManager {
                 }
             }
             catch (RepositoryException e) {
-                log.error("can't check commands node of the tree node [" + defNode.getHandle() + "]", e);
+                log.error("can't check commands node of the tree node [" + tree.getHandle() + "]", e);
             }
         }
     }
