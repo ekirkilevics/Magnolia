@@ -108,7 +108,7 @@ public class TreeHandlerManager extends ObservedManager {
             // register commands if defined
             try {
                 if (tree.hasContent("commands")) {
-                    log.error("the definition of commands at the tree level is not longer supported. Move them to the modules commands node! [" + defNode.getHandle() + "]");
+                    log.error("the definition of commands at the tree level is not longer supported. Move them to the modules commands node! [" + tree.getHandle() + "]");
                 }
             }
             catch (RepositoryException e) {
