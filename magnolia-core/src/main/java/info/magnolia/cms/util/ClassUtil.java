@@ -47,13 +47,7 @@ public final class ClassUtil {
             loadedClass = Class.forName(className);
         }
         catch (ClassNotFoundException e) {
-            try {
-                loadedClass = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
-            }
-            catch (ClassNotFoundException e1) {
-                log.error("Unable to load class \"{}\" due to a ClassNotFoundException", className);
-                throw e1;
-            }
+            loadedClass = Class.forName(className, true, Thread.currentThread().getContextClassLoader());
         }
         return loadedClass;
     }
