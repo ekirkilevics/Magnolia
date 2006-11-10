@@ -210,8 +210,6 @@ public abstract class AbstractModule implements Module {
      * Register the repositories defined in the descriptor.
      * @param def
      * @throws RegisterException
-     * @throws IOException
-     * @throws ConfigurationExceptionJDOMException
      */
     protected void registerRepositories(ModuleDefinition def) throws RegisterException {
         boolean restartNeeded = false;
