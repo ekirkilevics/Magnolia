@@ -30,7 +30,6 @@ import java.util.jar.JarFile;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -58,11 +57,8 @@ public class ClasspathResourcesUtil {
     }
 
     private static boolean isCache() {
-        String str = SystemProperty.getProperty("magnolia.develop");
-        if(str != null && str == "true"){
-            return true;
-        }
-        return false;
+        final String devMode = SystemProperty.getProperty("magnolia.develop");
+        return !"true".equalsIgnoreCase(devMode);
     }
 
     /**
