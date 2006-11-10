@@ -12,20 +12,28 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.security.SecureURI;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.ServletContext;
 
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.derby.iapi.services.io.ArrayUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -162,13 +170,37 @@ public class ConfigLoader {
 
         if (initialized) {
             // define the system property to (re)bootstrap a singel repository
-            String bootstrapIfEmpty = SystemProperty.getProperty(SystemProperty.BOOTSTRAP_IF_EMPTY);
-            if (StringUtils.isNotEmpty(bootstrapIfEmpty)) {
-                String[] repositories = StringUtils.split(bootstrapIfEmpty,", ");
-                for (int i = 0; i < repositories.length; i++) {
-                    String repository = repositories[i];
+            String bootstrapIfEmpty = StringUtils.defaultString(SystemProperty.getProperty(SystemProperty.BOOTSTRAP_IF_EMPTY));
+            String bootstrapForce = StringUtils.defaultString(SystemProperty.getProperty(SystemProperty.BOOTSTRAP_FORCE));
+            
+            if (StringUtils.isNotEmpty(bootstrapIfEmpty) || StringUtils.isNotEmpty(bootstrapForce)) {
+                Set repositories = new HashSet();
+                String[] ifEmptyRepositories = StringUtils.split(bootstrapIfEmpty,", ");
+                String[] forceRepositories = StringUtils.split(bootstrapForce,", ");
+
+                repositories.addAll(Arrays.asList(ifEmptyRepositories));
+                repositories.addAll(Arrays.asList(forceRepositories));
+                
+                for (Iterator iter = repositories.iterator(); iter.hasNext();) {
+                    String repository = (String) iter.next();
+                    
                     try {
-                        if (!ContentRepository.checkIfInitialized(repository)) {
+                        if (ArrayUtils.contains(forceRepositories, repository)) {
+                            log.info(
+                                "will clean and bootstrap the repository {} because the property {} is set",
+                                repository,
+                                SystemProperty.BOOTSTRAP_FORCE);
+                            Content root = MgnlContext.getHierarchyManager(repository).getRoot();
+                            for (Iterator iterator = ContentUtil.getAllChildren(root).iterator(); iterator.hasNext();) {
+                                Content node = (Content) iterator.next();
+                                node.delete();
+                            }
+                            root.save();
+                            
+                            Bootstrapper.bootstrapRepository(repository, new BootstrapFileFilter(), bootDirs);
+                        }
+
+                        else if (ArrayUtils.contains(ifEmptyRepositories, repository) && !ContentRepository.checkIfInitialized(repository)) {
                             log.info(
                                 "will bootstrap the repository {} because the property {} is set",
                                 repository,

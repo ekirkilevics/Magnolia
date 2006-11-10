@@ -47,6 +47,11 @@ public final class SystemProperty {
      */
     public static final String BOOTSTRAP_IF_EMPTY = "magnolia.bootstrap.ifEmpty";
 
+    /**
+     * Force bootstrapping of the listed workspaces
+     */
+    public static final String BOOTSTRAP_FORCE = "magnolia.bootstrap.force";
+    
     private static Properties properties = new Properties();
 
     /**
