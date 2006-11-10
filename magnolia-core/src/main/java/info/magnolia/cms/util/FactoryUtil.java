@@ -146,7 +146,7 @@ public class FactoryUtil {
      * @param impl
      */
     public static void setDefaultImplementation(Class interf, String impl) {
-        if(SystemProperty.getProperties().containsKey(interf.getName())){
+        if(!SystemProperty.getProperties().containsKey(interf.getName())){
             setImplementation(interf, impl);
         }
     }
