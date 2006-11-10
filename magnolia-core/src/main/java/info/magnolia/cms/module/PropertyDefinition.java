@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.module;
 
-public class PropertyDefintion {
+public class PropertyDefinition {
     private String name;
 
     private String value;

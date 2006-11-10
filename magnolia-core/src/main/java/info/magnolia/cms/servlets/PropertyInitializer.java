@@ -16,7 +16,7 @@ import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ModuleRegistration;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.module.ModuleDefinition;
-import info.magnolia.cms.module.PropertyDefintion;
+import info.magnolia.cms.module.PropertyDefinition;
 import info.magnolia.logging.Log4jConfigurer;
 
 import java.io.File;
@@ -221,7 +221,7 @@ public class PropertyInitializer implements ServletContextListener {
             iter.next();
             ModuleDefinition def = (ModuleDefinition) iter.getValue();
             for (Iterator iter2 = def.getProperties().iterator(); iter2.hasNext();) {
-                PropertyDefintion property = (PropertyDefintion) iter2.next();
+                PropertyDefinition property = (PropertyDefinition) iter2.next();
                 SystemProperty.setProperty(property.getName(), property.getValue());
             }
         }

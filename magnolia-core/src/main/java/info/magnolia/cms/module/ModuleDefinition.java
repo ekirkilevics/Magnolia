@@ -17,9 +17,7 @@ import info.magnolia.cms.beans.config.ModuleRegistration;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -267,7 +265,7 @@ public class ModuleDefinition {
         return properties;
     }
     
-    public void addProperty(PropertyDefintion property){
+    public void addProperty(PropertyDefinition property){
         properties.add(property);
     }
 }
