@@ -39,12 +39,12 @@
     <dependency>
       <groupId>org.openwfe</groupId>
       <artifactId>openwfe-applic</artifactId>
-      <version>1.7.2pre11</version>
+      <version>1.7.2pre15</version>
     </dependency>
     <dependency>
       <groupId>org.openwfe</groupId>
       <artifactId>openwfe-jcr</artifactId>
-      <version>1.7.2pre11</version>
+      <version>1.7.2pre15</version>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
