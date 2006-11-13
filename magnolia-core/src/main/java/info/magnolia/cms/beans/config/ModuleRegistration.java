@@ -403,10 +403,11 @@ public class ModuleRegistration {
         for (Iterator iter = def.getDependencies().iterator(); iter.hasNext();) {
             DependencyDefinition dep = (DependencyDefinition) iter.next();
             ModuleDefinition depDef = this.getModuleDefinition(dep.getName());
-            if (depDef == null) {
+            if (depDef == null && !dep.isOptional()) {
                 throw new RuntimeException("Missing definition for module:" + dep.getName());
+            } else if (depDef != null){
+                dependencyLevels.add(new Integer(calcDependencyLevel(depDef)));
             }
-            dependencyLevels.add(new Integer(calcDependencyLevel(depDef)));
         }
         return ((Integer) Collections.max(dependencyLevels)).intValue() + 1;
     }
