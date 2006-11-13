@@ -111,7 +111,7 @@ public class MgnlUserManager implements UserManager {
     public Collection getAllUsers() {
         Collection users = new ArrayList();
         try {
-            Collection nodes = getHierarchyManager().getRoot().getChildren(ItemType.CONTENT);
+            Collection nodes = getHierarchyManager().getRoot().getChildren(ItemType.USER);
             for (Iterator iter = nodes.iterator(); iter.hasNext();) {
                 users.add(new MgnlUser((Content) iter.next()));
             }
@@ -130,7 +130,7 @@ public class MgnlUserManager implements UserManager {
     public User createUser(String name, String pw) {
         try {
             Content node;
-            node = getHierarchyManager().createContent("/", name, ItemType.CONTENT.getSystemName());
+            node = getHierarchyManager().createContent("/", name, ItemType.USER.getSystemName());
             node.createNodeData("name").setValue(name);
             node.createNodeData("pswd").setValue(new String(Base64.encodeBase64(pw.getBytes())));
             node.createNodeData("language").setValue("en");
