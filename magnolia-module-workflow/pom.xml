@@ -5,33 +5,33 @@
    <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.0-rc5-SNAPSHOT</version>
+    <version>3.0</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-workflow</artifactId>
   <name>magnolia-module-workflow</name>
-  <version>3.0-rc5-SNAPSHOT</version>
+  <version>3.0</version>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>3.0-rc5-SNAPSHOT</version>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-exchange-simple</artifactId>
-      <version>3.0-rc5-SNAPSHOT</version>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>3.0-rc5-SNAPSHOT</version>
+      <version>3.0</version>
     </dependency>  
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
-      <version>3.0-rc5-SNAPSHOT</version>
+      <version>3.0</version>
     </dependency>
     <dependency>
       <groupId>org.openwfe</groupId>

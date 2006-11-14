@@ -1,11 +1,10 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>3.0-rc5-SNAPSHOT</version>
+  <version>3.0</version>
   <description>
     Magnolia is a free enterprise class content management system developed by obinary based on the standard API for java content repositories (JCR).
   </description>
@@ -87,9 +86,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
-    <url>http://svn.magnolia.info/view/magnolia/trunk/</url>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-project-3.0</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-project-3.0</developerConnection>
+    <url>http://svn.magnolia.info/view/magnolia/tags/magnolia-project-3.0</url>
   </scm>
   <organization>
     <name>Magnolia International</name>
@@ -284,42 +283,42 @@
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-core</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-jaas</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-gui</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-exchange-simple</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-module-mail</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-module-admininterface</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-module-templating</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-module-workflow</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
@@ -329,32 +328,32 @@
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-module-cache</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-taglib-cms</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-taglib-utility</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-editor-fckeditor</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-editor-kupu</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
       <dependency>
         <groupId>info.magnolia</groupId>
         <artifactId>magnolia-module-samples</artifactId>
-        <version>3.0-rc5-SNAPSHOT</version>
+        <version>3.0</version>
       </dependency>
 
       <dependency>
