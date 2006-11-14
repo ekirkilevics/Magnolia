@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.admininterface.lists;
 
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.FunctionBar;
 import info.magnolia.cms.gui.controlx.RenderKit;
@@ -19,6 +20,8 @@ import info.magnolia.cms.gui.controlx.RenderKitFactory;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
 import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -225,6 +228,11 @@ public abstract class AbstractList extends TemplatedMVCHandler {
      */
     public String onRender() {
         return "";
+    }
+    
+    public String getURI() {
+        String uri = (String) MgnlContext.getAttribute(Path.MGNL_REQUEST_URI_DECODED);
+        return uri;
     }
 
 }
