@@ -29,16 +29,16 @@ import org.safehaus.uuid.UUIDGenerator;
  */
 public final class Path {
 
+    public static final String JAVAX_FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path"; //$NON-NLS-1$
+
+    public static final String MGNL_REQUEST_URI_DECODED = "mgnl.request.uri.decoded"; //$NON-NLS-1$
+    
     /**
      *
      */
     private static final String DEFAULT_UNTITLED_NODE_NAME = "untitled";
 
     private static final String ENCODING_DEFAULT = "UTF-8"; //$NON-NLS-1$
-
-    private static final String JAVAX_FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path"; //$NON-NLS-1$
-
-    private static final String MGNL_REQUEST_URI_DECODED = "mgnl.request.uri.decoded"; //$NON-NLS-1$
 
     /**
      * Utility class, don't instantiate.
