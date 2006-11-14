@@ -9,7 +9,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-core</artifactId>
   <name>magnolia-core</name>
-  <version>3.0-rc5-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>commons-io</groupId>
