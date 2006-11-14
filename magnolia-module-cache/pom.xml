@@ -9,7 +9,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-cache</artifactId>
   <name>magnolia-module-cache</name>
-  <version>3.0-rc5-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>commons-lang</groupId>
