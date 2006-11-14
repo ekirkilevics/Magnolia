@@ -31,6 +31,7 @@ import javax.security.auth.login.LoginException;
 import javax.security.auth.login.FailedLoginException;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -118,9 +119,11 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
         try {
             this.user = hm.getContent(this.name);
             String serverPassword = this.user.getNodeData("pswd").getString().trim();
+            // we do not allow users with no password
+            if (StringUtils.isEmpty(serverPassword)) return false;
             // plain text server password
             serverPassword = new String(Base64.decodeBase64(serverPassword.getBytes()));
-            return serverPassword.equalsIgnoreCase(new String(this.pswd));
+            return StringUtils.equals(serverPassword, new String(this.pswd));
         }
         catch (PathNotFoundException pe) {
             log.info("Unable to locate user [{}], authentication failed", this.name);
