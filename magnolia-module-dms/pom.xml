@@ -2,13 +2,13 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.0</version>
+    <version>3.0.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-dms</artifactId>
   <name>magnolia-module-dms</name>
-  <version>1.1</version>
+  <version>1.2-SNAPSHOT</version>
   <url>http://www.magnolia.info</url>
   <dependencies>
     <dependency>
