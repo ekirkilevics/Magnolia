@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd" >
 <module>
-    <name>mail</name>
-    <class>info.magnolia.cms.mail.Engine</class>
-    <version>3.0</version>
-    <displayName>Magnolia templating mail</displayName>
-    <dependencies>
-        <dependency>
-            <name>templating</name>
-            <version>3.0</version>
-        </dependency>
-    </dependencies>
-    <servlets>
-        <servlet>
-            <class>info.magnolia.cms.mail.servlets.MgnlMailServlet</class>
-            <mappings>
-                <mapping>/.magnolia/mail/*</mapping>
-            </mappings>
-            <name>Mail</name>
-            <comment>Servlet to send email using the email system.</comment>
-            <params>
-                <!--              <param></param> -->
-            </params>
-        </servlet>
-    </servlets>
+  <name>mail</name>
+  <displayName>Magnolia templating mail</displayName>
+  <class>info.magnolia.cms.mail.Engine</class>
+  <version>3.0</version>
+  <dependencies>
+    <dependency>
+      <name>templating</name>
+      <version>3.0</version>
+    </dependency>
+  </dependencies>
+  <servlets>
+    <servlet>
+      <class>info.magnolia.cms.mail.servlets.MgnlMailServlet</class>
+      <mappings>
+        <mapping>/.magnolia/mail/*</mapping>
+      </mappings>
+      <name>Mail</name>
+      <comment>Servlet to send email using the email system.</comment>
+      <params>
+        <!--<param></param> -->
+      </params>
+    </servlet>
+  </servlets>
 </module>

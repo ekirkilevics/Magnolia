@@ -2,9 +2,9 @@
 <!DOCTYPE module SYSTEM "module.dtd" >
 <module>
   <name>cache</name>
+  <displayName>Magnolia pluggable Cache</displayName>
   <class>info.magnolia.cms.cache.Engine</class>
   <version>3.0</version>
-  <displayName>Magnolia pluggable Cache</displayName>
   <servlets>
     <servlet>
       <name>CacheServlet</name>
