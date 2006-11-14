@@ -68,4 +68,10 @@ public interface WebContext extends Context {
      * @return
      */
     public String getContextPath();
+    
+    /**
+     * Avoid the call to this method where ever possible.
+     * @return Returns the request.
+     */
+    public HttpServletRequest getRequest();
 }
