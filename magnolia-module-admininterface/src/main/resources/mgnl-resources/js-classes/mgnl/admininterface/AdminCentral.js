@@ -63,7 +63,6 @@ function MgnlAdminCentral(){
             var w=sizeObj.w-195-20;
     
             this.divMenu.style.height=h;
-            this.divMessageBox.style.top=h-47;
     
             this.divContent.style.width=w;
             this.divContent.style.height=h;
