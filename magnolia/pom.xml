@@ -49,7 +49,7 @@
                   <repositories>
                     <repository>config</repository>
                   </repositories>
-                  <path>/modules/templating</path>
+                  <path>/modules</path>
                   <activated>true</activated>
                 </postBootstrapper>
               </postBootstrappers>
