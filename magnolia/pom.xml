@@ -89,7 +89,6 @@
   <artifactId>magnolia</artifactId>
   <packaging>war</packaging>
   <name>magnolia</name>
-  <version>3.0-rc5-SNAPSHOT</version>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -149,7 +148,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-dms</artifactId>
-      <version>3.0-rc5-SNAPSHOT</version>
+      <version>1.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
