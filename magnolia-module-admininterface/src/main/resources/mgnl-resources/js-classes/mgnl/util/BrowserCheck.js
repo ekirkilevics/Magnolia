@@ -19,7 +19,7 @@ classDef("mgnl.util.BrowserCheck", {
     isIE            : mgnl.Runtime.isIE,
     // Firefox and others
     isGecko     : !( agent.indexOf("msie") != -1 ),
-    isSafari        : ( agent.indexOf("safari") != -1 ),
+    isSafari    : ( agent.indexOf("safari") != -1 ),
     isNetscape  : ( agent.indexOf("netscape") != -1 )
 });
 
