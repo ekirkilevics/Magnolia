@@ -2,6 +2,7 @@
 <!DOCTYPE License [
     <!ELEMENT License (Meta+)>
     <!ELEMENT Meta (VersionNumber,
+                    Edition,
                     BuildNumber,
                     Provider,
                     ProviderAddress,
@@ -9,6 +10,7 @@
                     ProductDomain,
                     VersionPageHandle+)>
     <!ELEMENT VersionNumber (#PCDATA)>
+    <!ELEMENT Edition (#PCDATA)>
     <!ELEMENT BuildNumber (#PCDATA)>
     <!ELEMENT Provider (#PCDATA)>
     <!ELEMENT ProviderAddress (#PCDATA)>
