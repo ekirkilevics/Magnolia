@@ -123,17 +123,21 @@
                 </descriptors>
               </configuration>
             </plugin>
-            <plugin>
-              <groupId>info.magnolia</groupId>
-              <artifactId>maven-bundle-plugin</artifactId>
-              <version>1.0-rc2-SNAPSHOT</version>
-            </plugin>
           </plugins>
         </pluginManagement>
       </build>
     </profile>
   </profiles>
   <build>
+    <pluginManagement>
+      <plugins>
+        <plugin>
+          <groupId>info.magnolia</groupId>
+          <artifactId>maven-bundle-plugin</artifactId>
+          <version>1.0-rc2-SNAPSHOT</version>
+        </plugin>
+      </plugins>
+    </pluginManagement>
     <plugins>
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
