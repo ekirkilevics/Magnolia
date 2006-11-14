@@ -3,7 +3,7 @@
 <module>
   <name>dms</name>
   <class>info.magnolia.module.dms.DMSModule</class>
-  <version>3.0</version>
+  <version>1.1</version>
   <dependencies>
     <dependency>
       <name>adminInterface</name>
