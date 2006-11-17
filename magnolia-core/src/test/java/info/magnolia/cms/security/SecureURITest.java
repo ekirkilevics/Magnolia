@@ -38,4 +38,16 @@ public class SecureURITest extends TestCase {
         assertTrue(SecureURI.isUnsecure("/home/x/test/me.html"));
         assertTrue(SecureURI.isUnsecure("/home/x/test/me/if.html"));
     }
+
+    public void testUnsecureWildcard() {
+        SecureURI.init();
+        SecureURI.addUnsecure("/home/x/test?");
+        assertFalse(SecureURI.isUnsecure("/home/x/tes"));
+        assertTrue(SecureURI.isUnsecure("/home/x/test"));
+        assertTrue(SecureURI.isUnsecure("/home/x/test."));
+        assertTrue(SecureURI.isUnsecure("/home/x/testd"));
+        assertFalse(SecureURI.isUnsecure("/home/x/test.html"));
+        assertFalse(SecureURI.isUnsecure("/home/x/test/me.html"));
+        assertFalse(SecureURI.isUnsecure("/home/x/test/me/if.html"));
+    }
 }
