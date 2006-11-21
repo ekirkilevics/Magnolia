@@ -10,7 +10,7 @@ rem ---------------------------------------------------------------------------
 rem Magnolia needs extra memory
 rem ---------------------------------------------------------------------------
 
-set CATALINA_OPTS=%CATALINA_OPTS% -Xms64M -Xmx512M
+set CATALINA_OPTS=%CATALINA_OPTS% -Xms64M -Xmx512M -Djava.awt.headless=true
 
 rem Guess CATALINA_HOME if not defined
 set CURRENT_DIR=%cd%

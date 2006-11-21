@@ -83,7 +83,7 @@ echo Using CATALINA_BASE:   %CATALINA_BASE%
 echo Using CATALINA_HOME:   %CATALINA_HOME%
 echo Using CATALINA_TMPDIR: %CATALINA_TMPDIR%
 echo Using JAVA_HOME:       %JAVA_HOME%
-echo Using CATALINA_OPTS:    %CATALINA_OPTS%
+echo Using CATALINA_OPTS:   %CATALINA_OPTS%
 
 set _EXECJAVA=%_RUNJAVA%
 set MAINCLASS=org.apache.catalina.startup.Bootstrap
