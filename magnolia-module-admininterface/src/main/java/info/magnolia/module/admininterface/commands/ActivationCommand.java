@@ -48,14 +48,9 @@ public class ActivationCommand extends BaseActivationCommand {
     private List versionMap;
 
     /**
-     * Execute the activation
+     * Execute activation
      */
     public boolean execute(Context ctx) {
-        if (log.isDebugEnabled()) {
-            log.debug("recursive = " + recursive);
-            log.debug("user = " + ctx.getUser().getName());
-        }
-
         try {
             Content thisState;
             if (StringUtils.isNotEmpty(getUuid())) {
@@ -67,8 +62,6 @@ public class ActivationCommand extends BaseActivationCommand {
             if (StringUtils.isEmpty(parentPath)) {
                 parentPath = "/";
             }
-            // get ordering info now since this object might point to the version store later
-            List orderInfo= getOrderingInfo(thisState);
             if (StringUtils.isNotEmpty(getVersion())) {
                 try {
                     thisState = thisState.getVersionedContent(getVersion());
@@ -80,13 +73,13 @@ public class ActivationCommand extends BaseActivationCommand {
             if (recursive) {
                 List versionMap = getVersionMap();
                 if (versionMap == null) {
-                    activateRecursive(parentPath, thisState, orderInfo, ctx);
+                    activateRecursive(parentPath, thisState, ctx);
                 } else {
-                    activateRecursive(ctx, orderInfo, versionMap);
+                    activateRecursive(ctx, versionMap);
                 }
             }
             else {
-                getSyndicator().activate(parentPath, thisState, orderInfo);
+                getSyndicator().activate(parentPath, thisState, getOrderingInfo(thisState));
             }
         }
         catch (Exception e) {
@@ -102,18 +95,15 @@ public class ActivationCommand extends BaseActivationCommand {
      * Activate recursively. This is done one by one to send only small peaces (memory friendly).
      * @param parentPath
      * @param node
-     * @param orderInfo
      * @throws ExchangeException
      * @throws RepositoryException
      */
-    protected void activateRecursive(String parentPath, Content node, List orderInfo ,Context ctx)
+    protected void activateRecursive(String parentPath, Content node, Context ctx)
             throws ExchangeException, RepositoryException {
-        // activate this node using the rules
-        getSyndicator().activate(parentPath, node, orderInfo);
 
-        // proceed recursively
+        getSyndicator().activate(parentPath, node, getOrderingInfo(node));
+
         Iterator children = node.getChildren(new Content.ContentFilter() {
-
             public boolean accept(Content content) {
                 try {
                     return !getRule().isAllowed(content.getNodeTypeName());
@@ -126,17 +116,15 @@ public class ActivationCommand extends BaseActivationCommand {
         }).iterator();
 
         while (children.hasNext()) {
-            // note: recursive activation does not need to set ordering info, except for the first node in a tree
-            this.activateRecursive(node.getHandle(), ((Content) children.next()), new ArrayList(),ctx);
+            this.activateRecursive(node.getHandle(), ((Content) children.next()), ctx);
         }
     }
 
     /**
      * @param ctx
-     * @param orderInfo
      * @param versionMap
      * */
-    protected void activateRecursive(Context ctx, List orderInfo, List versionMap)
+    protected void activateRecursive(Context ctx, List versionMap)
             throws ExchangeException, RepositoryException {
         // activate all uuid's present in versionMap
         Iterator entries = versionMap.iterator();
@@ -147,26 +135,28 @@ public class ActivationCommand extends BaseActivationCommand {
             if (StringUtils.equalsIgnoreCase("class", uuid)) {
                 // todo , this should not happen in between the serialized list, somewhere a bug
                 // for the moment simply ignore it
-                orderInfo = new ArrayList();
                 continue;
             }
             try {
                 Content content = ctx.getHierarchyManager(getRepository()).getContentByUUID(uuid);
+                // NOTE : on activation of the version it uses current hierarchy to order
+                // since admin interface does not protect the state of the hierarchy if its in workflow
+                // we have to use the current state
+                List orderedList = getOrderingInfo(content);
                 String parentPath = content.getParent().getHandle();
                 content = content.getVersionedContent(versionNumber);
                 // add order info for the first node as it represents the parent in a tree
-                getSyndicator().activate(parentPath, content, orderInfo);
+                getSyndicator().activate(parentPath, content, orderedList);
             } catch (RepositoryException re) {
                 log.error("Failed to activate node with UUID : "+uuid);
                 log.error(re.getMessage());
             }
-            // for rest of the nodes there is no need to set order since they will be activated as they were collected
-            orderInfo = new ArrayList();
         }
     }
 
     /**
-     * gets ordering info for the fiven node
+     * collect node UUID of the siblings in the exact order as it should be written on
+     * subscribers
      * @param node
      * */
     private List getOrderingInfo(Content node) {
