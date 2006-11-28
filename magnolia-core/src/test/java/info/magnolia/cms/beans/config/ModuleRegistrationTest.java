@@ -1,19 +1,10 @@
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.DependencyDefinition;
-import info.magnolia.cms.module.InitializationException;
-import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleDefinition;
-import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.security.AccessDeniedException;
 import junit.framework.TestCase;
-import static org.easymock.classextension.EasyMock.*;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.PathNotFoundException;
 import java.io.File;
 import java.net.URL;
 
