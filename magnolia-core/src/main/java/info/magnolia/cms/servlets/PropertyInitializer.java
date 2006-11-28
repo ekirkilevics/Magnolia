@@ -182,7 +182,7 @@ public class PropertyInitializer implements ServletContextListener {
         String servername = initServername();
 
         String rootPath = initRootPath(context);
-        
+
         String webapp = initWebappName(rootPath);
 
         if (log.isDebugEnabled()) {
@@ -240,7 +240,7 @@ public class PropertyInitializer implements ServletContextListener {
         return found;
     }
 
-    private String initWebappName(String rootPath) {
+    protected String initWebappName(String rootPath) {
         String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
         envProperties.put(SystemProperty.MAGNOLIA_WEBAPP, webapp);
         return webapp;
@@ -248,6 +248,7 @@ public class PropertyInitializer implements ServletContextListener {
 
     protected String initRootPath(final ServletContext context) {
         String rootPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+        rootPath = StringUtils.removeEnd(rootPath, "/");
         envProperties.put(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootPath);
         
         // system property initialization

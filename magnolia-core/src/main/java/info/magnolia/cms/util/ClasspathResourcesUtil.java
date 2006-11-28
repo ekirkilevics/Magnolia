@@ -77,25 +77,11 @@ public class ClasspathResourcesUtil {
         if (cl instanceof URLClassLoader) {
             // tomcat classloader is org.apache.catalina.loader.WebappClassLoader
             URL[] urls = ((URLClassLoader) cl).getURLs();
-
             for (int j = 0; j < urls.length; j++) {
-                URL url = urls[j];
-                String fileUrl = url.getFile();
-
-                // needed for Resin
-                if (fileUrl.startsWith("file:/")) {
-                    fileUrl = StringUtils.substringAfter(fileUrl, "file:/");
-                }
-                if (fileUrl.endsWith("!/")) {
-                    fileUrl = StringUtils.substringBeforeLast(fileUrl, "!/");
-                }
-
-                File tofile = new File(fileUrl);
-
+                final File tofile = sanitizeToFile(urls[j]);
                 collectFiles(resources, tofile, filter);
             }
-        }
-        else {
+        } else {
             // no way, we have to assume a standard war structure and look in the WEB-INF/lib and WEB-INF/classes dirs
 
             // read the jars in the lib dir
@@ -121,6 +107,16 @@ public class ClasspathResourcesUtil {
         }
 
         return (String[]) resources.toArray(new String[resources.size()]);
+    }
+
+    protected static File sanitizeToFile(URL url) {
+        String fileUrl = url.getFile();
+
+        // needed for Resin - for some reason, its URLs are formed as jar:file:/absolutepath/foo/bar.jar instead of using the :///abs.. notation
+        fileUrl = StringUtils.removeStart(fileUrl, "file:");
+        fileUrl = StringUtils.removeEnd(fileUrl, "!/");
+
+        return new File(fileUrl);
     }
 
     /**
