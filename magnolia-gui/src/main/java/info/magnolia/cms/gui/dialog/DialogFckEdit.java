@@ -351,10 +351,9 @@ public class DialogFckEdit extends DialogBox {
      * @return
      */
     protected String convertToView(String value) {
-        String tmp = value;
-        if (tmp != null) {
-            tmp = tmp.replaceAll("\r\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
-            tmp = tmp.replaceAll("\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
+        if (value != null) {
+            value = value.replaceAll("\r\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
+            value = value.replaceAll("\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
 
             value = LinkUtil.convertUUIDsToAbsoluteLinks(value);
 
