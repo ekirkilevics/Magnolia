@@ -156,27 +156,5 @@
         </includes>
       </resource>
     </resources>
-<!--
-    <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clover-plugin</artifactId>
-        <configuration>
-          <targetPercentage>0%</targetPercentage>
-          <licenseLocation>${cloverLicense}</licenseLocation>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>verify</phase>
-            <goals>
-              <goal>instrument</goal>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-    </plugins>
--->
-
   </build>
 </project>

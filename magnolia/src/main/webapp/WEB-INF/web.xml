@@ -116,6 +116,9 @@
   <listener>
     <listener-class>info.magnolia.cms.servlets.PropertyInitializer</listener-class>
   </listener>
+  <!-- These are the default paths searched for magnolia configuration. Uncomment if you need to customize this. -->
+  <!-- Be aware that your container might do its own variables replacement here (Resin does, Tomcat doesn't, for instance -->
+  <!--
   <context-param>
     <param-name>magnolia.initialization.file</param-name>
     <param-value>
@@ -124,6 +127,7 @@
       WEB-INF/config/magnolia.properties
     </param-value>
   </context-param>
+  -->
   <listener>
     <listener-class>info.magnolia.cms.beans.config.ShutdownManager</listener-class>
   </listener>
