@@ -115,7 +115,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class PropertyInitializer implements ServletContextListener {
-    
+
     /**
      * Stable serialVersionUID.
      */
@@ -163,7 +163,7 @@ public class PropertyInitializer implements ServletContextListener {
      */
     public void contextInitialized(ServletContextEvent sce) {
         final ServletContext context = sce.getServletContext();
-        
+
         loadBeanProperties();
         
         loadModuleProperties();
@@ -174,6 +174,7 @@ public class PropertyInitializer implements ServletContextListener {
             log.debug("{} value in web.xml is :[{}]", MAGNOLIA_INITIALIZATION_FILE, propertiesLocationString); //$NON-NLS-1$
         }
         if (StringUtils.isEmpty(propertiesLocationString)) {
+            log.debug("{} value in web.xml is undefined, falling back to default: {}", MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);
             propertiesLocationString = DEFAULT_INITIALIZATION_PARAMETER;
         }
 
