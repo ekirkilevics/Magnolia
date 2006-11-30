@@ -26,12 +26,13 @@ public class ClasspathResourcesUtilTest extends TestCase {
     public void testSanitizeUrlToFile() throws MalformedURLException {
         assertSanitizeToFile("/foo/bar/baz.jar", new URL("file:///foo/bar/baz.jar"));
         assertSanitizeToFile("/foo/bar/baz.jar", new URL("file:///foo/bar/baz.jar!/"));
-        assertSanitizeToFile("/foo/bar/baz.jar", new URL("jar:file:///foo/bar/baz.jar!/"));
+        assertSanitizeToFile("/foo/bar/baz.jar", new URL("file:/foo/bar/baz.jar!/"));
+        assertSanitizeToFile("//foo/bar/baz.jar", new URL("jar:file:///foo/bar/baz.jar!/"));
         assertSanitizeToFile("/foo/bar/baz.jar", new URL("jar:file:/foo/bar/baz.jar!/"));
     }
 
     private void assertSanitizeToFile(String expectedAbsPath, URL url) throws MalformedURLException {
         final File file = ClasspathResourcesUtil.sanitizeToFile(url);
-        assertEquals(expectedAbsPath, file.getAbsolutePath());
+        assertEquals(new File(expectedAbsPath).getAbsolutePath(), file.getAbsolutePath());
     }
 }
