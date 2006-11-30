@@ -430,7 +430,7 @@
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="subscribers">
+    <sv:node sv:name="subscriber">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -444,10 +444,10 @@
         <sv:value>/.resources/icons/16/dot.gif</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
-        <sv:value>MgnlAdminCentral.showTree('config','/subscribers/SubscriberConfig/magnoliaPublic8080/active')</sv:value>
+        <sv:value>MgnlAdminCentral.showTree('config','/subscriber/SubscriberConfig/magnoliaPublic8080/active')</sv:value>
       </sv:property>
       <sv:property sv:name="label" sv:type="String">
-        <sv:value>menu.config.subscribers</sv:value>
+        <sv:value>menu.config.subscriber</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
