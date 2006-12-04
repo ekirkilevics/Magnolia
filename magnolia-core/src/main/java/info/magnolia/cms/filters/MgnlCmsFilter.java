@@ -13,7 +13,6 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.ModuleRegistration;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
@@ -21,13 +20,10 @@ import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.URI2RepositoryMapping;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
-import info.magnolia.cms.core.Aggregator;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.*;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -62,17 +58,16 @@ import org.slf4j.LoggerFactory;
  */
 public class MgnlCmsFilter implements Filter {
 
-    /**
-     *
-     */
     private static final String BYPASS_PARAM = "bypass";
 
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(MgnlCmsFilter.class);
 
     private String[] bypass;
+
+    private static final String NODE_DATA_TEMPLATE = "nodeDataTemplate";
+
+    private static final String VERSION_NUMBER = "mgnlVersion"; //$NON-NLS-1$
+
 
     /**
      * @see javax.servlet.Filter#destroy()
@@ -100,19 +95,15 @@ public class MgnlCmsFilter implements Filter {
         String requestURI = Path.getURI(request);
         String pathInfo = request.getPathInfo();
 
+        boolean success = true;
         if (pathInfo == null && !startsWithAny(bypass, requestURI)) {
-            if (handle(request, response)) {
-                return;
-            }
+            success = handle(request, response);
         }
 
-        chain.doFilter(request, response);
-
+        if (success) {
+            chain.doFilter(request, response);
+        }
     }
-
-    private static final String NODE_DATA_TEMPLATE = "nodeDataTemplate";
-
-    private static final String VERSION_NUMBER = "mgnlVersion"; //$NON-NLS-1$
 
     /**
      * All HTTP/s requests are handled here.
@@ -124,8 +115,6 @@ public class MgnlCmsFilter implements Filter {
     public boolean handle(HttpServletRequest request, HttpServletResponse response) throws IOException,
         ServletException {
 
-        // context initialization: moved to a filter
-
         if (ConfigLoader.isBootstrapping()) {
             // @todo a nice page, with the log content...
             response.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs"); //$NON-NLS-1$
@@ -134,77 +123,75 @@ public class MgnlCmsFilter implements Filter {
 
         setHandleAndMapping(request);
 
-        if (isAuthorized(request, response)) {
+        try {
+            authorize(request);
+            // aggregate content
+            boolean success = collect(request);
 
-            // redirect: moved to a filter
+            if (success) {
 
-            // intercept: moved to a filter
+                Template template = (Template) request.getAttribute(Aggregator.TEMPLATE);
 
-            try {
-                // aggregate content
-                boolean success = collect(request);
+                if (template != null) {
+                    try {
+                        String type = template.getType();
+                        TemplateRenderer renderer = TemplateRendererManager.getInstance().getRenderer(type);
 
-                if (success) {
-
-                    Template template = (Template) request.getAttribute(Aggregator.TEMPLATE);
-
-                    if (template != null) {
-                        try {
-                            String type = template.getType();
-                            TemplateRenderer renderer = TemplateRendererManager.getInstance().getRenderer(type);
-
-                            if (renderer == null) {
-                                throw new RuntimeException("No renderer found for type " + type);
-                            }
-                            renderer.renderTemplate(template, request, response);
+                        if (renderer == null) {
+                            throw new RuntimeException("No renderer found for type " + type);
                         }
-                        catch (IOException e) {
-                            log.error(e.getMessage(), e);
-                            throw e;
-                        }
-                        catch (ServletException e) {
-                            log.error(e.getMessage(), e);
-                            throw e;
-                        }
-                        catch (Exception e) {
-                            // @todo better handling of rendering exception
-                            log.error(e.getMessage(), e);
-                            if (!response.isCommitted()) {
-                                response.reset();
-                                response.setContentType("text/html");
-                            }
-                            throw new NestableRuntimeException(e);
-                        }
+                        renderer.renderTemplate(template, request, response);
                     }
-                    else {
-                        // direct request
-                        handleResourceRequest(request, response);
+                    catch (IOException e) {
+                        log.error(e.getMessage(), e);
+                        throw e;
                     }
-
+                    catch (ServletException e) {
+                        log.error(e.getMessage(), e);
+                        throw e;
+                    }
+                    catch (Exception e) {
+                        // @todo better handling of rendering exception
+                        log.error(e.getMessage(), e);
+                        if (!response.isCommitted()) {
+                            response.reset();
+                            response.setContentType("text/html");
+                        }
+                        throw new NestableRuntimeException(e);
+                    }
                 }
                 else {
-                    if (log.isDebugEnabled()) {
-                        log.debug(
-                            "Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI()); //$NON-NLS-1$
-                    }
-
-                    if (!response.isCommitted()) {
-                        response.sendError(HttpServletResponse.SC_NOT_FOUND);
-                    }
-                    else {
-                        log.info("Unable to redirect to 404 page, response is already committed. URI was {}", //$NON-NLS-1$
-                            request.getRequestURI());
-                    }
+                    // direct request
+                    handleResourceRequest(request, response);
                 }
+
             }
-            catch (AccessDeniedException e) {
-                // don't log AccessDenied as errors, it can happen...
-                log.warn(e.getMessage());
+            else {
+                if (log.isDebugEnabled()) {
+                    log.debug(
+                        "Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI()); //$NON-NLS-1$
+                }
+
+                if (!response.isCommitted()) {
+                    response.sendError(HttpServletResponse.SC_NOT_FOUND);
+                }
+                else {
+                    log.info("Unable to redirect to 404 page, response is already committed. URI was {}", //$NON-NLS-1$
+                        request.getRequestURI());
+                }
+                return false;
             }
-            catch (RepositoryException e) {
-                log.error(e.getMessage(), e);
-                throw new ServletException(e.getMessage(), e);
-            }
+        }
+        catch (AccessDeniedException e) {
+            // don't throw further, simply return error and break filter chain
+            log.debug(e.getMessage());
+            if (!response.isCommitted())
+                response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            return false;
+        }
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+            throw new ServletException(e.getMessage(), e);
         }
 
         return true;
@@ -246,21 +233,15 @@ public class MgnlCmsFilter implements Filter {
     }
 
     /**
-     * Uses access manager to authorise this request.
-     * @param req HttpServletRequest as received by the service method
-     * @param res HttpServletResponse as received by the service method
-     * @return boolean true if read access is granted
-     * @throws IOException can be thrown when the servlet is unable to write to the response stream
+     * Uses access manager to authorize this request.
+     * @param request HttpServletRequest as received by the service method
+     * @throws AccessDeniedException if the given request is not authorized
      */
-    protected boolean isAuthorized(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        if (MgnlContext.getAccessManager(getRepository(req)) != null) {
-            String handle = Path.getHandle(req); //$NON-NLS-1$
-
-            if (!MgnlContext.getAccessManager(getRepository(req)).isGranted(handle, Permission.READ)) {
-                res.sendError(HttpServletResponse.SC_FORBIDDEN);
-            }
+    protected void authorize(HttpServletRequest request) throws AccessDeniedException {
+        AccessManager accessManager = MgnlContext.getAccessManager(getRepository(request));
+        if (null != accessManager) {
+            Access.isGranted(accessManager, Path.getHandle(request), Permission.READ);
         }
-        return true;
     }
 
     /**
