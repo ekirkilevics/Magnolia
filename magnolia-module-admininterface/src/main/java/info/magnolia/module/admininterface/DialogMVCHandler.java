@@ -23,11 +23,7 @@ import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
-import info.magnolia.cms.util.ClassUtil;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.cms.util.RequestFormUtil;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.util.*;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -145,7 +141,6 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     /**
      * Calls createDialog and sets the common parameters on the dialog
-     * @return
      */
     public String showDialog() {
         return VIEW_SHOW_DIALOG;
@@ -186,8 +181,10 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         if (!onSave(saveHandler)) {
             return onSaveFailed();
         }
-        if (!onPostSave(saveHandler)) {
-            return onSaveFailed();
+        synchronized (ExclusiveWrite.getInstance()) {
+            if (!onPostSave(saveHandler)) {
+                return onSaveFailed();
+            }
         }
         removeSessionAttributes();
         return VIEW_CLOSE_WINDOW;
@@ -332,7 +329,6 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     /**
      * Returns the node with the dialog definition. Default: null
-     * @return
      */
     public Content getConfigNode() {
         return null;
@@ -354,7 +350,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             out.println("</script></html>"); //$NON-NLS-1$
         }
         // show the created dialog
-        else if (view == VIEW_SHOW_DIALOG) {
+        else if (VIEW_SHOW_DIALOG.equals(view)) {
             try {
                 getDialog().drawHtml(out);
             }
