@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This class initializes the current context.
+ * CMS filter responsible for content aggregation and dispatching 
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
