@@ -14,17 +14,22 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>3.0</version>
+      <version>3.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>3.0</version>
+      <version>3.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
-      <version>3.0</version>
+      <version>3.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-taglib-cms</artifactId>
+      <version>3.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>com.metaparadigm</groupId>
@@ -46,4 +51,13 @@
       <version>1.6.5</version>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jspc-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
 </project>
