@@ -20,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -155,8 +156,36 @@ public class CacheImpl implements Cache {
             if (!result) {
                 log.error("Failed to create cache directory location {}", cacheDir.getAbsolutePath());
             }
+        } else {
+            updateInMemoryCache(cacheDir);
         }
     }
+
+    /**
+     * synchronize file system with in-memory cache list
+     * @param cacheDir
+     * */
+    private void updateInMemoryCache(File cacheDir) {
+        File[] items = cacheDir.listFiles();
+        for (int index=0; index < items.length; index++) {
+            File item = items[index];
+            if (item.isDirectory()) {
+                updateInMemoryCache(item);
+            } else {
+                if (item.getName().lastIndexOf("gzip") < 0) {
+                    // use this as key
+                    String cacheHome = getCacheDirectory().getPath();
+                    CacheKey key = new CacheKey(StringUtils.substringAfter(item.getPath(), cacheHome));
+                    int size = (int) item.length();
+                    File compressedFile = new File(item.getPath()+".gzip");
+                    int compressedSize = -1;
+                    if (compressedFile.exists()) compressedSize = (int) compressedFile.length();
+                    addToCachedURIList(key, item.lastModified(), size, compressedSize);
+                }
+            }
+        }
+    }
+
 
     public boolean isCached(CacheKey key) {
         return this.cachedURIList.get(key) != null;
@@ -191,6 +220,7 @@ public class CacheImpl implements Cache {
 
             fin = new FileInputStream(file);
             out = response.getOutputStream();
+            response.setDateHeader("Last-Modified", this.getCreationTime(key));
             if (canCompress) {
                 response.setContentLength(getCompressedSize(key));
                 response.setHeader("Content-Encoding", "gzip");

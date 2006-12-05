@@ -60,7 +60,10 @@ public class CacheFilter implements Filter {
                 HttpServletResponse response = (HttpServletResponse) res;
 
                 CacheKey key = cacheManager.getCacheKey(request);
-
+                if (!this.ifModifiedSince((HttpServletRequest)req, cacheManager.getCreationTime(key))) {
+                    response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    return;
+                }
                 boolean canCompress = cacheManager.canCompress(request);
                 boolean usedCache = cacheManager.streamFromCache(key, response, canCompress
                     && clientAcceptsGzip(request));
@@ -92,6 +95,29 @@ public class CacheFilter implements Filter {
         // don't cache, just go on
         chain.doFilter(req, res);
 
+    }
+
+    /**
+     * Check if server cache is newer then the client cache
+     *
+     * @param request The servlet request we are processing
+     * @return boolean true if the server resource is newer
+     */
+    private boolean ifModifiedSince(HttpServletRequest request, long lastModified) {
+        try {
+            long headerValue = request.getDateHeader("If-Modified-Since");
+            if (headerValue != -1) {
+                // If an If-None-Match header has been specified, if modified since
+                // is ignored.
+                if ((request.getHeader("If-None-Match") == null)
+                    && (lastModified <= headerValue + 1000)) {
+                    return false;
+                }
+            }
+        } catch(IllegalArgumentException illegalArgument) {
+            return true;
+        }
+        return true;
     }
 
     private boolean clientAcceptsGzip(HttpServletRequest request) {
