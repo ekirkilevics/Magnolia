@@ -96,14 +96,14 @@
   </organization>
   <!-- temporary sollution for the bundeling: we will make a submodule for the bundle -->
   <profiles>
-    
+
     <profile>
       <id>enterprise</id>
       <modules>
         <module>../magnolia-enterprise</module>
       </modules>
     </profile>
-    
+
     <profile>
       <id>bundle</id>
       <build>
@@ -134,6 +134,25 @@
           <groupId>info.magnolia</groupId>
           <artifactId>maven-bundle-plugin</artifactId>
           <version>1.0.1-SNAPSHOT</version>
+        </plugin>
+        <!-- precompile/validate JSPs : -->
+        <plugin>
+          <groupId>org.codehaus.mojo</groupId>
+          <artifactId>jspc-maven-plugin</artifactId>
+          <version>1.4.7-magnolia-SNAPSHOT</version>
+          <executions>
+            <execution>
+              <id>jspc</id>
+              <goals>
+                <goal>compile</goal>
+              </goals>
+            </execution>
+          </executions>
+          <configuration>
+            <warSourceDirectory>src/main/resources</warSourceDirectory>
+            <source>1.4</source>
+            <target>1.4</target>
+          </configuration>
         </plugin>
       </plugins>
     </pluginManagement>

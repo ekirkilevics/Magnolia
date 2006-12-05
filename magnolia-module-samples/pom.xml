@@ -16,6 +16,16 @@
       <version>3.0.1-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-taglib-cms</artifactId>
+      <version>3.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-taglib-utility</artifactId>
+      <version>3.0.1-SNAPSHOT</version>
+    </dependency>
+    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jsp-api</artifactId>
     </dependency>
@@ -24,4 +34,14 @@
       <artifactId>slf4j-log4j12</artifactId>
     </dependency>
   </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jspc-maven-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>
