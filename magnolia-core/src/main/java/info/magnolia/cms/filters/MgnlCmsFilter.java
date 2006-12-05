@@ -52,7 +52,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * CMS filter responsible for content aggregation and dispatching 
+ * CMS filter responsible for content aggregation and dispatching
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -95,12 +95,11 @@ public class MgnlCmsFilter implements Filter {
         String requestURI = Path.getURI(request);
         String pathInfo = request.getPathInfo();
 
-        boolean success = true;
         if (pathInfo == null && !startsWithAny(bypass, requestURI)) {
-            success = handle(request, response);
-        }
-
-        if (success) {
+            handle(request, response);
+        } else {
+            // only continue if bypassed by this filter, independent of return status from handle(request, response)
+            // since it will return false on exceptions like AccessDenied in which case it should not continue
             chain.doFilter(request, response);
         }
     }
