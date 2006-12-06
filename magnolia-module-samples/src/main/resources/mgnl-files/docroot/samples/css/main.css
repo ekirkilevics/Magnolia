@@ -126,11 +126,11 @@ hr {
 }
 
 .spacer1 {
-    height: 10px;
+    margin-bottom: 1em;
 }
 
 .spacer2 {
-    height: 20px;
+    margin-bottom: 2em;
 }
 
 #footer {

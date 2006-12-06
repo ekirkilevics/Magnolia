@@ -9,18 +9,14 @@
   <h1>${title}</h1>
   <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
     <cms:out nodeDataName="lineAbove" var="lineAbove" />
-    <div style="clear:both;">
+    <cms:out nodeDataName="spacer" var="spacer" />
+    <div style="clear:both;" class="spacer${spacer}">
       <cms:editBar adminOnly="true" />
       <!-- line -->
       <c:if test="${lineAbove=='true'}">
         <hr />
       </c:if>
       <cms:includeTemplate />
-    </div>
-    <!-- spacer -->
-    <cms:out nodeDataName="spacer" var="spacer" />
-    <div style="clear:both;" class="spacer${spacer}">
-      <!--  -->
     </div>
   </cms:contentNodeIterator>
   <cms:adminOnly>
