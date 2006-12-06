@@ -193,7 +193,8 @@ public class CacheImpl implements Cache {
 
     public void stop() {
         // NOTE: it should not flush the cache here. otherwise on server stop all filesystem
-        // cache is removed
+        // cache is removed, only clean in-memory cache
+        clearCachedURIList();
     }
 
     /**
