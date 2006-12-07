@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- main definition -->
-<!ELEMENT module (name, displayName?, class, version, description?, dependencies?, repositories?, servlets?)>
+<!ELEMENT module (name, displayName?, class, version, description?, dependencies?, properties?, repositories?, servlets?)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT displayName (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
 <!ELEMENT class (#PCDATA)>
+<!ELEMENT value (#PCDATA)>
 
 <!-- dependencies to other modules -->
 <!ELEMENT dependencies (dependency+)>
 <!ELEMENT dependency (name,version)>
+
+<!-- properties -->
+<!ELEMENT properties (property+)>
+<!ELEMENT property (name,value)>
 
 <!-- servlet to register -->
 <!ELEMENT servlets (servlet+)>
@@ -20,9 +25,9 @@
 <!ELEMENT comment (#PCDATA)>
 <!ELEMENT params (param*)>
 <!ELEMENT param (name,value)>
-<!ELEMENT value (#PCDATA)>
 
 <!-- repositories to register -->
 <!ELEMENT repositories (repository+)>
-<!ELEMENT repository (name,nodeTypeFile)>
-<!ELEMENT nodeTypeFile EMPTY>
+<!ELEMENT repository (name,workspaces)>
+<!ELEMENT workspaces (workspace+)>
+<!ELEMENT workspace (#PCDATA)>
