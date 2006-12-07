@@ -181,9 +181,12 @@ function mgnlOpenWindow(url,width,height)
     //dialog window is resized in  dialog itself (window.resize)
     if (!width) width=800;
     if (!height) height=100;
-    if(contextPath.length != 0){
-    	url = contextPath + "/" + url;
+
+    if(url[0]!= "/"){
+    	url = "/" + url;
     }
+   	url = contextPath + url;
+    
     if(url.indexOf('?')>=0){
         url+="&";
     }
