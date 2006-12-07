@@ -134,7 +134,7 @@ public class MgnlUserManager implements UserManager {
             node.createNodeData("name").setValue(name);
             node.createNodeData("pswd").setValue(new String(Base64.encodeBase64(pw.getBytes())));
             node.createNodeData("language").setValue("en");
-            node.save();
+            getHierarchyManager().save();
             return new MgnlUser(node);
         }
         catch (Exception e) {

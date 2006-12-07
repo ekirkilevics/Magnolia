@@ -15,6 +15,7 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
@@ -215,6 +216,9 @@ public class MgnlGroup implements Group {
             }
 
             if (!this.hasAny(name, nodeName)) {
+               if (!groupNode.hasContent(nodeName)) {
+                    groupNode.createContent(nodeName, ItemType.CONTENTNODE);
+               }
                 Content node = groupNode.getContent(nodeName);
                 // add corresponding ID
                 try {

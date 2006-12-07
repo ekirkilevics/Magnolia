@@ -49,8 +49,8 @@ public class MgnlRoleManager implements RoleManager {
 
     public Role createRole(String name) {
         try {
-            Content node = getHierarchyManager().createContent("/", name, ItemType.CONTENT.getSystemName());
-            node.save();
+            Content node = getHierarchyManager().createContent("/", name, ItemType.ROLE.getSystemName());
+            getHierarchyManager().save();
             return new MgnlRole(node);
         }
         catch (Exception e) {

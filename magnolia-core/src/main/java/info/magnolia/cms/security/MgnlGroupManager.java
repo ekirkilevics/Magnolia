@@ -38,8 +38,8 @@ public class MgnlGroupManager implements GroupManager {
      */
     public Group createGroup(String name) throws UnsupportedOperationException, AccessDeniedException {
         try {
-            Content node = getHierarchyManager().createContent("/", name, ItemType.CONTENT.getSystemName());
-            node.save();
+            Content node = getHierarchyManager().createContent("/", name, ItemType.GROUP.getSystemName());
+            getHierarchyManager().save();
             return new MgnlGroup(node);
         }
         catch (Exception e) {
