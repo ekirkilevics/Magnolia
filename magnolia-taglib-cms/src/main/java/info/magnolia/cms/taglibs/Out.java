@@ -212,10 +212,10 @@ public class Out extends BaseContentTag {
                 Date date = nodeData.getDate().getTime();
                 if (date != null) {
                     if (this.dateLanguage == null) {
-                        value = DateFormatUtils.formatUTC(date, this.datePattern);
+                        value = DateFormatUtils.format(date, this.datePattern);
                     }
                     else {
-                        value = DateFormatUtils.formatUTC(date, this.datePattern, new Locale(this.dateLanguage));
+                        value = DateFormatUtils.format(date, this.datePattern, new Locale(this.dateLanguage));
                     }
                 }
                 break;
