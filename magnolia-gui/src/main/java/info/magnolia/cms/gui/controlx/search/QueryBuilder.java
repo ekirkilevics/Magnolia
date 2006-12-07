@@ -17,7 +17,13 @@ import info.magnolia.cms.gui.query.SearchQueryExpression;
 import info.magnolia.cms.gui.query.SearchQueryOperator;
 import info.magnolia.cms.gui.query.StringSearchQueryParameter;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.TimeZone;
+
+import javax.swing.text.NumberFormatter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
@@ -139,16 +145,38 @@ class QueryBuilder {
         StringBuffer buffer = new StringBuffer();
         buffer.append(param.getName());
         if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.BEFORE)) {
-            buffer.append(" <= TIMESTAMP '");
+            buffer.append(" <= ");
         }
         else if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.AFTER)) {
-            buffer.append(" >= TIMESTAMP '");
+            buffer.append(" >= ");
         }
         else if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.IS)) {
-            buffer.append(" = TIMESTAMP '");
+            buffer.append(" = ");
         }
+        
+        buffer.append("TIMESTAMP '");
         buffer.append(DateFormatUtils.format(date, "yyyy-MM-dd"));
-        buffer.append("T00:00:00.000Z'");
+        buffer.append("T00:00:00.000");
+        
+        TimeZone timezone = TimeZone.getDefault();
+        int milis = Math.abs(timezone.getRawOffset());
+        if(milis == 0){
+            buffer.append("Z");
+        }
+        else{
+            if(timezone.getRawOffset() > 0){
+                buffer.append("+");
+            }
+            else{
+                buffer.append("-");
+            }
+
+            int hours = milis / (1000 * 60 * 60);
+            int minutes =  (milis - hours * 1000 * 60 * 60) / (1000 * 60);
+            DecimalFormat format = new DecimalFormat("00");
+            buffer.append(format.format(hours)).append(":").append(format.format(minutes));
+        }
+        buffer.append("'");
         return buffer.toString();
     }
 
