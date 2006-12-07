@@ -3,7 +3,7 @@
               M A G N O L I A (TM)
      Simple Enterprise Content Management
 
-              ${magnolia.currentDate}
+               ${magnolia.currentDate}
            Release Notes v ${magnolia.niceVersion} 
                ${magnolia.edition}
 
@@ -44,10 +44,14 @@ The Package contains:
 System Requirements
 ===============================================
 
-To run Magnolia, all you need is Java 1.4.2.x
-You need any J2EE application server for using 
-magnolia.
- 
+To run Magnolia within the bundled Tomcat, all
+you need is a Java SDK, version 1.4.2 or 1.5.
+You can get a Java SDK from:
+ http://java.sun.com/j2se/1.4.2/download.html (SDK)
+ http://java.sun.com/j2se/1.5.0/download.jsp (SDK)
+A JRE (Java Runtime Environment) will not be
+sufficient.
+
 The authoring environment will need a browser. The
 latest list of tested and compliant browsers can 
 be found at www.magnolia.info
@@ -64,7 +68,7 @@ magnolia instances in one step
 
 1.1. Unix (all flavors)
 
-  open a shell and set the environment variables
+  Open a shell and set the environment variables
   JAVA_HOME and preferably CATALINA_HOME. If you
   do not set CATALINA_HOME, you will have to 
   start magnolia from within the bin/ directory
@@ -72,7 +76,7 @@ magnolia instances in one step
     > sh
     > cd INSTALL_DIRECTORY/tomcat/bin
     > export JAVA_HOME=YOUR_JAVA1.4_HOME
-    > ./startup.sh
+    > ./magnolia_control.sh start
 
 
   Here is an example of a small shell script 
@@ -85,7 +89,7 @@ magnolia instances in one step
   #
   export JAVA_HOME=/Library/Java/Home
   cd INSTALL_DIRECTORY/tomcat/bin
-  ./startup.sh
+  ./magnolia_control.sh start
   --------- 8< ---------
 
 
@@ -93,7 +97,7 @@ magnolia instances in one step
 
   open command prompt 
     > C:\set JAVA_HOME=YOUR_JAVA1.4_HOME
-    > C:\INSTALL_DIRECTORY\tomcat\bin\startup.bat
+    > C:\INSTALL_DIRECTORY\tomcat\bin\magnolia_control.bat start
 
 
 =============================================== 

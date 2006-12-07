@@ -1,12 +1,13 @@
 ===============================================
 
               M A G N O L I A (TM)
-    Simple Enterprise Content Management
+     Simple Enterprise Content Management
 
-              ${magnolia.currentDate}
+               ${magnolia.currentDate}
            Release Notes v ${magnolia.niceVersion} 
+               ${magnolia.edition}
 
-          http://www.magnolia.info/
+           http://www.magnolia.info/
 
 
 
@@ -42,9 +43,16 @@ The Package contains:
 System Requirements
 ===============================================
 
-To run Magnolia, all you need is Java 1.4.2.x
-You need any J2EE application server for using 
-magnolia.
+You need a J2EE application server to use
+Magnolia. Depending on the application server
+you use, you might also need a Java SDK,
+version 1.4.2 or 1.5 (A simple JRE (Java Runtime
+Environment) will not be sufficient).
+You can a Java SDK from:
+ http://java.sun.com/j2se/1.4.2/download.html (SDK)
+ http://java.sun.com/j2se/1.5.0/download.jsp (SDK)
+A JRE (Java Runtime Environment) will not be
+sufficient.
  
 The authoring environment will need a browser. The
 latest list of tested and compliant browsers can 
