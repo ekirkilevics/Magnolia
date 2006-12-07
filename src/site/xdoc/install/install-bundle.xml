@@ -14,7 +14,7 @@
                         <a href="http://sourceforge.net/project/showfiles.php?group_id=86297">sourceforge</a>
                     </li>
                     <li>unzip the file</li>
-                    <li>start the bundled tomcat (bin/startup.sh or bin/startup.bat)</li>
+                    <li>start the bundled tomcat (bin/magnolia_control.sh start or bin/magnolia_control.bat start)</li>
                     <li>wait ....</li>
                     <li>connect to localhost:8081/magnoliaAuthor or localhost:8081/magnoliaPublic</li>
                     <li>login as superuser (password is 'superuser')</li>
@@ -55,7 +55,7 @@ magnolia instances in one step
     > sh
     > cd INSTALL_DIRECTORY/tomcat/bin
     > export JAVA_HOME=YOUR_JAVA1.4_HOME
-    > ./startup.sh
+    > ./magnolia_control.sh start
 
 
   Here is an example of a small shell script
@@ -68,7 +68,7 @@ magnolia instances in one step
   #
   export JAVA_HOME=/Library/Java/Home
   cd INSTALL_DIRECTORY/tomcat/bin
-  ./startup.sh
+  ./magnolia_control.sh start
   --------- 8< ---------
 
 
@@ -76,7 +76,7 @@ magnolia instances in one step
 
   open command prompt
     > C:\set JAVA_HOME=YOUR_JAVA1.4_HOME
-    > C:\INSTALL_DIRECTORY\tomcat\bin\startup.bat
+    > C:\INSTALL_DIRECTORY\tomcat\bin\magnolia_control.bat start
 
 
 ===============================================
