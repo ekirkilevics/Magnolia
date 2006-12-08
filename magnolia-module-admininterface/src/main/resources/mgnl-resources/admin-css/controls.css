@@ -4,11 +4,13 @@
 }
 
 .mgnlBtnsLeft {
-	text-align: left;
+    text-align: left;
+    line-height: 14px;
 }
 
 .mgnlBtnsRight {
-	text-align: right;
+    text-align: right;
+    line-height: 14px;
 }
 
 .mgnlControlButton,.mgnlControlButton_PUSHED {
