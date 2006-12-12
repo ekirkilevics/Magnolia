@@ -62,13 +62,6 @@ public class ActivationCommand extends BaseActivationCommand {
             if (StringUtils.isEmpty(parentPath)) {
                 parentPath = "/";
             }
-            if (StringUtils.isNotEmpty(getVersion())) {
-                try {
-                    thisState = thisState.getVersionedContent(getVersion());
-                } catch (RepositoryException re) {
-                    log.error("Failed to get version "+getVersion()+" for "+thisState.getHandle(), re);
-                }
-            }
             // make multiple activations instead of a big bulp
             if (recursive) {
                 List versionMap = getVersionMap();
@@ -79,7 +72,15 @@ public class ActivationCommand extends BaseActivationCommand {
                 }
             }
             else {
-                getSyndicator().activate(parentPath, thisState, getOrderingInfo(thisState));
+                List orderInfo = getOrderingInfo(thisState);
+                if (StringUtils.isNotEmpty(getVersion())) {
+                    try {
+                        thisState = thisState.getVersionedContent(getVersion());
+                    } catch (RepositoryException re) {
+                        log.error("Failed to get version "+getVersion()+" for "+thisState.getHandle(), re);
+                    }
+                }
+                getSyndicator().activate(parentPath, thisState, orderInfo);
             }
         }
         catch (Exception e) {
