@@ -19,8 +19,10 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
@@ -110,13 +112,17 @@ public class ClasspathResourcesUtil {
     }
 
     protected static File sanitizeToFile(URL url) {
-        String fileUrl = url.getFile();
-
-        // needed for Resin - for some reason, its URLs are formed as jar:file:/absolutepath/foo/bar.jar instead of using the :///abs.. notation
-        fileUrl = StringUtils.removeStart(fileUrl, "file:");
-        fileUrl = StringUtils.removeEnd(fileUrl, "!/");
-
-        return new File(fileUrl);
+        try {
+            String fileUrl = url.getFile();
+            // needed because somehow the URLClassLoader has encoded URLs, and getFile does not decode them.
+            fileUrl = URLDecoder.decode(fileUrl, "UTF-8");
+            // needed for Resin - for some reason, its URLs are formed as jar:file:/absolutepath/foo/bar.jar instead of using the :///abs.. notation
+            fileUrl = StringUtils.removeStart(fileUrl, "file:");
+            fileUrl = StringUtils.removeEnd(fileUrl, "!/");
+            return new File(fileUrl);
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
