@@ -1,6 +1,6 @@
 <jsp:root xmlns:jsp="http://java.sun.com/JSP/Page" version="2.0"
-    xmlns:c="urn:jsptld:http://java.sun.com/jsp/jstl/core"
-    xmlns:cms="urn:jsptld:cms-taglib">
+    xmlns:c="http://java.sun.com/jsp/jstl/core"
+    xmlns:cms="cms-taglib">
     <jsp:directive.page language="java"
         contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" />
 

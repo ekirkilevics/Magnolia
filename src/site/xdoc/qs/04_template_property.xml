@@ -146,7 +146,7 @@ with
                     <code>cms:setNode</code>
                     tag is from our cms-taglib that we have made available at the start of our page template:
                 </p>
-                <source><![CDATA[<jsp:root version="2.0" ... xmlns:cms="urn:jsptld:cms-taglib">]]></source>
+                <source><![CDATA[<jsp:root version="2.0" ... xmlns:cms="cms-taglib">]]></source>
                 <p>
                     <code>cms:setNode</code>
                     exposes the current page properties in order to access them using EL expressions. You can also use

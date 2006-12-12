@@ -8,7 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-dms</artifactId>
   <name>magnolia-module-dms</name>
-  <version>1.2-SNAPSHOT</version>
+  <version>1.1.1-SNAPSHOT</version>
   <url>http://www.magnolia.info</url>
   <dependencies>
     <dependency>
