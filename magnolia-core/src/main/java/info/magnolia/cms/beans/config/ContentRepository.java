@@ -231,7 +231,7 @@ public final class ContentRepository {
         // return any kind of children
         Collection children = startPage.getChildren(new Content.ContentFilter(){
             public boolean accept(Content content) {
-                return !content.getName().startsWith("jcr:");
+                return (!content.getName().startsWith("jcr:") && !content.getName().startsWith("rep:"));
             }
         });
 
