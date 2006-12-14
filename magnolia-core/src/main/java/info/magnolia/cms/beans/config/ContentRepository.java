@@ -586,7 +586,7 @@ public final class ContentRepository {
      * @param workspaceName
      * @return workspace name as configured in magnolia repositories.xml
      * */
-    private static String getInternalWorkspaceName(String workspaceName) {
+    public static String getInternalWorkspaceName(String workspaceName) {
         Iterator keys = repositoryNameMap.keySet().iterator();
         while (keys.hasNext()) {
             String key = (String) keys.next();

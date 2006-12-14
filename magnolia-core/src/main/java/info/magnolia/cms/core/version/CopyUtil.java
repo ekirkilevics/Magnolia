@@ -15,6 +15,7 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
 
 import java.io.File;
@@ -188,7 +189,8 @@ public final class CopyUtil {
             // it seems to be a bug in jackrabbit - cloning does not work if the node with the same uuid
             // exist, "removeExisting" has no effect
             // if node exist with the same UUID, simply update non propected properties
-            Content existingNode = getHierarchyManager(parent.getWorkspace().getName())
+            String workspaceName = ContentRepository.getInternalWorkspaceName(parent.getWorkspace().getName());
+            Content existingNode = getHierarchyManager(workspaceName)
                 .getContentByUUID(node.getUUID());
             if (removeExisting) {
                 existingNode.delete();

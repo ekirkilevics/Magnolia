@@ -640,19 +640,6 @@ public final class ModuleUtil {
                     + "]");
             }
 
-            // check if existing
-            Element workspaceNode = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='"
-                + repositoryName
-                + "']/workspace[@name='"
-                + workspaceName
-                + "']");
-            if (workspaceNode == null) {
-                workspaceNode = new Element("workspace");
-                workspaceNode.setAttribute("name", workspaceName);
-                repositoryNode.addContent(workspaceNode);
-                changed = true;
-            }
-
             // make the mapping
             Element mappingNode = (Element) XPath.selectSingleNode(doc, "/JCR/RepositoryMapping/Map[@name='"
                 + workspaceName
@@ -662,6 +649,21 @@ public final class ModuleUtil {
                 mappingNode.setAttribute("name", workspaceName).setAttribute("repositoryName", repositoryName);
                 // add it
                 doc.getRootElement().getChild("RepositoryMapping").addContent(mappingNode);
+
+                // check only if mapping not existing
+                Element workspaceNode = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='"
+                    + repositoryName
+                    + "']/workspace[@name='"
+                    + workspaceName
+                    + "']");
+
+                if (workspaceNode == null) {
+                    workspaceNode = new Element("workspace");
+                    workspaceNode.setAttribute("name", workspaceName);
+                    repositoryNode.addContent(workspaceNode);
+                }
+
+
                 changed = true;
             }
 

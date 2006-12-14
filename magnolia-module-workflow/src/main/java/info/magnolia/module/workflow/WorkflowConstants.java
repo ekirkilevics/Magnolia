@@ -74,7 +74,7 @@ public final class WorkflowConstants {
 
     public static final String NODEDATA_VALUE = "value";
 
-    public final static String ROOT_PATH_FOR_FLOW = "/modules/workflow/config/flows/";
+    public final static String ROOT_PATH_FOR_FLOW = "/modules/workflow/config/flows";
 
     public final static String FLOW_VALUE = "value";
 
