@@ -21,6 +21,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.security.auth.login.LoginException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -149,8 +150,8 @@ public class SecurityFilter implements Filter {
                 return false;
             }
         }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
+        catch (LoginException e) {
+            log.warn("Login failed: " + e.getMessage(), e);
             return false;
         }
 

@@ -72,7 +72,7 @@ public final class Authenticator {
      * @param request as received by the servlet engine
      * @return boolean
      */
-    public static boolean authenticate(HttpServletRequest request) throws Exception {
+    public static boolean authenticate(HttpServletRequest request) throws LoginException {
         String credentials = request.getHeader("Authorization");
         String userid;
         String pswd;
