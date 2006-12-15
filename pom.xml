@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
@@ -6,7 +7,8 @@
   <name>magnolia-project</name>
   <version>3.0.2-SNAPSHOT</version>
   <description>
-    Magnolia is a free enterprise class content management system developed by obinary based on the standard API for java content repositories (JCR).
+    Magnolia is a free enterprise class content management system developed by obinary based on the standard API for
+    java content repositories (JCR).
   </description>
   <url>http://magnolia.sourceforge.net</url>
   <issueManagement>
@@ -96,14 +98,12 @@
   </organization>
   <!-- temporary sollution for the bundeling: we will make a submodule for the bundle -->
   <profiles>
-
     <profile>
       <id>enterprise</id>
       <modules>
         <module>../magnolia-enterprise</module>
       </modules>
     </profile>
-
     <profile>
       <id>bundle</id>
       <build>
@@ -302,48 +302,27 @@
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-core</artifactId>
-        <version>1.0.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>jsr170</groupId>
-            <artifactId>jcr</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>xerces</groupId>
-            <artifactId>xercesImpl</artifactId>
-          </exclusion>
-        </exclusions>
+        <version>1.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-index-filters</artifactId>
-        <version>1.0.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>pdfbox</groupId>
-            <artifactId>pdfbox</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
-        <groupId>pdfbox</groupId>
-        <artifactId>pdfbox</artifactId>
-        <version>0.7.1</version>
+        <version>1.1</version>
       </dependency>
       <dependency>
         <groupId>org.apache.derby</groupId>
         <artifactId>derby</artifactId>
-        <version>10.1.3.1</version>
+        <version>10.2.1.6</version>
       </dependency>
       <dependency>
         <groupId>log4j</groupId>
         <artifactId>log4j</artifactId>
-        <version>1.2.13</version>
+        <version>1.2.14</version>
       </dependency>
       <dependency>
         <groupId>commons-httpclient</groupId>
         <artifactId>commons-httpclient</artifactId>
-        <version>3.0</version>
+        <version>3.0.1</version>
         <exclusions>
           <exclusion>
             <groupId>junit</groupId>
@@ -435,12 +414,22 @@
       <dependency>
         <groupId>commons-lang</groupId>
         <artifactId>commons-lang</artifactId>
-        <version>2.1</version>
+        <version>2.2</version>
       </dependency>
       <dependency>
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging</artifactId>
-        <version>1.0.4</version>
+        <version>1.1</version>
+        <exclusions>
+          <exclusion>
+            <groupId>avalon-framework</groupId>
+            <artifactId>avalon-framework</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>logkit</groupId>
+            <artifactId>logkit</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>commons-digester</groupId>
@@ -554,9 +543,33 @@
         <scope>provided</scope>
       </dependency>
       <dependency>
+        <groupId>org.openwfe</groupId>
+        <artifactId>openwfe-applic</artifactId>
+        <version>1.7.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.openwfe</groupId>
+        <artifactId>openwfe-jcr</artifactId>
+        <version>1.7.2</version>
+        <exclusions>
+          <exclusion>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>ant</groupId>
+            <artifactId>ant-launcher</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+        </exclusions>
+      </dependency>
+      <dependency>
         <groupId>net.sf.ehcache</groupId>
         <artifactId>ehcache</artifactId>
-        <version>1.2.2</version>
+        <version>1.2.4</version>
         <exclusions>
           <exclusion>
             <groupId>org.hibernate</groupId>
@@ -697,7 +710,7 @@
     <module>magnolia-module-admininterface</module>
     <module>magnolia-module-templating</module>
     <module>magnolia-module-workflow</module>
-    <!--<module>magnolia-module-dms</module>-->
+    <module>magnolia-module-dms</module>
     <module>magnolia-module-cache</module>
     <module>magnolia-taglib-cms</module>
     <module>magnolia-taglib-utility</module>

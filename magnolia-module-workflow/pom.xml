@@ -1,8 +1,6 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-  <properties>
-      <openwfe.version>1.7.2</openwfe.version>
-  </properties>
-   <parent>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
     <version>3.0.2-SNAPSHOT</version>
@@ -12,6 +10,9 @@
   <artifactId>magnolia-module-workflow</artifactId>
   <name>magnolia-module-workflow</name>
   <version>3.0.2-SNAPSHOT</version>
+  <properties>
+    <openwfe.version>1.7.2</openwfe.version>
+  </properties>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
