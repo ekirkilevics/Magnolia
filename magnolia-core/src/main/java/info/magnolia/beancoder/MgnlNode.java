@@ -235,7 +235,7 @@ public class MgnlNode implements Node {
 
             switch (type) {
                 case PropertyType.BOOLEAN:
-                    nodeData.setValue(Boolean.valueOf(value));
+                    nodeData.setValue(Boolean.parseBoolean(value));
                     break;
                 // @todo handle different types?
                 default:
