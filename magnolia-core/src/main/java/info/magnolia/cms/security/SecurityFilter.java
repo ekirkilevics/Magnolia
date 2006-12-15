@@ -213,7 +213,7 @@ public class SecurityFilter implements Filter {
      * Require basic authentication, the browser will take care of this.
      * @param response HttpServletResponse
      */
-    private void doBasicAuthentication(HttpServletResponse response) {
+    protected void doBasicAuthentication(HttpServletResponse response) {
         response.setHeader("WWW-Authenticate", "BASIC realm=\"" + Server.getBasicRealm() + "\"");
     }
 
