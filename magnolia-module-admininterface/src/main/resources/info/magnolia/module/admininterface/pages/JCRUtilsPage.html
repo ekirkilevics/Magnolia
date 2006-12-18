@@ -44,6 +44,14 @@
 	          </select>
 	        </div>
 	        <div class="formelement">
+             <label for="language">Query Language</label>
+             <select name="language">
+               [#list this.languages as item]
+               <option [#if item == this.language]selected[/#if]>${item}</option>
+               [/#list]
+             </select>
+           </div>
+           <div class="formelement">
 	          <label for="repository">Result ItemType</label>
 	          <input type="text" name="itemType" value="${this.itemType}" />
 	        </div>

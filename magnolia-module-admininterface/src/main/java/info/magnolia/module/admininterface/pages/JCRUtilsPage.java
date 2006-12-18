@@ -34,6 +34,8 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
     
     private String statement = "";
 
+    private static String[] languages = new String[] {Query.SQL, Query.XPATH};
+    
     private String language = Query.SQL;
 
     private String itemType = "nt:base";
@@ -73,6 +75,10 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
         
     public Iterator getRepositories() {
         return ContentRepository.getAllRepositoryNames();
+    }
+    
+    public String[] getLanguages() {
+        return languages;
     }
     
     public int getLevel() {
