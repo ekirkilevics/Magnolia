@@ -13,7 +13,6 @@
 <%@ page import="org.apache.commons.lang.StringUtils" %>
 <%@ page import="info.magnolia.cms.core.ItemType" %>
 
-<%@taglib prefix="cms" uri="cms-taglib"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 
 <%
