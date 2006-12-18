@@ -710,7 +710,7 @@
     <module>magnolia-module-admininterface</module>
     <module>magnolia-module-templating</module>
     <module>magnolia-module-workflow</module>
-    <module>magnolia-module-dms</module>
+    <!--<module>magnolia-module-dms</module>-->
     <module>magnolia-module-cache</module>
     <module>magnolia-taglib-cms</module>
     <module>magnolia-taglib-utility</module>
