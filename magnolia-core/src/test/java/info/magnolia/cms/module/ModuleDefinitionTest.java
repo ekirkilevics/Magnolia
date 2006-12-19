@@ -46,4 +46,36 @@ public class ModuleDefinitionTest extends TestCase {
         assertEquals(null, md.getProperty("Blame it on the boogie"));
     }
 
+    public void testDisplayNameReturnsNameWhenEmptyNoMatterWhatOrderTheSettersAreCalledIn() {
+        ModuleDefinition md = new ModuleDefinition();
+        md.setName("name");
+        md.setDisplayName("displayName");
+        assertEquals("displayName", md.getDisplayName());
+
+        md = new ModuleDefinition();
+        md.setDisplayName("displayName");
+        md.setName("name");
+        assertEquals("displayName", md.getDisplayName());
+
+        md = new ModuleDefinition();
+        md.setName("name");
+        md.setDisplayName("");
+        assertEquals("name", md.getDisplayName());
+
+        md = new ModuleDefinition();
+        md.setName("name");
+        assertEquals("name", md.getDisplayName());
+
+        md = new ModuleDefinition();
+        md.setDisplayName("d");
+        assertEquals("d", md.getDisplayName());
+
+        md = new ModuleDefinition();
+        md.setDisplayName("");
+        assertEquals(null, md.getDisplayName());
+
+        md = new ModuleDefinition();
+        assertEquals(null, md.getDisplayName());
+    }
+
 }

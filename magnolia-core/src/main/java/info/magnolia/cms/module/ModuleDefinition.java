@@ -57,7 +57,7 @@ public class ModuleDefinition {
     /**
      * A nice name for displaying
      */
-    private String displayName = "";
+    private String displayName;
 
     /**
      * The version of the module
@@ -65,7 +65,7 @@ public class ModuleDefinition {
     private String version;
 
     /**
-     * A full descrpition of the module
+     * A full description of the module
      */
     private String description;
 
@@ -105,14 +105,10 @@ public class ModuleDefinition {
     }
 
     /**
-     * If the displayName is empty the displayName will get set too.
      * @param name The name to set.
      */
     public void setName(String name) {
         this.name = name;
-        if (StringUtils.isEmpty(this.getDisplayName())) {
-            this.setDisplayName(name);
-        }
     }
 
     /**
@@ -227,9 +223,13 @@ public class ModuleDefinition {
     }
 
     /**
-     * @return Returns the displayName.
+     * @return Returns the displayName. (or the name if displayName wasn't set)
      */
     public String getDisplayName() {
+        if (StringUtils.isEmpty(this.displayName)) {
+            return this.name;
+        }
+
         return this.displayName;
     }
 

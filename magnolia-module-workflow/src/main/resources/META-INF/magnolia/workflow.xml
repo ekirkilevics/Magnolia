@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>workflow</name>
   <displayName>Workflow</displayName>
@@ -29,11 +30,11 @@
   <repositories>
     <repository>
       <name>magnolia</name>
-      <nodeTypeFile>/mgnl-nodetypes/owfe-nodetypes.xml</nodeTypeFile>
       <workspaces>
         <workspace>Store</workspace>
         <workspace>Expressions</workspace>
       </workspaces>
+      <nodeTypeFile>/mgnl-nodetypes/owfe-nodetypes.xml</nodeTypeFile>
     </repository>
   </repositories>
 </module>

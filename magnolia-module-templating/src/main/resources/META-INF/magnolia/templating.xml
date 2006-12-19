@@ -2,7 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>templating</name>
-  <display-name>Templating</display-name>
+  <displayName>Templating</displayName>
   <description>Custom templates</description>
   <class>info.magnolia.module.templating.Engine</class>
   <version>3.0</version>
