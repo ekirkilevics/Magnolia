@@ -52,6 +52,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -459,6 +460,14 @@ public class SimpleExchangeServlet extends HttpServlet {
         }
         else if (SimpleSyndicator.DE_ACTIVATE.equalsIgnoreCase(action)) {
             path = request.getHeader(SimpleSyndicator.PATH);
+        }
+        try {
+            getHierarchyManager(request).getWorkspace().getSession().logout();
+            HttpSession httpSession = request.getSession(false);
+            if (httpSession != null) httpSession.invalidate();
+        } catch (Throwable t) {
+            // its only a test so just dump
+            log.error("failed to invalidate session", t);
         }
         try {
             Content content = getHierarchyManager(request).getContent(path);
