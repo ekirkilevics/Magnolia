@@ -182,7 +182,7 @@ function mgnlOpenWindow(url,width,height)
     if (!width) width=800;
     if (!height) height=100;
 
-    if(url[0]!= "/"){
+    if(url.charAt(0)!= "/"){
     	url = "/" + url;
     }
    	url = contextPath + url;
@@ -194,6 +194,7 @@ function mgnlOpenWindow(url,width,height)
         url+="?";
     }
     url+="mgnlCK="+mgnlGetCacheKiller();
+
     var w=window.open(url,"mgnlDialog"+mgnlGetCacheKiller(),"width="+width+",height="+height+"scrollbars=no,status=yes,resizable=yes");
     if (w) w.focus();
     }
