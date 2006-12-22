@@ -13,6 +13,7 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
+import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.ModuleRegistration;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.module.ModuleDefinition;
@@ -28,7 +29,6 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Properties;
 
 import javax.servlet.ServletContext;
@@ -145,17 +145,12 @@ public class PropertyInitializer implements ServletContextListener {
      * The properties file containing the bean default implementations
      */
     private static final String MGNL_BEANS_PROPERTIES = "/mgnl-beans.properties";
-    
-    /**
-     * Environment-specific properties.
-     */
-    protected Properties envProperties = new Properties();
 
     /**
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     public void contextDestroyed(ServletContextEvent sce) {
-        Log4jConfigurer.shutdownLogging(envProperties);
+        Log4jConfigurer.shutdownLogging(SystemProperty.getProperties());
     }
 
     /**
@@ -163,22 +158,6 @@ public class PropertyInitializer implements ServletContextListener {
      */
     public void contextInitialized(ServletContextEvent sce) {
         final ServletContext context = sce.getServletContext();
-
-        loadBeanProperties();
-        
-        loadModuleProperties();
-
-        String propertiesLocationString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
-
-        if (log.isDebugEnabled()) {
-            log.debug("{} value in web.xml is :[{}]", MAGNOLIA_INITIALIZATION_FILE, propertiesLocationString); //$NON-NLS-1$
-        }
-        if (StringUtils.isEmpty(propertiesLocationString)) {
-            log.debug("{} value in web.xml is undefined, falling back to default: {}", MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);
-            propertiesLocationString = DEFAULT_INITIALIZATION_PARAMETER;
-        }
-
-        String[] propertiesLocation = StringUtils.split(propertiesLocationString, ',');
 
         String servername = initServername();
 
@@ -189,23 +168,23 @@ public class PropertyInitializer implements ServletContextListener {
         if (log.isDebugEnabled()) {
             log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$ 
         }
+        
+        loadBeanProperties();
+        
+        loadModuleProperties();
 
         createApplicationDirectories(webapp);
 
-        boolean found = false;
-
-        found = loadPropertiesFiles(propertiesLocation, servername, rootPath, webapp, found);
+        loadPropertiesFiles(context, servername, rootPath, webapp);
+        
+        // system property initialization
+        String magnoliaRootSysproperty = SystemProperty.getProperty(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
+        if (StringUtils.isNotEmpty(magnoliaRootSysproperty)) {
+            System.setProperty(magnoliaRootSysproperty, rootPath);
+            log.info("Setting the magnolia root system property: [" + magnoliaRootSysproperty + "] to [" + rootPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
         
         overloadWithSystemProperties();
-        
-        if(!found){
-            log
-            .error(MessageFormat
-                .format(
-                    "No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", //$NON-NLS-1$
-                    new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath}));
-            return;
-        }
         
         Log4jConfigurer.initLogging(context);
 
@@ -228,7 +207,20 @@ public class PropertyInitializer implements ServletContextListener {
         }
     }
 
-    protected boolean loadPropertiesFiles(String[] propertiesLocation, String servername, String rootPath, String webapp, boolean found) {
+    protected void loadPropertiesFiles(ServletContext context, String servername, String rootPath, String webapp) {
+        String propertiesLocationString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
+
+        if (log.isDebugEnabled()) {
+            log.debug("{} value in web.xml is :[{}]", MAGNOLIA_INITIALIZATION_FILE, propertiesLocationString); //$NON-NLS-1$
+        }
+        if (StringUtils.isEmpty(propertiesLocationString)) {
+            log.debug("{} value in web.xml is undefined, falling back to default: {}", MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);
+            propertiesLocationString = DEFAULT_INITIALIZATION_PARAMETER;
+        }
+
+        String[] propertiesLocation = StringUtils.split(propertiesLocationString, ',');
+
+        boolean found = false;
         for (int j = propertiesLocation.length-1; j >= 0; j--) {
             String location = StringUtils.trim(propertiesLocation[j]);
             location = StringUtils.replace(location, "${servername}", servername); //$NON-NLS-1$
@@ -238,26 +230,28 @@ public class PropertyInitializer implements ServletContextListener {
                 found = true;
             }
         }
-        return found;
+        
+        if(!found){
+            String msg = MessageFormat
+            .format(
+                "No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", //$NON-NLS-1$
+                new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath});
+            log.error(msg);
+            throw new ConfigurationException(msg);
+        }
     }
 
     protected String initWebappName(String rootPath) {
         String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
-        envProperties.put(SystemProperty.MAGNOLIA_WEBAPP, webapp);
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_WEBAPP, webapp);
         return webapp;
     }
 
     protected String initRootPath(final ServletContext context) {
         String rootPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
         rootPath = StringUtils.removeEnd(rootPath, "/");
-        envProperties.put(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootPath);
-        
-        // system property initialization
-        String magnoliaRootSysproperty = (String) envProperties.get(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
-        if (StringUtils.isNotEmpty(magnoliaRootSysproperty)) {
-            System.setProperty(magnoliaRootSysproperty, rootPath);
-            log.info("Setting the magnolia root system property: [" + magnoliaRootSysproperty + "] to [" + rootPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        }
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootPath);
+
         return rootPath;
     }
 
@@ -266,7 +260,7 @@ public class PropertyInitializer implements ServletContextListener {
 
         try {
             servername = StringUtils.lowerCase(InetAddress.getLocalHost().getHostName());
-            envProperties.put(SystemProperty.MAGNOLIA_SERVERNAME, servername);
+            SystemProperty.setProperty(SystemProperty.MAGNOLIA_SERVERNAME, servername);
         }
         catch (UnknownHostException e) {
             log.error(e.getMessage());
@@ -349,7 +343,7 @@ public class PropertyInitializer implements ServletContextListener {
         }
 
         try {
-            envProperties.load(fileStream);
+            SystemProperty.getProperties().load(fileStream);
             log.info("Loading configuration at {}", initFile.getAbsolutePath());//$NON-NLS-1$
         }
         catch (Exception e) {
@@ -366,15 +360,14 @@ public class PropertyInitializer implements ServletContextListener {
      * Overload the properties with set system properties
      */
     protected void overloadWithSystemProperties() {
-        Iterator it = envProperties.entrySet().iterator();
+        Iterator it = SystemProperty.getProperties().keySet().iterator();
         while (it.hasNext()) {
-            Map.Entry param = (Map.Entry) it.next();
-            String value = (String)param.getValue();
-            if(System.getProperties().containsKey(param.getKey())){
-                log.info("system property found: {}", param.getKey());
-                value = (String) System.getProperty((String)param.getKey());
+            String key = (String) it.next();
+            if(System.getProperties().containsKey(key)){
+                log.info("system property found: {}", key);
+                String value = (String) System.getProperty(key);
+                SystemProperty.setProperty(key, value);
             }
-            SystemProperty.setProperty((String) param.getKey(), value);
         }
     }
 }
