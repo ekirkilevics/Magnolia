@@ -12,8 +12,7 @@
  */
 package info.magnolia.module.workflow;
 
-import info.magnolia.cms.security.MgnlUser;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.flows.FlowDefinionException;
@@ -200,6 +199,8 @@ public class WorkflowUtil {
      * @param userName
      * @return
      * @throws Exception
+     *
+     * TODO : MAGNOLIA-1296 : uh !? this is using the given username only for user assigned workitems, but the *current* user for groups and roles ...
      */
     public static List getWorkItems(String userName) throws Exception {
         if (log.isDebugEnabled()) {
@@ -209,7 +210,7 @@ public class WorkflowUtil {
 
         long start = System.currentTimeMillis();
 
-        MgnlUser user = (MgnlUser) MgnlContext.getUser();
+        User user = MgnlContext.getUser();
         Collection groups = user.getGroups();
         Collection roles = user.getRoles();
         StringBuffer queryString = new StringBuffer();
