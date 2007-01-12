@@ -44,7 +44,7 @@ class BootstrapFilesComparator implements Comparator {
             // import xml first
             if (ext1.equalsIgnoreCase("xml")) {
                 return -1;
-            } else if (ext2.equalsIgnoreCase("properties")) {
+            } else if (ext2.equalsIgnoreCase("xml")) {
                 return 1;
             }
         }
