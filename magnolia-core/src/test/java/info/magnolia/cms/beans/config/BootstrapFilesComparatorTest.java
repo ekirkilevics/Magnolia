@@ -23,6 +23,9 @@ import java.io.File;
 public class BootstrapFilesComparatorTest extends TestCase {
     public void testXmlShouldBeBeforeProperties() {
         assertStrictOrder("foo.xml", "foo.properties");
+        assertStrictOrder("/foo/bar/baz.xml", "/bar/bar/abc.properties");
+        assertStrictOrder("/foo/bar/baz.xml", "/bar/bar/baz.properties");
+        assertStrictOrder("/foo/bar/abc.xml", "/bar/bar/abc.properties");
     }
 
     public void testZipAndGzShouldBeIgnoredInSortingXmlBeforeProperties() {
