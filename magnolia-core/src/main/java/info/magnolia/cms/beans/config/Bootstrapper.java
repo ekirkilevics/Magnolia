@@ -14,12 +14,10 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.ie.DataTransporter;
-import info.magnolia.context.MgnlContext;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Collection;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
@@ -175,39 +173,7 @@ public final class Bootstrapper {
      * @return the sorted set
      */
     public static SortedSet getBootstrapFiles(String[] bootdirs, final String repositoryName, final BootstrapFilter filter) {
-        SortedSet xmlfileset = new TreeSet(new Comparator() {
-
-            // remove file with the same name in different dirs
-            public int compare(Object file1obj, Object file2obj) {
-                File file1 = (File) file1obj;
-                File file2 = (File) file2obj;
-
-                String name1 = getName(file1); //$NON-NLS-1$
-                String name2 = getName(file2); //$NON-NLS-1$
-                
-                String ext1 = getExtension(file1);
-                String ext2 = getExtension(file2);
-                
-                if(StringUtils.equals(ext1, ext2)){
-                    // a simple way to detect nested nodes
-                    if (name1.length() != name2.length()) {
-                        return name1.length() - name2.length();
-                    }
-                }
-                else{
-                    // import xml first
-                    if(ext1.equalsIgnoreCase("xml")){
-                        return -1;
-                    }
-                    else if(ext2.equalsIgnoreCase("properties")){
-                        return 1;
-                    }
-                }
-                
-                return name1.compareTo(name2);
-            }
-            
-        });
+        SortedSet xmlfileset = new TreeSet(new BootstrapFilesComparator());
 
         for (int j = 0; j < bootdirs.length; j++) {
             String bootdir = bootdirs[j];
@@ -232,22 +198,6 @@ public final class Bootstrapper {
         }
         
         return xmlfileset;
-    }
-
-    private static String getExtension(File file){
-        String ext = StringUtils.substringAfterLast(file.getName(),".");
-        if(("." + ext).equals(DataTransporter.GZ) || ("." + ext).equals(DataTransporter.ZIP)){
-            ext = StringUtils.substringAfterLast(StringUtils.substringBeforeLast(file.getName(), "."), ".");
-        }
-        return ext;
-    }
-
-    private static String getName(File file){
-        String name = StringUtils.substringBeforeLast(file.getName(),".");
-        if(name.endsWith(DataTransporter.XML) || name.endsWith(DataTransporter.PROPERTIES)){
-            name = StringUtils.substringBeforeLast(file.getName(),".");
-        }
-        return name;
     }
     
     /**
