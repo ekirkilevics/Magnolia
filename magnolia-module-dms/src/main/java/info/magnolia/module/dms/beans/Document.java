@@ -19,6 +19,7 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 
 import java.io.InputStream;
@@ -161,7 +162,17 @@ public class Document {
             return "";
         }
 
-        return this.fileNode.getAttribute(FileProperties.PROPERTY_EXTENSION);
+        String ext = this.fileNode.getAttribute(FileProperties.PROPERTY_EXTENSION);
+        
+        try {
+            if(StringUtils.isEmpty(ext) && orgNode.hasNodeData("type")){
+                ext = orgNode.getNodeData("type").getString();
+            }
+        }
+        catch (RepositoryException e) {
+            log.error("'can't read the type of the document", e);
+        }
+        return ext;
     }
 
     public void setFileName(String name) {
@@ -234,13 +245,35 @@ public class Document {
         name = StringUtils.replace(name, "+", "%20");
         return name;
     }
-
+    
+    /**
+     * @deprecated use the method without passing a request
+     */
     public static void setCurrent(HttpServletRequest request, Document doc) {
         request.setAttribute(DMS_DOCUMENT_CURRENT, doc);
     }
 
+    /**
+     * @deprecated use the method without passing a request
+     */
     public static Document getCurrent(HttpServletRequest request) {
         return (Document) request.getAttribute(DMS_DOCUMENT_CURRENT);
+    }
+    
+    /**
+     * Sets the document into the context
+     * @param doc
+     */
+    public static void setCurrent(Document doc) {
+        MgnlContext.setAttribute(DMS_DOCUMENT_CURRENT, doc);
+    }
+
+    /**
+     * Gets the document set in the current context
+     * @return
+     */
+    public static Document getCurrent() {
+        return (Document) MgnlContext.getAttribute(DMS_DOCUMENT_CURRENT);
     }
 
     public String getUserName() {
