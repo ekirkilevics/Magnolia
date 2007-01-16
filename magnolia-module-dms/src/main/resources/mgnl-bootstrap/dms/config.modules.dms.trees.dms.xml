@@ -1,12 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="dms" xmlns:jcr="http://www.jcp.org/jcr/1.0"
-  xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
-  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
-  xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-  xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
-  xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
-  xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
+<sv:node sv:name="dms" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
+  xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:contentNode</sv:value>
   </sv:property>
@@ -19,15 +15,21 @@
   <sv:property sv:name="class" sv:type="String">
     <sv:value>info.magnolia.module.dms.DMSAdminTree</sv:value>
   </sv:property>
+  <sv:property sv:name="treeClass" sv:type="String">
+    <sv:value>info.magnolia.module.dms.gui.DMSTreeControl</sv:value>
+  </sv:property>
   <sv:property sv:name="name" sv:type="String">
     <sv:value>dms</sv:value>
+  </sv:property>
+  <sv:property sv:name="configurationClass" sv:type="String">
+    <sv:value>info.magnolia.module.dms.DMSAdminTreeConfig</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>a0e894ff-bfd4-40b7-8186-32b8dd4d52a5</sv:value>
+      <sv:value>f64dc1ba-46e9-42ba-8029-3a11f86184c1</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -36,7 +38,7 @@
       <sv:value>2006-03-16T16:46:25.971+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2006-03-17T09:35:54.801+01:00</sv:value>
+      <sv:value>2007-01-15T14:43:18.607+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>

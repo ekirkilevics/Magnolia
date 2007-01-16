@@ -50,8 +50,6 @@ public class DMSAdminTree extends AdminTreeMVCHandler {
      */
     public DMSAdminTree(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
-        setTree(new DMSTreeControl(getRepository(), request, response));
-        setConfiguration(new DMSAdminTreeConfig());
     }
 
     /**

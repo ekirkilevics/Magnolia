@@ -228,18 +228,18 @@ public class DMSAdminTreeConfig implements AdminTreeConfiguration {
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
         }
 
-        ContextMenuItem menuExport = new ContextMenuItem();
+        ContextMenuItem menuExport = new ContextMenuItem("export");
         menuExport.setLabel(msgs.get("tree.menu.export")); //$NON-NLS-1$
         menuExport.setIcon(request.getContextPath() + "/.resources/icons/16/export1.gif"); //$NON-NLS-1$
         // keep versions
         menuExport.setOnclick(tree.getJavascriptTree() + ".exportNode(true);"); //$NON-NLS-1$
 
-        ContextMenuItem menuImport = new ContextMenuItem();
+        ContextMenuItem menuImport = new ContextMenuItem("import");
         menuImport.setLabel(msgs.get("tree.menu.import")); //$NON-NLS-1$
         menuImport.setIcon(request.getContextPath() + "/.resources/icons/16/import2.gif"); //$NON-NLS-1$
         menuImport.setOnclick(tree.getJavascriptTree() + ".importNode(this);"); //$NON-NLS-1$
 
-        ContextMenuItem menuRefresh = new ContextMenuItem();
+        ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
         menuRefresh.setLabel(msgs.get("tree.menu.refresh"));
         menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif");
         menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();");
