@@ -25,17 +25,19 @@ import java.util.Iterator;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Value;
 
 import openwfe.org.jcr.Item;
 import openwfe.org.jcr.JcrException;
 import openwfe.org.jcr.Node;
 import openwfe.org.jcr.Property;
-
+import org.apache.log4j.Logger;
 
 /**
  * Magnolia wrapper for a node.
  */
 public class MgnlNode implements Node {
+    private static final Logger log = Logger.getLogger(MgnlNode.class);
 
     Content mnode;
 
@@ -102,6 +104,7 @@ public class MgnlNode implements Node {
         }
     }
 
+    // TODO : delegate to setProperty(String, String, int)
     public Property setProperty(String propertyName, String value) throws JcrException {
         try {
             NodeData nodeData = NodeDataUtil.getOrCreate(mnode, propertyName);
@@ -113,6 +116,7 @@ public class MgnlNode implements Node {
         }
     }
 
+    // TODO : delegate to setProperty(String, String, int)
     public Property setProperty(String propertyName, long value) throws JcrException {
         try {
             NodeData nodeData = NodeDataUtil.getOrCreate(mnode, propertyName);
@@ -229,23 +233,20 @@ public class MgnlNode implements Node {
     /**
      * @see openwfe.org.jcr.Node#setProperty(java.lang.String, java.lang.String, int)
      */
-    public Property setProperty(String propertyName, String value, int type) throws JcrException {
-        try {
-            NodeData nodeData = NodeDataUtil.getOrCreate(mnode, propertyName);
-
-            switch (type) {
-                case PropertyType.BOOLEAN:
-                    nodeData.setValue(Boolean.parseBoolean(value));
-                    break;
-                // @todo handle different types?
-                default:
-                    nodeData.setValue(value);
-                    break;
-            }
-            return new MgnlProperty(this, nodeData);
+    public Property setProperty(String propertyName, String valueStr, int type) throws JcrException {
+        if (type == PropertyType.NAME) {
+            log.warn("setProperty(" + propertyName + ", " + valueStr + " with type PropertyType.NAME, will switch to PropertyType.STRING ...");
+            type = PropertyType.STRING;
         }
-        catch (RepositoryException e) {
-            throw new JcrException(e.getMessage());
+
+        try {
+            final NodeData nodeData = NodeDataUtil.getOrCreate(mnode, propertyName, type);
+            final Value value = NodeDataUtil.createValue(valueStr, type);
+            nodeData.setValue(value);
+            
+            return new MgnlProperty(this, nodeData);
+        } catch (RepositoryException e) {
+            throw new JcrException(e.getMessage(), e);
         }
     }
 
