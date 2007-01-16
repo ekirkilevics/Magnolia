@@ -14,8 +14,10 @@ package info.magnolia.cms.gui.controlx.search;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.SortedMap;
@@ -23,8 +25,13 @@ import java.util.TreeMap;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConstructorUtils;
+import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.sun.tools.doclets.internal.toolkit.ConstructorWriter;
 
 
 /**
@@ -54,8 +61,9 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
      */
     protected void init(Content dialogNode) throws Exception {
         // ordered definition
-        SortedMap sortMap = new TreeMap();
-
+        SortedMap sortedByOrder = new TreeMap();
+        SortedMap sortedByName = new TreeMap();
+        
         // for all tabs
         Collection tabNodes = dialogNode.getChildren(ItemType.CONTENTNODE);
 
@@ -66,46 +74,74 @@ public class DialogBasedSearchConfig extends SearchConfigImpl {
 
             for (Iterator iter2 = controlNodes.iterator(); iter2.hasNext();) {
                 Content controlNode = (Content) iter2.next();
-
-                if (controlNode.hasNodeData("searchable")) {
-                    String searchable = NodeDataUtil.getString(controlNode, "searchable");
-
+                String searchable = NodeDataUtil.getString(controlNode, "searchable", "true");
+                if (!searchable.equals("false")) {
                     SearchControlDefinition def = createSearchControl(controlNode);
 
-                    sortMap.put(searchable, def);
+                    try{
+                        Integer order = new Integer(searchable);
+                        sortedByOrder.put(order, def);
+                    }
+                    catch(NumberFormatException e){
+                        sortedByName.put(def.getLabel(), def);
+                    }
                 }
             }
         }
 
         // add them now (after ordering)
-        for (Iterator iter = sortMap.values().iterator(); iter.hasNext();) {
-            SearchControlDefinition def = (SearchControlDefinition) iter.next();
-            this.addControlDefinition(def);
+        for (Iterator iter = sortedByOrder.values().iterator(); iter.hasNext();) {
+            this.addControlDefinition((SearchControlDefinition) iter.next());
+        }
+        
+        for (Iterator iter = sortedByName.values().iterator(); iter.hasNext();) {
+            this.addControlDefinition((SearchControlDefinition) iter.next());
         }
     }
 
     protected SearchControlDefinition createSearchControl(Content controlNode) throws Exception {
-        String type = controlNode.getNodeData("searchType").getString();
+        String contolType = controlNode.getNodeData("controlType").getString();
+        String searchType = NodeDataUtil.getString(controlNode, "searchType", contolType);
+        
         String name = controlNode.getNodeData("name").getString();
-        String label = controlNode.getNodeData("label").getString();
+        String label = NodeDataUtil.getI18NString(controlNode, "label");
 
-        if (type.equals("select")) {
+        return createSearchControl(name, label, searchType, controlNode);
+    }
+
+    protected SearchControlDefinition createSearchControl(String name, String label, String searchType, Content controlNode) throws RepositoryException {
+        if (searchType.equals("select")) {
             SelectSearchControlDefinition select = new SelectSearchControlDefinition(name, label);
-            configureSelect(select, controlNode);
+            
+            Collection optionNodes = controlNode.getContent("options").getChildren();
+
+            for (Iterator iter = optionNodes.iterator(); iter.hasNext();) {
+                Content optionNode = (Content) iter.next();
+                String optionValue = optionNode.getNodeData("name").getString();
+                String optionLabel = optionNode.getNodeData("value").getString();
+                select.addOption(optionValue, optionLabel);
+            }
             return select;
         }
-        return new SearchControlDefinition(name, label, type);
-    }
-
-    public void configureSelect(SelectSearchControlDefinition def, Content node) throws RepositoryException {
-        Collection optionNodes = node.getContent("options").getChildren();
-
-        for (Iterator iter = optionNodes.iterator(); iter.hasNext();) {
-            Content optionNode = (Content) iter.next();
-            String value = optionNode.getNodeData("value").getString();
-            String label = optionNode.getNodeData("value").getString();
-            def.addOption(value, label);
+        else{
+            try {
+                Class defClass = ClassUtil.classForName(searchType);
+                try {
+                    SearchControlDefinition def = (SearchControlDefinition) ConstructorUtils.invokeConstructor(defClass, new Object[]{name, label});
+                    if(def instanceof DialogBasedSearchControlDefinition){
+                        ((DialogBasedSearchControlDefinition)def).init(controlNode); 
+                    }
+                    return def;
+                }
+                catch (Exception e) {
+                    log.error("can't instantiate search control definition " + defClass , e);
+                }
+            }
+            catch (ClassNotFoundException e) {
+                // this happens if the search Type is not a class
+            }
         }
+        // default to the normal search field
+        return new SearchControlDefinition(name, label, searchType);
     }
-
 }
