@@ -10,6 +10,7 @@ import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
 import info.magnolia.cms.gui.controlx.search.RepositorySearchListModel;
 import info.magnolia.cms.gui.controlx.search.SearchConfig;
+import info.magnolia.cms.gui.controlx.search.SimpleSearchUtil;
 import info.magnolia.cms.gui.query.SearchQuery;
 import info.magnolia.cms.gui.query.SearchQueryExpression;
 import info.magnolia.cms.gui.query.StringSearchQueryParameter;
@@ -109,15 +110,8 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
      * Here we create a all over query
      */
     public SearchQuery getQuery() {
-        SearchQuery query = new SearchQuery();
-        if (StringUtils.isNotEmpty(this.getSearchStr())) {
-            SearchQueryExpression exp = new StringSearchQueryParameter(
-                "*",
-                this.getSearchStr(),
-                StringSearchQueryParameter.CONTAINS);
-            query.setRootExpression(exp);
-        }
-        return query;
+        return SimpleSearchUtil.getSimpleSearchQuery(this.getSearchStr());
+        
     }
 
     /**
