@@ -35,6 +35,7 @@ import javax.jcr.ValueFactory;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -52,14 +53,23 @@ public class NodeDataUtil {
 
     NodeData nodeData;
 
+    /**
+     * @deprecated You should not instantiate this util
+     */
     public NodeDataUtil(NodeData nodeData) {
         this.setNodeData(nodeData);
     }
 
+    /**
+     * @deprecated You should not instantiate this util
+     */
     public void setNodeData(NodeData nodeData) {
         this.nodeData = nodeData;
     }
 
+    /**
+     * @deprecated You should not instantiate this util
+     */
     public NodeData getNodeData() {
         return this.nodeData;
     }
@@ -67,15 +77,17 @@ public class NodeDataUtil {
     /**
      * <p/> Returns the representation of the value as a String:
      * </p>
+     * @deprecated You should not instantiate this util
      * @return String
      */
     public String getValueString() {
-        return getValueString(null);
+        return getValueString((String) null);
     }
 
     /**
      * <p/> Returns the representation of the value as a String:
      * </p>
+     * @deprecated You should not instantiate this util
      * @return String
      */
     public String getValueString(String dateFormat) {
@@ -91,10 +103,57 @@ public class NodeDataUtil {
         return StringUtils.EMPTY;
     }
 
+    /**
+     * Same as getValueString(nd, dateFormat) but using the users short date format
+     * @param nodeData
+     * @return
+     */
+    public static String getValueString(NodeData nodeData) {
+        String dateFormat = null;
+        if(nodeData.getType() == PropertyType.DATE){
+            try{
+                dateFormat = FastDateFormat.getDateInstance(
+                FastDateFormat.SHORT,
+                MgnlContext.getLocale()).getPattern();
+            }
+            // this happens if the context is not (yet) set
+            catch(IllegalStateException e){
+                dateFormat = DateUtil.YYYY_MM_DD;
+            }
+        }
+        return getValueString(nodeData, dateFormat);
+    }
+    
+    /**
+     * Returns a String representation of the value. In case of a binary the path including filename and extension is returned
+     * @param nodeData
+     * @param dateFormat date format to use in the case it is a date
+     * @return
+     */
     public static String getValueString(NodeData nodeData, String dateFormat) {
-        return getValueString(nodeData.getValue(), dateFormat);
+        // we can't use FileProperties since this class is in the GUI package
+        if(nodeData.getType()==PropertyType.BINARY){
+            String filename = nodeData.getAttribute("fileName");
+            String ext = nodeData.getAttribute("extension");
+            String fullName = filename;
+            String fullExt = StringUtils.EMPTY;
+            if (StringUtils.isNotEmpty(ext)) {
+                fullExt = "." + ext;
+                fullName += fullExt;
+            }
+            return nodeData.getHandle() + "/" + fullName;
+        }
+        else{
+            return getValueString(nodeData.getValue(), dateFormat);
+        }
     }
 
+    /**
+     * Same as value.getString(), but using custom date format
+     * @param value
+     * @param dateFormat
+     * @return
+     */
     public static String getValueString(Value value, String dateFormat) {
         try{
             switch (value.getType()) {
@@ -122,12 +181,74 @@ public class NodeDataUtil {
         }
         return StringUtils.EMPTY;
     }
+    
+    /**
+     * Inherit a value. Uses the string value
+     * @param node
+     * @param name
+     */
+    public static String inheritString(Content node, String name) throws RepositoryException{
+        String value = "";
+        
+        if (node.hasNodeData(name)) {
+            value = NodeDataUtil.getString(node, name);
+        }
+        if(StringUtils.isEmpty(value) && node.getLevel() > 0){
+            value = inheritString(node.getParent(), name);
+        }
+        return value;
+    }
+    
+    /**
+     * Inherit a value. You can provide a default value if not found
+     */
+    public static String inheritString(Content node, String name, String dflt) throws RepositoryException{
+        String value = inheritString(node, name);
+        if(StringUtils.isEmpty(value)){
+            return dflt;
+        }
+        return value;
+    }
 
+    /**
+     * Inherit a value. Uses the string value
+     */
+    public static Object inherit(Content node, String name) throws RepositoryException{
+        Object value = null;
+        
+        if (node.hasNodeData(name)) {
+            value = NodeDataUtil.getValueObject(node.getNodeData(name));
+        }
+        if(value == null && node.getLevel() > 0){
+            value = inherit(node.getParent(), name);
+        }
+        return value;
+    }
+    
+    /**
+     * Inherit a value. You can provide a default value if not found
+     */
+    public static Object inherit(Content node, String name, Object dflt) throws RepositoryException{
+        Object value = inherit(node, name);
+        if(value == null){
+            return dflt;
+        }
+        return value;
+    }
+    
+    /**
+     * @deprecated renamed to getValueObject
+     * @return the object representing the value
+     */
+    public static Object getValue(NodeData nd) {
+       return getValueObject(nd); 
+    }
+    
     /**
      * Returns the value as an Object.
      * @return Object
      */
-    public static Object getValue(NodeData nd) {
+    public static Object getValueObject(NodeData nd) {
         try {
             switch (nd.getType()) {
                 case (PropertyType.STRING):
@@ -154,6 +275,11 @@ public class NodeDataUtil {
         return null;
     }
 
+    /**
+     * String representation of the jcr property type
+     * @param type
+     * @return
+     */
     public String getTypeName(int type) {
 
         switch (type) {
@@ -204,7 +330,10 @@ public class NodeDataUtil {
      */
     public static String getString(String repository, String path, String defaultValue) {
         try {
-            return MgnlContext.getHierarchyManager(repository).getNodeData(path).getString();
+            String name = StringUtils.substringAfterLast(path, "/");
+            String nodeHandle = StringUtils.substringBeforeLast(path, "/"); 
+            Content node = MgnlContext.getHierarchyManager(repository).getContent(nodeHandle);
+            return getString(node, name);
         }
         catch (Exception e) {
             return defaultValue;
@@ -221,7 +350,7 @@ public class NodeDataUtil {
     public static String getString(Content node, String name, String defaultValue) {
         try {
             if (node.hasNodeData(name)) {
-                return node.getNodeData(name).getString();
+                return getValueString(node.getNodeData(name));
             }
 
             return defaultValue;
@@ -268,33 +397,67 @@ public class NodeDataUtil {
      * @param string
      * @return the i18n string
      */
-    public static Object getI18NString(Content node, String str) {
+    public static String getI18NString(Content node, String str) {
+        Messages msgs = MessagesManager.getMessages();
         String key = getString(node, str);
-        String i18nBasename = NodeDataUtil.getString(node, "i18nBasename");
+        String i18nBasename = null;
+        try {
+            i18nBasename = NodeDataUtil.inheritString(node, "i18nBasename");
+        }
+        catch (RepositoryException e) {
+            log.error("can't read i18nBasename value, will default back", e);
+        }
+        
         if (StringUtils.isNotEmpty(i18nBasename)) {
-            Messages msgs = MessagesUtil.chainWithDefault(i18nBasename);
-            return msgs.getWithDefault(key, key);
+            msgs = MessagesUtil.chainWithDefault(i18nBasename);
         }
 
-        return MessagesManager.getWithDefault(key, key);
-
+        return msgs.getWithDefault(key, key);
     }
 
     /**
      * Uses the i18n mechanism to translate the message if the resulting string is a key
      */
-    public static Object getI18NString(Content node, String str, String basename) {
+    public static String getI18NString(Content node, String str, String basename) {
         String key = getString(node, str);
         return MessagesManager.getMessages(basename).getWithDefault(key, key);
     }
 
+    /**
+     * @deprecated use createValue
+     */
     public static Value getValue(String valueStr, int type) throws RepositoryException {
+        return createValue(valueStr, type);
+    }
+        
+    /**
+     * Uses the default value factory
+     * @param valueStr
+     * @param type
+     * @return
+     * @throws RepositoryException
+     */
+    public static Value createValue(String valueStr, int type) throws RepositoryException {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
         ValueFactory valueFactory = hm.getWorkspace().getSession().getValueFactory();
         return getValue(valueStr, type, valueFactory);
     }
-    
+
+    /**
+     * @deprecated use createValue
+     */
     public static Value getValue(String valueStr, int type, ValueFactory valueFactory) {
+        return createValue(valueStr, type, valueFactory);
+    }
+
+    /**
+     * Transforms a string to a jcr value object
+     * @param valueStr
+     * @param type
+     * @param valueFactory
+     * @return the value
+     */
+    public static Value createValue(String valueStr, int type, ValueFactory valueFactory) {
         Value value = null;
         if (type == PropertyType.STRING) {
             value = valueFactory.createValue(valueStr);
