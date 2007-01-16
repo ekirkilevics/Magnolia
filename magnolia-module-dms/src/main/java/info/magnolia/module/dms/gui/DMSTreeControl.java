@@ -20,6 +20,7 @@ import info.magnolia.module.dms.beans.Document;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -32,6 +33,21 @@ import org.apache.log4j.Logger;
 public class DMSTreeControl extends Tree {
 
     private static Logger log = Logger.getLogger(DMSTreeControl.class);
+
+    /**
+     * @deprecated
+     */
+    HttpServletResponse response;
+    
+    /**
+     * @deprecated don't pass the response
+     * @param repository
+     * @param request
+     */
+    public DMSTreeControl(String repository, HttpServletRequest request, HttpServletResponse response) {
+        super(repository, repository, request);
+        this.response = response;
+    }
     
     public DMSTreeControl(String name, String repository, HttpServletRequest request) {
         super(name, repository, request);
