@@ -47,7 +47,7 @@ public class DMSDialogFileControl extends DialogFile {
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
         throws RepositoryException {
         super.init(request, response, websiteNode, configNode);
-        this.doc = Document.getCurrent(request);
+        this.doc = Document.getCurrent();
     }
 
     public void drawHtml(Writer out) throws IOException {
