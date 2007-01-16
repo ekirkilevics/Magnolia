@@ -22,6 +22,8 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * A default page (hander) using a freemarker template to render. The default templat name is following the class name.
@@ -46,7 +48,11 @@ public class TemplatedMVCHandler extends PageMVCHandler {
      * @return the template name (including path)
      */
     protected String getTemplateName(String viewName) {
-        return FreeMarkerUtil.createTemplateName(this.getClass(), "html");
+        String template = FreeMarkerUtil.createTemplateName(this.getClass(), "html");
+        if(!viewName.equals(VIEW_SHOW)){
+            template = StringUtils.replace(template, ".html", StringUtils.capitalize(viewName + ".html"));
+        }
+        return template;
     }
 
     /**
@@ -59,6 +65,7 @@ public class TemplatedMVCHandler extends PageMVCHandler {
 
             Map data = new HashMap();
             data.put("this", this);
+            data.put("view", view);
 
             PrintWriter writer;
 
