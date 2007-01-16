@@ -72,6 +72,9 @@ classDef("mgnl.dms.DMS", {
     
     simpleSearch: function(val){
         if(document.mgnlForm &&  document.mgnlForm.searchStr){
+            if(document.mgnlForm.searchAdvanced){
+            	document.mgnlForm.searchAdvanced.value = "false";
+            }
             document.mgnlForm.searchStr.value = val;
             document.mgnlForm.submit();
         }
@@ -81,6 +84,6 @@ classDef("mgnl.dms.DMS", {
     },
      
     uploadZip: function(path){
-        mgnlOpenWindow(".magnolia/dms/uploadzip.html?path=" + path);
+        mgnlOpenWindow(".magnolia/pages/dmsZipUpload.html?path=" + path);
     }
 });
