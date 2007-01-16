@@ -16,15 +16,13 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.dialog.Dialog;
-import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.JSPIncludeUtil;
 import info.magnolia.module.admininterface.SaveHandler;
 import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
 import info.magnolia.module.dms.beans.Document;
-import info.magnolia.module.dms.util.PathUtil;
+import info.magnolia.module.dms.gui.VersionCommentPopup;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -70,7 +68,7 @@ public class DocumentDialog extends ConfiguredDialog {
         // get the version node
         Document doc = new Document(storageNode, version);
         // set this document for some of the subcontrols
-        Document.setCurrent(request, doc);
+        Document.setCurrent(doc);
 
         // execute the js init code
         Dialog dialog = new Dialog() {
@@ -89,19 +87,7 @@ public class DocumentDialog extends ConfiguredDialog {
 
         dialog.init(request, response, storageNode, configNode);
 
-        dialog.addSub(new DialogControlImpl() {
-
-            public void drawHtml(Writer out) throws IOException {
-                String str = "";
-                try {
-                    str = JSPIncludeUtil.get("/admintemplates/dms/versionCommentPopUp.jsp", request, response);
-                }
-                catch (Exception e) {
-                    log.error("can't get comment popup", e);
-                }
-                out.write(str);
-            }
-        });
+        dialog.addSub(new VersionCommentPopup());
 
         if (StringUtils.isNotEmpty(this.version)) {
             dialog.setConfig("cancelLabel", "Close");
