@@ -30,12 +30,14 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admininterface.TemplatedMVCHandler;
 import info.magnolia.module.dms.DMSModule;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.io.Writer;
 import java.util.Enumeration;
 
@@ -59,14 +61,9 @@ import org.apache.tools.zip.ZipFile;
  * Upload a zip file
  * @author philipp
  */
-public class ZipUploadView {
+public class ZipUpload extends TemplatedMVCHandler{
 
-    private static Logger log = Logger.getLogger(ZipUploadView.class);
-
-    /**
-     * Easy to handle file upload
-     */
-    private RequestFormUtil form;
+    private static Logger log = Logger.getLogger(ZipUpload.class);
 
     private boolean success = false;
 
@@ -83,42 +80,19 @@ public class ZipUploadView {
      * Error messages
      */
     private String msg = "";
+    
 
-    public ZipUploadView() {
+    public ZipUpload(String name, HttpServletRequest request, HttpServletResponse response) {
+        super(name, request, response);
     }
 
     /**
      * Process.
      */
-    public void process(HttpServletRequest request) {
-        MgnlContext.initAsWebContext(request);
-
-        if(request.getMethod().equals("POST")){
-            // TODO find a better solution
-            try {
-                new MultipartRequestFilter().doFilter(request, null, new FilterChain(){
-                    public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-                        // do nothing
-                    }
-                });
-            }
-            catch (Exception e) {
-                log.error("can't create multipartform", e);
-            }
-        }
-        this.form = new RequestFormUtil(request);
-        this.setPath(form.getParameter("path"));
-        this.setEncoding(form.getParameter("encoding"));
+    public String process() {
         this.hm = MgnlContext.getHierarchyManager(DMSModule.getInstance().getRepository());
-        success = _process();
-    }
-
-    private boolean _process() {
-        if(form.getForm() == null){
-            return false;
-        }
         
-        Document doc = form.getDocument("file");
+        Document doc = this.getForm().getDocument("file");
         if (doc != null) {
             try {
                 File tmpFile = File.createTempFile("dms_zipupload", ".zip");
@@ -139,12 +113,13 @@ public class ZipUploadView {
             catch (Exception e) {
                 log.error("can't upload zip file", e);
                 msg = e.toString();
-                return false;
+                return VIEW_SHOW;
             }
-            return true;
+            this.success = true;
+            return VIEW_SHOW;
         }
 
-        return false;
+        return VIEW_SHOW;
     }
 
     /**
@@ -306,7 +281,7 @@ public class ZipUploadView {
     /**
      * @param path The path to set.
      */
-    private void setPath(String path) {
+    public void setPath(String path) {
         this.path = path;
     }
 
@@ -328,12 +303,11 @@ public class ZipUploadView {
         return encoding;
     }
 
-    private void setEncoding(String encoding) {
+    public void setEncoding(String encoding) {
         this.encoding = encoding;
     }
 
-    public void render(HttpServletRequest request, HttpServletResponse response) throws RepositoryException,
-        IOException {
+    public String getDialog() throws RepositoryException, IOException {
         
         Dialog dialog = DialogFactory.getDialogInstance(request, response, null, null);
         dialog.setAction(request.getContextPath() + Path.getURI(request));
@@ -362,6 +336,11 @@ public class ZipUploadView {
         path.setValue(this.getPath());
         tab.addSub(path);
 
+        DialogHidden command = DialogFactory.getDialogHiddenInstance(request, response, null, null);
+        command.setName("command");
+        command.setValue("process");
+        tab.addSub(command);
+
         DialogSelect enc = DialogFactory.getDialogSelectInstance(request, response, null, null);
         enc.setLabel("Encoding");
         enc.setName("encoding");
@@ -371,6 +350,8 @@ public class ZipUploadView {
         enc.addOption(new SelectOption("Mac (UTF-8)", "UTF-8"));
         tab.addSub(enc);
 
-        dialog.drawHtml(response.getWriter());
+        Writer out = new StringWriter();
+        dialog.drawHtml(out);
+        return out.toString();
     }
 }

@@ -1,0 +1,17 @@
+[#if this.success]
+    <script type="text/javascript">
+        window.close();
+        opener.mgnl.dms.DMS.showInTree('${this.path}');
+    </script>
+[#else]
+
+   ${this.dialog}
+
+   [#if this.msg != '' ]
+       <script type="text/javascript">
+           alert('${this.msg}');
+       </script>
+   [/#if]
+   
+[/#if]
+

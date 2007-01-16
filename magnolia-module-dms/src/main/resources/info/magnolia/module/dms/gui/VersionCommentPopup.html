@@ -1,0 +1,17 @@
+  <script type="text/javascript">
+      document.onkeydown = function(e){mgnl.dms.VersionCommentPopup.keyDown(e)};
+  </script>
+
+  <div style="position:absolute; visibility: hidden" id="blockInputDiv">&nbsp;</div>
+
+   <div style="position:absolute;border-style:solid;border-top-style:hidden; border-left-color: gray;border-right-color: black;border-bottom-color: black; border-width: thin; background-color: #F0F2E6; z-index:1; visibility: hidden" id="commentPopUpDiv">
+      <div style="border-bottom:thin solid gray;background-image: url(${contextPath}/.resources/controls/list/dmsListHeaderBackground.gif);padding: 3px;font-weight: bold;">Version Comment</div>
+      <!-- <div style="background-color:gray;padding: 3px;font-weight: bold;">Version Comment</div>-->
+      <div style="padding: 10px;">
+          <div style="padding-bottom: 5px;">Enter a comment for this version (optional)</div>
+          <div style="padding-bottom: 5px;"><textarea onclick="mgnl.dmsVersionCommentPopup.checkEnter=false" id="commentPopUpTextArea" rows="4" cols="40" class="mgnlDialogControlEdit">Dummy Text</textarea></div>
+          <div align="right">
+          	${this.saveButton.html} ${this.cancelButton.html}
+          </div>
+      </div>
+  </div>
