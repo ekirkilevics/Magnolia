@@ -63,6 +63,14 @@ public class FreeMarkerUtil {
         return writer.toString();
     }
 
+    public static String process(String name, Object thisObj) {
+        Writer writer = new StringWriter();
+        Map data = new HashMap();
+        data.put("this", thisObj);
+        process(name, data, writer);
+        return writer.toString();
+    }
+    
     /**
      * Uses the class of the object to create the templates name and passes the object under the name 'this'
      * @param thisObj
