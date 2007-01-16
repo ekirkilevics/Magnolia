@@ -7,7 +7,6 @@
         <script type="text/javascript" src="${contextPath}/.resources/admin-js/dialogs/calendar.js"></script>
         <script type="text/javascript" src="${contextPath}/.resources/js-libs/json/json.js"></script>
         <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/admin-css/admin-all.css" />
-        <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/pro-css/search.css" />
 		
 		<meta http-equiv="cache-control" content="no-cache" /> 	
 		<meta http-equiv="pragma" content="no-cache" />
@@ -42,6 +41,8 @@
 
             MgnlDHTMLUtil.addOnResize(mgnlListResize);
         </script>
+
+        ${this.onRenderHeader()}
     </head>
 
     <body style="padding: 0px;margin: 0px">

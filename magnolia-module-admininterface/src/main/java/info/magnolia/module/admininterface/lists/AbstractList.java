@@ -230,6 +230,14 @@ public abstract class AbstractList extends TemplatedMVCHandler {
         return "";
     }
     
+    /**
+     * Do some additional rendering in the subclass
+     */
+    public String onRenderHeader() {
+        return "";
+    }
+
+    
     public String getURI() {
         String uri = (String) MgnlContext.getAttribute(Path.MGNL_REQUEST_URI_DECODED);
         return uri;
