@@ -154,14 +154,6 @@
 	cursor: pointer;
 	font: 11px verdana, arial, helvetica, sans-serif;
 	background-color: #ffffff;
-	z-index: 1000;
-	width: auto;
-	padding: 0px;
-	cursor: pointer;
-	font: 11px verdana, arial, helvetica, sans-serif;
-	background-color: #ffffff;
-	z-index: 1000;
-	width: auto;
 }
 
 .smothDropdownEntry {
@@ -169,7 +161,6 @@
 	padding: 0px;
 	cursor: pointer;
 	font: 11px verdana, arial, helvetica, sans-serif;
-	background-color: #ffffff;
 	width: auto;
 	border-left: 1px #999999 solid;
 	border-right: 1px #CCCCCC solid;
