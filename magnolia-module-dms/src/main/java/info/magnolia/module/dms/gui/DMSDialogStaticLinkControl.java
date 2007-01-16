@@ -33,7 +33,7 @@ public class DMSDialogStaticLinkControl extends DialogStatic {
 
         super.init(request, response, websiteNode, configNode);
         if (websiteNode != null) {
-            Document doc = Document.getCurrent(request);
+            Document doc = Document.getCurrent();
             this.setValue(doc.getStaticLink());
         }
     }
