@@ -89,8 +89,16 @@ public class AbstractControl implements Control {
         return (Control) this.children.get(name);
     }
 
+    public void removeChild(String name){
+        this.children.remove(name);
+    }
+    
     public Collection getChildren() {
         return this.children.values();
+    }
+
+    public void removeAllChildren(){
+        this.children.clear();
     }
 
     /**
