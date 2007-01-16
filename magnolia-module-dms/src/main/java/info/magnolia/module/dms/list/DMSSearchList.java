@@ -17,13 +17,13 @@ import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBar;
 import info.magnolia.cms.gui.control.FunctionBarItem;
+import info.magnolia.cms.gui.controlx.list.IconListColumnRenderer;
 import info.magnolia.cms.gui.controlx.list.ListColumn;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
 import info.magnolia.cms.gui.controlx.search.SearchConfig;
+import info.magnolia.cms.gui.controlx.search.SimpleSearchUtil;
 import info.magnolia.cms.gui.query.SearchQuery;
-import info.magnolia.cms.gui.query.SearchQueryExpression;
-import info.magnolia.cms.gui.query.StringSearchQueryParameter;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.context.MgnlContext;
@@ -34,8 +34,6 @@ import info.magnolia.module.dms.beans.Document;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -79,33 +77,21 @@ public class DMSSearchList extends AbstractSimpleSearchList {
     public void configureList(ListControl list) {
 
         // all this should be read from the dialog
-        list.addColumn(new ListColumn() {
-
+        list.addColumn(new ListColumn("icon","", "30px", false) {
             {
-                setName("name");
-                setColumnName("name");
-                setLabel(msgs.get("dms.list.url"));
-                setWidth("200");
+                setRenderer(new IconListColumnRenderer());
             }
 
-            public String getIcon() {
+            public Object getValue() {
                 Document doc = new Document((Content) this.getListControl().getIteratorValueObject());
                 return doc.getMimeTypeIcon();
             }
-
-            public String render() {
-                return "<span style=\"vertical-align: middle\"><img src=\""
-                    + MgnlContext.getContextPath()
-                    + this.getIcon()
-                    + "\"/></span>"
-                    + this.getValue();
-            }
-
         });
 
-        list.addColumn(new ListColumn("type", msgs.get("dms.list.type"), "200", true));
+        list.addColumn(new ListColumn("name", msgs.get("dms.list.url"), "200", true));
+        list.addColumn(new ListColumn("type", msgs.get("dms.list.type"), "80px", true));
         list.addColumn(new ListColumn("title", msgs.get("dms.list.title"), "200", true));
-        list.addColumn(new ListColumn("modificationDate", msgs.get("dms.list.date"), "200", true));
+        list.addColumn(new ListColumn("modificationDate", msgs.get("dms.list.date"), "100px", true));
 
         list.addSortableField("name");
         list.addSortableField("modificationDate");
@@ -129,15 +115,7 @@ public class DMSSearchList extends AbstractSimpleSearchList {
      * Simple search only
      */
     public SearchQuery getQuery() {
-        SearchQuery query = new SearchQuery();
-        if (StringUtils.isNotEmpty(this.getSearchStr())) {
-            SearchQueryExpression exp = new StringSearchQueryParameter(
-                "*",
-                this.getSearchStr(),
-                StringSearchQueryParameter.CONTAINS);
-            query.setRootExpression(exp);
-        }
-        return query;
+        return SimpleSearchUtil.getSimpleSearchQuery(this.getSearchStr());
     }
 
     /**
