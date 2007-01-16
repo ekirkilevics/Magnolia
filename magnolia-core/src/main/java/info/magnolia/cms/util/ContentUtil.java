@@ -312,7 +312,7 @@ public class ContentUtil {
         Map map = new HashMap();
         for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
             NodeData nd = (NodeData) iter.next();
-            Object val = NodeDataUtil.getValue(nd);
+            Object val = NodeDataUtil.getValueObject(nd);
             if (val != null) {
                 map.put(nd.getName(), val);
             }
