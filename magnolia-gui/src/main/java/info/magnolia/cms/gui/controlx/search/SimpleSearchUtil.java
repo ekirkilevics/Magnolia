@@ -31,12 +31,35 @@ import org.apache.commons.lang.StringUtils;
  */
 public class SimpleSearchUtil {
 
+    /**
+     * Creates an orified query based on the passed config
+     * @param searchStr
+     * @param config
+     * @return
+     */
     public static SearchQuery getSimpleSearchQuery(String searchStr, SearchConfig config) {
         SearchQuery query = new SearchQuery();
         query.setRootExpression(getSimpleSearchExpression(searchStr, config));
         return query;
     }
 
+    /**
+     * Creates a query using the special search field name '*'
+     * @param searchStr
+     * @return
+     */
+    public static SearchQuery getSimpleSearchQuery(String searchStr) {
+        SearchQuery query = new SearchQuery();
+        if (StringUtils.isNotEmpty(searchStr)) {
+            SearchQueryExpression exp = new StringSearchQueryParameter(
+                "*",
+                searchStr,
+                StringSearchQueryParameter.CONTAINS);
+            query.setRootExpression(exp);
+        }
+        return query;
+    }
+    
     /**
      * Return the expression build by a simple search
      */
@@ -72,5 +95,7 @@ public class SimpleSearchUtil {
         }
         return expr;
     }
+
+
 
 }
