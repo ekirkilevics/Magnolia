@@ -890,13 +890,13 @@ public class Content extends ContentHandler implements Cloneable {
     }
 
     /**
-     * get node level from the ROOT node : FIXME implement getDepth in javax.jcr
+     * get node level from the ROOT node
      * @return level at which current node exist, relative to the ROOT node
      * @throws javax.jcr.PathNotFoundException
      * @throws RepositoryException if an error occurs
      */
     public int getLevel() throws PathNotFoundException, RepositoryException {
-        return this.node.getPath().split("/").length - 1; //$NON-NLS-1$
+        return this.node.getDepth(); //$NON-NLS-1$
     }
 
     /**
