@@ -23,6 +23,7 @@ import org.apache.commons.discovery.tools.DiscoverClass;
 import org.apache.commons.discovery.tools.DiscoverSingleton;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -38,7 +39,7 @@ public class FactoryUtil {
     /**
      * Logger.
      */
-    protected static Logger log;// = LoggerFactory.getLogger(FactoryUtil.class);
+    protected static Logger log = LoggerFactory.getLogger(FactoryUtil.class);
 
     protected static DiscoverClass discovery = new DiscoverClass();
 
