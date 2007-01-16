@@ -649,7 +649,7 @@ public class SaveHandlerImpl implements SaveHandler {
             }
         }
         else {
-            value = NodeDataUtil.getValue(valueStr, type, valueFactory);
+            value = NodeDataUtil.createValue(valueStr, type, valueFactory);
         }
 
         return value;
