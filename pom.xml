@@ -159,8 +159,8 @@
           </executions>
           <configuration>
             <warSourceDirectory>${basedir}/src/main/resources</warSourceDirectory>
-            <source>1.5</source>
-            <target>1.5</target>
+            <source>1.4</source>
+            <target>1.4</target>
           </configuration>
         </plugin>
       </plugins>
