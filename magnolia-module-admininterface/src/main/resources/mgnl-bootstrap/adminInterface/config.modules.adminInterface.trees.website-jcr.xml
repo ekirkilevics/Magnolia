@@ -19,7 +19,7 @@
     <sv:value>website</sv:value>
   </sv:property>
   <sv:property sv:name="configurationClass" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.trees.ConfigTreeConfiguration</sv:value>
+    <sv:value>info.magnolia.module.admininterface.trees.JcrBrowserTreeConfiguration</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

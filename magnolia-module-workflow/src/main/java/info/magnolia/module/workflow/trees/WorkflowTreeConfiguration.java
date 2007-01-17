@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 
 /**
  * Tree to view workitems and expressions
+ * @deprecated use JcrBrowserTreeConfiguration
  */
 public class WorkflowTreeConfiguration extends ConfigTreeConfiguration {
 
