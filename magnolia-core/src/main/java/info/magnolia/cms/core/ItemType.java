@@ -28,10 +28,13 @@ public final class ItemType implements Serializable {
 
     /**
      * Node type: unstructured.
+     */
+    public static final String NT_UNSTRUCTURED = "nt:unstructured"; //$NON-NLS-1$
+
+    /**
      * @deprecated typo in the name
      */
     public static final String NT_UNSTRUCTRUED = NT_UNSTRUCTURED;
-    public static final String NT_UNSTRUCTURED = "nt:unstructured"; //$NON-NLS-1$
 
     /**
      * Node type: hierarchyNode.
