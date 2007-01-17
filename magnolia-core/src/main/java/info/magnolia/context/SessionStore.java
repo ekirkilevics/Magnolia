@@ -115,15 +115,12 @@ final class SessionStore {
         if (httpSession != null) {
             hm = (HierarchyManager) httpSession.getAttribute(ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID); //$NON-NLS-1$
         }
-
         if (hm == null) {
             hm = new HierarchyManager(Authenticator.getUserId(request));
-
             try {
                 hm.init(getSession(request, repositoryID, workspaceID).getRootNode());
-                AccessManager am = getAccessManager(request, repositoryID, workspaceID);
-                hm.setAccessManager(am);
-
+                hm.setAccessManager(getAccessManager(request, repositoryID, workspaceID));
+                hm.setQueryManager(getQueryManager(request, repositoryID, workspaceID));
                 if (httpSession != null) {
                     httpSession.setAttribute(ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID, hm); //$NON-NLS-1$
                 }
