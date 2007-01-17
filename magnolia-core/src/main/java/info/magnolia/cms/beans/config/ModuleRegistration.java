@@ -213,7 +213,7 @@ public class ModuleRegistration {
      * Check if the dependencies are ok
      * @throws MissingDependencyException
      */
-    private void checkDependencies() throws MissingDependencyException {
+    protected void checkDependencies() throws MissingDependencyException {
         for (MapIterator iter = this.moduleDefinitions.orderedMapIterator(); iter.hasNext();) {
             iter.next();
             ModuleDefinition def = (ModuleDefinition) iter.getValue();
@@ -221,16 +221,39 @@ public class ModuleRegistration {
             for (Iterator iterator = def.getDependencies().iterator(); iterator.hasNext();) {
                 DependencyDefinition dep = (DependencyDefinition) iterator.next();
                 if (!dep.isOptional()) {
-                    if (!this.moduleDefinitions.containsKey(dep.getName())
-                        || !dep.getVersion().equals(this.getModuleDefinition(dep.getName()).getVersion())) {
-                        throw new MissingDependencyException("missing dependency: module ["
-                            + def.getName()
-                            + "] needs ["
-                            + dep.getName()
-                            + "]");
-                    }
+                    checkDependency(def, dep);
                 }
             }
+        }
+    }
+
+    protected void checkDependency(ModuleDefinition def, DependencyDefinition dep) throws MissingDependencyException {
+        if (!this.moduleDefinitions.containsKey(dep.getName())){
+            throw new MissingDependencyException("missing dependency: module ["
+                + def.getName()
+                + "] needs ["
+                + dep.getName()
+                + "]");
+        }
+
+        ModuleDefinition instDef = this.getModuleDefinition(dep.getName());
+        
+        checkDependencyVersion(def, dep, instDef);
+    }
+
+    protected void checkDependencyVersion(ModuleDefinition def, DependencyDefinition dep, ModuleDefinition instDef) throws MissingDependencyException {
+        // check version 
+        String depVersion = dep.getVersion();
+        String instVersion = instDef.getVersion();
+        
+        // check if only bugfix release is different
+        int indexOfDifference = StringUtils.indexOfDifference(depVersion, instVersion);
+        if( indexOfDifference != -1 && indexOfDifference < 3){
+            throw new MissingDependencyException("wrong version dependency: module ["
+                + def.getName()
+                + "] needs ["
+                + dep.getName() + " " + depVersion
+                + "] but [" + dep.getName() + " " + instVersion + "] is installed" );
         }
     }
 
