@@ -229,11 +229,13 @@ public class ModuleRegistration {
 
     protected void checkDependency(ModuleDefinition def, DependencyDefinition dep) throws MissingDependencyException {
         if (!this.moduleDefinitions.containsKey(dep.getName())){
-            throw new MissingDependencyException("missing dependency: module ["
+            String msg = "missing dependency: module ["
                 + def.getName()
                 + "] needs ["
                 + dep.getName()
-                + "]");
+                + "]";
+            log.error(msg);
+            throw new MissingDependencyException(msg);
         }
 
         ModuleDefinition instDef = this.getModuleDefinition(dep.getName());
@@ -246,14 +248,30 @@ public class ModuleRegistration {
         String depVersion = dep.getVersion();
         String instVersion = instDef.getVersion();
         
+        // ignore ${project.version}
+        if(instVersion.equals("${project.version}")){
+            log.info("module " + dep.getName() + " has a dynamic version [" + instVersion + "]. checks ignored" );
+            return;
+        }
+        
         // check if only bugfix release is different
+        // TODO better check
         int indexOfDifference = StringUtils.indexOfDifference(depVersion, instVersion);
         if( indexOfDifference != -1 && indexOfDifference < 3){
-            throw new MissingDependencyException("wrong version dependency: module ["
+            String msg = "wrong version dependency: module ["
                 + def.getName()
                 + "] needs ["
                 + dep.getName() + " " + depVersion
-                + "] but [" + dep.getName() + " " + instVersion + "] is installed" );
+                + "] but [" + dep.getName() + " " + instVersion + "] is installed";
+            log.error(msg);
+            throw new MissingDependencyException(msg);
+        }
+        else if(indexOfDifference != -1){
+            log.info("module ["
+                + def.getName()
+                + "] needs version ["
+                + dep.getName() + " " + depVersion
+                + "] and [" + dep.getName() + " " + instVersion + "] is installed. This version seams to be ok");
         }
     }
 
