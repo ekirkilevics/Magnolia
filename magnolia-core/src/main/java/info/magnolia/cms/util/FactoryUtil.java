@@ -16,7 +16,6 @@ import info.magnolia.cms.core.SystemProperty;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.discovery.tools.DiscoverClass;

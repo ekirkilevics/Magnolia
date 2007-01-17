@@ -14,12 +14,14 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.DateUtil;
+
+import java.util.Calendar;
+
+import javax.jcr.PropertyType;
+
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.PropertyType;
-import java.util.Calendar;
 
 
 /**

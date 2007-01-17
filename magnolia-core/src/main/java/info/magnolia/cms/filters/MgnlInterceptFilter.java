@@ -19,7 +19,6 @@ import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Resource;
@@ -27,7 +26,6 @@ import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;

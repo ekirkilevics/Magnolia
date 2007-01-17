@@ -12,10 +12,10 @@
  */
 package info.magnolia.cms.gui.controlx.list;
 
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.gui.controlx.Control;
 import info.magnolia.context.MgnlContext;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**

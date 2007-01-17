@@ -18,7 +18,6 @@ import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleDefinition;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RegisterException;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;

@@ -9,7 +9,6 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.context.MgnlContext;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 

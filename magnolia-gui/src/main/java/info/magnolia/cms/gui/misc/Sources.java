@@ -13,7 +13,6 @@
 package info.magnolia.cms.gui.misc;
 
 import info.magnolia.context.MgnlContext;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author Vinzenz Wyser

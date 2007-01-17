@@ -17,7 +17,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.SortedMap;
@@ -25,13 +24,10 @@ import java.util.TreeMap;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConstructorUtils;
-import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.sun.tools.doclets.internal.toolkit.ConstructorWriter;
 
 
 /**

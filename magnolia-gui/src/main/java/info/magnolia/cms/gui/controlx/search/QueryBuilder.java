@@ -18,12 +18,8 @@ import info.magnolia.cms.gui.query.SearchQueryOperator;
 import info.magnolia.cms.gui.query.StringSearchQueryParameter;
 
 import java.text.DecimalFormat;
-import java.text.NumberFormat;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
-
-import javax.swing.text.NumberFormatter;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;

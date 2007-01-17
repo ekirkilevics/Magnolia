@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.gui.inline;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;

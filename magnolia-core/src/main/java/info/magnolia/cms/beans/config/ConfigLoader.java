@@ -23,7 +23,6 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -33,7 +32,6 @@ import javax.servlet.ServletContext;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.derby.iapi.services.io.ArrayUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

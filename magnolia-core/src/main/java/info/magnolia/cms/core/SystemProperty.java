@@ -12,11 +12,10 @@
  */
 package info.magnolia.cms.core;
 
-import org.apache.commons.lang.StringUtils;
-
-import java.util.Hashtable;
 import java.util.Map;
 import java.util.Properties;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**

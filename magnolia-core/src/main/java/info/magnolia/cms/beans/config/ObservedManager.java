@@ -18,7 +18,6 @@ import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
@@ -27,7 +26,6 @@ import java.util.Set;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
