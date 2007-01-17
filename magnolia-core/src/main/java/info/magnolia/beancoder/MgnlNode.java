@@ -38,7 +38,7 @@ import org.apache.log4j.Logger;
  */
 public class MgnlNode implements Node {
     private static final Logger log = Logger.getLogger(MgnlNode.class);
-
+    // TODO private final ?
     Content mnode;
 
     public MgnlNode(Content mnode) {
@@ -53,24 +53,26 @@ public class MgnlNode implements Node {
         return new MgnlNodeIterator(mnode);
     }
 
+    // TODO UNUSED ?
     public Property setProperty(String string, Object object) throws JcrException {
         Property property = getProperty(string);
         try {
             final NodeData nodeData = ((NodeData) property.getWrappedInstance());
-            if (object instanceof String)
+            if (object instanceof String) {
                 nodeData.setValue((String) object);
-            else if (object instanceof Date)
+            } else if (object instanceof Date) {
                 nodeData.setValue(DateUtil.getUTCCalendarFromLocalDate((Date) object));
-            else if (object instanceof InputStream)
+            } else if (object instanceof InputStream) {
                 nodeData.setValue((InputStream) object);
-            else if (object instanceof Double)
+            } else if (object instanceof Double) {
                 nodeData.setValue(((Double) object).doubleValue());
-            else if (object instanceof Long)
+            } else if (object instanceof Long) {
                 nodeData.setValue(((Long) object).longValue());
-            else if (object instanceof Boolean)
+            } else if (object instanceof Boolean) {
                 nodeData.setValue(((Boolean) object).booleanValue());
-            else
+            } else {
                 throw new JcrException("Does not support object of kind:" + object.getClass().getName());
+            }
         }
         catch (RepositoryException e) {
             throw new JcrException(e.getMessage(), e);
@@ -243,7 +245,7 @@ public class MgnlNode implements Node {
             final NodeData nodeData = NodeDataUtil.getOrCreate(mnode, propertyName, type);
             final Value value = NodeDataUtil.createValue(valueStr, type);
             nodeData.setValue(value);
-            
+
             return new MgnlProperty(this, nodeData);
         } catch (RepositoryException e) {
             throw new JcrException(e.getMessage(), e);
