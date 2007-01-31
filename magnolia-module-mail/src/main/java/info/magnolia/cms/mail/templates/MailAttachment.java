@@ -1,5 +1,7 @@
 package info.magnolia.cms.mail.templates;
 
+import info.magnolia.cms.beans.config.MIMEMapping;
+
 import java.io.File;
 import java.net.URL;
 
@@ -12,9 +14,11 @@ import org.apache.commons.lang.StringUtils;
  */
 public class MailAttachment {
 
-    private static final String ATTACHMENT_INLINE = "inline";
+    public static final String DISPOSITION_INLINE = "inline";
 
-    private static final String ATTACHMENT_NORMAL = "normal";
+    public static final String DISPOSITION_NORMAL = "normal";
+
+    public static final String DISPOSITION_ATTACHMENT = "attachment";
 
     private static final String FILE_URL_PREFIX = "file://";
 
@@ -43,7 +47,7 @@ public class MailAttachment {
     public MailAttachment(URL _url, String name) {
         this.url = _url;
         this.name = name;
-        this.disposition = ATTACHMENT_INLINE;
+        this.disposition = DISPOSITION_INLINE;
         this.description = StringUtils.EMPTY;
     }
 
@@ -52,6 +56,9 @@ public class MailAttachment {
     }
 
     public java.lang.String getDisposition() {
+    	if(StringUtils.isEmpty(disposition)){
+    		return DISPOSITION_INLINE;
+    	}
         return this.disposition;
     }
 
@@ -108,7 +115,7 @@ public class MailAttachment {
     }
 
     public String getContentType() {
-        return MgnlEmail.map.getContentType(this.getPath());
+    	return MIMEMapping.getMIMEType(StringUtils.substringAfterLast(this.getPath(), "."));
     }
 
     public String getFileName() {
