@@ -58,10 +58,8 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
             String name = attachment.getFileName();
             String contentType = attachment.getContentType();
 
-            // set the header as well as the content type
-            messageBodyPart.setHeader(CONTENT_TYPE, contentType + "; name=\"" + name + "\"");
             // set the disposition of the file.
-            messageBodyPart.setDisposition("inline; filename=\"" + name + "\"");
+            messageBodyPart.setDisposition(attachment.getDisposition() + "; filename=\"" + name + "\"");
 
             // Fetch the image and associate to part
             DataSource fds = url.getProtocol().startsWith("file:")
@@ -71,6 +69,9 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
             messageBodyPart.setDataHandler(new DataHandler(fds));
             // Add a header to connect to the HTML
             messageBodyPart.setHeader(CONTENT_ID, key);
+            // set the header as well as the content type do this AFTER setting the data source
+            messageBodyPart.setHeader(CONTENT_TYPE, contentType + "; name=\"" + name + "\"");
+
             // Add part to multi-part
             this.multipart.addBodyPart(messageBodyPart);
 
