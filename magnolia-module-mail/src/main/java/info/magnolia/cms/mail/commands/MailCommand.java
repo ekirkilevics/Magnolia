@@ -19,6 +19,7 @@ import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
 
 import java.util.Arrays;
+import java.util.List;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
@@ -65,16 +66,24 @@ public class MailCommand implements Command {
                 String type = (String) ctx.get(MailConstants.ATTRIBUTE_TYPE);
                 String subject = (String) ctx.get(MailConstants.ATTRIBUTE_SUBJECT);
                 String text = (String) ctx.get(MailConstants.ATTRIBUTE_TEXT);
-                MailAttachment attachment = (MailAttachment) ctx.get(MailConstants.ATTRIBUTE_ATTACHMENT);
 
                 MgnlEmail email = factory.getEmailFromType(type);
                 email.setFrom(from);
                 email.setSubject(subject);
                 email.setToList(factory.convertEmailList(to));
                 email.setBody(text, ctx);
+
+                Object attachment = ctx.get(MailConstants.ATTRIBUTE_ATTACHMENT);
+
                 if (attachment != null) {
-                    email.addAttachment(attachment);
+                	if(attachment instanceof MailAttachment) {
+                		email.addAttachment((MailAttachment)attachment);
+                	}
+                	else if(attachment instanceof List) {
+                		email.setAttachments((List) attachment);
+                	};
                 }
+
                 email.setCcList(factory.convertEmailList(cc));
                 handler.prepareAndSendMail(email);
             }

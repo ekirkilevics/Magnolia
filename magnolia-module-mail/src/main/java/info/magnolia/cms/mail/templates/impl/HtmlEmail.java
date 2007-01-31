@@ -4,7 +4,7 @@ import info.magnolia.cms.mail.MailException;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlMultipartEmail;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import javax.mail.BodyPart;
@@ -42,8 +42,13 @@ public class HtmlEmail extends MgnlMultipartEmail {
 
         // process the attachments
         if (parameters != null && parameters.containsKey(MAIL_ATTACHMENT)) {
-            ArrayList attachment = (ArrayList) parameters.get(MAIL_ATTACHMENT);
-            setAttachments(attachment);
+        	Object attachment = parameters.get(MAIL_ATTACHMENT);
+        	if(attachment instanceof MailAttachment) {
+        		addAttachment((MailAttachment)attachment);
+        	}
+        	else if(attachment instanceof List) {
+        		setAttachments((List) attachment);
+        	};
         }
     }
 
