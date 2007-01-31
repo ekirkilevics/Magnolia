@@ -22,7 +22,6 @@ import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,8 +44,6 @@ public abstract class MgnlEmail extends MimeMessage {
     protected static final Pattern EMAIL_WITH_PERSONAL_PATTERN = Pattern.compile("\"+(.*)\"+<(.*)>");
 
     public static Logger log = LoggerFactory.getLogger(MgnlEmail.class);
-
-    public static final MimetypesFileTypeMap map = new MimetypesFileTypeMap();
 
     private String template;
 
@@ -166,7 +163,7 @@ public abstract class MgnlEmail extends MimeMessage {
         return (Address[]) atos.toArray(new Address[atos.size()]);
     }
 
-    public void setAttachments(ArrayList list) throws MailException {
+    public void setAttachments(List list) throws MailException {
         if (list == null) {
             return;
         }
