@@ -18,6 +18,7 @@ import info.magnolia.cms.util.FactoryUtil;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -69,23 +70,54 @@ public class MgnlMailFactory extends ObservedManager {
 
     private static Logger log = LoggerFactory.getLogger(MgnlMailFactory.class);
 
-    private static MgnlMailFactory factory = new MgnlMailFactory();
+    private static MgnlMailFactory factory = (MgnlMailFactory) FactoryUtil.getSingleton(MgnlMailFactory.class);
 
     protected Map mailParameters;
 
     private List templates;
 
-    private static Class mailHandlerClass;
+    private Class mailHandlerClass;
 
     private String templatePath;
+    
+    private Map mailTypeHandlers = new HashMap();
+    
 
-    private MgnlMailFactory() {
+    /**
+     * Use getInstance to get the current used instance
+     */
+    public MgnlMailFactory() {
         mailHandlerClass = info.magnolia.cms.mail.handlers.MgnlMailHandler.class;
         this.mailParameters = new Hashtable();
         this.templates = new ArrayList();
+        
+        // default handlers
+        registerMailType(MailConstants.MAIL_TEMPLATE_VELOCITY, new MgnlMailTypeFactory(){
+        	public MgnlEmail createEmail() throws Exception {
+        		return new VelocityEmail(getSession());
+        	}
+        });
+        
+        registerMailType(MailConstants.MAIL_TEMPLATE_HTML, new MgnlMailTypeFactory(){
+        	public MgnlEmail createEmail() throws Exception {
+        		return new HtmlEmail(getSession());
+        	}
+        });
+        
+        registerMailType(MailConstants.MAIL_TEMPLATE_FREEMARKER, new MgnlMailTypeFactory(){
+        	public MgnlEmail createEmail() throws Exception {
+        		return new FreemarkerEmail(getSession());
+        	}
+        });
+
+        registerMailType(MailConstants.MAIL_TEMPLATE_MAGNOLIA, new MgnlMailTypeFactory(){
+        	public MgnlEmail createEmail() throws Exception {
+        		return new MagnoliaEmail(getSession());
+        	}
+        });
     }
 
-    public static MgnlMailFactory getInstance() {
+	public static MgnlMailFactory getInstance() {
         return factory;
     }
 
@@ -93,6 +125,10 @@ public class MgnlMailFactory extends ObservedManager {
         return (MgnlMailHandler) FactoryUtil.getSingleton(mailHandlerClass);
     }
 
+    public void registerMailType(String name, MgnlMailTypeFactory handler) {
+    	mailTypeHandlers.put(name.toLowerCase(), handler);
+	}
+    
     /**
      * Data is fetch into the repository to get the different parameters of the email
      * @param id the id to find under the template section of the repository
@@ -177,18 +213,9 @@ public class MgnlMailFactory extends ObservedManager {
      * @throws Exception if fails
      */
     public MgnlEmail getEmailFromType(String type) throws Exception {
-        if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_VELOCITY)) {
-            return new VelocityEmail(getSession());
-        }
-        else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_HTML)) {
-            return new HtmlEmail(getSession());
-        }
-        else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_FREEMARKER)) {
-            return new FreemarkerEmail(getSession());
-        }
-        else if (type.equalsIgnoreCase(MailConstants.MAIL_TEMPLATE_MAGNOLIA)) {
-            return new MagnoliaEmail(getSession());
-        }
+    	if(mailTypeHandlers.containsKey(type.toLowerCase())){
+    		return ((MgnlMailTypeFactory) mailTypeHandlers.get(type.toLowerCase())).createEmail();
+    	}
         else {
             return new SimpleEmail(getSession());
         }
