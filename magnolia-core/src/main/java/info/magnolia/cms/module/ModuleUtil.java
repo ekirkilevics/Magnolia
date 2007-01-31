@@ -139,9 +139,6 @@ public final class ModuleUtil {
     }
 
     public static void bootstrap(String[] resourceNames) throws IOException, RegisterException {
-
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
-
         // sort by length --> import parent node first
         List list = new ArrayList(Arrays.asList(resourceNames));
 
@@ -175,19 +172,15 @@ public final class ModuleUtil {
 
             // if the path already exists --> delete it
             try {
+                final HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+
                 if (hm.isExist(fullPath)) {
                     hm.delete(fullPath);
                     if (log.isDebugEnabled()) {
                         log.debug("already existing node [{}] deleted", fullPath);
                     }
                 }
-
-                // if the parent path not exists just create it
-                if (!pathName.equals("/")) {
-                    ContentUtil.createPath(hm, pathName, ItemType.CONTENT);
-                }
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 throw new RegisterException("can't register bootstrap file: [" + name + "]", e);
             }
             InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
