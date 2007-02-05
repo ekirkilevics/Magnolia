@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.workflow;
 
+import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -19,21 +20,19 @@ import info.magnolia.module.workflow.flows.FlowDefinionException;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
-
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowItem;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.LaunchItem;
 import openwfe.org.engine.workitem.StringAttribute;
 import openwfe.org.worklist.store.StoreException;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -210,9 +209,10 @@ public class WorkflowUtil {
 
         long start = System.currentTimeMillis();
 
-        User user = MgnlContext.getUser();
+        User user = Security.getUserManager().getUser(userName);
         Collection groups = user.getGroups();
         Collection roles = user.getRoles();
+
         StringBuffer queryString = new StringBuffer();
         queryString.append("//*[(@assignTo=\"");
         queryString.append(userName);
