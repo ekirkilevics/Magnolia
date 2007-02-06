@@ -174,7 +174,8 @@ public final class ModuleUtil {
             try {
                 final HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
 
-                if (hm.isExist(fullPath)) {
+                // hm can be null if module is not properly registered and the repository has not been created
+                if (hm != null && hm.isExist(fullPath)) {
                     hm.delete(fullPath);
                     if (log.isDebugEnabled()) {
                         log.debug("already existing node [{}] deleted", fullPath);
