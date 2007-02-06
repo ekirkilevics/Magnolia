@@ -198,6 +198,13 @@ public class DataTransporter {
             throws IOException {
 
         HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
+        if (hm == null) {
+            // this happens when the samples module tries to insert content into the dms repository and dms is not
+            // installed
+            log.warn("NOT importing content from: [{}] since repository [{}] does not exist", //$NON-NLS-1$
+                new Object[]{name, repositoryName});
+            return;
+        }
         Workspace ws = hm.getWorkspace();
 
         if (log.isDebugEnabled()) {
