@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.admininterface;
 
+import freemarker.template.utility.StringUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
 
 import java.io.IOException;
@@ -49,8 +50,12 @@ public class TemplatedMVCHandler extends PageMVCHandler {
      */
     protected String getTemplateName(String viewName) {
         String template = FreeMarkerUtil.createTemplateName(this.getClass(), "html");
-        if(!viewName.equals(VIEW_SHOW)){
-            template = StringUtils.replace(template, ".html", StringUtils.capitalize(viewName + ".html"));
+        if(StringUtils.isNotEmpty(viewName) && !viewName.equals(VIEW_SHOW)){
+            String subtemplate = StringUtils.replace(template, ".html", StringUtils.capitalize(viewName + ".html"));
+            // add postfix only in case the resource exists
+            if(this.getClass().getResource(subtemplate) != null){
+                template = subtemplate;
+            }
         }
         return template;
     }
@@ -59,7 +64,11 @@ public class TemplatedMVCHandler extends PageMVCHandler {
      * Renders the template. The handlers is passed with the name 'this'.
      */
     public void renderHtml(String view) throws IOException {
-
+        // no rendering if view is null
+        if(StringUtils.isEmpty(view)){
+            return;
+        }
+        
         String template = this.getTemplateName(view);
         if (template != null) {
 
