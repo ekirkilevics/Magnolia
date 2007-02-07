@@ -1,9 +1,6 @@
 package info.magnolia.module.workflow.flows;
 
-import org.apache.commons.lang.exception.NestableException;
-
-
-public class FlowDefinionException extends NestableException {
+public class FlowDefinionException extends Exception {
 
     public FlowDefinionException() {
         super();
