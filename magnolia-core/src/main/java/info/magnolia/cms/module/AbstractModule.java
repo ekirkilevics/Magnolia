@@ -270,9 +270,8 @@ public abstract class AbstractModule implements Module {
     protected void bootstrap(final String moduleName) throws IOException, RegisterException {
         // bootstrap the module files
         String[] moduleBootstrap = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
-
             public boolean accept(String name) {
-                return name.startsWith("/mgnl-bootstrap/" + moduleName) && name.endsWith(".xml");
+                return name.startsWith("/mgnl-bootstrap/" + moduleName + "/") && name.endsWith(".xml");
             }
         });
 
