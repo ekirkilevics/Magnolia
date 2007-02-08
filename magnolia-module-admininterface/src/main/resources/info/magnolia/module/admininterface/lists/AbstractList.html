@@ -46,14 +46,23 @@
     </head>
 
     <body style="padding: 0px;margin: 0px">
+        
         <form name="mgnlForm" style="margin: 0 0 0 0;" method="post" action="${contextPath}${this.URI}" >
             <input type="hidden" id="command" name="command" value="show"/>
+
             <!--  used by subclasses mainly to add additional hiddenfields or js -->
             ${this.onRender()}
-
+            	
             <div id="${this.list.name}Div" style="position:absolute;">
                 ${this.list.render()}
             </div>
+            
+            [#if this.list.contextMenu?exists]
+			    ${this.list.contextMenu.html}
+			    <script type="text/javascript">
+			        ${this.list.contextMenu.javascript}
+			    </script>
+			[/#if]
 
             [#if this.functionBar.menuItems?has_content]
                 ${this.functionBar.html}

@@ -24,12 +24,7 @@
     MgnlDHTMLUtil.addOnResize(function(){${this.name}.resize();});
 </script>
 
-[#if this.contextMenu?exists]
-    ${this.contextMenu.html}
-    <script type="text/javascript">
-        ${this.contextMenu.javascript}
-    </script>
-[/#if]
+
 
 <div style="position:relative">
     [#if this.groupableFields?has_content || this.sortableFields?has_content]
