@@ -199,9 +199,9 @@ public class ModuleRegistration {
             String name = moduleNode.getName();
             String version = NodeDataUtil.getString(moduleNode, "version", "");
             String className = NodeDataUtil.getString(ContentRepository.CONFIG, moduleNode.getHandle()
-                + "/Register/class", "");
+                + "/Register/class", null);
 
-            if (!this.moduleDefinitions.containsKey(name)) {
+            if (!this.moduleDefinitions.containsKey(name) && StringUtils.isNotEmpty(className)) {
                 log.warn("no proper module definition file found for [{}]: will add an adhoc definition", name);
                 ModuleDefinition def = new ModuleDefinition(name, version, className);
                 this.moduleDefinitions.put(def.getName(), def);
