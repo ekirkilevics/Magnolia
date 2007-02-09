@@ -43,4 +43,8 @@
     <#if message?exists>
         MgnlDHTMLUtil.addOnLoad(function(){alert('${message}')});
     </#if>
+    
+    MgnlDHTMLUtil.addOnResize(function(){${tree.javascriptTree}.resize()});
+    MgnlDHTMLUtil.addOnLoad(function(){${tree.javascriptTree}.resize()});
+    
 </script>
