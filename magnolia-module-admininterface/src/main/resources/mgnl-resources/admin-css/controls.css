@@ -135,7 +135,6 @@
 	cursor: pointer;
 	font: 11px verdana, arial, helvetica, sans-serif;
 	background-color: #ffffff;
-	z-index: 1000;
 }
 
 .smothDropdownHeaderField {
@@ -145,22 +144,22 @@
 	background-color: #ffffff;
 	border-top: 1px #999999 solid;
 	border-bottom: 1px #CCCCCC solid;
-	z-index: 1000;
 }
 
 .smothDropdownBox {
 	margin: 0px;
 	padding: 0px;
 	cursor: pointer;
-	font: 11px verdana, arial, helvetica, sans-serif;
 	background-color: #ffffff;
+	visibility: hidden;
+	position: absolute;
+	z-index: 2;
 }
 
 .smothDropdownEntry {
 	margin: 0px;
 	padding: 0px;
 	cursor: pointer;
-	font: 11px verdana, arial, helvetica, sans-serif;
 	width: auto;
 	border-left: 1px #999999 solid;
 	border-right: 1px #CCCCCC solid;
@@ -174,7 +173,6 @@
 	margin: 0px;
 	padding: 0px;
 	cursor: pointer;
-	font: 11px verdana, arial, helvetica, sans-serif;
 	background-color: #D9F1B3;
 	width: auto;
 	border-left: 1px #999999 solid;

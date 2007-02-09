@@ -753,11 +753,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
             html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); //$NON-NLS-1$
             renderHeaderIncludes(html);
             html.append("<title>Magnolia</title>"); //$NON-NLS-1$
-            html.append("<script type=\"text/javascript\">window.onresize = mgnlTreeResize;</script>"); //$NON-NLS-1$
-            html.append("</head>"); //$NON-NLS-1$
-            html.append("<body class=\"mgnlBgDark\" onload=\"");
-            html.append(tree.getJavascriptTree());
-            html.append(".resizeOnload();\" >");
+            html.append("<body class=\"mgnlBgDark\">");
         }
 
         tree.setSnippetMode(snippetMode);

@@ -39,7 +39,7 @@
                 mgnlListResize();
             });
 
-            MgnlDHTMLUtil.addOnResize(mgnlListResize);
+            MgnlDHTMLUtil.addOnResize(function(){mgnlListResize();});
         </script>
 
         ${this.onRenderHeader()}

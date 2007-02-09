@@ -263,23 +263,6 @@
         return w;
         }
 
-    mgnlTree.prototype.resizeOnload = function(){
-        if (navigator.userAgent.toLowerCase().indexOf("safari")==-1) {
-            mgnlDebug("resizeOnload: not safari","tree");
-            this.resize();
-        }
-        else{
-            mgnlDebug("resizeOnload: safari","tree");
-            setTimeout("mgnlTreeResizeOnloadSafari('"+this.name+"');",200);
-        }
-    }
-
-    function mgnlTreeResizeOnloadSafari(treeName){
-        mgnlDebug("mgnlTreeResizeOnloadSafari: safari","tree");
-        var tree=eval(treeName);
-        tree.resize();
-    }
-
     mgnlTree.prototype.resize = function(columnNumber){
         //no columnNumber passed: resize all columns (@ resizing window)
         //columnNumber passed: resize only this column and re-clip the one before (@ resizing column)
