@@ -34,7 +34,7 @@ public abstract class RuleBasedCommand extends BaseRepositoryCommand {
 
     private Rule rule;
 
-    protected Rule getRule() {
+    public Rule getRule() {
         // lazy bound but only if this is a clone
         if (rule == null && isClone()) {
             rule = new Rule();
@@ -65,5 +65,5 @@ public abstract class RuleBasedCommand extends BaseRepositoryCommand {
     public void setRule(Rule rule) {
         this.rule = rule;
     }
-
+    
 }
