@@ -74,6 +74,6 @@ public class PermissionImpl implements Permission, Serializable {
      * {@inheritDoc}
      */
     public String toString() {
-        return nameStrings.get(permissions) + " " + pattern;
+        return nameStrings.get(new Long(permissions)) + " " + pattern;
     }
 }
