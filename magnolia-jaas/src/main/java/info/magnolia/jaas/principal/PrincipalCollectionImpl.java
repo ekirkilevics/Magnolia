@@ -116,6 +116,14 @@ public class PrincipalCollectionImpl implements PrincipalCollection {
     }
 
     /**
+     * Returns an iterator on principals
+     * @return iterator for Principal objects
+     */
+    public Iterator iterator() {
+        return collection.iterator();
+    }
+    
+    /**
      * @see java.lang.Object#toString()
      */
     public String toString() {
