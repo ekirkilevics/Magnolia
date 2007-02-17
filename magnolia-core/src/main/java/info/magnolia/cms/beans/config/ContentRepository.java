@@ -570,7 +570,7 @@ public final class ContentRepository {
      */
     public static boolean hasRepositoryMapping(String repositoryID) {
         String name = getMappedRepositoryName(repositoryID);
-        return name != null;
+        return name != null && ContentRepository.repositoryMapping.containsKey(name);
     }
 
     /**
