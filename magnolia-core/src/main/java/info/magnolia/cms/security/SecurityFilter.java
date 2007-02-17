@@ -38,6 +38,14 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * This filter takes care of applying access control and to invoke the Authenticator when a secure url is calles. It
+ * also handles explicit login/logout requests by listening for a few predefined request parameters:
+ * <ul>
+ * <li>if both <code>mgnlUserId</code> and <code>mgnlUserPSWD</code> are sent and the user is not already
+ * authenticated it will try to authenticate it. If a login failure will occur, the related exception will be set into
+ * the <code>mgnlLoginError</code> request attribute</li>
+ * <li>if the <code>mgnlLogout</code> parameter is send the session will be invalidated and the user logged out</li>
+ * </ul>
  * @author Fabrizio Giustina
  * @version $Id$
  */
@@ -74,6 +82,16 @@ public class SecurityFilter implements Filter {
     protected static final String AUTH_TYPE_FORM = "Form";
 
     /**
+     * Request parameter: logout.
+     */
+    protected static final String PARAMETER_LOGOUT = "mgnlLogout";
+
+    /**
+     * Request parameter: login error.
+     */
+    protected static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
+
+    /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -81,15 +99,14 @@ public class SecurityFilter implements Filter {
     }
 
     /**
-     * @see javax.servlet.Filter#destroy()
+     * {@inheritDoc}
      */
     public void destroy() {
         // unused
     }
 
     /**
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
-     * javax.servlet.FilterChain)
+     * {@inheritDoc}
      */
     public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
         ServletException {
@@ -97,8 +114,26 @@ public class SecurityFilter implements Filter {
         HttpServletRequest request = (HttpServletRequest) req;
         HttpServletResponse response = (HttpServletResponse) res;
 
+        handleLogout(request);
+
         if (isAllowed(request, response)) {
             chain.doFilter(request, response);
+        }
+    }
+
+    /**
+     * Check if a request parameter PARAMETER_LOGOUT is set and logout user.
+     * @param request HttpServletRequest
+     */
+    protected void handleLogout(HttpServletRequest request) {
+        if (request.getParameter(PARAMETER_LOGOUT) == null) {
+            // go on, logout not requested
+            return;
+        }
+        HttpSession session = request.getSession(false);
+        if (session != null) {
+            session.invalidate();
+            log.debug("Logging out user");
         }
     }
 
@@ -117,11 +152,25 @@ public class SecurityFilter implements Filter {
         else if (Authenticator.isAuthenticated(req)) {
             return true;
         }
-        else if (SecureURI.isUnsecure(Path.getURI(req))) {
+
+        // MAGNOLIA-1385 allow to login without having to request a secure uri
+        if (req.getParameter(Authenticator.PARAMETER_USER_ID) != null
+            && req.getParameter(Authenticator.PARAMETER_PSWD) != null) {
+            try {
+                Authenticator.authenticate(req);
+            }
+            catch (LoginException e) {
+                // set a request parameter that can be used in page to detect an unsuccessful login attempt
+                req.setAttribute(ATTRIBUTE_LOGINERROR, e);
+            }
+        }
+
+        if (SecureURI.isUnsecure(Path.getURI(req))) {
             return true;
         }
         else if (SecureURI.isProtected(Path.getURI(req))) {
-            return authenticate(req, res);
+            // check if it has just been authenticated using form or try authentication again
+            return Authenticator.isAuthenticated(req) || authenticate(req, res);
         }
         else if (!Listener.isAllowed(req)) {
             res.sendError(HttpServletResponse.SC_FORBIDDEN);
@@ -182,7 +231,7 @@ public class SecurityFilter implements Filter {
     }
 
     /**
-     * Diaplay a login page, processing the configured template using freemarker.
+     * Display a login page, processing the configured template using freemarker.
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      */
