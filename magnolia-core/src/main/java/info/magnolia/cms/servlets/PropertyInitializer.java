@@ -209,15 +209,15 @@ public class PropertyInitializer implements ServletContextListener {
     protected void loadPropertiesFiles(ServletContext context, String servername, String rootPath, String webapp) {
         String propertiesLocationString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
 
-        if (log.isDebugEnabled()) {
-            log.debug("{} value in web.xml is :[{}]", MAGNOLIA_INITIALIZATION_FILE, propertiesLocationString); //$NON-NLS-1$
-        }
         if (StringUtils.isEmpty(propertiesLocationString)) {
             log.debug(
                 "{} value in web.xml is undefined, falling back to default: {}",
                 MAGNOLIA_INITIALIZATION_FILE,
                 DEFAULT_INITIALIZATION_PARAMETER);
             propertiesLocationString = DEFAULT_INITIALIZATION_PARAMETER;
+        }
+        else {
+            log.debug("{} value in web.xml is :'{}'", MAGNOLIA_INITIALIZATION_FILE, propertiesLocationString); //$NON-NLS-1$
         }
 
         String[] propertiesLocation = StringUtils.split(propertiesLocationString, ',');
