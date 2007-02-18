@@ -168,24 +168,24 @@ public class PropertyInitializer implements ServletContextListener {
         if (log.isDebugEnabled()) {
             log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$ 
         }
-        
+
         loadBeanProperties();
-        
+
         loadModuleProperties();
 
         createApplicationDirectories(webapp);
 
         loadPropertiesFiles(context, servername, rootPath, webapp);
-        
+
         // system property initialization
         String magnoliaRootSysproperty = SystemProperty.getProperty(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
         if (StringUtils.isNotEmpty(magnoliaRootSysproperty)) {
             System.setProperty(magnoliaRootSysproperty, rootPath);
-            log.info("Setting the magnolia root system property: [" + magnoliaRootSysproperty + "] to [" + rootPath + "]"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+            log.info("Setting the magnolia root system property: {} to {}", magnoliaRootSysproperty, rootPath); //$NON-NLS-1$
         }
-        
+
         overloadWithSystemProperties();
-        
+
         Log4jConfigurer.initLogging(context);
 
         new ConfigLoader(context);
@@ -193,7 +193,8 @@ public class PropertyInitializer implements ServletContextListener {
     }
 
     /**
-     * Load the properties defined in the module descriptors. They can get overridden later in the properties files in WEB-INF
+     * Load the properties defined in the module descriptors. They can get overridden later in the properties files in
+     * WEB-INF
      */
     protected void loadModuleProperties() {
         OrderedMap defs = ModuleRegistration.getInstance().getModuleDefinitions();
@@ -214,7 +215,10 @@ public class PropertyInitializer implements ServletContextListener {
             log.debug("{} value in web.xml is :[{}]", MAGNOLIA_INITIALIZATION_FILE, propertiesLocationString); //$NON-NLS-1$
         }
         if (StringUtils.isEmpty(propertiesLocationString)) {
-            log.debug("{} value in web.xml is undefined, falling back to default: {}", MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);
+            log.debug(
+                "{} value in web.xml is undefined, falling back to default: {}",
+                MAGNOLIA_INITIALIZATION_FILE,
+                DEFAULT_INITIALIZATION_PARAMETER);
             propertiesLocationString = DEFAULT_INITIALIZATION_PARAMETER;
         }
 
@@ -257,11 +261,11 @@ public class PropertyInitializer implements ServletContextListener {
             }
         }
 
-        if(!found){
+        if (!found) {
             String msg = MessageFormat
-            .format(
-                "No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", //$NON-NLS-1$
-                new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath});
+                .format(
+                    "No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", //$NON-NLS-1$
+                    new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath});
             log.error(msg);
             throw new ConfigurationException(msg);
         }
@@ -297,7 +301,7 @@ public class PropertyInitializer implements ServletContextListener {
     protected void loadBeanProperties() {
         // load mgnl-beans.properties first
         InputStream mgnlbeansStream = getClass().getResourceAsStream(MGNL_BEANS_PROPERTIES);
-        
+
         if (mgnlbeansStream != null) {
             Properties mgnlbeans = new Properties();
             try {
@@ -328,16 +332,16 @@ public class PropertyInitializer implements ServletContextListener {
      * Crate the tmp and log directory
      */
     private void createApplicationDirectories(String webapp) {
-        File logs = new File(webapp + File.separator + "logs");
-        File tmp = new File(webapp + File.separator + "tmp");
+        File logs = new File(webapp, "logs");
+        File tmp = new File(webapp, "tmp");
         if (!logs.exists()) {
             logs.mkdir();
-            log.debug("Creating " + logs.getAbsoluteFile() + " folder");
+            log.debug("Creating {} folder", logs.getAbsolutePath());
         }
 
         if (!tmp.exists()) {
             tmp.mkdir();
-            log.debug("Creating " + tmp.getAbsoluteFile() + " folder");
+            log.debug("Creating {} folder", tmp.getAbsoluteFile());
         }
     }
 
@@ -358,7 +362,7 @@ public class PropertyInitializer implements ServletContextListener {
             return false;
         }
 
-        InputStream fileStream=null;
+        InputStream fileStream = null;
         try {
             fileStream = new FileInputStream(initFile);
         }
@@ -389,7 +393,7 @@ public class PropertyInitializer implements ServletContextListener {
         Iterator it = SystemProperty.getProperties().keySet().iterator();
         while (it.hasNext()) {
             String key = (String) it.next();
-            if(System.getProperties().containsKey(key)){
+            if (System.getProperties().containsKey(key)) {
                 log.info("system property found: {}", key);
                 String value = (String) System.getProperty(key);
                 SystemProperty.setProperty(key, value);
