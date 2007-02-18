@@ -220,17 +220,43 @@ public class PropertyInitializer implements ServletContextListener {
 
         String[] propertiesLocation = StringUtils.split(propertiesLocationString, ',');
 
+        // we should use the server name without the domain, sometimes it's hard to foresee if
+        // getLocalHost().getHostName() will return a qualified or unqualified server name
+        String fqServerName = null;
+        if (StringUtils.contains(servername, '.')) {
+            fqServerName = servername;
+            servername = StringUtils.substringBefore(servername, ".");
+        }
+
         boolean found = false;
-        for (int j = propertiesLocation.length-1; j >= 0; j--) {
+        for (int j = propertiesLocation.length - 1; j >= 0; j--) {
             String location = StringUtils.trim(propertiesLocation[j]);
+
             location = StringUtils.replace(location, "${servername}", servername); //$NON-NLS-1$
             location = StringUtils.replace(location, "${webapp}", webapp); //$NON-NLS-1$
 
-            if(loadPropertiesFile(rootPath, location)){
+            if (loadPropertiesFile(rootPath, location)) {
                 found = true;
             }
+
+            // compatibility with old version, in case a fully qualified server name was used
+            if (fqServerName != null) {
+                location = StringUtils.trim(propertiesLocation[j]);
+                if (StringUtils.contains(location, "${servername}")) {
+                    location = StringUtils.replace(location, "${servername}", fqServerName); //$NON-NLS-1$
+                    location = StringUtils.replace(location, "${webapp}", webapp); //$NON-NLS-1$
+
+                    if (loadPropertiesFile(rootPath, location)) {
+                        found = true;
+                        log.warn(
+                            "Deprecated: found a configuration file using server name {}, you should use {} instead.",
+                            fqServerName,
+                            servername);
+                    }
+                }
+            }
         }
-        
+
         if(!found){
             String msg = MessageFormat
             .format(
