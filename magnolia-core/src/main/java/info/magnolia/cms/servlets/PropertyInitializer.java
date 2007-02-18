@@ -173,8 +173,6 @@ public class PropertyInitializer implements ServletContextListener {
 
         loadModuleProperties();
 
-        createApplicationDirectories(webapp);
-
         loadPropertiesFiles(context, servername, rootPath, webapp);
 
         // system property initialization
@@ -325,23 +323,6 @@ public class PropertyInitializer implements ServletContextListener {
                 .warn(
                     "{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.",
                     MGNL_BEANS_PROPERTIES);
-        }
-    }
-
-    /**
-     * Crate the tmp and log directory
-     */
-    private void createApplicationDirectories(String webapp) {
-        File logs = new File(webapp, "logs");
-        File tmp = new File(webapp, "tmp");
-        if (!logs.exists()) {
-            logs.mkdir();
-            log.debug("Creating {} folder", logs.getAbsolutePath());
-        }
-
-        if (!tmp.exists()) {
-            tmp.mkdir();
-            log.debug("Creating {} folder", tmp.getAbsoluteFile());
         }
     }
 
