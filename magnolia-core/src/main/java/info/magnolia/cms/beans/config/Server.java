@@ -170,7 +170,7 @@ public final class Server {
         while (childIterator.hasNext()) {
             Content sub = (Content) childIterator.next();
             String uri = sub.getNodeData("URI").getString(); //$NON-NLS-1$
-            log.warn("Adding new unsecure uri:" + uri);
+            log.info("Adding new unsecure uri: {}", uri);
             SecureURI.addUnsecure(uri);
         }
     }
