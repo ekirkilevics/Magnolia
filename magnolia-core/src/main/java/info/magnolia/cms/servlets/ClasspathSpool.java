@@ -45,7 +45,7 @@ public class ClasspathSpool extends HttpServlet {
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(Spool.class);
+    private static Logger log = LoggerFactory.getLogger(ClasspathSpool.class);
 
     protected long getLastModified(HttpServletRequest req) {
         String filePath = this.getFilePath(req);

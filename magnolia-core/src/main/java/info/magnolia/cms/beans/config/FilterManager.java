@@ -139,8 +139,7 @@ public final class FilterManager {
         for (int j = 0; j < filterDefinitions.length; j++) {
             FilterDefinition definition = filterDefinitions[j];
             try {
-                Filter filter = (Filter) ClassUtil.newInstance(definition.getClassName());
-                this.filterChain[j] = filter;
+                this.filterChain[j] = (Filter) ClassUtil.newInstance(definition.getClassName());
             }
             catch (Throwable e) {
                 log.error("Failed to instantiate filter [ " + definition.getClassName() + " ]", e);
@@ -164,41 +163,44 @@ public final class FilterManager {
     private void extractDefinitions() {
         List definitionList = new ArrayList();
 
-        Content node = ContentUtil.getContent(ContentRepository.CONFIG, SERVER_FILTERS);
+        Content node;
+        try {
+            node = MgnlContext.getSystemContext()
+                    .getHierarchyManager(ContentRepository.CONFIG).getContent(SERVER_FILTERS);
+        } catch (RepositoryException re) {
+            throw new RuntimeException("Failed to initialize filters", re);
+        }
 
-        if (node != null) {
+        Collection children = node.getChildren(ItemType.CONTENT);
 
-            Collection children = node.getChildren(ItemType.CONTENT);
+        Iterator childIterator = children.iterator();
 
-            Iterator childIterator = children.iterator();
+        while (childIterator.hasNext()) {
+            Content child = (Content) childIterator.next();
 
-            while (childIterator.hasNext()) {
-                Content child = (Content) childIterator.next();
+            String filterClass = child.getNodeData(PARAM_FILTERCLASS).getString();
 
-                String filterClass = child.getNodeData(PARAM_FILTERCLASS).getString();
+            if (StringUtils.isNotEmpty(filterClass)) {
+                FilterDefinition definition = new FilterDefinition();
+                definition.setClassName(filterClass);
+                definition.setPriority(child.getNodeData(PARAM_PRIORITY).getLong());
 
-                if (StringUtils.isNotEmpty(filterClass)) {
-                    FilterDefinition definition = new FilterDefinition();
-                    definition.setClassName(filterClass);
-                    definition.setPriority(child.getNodeData(PARAM_PRIORITY).getLong());
-
-                    try {
-                        if (child.hasContent(PARAM_CONFIG)) {
-                            Content config = child.getContent(PARAM_CONFIG);
-                            definition.setParameters(ContentUtil.toMap(config));
-                        }
+                try {
+                    if (child.hasContent(PARAM_CONFIG)) {
+                        Content config = child.getContent(PARAM_CONFIG);
+                        definition.setParameters(ContentUtil.toMap(config));
                     }
-                    catch (RepositoryException e) {
-                        log.error("Unable to read config parameters for filter {} due to a ", filterClass, e
-                            .getClass()
-                            .getName());
-                    }
-
-                    log.debug("Adding filter [{}] to managed filter list", filterClass);
-
-                    definitionList.add(definition);
-
                 }
+                catch (RepositoryException e) {
+                    log.error("Unable to read config parameters for filter {} due to a ", filterClass, e
+                        .getClass()
+                        .getName());
+                }
+
+                log.debug("Adding filter [{}] to managed filter list", filterClass);
+
+                definitionList.add(definition);
+
             }
         }
 
@@ -209,7 +211,6 @@ public final class FilterManager {
 
     /**
      * @param filterConfig
-     * @throws ServletException
      */
     public void initFilters(FilterConfig filterConfig) {
         this.filterConfig = filterConfig;

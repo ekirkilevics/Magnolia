@@ -94,8 +94,10 @@ public class MgnlCmsFilter implements Filter {
 
         String requestURI = Path.getURI(request);
         String pathInfo = request.getPathInfo();
-
-        if (pathInfo == null && !startsWithAny(bypass, requestURI)) {
+        // minor workaround due to the bug in webSphere 6.1 (fix pack 6.1.0.2)
+        // according to servlet specs getPathInfo should return null if there is no extra info other
+        // than URI
+        if ((pathInfo == null || pathInfo.equalsIgnoreCase(requestURI)) && !startsWithAny(bypass, requestURI)) {
             handle(request, response);
         } else {
             // only continue if bypassed by this filter, independent of return status from handle(request, response)
@@ -139,6 +141,7 @@ public class MgnlCmsFilter implements Filter {
                         if (renderer == null) {
                             throw new RuntimeException("No renderer found for type " + type);
                         }
+                        response.setStatus(HttpServletResponse.SC_OK);
                         renderer.renderTemplate(template, request, response);
                     }
                     catch (IOException e) {
@@ -153,7 +156,6 @@ public class MgnlCmsFilter implements Filter {
                         // @todo better handling of rendering exception
                         log.error(e.getMessage(), e);
                         if (!response.isCommitted()) {
-                            response.reset();
                             response.setContentType("text/html");
                         }
                         throw new NestableRuntimeException(e);
@@ -183,7 +185,7 @@ public class MgnlCmsFilter implements Filter {
         }
         catch (AccessDeniedException e) {
             // don't throw further, simply return error and break filter chain
-            log.debug(e.getMessage());
+            log.debug(e.getMessage(), e);
             if (!response.isCommitted())
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
@@ -271,10 +273,7 @@ public class MgnlCmsFilter implements Filter {
             try {
                 is = getNodedataAstream(resourceHandle, hm, response);
                 if (null != is) {
-                    // todo find better way to discover if resource could be compressed, implement as in "cache"
-                    // browsers will always send header saying either it can decompress or not, but
-                    // resources like jpeg which is already compressed should be not be written on
-                    // zipped stream otherwise some browsers takes a long time to render
+                    response.setStatus(HttpServletResponse.SC_OK);
                     sendUnCompressed(is, response);
                     IOUtils.closeQuietly(is);
                     return;

@@ -23,6 +23,8 @@ import org.apache.commons.chain.Context;
 import org.apache.commons.lang.exception.NestableException;
 import org.apache.commons.pool.BasePoolableObjectFactory;
 import org.apache.commons.pool.impl.StackObjectPool;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -33,6 +35,12 @@ import org.apache.commons.pool.impl.StackObjectPool;
  * @version $Revision$ ($Author$)
  */
 public abstract class MgnlCommand implements Command {
+
+    /**
+     * Logger
+     */
+    public static Logger log = LoggerFactory.getLogger(MgnlCommand.class);
+
 
     /**
      * The default properties. Lazy bound.
@@ -114,8 +122,8 @@ public abstract class MgnlCommand implements Command {
                 // try to use the pool
                 cmd = (MgnlCommand) pool.borrowObject();
             }
-            // this happens if the commans constructor is not public: anonymous classes for example
-            catch (InstantiationException e) {
+            // this happens if the commons constructor is not public: anonymous classes for example
+            catch (Throwable t) {
                 pooling = false;
                 // start again
                 return execute(ctx);
