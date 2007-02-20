@@ -221,6 +221,7 @@ public class CacheImpl implements Cache {
 
             fin = new FileInputStream(file);
             out = response.getOutputStream();
+            response.setStatus(HttpServletResponse.SC_OK);
             response.setDateHeader("Last-Modified", this.getCreationTime(key));
             if (canCompress) {
                 response.setContentLength(getCompressedSize(key));

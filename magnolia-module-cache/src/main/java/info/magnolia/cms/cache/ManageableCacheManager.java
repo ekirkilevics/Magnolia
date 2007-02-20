@@ -6,9 +6,7 @@ import info.magnolia.cms.core.Path;
 
 import java.util.ArrayList;
 
-import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
-import javax.management.ObjectName;
+import javax.management.*;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -154,20 +152,24 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
     private void registerMBean() {
         String appName = Path.getAppRootDir().getName();
         // not totally failsafe, but it will work unless you run two instances in directories with the same name
-        String objectName = "Magnolia:type=CacheManager,domain=" + appName;
+        final String id = "Magnolia:type=CacheManager,domain=" + appName;
         try {
+            final ObjectName mbeanName = new ObjectName(id);
             ArrayList list = MBeanServerFactory.findMBeanServer(null);
-            MBeanServer mbeanServer;
+            final MBeanServer mbeanServer;
             if (list != null && list.size() > 0) {
                 mbeanServer = (MBeanServer) list.get(0);
             }
             else {
                 mbeanServer = MBeanServerFactory.createMBeanServer();
             }
-            mbeanServer.registerMBean(this, new ObjectName(objectName));
-        }
-        catch (Exception e) {
-            log.error("Could not register JMX MBean '" + objectName + "'.", e);
+            if (!mbeanServer.isRegistered(mbeanName)) {
+                mbeanServer.registerMBean(this, mbeanName);
+            }
+        } catch (InstanceAlreadyExistsException e) {
+            log.info("MBean '{}' exist", id);
+        } catch (Throwable t) {
+            log.error("Could not register JMX MBean '" + id + "'", t);
         }
     }
 }

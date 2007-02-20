@@ -18,8 +18,10 @@ import org.apache.commons.lang.StringUtils;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
+ * $Id$
  */
 public class CacheFilter implements Filter {
+
 
     public static String ALREADY_FILTERED = CacheFilter.class.getName();
 
@@ -68,7 +70,6 @@ public class CacheFilter implements Filter {
                 boolean usedCache = cacheManager.streamFromCache(key, response, canCompress
                     && clientAcceptsGzip(request));
                 if (!usedCache && !isAlreadyFiltered(request) && cacheManager.isCacheable(request)) {
-
                     // mark the request as already filtered, avoid recursion
                     request.setAttribute(ALREADY_FILTERED, Boolean.TRUE);
 
