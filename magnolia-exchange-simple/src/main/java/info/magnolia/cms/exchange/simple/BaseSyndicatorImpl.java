@@ -508,7 +508,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          addOrderingInfo(root, orderBefore);
 
          this.addResources(root, node.getWorkspace().getSession(), node, this.contentFilter, activationContent);
-         File resourceFile = File.createTempFile("resources", "", Path.getTempDirectory());
+         File resourceFile = File.createTempFile("resources", ".xml", Path.getTempDirectory());
          XMLOutputter outputter = new XMLOutputter();
          outputter.output(document, new FileOutputStream(resourceFile));
          // add resource file to the list
@@ -548,7 +548,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      protected void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter,
                                ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
 
-         File file = File.createTempFile("exchange" + content.getName(), "", Path.getTempDirectory());
+         File file = File.createTempFile("exchange_" + content.getName(), ".xml.gz", Path.getTempDirectory());
          GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
          if (content.getWorkspace().getName().equalsIgnoreCase(ContentRepository.VERSION_STORE)) {
@@ -601,7 +601,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
                                  XMLReader elementfilter,
                                  OutputStream os,
                                  boolean noRecurse) throws Exception {
-         File tempFile = File.createTempFile("Frozen_"+content.getName(), "xml"); //$NON-NLS-1$ //$NON-NLS-2$
+         File tempFile = File.createTempFile("Frozen_"+content.getName(), ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
          OutputStream tmpFileOutStream = null;
          FileInputStream tmpFileInStream = null;
          try {
