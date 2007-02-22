@@ -973,6 +973,10 @@ public class Content extends ContentHandler implements Cloneable {
      * @throws RepositoryException if an error occurs
      */
     public String getNodeTypeName() throws RepositoryException {
+
+        if (this.node.hasProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)) {
+            return this.node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE).getString();
+        }
         return this.node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
     }
 
