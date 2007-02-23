@@ -30,8 +30,7 @@ import org.slf4j.LoggerFactory;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @author Sameer Charles
- * @since 3.0
- * $Id:CacheImpl.java 6314 2006-09-11 08:24:51Z scharles $
+ * @since 3.0 $Id:CacheImpl.java 6314 2006-09-11 08:24:51Z scharles $
  */
 public class CacheImpl implements Cache {
 
@@ -43,9 +42,9 @@ public class CacheImpl implements Cache {
     private Map cachedURIList = new Hashtable();
 
     /**
-     * This is used to syncronize between cache flushing and creating
-     * We cannot use syncronized blocks here because it will block other threads even to cache simultaniusly
-     * */
+     * This is used to syncronize between cache flushing and creating We cannot use syncronized blocks here because it
+     * will block other threads even to cache simultaniusly
+     */
     private static boolean currentlyRemoving;
 
     private CacheConfig config;
@@ -85,9 +84,11 @@ public class CacheImpl implements Cache {
                 out = new FileOutputStream(file);
                 out.write(entry.getOut());
                 out.flush();
-            } catch (Exception e) {
-                log.error("Failed to cache "+key.toString(), e);
-            } finally {
+            }
+            catch (Exception e) {
+                log.error("Failed to cache " + key.toString() + " to " + file.getAbsolutePath(), e);
+            }
+            finally {
                 IOUtils.closeQuietly(out);
             }
         }
@@ -103,9 +104,11 @@ public class CacheImpl implements Cache {
                     gzipOut = new GZIPOutputStream(out);
                     gzipOut.write(entry.getOut());
                     gzipOut.flush();
-                } catch (Exception e) {
-                    log.error("Failed to create compressed entry for "+key.toString(), e);
-                } finally {
+                }
+                catch (Exception e) {
+                    log.error("Failed to create compressed entry for " + key.toString(), e);
+                }
+                finally {
                     IOUtils.closeQuietly(gzipOut);
                 }
             }
@@ -132,7 +135,8 @@ public class CacheImpl implements Cache {
         }
         catch (Throwable t) {
             log.error(t.getMessage(), t);
-        } finally {
+        }
+        finally {
             currentlyRemoving = false;
         }
     }
@@ -156,7 +160,8 @@ public class CacheImpl implements Cache {
             if (!result) {
                 log.error("Failed to create cache directory location {}", cacheDir.getAbsolutePath());
             }
-        } else {
+        }
+        else {
             updateInMemoryCache(cacheDir);
         }
     }
@@ -164,28 +169,30 @@ public class CacheImpl implements Cache {
     /**
      * synchronize file system with in-memory cache list
      * @param cacheDir
-     * */
+     */
     private void updateInMemoryCache(File cacheDir) {
         File[] items = cacheDir.listFiles();
-        for (int index=0; index < items.length; index++) {
+        for (int index = 0; index < items.length; index++) {
             File item = items[index];
             if (item.isDirectory()) {
                 updateInMemoryCache(item);
-            } else {
+            }
+            else {
                 if (item.getName().lastIndexOf("gzip") < 0) {
                     // use this as key
                     String cacheHome = getCacheDirectory().getPath();
                     CacheKey key = new CacheKey(StringUtils.substringAfter(item.getPath(), cacheHome));
                     int size = (int) item.length();
-                    File compressedFile = new File(item.getPath()+".gzip");
+                    File compressedFile = new File(item.getPath() + ".gzip");
                     int compressedSize = -1;
-                    if (compressedFile.exists()) compressedSize = (int) compressedFile.length();
+                    if (compressedFile.exists()) {
+                        compressedSize = (int) compressedFile.length();
+                    }
                     addToCachedURIList(key, item.lastModified(), size, compressedSize);
                 }
             }
         }
     }
-
 
     public boolean isCached(CacheKey key) {
         return this.cachedURIList.get(key) != null;
@@ -267,8 +274,8 @@ public class CacheImpl implements Cache {
     }
 
     /**
-     * Empties the cache for the specified resource. Currenty it expects the entire path, including cache location.
-     * This is never used for simple cache since there are no way to find out how to flush related items
+     * Empties the cache for the specified resource. Currenty it expects the entire path, including cache location. This
+     * is never used for simple cache since there are no way to find out how to flush related items
      */
     public void remove(CacheKey key) {
         File file = this.getFile(key, false);
