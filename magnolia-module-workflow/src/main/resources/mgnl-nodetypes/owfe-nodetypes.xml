@@ -60,38 +60,31 @@
   <!ELEMENT requiredPrimaryType (CDATA)>
   ]>
 -->
-<nodeTypes xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0"
-  xmlns:mgnl="http://www.magnolia.info/jcr/mgnl" xmlns:jcr="http://www.jcp.org/jcr/1.0">
+<nodeTypes xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl" xmlns:jcr="http://www.jcp.org/jcr/1.0">
   <!--
     Workflow node types
   -->
-  <nodeType hasOrderableChildNodes="true" isMixin="false" name="workItem" primaryItemName="">
+  <nodeType name="workItem" hasOrderableChildNodes="true" isMixin="false" primaryItemName="">
     <supertypes>
       <supertype>nt:hierarchyNode</supertype>
     </supertypes>
-    <propertyDefinition autoCreated="false" mandatory="false" multiple="false" name="*" onParentVersion="COPY"
-      protected="false" requiredType="undefined" />
-    <childNodeDefinition autoCreated="false" defaultPrimaryType="" mandatory="false" name="*" onParentVersion="VERSION"
-      protected="false" sameNameSiblings="true">
+    <propertyDefinition name="*" autoCreated="false" requiredType="undefined" mandatory="false" multiple="false" onParentVersion="COPY"
+                        protected="false"/>
+    <childNodeDefinition name="*" autoCreated="false" defaultPrimaryType="" mandatory="false" onParentVersion="VERSION"
+                         protected="false" sameNameSiblings="true">
       <requiredPrimaryTypes>
         <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
       </requiredPrimaryTypes>
     </childNodeDefinition>
   </nodeType>
-  <nodeType hasOrderableChildNodes="true" isMixin="false" name="expression" primaryItemName="">
+  <nodeType name="expression" hasOrderableChildNodes="true" isMixin="false" primaryItemName="">
     <supertypes>
       <supertype>nt:hierarchyNode</supertype>
     </supertypes>
-    <propertyDefinition autoCreated="false" mandatory="false" multiple="false" name="*" onParentVersion="COPY"
-      protected="false" requiredType="undefined" />
-    <childNodeDefinition name="MetaData" defaultPrimaryType="mgnl:metaData" autoCreated="true" mandatory="true"
-      onParentVersion="COPY" protected="false" sameNameSiblings="false">
-      <requiredPrimaryTypes>
-        <requiredPrimaryType>mgnl:metaData</requiredPrimaryType>
-      </requiredPrimaryTypes>
-    </childNodeDefinition>
-    <childNodeDefinition autoCreated="false" defaultPrimaryType="" mandatory="false" name="*" onParentVersion="VERSION"
-      protected="false" sameNameSiblings="true">
+    <propertyDefinition name="*" autoCreated="false" requiredType="undefined" mandatory="false" multiple="false" onParentVersion="COPY"
+                        protected="false"/>
+    <childNodeDefinition name="*" autoCreated="false" defaultPrimaryType="" mandatory="false" onParentVersion="VERSION"
+                         protected="false" sameNameSiblings="true">
       <requiredPrimaryTypes>
         <requiredPrimaryType>nt:hierarchyNode</requiredPrimaryType>
       </requiredPrimaryTypes>

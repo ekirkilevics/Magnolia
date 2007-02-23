@@ -13,7 +13,6 @@
 package info.magnolia.module.workflow.jcr;
 
 import info.magnolia.beancoder.MgnlNode;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -24,10 +23,12 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
+import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.beancoder.OwfeJcrBeanCoder;
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.StringAttribute;
+import openwfe.org.util.beancoder.BeanCoderException;
 import openwfe.org.worklist.store.StoreException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -49,45 +50,67 @@ import java.util.List;
  * @author John Mettraux
  */
 public class JCRWorkItemAPI {
+    private final static Logger log = LoggerFactory.getLogger(JCRWorkItemAPI.class.getName());
 
-    public final static Logger log = LoggerFactory.getLogger(JCRWorkItemAPI.class.getName());
+    private static final String BACKUP_REL = "backup";
+    private static final String BACKUP = "/" + BACKUP_REL;
 
-    private HierarchyManager hm;
+    private final HierarchyManager hm;
+    private final boolean shouldBackupWorkItems;
 
     public JCRWorkItemAPI() throws Exception {
-        this.hm = ContentRepository.getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
+        this.hm = MgnlContext.getSystemContext().getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
         if (this.hm == null) {
             Exception e = new Exception("Can't get HierarchyManager Object for workitems repository");
             log.error(e.getMessage(), e);
             throw e;
         }
+
+        shouldBackupWorkItems = WorkflowModule.shouldBackupWorkItems();
+        if (shouldBackupWorkItems) {
+            // ensure the backup directory is there.
+            if (!hm.isExist(BACKUP)) {
+                hm.createContent("/", BACKUP_REL, ItemType.CONTENT.getSystemName());
+                hm.save();
+                log.info("Created " + BACKUP + " in workflow store.");
+            }
+        }
     }
 
     /**
-     * remove one workItem by its ID
+     * Deletes or moves a workItem to the backup folder.
      */
     public void removeWorkItem(FlowExpressionId fei) throws StoreException {
         synchronized (this.hm) {
             try {
                 Content ct = getWorkItemById(fei);
                 if (ct != null) {
-                    ct.delete();
-                    this.hm.save();
-                    if (log.isDebugEnabled()) {
-                        log.debug("work item removed");
+                    // TODO : this behaviour could be hidden/wrapped in a special HierarchyManager
+                    if (!shouldBackupWorkItems) {
+                        ct.delete();
+                    } else {
+                        final ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
+                        ct.setNodeData("isBackup", vf.createValue(true));
+                        final Content parent = ct.getParent();
+                        final String pathInBackup = BACKUP + parent.getHandle();
+                        ContentUtil.createPath(hm, pathInBackup, ItemType.WORKITEM);
+                        hm.save();
+                        hm.moveTo(ct.getHandle(), BACKUP + ct.getHandle());
+                        // TODO : MAGNOLIA-1225 : we should only save here, once move uses session instead of workspace
                     }
+                    hm.save();
+                    log.debug("work item removed or moved to /backup");
                 }
 
-            }
-            catch (Exception e) {
-                log.error("exception:" + e);
+            } catch (Exception e) {
+                log.error("exception when unstoring workitem:" + e, e);
             }
         }
     }
 
     /**
      * retrieve work item by
-     * @param storeName
+     * @param storeName TODO : this parameter is not used ...
      * @param fei
      * @return
      * @throws StoreException
@@ -119,8 +142,8 @@ public class JCRWorkItemAPI {
      * @throws Exception
      */
     public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
-        OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null,new MgnlNode(ct.getContent(WorkflowConstants.NODEDATA_VALUE)));
-        return (InFlowWorkItem)coder.decode();
+        OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null, new MgnlNode(ct.getContent(WorkflowConstants.NODEDATA_VALUE)));
+        return (InFlowWorkItem) coder.decode();
     }
 
     /**
@@ -218,13 +241,11 @@ public class JCRWorkItemAPI {
     }
 
     /**
-     * store work Item
-     * @param arg0
-     * @param wi the work item intends to be stored
-     * @throws StoreException
+     * @param arg0 TODO : this parameter is not used ...
+     * @param wi   the work item to be stored
      */
     public void storeWorkItem(String arg0, InFlowWorkItem wi) throws StoreException {
-        synchronized(this.hm) {
+        synchronized (this.hm) {
             try {
 
                 // delete it if already exist
@@ -256,8 +277,7 @@ public class JCRWorkItemAPI {
                 }
 
                 // convert to xml string
-                OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null,new MgnlNode(newc),WorkflowConstants.NODEDATA_VALUE);
-                coder.encode(wi);
+                encodeWorkItemToNode(wi, newc);
                 hm.save();
 
                 if (log.isDebugEnabled()) {
@@ -271,10 +291,19 @@ public class JCRWorkItemAPI {
         }
     }
 
+    protected void encodeWorkItemToNode(InFlowWorkItem wi, Content newc) throws BeanCoderException {
+        OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null, new MgnlNode(newc), WorkflowConstants.NODEDATA_VALUE);
+        coder.encode(wi);
+    }
+
     /**
      * execute the xPath Query
      */
     public List doQuery(String queryString) {
+        return doQuery(queryString, Query.XPATH);
+    }
+
+    public List doQuery(String queryString, String language) {
         ArrayList list = new ArrayList();
         if (log.isDebugEnabled()) {
             log.debug("xpath query string: " + queryString);
@@ -282,7 +311,7 @@ public class JCRWorkItemAPI {
         try {
             final QueryManager queryManager = MgnlContext.getSystemContext().getQueryManager(
                     WorkflowConstants.WORKSPACE_STORE);
-            final Query q = queryManager.createQuery(queryString, Query.XPATH);
+            final Query q = queryManager.createQuery(queryString, language);
 
             QueryResult result = q.execute();
             if (result == null) {

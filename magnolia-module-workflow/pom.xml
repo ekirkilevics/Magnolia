@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
@@ -9,10 +9,11 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-workflow</artifactId>
   <name>magnolia-module-workflow</name>
-  <version>3.1-SNAPSHOT</version>
+
   <properties>
     <openwfe.version>1.7.2</openwfe.version>
   </properties>
+
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -39,6 +40,7 @@
       <artifactId>openwfe-worklist</artifactId>
       <version>${openwfe.version}</version>
     </dependency>
+
     <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>servlet-api</artifactId>

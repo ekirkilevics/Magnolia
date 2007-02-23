@@ -14,24 +14,24 @@ package info.magnolia.module.workflow;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
-
-import javax.jcr.RepositoryException;
-
 import openwfe.org.ServiceException;
 import openwfe.org.engine.impl.expool.SimpleExpressionPool;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
 
 
 /**
  * Module "workflow" entry class.
+ *
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @author Nicolas Modrzyk
@@ -40,11 +40,14 @@ import org.slf4j.LoggerFactory;
 public class WorkflowModule extends AbstractAdminModule {
 
     /**
-     * 
+     *
      */
     public static final String COMMANDS_CATALOG_PATH = "/modules/workflow/config/commands";
 
     public static final String CACHE_URL_DEFINITION = "/modules/workflow/config/cache";
+
+    private static final String DEFERRED_EXPRESSION_STORAGE = "deferredExpressionStorage";
+    private static final String BACKUP_WORKITEMS = "backupWorkitems";
 
     /**
      * Logger.
@@ -55,6 +58,7 @@ public class WorkflowModule extends AbstractAdminModule {
      * The current used engine
      */
     private static JCRPersistedEngine wfEngine;
+    private static boolean shouldBackupWorkItems;
     private static String cacheURL;
 
     /**
@@ -76,11 +80,14 @@ public class WorkflowModule extends AbstractAdminModule {
      */
     protected void onInit() {
         registerCacheUrl();
-        startEngine();
+        shouldBackupWorkItems = getBooleanConfigProperty(BACKUP_WORKITEMS);
+        final boolean deferredExprStorage = getBooleanConfigProperty(DEFERRED_EXPRESSION_STORAGE);
+        startEngine(deferredExprStorage);
     }
 
-    public static String getCacheURL() {
-        return cacheURL;
+    private boolean getBooleanConfigProperty(final String propertyName) {
+        final NodeData deferredExprStorageProperty = getConfigNode().getNodeData(propertyName);
+        return deferredExprStorageProperty.isExist() && deferredExprStorageProperty.getBoolean();
     }
 
     private void registerCacheUrl() {
@@ -99,12 +106,12 @@ public class WorkflowModule extends AbstractAdminModule {
     }
 
     /**
-     * 
+     *
      */
-    private void startEngine() {
+    private void startEngine(final boolean deferredExprStorage) {
         try {
             log.info("Starting openwfe engine");
-            wfEngine = new JCRPersistedEngine();
+            wfEngine = new JCRPersistedEngine(deferredExprStorage);
             wfEngine.registerParticipant(new MgnlParticipant("user-.*"));
             wfEngine.registerParticipant(new MgnlParticipant("group-.*"));
             wfEngine.registerParticipant(new MgnlParticipant("role-.*"));
@@ -121,6 +128,7 @@ public class WorkflowModule extends AbstractAdminModule {
             log.info("Stopping workflow engine..");
             try {
                 // before try to stop purge and scheduling tasks
+                // TODO : this is already done by engine.stop() ... ?
                 ((SimpleExpressionPool) engine.getExpressionPool()).stop();
                 engine.stop();
             }
@@ -137,8 +145,17 @@ public class WorkflowModule extends AbstractAdminModule {
     static public JCRPersistedEngine getEngine() {
         return wfEngine;
     }
-    
-    public static FlowDefinitionManager getFlowDefinitionManager(){
+
+    // an easy and ugly way to access this config param
+    public static boolean shouldBackupWorkItems() {
+        return shouldBackupWorkItems;
+    }
+
+    public static String getCacheURL() {
+        return cacheURL;
+    }
+
+    public static FlowDefinitionManager getFlowDefinitionManager() {
         return (FlowDefinitionManager) FactoryUtil.getSingleton(FlowDefinitionManager.class);
     }
 
