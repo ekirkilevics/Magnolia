@@ -80,7 +80,7 @@ public class CacheFilter implements Filter {
                     // if response has status 200 go cache it
                     if (responseWrapper.getStatus() == HttpServletResponse.SC_OK) {
                         CacheableEntry cacheableEntry = responseWrapper.getCacheableEntry();
-                        if (cacheableEntry != null) {
+                        if (cacheableEntry != null && cacheableEntry.getOut().length > 0) {
                             this.cacheManager.cacheRequest(key, cacheableEntry, canCompress);
                         }
                     }
