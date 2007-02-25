@@ -109,7 +109,8 @@ public abstract class AbstractContext implements Context {
      */
     public Locale getLocale() {
         if (locale == null) {
-            User user = this.getUser();
+            // MAGNOLIA-1402 if available, user is already set. If not, this is an external user so don't call user manager
+            // User user = this.getUser();
             if (user != null) {
                 locale = new Locale(user.getLanguage());
             }
