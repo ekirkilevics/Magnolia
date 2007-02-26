@@ -61,7 +61,7 @@ public class Tree extends ControlImpl {
     public static final String DEFAULT_ICON_CONTENT = ICONDOCROOT + "document_plain_earth.gif";
 
     public static final String DEFAULT_ICON_CONTENTNODE = DEFAULT_ICON;
-    
+
     public static final String DEFAULT_ICON_NODEDATA = ICONDOCROOT + "cube_green.gif";
 
     public static final String ITEM_TYPE_NODEDATA = "mgnl:nodeData";
@@ -100,7 +100,7 @@ public class Tree extends ControlImpl {
     private List itemTypes = new ArrayList();
 
     private int height = 400;
-    
+
     private Map icons = new HashMap();
 
     private String iconOndblclick;
@@ -118,7 +118,7 @@ public class Tree extends ControlImpl {
     private List columns = new ArrayList();
 
     private ContextMenu menu;
-    
+
     private Comparator sortComparator;
 
     /**
@@ -151,7 +151,7 @@ public class Tree extends ControlImpl {
         this.setFunctionBar(new FunctionBar(this.getJavascriptTree()));
 
         this.setHierarchyManager(MgnlContext.getHierarchyManager(this.getRepository()));
-        
+
         // set default icons
         this.setIcon(ItemType.CONTENT.getSystemName(), DEFAULT_ICON_CONTENT);
         this.setIcon(ItemType.CONTENTNODE.getSystemName(), DEFAULT_ICON_CONTENTNODE);
@@ -457,15 +457,21 @@ public class Tree extends ControlImpl {
                 newNode.getMetaData().setCreationDate();
                 newNode.getMetaData().setModificationDate();
                 // todo: default template
-                // now tmp: first template of list is taken...
                 if (this.getRepository().equals(ContentRepository.WEBSITE)
                     && itemType.equals(ItemType.CONTENT.getSystemName())) {
-                    Iterator templates = TemplateManager.getInstance().getAvailableTemplates(
-                        MgnlContext.getAccessManager(ContentRepository.CONFIG));
-                    if (templates.hasNext()) {
-                        Template template = (Template) templates.next();
-                        newNode.getMetaData().setTemplate(template.getName());
+
+                	// default to the template used by the parent node
+                	String newTemplate = parentNode.getTemplate();
+                	if (StringUtils.isEmpty(newTemplate)) {
+	                    // if that fails then first template of list is taken...
+	                    Iterator templates = TemplateManager.getInstance().getAvailableTemplates(
+                                    MgnlContext.getAccessManager(ContentRepository.CONFIG));
+	                    if (templates.hasNext()) {
+	                        Template template = (Template) templates.next();
+	                        newTemplate = template.getName();
+	                    }
                     }
+                    newNode.getMetaData().setTemplate(newTemplate);
                 }
             }
             parentNode.save();
@@ -836,7 +842,7 @@ public class Tree extends ControlImpl {
                 html.append("_Column0Outer\" class=\"mgnlTreeColumn ");
                 html.append(this.javascriptTree);
                 html.append("CssClassColumn0\" style=\"padding-left:");
-                
+
                 html.append(getPaddingLeft(parentNode));
                 html.append("px;\">");
                 if (this.getDrawShifter()) {
@@ -1115,12 +1121,12 @@ public class Tree extends ControlImpl {
         this.hm = hm;
     }
 
-    
+
     public Comparator getSortComparator() {
         return sortComparator;
     }
 
-    
+
     public void setSortComparator(Comparator sortComperator) {
         this.sortComparator = sortComperator;
     }
