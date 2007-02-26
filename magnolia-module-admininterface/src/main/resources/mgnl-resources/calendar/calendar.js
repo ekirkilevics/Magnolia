@@ -1752,8 +1752,9 @@ Date.prototype.print = function (str) {
 	s["%H"] = (hr < 10) ? ("0" + hr) : hr; // hour, range 00 to 23 (24h format)
 	s["%I"] = (ir < 10) ? ("0" + ir) : ir; // hour, range 01 to 12 (12h format)
 	s["%j"] = (dy < 100) ? ((dy < 10) ? ("00" + dy) : ("0" + dy)) : dy; // day of the year (range 001 to 366)
-	s["%k"] = hr;		// hour, range 0 to 23 (24h format)
-	s["%l"] = ir;		// hour, range 1 to 12 (12h format)
+    // FIX MAGNOLIA-1290
+    s["%k"] = (!hr) ? "00" : hr;// hour, range 0 to 23 (24h format)
+    s["%l"] = (!ir) ? '0' : i;// hour, range 1 to 12 (12h format)
 	s["%m"] = (m < 9) ? ("0" + (1+m)) : (1+m); // month, range 01 to 12
 	s["%M"] = (min < 10) ? ("0" + min) : min; // minute, range 00 to 59
 	s["%n"] = "\n";		// a newline character
