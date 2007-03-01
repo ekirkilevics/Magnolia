@@ -86,6 +86,7 @@ public class DialogBox extends DialogControlImpl {
                     + CssConstants.CSSCLASS_BOXLABEL
                     + "\">" //$NON-NLS-1$
                     + this.getMessage(this.getLabel())
+                    + (this.isRequired() ? "(*)" : "")
                     + "</div>"); //$NON-NLS-1$
             }
             if (StringUtils.isNotEmpty(this.getConfigValue("labelDescription"))) { //$NON-NLS-1$
