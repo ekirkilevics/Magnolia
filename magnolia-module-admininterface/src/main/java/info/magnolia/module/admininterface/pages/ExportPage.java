@@ -271,7 +271,7 @@ public class ExportPage extends TemplatedMVCHandler {
     
     public void renderHtml(String view) throws IOException {
         // if we are exporing the file, everything is already done --> do not render
-        if(view == VIEW_EXPORT){
+        if(VIEW_EXPORT.equals(view)){
             return;
         }
         super.renderHtml(view);
