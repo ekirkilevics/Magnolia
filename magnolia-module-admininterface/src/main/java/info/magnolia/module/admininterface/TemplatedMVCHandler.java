@@ -12,7 +12,6 @@
  */
 package info.magnolia.module.admininterface;
 
-import freemarker.template.utility.StringUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
 
 import java.io.IOException;
