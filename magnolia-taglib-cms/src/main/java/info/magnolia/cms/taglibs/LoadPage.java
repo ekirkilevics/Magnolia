@@ -93,6 +93,9 @@ public class LoadPage extends BodyTagSupport {
     public int doEndTag() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         Content newActpage = Resource.getCurrentActivePage(req);
+
+        String actPageHandle = newActpage.getHandle();
+
         if (StringUtils.isNotEmpty(this.templateName)) {
             Content startPage;
             try {
@@ -101,7 +104,15 @@ public class LoadPage extends BodyTagSupport {
                 newActpage = hm.getPage(startPage.getHandle(), this.templateName);
             }
             catch (RepositoryException e) {
-                log.error(e.getMessage());
+                log.error(e.getClass().getName()
+                    + " caught while loading page with template "
+                    + this.templateName
+                    + " (start level="
+                    + this.level
+                    + ") from "
+                    + actPageHandle
+                    + ": "
+                    + e.getMessage());
                 return EVAL_PAGE;
             }
         }
@@ -109,8 +120,14 @@ public class LoadPage extends BodyTagSupport {
             try {
                 newActpage = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent(this.path);
             }
-            catch (Exception e) {
-                log.error(e.getMessage());
+            catch (RepositoryException e) {
+                log.error(e.getClass().getName()
+                    + " caught while loading path "
+                    + this.path
+                    + " from "
+                    + actPageHandle
+                    + ": "
+                    + e.getMessage());
                 return EVAL_PAGE;
             }
         }
@@ -118,8 +135,14 @@ public class LoadPage extends BodyTagSupport {
             try {
                 newActpage = Resource.getCurrentActivePage(req).getAncestor(this.level);
             }
-            catch (Exception e) {
-                log.error(e.getMessage());
+            catch (RepositoryException e) {
+                log.error(e.getClass().getName()
+                    + " caught while loading page with level "
+                    + this.level
+                    + " from "
+                    + actPageHandle
+                    + ": "
+                    + e.getMessage());
                 return EVAL_PAGE;
             }
         }
