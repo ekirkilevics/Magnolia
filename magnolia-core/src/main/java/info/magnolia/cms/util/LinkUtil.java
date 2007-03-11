@@ -48,7 +48,8 @@ public final class LinkUtil {
     /**
      * Pattern to find a link
      */
-    private static final Pattern linkPattern = Pattern.compile("(<a[^>]+href[ ]*=[ ]*\")(/[^\"]*).html((#[^\"]*)?\"[^>]*>)"); //$NON-NLS-1$
+    private static final Pattern linkPattern = Pattern
+        .compile("(<a[^>]+href[ ]*=[ ]*\")(/[^\"]*).html((#[^\"]*)?\"[^>]*>)"); //$NON-NLS-1$
 
     /**
      * Pattern that matches external and mailto: links.
@@ -151,9 +152,7 @@ public final class LinkUtil {
             // can't find the uuid
             if (StringUtils.isEmpty(absolutePath)) {
                 absolutePath = matcher.group(2);
-                log.warn(
-                    "Was not able to get the page by jcr:uuid nor by mgnl:uuid. Will use the saved path {}",
-                    absolutePath);
+                log.warn("Was not able to get the page by uuid. Will use the saved path {}", absolutePath);
             }
 
             // to relative path
@@ -181,7 +180,7 @@ public final class LinkUtil {
         // then the old mgnl:uuid
         // TODO remove this in later versions
         catch (Exception e) {
-            log.info("Was not able to get the page by the jcr:uuid. will try the old mgnl:uuid");
+            log.debug("Was not able to get the page by the jcr:uuid. will try the old mgnl:uuid");
 
             QueryManager qmanager = hm.getQueryManager();
 
