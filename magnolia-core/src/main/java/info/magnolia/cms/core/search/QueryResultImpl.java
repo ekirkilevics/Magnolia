@@ -74,9 +74,11 @@ public class QueryResultImpl implements QueryResult {
                 build(node, nodeType, collection);
             }
             catch (RepositoryException re) {
-                log.error(re.getMessage());
+                log.error("{} caught while iterating on query results: {}", re.getClass().getName(), re.getMessage());
                 if (log.isDebugEnabled()) {
-                    log.debug(re.getMessage(), re);
+                    log.debug(
+                        re.getClass().getName() + " caught while iterating on query results: " + re.getMessage(),
+                        re);
                 }
             }
         }
