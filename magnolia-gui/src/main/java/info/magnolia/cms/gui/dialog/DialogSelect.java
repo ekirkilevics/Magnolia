@@ -82,10 +82,10 @@ public class DialogSelect extends DialogBox {
         }
         this.setOptions(options);
     }
-    
+
     protected Collection getOptionNodes(Content configNode) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Content optionsNode = null;
-        
+
         if(configNode.hasContent("options")){
             optionsNode = configNode.getContent("options"); //$NON-NLS-1$
         }
@@ -96,7 +96,7 @@ public class DialogSelect extends DialogBox {
                 optionsNode = ContentUtil.getContent(repository, path);
             }
         }
-        
+
         if(optionsNode != null){
             return ContentUtil.getAllChildren(optionsNode);
         }
@@ -125,12 +125,13 @@ public class DialogSelect extends DialogBox {
         }
         control.setCssClass(CssConstants.CSSCLASS_SELECT);
         control.setCssStyles("width", this.getConfigValue("width", "100%")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        
+
         // translate (not possible in init since not a sub of the tab then)
         for (Iterator iter = this.getOptions().iterator(); iter.hasNext();) {
             SelectOption option = (SelectOption) iter.next();
-            control.setOptions(this.getMessage(option.getLabel()), option.getValue());
+            option.setLabel(this.getMessage(option.getLabel()));
         }
+        control.setOptions(this.getOptions());
 
         this.drawHtmlPre(out);
         out.write(control.getHtml());
