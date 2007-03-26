@@ -156,7 +156,7 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jspc-maven-plugin</artifactId>
-          <version>1.4.7-SNAPSHOT</version>
+          <version>1.4.7-magnolia-20070206</version>
           <executions>
             <execution>
               <id>jspc</id>
