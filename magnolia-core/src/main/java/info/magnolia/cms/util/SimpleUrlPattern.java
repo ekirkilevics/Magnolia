@@ -51,19 +51,13 @@ public final class SimpleUrlPattern implements UrlPattern {
     private int length;
 
     /**
-     * internal pattern string.
-     */
-    private String patternString;
-
-    /**
      * Compile a regexp pattern handling <code>*</code> and <code>?</code> chars.
      * @param string input string
      * @return a RegExp pattern
      */
     public SimpleUrlPattern(String string) {
         this.length = string.length();
-        this.pattern = Pattern.compile(getEncodedString(string));
-        this.patternString = string;
+        this.pattern = Pattern.compile(getEncodedPattern(string));
     }
 
     /**
@@ -72,7 +66,7 @@ public final class SimpleUrlPattern implements UrlPattern {
      * @return string where all the occurrences of <code>*</code> and <code>?</code> are replaced with a regexp
      * pattern.
      */
-    private static String getEncodedString(String str) {
+    protected String getEncodedPattern(String str) {
         StringBuffer stringBuffer = new StringBuffer();
         char[] chars = str.toCharArray();
         int i = 0, last = 0;
@@ -109,6 +103,6 @@ public final class SimpleUrlPattern implements UrlPattern {
     }
 
     public String toString() {
-        return "SimpleUrlPattern{" + patternString + '}';
+        return "SimpleUrlPattern{" + pattern.pattern() + '}';
     }
 }
