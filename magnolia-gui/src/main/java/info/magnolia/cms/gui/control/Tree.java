@@ -1048,7 +1048,7 @@ public class Tree extends ControlImpl {
      * @param itemType
      * @return true if the node is shown
      */
-    private boolean showNode(Content node, NodeData nodedata, String itemType) {
+    protected boolean showNode(Content node, NodeData nodedata, String itemType) {
         return true;
     }
 
