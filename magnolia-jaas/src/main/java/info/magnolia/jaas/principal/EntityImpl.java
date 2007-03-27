@@ -13,13 +13,12 @@
 package info.magnolia.jaas.principal;
 
 import info.magnolia.cms.security.auth.Entity;
-
-import java.util.Hashtable;
-import java.util.Map;
-
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
+
+import java.util.Hashtable;
+import java.util.Map;
 
 
 /**
@@ -47,13 +46,19 @@ public class EntityImpl implements Entity {
 
     /**
      * Get name given to this principal
+     *
      * @return name
      */
     public String getName() {
-        if (StringUtils.isEmpty(this.name)) {
+        String result = this.name;
+        if (StringUtils.isEmpty(result)) {
+            result = (String) getProperty(NAME);
+        }
+        if (StringUtils.isEmpty(result)) {
             return DEFAULT_NAME;
         }
-        return this.name;
+
+        return result;
     }
 
     public void setName(String name) {

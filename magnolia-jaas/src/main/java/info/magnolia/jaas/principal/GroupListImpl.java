@@ -36,12 +36,9 @@ public class GroupListImpl implements GroupList {
     /**
      * default name for this principal
      */
-    protected static final String DEFAULT_NAME = "groups";
+    private static final String DEFAULT_NAME = "groups";
 
-    /**
-     * properties
-     */
-    protected String name;
+    private String name;
 
     /**
      * list of names
@@ -58,9 +55,13 @@ public class GroupListImpl implements GroupList {
      */
     public String getName() {
         if (StringUtils.isEmpty(this.name)) {
-            return DEFAULT_NAME;
+            return getDefaultName();
         }
         return this.name;
+    }
+
+    protected String getDefaultName() {
+        return DEFAULT_NAME;
     }
 
     /**
@@ -106,8 +107,6 @@ public class GroupListImpl implements GroupList {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", this.name).append(
-            "list",
-            this.list).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", getName()).append("list", this.list).toString();
     }
 }
