@@ -431,28 +431,12 @@ public class Tree extends ControlImpl {
      * @param itemType new node type
      */
     public String createNode(String label, String itemType) {
-        String name = label;
         try {
             Content parentNode = getHierarchyManager().getContent(this.getPath());
-            String slash = "/"; //$NON-NLS-1$
-            boolean isRoot = false;
-            if (this.getPath().equals("/")) { //$NON-NLS-1$
-                isRoot = true;
-                slash = StringUtils.EMPTY;
-            }
-            if (getHierarchyManager().isExist(this.getPath() + slash + label)) {
-                // todo: bugfix getUniqueLabel???
-                if (!isRoot) {
-                    name = Path.getUniqueLabel(getHierarchyManager(), this.getPath(), label);
-                }
-                else {
-                    name = Path.getUniqueLabel(getHierarchyManager(), StringUtils.EMPTY, label);
-                }
-            }
+            String name = getUniqueLabel(label);
             if (itemType.equals(ITEM_TYPE_NODEDATA)) {
                 parentNode.createNodeData(name);
-            }
-            else {
+            } else {
                 Content newNode;
                 newNode = parentNode.createContent(name, itemType);
                 newNode.getMetaData().setAuthorId(Authenticator.getUserId(this.getRequest()));
@@ -480,27 +464,26 @@ public class Tree extends ControlImpl {
                 }
             }
             parentNode.save();
-        }
-        catch (Exception e) {
+            return name;
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
-            name = ""; // reset the name, so that you can check if the node was created
+            return StringUtils.EMPTY; // reset the name, so that you can check if the node was created
         }
 
-        return name;
     }
 
     public String saveNodeData(String nodeDataName, String value, boolean isMeta) {
         String returnValue = StringUtils.EMPTY;
         try {
-            Content page = getHierarchyManager().getContent(this.getPath());
+            Content content = getHierarchyManager().getContent(this.getPath());
             if (!isMeta) {
                 NodeData node;
                 int type = PropertyType.STRING;
-                if (!page.getNodeData(nodeDataName).isExist()) {
-                    node = page.createNodeData(nodeDataName);
+                if (!content.getNodeData(nodeDataName).isExist()) {
+                    node = content.createNodeData(nodeDataName);
                 }
                 else {
-                    node = page.getNodeData(nodeDataName);
+                    node = content.getNodeData(nodeDataName);
                     type = node.getType();
                 }
                 // todo: share with Contorol.Save
@@ -536,15 +519,15 @@ public class Tree extends ControlImpl {
                         // todo
                         break;
                 }
-                page.updateMetaData();
-                page.save();
+                content.updateMetaData();
+                content.save();
                 returnValue = new NodeDataUtil(node).getValueString();
             }
             else {
-                page.getMetaData().setProperty(nodeDataName, value);
-                page.updateMetaData();
-                page.save();
-                returnValue = new MetaDataUtil(page).getPropertyValueString(nodeDataName);
+                content.getMetaData().setProperty(nodeDataName, value);
+                content.updateMetaData();
+                content.save();
+                returnValue = new MetaDataUtil(content).getPropertyValueString(nodeDataName);
             }
         }
         catch (Exception e) {
@@ -557,13 +540,13 @@ public class Tree extends ControlImpl {
 
     public String saveNodeDataType(String nodeDataName, int type) {
         try {
-            Content page = getHierarchyManager().getContent(this.getPath());
+            Content content = getHierarchyManager().getContent(this.getPath());
             Value value = null;
-            if (page.getNodeData(nodeDataName).isExist()) {
-                value = page.getNodeData(nodeDataName).getValue();
-                page.deleteNodeData(nodeDataName);
+            if (content.getNodeData(nodeDataName).isExist()) {
+                value = content.getNodeData(nodeDataName).getValue();
+                content.deleteNodeData(nodeDataName);
             }
-            NodeData node = page.createNodeData(nodeDataName);
+            NodeData node = content.createNodeData(nodeDataName);
             if (value != null) {
                 switch (type) {
                     case PropertyType.STRING:
@@ -598,9 +581,9 @@ public class Tree extends ControlImpl {
                         break;
                 }
             }
-            page.updateMetaData();
-            page.save();
-            return PropertyType.nameFromValue(page.getNodeData(nodeDataName).getType());
+            content.updateMetaData();
+            content.save();
+            return PropertyType.nameFromValue(content.getNodeData(nodeDataName).getType());
             // return PropertyType.nameFromValue(node.getType());
         }
         catch (Exception e) {
@@ -609,6 +592,29 @@ public class Tree extends ControlImpl {
             }
         }
         return StringUtils.EMPTY;
+    }
+
+    /**
+     *
+     * @param label
+     * @return unique label
+     */
+    protected String getUniqueLabel(String label) {
+        String slash = "/"; //$NON-NLS-1$
+        boolean isRoot = false;
+        if ("/".equals(getPath())) { //$NON-NLS-1$
+            isRoot = true;
+            slash = StringUtils.EMPTY;
+        }
+        if (getHierarchyManager().isExist(this.getPath() + slash + label)) {
+            // todo: bugfix getUniqueLabel???
+            if (isRoot) {
+                label = Path.getUniqueLabel(getHierarchyManager(), StringUtils.EMPTY, label);
+            } else {
+                label = Path.getUniqueLabel(getHierarchyManager(), this.getPath(), label);
+            }
+        }
+        return label;
     }
 
     public String getHtml() {
