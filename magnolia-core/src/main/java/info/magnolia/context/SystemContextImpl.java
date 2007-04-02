@@ -13,11 +13,11 @@
 package info.magnolia.context;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
+import info.magnolia.api.HierarchyManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

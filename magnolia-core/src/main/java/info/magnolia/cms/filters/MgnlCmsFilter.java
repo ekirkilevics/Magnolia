@@ -25,6 +25,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.api.HierarchyManager;
 
 import java.io.IOException;
 import java.io.InputStream;

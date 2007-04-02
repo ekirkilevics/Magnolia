@@ -13,7 +13,7 @@
 package info.magnolia.context;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
 import info.magnolia.cms.security.AccessManager;
@@ -21,6 +21,7 @@ import info.magnolia.cms.security.AccessManagerImpl;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.PrincipalCollection;
+import info.magnolia.api.HierarchyManager;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -116,7 +117,7 @@ final class SessionStore {
             hm = (HierarchyManager) httpSession.getAttribute(ATTRIBUTE_HM_PREFIX + repositoryID + "_" + workspaceID); //$NON-NLS-1$
         }
         if (hm == null) {
-            hm = new HierarchyManager(Authenticator.getUserId(request));
+            hm = new DefaultHierarchyManager(Authenticator.getUserId(request));
             try {
                 hm.init(getSession(request, repositoryID, workspaceID).getRootNode());
                 hm.setAccessManager(getAccessManager(request, repositoryID, workspaceID));

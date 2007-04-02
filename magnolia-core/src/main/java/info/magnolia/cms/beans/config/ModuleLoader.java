@@ -13,7 +13,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.ModuleDefinition;
@@ -21,6 +20,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.api.HierarchyManager;
 
 import java.util.HashMap;
 import java.util.Map;

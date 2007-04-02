@@ -14,7 +14,6 @@ package info.magnolia.module.admininterface.lists;
 
 import info.magnolia.cms.beans.config.VersionConfig;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBar;
@@ -28,6 +27,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.api.HierarchyManager;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;

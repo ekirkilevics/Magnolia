@@ -13,7 +13,7 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.search.QueryManager;
@@ -29,6 +29,7 @@ import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
 import info.magnolia.repository.RepositoryNameMap;
+import info.magnolia.api.HierarchyManager;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -381,7 +382,7 @@ public final class ContentRepository {
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             provider.registerNodeTypes();
             AccessManagerImpl accessManager = getAccessManager();
-            HierarchyManager hierarchyManager = new HierarchyManager(REPOSITORY_USER);
+            HierarchyManager hierarchyManager = new DefaultHierarchyManager(REPOSITORY_USER);
             hierarchyManager.init(session.getRootNode());
             hierarchyManager.setAccessManager(accessManager);
             ContentRepository.hierarchyManagers.put(map.getName()

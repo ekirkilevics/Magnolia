@@ -14,10 +14,10 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
+import info.magnolia.api.HierarchyManager;
 
 import java.util.Iterator;
 import java.util.regex.Matcher;

@@ -17,6 +17,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.api.HierarchyManager;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -37,12 +38,12 @@ import org.slf4j.LoggerFactory;
  * User: sameercharles Date: Sept 23, 2004 Time: 1:42:48 PM
  * @author Sameer Charles $Id:HierarchyManager.java 2719 2006-04-27 14:38:44Z scharles $
  */
-public class HierarchyManager {
+public class DefaultHierarchyManager implements HierarchyManager {
 
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(HierarchyManager.class);
+    private static Logger log = LoggerFactory.getLogger(DefaultHierarchyManager.class);
 
     /**
      * root of this hierarchy
@@ -72,18 +73,18 @@ public class HierarchyManager {
     /**
      * @deprecated not used
      */
-    public HierarchyManager() {
+    public DefaultHierarchyManager() {
         this.userID = "anonymous"; //$NON-NLS-1$
     }
 
-    public HierarchyManager(String userID) {
+    public DefaultHierarchyManager(String userID) {
         this.userID = userID;
     }
 
     /**
      * @deprecated : not used
      */
-    public HierarchyManager(HttpServletRequest request) {
+    public DefaultHierarchyManager(HttpServletRequest request) {
         this.userID = Authenticator.getUserId(request);
     }
 
@@ -91,7 +92,7 @@ public class HierarchyManager {
      * sets start page of the current working repository
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
-     * @see HierarchyManager#init(javax.jcr.Node)
+     * @see DefaultHierarchyManager#init(javax.jcr.Node)
      * @deprecated instead use init(Node rootNode)
      */
     public void setStartPage(Node rootNode) throws PathNotFoundException, RepositoryException {

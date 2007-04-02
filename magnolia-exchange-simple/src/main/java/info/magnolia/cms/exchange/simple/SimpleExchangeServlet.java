@@ -19,7 +19,6 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.cache.CacheManager;
 import info.magnolia.cms.cache.CacheManagerFactory;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.exchange.ExchangeException;
@@ -33,6 +32,7 @@ import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.api.HierarchyManager;
 
 import java.io.IOException;
 import java.io.InputStream;

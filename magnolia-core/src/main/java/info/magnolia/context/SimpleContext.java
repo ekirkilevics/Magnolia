@@ -14,10 +14,10 @@ package info.magnolia.context;
 
 import java.util.Map;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
+import info.magnolia.api.HierarchyManager;
 
 
 /**

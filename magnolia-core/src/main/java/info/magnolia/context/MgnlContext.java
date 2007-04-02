@@ -15,12 +15,12 @@ package info.magnolia.context;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.api.HierarchyManager;
 
 import java.util.Locale;
 import java.util.Map;

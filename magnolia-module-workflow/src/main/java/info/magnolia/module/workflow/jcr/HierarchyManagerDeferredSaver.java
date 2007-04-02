@@ -12,7 +12,7 @@
  */
 package info.magnolia.module.workflow.jcr;
 
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.api.HierarchyManager;
 import org.apache.log4j.Logger;
 
 import javax.jcr.RepositoryException;

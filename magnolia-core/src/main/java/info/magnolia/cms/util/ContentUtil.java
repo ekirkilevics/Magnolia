@@ -13,12 +13,12 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.api.HierarchyManager;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;

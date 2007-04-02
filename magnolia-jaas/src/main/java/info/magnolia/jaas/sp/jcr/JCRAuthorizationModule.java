@@ -14,7 +14,6 @@ package info.magnolia.jaas.sp.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.Permission;
@@ -29,6 +28,7 @@ import info.magnolia.jaas.principal.ACLImpl;
 import info.magnolia.jaas.principal.GroupListImpl;
 import info.magnolia.jaas.principal.PrincipalCollectionImpl;
 import info.magnolia.jaas.principal.RoleListImpl;
+import info.magnolia.api.HierarchyManager;
 
 import java.security.Principal;
 import java.util.Iterator;

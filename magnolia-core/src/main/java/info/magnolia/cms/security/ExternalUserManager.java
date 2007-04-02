@@ -13,7 +13,7 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.api.HierarchyManager;
 
 import java.util.Collection;
 

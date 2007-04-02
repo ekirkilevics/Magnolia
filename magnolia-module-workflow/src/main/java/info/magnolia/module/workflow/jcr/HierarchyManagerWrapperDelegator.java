@@ -13,10 +13,10 @@
 package info.magnolia.module.workflow.jcr;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.api.HierarchyManager;
 
 import javax.jcr.RepositoryException;
 

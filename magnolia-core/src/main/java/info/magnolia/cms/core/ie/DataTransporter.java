@@ -2,7 +2,6 @@ package info.magnolia.cms.core.ie;
 
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.ie.filters.ImportXmlRootFilter;
 import info.magnolia.cms.core.ie.filters.MagnoliaV2Filter;
@@ -10,6 +9,7 @@ import info.magnolia.cms.core.ie.filters.VersionFilter;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.api.HierarchyManager;
 
 import java.io.File;
 import java.io.FileInputStream;

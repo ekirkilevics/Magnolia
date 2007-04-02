@@ -37,6 +37,7 @@ import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.api.HierarchyManager;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;

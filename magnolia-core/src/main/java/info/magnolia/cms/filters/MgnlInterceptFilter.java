@@ -17,12 +17,12 @@ import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.URI2RepositoryMapping;
 import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.api.HierarchyManager;
 
 import java.io.IOException;
 

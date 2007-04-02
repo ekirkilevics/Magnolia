@@ -13,10 +13,7 @@
 
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.beans.config.MIMEMapping;
-import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.exchange.ExchangeException;
@@ -33,6 +30,7 @@ import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.commands.BaseActivationCommand;
+import info.magnolia.api.HierarchyManager;
 
 import java.io.IOException;
 import java.util.Iterator;

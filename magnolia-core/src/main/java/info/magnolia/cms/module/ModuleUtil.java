@@ -17,7 +17,6 @@ import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
@@ -31,6 +30,7 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
+import info.magnolia.api.HierarchyManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;

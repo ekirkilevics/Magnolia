@@ -15,9 +15,9 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.api.HierarchyManager;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;

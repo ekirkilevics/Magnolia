@@ -14,7 +14,6 @@ package info.magnolia.module.workflow.jcr;
 
 import info.magnolia.beancoder.MgnlNode;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
@@ -25,6 +24,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.beancoder.OwfeJcrBeanCoder;
+import info.magnolia.api.HierarchyManager;
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.StringAttribute;
