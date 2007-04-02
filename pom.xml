@@ -182,18 +182,25 @@
     </pluginManagement>
     <plugins>
       <plugin>
-        <groupId>org.apache.geronimo.genesis.plugins</groupId>
-        <artifactId>tools-maven-plugin</artifactId>
-        <version>1.2-SNAPSHOT</version>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <version>1.0-alpha-1-SNAPSHOT</version>
         <executions>
           <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>require-maven-version</goal>
-            </goals>
+            <id>enforce</id>
             <configuration>
-              <version>2.0.5+</version>
+              <rules>
+                <!--<requireJavaVersion>-->
+                  <!--<version>[1.3,1.6]</version>-->
+                <!--</requireJavaVersion>-->
+                <requireMavenVersion>
+                  <version>2.0.5</version>
+                </requireMavenVersion>
+              </rules>
             </configuration>
+            <goals>
+              <goal>enforce</goal>
+            </goals>
           </execution>
         </executions>
       </plugin>

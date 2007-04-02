@@ -26,18 +26,6 @@
       <artifactId>magnolia-taglib-utility</artifactId>
       <version>3.1-SNAPSHOT</version>
     </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jsp-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>servlet-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>javax.servlet</groupId>
-      <artifactId>jstl</artifactId>
-    </dependency>
   </dependencies>
   <build>
     <plugins>
