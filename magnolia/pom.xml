@@ -148,7 +148,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-dms</artifactId>
-      <version>1.1</version>
+      <version>1.2-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>

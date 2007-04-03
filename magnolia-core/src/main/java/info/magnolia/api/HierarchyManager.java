@@ -12,18 +12,16 @@
  */
 package info.magnolia.api;
 
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.AccessManager;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.Workspace;
 
 /**
@@ -32,11 +30,11 @@ import javax.jcr.Workspace;
  */
 public interface HierarchyManager {
 
-    void setStartPage(Node rootNode) throws PathNotFoundException, RepositoryException;
+    void setStartPage(Node rootNode) throws RepositoryException;
 
-    void init(Node rootNode) throws PathNotFoundException, RepositoryException;
+    void init(Node rootNode) throws RepositoryException;
 
-    void init(Node rootNode, AccessManager manager) throws PathNotFoundException, RepositoryException;
+    void init(Node rootNode, AccessManager manager) throws RepositoryException;
 
     void setAccessManager(AccessManager accessManager);
 
@@ -46,35 +44,31 @@ public interface HierarchyManager {
 
     QueryManager getQueryManager();
 
-    Content createPage(String path, String label) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException;
+    Content createPage(String path, String label) throws RepositoryException;
 
-    Content createContent(String path, String label, String contentType) throws PathNotFoundException,
-            RepositoryException, AccessDeniedException;
+    Content createContent(String path, String label, String contentType) throws RepositoryException;
 
-    void setMetaData(MetaData md, String template) throws RepositoryException, AccessDeniedException;
+    void setMetaData(MetaData md, String template) throws RepositoryException;
 
-    void setMetaData(MetaData md) throws RepositoryException, AccessDeniedException;
+    void setMetaData(MetaData md) throws RepositoryException;
 
-    void updateMetaData(MetaData md) throws RepositoryException, AccessDeniedException;
+    void updateMetaData(MetaData md) throws RepositoryException;
 
-    Content getPage(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+    Content getPage(String path) throws RepositoryException;
 
-    Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+    Content getContent(String path) throws RepositoryException;
 
-    Content getContent(String path, boolean create, ItemType type) throws AccessDeniedException,
-        RepositoryException;
+    Content getContent(String path, boolean create, ItemType type) throws RepositoryException;
 
-    Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+    Content getContentNode(String path) throws RepositoryException;
 
-    NodeData getNodeData(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+    NodeData getNodeData(String path) throws RepositoryException;
 
-    Content getPage(String path, String templateName) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException;
+    Content getPage(String path, String templateName) throws RepositoryException;
 
-    void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException;
+    void delete(String path) throws RepositoryException;
 
-    Content getRoot() throws RepositoryException, AccessDeniedException;
+    Content getRoot() throws RepositoryException;
 
     boolean isPage(String path) throws AccessDeniedException;
 
@@ -86,16 +80,13 @@ public interface HierarchyManager {
 
     boolean isNodeData(String path) throws AccessDeniedException;
 
-    Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
-        AccessDeniedException;
+    Content getContentByUUID(String uuid) throws RepositoryException;
 
     Workspace getWorkspace();
 
-    void moveTo(String source, String destination) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException;
+    void moveTo(String source, String destination) throws RepositoryException;
 
-    void copyTo(String source, String destination) throws PathNotFoundException, RepositoryException,
-            AccessDeniedException;
+    void copyTo(String source, String destination) throws RepositoryException;
 
     void save() throws RepositoryException;
 
