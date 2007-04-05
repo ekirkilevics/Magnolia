@@ -281,24 +281,7 @@ public class NodeDataUtil {
      * @return
      */
     public String getTypeName(int type) {
-
-        switch (type) {
-            case PropertyType.STRING:
-                return PropertyType.TYPENAME_STRING;
-            case PropertyType.BOOLEAN:
-                return PropertyType.TYPENAME_BOOLEAN;
-            case PropertyType.DATE:
-                return PropertyType.TYPENAME_DATE;
-            case PropertyType.LONG:
-                return PropertyType.TYPENAME_LONG;
-            case PropertyType.DOUBLE:
-                return PropertyType.TYPENAME_DOUBLE;
-            case PropertyType.BINARY:
-                return PropertyType.TYPENAME_BINARY;
-            default:
-                return StringUtils.EMPTY;
-        }
-
+        return PropertyType.nameFromValue(type);
     }
 
     /**
