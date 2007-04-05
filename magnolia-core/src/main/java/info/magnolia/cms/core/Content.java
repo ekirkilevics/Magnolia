@@ -21,7 +21,9 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
 
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
@@ -37,6 +39,7 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
+import javax.jcr.ValueFactory;
 import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
 import javax.jcr.lock.LockException;
@@ -466,6 +469,35 @@ public class Content extends ContentHandler implements Cloneable {
     public NodeData createNodeData(String name, Value value) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
         return (new NodeData(this.node, name, value, this.accessManager));
+    }
+
+    /**
+     * Creates a property and set its value immediately, according to the type of the
+     * passed instance, hiding the complexity of using JCR's ValueFactory and providing
+     * a sensible default behaviour.
+     */
+    public NodeData createNodeData(String name, Object obj) throws RepositoryException {
+        final ValueFactory valueFactory = node.getSession().getValueFactory();
+        final Value value;
+        if (obj instanceof String) {
+            value = valueFactory.createValue((String) obj);
+        } else if (obj instanceof Boolean) {
+            value = valueFactory.createValue(((Boolean) obj).booleanValue());
+        } else if (obj instanceof Long) {
+            value = valueFactory.createValue(((Long) obj).longValue());
+        } else if (obj instanceof Double) {
+            value = valueFactory.createValue(((Double) obj).doubleValue());
+        } else if (obj instanceof Calendar) {
+            value = valueFactory.createValue((Calendar) obj);
+        } else if (obj instanceof InputStream) {
+            value = valueFactory.createValue((InputStream) obj);
+        } else if (obj instanceof Content) {
+            value = valueFactory.createValue(((Content) obj).getJCRNode());
+        } else {
+            value = valueFactory.createValue(obj.toString());
+        }
+
+        return createNodeData(name, value);
     }
 
     /**
