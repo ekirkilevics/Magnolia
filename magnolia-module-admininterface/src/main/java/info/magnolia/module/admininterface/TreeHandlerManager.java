@@ -101,9 +101,6 @@ public class TreeHandlerManager extends ObservedManager {
             try {
                 this.registerTreeHandler(name, repository, ClassUtil.classForName(className), tree);
             }
-            catch (java.lang.NoClassDefFoundError ne) {
-                log.error("Can't register tree handler [{}]: class [{}] not found", name, className);
-            }
             catch (ClassNotFoundException e) {
                 log.error("Can't register tree handler [{}]: class [{}] not found", name, className);
             }
