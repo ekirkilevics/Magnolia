@@ -11,9 +11,9 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 
@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
-public class MockHierarchyManager extends HierarchyManager {
+public class MockHierarchyManager extends DefaultHierarchyManager {
 
     private Map nodes = new HashMap();
 
