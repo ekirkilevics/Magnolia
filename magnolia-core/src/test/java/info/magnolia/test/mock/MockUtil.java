@@ -13,7 +13,6 @@ package info.magnolia.test.mock;
 import info.magnolia.cms.core.Content;
 import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
@@ -22,20 +21,16 @@ import info.magnolia.context.SystemContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
-import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Properties;
 import java.util.Set;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -77,11 +72,6 @@ public class MockUtil {
     }
 
     /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MockUtil.class);
-
-    /**
      * Mocks the current and system context
      */
     public static MockContext initMockContext() {
@@ -92,8 +82,7 @@ public class MockUtil {
         return ctx;
     }
 
-    public static HierarchyManager createHierarchyManager(InputStream propertiesStream) throws IOException,
-        RepositoryException {
+    public static HierarchyManager createHierarchyManager(InputStream propertiesStream) throws IOException, RepositoryException {
         MockHierarchyManager hm = new MockHierarchyManager();
         Content root = hm.getRoot();
         createContent(root, propertiesStream);
@@ -105,14 +94,13 @@ public class MockUtil {
         return createHierarchyManager(in);
     }
 
-    public static void createContent(Content root, InputStream propertiesStream) throws IOException,
-        RepositoryException, PathNotFoundException, AccessDeniedException {
+    public static void createContent(Content root, InputStream propertiesStream) throws IOException, RepositoryException {
         Properties properties = new OrderedProperties();
 
         properties.load(propertiesStream);
 
-        for (Iterator iter = properties.keySet().iterator(); iter.hasNext();) {
-            String key = (String) iter.next();
+        for (Object o : properties.keySet()) {
+            String key = (String) o;
             String name = StringUtils.substringAfterLast(key, ".");
             String valueStr = properties.getProperty(key);
             String path = StringUtils.substringBeforeLast(key, ".");
@@ -155,13 +143,11 @@ public class MockUtil {
         return valueObj;
     }
 
-    public static Content createContent(final String name, Object[][] data, Content[] children)
-        throws RepositoryException {
+    public static Content createContent(final String name, Object[][] data, Content[] children) throws RepositoryException {
         OrderedMap nodeDatas = MockUtil.createNodeDatas(data);
         OrderedMap childrenMap = new ListOrderedMap();
 
-        for (int i = 0; i < children.length; i++) {
-            Content child = children[i];
+        for (Content child : children) {
             childrenMap.put(child.getName(), child);
         }
 
@@ -174,9 +160,9 @@ public class MockUtil {
 
     public static OrderedMap createNodeDatas(Object[][] data) {
         OrderedMap nodeDatas = new ListOrderedMap();
-        for (int i = 0; i < data.length; i++) {
-            String name = (String) data[i][0];
-            Object value = data[i][1];
+        for (Object[] aData : data) {
+            String name = (String) aData[0];
+            Object value = aData[1];
             nodeDatas.put(name, new MockNodeData(name, value));
         }
         return nodeDatas;
