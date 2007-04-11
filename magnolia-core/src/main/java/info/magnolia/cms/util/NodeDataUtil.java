@@ -22,6 +22,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
 
+import java.io.InputStream;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -38,7 +39,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * @author Sameer Charles
@@ -123,7 +123,7 @@ public class NodeDataUtil {
         }
         return getValueString(nodeData, dateFormat);
     }
-    
+
     /**
      * Returns a String representation of the value. In case of a binary the path including filename and extension is returned
      * @param nodeData
@@ -181,7 +181,7 @@ public class NodeDataUtil {
         }
         return StringUtils.EMPTY;
     }
-    
+
     /**
      * Inherit a value. Uses the string value
      * @param node
@@ -189,7 +189,7 @@ public class NodeDataUtil {
      */
     public static String inheritString(Content node, String name) throws RepositoryException{
         String value = "";
-        
+
         if (node.hasNodeData(name)) {
             value = NodeDataUtil.getString(node, name);
         }
@@ -198,7 +198,7 @@ public class NodeDataUtil {
         }
         return value;
     }
-    
+
     /**
      * Inherit a value. You can provide a default value if not found
      */
@@ -215,7 +215,7 @@ public class NodeDataUtil {
      */
     public static Object inherit(Content node, String name) throws RepositoryException{
         Object value = null;
-        
+
         if (node.hasNodeData(name)) {
             value = NodeDataUtil.getValueObject(node.getNodeData(name));
         }
@@ -224,7 +224,7 @@ public class NodeDataUtil {
         }
         return value;
     }
-    
+
     /**
      * Inherit a value. You can provide a default value if not found
      */
@@ -235,15 +235,15 @@ public class NodeDataUtil {
         }
         return value;
     }
-    
+
     /**
      * @deprecated renamed to getValueObject
      * @return the object representing the value
      */
     public static Object getValue(NodeData nd) {
-       return getValueObject(nd); 
+       return getValueObject(nd);
     }
-    
+
     /**
      * Returns the value as an Object.
      * @return Object
@@ -314,7 +314,7 @@ public class NodeDataUtil {
     public static String getString(String repository, String path, String defaultValue) {
         try {
             String name = StringUtils.substringAfterLast(path, "/");
-            String nodeHandle = StringUtils.substringBeforeLast(path, "/"); 
+            String nodeHandle = StringUtils.substringBeforeLast(path, "/");
             Content node = MgnlContext.getHierarchyManager(repository).getContent(nodeHandle);
             return getString(node, name);
         }
@@ -374,6 +374,12 @@ public class NodeDataUtil {
         return node.createNodeData(name, type);
     }
 
+    public static NodeData getOrCreate(Content node, String name, Object obj) throws AccessDeniedException,
+        RepositoryException {
+
+        return getOrCreate(node, name, getJCRPropertyType(obj));
+    }
+
     /**
      * Uses the i18n mechanism to translate the message if the resulting string is a key
      * @param node
@@ -390,7 +396,7 @@ public class NodeDataUtil {
         catch (RepositoryException e) {
             log.error("can't read i18nBasename value, will default back", e);
         }
-        
+
         if (StringUtils.isNotEmpty(i18nBasename)) {
             msgs = MessagesUtil.chainWithDefault(i18nBasename);
         }
@@ -412,7 +418,7 @@ public class NodeDataUtil {
     public static Value getValue(String valueStr, int type) throws RepositoryException {
         return createValue(valueStr, type);
     }
-        
+
     /**
      * Uses the default value factory
      * @param valueStr
@@ -423,7 +429,28 @@ public class NodeDataUtil {
     public static Value createValue(String valueStr, int type) throws RepositoryException {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
         ValueFactory valueFactory = hm.getWorkspace().getSession().getValueFactory();
-        return getValue(valueStr, type, valueFactory);
+        return createValue(valueStr, type, valueFactory);
+    }
+
+    public static Value createValue(Object obj, ValueFactory valueFactory) throws RepositoryException {
+        switch (getJCRPropertyType(obj)) {
+            case PropertyType.STRING:
+                return valueFactory.createValue((String)obj);
+            case PropertyType.BOOLEAN:
+                return valueFactory.createValue(((Boolean)obj).booleanValue());
+            case PropertyType.DATE:
+                return valueFactory.createValue((Calendar)obj);
+            case PropertyType.LONG:
+                return valueFactory.createValue(((Long)obj).longValue());
+            case PropertyType.DOUBLE:
+                return valueFactory.createValue(((Double)obj).doubleValue());
+            case PropertyType.BINARY:
+                return valueFactory.createValue((InputStream)obj);
+            case PropertyType.REFERENCE:    
+                return valueFactory.createValue(((Content)obj).getJCRNode());
+            default:
+                return valueFactory.createValue(obj.toString());
+        }
     }
 
     /**
@@ -502,9 +529,34 @@ public class NodeDataUtil {
                 }
             }
         }
-        
+
         return value;
 
+    }
+
+    public static int getJCRPropertyType(Object obj) {
+        if(obj instanceof String) {
+            return PropertyType.STRING;
+        }
+        if(obj instanceof Double) {
+            return PropertyType.DOUBLE;
+        }
+        if(obj instanceof Long) {
+            return PropertyType.LONG;
+        }
+        if(obj instanceof Boolean) {
+            return PropertyType.BOOLEAN;
+        }
+        if(obj instanceof Calendar) {
+            return PropertyType.DATE;
+        }
+        if(obj instanceof InputStream) {
+            return PropertyType.BINARY;
+        }
+        if(obj instanceof Content) {
+            return PropertyType.REFERENCE;
+        }
+        return PropertyType.UNDEFINED;
     }
 
 }
