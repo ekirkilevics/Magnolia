@@ -47,7 +47,7 @@ public class MockNodeData extends NodeData {
     }
 
     public int getType() {
-        return NodeDataUtil.getPropertyType(value);
+        return NodeDataUtil.getJCRPropertyType(value);
     }
 
     public Content getParent() {
