@@ -21,6 +21,7 @@ import info.magnolia.context.SystemContext;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.ByteArrayInputStream;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Properties;
@@ -91,12 +92,6 @@ public class MockUtil {
         return ctx;
     }
 
-    /**
-     * @param propertiesStream
-     * @return
-     * @throws IOException
-     * @throws RepositoryException
-     */
     public static HierarchyManager createHierarchyManager(InputStream propertiesStream) throws IOException,
         RepositoryException {
         MockHierarchyManager hm = new MockHierarchyManager();
@@ -105,14 +100,11 @@ public class MockUtil {
         return hm;
     }
 
-    /**
-     * @param root
-     * @param propertiesStream
-     * @throws IOException
-     * @throws RepositoryException
-     * @throws PathNotFoundException
-     * @throws AccessDeniedException
-     */
+    public static HierarchyManager createHierarchyManager(String s) throws IOException, RepositoryException {
+        final ByteArrayInputStream in = new ByteArrayInputStream(s.getBytes());
+        return createHierarchyManager(in);
+    }
+
     public static void createContent(Content root, InputStream propertiesStream) throws IOException,
         RepositoryException, PathNotFoundException, AccessDeniedException {
         Properties properties = new OrderedProperties();

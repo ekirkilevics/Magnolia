@@ -87,7 +87,7 @@ public class MockNodeData extends NodeData {
     }
 
     public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
-        this.value = new Boolean(value);
+        this.value = Boolean.valueOf(value);
     }
 
     public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
