@@ -22,10 +22,6 @@ import javax.jcr.RepositoryException;
 
 import junit.framework.TestCase;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author philipp
  * @version $Id$
@@ -33,18 +29,12 @@ import org.slf4j.LoggerFactory;
  */
 public class MockUtilTest extends TestCase {
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MockUtilTest.class);
-
     public void testGettingHierarchyManagerFromContext() throws IOException, RepositoryException{
         MockContext ctx = MockUtil.initMockContext();
         HierarchyManager hm = initTestData();
         ctx.addHierarchyManager(ContentRepository.CONFIG, hm);
         assertEquals(MgnlContext.getHierarchyManager(ContentRepository.CONFIG), hm);
     }
-
 
     public void testReadingNodes() throws IOException, RepositoryException{
         HierarchyManager hm = initTestData();
@@ -89,7 +79,7 @@ public class MockUtilTest extends TestCase {
 
         Content node = hm.getContent("/parent");
         assertEquals(true, node.getNodeData("prop3").getBoolean());
-        assertEquals(new Boolean(true), NodeDataUtil.getValueObject(node.getNodeData("prop3")));
+        assertEquals(Boolean.TRUE, NodeDataUtil.getValueObject(node.getNodeData("prop3")));
     }
 
     public void testGettingByUUID() throws IOException, RepositoryException{
