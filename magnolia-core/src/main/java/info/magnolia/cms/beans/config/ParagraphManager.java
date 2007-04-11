@@ -25,7 +25,8 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Manages the paragraph ot the system. The modules register the nodes where the paragraph are defined.
+ * Manages the paragraphs on the system. Modules can register the nodes where the paragraph are defined.
+ *
  * @author philipp
  */
 public class ParagraphManager extends ObservedManager {
@@ -49,7 +50,7 @@ public class ParagraphManager extends ObservedManager {
     /**
      * Cached paragraphs
      */
-    protected Map paragraphs = new Hashtable();
+    private Map paragraphs = new Hashtable();
 
     /**
      * Returns the cached content of the requested template. TemplateInfo properties :
@@ -59,7 +60,7 @@ public class ParagraphManager extends ObservedManager {
      * <li>path - jsp / servlet path</li>
      * <li>description - description of a template</li>
      * </ol>
-     * @return TemplateInfo
+     * @return a Paragraph instance
      */
     public Paragraph getInfo(String key) {
         return (Paragraph) paragraphs.get(key);
@@ -67,16 +68,13 @@ public class ParagraphManager extends ObservedManager {
 
     /**
      * Get a map of all registered paragraphs.
-     * @return
      */
     public Map getParagraphs() {
         return paragraphs;
     }
-
+    
     /**
      * Register all the paragraphs under this and subnodes.
-     * @param node
-     * @param observate true if an eventlistener should get registered
      */
     protected void onRegister(Content node) {
         // register a listener
