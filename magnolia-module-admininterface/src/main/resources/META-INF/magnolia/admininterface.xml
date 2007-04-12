@@ -4,6 +4,6 @@
   <name>adminInterface</name>
   <displayName>Admin Interface</displayName>
   <description>Magnolia Administration GUI</description>
-  <class>info.magnolia.module.admininterface.Engine</class>
+  <class>info.magnolia.module.admininterface.AdminInterfaceModule</class>
   <version>3.0</version>
 </module>

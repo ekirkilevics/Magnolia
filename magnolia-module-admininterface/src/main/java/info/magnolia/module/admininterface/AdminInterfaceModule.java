@@ -24,21 +24,17 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version 2.0
  */
-public class Engine extends AbstractAdminModule {
+public class AdminInterfaceModule extends AbstractAdminModule {
 
     /**
      * Logger.
      */
-    protected static Logger log = LoggerFactory.getLogger(Engine.class);
+    protected static Logger log = LoggerFactory.getLogger(AdminInterfaceModule.class);
 
     /**
      * @see info.magnolia.module.admininterface.AbstractAdminModule#onInit()
      */
     public void onInit() {
-        // set local store to be accessed via admin interface classes or JSP
-        Store store = Store.getInstance();
-        store.setStore(this.getConfigNode());
-
         // register the admin renderer kit
         RenderKitFactory.registerRenderKit(RenderKitFactory.ADMIN_INTERFACE_RENDER_KIT, new AdminInterfaceRenderKit());
     }

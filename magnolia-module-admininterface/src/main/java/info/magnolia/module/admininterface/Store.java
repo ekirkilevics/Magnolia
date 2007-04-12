@@ -21,6 +21,8 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Sameer Charles
  * @version 2.0
+ *
+ * @deprecated not used and not useful :)
  */
 public class Store {
 

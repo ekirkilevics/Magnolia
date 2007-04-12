@@ -4,7 +4,7 @@
   <name>templating</name>
   <displayName>Templating</displayName>
   <description>Custom templates</description>
-  <class>info.magnolia.module.templating.Engine</class>
+  <class>info.magnolia.module.templating.TemplatingModule</class>
   <version>3.0</version>
   <dependencies>
     <dependency>
