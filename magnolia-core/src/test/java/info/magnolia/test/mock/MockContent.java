@@ -134,13 +134,15 @@ public class MockContent extends Content {
     }
 
     public NodeData getNodeData(String name) {
-        return (NodeData) this.nodeDatas.get(name);
+        final MockNodeData nodeData = (MockNodeData) this.nodeDatas.get(name);
+        return nodeData !=null ? nodeData : new MockNodeData(name, null);
     }
 
     public boolean hasNodeData(String name) throws RepositoryException {
         return nodeDatas.containsKey(name);
     }
 
+    // TODO : use the given Comparator
     public Collection getChildren(final ContentFilter filter, Comparator orderCriteria) {
         // copy
         List children = new ArrayList(this.children.values());
@@ -153,6 +155,22 @@ public class MockContent extends Content {
         });
 
         return children;
+    }
+
+    public Collection getChildren(final String contentType, String namePattern) {
+        if (!"*".equals(namePattern)) {
+            throw new IllegalStateException("Only the \"*\" name pattern is currently supported in MockContent.");
+        }
+        return getChildren(new ContentFilter() {
+            public boolean accept(Content content) {
+                return contentType == null || content.isNodeType(contentType);
+            }
+        });
+
+    }
+
+    public Content getChildByName(String namePattern) {
+        throw new IllegalStateException("not implemented !");
     }
 
     public String getName() {

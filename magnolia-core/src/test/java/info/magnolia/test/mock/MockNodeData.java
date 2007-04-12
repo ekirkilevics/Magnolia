@@ -43,7 +43,7 @@ public class MockNodeData extends NodeData {
     }
 
     public String getString() {
-        return value.toString();
+        return value !=null ? value.toString() : "";
     }
 
     public int getType() {
@@ -83,7 +83,7 @@ public class MockNodeData extends NodeData {
     }
 
     public boolean isExist() {
-        return true;
+        return value != null;
     }
 
     public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
