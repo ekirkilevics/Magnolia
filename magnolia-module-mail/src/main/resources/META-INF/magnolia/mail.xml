@@ -3,7 +3,7 @@
 <module>
   <name>mail</name>
   <displayName>Magnolia templating mail</displayName>
-  <class>info.magnolia.cms.mail.Engine</class>
+  <class>info.magnolia.cms.mail.MailModule</class>
   <version>3.0</version>
   <dependencies>
     <dependency>

@@ -1,5 +1,6 @@
 package info.magnolia.cms.cache;
 
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.AbstractModule;
@@ -8,23 +9,19 @@ import info.magnolia.cms.module.InvalidConfigException;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.NodeDataUtil;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 
 
 /**
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class Engine extends AbstractModule {
+public class CacheModule extends AbstractModule {
+    private static final Logger log = LoggerFactory.getLogger(CacheModule.class);
 
-    /**
-     * Logger.
-     */
-    private static Log log = LogFactory.getLog(Engine.class);
-
-    private CacheManager cacheManager = CacheManagerFactory.getCacheManager();
+    private final CacheManager cacheManager = CacheManagerFactory.getCacheManager();
 
     /**
      * Init cache manager
@@ -49,16 +46,17 @@ public class Engine extends AbstractModule {
     protected void onRegister(int registerState) throws RegisterException {
         // set the cache inactive if this is an admin instance (default)
         try {
-            boolean admin = BooleanUtils.toBoolean(NodeDataUtil.getString(
+            // TODO : Can't use Server.isAdmin() here, because it's only initialized after the modules
+            boolean isAdmin = BooleanUtils.toBoolean(NodeDataUtil.getString(
                 ContentRepository.CONFIG,
                 "/server/admin",
                 "true"));
-            if (admin) {
+
+            if (isAdmin) {
                 NodeDataUtil.getOrCreate(this.getModuleNode().getContent("config"), "active").setValue(false);
             }
-        }
-        catch (Exception e) {
-            log.error("can't set the caches active flag properly", e);
+        } catch (Exception e) {
+            log.error("can't set the cache's active flag properly", e);
         }
     }
 

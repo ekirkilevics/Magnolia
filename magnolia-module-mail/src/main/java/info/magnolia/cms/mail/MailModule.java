@@ -14,13 +14,12 @@ import org.slf4j.LoggerFactory;
 /**
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
-public class Engine extends AbstractModule {
+public class MailModule extends AbstractModule {
+    private static final Logger log = LoggerFactory.getLogger(MailModule.class);
 
     public static final String SERVER_MAIL_CONFIG = "smtp";
 
     public static final String MAIL_TEMPLATES_PATH = "templates";
-
-    static final Logger log = LoggerFactory.getLogger(Engine.class);
 
     /**
      * Init cache manager

@@ -3,7 +3,7 @@
 <module>
   <name>cache</name>
   <displayName>Magnolia pluggable Cache</displayName>
-  <class>info.magnolia.cms.cache.Engine</class>
+  <class>info.magnolia.cms.cache.CacheModule</class>
   <version>3.0</version>
   <servlets>
     <servlet>
