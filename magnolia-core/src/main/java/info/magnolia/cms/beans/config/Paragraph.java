@@ -148,7 +148,7 @@ public final class Paragraph {
             .append("dialog", this.dialog) //$NON-NLS-1$
             .append("dialogPath", this.dialogPath) //$NON-NLS-1$
             .append("title", this.title) //$NON-NLS-1$
-            .append("path", this.path) //$NON-NLS-1$
+            .append("templatePath", this.templatePath) //$NON-NLS-1$
             .toString();
     }
 
