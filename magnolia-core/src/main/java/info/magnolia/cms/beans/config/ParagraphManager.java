@@ -22,6 +22,8 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -30,6 +32,9 @@ import org.apache.commons.lang.StringUtils;
  * @author philipp
  */
 public class ParagraphManager extends ObservedManager {
+    private static final Logger log = LoggerFactory.getLogger(Paragraph.class);
+
+    private static final String DEFAULT_PARA_TYPE = "jsp";
 
     private static final String ND_I18N_BASENAME = "i18nBasename";
 
@@ -117,13 +122,12 @@ public class ParagraphManager extends ObservedManager {
 
         pi.setTemplatePath(c.getNodeData(ND_TEMPLATE_PATH).getString());
         pi.setDialogPath(c.getNodeData(ND_DIALOG_PATH).getString());
-        pi.setTemplateType(c.getNodeData(ND_TYPE).getString());
+        final String type = c.getNodeData(ND_TYPE).getString();
+        pi.setType(StringUtils.defaultIfEmpty(type, DEFAULT_PARA_TYPE));
         pi.setTitle(c.getNodeData(ND_TITLE).getString());
         pi.setDescription(c.getNodeData(ND_DESCRIPTION).getString());
         pi.setI18nBasename(c.getNodeData(ND_I18N_BASENAME).getString());
-        if (Paragraph.log.isDebugEnabled()) {
-            Paragraph.log.debug("Registering paragraph [{}]", pi.getName()); //$NON-NLS-1$ 
-        }
+        log.debug("Registering paragraph [{}] of type [{}]", pi.getName(), pi.getType()); //$NON-NLS-1$ 
 
         paragraphs.put(pi.getName(), pi);
         return pi;

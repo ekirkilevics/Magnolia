@@ -13,19 +13,12 @@
 package info.magnolia.cms.beans.config;
 
 import org.apache.commons.lang.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  * @author Sameer Charles
  */
 public final class Paragraph {
-
-    /**
-     * Logger.
-     */
-    static Logger log = LoggerFactory.getLogger(Paragraph.class);
 
     private String name;
 
@@ -37,7 +30,7 @@ public final class Paragraph {
 
     private String dialog;
 
-    private String templateType;
+    private String type;
 
     private String description;
 
@@ -79,9 +72,14 @@ public final class Paragraph {
 
     /**
      * @return String, template type (jsp / servlet)
+     * @deprecated use getType()
      */
     public String getTemplateType() {
-        return this.templateType;
+        return this.type;
+    }
+
+    public String getType() {
+        return type;
     }
 
     /**
@@ -107,8 +105,15 @@ public final class Paragraph {
         this.templatePath = templatePath;
     }
 
+    /**
+     * @deprecated use setType()
+     */
     void setTemplateType(String templateType) {
-        this.templateType = templateType;
+        this.type = templateType;
+    }
+
+    void setType(String type) {
+        this.type = type;
     }
 
     void setTitle(String title) {
@@ -138,12 +143,12 @@ public final class Paragraph {
         return new ToStringBuilder(this)
         //
             .append("name", this.name) //$NON-NLS-1$
-            .append("templateType", this.templateType) //$NON-NLS-1$
+            .append("type", this.type) //$NON-NLS-1$
             .append("description", this.description) //$NON-NLS-1$
             .append("dialog", this.dialog) //$NON-NLS-1$
             .append("dialogPath", this.dialogPath) //$NON-NLS-1$
             .append("title", this.title) //$NON-NLS-1$
-            .append("templatePath", this.templatePath) //$NON-NLS-1$
+            .append("path", this.path) //$NON-NLS-1$
             .toString();
     }
 
