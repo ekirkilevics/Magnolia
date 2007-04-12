@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.util;
 
+import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,5 +64,20 @@ public final class ClassUtil {
     public static Object newInstance(String className) throws InstantiationException, IllegalAccessException,
         ClassNotFoundException {
         return classForName(className).newInstance();
+    }
+
+    /**
+     * Checks if this class is a subclass
+     */
+    public static boolean isSubClass(Class subClass, Class parentClass) {
+        if(subClass.equals(parentClass)){
+            return true;
+        }
+        if(parentClass.isInterface()){
+            return ClassUtils.getAllInterfaces(subClass).contains(parentClass);
+        }
+        else{
+            return ClassUtils.getAllSuperclasses(subClass).contains(parentClass);
+        }
     }
 }

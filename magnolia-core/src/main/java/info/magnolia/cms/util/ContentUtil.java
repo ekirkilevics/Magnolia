@@ -14,24 +14,29 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.content2bean.Bean2ContentProcessor;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanProcessor;
+import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Stack;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.ConstructorUtils;
+import org.apache.commons.collections.MapUtils;
+import org.apache.commons.discovery.tools.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,7 +47,8 @@ import org.slf4j.LoggerFactory;
  */
 public class ContentUtil {
 
-    private static Logger log = LoggerFactory.getLogger(ContentUtil.class);
+
+    static Logger log = LoggerFactory.getLogger(ContentUtil.class);
 
     /**
      * Content filter accepting everything
@@ -53,7 +59,44 @@ public class ContentUtil {
             return true;
         }
     };
-    
+
+    /**
+     * Content filter accepting everything exept nodes with namespace jcr (version and system store)
+     */
+    public static ContentFilter ALL_NODES_EXCEPT_JCR_CONTENT_FILTER = new ContentFilter() {
+
+        public boolean accept(Content content) {
+            return !content.getName().startsWith("jcr:");
+        }
+    };
+
+    /**
+     * Content filter accepting everything exept meta data and jcr:
+     */
+    public static ContentFilter EXCLUDE_META_DATA_CONTENT_FILTER = new ContentFilter() {
+        public boolean accept(Content content) {
+            return !content.getName().startsWith("jcr:") && !content.isNodeType(ItemType.NT_METADATA);
+        }
+    };
+
+    /**
+     * Content filter accepting all nodes with a nodetype of namespace mgnl
+     */
+    public static ContentFilter MAGNOLIA_FILTER = new ContentFilter() {
+        public boolean accept(Content content) {
+
+            try {
+                String nodetype = content.getNodeType().getName();
+                // export only "magnolia" nodes
+                return nodetype.startsWith("mgnl:");
+            }
+            catch (RepositoryException e) {
+                log.error("Unable to read nodetype for node {}", content.getHandle());
+            }
+            return false;
+        }
+    };
+
     /**
      * @author Philipp Bracher
      * @version $Id$
@@ -62,15 +105,6 @@ public class ContentUtil {
     public interface Visitor {
         void visit(Content node) throws Exception;
     }
-    
-    /**
-     * Content filter accepting everything
-     */
-    public static ContentFilter EXCLUDE_META_DATA_CONTENT_FILTER = new ContentFilter() {
-        public boolean accept(Content content) {
-            return !content.getName().startsWith("jcr:") && !content.isNodeType(ItemType.NT_METADATA);
-        }
-    };
 
     /**
      * Returns a Content object of the named repository or null if not existing.
@@ -200,7 +234,7 @@ public class ContentUtil {
         List nodes = new ArrayList();
         return collectAllChildren(nodes, node, new ItemType[]{type});
     }
-    
+
     /**
      * Returns all children (not recursively) indpendent of there type
      * @param node
@@ -241,18 +275,18 @@ public class ContentUtil {
         }
         return nodes;
     }
-    
+
     public static void orderNodes(Content node, String[] nodes) throws RepositoryException{
         for (int i = nodes.length - 1; i > 0; i--) {
             node.orderBefore(nodes[i-1], nodes[i]);
         }
         node.save();
     }
-    
+
     public static void visit(Content node, Visitor visitor) throws Exception{
         visit(node, visitor, EXCLUDE_META_DATA_CONTENT_FILTER);
     }
-    
+
     public static void visit(Content node, Visitor visitor, ContentFilter filter) throws Exception{
         visitor.visit(node);
         for (Iterator iter = node.getChildren(filter).iterator(); iter.hasNext();) {
@@ -262,25 +296,31 @@ public class ContentUtil {
 
     public static Content createPath(HierarchyManager hm, String path) throws AccessDeniedException,
         PathNotFoundException, RepositoryException {
-        return ContentUtil.createPath(hm, path, ItemType.CONTENT);
+        return createPath(hm, path, false);
+    }
+
+    public static Content createPath(HierarchyManager hm, String path, boolean save) throws AccessDeniedException,
+        PathNotFoundException, RepositoryException {
+        return ContentUtil.createPath(hm, path, ItemType.CONTENT, save);
     }
 
     public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
         PathNotFoundException, RepositoryException {
-        Content node = hm.getRoot();
-        return createPath(node, path, type);
+        return createPath(hm, path, type, false);
     }
 
-    /**
-     * @param node
-     * @param path
-     * @param type
-     * @return
-     * @throws RepositoryException
-     * @throws PathNotFoundException
-     * @throws AccessDeniedException
-     */
+    public static Content createPath(HierarchyManager hm, String path, ItemType type, boolean save) throws AccessDeniedException,
+        PathNotFoundException, RepositoryException {
+        Content node = hm.getRoot();
+        return createPath(node, path, type, save);
+    }
+
     public static Content createPath(Content node, String path, ItemType type) throws RepositoryException,
+        PathNotFoundException, AccessDeniedException {
+        return createPath(node, path, type, false);
+    }
+
+    public static Content createPath(Content node, String path, ItemType type, boolean save) throws RepositoryException,
         PathNotFoundException, AccessDeniedException {
         // remove leading /
         path = StringUtils.removeStart(path, "/");
@@ -298,6 +338,9 @@ public class ContentUtil {
             }
             else {
                 node = node.createContent(name, type);
+                if(save){
+                    node.save();
+                }
             }
         }
         return node;
@@ -307,17 +350,10 @@ public class ContentUtil {
      * Transforms the nodes data into a map containting the names and values.
      * @param node
      * @return a flat map
+     * @deprecated Use Content2BeanUtil instead
      */
     public static Map toMap(Content node) {
-        Map map = new HashMap();
-        for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
-            NodeData nd = (NodeData) iter.next();
-            Object val = NodeDataUtil.getValueObject(nd);
-            if (val != null) {
-                map.put(nd.getName(), val);
-            }
-        }
-        return map;
+        return Content2BeanUtil.toMap(node);
     }
 
     /**
@@ -325,77 +361,54 @@ public class ContentUtil {
      * @param bean the bean you like to populate
      * @param node the node containing the data
      * @return the bean
+     * @deprecated Use Use Content2BeanUtil instead
      */
     public static Object setProperties(Object bean, Content node) {
         try {
-            BeanUtils.populate(bean, toMap(node));
+            return Content2BeanUtil.setProperties(bean, node);
         }
-        catch (IllegalAccessException e) {
+        catch (Content2BeanException e) {
             log.error("can't set properties", e);
         }
-        catch (InvocationTargetException e) {
-            log.error("can't set properties", e);
-        }
-        return bean;
+        return null;
     }
 
     /**
-     * Takes a nodes data and and sets the beans properties which follow the naming of the nodes nodedatas.
-     * @param bean the bean you like to populate
-     * @param repository
-     * @param path
-     * @return the bean
+     * @deprecated Use Use Content2BeanUtil instead
      */
-    public static Object setProperties(Object bean, String repository, String path) {
-        Content node = getContent(repository, path);
-        if (node != null) {
-            setProperties(bean, node);
-        }
-        return bean;
-    }
-
     public static void setNodeDatas(Content node, Object obj) throws RepositoryException {
         try {
-            setNodeDatas(node, BeanUtils.describe(obj));
+            Content2BeanUtil.setNodeDatas(node, obj);
         }
-        catch (InvocationTargetException e) {
-            log.error("can't persist", e);
-        }
-        catch (NoSuchMethodException e) {
-            log.error("can't persist", e);
-        }
-        catch (IllegalAccessException e) {
-            log.error("can't persist", e);
+        catch (Content2BeanException e) {
+            log.error("can't set node datas", e);
         }
     }
 
+    /**
+     * @deprecated Use Content2BeanUtil instead
+     */
     public static void setNodeDatas(Content node, Map map) throws RepositoryException {
-        for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
-            String name = (String) iter.next();
-            NodeDataUtil.getOrCreate(node, name).setValue(map.get(name).toString());
+        try {
+            Content2BeanUtil.setNodeDatas(node, map);
+        }
+        catch (Content2BeanException e) {
+            log.error("can't set node datas", e);
         }
     }
 
+    /**
+     * @deprecated Use Use Content2BeanUtil instead
+     */
     public static void setNodeDatas(Content node, Object bean, String[] excludes) throws RepositoryException {
         try {
-            Map properties = BeanUtils.describe(bean);
-            for (int i = 0; i < excludes.length; i++) {
-                String exclude = excludes[i];
-                properties.remove(exclude);
-            }
-            setNodeDatas(node, properties);
+            Content2BeanUtil.setNodeDatas(node, bean, excludes);
         }
-        catch (InvocationTargetException e) {
-            log.error("can't persist", e);
-        }
-        catch (NoSuchMethodException e) {
-            log.error("can't persist", e);
-        }
-        catch (IllegalAccessException e) {
-            log.error("can't persist", e);
+        catch (Content2BeanException e) {
+            log.error("can't set node datas", e);
         }
     }
-    
+
     public static String uuid2path(String repository, String uuid){
         if(StringUtils.isNotEmpty(uuid)){
             HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
@@ -406,7 +419,7 @@ public class ContentUtil {
             catch (Exception e) {
                 // return the uuid
             }
-            
+
         }
         return uuid;
     }
