@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Properties;
 
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -119,32 +120,15 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
             klass = transformer.resolveClass(node);
         }
         catch (ClassNotFoundException e) {
-            new Content2BeanException("can't resolve class for node " +  node.getHandle(), e);
+            throw new Content2BeanException("can't resolve class for node " +  node.getHandle(), e);
         }
 
-        if(klass != null){
-            // supports default implementations for interfaces
-            Object bean = transformer.newBeanInstance(node, klass);
-            transformer.pushBean(bean);
-            setProperties(bean, node, recursive, transformer);
-            transformer.popBean();
-            return bean;
-        }
-        else{
-            // not a bean, make a map
-            Map map = toMap(node, false);
-            if (recursive) {
-                Collection children = node.getChildren(transformer);
-                for (Iterator iter = children.iterator(); iter.hasNext();) {
-                    Content childNode = (Content) iter.next();
-                    transformer.pushBean(map);
-                    Object childBean = toBean(childNode, true, transformer);
-                    transformer.popBean();
-                    map.put(childNode.getName(), childBean);
-                }
-            }
-            return map;
-        }
+        // supports default implementations for interfaces
+        Object bean = transformer.newBeanInstance(node, klass);
+        transformer.pushBean(bean);
+        setProperties(bean, node, recursive, transformer);
+        transformer.popBean();
+        return bean;
     }
 
     public Object setProperties(final Object bean, Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException {
@@ -160,10 +144,14 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
                 properties.put(childNode.getName(), childBean);
             }
         }
+        if(!(bean instanceof Map) && !properties.containsKey("content")){
+            properties.put("content", node);
+        }
         for (Iterator iter = properties.keySet().iterator(); iter.hasNext();) {
             String propertyName = (String) iter.next();
             transformer.setProperty(bean, propertyName, properties.get(propertyName));
         }
+        transformer.initBean(bean, properties);
 
         return bean;
     }

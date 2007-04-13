@@ -10,6 +10,8 @@
  */
 package info.magnolia.content2bean;
 
+import java.util.Map;
+
 import info.magnolia.cms.core.Content;
 
 
@@ -29,6 +31,11 @@ public interface Content2BeanTransformer extends Content.ContentFilter {
      * Instantiates the bean
      */
     public Object newBeanInstance(Content node, Class klass);
+
+    /**
+     * Called after all properties are set
+     */
+    public void initBean(Object bean, Map properties) throws Content2BeanException;
 
     /**
      * Set this property on that bean. Allows conversions or excluding properties
@@ -54,5 +61,6 @@ public interface Content2BeanTransformer extends Content.ContentFilter {
      * Pop the current bean
      */
     public void popBean();
+
 
 }

@@ -15,6 +15,7 @@ import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
@@ -56,7 +57,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
      * <li> calls onResolve subclasses should override
      * <li> reflection on the parent bean
      * <li> in case of a collection/map type call getClassForCollectionProperty
-     * <li> otherwise return null (means transform to a map)
+     * <li> otherwise use a Map
      * </ul>
      */
     public Class resolveClass(Content node) throws ClassNotFoundException {
@@ -90,12 +91,13 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
                     Class klass = PropertyUtils
                         .getPropertyDescriptor(beanStack.peek(), node.getName())
                         .getPropertyType();
+
                     if (!ClassUtil.isSubClass(klass, Map.class) && !ClassUtil.isSubClass(klass, Collection.class)) {
                         return klass;
                     }
                     else {
                         // a map is created
-                        return null;
+                        return HashMap.class;
                     }
                 }
             }
@@ -104,7 +106,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             Content2BeanProcessorImpl.log.error("can't resolve type by beans property type", e);
         }
 
-        return null;
+        return HashMap.class;
     }
 
     /**
@@ -217,43 +219,48 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
      */
     public void setProperty(Object bean, String propertyName, Object value) {
         if (propertyName.equals("class")) {
-            return;
+            propertyName = "className";
         }
 
-        Class type;
-        try {
-            type = PropertyUtils.getPropertyType(bean, propertyName);
-            if (ClassUtil.isSubClass(type, Collection.class)) {
-                value = ((Map) value).entrySet();
-                Method method = getAddMethod(bean.getClass(), propertyName);
-                if (method != null) {
-                    for (Iterator iter = ((Collection) value).iterator(); iter.hasNext();) {
-                        method.invoke(bean, new Object[]{iter.next()});
+        if(!(bean instanceof Map)){
+            try {
+                Class type = PropertyUtils.getPropertyType(bean, propertyName);
+                if(type != null){
+                    if (ClassUtil.isSubClass(type, Collection.class)) {
+                        value = ((Map) value).entrySet();
+                        Method method = getAddMethod(bean.getClass(), propertyName);
+                        if (method != null) {
+                            for (Iterator iter = ((Collection) value).iterator(); iter.hasNext();) {
+                                method.invoke(bean, new Object[]{iter.next()});
+                            }
+                        }
+                        return;
+                    }
+
+                    // try to use an adder method
+                    if (ClassUtil.isSubClass(type, Map.class)) {
+                        Method method = getAddMethod(bean.getClass(), propertyName);
+                        if (method != null) {
+                            for (Iterator iter = ((Map) value).keySet().iterator(); iter.hasNext();) {
+                                Object key = iter.next();
+                                method.invoke(bean, new Object[]{key, ((Map) value).get(key)});
+                            }
+                            return;
+                        }
                     }
                 }
-                return;
             }
-
-            // try to use an adder method
-            if (ClassUtil.isSubClass(type, Map.class)) {
-                Method method = getAddMethod(bean.getClass(), propertyName);
-                if (method != null) {
-                    for (Iterator iter = ((Map) value).keySet().iterator(); iter.hasNext();) {
-                        Object key = iter.next();
-                        method.invoke(bean, new Object[]{key, ((Map) value).get(key)});
-                    }
-                    return;
-                }
+            catch (Exception e) {
+                // do it better
+                log.error("can't set property", e);
             }
-
-        }
-        catch (Exception e) {
-            // do it better
-            log.error("can't set property", e);
         }
 
         try {
             PropertyUtils.setProperty(bean, propertyName, value);
+        }
+        catch (NoSuchMethodException e){
+            // ignore, this is not a property at all
         }
         catch (Exception e) {
             // do it better
@@ -267,6 +274,28 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
      */
     public Object newBeanInstance(Content node, Class klass) {
         return FactoryUtil.newInstance(klass);
+    }
+
+    /**
+     * Call init method if present
+     */
+    public void initBean(Object bean, Map properties) throws Content2BeanException {
+        Method init;
+        try {
+            init = bean.getClass().getMethod("init", new Class[]{});
+        }
+        catch (SecurityException e) {
+            return;
+        }
+        catch (NoSuchMethodException e) {
+            return;
+        }
+        try {
+            init.invoke(bean);
+        }
+        catch (Exception e) {
+            throw new Content2BeanException("can't call init method",e);
+        }
     }
 
 }
