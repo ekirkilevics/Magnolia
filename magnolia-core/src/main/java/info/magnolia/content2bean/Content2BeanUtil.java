@@ -46,7 +46,7 @@ public class Content2BeanUtil {
     }
 
     public static Object toBean(Content node, final Class defaultClass) throws Content2BeanException{
-        return getContent2BeanProcessor().toBean(node, false, new Content2BeanTransformerImpl(){
+        return toBean(node, false, new Content2BeanTransformerImpl(){
             protected Class onResolveClass(Content node) {
                 return defaultClass;
             }
@@ -54,9 +54,13 @@ public class Content2BeanUtil {
     }
 
     public static Object toBean(Content node, boolean recursive) throws Content2BeanException{
-        return getContent2BeanProcessor().toBean(node, recursive, Content2BeanUtil.getContent2BeanProcessor().getDefaultContentToBeanTransformer());
+        return toBean(node, recursive, Content2BeanUtil.getContent2BeanProcessor().getDefaultContentToBeanTransformer());
     }
 
+    public static Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException{
+        return getContent2BeanProcessor().toBean(node, recursive, transformer);
+    }
+    
     public static Map toMap(Content node) {
         return toMap(node, false);
     }
