@@ -86,6 +86,9 @@ public class MetaData {
         this.setAccessManager(manager);
     }
 
+    protected MetaData() {
+    }
+
     public String getHandle() throws RepositoryException {
         return this.node.getPath();
     }

@@ -13,6 +13,7 @@ package info.magnolia.test.mock;
 import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
@@ -88,6 +89,18 @@ public class MockUtilTest extends TestCase {
         Content node = hm.getContentByUUID("3");
         assertNotNull(node);
         assertEquals(node.getHandle(), "/parent/sub2");
+    }
+
+    public void testMetaData() throws IOException, RepositoryException {
+        final HierarchyManager hm = initTestData();
+        Content sub1 = hm.getContent("/parent/sub1");
+        final MetaData metaData = sub1.getMetaData();
+        assertEquals("greg", metaData.getAuthorId());
+        assertEquals("bozo", metaData.getActivatorId());
+        assertEquals("someParagraphName", metaData.getTemplate());
+        assertEquals("myLabel", metaData.getLabel());
+        assertEquals("myTitle", metaData.getTitle());
+        assertEquals("/parent/sub1/MetaData", metaData.getHandle());
     }
 
     protected HierarchyManager initTestData() throws IOException, RepositoryException {

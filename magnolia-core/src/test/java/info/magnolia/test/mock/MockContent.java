@@ -14,6 +14,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.AccessDeniedException;
 
 import java.util.ArrayList;
@@ -215,4 +216,11 @@ public class MockContent extends Content {
         this.uuid = uuid;
     }
 
+    public MetaData getMetaData() {
+        try {
+            return new MockMetaData((MockContent) getContent("MetaData"));
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e); // TODO
+        }
+    }
 }
