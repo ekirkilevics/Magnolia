@@ -33,62 +33,105 @@ public class Content2BeanUtil {
 
     private static Logger log = LoggerFactory.getLogger(Content2BeanUtil.class);
 
-    public static Content2BeanProcessor getContent2BeanProcessor(){
+    /**
+     * Get the current processor
+     */
+    public static Content2BeanProcessor getContent2BeanProcessor() {
         return Content2BeanProcessor.Factory.getProcessor();
     }
 
-    public static Bean2ContentProcessor getBean2ContentProcessor(){
+    /**
+     * Get the current processor
+     */
+    public static Bean2ContentProcessor getBean2ContentProcessor() {
         return Bean2ContentProcessor.Factory.getProcessor();
     }
 
-    public static Object toBean(Content node) throws Content2BeanException{
+    /**
+     * @see Content2BeanProcessor
+     */
+    public static Object toBean(Content node) throws Content2BeanException {
         return toBean(node, false);
     }
 
-    public static Object toBean(Content node, final Class defaultClass) throws Content2BeanException{
-        return toBean(node, false, new Content2BeanTransformerImpl(){
+    /**
+     * @see Content2BeanProcessor
+     */
+    public static Object toBean(Content node, final Class defaultClass) throws Content2BeanException {
+        return toBean(node, false, new Content2BeanTransformerImpl() {
+
             protected Class onResolveClass(Content node) {
                 return defaultClass;
             }
         });
     }
 
-    public static Object toBean(Content node, boolean recursive) throws Content2BeanException{
+    /**
+     * @see Content2BeanProcessor
+     */
+    public static Object toBean(Content node, boolean recursive) throws Content2BeanException {
         return toBean(node, recursive, Content2BeanUtil.getContent2BeanProcessor().getDefaultContentToBeanTransformer());
     }
 
-    public static Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException{
+    /**
+     * @see Content2BeanProcessor
+     */
+    public static Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException {
         return getContent2BeanProcessor().toBean(node, recursive, transformer);
     }
-    
+
+    /**
+     * @see Content2BeanProcessor
+     */
     public static Map toMap(Content node) {
         return toMap(node, false);
     }
 
+    /**
+     * @see Content2BeanProcessor
+     */
     public static Map toMap(Content node, boolean recursive) {
         return getContent2BeanProcessor().toMap(node, recursive);
     }
 
-    public static void addMapPropertyType(Class type, String name, Class mappedType) {
-        getContent2BeanProcessor().getDefaultContentToBeanTransformer().addCollectionPropertyClass(type, name, mappedType);
-    }
-
-    public static Object setProperties(Object bean, Content node, boolean recursive) throws Content2BeanException {
-        return getContent2BeanProcessor().setProperties(bean, node, recursive, Content2BeanUtil.getContent2BeanProcessor().getDefaultContentToBeanTransformer());
-    }
-
+    /**
+     * @see Content2BeanProcessor
+     */
     public static Object setProperties(Object bean, Content node) throws Content2BeanException {
         return setProperties(bean, node, false);
     }
 
-    public static void setNodeDatas(Content node, Map map) throws Content2BeanException {
-       getBean2ContentProcessor().setNodeDatas(node, map);
+    /**
+     * @see Content2BeanProcessor
+     */
+    public static Object setProperties(Object bean, Content node, boolean recursive) throws Content2BeanException {
+        return getContent2BeanProcessor().setProperties(bean, node, recursive, Content2BeanUtil.getContent2BeanProcessor().getDefaultContentToBeanTransformer());
     }
 
+    /**
+     * @see Content2BeanProcessor
+     */
+    public static void addMapPropertyType(Class type, String name, Class mappedType) {
+        getContent2BeanProcessor().getDefaultContentToBeanTransformer().addCollectionPropertyClass(type, name, mappedType);
+    }
+
+    /**
+     * @see Bean2ContentProcessor
+     */
+    public static void setNodeDatas(Content node, Map map) throws Content2BeanException {
+        getBean2ContentProcessor().setNodeDatas(node, map);
+    }
+
+    /**
+     * @see Bean2ContentProcessor
+     */
     public static void setNodeDatas(Content node, Object bean, String[] excludes) throws Content2BeanException {
         getBean2ContentProcessor().setNodeDatas(node, bean, excludes);
     }
 
+    /**
+     * @see Bean2ContentProcessor
+     */
     public static void setNodeDatas(Content node, Object obj) throws Content2BeanException {
         getBean2ContentProcessor().setNodeDatas(node, obj);
     }
