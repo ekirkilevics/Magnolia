@@ -12,67 +12,29 @@ package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.NodeDataUtil;
 
-import java.util.Iterator;
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
+ * Transforms beans to nodes. Uncomplete.
  * @author philipp
  * @version $Id$
  *
  */
-public class Bean2ContentProcessor {
+public interface Bean2ContentProcessor {
+
+    public void setNodeDatas(Content node, Object bean) throws Content2BeanException;
+
+    public void setNodeDatas(Content node, Map map) throws Content2BeanException;
+
+    public void setNodeDatas(Content node, Object bean, String[] excludes) throws Content2BeanException;
 
     /**
-     * Logger.
+     * Get your instance here
      */
-    private static Logger log = LoggerFactory.getLogger(Bean2ContentProcessor.class);
-
-    public static Bean2ContentProcessor getInstance(){
-        return (Bean2ContentProcessor) FactoryUtil.getSingleton(Bean2ContentProcessor.class);
-    }
-
-    public void setNodeDatas(Content node, Object obj) throws Content2BeanException {
-        setNodeDatas(node, propertiesAsMap(obj));
-    }
-
-    public void setNodeDatas(Content node, Map map) throws Content2BeanException {
-        for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
-            String name = (String) iter.next();
-            try {
-                NodeDataUtil.getOrCreate(node, name).setValue(map.get(name).toString());
-            }
-            catch (RepositoryException e) {
-                throw new Content2BeanException("can't set/create nodedata [" + name + "] on node " + node.getHandle(), e);
-            }
+    class Factory{
+        public static Bean2ContentProcessor getProcessor(){
+            return (Bean2ContentProcessor) FactoryUtil.getSingleton(Bean2ContentProcessor.class);
         }
     }
-
-    public void setNodeDatas(Content node, Object bean, String[] excludes) throws Content2BeanException {
-        Map properties = propertiesAsMap(bean);
-
-        for (int i = 0; i < excludes.length; i++) {
-            String exclude = excludes[i];
-            properties.remove(exclude);
-        }
-        setNodeDatas(node, properties);
-    }
-
-    protected Map propertiesAsMap(Object bean) throws Content2BeanException {
-        try {
-            return BeanUtils.describe(bean);
-        }
-        catch (Exception e) {
-            throw new Content2BeanException("can't read properties from bean", e);
-        }
-    }
-
 }

@@ -19,39 +19,22 @@ import org.slf4j.LoggerFactory;
 /**
  * @author philipp
  * @version $Id$
- *
  */
 public class Content2BeanException extends MgnlException {
 
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(Content2BeanException.class);
 
-    /**
-     *
-     */
     public Content2BeanException() {
     }
 
-    /**
-     * @param arg0
-     */
     public Content2BeanException(String arg0) {
         super(arg0);
     }
 
-    /**
-     * @param arg0
-     */
     public Content2BeanException(Throwable arg0) {
         super(arg0);
     }
 
-    /**
-     * @param arg0
-     * @param arg1
-     */
     public Content2BeanException(String arg0, Throwable arg1) {
         super(arg0, arg1);
     }

@@ -11,9 +11,9 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.test.mock.MockUtil;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
@@ -34,6 +34,15 @@ public class Content2BeanTest extends TestCase {
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(Content2BeanTest.class);
+
+
+    /**
+     * Setup factory util
+     */
+    public Content2BeanTest() {
+        FactoryUtil.setDefaultImplementation(Content2BeanProcessor.class, Content2BeanProcessorImpl.class);
+        FactoryUtil.setDefaultImplementation(Bean2ContentProcessor.class, Bean2ContentProcessor.class);
+    }
 
     public void testContentToBeanWithClassDefined() throws RepositoryException, Content2BeanException{
         Content node = MockUtil.createNode("node", new Object[][]{
@@ -152,7 +161,7 @@ public class Content2BeanTest extends TestCase {
 
         });
 
-        Content2BeanProcessor.getInstance().addMapPropertyType(BeanWithMap.class, "beans", SimpleBean.class);
+        Content2BeanUtil.addMapPropertyType(BeanWithMap.class, "beans", SimpleBean.class);
 
         BeanWithMap bean = (BeanWithMap) Content2BeanUtil.toBean(node, true);
         Map beans = bean.getBeans();
@@ -200,6 +209,4 @@ public class Content2BeanTest extends TestCase {
         assertEquals("prop1Sub2Value", ((SimpleBean)beans.get("sub2")).getProp1());
         assertEquals("prop2Sub2Value", ((SimpleBean)beans.get("sub2")).getProp2());
     }
-
-
 }

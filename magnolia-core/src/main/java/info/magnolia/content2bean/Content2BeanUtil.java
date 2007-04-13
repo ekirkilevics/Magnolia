@@ -19,24 +19,34 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * In case you do not have to customize the transformation you should use one of this methods
+ * <ul>
+ * <li><code>toMap</code> is used to build a map from a node
+ * <li><code>toBean<code> transforms the nodes to beans
+ * <li><code>setProperties<code> tries to set the properties on the bean passed to the method
+ * <li><code>setNodeData<code> set the nodedatas based on the bean you pass
+ * </ul>
  * @author philipp
  * @version $Id$
- *
  */
 public class Content2BeanUtil {
 
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(Content2BeanUtil.class);
 
+    public static Content2BeanProcessor getContent2BeanProcessor(){
+        return Content2BeanProcessor.Factory.getProcessor();
+    }
+
+    public static Bean2ContentProcessor getBean2ContentProcessor(){
+        return Bean2ContentProcessor.Factory.getProcessor();
+    }
 
     public static Object toBean(Content node) throws Content2BeanException{
         return toBean(node, false);
     }
 
     public static Object toBean(Content node, final Class defaultClass) throws Content2BeanException{
-        return Content2BeanProcessor.getInstance().toBean(node, false, new Content2BeanTransformerImpl(){
+        return getContent2BeanProcessor().toBean(node, false, new Content2BeanTransformerImpl(){
             protected Class onResolveClass(Content node) {
                 return defaultClass;
             }
@@ -44,7 +54,7 @@ public class Content2BeanUtil {
     }
 
     public static Object toBean(Content node, boolean recursive) throws Content2BeanException{
-        return Content2BeanProcessor.getInstance().toBean(node, recursive, Content2BeanProcessor.getInstance().getDefaultContentToBeanTransformer());
+        return getContent2BeanProcessor().toBean(node, recursive, Content2BeanUtil.getContent2BeanProcessor().getDefaultContentToBeanTransformer());
     }
 
     public static Map toMap(Content node) {
@@ -52,15 +62,15 @@ public class Content2BeanUtil {
     }
 
     public static Map toMap(Content node, boolean recursive) {
-        return Content2BeanProcessor.getInstance().toMap(node, recursive);
+        return getContent2BeanProcessor().toMap(node, recursive);
     }
 
     public static void addMapPropertyType(Class type, String name, Class mappedType) {
-        Content2BeanProcessor.getInstance().addMapPropertyType(type, name, mappedType);
+        getContent2BeanProcessor().getDefaultContentToBeanTransformer().addCollectionPropertyClass(type, name, mappedType);
     }
 
     public static Object setProperties(Object bean, Content node, boolean recursive) throws Content2BeanException {
-        return Content2BeanProcessor.getInstance().setProperties(bean, node, recursive, Content2BeanProcessor.getInstance().getDefaultContentToBeanTransformer());
+        return getContent2BeanProcessor().setProperties(bean, node, recursive, Content2BeanUtil.getContent2BeanProcessor().getDefaultContentToBeanTransformer());
     }
 
     public static Object setProperties(Object bean, Content node) throws Content2BeanException {
@@ -68,15 +78,15 @@ public class Content2BeanUtil {
     }
 
     public static void setNodeDatas(Content node, Map map) throws Content2BeanException {
-       Bean2ContentProcessor.getInstance().setNodeDatas(node, map);
+       getBean2ContentProcessor().setNodeDatas(node, map);
     }
 
     public static void setNodeDatas(Content node, Object bean, String[] excludes) throws Content2BeanException {
-        Bean2ContentProcessor.getInstance().setNodeDatas(node, bean, excludes);
+        getBean2ContentProcessor().setNodeDatas(node, bean, excludes);
     }
 
     public static void setNodeDatas(Content node, Object obj) throws Content2BeanException {
-        Bean2ContentProcessor.getInstance().setNodeDatas(node, obj);
+        getBean2ContentProcessor().setNodeDatas(node, obj);
     }
 
 }
