@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
@@ -20,12 +21,15 @@ import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.URI2RepositoryMapping;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
-import info.magnolia.cms.core.*;
+import info.magnolia.cms.core.Access;
+import info.magnolia.cms.core.Aggregator;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.api.HierarchyManager;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -46,7 +50,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.commons.lang.math.NumberUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +64,7 @@ public class MgnlCmsFilter implements Filter {
 
     private static final String BYPASS_PARAM = "bypass";
 
-    private static Logger log = LoggerFactory.getLogger(MgnlCmsFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(MgnlCmsFilter.class);
 
     private String[] bypass;
 
@@ -159,7 +162,7 @@ public class MgnlCmsFilter implements Filter {
                         if (!response.isCommitted()) {
                             response.setContentType("text/html");
                         }
-                        throw new NestableRuntimeException(e);
+                        throw new RuntimeException(e);
                     }
                 }
                 else {
