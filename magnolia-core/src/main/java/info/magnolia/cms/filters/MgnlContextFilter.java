@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -39,7 +40,7 @@ public class MgnlContextFilter implements Filter {
         ServletException {
 
         if (!MgnlContext.hasInstance()) {
-            MgnlContext.initAsWebContext((HttpServletRequest) request);
+            MgnlContext.initAsWebContext((HttpServletRequest) request, (HttpServletResponse) response);
         }
 
         chain.doFilter(request, response);

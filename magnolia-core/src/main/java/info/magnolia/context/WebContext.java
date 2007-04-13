@@ -19,7 +19,7 @@ import info.magnolia.cms.core.Content;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
-
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author Philipp Bracher
@@ -30,7 +30,7 @@ public interface WebContext extends Context {
     /**
      * Method used to initialize the context
      */
-    public void init(HttpServletRequest request);
+    public void init(HttpServletRequest request, HttpServletResponse response);
 
     /**
      * Get currently active page
@@ -68,10 +68,15 @@ public interface WebContext extends Context {
      * @return
      */
     public String getContextPath();
-    
+
     /**
-     * Avoid the call to this method where ever possible.
+     * Avoid calls to this method wherever possible.
      * @return Returns the request.
      */
     public HttpServletRequest getRequest();
+
+    /**
+     * Avoid depending on this as much as possible.
+     */
+    public HttpServletResponse getResponse();
 }

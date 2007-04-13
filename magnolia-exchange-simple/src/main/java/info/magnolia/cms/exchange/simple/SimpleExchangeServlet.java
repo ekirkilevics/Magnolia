@@ -26,12 +26,10 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 import info.magnolia.api.HierarchyManager;
 
 import java.io.IOException;
@@ -91,7 +89,7 @@ public class SimpleExchangeServlet extends HttpServlet {
         String status = "";
         try {
             validateRequest(request);
-            initializeContext(request);
+            initializeContext(request, response);
             applyLock(request);
             receive(request);
             // remove cached files if successful
@@ -402,10 +400,8 @@ public class SimpleExchangeServlet extends HttpServlet {
      * the implementation may get changed
      * @param request the current request
      */
-    protected void initializeContext(HttpServletRequest request) {
-        WebContext ctx = (WebContext) FactoryUtil.newInstance(WebContext.class);
-        ctx.init(request);
-        MgnlContext.setInstance(ctx);
+    protected void initializeContext(HttpServletRequest request, HttpServletResponse response) {
+        MgnlContext.initAsWebContext(request, response);
     }
 
     /**

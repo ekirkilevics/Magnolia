@@ -12,6 +12,7 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Aggregator;
@@ -23,7 +24,6 @@ import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.DumperUtil;
-import info.magnolia.api.HierarchyManager;
 
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -32,33 +32,24 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * @author Sameer Charles
  * @version $Revision $ ($Author $)
  */
 public class WebContextImpl extends AbstractContext implements WebContext {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebContextImpl.class);
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(WebContextImpl.class);
-
-    /**
-     * http request
-     */
     private HttpServletRequest request;
+    private HttpServletResponse response;
 
     /**
      * Use init to initialize the object
@@ -66,11 +57,9 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     public WebContextImpl() {
     }
 
-    /**
-     * @see info.magnolia.context.WebContext#init(javax.servlet.http.HttpServletRequest)
-     */
-    public void init(HttpServletRequest request) {
+    public void init(HttpServletRequest request, HttpServletResponse response) {
         this.request = request;
+        this.response = response;
     }
 
     /**
@@ -333,6 +322,10 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public HttpServletRequest getRequest() {
         return this.request;
+    }
+
+    public HttpServletResponse getResponse() {
+        return response;
     }
 
     public String getContextPath() {

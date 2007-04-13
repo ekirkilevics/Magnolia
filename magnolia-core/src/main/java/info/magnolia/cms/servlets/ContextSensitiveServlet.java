@@ -14,55 +14,41 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.context.MgnlContext;
 
-import java.io.IOException;
-
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.IOException;
 
 /**
  * Servlet which sets the context properly.
+ *
+ * @deprecated the context is now set through a filter.
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
 public abstract class ContextSensitiveServlet extends HttpServlet {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ContextSensitiveServlet.class);
 
-    /**
-     * Logger
-     */
-    Logger log = LoggerFactory.getLogger(ContextSensitiveServlet.class);
-
-    /**
-     * @see javax.servlet.http.HttpServlet#doGet(javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
-     */
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        initializeContext(req);
+        initializeContext(req, resp);
     }
 
-    /**
-     * @see javax.servlet.http.HttpServlet#doPost(javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
-     */
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        initializeContext(req);
+        initializeContext(req, resp);
     }
 
     /**
      * Initialize Magnolia context. It creates a context and initialize the user only if these do not exist yet.
      * <strong>Note</strong>: the implementation may get changed
+     *
      * @param request the current request
      */
-    protected void initializeContext(HttpServletRequest request) {
+    protected void initializeContext(HttpServletRequest request, HttpServletResponse response) {
         if (!MgnlContext.hasInstance()) {
-            MgnlContext.initAsWebContext(request);
-        }
-        else {
+            MgnlContext.initAsWebContext(request, response);
+        } else {
             // this will happen if a virtual uri mapping is pointing again to a virtual uri
             if (log.isDebugEnabled()) {
                 log.debug("context of thread was already set");

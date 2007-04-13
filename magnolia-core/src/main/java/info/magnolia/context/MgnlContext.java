@@ -26,6 +26,7 @@ import java.util.Locale;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -314,9 +315,9 @@ public class MgnlContext {
      * Sets this context as a web context.
      * @param request
      */
-    public static void initAsWebContext(HttpServletRequest request) {
+    public static void initAsWebContext(HttpServletRequest request, HttpServletResponse response) {
         WebContext ctx = (WebContext) FactoryUtil.newInstance(WebContext.class);
-        ctx.init(request);
+        ctx.init(request, response);
         setInstance(ctx);
     }
 
