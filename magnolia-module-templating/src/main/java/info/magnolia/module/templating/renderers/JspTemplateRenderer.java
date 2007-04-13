@@ -15,43 +15,26 @@ package info.magnolia.module.templating.renderers;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 
-import java.io.IOException;
-import java.text.MessageFormat;
-
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.IOException;
 
 /**
  * <p>
  * Simple jsp template renderer, mapped to template type <code>jsp</code>. The only valid attribute jsp templates is
  * <code>path</code>, which specify the jsp/servlet path to forward to.
  * </p>
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public class JspTemplateRenderer implements TemplateRenderer {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JspTemplateRenderer.class);
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(JspTemplateRenderer.class);
-
-    /**
-     * @throws IOException
-     * @throws ServletException
-     * @see info.magnolia.cms.beans.runtime.TemplateRenderer#renderTemplate(javax.servlet.http.HttpServletRequest,
-     * javax.servlet.http.HttpServletResponse)
-     */
-    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException {
-
-        String requestReceiver = template.getPath();
+    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        final String requestReceiver = template.getPath();
 
         if (requestReceiver == null) {
             log.error("requestReceiver is missing, returning a 404 error"); //$NON-NLS-1$
@@ -59,20 +42,15 @@ public class JspTemplateRenderer implements TemplateRenderer {
             return;
         }
 
-        if (log.isDebugEnabled()) {
-            log.debug(MessageFormat.format("Dispatching request for [{0}] - forward to [{1}]", //$NON-NLS-1$
-                new Object[]{request.getRequestURL(), requestReceiver}));
-        }
+        log.debug("Dispatching request for [{}] - forward to [{1}]", request.getRequestURL(), requestReceiver);
 
         if (response.isCommitted()) {
-            log.error(MessageFormat.format("Can''t forward to [{0}] for request [{1}]. Response is already committed.", //$NON-NLS-1$
-                new Object[]{requestReceiver, request.getRequestURL()}));
+            log.error("Can''t forward to [{}] for request [{}]. Response is already committed.", requestReceiver, request.getRequestURL());
             return;
         }
 
         RequestDispatcher rd = request.getRequestDispatcher(requestReceiver);
         rd.forward(request, response);
-        rd = null;
     }
 
 }
