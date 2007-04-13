@@ -112,10 +112,10 @@ public class MockUtil {
     }
 
     public static void populateContent(MockContent c, String name, String valueStr) {
-        if (name.equals("type")) {
+        if (name.equals("@type")) {
             c.setNodeTypeName(valueStr);
         }
-        else if (name.equals("uuid")) {
+        else if (name.equals("@uuid")) {
             c.setUUID(valueStr);
         }
         else {
