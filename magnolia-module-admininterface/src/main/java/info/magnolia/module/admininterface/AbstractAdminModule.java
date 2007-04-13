@@ -19,6 +19,7 @@ import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
+import info.magnolia.cms.beans.config.ParagraphRendererManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.ControlsManager;
 import info.magnolia.cms.module.AbstractModule;
@@ -57,8 +58,9 @@ public abstract class AbstractAdminModule extends AbstractModule {
 
             initEntry("virtualURIMapping", VirtualURIManager.getInstance());
             initEntry("templates", TemplateManager.getInstance());
-            initEntry("renderers", TemplateRendererManager.getInstance());
+            initEntry("template-renderers", TemplateRendererManager.getInstance());
             initEntry("paragraphs", ParagraphManager.getInstance());
+            initEntry("paragraph-renderers", ParagraphRendererManager.getInstance());
             initEntry("dialogs", DialogHandlerManager.getInstance());
             initEntry("controls", ControlsManager.getInstance());
             initEntry("pages", PageHandlerManager.getInstance());

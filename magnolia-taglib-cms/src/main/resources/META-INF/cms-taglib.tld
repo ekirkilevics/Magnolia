@@ -355,7 +355,9 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>path</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>file to be included (e.g. /templates/jsp/x.jsp)</description>
+      <description>file to be included (e.g. /templates/jsp/x.jsp)
+      This is deprecated: just use basic jsp tags if you need to include a jsp in your templates.
+      </description>
     </attribute>
     <attribute>
       <name>contentNode</name>

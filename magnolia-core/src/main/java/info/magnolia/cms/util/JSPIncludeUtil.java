@@ -1,22 +1,3 @@
-package info.magnolia.cms.util;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.io.UnsupportedEncodingException;
-import java.util.Locale;
-
-import javax.servlet.ServletException;
-import javax.servlet.ServletOutputStream;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpServletResponseWrapper;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.taglibs.standard.resources.Resources;
-
-
 /**
  *
  * Magnolia and its source-code is licensed under the LGPL.
@@ -29,8 +10,26 @@ import org.apache.taglibs.standard.resources.Resources;
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
+package info.magnolia.cms.util;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.taglibs.standard.resources.Resources;
+
+import javax.servlet.http.HttpServletResponseWrapper;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletOutputStream;
+import javax.servlet.ServletException;
+import java.io.StringWriter;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.io.IOException;
+import java.io.ByteArrayOutputStream;
+import java.util.Locale;
 
 /**
+ * This (the WriterResponseWrapper inner class) was copied from the JSTL include tag. *
+ *
  * We provide either a Writer or an OutputStream as requested. We actually have a true Writer and an OutputStream
  * backing both, since we don't want to use a character encoding both ways (Writer -> OutputStream -> Writer). So we use
  * no encoding at all (as none is relevant) when the target resource uses a Writer. And we decode the OutputStream's
@@ -38,8 +37,12 @@ import org.apache.taglibs.standard.resources.Resources;
  * setContentType() in this wrapper. In other words, the target's asserted encoding is used to convert from a Writer to
  * an OutputStream, which is typically the medium through with the target will communicate its ultimate response. Since
  * we short-circuit that mechanism and read the target's characters directly if they're offered as such, we simply
- * ignore the target's encoding assertion. The inner class ImportResponseWrapper is copied from the JSTL include tag
+ * ignore the target's encoding assertion.
  * @author philipp
+ *
+ * @deprecated not used. If you need to include JSPs or other servlet resources, use WebContext.include()
+ * @see info.magnolia.context.WebContext#include(String, java.io.Writer)
+ * @see info.magnolia.cms.taglibs.Include
  */
 public final class JSPIncludeUtil {
 

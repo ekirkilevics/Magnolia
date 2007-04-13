@@ -17,9 +17,12 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 
 import java.util.Map;
+import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletException;
 
 /**
  * @author Philipp Bracher
@@ -52,7 +55,6 @@ public interface WebContext extends Context {
 
     /**
      * Get parameter value as string
-     * @param name
      * @return parameter value
      */
     public String getParameter(String name);
@@ -64,8 +66,7 @@ public interface WebContext extends Context {
     public Map getParameters();
 
     /**
-     * Get the current context path
-     * @return
+     * Get the current context path.
      */
     public String getContextPath();
 
@@ -79,4 +80,12 @@ public interface WebContext extends Context {
      * Avoid depending on this as much as possible.
      */
     public HttpServletResponse getResponse();
+
+    /**
+     * Includes/render the given path into the given Writer, by wrapping it in the
+     * current HttpServletResponse.
+     *
+     * @see javax.servlet.ServletRequest#getRequestDispatcher(String)
+     */
+    void include(final String path, final Writer out) throws ServletException, IOException;
 }

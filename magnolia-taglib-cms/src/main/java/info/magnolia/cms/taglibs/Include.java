@@ -14,6 +14,7 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ParagraphManager;
+import info.magnolia.cms.beans.config.ParagraphRendererManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 
@@ -25,11 +26,6 @@ import java.util.List;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author marcel Salathe
  * @author Sameer Charles
@@ -37,16 +33,12 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class Include extends BodyTagSupport {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Include.class);
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(Include.class);
 
     /**
      * file to be included (e.g. /templates/jsp/x.jsp).
@@ -87,6 +79,7 @@ public class Include extends BodyTagSupport {
     /**
      * Set the file to be included.
      * @param path file to be included (e.g. /templates/jsp/x.jsp)
+     * @deprecated this only includes a jsp file, use the default jsp tags to do this
      */
     public void setPath(String path) {
         this.path = path;
@@ -162,36 +155,25 @@ public class Include extends BodyTagSupport {
                 }
             }
 
-            String jspPage = this.path;
-
-            if (jspPage == null) {
-                String paragraphName = content.getMetaData().getTemplate();
-                Paragraph paragraph = ParagraphManager.getInstance().getInfo(paragraphName);
-
-                if (paragraph == null) {
-                    log.error("Paragraph {} not found for page {}", //$NON-NLS-1$
-                        paragraphName,
-                        content.getHandle());
-                }
-                else {
-                    jspPage = paragraph.getTemplatePath();
-                }
-
-                if (jspPage == null) {
-                    log.error("Unable to render paragraph {} in page {}: templatePath not set.", //$NON-NLS-1$
-                        paragraphName,
-                        content.getHandle());
-                }
+            if (this.path!=null) { // TODO
+                log.warn("You are using the deprecated path attribute of the include tag. Your jsp will be included for now, but you might want to update your code to avoid bad surprises in the future.");
+                pageContext.include(this.path);
             }
-            if (jspPage != null) {
-                pageContext.include(jspPage);
+
+
+            final String paragraphName = content.getMetaData().getTemplate();
+            final Paragraph paragraph = ParagraphManager.getInstance().getInfo(paragraphName);
+            if (paragraph == null) {
+                // TODO : throw exception ?
+                log.error("Paragraph {} not found for page {}", paragraphName, content.getHandle());
+            } else {
+                ParagraphRendererManager.getInstance().render(paragraph, pageContext.getOut());                
             }
-        }
-        catch (IOException e) {
+
+        } catch (IOException e) {
             // should never happen
-            throw new NestableRuntimeException(e);
-        }
-        catch (Exception e) {
+            throw new RuntimeException(e);
+        } catch (Exception e) {
             log.error(e.getMessage(), e);
         }
 

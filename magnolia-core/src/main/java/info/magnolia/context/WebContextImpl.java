@@ -29,12 +29,15 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.io.Writer;
+import java.io.IOException;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
+import javax.servlet.ServletException;
 
 /**
  * @author Sameer Charles
@@ -89,8 +92,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Get hierarchy manager initialized for this user
-     * @param repositoryId
-     * @param workspaceId
      * @return hierarchy manager
      */
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
@@ -119,8 +120,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Get access manager for the specified repository on the specified workspace
-     * @param repositoryId
-     * @param workspaceId
      * @return access manager
      */
     public AccessManager getAccessManager(String repositoryId, String workspaceId) {
@@ -129,8 +128,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Get QueryManager created for this user on the specified repository and workspace
-     * @param repositoryId
-     * @param workspaceId
      * @return query manager
      */
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
@@ -169,8 +166,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     }
 
     /**
-     * Get parameter value as string
-     * @param name
+     * Get parameter value as string.
      * @return parameter value
      */
     public String getParameter(String name) {
@@ -204,14 +200,9 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 this.request.setAttribute(name, value);
                 break;
             case Context.SESSION_SCOPE:
-
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
-                    log
-                        .warn(
-                            "Session initialized in oder to setting attribute '{}' to '{}'. You should avoid using session when possible!",
-                            name,
-                            value);
+                    log.warn("Session initialized in order to setting attribute '{}' to '{}'. You should avoid using session when possible!", name, value);
                     httpsession = request.getSession(true);
                 }
 
@@ -330,5 +321,16 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     public String getContextPath() {
         return this.request.getContextPath();
+    }
+
+    public void include(final String path, final Writer out) throws ServletException, IOException {
+        try {
+            final WriterResponseWrapper wrappedResponse = new WriterResponseWrapper(response, out);
+            request.getRequestDispatcher(path).include(request, wrappedResponse);
+        } catch (ServletException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
