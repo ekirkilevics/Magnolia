@@ -18,7 +18,7 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * @author Sameer Charles
  */
-public final class Paragraph {
+public class Paragraph {
 
     private String name;
 
@@ -36,10 +36,7 @@ public final class Paragraph {
 
     private String i18nBasename;
 
-    /**
-     * constructor
-     */
-    Paragraph() {
+    protected Paragraph() {
     }
 
     /**
@@ -141,7 +138,6 @@ public final class Paragraph {
      */
     public String toString() {
         return new ToStringBuilder(this)
-        //
             .append("name", this.name) //$NON-NLS-1$
             .append("type", this.type) //$NON-NLS-1$
             .append("description", this.description) //$NON-NLS-1$
