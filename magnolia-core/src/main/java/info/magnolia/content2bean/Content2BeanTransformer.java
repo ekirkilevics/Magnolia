@@ -23,9 +23,9 @@ import info.magnolia.cms.core.Content;
 public interface Content2BeanTransformer extends Content.ContentFilter {
 
     /**
-     * Resolves the class to use for that node
+     * Resolves the class to use for the current node
      */
-    public Class resolveClass(Content node) throws ClassNotFoundException;
+    public Class resolveClass() throws ClassNotFoundException;
 
     /**
      * Instantiates the bean

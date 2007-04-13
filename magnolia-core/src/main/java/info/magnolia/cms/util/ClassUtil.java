@@ -12,6 +12,9 @@
  */
 package info.magnolia.cms.util;
 
+import java.util.Map;
+
+import org.apache.commons.collections.map.LRUMap;
 import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +31,8 @@ public final class ClassUtil {
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(ClassUtil.class);
+
+    private static Map subClassCache = new LRUMap(200);
 
     /**
      * Don't instantiate.
@@ -73,11 +78,21 @@ public final class ClassUtil {
         if(subClass.equals(parentClass)){
             return true;
         }
+        String key = subClass.getName() + "-" +parentClass.getName();
+
+        // lru map
+        Boolean isSubClass = (Boolean) subClassCache.get(key);
+        if(isSubClass != null){
+            return isSubClass.booleanValue();
+        }
+
         if(parentClass.isInterface()){
-            return ClassUtils.getAllInterfaces(subClass).contains(parentClass);
+            isSubClass = Boolean.valueOf(ClassUtils.getAllInterfaces(subClass).contains(parentClass));
         }
         else{
-            return ClassUtils.getAllSuperclasses(subClass).contains(parentClass);
+            isSubClass = Boolean.valueOf(ClassUtils.getAllSuperclasses(subClass).contains(parentClass));
         }
+        subClassCache.put(key, isSubClass);
+        return isSubClass.booleanValue();
     }
 }

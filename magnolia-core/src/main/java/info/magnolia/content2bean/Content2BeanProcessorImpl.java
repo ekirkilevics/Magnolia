@@ -107,16 +107,17 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     }
 
     public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException{
+        transformer.pushContent(node);
+
         Class klass = null;
         try {
-            klass = transformer.resolveClass(node);
+            klass = transformer.resolveClass();
         }
         catch (ClassNotFoundException e) {
             throw new Content2BeanException("can't resolve class for node " +  node.getHandle(), e);
         }
 
         transformer.pushClass(klass);
-        transformer.pushContent(node);
 
         Map properties = toMap(node, recursive, transformer);
 

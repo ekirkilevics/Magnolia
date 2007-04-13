@@ -21,6 +21,7 @@ import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
@@ -42,11 +43,16 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
     private static Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
 
     /**
+     * Property types already resolved
+     */
+    protected static Map propertyTypes = new HashMap();
+
+    /**
      * Stack of classes
      */
     protected ArrayStack classStack = new ArrayStack();
 
-    protected ArrayStack nodesStack = new ArrayStack();
+    protected ArrayStack nodeStack = new ArrayStack();
 
     /**
      * Mappings to use
@@ -56,14 +62,15 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
     /**
      * Resolves in this order
      * <ul>
-     * <li> checks the class property of the node
+     * <li> checks the class property of the current node
      * <li> calls onResolve subclasses should override
      * <li> reflection on the parent bean
      * <li> in case of a collection/map type call getClassForCollectionProperty
      * <li> otherwise use a Map
      * </ul>
      */
-    public Class resolveClass(Content node) throws ClassNotFoundException {
+    public Class resolveClass() throws ClassNotFoundException {
+        Content node = (Content) nodeStack.peek();
         try {
             if (node.hasNodeData("class")) {
                 String className = node.getNodeData("class").getString();
@@ -85,28 +92,14 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             if (!classStack.isEmpty()) {
                 if (ClassUtil.isSubClass((Class)classStack.peek(), Map.class)) {
                     if (classStack.size() >= 2) {
-                        String mapProperyName = node.getParent().getName();
+                        // this is not necesserely the parent node of the current
+                        String mapProperyName = ((Content)nodeStack.peek(1)).getName();
                         return getClassForCollectionProperty((Class)classStack.peek(1), mapProperyName);
                     }
                 }
                 else {
-                    Class klass = null;
-                    PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors((Class)classStack.peek());
-                    for (int i = 0; i < descriptors.length; i++) {
-                        PropertyDescriptor descriptor = descriptors[i];
-                        if(descriptor.getName().equals(node.getName())){
-                            klass = descriptor.getPropertyType();
-                            break;
-                        }
-                    }
+                    return resolvePropertyType((Class)classStack.peek(), node.getName());
 
-                    if (klass!= null && !ClassUtil.isSubClass(klass, Map.class) && !ClassUtil.isSubClass(klass, Collection.class)) {
-                        return klass;
-                    }
-                    else {
-                        // a map is created
-                        return HashMap.class;
-                    }
                 }
             }
         }
@@ -115,6 +108,36 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         }
 
         return HashMap.class;
+    }
+
+    /**
+     * Cache the already resolved types
+     *
+     */
+    protected Class resolvePropertyType(Class beanClass, String propName) {
+        String key = beanClass.getName() + "." + propName;
+        if(propertyTypes.containsKey(key)){
+            return (Class) propertyTypes.get(key);
+        }
+
+        Class klass = null;
+
+        PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors(beanClass);
+        for (int i = 0; i < descriptors.length; i++) {
+            PropertyDescriptor descriptor = descriptors[i];
+            if(descriptor.getName().equals(propName)){
+                klass = descriptor.getPropertyType();
+                break;
+            }
+        }
+        if (klass == null || ClassUtil.isSubClass(klass, Map.class) || ClassUtil.isSubClass(klass, Collection.class)) {
+            // a map is created
+            klass = LinkedHashMap.class;
+        }
+        // remember me
+        propertyTypes.put(key, klass);
+
+        return klass;
     }
 
     /**
@@ -216,11 +239,11 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
     }
 
     public void pushContent(Content node) {
-        nodesStack.push(node);
+        nodeStack.push(node);
     }
 
     public void popContent() {
-        nodesStack.pop();
+        nodeStack.pop();
     }
 
     /**
@@ -240,7 +263,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
 
         if(!(bean instanceof Map)){
             try {
-                Class type = PropertyUtils.getPropertyType(bean, propertyName);
+                Class type = resolvePropertyType(bean.getClass(), propertyName);
                 if(type != null){
                     if (ClassUtil.isSubClass(type, Collection.class)) {
                         value = ((Map) value).entrySet();
@@ -249,12 +272,11 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
                             for (Iterator iter = ((Collection) value).iterator(); iter.hasNext();) {
                                 method.invoke(bean, new Object[]{iter.next()});
                             }
+                            return;
                         }
-                        return;
                     }
-
                     // try to use an adder method
-                    if (ClassUtil.isSubClass(type, Map.class)) {
+                    else if (ClassUtil.isSubClass(type, Map.class)) {
                         Method method = getAddMethod(bean.getClass(), propertyName);
                         if (method != null) {
                             for (Iterator iter = ((Map) value).keySet().iterator(); iter.hasNext();) {
