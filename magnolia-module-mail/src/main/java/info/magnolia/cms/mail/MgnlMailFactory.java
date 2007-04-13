@@ -3,6 +3,7 @@ package info.magnolia.cms.mail;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.cms.mail.templates.MailAttachment;
@@ -12,6 +13,9 @@ import info.magnolia.cms.mail.templates.impl.HtmlEmail;
 import info.magnolia.cms.mail.templates.impl.MagnoliaEmail;
 import info.magnolia.cms.mail.templates.impl.SimpleEmail;
 import info.magnolia.cms.mail.templates.impl.VelocityEmail;
+import info.magnolia.cms.security.Security;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.api.HierarchyManager;
 
@@ -79,9 +83,9 @@ public class MgnlMailFactory extends ObservedManager {
     private Class mailHandlerClass;
 
     private String templatePath;
-    
+
     private Map mailTypeHandlers = new HashMap();
-    
+
 
     /**
      * Use getInstance to get the current used instance
@@ -90,34 +94,34 @@ public class MgnlMailFactory extends ObservedManager {
         mailHandlerClass = info.magnolia.cms.mail.handlers.MgnlMailHandler.class;
         this.mailParameters = new Hashtable();
         this.templates = new ArrayList();
-        
+
         // default handlers
         registerMailType(MailConstants.MAIL_TEMPLATE_VELOCITY, new MgnlMailTypeFactory(){
-        	public MgnlEmail createEmail() throws Exception {
-        		return new VelocityEmail(getSession());
-        	}
+            public MgnlEmail createEmail() throws Exception {
+                return new VelocityEmail(getSession());
+            }
         });
-        
+
         registerMailType(MailConstants.MAIL_TEMPLATE_HTML, new MgnlMailTypeFactory(){
-        	public MgnlEmail createEmail() throws Exception {
-        		return new HtmlEmail(getSession());
-        	}
+            public MgnlEmail createEmail() throws Exception {
+                return new HtmlEmail(getSession());
+            }
         });
-        
+
         registerMailType(MailConstants.MAIL_TEMPLATE_FREEMARKER, new MgnlMailTypeFactory(){
-        	public MgnlEmail createEmail() throws Exception {
-        		return new FreemarkerEmail(getSession());
-        	}
+            public MgnlEmail createEmail() throws Exception {
+                return new FreemarkerEmail(getSession());
+            }
         });
 
         registerMailType(MailConstants.MAIL_TEMPLATE_MAGNOLIA, new MgnlMailTypeFactory(){
-        	public MgnlEmail createEmail() throws Exception {
-        		return new MagnoliaEmail(getSession());
-        	}
+            public MgnlEmail createEmail() throws Exception {
+                return new MagnoliaEmail(getSession());
+            }
         });
     }
 
-	public static MgnlMailFactory getInstance() {
+    public static MgnlMailFactory getInstance() {
         return factory;
     }
 
@@ -126,9 +130,9 @@ public class MgnlMailFactory extends ObservedManager {
     }
 
     public void registerMailType(String name, MgnlMailTypeFactory handler) {
-    	mailTypeHandlers.put(name.toLowerCase(), handler);
-	}
-    
+        mailTypeHandlers.put(name.toLowerCase(), handler);
+    }
+
     /**
      * Data is fetch into the repository to get the different parameters of the email
      * @param id the id to find under the template section of the repository
@@ -213,9 +217,9 @@ public class MgnlMailFactory extends ObservedManager {
      * @throws Exception if fails
      */
     public MgnlEmail getEmailFromType(String type) throws Exception {
-    	if(mailTypeHandlers.containsKey(type.toLowerCase())){
-    		return ((MgnlMailTypeFactory) mailTypeHandlers.get(type.toLowerCase())).createEmail();
-    	}
+        if(mailTypeHandlers.containsKey(type.toLowerCase())){
+            return ((MgnlMailTypeFactory) mailTypeHandlers.get(type.toLowerCase())).createEmail();
+        }
         else {
             return new SimpleEmail(getSession());
         }
@@ -316,7 +320,7 @@ public class MgnlMailFactory extends ObservedManager {
         if(StringUtils.isEmpty(mailTo)){
             return "";
         }
-        
+
         String[] list = mailTo.split(";");
         if (list == null) {
             return "";
@@ -334,16 +338,47 @@ public class MgnlMailFactory extends ObservedManager {
                 ret.append(getUserMail(userName));
             }
             else if (userName.startsWith(MailConstants.PREFIX_GROUP)) {
-
+                userName = StringUtils.removeStart(userName, MailConstants.PREFIX_GROUP);
+                try {
+                    HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+                    Collection users = hm.getRoot().getChildren(ItemType.USER);
+                    Iterator iter = users.iterator();
+                    while(iter.hasNext()){
+                        Content userNode = ((Content) iter.next());
+                        UserManager manager = Security.getUserManager();
+                        User user = manager.getUser(userNode.getName());
+                        if (user.getGroups().contains(userName)){
+                            ret.append(getUserMail(user.getName()));
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    log.error("can not get user email info.");
+                }
             }
             else if (userName.startsWith(MailConstants.PREFIX_ROLE)) {
-
+                userName = StringUtils.removeStart(userName, MailConstants.PREFIX_ROLE);
+                try {
+                    HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+                    Collection users = hm.getRoot().getChildren(ItemType.USER);
+                    Iterator iter = users.iterator();
+                    while(iter.hasNext()){
+                        Content userNode = ((Content) iter.next());
+                        UserManager manager = Security.getUserManager();
+                        User user = manager.getUser(userNode.getName());
+                        if (user.getRoles().contains(userName)){
+                            ret.append(getUserMail(user.getName()));
+                        }
+                    }
+                }
+                catch (Exception e) {
+                    log.error("can not get user email info.");
+                }
             }
             else {
                 // none of the above, just add the mail to the list
                 ret.append(userName);
             }
-
         }
         return ret.toString();
     }
