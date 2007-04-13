@@ -15,7 +15,7 @@ package info.magnolia.cms.taglibs.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
@@ -24,10 +24,10 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Calendar;
 
 import javax.imageio.ImageIO;
 import javax.jcr.AccessDeniedException;
@@ -37,7 +37,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
 
 import org.apache.log4j.Logger;
 
@@ -63,7 +62,7 @@ import org.apache.log4j.Logger;
  * @author Fabrizio Giustina
  * @version 1.0
  */
-public class ScaleImageTag extends SimpleTagSupport {
+public class ScaleImageTag extends BaseImageTag {
 
     /**
      * Location for folder for temporary image creation.
@@ -71,39 +70,9 @@ public class ScaleImageTag extends SimpleTagSupport {
     private static final String TEMP_IMAGE_NAME = "tmp-img";
 
     /**
-     * Name of properties node that describes an image. This gets combined with to the name of the image.
-     */
-    private static final String PROPERTIES_NODE_NAME = "_properties";
-
-    /**
-     * The name of the fileName nodeData in the properties node.
-     */
-    private static final String PROPERTIES_FILENAME = "fileName";
-
-    /**
-     * The name of the size nodeData in the properties node.
-     */
-    private static final String PROPERTIES_SIZE = "size";
-
-    /**
-     * The name of the extension nodeData in the properties node.
-     */
-    private static final String PROPERTIES_EXTENSION = "extension";
-
-    /**
      * The value of the extension nodeData in the properties node.
      */
     private static final String PROPERTIES_EXTENSION_VALUE = "PNG";
-
-    /**
-     * The name of the contentType nodeData in the properties node.
-     */
-    private static final String PROPERTIES_CONTENTTYPE = "contentType";
-
-    /**
-     * The valye of the contentType nodeData in the properties node.
-     */
-    private static final String PROPERTIES_CONTENTTYPE_VALUE = "image/png";
 
     /**
      * Attribute: Image maximum height
@@ -119,11 +88,6 @@ public class ScaleImageTag extends SimpleTagSupport {
      * Attribute: The name of the new content node to create
      */
     private String imageContentNodeName;
-
-    /**
-     * Attribute: The node that contains the original image. If null, the default will be the local content node.
-     */
-    private String parentContentNodeName;
 
     /**
      * Attribute: The name of the data node that contains the existing image.
@@ -213,13 +177,16 @@ public class ScaleImageTag extends SimpleTagSupport {
                 imageContentNode = parentContentNode.createContent(this.imageContentNodeName, ItemType.CONTENTNODE);
                 parentContentNode.save();
             }
-            // if the node does not have the image data, then create the data
-            if (!imageContentNode.hasNodeData(this.parentNodeDataName)) {
+            // if the node does not have the image data or should be rescaled (i.e., something has c
+            // then create the image data
+            if (!imageContentNode.hasNodeData(this.parentNodeDataName) || rescale(parentContentNode, imageContentNode)) {
                 this.createImageNodeData(parentContentNode, imageContentNode);
             }
             // write out the handle for the new image and exit
-            out.write(imageContentNode.getHandle());
-
+            StringBuffer handle = new StringBuffer(imageContentNode.getHandle());
+            handle.append("/");
+            handle.append(getFilename());
+            out.write(handle.toString());
         }
         catch (PathNotFoundException e) {
             log.error("PathNotFoundException occured in ScaleImage tag: " + e.getMessage(), e);
@@ -240,6 +207,34 @@ public class ScaleImageTag extends SimpleTagSupport {
     }
 
     /**
+     * Checks to see if the previously scaled image needs to be rescaled.
+     * This is true when the parent content node has been updated or the height or width
+     * parameters have changed.
+     *
+     * @param parentContentNode The node containing the scaled image node
+     * @param imageContentNode The scaled image node
+     * @return
+     */
+    protected boolean rescale(Content parentContentNode, Content imageContentNode) {
+        Calendar parentModified = parentContentNode.getMetaData().getModificationDate() != null ?
+                parentContentNode.getMetaData().getModificationDate() :
+                    parentContentNode.getMetaData().getCreationDate();
+
+        Calendar imageModified = imageContentNode.getMetaData().getModificationDate() != null ?
+                imageContentNode.getMetaData().getModificationDate() :
+                    imageContentNode.getMetaData().getCreationDate();
+
+        if (parentModified.after(imageModified)) {
+            return true;
+        } else {
+            int originalHeight = (int) imageContentNode.getNodeData("maxHeight").getLong();
+            int originalWidth = (int) imageContentNode.getNodeData("maxWidth").getLong();
+
+            return originalHeight != maxHeight || originalWidth != maxWidth;
+        }
+    }
+
+    /**
      * Set objects to null
      */
     public void cleanUp() {
@@ -251,39 +246,24 @@ public class ScaleImageTag extends SimpleTagSupport {
 
     /**
      * Create an image file that is a scaled version of the original image
-     * @param the original image file
-     * @return the new image file
+     * @param image node
      */
     private void createImageNodeData(Content parentContentNode, Content imageContentNode) throws PathNotFoundException,
         RepositoryException, IOException {
-        // create the nodeData for the image
-        NodeData newNodeData = imageContentNode.createNodeData(this.parentNodeDataName);
+
         // get the original image, as a buffered image
         InputStream oriImgStr = parentContentNode.getNodeData(this.parentNodeDataName).getStream();
         BufferedImage oriImgBuff = ImageIO.read(oriImgStr);
         oriImgStr.close();
         // create the new image file
         File newImgFile = this.scaleImage(oriImgBuff);
-        long fileSize = newImgFile.length();
-        InputStream newImgStr = new FileInputStream(newImgFile);
-        newNodeData.setValue(newImgStr);
-        newImgStr.close();
+
+        NodeDataUtil.getOrCreate(imageContentNode, "maxHeight").setValue(maxHeight);
+        NodeDataUtil.getOrCreate(imageContentNode, "maxWidth").setValue(maxWidth);
+
+        createImageNode(newImgFile, imageContentNode);
+
         newImgFile.delete();
-        // create the properties node for the image
-        Content newPropsNode = imageContentNode.createContent(
-            this.parentNodeDataName + PROPERTIES_NODE_NAME,
-            ItemType.CONTENTNODE);
-        NodeData size = newPropsNode.createNodeData(PROPERTIES_SIZE);
-        size.setValue(fileSize);
-        NodeData extension = newPropsNode.createNodeData(PROPERTIES_EXTENSION);
-        extension.setValue(PROPERTIES_EXTENSION_VALUE);
-        NodeData contentType = newPropsNode.createNodeData(PROPERTIES_CONTENTTYPE);
-        contentType.setValue(PROPERTIES_CONTENTTYPE_VALUE);
-        NodeData fileName = newPropsNode.createNodeData(PROPERTIES_FILENAME);
-        fileName.setValue(this.imageContentNodeName);
-        // save everything
-        imageContentNode.save(); // TO DO : does this save the properties node???
-        newPropsNode.save();
     }
 
     /**
@@ -344,5 +324,9 @@ public class ScaleImageTag extends SimpleTagSupport {
             scaleFactor = Math.min(scaleFactorWidth, scaleFactorHeight);
         }
         return scaleFactor;
+    }
+
+    protected String getFilename() {
+        return this.parentNodeDataName;
     }
 }

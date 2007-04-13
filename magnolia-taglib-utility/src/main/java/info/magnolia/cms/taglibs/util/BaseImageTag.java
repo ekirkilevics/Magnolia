@@ -276,7 +276,8 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         // delete the temporary file
         imageFile.delete();
 
-        // save the new image node
+        // update modification date and save the new image node
+        imageNode.getMetaData().setModificationDate();        
         imageNode.save();
     }
 }
