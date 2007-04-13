@@ -89,8 +89,8 @@ public class MockUtil {
         return hm;
     }
 
-    public static HierarchyManager createHierarchyManager(String s) throws IOException, RepositoryException {
-        final ByteArrayInputStream in = new ByteArrayInputStream(s.getBytes());
+    public static HierarchyManager createHierarchyManager(String propertiesStr) throws IOException, RepositoryException {
+        final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());
         return createHierarchyManager(in);
     }
 
