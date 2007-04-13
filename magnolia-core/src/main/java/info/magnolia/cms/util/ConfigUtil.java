@@ -12,7 +12,10 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -47,6 +50,7 @@ import org.xml.sax.SAXException;
  *
  */
 public class ConfigUtil {
+
     /**
      * EntityResolver using a Map to resources
      * @author Philipp Bracher
@@ -145,7 +149,7 @@ public class ConfigUtil {
         IOUtils.closeQuietly(stream);
         return replaceTokens(config);
     }
-    
+
     /**
      * Replace tokens in a string
      * @param config
@@ -156,7 +160,6 @@ public class ConfigUtil {
         for (Iterator iter = SystemProperty.getProperties().keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             config = StringUtils.replace(config, "${" + key + "}", SystemProperty.getProperty(key, ""));
-            
         }
         return config;
     }
@@ -197,7 +200,7 @@ public class ConfigUtil {
         builder.setEntityResolver(new MapDTDEntityResolver(dtds));
         return builder.build(IOUtils.toInputStream(xml));
     }
-    
+
     /**
      * Uses a map to find dtds in the resources
      * @param xml
@@ -214,6 +217,22 @@ public class ConfigUtil {
         builder = dbf.newDocumentBuilder();
         builder.setEntityResolver(new MapDTDEntityResolver(dtds));
         return builder.parse(IOUtils.toInputStream(xml));
+    }
+
+    public static Object toBean(Content node, boolean recursive) throws Content2BeanException {
+        return Content2BeanUtil.toBean(node, recursive);
+    }
+
+    public static Object toBean(Content node) throws Content2BeanException {
+        return Content2BeanUtil.toBean(node);
+    }
+
+    public static Map toMap(Content node, boolean recursive) throws Content2BeanException {
+        return Content2BeanUtil.toMap(node, recursive);
+    }
+
+    public static Map toMap(Content node) throws Content2BeanException {
+        return Content2BeanUtil.toMap(node);
     }
 
 }

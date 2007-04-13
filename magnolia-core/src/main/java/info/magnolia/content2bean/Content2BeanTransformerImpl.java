@@ -15,6 +15,7 @@ import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
@@ -41,9 +42,11 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
     private static Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
 
     /**
-     * Stack of beans
+     * Stack of classes
      */
-    protected ArrayStack beanStack = new ArrayStack();
+    protected ArrayStack classStack = new ArrayStack();
+
+    protected ArrayStack nodesStack = new ArrayStack();
 
     /**
      * Mappings to use
@@ -79,20 +82,25 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         }
 
         try {
-            if (!beanStack.isEmpty()) {
-                if (beanStack.peek() instanceof Map) {
-                    if (beanStack.size() >= 2) {
-                        Object mapContainingBean = beanStack.peek(1);
+            if (!classStack.isEmpty()) {
+                if (ClassUtil.isSubClass((Class)classStack.peek(), Map.class)) {
+                    if (classStack.size() >= 2) {
                         String mapProperyName = node.getParent().getName();
-                        return getClassForCollectionProperty(mapContainingBean.getClass(), mapProperyName);
+                        return getClassForCollectionProperty((Class)classStack.peek(1), mapProperyName);
                     }
                 }
                 else {
-                    Class klass = PropertyUtils
-                        .getPropertyDescriptor(beanStack.peek(), node.getName())
-                        .getPropertyType();
+                    Class klass = null;
+                    PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors((Class)classStack.peek());
+                    for (int i = 0; i < descriptors.length; i++) {
+                        PropertyDescriptor descriptor = descriptors[i];
+                        if(descriptor.getName().equals(node.getName())){
+                            klass = descriptor.getPropertyType();
+                            break;
+                        }
+                    }
 
-                    if (!ClassUtil.isSubClass(klass, Map.class) && !ClassUtil.isSubClass(klass, Collection.class)) {
+                    if (klass!= null && !ClassUtil.isSubClass(klass, Map.class) && !ClassUtil.isSubClass(klass, Collection.class)) {
                         return klass;
                     }
                     else {
@@ -199,12 +207,20 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         mapPropertyMapping.put(type.getName() + "." + name, mappedType);
     }
 
-    public void pushBean(Object bean) {
-        beanStack.push(bean);
+    public void pushClass(Class klass) {
+        classStack.push(klass);
     }
 
-    public void popBean() {
-        beanStack.pop();
+    public void popClass() {
+        classStack.pop();
+    }
+
+    public void pushContent(Content node) {
+        nodesStack.push(node);
+    }
+
+    public void popContent() {
+        nodesStack.pop();
     }
 
     /**
@@ -272,7 +288,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
     /**
      * Use the factory util to instantiate. This is usefull to get default implementation of interfaces
      */
-    public Object newBeanInstance(Content node, Class klass) {
+    public Object newBeanInstance(Class klass, Map properties) {
         return FactoryUtil.newInstance(klass);
     }
 

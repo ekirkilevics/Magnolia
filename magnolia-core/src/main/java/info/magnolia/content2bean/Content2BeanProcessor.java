@@ -26,8 +26,9 @@ public interface Content2BeanProcessor {
     /**
      * Transforms the nodes data into a map containting the names and values. In case recursive is true the subnodes are
      * transformed to maps as well
+     * @throws Content2BeanException
      */
-    public Map toMap(Content node, boolean recursive);
+    public Map toMap(Content node, boolean recursive) throws Content2BeanException;
 
     /**
      * Transforms the node to a bean using the passed transformer

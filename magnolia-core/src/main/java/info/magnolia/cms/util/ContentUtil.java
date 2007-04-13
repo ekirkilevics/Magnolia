@@ -16,27 +16,20 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.content2bean.Bean2ContentProcessor;
 import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanProcessor;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.EmptyStackException;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Stack;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.beanutils.ConstructorUtils;
-import org.apache.commons.collections.MapUtils;
-import org.apache.commons.discovery.tools.ClassUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -353,7 +346,14 @@ public class ContentUtil {
      * @deprecated Use Content2BeanUtil instead
      */
     public static Map toMap(Content node) {
-        return Content2BeanUtil.toMap(node);
+        try {
+            return Content2BeanUtil.toMap(node);
+        }
+        // we ignore it to not change the method signatur
+        catch (Content2BeanException e) {
+            log.error("exception catched in deprecated method", e);
+        }
+        return null;
     }
 
     /**

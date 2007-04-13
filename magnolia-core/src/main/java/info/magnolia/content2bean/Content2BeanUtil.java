@@ -83,14 +83,14 @@ public class Content2BeanUtil {
     /**
      * @see Content2BeanProcessor
      */
-    public static Map toMap(Content node) {
+    public static Map toMap(Content node) throws Content2BeanException {
         return toMap(node, false);
     }
 
     /**
      * @see Content2BeanProcessor
      */
-    public static Map toMap(Content node, boolean recursive) {
+    public static Map toMap(Content node, boolean recursive) throws Content2BeanException {
         return getContent2BeanProcessor().toMap(node, recursive);
     }
 

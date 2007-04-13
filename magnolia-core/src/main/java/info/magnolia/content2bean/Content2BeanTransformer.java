@@ -30,7 +30,7 @@ public interface Content2BeanTransformer extends Content.ContentFilter {
     /**
      * Instantiates the bean
      */
-    public Object newBeanInstance(Content node, Class klass);
+    public Object newBeanInstance(Class klass, Map properties);
 
     /**
      * Called after all properties are set
@@ -55,12 +55,21 @@ public interface Content2BeanTransformer extends Content.ContentFilter {
     /**
      * Push the current bean. This allows to use the bean stack in other methods
      */
-    public void pushBean(Object bean);
+    public void pushClass(Class klass);
 
     /**
      * Pop the current bean
      */
-    public void popBean();
+    public void popClass();
 
+    /**
+     * Push the current node. This allows to use the content stack in other methods
+     */
+    public void pushContent(Content node);
+
+    /**
+     * Pop the current node
+     */
+    public void popContent();
 
 }
