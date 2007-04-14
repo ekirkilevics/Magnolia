@@ -10,26 +10,28 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.beans.runtime;
+package info.magnolia.module.templating.paragraphs;
 
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 
 import java.io.IOException;
 import java.io.Writer;
 
 /**
- * An interface to renderer paragraphs of content.
- * 
+ * A simple paragraph renderer which just writes the value of the "text" property of the content node.
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface ParagraphRenderer {
+public class PlainTextParagraphRenderer implements ParagraphRenderer {
 
     /**
-     * @param content the content to render (usually passed to the appropriate templating engine)
-     * @param paragraph information about the rendering (template to use etc)
-     * @param out where the renderering happens
+     * The given paragraph is ignored here, since we're just printing the value of the text property.
      */
-    void render(Content content, Paragraph paragraph, Writer out) throws IOException;
+    public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
+        final String s = content.getNodeData("text").getString();
+        out.write(s);
+    }
 }

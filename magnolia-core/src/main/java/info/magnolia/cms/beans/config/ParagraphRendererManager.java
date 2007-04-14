@@ -19,14 +19,11 @@ import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.jsp.JspWriter;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import java.io.Writer;
-import java.io.IOException;
 
 /**
  * @author gjoseph
@@ -43,11 +40,6 @@ public class ParagraphRendererManager extends ObservedManager {
 
     public static ParagraphRendererManager getInstance() {
         return (ParagraphRendererManager) FactoryUtil.getSingleton(ParagraphRendererManager.class);
-    }
-
-    public void render(Paragraph paragraph, Writer out) throws IOException {
-        final ParagraphRenderer renderer = getRenderer(paragraph.getType());
-        renderer.render(paragraph, out);
     }
 
     protected ParagraphRenderer getRenderer(String name) {

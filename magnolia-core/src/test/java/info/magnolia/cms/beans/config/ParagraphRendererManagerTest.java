@@ -20,7 +20,6 @@ import junit.framework.TestCase;
 import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.Writer;
-import java.io.StringWriter;
 import java.util.Map;
 
 /**
@@ -63,14 +62,14 @@ public class ParagraphRendererManagerTest extends TestCase {
         assertEquals(2, renderers.size());
         final ParagraphRenderer foo = (ParagraphRenderer) renderers.get("foo");
         assertEquals(foo, prm.getRenderer("foo"));
-        assertTrue(renderers.get("bar") instanceof ParagraphRenderer);
+        assertTrue(renderers.get("bar") instanceof OtherDummyParagraphRenderer);
 
         prm.onRegister(node2);
         assertEquals(4, prm.getRenderers().size());
         assertEquals(4, renderers.size());
         assertEquals(renderers, prm.getRenderers());
-        assertTrue(renderers.get("baz") instanceof ParagraphRenderer);
-        assertTrue(renderers.get("gazonk") instanceof ParagraphRenderer);
+        assertTrue(renderers.get("baz") instanceof DummyParagraphRenderer);
+        assertTrue(renderers.get("gazonk") instanceof DummyParagraphRenderer);
 
         prm.clear();
         assertEquals(0, prm.getRenderers().size());
@@ -87,7 +86,7 @@ public class ParagraphRendererManagerTest extends TestCase {
         assertEquals(2, renderers.size());
         final ParagraphRenderer foo = (ParagraphRenderer) renderers.get("foo");
         assertEquals(foo, prm.getRenderer("foo"));
-        assertTrue(renderers.get("bar") instanceof ParagraphRenderer);
+        assertTrue(renderers.get("bar") instanceof OtherDummyParagraphRenderer);
 
         try {
             prm.onRegister(node3);
@@ -105,7 +104,7 @@ public class ParagraphRendererManagerTest extends TestCase {
         final Map renderers = prm.getRenderers();
         assertEquals(2, renderers.size());
         // node name is "foo-node" will the name property is set to "foo"
-        assertTrue(renderers.get("foo") instanceof ParagraphRenderer);
+        assertTrue(renderers.get("foo") instanceof DummyParagraphRenderer);
         try {
             prm.getRenderer("foo-node");
             fail("Should have thrown an IllegalArgumentException");
@@ -113,7 +112,7 @@ public class ParagraphRendererManagerTest extends TestCase {
             assertEquals("No paragraph renderer registered with name foo-node", e.getMessage());
         }
         // just a sanity check
-        assertTrue(renderers.get("bar") instanceof ParagraphRenderer);
+        assertTrue(renderers.get("bar") instanceof DummyParagraphRenderer);
     }
 
     public void testRenderersWithFaultyClassNamesShouldNotBeIgnored() throws IOException, RepositoryException {
@@ -128,33 +127,14 @@ public class ParagraphRendererManagerTest extends TestCase {
         }
     }
 
-    public void testRenderCallsTheAppropriateRenderer() throws IOException, RepositoryException {
-        final ParagraphRendererManager prm = new ParagraphRendererManager();
-        prm.onRegister(getConfigNode(CONFIGNODE1, "/modules/test/paragraph-renderers"));
-
-        final Paragraph tra = new Paragraph();
-        tra.setName("para-one");
-        tra.setType("foo");
-        final StringWriter res = new StringWriter();
-        prm.render(tra, res);
-        assertEquals("tralala:para-one", res.toString());
-
-        final Paragraph tru = new Paragraph();
-        tru.setName("para-two");
-        tru.setType("bar");
-        final StringWriter res2 = new StringWriter();
-        prm.render(tru, res2);
-        assertEquals("trülülü:para-two", res2.toString());
-    }
-
     public static final class DummyParagraphRenderer implements ParagraphRenderer {
-        public void render(Paragraph paragraph, Writer out) throws IOException {
+        public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
             out.write("tralala:" + paragraph.getName());
         }
     }
 
     public static final class OtherDummyParagraphRenderer implements ParagraphRenderer {
-        public void render(Paragraph paragraph, Writer out) throws IOException {
+        public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
             out.write("trülülü:" + paragraph.getName());
         }
     }

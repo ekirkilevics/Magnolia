@@ -17,8 +17,7 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.createStrictMock;
-import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.*;
 
 import javax.servlet.ServletException;
 import java.io.IOException;
@@ -38,7 +37,7 @@ public class JspParagraphRendererTest extends TestCase {
         final Paragraph paragraph = new DummyParagraph("plop", null);
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
-            renderer.render(paragraph, new StringWriter());
+            renderer.render(null, paragraph, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
             assertEquals("Unable to render paragraph plop: templatePath not set.", e.getMessage());
@@ -55,15 +54,15 @@ public class JspParagraphRendererTest extends TestCase {
         ctx.include("/foo/bar.jsp", w);
         replay(ctx);
 
-        renderer.render(paragraph, w);
+        renderer.render(null, paragraph, w);
 
-        //verify(ctx);
+        verify(ctx);
     }
 
     public void testShouldFailIfContextIsNotWebContext() throws IOException {
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
-            renderer.render(new DummyParagraph("plop", "/foo/bar.jsp"), new StringWriter());
+            renderer.render(null, new DummyParagraph("plop", "/foo/bar.jsp"), new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
             assertEquals("MgnlContext is not set for this thread", e.getMessage());
@@ -71,7 +70,7 @@ public class JspParagraphRendererTest extends TestCase {
 
         MgnlContext.setInstance(createStrictMock(Context.class));
         try {
-            renderer.render(new DummyParagraph("plop", "/foo/bar.jsp"), new StringWriter());
+            renderer.render(null, new DummyParagraph("plop", "/foo/bar.jsp"), new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
             assertEquals("This paragraph renderer can only be used with a WebContext", e.getMessage());

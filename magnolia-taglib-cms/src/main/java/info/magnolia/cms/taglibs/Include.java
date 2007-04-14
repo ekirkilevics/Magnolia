@@ -12,9 +12,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.ParagraphManager;
-import info.magnolia.cms.beans.config.ParagraphRendererManager;
+import info.magnolia.cms.beans.config.ParagraphRenderingFacade;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 
@@ -160,15 +158,7 @@ public class Include extends BodyTagSupport {
                 pageContext.include(this.path);
             }
 
-
-            final String paragraphName = content.getMetaData().getTemplate();
-            final Paragraph paragraph = ParagraphManager.getInstance().getInfo(paragraphName);
-            if (paragraph == null) {
-                // TODO : throw exception ?
-                log.error("Paragraph {} not found for page {}", paragraphName, content.getHandle());
-            } else {
-                ParagraphRendererManager.getInstance().render(paragraph, pageContext.getOut());                
-            }
+            ParagraphRenderingFacade.getInstance().render(content, pageContext.getOut());
 
         } catch (IOException e) {
             // should never happen
