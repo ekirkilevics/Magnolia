@@ -16,7 +16,6 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.beans.PropertyDescriptor;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
@@ -329,7 +328,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             return;
         }
         try {
-            init.invoke(bean);
+            init.invoke(bean, null);
         }
         catch (Exception e) {
             throw new Content2BeanException("can't call init method",e);
