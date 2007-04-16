@@ -41,7 +41,6 @@ public class JspParagraphRenderer implements ParagraphRenderer {
         final String jspPath = paragraph.getTemplatePath();
 
         if (jspPath == null) {
-            // TODO:  in page {}
             throw new IllegalStateException("Unable to render paragraph " + paragraph.getName() + " in page " + content.getHandle() + ": templatePath not set.");
         }
 

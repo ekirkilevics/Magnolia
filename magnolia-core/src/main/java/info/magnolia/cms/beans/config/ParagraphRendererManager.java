@@ -68,7 +68,7 @@ public class ParagraphRendererManager extends ObservedManager {
             }
 
             if (StringUtils.isBlank(name) || StringUtils.isBlank(clazz)) {
-                log.warn("Can't register template renderer at {},missing name or class property.", paragraphRendererNode.getHandle());
+                log.warn("Can't register template renderer at {}, missing name or class property.", paragraphRendererNode.getHandle());
                 continue;
             }
 
