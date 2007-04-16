@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
+import java.io.Serializable;
+import java.io.ObjectStreamField;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
@@ -42,9 +44,19 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Revision$ ($Author$)
  */
-public class MgnlUser implements User {
+public class MgnlUser implements User, Serializable {
 
-    public static Logger log = LoggerFactory.getLogger(User.class);
+    private static final long serialVersionUID = 222L;
+
+    /**
+     * instead of defining each field transient, we explicitly says what needs to be
+     * serialized
+     * */
+    private static final ObjectStreamField[] serialPersistentFields = {
+            new ObjectStreamField("userId", String.class)
+    };
+
+    public static Logger log = LoggerFactory.getLogger(MgnlUser.class);
 
     /**
      * Under this subnodes the assigned roles are saved
@@ -53,16 +65,27 @@ public class MgnlUser implements User {
 
     private static final String NODE_GROUPS = "groups"; //$NON-NLS-1$
 
-    /**
-     * the content object
-     */
     private Content userNode;
+
+    private String userId;
 
     /**
      * @param userNode the Content object representing this user
      */
     protected MgnlUser(Content userNode) {
         this.userNode = userNode;
+        this.userId = userNode.getName();
+    }
+
+    /**
+     * Reinitialize itself with the partial deserialized data
+     * */
+    private void reInitialize() {
+        try {
+            this.userNode = ContentRepository.getHierarchyManager(ContentRepository.USERS).getContent(this.userId);
+        } catch (RepositoryException re) {
+            log.error("Failed to load MgnlUser from persistent storage", re);
+        }
     }
 
     /**
@@ -126,7 +149,7 @@ public class MgnlUser implements User {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
             }
 
-            Content node = userNode.getContent(nodeName);
+            Content node = this.getUserNode().getContent(nodeName);
             for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
                 NodeData nodeData = (NodeData) iter.next();
                 // check for the existence of this ID
@@ -167,7 +190,7 @@ public class MgnlUser implements User {
             else {
                 hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
             }
-            Content node = userNode.getContent(nodeName);
+            Content node = this.getUserNode().getContent(nodeName);
 
             for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
                 NodeData nodeData = (NodeData) iter.next();
@@ -188,7 +211,7 @@ public class MgnlUser implements User {
                     }
                 }
             }
-            userNode.save();
+            this.getUserNode().save();
         }
         catch (RepositoryException e) {
             log.error("failed to remove " + name + " from user [" + this.getName() + "]", e);
@@ -209,10 +232,10 @@ public class MgnlUser implements User {
             }
 
             if (!this.hasAny(name, nodeName)) {
-               if (!userNode.hasContent(nodeName)) {
-                    userNode.createContent(nodeName, ItemType.CONTENTNODE);
+               if (!this.getUserNode().hasContent(nodeName)) {
+                    this.getUserNode().createContent(nodeName, ItemType.CONTENTNODE);
                }
-                Content node = userNode.getContent(nodeName);
+                Content node = this.getUserNode().getContent(nodeName);
                 // add corresponding ID
                 try {
                     String value = hm.getContent("/" + name).getUUID(); // assuming that there is a flat hierarchy
@@ -220,7 +243,7 @@ public class MgnlUser implements User {
                     HierarchyManager usersHM = ContentRepository.getHierarchyManager(ContentRepository.USERS);
                     String newName = Path.getUniqueLabel(usersHM, node.getHandle(), "0");
                     node.createNodeData(newName).setValue(value);
-                    userNode.save();
+                    this.getUserNode().save();
                 }
                 catch (PathNotFoundException e) {
                     if (log.isDebugEnabled()) {
@@ -239,7 +262,7 @@ public class MgnlUser implements User {
      * @return the name of the user
      */
     public String getName() {
-        return this.userNode.getName();
+        return this.getUserNode().getName();
     }
 
     /**
@@ -247,7 +270,7 @@ public class MgnlUser implements User {
      * @return password string
      */
     public String getPassword() {
-        String pswd = this.userNode.getNodeData("pswd").getString().trim();
+        String pswd = this.getUserNode().getNodeData("pswd").getString().trim();
         return new String(Base64.decodeBase64(pswd.getBytes()));
     }
 
@@ -255,7 +278,7 @@ public class MgnlUser implements User {
      * the language of the current user
      */
     public String getLanguage() {
-        return userNode.getNodeData("language").getString(); //$NON-NLS-1$
+        return this.getUserNode().getNodeData("language").getString(); //$NON-NLS-1$
     }
 
     public Collection getGroups() {
@@ -265,7 +288,7 @@ public class MgnlUser implements User {
             Content groups = null;
             try {
                 // get "groups" node under node "user"
-                groups = userNode.getContent("groups");
+                groups = this.getUserNode().getContent("groups");
             }
             catch (javax.jcr.PathNotFoundException e) {
                 log.warn("the user " + getName() + " does have not groups node");
@@ -300,7 +323,7 @@ public class MgnlUser implements User {
             Content roles = null;
             try {
                 // get "groups" node under node "user"
-                roles = userNode.getContent("roles");
+                roles = this.getUserNode().getContent("roles");
             }
             catch (javax.jcr.PathNotFoundException e) {
                 log.warn("the user " + getName() + " does have not roles node");
@@ -335,7 +358,7 @@ public class MgnlUser implements User {
 
         NodeData lastaccess;
         try {
-            lastaccess = NodeDataUtil.getOrCreate(userNode, "lastaccess", PropertyType.DATE);
+            lastaccess = NodeDataUtil.getOrCreate(this.getUserNode(), "lastaccess", PropertyType.DATE);
             synchronized (lastaccess) {
                 lastaccess.setValue(new GregorianCalendar());
                 lastaccess.save();
@@ -347,5 +370,12 @@ public class MgnlUser implements User {
                 e);
         }
 
+    }
+
+    private Content getUserNode() {
+        if (null == userNode) {
+            reInitialize();
+        }
+        return userNode;
     }
 }

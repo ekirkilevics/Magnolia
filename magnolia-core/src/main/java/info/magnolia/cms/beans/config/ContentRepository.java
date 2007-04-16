@@ -13,18 +13,14 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.core.search.SearchFactory;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.AccessManagerImpl;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.security.*;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.cms.util.UrlPattern;
+import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
@@ -381,23 +377,13 @@ public final class ContentRepository {
             Session session = repository.login(sc, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             provider.registerNodeTypes();
-            AccessManagerImpl accessManager = getAccessManager();
-            HierarchyManager hierarchyManager = new DefaultHierarchyManager(REPOSITORY_USER);
-            hierarchyManager.init(session.getRootNode());
-            hierarchyManager.setAccessManager(accessManager);
+            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
+            AccessManager accessManager = util.createAccessManager(getSystemPermissions());
+            QueryManager queryManager = util.createQueryManager(session, accessManager);
+            HierarchyManager hierarchyManager = util.createHierarchyManager(REPOSITORY_USER, session, accessManager, queryManager);
             ContentRepository.hierarchyManagers.put(map.getName()
                     + "_"
                     + getInternalWorkspaceName(wspID), hierarchyManager); //$NON-NLS-1$
-            try {
-                QueryManager queryManager = SearchFactory.getAccessControllableQueryManager(hierarchyManager
-                    .getWorkspace()
-                    .getQueryManager(), accessManager);
-                hierarchyManager.setQueryManager(queryManager);
-            }
-            catch (RepositoryException e) {
-                // probably no search manager is configured for this workspace
-                log.info("QueryManager not initialized for repository {}: {}", map.getName(), e.getMessage()); //$NON-NLS-1$
-            }
         }
         catch (RepositoryException re) {
             log.error("System : Failed to initialize hierarchy manager for JCR {}", map.getName()); //$NON-NLS-1$
@@ -409,11 +395,8 @@ public final class ContentRepository {
      * Configures and returns a AccessManager with system permissions
      * @return The system AccessManager
      */
-    public static AccessManagerImpl getAccessManager() {
-        List acl = getSystemPermissions();
-        AccessManagerImpl accessManager = new AccessManagerImpl();
-        accessManager.setPermissionList(acl);
-        return accessManager;
+    public static AccessManager getAccessManager() {
+        return WorkspaceAccessUtil.getInstance().createAccessManager(getSystemPermissions());
     }
 
     /**
@@ -447,6 +430,21 @@ public final class ContentRepository {
     }
 
     /**
+     * Returns magnolia specific Repository name where this workspace is registered
+     * within <Repository/>
+     * */
+    public static String getParentRepositoryName(String workspaceName) throws RepositoryException {
+        Iterator values = repositoryNameMap.values().iterator();
+        while (values.hasNext()) {
+            RepositoryNameMap map = (RepositoryNameMap) values.next();
+            if (workspaceName.equalsIgnoreCase(map.getWorkspaceName())) {
+                return map.getRepositoryName();
+            }
+        }
+        throw new RepositoryException("No mapping found for this repository in magnolia repositories.xml");
+    }
+
+    /**
      * Get mapped repository name
      * @param name
      * @return mapped name as in repositories.xml RepositoryMapping element
@@ -466,6 +464,9 @@ public final class ContentRepository {
      */
     public static String getMappedWorkspaceName(String name) {
         RepositoryNameMap nameMap = (RepositoryNameMap) ContentRepository.repositoryNameMap.get(name);
+        if (nameMap == null) {
+            return name;
+        }
         return nameMap.getWorkspaceName();
     }
 
@@ -531,11 +532,14 @@ public final class ContentRepository {
      * Returns repository specified by the <code>repositoryID</code> as configured in repository config.
      */
     public static Repository getRepository(String repositoryID) {
-        String mappedRepositoryName = getMappedRepositoryName(repositoryID);
-        if (mappedRepositoryName == null) {
-            return null;
+        Repository repository = (Repository) ContentRepository.repositories.get(repositoryID);
+        if (repository == null) {
+            String mappedRepositoryName = getMappedRepositoryName(repositoryID);
+            if (mappedRepositoryName != null) {
+                return (Repository) ContentRepository.repositories.get(mappedRepositoryName);
+            }
         }
-        return (Repository) ContentRepository.repositories.get(mappedRepositoryName);
+        return repository;
     }
 
     /**

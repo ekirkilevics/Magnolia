@@ -13,6 +13,7 @@
 package info.magnolia.cms.security;
 
 import java.util.List;
+import java.io.Serializable;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -21,18 +22,14 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
- * @version $Revision:2558 $ ($Author:scharles $)
+ * $Id$
  */
-public class AccessManagerImpl implements AccessManager {
+public class AccessManagerImpl implements AccessManager, Serializable {
 
-    /**
-     * logger.
-     */
+    private static final long serialVersionUID = 222L;
+
     private static Logger log = LoggerFactory.getLogger(AccessManagerImpl.class);
 
-    /**
-     *
-     * */
     private List userPermissions;
 
     /**

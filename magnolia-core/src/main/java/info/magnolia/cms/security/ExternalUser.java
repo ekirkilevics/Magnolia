@@ -19,6 +19,7 @@ import info.magnolia.cms.security.auth.RoleList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+import java.io.Serializable;
 
 import javax.security.auth.Subject;
 
@@ -32,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision:2558 $ ($Author:scharles $)
  */
-public class ExternalUser implements User {
+public class ExternalUser implements User, Serializable {
 
     public static Logger log = LoggerFactory.getLogger(ExternalUser.class);
 

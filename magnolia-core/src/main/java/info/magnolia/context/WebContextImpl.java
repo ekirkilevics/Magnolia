@@ -18,38 +18,41 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.Security;
-import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.UserManager;
+import info.magnolia.cms.security.*;
 import info.magnolia.cms.util.DumperUtil;
+import info.magnolia.cms.util.WorkspaceAccessUtil;
 
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
 import java.io.Writer;
 import java.io.IOException;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
+import javax.security.auth.Subject;
+
 import javax.servlet.ServletException;
 
 /**
  * @author Sameer Charles
- * @version $Revision $ ($Author $)
+ * $Id$
  */
 public class WebContextImpl extends AbstractContext implements WebContext {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebContextImpl.class);
 
-    /**
-     * Stable serialVersionUID.
-     */
     private static final long serialVersionUID = 222L;
+
+    private static final String ATTRIBUTE_REPOSITORY_SESSION_PREFIX = "mgnlRepositorySession_";
+
+    private static final String ATTRIBUTE_HM_PREFIX = "mgnlHMgr_";
+
+    private static final String ATTRIBUTE_AM_PREFIX = "mgnlAccessMgr_";
+
+    private static final String ATTRIBUTE_QM_PREFIX = "mgnlQueryMgr_";
 
     private HttpServletRequest request;
     private HttpServletResponse response;
@@ -92,15 +95,35 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Get hierarchy manager initialized for this user
+     * @param repositoryName
+     * @param workspaceName
      * @return hierarchy manager
      */
-    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        HierarchyManager hm = SessionStore.getHierarchyManager(this.request, repositoryId, workspaceId);
+    public HierarchyManager getHierarchyManager(String repositoryName, String workspaceName) {
+        HttpSession httpSession = request.getSession(false);
+        HierarchyManager hm = null;
+        if (httpSession != null) {
+            hm = (HierarchyManager) httpSession.getAttribute(ATTRIBUTE_HM_PREFIX + repositoryName + "_" + workspaceName);
+        }
+        if (hm == null) {
+            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
+            try {
+                hm = util.createHierarchyManager(this.getUser().getName(),
+                        getRepositorySession(repositoryName, workspaceName),
+                        getAccessManager(repositoryName, workspaceName),
+                        getQueryManager(repositoryName, workspaceName));
+                if (httpSession != null) {
+                    httpSession.setAttribute(ATTRIBUTE_HM_PREFIX + repositoryName + "_" + workspaceName, hm); //$NON-NLS-1$
+                }
+            } catch (Throwable t) {
+                log.error("Failed to create HierarchyManager", t);
+            }
+        }
 
         //TODO remove this after we found the session refreshing issues
         // check only once per session
-        if(this.request.getAttribute("jcr.session. " + repositoryId + ".checked")==null){
-            this.request.setAttribute("jcr.session. " + repositoryId + ".checked", "true");
+        if(this.request.getAttribute("jcr.session. " + repositoryName + ".checked")==null){
+            this.request.setAttribute("jcr.session. " + repositoryName + ".checked", "true");
             try {
                 if(hm.getWorkspace().getSession().hasPendingChanges()){
                     log.error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
@@ -120,25 +143,60 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Get access manager for the specified repository on the specified workspace
+     * @param repositoryName
+     * @param workspaceName
      * @return access manager
      */
-    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return SessionStore.getAccessManager(this.request, repositoryId, workspaceId);
+    public AccessManager getAccessManager(String repositoryName, String workspaceName) {
+        HttpSession httpSession = request.getSession(false);
+        AccessManager accessManager = null;
+
+        if (httpSession != null) {
+            accessManager = (AccessManager) httpSession.getAttribute(ATTRIBUTE_AM_PREFIX
+                + repositoryName
+                + "_" + workspaceName); //$NON-NLS-1$
+        }
+
+        if (accessManager == null) {
+            Subject subject = Authenticator.getSubject(request);
+            accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(subject, repositoryName, workspaceName);
+            if (httpSession != null) {
+                httpSession.setAttribute(ATTRIBUTE_AM_PREFIX + repositoryName + "_" + workspaceName, accessManager);
+            }
+        }
+
+        return accessManager;
     }
 
     /**
      * Get QueryManager created for this user on the specified repository and workspace
+     * @param repositoryName
+     * @param workspaceName
      * @return query manager
      */
-    public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        try {
-            return SessionStore.getQueryManager(this.request, repositoryId, workspaceId);
+    public QueryManager getQueryManager(String repositoryName, String workspaceName) {
+        QueryManager queryManager = null;
+
+        HttpSession httpSession = request.getSession(false);
+        if (httpSession != null) {
+            queryManager = (QueryManager) httpSession.getAttribute(ATTRIBUTE_QM_PREFIX
+                + repositoryName
+                + "_" + workspaceName);
         }
-        catch (RepositoryException re) {
-            log.error(re.getMessage());
-            log.debug("Exception caught", re);
-            return null;
+        if (queryManager == null) {
+            try {
+                queryManager = WorkspaceAccessUtil.getInstance().createQueryManager(
+                        getRepositorySession(repositoryName, workspaceName),
+                        getAccessManager(repositoryName, workspaceName));
+            } catch (Throwable t) {
+                log.error("Failed to create QueryManager", t);
+            }
+            if (httpSession != null) {
+                httpSession.setAttribute(ATTRIBUTE_QM_PREFIX + repositoryName + "_" + workspaceName, queryManager);
+            }
         }
+
+        return queryManager;
     }
 
     /**
@@ -305,6 +363,39 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 return null;
         }
 
+    }
+
+    /**
+     * Get repository session
+     * @param repositoryName
+     * @param workspaceName
+     * @throws javax.jcr.LoginException
+     * @throws RepositoryException
+     */
+    private Session getRepositorySession(String repositoryName, String workspaceName)
+        throws LoginException, RepositoryException {
+
+        Session jcrSession = null;
+        HttpSession httpSession = request.getSession(false);
+
+        if (httpSession != null) {
+            jcrSession = (Session) httpSession.getAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX
+                + repositoryName
+                + "_" + workspaceName);
+        }
+        if (jcrSession == null) {
+            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
+            jcrSession = util.createRepositorySession(
+                    util.getDefaultCredentials(),
+                    repositoryName,
+                    workspaceName);
+            if (httpSession != null) {
+                httpSession.setAttribute(ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryName + "_" + workspaceName,
+                    jcrSession);
+            }
+
+        }
+        return jcrSession;
     }
 
     /**

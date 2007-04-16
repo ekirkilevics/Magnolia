@@ -20,7 +20,6 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
 
@@ -29,12 +28,6 @@ import javax.jcr.Workspace;
  * @version $Revision: $ ($Author: $)
  */
 public interface HierarchyManager {
-
-    void setStartPage(Node rootNode) throws RepositoryException;
-
-    void init(Node rootNode) throws RepositoryException;
-
-    void init(Node rootNode, AccessManager manager) throws RepositoryException;
 
     void setAccessManager(AccessManager accessManager);
 
