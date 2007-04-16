@@ -494,21 +494,6 @@
         <version>2.3</version>
       </dependency>
       <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>1.1</version>
-        <exclusions>
-          <exclusion>
-            <groupId>avalon-framework</groupId>
-            <artifactId>avalon-framework</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>logkit</groupId>
-            <artifactId>logkit</artifactId>
-          </exclusion>
-        </exclusions>
-      </dependency>
-      <dependency>
         <groupId>commons-digester</groupId>
         <artifactId>commons-digester</artifactId>
         <version>1.7</version>
@@ -658,6 +643,11 @@
             <artifactId>hibernate</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>pdfbox</groupId>
+        <artifactId>pdfbox</artifactId>
+        <version>0.7.1</version>
       </dependency>
       <dependency>
         <groupId>junit</groupId>
