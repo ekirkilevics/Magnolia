@@ -16,20 +16,18 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
-
-import java.util.Calendar;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Calendar;
+import java.util.GregorianCalendar;
+import java.util.TimeZone;
 
 
 /**
@@ -63,12 +61,12 @@ public class MetaData {
 
     public static final String DEFAULT_META_NODE = "MetaData"; //$NON-NLS-1$
 
+    /**
+     * @deprecated unused
+     */
     public static final long SEQUENCE_POS_COEFFICIENT = 1000;
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MetaData.class);
+    private static final Logger log = LoggerFactory.getLogger(MetaData.class);
 
     /**
      * meta data node
