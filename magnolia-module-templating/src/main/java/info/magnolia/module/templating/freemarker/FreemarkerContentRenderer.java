@@ -23,7 +23,7 @@ import java.util.Locale;
 
 /**
  * A generic helper to render Content instances with freemarker templates.
- * Is used to render paragraphs and templates.
+ * Is (potentially) used to render both paragraphs and templates.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
