@@ -77,10 +77,7 @@ public class ParagraphRenderingFacadeTest extends TestCase {
 
     private static final String CONTENTNODE1 = "" +
             "foo.bar.MyPage.text=hello\n" +
-            "foo.bar.MyPage.MetaData.template=para1\n" +
-            "\n" +
-            "\n" +
-            "";
+            "foo.bar.MyPage.MetaData.mgnl\\:template=para1";
 
     private Content getNode(String configNode, String path) throws IOException, RepositoryException {
         return MockUtil.createHierarchyManager(configNode).getContent(path);

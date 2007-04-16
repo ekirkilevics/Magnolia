@@ -16,12 +16,10 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-
-import java.io.IOException;
+import junit.framework.TestCase;
 
 import javax.jcr.RepositoryException;
-
-import junit.framework.TestCase;
+import java.io.IOException;
 
 /**
  * @author philipp
@@ -98,7 +96,7 @@ public class MockUtilTest extends TestCase {
         assertEquals("greg", metaData.getAuthorId());
         assertEquals("bozo", metaData.getActivatorId());
         assertEquals("someParagraphName", metaData.getTemplate());
-        assertEquals("myLabel", metaData.getLabel());
+        assertEquals("MetaData", metaData.getLabel());
         assertEquals("myTitle", metaData.getTitle());
         assertEquals("/parent/sub1/MetaData", metaData.getHandle());
     }

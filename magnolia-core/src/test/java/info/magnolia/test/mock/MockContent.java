@@ -10,27 +10,24 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.security.AccessDeniedException;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Comparator;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -77,6 +74,11 @@ public class MockContent extends Content {
     public void addNodeData(MockNodeData nd) {
         nd.setParent(this);
         nodeDatas.put(nd.getName(), nd);
+    }
+
+    public MockMetaData createMetaData() {
+        addContent(new MockContent("MetaData"));//, ItemType."mgnl:metaData"));
+        return getMetaData();
     }
 
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
@@ -171,7 +173,7 @@ public class MockContent extends Content {
     }
 
     public Content getChildByName(String namePattern) {
-        throw new IllegalStateException("not implemented !");
+        return (Content) children.get(namePattern);
     }
 
     public String getName() {
@@ -216,7 +218,7 @@ public class MockContent extends Content {
         this.uuid = uuid;
     }
 
-    public MetaData getMetaData() {
+    public MockMetaData getMetaData() {
         try {
             return new MockMetaData((MockContent) getContent("MetaData"));
         } catch (RepositoryException e) {

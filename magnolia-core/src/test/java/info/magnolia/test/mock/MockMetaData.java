@@ -13,6 +13,9 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.security.AccessDeniedException;
+
+import java.util.Calendar;
 
 /**
  * TODO : this is incomplete, please complete per your needs...
@@ -21,17 +24,6 @@ import info.magnolia.cms.core.MetaData;
  * @version $Revision: $ ($Author: $)
  */
 public class MockMetaData extends MetaData {
-//    private String activatorId;
-//    private String authorId;
-//    private Calendar creationDate;
-//    private String handle;
-//    private boolean isActivated;
-//    private String label;
-//    private Calendar lastActionDate;
-//    private Calendar modificationDate;
-//    private String template;
-//    private String title;
-
     private final MockContent mockContent;
 
     public MockMetaData(MockContent mockContent) {
@@ -42,23 +34,32 @@ public class MockMetaData extends MetaData {
         return mockContent.getHandle();
     }
 
-    public String getActivatorId() {
-        return mockContent.getNodeData("activatorId").getString();
-    }
-
-    public String getAuthorId() {
-        return mockContent.getNodeData("authorId").getString();
-    }
-
     public String getLabel() {
-        return mockContent.getNodeData("label").getString();
+        return mockContent.getName();
     }
 
-    public String getTemplate() {
-        return mockContent.getNodeData("template").getString();
+    public boolean getBooleanProperty(String name) {
+        return mockContent.getNodeData(name).getBoolean();
     }
 
-    public String getTitle() {
-        return mockContent.getNodeData("title").getString();
+    public String getStringProperty(String name) {
+        return mockContent.getNodeData(name).getString();
     }
+
+    public Calendar getDateProperty(String name) {
+        return mockContent.getNodeData(name).getDate();
+    }
+
+    public void setProperty(String name, boolean value) throws AccessDeniedException {
+        mockContent.addNodeData(new MockNodeData(name, Boolean.valueOf(value)));
+    }
+
+    public void setProperty(String name, Calendar value) throws AccessDeniedException {
+        mockContent.addNodeData(new MockNodeData(name, value));
+    }
+
+    public void setProperty(String name, String value) throws AccessDeniedException {
+        mockContent.addNodeData(new MockNodeData(name, value));
+    }
+
 }
