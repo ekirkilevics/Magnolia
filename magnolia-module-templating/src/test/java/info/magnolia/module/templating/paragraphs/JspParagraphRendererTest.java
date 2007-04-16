@@ -13,9 +13,11 @@
 package info.magnolia.module.templating.paragraphs;
 
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.core.Content;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -34,13 +36,14 @@ public class JspParagraphRendererTest extends TestCase {
     }
 
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws IOException {
+        final Content c = new MockContent("pouet");
         final Paragraph paragraph = new DummyParagraph("plop", null);
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
-            renderer.render(null, paragraph, new StringWriter());
+            renderer.render(c, paragraph, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
-            assertEquals("Unable to render paragraph plop: templatePath not set.", e.getMessage());
+            assertEquals("Unable to render paragraph plop in page /pouet: templatePath not set.", e.getMessage());
         }
     }
 
