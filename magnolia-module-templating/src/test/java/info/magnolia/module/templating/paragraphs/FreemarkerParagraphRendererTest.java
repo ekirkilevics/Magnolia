@@ -69,7 +69,7 @@ public class FreemarkerParagraphRendererTest extends TestCase {
                 "The value of the foo property is bar.", out.toString());
     }
 
-    public void testCanRenderWithActionParagraphIfActionClassNotSet() throws IOException {
+    public void testCantRenderWithActionParagraphIfActionClassNotSet() throws IOException {
         final ActionBasedParagraph par = new ActionBasedParagraph();
         par.setName("test-with-action");
         par.setTemplatePath("test_action.ftl");
