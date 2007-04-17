@@ -5,6 +5,7 @@ import info.magnolia.cms.cache.CacheConfig;
 import info.magnolia.cms.cache.CacheKey;
 import info.magnolia.cms.cache.CacheableEntry;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.beans.config.ContentRepository;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -17,6 +18,11 @@ import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.ObservationManager;
+import javax.jcr.observation.Event;
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -78,7 +84,7 @@ public class CacheImpl implements Cache {
                 log.debug("creating file {}", file.getAbsolutePath());
             }
             try {
-                file.getParentFile().mkdirs();
+                mkdirs(file.getParentFile());
                 file.createNewFile();
 
                 out = new FileOutputStream(file);
@@ -98,7 +104,7 @@ public class CacheImpl implements Cache {
             if (!gzipFile.exists()) {
                 GZIPOutputStream gzipOut = null;
                 try {
-                    gzipFile.getParentFile().mkdirs();
+                    mkdirs(gzipFile.getParentFile());
                     gzipFile.createNewFile();
                     FileOutputStream out = new FileOutputStream(gzipFile);
                     gzipOut = new GZIPOutputStream(out);
@@ -128,7 +134,7 @@ public class CacheImpl implements Cache {
             }
 
             // this will create cache start directory again
-            cacheDir.mkdirs();
+            mkdirs(cacheDir);
 
             // clear in-memory cache also
             clearCachedURIList();
@@ -153,10 +159,24 @@ public class CacheImpl implements Cache {
     public void start(CacheConfig config) {
         this.config = config;
 
+        // register to observe on any changes if configured
+        try {
+            this.registerChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
+                public void onEvent(EventIterator events) {
+                    DeferredCleaner.getInstance().consume(events);
+                }
+            });
+        } catch (RepositoryException re) {
+            log.error("Failed to register Simple-Cache deferred cleaner", re);
+            // abort, else public site will be inconsistent
+            this.stop();
+            return;
+        }
+
         File cacheDir = getCacheDirectory();
 
         if (!cacheDir.exists()) {
-            boolean result = cacheDir.mkdirs();
+            boolean result = mkdirs(cacheDir);
             if (!result) {
                 log.error("Failed to create cache directory location {}", cacheDir.getAbsolutePath());
             }
@@ -164,6 +184,21 @@ public class CacheImpl implements Cache {
         else {
             updateInMemoryCache(cacheDir);
         }
+    }
+
+    private void registerChangeListener(String repository, String observationPath, EventListener listener)
+            throws RepositoryException {
+        log.debug("Registering deferred cleaner");
+        ObservationManager observationManager = ContentRepository
+            .getHierarchyManager(repository)
+            .getWorkspace()
+            .getObservationManager();
+
+        observationManager.addEventListener(listener, Event.NODE_ADDED
+            | Event.NODE_REMOVED
+            | Event.PROPERTY_ADDED
+            | Event.PROPERTY_CHANGED
+            | Event.PROPERTY_REMOVED, observationPath, true, null, null, false);
     }
 
     /**
@@ -349,6 +384,27 @@ public class CacheImpl implements Cache {
         return new File(Path.getCacheDirectory(), "mgnl-cache");
     }
 
+    /**
+     * override File.mkdir to solve race condition
+     * check http://jira.magnolia.info/browse/MAGNOLIA-1446
+     * */
+    private boolean mkdirs(File file) {
+        if (file.exists()) return true;
+        if (file.mkdir()) return true;
+        File canonFile;
+        try {
+            canonFile = file.getCanonicalFile();
+        } catch (IOException e) {
+            return false;
+        }
+        File parent = canonFile.getParentFile();
+        if (null == parent) {
+          return false;
+        }
+        mkdirs(parent);
+        return canonFile.mkdir();
+    }
+
     private static class CachedItem {
 
         /**
@@ -372,4 +428,5 @@ public class CacheImpl implements Cache {
             this.compressedSize = compressedSize;
         }
     }
+
 }
