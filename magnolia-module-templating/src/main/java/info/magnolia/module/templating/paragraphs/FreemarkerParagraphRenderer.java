@@ -31,7 +31,7 @@ import java.util.HashMap;
  * @version $Revision: $ ($Author: $)
  */
 public class FreemarkerParagraphRenderer implements ParagraphRenderer {
-    private final info.magnolia.freemarker.FreemarkerHelper fmRenderer;
+    private final FreemarkerHelper fmRenderer;
 
     public FreemarkerParagraphRenderer(FreemarkerHelper fmRenderer) {
         this.fmRenderer = fmRenderer;

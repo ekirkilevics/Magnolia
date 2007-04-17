@@ -38,14 +38,14 @@ import java.util.Locale;
  */
 public class FreemarkerHelperTest extends TestCase {
     private StringTemplateLoader tplLoader;
-    private FreemarkerHelper renderer;
+    private FreemarkerHelper fmHelper;
 
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
         final Configuration cfg = new Configuration();
         cfg.setTemplateLoader(tplLoader);
-        renderer = new FreemarkerHelper(cfg);
+        fmHelper = new FreemarkerHelper(cfg);
     }
 
     private void assertRendereredContent(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {
@@ -59,7 +59,7 @@ public class FreemarkerHelperTest extends TestCase {
         MgnlContext.setInstance(context);
 
         final StringWriter out = new StringWriter();
-        renderer.render(templateName, o, out);
+        fmHelper.render(templateName, o, out);
 
         assertEquals(expectedOutput, out.toString());
         verify(context);
