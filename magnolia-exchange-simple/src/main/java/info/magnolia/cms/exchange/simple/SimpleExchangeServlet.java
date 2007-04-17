@@ -16,8 +16,6 @@ import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.cache.CacheManager;
-import info.magnolia.cms.cache.CacheManagerFactory;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
@@ -76,8 +74,6 @@ public class SimpleExchangeServlet extends HttpServlet {
      */
     private static Logger log = LoggerFactory.getLogger(SimpleExchangeServlet.class);
 
-    private CacheManager cacheManager = CacheManagerFactory.getCacheManager();
-
     /**
      * @param request
      * @param response
@@ -92,8 +88,6 @@ public class SimpleExchangeServlet extends HttpServlet {
             initializeContext(request, response);
             applyLock(request);
             receive(request);
-            // remove cached files if successful
-            this.cacheManager.flushAll();
             status = SimpleSyndicator.ACTIVATION_SUCCESSFUL;
         }
         catch (OutOfMemoryError e) {
