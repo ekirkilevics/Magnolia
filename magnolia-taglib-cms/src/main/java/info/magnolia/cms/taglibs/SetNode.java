@@ -12,25 +12,23 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.PropertyType;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-
-import javax.jcr.PropertyType;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**

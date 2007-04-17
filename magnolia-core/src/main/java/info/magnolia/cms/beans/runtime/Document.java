@@ -12,18 +12,20 @@
  */
 package info.magnolia.cms.beans.runtime;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.Serializable;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.io.Serializable;
+
 
 /**
+ * A wrapper for a temporary uploaded file.
+ * 
  * User: sameercharles Date: Apr 28, 2003 Time: 11:20:59 AM
  * @author Sameer Charles
  * @version 1.1

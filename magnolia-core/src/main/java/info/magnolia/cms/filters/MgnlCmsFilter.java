@@ -27,12 +27,14 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
-
-import java.io.IOException;
-import java.io.InputStream;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.math.NumberUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
@@ -47,12 +49,8 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.math.NumberUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.io.InputStream;
 
 
 /**
@@ -461,9 +459,7 @@ public class MgnlCmsFilter implements Filter {
             request.setAttribute(Aggregator.CURRENT_ACTPAGE, requestedPage);
         }
         if ((requestedData != null) && (requestedData.getType() == PropertyType.BINARY)) {
-            File file = new File();
-            file.setProperties(requestedData);
-            file.setNodeData(requestedData);
+            File file = new File(requestedData);
             request.setAttribute(Aggregator.FILE, file);
         }
 

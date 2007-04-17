@@ -12,14 +12,13 @@
  */
 package info.magnolia.cms.gui.control;
 
+import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.i18n.MessagesManager;
+import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
 
 
 /**

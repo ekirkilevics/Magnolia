@@ -12,24 +12,22 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.commons.lang.time.DateFormatUtils;
 
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.commons.lang.time.DateFormatUtils;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**

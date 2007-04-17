@@ -12,15 +12,27 @@
  */
 package info.magnolia.cms.taglibs.util;
 
+import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.api.HierarchyManager;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.devlib.schmidt.imageinfo.ImageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.AccessDeniedException;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.PageContext;
+import javax.servlet.jsp.tagext.SimpleTagSupport;
 import java.awt.Color;
 import java.io.File;
 import java.io.FileInputStream;
@@ -32,20 +44,6 @@ import java.text.StringCharacterIterator;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
-
-import javax.jcr.AccessDeniedException;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.tagext.SimpleTagSupport;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.devlib.schmidt.imageinfo.ImageInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**

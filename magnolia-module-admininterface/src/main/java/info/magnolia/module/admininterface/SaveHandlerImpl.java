@@ -12,8 +12,10 @@
  */
 package info.magnolia.module.admininterface;
 
+import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -22,7 +24,6 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
-import info.magnolia.cms.gui.misc.FileProperties;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.util.ContentUtil;
@@ -31,8 +32,21 @@ import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.api.HierarchyManager;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.devlib.schmidt.imageinfo.ImageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+import javax.jcr.ValueFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -44,22 +58,6 @@ import java.util.Map;
 import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.Value;
-import javax.jcr.ValueFactory;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.devlib.schmidt.imageinfo.ImageInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**

@@ -13,21 +13,21 @@
 package info.magnolia.cms.beans.runtime;
 
 import info.magnolia.cms.core.NodeData;
-
-import java.io.InputStream;
+import org.apache.commons.lang.math.NumberUtils;
 
 import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.math.NumberUtils;
+import java.io.InputStream;
 
 
 /**
+ * Wraps a NodeData and exposes it into a simple file-like bean.
+ *
  * @author Sameer Charles
  * @version 1.1
  */
 public class File {
 
-    private NodeData data;
+    private final NodeData data;
 
     private String extension;
 
@@ -39,13 +39,15 @@ public class File {
 
     private int size;
 
-    public void setProperties(NodeData properties) {
-        this.setNodeDataTemplate(properties.getAttribute("nodeDataTemplate")); //$NON-NLS-1$
-        this.setExtension(properties.getAttribute("extension")); //$NON-NLS-1$
-        this.setFileName(properties.getAttribute("fileName")); //$NON-NLS-1$
-        this.setContentType(properties.getAttribute("contentType")); //$NON-NLS-1$
+    public File(NodeData data) {
+        this.data = data;
 
-        String sizeString = properties.getAttribute("size"); //$NON-NLS-1$
+        this.setNodeDataTemplate(data.getAttribute("nodeDataTemplate")); //$NON-NLS-1$
+        this.setExtension(data.getAttribute("extension")); //$NON-NLS-1$
+        this.setFileName(data.getAttribute("fileName")); //$NON-NLS-1$
+        this.setContentType(data.getAttribute("contentType")); //$NON-NLS-1$
+
+        String sizeString = data.getAttribute("size"); //$NON-NLS-1$
         if (NumberUtils.isNumber(sizeString)) {
             this.setSize(Integer.parseInt(sizeString));
         }
@@ -94,10 +96,6 @@ public class File {
 
     public NodeData getNodeData() {
         return this.data;
-    }
-
-    public void setNodeData(NodeData data) {
-        this.data = data;
     }
 
     public InputStream getStream() {
