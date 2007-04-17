@@ -14,7 +14,6 @@ package info.magnolia.freemarker;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
-import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -35,8 +34,16 @@ public class FreemarkerContentRenderer {
         this.cfg = cfg;
     }
 
-    public void render(String templatePath, Content content, Writer out) throws TemplateException, IOException {
-        final Locale locale = MgnlContext.getLocale();
-        cfg.getTemplate(templatePath, locale).process(content, out, new MagnoliaContentWrapper());
+    /**
+     * Renders the given template, using the given root object (can be a map, or any other type of object
+     * handled by MagnoliaContentWrapper) to the given Writer.
+     */
+    public void render(String templatePath, Object root, Writer out) throws TemplateException, IOException {
+        final Locale locale = determineLocale();
+        cfg.getTemplate(templatePath, locale).process(root, out, new MagnoliaContentWrapper());
+    }
+
+    protected Locale determineLocale() {
+        return MgnlContext.getLocale();
     }
 }

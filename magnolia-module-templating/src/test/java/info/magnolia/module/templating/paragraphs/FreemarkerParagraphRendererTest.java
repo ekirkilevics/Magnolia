@@ -15,6 +15,7 @@ package info.magnolia.module.templating.paragraphs;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import info.magnolia.cms.beans.config.ActionBasedParagraph;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.Context;
@@ -36,44 +37,68 @@ import java.util.Locale;
 public class FreemarkerParagraphRendererTest extends TestCase {
     private StringTemplateLoader tplLoader;
     private FreemarkerParagraphRenderer renderer;
+    private Configuration cfg;
 
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
-        final Configuration cfg = new Configuration();
+        cfg = new Configuration();
         cfg.setTemplateLoader(tplLoader);
         renderer = new FreemarkerParagraphRenderer(new FreemarkerContentRenderer(cfg));
-    }
-
-    private void assertRendereredContent(String expectedOutput, MockContent c, String templateName) throws TemplateException, IOException {
-        final Context context = createStrictMock(Context.class);
+        final Context context = createNiceMock(Context.class);
         expect(context.getLocale()).andReturn(Locale.US);
-        replay(context);
         MgnlContext.setInstance(context);
-
-        final StringWriter out = new StringWriter();
-        final DummyParagraph p = new DummyParagraph("test-para", templateName, null);
-        renderer.render(c, p, out);
-
-        assertEquals(expectedOutput, out.toString());
-        verify(context);
+        replay(context);
     }
 
-    public void testActionClassIsNotMandatory() throws TemplateException, IOException {
-        tplLoader.putTemplate("test_noclass.ftl", "This is a test template, rendering the content node under ${@handle} with UUID ${@uuid}.\n" +
-                "The value of the foo property is ${foo}.");
+    public void testWorksWithNonActionParagraphAndContentIsExposedToFreemarker() throws TemplateException, IOException {
+        tplLoader.putTemplate("test_noclass.ftl", "This is a test template, rendering the content node under ${content.@handle} with UUID ${content.@uuid}.\n" +
+                "The value of the foo property is ${content.foo}.");
 
         final MockContent c = new MockContent("plop");
         c.setUUID("123");
         c.addNodeData(new MockNodeData("foo", "bar"));
-        assertRendereredContent("This is a test template, rendering the content node under /plop with UUID 123.\n" +
-                "The value of the foo property is bar.", c, "test_noclass.ftl");
+
+        final StringWriter out = new StringWriter();
+        final Paragraph p = new Paragraph();
+        p.setName("test-para");
+        p.setTemplatePath("test_noclass.ftl");
+        renderer.render(c, p, out);
+
+        assertEquals("This is a test template, rendering the content node under /plop with UUID 123.\n" +
+                "The value of the foo property is bar.", out.toString());
+    }
+
+    public void testCanRenderWithActionParagraphIfActionClassNotSet() throws IOException {
+        final ActionBasedParagraph par = new ActionBasedParagraph();
+        par.setName("test-with-action");
+        par.setTemplatePath("test_action.ftl");
+        final MockContent c = new MockContent("plop");
+        try {
+            renderer.render(c, par, new StringWriter());
+        } catch (IllegalStateException e) {
+            assertEquals("Can't render paragraph test-with-action in page /plop: actionClass not set.", e.getMessage());
+        }
+    }
+
+    public void testActionClassGetsExecutedAndIsPutOnContextAlongWithResultAndContent() throws IOException {
+        tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${action.pouet} : ${result}");
+        final ActionBasedParagraph par = new ActionBasedParagraph();
+        par.setName("test-with-action");
+        par.setTemplatePath("test_action.ftl");
+        par.setActionClass(SimpleTestAction.class);
+        final MockContent c = new MockContent("plop");
+        c.addNodeData(new MockNodeData("boo", "yay"));
+        final StringWriter out = new StringWriter();
+        renderer.render(c, par, out);
+        assertEquals("yay : it works : success", out.toString());
     }
 
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws IOException {
         tplLoader.putTemplate("foo", "");
         final Content c = new MockContent("pouet");
-        final Paragraph paragraph = new DummyParagraph("plop", null, null);
+        final Paragraph paragraph = new Paragraph();
+        paragraph.setName("plop");
         try {
             renderer.render(c, paragraph, new StringWriter());
             fail("should have failed");
@@ -82,31 +107,13 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         }
     }
 
-    private static final class SimpleTestAction {
-
-    }
-
-    private static class DummyParagraph extends Paragraph {
-        private final String name;
-        private final String tplPath;
-        private final String actionClass;
-
-        public DummyParagraph(String name, String tplPath, String actionClass) {
-            this.name = name;
-            this.tplPath = tplPath;
-            this.actionClass = actionClass;
+    public static final class SimpleTestAction {
+        public String execute() {
+            return "success";
         }
 
-        public String getName() {
-            return name;
-        }
-
-        public String getTemplatePath() {
-            return tplPath;
-        }
-
-        public String getActionClass() {
-            return actionClass;
+        public String getPouet() {
+            return "it works";
         }
     }
 }

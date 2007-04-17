@@ -37,7 +37,8 @@ public class JspParagraphRendererTest extends TestCase {
 
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws IOException {
         final Content c = new MockContent("pouet");
-        final Paragraph paragraph = new DummyParagraph("plop", null);
+        final Paragraph paragraph = new Paragraph();
+        paragraph.setName("plop");
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
             renderer.render(c, paragraph, new StringWriter());
@@ -48,7 +49,9 @@ public class JspParagraphRendererTest extends TestCase {
     }
 
     public void testIncludesPathWhenProvided() throws IOException, ServletException {
-        final Paragraph paragraph = new DummyParagraph("plop", "/foo/bar.jsp");
+        final Paragraph paragraph = new Paragraph();
+        paragraph.setName("plop");
+        paragraph.setTemplatePath("/foo/bar.jsp");
         final WebContext ctx = createStrictMock(WebContext.class);
         MgnlContext.setInstance(ctx);
 
@@ -65,7 +68,10 @@ public class JspParagraphRendererTest extends TestCase {
     public void testShouldFailIfContextIsNotWebContext() throws IOException {
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
-            renderer.render(null, new DummyParagraph("plop", "/foo/bar.jsp"), new StringWriter());
+            final Paragraph p = new Paragraph();
+            p.setName("plop");
+            p.setTemplatePath("/foo/bar.jsp");
+            renderer.render(null, p, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
             assertEquals("MgnlContext is not set for this thread", e.getMessage());
@@ -73,28 +79,13 @@ public class JspParagraphRendererTest extends TestCase {
 
         MgnlContext.setInstance(createStrictMock(Context.class));
         try {
-            renderer.render(null, new DummyParagraph("plop", "/foo/bar.jsp"), new StringWriter());
+            final Paragraph p = new Paragraph();
+            p.setName("plop");
+            p.setTemplatePath("/foo/bar.jsp");
+            renderer.render(null, p, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
             assertEquals("This paragraph renderer can only be used with a WebContext", e.getMessage());
-        }
-    }
-
-    private static class DummyParagraph extends Paragraph {
-        private final String name;
-        private final String tplPath;
-
-        public DummyParagraph(String name, String tplPath) {
-            this.name = name;
-            this.tplPath = tplPath;
-        }
-
-        public String getName() {
-            return name;
-        }
-
-        public String getTemplatePath() {
-            return tplPath;
         }
     }
 }

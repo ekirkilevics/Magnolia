@@ -30,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.awt.Color;
 
 /**
  * @author gjoseph
@@ -47,21 +48,27 @@ public class FreemarkerContentRendererTest extends TestCase {
         renderer = new FreemarkerContentRenderer(cfg);
     }
 
-    private void assertRendereredContent(String expectedOutput, MockContent c, String templateName) throws TemplateException, IOException {
-        assertRendereredContent(expectedOutput, Locale.US, c, templateName);
+    private void assertRendereredContent(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {
+        assertRendereredContent(expectedOutput, Locale.US, o, templateName);
     }
 
-    private void assertRendereredContent(String expectedOutput, Locale l, MockContent c, String templateName) throws TemplateException, IOException {
+    private void assertRendereredContent(String expectedOutput, Locale l, Object o, String templateName) throws TemplateException, IOException {
         final Context context = createStrictMock(Context.class);
         expect(context.getLocale()).andReturn(l);
         replay(context);
         MgnlContext.setInstance(context);
 
         final StringWriter out = new StringWriter();
-        renderer.render(templateName, c, out);
+        renderer.render(templateName, o, out);
 
         assertEquals(expectedOutput, out.toString());
         verify(context);
+    }
+
+    public void testWeCanUseAnyObjectTypeAsOurRoot() throws IOException, TemplateException {
+        tplLoader.putTemplate("test.ftl", "${left} ${right.left.blue - 100} ${right.right.green}");
+        final Pair root = new Pair(Integer.valueOf(33), new Pair(Color.PINK, Color.ORANGE));
+        assertRendereredContent("33 75 200", root, "test.ftl");
     }
 
     public void testSubNodesAreReachable() throws TemplateException, IOException {
@@ -201,4 +208,21 @@ public class FreemarkerContentRendererTest extends TestCase {
         assertRendereredContent("Ceci est une template belge hein une fois.", new Locale("fr", "BE"), c, "test.ftl");
     }
 
+    public static final class Pair {
+        private final Object left;
+        private final Object right;
+
+        public Pair(Object left, Object right) {
+            this.left = left;
+            this.right = right;
+        }
+
+        public Object getLeft() {
+            return left;
+        }
+
+        public Object getRight() {
+            return right;
+        }
+    }
 }

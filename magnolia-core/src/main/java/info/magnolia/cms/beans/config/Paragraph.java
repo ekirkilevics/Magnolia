@@ -19,56 +19,35 @@ import org.apache.commons.lang.builder.ToStringBuilder;
  * @author Sameer Charles
  */
 public class Paragraph {
-
     private String name;
-
     private String title;
-
     private String templatePath;
-
     private String dialogPath;
-
     private String dialog;
-
     private String type;
-
     private String description;
-
     private String i18nBasename;
 
-    protected Paragraph() {
+    public Paragraph() {
     }
 
-    /**
-     * @return String, name
-     */
     public String getName() {
         return this.name;
     }
 
-    /**
-     * @return String, title
-     */
     public String getTitle() {
         return this.title;
     }
 
-    /**
-     * @return String, templatePath
-     */
     public String getTemplatePath() {
         return this.templatePath;
     }
 
-    /**
-     * @return String, dialogPath
-     */
     public String getDialogPath() {
         return this.dialogPath;
     }
 
     /**
-     * @return String, template type (jsp / servlet)
      * @deprecated use getType()
      */
     public String getTemplateType() {
@@ -79,63 +58,57 @@ public class Paragraph {
         return type;
     }
 
-    /**
-     * @return String, description
-     */
     public String getDescription() {
         return this.description;
     }
 
-    void setDescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    void setDialogPath(String dialogPath) {
+    public void setDialogPath(String dialogPath) {
         this.dialogPath = dialogPath;
     }
 
-    void setName(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    void setTemplatePath(String templatePath) {
+    public void setTemplatePath(String templatePath) {
         this.templatePath = templatePath;
     }
 
     /**
      * @deprecated use setType()
      */
-    void setTemplateType(String templateType) {
+    public void setTemplateType(String templateType) {
         this.type = templateType;
     }
 
-    void setType(String type) {
+    public void setType(String type) {
         this.type = type;
     }
 
-    void setTitle(String title) {
+    public void setTitle(String title) {
         this.title = title;
     }
 
-    /**
-     * Getter for <code>dialog</code>.
-     * @return Returns the dialog.
-     */
     public String getDialog() {
         return this.dialog;
     }
 
-    /**
-     * Setter for <code>dialog</code>.
-     * @param dialog The dialog to set.
-     */
     public void setDialog(String dialog) {
         this.dialog = dialog;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
+    public String getI18nBasename() {
+        return this.i18nBasename;
+    }
+
+    public void setI18nBasename(String basename) {
+        this.i18nBasename = basename;
+    }
+
     public String toString() {
         return new ToStringBuilder(this)
             .append("name", this.name) //$NON-NLS-1$
@@ -146,20 +119,6 @@ public class Paragraph {
             .append("title", this.title) //$NON-NLS-1$
             .append("templatePath", this.templatePath) //$NON-NLS-1$
             .toString();
-    }
-
-    /**
-     * @return Returns the i18nBasename.
-     */
-    public String getI18nBasename() {
-        return this.i18nBasename;
-    }
-
-    /**
-     * @param basename The i18nBasename to set.
-     */
-    public void setI18nBasename(String basename) {
-        this.i18nBasename = basename;
     }
 
 }
