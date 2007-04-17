@@ -20,7 +20,7 @@ import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.freemarker.FreemarkerContentRenderer;
+import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
 import junit.framework.TestCase;
@@ -44,7 +44,7 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         tplLoader = new StringTemplateLoader();
         cfg = new Configuration();
         cfg.setTemplateLoader(tplLoader);
-        renderer = new FreemarkerParagraphRenderer(new FreemarkerContentRenderer(cfg));
+        renderer = new FreemarkerParagraphRenderer(new FreemarkerHelper(cfg));
         final Context context = createNiceMock(Context.class);
         expect(context.getLocale()).andReturn(Locale.US);
         MgnlContext.setInstance(context);

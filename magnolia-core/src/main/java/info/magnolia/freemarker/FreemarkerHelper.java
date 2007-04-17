@@ -27,10 +27,10 @@ import java.util.Locale;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class FreemarkerContentRenderer {
+public class FreemarkerHelper {
     private final Configuration cfg;
 
-    public FreemarkerContentRenderer(Configuration cfg) {
+    public FreemarkerHelper(Configuration cfg) {
         this.cfg = cfg;
     }
 

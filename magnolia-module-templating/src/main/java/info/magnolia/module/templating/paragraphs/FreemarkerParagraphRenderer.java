@@ -17,7 +17,7 @@ import info.magnolia.cms.beans.config.ActionBasedParagraph;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
-import info.magnolia.freemarker.FreemarkerContentRenderer;
+import info.magnolia.freemarker.FreemarkerHelper;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -31,9 +31,9 @@ import java.util.HashMap;
  * @version $Revision: $ ($Author: $)
  */
 public class FreemarkerParagraphRenderer implements ParagraphRenderer {
-    private final FreemarkerContentRenderer fmRenderer;
+    private final info.magnolia.freemarker.FreemarkerHelper fmRenderer;
 
-    public FreemarkerParagraphRenderer(FreemarkerContentRenderer fmRenderer) {
+    public FreemarkerParagraphRenderer(FreemarkerHelper fmRenderer) {
         this.fmRenderer = fmRenderer;
     }
 

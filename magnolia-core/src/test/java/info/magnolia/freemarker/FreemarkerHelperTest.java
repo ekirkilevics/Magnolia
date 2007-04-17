@@ -24,28 +24,28 @@ import info.magnolia.test.mock.MockNodeData;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
+import java.awt.Color;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
-import java.awt.Color;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class FreemarkerContentRendererTest extends TestCase {
+public class FreemarkerHelperTest extends TestCase {
     private StringTemplateLoader tplLoader;
-    private FreemarkerContentRenderer renderer;
+    private FreemarkerHelper renderer;
 
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
         final Configuration cfg = new Configuration();
         cfg.setTemplateLoader(tplLoader);
-        renderer = new FreemarkerContentRenderer(cfg);
+        renderer = new FreemarkerHelper(cfg);
     }
 
     private void assertRendereredContent(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {
