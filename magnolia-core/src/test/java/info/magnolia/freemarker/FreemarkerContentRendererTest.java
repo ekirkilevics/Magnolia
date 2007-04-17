@@ -26,6 +26,8 @@ import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
 
@@ -145,8 +147,9 @@ public class FreemarkerContentRendererTest extends TestCase {
         final MockContent c = new MockContent("root");
         c.addContent(f);
         // skipping the time in the datetime format, cause i'm lazy: MetaData currently does not let me set the activation datetime as i want it
+        String expectedDate = new SimpleDateFormat("yyyy-MM-dd").format(new Date());
         tplLoader.putTemplate("test.ftl", "${foo.MetaData.authorId}:${foo.MetaData.isActivated?string('yes','no')}:${foo.MetaData.title}:${foo.MetaData.creationDate?string('yyyy-MM-dd')}");
-        assertRendereredContent("greg:yes:my test page:2007-04-16", c, "test.ftl");
+        assertRendereredContent("greg:yes:my test page:" + expectedDate, c, "test.ftl");
     }
 
     public void testBooleanPropertiesAreHandledProperly() throws TemplateException, IOException {
@@ -195,7 +198,7 @@ public class FreemarkerContentRendererTest extends TestCase {
         c.setUUID("123");
         c.addNodeData(new MockNodeData("foo", "bar"));
 
-        assertRendereredContent("Ceci est une template belge hein une fois.",new Locale("fr", "BE"), c, "test.ftl");
+        assertRendereredContent("Ceci est une template belge hein une fois.", new Locale("fr", "BE"), c, "test.ftl");
     }
 
 }
