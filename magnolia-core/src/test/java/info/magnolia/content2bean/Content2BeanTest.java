@@ -209,4 +209,15 @@ public class Content2BeanTest extends TestCase {
         assertEquals("prop1Sub2Value", ((SimpleBean)beans.get("sub2")).getProp1());
         assertEquals("prop2Sub2Value", ((SimpleBean)beans.get("sub2")).getProp2());
     }
+
+    public void testClassPropertiesAreConvertedProperly() throws RepositoryException, Content2BeanException {
+        Content node = MockUtil.createContent("parent", new String[][]{
+                {"class", "info.magnolia.content2bean.BeanWithClass"},
+                {"foo", "blah"},
+                {"clazz", "java.lang.String"}}, new Content[0]);
+
+        BeanWithClass o = (BeanWithClass) Content2BeanUtil.toBean(node, true);
+        assertEquals("blah", o.getFoo());
+        assertEquals(String.class, o.getClazz());
+    }
 }

@@ -260,10 +260,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             propertyName = "className";
         }
 
+        // if the root bean is a map, we can't guess the types.
         if(!(bean instanceof Map)){
             try {
                 Class type = resolvePropertyType(bean.getClass(), propertyName);
                 if(type != null){
+                    // try to use an adder method for a Collection property of the bean
                     if (ClassUtil.isSubClass(type, Collection.class)) {
                         value = ((Map) value).entrySet();
                         Method method = getAddMethod(bean.getClass(), propertyName);
@@ -274,7 +276,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
                             return;
                         }
                     }
-                    // try to use an adder method
+                    // try to use an adder method for a Map property of the bean
                     else if (ClassUtil.isSubClass(type, Map.class)) {
                         Method method = getAddMethod(bean.getClass(), propertyName);
                         if (method != null) {
@@ -285,6 +287,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
                             return;
                         }
                     }
+                    value = convertPropertyValue(type, value);
                 }
             }
             catch (Exception e) {
@@ -304,6 +307,13 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             log.error("can't set property", e);
         }
 
+    }
+
+    protected Object convertPropertyValue(Class propertyType, Object value) throws ClassNotFoundException {
+        if (Class.class.equals(propertyType)) {
+            value = ClassUtil.classForName((String) value);
+        }
+        return value;
     }
 
     /**
