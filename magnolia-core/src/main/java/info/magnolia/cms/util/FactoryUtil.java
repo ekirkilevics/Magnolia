@@ -64,6 +64,10 @@ public class FactoryUtil {
     }
 
     public static Object newInstance(Class interf) {
+        if(interf == null){
+            log.error("interf can't be null", new Throwable());
+            return null;
+        }
         try {
             if (factories.containsKey(interf)) {
                 return ((InstanceFactory) factories.get(interf)).newInstance();
@@ -150,7 +154,7 @@ public class FactoryUtil {
             setImplementation(interf, impl);
         }
     }
-    
+
     public static void setImplementation(Class interf, Class impl) {
         setDefaultImplementation(interf, impl.getName());
     }
@@ -162,7 +166,7 @@ public class FactoryUtil {
     public static void setImplementation(Class interf, String impl) {
         SystemProperty.getProperties().setProperty(interf.getName(), impl);
     }
-    
+
 
     /**
      * Register an instance which will be returned by getSingleton()
