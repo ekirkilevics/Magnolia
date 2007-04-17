@@ -12,8 +12,10 @@ package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 
+import java.io.IOException;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
@@ -28,21 +30,19 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  */
-public class Content2BeanTest extends TestCase {
+public class Content2BeanTest extends MgnlTestCase {
+
+    /**
+     * 
+     */
+    public Content2BeanTest() throws IOException {
+        super();
+    }
 
     /**
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(Content2BeanTest.class);
-
-
-    /**
-     * Setup factory util
-     */
-    public Content2BeanTest() {
-        FactoryUtil.setDefaultImplementation(Content2BeanProcessor.class, Content2BeanProcessorImpl.class);
-        FactoryUtil.setDefaultImplementation(Bean2ContentProcessor.class, Bean2ContentProcessor.class);
-    }
 
     public void testContentToBeanWithClassDefined() throws RepositoryException, Content2BeanException{
         Content node = MockUtil.createNode("node", new Object[][]{
@@ -161,7 +161,7 @@ public class Content2BeanTest extends TestCase {
 
         });
 
-        Content2BeanUtil.addMapPropertyType(BeanWithMap.class, "beans", SimpleBean.class);
+        Content2BeanUtil.addCollectionPropertyMapping(BeanWithMap.class, "beans", SimpleBean.class);
 
         BeanWithMap bean = (BeanWithMap) Content2BeanUtil.toBean(node, true);
         Map beans = bean.getBeans();

@@ -10,27 +10,35 @@
  */
 package info.magnolia.content2bean;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
 
+
+
 /**
- * Transforms beans to nodes. Uncomplete.
  * @author philipp
  * @version $Id$
  *
  */
-public interface Bean2ContentProcessor {
-
-    public Content toContent(Content parent, Object bean, boolean recursive, Bean2ContentTransformer transformer);
-
-    public Content setNodeDatas(Content node, Object bean, Bean2ContentTransformer transformer) throws Content2BeanException;
+public interface CollectionPropertyMapping {
 
     /**
-     * Get your instance here
+     * In case the property is a map this method is used to resolve the class to use
+     */
+    public Class getClassForCollectionProperty(Class parentClass, String name);
+
+    /**
+     * Define a collection/map name to class mapping
+     */
+    public void addCollectionPropertyClass(Class type, String name, Class mappedType);
+
+    /**
+     * Get the default transformer.
      */
     class Factory{
-        public static Bean2ContentProcessor getProcessor(){
-            return (Bean2ContentProcessor) FactoryUtil.getSingleton(Bean2ContentProcessor.class);
+        public static CollectionPropertyMapping getDefaultMapping(){
+            return (CollectionPropertyMapping) FactoryUtil.getSingleton(CollectionPropertyMapping.class);
         }
     }
+
+
 }

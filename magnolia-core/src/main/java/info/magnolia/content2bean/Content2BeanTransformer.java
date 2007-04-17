@@ -10,9 +10,9 @@
  */
 package info.magnolia.content2bean;
 
-import java.util.Map;
-
 import info.magnolia.cms.core.Content;
+
+import java.util.Map;
 
 
 /**
@@ -21,55 +21,30 @@ import info.magnolia.cms.core.Content;
  * @version $Id$
  */
 public interface Content2BeanTransformer extends Content.ContentFilter {
+    /**
+     * Create a state object to share the state between the processor and transformer
+     */
+    public TransformationState newState();
 
     /**
      * Resolves the class to use for the current node
      */
-    public Class resolveClass() throws ClassNotFoundException;
+    public Class resolveClass(TransformationState state) throws ClassNotFoundException;
 
     /**
      * Instantiates the bean
      */
-    public Object newBeanInstance(Class klass, Map properties);
+    public Object newBeanInstance(TransformationState state, Map properties);
 
     /**
      * Called after all properties are set
      */
-    public void initBean(Object bean, Map properties) throws Content2BeanException;
+    public void initBean(TransformationState state, Map properties) throws Content2BeanException;
 
     /**
      * Set this property on that bean. Allows conversions or excluding properties
      */
-    public void setProperty(Object bean, String propertyName, Object object);
+    public void setProperty(TransformationState state, String propertyName, Object object);
 
-    /**
-     * In case the property is a map this method is used to resolve the class to use
-     */
-    public Class getClassForCollectionProperty(Class parentClass, String name);
-
-    /**
-     * Define a collection/map name to class mapping
-     */
-    public void addCollectionPropertyClass(Class type, String name, Class mappedType);
-
-    /**
-     * Push the current bean. This allows to use the bean stack in other methods
-     */
-    public void pushClass(Class klass);
-
-    /**
-     * Pop the current bean
-     */
-    public void popClass();
-
-    /**
-     * Push the current node. This allows to use the content stack in other methods
-     */
-    public void pushContent(Content node);
-
-    /**
-     * Pop the current node
-     */
-    public void popContent();
 
 }

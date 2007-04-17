@@ -15,19 +15,15 @@ import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 
-import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.collections.ArrayStack;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,26 +33,11 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  */
-public class Content2BeanTransformerImpl implements Content2BeanTransformer {
+public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl implements Content2BeanTransformer {
 
     private static Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
 
-    /**
-     * Property types already resolved
-     */
-    protected static Map propertyTypes = new HashMap();
 
-    /**
-     * Stack of classes
-     */
-    protected ArrayStack classStack = new ArrayStack();
-
-    protected ArrayStack nodeStack = new ArrayStack();
-
-    /**
-     * Mappings to use
-     */
-    protected Map mapPropertyMapping = new HashMap();
 
     /**
      * Resolves in this order
@@ -68,15 +49,15 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
      * <li> otherwise use a Map
      * </ul>
      */
-    public Class resolveClass() throws ClassNotFoundException {
-        Content node = (Content) nodeStack.peek();
+    public Class resolveClass(TransformationState state) throws ClassNotFoundException {
+        Content node = state.getCurrentContent();
         try {
             if (node.hasNodeData("class")) {
                 String className = node.getNodeData("class").getString();
                 return ClassUtil.classForName(className);
             }
             else {
-                Class klass = onResolveClass(node);
+                Class klass = onResolveClass(state);
                 if (klass != null) {
                     return klass;
                 }
@@ -88,16 +69,16 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         }
 
         try {
-            if (!classStack.isEmpty()) {
-                if (ClassUtil.isSubClass((Class)classStack.peek(), Map.class)) {
-                    if (classStack.size() >= 2) {
+            if(state.getLevel() > 1){
+                if (ClassUtil.isSubClass(state.getCurrentClass(), Map.class)) {
+                    if (state.getLevel() > 2) {
                         // this is not necesserely the parent node of the current
-                        String mapProperyName = ((Content)nodeStack.peek(1)).getName();
-                        return getClassForCollectionProperty((Class)classStack.peek(1), mapProperyName);
+                        String mapProperyName = state.peekContent(1).getName();
+                        return getClassForCollectionProperty(state.peekClass(1), mapProperyName);
                     }
                 }
                 else {
-                    return resolvePropertyType((Class)classStack.peek(), node.getName());
+                    return resolvePropertyType(state.getCurrentClass(), node.getName());
 
                 }
             }
@@ -109,140 +90,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         return HashMap.class;
     }
 
-    /**
-     * Cache the already resolved types
-     *
-     */
-    protected Class resolvePropertyType(Class beanClass, String propName) {
-        String key = beanClass.getName() + "." + propName;
-        if(propertyTypes.containsKey(key)){
-            return (Class) propertyTypes.get(key);
-        }
-
-        Class klass = null;
-
-        PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors(beanClass);
-        for (int i = 0; i < descriptors.length; i++) {
-            PropertyDescriptor descriptor = descriptors[i];
-            if(descriptor.getName().equals(propName)){
-                klass = descriptor.getPropertyType();
-                break;
-            }
-        }
-        if (klass == null || ClassUtil.isSubClass(klass, Map.class) || ClassUtil.isSubClass(klass, Collection.class)) {
-            // a map is created
-            klass = LinkedHashMap.class;
-        }
-        // remember me
-        propertyTypes.put(key, klass);
-
-        return klass;
-    }
 
     /**
      * Override for custom resolving. In case this method is called no class property was set on the node
      */
-    protected Class onResolveClass(Content node) {
+    protected Class onResolveClass(TransformationState state) {
         return null;
-    }
-
-    /**
-     * Find a method
-     */
-    protected Method getExactMethod(Class type, String name) {
-        Method[] methods = type.getMethods();
-        for (int i = 0; i < methods.length; i++) {
-            Method method = methods[i];
-            if (method.getName().equals(name)) {
-                return method;
-            }
-        }
-        return null;
-    }
-
-    /**
-     * Get a adder method. Transforms name to singular
-     */
-    protected Method getAddMethod(Class type, String name) {
-        name = StringUtils.capitalize(name);
-        Method method = getExactMethod(type, "add" + name);
-        if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "s"));
-        }
-
-        if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ren"));
-        }
-
-        if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ies") + "y");
-        }
-        return method;
-    }
-
-    /**
-     * Resolves in this order
-     * <ul>
-     * <li> added definitions
-     * <li> definitions kept by the default transformer
-     * <li> adder methods type
-     * </ul>
-     */
-    public Class getClassForCollectionProperty(Class beanKlass, String name) {
-        String key = beanKlass.getName() + "." + name;
-        if (mapPropertyMapping.containsKey(key)) {
-            return (Class) mapPropertyMapping.get(key);
-        }
-
-        Content2BeanTransformerImpl defaultTransformer = Content2BeanUtil
-            .getContent2BeanProcessor()
-            .getDefaultContentToBeanTransformer();
-
-        if (this != defaultTransformer) {
-            Class klass = defaultTransformer.getClassForCollectionProperty(beanKlass, name);
-            if (klass != null) {
-                return klass;
-            }
-        }
-
-        Method addMethod = getAddMethod(beanKlass, name);
-        if (addMethod != null) {
-            Class klass = null;
-            // map
-            if (addMethod.getParameterTypes().length == 2) {
-                klass = addMethod.getParameterTypes()[1];
-            }
-            else if (addMethod.getParameterTypes().length == 1) {
-                klass = addMethod.getParameterTypes()[0];
-            }
-            if (klass != null) {
-                // remember
-                this.addCollectionPropertyClass(beanKlass, name, klass);
-                return klass;
-            }
-        }
-
-        return null;
-    }
-
-    public void addCollectionPropertyClass(Class type, String name, Class mappedType) {
-        mapPropertyMapping.put(type.getName() + "." + name, mappedType);
-    }
-
-    public void pushClass(Class klass) {
-        classStack.push(klass);
-    }
-
-    public void popClass() {
-        classStack.pop();
-    }
-
-    public void pushContent(Content node) {
-        nodeStack.push(node);
-    }
-
-    public void popContent() {
-        nodeStack.pop();
     }
 
     /**
@@ -255,39 +108,47 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
     /**
      * Do not set class property. In case of a map/collection try to use adder method.
      */
-    public void setProperty(Object bean, String propertyName, Object value) {
+    public void setProperty(TransformationState state, String propertyName, Object value) {
         if (propertyName.equals("class")) {
             propertyName = "className";
         }
 
-        // if the root bean is a map, we can't guess the types.
+        Object bean = state.getCurrentBean();
+
+        // if the parent bean is a map, we can't guess the types.
         if(!(bean instanceof Map)){
             try {
                 Class type = resolvePropertyType(bean.getClass(), propertyName);
                 if(type != null){
+                    boolean isCollection = ClassUtil.isSubClass(type, Collection.class);
+                    boolean isMap = isCollection == true? false : ClassUtil.isSubClass(type, Map.class);
+
                     // try to use an adder method for a Collection property of the bean
-                    if (ClassUtil.isSubClass(type, Collection.class)) {
-                        value = ((Map) value).entrySet();
+                    if (isCollection || isMap) {
                         Method method = getAddMethod(bean.getClass(), propertyName);
+
                         if (method != null) {
-                            for (Iterator iter = ((Collection) value).iterator(); iter.hasNext();) {
-                                method.invoke(bean, new Object[]{iter.next()});
-                            }
-                            return;
-                        }
-                    }
-                    // try to use an adder method for a Map property of the bean
-                    else if (ClassUtil.isSubClass(type, Map.class)) {
-                        Method method = getAddMethod(bean.getClass(), propertyName);
-                        if (method != null) {
+                            Class entryClass = getClassForCollectionProperty(bean.getClass(), propertyName);
+
                             for (Iterator iter = ((Map) value).keySet().iterator(); iter.hasNext();) {
                                 Object key = iter.next();
-                                method.invoke(bean, new Object[]{key, ((Map) value).get(key)});
+                                Object entryValue = ((Map) value).get(key);
+                                entryValue = convertPropertyValue(entryClass, entryValue);
+                                if(isCollection){
+                                    method.invoke(bean, new Object[]{entryValue});
+                                }
+                                // is a map
+                                else{
+                                    method.invoke(bean, new Object[]{key, entryValue});
+                                }
                             }
+
                             return;
                         }
                     }
-                    value = convertPropertyValue(type, value);
+                    else{
+                        value = convertPropertyValue(type, value);
+                    }
                 }
             }
             catch (Exception e) {
@@ -319,14 +180,15 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
     /**
      * Use the factory util to instantiate. This is usefull to get default implementation of interfaces
      */
-    public Object newBeanInstance(Class klass, Map properties) {
-        return FactoryUtil.newInstance(klass);
+    public Object newBeanInstance(TransformationState state, Map properties) {
+        return FactoryUtil.newInstance(state.getCurrentClass());
     }
 
     /**
      * Call init method if present
      */
-    public void initBean(Object bean, Map properties) throws Content2BeanException {
+    public void initBean(TransformationState state, Map properties) throws Content2BeanException {
+        Object bean = state.getCurrentBean();
         Method init;
         try {
             init = bean.getClass().getMethod("init", new Class[]{});

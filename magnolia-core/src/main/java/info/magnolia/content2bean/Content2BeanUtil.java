@@ -11,9 +11,14 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.NodeDataUtil;
 
+import java.util.Iterator;
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,7 +65,7 @@ public class Content2BeanUtil {
     public static Object toBean(Content node, final Class defaultClass) throws Content2BeanException {
         return toBean(node, false, new Content2BeanTransformerImpl() {
 
-            protected Class onResolveClass(Content node) {
+            protected Class onResolveClass(TransformationState state) {
                 return defaultClass;
             }
         });
@@ -111,30 +116,54 @@ public class Content2BeanUtil {
     /**
      * @see Content2BeanProcessor
      */
-    public static void addMapPropertyType(Class type, String name, Class mappedType) {
+    public static void addCollectionPropertyMapping(Class type, String name, Class mappedType) {
         getContent2BeanProcessor().getDefaultContentToBeanTransformer().addCollectionPropertyClass(type, name, mappedType);
     }
 
     /**
-     * @see Bean2ContentProcessor
-     */
-    public static void setNodeDatas(Content node, Map map) throws Content2BeanException {
-        getBean2ContentProcessor().setNodeDatas(node, map);
-    }
-
-    /**
-     * @see Bean2ContentProcessor
+     * @todo use the Bean2ContentProcessor
      */
     public static void setNodeDatas(Content node, Object bean, String[] excludes) throws Content2BeanException {
-        getBean2ContentProcessor().setNodeDatas(node, bean, excludes);
+        Map properties = toMap(bean);
+
+        for (int i = 0; i < excludes.length; i++) {
+            String exclude = excludes[i];
+            properties.remove(exclude);
+        }
     }
 
     /**
-     * @see Bean2ContentProcessor
+     * @todo use the Bean2ContentProcessor
      */
     public static void setNodeDatas(Content node, Object obj) throws Content2BeanException {
-        getBean2ContentProcessor().setNodeDatas(node, obj);
+        setNodeDatas(node, toMap(obj));
     }
 
+    /**
+     * @todo use the Bean2ContentProcessor
+     */
+    public static void setNodeDatas(Content node, Map map) throws Content2BeanException {
+        for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
+            String name = (String) iter.next();
+            try {
+                NodeDataUtil.getOrCreate(node, name).setValue(map.get(name).toString());
+            }
+            catch (RepositoryException e) {
+                throw new Content2BeanException("can't set/create nodedata [" + name + "] on node " + node.getHandle(), e);
+            }
+        }
+    }
+
+    /**
+     * Used to fake the setNodeDatas() methods
+     */
+    static private Map toMap(Object bean) throws Content2BeanException {
+        try {
+            return BeanUtils.describe(bean);
+        }
+        catch (Exception e) {
+            throw new Content2BeanException("can't read properties from bean", e);
+        }
+    }
 }
 
