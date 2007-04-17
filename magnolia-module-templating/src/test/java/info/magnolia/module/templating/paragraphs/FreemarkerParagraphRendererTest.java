@@ -19,7 +19,7 @@ import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.freemarker.FreemarkerContentRenderer;
+import info.magnolia.freemarker.FreemarkerContentRenderer;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
 import junit.framework.TestCase;

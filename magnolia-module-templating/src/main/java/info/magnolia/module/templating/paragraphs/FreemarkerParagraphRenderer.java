@@ -16,7 +16,7 @@ import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
-import info.magnolia.module.templating.freemarker.FreemarkerContentRenderer;
+import info.magnolia.freemarker.FreemarkerContentRenderer;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -47,3 +47,20 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
     }
 
 }
+
+
+/**
+ action
+
+ RequestFormUtil requestFormUtil = new RequestFormUtil(this.getRequest());
+ Map parameters = new HashMap(); // needed, can't directly modify the map returned by request.getParameterMap()
+ parameters.putAll(requestFormUtil.getParameters());
+ parameters.putAll(requestFormUtil.getDocuments()); // handle uploaded files too
+
+ try {
+     BeanUtils.populate(this, parameters);
+ }
+ catch (Exception e) {
+     log.error("can't set properties on the handler", e);
+ }
+*/

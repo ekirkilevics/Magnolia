@@ -10,7 +10,7 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module.templating.freemarker;
+package info.magnolia.freemarker;
 
 import freemarker.template.SimpleCollection;
 import freemarker.template.TemplateCollectionModel;
