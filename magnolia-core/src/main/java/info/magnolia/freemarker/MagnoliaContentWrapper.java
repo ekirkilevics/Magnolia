@@ -28,6 +28,7 @@ import java.util.Calendar;
 
 /**
  * @author Chris Miner
+ * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class MagnoliaContentWrapper extends DefaultObjectWrapper {

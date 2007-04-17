@@ -31,10 +31,10 @@ import java.util.HashMap;
  * @version $Revision: $ ($Author: $)
  */
 public class FreemarkerParagraphRenderer implements ParagraphRenderer {
-    private final FreemarkerHelper fmRenderer;
+    private final FreemarkerHelper fmHelper;
 
     public FreemarkerParagraphRenderer(FreemarkerHelper fmRenderer) {
-        this.fmRenderer = fmRenderer;
+        this.fmHelper = fmRenderer;
     }
 
     public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
@@ -65,7 +65,7 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
             freemarkerCtx.put("action", actionResult.getActionBean());
         }
         try {
-            fmRenderer.render(template, freemarkerCtx, out);
+            fmHelper.render(template, freemarkerCtx, out);
         } catch (TemplateException e) {
             throw new RuntimeException(e); // TODO
         }

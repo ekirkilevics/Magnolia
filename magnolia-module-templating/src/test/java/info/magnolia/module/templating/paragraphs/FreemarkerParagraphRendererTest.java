@@ -13,7 +13,6 @@
 package info.magnolia.module.templating.paragraphs;
 
 import freemarker.cache.StringTemplateLoader;
-import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.ActionBasedParagraph;
 import info.magnolia.cms.beans.config.Paragraph;
@@ -37,14 +36,12 @@ import java.util.Locale;
 public class FreemarkerParagraphRendererTest extends TestCase {
     private StringTemplateLoader tplLoader;
     private FreemarkerParagraphRenderer renderer;
-    private Configuration cfg;
 
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
-        cfg = new Configuration();
-        cfg.setTemplateLoader(tplLoader);
-        renderer = new FreemarkerParagraphRenderer(new FreemarkerHelper(cfg));
+        final FreemarkerHelper freemarkerHelper = new TestFreemarkerHelper(tplLoader);
+        renderer = new FreemarkerParagraphRenderer(freemarkerHelper);
         final Context context = createNiceMock(Context.class);
         expect(context.getLocale()).andReturn(Locale.US);
         MgnlContext.setInstance(context);
@@ -114,6 +111,14 @@ public class FreemarkerParagraphRendererTest extends TestCase {
 
         public String getPouet() {
             return "it works";
+        }
+    }
+
+    private final static class TestFreemarkerHelper extends FreemarkerHelper {
+
+        public TestFreemarkerHelper(StringTemplateLoader stl) {
+            super();
+            getConfiguration().setTemplateLoader(stl);
         }
     }
 }

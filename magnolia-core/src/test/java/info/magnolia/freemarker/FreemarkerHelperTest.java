@@ -43,9 +43,8 @@ public class FreemarkerHelperTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
-        final Configuration cfg = new Configuration();
-        cfg.setTemplateLoader(tplLoader);
-        fmHelper = new FreemarkerHelper(cfg);
+        fmHelper = new FreemarkerHelper();
+        fmHelper.getConfiguration().setTemplateLoader(tplLoader);
     }
 
     private void assertRendereredContent(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {

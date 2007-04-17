@@ -12,14 +12,13 @@
  */
 package info.magnolia.cms.security;
 
-import freemarker.template.Template;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.freemarker.FreemarkerHelper;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Collections;
 
 import javax.security.auth.login.LoginException;
 import javax.servlet.Filter;
@@ -248,11 +247,8 @@ public class SecurityFilter implements Filter {
         }
 
         try {
-            // we cannot use FreemarketUtil.process because MgnlContext is not set yet!
-            Template tmpl = FreeMarkerUtil.getDefaultConfiguration().getTemplate(loginUrl);
-            Map data = new HashMap();
-            data.put("contextPath", request.getContextPath());
-            tmpl.process(data, response.getWriter());
+            final Map data = Collections.singletonMap("contextPath", request.getContextPath());
+            FreemarkerHelper.getInstance().render(loginUrl, data, response.getWriter());
         }
         catch (Exception e) {
             log.error("exception while writing login template", e);

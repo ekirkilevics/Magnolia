@@ -14,6 +14,7 @@ package info.magnolia.freemarker;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -28,10 +29,18 @@ import java.util.Locale;
  * @version $Revision: $ ($Author: $)
  */
 public class FreemarkerHelper {
+    public static FreemarkerHelper getInstance() {
+        return (FreemarkerHelper) FactoryUtil.getSingleton(FreemarkerHelper.class);
+    }
+
     private final Configuration cfg;
 
-    public FreemarkerHelper(Configuration cfg) {
-        this.cfg = cfg;
+    public FreemarkerHelper() {
+        cfg = new Configuration();
+        cfg.setObjectWrapper(new MagnoliaContentWrapper());
+        cfg.setClassForTemplateLoading(FreemarkerUtil.class, "/");
+        cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
+        cfg.setDefaultEncoding("UTF8");
     }
 
     /**
@@ -40,10 +49,18 @@ public class FreemarkerHelper {
      */
     public void render(String templatePath, Object root, Writer out) throws TemplateException, IOException {
         final Locale locale = determineLocale();
-        cfg.getTemplate(templatePath, locale).process(root, out, new MagnoliaContentWrapper());
+        cfg.getTemplate(templatePath, locale).process(root, out);
     }
 
     protected Locale determineLocale() {
-        return MgnlContext.getLocale();
+        if (MgnlContext.hasInstance()) {
+            return MgnlContext.getLocale();
+        } else {
+            return Locale.getDefault();
+        }
+    }
+
+    protected Configuration getConfiguration() {
+        return cfg;
     }
 }
