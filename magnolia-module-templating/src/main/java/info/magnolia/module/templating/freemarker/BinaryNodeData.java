@@ -28,6 +28,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 /**
+ * TODO : review this !
+ * 
  * @author Chris Miner
  * @version $Revision: $ ($Author: $)
  */
