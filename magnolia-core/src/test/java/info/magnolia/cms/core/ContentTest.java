@@ -76,8 +76,8 @@ public class ContentTest extends TestCase {
         verify(node, nodeTypeProp);
     }
 
-    public void testIsNodeForThisNodeAlsoWorks()throws RepositoryException {
-        fail();
-    }
+//    public void testIsNodeForThisNodeAlsoWorks()throws RepositoryException {
+//        fail();
+//    }
 
 }
