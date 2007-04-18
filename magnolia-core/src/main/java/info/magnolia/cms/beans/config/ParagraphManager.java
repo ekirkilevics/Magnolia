@@ -15,6 +15,8 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.content2bean.Content2BeanException;
 
 import java.util.Collection;
 import java.util.Hashtable;
@@ -36,21 +38,12 @@ public class ParagraphManager extends ObservedManager {
 
     private static final String DEFAULT_PARA_TYPE = "jsp";
 
-    private static final String ND_I18N_BASENAME = "i18nBasename";
-
-    private static final String ND_DESCRIPTION = "description";
-
-    private static final String ND_TITLE = "title";
-
-    private static final String ND_TYPE = "type";
-
-    private static final String ND_DIALOG_PATH = "dialogPath";
-
-    private static final String ND_TEMPLATE_PATH = "templatePath";
-
-    private static final String ND_DIALOG = "dialog";
-
-    private static final String ND_NAME = "name";
+    /**
+     * Gets the current singleton instance.
+     */
+    public static ParagraphManager getInstance() {
+        return (ParagraphManager) FactoryUtil.getSingleton(ParagraphManager.class);
+    }
 
     /**
      * Cached paragraphs
@@ -103,42 +96,20 @@ public class ParagraphManager extends ObservedManager {
     /**
      * Adds paragraph definition to ParagraphInfo cache.
      */
-    protected Paragraph addParagraphToCache(Content c) {
-        Paragraph pi = new Paragraph();
-
-        String name = c.getNodeData(ND_NAME).getString();
-        if (StringUtils.isEmpty(name)) {
-            name = c.getName();
+    protected void addParagraphToCache(Content c) {
+        try {
+            final Paragraph p = (Paragraph) Content2BeanUtil.toBean(c, Paragraph.class);
+            if (StringUtils.isEmpty(p.getType())) {
+                p.setType(DEFAULT_PARA_TYPE);
+            }
+            if (StringUtils.isEmpty(p.getDialog())) {
+                p.setDialog(p.getName());
+            }
+            log.debug("Registering pi [{}] of type [{}]", p.getName(), p.getType()); //$NON-NLS-1$
+            paragraphs.put(p.getName(), p);
+        } catch (Content2BeanException e) {
+            throw new RuntimeException(e); // TODO
         }
-
-        pi.setName(name);
-
-        // by default just use the dialog with the same name of the paragraph
-        String dialog = c.getNodeData(ND_DIALOG).getString();
-        if (StringUtils.isEmpty(dialog)) {
-            dialog = c.getName();
-        }
-        pi.setDialog(dialog);
-
-        pi.setTemplatePath(c.getNodeData(ND_TEMPLATE_PATH).getString());
-        pi.setDialogPath(c.getNodeData(ND_DIALOG_PATH).getString());
-        final String type = c.getNodeData(ND_TYPE).getString();
-        pi.setType(StringUtils.defaultIfEmpty(type, DEFAULT_PARA_TYPE));
-        pi.setTitle(c.getNodeData(ND_TITLE).getString());
-        pi.setDescription(c.getNodeData(ND_DESCRIPTION).getString());
-        pi.setI18nBasename(c.getNodeData(ND_I18N_BASENAME).getString());
-        log.debug("Registering paragraph [{}] of type [{}]", pi.getName(), pi.getType()); //$NON-NLS-1$ 
-
-        paragraphs.put(pi.getName(), pi);
-        return pi;
-    }
-
-    /**
-     * Get the current singleton object
-     * @return
-     */
-    public static ParagraphManager getInstance() {
-        return (ParagraphManager) FactoryUtil.getSingleton(ParagraphManager.class);
     }
 
     public void onClear() {

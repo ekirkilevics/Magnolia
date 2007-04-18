@@ -39,7 +39,7 @@ public class ParagraphRenderingFacade {
     }
 
     // currently only used for tests, but one day, we'll go IOC instead of using singletons !
-    public ParagraphRenderingFacade(ParagraphRendererManager rendererManager, ParagraphManager paragraphManager) {
+    ParagraphRenderingFacade(ParagraphRendererManager rendererManager, ParagraphManager paragraphManager) {
         this.rendererManager = rendererManager;
         this.paragraphManager = paragraphManager;
     }

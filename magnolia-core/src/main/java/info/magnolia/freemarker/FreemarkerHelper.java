@@ -14,6 +14,7 @@ package info.magnolia.freemarker;
 
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
+import freemarker.template.TemplateExceptionHandler;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 
@@ -41,6 +42,8 @@ public class FreemarkerHelper {
         cfg.setClassForTemplateLoading(FreemarkerUtil.class, "/");
         cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
         cfg.setDefaultEncoding("UTF8");
+        // TODO : configure this (maybe based on the dev-mode system property)
+        cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
     }
 
     /**

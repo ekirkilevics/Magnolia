@@ -31,6 +31,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Locale;
+import java.util.Map;
+import java.util.Collections;
 
 /**
  * @author gjoseph
@@ -205,6 +207,19 @@ public class FreemarkerHelperTest extends TestCase {
         c.addNodeData(new MockNodeData("foo", "bar"));
 
         assertRendereredContent("Ceci est une template belge hein une fois.", new Locale("fr", "BE"), c, "test.ftl");
+    }
+
+    public void testMissingAndDefaultValueOperatorsActsAsIExceptThemTo() throws IOException, TemplateException {
+        tplLoader.putTemplate("test.ftl", "[#if content.title!?has_content]<h2>${content.title}</h2>[/#if]");
+        final MockContent c = new MockContent("pouet");
+        final Map m = Collections.singletonMap("content", c);
+        assertRendereredContent("", m, "test.ftl");
+
+        c.addNodeData(new MockNodeData("title", ""));
+        assertRendereredContent("", m, "test.ftl");
+
+        c.addNodeData(new MockNodeData("title", "pouet"));
+        assertRendereredContent("<h2>pouet</h2>", m, "test.ftl");
     }
 
 }

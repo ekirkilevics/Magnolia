@@ -23,8 +23,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author gjoseph
@@ -33,7 +33,15 @@ import java.util.HashMap;
 public class FreemarkerParagraphRenderer implements ParagraphRenderer {
     private final FreemarkerHelper fmHelper;
 
-    public FreemarkerParagraphRenderer(FreemarkerHelper fmRenderer) {
+    /**
+     * Constructs a FreemarkerParagraphRenderer that uses the default (singleton)
+     * instance of FreemarkerHelper.
+     */
+    public FreemarkerParagraphRenderer() {
+        this(FreemarkerHelper.getInstance());
+    }
+
+    FreemarkerParagraphRenderer(FreemarkerHelper fmRenderer) {
         this.fmHelper = fmRenderer;
     }
 
@@ -60,7 +68,7 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
 
         final Map freemarkerCtx = new HashMap();
         freemarkerCtx.put("content", content);
-        if (actionResult!=null){
+        if (actionResult != null) {
             freemarkerCtx.put("result", actionResult.getResult());
             freemarkerCtx.put("action", actionResult.getActionBean());
         }
