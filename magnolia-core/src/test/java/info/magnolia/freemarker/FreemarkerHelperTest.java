@@ -13,7 +13,6 @@
 package info.magnolia.freemarker;
 
 import freemarker.cache.StringTemplateLoader;
-import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.Context;
@@ -21,10 +20,11 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockMetaData;
 import info.magnolia.test.mock.MockNodeData;
+import info.magnolia.test.model.Color;
+import info.magnolia.test.model.Pair;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
-import java.awt.Color;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -65,9 +65,9 @@ public class FreemarkerHelperTest extends TestCase {
     }
 
     public void testWeCanUseAnyObjectTypeAsOurRoot() throws IOException, TemplateException {
-        tplLoader.putTemplate("test.ftl", "${left} ${right.left.blue - 100} ${right.right.green}");
-        final Pair root = new Pair(Integer.valueOf(33), new Pair(Color.PINK, Color.ORANGE));
-        assertRendereredContent("33 75 200", root, "test.ftl");
+        tplLoader.putTemplate("test.ftl", "${left} ${right.left.blue - left} ${right.right.green} ${right.right.name}");
+        final Pair root = new Pair(Integer.valueOf(100), new Pair(Color.PINK, Color.ORANGE));
+        assertRendereredContent("100 75 200 orange", root, "test.ftl");
     }
 
     public void testSubNodesAreReachable() throws TemplateException, IOException {
@@ -207,21 +207,4 @@ public class FreemarkerHelperTest extends TestCase {
         assertRendereredContent("Ceci est une template belge hein une fois.", new Locale("fr", "BE"), c, "test.ftl");
     }
 
-    public static final class Pair {
-        private final Object left;
-        private final Object right;
-
-        public Pair(Object left, Object right) {
-            this.left = left;
-            this.right = right;
-        }
-
-        public Object getLeft() {
-            return left;
-        }
-
-        public Object getRight() {
-            return right;
-        }
-    }
 }
