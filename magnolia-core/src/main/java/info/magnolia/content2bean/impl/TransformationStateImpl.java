@@ -1,6 +1,8 @@
-package info.magnolia.content2bean;
+package info.magnolia.content2bean.impl;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.content2bean.TransformationState;
+import info.magnolia.content2bean.TypeDescriptor;
 
 import org.apache.commons.collections.ArrayStack;
 import org.slf4j.Logger;
@@ -14,7 +16,7 @@ public class TransformationStateImpl implements TransformationState {
      */
     private static Logger log = LoggerFactory.getLogger(TransformationStateImpl.class);
 
-    protected ArrayStack classStack = new ArrayStack();
+    protected ArrayStack typeStack = new ArrayStack();
 
     protected ArrayStack beanStack = new ArrayStack();
 
@@ -24,8 +26,8 @@ public class TransformationStateImpl implements TransformationState {
         return beanStack.peek();
     }
 
-    public Class getCurrentClass() {
-        return (Class) classStack.peek();
+    public TypeDescriptor getCurrentType() {
+        return (TypeDescriptor) typeStack.peek();
     }
 
     public Content getCurrentContent() {
@@ -36,8 +38,8 @@ public class TransformationStateImpl implements TransformationState {
         return beanStack.peek(pos);
     }
 
-    public Class peekClass(int pos) {
-        return (Class) classStack.peek(pos);
+    public TypeDescriptor peekType(int pos) {
+        return (TypeDescriptor) typeStack.peek(pos);
     }
 
     public Content peekContent(int pos) {
@@ -48,8 +50,8 @@ public class TransformationStateImpl implements TransformationState {
         beanStack.pop();
     }
 
-    public void popClass() {
-        classStack.pop();
+    public void popType() {
+        typeStack.pop();
     }
 
     public void popContent() {
@@ -60,8 +62,8 @@ public class TransformationStateImpl implements TransformationState {
         beanStack.push(bean);
     }
 
-    public void pushClass(Class klass) {
-        classStack.push(klass);
+    public void pushType(TypeDescriptor type) {
+        typeStack.push(type);
     }
 
     public void pushContent(Content node) {
@@ -69,6 +71,6 @@ public class TransformationStateImpl implements TransformationState {
     }
 
     public int getLevel() {
-        return Math.max(Math.max(classStack.size(), beanStack.size()), contentStack.size());
+        return Math.max(Math.max(typeStack.size(), beanStack.size()), contentStack.size());
     }
 }

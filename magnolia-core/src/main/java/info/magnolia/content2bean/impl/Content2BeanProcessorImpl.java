@@ -8,11 +8,19 @@
  *
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  */
-package info.magnolia.content2bean;
+package info.magnolia.content2bean.impl;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanProcessor;
+import info.magnolia.content2bean.Content2BeanTransformer;
+import info.magnolia.content2bean.PropertyTypeDescriptor;
+import info.magnolia.content2bean.TransformationState;
+import info.magnolia.content2bean.TypeDescriptor;
+import info.magnolia.content2bean.TypeMapping;
+import info.magnolia.content2bean.TypeMapping.Factory;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -36,8 +44,8 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
      */
     public static final Content2BeanTransformerImpl TO_MAP_TRANSFORMER = new Content2BeanTransformerImpl() {
 
-        public Class resolveClass(TransformationState state) throws ClassNotFoundException {
-            return HashMap.class;
+        public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException {
+            return TypeMapping.MAP_TYPE;
         }
     };
 
@@ -66,17 +74,17 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
         state.pushContent(node);
 
-        Class klass = null;
+        TypeDescriptor type = null;
         try {
-            klass = transformer.resolveClass(state);
+            type = transformer.resolveType(state);
         }
         catch (ClassNotFoundException e) {
             throw new Content2BeanException("can't resolve class for node " +  node.getHandle(), e);
         }
 
-        state.pushClass(klass);
+        state.pushType(type);
 
-        Map properties = toMap(node);
+        Map values = toMap(node);
 
         if(recursive){
             Collection children = node.getChildren(transformer);
@@ -86,28 +94,20 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
                 // the parent bean to resolve the class
 
                 Object childBean = toBean(childNode, true, transformer, state);
-                properties.put(childNode.getName(), childBean);
+                values.put(childNode.getName(), childBean);
             }
         }
 
 
-        Object bean = transformer.newBeanInstance(state, properties);
+        Object bean = transformer.newBeanInstance(state, values);
 
         state.pushBean(bean);
 
-        if(!(bean instanceof Map) && !properties.containsKey("content")){
-            properties.put("content", node);
-        }
+        setProperties(values, transformer, state);
 
-        if(!(bean instanceof Map) && !properties.containsKey("name")){
-            properties.put("name", node.getName());
-        }
+        transformer.initBean(state, values);
 
-        setProperties(properties, transformer, state);
-
-        transformer.initBean(state, properties);
-
-        state.popClass();
+        state.popType();
         state.popBean();
         state.popContent();
 
@@ -117,14 +117,17 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     public Object setProperties(final Object bean, Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException {
         TransformationState state = transformer.newState();
         state.pushBean(bean);
-        state.pushClass(bean.getClass());
+        // TODO this is ugly
+        state.pushType(TypeMapping.Factory.getDefaultMapping().getTypeDescriptor(bean.getClass()));
 
-        Map properties = toMap(node, recursive);
+        Map values = toMap(node, recursive);
 
-        setProperties(properties, transformer, state);
+        setProperties(values, transformer, state);
+
+        transformer.initBean(state, values);
 
         state.popBean();
-        state.popClass();
+        state.popType();
 
         return bean;
     }
@@ -142,14 +145,18 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         return map;
     }
 
-    protected void setProperties(Map properties, final Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException {
-        for (Iterator iter = properties.keySet().iterator(); iter.hasNext();) {
-            String propertyName = (String) iter.next();
-            transformer.setProperty(state, propertyName, properties.get(propertyName));
+    protected void setProperties(Map values, final Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException {
+        Object bean = state.getCurrentBean();
+        if(bean instanceof Map){
+            ((Map)bean).putAll(values);
+        }
+        else{
+            Collection dscrs = state.getCurrentType().getPropertyDescriptors().values();
+            for (Iterator iter = dscrs.iterator(); iter.hasNext();) {
+                PropertyTypeDescriptor descriptor = (PropertyTypeDescriptor) iter.next();
+                transformer.setProperty(state, descriptor, values);
+            }
         }
     }
 
-    public Content2BeanTransformerImpl getDefaultContentToBeanTransformer() {
-        return defaultTransformer;
-    }
 }

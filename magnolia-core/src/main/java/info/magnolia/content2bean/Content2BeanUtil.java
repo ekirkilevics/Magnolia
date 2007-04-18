@@ -12,6 +12,7 @@ package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
 import java.util.Iterator;
 import java.util.Map;
@@ -53,6 +54,21 @@ public class Content2BeanUtil {
     }
 
     /**
+     * Get the current mapping
+     */
+    public static TypeMapping getTypeMapping() {
+        return TypeMapping.Factory.getDefaultMapping();
+    }
+
+    /**
+     * Get the current transformer
+     */
+    public static Content2BeanTransformer getContent2BeanTransformer() {
+        return Content2BeanTransformer.Factory.getDefaultTransformer();
+    }
+
+
+    /**
      * @see Content2BeanProcessor
      */
     public static Object toBean(Content node) throws Content2BeanException {
@@ -64,9 +80,10 @@ public class Content2BeanUtil {
      */
     public static Object toBean(Content node, final Class defaultClass) throws Content2BeanException {
         return toBean(node, false, new Content2BeanTransformerImpl() {
+            TypeDescriptor defaultType = TypeMapping.Factory.getDefaultMapping().getTypeDescriptor(defaultClass);
 
-            protected Class onResolveClass(TransformationState state) {
-                return defaultClass;
+            protected TypeDescriptor onResolveClass(TransformationState state) {
+                return defaultType;
             }
         });
     }
@@ -75,7 +92,7 @@ public class Content2BeanUtil {
      * @see Content2BeanProcessor
      */
     public static Object toBean(Content node, boolean recursive) throws Content2BeanException {
-        return toBean(node, recursive, Content2BeanUtil.getContent2BeanProcessor().getDefaultContentToBeanTransformer());
+        return toBean(node, recursive, getContent2BeanTransformer());
     }
 
     /**
@@ -110,14 +127,15 @@ public class Content2BeanUtil {
      * @see Content2BeanProcessor
      */
     public static Object setProperties(Object bean, Content node, boolean recursive) throws Content2BeanException {
-        return getContent2BeanProcessor().setProperties(bean, node, recursive, Content2BeanUtil.getContent2BeanProcessor().getDefaultContentToBeanTransformer());
+        return getContent2BeanProcessor().setProperties(bean, node, recursive, getContent2BeanTransformer());
     }
 
     /**
      * @see Content2BeanProcessor
      */
     public static void addCollectionPropertyMapping(Class type, String name, Class mappedType) {
-        getContent2BeanProcessor().getDefaultContentToBeanTransformer().addCollectionPropertyClass(type, name, mappedType);
+        TypeMapping mapping = getTypeMapping();
+        mapping.getPropertyTypeDescriptor(type, name).setCollectionEntryType(mapping.getTypeDescriptor(mappedType));
     }
 
     /**

@@ -8,16 +8,21 @@
  *
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  */
-package info.magnolia.content2bean;
+package info.magnolia.content2bean.impl;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanTransformer;
+import info.magnolia.content2bean.PropertyTypeDescriptor;
+import info.magnolia.content2bean.TransformationState;
+import info.magnolia.content2bean.TypeDescriptor;
+import info.magnolia.content2bean.TypeMapping;
+import info.magnolia.content2bean.TypeMapping.Factory;
 
 import java.lang.reflect.Method;
-import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -33,11 +38,9 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  */
-public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl implements Content2BeanTransformer {
+public class Content2BeanTransformerImpl implements Content2BeanTransformer {
 
     private static Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
-
-
 
     /**
      * Resolves in this order
@@ -49,18 +52,18 @@ public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl i
      * <li> otherwise use a Map
      * </ul>
      */
-    public Class resolveClass(TransformationState state) throws ClassNotFoundException {
+    public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException {
+        TypeDescriptor typeDscr = null;
         Content node = state.getCurrentContent();
+
         try {
             if (node.hasNodeData("class")) {
                 String className = node.getNodeData("class").getString();
-                return ClassUtil.classForName(className);
+                Class clazz = ClassUtil.classForName(className);
+                typeDscr = getTypeMapping().getTypeDescriptor(clazz);
             }
             else {
-                Class klass = onResolveClass(state);
-                if (klass != null) {
-                    return klass;
-                }
+                typeDscr = onResolveClass(state);
             }
         }
         catch (RepositoryException e) {
@@ -68,33 +71,41 @@ public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl i
             Content2BeanProcessorImpl.log.warn("can't read class property", e);
         }
 
-        try {
-            if(state.getLevel() > 1){
-                if (ClassUtil.isSubClass(state.getCurrentClass(), Map.class)) {
+        if (typeDscr == null && state.getLevel() > 1) {
+            try {
+                TypeDescriptor parentTypeDscr = state.getCurrentType();
+                PropertyTypeDescriptor propDscr;
+
+                if (parentTypeDscr.isMap() || parentTypeDscr.isCollection()) {
                     if (state.getLevel() > 2) {
                         // this is not necesserely the parent node of the current
                         String mapProperyName = state.peekContent(1).getName();
-                        return getClassForCollectionProperty(state.peekClass(1), mapProperyName);
+                        propDscr = state.peekType(1).getPropertyTypeDescriptor(mapProperyName);
+                        typeDscr = propDscr.getCollectionEntryType();
                     }
                 }
                 else {
-                    return resolvePropertyType(state.getCurrentClass(), node.getName());
-
+                    propDscr = state.getCurrentType().getPropertyTypeDescriptor(node.getName());
+                    typeDscr = propDscr.getType();
                 }
+
+            }
+            catch (Exception e) {
+                Content2BeanProcessorImpl.log.error("can't resolve type by beans property type", e);
             }
         }
-        catch (Exception e) {
-            Content2BeanProcessorImpl.log.error("can't resolve type by beans property type", e);
+
+        if (typeDscr == null || typeDscr.isMap() || typeDscr.isCollection()) {
+            typeDscr = TypeMapping.MAP_TYPE;
         }
 
-        return HashMap.class;
+        return typeDscr;
     }
-
 
     /**
      * Override for custom resolving. In case this method is called no class property was set on the node
      */
-    protected Class onResolveClass(TransformationState state) {
+    protected TypeDescriptor onResolveClass(TransformationState state) {
         return null;
     }
 
@@ -108,37 +119,46 @@ public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl i
     /**
      * Do not set class property. In case of a map/collection try to use adder method.
      */
-    public void setProperty(TransformationState state, String propertyName, Object value) {
-        if (propertyName.equals("class")) {
-            propertyName = "className";
-        }
-
+    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
+        String propertyName = descriptor.getName();
+        Object value = values.get(propertyName);
+        TypeMapping mapping = getTypeMapping();
         Object bean = state.getCurrentBean();
 
+        if (propertyName.equals("content") && value == null) {
+            value = state.getCurrentContent();
+        }
+
+        else if (propertyName.equals("name") && value == null) {
+            value = state.getCurrentContent().getName();
+        }
+
+        else if (propertyName.equals("className") && value == null) {
+            value = values.get("class");
+        }
+
         // if the parent bean is a map, we can't guess the types.
-        if(!(bean instanceof Map)){
+        if (!(bean instanceof Map)) {
             try {
-                Class type = resolvePropertyType(bean.getClass(), propertyName);
-                if(type != null){
-                    boolean isCollection = ClassUtil.isSubClass(type, Collection.class);
-                    boolean isMap = isCollection == true? false : ClassUtil.isSubClass(type, Map.class);
+                PropertyTypeDescriptor dscr = mapping.getPropertyTypeDescriptor(bean.getClass(), propertyName);
+                if (dscr.getType() != null) {
 
                     // try to use an adder method for a Collection property of the bean
-                    if (isCollection || isMap) {
-                        Method method = getAddMethod(bean.getClass(), propertyName);
+                    if (dscr.isCollection() || dscr.isMap()) {
+                        Method method = dscr.getAddMethod();
 
                         if (method != null) {
-                            Class entryClass = getClassForCollectionProperty(bean.getClass(), propertyName);
+                            Class entryClass = dscr.getCollectionEntryType().getClass();
 
                             for (Iterator iter = ((Map) value).keySet().iterator(); iter.hasNext();) {
                                 Object key = iter.next();
                                 Object entryValue = ((Map) value).get(key);
                                 entryValue = convertPropertyValue(entryClass, entryValue);
-                                if(isCollection){
+                                if (dscr.isCollection()) {
                                     method.invoke(bean, new Object[]{entryValue});
                                 }
                                 // is a map
-                                else{
+                                else {
                                     method.invoke(bean, new Object[]{key, entryValue});
                                 }
                             }
@@ -146,8 +166,8 @@ public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl i
                             return;
                         }
                     }
-                    else{
-                        value = convertPropertyValue(type, value);
+                    else {
+                        value = convertPropertyValue(dscr.getType().getType(), value);
                     }
                 }
             }
@@ -160,7 +180,7 @@ public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl i
         try {
             PropertyUtils.setProperty(bean, propertyName, value);
         }
-        catch (NoSuchMethodException e){
+        catch (NoSuchMethodException e) {
             // ignore, this is not a property at all
         }
         catch (Exception e) {
@@ -170,9 +190,20 @@ public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl i
 
     }
 
-    protected Object convertPropertyValue(Class propertyType, Object value) throws ClassNotFoundException {
+    /**
+     * Hadles properties of type Class.
+     */
+    public Object convertPropertyValue(Class propertyType, Object value) throws Content2BeanException {
+        if(value == null){
+            return value;
+        }
         if (Class.class.equals(propertyType)) {
-            value = ClassUtil.classForName((String) value);
+            try {
+                value = ClassUtil.classForName((String) value);
+            }
+            catch (ClassNotFoundException e) {
+                throw new Content2BeanException("can't find class for value [" + value + "]", e);
+            }
         }
         return value;
     }
@@ -181,7 +212,7 @@ public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl i
      * Use the factory util to instantiate. This is usefull to get default implementation of interfaces
      */
     public Object newBeanInstance(TransformationState state, Map properties) {
-        return FactoryUtil.newInstance(state.getCurrentClass());
+        return FactoryUtil.newInstance(state.getCurrentType().getType());
     }
 
     /**
@@ -189,6 +220,7 @@ public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl i
      */
     public void initBean(TransformationState state, Map properties) throws Content2BeanException {
         Object bean = state.getCurrentBean();
+
         Method init;
         try {
             init = bean.getClass().getMethod("init", new Class[]{});
@@ -203,8 +235,19 @@ public class Content2BeanTransformerImpl extends CollectionPropertyMappingImpl i
             init.invoke(bean, null);
         }
         catch (Exception e) {
-            throw new Content2BeanException("can't call init method",e);
+            throw new Content2BeanException("can't call init method", e);
         }
+    }
+
+    public TransformationState newState() {
+        return (TransformationState) FactoryUtil.newInstance(TransformationState.class);
+    }
+
+    /**
+     * Returns the dafault mapping
+     */
+    protected TypeMapping getTypeMapping() {
+        return TypeMapping.Factory.getDefaultMapping();
     }
 
 }

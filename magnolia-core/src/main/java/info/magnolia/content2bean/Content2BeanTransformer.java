@@ -11,12 +11,13 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.FactoryUtil;
 
 import java.util.Map;
 
 
 /**
- * Used to create the bens and resolve classes
+ * Used to create beans
  * @author philipp
  * @version $Id$
  */
@@ -29,22 +30,36 @@ public interface Content2BeanTransformer extends Content.ContentFilter {
     /**
      * Resolves the class to use for the current node
      */
-    public Class resolveClass(TransformationState state) throws ClassNotFoundException;
+    public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException;
 
     /**
      * Instantiates the bean
      */
-    public Object newBeanInstance(TransformationState state, Map properties);
+    public Object newBeanInstance(TransformationState state, Map values);
 
     /**
      * Called after all properties are set
      */
-    public void initBean(TransformationState state, Map properties) throws Content2BeanException;
+    public void initBean(TransformationState state, Map values) throws Content2BeanException;
 
     /**
-     * Set this property on that bean. Allows conversions or excluding properties
+     * Set this property on that bean. Allows excluding of properties
      */
-    public void setProperty(TransformationState state, String propertyName, Object object);
+    public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values);
 
+    /**
+     * Transforms the simple basic jcr property value objects to complexer properties
+     */
+    public Object convertPropertyValue(Class propertyType, Object value) throws Content2BeanException;
+
+    /**
+     * Get your instance here
+     */
+    class Factory {
+
+        public static Content2BeanTransformer getDefaultTransformer() {
+            return (Content2BeanTransformer) FactoryUtil.getSingleton(Content2BeanTransformer.class);
+        }
+    }
 
 }

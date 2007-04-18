@@ -10,7 +10,10 @@
  */
 package info.magnolia.content2bean;
 
+
 import info.magnolia.cms.util.FactoryUtil;
+
+import java.util.LinkedHashMap;
 
 
 
@@ -19,24 +22,24 @@ import info.magnolia.cms.util.FactoryUtil;
  * @version $Id$
  *
  */
-public interface CollectionPropertyMapping {
+public interface TypeMapping {
 
-    /**
-     * In case the property is a map this method is used to resolve the class to use
-     */
-    public Class getClassForCollectionProperty(Class parentClass, String name);
+    public static TypeDescriptor MAP_TYPE = Factory.getDefaultMapping().getTypeDescriptor(LinkedHashMap.class);
 
-    /**
-     * Define a collection/map name to class mapping
-     */
-    public void addCollectionPropertyClass(Class type, String name, Class mappedType);
+    public PropertyTypeDescriptor getPropertyTypeDescriptor(Class beanClass, String propName);
+
+    public TypeDescriptor getTypeDescriptor(Class beanClass);
+
+    public void addPropertyTypeDescriptor(Class beanClass, String propName, PropertyTypeDescriptor dscr);
+
+    public void addTypeDescriptor(Class beanClass, TypeDescriptor dscr);
 
     /**
      * Get the default transformer.
      */
     class Factory{
-        public static CollectionPropertyMapping getDefaultMapping(){
-            return (CollectionPropertyMapping) FactoryUtil.getSingleton(CollectionPropertyMapping.class);
+        public static TypeMapping getDefaultMapping(){
+            return (TypeMapping) FactoryUtil.getSingleton(TypeMapping.class);
         }
     }
 

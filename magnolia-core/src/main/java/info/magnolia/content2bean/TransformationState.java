@@ -23,13 +23,13 @@ import info.magnolia.cms.core.Content;
  */
 public interface TransformationState {
 
-    public void pushClass(Class klass);
+    public void pushType(TypeDescriptor type);
 
-    public void popClass();
+    public void popType();
 
-    public Class getCurrentClass();
+    public TypeDescriptor getCurrentType();
 
-    public Class peekClass(int pos);
+    public TypeDescriptor peekType(int pos);
 
     public void pushBean(Object bean);
 

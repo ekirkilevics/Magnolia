@@ -14,15 +14,49 @@ import info.magnolia.cms.core.ItemType;
 
 
 /**
+ * Used to create content nodes. This is a kind of configuration for the processor.
  * @author philipp
  * @version $Id$
- *
  */
 public interface Bean2ContentTransformer {
+
+    /**
+     * The item type of the node
+     */
     public ItemType resolveItemType(TransformationState state);
-    public ItemType initContent(TransformationState state);
+
+    /**
+     * The content name to use
+     */
+    public ItemType resolveName(TransformationState state);
+
+    /**
+     * Set mixin types or similar. Does not create the node!
+     */
+    public ItemType prepareContent(TransformationState state);
+
+    /**
+     * Called after the nodedatas and child content is set.
+     */
     public ItemType finishContent(TransformationState state);
-    public boolean isNode(TransformationState state, String propertyName);
-    public boolean isProperty(TransformationState state, String propertyName);
+
+    /**
+     * Will this property be a node?
+     */
+    public boolean isNode(TransformationState state, String propertyName, Object value);
+
+    /**
+     * Will this property be a node data?
+     */
+    public boolean isProperty(TransformationState state, String propertyName, Object value);
+
+    /**
+     * Create/set the node data of the node
+     */
     public void setNodeData(TransformationState state, String name, Object value);
+
+    /**
+     * Convert complex vlues to the basic supported types (int, boolean, .. String)
+     */
+    public Object convertNodeDataValue(TransformationState state, String name, Object value);
 }

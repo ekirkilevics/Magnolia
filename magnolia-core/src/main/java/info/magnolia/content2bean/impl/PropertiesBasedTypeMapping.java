@@ -8,7 +8,7 @@
  *
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  */
-package info.magnolia.content2bean;
+package info.magnolia.content2bean.impl;
 
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
@@ -29,18 +29,11 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
-public class PropertiesBasedCollectionPropertyMapping extends CollectionPropertyMappingImpl {
+public class PropertiesBasedTypeMapping extends TypeMappingImpl {
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(PropertiesBasedCollectionPropertyMapping.class);
+    private static Logger log = LoggerFactory.getLogger(PropertiesBasedTypeMapping.class);
 
-
-    /**
-     *
-     */
-    public PropertiesBasedCollectionPropertyMapping() {
+    public PropertiesBasedTypeMapping() {
         String[] fileNames = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter(){
             public boolean accept(String name) {
                 return name.endsWith(".content2bean");
@@ -63,11 +56,11 @@ public class PropertiesBasedCollectionPropertyMapping extends CollectionProperty
 
             for (Iterator iter = props.keySet().iterator(); iter.hasNext();) {
                 String key = (String) iter.next();
-                Class type;
                 try {
-                    type = ClassUtil.classForName(StringUtils.substringBeforeLast(key, "."));
+                    Class type = ClassUtil.classForName(StringUtils.substringBeforeLast(key, "."));
                     Class mappedType = ClassUtil.classForName(props.getProperty(key));
-                    addCollectionPropertyClass(type, StringUtils.substringAfterLast(key, "."), mappedType);
+                    String propName = StringUtils.substringAfterLast(key, ".");
+                    getPropertyTypeDescriptor(type, propName).setCollectionEntryType(getTypeDescriptor(mappedType));
                 }
                 catch (ClassNotFoundException e) {
                     log.error("can't read collection to bean information file: " + fileName + " key: " + key,  e);

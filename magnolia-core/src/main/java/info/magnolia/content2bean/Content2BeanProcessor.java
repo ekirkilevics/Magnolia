@@ -42,11 +42,6 @@ public interface Content2BeanProcessor {
     public Object setProperties(final Object bean, Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException;
 
     /**
-     * The default transformer used by this processor
-     */
-    public Content2BeanTransformerImpl getDefaultContentToBeanTransformer();
-
-    /**
      * Get your instance here
      */
     class Factory {
