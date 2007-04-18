@@ -51,7 +51,7 @@ public class ContentTest extends TestCase {
         final Property nodeFrozenTypeProp = createStrictMock(Property.class);
 
         expect(node.getProperty(ItemType.JCR_PRIMARY_TYPE)).andReturn(nodeTypeProp);
-        expect(nodeTypeProp.getString()).andReturn(ItemType.JCR_FROZENNODE);
+        expect(nodeTypeProp.getString()).andReturn(ItemType.NT_FROZENNODE);
         expect(node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE)).andReturn(nodeFrozenTypeProp);
         expect(nodeFrozenTypeProp.getString()).andReturn(returnedType);
 
@@ -67,12 +67,12 @@ public class ContentTest extends TestCase {
         final Node node = createStrictMock(Node.class);
         final Property nodeTypeProp = createStrictMock(Property.class);
         expect(node.getProperty(ItemType.JCR_PRIMARY_TYPE)).andReturn(nodeTypeProp);
-        expect(nodeTypeProp.getString()).andReturn(ItemType.JCR_FROZENNODE);
+        expect(nodeTypeProp.getString()).andReturn(ItemType.NT_FROZENNODE);
 
         replay(node, nodeTypeProp);
         final Content c = new Content();
         c.setNode(node);
-        assertTrue(c.isNodeType(node, ItemType.JCR_FROZENNODE));
+        assertTrue(c.isNodeType(node, ItemType.NT_FROZENNODE));
         verify(node, nodeTypeProp);
     }
 

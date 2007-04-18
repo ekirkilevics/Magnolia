@@ -92,24 +92,14 @@ public final class ItemType implements Serializable {
      */
     public static final String NT_CONTENT = "mgnl:content"; //$NON-NLS-1$
 
-    /**
-     * jcr:frozenNode
-     */
+    public static final String NT_FROZENNODE = "nt:frozenNode";
+
     public static final String JCR_FROZENNODE = "jcr:frozenNode";
 
-    /**
-     * jcr:frozenPrimaryType
-     */
     public static final String JCR_FROZEN_PRIMARY_TYPE = "jcr:frozenPrimaryType";
 
-    /**
-     * jcr:primaryType
-     */
     public static final String JCR_PRIMARY_TYPE = "jcr:primaryType";
 
-    /**
-     * jcr:data
-     */
     public static final String JCR_DATA = "jcr:data";
 
     /**
@@ -123,39 +113,18 @@ public final class ItemType implements Serializable {
      */
     public static final String NT_NODEDATA = "mgnl:nodeData"; //$NON-NLS-1$
 
-    /**
-     * "mgnl:content"
-     */
     public static final ItemType CONTENT = new ItemType("mgnl:content"); //$NON-NLS-1$
 
-    /**
-     * "mgnl:contentNode"
-     */
     public static final ItemType CONTENTNODE = new ItemType("mgnl:contentNode"); //$NON-NLS-1$
 
-    /**
-     * "mgnl:user"
-     */
     public static final ItemType USER = new ItemType("mgnl:user"); //$NON-NLS-1$
 
-    /**
-     * "mgnl:role"
-     */
     public static final ItemType ROLE = new ItemType("mgnl:role"); //$NON-NLS-1$
 
-    /**
-     * "mgnl:group"
-     */
     public static final ItemType GROUP = new ItemType("mgnl:group"); //$NON-NLS-1$
 
-    /**
-     * "mgnl:contentNode"
-     */
     public static final ItemType SYSTEM = new ItemType("mgnl:reserve"); //$NON-NLS-1$
 
-    /**
-     * "jcr:content"
-     */
     public static final ItemType JCR_CONTENT = new ItemType("jcr:content"); //$NON-NLS-1$
 
     /**

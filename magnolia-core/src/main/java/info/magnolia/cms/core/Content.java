@@ -985,7 +985,7 @@ public class Content extends ContentHandler implements Cloneable {
         try {
             final String actualType = node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
             // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original node type
-            if (ItemType.JCR_FROZENNODE.equals(actualType) && !(ItemType.JCR_FROZENNODE.equals(type))) {
+            if (ItemType.NT_FROZENNODE.equals(actualType) && !(ItemType.NT_FROZENNODE.equals(type))) {
                 final Property p = node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE);
                 final String s = p.getString();
                 return s.equalsIgnoreCase(type);
