@@ -981,15 +981,23 @@ public class Content extends ContentHandler implements Cloneable {
      * @param node
      * @param type
      */
-    private boolean isNodeType(Node node, String type) {
+    protected boolean isNodeType(Node node, String type) {
         try {
-            return node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString().equalsIgnoreCase(type);
+            final String actualType = node.getProperty(ItemType.JCR_PRIMARY_TYPE).getString();
+            // if the node is frozen, and we're not looking specifically for frozen nodes, then we compare with the original node type
+            if (ItemType.JCR_FROZENNODE.equals(actualType) && !(ItemType.JCR_FROZENNODE.equals(type))) {
+                final Property p = node.getProperty(ItemType.JCR_FROZEN_PRIMARY_TYPE);
+                final String s = p.getString();
+                return s.equalsIgnoreCase(type);
+            } else {
+                return actualType.equalsIgnoreCase(type);
+            }
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
             log.debug(re.getMessage(), re);
+            return false;
         }
-        return false;
     }
 
     /**
