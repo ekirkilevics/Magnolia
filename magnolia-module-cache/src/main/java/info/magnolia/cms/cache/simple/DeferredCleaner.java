@@ -99,7 +99,7 @@ class DeferredCleaner {
                 } else {
                     // yield...
                     try {
-                        Thread.sleep(YIELD_FOR);
+                        Thread.sleep(YIELD_FOR*1000);
                     } catch (InterruptedException e) {
                         // shouldn't happen, else just wake up :)
                     }
