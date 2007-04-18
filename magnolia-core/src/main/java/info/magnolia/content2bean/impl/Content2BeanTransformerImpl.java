@@ -138,7 +138,8 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         }
 
         // do no try to set a bean-property that has no correspoding node-property
-        if (!values.containsKey(propertyName)) {
+        //else if (!values.containsKey(propertyName)) {
+        if (value == null) {
             return;
         }
 
