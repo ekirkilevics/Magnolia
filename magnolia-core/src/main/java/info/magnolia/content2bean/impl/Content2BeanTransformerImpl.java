@@ -137,6 +137,11 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             value = values.get("class");
         }
 
+        // do no try to set a bean-property that has no correspoding node-property
+        if (!values.containsKey(propertyName)) {
+            return;
+        }
+
         // if the parent bean is a map, we can't guess the types.
         if (!(bean instanceof Map)) {
             try {
