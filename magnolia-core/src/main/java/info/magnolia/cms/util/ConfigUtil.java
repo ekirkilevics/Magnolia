@@ -219,20 +219,4 @@ public class ConfigUtil {
         return builder.parse(IOUtils.toInputStream(xml));
     }
 
-    public static Object toBean(Content node, boolean recursive) throws Content2BeanException {
-        return Content2BeanUtil.toBean(node, recursive);
-    }
-
-    public static Object toBean(Content node) throws Content2BeanException {
-        return Content2BeanUtil.toBean(node);
-    }
-
-    public static Map toMap(Content node, boolean recursive) throws Content2BeanException {
-        return Content2BeanUtil.toMap(node, recursive);
-    }
-
-    public static Map toMap(Content node) throws Content2BeanException {
-        return Content2BeanUtil.toMap(node);
-    }
-
 }
