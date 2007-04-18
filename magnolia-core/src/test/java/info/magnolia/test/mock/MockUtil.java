@@ -11,8 +11,10 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.servlets.PropertyInitializer;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
@@ -21,6 +23,7 @@ import info.magnolia.context.SystemContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.ByteArrayInputStream;
+import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Properties;
 import java.util.Set;
@@ -30,7 +33,10 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -40,6 +46,11 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class MockUtil {
+
+    /**
+     * Logger.
+     */
+    private static Logger log = LoggerFactory.getLogger(MockContext.class);
 
     /**
      * Ordered properties. Uses to keep the order in the mocked content
