@@ -1,8 +1,8 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.io.StringWriter;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ParagraphRenderingFacadeTest extends TestCase {
+public class ParagraphRenderingFacadeTest extends MgnlTestCase {
 
     public void testRenderCallsTheAppropriateRenderer() throws IOException, RepositoryException {
         final ParagraphRendererManager prm = new ParagraphRendererManager();
