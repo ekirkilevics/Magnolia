@@ -95,7 +95,7 @@
         <sv:value>info.magnolia.cms.security.SecurityFilter</sv:value>
       </sv:property>
       <sv:property sv:name="priority" sv:type="Long">
-        <sv:value>400</sv:value>
+        <sv:value>200</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -138,7 +138,7 @@
       <sv:value>info.magnolia.cms.filters.MgnlVirtualUriFilter</sv:value>
     </sv:property>
     <sv:property sv:name="priority" sv:type="Long">
-      <sv:value>200</sv:value>
+      <sv:value>300</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -178,7 +178,7 @@
       <sv:value>406ad67a-85c9-40da-8064-d3b40637b4e8</sv:value>
     </sv:property>
     <sv:property sv:name="priority" sv:type="Long">
-      <sv:value>300</sv:value>
+      <sv:value>400</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.filters.MultipartRequestFilter</sv:value>
