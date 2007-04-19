@@ -30,10 +30,11 @@
             <br />
           </div>
         </cms:contentNodeIterator>
-        <cms:adminOnly>
-          <div style="clear:both;">
+        <cms:adminOnly>yyyy
+          <div style="clear:both;">yyyy
             <cms:newBar contentNodeCollectionName="mainColumnParagraphsDev"
-              paragraph="samplesDevShowRichEdit,samplesDevShowDate,samplesDevShowFile,samplesDevShowAllControls,samplesDevShowInclude" />
+               />
+              <!--paragraph="samplesDevShowRichEdit,samplesDevShowDate,samplesDevShowFile,samplesDevShowAllControls,samplesDevShowInclude"-->
           </div>
         </cms:adminOnly>
         <div id="footer">

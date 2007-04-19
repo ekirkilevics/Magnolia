@@ -117,6 +117,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
     public Object setProperties(final Object bean, Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException {
         TransformationState state = transformer.newState();
         state.pushBean(bean);
+        state.pushContent(node);
         // TODO this is ugly
         state.pushType(TypeMapping.Factory.getDefaultMapping().getTypeDescriptor(bean.getClass()));
 
@@ -128,6 +129,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
 
         state.popBean();
         state.popType();
+        state.popContent();
 
         return bean;
     }
