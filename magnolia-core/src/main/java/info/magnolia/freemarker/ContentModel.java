@@ -18,6 +18,7 @@ import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateNodeModel;
+import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
@@ -32,13 +33,17 @@ import java.util.Iterator;
  * @author Chris Miner
  * @version $Revision: $ ($Author: $)
  */
-public class ContentModel implements TemplateHashModelEx, TemplateNodeModel {
+public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, TemplateScalarModel {
     private final Content content;
     private final MagnoliaContentWrapper wrapper;
 
     ContentModel(Content content, MagnoliaContentWrapper wrapper) {
         this.content = content;
         this.wrapper = wrapper;
+    }
+
+    public String getAsString() throws TemplateModelException {
+        return content.getName();
     }
 
     public TemplateModel get(String key) throws TemplateModelException {

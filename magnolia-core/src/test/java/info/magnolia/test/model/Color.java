@@ -48,4 +48,8 @@ public final class Color {
     public int getBlue() {
         return blue;
     }
+
+    public String toString() {
+        return "color:" + name;
+    }
 }

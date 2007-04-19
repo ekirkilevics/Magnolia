@@ -72,6 +72,19 @@ public class FreemarkerHelperTest extends TestCase {
         assertRendereredContent("100 75 200 orange", root, "test.ftl");
     }
 
+    public void testSimpleNodeReferenceOutputsItsName() throws TemplateException, IOException {
+        final MockContent foo = new MockContent("foo");
+        foo.addContent(new MockContent("bar"));
+        foo.addContent(new MockContent("baz"));
+        foo.addContent(new MockContent("gazonk"));
+        Pair pair = new Pair(Color.ORANGE, foo);
+        Map<String, Pair> map = Collections.singletonMap("pair", pair);
+
+        tplLoader.putTemplate("test.ftl", "${pair.right} ${pair.right.gazonk} ${pair.left?string} ${pair.right?string} ${pair.right.gazonk?string}");
+
+        assertRendereredContent("foo gazonk color:orange foo gazonk", map, "test.ftl");
+    }
+
     public void testSubNodesAreReachable() throws TemplateException, IOException {
         tplLoader.putTemplate("test_sub.ftl", "The child node's bli'bla property is ${bli['bla']}");
 
@@ -110,6 +123,19 @@ public class FreemarkerHelperTest extends TestCase {
         tplLoader.putTemplate("test.ftl", "${foo?children?size}: <#list foo?children as n>${n.@handle} </#list>");
 
         assertRendereredContent("3: /root/foo/bar /root/foo/baz /root/foo/gazonk ", c, "test.ftl");
+    }
+
+    public void testCanLoopThroughNodesNestedInBean() throws TemplateException, IOException {
+        final MockContent foo = new MockContent("foo");
+        foo.addContent(new MockContent("bar"));
+        foo.addContent(new MockContent("baz"));
+        foo.addContent(new MockContent("gazonk"));
+        Pair pair = new Pair(Color.ORANGE, foo);
+        Map<String, Pair> map = Collections.singletonMap("pair", pair);
+
+        tplLoader.putTemplate("test.ftl", "${pair.right?children?size}: <#list pair.right?children as n>${n.@handle} </#list>");
+
+        assertRendereredContent("3: /foo/bar /foo/baz /foo/gazonk ", map, "test.ftl");
     }
 
     public void testCanLoopThroughPropertiesUsingTheKeysBuiltIn() throws TemplateException, IOException {
@@ -210,7 +236,7 @@ public class FreemarkerHelperTest extends TestCase {
     }
 
     public void testMissingAndDefaultValueOperatorsActsAsIExceptThemTo() throws IOException, TemplateException {
-        tplLoader.putTemplate("test.ftl", "[#if content.title!?has_content]<h2>${content.title}</h2>[/#if]");
+        tplLoader.putTemplate("test.ftl", "[#if content.title?has_content]<h2>${content.title}</h2>[/#if]");
         final MockContent c = new MockContent("pouet");
         final Map m = Collections.singletonMap("content", c);
         assertRendereredContent("", m, "test.ftl");
