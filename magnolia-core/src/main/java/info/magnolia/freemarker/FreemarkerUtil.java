@@ -27,21 +27,14 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.util.AlertUtil;
 
 /**
+ * A bunch of utility methods to render freemarker templates into Strings.
+ *
  * @author Philipp Bracher
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class FreemarkerUtil {
     private static final Logger log = LoggerFactory.getLogger(FreemarkerUtil.class);
-
-    /**
-     * Process this template with the passed data and returns the result in a String.
-     */
-    public static String process(String name, Map data) {
-        final Writer writer = new StringWriter();
-        process(name, data, writer);
-        return writer.toString();
-    }
 
     /**
      * Uses the class of the object to create the templates name, passes the object under the name 'this'
@@ -60,6 +53,7 @@ public class FreemarkerUtil {
 
     /**
      * Uses the class to create the templates name and passes the object under the name 'this'
+     *
      * @deprecated not used (only by this class)
      */
     public static String process(Class klass, Object thisObj, String ext) {
@@ -70,6 +64,7 @@ public class FreemarkerUtil {
 
     /**
      * Uses the class to create the templates name.
+     *
      * @deprecated not used (only by this class)
      */
     public static String process(Class klass, Map data, String ext) {
@@ -77,7 +72,17 @@ public class FreemarkerUtil {
     }
 
     /**
+     * Process this template with the passed data and returns the result in a String.
+     */
+    public static String process(String name, Map data) {
+        final Writer writer = new StringWriter();
+        process(name, data, writer);
+        return writer.toString();
+    }
+
+    /**
      * Process the template with the data and writes the result to the writer.
+     * TODO : move this to FreemarkerHelper
      */
     public static void process(String name, Map data, Writer writer) {
         try {
