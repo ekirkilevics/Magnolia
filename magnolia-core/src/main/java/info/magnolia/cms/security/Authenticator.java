@@ -60,6 +60,8 @@ public final class Authenticator {
      */
     public static final String PARAMETER_PSWD = "mgnlUserPSWD";
 
+    private static Subject anonymousSubject = createAnonymousSubject();
+
     /**
      * Utility class, don't instantiate.
      */
@@ -128,6 +130,20 @@ public final class Authenticator {
         return true;
     }
 
+    public static Subject createAnonymousSubject() {
+        User aUser = Security.getUserManager().getAnonymousUser();
+        CredentialsCallbackHandler callbackHandler
+                = new PlainTextCallbackHandler(aUser.getName(), aUser.getPassword().toCharArray());
+        try {
+            LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
+            loginContext.login();
+            return loginContext.getSubject();
+        } catch (LoginException le) {
+            log.error("Failed to login as Anonymous user", le);
+            return null;
+        }
+    }
+
     /**
      * @param credentials to be decoded
      * @return String decoded credentials <b>name:password </b>
@@ -160,6 +176,8 @@ public final class Authenticator {
                 catch (Exception e) {
                     log.debug(e.getMessage(), e);
                 }
+            } else {
+                return UserManager.ANONYMOUS_USER;
             }
         }
 
@@ -197,7 +215,8 @@ public final class Authenticator {
         HttpSession httpsession = request.getSession(false);
         if (httpsession != null) {
             return (Subject) httpsession.getAttribute(ATTRIBUTE_JAAS_SUBJECT);
+        } else {
+            return anonymousSubject;
         }
-        return null;
     }
 }

@@ -55,6 +55,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     private static final String ATTRIBUTE_QM_PREFIX = "mgnlQueryMgr_";
 
     private HttpServletRequest request;
+    
     private HttpServletResponse response;
 
     /**
@@ -74,13 +75,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public User getUser() {
         if (this.user == null) {
-            if (Authenticator.getSubject(request) == null) {
-                log.debug("JAAS Subject is null, returning Anonymous user");
-                this.user = Security.getUserManager().getUser(UserManager.ANONYMOUS_USER);
-            }
-            else {
-                this.user = Security.getUserManager().getUser(Authenticator.getSubject(request));
-            }
+            this.user = Security.getUserManager().getUser(Authenticator.getSubject(request));
         }
         return this.user;
     }

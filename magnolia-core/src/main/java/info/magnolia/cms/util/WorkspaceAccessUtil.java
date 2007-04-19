@@ -118,7 +118,7 @@ public class WorkspaceAccessUtil {
      * @return newly created accessmanager
      * */
     public AccessManager createAccessManager(Subject subject, String repositoryName, String workspaceName) {
-        List permissionList = null;
+        List permissionList = new ArrayList();
         if (subject != null) {
             Set principalSet = subject.getPrincipals(PrincipalCollection.class);
             Iterator it = principalSet.iterator();
@@ -126,12 +126,8 @@ public class WorkspaceAccessUtil {
             ACL acl = (ACL) principals.get(repositoryName + "_" + workspaceName);
             if (acl != null) {
                 permissionList = acl.getList();
-            } else {
-                permissionList = new ArrayList();
             }
         }
-        // if acl or subject is null this accessmanager wont have "any" permissions
-        // todo : allow here and fix it together with MAGNOLIA-1292
         AccessManager accessManager = new AccessManagerImpl();
         accessManager.setPermissionList(permissionList);
 
