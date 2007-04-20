@@ -60,7 +60,7 @@ public interface WebContext extends Context {
     public String getParameter(String name);
 
     /**
-     * Get parameter value as string
+     * Get parameter value as a Map<String, String>
      * @return parameter values
      */
     public Map getParameters();

@@ -227,15 +227,16 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     }
 
     /**
-     * Get parameter values as strings
+     * Get parameter values as a Map<String, String>
+     * (unlike HttpServletRequest.getParameterMap() which returns a Map<String, String[]>,
+     * so don't expect to retrieve multiple-valued form parameters here)
      * @return parameter values
      */
     public Map getParameters() {
-        // getParameterMap() is returning multiple values!
         Map map = new HashMap();
         Enumeration paramEnum = this.request.getParameterNames();
         while (paramEnum.hasMoreElements()) {
-            String name = (String) paramEnum.nextElement();
+            final String name = (String) paramEnum.nextElement();
             map.put(name, this.request.getParameter(name));
         }
         return map;
