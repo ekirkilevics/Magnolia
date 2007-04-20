@@ -24,6 +24,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 import java.util.Calendar;
 
 /**
@@ -59,7 +60,14 @@ public class MagnoliaContentWrapper extends DefaultObjectWrapper {
                 case PropertyType.BINARY:
                     return new BinaryNodeData(nodeData, this);
 
-//                case PropertyType.REFERENCE:
+                case PropertyType.REFERENCE:
+                    try {
+                        Content c = nodeData.getReferencedContent();
+                        return new ContentModel(c, this);
+                    } catch (RepositoryException e) {
+                        throw new TemplateModelException(e);
+                    }
+                    
 //                case PropertyType.PATH:
 //                case PropertyType.NAME:
                 default:

@@ -78,6 +78,13 @@ public class MockNodeData extends NodeData {
         return (InputStream) value;
     }
 
+    public Content getReferencedContent() throws RepositoryException {
+        if (value instanceof Content) {
+            return (Content) value;
+        }
+        throw new RepositoryException("Value is not Content, a real NodeData/javax.jcr.Property will not allow this either");
+    }
+
     public String getHandle() {
         return this.getParent().getHandle() + "/" + this.getName();
     }

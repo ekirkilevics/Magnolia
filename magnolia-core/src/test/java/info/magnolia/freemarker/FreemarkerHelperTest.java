@@ -222,6 +222,15 @@ public class FreemarkerHelperTest extends TestCase {
         assertRendereredContent("1,234,567,890,123,456,789 , 12,345,678.901", c, "test.ftl");
     }
 
+    public void testReferenceProperties() throws TemplateException, IOException {
+        final MockContent foo = new MockContent("foo");
+        final MockContent bar = new MockContent("bar");
+        foo.addNodeData(new MockNodeData("some-ref", bar));
+        bar.addNodeData(new MockNodeData("baz", "gazonk"));
+        tplLoader.putTemplate("test.ftl", "${foo['some-ref']} ${foo['some-ref'].baz}");
+        assertRendereredContent("bar gazonk", Collections.singletonMap("foo", foo), "test.ftl");
+    }
+
     public void testRendereredWithCurrentLocale() throws TemplateException, IOException {
         tplLoader.putTemplate("test.ftl", "this is a test template.");
         tplLoader.putTemplate("test_en.ftl", "this is a test template in english.");

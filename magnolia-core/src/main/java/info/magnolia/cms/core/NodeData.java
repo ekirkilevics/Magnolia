@@ -315,6 +315,16 @@ public class NodeData extends ContentHandler {
     }
 
     /**
+     * @return the Content that this NodeData references (if its type
+     * is PropertyType.REFERENCE, otherwise throws an exception)
+     * @see javax.jcr.Property#getNode()
+     */
+    public Content getReferencedContent() throws RepositoryException {
+        final Node n = property.getNode();
+        return new Content(n, getAccessManager());
+    }
+
+    /**
      * Returns the <code>type</code> of this <code>NodeData</code>. One of:
      * <ul>
      * <li><code>PropertyType.STRING</code></li>
