@@ -17,9 +17,9 @@ import info.magnolia.cms.security.auth.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.PlainTextCallbackHandler;
 
 import javax.security.auth.Subject;
+import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
-import javax.security.auth.login.FailedLoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
- * @version 2.0
+ * @version $Id$
  */
 public final class Authenticator {
 
@@ -60,6 +60,11 @@ public final class Authenticator {
      */
     public static final String PARAMETER_PSWD = "mgnlUserPSWD";
 
+    /**
+     * request attribute holding the login exception
+     */
+    protected static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
+
     private static Subject anonymousSubject = createAnonymousSubject();
 
     /**
@@ -75,30 +80,27 @@ public final class Authenticator {
      * @return boolean
      */
     public static boolean authenticate(HttpServletRequest request) throws LoginException {
+
         String credentials = request.getHeader("Authorization");
-        String userid;
-        String pswd;
         CredentialsCallbackHandler callbackHandler;
-        String loginModuleToInitialize = "magnolia"; // default login module
 
         if (StringUtils.isEmpty(credentials) || credentials.length() <= 6) {
             // check for form based login request
             if (StringUtils.isNotEmpty(request.getParameter(PARAMETER_USER_ID))) {
-                userid = request.getParameter(PARAMETER_USER_ID);
-                pswd = StringUtils.defaultString(request.getParameter(PARAMETER_PSWD));
+                String userid = request.getParameter(PARAMETER_USER_ID);
+                String pswd = StringUtils.defaultString(request.getParameter(PARAMETER_PSWD));
                 callbackHandler = new PlainTextCallbackHandler(userid, pswd.toCharArray());
             }
             else {
                 // select login module to use if user is authenticated against the container
                 if (request.getUserPrincipal() != null) {
-                    loginModuleToInitialize = "magnolia_authorization";
                     callbackHandler = new PlainTextCallbackHandler(request.getUserPrincipal().getName(), ""
                         .toCharArray());
+                    return authenticate(request, callbackHandler, "magnolia_authorization");
                 }
-                else {
-                    // invalid auth request
-                    return false;
-                }
+
+                // invalid auth request
+                return false;
             }
         }
         else {
@@ -106,15 +108,48 @@ public final class Authenticator {
             callbackHandler = new Base64CallbackHandler(credentials);
         }
 
+        return authenticate(request, callbackHandler);
+    }
+
+    /**
+     * Authenticate using the given CredentialsCallbackHandler and the default login module.
+     * @param request HttpServletRequest
+     * @param callbackHandler CredentialsCallbackHandler instance
+     * @return <code>true</code> if the authentication request succeeds
+     * @throws LoginException if the authentication request is not valid
+     */
+    public static boolean authenticate(HttpServletRequest request, CredentialsCallbackHandler callbackHandler)
+        throws LoginException {
+        return authenticate(request, callbackHandler, null);
+    }
+
+    /**
+     * Authenticate using the given CredentialsCallbackHandler and a custom login module.
+     * @param request HttpServletRequest
+     * @param callbackHandler CredentialsCallbackHandler instance
+     * @param customLoginModule login module to use, null for the default (magnolia) module
+     * @return <code>true</code> if the authentication request succeeds
+     * @throws LoginException if the authentication request is not valid
+     */
+    public static boolean authenticate(HttpServletRequest request, CredentialsCallbackHandler callbackHandler,
+        String customLoginModule) throws LoginException {
         Subject subject;
         try {
-            LoginContext loginContext = new LoginContext(loginModuleToInitialize, callbackHandler);
+            LoginContext loginContext = new LoginContext(
+                StringUtils.defaultString(customLoginModule, "magnolia"),
+                callbackHandler);
             loginContext.login();
             subject = loginContext.getSubject();
             // ok, we NEED a session here since the user has been authenticated
             HttpSession httpsession = request.getSession(true);
             httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
-        } catch (FailedLoginException fle) {
+
+            request.removeAttribute(ATTRIBUTE_LOGINERROR);
+        }
+        catch (FailedLoginException fle) {
+
+            request.setAttribute(ATTRIBUTE_LOGINERROR, fle);
+
             if (log.isDebugEnabled()) {
                 log.debug("Wrong credentials", fle);
             }
@@ -123,7 +158,8 @@ public final class Authenticator {
                 httpsession.invalidate();
             }
             return false;
-        } catch (LoginException le) {
+        }
+        catch (LoginException le) {
             throw le;
         }
 
@@ -132,13 +168,15 @@ public final class Authenticator {
 
     public static Subject createAnonymousSubject() {
         User aUser = Security.getUserManager().getAnonymousUser();
-        CredentialsCallbackHandler callbackHandler
-                = new PlainTextCallbackHandler(aUser.getName(), aUser.getPassword().toCharArray());
+        CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(aUser.getName(), aUser
+            .getPassword()
+            .toCharArray());
         try {
             LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
             loginContext.login();
             return loginContext.getSubject();
-        } catch (LoginException le) {
+        }
+        catch (LoginException le) {
             log.error("Failed to login as Anonymous user", le);
             return null;
         }
@@ -176,7 +214,8 @@ public final class Authenticator {
                 catch (Exception e) {
                     log.debug(e.getMessage(), e);
                 }
-            } else {
+            }
+            else {
                 return UserManager.ANONYMOUS_USER;
             }
         }
@@ -215,8 +254,8 @@ public final class Authenticator {
         HttpSession httpsession = request.getSession(false);
         if (httpsession != null) {
             return (Subject) httpsession.getAttribute(ATTRIBUTE_JAAS_SUBJECT);
-        } else {
-            return anonymousSubject;
         }
+
+        return anonymousSubject;
     }
 }
