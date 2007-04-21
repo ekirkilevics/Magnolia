@@ -5,14 +5,4 @@
   <displayName>Magnolia pluggable Cache</displayName>
   <class>info.magnolia.cms.cache.CacheModule</class>
   <version>3.0</version>
-  <servlets>
-    <servlet>
-      <name>CacheServlet</name>
-      <class>info.magnolia.cms.cache.CacheGeneratorServlet</class>
-      <comment>Cache Generator Servlet</comment>
-      <mappings>
-        <mapping>/.magnolia/cache-all/*</mapping>
-      </mappings>
-    </servlet>
-  </servlets>
 </module>
