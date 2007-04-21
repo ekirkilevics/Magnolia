@@ -32,6 +32,7 @@ public class PermissionImpl implements Permission, Serializable {
     private static Map nameStrings = new Hashtable();
 
     static {
+        nameStrings.put(new Long(0), "none");
         nameStrings.put(new Long(Permission.ADD), Permission.PERMISSION_NAME_ADD);
         nameStrings.put(new Long(Permission.SET), Permission.PERMISSION_NAME_SET);
         nameStrings.put(new Long(Permission.REMOVE), Permission.PERMISSION_NAME_REMOVE);
@@ -69,7 +70,7 @@ public class PermissionImpl implements Permission, Serializable {
     public static String getPermissionAsName(long permission) {
         return (String) nameStrings.get(new Long(permission));
     }
-    
+
     /**
      * {@inheritDoc}
      */
