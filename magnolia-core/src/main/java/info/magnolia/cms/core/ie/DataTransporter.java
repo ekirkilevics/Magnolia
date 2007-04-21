@@ -63,7 +63,7 @@ public class DataTransporter {
 
     private static Logger log = LoggerFactory.getLogger(DataTransporter.class.getName());
 
-    final static int bootstrapImportMode = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+    final static int BOOTSTRAP_IMPORT_MODE = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
 
     public static final String ZIP = ".zip";
 
@@ -144,7 +144,7 @@ public class DataTransporter {
             importProperties(properties , repositoryName);
         }
         else{
-            DataTransporter.importFile(xmlFile, repositoryName, basepath, false, bootstrapImportMode, true, true);
+            DataTransporter.importFile(xmlFile, repositoryName, basepath, false, BOOTSTRAP_IMPORT_MODE, true, true);
         }
     }
 
