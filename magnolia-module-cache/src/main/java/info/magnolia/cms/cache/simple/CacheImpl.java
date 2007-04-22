@@ -162,11 +162,13 @@ public class CacheImpl implements Cache {
         // register to observe on any changes if configured
         try {
             this.registerChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
+
                 public void onEvent(EventIterator events) {
                     DeferredCleaner.getInstance().consume(events);
                 }
             });
-        } catch (RepositoryException re) {
+        }
+        catch (RepositoryException re) {
             log.error("Failed to register Simple-Cache deferred cleaner", re);
             // abort, else public site will be inconsistent
             this.stop();
@@ -187,7 +189,7 @@ public class CacheImpl implements Cache {
     }
 
     private void registerChangeListener(String repository, String observationPath, EventListener listener)
-            throws RepositoryException {
+        throws RepositoryException {
         log.debug("Registering deferred cleaner");
         ObservationManager observationManager = ContentRepository
             .getHierarchyManager(repository)
@@ -385,21 +387,25 @@ public class CacheImpl implements Cache {
     }
 
     /**
-     * override File.mkdir to solve race condition
-     * check http://jira.magnolia.info/browse/MAGNOLIA-1446
-     * */
+     * override File.mkdir to solve race condition check http://jira.magnolia.info/browse/MAGNOLIA-1446
+     */
     private boolean mkdirs(File file) {
-        if (file.exists()) return true;
-        if (file.mkdir()) return true;
+        if (file.exists()) {
+            return true;
+        }
+        if (file.mkdir()) {
+            return true;
+        }
         File canonFile;
         try {
             canonFile = file.getCanonicalFile();
-        } catch (IOException e) {
+        }
+        catch (IOException e) {
             return false;
         }
         File parent = canonFile.getParentFile();
         if (null == parent) {
-          return false;
+            return false;
         }
         mkdirs(parent);
         return canonFile.mkdir();
