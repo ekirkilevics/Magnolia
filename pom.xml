@@ -7,7 +7,8 @@
   <name>magnolia-project</name>
   <version>3.1-SNAPSHOT</version>
   <description>
-    Magnolia is a free enterprise class content management system developed by Magnolia International based on the standard API for java content repositories (JCR).
+    Magnolia is a free enterprise class content management system developed by Magnolia International based on the
+    standard API for java content repositories (JCR).
   </description>
   <url>http://magnolia.sourceforge.net</url>
   <issueManagement>
@@ -191,7 +192,7 @@
             <configuration>
               <rules>
                 <!--<requireJavaVersion>-->
-                  <!--<version>[1.3,1.6]</version>-->
+                <!--<version>[1.3,1.6]</version>-->
                 <!--</requireJavaVersion>-->
                 <requireMavenVersion>
                   <version>2.0.5</version>
@@ -370,6 +371,12 @@
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-core</artifactId>
         <version>1.2.3</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-jta_1.0.1B_spec</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
@@ -394,6 +401,10 @@
           <exclusion>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -428,6 +439,10 @@
           <exclusion>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
@@ -513,7 +528,7 @@
       <dependency>
         <groupId>commons-fileupload</groupId>
         <artifactId>commons-fileupload</artifactId>
-        <version>1.1.1</version>
+        <version>1.2</version>
       </dependency>
       <dependency>
         <groupId>commons-io</groupId>
@@ -523,7 +538,13 @@
       <dependency>
         <groupId>commons-discovery</groupId>
         <artifactId>commons-discovery</artifactId>
-        <version>0.2</version>
+        <version>0.4</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.freemarker</groupId>
@@ -539,18 +560,32 @@
       <dependency>
         <groupId>net.sourceforge.openutils</groupId>
         <artifactId>openutils-log4j</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>slf4j-api</artifactId>
+        <version>1.3.1</version>
       </dependency>
       <dependency>
         <groupId>org.slf4j</groupId>
         <artifactId>slf4j-log4j12</artifactId>
-        <version>1.2</version>
+        <version>1.3.1</version>
+      </dependency>
+      <dependency>
+        <groupId>org.slf4j</groupId>
+        <artifactId>jcl104-over-slf4j</artifactId>
+        <version>1.3.1</version>
       </dependency>
       <dependency>
         <groupId>commons-chain</groupId>
         <artifactId>commons-chain</artifactId>
         <version>1.1</version>
         <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>xml-apis</groupId>
             <artifactId>xml-apis</artifactId>
@@ -608,6 +643,21 @@
         <groupId>org.openwfe</groupId>
         <artifactId>openwfe-applic</artifactId>
         <version>1.7.2</version>
+        <exclusions>
+          <!-- exclusions here are not transitive -->
+          <exclusion>
+            <groupId>ant</groupId>
+            <artifactId>ant</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>ant</groupId>
+            <artifactId>ant-launcher</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>xml-apis</groupId>
+            <artifactId>xml-apis</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.openwfe</groupId>
@@ -641,6 +691,10 @@
           <exclusion>
             <groupId>net.sf.hibernate</groupId>
             <artifactId>hibernate</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
           </exclusion>
         </exclusions>
       </dependency>
