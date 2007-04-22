@@ -105,7 +105,7 @@ public class ImgTag extends BaseContentTag {
     public int doEndTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
-        Content contentNode = getFirtMatchingNode();
+        Content contentNode = getFirstMatchingNode();
         if (contentNode == null) {
             return EVAL_PAGE;
         }

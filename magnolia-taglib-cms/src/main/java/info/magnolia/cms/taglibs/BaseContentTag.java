@@ -84,8 +84,17 @@ public class BaseContentTag extends TagSupport {
     /**
      * Get the first matching node containing a NodeData named <code>nodeDataName</code>
      * @return the active node, or the first matching one if nodedata is null and inherit is set.
+     * @deprecated Use {@link #getFirstMatchingNode()} instead
      */
     protected Content getFirtMatchingNode() {
+        return getFirstMatchingNode();
+    }
+
+    /**
+     * Get the first matching node containing a NodeData named <code>nodeDataName</code>
+     * @return the active node, or the first matching one if nodedata is null and inherit is set.
+     */
+    protected Content getFirstMatchingNode() {
 
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         Content currentPage = Resource.getCurrentActivePage(request);

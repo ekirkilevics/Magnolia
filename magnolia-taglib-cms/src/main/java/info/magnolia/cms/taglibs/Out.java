@@ -190,7 +190,7 @@ public class Out extends BaseContentTag {
     public int doEndTag() {
         // don't reset any value set using a tag attribute here, or it will break any container that does tag pooling!
 
-        Content contentNode = getFirtMatchingNode();
+        Content contentNode = getFirstMatchingNode();
         if (contentNode == null) {
             return EVAL_PAGE;
         }
