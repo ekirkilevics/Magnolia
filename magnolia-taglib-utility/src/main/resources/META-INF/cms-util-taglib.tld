@@ -159,6 +159,14 @@
       <description>Name for a page property which, if set, will make the page hidden in the breadcrumb.</description>
     </attribute>
     <attribute>
+      <name>titleProperty</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Name for a page property which holds the title to display in breadcrumbs. If empty, the standard title is used.
+      </description>
+    </attribute>
+    <attribute>
       <name>excludeCurrent</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>

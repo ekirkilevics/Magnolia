@@ -74,6 +74,11 @@ public class Breadcrumb extends TagSupport {
     private String hideProperty;
 
     /**
+     * Name for the property used as page title.
+     */
+    private String titleProperty;
+
+    /**
      * Setter for the <code>delimeter</code> tag attribute.
      * @param delimiter delimeter between links
      */
@@ -113,7 +118,15 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
+     * Setter for <code>titleProperty</code>.
+     * @param titleProperty name of nodeData for page title
+     */
+    public void setTitleProperty(String titleProperty) {
+        this.titleProperty = titleProperty;
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
@@ -135,16 +148,27 @@ public class Breadcrumb extends TagSupport {
                     continue;
                 }
 
+                String title = null;
+                if (StringUtils.isNotEmpty(titleProperty)) {
+                    title = page.getNodeData(titleProperty).getString(StringUtils.EMPTY);
+                }
+
+                if (StringUtils.isEmpty(title)) {
+                    title = page.getTitle();
+                }
+
                 if (j != this.startLevel) {
                     out.print(StringUtils.defaultString(this.delimiter, " > ")); //$NON-NLS-1$
                 }
                 if (this.link) {
                     out.print("<a href=\""); //$NON-NLS-1$
                     out.print(request.getContextPath());
-                    out.print(page.getHandle() + "." + Server.getDefaultExtension());
+                    out.print(page.getHandle());
+                    out.print("."); //$NON-NLS-1$
+                    out.print(Server.getDefaultExtension());
                     out.print("\">"); //$NON-NLS-1$
                 }
-                out.print(page.getTitle());
+                out.print(title);
                 if (this.link) {
                     out.print("</a>"); //$NON-NLS-1$
                 }
@@ -169,6 +193,7 @@ public class Breadcrumb extends TagSupport {
         this.excludeCurrent = false;
         this.link = true;
         this.hideProperty = null;
+        this.titleProperty = null;
         super.release();
     }
 
