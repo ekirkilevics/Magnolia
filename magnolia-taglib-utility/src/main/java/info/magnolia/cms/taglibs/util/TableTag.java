@@ -119,7 +119,7 @@ public class TableTag extends BodyTagSupport {
                 out.print("<thead>\n");
                 out.print("<tr>\n");
 
-                String[] cols = StringUtils.split(rows[0], "\t");
+                String[] cols = StringUtils.splitPreserveAllTokens(rows[0], "\t");
                 for (int col = 0; col < cols.length; col++) {
                     out.print("<th>");
                     out.print(cols[col]);
@@ -143,7 +143,7 @@ public class TableTag extends BodyTagSupport {
 
                     out.print("\">\n");
 
-                    String[] cols = StringUtils.split(rows[row], "\t");
+                    String[] cols = StringUtils.splitPreserveAllTokens(rows[row], "\t");
 
                     for (int col = 0; col < cols.length; col++) {
                         out.print("<td>");
