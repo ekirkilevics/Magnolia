@@ -22,12 +22,6 @@
   <sv:property sv:name="cacheImplementation" sv:type="String">
     <sv:value>info.magnolia.cms.cache.simple.CacheImpl</sv:value>
   </sv:property>
-  <sv:property sv:name="threadStrategy" sv:type="String">
-    <sv:value>queued</sv:value>
-  </sv:property>
-  <sv:property sv:name="domain" sv:type="String">
-    <sv:value/>
-  </sv:property>
   <sv:property sv:name="jcr:created" sv:type="Date">
     <sv:value>2006-03-22T08:42:53.117+01:00</sv:value>
   </sv:property>
