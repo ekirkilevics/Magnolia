@@ -63,20 +63,8 @@
       <artifactId>commons-fileupload</artifactId>
     </dependency>
     <dependency>
-      <groupId>jdom</groupId>
-      <artifactId>jdom</artifactId>
-    </dependency>
-    <dependency>
       <groupId>velocity</groupId>
       <artifactId>velocity</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>oro</groupId>
-      <artifactId>oro</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>logkit</groupId>
-      <artifactId>logkit</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-discovery</groupId>
