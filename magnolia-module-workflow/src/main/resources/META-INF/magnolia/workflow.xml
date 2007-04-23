@@ -5,7 +5,7 @@
   <displayName>Workflow</displayName>
   <description>Workflow using OpenWFE</description>
   <class>info.magnolia.module.workflow.WorkflowModule</class>
-  <version>3.0</version>
+  <version>3.1</version>
   
   <properties>
     <property>
@@ -17,7 +17,7 @@
   <dependencies>
     <dependency>
       <name>adminInterface</name>
-      <version>3.0</version>
+      <version>3.1</version>
     </dependency>
 
     <dependency>
