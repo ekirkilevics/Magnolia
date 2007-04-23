@@ -668,14 +668,6 @@
         <version>1.2.4</version>
         <exclusions>
           <exclusion>
-            <groupId>org.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-          </exclusion>
-          <exclusion>
-            <groupId>net.sf.hibernate</groupId>
-            <artifactId>hibernate</artifactId>
-          </exclusion>
-          <exclusion>
             <groupId>commons-logging</groupId>
             <artifactId>commons-logging</artifactId>
           </exclusion>
