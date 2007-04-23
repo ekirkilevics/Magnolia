@@ -63,10 +63,6 @@
       <classifier>asl</classifier>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
-    </dependency>
-    <dependency>
       <groupId>javax.servlet</groupId>
       <artifactId>jstl</artifactId>
     </dependency>
