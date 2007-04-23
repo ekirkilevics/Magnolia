@@ -1,5 +1,5 @@
 <div class="freemarker-sample-paragraph">
-    [#if content.title!?has_content]<h2>${content.title}</h2>[/#if]
+    [#if content.title?has_content]<h2>${content.title}</h2>[/#if]
     <p>${content.text}</p>
     <p>result: ${result}</p>
     <p>Action's execution time: ${action.executionTime?datetime}</p>
