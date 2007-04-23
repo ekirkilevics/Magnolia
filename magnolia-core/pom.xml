@@ -93,12 +93,13 @@
       <classifier>asl</classifier>
     </dependency>
     <dependency>
-      <groupId>log4j</groupId>
-      <artifactId>log4j</artifactId>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
     <dependency>
+      <!-- required by commons-httpclient, commons-betwixt, commons-discovery, commons-chain in replacement of commons-logging-->
       <groupId>org.slf4j</groupId>
-      <artifactId>slf4j-log4j12</artifactId>
+      <artifactId>jcl104-over-slf4j</artifactId>
     </dependency>
     <dependency>
       <groupId>xerces</groupId>
@@ -150,11 +151,6 @@
           <artifactId>commons-logging</artifactId>
         </exclusion>
       </exclusions>
-    </dependency>
-    <dependency>
-      <!-- required by commons-httpclient, commons-betwixt, commons-discovery, commons-chain in replacement of commons-logging-->
-      <groupId>org.slf4j</groupId>
-      <artifactId>jcl104-over-slf4j</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-httpclient</groupId>
