@@ -19,6 +19,7 @@ import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
@@ -28,6 +29,8 @@ import static org.easymock.EasyMock.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Locale;
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * @author gjoseph
@@ -91,6 +94,31 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         assertEquals("yay : it works : success", out.toString());
     }
 
+    public void testActionGetsPopulatedWithAllowedFields() throws IOException {
+        final WebContext context = createStrictMock(WebContext.class);
+        Map<String,String> params=new HashMap<String,String>();
+        params.put("blah", "tralala");
+        params.put("pouet", "oh oh this shouldn't have been set");
+        params.put("foo", "bar");
+        expect(context.getParameters()).andReturn(params);
+        expect(context.getLocale()).andReturn(Locale.ENGLISH);
+        replay(context);
+        MgnlContext.setInstance(context);
+
+        tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${action.pouet} : ${action.blah} : ${result}");
+        final ActionBasedParagraph par = new ActionBasedParagraph();
+        par.setName("test-with-action");
+        par.setTemplatePath("test_action.ftl");
+        par.setActionClass(SimpleTestAction.class);
+        par.setAllowedParameters("blah");
+        final MockContent c = new MockContent("plop");
+        c.addNodeData(new MockNodeData("boo", "yay"));
+        final StringWriter out = new StringWriter();
+        renderer.render(c, par, out);
+        assertEquals("yay : it works : tralala : success", out.toString());
+        verify(context);
+    }
+
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws IOException {
         tplLoader.putTemplate("foo", "");
         final Content c = new MockContent("pouet");
@@ -105,12 +133,27 @@ public class FreemarkerParagraphRendererTest extends TestCase {
     }
 
     public static final class SimpleTestAction {
+        private String pouet = "it works";
+        private String blah;
+
         public String execute() {
             return "success";
         }
 
         public String getPouet() {
-            return "it works";
+            return pouet;
+        }
+
+        public void setPouet(String pouet) {
+            this.pouet = pouet;
+        }
+
+        public String getBlah() {
+            return blah;
+        }
+
+        public void setBlah(String blah) {
+            this.blah = blah;
         }
     }
 

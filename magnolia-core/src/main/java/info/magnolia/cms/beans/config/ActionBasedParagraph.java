@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.beans.config;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * A paragraph that also defines an action class.
  *
@@ -20,6 +22,7 @@ package info.magnolia.cms.beans.config;
  */
 public class ActionBasedParagraph extends Paragraph {
     private Class actionClass;
+    private String allowedParameters;
 
     public ActionBasedParagraph() {
     }
@@ -30,5 +33,17 @@ public class ActionBasedParagraph extends Paragraph {
 
     public void setActionClass(Class actionClass) {
         this.actionClass = actionClass;
+    }
+
+    public String[] getAllowedParametersList() {
+        return StringUtils.split(allowedParameters, ',');
+    }
+
+    public String getAllowedParameters() {
+        return allowedParameters;
+    }
+
+    public void setAllowedParameters(String allowedParameters) {
+        this.allowedParameters = allowedParameters;
     }
 }

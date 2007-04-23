@@ -17,7 +17,9 @@ import info.magnolia.cms.beans.config.ActionBasedParagraph;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
+import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -59,7 +61,7 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
             if (actionClass == null) {
                 throw new IllegalStateException("Can't render paragraph " + paragraph.getName() + " in page " + content.getHandle() + ": actionClass not set.");
             }
-            actionResult = execute(actionClass);
+            actionResult = execute(actionClass, abp.getAllowedParametersList());
         } else {
             actionResult = null;
         }
@@ -79,10 +81,23 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
         }
     }
 
-    protected ActionResult execute(Class actionClass) {
+    protected ActionResult execute(Class actionClass, String[] allowedParametersList) {
         // see MVCServletHandlerImpl.init() if we need to populate the action bean
+
+        // TODO : refactoring w/ Pages ?
+
         try {
             final Object actionBean = actionClass.newInstance();
+            final Map params = MgnlContext.getParameters();
+            if (params != null && allowedParametersList != null) {
+                final Map filteredParams = new HashMap();
+                for (int i = 0; i < allowedParametersList.length; i++) {
+                    final String param = allowedParametersList[i];
+                    filteredParams.put(param, params.get(param));
+                }
+                BeanUtils.populate(actionBean, filteredParams);
+            }
+
             final Method method = actionClass.getMethod("execute", null);
             final Object result = method.invoke(actionBean, null);
             return new ActionResult(result, actionBean);
