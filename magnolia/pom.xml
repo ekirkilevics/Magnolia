@@ -171,7 +171,7 @@
     </dependency>
     <dependency>
       <groupId>org.apache.jackrabbit</groupId>
-      <artifactId>jackrabbit-index-filters</artifactId>
+      <artifactId>jackrabbit-text-extractors</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.derby</groupId>
