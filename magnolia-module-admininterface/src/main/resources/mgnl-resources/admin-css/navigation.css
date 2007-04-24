@@ -12,6 +12,9 @@ div.mgnlAdminCentralButtonsDiv {
     font-family: Verdana, sans-serif;
     text-decoration: none;
 }
+#mgnlAdminCentralMenuInnerDiv {
+    width: 100%;
+}
 div.mgnlNavigationBox {
     margin: 3px;
     cursor: default;
