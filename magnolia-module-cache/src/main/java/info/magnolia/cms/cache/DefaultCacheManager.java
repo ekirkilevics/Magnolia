@@ -1,7 +1,6 @@
 package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
-import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.cache.noop.NoOpCache;
 import info.magnolia.cms.util.ClassUtil;
 
@@ -38,16 +37,13 @@ public class DefaultCacheManager extends BaseCacheManager {
      */
     public boolean isCacheable(HttpServletRequest request) {
 
-        if (StringUtils.equalsIgnoreCase(request.getMethod(), "POST")) {
-            return false; // don't cache POSTs
-        }
-
-        if (!request.getParameterMap().isEmpty()) {
-            return false; // don't cache requests with parameters
-        }
-
-        if (StringUtils.isEmpty(MIMEMapping.getMIMEType(request))) {
-            return false; // check for MIMEMapping, extension must exist
+        if (cacheVoters != null) {
+            for (int j = 0; j < cacheVoters.length; j++) {
+                CacheVoter voter = cacheVoters[j];
+                if (voter.isEnabled() && !voter.allowCaching(request)) {
+                    return false;
+                }
+            }
         }
 
         return getConfig().isUriCacheable(request);

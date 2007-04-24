@@ -1,8 +1,21 @@
 package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
+import info.magnolia.cms.cache.voters.ExtensionVoter;
+import info.magnolia.cms.cache.voters.NotAuthenticatedVoter;
+import info.magnolia.cms.cache.voters.NotOnAdminVoter;
+import info.magnolia.cms.cache.voters.NotWithParametersVoter;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -14,14 +27,15 @@ import org.slf4j.LoggerFactory;
  * exception policy after initialization. Also does INFO level logging.
  * @author Andreas Brenk
  * @author Fabrizio Giustina
- * @since 3.0
- * $Id$
+ * @since 3.0 $Id$
  */
 public abstract class BaseCacheManager implements CacheManager {
 
     private static final Logger log = LoggerFactory.getLogger(BaseCacheManager.class);
 
     private CacheConfig config;
+
+    protected CacheVoter[] cacheVoters = new CacheVoter[0];
 
     private boolean initialized;
 
@@ -74,6 +88,59 @@ public abstract class BaseCacheManager implements CacheManager {
         log.info("Initializing CacheManager...");
 
         createCacheConfig(content);
+
+        List cacheVotersList = new ArrayList();
+        Content votersNode = content.getChildByName("voters");
+
+        if (votersNode == null) {
+            log.info("Missing voters configuration in CacheManager. Adding default config.");
+            try {
+                votersNode = content.createContent("voters");
+                Content voter = votersNode.createContent("notWithParametersVoter", ItemType.CONTENTNODE);
+                voter.createNodeData("class", NotWithParametersVoter.class.getName());
+                voter.createNodeData("enabled", Boolean.TRUE);
+                voter = votersNode.createContent("extensionVoter", ItemType.CONTENTNODE);
+                voter.createNodeData("class", ExtensionVoter.class.getName());
+                voter.createNodeData("enabled", Boolean.TRUE);
+                voter = votersNode.createContent("notOnAdminVoter", ItemType.CONTENTNODE);
+                voter.createNodeData("class", NotOnAdminVoter.class.getName());
+                voter.createNodeData("enabled", Boolean.TRUE);
+                voter = votersNode.createContent("notAuthenticatedVoter", ItemType.CONTENTNODE);
+                voter.createNodeData("class", NotAuthenticatedVoter.class.getName());
+                voter.createNodeData("enabled", Boolean.FALSE);
+            }
+            catch (RepositoryException e) {
+                log.error("Unable to create default cache manager configuration.", e);
+            }
+            finally {
+                try {
+                    content.save();
+                }
+                catch (RepositoryException e) {
+                    log.error("Unable to save changes to default cache manager configuration.", e);
+                }
+            }
+        }
+
+        Collection childrens = votersNode.getChildren(ItemType.CONTENTNODE);
+        Iterator it = childrens.iterator();
+        while (it.hasNext()) {
+            Content cnt = (Content) it.next();
+            try {
+                CacheVoter voter = (CacheVoter) Content2BeanUtil.toBean(cnt, true);
+                cacheVotersList.add(voter);
+            }
+            catch (Content2BeanException e) {
+                log.error("Unable to unmarshall config at " + cnt.getHandle(), e);
+            }
+            catch (ClassCastException e) {
+                log.error(
+                    "Invalid class configured at " + cnt.getHandle() + ". Expected " + CacheVoter.class.getName(),
+                    e);
+            }
+        }
+
+        this.cacheVoters = (CacheVoter[]) cacheVotersList.toArray(new CacheVoter[cacheVotersList.size()]);
 
         try {
             doInit();
