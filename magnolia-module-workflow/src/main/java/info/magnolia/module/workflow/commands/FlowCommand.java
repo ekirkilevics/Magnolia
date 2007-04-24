@@ -12,26 +12,16 @@
  */
 package info.magnolia.module.workflow.commands;
 
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.commands.MgnlCommand;
 import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContextImpl;
 import info.magnolia.module.workflow.WorkflowConstants;
-import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.WorkflowUtil;
-import info.magnolia.module.workflow.flows.FlowDefinionException;
-import info.magnolia.module.workflow.flows.FlowDefinitionManager;
+import info.magnolia.module.workflow.flows.FlowDefinitionException;
 
-import java.io.InputStream;
 import java.io.Serializable;
-import java.net.URL;
-import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
 
 import openwfe.org.engine.workitem.AttributeUtils;
 import openwfe.org.engine.workitem.LaunchItem;
@@ -50,7 +40,7 @@ public class FlowCommand extends MgnlCommand {
 
     private static Logger log = LoggerFactory.getLogger(FlowCommand.class);
 
-    public boolean execute(Context ctx) throws FlowDefinionException {
+    public boolean execute(Context ctx) throws FlowDefinitionException {
         // Get the references
         LaunchItem li = new LaunchItem();
         prepareLaunchItem(ctx, li);

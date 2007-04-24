@@ -18,21 +18,21 @@ public interface FlowDefinitionManager {
     /**
      * Configure the launchItem, so that it will use the workflow
      */
-    void configure(LaunchItem launchItem, String workflowName) throws FlowDefinionException;
+    void configure(LaunchItem launchItem, String workflowName) throws FlowDefinitionException;
     
     /**
      * The flow name gets extracted out of the workflow definition.
      * @param definition the workflow definition xml
      */
-    void saveDefinition(String definition) throws FlowDefinionException;
+    void saveDefinition(String definition) throws FlowDefinitionException;
     
     /**
      * Read the workflow definition stored with this name
      */
-    String readDefinition(String workflowName) throws FlowDefinionException;
+    String readDefinition(String workflowName) throws FlowDefinitionException;
 
     /**
      * List all available workflow names
      */
-    List getDefinitionNames() throws FlowDefinionException;
+    List getDefinitionNames() throws FlowDefinitionException;
 }

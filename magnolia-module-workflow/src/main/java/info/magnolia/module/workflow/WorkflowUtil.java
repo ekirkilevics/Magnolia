@@ -14,10 +14,9 @@ package info.magnolia.module.workflow;
 
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.Security;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.workflow.flows.FlowDefinionException;
+import info.magnolia.module.workflow.flows.FlowDefinitionException;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
@@ -107,9 +106,9 @@ public class WorkflowUtil {
      * Start a flow
      * @param li the prepared lunchItem
      * @param flowName the flow to start
-     * @throws FlowDefinionException 
+     * @throws FlowDefinitionException
      */
-    public static void launchFlow(LaunchItem li, String flowName) throws FlowDefinionException {
+    public static void launchFlow(LaunchItem li, String flowName) throws FlowDefinitionException {
         FlowDefinitionManager configurator = WorkflowModule.getFlowDefinitionManager();
         
         configurator.configure(li, flowName);
