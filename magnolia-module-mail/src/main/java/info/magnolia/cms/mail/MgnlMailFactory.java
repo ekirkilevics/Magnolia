@@ -198,7 +198,7 @@ public class MgnlMailFactory extends ObservedManager {
             templates = listTemplatesFromRepository(node);
         }
         else if (node.getHandle().endsWith("smtp")) {
-            log.info("Loading mail smptp settings from node:" + node.getHandle());
+            log.info("Loading mail smtp settings from node:" + node.getHandle());
             initMailParameter(node);
         }
 
