@@ -71,6 +71,9 @@ public class MockNodeData extends NodeData {
     }
 
     public long getLong() {
+        if (value instanceof Integer) {
+            return ((Integer)value).longValue();
+        }
         return ((Long) value).longValue();
     }
 
@@ -119,6 +122,10 @@ public class MockNodeData extends NodeData {
 
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
         this.value = value;
+    }
+
+    public String toString() {
+        return this.getHandle() + ": " + this.getString();
     }
 
 }
