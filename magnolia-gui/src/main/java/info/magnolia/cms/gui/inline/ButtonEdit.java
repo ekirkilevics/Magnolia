@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.gui.inline;
 
+import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
@@ -63,7 +64,7 @@ public class ButtonEdit extends Button {
             nodeName = StringUtils.EMPTY;
         }
 
-        String repository = (String) getRequest().getAttribute(info.magnolia.cms.core.Aggregator.REPOSITORY);
+        String repository = Aggregator.getRepository();
         this.setOnclick("mgnlOpenDialog('" //$NON-NLS-1$
             + this.getPath()
             + "','" //$NON-NLS-1$

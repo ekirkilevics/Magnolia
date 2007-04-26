@@ -13,6 +13,7 @@
 package info.magnolia.cms.gui.inline;
 
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.Sources;
@@ -183,7 +184,7 @@ public class BarMain extends Bar {
     public void setButtonSiteAdmin(String path) {
         Button b = new Button();
         b.setLabel(MessagesManager.get("buttons.admincentral")); //$NON-NLS-1$
-        String repository = (String) getRequest().getAttribute(info.magnolia.cms.core.Aggregator.REPOSITORY);
+        String repository = Aggregator.getRepository();
         b.setOnclick("MgnlAdminCentral.showTree('"+repository+"','" + path + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         this.setButtonSiteAdmin(b);
     }
