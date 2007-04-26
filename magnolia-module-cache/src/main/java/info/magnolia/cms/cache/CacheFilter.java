@@ -1,5 +1,7 @@
 package info.magnolia.cms.cache;
 
+import info.magnolia.cms.filters.AbstractMagnoliaFilter;
+
 import java.io.IOException;
 
 import javax.servlet.Filter;
@@ -20,7 +22,7 @@ import org.apache.commons.lang.StringUtils;
  * @since 3.0
  * $Id$
  */
-public class CacheFilter implements Filter {
+public class CacheFilter extends AbstractMagnoliaFilter {
 
 
     public static String ALREADY_FILTERED = CacheFilter.class.getName();
@@ -47,11 +49,10 @@ public class CacheFilter implements Filter {
     /**
      * @see javax.servlet.Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
      */
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException,
         ServletException {
 
         if (cacheManager.isEnabled() && cacheManager.isRunning()) {
-            HttpServletRequest request = (HttpServletRequest) req;
             boolean cacheable = cacheManager.isCacheable(request);
 
             // check if the request is cachable before trying to stream from cache.
@@ -59,10 +60,9 @@ public class CacheFilter implements Filter {
             // cache
             // if this time there are parameters.
             if (cacheable) {
-                HttpServletResponse response = (HttpServletResponse) res;
 
                 CacheKey key = cacheManager.getCacheKey(request);
-                if (!this.ifModifiedSince((HttpServletRequest)req, cacheManager.getCreationTime(key))) {
+                if (!this.ifModifiedSince(request, cacheManager.getCreationTime(key))) {
                     response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     return;
                 }
@@ -94,8 +94,7 @@ public class CacheFilter implements Filter {
         }
 
         // don't cache, just go on
-        chain.doFilter(req, res);
-
+        chain.doFilter(request, response);
     }
 
     /**
