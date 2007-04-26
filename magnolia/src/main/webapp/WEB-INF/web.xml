@@ -6,7 +6,7 @@
   <filter>
     <display-name>Magnolia global filters</display-name>
     <filter-name>magnoliaFilterChain</filter-name>
-    <filter-class>info.magnolia.cms.filters.MagnoliaManagedFilter</filter-class>
+    <filter-class>info.magnolia.cms.filters.MagnoliaMainFilter</filter-class>
     <!--
       login configuration is now in config jcr, path: /server/config/login
     -->
