@@ -12,12 +12,8 @@
  */
 package info.magnolia.cms.beans.config;
 
-import static org.easymock.EasyMock.anyBoolean;
-import static org.easymock.EasyMock.anyInt;
-import static org.easymock.EasyMock.anyObject;
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 
 import info.magnolia.cms.core.Path;
@@ -25,15 +21,9 @@ import info.magnolia.cms.filters.AbstractMagnoliaFilter;
 import info.magnolia.cms.filters.FilterDecorator;
 import info.magnolia.cms.filters.MagnoliaFilter;
 import info.magnolia.cms.filters.MagnoliaMainFilter;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.context.WebContextImpl;
 import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.MockContext;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -42,9 +32,6 @@ import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
-import javax.jcr.Workspace;
-import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -54,11 +41,6 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.easymock.EasyMock;
-
-import sun.tools.jconsole.CreateMBeanDialog;
 
 /**
  * @author fgiust
@@ -161,41 +143,13 @@ public class FilterManagerTest extends MgnlTestCase {
         assertEquals(true, ((TestFilter)fm.getFilters()[1]).executed);
     }
 
-    protected MockHierarchyManager initConfigRepository(String conf) throws IOException, RepositoryException, UnsupportedRepositoryOperationException {
-        // ignore mapping warnings
-        Logger.getLogger(ContentRepository.class).setLevel(Level.ERROR);
-
-        MockHierarchyManager hm = MockUtil.createHierarchyManager(conf);
-
-        mockObservation(hm);
-
-        ((MockContext)MgnlContext.getInstance()).addHierarchyManager(ContentRepository.CONFIG, hm);
-        ((MockContext)MgnlContext.getSystemContext()).addHierarchyManager(ContentRepository.CONFIG, hm);
-
-        return hm;
-    }
-
-    protected void mockObservation(MockHierarchyManager hm) throws RepositoryException, UnsupportedRepositoryOperationException {
-        // fake observation
-        Workspace ws = createMock(Workspace.class);
-        ObservationManager om = createMock(ObservationManager.class);
-
-        om.addEventListener(isA(EventListener.class), anyInt(),isA(String.class),anyBoolean(), (String[])anyObject(), (String[]) anyObject(), anyBoolean());
-
-        expect(ws.getObservationManager()).andStubReturn(om);
-        hm.setWorkspace(ws);
-        replay(ws, om);
-    }
-
     public static class TestFilter extends AbstractMagnoliaFilter{
         public boolean executed = false;
 
         public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
             this.executed = true;
         }
-
     }
-
 
     public static class NotMagnoliaFilter implements Filter{
 

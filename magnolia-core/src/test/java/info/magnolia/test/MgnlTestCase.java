@@ -10,8 +10,20 @@
  */
 package info.magnolia.test;
 
+import static org.easymock.EasyMock.anyBoolean;
+import static org.easymock.EasyMock.anyInt;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.mock.MockContext;
+import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
@@ -19,9 +31,16 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.Properties;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Workspace;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.ObservationManager;
+
 import junit.framework.TestCase;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -39,8 +58,9 @@ public abstract class MgnlTestCase extends TestCase {
     private static Logger log = LoggerFactory.getLogger(MgnlTestCase.class);
 
     protected void setUp() throws Exception {
-        MockUtil.initMockContext();
+        FactoryUtil.clear();
         initDefaultImplementions();
+        MockUtil.initMockContext();
     }
 
     protected void initDefaultImplementions() throws IOException {
@@ -56,5 +76,31 @@ public abstract class MgnlTestCase extends TestCase {
                 SystemProperty.setProperty(key, mgnlbeans.getProperty(key));
             }
         }
+    }
+
+    protected MockHierarchyManager initConfigRepository(String conf) throws IOException, RepositoryException, UnsupportedRepositoryOperationException {
+        // ignore mapping warnings
+        org.apache.log4j.Logger.getLogger(ContentRepository.class).setLevel(Level.ERROR);
+
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(conf);
+
+        mockObservation(hm);
+
+        ((MockContext)MgnlContext.getInstance()).addHierarchyManager(ContentRepository.CONFIG, hm);
+        ((MockContext)MgnlContext.getSystemContext()).addHierarchyManager(ContentRepository.CONFIG, hm);
+
+        return hm;
+    }
+
+    protected void mockObservation(MockHierarchyManager hm) throws RepositoryException, UnsupportedRepositoryOperationException {
+        // fake observation
+        Workspace ws = createMock(Workspace.class);
+        ObservationManager om = createMock(ObservationManager.class);
+
+        om.addEventListener(isA(EventListener.class), anyInt(),isA(String.class),anyBoolean(), (String[])anyObject(), (String[]) anyObject(), anyBoolean());
+
+        expect(ws.getObservationManager()).andStubReturn(om);
+        hm.setWorkspace(ws);
+        replay(ws, om);
     }
 }
