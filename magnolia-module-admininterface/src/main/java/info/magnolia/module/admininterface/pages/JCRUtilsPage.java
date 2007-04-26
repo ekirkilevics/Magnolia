@@ -25,17 +25,17 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
     }
 
     private String repository = "";
-    
+
     private int level = 1;
-    
+
     private String path = "/";
-    
+
     private String result  = "";
-    
+
     private String statement = "";
 
     private static String[] languages = new String[] {Query.SQL, Query.XPATH};
-    
+
     private String language = Query.SQL;
 
     private String itemType = "nt:base";
@@ -55,7 +55,7 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
         long start = System.currentTimeMillis();
         Collection nodes = QueryUtil.query(repository, statement, language, this.itemType);
         this.result +=(System.currentTimeMillis() - start) + "ms\n";
-        
+
         for (Iterator iter = nodes.iterator(); iter.hasNext();) {
             Content node = (Content) iter.next();
             this.result += node.getHandle() + "\n";
@@ -72,75 +72,75 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
         }
         return VIEW_SHOW;
     }
-        
+
     public Iterator getRepositories() {
         return ContentRepository.getAllRepositoryNames();
     }
-    
+
     public String[] getLanguages() {
         return languages;
     }
-    
+
     public int getLevel() {
         return level;
     }
 
-    
+
     public void setLevel(int level) {
         this.level = level;
     }
 
-    
+
     public String getPath() {
         return path;
     }
 
-    
+
     public void setPath(String path) {
         this.path = path;
     }
 
-    
+
     public String getRepository() {
         return repository;
     }
 
-    
+
     public void setRepository(String repositroy) {
         this.repository = repositroy;
     }
 
-    
+
     public String getResult() {
         return result;
     }
 
-    
+
     public String getStatement() {
         return statement;
     }
 
-    
+
     public void setStatement(String statement) {
         this.statement = statement;
     }
 
-    
+
     public String getLanguage() {
         return language;
     }
 
-    
+
     public void setLanguage(String language) {
         this.language = language;
     }
 
-    
+
     public String getItemType() {
         return itemType;
     }
 
-    
+
     public void setItemType(String itemType) {
         this.itemType = itemType;
     }
