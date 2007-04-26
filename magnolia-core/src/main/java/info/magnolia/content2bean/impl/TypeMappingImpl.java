@@ -61,6 +61,10 @@ public class TypeMappingImpl implements TypeMapping {
         }
 
         if (method == null) {
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "es"));
+        }
+
+        if (method == null) {
             method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ren"));
         }
 
