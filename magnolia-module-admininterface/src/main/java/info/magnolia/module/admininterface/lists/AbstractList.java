@@ -19,9 +19,8 @@ import info.magnolia.cms.gui.controlx.RenderKit;
 import info.magnolia.cms.gui.controlx.RenderKitFactory;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.list.ListModel;
-import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
+import info.magnolia.freemarker.FreemarkerUtil;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 
 import javax.servlet.http.HttpServletRequest;
@@ -67,7 +66,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
      * Don't use the class name.
      */
     protected String getTemplateName(String viewName) {
-        return FreeMarkerUtil.createTemplateName(AbstractList.class, "html");
+        return FreemarkerUtil.createTemplateName(AbstractList.class, "html");
     }
 
     /**
@@ -229,7 +228,7 @@ public abstract class AbstractList extends TemplatedMVCHandler {
     public String onRender() {
         return "";
     }
-    
+
     /**
      * Do some additional rendering in the subclass
      */
@@ -237,9 +236,9 @@ public abstract class AbstractList extends TemplatedMVCHandler {
         return "";
     }
 
-    
+
     public String getURI() {
-        String uri = (String) MgnlContext.getAttribute(Path.MGNL_REQUEST_URI_DECODED);
+        String uri = Path.getURI();
         return uri;
     }
 
