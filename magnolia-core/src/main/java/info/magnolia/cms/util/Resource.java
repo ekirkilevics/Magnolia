@@ -17,6 +17,7 @@ import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
 
@@ -55,50 +56,77 @@ public final class Resource {
      * <p>
      * get Content object as requested from the URI
      * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
      * @return currently active page, as requested from the URI
      */
+    public static Content getActivePage() {
+        return Aggregator.getMainContent();
+    }
+
+    /**
+     * @deprecated don't pass the request
+     */
     public static Content getActivePage(HttpServletRequest req) {
-        return (Content) req.getAttribute(Aggregator.ACTPAGE);
-    }
-
-    /**
-     * <p>
-     * get selector as requested from the URI. The selector is the part between the handle and the extension.
-     * selector("http://server/a.x.1.f.4.html") = "x.1.f.4"
-     * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
-     * @return selector String as requested from the URI
-     */
-    public static String getSelector(HttpServletRequest req) {
-        return (String) req.getAttribute(Aggregator.SELECTOR);
-    }
-
-    /**
-     * <p>
-     * get file object associated with the requested atom
-     * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
-     * @return currently atom
-     */
-    public static File getFile(HttpServletRequest req) {
-        return (File) req.getAttribute(Aggregator.FILE);
+        return getActivePage();
     }
 
     /**
      * <p>
      * get Content object as requested from the URI
      * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
      * @return currently active page, as requested from the URI
      */
-    public static Content getCurrentActivePage(HttpServletRequest req) {
-        Content currentActpage;
-        currentActpage = (Content) req.getAttribute(Aggregator.CURRENT_ACTPAGE);
+    public static Content getCurrentActivePage() {
+        Content currentActpage = Aggregator.getCurrentContent();
         if (currentActpage == null) {
-            currentActpage = (Content) req.getAttribute(Aggregator.ACTPAGE);
+            currentActpage = Aggregator.getMainContent();
         }
         return currentActpage;
+    }
+
+    /**
+     * @deprecated don't pass the request
+     */
+    public static Content getCurrentActivePage(HttpServletRequest req) {
+        return getCurrentActivePage();
+    }
+
+    /**
+     * <p>
+     * get file object associated with the requested atom
+     * </p>
+     * @return currently atom
+     */
+    public static File getFile() {
+        return Aggregator.getFile();
+    }
+
+    /**
+     * @deprecated don't pass the request
+     */
+    public static File getFile(HttpServletRequest req) {
+       return getFile();
+    }
+
+    /**
+     * <p>
+     * get ContentNode object as set by the "set" tag
+     * </p>
+     * @return ContentNode , global container specific to the current JSP/Servlet page
+     */
+    public static Content getGlobalContentNode() {
+        try {
+            return (Content) MgnlContext.getAttribute(Resource.GLOBAL_CONTENT_NODE);
+        }
+        catch (Exception e) {
+            return null;
+        }
+    }
+
+    /**
+     * @deprecated don't pass the request
+     */
+    public static Content getGlobalContentNode(HttpServletRequest req) {
+        return getGlobalContentNode();
     }
 
     /**
@@ -106,7 +134,7 @@ public final class Resource {
      * repository, in order to swith between user and website repositories, use method (changeContext) on this object.
      * @param req HttpServletRequest as received in JSP or servlet
      * @return hierarchy manager, for the website repository
-     * @deprecated as on magnolia 2.0, use SessionAccessControl instead
+     * @deprecated as on magnolia 3.0, use MglnContext instead
      * @see info.magnolia.cms.security.SessionAccessControl#getHierarchyManager(javax.servlet.http.HttpServletRequest)
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest req) {
@@ -115,66 +143,157 @@ public final class Resource {
 
     /**
      * <p>
-     * this only works for forms which uses enctype=multipart/form-data
-     * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
-     * @return initialised multipart form object with the posted data
-     */
-    public static MultipartForm getPostedForm(HttpServletRequest req) {
-        return (MultipartForm) req.getAttribute("multipartform"); //$NON-NLS-1$
-    }
-
-    /**
-     * <p>
      * get ContentNode object as passed to the include tag
      * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
      * @return ContentNode , local container specific to the current JSP/Servlet paragraph
      */
+    public static Content getLocalContentNode() {
+        return (Content) MgnlContext.getAttribute(Resource.LOCAL_CONTENT_NODE);
+    }
+
+    /**
+     * @deprecated don't pass the request
+     */
     public static Content getLocalContentNode(HttpServletRequest req) {
+        return getLocalContentNode();
+    }
+
+    /**
+     *
+     */
+    public static String getLocalContentNodeCollectionName() {
         try {
-            return (Content) req.getAttribute(Resource.LOCAL_CONTENT_NODE);
+            return (String) MgnlContext.getAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME);
         }
         catch (Exception e) {
-            return null;
+            return StringUtils.EMPTY;
         }
     }
 
     /**
-     * <p>
-     * set ContentNode object in resources , scope:TAG
-     * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
-     * @param node to be set
+     * @deprecated do not pass the request
      */
-    public static void setLocalContentNode(HttpServletRequest req, Content node) {
-        req.setAttribute(Resource.LOCAL_CONTENT_NODE, node);
+    public static String getLocalContentNodeCollectionName(HttpServletRequest req) {
+        return getLocalContentNodeCollectionName();
     }
 
     /**
      * <p>
-     * removes ContentNode object in resources , scope:TAG
+     * this only works for forms which uses enctype=multipart/form-data
      * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
+     * @return initialised multipart form object with the posted data
+     */
+    public static MultipartForm getPostedForm() {
+        return (MultipartForm) MgnlContext.getAttribute("multipartform"); //$NON-NLS-1$
+    }
+
+    /**
+     * @deprecated don't pass the request
+     */
+    public static MultipartForm getPostedForm(HttpServletRequest req) {
+        return getPostedForm();
+    }
+
+    /**
+     * <p>
+     * get selector as requested from the URI. The selector is the part between the handle and the extension.
+     * selector("http://server/a.x.1.f.4.html") = "x.1.f.4"
+     * </p>
+     * @return selector String as requested from the URI
+     */
+
+    public static String getSelector() {
+        return Aggregator.getSelector();
+    }
+
+    /**
+     * @deprecated don't pass the request
+     */
+
+    public static String getSelector(HttpServletRequest req) {
+        return getSelector();
+    }
+
+    /**
+     * Get the selector by index
+     * @param index
+     * @return the selector value
+     */
+    public static String getSelector(int index) {
+        String[] selectors = StringUtils.split(Aggregator.getSelector(), ".");
+        if(selectors.length > index){
+            return selectors[index];
+        }
+        return null;
+    }
+
+    /**
+     * <p>
+     * removes ContentNode object in resources , scope:page
+     * </p>
+     */
+    public static void removeGlobalContentNode() {
+        MgnlContext.removeAttribute(Resource.GLOBAL_CONTENT_NODE);
+    }
+
+    public static void removeGlobalContentNode(HttpServletRequest req) {
+        removeGlobalContentNode();
+    }
+
+    /**
+     * removes ContentNode object in resources , scope:TAG
+     */
+    public static void removeLocalContentNode() {
+        MgnlContext.removeAttribute(Resource.LOCAL_CONTENT_NODE);
+    }
+
+    /**
+     * @deprecated don't pass the request
      */
     public static void removeLocalContentNode(HttpServletRequest req) {
-        req.removeAttribute(Resource.LOCAL_CONTENT_NODE);
+       removeLocalContentNode();
     }
 
     /**
-     * <p>
-     * get ContentNode object as set by the "set" tag
-     * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
-     * @return ContentNode , global container specific to the current JSP/Servlet page
+     *
      */
-    public static Content getGlobalContentNode(HttpServletRequest req) {
-        try {
-            return (Content) req.getAttribute(Resource.GLOBAL_CONTENT_NODE);
-        }
-        catch (Exception e) {
-            return null;
-        }
+    public static void removeLocalContentNodeCollectionName() {
+        MgnlContext.removeAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME);
+    }
+
+    /**
+     * @deprecated do not pass the request
+     */
+    public static void removeLocalContentNodeCollectionName(HttpServletRequest req) {
+        removeLocalContentNodeCollectionName();
+    }
+
+    /**
+     * Restores the request's original <code>actpage</code> attribute (i.e. the one specified by the request URI).
+     */
+    public static void restoreCurrentActivePage() {
+        setCurrentActivePage(getActivePage());
+    }
+
+    /**
+     * @deprecated do not pass the request
+     */
+    public static void restoreCurrentActivePage(HttpServletRequest request) {
+        restoreCurrentActivePage();
+    }
+
+    /**
+     * Set the request's <code>actpage</code> attribute to <code>page</code>
+     */
+    public static void setCurrentActivePage(Content page) {
+        Aggregator.setCurrentContent(page);
+    }
+
+    /**
+     * @deprecated do not pass the request
+     */
+    public static void setCurrentActivePage(HttpServletRequest request, Content page) {
+        setCurrentActivePage(page);
     }
 
     /**
@@ -184,44 +303,44 @@ public final class Resource {
      * @param req HttpServletRequest as received in JSP or servlet
      * @param node to be set
      */
+    public static void setGlobalContentNode(Content node) {
+        MgnlContext.setAttribute(Resource.GLOBAL_CONTENT_NODE, node);
+    }
+
+    /**
+     * @deprecated don't pass the request
+     */
     public static void setGlobalContentNode(HttpServletRequest req, Content node) {
-        req.setAttribute(Resource.GLOBAL_CONTENT_NODE, node);
+        setGlobalContentNode(node);
     }
 
     /**
      * <p>
-     * removes ContentNode object in resources , scope:page
+     * set ContentNode object in resources , scope:TAG
      * </p>
      * @param req HttpServletRequest as received in JSP or servlet
+     * @param node to be set
      */
-    public static void removeGlobalContentNode(HttpServletRequest req) {
-        req.removeAttribute(Resource.GLOBAL_CONTENT_NODE);
+    public static void setLocalContentNode(Content node) {
+        MgnlContext.setAttribute(Resource.LOCAL_CONTENT_NODE, node);
     }
 
     /**
-     *
+     * @deprecated don't pass the request
      */
+    public static void setLocalContentNode(HttpServletRequest req, Content node) {
+        setLocalContentNode(node);
+    }
+
     public static void setLocalContentNodeCollectionName(HttpServletRequest req, String name) {
-        req.setAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME, name);
+        setLocalContentNodeCollectionName(name);
     }
 
     /**
      *
      */
-    public static String getLocalContentNodeCollectionName(HttpServletRequest req) {
-        try {
-            return (String) req.getAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME);
-        }
-        catch (Exception e) {
-            return StringUtils.EMPTY;
-        }
-    }
-
-    /**
-     *
-     */
-    public static void removeLocalContentNodeCollectionName(HttpServletRequest req) {
-        req.removeAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME);
+    public static void setLocalContentNodeCollectionName(String name) {
+        MgnlContext.setAttribute(Resource.LOCAL_CONTENT_NODE_COLLECTION_NAME, name);
     }
 
     /**
@@ -229,32 +348,21 @@ public final class Resource {
      * @param req HttpServletRequest as received in JSP or servlet
      * @return boolean , true if preview is enabled
      */
-    public static boolean showPreview(HttpServletRequest req) {
+    public static boolean showPreview() {
         // first check if its set in request scope
-        if (req.getParameter(MGNL_PREVIEW_ATTRIBUTE) != null) {
-            return BooleanUtils.toBoolean(req.getParameter(MGNL_PREVIEW_ATTRIBUTE));
+        if (MgnlContext.getParameter(MGNL_PREVIEW_ATTRIBUTE) != null) {
+            return BooleanUtils.toBoolean(MgnlContext.getParameter(MGNL_PREVIEW_ATTRIBUTE));
         }
 
-        HttpSession httpsession = req.getSession(false);
-        if (httpsession != null) {
-            return BooleanUtils.toBoolean((Boolean) httpsession.getAttribute(MGNL_PREVIEW_ATTRIBUTE));
-        }
-
-        return false;
+        Boolean sessionValue = (Boolean) MgnlContext.getAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
+        return BooleanUtils.toBoolean(sessionValue);
     }
 
     /**
-     * Set the request's <code>actpage</code> attribute to <code>page</code>
+     * @deprecated do not pass the request
      */
-    public static void setCurrentActivePage(HttpServletRequest request, Content page) {
-        request.setAttribute(Aggregator.CURRENT_ACTPAGE, page);
-    }
-
-    /**
-     * Restores the request's original <code>actpage</code> attribute (i.e. the one specified by the request URI).
-     */
-    public static void restoreCurrentActivePage(HttpServletRequest request) {
-        setCurrentActivePage(request, getActivePage(request));
+    public static boolean showPreview(HttpServletRequest req) {
+        return showPreview();
     }
 
 }

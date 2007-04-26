@@ -12,34 +12,130 @@
  */
 package info.magnolia.cms.core;
 
+import org.apache.commons.lang.StringUtils;
+
+import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.runtime.File;
+import info.magnolia.context.MgnlContext;
+
+
 /**
- * As of Magnolia 3.0, this class only contains constants.
+ * As of Magnolia 3.0, this class only contains constants and some methods to avoid direct access to the attributes.
  * @author Sameer Charles $Id$
  */
 public class Aggregator {
+    private static final String FILE = "file"; //$NON-NLS-1$
 
-    public static final String ACTPAGE = "static_actpage"; //$NON-NLS-1$
+    public static final String NODE_DATA_TEMPLATE = "nodeDataTemplate";
 
-    public static final String CURRENT_ACTPAGE = "actpage"; //$NON-NLS-1$
+    private static final String CURRENT_CONTENT = "current_content"; //$NON-NLS-1$
 
-    public static final String SELECTOR = "selector"; //$NON-NLS-1$
+    private static final String EXTENSION = "extension";
 
-    public static final String FILE = "file"; //$NON-NLS-1$
+    private static final String HANDLE = "handle"; //$NON-NLS-1$
 
-    public static final String HANDLE = "handle"; //$NON-NLS-1$
+    private static final String MAIN_CONTENT = "main_content"; //$NON-NLS-1$
 
-    public static final String TEMPLATE = "mgnl_Template"; //$NON-NLS-1$
+    private static final String REPOSITORY = "repository";
 
-    public static final String EXTENSION = "extension";
+    private static final String SELECTOR = "selector"; //$NON-NLS-1$
 
-    public static final String MAPPING = "mapping";
+    private static final String TEMPLATE = "mgnl_Template"; //$NON-NLS-1$
 
-    public static final String REPOSITORY = "repository";
+    /**
+     * @deprecated
+     */
+    private static final String ACTPAGE = MAIN_CONTENT;
+
+    /**
+     * @deprecated
+     */
+    private static final String CURRENT_ACTPAGE = CURRENT_CONTENT;
 
     /**
      * Don't instantiate.
      */
     private Aggregator() {
+    }
+
+
+    public static Content getCurrentContent() {
+        return (Content) MgnlContext.getAttribute(CURRENT_CONTENT);
+    }
+
+    /**
+     * Get the current extesion of the request
+     * @return
+     */
+    public static String getExtension() {
+        String ext = (String) MgnlContext.getAttribute(EXTENSION);
+        if (ext == null) {
+            ext = StringUtils.substringAfterLast(Path.getURI(), ".");
+            MgnlContext.setAttribute(EXTENSION, ext);
+        }
+        return ext;
+    }
+
+    public static File getFile() {
+        return (File) MgnlContext.getAttribute(FILE);
+    }
+
+    /**
+     * Returns the URI of the current request, but uses the uri to repository mapping to remove any prefix.
+     * @param req request
+     * @return request URI without servlet context and without repository mapping prefix
+     */
+    public static String getHandle() {
+        return (String) MgnlContext.getAttribute(HANDLE);
+    }
+
+    public static Content getMainContent() {
+        return (Content) MgnlContext.getAttribute(MAIN_CONTENT);
+    }
+
+    public static String getRepository() {
+        return (String) MgnlContext.getAttribute(REPOSITORY);
+    }
+
+    public static String getSelector() {
+        return (String) MgnlContext.getAttribute(SELECTOR);
+    }
+
+    public static Template getTemplate() {
+        return (Template) MgnlContext.getAttribute(TEMPLATE);
+    }
+
+    public static void setCurrentContent(Content node) {
+        MgnlContext.setAttribute(CURRENT_CONTENT, node);
+    }
+
+    public static void setExtension(String extension) {
+        MgnlContext.setAttribute(EXTENSION, extension);
+    }
+
+    public static void setFile(File file) {
+        MgnlContext.setAttribute(FILE, file);
+    }
+
+    public static void setHandle(String handle) {
+        // set the new handle pointing to the real node
+        MgnlContext.setAttribute(HANDLE, handle);
+    }
+
+    public static void setMainContent(Content node) {
+        MgnlContext.setAttribute(MAIN_CONTENT, node);
+    }
+
+    public static void setRepository(String repository) {
+        MgnlContext.setAttribute(REPOSITORY, repository);
+    }
+
+    public static void setSelector(String selector) {
+        MgnlContext.setAttribute(SELECTOR, selector);
+    }
+
+    public static void setTemplate(Template template) {
+        MgnlContext.setAttribute(TEMPLATE, template);
     }
 
 }
