@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
 public class Content2BeanTest extends MgnlTestCase {
 
     /**
-     * 
+     *
      */
     public Content2BeanTest() throws IOException {
         super();
@@ -219,5 +219,29 @@ public class Content2BeanTest extends MgnlTestCase {
         BeanWithClass o = (BeanWithClass) Content2BeanUtil.toBean(node, true);
         assertEquals("blah", o.getFoo());
         assertEquals(String.class, o.getClazz());
+    }
+
+    public void testJCRPropertiesTypes() throws RepositoryException, Content2BeanException {
+        Content node = MockUtil.createContent("parent", new Object[][]{
+                {"class", "info.magnolia.content2bean.BeanWithPrimitiveProperties"},
+                {"integer", new Integer(5)},
+                {"bool", new Boolean(true)}
+        }, new Content[0]);
+
+        BeanWithPrimitiveProperties bean = (BeanWithPrimitiveProperties) Content2BeanUtil.toBean(node, true);
+        assertEquals(5, bean.getInteger());
+        assertEquals(true, bean.isBool());
+    }
+
+    public void testFromStringConversion() throws RepositoryException, Content2BeanException {
+        Content node = MockUtil.createContent("parent", new Object[][]{
+                {"class", "info.magnolia.content2bean.BeanWithPrimitiveProperties"},
+                {"integer", "5"},
+                {"bool", "true"}
+        }, new Content[0]);
+
+        BeanWithPrimitiveProperties bean = (BeanWithPrimitiveProperties) Content2BeanUtil.toBean(node, true);
+        assertEquals(5, bean.getInteger());
+        assertEquals(true, bean.isBool());
     }
 }
