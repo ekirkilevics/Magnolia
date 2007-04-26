@@ -18,13 +18,10 @@ import info.magnolia.cms.core.Path;
 import java.io.IOException;
 import java.util.Enumeration;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -35,33 +32,15 @@ import com.oreilly.servlet.MultipartRequest;
  * @author Sameer Charles
  * @version $Id$
  */
-public class MultipartRequestFilter implements Filter {
+public class MultipartRequestFilter extends AbstractMagnoliaFilter {
 
     /**
      * Max file upload size.
      */
     private static final int MAX_FILE_SIZE = 2000000000; // 2GB
 
-    /**
-     * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
-     */
-    public void init(FilterConfig filterConfig) throws ServletException {
-        // unused
-    }
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
 
-    /**
-     * @see javax.servlet.Filter#destroy()
-     */
-    public void destroy() {
-        // unused
-    }
-
-    /**
-     * @see javax.servlet.Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
-     */
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain filterChain) throws IOException,
-        ServletException {
-        HttpServletRequest request = (HttpServletRequest) req;
         String type = null;
         String type1 = request.getHeader("Content-Type"); //$NON-NLS-1$
         String type2 = request.getContentType();
@@ -77,7 +56,7 @@ public class MultipartRequestFilter implements Filter {
         if ((type != null) && type.toLowerCase().startsWith("multipart/form-data")) { //$NON-NLS-1$
             parseParameters(request);
         }
-        filterChain.doFilter(req, res);
+        chain.doFilter(request, response);
     }
 
     /**

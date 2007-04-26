@@ -17,13 +17,12 @@ import info.magnolia.cms.beans.config.MIMEMapping;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -35,35 +34,16 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class ContentTypeFilter implements Filter {
+public class ContentTypeFilter extends AbstractMagnoliaFilter {
 
     /**
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(ContentTypeFilter.class);
 
-    /**
-     * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
-     */
-    public void init(FilterConfig filterConfig) throws ServletException {
-        // unused
-    }
-
-    /**
-     * @see javax.servlet.Filter#destroy()
-     */
-    public void destroy() {
-        // unused
-    }
-
-    /**
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
-     * javax.servlet.FilterChain)
-     */
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws IOException,
-        ServletException {
-        this.setContentType(req, resp);
-        filterChain.doFilter(req, resp);
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
+        this.setContentType(request, response);
+        chain.doFilter(request, response);
     }
 
     private void setContentType(ServletRequest req, ServletResponse resp) {

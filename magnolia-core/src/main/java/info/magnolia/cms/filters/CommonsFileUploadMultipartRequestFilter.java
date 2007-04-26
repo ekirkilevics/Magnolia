@@ -21,13 +21,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
@@ -43,7 +41,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Andreas Brenk
  * @version $Id$
  */
-public class CommonsFileUploadMultipartRequestFilter implements Filter {
+public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFilter {
 
     /**
      * Default max file upload size (200 MB).
@@ -58,7 +56,7 @@ public class CommonsFileUploadMultipartRequestFilter implements Filter {
     /**
      * The maximum size a file upload may have.
      */
-    private int maxFileSize = DEFAULT_MAX_FILE_SIZE;
+    private long maxFileSize = DEFAULT_MAX_FILE_SIZE;
 
     /**
      * The directory for temporary storage of uploaded files.
@@ -69,43 +67,32 @@ public class CommonsFileUploadMultipartRequestFilter implements Filter {
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
     public void init(FilterConfig config) throws ServletException {
+        super.init(config);
         String maxFileSize = config.getInitParameter(PARAM_MAX_FILE_SIZE);
         if (maxFileSize != null) {
-            this.maxFileSize = Integer.parseInt(maxFileSize);
+            this.maxFileSize = Long.parseLong(maxFileSize);
         }
 
         this.tempDir = new File(Path.getTempDirectoryPath());
     }
 
     /**
-     * @see javax.servlet.Filter#destroy()
-     */
-    public void destroy() {
-        // unused
-    }
-
-    /**
      * Determine if the request has multipart content and if so parse it into a <code>MultipartForm</code> and store
      * it as a request attribute.
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
-     * javax.servlet.FilterChain)
      */
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-        ServletException {
-        if (request instanceof HttpServletRequest) {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
 
-            boolean isMultipartContent = FileUploadBase.isMultipartContent(new ServletRequestContext(
-                (HttpServletRequest) request));
-            if (isMultipartContent) {
-                try {
-                    parseRequest((HttpServletRequest) request);
-                }
-                catch (IOException e) {
-                    throw e;
-                }
-                catch (Exception e) {
-                    throw new ServletException(e);
-                }
+        boolean isMultipartContent = FileUploadBase.isMultipartContent(new ServletRequestContext(
+            (HttpServletRequest) request));
+        if (isMultipartContent) {
+            try {
+                parseRequest((HttpServletRequest) request);
+            }
+            catch (IOException e) {
+                throw e;
+            }
+            catch (Exception e) {
+                throw new ServletException(e);
             }
         }
 

@@ -17,12 +17,8 @@ import info.magnolia.cms.core.Path;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -37,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class MgnlVirtualUriFilter implements Filter {
+public class MgnlVirtualUriFilter extends AbstractMagnoliaFilter  {
 
     /**
      * Logger.
@@ -50,37 +46,17 @@ public class MgnlVirtualUriFilter implements Filter {
 
     private static final int NO_ACTION = 3;
 
-    /**
-     * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
-     */
-    public void init(FilterConfig filterConfig) throws ServletException {
-        // unused
-    }
-
-    /**
-     * @see javax.servlet.Filter#destroy()
-     */
-    public void destroy() {
-        // unused
-    }
-
-    /**
-     * @see javax.servlet.Filter#doFilter(javax.servlet.ServletRequest, javax.servlet.ServletResponse,
-     * javax.servlet.FilterChain)
-     */
-    public void doFilter(ServletRequest req, ServletResponse resp, FilterChain filterChain) throws IOException,
-        ServletException {
-
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) resp;
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
+        // set original uri if not yet set
+        Path.setURI(request.getRequestURI());
 
         int result = redirect(request, response);
         if (result == REDIRECT) {
             return;
         } else if (result == INCLUDE) {
-            ((MagnoliaManagedFilter.CustomFilterChain)filterChain).reset();
+            ((MagnoliaMainFilter.CustomFilterChain)chain).reset();
         }
-        filterChain.doFilter(req, resp);
+        chain.doFilter(request, response);
     }
 
     /**
@@ -90,7 +66,9 @@ public class MgnlVirtualUriFilter implements Filter {
      * @return <code>true</code> if request has been redirected, <code>false</code> otherwise
      */
     private int redirect(HttpServletRequest request, HttpServletResponse response) {
+
         String uri = this.getURIMap(request);
+
         if (StringUtils.isNotEmpty(uri)) {
             if (!response.isCommitted()) {
 
@@ -113,7 +91,7 @@ public class MgnlVirtualUriFilter implements Filter {
                             new Object[]{uri, ClassUtils.getShortClassName(e.getClass()), e.getMessage()});
                     }
                 } else {
-                    Path.setURI(uri, request);
+                    Path.setURI(uri);
                     return INCLUDE;
                 }
             }
@@ -125,6 +103,7 @@ public class MgnlVirtualUriFilter implements Filter {
 
             //return true;
         }
+
         return NO_ACTION;
     }
 
@@ -133,7 +112,8 @@ public class MgnlVirtualUriFilter implements Filter {
      * @param request HttpServletRequest
      */
     private String getURIMap(HttpServletRequest request) {
-        return VirtualURIManager.getInstance().getURIMapping(Path.getURI(request));
+        return VirtualURIManager.getInstance().getURIMapping(Path.getURI());
     }
+
 
 }

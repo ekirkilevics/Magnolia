@@ -16,12 +16,8 @@ import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
-import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -31,14 +27,9 @@ import javax.servlet.http.HttpServletResponse;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class MgnlContextFilter implements Filter {
+public class MgnlContextFilter extends AbstractMagnoliaFilter {
 
-    public void init(FilterConfig conf) throws ServletException {
-    }
-
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-        ServletException {
-
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
         if (!MgnlContext.hasInstance()) {
             MgnlContext.initAsWebContext((HttpServletRequest) request, (HttpServletResponse) response);
         }
@@ -46,8 +37,5 @@ public class MgnlContextFilter implements Filter {
         chain.doFilter(request, response);
 
         MgnlContext.setInstance(null);
-    }
-
-    public void destroy() {
     }
 }
