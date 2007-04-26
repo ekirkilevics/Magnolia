@@ -20,7 +20,6 @@ import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
-import info.magnolia.content2bean.TypeMapping.Factory;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
@@ -28,7 +27,7 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -72,30 +71,29 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         }
 
         if (typeDscr == null && state.getLevel() > 1) {
-            try {
-                TypeDescriptor parentTypeDscr = state.getCurrentType();
-                PropertyTypeDescriptor propDscr;
+            TypeDescriptor parentTypeDscr = state.getCurrentType();
+            PropertyTypeDescriptor propDscr;
 
-                if (parentTypeDscr.isMap() || parentTypeDscr.isCollection()) {
-                    if (state.getLevel() > 2) {
-                        // this is not necesserely the parent node of the current
-                        String mapProperyName = state.peekContent(1).getName();
-                        propDscr = state.peekType(1).getPropertyTypeDescriptor(mapProperyName);
-                        typeDscr = propDscr.getCollectionEntryType();
-                    }
+            if (parentTypeDscr.isMap() || parentTypeDscr.isCollection()) {
+                if (state.getLevel() > 2) {
+                    // this is not necesserely the parent node of the current
+                    String mapProperyName = state.peekContent(1).getName();
+                    propDscr = state.peekType(1).getPropertyTypeDescriptor(mapProperyName);
+                    typeDscr = propDscr.getCollectionEntryType();
                 }
-                else {
-                    propDscr = state.getCurrentType().getPropertyTypeDescriptor(node.getName());
+            }
+            else {
+                propDscr = state.getCurrentType().getPropertyTypeDescriptor(node.getName());
+                if(propDscr != null){
                     typeDscr = propDscr.getType();
                 }
-
-            }
-            catch (Exception e) {
-                Content2BeanProcessorImpl.log.error("can't resolve type by beans property type", e);
             }
         }
 
         if (typeDscr == null || typeDscr.isMap() || typeDscr.isCollection()) {
+            if(typeDscr== null && log.isDebugEnabled()){
+                log.debug("was not able to resolve type for node []", node );
+            }
             typeDscr = TypeMapping.MAP_TYPE;
         }
 
@@ -121,6 +119,9 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
      */
     public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
         String propertyName = descriptor.getName();
+        if(propertyName.equals("class")){
+            return;
+        }
         Object value = values.get(propertyName);
         TypeMapping mapping = getTypeMapping();
         Object bean = state.getCurrentBean();
@@ -183,34 +184,25 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             }
         }
 
-        try {
-            PropertyUtils.setProperty(bean, propertyName, value);
-        }
-        catch (NoSuchMethodException e) {
-            // ignore, this is not a property at all
+        try{
+            // this does some conversions like string to class. Performance of PropertyUtils.setProperty() would be better
+            BeanUtils.setProperty(bean, propertyName, value);
+            //PropertyUtils.setProperty(bean, propertyName, value);
         }
         catch (Exception e) {
             // do it better
-            log.error("can't set property", e);
+            log.error("can't set property [" + propertyName + "] in bean [" + bean.getClass().getName() + "]");
+            if(log.isDebugEnabled()){
+                log.debug("stacktrace", e);
+            }
         }
 
     }
 
     /**
-     * Hadles properties of type Class.
+     * Most of the conversion is done by the BeanUtils.
      */
     public Object convertPropertyValue(Class propertyType, Object value) throws Content2BeanException {
-        if(value == null){
-            return value;
-        }
-        if (Class.class.equals(propertyType)) {
-            try {
-                value = ClassUtil.classForName((String) value);
-            }
-            catch (ClassNotFoundException e) {
-                throw new Content2BeanException("can't find class for value [" + value + "]", e);
-            }
-        }
         return value;
     }
 
@@ -252,7 +244,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
     /**
      * Returns the dafault mapping
      */
-    protected TypeMapping getTypeMapping() {
+    public TypeMapping getTypeMapping() {
         return TypeMapping.Factory.getDefaultMapping();
     }
 
