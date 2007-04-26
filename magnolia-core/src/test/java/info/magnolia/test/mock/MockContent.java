@@ -18,8 +18,10 @@ import info.magnolia.cms.security.AccessDeniedException;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.jcr.PathNotFoundException;
@@ -176,6 +178,22 @@ public class MockContent extends Content {
 
     public Content getChildByName(String namePattern) {
         return (Content) children.get(namePattern);
+    }
+
+    public void orderBefore(String srcName, String beforeName) throws RepositoryException {
+        Content movedNode = (Content)children.get(srcName);
+        List tmp = new ArrayList(children.values());
+        tmp.remove(movedNode);
+        tmp.add(tmp.indexOf(children.get(beforeName)), movedNode);
+        children.clear();
+        for (Iterator iter = tmp.iterator(); iter.hasNext();) {
+            Content child = (Content) iter.next();
+            children.put(child.getName(), child);
+        }
+    }
+
+    public void save() throws RepositoryException {
+        // nothing to do
     }
 
     public String getName() {
