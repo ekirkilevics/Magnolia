@@ -14,7 +14,6 @@ import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
-import info.magnolia.content2bean.TypeMapping.Factory;
 
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
