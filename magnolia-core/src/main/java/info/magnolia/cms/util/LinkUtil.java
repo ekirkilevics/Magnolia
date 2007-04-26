@@ -13,11 +13,12 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Iterator;
 import java.util.regex.Matcher;
@@ -40,10 +41,13 @@ import org.slf4j.LoggerFactory;
  */
 public final class LinkUtil {
 
-    /**
-     * The HierarchyManager to get the uuid
-     */
-    private static HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.WEBSITE);
+    public static final String DEFAULT_EXTENSION = "html";
+
+    public static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
+
+    public interface PathToLinkTransformer {
+        String transform(String uuid, String absolutePath);
+    }
 
     /**
      * Pattern to find a link
@@ -60,7 +64,7 @@ public final class LinkUtil {
      * Pattern to find a magnolia formatted link
      */
     private static Pattern uuidPattern = Pattern.compile("\\$\\{link:\\{uuid:\\{([^\\}]*)\\}," //$NON-NLS-1$
-        + "repository:\\{[^\\}]*\\}," // has value website unless we support it //$NON-NLS-1$
+        + "repository:\\{([^\\}]*)\\}," // has value website unless we support it //$NON-NLS-1$
         + "workspace:\\{[^\\}]*\\}," // has value default unless we support it //$NON-NLS-1$
         + "path:\\{([^\\}]*)\\}\\}\\}"); //$NON-NLS-1$
 
@@ -88,12 +92,13 @@ public final class LinkUtil {
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
             String path = matcher.group(2);
-            String uuid = makeUUIDFromAbsolutePath(path);
+            String repository = mapPathToRepository(path);
+            String uuid = makeUUIDFromAbsolutePath(path, repository);
             matcher.appendReplacement(res, "$1\\${link:{" //$NON-NLS-1$
                 + "uuid:{" //$NON-NLS-1$
                 + uuid
                 + "}," //$NON-NLS-1$
-                + "repository:{website}," //$NON-NLS-1$
+                + "repository:{" + repository + "}," //$NON-NLS-1$
                 + "workspace:{default}," //$NON-NLS-1$
                 + "path:{" //$NON-NLS-1$
                 + path
@@ -104,32 +109,30 @@ public final class LinkUtil {
     }
 
     /**
+     * Maps a path to a repository. The URI2RepositoryManager is used.
+     * @param path
+     * @return
+     */
+    public static String mapPathToRepository(String path) {
+        String repository = URI2RepositoryManager.getInstance().getRepository(path);
+        if(StringUtils.isEmpty(repository)){
+            repository = DEFAULT_REPOSITORY;
+        }
+        return repository;
+    }
+
+    /**
      * Convert the mangolia format to absolute (repository friendly) pathes
      * @param str html
      * @return html with absolute links
      */
     public static String convertUUIDsToAbsoluteLinks(String str) {
-        Matcher matcher = uuidPattern.matcher(str);
-        StringBuffer res = new StringBuffer();
-        while (matcher.find()) {
-            String absolutePath = null;
-            String uuid = matcher.group(1);
-
-            if (StringUtils.isNotEmpty(uuid)) {
-                absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
+        return convertUUIDsToLinks(str, new PathToLinkTransformer(){
+            public String transform(String absolutePath, String repository) {
+                return absolutePath;
             }
+        });
 
-            // can't find the uuid
-            if (StringUtils.isEmpty(absolutePath)) {
-                absolutePath = matcher.group(2);
-                log.error(
-                    "Was not able to get the page by jcr:uuid nor by mgnl:uuid. Will use the saved path {}",
-                    absolutePath);
-            }
-            matcher.appendReplacement(res, absolutePath + ".html"); //$NON-NLS-1$
-        }
-        matcher.appendTail(res);
-        return res.toString();
     }
 
     /**
@@ -138,29 +141,50 @@ public final class LinkUtil {
      * @param page the links are relative to this page
      * @return html with proper links
      */
-    public static String convertUUIDsToRelativeLinks(String str, Content page) {
+    public static String convertUUIDsToRelativeLinks(String str, final Content page) {
+        return convertUUIDsToLinks(str, new PathToLinkTransformer(){
+            public String transform(String absolutePath, String repository) {
+                 return makeRelativePath(absolutePath, page);
+            }
+        });
+    }
+
+    public static String convertUUIDsToLinks(String str, PathToLinkTransformer transformer) {
         Matcher matcher = uuidPattern.matcher(str);
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
-            String absolutePath = null;
             String uuid = matcher.group(1);
+            String repository = StringUtils.defaultIfEmpty(matcher.group(2), DEFAULT_REPOSITORY);
+            String absolutePath = matcher.group(3);
+
+            String link = null;
 
             if (StringUtils.isNotEmpty(uuid)) {
-                absolutePath = LinkUtil.makeAbsolutePathFromUUID(uuid);
+                link = LinkUtil.makeAbsolutePathFromUUID(uuid, repository);
             }
 
             // can't find the uuid
-            if (StringUtils.isEmpty(absolutePath)) {
-                absolutePath = matcher.group(2);
+            if (StringUtils.isEmpty(link)) {
+                link = absolutePath;
                 log.warn("Was not able to get the page by uuid. Will use the saved path {}", absolutePath);
             }
 
             // to relative path
-            String relativePath = makeRelativePath(absolutePath, page);
-            matcher.appendReplacement(res, relativePath);
+            link = transformer.transform(absolutePath, repository);
+            // TODO support other extensions than html. used for MGNLDMS-84
+            link += "." + DEFAULT_EXTENSION;
+            matcher.appendReplacement(res, link);
         }
         matcher.appendTail(res);
         return res.toString();
+    }
+
+
+    /**
+     * @deprecated pass the repository name
+     */
+    public static String makeAbsolutePathFromUUID(String uuid) {
+        return makeAbsolutePathFromUUID(uuid, DEFAULT_REPOSITORY);
     }
 
     /**
@@ -169,12 +193,12 @@ public final class LinkUtil {
      * @param uuid uuid
      * @return path
      */
-    public static String makeAbsolutePathFromUUID(String uuid) {
+    public static String makeAbsolutePathFromUUID(String uuid, String repository) {
         Content content = null;
 
-        // first use the jcr:uuid (since 2.2)
+        // first use the jcr:uuid (since 3.0)
         try {
-            content = hm.getContentByUUID(uuid);
+            content = MgnlContext.getHierarchyManager(repository).getContentByUUID(uuid);
         }
 
         // then the old mgnl:uuid
@@ -182,7 +206,7 @@ public final class LinkUtil {
         catch (Exception e) {
             log.debug("Was not able to get the page by the jcr:uuid. will try the old mgnl:uuid");
 
-            QueryManager qmanager = hm.getQueryManager();
+            QueryManager qmanager = MgnlContext.getHierarchyManager(repository).getQueryManager();
 
             if (qmanager != null) {
                 // this uses magnolia uuid
@@ -228,9 +252,16 @@ public final class LinkUtil {
             relativePath.append(absolutePath);
         }
 
-        relativePath.append(".html"); //$NON-NLS-1$
-
         return relativePath.toString();
+    }
+
+    /**
+     * @deprecated pass the repository name
+     * @param path
+     * @return
+     */
+    public static String makeUUIDFromAbsolutePath(String path) {
+        return makeUUIDFromAbsolutePath(path, DEFAULT_REPOSITORY);
     }
 
     /**
@@ -238,9 +269,9 @@ public final class LinkUtil {
      * @param path path to the page
      * @return the uuid if found
      */
-    public static String makeUUIDFromAbsolutePath(String path) {
+    public static String makeUUIDFromAbsolutePath(String path, String repository) {
         try {
-            return hm.getContent(path).getUUID();
+            return MgnlContext.getHierarchyManager(repository).getContent(path).getUUID();
         }
         catch (RepositoryException e) {
             return path;
