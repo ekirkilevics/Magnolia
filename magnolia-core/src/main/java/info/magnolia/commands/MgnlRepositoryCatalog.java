@@ -4,7 +4,9 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ClassUtil;
-import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -97,9 +99,10 @@ public class MgnlRepositoryCatalog extends CatalogBase {
      * @throws ClassNotFoundException
      * @throws InstantiationException
      * @throws IllegalAccessException
+     * @throws Content2BeanException
      */
     private Command createCommand(Content commandNode) throws InstantiationException,
-        IllegalAccessException {
+        IllegalAccessException, Content2BeanException {
         Command command = null;
         String className;
         className = commandNode.getNodeData(CLASS_NODE_DATA).getString();
@@ -108,7 +111,7 @@ public class MgnlRepositoryCatalog extends CatalogBase {
         try{
             Class klass = ClassUtil.classForName(className);
             command = (Command) klass.newInstance();
-            ContentUtil.setProperties(command, commandNode);
+            Content2BeanUtil.setProperties(command, commandNode);
             return command;
         }
         // asume it is a qualified command name
