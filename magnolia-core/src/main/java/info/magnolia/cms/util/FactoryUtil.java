@@ -18,8 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.beanutils.ConstructorUtils;
-import org.apache.commons.discovery.tools.DiscoverClass;
-import org.apache.commons.discovery.tools.DiscoverSingleton;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,8 +37,6 @@ public class FactoryUtil {
      * Logger.
      */
     protected static Logger log = LoggerFactory.getLogger(FactoryUtil.class);
-
-    protected static DiscoverClass discovery = new DiscoverClass();
 
     /**
      * Registered singleton instances
@@ -73,12 +69,18 @@ public class FactoryUtil {
                 return ((InstanceFactory) factories.get(interf)).newInstance();
             }
             // make interf the default implementation
-            return discovery.newInstance(interf, SystemProperty.getProperties(), interf.getName());
+            Class clazz =  getImplementation(interf);
+            return clazz.newInstance();
         }
         catch (Exception e) {
-            log.error("can't instantiate an implementation of this class [" + interf.getName() + "]");
+            log.error("can't instantiate an implementation of this class [" + interf.getName() + "]", e);
         }
         return null;
+    }
+
+    public static Class getImplementation(Class interf) throws ClassNotFoundException {
+        String className = StringUtils.defaultIfEmpty(SystemProperty.getProperty(interf.getName()), interf.getName());
+        return ClassUtil.classForName(className);
     }
 
     /**
@@ -131,11 +133,7 @@ public class FactoryUtil {
     public static Object getSingleton(Class interf) {
         Object instance = instances.get(interf);
         if (instance == null) {
-            if (factories.containsKey(interf)) {
-                instance = ((InstanceFactory) factories.get(interf)).newInstance();
-            } else {
-                instance = DiscoverSingleton.find(interf, SystemProperty.getProperties(), interf.getName());
-            }
+            instance = newInstance(interf);
             instances.put(interf, instance);
         }
         return instance;
@@ -191,7 +189,6 @@ public class FactoryUtil {
     public static void clear() {
         factories.clear();
         instances.clear();
-        DiscoverSingleton.release();
     }
 
 }
