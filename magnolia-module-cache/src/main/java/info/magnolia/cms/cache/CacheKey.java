@@ -38,7 +38,7 @@ public class CacheKey implements Serializable {
      * @param request the request from which we get the path
      */
     public CacheKey(HttpServletRequest request) {
-        key = Path.getURI(request);
+        key = Path.getOriginalURI();
     }
 
     /**
