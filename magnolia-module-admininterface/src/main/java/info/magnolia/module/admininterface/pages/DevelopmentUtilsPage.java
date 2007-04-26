@@ -17,7 +17,6 @@ import info.magnolia.cms.beans.config.ModuleLoader;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
@@ -73,26 +72,10 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     private String repository;
 
-    private static ContentFilter MAGNOLIA_FILTER = new ContentFilter() {
-
-        public boolean accept(Content content) {
-
-            try {
-                String nodetype = content.getNodeType().getName();
-                // export only "magnolia" nodes
-                return nodetype.startsWith("mgnl:");
-            }
-            catch (RepositoryException e) {
-                log.error("Unable to read nodetype for node {}", content.getHandle());
-            }
-            return false;
-        }
-    };
-
     /**
      * Logger.
      */
-    protected static Logger log = LoggerFactory.getLogger(DevelopmentUtilsPage.class);
+    public static Logger log = LoggerFactory.getLogger(DevelopmentUtilsPage.class);
 
     /**
      * @param name
@@ -270,7 +253,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
             HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
             Content wesiteRoot = hm.getRoot();
 
-            Iterator children = wesiteRoot.getChildren(MAGNOLIA_FILTER).iterator();
+            Iterator children = wesiteRoot.getChildren(ContentUtil.MAGNOLIA_FILTER).iterator();
             while (children.hasNext()) {
                 Content exported = (Content) children.next();
                 exportNode(repositoryName, hm.getWorkspace().getSession(), exported);
@@ -293,7 +276,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
         try {
             Content parentNode = hm.getContent(parentpath);
-            Iterator children = parentNode.getChildren(MAGNOLIA_FILTER).iterator();
+            Iterator children = parentNode.getChildren(ContentUtil.ALL_NODES_EXCEPT_JCR_CONTENT_FILTER).iterator();
             while (children.hasNext()) {
                 Content exported = (Content) children.next();
                 exportNode(repository, hm.getWorkspace().getSession(), exported);
