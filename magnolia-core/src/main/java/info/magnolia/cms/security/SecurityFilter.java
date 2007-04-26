@@ -14,6 +14,7 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.filters.AbstractMagnoliaFilter;
 import info.magnolia.freemarker.FreemarkerHelper;
 
 import java.io.IOException;
@@ -48,7 +49,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class SecurityFilter implements Filter {
+public class SecurityFilter extends AbstractMagnoliaFilter {
 
     /**
      * Logger.
@@ -107,11 +108,8 @@ public class SecurityFilter implements Filter {
     /**
      * {@inheritDoc}
      */
-    public void doFilter(ServletRequest req, ServletResponse res, FilterChain chain) throws IOException,
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException,
         ServletException {
-
-        HttpServletRequest request = (HttpServletRequest) req;
-        HttpServletResponse response = (HttpServletResponse) res;
 
         handleLogout(request);
 
