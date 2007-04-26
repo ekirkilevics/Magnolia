@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.core;
 
+import info.magnolia.api.MgnlException;
+
 import java.io.PrintStream;
 import java.io.PrintWriter;
 
@@ -21,7 +23,7 @@ import java.io.PrintWriter;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public abstract class BaseException extends Exception {
+public abstract class BaseException extends MgnlException {
 
     /**
      * Stable serialVersionUID.

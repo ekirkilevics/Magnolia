@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.module;
 
-import org.apache.commons.lang.exception.NestableException;
+import info.magnolia.api.MgnlException;
 
 
 /**
@@ -20,7 +20,7 @@ import org.apache.commons.lang.exception.NestableException;
  * @author philipp
  * @version $Revision$ ($Author$)
  */
-public class RegisterException extends NestableException {
+public class RegisterException extends MgnlException {
 
     /**
      * Stable serialVersionUID.

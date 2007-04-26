@@ -1,12 +1,14 @@
 package info.magnolia.cms.module;
 
+import info.magnolia.api.MgnlException;
+
 import org.apache.commons.lang.exception.NestableException;
 
 
-public class InitializationException extends NestableException {
+public class InitializationException extends MgnlException {
 
     /**
-     * 
+     *
      */
     private static final long serialVersionUID = -1300543420918121871L;
 
