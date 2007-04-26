@@ -72,7 +72,7 @@ public abstract class AbstractAdminModule extends AbstractModule {
 
             this.setInitialized(true);
         }
-        catch (Exception e) {
+        catch (Throwable e) {
             throw new InitializationException("can't initialize module [" + this.getName() + "]", e);
         }
     }
