@@ -11,9 +11,9 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
 
@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Workspace;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -40,6 +41,8 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     private Map nodes = new HashMap();
 
     private MockContent root ;
+
+    private Workspace workspace;
 
     /**
      * Logger.
@@ -124,6 +127,18 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         }
 
         return str.toString();
+    }
+
+
+    public Workspace getWorkspace() {
+        return this.workspace;
+    }
+
+    /**
+     * Set mock workspace if observation or similar things are needed
+     */
+    public void setWorkspace(Workspace workspace) {
+        this.workspace = workspace;
     }
 
 }
