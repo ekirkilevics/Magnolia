@@ -14,7 +14,10 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 
+import java.util.GregorianCalendar;
+
 import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 
 import junit.framework.TestCase;
@@ -69,5 +72,22 @@ public class MockObjectTest extends TestCase {
         MockNodeData nd = new MockNodeData("test", new Boolean(true));
         assertEquals(true, nd.getBoolean());
     }
+
+    public void testSetAnObjectAndResolvePropertyType(){
+        MockNodeData ndBoolean = new MockNodeData("test", new Boolean(true));
+        MockNodeData ndLong = new MockNodeData("test", new Long(5));
+        MockNodeData ndDate = new MockNodeData("test", new GregorianCalendar(2007,2,14));
+
+        assertEquals(true, ndBoolean.getBoolean());
+        assertEquals(PropertyType.BOOLEAN,ndBoolean.getType());
+
+        assertEquals(5, ndLong.getLong());
+        assertEquals(PropertyType.LONG,ndLong.getType());
+
+        assertEquals(new GregorianCalendar(2007,2,14), ndDate.getDate());
+        assertEquals(PropertyType.DATE,ndDate.getType());
+
+    }
+
 
 }
