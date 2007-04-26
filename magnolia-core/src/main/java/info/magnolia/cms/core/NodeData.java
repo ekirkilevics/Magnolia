@@ -49,12 +49,12 @@ public class NodeData extends ContentHandler {
     /**
      * Wrapped javax.jcr.Property.
      */
-    private Property property;
+    protected Property property;
 
     /**
      * Wrapped javax.jcr.Node for nt:resource type
      */
-    private Node node;
+    protected Node node;
 
     /**
      * Empty constructor. Should NEVER be used for standard use, test only.
