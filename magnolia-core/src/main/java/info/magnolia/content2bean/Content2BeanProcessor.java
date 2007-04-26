@@ -13,8 +13,6 @@ package info.magnolia.content2bean;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
 
-import java.util.Map;
-
 
 /**
  * Transforms nodes to beans or maps. The transformer is use to resolve classes or to instantiate beans.
@@ -22,13 +20,6 @@ import java.util.Map;
  * @version $Id$
  */
 public interface Content2BeanProcessor {
-
-    /**
-     * Transforms the nodes data into a map containting the names and values. In case recursive is true the subnodes are
-     * transformed to maps as well
-     * @throws Content2BeanException
-     */
-    public Map toMap(Content node, boolean recursive) throws Content2BeanException;
 
     /**
      * Transforms the node to a bean using the passed transformer
