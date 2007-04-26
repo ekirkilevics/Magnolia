@@ -53,6 +53,11 @@ public interface Content2BeanTransformer extends Content.ContentFilter {
     public Object convertPropertyValue(Class propertyType, Object value) throws Content2BeanException;
 
     /**
+     * The mapping to use
+     */
+    public TypeMapping getTypeMapping();
+
+    /**
      * Get your instance here
      */
     class Factory {
