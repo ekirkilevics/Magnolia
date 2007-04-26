@@ -23,6 +23,8 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.sun.tools.jdi.LinkedHashMap;
+
 
 /**
  * In case you do not have to customize the transformation you should use one of this methods
@@ -38,6 +40,16 @@ import org.slf4j.LoggerFactory;
 public class Content2BeanUtil {
 
     private static Logger log = LoggerFactory.getLogger(Content2BeanUtil.class);
+
+    /**
+     * Transforms all nodes to a map
+     */
+    public static final Content2BeanTransformerImpl TO_MAP_TRANSFORMER = new Content2BeanTransformerImpl() {
+
+        public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException {
+            return TypeMapping.MAP_TYPE;
+        }
+    };
 
     /**
      * Get the current processor
@@ -103,17 +115,29 @@ public class Content2BeanUtil {
     }
 
     /**
-     * @see Content2BeanProcessor
+     * Transforms the nodes data into a map containting the names and values.
+     * @param node
+     * @return a flat map
      */
     public static Map toMap(Content node) throws Content2BeanException {
         return toMap(node, false);
     }
 
+
     /**
-     * @see Content2BeanProcessor
+     * Transforms the nodes data into a map containting the names and values. In case recursive is true the subnodes are
+     * transformed to beans using the transformer. To avoid that use toMaps() instead
      */
     public static Map toMap(Content node, boolean recursive) throws Content2BeanException {
-        return getContent2BeanProcessor().toMap(node, recursive);
+        return (Map) setProperties(new LinkedHashMap(), node, recursive);
+    }
+
+    /**
+     * Transforms the nodes data into a map containting the names and values. In case recursive is true the subnodes are
+     * transformed to maps as well
+     */
+    public static Map toMaps(Content node, boolean recursive) throws Content2BeanException {
+        return (Map) toBean(node, recursive, TO_MAP_TRANSFORMER);
     }
 
     /**
