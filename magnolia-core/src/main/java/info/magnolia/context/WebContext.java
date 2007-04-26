@@ -31,6 +31,15 @@ import javax.servlet.ServletException;
 public interface WebContext extends Context {
 
     /**
+     * Attribute name to get the requests character encoding
+     */
+    public static final String ATTRIBUTE_REQUEST_CHARACTER_ENCODING = "characterEncoding";
+    /**
+     * Attribute name to get the request uri
+     */
+    public static final String ATTRIBUTE_REQUEST_URI = "requestURI";
+
+    /**
      * Method used to initialize the context
      */
     public void init(HttpServletRequest request, HttpServletResponse response);

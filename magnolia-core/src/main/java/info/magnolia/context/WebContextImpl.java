@@ -22,7 +22,12 @@ import info.magnolia.cms.security.*;
 import info.magnolia.cms.util.DumperUtil;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 
-import java.util.*;
+import java.lang.reflect.InvocationTargetException;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import java.io.Writer;
 import java.io.IOException;
 
@@ -36,6 +41,8 @@ import javax.servlet.jsp.jstl.core.Config;
 import javax.security.auth.Subject;
 
 import javax.servlet.ServletException;
+
+import org.apache.commons.beanutils.BeanUtils;
 
 /**
  * @author Sameer Charles
@@ -199,7 +206,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * @return content object
      */
     public Content getActivePage() {
-        return (Content) this.request.getAttribute(Aggregator.ACTPAGE);
+        return Aggregator.getMainContent();
     }
 
     /**
@@ -207,7 +214,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * @return file object
      */
     public File getFile() {
-        return (File) this.request.getAttribute(Aggregator.FILE);
+        return Aggregator.getFile();
     }
 
     /**
@@ -284,6 +291,20 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 Object obj = this.request.getAttribute(name);
                 if (obj == null) {
                     obj = this.getParameter(name);
+                }
+                if(obj == null){
+                    try {
+                        obj = BeanUtils.getProperty(request, name);
+                    }
+                    catch (IllegalAccessException e) {
+                        // expected
+                    }
+                    catch (InvocationTargetException e) {
+                        // expected
+                    }
+                    catch (NoSuchMethodException e) {
+                        // expected
+                    }
                 }
                 return obj;
             case Context.SESSION_SCOPE:
