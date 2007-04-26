@@ -16,10 +16,12 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import junit.framework.TestCase;
+
+import java.io.IOException;
 
 import javax.jcr.RepositoryException;
-import java.io.IOException;
+
+import junit.framework.TestCase;
 
 /**
  * @author philipp
