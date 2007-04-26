@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.context.MgnlContext;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
@@ -41,11 +41,11 @@ public class ObservationUtil {
      * @param listener event listener
      */
     public static void registerChangeListener(String repository, String observationPath, EventListener listener) {
-        log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$ 
+        log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$
 
         try {
 
-            ObservationManager observationManager = ContentRepository
+            ObservationManager observationManager = MgnlContext.getSystemContext()
                 .getHierarchyManager(repository)
                 .getWorkspace()
                 .getObservationManager();
