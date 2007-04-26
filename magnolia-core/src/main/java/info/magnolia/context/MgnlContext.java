@@ -272,6 +272,24 @@ public class MgnlContext {
     }
 
     /**
+     * Check if this attribute exists in the local scope
+     * @param name
+     * @return
+     */
+    public static boolean hasAttribute(String name){
+        return getInstance().getAttribute(name, Context.LOCAL_SCOPE) != null;
+    }
+
+    /**
+     * Remove an attribute in the local scope
+     * @param name
+     * @return
+     */
+    public static void removeAttribute(String name){
+        getInstance().removeAttribute(name, Context.LOCAL_SCOPE);
+    }
+
+    /**
      * Set context implementation instance
      * @param context
      */
