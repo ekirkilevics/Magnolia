@@ -343,6 +343,32 @@ public class NodeDataUtil {
         }
     }
 
+    public static long getLong(Content node, String name, long defaultValue) {
+        try {
+            if(node.hasNodeData(name)){
+                return node.getNodeData(name).getLong();
+            }
+        }
+        // should not happen
+        catch (RepositoryException e) {
+            log.error("can't read value will return default value", e);
+        }
+        return defaultValue;
+    }
+
+    public static boolean getBoolean(Content node, String name, boolean defaultValue) {
+        try {
+            if(node.hasNodeData(name)){
+                return node.getNodeData(name).getBoolean();
+            }
+        }
+        // should not happen
+        catch (RepositoryException e) {
+            log.error("can't read value will return default value", e);
+        }
+        return defaultValue;
+    }
+
     /**
      * If the NodeData does not exist yet, just create it.
      * @param node
@@ -446,7 +472,7 @@ public class NodeDataUtil {
                 return valueFactory.createValue(((Double)obj).doubleValue());
             case PropertyType.BINARY:
                 return valueFactory.createValue((InputStream)obj);
-            case PropertyType.REFERENCE:    
+            case PropertyType.REFERENCE:
                 return valueFactory.createValue(((Content)obj).getJCRNode());
             default:
                 return valueFactory.createValue(obj.toString());
@@ -544,6 +570,9 @@ public class NodeDataUtil {
         if(obj instanceof Long) {
             return PropertyType.LONG;
         }
+        if(obj instanceof Integer) {
+            return PropertyType.LONG;
+        }
         if(obj instanceof Boolean) {
             return PropertyType.BOOLEAN;
         }
@@ -558,5 +587,6 @@ public class NodeDataUtil {
         }
         return PropertyType.UNDEFINED;
     }
+
 
 }
