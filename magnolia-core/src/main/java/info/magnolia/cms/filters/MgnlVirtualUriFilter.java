@@ -54,7 +54,7 @@ public class MgnlVirtualUriFilter extends AbstractMagnoliaFilter  {
         if (result == REDIRECT) {
             return;
         } else if (result == INCLUDE) {
-            ((MagnoliaMainFilter.CustomFilterChain)chain).reset();
+            ((MagnoliaFilterChain)chain).reset();
         }
         chain.doFilter(request, response);
     }
