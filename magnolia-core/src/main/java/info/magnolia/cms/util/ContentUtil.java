@@ -22,7 +22,10 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -30,6 +33,9 @@ import java.util.Map;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -230,11 +236,16 @@ public class ContentUtil {
 
     /**
      * Returns all children (not recursively) indpendent of there type
-     * @param node
-     * @return
      */
     public static Collection getAllChildren(Content node){
         return node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER);
+    }
+
+    /**
+     * Returns all children (not recursively) indpendent of there type
+     */
+    public static Collection getAllChildren(Content node, Comparator comp){
+        return node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER, comp);
     }
 
     /**
@@ -274,6 +285,23 @@ public class ContentUtil {
             node.orderBefore(nodes[i-1], nodes[i]);
         }
         node.save();
+    }
+
+    /**
+     * Uses the passed comperater to create the jcr ordering of the children
+     * @throws RepositoryException
+     */
+    public static void orderNodes(Content node, Comparator comparator) throws RepositoryException {
+        Collection children = ContentUtil.getAllChildren(node, comparator);
+        String[] names = new String[children.size()];
+
+        int i = 0;
+        for (Iterator iter = children.iterator(); iter.hasNext();) {
+            Content childNode = (Content) iter.next();
+            names[i] = childNode.getName();
+            i++;
+        }
+        orderNodes(node, names);
     }
 
     public static void visit(Content node, Visitor visitor) throws Exception{
