@@ -15,19 +15,21 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.OrderedMap;
-import org.apache.commons.collections.Predicate;
-import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.lang.StringUtils;
 
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.OrderedMap;
+import org.apache.commons.collections.Predicate;
+import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -224,5 +226,9 @@ public class MockContent extends Content {
         } catch (RepositoryException e) {
             throw new RuntimeException(e); // TODO
         }
+    }
+
+    public String toString() {
+        return super.toString() + ": " + this.getHandle();
     }
 }
