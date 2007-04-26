@@ -92,14 +92,14 @@ public class LoadPage extends BodyTagSupport {
      */
     public int doEndTag() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-        Content newActpage = Resource.getCurrentActivePage(req);
+        Content newActpage = Resource.getCurrentActivePage();
 
         String actPageHandle = newActpage.getHandle();
 
         if (StringUtils.isNotEmpty(this.templateName)) {
             Content startPage;
             try {
-                startPage = Resource.getCurrentActivePage(req).getAncestor(this.level);
+                startPage = Resource.getCurrentActivePage().getAncestor(this.level);
                 HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
                 newActpage = hm.getPage(startPage.getHandle(), this.templateName);
             }
@@ -133,7 +133,7 @@ public class LoadPage extends BodyTagSupport {
         }
         else {
             try {
-                newActpage = Resource.getCurrentActivePage(req).getAncestor(this.level);
+                newActpage = Resource.getCurrentActivePage().getAncestor(this.level);
             }
             catch (RepositoryException e) {
                 log.error(e.getClass().getName()
@@ -146,7 +146,7 @@ public class LoadPage extends BodyTagSupport {
                 return EVAL_PAGE;
             }
         }
-        pageContext.setAttribute(Aggregator.CURRENT_ACTPAGE, newActpage, PageContext.REQUEST_SCOPE);
+        Aggregator.setCurrentContent(newActpage);
         return EVAL_PAGE;
     }
 

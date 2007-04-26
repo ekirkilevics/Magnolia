@@ -124,26 +124,25 @@ public class Include extends BodyTagSupport {
     public int doEndTag() {
         boolean localContentNodeSet = false;
         try {
-            HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-            
+
             // get content
             Content content = this.contentNode;
             if (content == null) {
                 // was there a node name passed
                 if (this.contentNodeName != null) {
-                    content = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
+                    content = Resource.getCurrentActivePage().getContent(this.contentNodeName);
                     if (content != null) {
-                        Resource.setLocalContentNode(req, content);
+                        Resource.setLocalContentNode(content);
                         localContentNodeSet = true;
                     }
                 }
                 // use current (first local then global)
                 else {
-                    content = Resource.getLocalContentNode(req);
+                    content = Resource.getLocalContentNode();
                     if (content == null) {
-                        content = Resource.getGlobalContentNode(req);
+                        content = Resource.getGlobalContentNode();
                         if (content != null) {
-                            Resource.setLocalContentNode(req, content);
+                            Resource.setLocalContentNode(content);
                             localContentNodeSet = true;
                         }
                     }
@@ -171,7 +170,7 @@ public class Include extends BodyTagSupport {
             // if we set the local content node we have to reset it again else we keep the node
             if(localContentNodeSet){
                 Resource.removeLocalContentNode((HttpServletRequest) pageContext.getRequest());
-                
+
             }
         }
 

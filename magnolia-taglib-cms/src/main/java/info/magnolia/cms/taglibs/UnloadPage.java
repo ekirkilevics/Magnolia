@@ -35,9 +35,7 @@ public class UnloadPage extends BodyTagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        pageContext
-            .setAttribute(Aggregator.CURRENT_ACTPAGE, Resource.getActivePage(request), PageContext.REQUEST_SCOPE);
+        Aggregator.setCurrentContent(Aggregator.getMainContent());
         return EVAL_PAGE;
     }
 }
