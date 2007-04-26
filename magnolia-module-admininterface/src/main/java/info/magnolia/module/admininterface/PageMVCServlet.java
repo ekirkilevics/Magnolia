@@ -47,15 +47,14 @@ public class PageMVCServlet extends MVCServlet {
 
         String pageName = RequestFormUtil.getParameter(request, "mgnlPage"); //$NON-NLS-1$
         if (StringUtils.isEmpty(pageName)) {
-            pageName = (String) request.getAttribute("javax.servlet.include.request_uri"); //$NON-NLS-1$
-            if (StringUtils.isEmpty(pageName)) {
-                pageName = (String) request.getAttribute("javax.servlet.forward.servlet_path"); //$NON-NLS-1$
-            }
-            if (StringUtils.isEmpty(pageName)) {
-                pageName = request.getRequestURI();
-            }
-            pageName = StringUtils.substringAfterLast(pageName, "/pages/"); //$NON-NLS-1$
-
+            if(StringUtils.isNotEmpty((String) request.getAttribute("javax.servlet.include.servlet_path")))
+                pageName = (String) request.getAttribute("javax.servlet.include.path_info");
+            
+            if (StringUtils.isEmpty(pageName))
+                pageName = request.getPathInfo();
+            
+            // strip off leading path
+            pageName = StringUtils.substringAfterLast(pageName, "/");
             // strip any extension
             pageName = StringUtils.substringBeforeLast(pageName, ".");
         }
