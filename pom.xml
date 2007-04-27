@@ -157,7 +157,8 @@
         <plugin>
           <groupId>org.codehaus.mojo</groupId>
           <artifactId>jspc-maven-plugin</artifactId>
-          <version>1.4.7-SNAPSHOT</version>
+          <!-- we need our specific version just because we can't force the plugin to use tomcat5 and jsp2.0 api when building with jdk5 -->
+          <version>1.4.7-magnolia-20070427</version>
           <executions>
             <execution>
               <id>jspc</id>
