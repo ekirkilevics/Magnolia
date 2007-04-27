@@ -18,6 +18,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
+import info.magnolia.cms.i18n.I18NSupport;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Iterator;
@@ -72,6 +73,12 @@ public final class LinkUtil {
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(LinkUtil.class);
+
+    /**
+     * Util has no public constructor
+     */
+    private LinkUtil() {
+    }
 
     /**
      * Determines if the given link is internal and relative.
@@ -129,7 +136,7 @@ public final class LinkUtil {
     public static String convertUUIDsToAbsoluteLinks(String str) {
         return convertUUIDsToLinks(str, new PathToLinkTransformer(){
             public String transform(String absolutePath, String repository) {
-                return absolutePath;
+                return I18NSupport.getInstance().toI18NURI(absolutePath, repository);
             }
         });
 
@@ -144,7 +151,8 @@ public final class LinkUtil {
     public static String convertUUIDsToRelativeLinks(String str, final Content page) {
         return convertUUIDsToLinks(str, new PathToLinkTransformer(){
             public String transform(String absolutePath, String repository) {
-                 return makeRelativePath(absolutePath, page);
+                String relativePath = makeRelativePath(absolutePath, page);
+                 return I18NSupport.getInstance().toI18NURI(relativePath, repository);
             }
         });
     }
@@ -276,12 +284,6 @@ public final class LinkUtil {
         catch (RepositoryException e) {
             return path;
         }
-    }
-
-    /**
-     * Util has no public constructor
-     */
-    private LinkUtil() {
     }
 
     /**
