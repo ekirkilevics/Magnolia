@@ -73,7 +73,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
         accessRight.setName("'+prefix+'AccessRight"); //$NON-NLS-1$
         accessRight.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
         if(repository.equals(URI_FAKE_REPOSITORY)){
-            accessRight.setOptions(escapeJs(msgs.get("roles.permission.postAndGet")), Long.toString(PERMISSION_ALL)); //$NON-NLS-1$
+            accessRight.setOptions(escapeJs(msgs.get("roles.permission.getAndPost")), Long.toString(PERMISSION_ALL)); //$NON-NLS-1$
             accessRight.setOptions(escapeJs(msgs.get("roles.permission.get")), Long.toString(PERMISSION_READ)); //$NON-NLS-1$
             accessRight.setOptions(escapeJs(msgs.get("roles.permission.deny")), Long.toString(PERMISSION_NO)); //$NON-NLS-1$
         }
@@ -316,7 +316,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
         repositorySelect.setSaveInfo(false);
         repositorySelect.setValue(ContentRepository.WEBSITE);
 
-        repositorySelect.setOptions("repository.uri", URI_FAKE_REPOSITORY);
+        repositorySelect.setOptions(MessagesManager.get("repository.uri"), URI_FAKE_REPOSITORY);
 
         // loop through the repositories
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
