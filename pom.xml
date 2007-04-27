@@ -125,7 +125,9 @@
     <profile>
         <id>webapp</id>
         <activation>
-            <property>all</property>
+            <property>
+                <name>all</name>
+            </property>
         </activation>
         <modules>
             <module>magnolia</module>
