@@ -16,11 +16,9 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.security.SecureURI;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 
 import java.util.List;
-import java.util.Set;
 import java.util.Map;
 import java.util.Collection;
 
@@ -62,14 +60,6 @@ public class ConfigurationPage extends TemplatedMVCHandler {
 
     public List getShutdownTasks() {
         return ShutdownManager.listShutdownTasks();
-    }
-
-    public Map getSecureURIs() {
-        return SecureURI.listSecureURIs();
-    }
-
-    public Map getUnsecureURIs() {
-        return SecureURI.listUnsecureURIs();
     }
 
     public Map getSystemProperties() {

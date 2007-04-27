@@ -68,33 +68,6 @@
       </tr>
       [/#list]
     </table>
-    <h3>Secure/Unsecure URIs</h3>
-    <table cellspacing="0" summary="Secure/Unsecure URIs">
-      <thead>
-        <tr>
-          <th width="300" scope="col">URL pattern</th>
-          <th width="20%" scope="col">Secure</th>
-          <th width="20%" scope="col">Unsecure</th>
-        </tr>
-      </thead>
-        [#assign keys = this.secureURIs?keys]
-        [#list keys as key]
-        <tr>
-        <th width="60%" align="left" scope="row">${key}<!--   ${this.secureURIs[key]} --></th>
-        <td width="20%" align="center">x</td>
-        <td width="20%"></td>
-      </tr>
-        [/#list]
-
-        [#assign keys = this.unsecureURIs?keys]
-        [#list keys as key]
-      <tr>
-        <th width="60%" align="left" scope="row">${key}</th>
-        <td width="20%"></td>
-        <td width="20%" align="center">x</td>
-      </tr>
-      [/#list]
-    </table>
     <h3>Shutdown tasks</h3>
     <table summary="Shutdown tasks">
       <thead>

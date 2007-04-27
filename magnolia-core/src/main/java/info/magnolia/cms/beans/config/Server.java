@@ -13,10 +13,8 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.security.SecureURI;
 
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -93,7 +91,6 @@ public final class Server {
             log.info("Config : loading Server"); //$NON-NLS-1$
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
             cacheServerConfiguration(startPage);
-            cacheSecureURIList(startPage);
             cacheMailSettings(startPage);
             cacheLoginSettings(startPage);
             log.info("Config : Server config loaded"); //$NON-NLS-1$
@@ -138,44 +135,6 @@ public final class Server {
     }
 
     /**
-     * Cache server content from the config repository.
-     */
-    private static void cacheSecureURIList(Content page) {
-        SecureURI.init();
-        try {
-            addToSecureList(page.getContent("secureURIList")); //$NON-NLS-1$
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-
-        try {
-            if (page.hasContent("unsecureURIList")) {
-                addToUnsecureList(page.getContent("unsecureURIList")); //$NON-NLS-1$
-            }
-        }
-        catch (javax.jcr.PathNotFoundException pn) {
-            log.info("No unsecure uri found");
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-    }
-
-    private static void addToUnsecureList(Content node) {
-        if (node == null) {
-            return;
-        }
-        Iterator childIterator = node.getChildren(ItemType.CONTENTNODE).iterator();
-        while (childIterator.hasNext()) {
-            Content sub = (Content) childIterator.next();
-            String uri = sub.getNodeData("URI").getString(); //$NON-NLS-1$
-            log.info("Adding new unsecure uri: {}", uri);
-            SecureURI.addUnsecure(uri);
-        }
-    }
-
-    /**
      * Register an event listener: reload server configuration when something changes. todo split reloading of base
      * server configuration and secure URI list
      */
@@ -211,32 +170,6 @@ public final class Server {
             log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
         }
 
-        // secure URI list
-        addEventListener(new EventListener() {
-
-            public void onEvent(EventIterator iterator) {
-                try {
-                    reload();
-                }
-                catch (ConfigurationException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        }, "/secureURIList");
-
-        // unsecure URI list
-        addEventListener(new EventListener() {
-
-            public void onEvent(EventIterator iterator) {
-                try {
-                    reload();
-                }
-                catch (ConfigurationException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        }, "/unsecureURIList");
-
         // login
         addEventListener(new EventListener() {
 
@@ -271,19 +204,6 @@ public final class Server {
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
-        }
-    }
-
-    private static void addToSecureList(Content node) {
-
-        if (node == null) {
-            return;
-        }
-        Iterator childIterator = node.getChildren(ItemType.CONTENTNODE).iterator();
-        while (childIterator.hasNext()) {
-            Content sub = (Content) childIterator.next();
-            String uri = sub.getNodeData("URI").getString(); //$NON-NLS-1$
-            SecureURI.addSecure(uri);
         }
     }
 

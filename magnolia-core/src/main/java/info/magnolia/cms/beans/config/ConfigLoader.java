@@ -18,7 +18,6 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.module.Module;
-import info.magnolia.cms.security.SecureURI;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 
@@ -120,9 +119,6 @@ public class ConfigLoader {
 
         log.info("Init i18n"); //$NON-NLS-1$
         MessagesManager.init(context);
-
-        log.info("Init secureURI"); //$NON-NLS-1$
-        SecureURI.init();
 
         try {
             ModuleRegistration.getInstance().registerModules();
