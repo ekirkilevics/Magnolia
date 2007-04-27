@@ -5,5 +5,5 @@
   <displayName>Admin Interface</displayName>
   <description>Magnolia Administration GUI</description>
   <class>info.magnolia.module.admininterface.AdminInterfaceModule</class>
-  <version>3.1</version>
+  <version>${project.version}</version>
 </module>
