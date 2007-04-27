@@ -109,7 +109,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
         path.setCssStyles("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
 
         Button choose = null;
-        if(repository.equals(URI_FAKE_REPOSITORY)){
+        if(!repository.equals(URI_FAKE_REPOSITORY)){
             choose = new Button();
             choose.setLabel(escapeJs(msgs.get("buttons.choose"))); //$NON-NLS-1$
             choose.setOnclick("aclChoose(\\''+prefix+'\\',\\'" + repository + "\\');"); //$NON-NLS-1$ //$NON-NLS-2$
