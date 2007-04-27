@@ -38,16 +38,13 @@ import org.apache.commons.lang.StringUtils;
  */
 public class RolesACLPage extends SimplePageMVCHandler {
 
+    protected static final String URI_FAKE_REPOSITORY = "uri";
+
     public static int TYPE_ALL = 3; // 11 : subs and this
 
     public static int TYPE_SUBS = 2; // 10
 
     public static int TYPE_THIS = 1; // 01
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
 
     /**
      * Do not show this repositories in the dialog. A module may change this list
@@ -75,9 +72,16 @@ public class RolesACLPage extends SimplePageMVCHandler {
         accessRight.setSaveInfo(false);
         accessRight.setName("'+prefix+'AccessRight"); //$NON-NLS-1$
         accessRight.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
-        accessRight.setOptions(escapeJs(msgs.get("roles.permission.readWrite")), Long.toString(PERMISSION_ALL)); //$NON-NLS-1$
-        accessRight.setOptions(escapeJs(msgs.get("roles.permission.readOnly")), Long.toString(PERMISSION_READ)); //$NON-NLS-1$
-        accessRight.setOptions(escapeJs(msgs.get("roles.permission.deny")), Long.toString(PERMISSION_NO)); //$NON-NLS-1$
+        if(repository.equals(URI_FAKE_REPOSITORY)){
+            accessRight.setOptions(escapeJs(msgs.get("roles.permission.postAndGet")), Long.toString(PERMISSION_ALL)); //$NON-NLS-1$
+            accessRight.setOptions(escapeJs(msgs.get("roles.permission.get")), Long.toString(PERMISSION_READ)); //$NON-NLS-1$
+            accessRight.setOptions(escapeJs(msgs.get("roles.permission.deny")), Long.toString(PERMISSION_NO)); //$NON-NLS-1$
+        }
+        else{
+            accessRight.setOptions(escapeJs(msgs.get("roles.permission.readWrite")), Long.toString(PERMISSION_ALL)); //$NON-NLS-1$
+            accessRight.setOptions(escapeJs(msgs.get("roles.permission.readOnly")), Long.toString(PERMISSION_READ)); //$NON-NLS-1$
+            accessRight.setOptions(escapeJs(msgs.get("roles.permission.deny")), Long.toString(PERMISSION_NO)); //$NON-NLS-1$
+        }
         accessRight.setValue("' + object.accessRight + '"); //$NON-NLS-1$
 
         Select accessType = new Select();
@@ -104,10 +108,13 @@ public class RolesACLPage extends SimplePageMVCHandler {
         path.setCssClass(CssConstants.CSSCLASS_EDIT);
         path.setCssStyles("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
 
-        Button choose = new Button();
-        choose.setLabel(escapeJs(msgs.get("buttons.choose"))); //$NON-NLS-1$
-        choose.setOnclick("aclChoose(\\''+prefix+'\\',\\'" + repository + "\\');"); //$NON-NLS-1$ //$NON-NLS-2$
-        choose.setSmall(small);
+        Button choose = null;
+        if(repository.equals(URI_FAKE_REPOSITORY)){
+            choose = new Button();
+            choose.setLabel(escapeJs(msgs.get("buttons.choose"))); //$NON-NLS-1$
+            choose.setOnclick("aclChoose(\\''+prefix+'\\',\\'" + repository + "\\');"); //$NON-NLS-1$ //$NON-NLS-2$
+            choose.setSmall(small);
+        }
 
         Button delete = new Button();
         delete.setLabel(escapeJs(msgs.get("buttons.delete"))); //$NON-NLS-1$
@@ -125,7 +132,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
             + "</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"mgnlDialogBoxInput\"></td>"); //$NON-NLS-1$
 
-        if (!repository.equals(ContentRepository.USERS) && !repository.equals(ContentRepository.USER_ROLES)) {
+        if (!repository.equals(URI_FAKE_REPOSITORY) && !repository.equals(ContentRepository.USERS) && !repository.equals(ContentRepository.USER_ROLES)) {
             html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
                 + CssConstants.CSSCLASS_EDITWITHBUTTON
                 + "\">" //$NON-NLS-1$
@@ -144,12 +151,16 @@ public class RolesACLPage extends SimplePageMVCHandler {
             + path.getHtml()
             + "</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
-        html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\">" //$NON-NLS-1$
-            + choose.getHtml()
-            + "</td>"); //$NON-NLS-1$
-        html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
+
+        if(choose != null){
+            html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
+                + CssConstants.CSSCLASS_EDITWITHBUTTON
+                + "\">" //$NON-NLS-1$
+                + choose.getHtml()
+                + "</td>"); //$NON-NLS-1$
+            html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
+        }
+
         html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
             + CssConstants.CSSCLASS_EDITWITHBUTTON
             + "\">" //$NON-NLS-1$
@@ -176,8 +187,12 @@ public class RolesACLPage extends SimplePageMVCHandler {
 
         out.print(repositorySelect.getHtml());
         out.print("<p><p/>"); //$NON-NLS-1$
-        Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
 
+        // do the facked uri repository
+        writeRepositoryTable(request, response, msgs, out, role, URI_FAKE_REPOSITORY);
+
+        // process with the real existing repositories
+        Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
             String name = (String) repositoryNames.next();
             // exclude system repositories
@@ -198,7 +213,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
      * @throws RepositoryException
      * @throws IOException
      */
-    private void writeRepositoryTable(HttpServletRequest request, HttpServletResponse response, Messages msgs,
+    protected void writeRepositoryTable(HttpServletRequest request, HttpServletResponse response, Messages msgs,
         PrintWriter out, Content role, String repository) throws RepositoryException, IOException {
         String tableName = "acl" + repository + "Table"; //$NON-NLS-1$ //$NON-NLS-2$
         String dynamicTableName = "acl" + repository + "DynamicTable"; //$NON-NLS-1$ //$NON-NLS-2$
@@ -213,7 +228,6 @@ public class RolesACLPage extends SimplePageMVCHandler {
             + "\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"100%\"><tr><td></td></tr></table>"); //$NON-NLS-1$
 
         // add button
-
         out.println("<table width=\"100%\">"); //$NON-NLS-1$
         DialogButton add = DialogFactory.getDialogButtonInstance(request, response, null, null);
         add.setBoxType(DialogBox.BOXTYPE_1COL);
@@ -236,7 +250,6 @@ public class RolesACLPage extends SimplePageMVCHandler {
         out.println("mgnlDebug('acl" + repository + "RenderFunction: prefix = ' + prefix, 'acl', object)");
         out.println("cell.innerHTML= '" + getHtmlRowInner(request, dynamicTableName, repository) + "';\n"); //$NON-NLS-1$ //$NON-NLS-2$
         out.println("document.getElementById(prefix + 'AccessType').value = object.accessType;\n"); //$NON-NLS-1$
-
         out.println("document.getElementById(prefix + 'AccessRight').value = object.accessRight;\n"); //$NON-NLS-1$
 
         out.println("}"); //$NON-NLS-1$
@@ -302,6 +315,8 @@ public class RolesACLPage extends SimplePageMVCHandler {
         repositorySelect.setEvent("onchange", "aclChangeRepository(this.value)"); //$NON-NLS-1$ //$NON-NLS-2$
         repositorySelect.setSaveInfo(false);
         repositorySelect.setValue(ContentRepository.WEBSITE);
+
+        repositorySelect.setOptions("repository.uri", URI_FAKE_REPOSITORY);
 
         // loop through the repositories
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();

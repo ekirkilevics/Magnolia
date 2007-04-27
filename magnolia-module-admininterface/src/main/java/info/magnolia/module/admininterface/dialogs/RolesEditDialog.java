@@ -88,96 +88,102 @@ public class RolesEditDialog extends ConfiguredDialog {
     protected boolean onPostSave(SaveHandler saveControl) {
         Content role = this.getStorageNode();
 
+        saveACLs(role, "uri");
+
         // for each repository
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
             String repository = (String) repositoryNames.next();
 
-            // ######################
-            // # acl
-            // ######################
-            // remove existing
-            try {
-                role.delete("acl_" + repository); //$NON-NLS-1$
-            }
-            catch (RepositoryException re) {
-                // ignore, not existing
-            }
-            // rewrite
-            try {
-                Content acl = role.createContent("acl_" + repository, ItemType.CONTENTNODE); //$NON-NLS-1$
-                String aclValueStr = form.getParameter("acl" + repository + "List"); //$NON-NLS-1$ //$NON-NLS-2$
-                if (StringUtils.isNotEmpty(aclValueStr)) {
-                    String[] aclEntries = aclValueStr.split(";"); //$NON-NLS-1$
-                    for (int i = 0; i < aclEntries.length; i++) {
-                        String path = StringUtils.EMPTY;
-                        long accessRight = 0;
-                        int accessType = 0;
+            saveACLs(role, repository);
+        }
+        return true;
+    }
 
-                        String[] aclValuePairs = aclEntries[i].split(","); //$NON-NLS-1$
-                        for (int j = 0; j < aclValuePairs.length; j++) {
-                            String[] aclValuePair = aclValuePairs[j].split(":"); //$NON-NLS-1$
-                            String aclName = aclValuePair[0].trim();
-                            String aclValue = StringUtils.EMPTY;
-                            if (aclValuePair.length > 1) {
-                                aclValue = aclValuePair[1].trim();
-                            }
+    protected void saveACLs(Content role, String repository) {
+        // ######################
+        // # acl
+        // ######################
+        // remove existing
+        try {
+            role.delete("acl_" + repository); //$NON-NLS-1$
+        }
+        catch (RepositoryException re) {
+            // ignore, not existing
+        }
+        // rewrite
+        try {
+            Content acl = role.createContent("acl_" + repository, ItemType.CONTENTNODE); //$NON-NLS-1$
+            String aclValueStr = form.getParameter("acl" + repository + "List"); //$NON-NLS-1$ //$NON-NLS-2$
+            if (StringUtils.isNotEmpty(aclValueStr)) {
+                String[] aclEntries = aclValueStr.split(";"); //$NON-NLS-1$
+                for (int i = 0; i < aclEntries.length; i++) {
+                    String path = StringUtils.EMPTY;
+                    long accessRight = 0;
+                    int accessType = 0;
 
-                            if (aclName.equals("path")) { //$NON-NLS-1$
-                                path = aclValue;
+                    String[] aclValuePairs = aclEntries[i].split(","); //$NON-NLS-1$
+                    for (int j = 0; j < aclValuePairs.length; j++) {
+                        String[] aclValuePair = aclValuePairs[j].split(":"); //$NON-NLS-1$
+                        String aclName = aclValuePair[0].trim();
+                        String aclValue = StringUtils.EMPTY;
+                        if (aclValuePair.length > 1) {
+                            aclValue = aclValuePair[1].trim();
+                        }
+
+                        if (aclName.equals("path")) { //$NON-NLS-1$
+                            path = aclValue;
+                        }
+                        else if (aclName.equals("accessType")) { //$NON-NLS-1$
+                            accessType = Integer.valueOf(aclValue).intValue();
+                        }
+                        else if (aclName.equals("accessRight")) { //$NON-NLS-1$
+                            try {
+                                accessRight = Long.parseLong(aclValue);
                             }
-                            else if (aclName.equals("accessType")) { //$NON-NLS-1$
-                                accessType = Integer.valueOf(aclValue).intValue();
+                            catch (NumberFormatException e) {
+                                accessRight = 0;
                             }
-                            else if (aclName.equals("accessRight")) { //$NON-NLS-1$
-                                try {
-                                    accessRight = Long.parseLong(aclValue);
-                                }
-                                catch (NumberFormatException e) {
-                                    accessRight = 0;
-                                }
+                        }
+                    }
+
+                    if (StringUtils.isNotEmpty(path)) {
+                        if (path.equals("/")) { //$NON-NLS-1$
+                            accessType = RolesACLPage.TYPE_SUBS;
+                            path = StringUtils.EMPTY;
+                        }
+
+                        if ((accessType & RolesACLPage.TYPE_THIS) != 0) {
+                            try {
+                                String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
+                                Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
+                                r.createNodeData("path").setValue(path); //$NON-NLS-1$
+                                r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
+                            }
+                            catch (Exception e) {
+                                log.error(e.getMessage(), e);
                             }
                         }
 
-                        if (StringUtils.isNotEmpty(path)) {
-                            if (path.equals("/")) { //$NON-NLS-1$
-                                accessType = RolesACLPage.TYPE_SUBS;
-                                path = StringUtils.EMPTY;
+                        if ((accessType & RolesACLPage.TYPE_SUBS) != 0) {
+                            try {
+                                String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
+                                Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
+                                r.createNodeData("path").setValue(path + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
+                                r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
                             }
-
-                            if ((accessType & RolesACLPage.TYPE_THIS) != 0) {
-                                try {
-                                    String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
-                                    Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
-                                    r.createNodeData("path").setValue(path); //$NON-NLS-1$
-                                    r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
-                                }
-                                catch (Exception e) {
-                                    log.error(e.getMessage(), e);
-                                }
-                            }
-
-                            if ((accessType & RolesACLPage.TYPE_SUBS) != 0) {
-                                try {
-                                    String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
-                                    Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
-                                    r.createNodeData("path").setValue(path + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
-                                    r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
-                                }
-                                catch (Exception e) {
-                                    log.error(e.getMessage(), e);
-                                }
+                            catch (Exception e) {
+                                log.error(e.getMessage(), e);
                             }
                         }
                     }
                 }
-                hm.save();
             }
-            catch (RepositoryException re) {
-                log.error(re.getMessage(), re);
-            }
+            hm.save();
         }
-        return true;
+        catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
     }
 
 }
