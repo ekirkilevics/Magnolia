@@ -123,6 +123,15 @@
       </modules>
     </profile>
     <profile>
+        <id>webapp</id>
+        <activation>
+            <property>all</property>
+        </activation>
+        <modules>
+            <module>magnolia</module>
+        </modules>
+    </profile>
+    <profile>
       <id>bundle</id>
       <build>
         <pluginManagement>
@@ -813,6 +822,5 @@
     <module>magnolia-editor-fckeditor</module>
     <module>magnolia-editor-kupu</module>
     <module>magnolia-module-samples</module>
-    <module>magnolia</module>
   </modules>
 </project>
