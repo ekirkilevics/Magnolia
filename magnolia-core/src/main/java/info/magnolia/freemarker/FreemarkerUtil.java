@@ -29,6 +29,8 @@ import info.magnolia.cms.util.AlertUtil;
 /**
  * A bunch of utility methods to render freemarker templates into Strings.
  *
+ * @see info.magnolia.freemarker.FreemarkerHelper
+ * 
  * @author Philipp Bracher
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
