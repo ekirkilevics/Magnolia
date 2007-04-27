@@ -14,13 +14,11 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Aggregator;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
 import javax.security.auth.login.LoginException;
-import javax.security.auth.Subject;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -70,7 +68,7 @@ public class URISecurityFilter extends BaseSecurityFilter {
                     accessManager = MgnlContext.getAccessManager(URI_REPOSITORY, URI_WORKSPACE);
                 } else {
                     // todo
-                    // better create a AnonymousContextImpl
+                    // use AnonymousContextImpl
                     accessManager = MgnlContext.getAccessManager(URI_REPOSITORY, URI_WORKSPACE);
                 }
             } catch (LoginException le) {
@@ -100,19 +98,6 @@ public class URISecurityFilter extends BaseSecurityFilter {
         }
         return false;
     }
-
-    /**
-     * todo
-     * tmp method to create accessmanager for anonymous access
-     * this will be moved to Authenticator where it will be cached instead of creating for each request
-     * */
-    protected AccessManager createAccessManager(HttpServletRequest request,
-                                                String repositoryName,
-                                                String workspaceName) {
-        Subject subject = Authenticator.getSubject(request);
-        return WorkspaceAccessUtil.getInstance().createAccessManager(subject, repositoryName, workspaceName);
-    }
-
 
 
 }

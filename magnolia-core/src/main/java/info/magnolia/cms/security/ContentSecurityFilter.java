@@ -45,7 +45,7 @@ public class ContentSecurityFilter extends BaseSecurityFilter {
                     accessManager = MgnlContext.getAccessManager(repositoryName);
                 } else {
                     // todo
-                    System.out.println("In ContentSecurityFilter, its an anonymous user");
+                    // use AnonymousContextImpl
                     accessManager = MgnlContext.getAccessManager(repositoryName);
                 }
             } catch (LoginException le) {
