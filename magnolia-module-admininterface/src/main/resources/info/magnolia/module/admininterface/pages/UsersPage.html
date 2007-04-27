@@ -19,12 +19,11 @@
       <tbody>
         [#list this.userNodes as user]
         <tr>
-          <td>${user.name}</td>
-          <td>${user.getNodeData("title").string}</td>
-          <td>${user.getNodeData("email").string}</td>
+          <td>${user}</td>
+          <td>${user.title!}</td>
+          <td>${user.email!}</td>
           <td>
-            [#if user.getNodeData("lastaccess").date?exists]
-            ${user.getNodeData("lastaccess").date.time?string("yyyy-MM-dd HH:mm")} [/#if]
+            [#if user.lastaccess??]${user.lastaccess?string("yyyy-MM-dd HH:mm")}[/#if]
           </td>
         </tr>
         [/#list]
