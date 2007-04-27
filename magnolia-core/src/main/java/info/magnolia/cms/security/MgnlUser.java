@@ -143,10 +143,10 @@ public class MgnlUser implements User, Serializable {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
+                hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
             }
 
             Content node = this.getUserNode().getContent(nodeName);
