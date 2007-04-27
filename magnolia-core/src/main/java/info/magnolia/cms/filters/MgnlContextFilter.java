@@ -31,7 +31,7 @@ public class MgnlContextFilter extends AbstractMagnoliaFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
         if (!MgnlContext.hasInstance()) {
-            MgnlContext.initAsWebContext((HttpServletRequest) request, (HttpServletResponse) response);
+            MgnlContext.initAsWebContext(request, response);
         }
 
         chain.doFilter(request, response);
