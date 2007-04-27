@@ -16,7 +16,7 @@
     <sv:value>info.magnolia.cms.cache.CacheFilter</sv:value>
   </sv:property>
   <sv:property sv:name="priority" sv:type="Long">
-    <sv:value>700</sv:value>
+    <sv:value>350</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
