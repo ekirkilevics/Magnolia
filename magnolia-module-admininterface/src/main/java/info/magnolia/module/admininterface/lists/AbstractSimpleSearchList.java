@@ -17,7 +17,7 @@ import info.magnolia.cms.gui.controlx.search.SearchConfig;
 import info.magnolia.cms.gui.controlx.search.SearchableListModel;
 import info.magnolia.cms.gui.controlx.search.SimpleSearchUtil;
 import info.magnolia.cms.gui.query.SearchQuery;
-import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.freemarker.FreemarkerUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +45,7 @@ public abstract class AbstractSimpleSearchList extends AbstractList {
      */
     public String onRender() {
         String str = super.onRender();
-        str += FreeMarkerUtil.process(AbstractSimpleSearchList.class, this);
+        str += FreemarkerUtil.process(AbstractSimpleSearchList.class, this);
         return str;
     }
 

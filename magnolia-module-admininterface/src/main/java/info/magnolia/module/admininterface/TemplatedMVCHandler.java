@@ -12,7 +12,7 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.freemarker.FreemarkerUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -48,7 +48,7 @@ public class TemplatedMVCHandler extends PageMVCHandler {
      * @return the template name (including path)
      */
     protected String getTemplateName(String viewName) {
-        String template = FreeMarkerUtil.createTemplateName(this.getClass(), "html");
+        String template = FreemarkerUtil.createTemplateName(this.getClass(), "html");
         if(StringUtils.isNotEmpty(viewName) && !viewName.equals(VIEW_SHOW)){
             String subtemplate = StringUtils.replace(template, ".html", StringUtils.capitalize(viewName + ".html"));
             // add postfix only in case the resource exists
@@ -84,7 +84,7 @@ public class TemplatedMVCHandler extends PageMVCHandler {
                 // getResponse().getOutputStream() has already been called
                 writer = new PrintWriter(getResponse().getOutputStream());
             }
-            FreeMarkerUtil.process(template, data, writer);
+            FreemarkerUtil.process(template, data, writer);
         }
     }
 

@@ -22,11 +22,11 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.FreeMarkerUtil;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
+import info.magnolia.freemarker.FreemarkerUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -635,7 +635,7 @@ public class Tree extends ControlImpl {
         StringBuffer str = new StringBuffer();
         try {
             Map params = populateTemplateParameters();
-            str.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeHeader.ftl", params));
+            str.append(FreemarkerUtil.process("info/magnolia/cms/gui/control/TreeHeader.ftl", params));
         }
         catch (Exception e) {
             log.error("can't render tree header", e);
@@ -651,7 +651,7 @@ public class Tree extends ControlImpl {
         Map params = populateTemplateParameters();
 
         // include the tree footer / menu divs
-        html.append(FreeMarkerUtil.process("info/magnolia/cms/gui/control/TreeFooter.ftl", params));
+        html.append(FreemarkerUtil.process("info/magnolia/cms/gui/control/TreeFooter.ftl", params));
 
         return html.toString();
     }

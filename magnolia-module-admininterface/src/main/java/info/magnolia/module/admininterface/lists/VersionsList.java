@@ -25,7 +25,7 @@ import info.magnolia.cms.gui.controlx.version.VersionListModel;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.freemarker.FreemarkerUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
 
@@ -200,7 +200,7 @@ public abstract class VersionsList extends AbstractList {
      * @see com.obinary.magnolia.professional.lists.AbstractAdvancedSearchList#onRender()
      */
     public String onRender() {
-        return FreeMarkerUtil.process(VersionsList.class, this);
+        return FreemarkerUtil.process(VersionsList.class, this);
     }
 
     /**

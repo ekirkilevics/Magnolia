@@ -14,7 +14,7 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ControlImpl;
-import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.freemarker.FreemarkerUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -71,7 +71,7 @@ public class DialogMultiSelect extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
-        out.write(FreeMarkerUtil.process(DialogMultiSelect.class, this));
+        out.write(FreemarkerUtil.process(DialogMultiSelect.class, this));
         this.drawHtmlPost(out);
     }
 
@@ -130,7 +130,7 @@ public class DialogMultiSelect extends DialogBox {
         String name = "/" + StringUtils.replace(DialogMultiSelect.class.getName(), ".", "/") + "Inner.html";
         Map map = new HashMap();
         map.put("this", this);
-        return FreeMarkerUtil.process(name, map);
+        return FreemarkerUtil.process(name, map);
     }
 
     /**

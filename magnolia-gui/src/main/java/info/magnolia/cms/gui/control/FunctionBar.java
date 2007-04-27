@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.gui.control;
 
-import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.freemarker.FreemarkerUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -58,7 +58,7 @@ public class FunctionBar extends ContextMenu {
     public String getHtml() {
         Map params = new HashMap();
         params.put("functionBar", this);
-        return FreeMarkerUtil.process("info/magnolia/cms/gui/control/FunctionBar.ftl", params);
+        return FreemarkerUtil.process("info/magnolia/cms/gui/control/FunctionBar.ftl", params);
     }
 
     /**
@@ -67,7 +67,7 @@ public class FunctionBar extends ContextMenu {
     public String getJavascript() {
         Map params = new HashMap();
         params.put("functionBar", this);
-        return FreeMarkerUtil.process("info/magnolia/cms/gui/control/FunctionBarJavascript.ftl", params);
+        return FreemarkerUtil.process("info/magnolia/cms/gui/control/FunctionBarJavascript.ftl", params);
     }
 
     /**
@@ -113,7 +113,7 @@ public class FunctionBar extends ContextMenu {
     }
 
     /**
-     * @param onSearchFunction The onSearchFunction to set.
+     * @param onSearch The onSearch function to set.
      */
     public void setOnSearchFunction(String onSearch) {
         this.onSearchFunction = onSearch;

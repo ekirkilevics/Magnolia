@@ -16,7 +16,7 @@ import info.magnolia.cms.gui.controlx.Control;
 import info.magnolia.cms.gui.controlx.Renderer;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.freemarker.FreemarkerUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,7 +54,7 @@ public class TemplatedRenderer implements Renderer {
         Map data = new HashMap();
         data.put("this", control);
         data.put("renderer", this);
-        return FreeMarkerUtil.process(this.getTemplateName(control), data);
+        return FreemarkerUtil.process(this.getTemplateName(control), data);
     }
 
     /**

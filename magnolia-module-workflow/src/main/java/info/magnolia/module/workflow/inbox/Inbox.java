@@ -24,7 +24,7 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.DateUtil;
-import info.magnolia.cms.util.FreeMarkerUtil;
+import info.magnolia.freemarker.FreemarkerUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.lists.AbstractList;
@@ -248,7 +248,7 @@ public class Inbox extends AbstractList {
      * Add some inbox specific stuff: mainly hidden fields.
      */
     public String onRender() {
-        return FreeMarkerUtil.process(this);
+        return FreemarkerUtil.process(this);
     }
 
     /**
