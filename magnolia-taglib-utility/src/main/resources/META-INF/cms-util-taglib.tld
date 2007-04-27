@@ -345,6 +345,25 @@
       </description>
     </attribute>
     <attribute>
+      <name>repository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The repository we search in. Default is website repository</description>
+    </attribute>
+    <attribute>
+      <name>supportSubstringSearch</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Seach for substrings too. This can decrease performance. Default value is false</description>
+    </attribute>
+    <attribute>
+      <name>itemType</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>The itemTypes search/returned by this tag. Default is mgnl:content which is used for pages</description>
+    </attribute>
+    <attribute>
       <name>scope</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>

@@ -14,6 +14,7 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.util.Resource;
@@ -45,14 +46,14 @@ import org.slf4j.LoggerFactory;
  * <p/> Tipical usage:
  * </p>
  * <p/>
- * 
+ *
  * <pre>
  *   &lt;cmsu:simplesearch query="${param.search}" startLevel="3" var="results" />
  *   &lt;c:forEach items="${results}">
  *     &lt;a href="${pageContext.request.contextPath}${node.handle}.html">${node.title}&lt;/a>
  *   &lt;/c:forEach>
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -94,12 +95,30 @@ public class SimpleSearchTag extends TagSupport {
     private String var;
 
     /**
+     * The repository we search in. Default is the website repository
+     */
+    private String repository = ContentRepository.WEBSITE;
+
+
+    private String itemType = ItemType.CONTENT.getSystemName();
+
+    /**
+     * Seach for substring. Means contains(. '*str*'). This will decrease performance.
+     */
+    private boolean supportSubstringSearch = false;
+
+    /**
+     * The path we search in.
+     */
+    private String startPath;
+
+    /**
      * Tag attribute. Scope for the declared variable. Can be <code>page</code>, <code>request</code>,
      * <code>session</code> or <code>application</code><code></code>.
      */
     private int scope = PageContext.PAGE_SCOPE;
 
-    /**
+     /**
      * Setter for <code>query</code>.
      * @param query The query to set.
      */
@@ -163,11 +182,11 @@ public class SimpleSearchTag extends TagSupport {
 
         Query q;
         try {
-            q = MgnlContext.getQueryManager(ContentRepository.WEBSITE).createQuery(queryString, "xpath"); //$NON-NLS-1$
+            q = MgnlContext.getQueryManager(repository).createQuery(queryString, "xpath"); //$NON-NLS-1$
 
             QueryResult result = q.execute();
 
-            pageContext.setAttribute(var, result.getContent(), scope);
+            pageContext.setAttribute(var, result.getContent(itemType), scope);
         }
         catch (Exception e) {
             log.error(MessageFormat.format(
@@ -184,8 +203,6 @@ public class SimpleSearchTag extends TagSupport {
      * @return valid xpath expression or null if the given query doesn't contain at least one valid search term
      */
     protected String generateXPathQuery() {
-
-        String startPath = null;
 
         // search only in a specific subtree
         if (this.startLevel != 0) {
@@ -232,7 +249,15 @@ public class SimpleSearchTag extends TagSupport {
                     xpath.append(" "); //$NON-NLS-1$
                 }
                 xpath.append("jcr:contains(., '"); //$NON-NLS-1$
-                xpath.append(tkn);
+                if(supportSubstringSearch){
+                    xpath.append("*");
+                    xpath.append(tkn);
+                    xpath.append("*");
+                }
+                else{
+                    xpath.append(tkn);
+                }
+
                 xpath.append("')"); //$NON-NLS-1$
                 emptyQuery = false;
             }
@@ -258,6 +283,49 @@ public class SimpleSearchTag extends TagSupport {
         this.scope = PageContext.PAGE_SCOPE;
         this.startLevel = 0;
         super.release();
+    }
+
+
+    public String getRepository() {
+        return this.repository;
+    }
+
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
+
+    public boolean isSupportSubstringSearch() {
+        return this.supportSubstringSearch;
+    }
+
+    public void setSupportSubstringSearch(boolean supportSubstringSearch) {
+        this.supportSubstringSearch = supportSubstringSearch;
+    }
+
+
+    /**
+     * @return the itemType
+     */
+    public String getItemType() {
+        return this.itemType;
+    }
+
+
+    /**
+     * @param itemType the itemType to set
+     */
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
+    }
+
+
+    public String getStartPath() {
+        return this.startPath;
+    }
+
+
+    public void setStartPath(String startPath) {
+        this.startPath = startPath;
     }
 
 }
