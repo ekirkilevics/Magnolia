@@ -103,17 +103,19 @@ public class BaseContentTag extends TagSupport {
             return null;
         }
 
-        NodeData nodeData = contentNode.getNodeData(this.nodeDataName);
+        if(StringUtils.isNotEmpty(this.nodeDataName)){
+            NodeData nodeData = contentNode.getNodeData(this.nodeDataName);
 
-        try {
-            while (inherit && currentPage.getLevel() > 0 && !nodeData.isExist()) {
-                currentPage = currentPage.getParent();
-                contentNode = resolveNode(currentPage);
-                nodeData = contentNode.getNodeData(this.nodeDataName);
+            try {
+                while (inherit && currentPage.getLevel() > 0 && !nodeData.isExist()) {
+                    currentPage = currentPage.getParent();
+                    contentNode = resolveNode(currentPage);
+                    nodeData = contentNode.getNodeData(this.nodeDataName);
+                }
             }
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
+            catch (RepositoryException e) {
+                log.error(e.getMessage(), e);
+            }
         }
 
         return contentNode;
