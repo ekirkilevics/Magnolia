@@ -16,15 +16,13 @@ import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
 import java.util.Iterator;
 import java.util.Map;
+import java.util.LinkedHashMap;
 
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import com.sun.tools.jdi.LinkedHashMap;
-
 
 /**
  * In case you do not have to customize the transformation you should use one of this methods
