@@ -102,6 +102,7 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         params.put("foo", "bar");
         expect(context.getParameters()).andReturn(params);
         expect(context.getLocale()).andReturn(Locale.ENGLISH);
+        expect(context.getContextPath()).andReturn("/pouet");
         replay(context);
         MgnlContext.setInstance(context);
 
