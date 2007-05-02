@@ -28,7 +28,6 @@ public class CacheGeneratorServlet extends HttpServlet {
     /**
      * {@inheritDoc}
      */
-    @Override
     public void init(ServletConfig config) throws ServletException {
 
         super.init(config);
