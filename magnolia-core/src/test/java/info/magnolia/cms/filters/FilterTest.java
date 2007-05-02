@@ -10,25 +10,17 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.cms.filters;
 
 import static org.easymock.EasyMock.createMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.filters.AbstractMagnoliaFilter;
-import info.magnolia.cms.filters.FilterDecorator;
-import info.magnolia.cms.filters.MagnoliaFilter;
-import info.magnolia.cms.filters.MagnoliaMainFilter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.MgnlTestCase;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
@@ -46,59 +38,46 @@ import javax.servlet.http.HttpServletResponse;
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
-public class FilterManagerTest extends MgnlTestCase {
+public class FilterTest extends MgnlTestCase {
 
-    public void testPrioritySorting(){
-        MagnoliaFilter f1 = createMock(MagnoliaFilter.class);
-        expect(f1.getPriority()).andStubReturn(300);
-        MagnoliaFilter f2 = createMock(MagnoliaFilter.class);
-        expect(f2.getPriority()).andStubReturn(100);
-        MagnoliaFilter f3 = createMock(MagnoliaFilter.class);
-        expect(f3.getPriority()).andStubReturn(200);
-        replay(f1, f2, f3);
-
-
-        List filters = new ArrayList();
-        filters.add(f1);
-        filters.add(f2);
-        filters.add(f3);
-
-        Collections.sort(filters, FilterManager.PRIORITY_COMPERATOR);
-        assertEquals(f2, filters.get(0));
-        assertEquals(f3, filters.get(1));
-        assertEquals(f1, filters.get(2));
-    }
-
-    public void testInitialization() throws IOException, RepositoryException{
+    public void testInitialization() throws IOException, RepositoryException, ServletException{
         String conf =
-            "server.filters.first.priority=800\n" +
-            "server.filters.first.class=info.magnolia.cms.beans.config.FilterManagerTest$TestFilter\n" +
-            "server.filters.second.priority=300\n" +
-            "server.filters.second.class=info.magnolia.cms.beans.config.FilterManagerTest$TestFilter\n";
+            "server.filters.first.prop1=val1\n" +
+            "server.filters.first.class=info.magnolia.cms.filters.FilterTest$TestFilter\n" +
+            "server.filters.second.prop1=val2\n" +
+            "server.filters.second.class=info.magnolia.cms.filters.FilterTest$TestFilter\n";
 
         initConfigRepository(conf);
 
-        FilterManager fm = FilterManager.getInstance();
+        MagnoliaMainFilter mf = initMainFilter();
 
-        assertEquals(300, fm.getFilters()[0].getPriority());
-        assertEquals("second", fm.getFilters()[0].getName());
+        assertEquals("val1", ((TestFilter)mf.getFilters()[0]).getProp1());
+        assertEquals("first", mf.getFilters()[0].getName());
 
-        assertEquals(800, fm.getFilters()[1].getPriority());
-        assertEquals("first", fm.getFilters()[1].getName());
+        assertEquals("val2", ((TestFilter)mf.getFilters()[1]).getProp1());
+        assertEquals("second", mf.getFilters()[1].getName());
 
+    }
+
+    protected MagnoliaMainFilter initMainFilter() throws ServletException {
+        MagnoliaMainFilter.rootFilter = null;
+        MagnoliaMainFilter mf = new MagnoliaMainFilter();
+        mf.init(createMock(FilterConfig.class));
+        return mf;
     }
 
     public void testDecoratedFilter() throws UnsupportedRepositoryOperationException, IOException, RepositoryException, ServletException{
         String conf =
             "server.filters.decorated.config.param1=value1\n" +
             "server.filters.decorated.class=info.magnolia.cms.filters.FilterDecorator\n" +
-            "server.filters.decorated.decoratedFilter.class=info.magnolia.cms.beans.config.FilterManagerTest$NotMagnoliaFilter\n";
+            "server.filters.decorated.decoratedFilter.class=info.magnolia.cms.filters.FilterTest$NotMagnoliaFilter\n";
 
         initConfigRepository(conf);
 
-        FilterManager fm = FilterManager.getInstance();
 
-        FilterDecorator fd = (FilterDecorator)fm.getFilters()[0];
+        MagnoliaMainFilter mf = initMainFilter();
+
+        FilterDecorator fd = (FilterDecorator)mf.getFilters()[0];
         FilterConfig filterConfig = createMock(FilterConfig.class);
         HttpServletRequest request = createMock(HttpServletRequest.class);
         HttpServletResponse response = createMock(HttpServletResponse.class);
@@ -114,15 +93,14 @@ public class FilterManagerTest extends MgnlTestCase {
     public void testBypassing() throws UnsupportedRepositoryOperationException, IOException, RepositoryException, ServletException{
         // first filter ignores all uris starting with a .
         String conf =
-            "server.filters.first.class=info.magnolia.cms.beans.config.FilterManagerTest$TestFilter\n" +
+            "server.filters.first.class=info.magnolia.cms.filters.FilterTest$TestFilter\n" +
             "server.filters.first.bypasses.dot.pattern=.\n" +
-            "server.filters.second.class=info.magnolia.cms.beans.config.FilterManagerTest$TestFilter\n";
+            "server.filters.second.class=info.magnolia.cms.filters.FilterTest$TestFilter\n";
 
         initConfigRepository(conf);
 
-        FilterManager fm = FilterManager.getInstance();
+        MagnoliaMainFilter mf = initMainFilter();
 
-        FilterConfig filterConfig = createMock(FilterConfig.class);
         HttpServletRequest request = createMock(HttpServletRequest.class);
         WebContext webCtx = createMock(WebContext.class);
         expect(webCtx.getAttribute(Path.MGNL_REQUEST_URI_CURRENT)).andStubReturn(".magnolia/something.html");
@@ -134,20 +112,29 @@ public class FilterManagerTest extends MgnlTestCase {
 
         replay(request, webCtx);
 
-        Filter mainFilter = new MagnoliaMainFilter();
-        mainFilter.init(filterConfig);
+        mf.doFilter(request, response, chain);
 
-        mainFilter.doFilter(request, response, chain);
-
-        assertEquals(false, ((TestFilter)fm.getFilters()[0]).executed);
-        assertEquals(true, ((TestFilter)fm.getFilters()[1]).executed);
+        assertEquals(false, ((TestFilter)mf.getFilters()[0]).executed);
+        assertEquals(true, ((TestFilter)mf.getFilters()[1]).executed);
     }
 
     public static class TestFilter extends AbstractMagnoliaFilter{
         public boolean executed = false;
 
+        private String prop1;
+
         public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
             this.executed = true;
+        }
+
+
+        public String getProp1() {
+            return this.prop1;
+        }
+
+
+        public void setProp1(String prop1) {
+            this.prop1 = prop1;
         }
     }
 

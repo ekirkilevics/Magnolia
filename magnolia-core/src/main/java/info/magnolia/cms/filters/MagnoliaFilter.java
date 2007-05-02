@@ -23,7 +23,5 @@ import javax.servlet.http.HttpServletRequest;
 public interface MagnoliaFilter extends Filter{
     public String getName();
     public void setName(String name);
-    public int getPriority();
-    public void setPriority(int priority);
     public boolean bypasses(HttpServletRequest request);
 }

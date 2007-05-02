@@ -32,13 +32,10 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author philipp
  * @version $Id$
- *
  */
 public abstract class AbstractMagnoliaFilter implements MagnoliaFilter {
 
     private String name;
-
-    private int priority = Integer.MAX_VALUE;
 
     private Map bypasses = new HashMap();
 
@@ -46,7 +43,7 @@ public abstract class AbstractMagnoliaFilter implements MagnoliaFilter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-        doFilter((HttpServletRequest)request, (HttpServletResponse)response, chain);
+        doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
     public abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
@@ -60,7 +57,7 @@ public abstract class AbstractMagnoliaFilter implements MagnoliaFilter {
      * In case there was no context set the request is used directly
      */
     protected String getCurrentURI(HttpServletRequest request) {
-        if(!MgnlContext.hasInstance()){
+        if (!MgnlContext.hasInstance()) {
             return StringUtils.removeStart(request.getRequestURI(), request.getContextPath());
         }
         return Path.getURI();
@@ -69,7 +66,7 @@ public abstract class AbstractMagnoliaFilter implements MagnoliaFilter {
     protected boolean bypasses(String uri) {
         for (Iterator iter = bypasses.values().iterator(); iter.hasNext();) {
             Bypass bypass = (Bypass) iter.next();
-            if(bypass.bypass(uri)){
+            if (bypass.bypass(uri)) {
                 return true;
             }
         }
@@ -92,21 +89,9 @@ public abstract class AbstractMagnoliaFilter implements MagnoliaFilter {
         this.bypasses.put(name, bypass);
     }
 
-
-    public int getPriority() {
-        return this.priority;
-    }
-
-
-    public void setPriority(int priority) {
-        this.priority = priority;
-    }
-
-
     public String getName() {
         return this.name;
     }
-
 
     public void setName(String name) {
         this.name = name;
