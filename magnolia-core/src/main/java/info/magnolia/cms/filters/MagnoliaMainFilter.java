@@ -52,7 +52,7 @@ public class MagnoliaMainFilter extends AbstractMagnoliaFilter {
      */
     static MagnoliaMainFilter rootFilter = null;
 
-    private static final String SERVER_FILTERS = "/server/filters";
+    public static final String SERVER_FILTERS = "/server/filters";
 
     /**
      * We do not have an additional filters node for the main filter
