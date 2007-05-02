@@ -1,12 +1,17 @@
 package info.magnolia.cms.cache;
 
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.filters.MagnoliaFilter;
+import info.magnolia.cms.filters.MagnoliaMainFilter;
 import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.module.InvalidConfigException;
 import info.magnolia.cms.module.RegisterException;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 
 import org.slf4j.Logger;
@@ -44,6 +49,15 @@ public class CacheModule extends AbstractModule {
      * @see info.magnolia.cms.module.AbstractModule#onRegister(int)
      */
     protected void onRegister(int registerState) throws RegisterException {
+        // order the filter
+        Content filters = ContentUtil.getContent(ContentRepository.CONFIG, MagnoliaMainFilter.SERVER_FILTERS);
+        try {
+            filters.orderBefore("cache", "virtualURI");
+        }
+        catch (RepositoryException e) {
+            log.error("can't reorder filter", e);
+        }
+
         // set the cache inactive if this is an admin instance (default)
         try {
             // TODO : Can't use Server.isAdmin() here, because it's only initialized after the modules
