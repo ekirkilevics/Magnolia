@@ -52,7 +52,7 @@ public class FreemarkerHelper {
     /**
      * Renders the given template, using the given root object (can be a map, or any other type of object
      * handled by MagnoliaContentWrapper) to the given Writer.
-     * If the root is a map, the following elements are added to it:
+     * If the root is an instance of a Map, the following elements are added to it:
      * - contextPath, if we have an available WebContext
      */
     public void render(String templatePath, Object root, Writer out) throws TemplateException, IOException {
