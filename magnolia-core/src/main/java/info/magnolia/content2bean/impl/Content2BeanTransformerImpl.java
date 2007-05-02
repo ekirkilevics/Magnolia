@@ -79,7 +79,9 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
                     // this is not necesserely the parent node of the current
                     String mapProperyName = state.peekContent(1).getName();
                     propDscr = state.peekType(1).getPropertyTypeDescriptor(mapProperyName);
-                    typeDscr = propDscr.getCollectionEntryType();
+                    if(propDscr != null){
+                        typeDscr = propDscr.getCollectionEntryType();
+                    }
                 }
             }
             else {
