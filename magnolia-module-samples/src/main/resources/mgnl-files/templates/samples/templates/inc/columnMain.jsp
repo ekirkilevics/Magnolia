@@ -22,7 +22,7 @@
   <cms:adminOnly>
     <div style="clear:both;">
       <cms:newBar contentNodeCollectionName="mainColumnParagraphs"
-        paragraph="samplesTextImage,samplesFreemarker,forum-list" />
+        paragraph="samplesTextImage,samplesEditor,samplesDownload,samplesLink,samplesTable,samplesFreemarker,dms" />
     </div>
   </cms:adminOnly>
 </jsp:root>
