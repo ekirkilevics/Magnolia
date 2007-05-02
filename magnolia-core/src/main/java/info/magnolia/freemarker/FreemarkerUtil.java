@@ -89,7 +89,6 @@ public class FreemarkerUtil {
     public static void process(String name, Map data, Writer writer) {
         try {
             // add some usfull default data
-            data.put("contextPath", MgnlContext.getContextPath());
             if (AlertUtil.isMessageSet()) {
                 data.put("message", AlertUtil.getMessage());
             }

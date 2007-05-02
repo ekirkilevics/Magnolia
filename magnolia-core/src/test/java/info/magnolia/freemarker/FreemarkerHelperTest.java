@@ -13,10 +13,12 @@
 package info.magnolia.freemarker;
 
 import freemarker.cache.StringTemplateLoader;
+import freemarker.core.InvalidReferenceException;
 import freemarker.template.TemplateException;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockMetaData;
 import info.magnolia.test.mock.MockNodeData;
@@ -28,11 +30,12 @@ import static org.easymock.EasyMock.*;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.Collections;
 
 /**
  * @author gjoseph
@@ -56,6 +59,9 @@ public class FreemarkerHelperTest extends TestCase {
     private void assertRendereredContent(String expectedOutput, Locale l, Object o, String templateName) throws TemplateException, IOException {
         final Context context = createStrictMock(Context.class);
         expect(context.getLocale()).andReturn(l);
+//        if (o instanceof Map) {
+//            expect(context.getAttribute("msg", 1)).andReturn(null);
+//        }
         replay(context);
         MgnlContext.setInstance(context);
 
@@ -255,6 +261,41 @@ public class FreemarkerHelperTest extends TestCase {
 
         c.addNodeData(new MockNodeData("title", "pouet"));
         assertRendereredContent("<h2>pouet</h2>", m, "test.ftl");
+    }
+
+    public void testContextPathIsAddedWithWebContext() throws IOException, TemplateException {
+        tplLoader.putTemplate("pouet", ":${contextPath}:");
+        final WebContext context = createStrictMock(WebContext.class);
+        expect(context.getLocale()).andReturn(Locale.US);
+        expect(context.getContextPath()).andReturn("tralala");
+
+        replay(context);
+        MgnlContext.setInstance(context);
+
+        final StringWriter out = new StringWriter();
+        fmHelper.render("pouet", new HashMap(), out);
+
+        assertEquals(":tralala:", out.toString());
+        verify(context);
+    }
+
+    public void testContextPathIsNotAddedWithNotWebContext() throws IOException, TemplateException {
+        tplLoader.putTemplate("pouet", ":${contextPath}:");
+        final Context context = createStrictMock(Context.class);
+        expect(context.getLocale()).andReturn(Locale.US);
+
+        replay(context);
+        MgnlContext.setInstance(context);
+
+        final StringWriter out = new StringWriter();
+        try {
+            fmHelper.render("pouet", new HashMap(), out);
+            fail("should have failed");
+        } catch (InvalidReferenceException e) {
+            assertEquals("Expression contextPath is undefined on line 1, column 4 in pouet.", e.getMessage());
+        }
+
+        verify(context);
     }
 
 }
