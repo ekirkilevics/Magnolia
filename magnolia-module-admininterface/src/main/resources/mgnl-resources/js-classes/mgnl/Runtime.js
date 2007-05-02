@@ -76,7 +76,7 @@ MgnlRuntime = mgnl.Runtime = {
                   }
 
                   // add nice shortcut to call the super method(s)
-                  klass.prototype.super = function(){
+                  klass.prototype.parentConstructor = function(){
                       // remember latest constructor to follow the chain
                       var superKlass = klass.superKlass;
                        if(this.nextSuperKlass){
