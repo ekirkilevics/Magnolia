@@ -107,6 +107,13 @@ public final class MessagesManager {
     private MessagesManager() {
     }
 
+    static{
+        // setting default language (en)
+        MessagesManager.setDefaultLocale(FALLBACK_LOCALE);
+
+        initLRUMap();
+    }
+
     /**
      * Called through the initialization process (startup of the container)
      * @param context servlet context
@@ -121,9 +128,6 @@ public final class MessagesManager {
         // for Resin and other J2EE Containers
         context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT, MessagesManager.DEFAULT_BASENAME);
 
-        // setting default language (en)
-        MessagesManager.setDefaultLocale(FALLBACK_LOCALE);
-
         load();
         registerEventListener();
     }
@@ -131,7 +135,7 @@ public final class MessagesManager {
     /**
      * The lazzy LRU Map creates messages objects with a faul back to the default locale.
      */
-    private static void intiLRUMap() {
+    private static void initLRUMap() {
         // FIXME use LRU
         // Map map = new LRUMap(20);
         Map map = new HashMap();
@@ -161,8 +165,6 @@ public final class MessagesManager {
         // reading the configuration from the repository, no need for context
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
         try {
-            intiLRUMap();
-
             log.info("Config : loading i18n configuration - " + I18N_CONFIG_NAME); //$NON-NLS-1$
 
             Content serverNode = hm.getContent("/server"); //$NON-NLS-1$
@@ -258,6 +260,7 @@ public final class MessagesManager {
         catch (Exception e) {
             log.error("can't reload i18n messages", e);
         }
+        initLRUMap();
         load();
     }
 
@@ -340,8 +343,11 @@ public final class MessagesManager {
     public static void setDefaultLocale(String defaultLocale) {
         MessagesManager.applicationLocale = new Locale(defaultLocale);
         MgnlContext.getSystemContext().setLocale(applicationLocale);
-        context.setAttribute(Config.FMT_LOCALE + ".application", defaultLocale); //$NON-NLS-1$
-    }
+
+        if(context != null){
+            context.setAttribute(Config.FMT_LOCALE + ".application", defaultLocale); //$NON-NLS-1$
+        }
+     }
 
     /**
      * @return Returns the availableLocals.
