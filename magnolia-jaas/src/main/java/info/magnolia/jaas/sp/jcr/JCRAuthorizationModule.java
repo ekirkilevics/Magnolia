@@ -91,18 +91,6 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public boolean commit() throws LoginException {
-        if (!this.success) {
-            throw new LoginException("failed to authenticate " + this.name);
-        }
-        this.setEntity();
-        this.setACL();
-        return true;
-    }
-
-    /**
      * set access control list from the user, roles and groups
      */
     public void setACL() {

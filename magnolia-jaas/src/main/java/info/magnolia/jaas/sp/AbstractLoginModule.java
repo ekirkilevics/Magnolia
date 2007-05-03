@@ -135,6 +135,7 @@ public abstract class AbstractLoginModule implements LoginModule {
             throw new LoginException("failed to authenticate " + this.name);
         }
         this.setEntity();
+        this.setACL();
         return true;
     }
 
