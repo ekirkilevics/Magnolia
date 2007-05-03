@@ -39,6 +39,7 @@ import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.security.auth.login.LoginException;
+import javax.security.auth.login.FailedLoginException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -71,7 +72,7 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
     /**
      * {@inheritDoc}
      */
-    public boolean isValidUser() {
+    public boolean validateUser() throws FailedLoginException ,LoginException {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
         try {
             this.user = hm.getContent(this.name);

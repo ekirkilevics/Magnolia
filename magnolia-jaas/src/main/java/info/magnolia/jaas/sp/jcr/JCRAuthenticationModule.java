@@ -19,14 +19,8 @@ import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 import info.magnolia.api.HierarchyManager;
 
-import java.io.IOException;
-
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.security.auth.callback.Callback;
-import javax.security.auth.callback.NameCallback;
-import javax.security.auth.callback.PasswordCallback;
-import javax.security.auth.callback.UnsupportedCallbackException;
 import javax.security.auth.login.LoginException;
 import javax.security.auth.login.FailedLoginException;
 
@@ -41,67 +35,9 @@ import org.slf4j.LoggerFactory;
  */
 public class JCRAuthenticationModule extends AbstractLoginModule {
 
-    /**
-     * Logger
-     */
     private static Logger log = LoggerFactory.getLogger(JCRAuthenticationModule.class);
 
-    protected String name;
-
-    protected char[] pswd;
-
-    protected boolean success;
-
     protected Content user;
-
-    /**
-     * Authenticate against magnolia/jcr user repository
-     */
-    public boolean login() throws LoginException {
-        if (this.callbackHandler == null) {
-            throw new LoginException("Error: no CallbackHandler available for JCRModule");
-        }
-
-        Callback[] callbacks = new Callback[2];
-        callbacks[0] = new NameCallback("name");
-        callbacks[1] = new PasswordCallback("pswd", false);
-
-        this.success = false;
-        try {
-            this.callbackHandler.handle(callbacks);
-            this.name = ((NameCallback) callbacks[0]).getName();
-            this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
-            this.success = this.isValidUser();
-        }
-        catch (IOException ioe) {
-            if (log.isDebugEnabled()) {
-                log.debug("Exception caught", ioe);
-            }
-            throw new LoginException(ioe.toString());
-        }
-        catch (UnsupportedCallbackException ce) {
-            if (log.isDebugEnabled()) {
-                log.debug(ce.getMessage(), ce);
-            }
-            throw new LoginException(ce.getCallback().toString() + " not available");
-        }
-        if (!this.success) {
-            throw new FailedLoginException("failed to authenticate " + this.name);
-        }
-
-        return this.success;
-    }
-
-    /**
-     * Update subject with ACL and other properties
-     */
-    public boolean commit() throws LoginException {
-        if (!this.success) {
-            throw new LoginException("failed to authenticate " + this.name);
-        }
-        this.setEntity();
-        return true;
-    }
 
     /**
      * Releases all associated memory
@@ -114,7 +50,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
      * checks is the credentials exist in the repository
      * @return boolean
      */
-    public boolean isValidUser() {
+    public boolean validateUser() throws FailedLoginException ,LoginException {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
         try {
             this.user = hm.getContent(this.name);
@@ -126,15 +62,13 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
             return StringUtils.equals(serverPassword, new String(this.pswd));
         }
         catch (PathNotFoundException pe) {
-            log.info("Unable to locate user [{}], authentication failed", this.name);
+            log.debug("Unable to locate user [{}], authentication failed", this.name);
+            throw new FailedLoginException(pe.getMessage());
         }
         catch (RepositoryException re) {
-            log.error("Unable to locate user ["
-                + this.name
-                + "], authentication failed due to a "
-                + re.getClass().getName(), re);
+            log.error(re.getMessage(), re);
+            throw new LoginException(re.getMessage());
         }
-        return false;
     }
 
     /**
