@@ -13,10 +13,6 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author philipp
  * @version $Id$
@@ -59,6 +55,10 @@ public class DefaultVirtualURIMapping implements VirtualURIMapping{
 
     public void setToURI(String toURI) {
         this.toURI = toURI;
+    }
+
+    public String toString() {
+        return fromURI + " --> " + toURI;
     }
 
 }
