@@ -13,14 +13,7 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.cms.util.SimpleUrlPattern;
-import info.magnolia.cms.util.StringComparator;
-import info.magnolia.cms.util.UrlPattern;
-import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
@@ -28,11 +21,8 @@ import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -45,11 +35,7 @@ import org.slf4j.LoggerFactory;
  * @version 2.0
  */
 public final class VirtualURIManager extends ObservedManager {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(VirtualURIManager.class);
+    private static final Logger log = LoggerFactory.getLogger(VirtualURIManager.class);
 
     public static final String FROM_URI_NODEDATANAME = "fromURI";
 
@@ -64,7 +50,7 @@ public final class VirtualURIManager extends ObservedManager {
     /**
      * all cached data. <UrlPattern, String[target, pattern]>
      */
-    private List cachedURImapping = new ArrayList();
+    private final List cachedURImapping = new ArrayList();
 
     /**
      * checks for the requested URI mapping in Server config : Servlet Specification 2.3 Section 10 "Mapping Requests to
