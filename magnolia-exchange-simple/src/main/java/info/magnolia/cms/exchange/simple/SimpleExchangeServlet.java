@@ -21,8 +21,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.Listener;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.Rule;
@@ -84,7 +82,6 @@ public class SimpleExchangeServlet extends HttpServlet {
         String statusMessage = "";
         String status = "";
         try {
-            validateRequest(request);
             initializeContext(request, response);
             applyLock(request);
             receive(request);
@@ -154,7 +151,7 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @throws Exception if fails to update
      */
     private synchronized void update(HttpServletRequest request) throws Exception {
-        MultipartForm data = Resource.getPostedForm(request);
+        MultipartForm data = Resource.getPostedForm();
         if (null != data) {
             String parentPath = request.getHeader(SimpleSyndicator.PARENT_PATH);
             String resourceFileName = request.getHeader(SimpleSyndicator.RESOURCE_MAPPING_FILE);
@@ -399,17 +396,6 @@ public class SimpleExchangeServlet extends HttpServlet {
     }
 
     /**
-     * Check if the request is valid
-     * @param request
-     * @throws AccessDeniedException
-     */
-    private void validateRequest(HttpServletRequest request) throws Exception {
-        if (ConfigLoader.isConfigured() && (!Listener.isAllowed(request) || !Authenticator.authenticate(request))) {
-            throw new AccessDeniedException("Either server not configured or user is not valid");
-        }
-    }
-
-    /**
      * get hierarchy manager
      * @param request
      * @throws ExchangeException
@@ -435,7 +421,7 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @param request
      */
     private void cleanUp(HttpServletRequest request) {
-        MultipartForm data = Resource.getPostedForm(request);
+        MultipartForm data = Resource.getPostedForm();
         if (null != data) {
             Iterator keys = data.getDocuments().keySet().iterator();
             while (keys.hasNext()) {
