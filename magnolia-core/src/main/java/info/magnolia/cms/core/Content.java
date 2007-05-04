@@ -486,6 +486,8 @@ public class Content extends ContentHandler implements Cloneable {
             value = valueFactory.createValue(((Boolean) obj).booleanValue());
         } else if (obj instanceof Long) {
             value = valueFactory.createValue(((Long) obj).longValue());
+        } else if (obj instanceof Integer) {
+            value = valueFactory.createValue(((Integer) obj).longValue());
         } else if (obj instanceof Double) {
             value = valueFactory.createValue(((Double) obj).doubleValue());
         } else if (obj instanceof Calendar) {
