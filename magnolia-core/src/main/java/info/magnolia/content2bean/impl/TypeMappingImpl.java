@@ -144,7 +144,7 @@ public class TypeMappingImpl implements TypeMapping {
         dscr = new TypeDescriptor();
         dscr.setType(beanClass);
         dscr.setMap(ClassUtil.isSubClass(beanClass, Map.class));
-        dscr.setCollection(ClassUtil.isSubClass(beanClass, Collection.class));
+        dscr.setCollection(beanClass.isArray() || ClassUtil.isSubClass(beanClass, Collection.class));
 
         types.put(beanClass, dscr);
         return dscr;
