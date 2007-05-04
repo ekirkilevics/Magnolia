@@ -73,18 +73,18 @@ MgnlRuntime = mgnl.Runtime = {
                 // clone prototype of the supper
                 for (var property in klass.superKlass.prototype) {
                     klass.prototype[property] = klass.superKlass.prototype[property];
-                  }
+                }
 
-                  // add nice shortcut to call the super method(s)
-                  klass.prototype.parentConstructor = function(){
-                      // remember latest constructor to follow the chain
-                      var superKlass = klass.superKlass;
-                       if(this.nextSuperKlass){
-                          superKlass = this.nextSuperKlass;
-                      }
-                      this.nextSuperKlass = superKlass.superKlass;
-                      superKlass.apply(this, arguments);
-                  }
+                // add nice shortcut to call the super method(s)
+                klass.prototype.parentConstructor = function(){
+                    // remember latest constructor to follow the chain
+                    var superKlass = klass.superKlass;
+                    if(this.nextSuperKlass){
+                        superKlass = this.nextSuperKlass;
+                    }
+                    this.nextSuperKlass = superKlass.superKlass;
+                    superKlass.apply(this, arguments);
+                }
             }
             // in case this is an object
             else{
@@ -105,22 +105,24 @@ MgnlRuntime = mgnl.Runtime = {
         }
 
         // add the the class name
-        if(klass.prototype)
+        if(klass.prototype){
             klass.prototype._class = name;
-        else
+        }
+        else{
             klass._class = name;
+        }
 
         // add members (prototype)
         if(members){
             for (var property in members) {
-                   klass.prototype[property] = members[property];
+                klass.prototype[property] = members[property];
             }
         }
 
         // add statics
         if(statics){
             for (var property in statics) {
-                   klass[property] = statics[property];
+                klass[property] = statics[property];
             }
         }
 
