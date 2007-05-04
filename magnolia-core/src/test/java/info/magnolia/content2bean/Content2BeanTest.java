@@ -210,6 +210,39 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals("prop2Sub2Value", ((SimpleBean)beans.get("sub2")).getProp2());
     }
 
+    public void testContentToBeanWithArraysUsingAdder() throws RepositoryException, Content2BeanException {
+        Content node = MockUtil.createContent("parent", new String[][]{
+                {"class", "info.magnolia.content2bean.BeanWithArrayAndAdder"},
+                {"prop1", "propParent1Value"},
+                {"prop2", "propParent2Value"}},
+                new Content[]{
+                    MockUtil.createContent("beans", new String[][]{},
+                        new Content[]{
+                            MockUtil.createNode("sub1", new String[][]{
+                                {"prop1", "prop1Sub1Value"},
+                                {"prop2", "prop2Sub1Value"}
+                            }),
+                            MockUtil.createNode("sub2", new String[][]{
+                                {"prop1", "prop1Sub2Value"},
+                                {"prop2", "prop2Sub2Value"}
+                            }),
+
+                    })
+
+        });
+
+        BeanWithArrayAndAdder bean = (BeanWithArrayAndAdder) Content2BeanUtil.toBean(node, true);
+
+        assertEquals(2, bean.getBeans().length);
+        assertNotNull(bean.getBeans()[0]);
+        assertNotNull(bean.getBeans()[1]);
+
+        assertEquals("prop1Sub1Value", bean.getBeans()[0].getProp1());
+        assertEquals("prop2Sub1Value", bean.getBeans()[0].getProp2());
+        assertEquals("prop1Sub2Value", bean.getBeans()[1].getProp1());
+        assertEquals("prop2Sub2Value", bean.getBeans()[1].getProp2());
+    }
+
     public void testClassPropertiesAreConvertedProperly() throws RepositoryException, Content2BeanException {
         Content node = MockUtil.createContent("parent", new String[][]{
                 {"class", "info.magnolia.content2bean.BeanWithClass"},

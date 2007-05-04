@@ -15,6 +15,7 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.LinkedHashMap;
 
@@ -149,7 +150,15 @@ public class Content2BeanUtil {
      * @see Content2BeanProcessor
      */
     public static Object setProperties(Object bean, Content node, boolean recursive) throws Content2BeanException {
-        return getContent2BeanProcessor().setProperties(bean, node, recursive, getContent2BeanTransformer());
+        return setProperties(bean, node, recursive, getContent2BeanTransformer());
+    }
+
+    /**
+
+     * @see Content2BeanProcessor
+     */
+    public static Object setProperties(Object bean, Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException {
+        return getContent2BeanProcessor().setProperties(bean, node, recursive, transformer);
     }
 
     /**
@@ -205,5 +214,6 @@ public class Content2BeanUtil {
             throw new Content2BeanException("can't read properties from bean", e);
         }
     }
+
 }
 
