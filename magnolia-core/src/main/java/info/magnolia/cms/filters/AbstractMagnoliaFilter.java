@@ -10,13 +10,11 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.voting.Voter;
+import info.magnolia.voting.Voting;
 
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -26,7 +24,7 @@ import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.ArrayUtils;
 
 
 /**
@@ -37,7 +35,9 @@ public abstract class AbstractMagnoliaFilter implements MagnoliaFilter {
 
     private String name;
 
-    private Map bypasses = new HashMap();
+    private Voter[] bypasses = new Voter[0];
+
+    private boolean enabled = true;
 
     public void init(FilterConfig filterConfig) throws ServletException {
     }
@@ -49,26 +49,11 @@ public abstract class AbstractMagnoliaFilter implements MagnoliaFilter {
     public abstract void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException;
 
     public boolean bypasses(HttpServletRequest request) {
-        String requestURI = getCurrentURI(request);
-        return bypasses(requestURI);
-    }
-
-    /**
-     * In case there was no context set the request is used directly
-     */
-    protected String getCurrentURI(HttpServletRequest request) {
-        if (!MgnlContext.hasInstance()) {
-            return StringUtils.removeStart(request.getRequestURI(), request.getContextPath());
+        if(!isEnabled()){
+            return true;
         }
-        return Path.getURI();
-    }
-
-    protected boolean bypasses(String uri) {
-        for (Iterator iter = bypasses.values().iterator(); iter.hasNext();) {
-            Bypass bypass = (Bypass) iter.next();
-            if (bypass.bypass(uri)) {
-                return true;
-            }
+        if(MgnlContext.hasInstance()){
+            return Voting.Factory.getDefaultVoting().vote(MgnlContext.getInstance(), bypasses) > 0;
         }
         return false;
     }
@@ -77,16 +62,12 @@ public abstract class AbstractMagnoliaFilter implements MagnoliaFilter {
         // nothing to do here
     }
 
-    public Map getBypasses() {
+    public Voter[] getBypasses() {
         return this.bypasses;
     }
 
-    public void setBypasses(Map bypasses) {
-        this.bypasses = bypasses;
-    }
-
-    public void addBypass(String name, Bypass bypass) {
-        this.bypasses.put(name, bypass);
+    public void addBypass(Voter voter) {
+        this.bypasses = (Voter[]) ArrayUtils.add(this.bypasses, voter);
     }
 
     public String getName() {
@@ -95,6 +76,16 @@ public abstract class AbstractMagnoliaFilter implements MagnoliaFilter {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+
+    public boolean isEnabled() {
+        return this.enabled;
+    }
+
+
+    public void setEnabled(boolean enabled) {
+        this.enabled = enabled;
     }
 
 }
