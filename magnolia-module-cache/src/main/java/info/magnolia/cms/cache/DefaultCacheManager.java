@@ -40,8 +40,7 @@ public class DefaultCacheManager extends BaseCacheManager {
      * In case we the voting is negative the request is not cached. Otherwise the defined deny or allow uri are checked.
      */
     public boolean isCacheable(HttpServletRequest request) {
-        Context ctx = MgnlContext.getInstance();
-        if(Voting.Factory.getDefaultVoting().vote(ctx, voters) < 0){
+        if(Voting.Factory.getDefaultVoting().vote(voters, request) < 0){
             return false;
         }
         return getConfig().isUriCacheable(request);

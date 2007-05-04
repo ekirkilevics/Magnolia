@@ -9,7 +9,7 @@ import info.magnolia.voting.Voter;
 import info.magnolia.voting.voters.AuthenticatedVoter;
 import info.magnolia.voting.voters.ExtensionVoter;
 import info.magnolia.voting.voters.OnAdminVoter;
-import info.magnolia.voting.voters.WithParametersVoter;
+import info.magnolia.voting.voters.RequestHasParametersVoter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -98,7 +98,7 @@ public abstract class BaseCacheManager implements CacheManager {
             try {
                 votersNode = content.createContent("voters");
                 Content voter = votersNode.createContent("notWithParametersVoter", ItemType.CONTENTNODE);
-                voter.createNodeData("class", WithParametersVoter.class.getName());
+                voter.createNodeData("class", RequestHasParametersVoter.class.getName());
                 voter.createNodeData("enabled", Boolean.TRUE);
                 voter.createNodeData("trueValue", new Long(-1));
 
