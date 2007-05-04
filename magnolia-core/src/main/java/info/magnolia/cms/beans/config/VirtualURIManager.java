@@ -20,7 +20,13 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.StringComparator;
 import info.magnolia.cms.util.UrlPattern;
+import info.magnolia.content2bean.Content2BeanTransformer;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.content2bean.TransformationState;
+import info.magnolia.content2bean.TypeDescriptor;
+import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Hashtable;
@@ -39,8 +45,6 @@ import org.slf4j.LoggerFactory;
  * @version 2.0
  */
 public final class VirtualURIManager extends ObservedManager {
-    public static final String FROM_URI_NODEDATANAME = "fromURI";
-    public static final String TO_URI_NODEDATANAME = "toURI";
 
     /**
      * Logger.
@@ -56,7 +60,7 @@ public final class VirtualURIManager extends ObservedManager {
     /**
      * all cached data. <UrlPattern, String[target, pattern]>
      */
-    private Map cachedURImapping = new Hashtable();
+    private List cachedURImapping = new ArrayList();
 
     /**
      * checks for the requested URI mapping in Server config : Servlet Specification 2.3 Section 10 "Mapping Requests to
@@ -64,17 +68,15 @@ public final class VirtualURIManager extends ObservedManager {
      * @return URI string mapping
      */
     public String getURIMapping(String uri) {
-        Iterator e = cachedURImapping.keySet().iterator();
+        Iterator e = cachedURImapping.iterator();
         String mappedURI = StringUtils.EMPTY;
-        int lastMatchedPatternlength = 0;
+        int lastMatchedLevel = 0;
         while (e.hasNext()) {
-            UrlPattern p = (UrlPattern) e.next();
-            if (p.match(uri)) {
-                int patternLength = p.getLength();
-                if (lastMatchedPatternlength < patternLength) {
-                    lastMatchedPatternlength = patternLength;
-                    mappedURI = ((String[]) cachedURImapping.get(p))[0];
-                }
+            VirtualURIMapping vm = (VirtualURIMapping) e.next();
+            VirtualURIMapping.MappingResult result = vm.mapURI(uri);
+            if (lastMatchedLevel < result.getLevel()) {
+                lastMatchedLevel = result.getLevel();
+                mappedURI = result.getToURI();
             }
         }
         return mappedURI;
@@ -83,15 +85,14 @@ public final class VirtualURIManager extends ObservedManager {
     protected void onRegister(Content node) {
         try {
             log.info("Config : Loading VirtualMap - " + node.getHandle()); //$NON-NLS-1$
-            Collection list = node.getChildren(ItemType.CONTENTNODE);
-            Collections.sort((List) list, new StringComparator(FROM_URI_NODEDATANAME)); //$NON-NLS-1$
-            Iterator it = list.iterator();
-            while (it.hasNext()) {
-                Content container = (Content) it.next();
-                NodeData fromURI = NodeDataUtil.getOrCreate(container, FROM_URI_NODEDATANAME); //$NON-NLS-1$
-                UrlPattern p = new SimpleUrlPattern(fromURI.getString());
-                cachedURImapping.put(p, new String[]{NodeDataUtil.getString(container, TO_URI_NODEDATANAME), fromURI.getString()}); //$NON-NLS-1$
-            }
+            Content2BeanUtil.setProperties(this.cachedURImapping, node, true, new Content2BeanTransformerImpl(){
+                protected TypeDescriptor onResolveClass(TransformationState state) {
+                    if(state.getLevel()==2){
+                        return this.getTypeMapping().getTypeDescriptor(DefaultVirtualURIMapping.class);
+                    }
+                    return null;
+                }
+            });
             log.info("Config : VirtualMap loaded - " + node.getHandle()); //$NON-NLS-1$
         }
         catch (Exception e) {
@@ -104,7 +105,7 @@ public final class VirtualURIManager extends ObservedManager {
     }
 
     // TODO : should this really be public ?
-    public Map getURIMappings() {
+    public Collection getURIMappings() {
         return cachedURImapping;
     }
 
