@@ -1,14 +1,15 @@
 package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
-import info.magnolia.cms.cache.voters.ExtensionVoter;
-import info.magnolia.cms.cache.voters.NotAuthenticatedVoter;
-import info.magnolia.cms.cache.voters.NotOnAdminVoter;
-import info.magnolia.cms.cache.voters.NotWithParametersVoter;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.voting.Voter;
+import info.magnolia.voting.voters.AuthenticatedVoter;
+import info.magnolia.voting.voters.ExtensionVoter;
+import info.magnolia.voting.voters.OnAdminVoter;
+import info.magnolia.voting.voters.WithParametersVoter;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -35,7 +36,7 @@ public abstract class BaseCacheManager implements CacheManager {
 
     private CacheConfig config;
 
-    protected CacheVoter[] cacheVoters = new CacheVoter[0];
+    protected Voter[] voters = new Voter[0];
 
     private boolean initialized;
 
@@ -97,17 +98,25 @@ public abstract class BaseCacheManager implements CacheManager {
             try {
                 votersNode = content.createContent("voters");
                 Content voter = votersNode.createContent("notWithParametersVoter", ItemType.CONTENTNODE);
-                voter.createNodeData("class", NotWithParametersVoter.class.getName());
+                voter.createNodeData("class", WithParametersVoter.class.getName());
                 voter.createNodeData("enabled", Boolean.TRUE);
+                voter.createNodeData("trueValue", new Long(-1));
+
                 voter = votersNode.createContent("extensionVoter", ItemType.CONTENTNODE);
                 voter.createNodeData("class", ExtensionVoter.class.getName());
                 voter.createNodeData("enabled", Boolean.TRUE);
+                voter.createNodeData("falseValue", new Long(-1));
+                voter.createNodeData("trueValue", new Long(0));
+
                 voter = votersNode.createContent("notOnAdminVoter", ItemType.CONTENTNODE);
-                voter.createNodeData("class", NotOnAdminVoter.class.getName());
+                voter.createNodeData("class", OnAdminVoter.class.getName());
                 voter.createNodeData("enabled", Boolean.TRUE);
+                voter.createNodeData("trueValue", new Long(-1));
+
                 voter = votersNode.createContent("notAuthenticatedVoter", ItemType.CONTENTNODE);
-                voter.createNodeData("class", NotAuthenticatedVoter.class.getName());
+                voter.createNodeData("class", AuthenticatedVoter.class.getName());
                 voter.createNodeData("enabled", Boolean.FALSE);
+                voter.createNodeData("trueValue", new Long(-1));
             }
             catch (RepositoryException e) {
                 log.error("Unable to create default cache manager configuration.", e);
@@ -127,7 +136,7 @@ public abstract class BaseCacheManager implements CacheManager {
         while (it.hasNext()) {
             Content cnt = (Content) it.next();
             try {
-                CacheVoter voter = (CacheVoter) Content2BeanUtil.toBean(cnt, true);
+                Voter voter = (Voter) Content2BeanUtil.toBean(cnt, true);
                 cacheVotersList.add(voter);
             }
             catch (Content2BeanException e) {
@@ -135,12 +144,12 @@ public abstract class BaseCacheManager implements CacheManager {
             }
             catch (ClassCastException e) {
                 log.error(
-                    "Invalid class configured at " + cnt.getHandle() + ". Expected " + CacheVoter.class.getName(),
+                    "Invalid class configured at " + cnt.getHandle() + ". Expected " + Voter.class.getName(),
                     e);
             }
         }
 
-        this.cacheVoters = (CacheVoter[]) cacheVotersList.toArray(new CacheVoter[cacheVotersList.size()]);
+        this.voters = (Voter[]) cacheVotersList.toArray(new Voter[cacheVotersList.size()]);
 
         try {
             doInit();

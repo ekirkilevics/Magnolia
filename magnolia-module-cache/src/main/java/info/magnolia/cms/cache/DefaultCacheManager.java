@@ -3,6 +3,10 @@ package info.magnolia.cms.cache;
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.cache.noop.NoOpCache;
 import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.voting.Voter;
+import info.magnolia.voting.Voting;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -33,19 +37,13 @@ public class DefaultCacheManager extends BaseCacheManager {
     }
 
     /**
-     * @see info.magnolia.cms.cache.CacheManager#isCacheable(javax.servlet.http.HttpServletRequest)
+     * In case we the voting is negative the request is not cached. Otherwise the defined deny or allow uri are checked.
      */
     public boolean isCacheable(HttpServletRequest request) {
-
-        if (cacheVoters != null) {
-            for (int j = 0; j < cacheVoters.length; j++) {
-                CacheVoter voter = cacheVoters[j];
-                if (voter.isEnabled() && !voter.allowCaching(request)) {
-                    return false;
-                }
-            }
+        Context ctx = MgnlContext.getInstance();
+        if(Voting.Factory.getDefaultVoting().vote(ctx, voters) < 0){
+            return false;
         }
-
         return getConfig().isUriCacheable(request);
     }
 
