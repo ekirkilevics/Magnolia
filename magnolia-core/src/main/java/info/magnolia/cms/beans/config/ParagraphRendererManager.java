@@ -32,14 +32,14 @@ import java.util.Map;
 public class ParagraphRendererManager extends ObservedManager {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ParagraphRendererManager.class);
 
+    public static ParagraphRendererManager getInstance() {
+        return (ParagraphRendererManager) FactoryUtil.getSingleton(ParagraphRendererManager.class);
+    }
+
     private final Map paragraphRenderers;
 
     public ParagraphRendererManager() {
         paragraphRenderers = Collections.synchronizedMap(new LinkedHashMap());
-    }
-
-    public static ParagraphRendererManager getInstance() {
-        return (ParagraphRendererManager) FactoryUtil.getSingleton(ParagraphRendererManager.class);
     }
 
     protected ParagraphRenderer getRenderer(String name) {
