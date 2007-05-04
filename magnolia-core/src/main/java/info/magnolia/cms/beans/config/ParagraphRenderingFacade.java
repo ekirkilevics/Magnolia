@@ -34,8 +34,7 @@ public class ParagraphRenderingFacade {
     }
 
     public ParagraphRenderingFacade() {
-        rendererManager = ParagraphRendererManager.getInstance();
-        paragraphManager = ParagraphManager.getInstance();
+        this(ParagraphRendererManager.getInstance(), ParagraphManager.getInstance());
     }
 
     // currently only used for tests, but one day, we'll go IOC instead of using singletons !
