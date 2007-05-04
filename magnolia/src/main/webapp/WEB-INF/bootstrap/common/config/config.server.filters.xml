@@ -229,6 +229,9 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>24978fe5-669a-4d72-80c8-01abc7dc0dce</sv:value>
         </sv:property>
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
+        </sv:property>
         <sv:property sv:name="pattern" sv:type="String">
           <sv:value>/.resources/loginForm</sv:value>
         </sv:property>
@@ -269,6 +272,9 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>b1310d4d-762e-4e41-a914-96c897571d8e</sv:value>
         </sv:property>
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
+        </sv:property>
         <sv:property sv:name="pattern" sv:type="String">
           <sv:value>/.magnolia/pages/logout.html</sv:value>
         </sv:property>
@@ -308,6 +314,9 @@
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>ae92d051-9159-43c6-9914-fe510ba58f34</sv:value>
+        </sv:property>
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
         </sv:property>
         <sv:property sv:name="pattern" sv:type="String">
           <sv:value>/.magnolia/pages/javascript.js</sv:value>
@@ -703,6 +712,9 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>03f93744-3250-48e2-a07b-08bd58d6f566</sv:value>
         </sv:property>
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
+        </sv:property>
         <sv:property sv:name="pattern" sv:type="String">
           <sv:value>/.</sv:value>
         </sv:property>
@@ -746,6 +758,9 @@
         <sv:property sv:name="pattern" sv:type="String">
           <sv:value>/docroot</sv:value>
         </sv:property>
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
+        </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:metaData</sv:value>
@@ -782,6 +797,9 @@
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>6994a241-7b5a-4f73-97e4-9e55355006eb</sv:value>
+        </sv:property>
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
         </sv:property>
         <sv:property sv:name="pattern" sv:type="String">
           <sv:value>/admindocroot/</sv:value>
@@ -822,6 +840,9 @@
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>06fe2bf0-01aa-4c58-92bd-ce1aee2727e1</sv:value>
+        </sv:property>
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
         </sv:property>
         <sv:property sv:name="pattern" sv:type="String">
           <sv:value>/tmp/fckeditor/</sv:value>
@@ -866,7 +887,10 @@
         <sv:property sv:name="pattern" sv:type="String">
           <sv:value>/ActivationHandler</sv:value>
         </sv:property>
-        <sv:node sv:name="MetaData">
+        <sv:property sv:name="class" sv:type="String">
+          <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
+        </sv:property>
+         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
