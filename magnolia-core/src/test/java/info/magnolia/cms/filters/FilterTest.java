@@ -19,6 +19,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.MgnlTestCase;
+import info.magnolia.voting.voters.URIStartsWithVoter;
 
 import java.io.IOException;
 
@@ -94,6 +95,7 @@ public class FilterTest extends MgnlTestCase {
         // first filter ignores all uris starting with a .
         String conf =
             "server.filters.first.class=info.magnolia.cms.filters.FilterTest$TestFilter\n" +
+            "server.filters.first.bypasses.dot.class=" + URIStartsWithVoter.class.getName() + "\n" +
             "server.filters.first.bypasses.dot.pattern=.\n" +
             "server.filters.second.class=info.magnolia.cms.filters.FilterTest$TestFilter\n";
 
