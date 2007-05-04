@@ -70,7 +70,13 @@ public class Aggregator {
     public static String getExtension() {
         String ext = (String) MgnlContext.getAttribute(EXTENSION);
         if (ext == null) {
-            ext = StringUtils.substringAfterLast(Path.getURI(), ".");
+            String fileName = StringUtils.substringAfterLast(Path.getURI(), "/");
+            ext = StringUtils.substringAfterLast(fileName, ".");
+
+            if(StringUtils.isEmpty(ext)){
+                fileName = StringUtils.substringAfterLast(Path.getOriginalURI(), "/");
+                ext = StringUtils.substringAfterLast(fileName, ".");
+            }
             MgnlContext.setAttribute(EXTENSION, ext);
         }
         return ext;

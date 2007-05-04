@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
@@ -40,7 +41,7 @@ import org.slf4j.LoggerFactory;
 public final class MIMEMapping {
 
     /**
-     * 
+     *
      */
     private static final String DEFAULT_ICON = "/.resources/file-icons/general.png";
 
@@ -166,26 +167,22 @@ public final class MIMEMapping {
     }
 
     /**
-     * Get MIME type String.
-     * @param request
-     * @return MIME type
+     * @deprecated do not pass the request
      */
     public static String getMIMEType(HttpServletRequest request) {
+        return getMIMEType();
+    }
 
-        String extension = StringUtils.substringAfterLast(Path.getURI(request), "."); //$NON-NLS-1$
-
-        if (StringUtils.isEmpty(extension)) {
-            // the . could be in the middle of the url
-            extension = StringUtils.substringAfterLast(request.getRequestURI(), "/");
-            extension = StringUtils.substringAfterLast(extension, "."); //$NON-NLS-1$
-            if (StringUtils.isEmpty(extension)) {
-                extension = Server.getDefaultExtension();
-            }
-        }
+    /**
+     * Get MIME type String.
+     * @return MIME type of the current context
+     */
+    public static String getMIMEType() {
+        String extension = Aggregator.getExtension();
         String mimeType = getMIMEType(extension);
 
         if (mimeType == null && StringUtils.isNotEmpty(extension)) {
-            log.info("Cannot find MIME type for extension \"{}\"", extension); //$NON-NLS-1$ 
+            log.info("Cannot find MIME type for extension \"{}\"", extension); //$NON-NLS-1$
             mimeType = ((MIMEMappingItem) MIMEMapping.cachedContent.get(Server.getDefaultExtension())).mime;
         }
         return mimeType;
