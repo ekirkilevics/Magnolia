@@ -10,9 +10,7 @@
  */
 package info.magnolia.voting.voters;
 
-import info.magnolia.cms.core.Path;
-import info.magnolia.context.Context;
-
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author philipp
@@ -20,8 +18,13 @@ import info.magnolia.context.Context;
  */
 public class URIStartsWithVoter extends BasePatternVoter {
 
-    protected boolean boolVote(Context ctx) {
-        return Path.getURI().startsWith(this.getPattern());
+    protected boolean boolVote(Object value) {
+        String uri = resolveURIFromValue(value);;
+        if(StringUtils.isEmpty(uri)){
+            return false;
+        }
+
+        return uri.startsWith(this.getPattern());
     }
 
 }

@@ -10,9 +10,6 @@
  */
 package info.magnolia.voting;
 
-import info.magnolia.context.Context;
-
-
 /**
  * @author philipp
  * @version $Id$
@@ -20,7 +17,7 @@ import info.magnolia.context.Context;
  */
 public interface Voter {
 
-    int vote(Context ctx);
+    int vote(Object value);
 
     boolean isEnabled();
 

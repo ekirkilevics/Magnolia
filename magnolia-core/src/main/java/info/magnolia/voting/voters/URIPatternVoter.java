@@ -10,9 +10,11 @@
  */
 package info.magnolia.voting.voters;
 
-import info.magnolia.cms.core.Path;
+
+
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.util.SimpleUrlPattern;
-import info.magnolia.context.Context;
 
 /**
  * @author philipp
@@ -22,8 +24,13 @@ import info.magnolia.context.Context;
 public class URIPatternVoter extends BasePatternVoter {
     private SimpleUrlPattern pattern;
 
-    protected boolean boolVote(Context ctx) {
-        return pattern.match(Path.getURI());
+    protected boolean boolVote(Object value) {
+        String uri = resolveURIFromValue(value);
+        if(StringUtils.isEmpty(uri)){
+            return false;
+        }
+
+        return pattern.match(uri);
     }
 
     public void setPattern(String pattern) {

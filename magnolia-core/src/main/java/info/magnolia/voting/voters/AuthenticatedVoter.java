@@ -11,8 +11,9 @@
 package info.magnolia.voting.voters;
 
 import info.magnolia.cms.security.Authenticator;
-import info.magnolia.context.Context;
-import info.magnolia.context.WebContext;
+import info.magnolia.context.MgnlContext;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
@@ -22,12 +23,13 @@ import info.magnolia.context.WebContext;
  */
 public class AuthenticatedVoter extends AbstractBoolVoter {
 
-    protected boolean boolVote(Context ctx) {
-        if (ctx instanceof WebContext) {
+    protected boolean boolVote(Object value) {
+        if (value instanceof HttpServletRequest) {
             // TODO can we check for anonymous?
-            return Authenticator.isAuthenticated(((WebContext)ctx).getRequest());
-
+            return Authenticator.isAuthenticated((HttpServletRequest)value);
         }
-        return false;
+        else{
+            return !MgnlContext.getUser().getName().equals("anonymous");
+        }
     }
 }

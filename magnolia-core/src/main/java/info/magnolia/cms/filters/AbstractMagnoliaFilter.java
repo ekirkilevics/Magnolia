@@ -53,7 +53,7 @@ public abstract class AbstractMagnoliaFilter implements MagnoliaFilter {
             return true;
         }
         if(MgnlContext.hasInstance()){
-            return Voting.Factory.getDefaultVoting().vote(MgnlContext.getInstance(), bypasses) > 0;
+            return Voting.Factory.getDefaultVoting().vote(bypasses, request) > 0;
         }
         return false;
     }

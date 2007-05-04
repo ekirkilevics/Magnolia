@@ -10,6 +10,13 @@
  */
 package info.magnolia.voting.voters;
 
+import info.magnolia.cms.core.Path;
+import info.magnolia.context.MgnlContext;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
+
 
 
 /**
@@ -53,6 +60,25 @@ public abstract class BasePatternVoter extends AbstractBoolVoter {
 
     public void setInverse(boolean positive) {
         this.inverse = positive;
+    }
+
+    protected String resolveURIFromValue(Object value) {
+        String uri = null;
+        if(value instanceof String){
+            uri = (String) value;
+        }
+        else{
+            if(MgnlContext.hasInstance()){
+                uri = Path.getURI();
+            }
+            else{
+                if (value instanceof HttpServletRequest) {
+                    HttpServletRequest request = (HttpServletRequest) value;
+                    uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
+                }
+            }
+        }
+        return uri;
     }
 
 }

@@ -11,7 +11,6 @@
 package info.magnolia.voting;
 
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.context.Context;
 
 /**
  * @author philipp
@@ -19,7 +18,7 @@ import info.magnolia.context.Context;
  */
 public interface Voting {
 
-    int vote(Context ctx, Voter[] voters);
+    int vote(Voter[] voters, Object value);
 
     static class Factory {
         public static Voting getDefaultVoting() {

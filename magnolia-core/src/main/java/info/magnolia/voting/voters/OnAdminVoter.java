@@ -1,7 +1,6 @@
 package info.magnolia.voting.voters;
 
 import info.magnolia.cms.beans.config.Server;
-import info.magnolia.context.Context;
 
 /**
  * @author fgiust
@@ -9,7 +8,7 @@ import info.magnolia.context.Context;
  */
 public class OnAdminVoter extends AbstractBoolVoter {
 
-    protected boolean boolVote(Context ctx) {
+    protected boolean boolVote(Object value) {
         return Server.isAdmin();
     }
 

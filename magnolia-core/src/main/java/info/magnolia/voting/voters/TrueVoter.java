@@ -10,7 +10,6 @@
  */
 package info.magnolia.voting.voters;
 
-import info.magnolia.context.Context;
 
 
 /**
@@ -20,7 +19,7 @@ import info.magnolia.context.Context;
  *
  */
 public class TrueVoter extends AbstractBoolVoter {
-    protected boolean boolVote(Context ctx) {
+    protected boolean boolVote(Object value) {
         return true;
     }
 }

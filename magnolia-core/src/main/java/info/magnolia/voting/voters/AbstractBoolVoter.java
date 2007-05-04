@@ -10,8 +10,6 @@
  */
 package info.magnolia.voting.voters;
 
-import info.magnolia.context.Context;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,8 +31,8 @@ public abstract class AbstractBoolVoter extends BaseVoterImpl {
 
     private boolean not;
 
-    public int vote(Context ctx) {
-        boolean vote = boolVote(ctx);
+    public int vote(Object value) {
+        boolean vote = boolVote(value);
         if(not){
             vote = !vote;
         }
@@ -57,13 +55,12 @@ public abstract class AbstractBoolVoter extends BaseVoterImpl {
         this.trueValue = positiveVoteValue;
     }
 
-    abstract protected boolean boolVote(Context ctx);
+    abstract protected boolean boolVote(Object value);
 
 
     public boolean isNot() {
         return this.not;
     }
-
 
     public void setNot(boolean not) {
         this.not = not;

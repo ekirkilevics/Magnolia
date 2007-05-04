@@ -2,7 +2,6 @@ package info.magnolia.voting.voters;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.core.Aggregator;
-import info.magnolia.context.Context;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -26,12 +25,18 @@ public class ExtensionVoter extends AbstractBoolVoter {
         this.deny = StringUtils.split(deny, ',');
     }
 
-    protected boolean boolVote(Context ctx) {
-        if (StringUtils.isEmpty(MIMEMapping.getMIMEType())) {
-            return false; // check for MIMEMapping, extension must exist
+    protected boolean boolVote(Object value) {
+        String extension;
+        if(value instanceof String){
+            extension = StringUtils.substringAfterLast((String)value, ".");
+        }
+        else{
+            extension = Aggregator.getExtension();
         }
 
-        String extension = Aggregator.getExtension();
+        if (StringUtils.isEmpty(MIMEMapping.getMIMEType(extension))) {
+            return false; // check for MIMEMapping, extension must exist
+        }
 
         if (allow != null && allow.length > 0 && !ArrayUtils.contains(allow, extension)) {
             return false;

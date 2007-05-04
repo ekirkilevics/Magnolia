@@ -10,7 +10,6 @@
  */
 package info.magnolia.voting;
 
-import info.magnolia.context.Context;
 
 /**
  * @author philipp
@@ -19,12 +18,12 @@ import info.magnolia.context.Context;
  */
 public class DefaultVoting implements Voting {
 
-    public int vote(Context ctx, Voter[] voters) {
+    public int vote(Voter[] voters, Object value) {
         int highestVote = 0;
         for (int i = 0; i < voters.length; i++) {
             Voter voter = voters[i];
             if(voter.isEnabled()){
-                int vote  = voter.vote(ctx);
+                int vote  = voter.vote(value);
 
                 if(Math.abs(vote) > Math.abs(highestVote)){
                     highestVote = vote;
