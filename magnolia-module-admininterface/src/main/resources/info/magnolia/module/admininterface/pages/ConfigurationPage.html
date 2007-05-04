@@ -56,15 +56,13 @@
     <table cellspacing="0" summary="Virtual URIs">
       <thead>
         <tr>
-          <th scope="col">From URI (URL Pattern)</th>
-          <th scope="col">To URI</th>
+          <th scope="col">Mapping</th>
         </tr>
       </thead>
 
       [#list this.virtualUriMappings as mapping]
       <tr>
-        <th align="left" width="300" scope="row">${mapping[1]}</th>
-        <td width="50%" >${mapping[0]}</td>
+        <td>${mapping}</td>
       </tr>
       [/#list]
     </table>
