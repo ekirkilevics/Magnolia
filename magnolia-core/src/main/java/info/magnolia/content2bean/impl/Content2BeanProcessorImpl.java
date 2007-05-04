@@ -42,9 +42,9 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
      */
     static Logger log = LoggerFactory.getLogger(Content2BeanProcessorImpl.class);
 
+    boolean forceCreation = true;
+
     protected Content2BeanTransformerImpl defaultTransformer = new Content2BeanTransformerImpl();
-
-
 
     public Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer) throws Content2BeanException{
        return toBean(node, recursive, transformer, transformer.newState());
@@ -59,23 +59,41 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
             type = transformer.resolveType(state);
         }
         catch (ClassNotFoundException e) {
-            throw new Content2BeanException("can't resolve class for node " +  node.getHandle(), e);
+            if(isForceCreation()){
+                log.warn("can't resolve class for node " +  node.getHandle(), e);
+            }
+            else{
+                throw new Content2BeanException("can't resolve class for node " +  node.getHandle(), e);
+            }
         }
 
-        state.pushType(type);
+        Object bean = null;
+        if(type != null){
+            state.pushType(type);
 
-        Map values = toMap(node, recursive, transformer, state);
+            Map values = toMap(node, recursive, transformer, state);
 
-        Object bean = transformer.newBeanInstance(state, values);
+            bean = transformer.newBeanInstance(state, values);
+            if(bean != null){
+                state.pushBean(bean);
 
-        state.pushBean(bean);
+                setProperties(values, transformer, state);
 
-        setProperties(values, transformer, state);
+                transformer.initBean(state, values);
 
-        transformer.initBean(state, values);
+                state.popBean();
+            }
+            else{
+                if(forceCreation){
+                    log.warn("can't instantiate bean of type " + type.getType().getName() + " for node " + node.getHandle());
+                }
+                else{
+                    throw new Content2BeanException("can't instantiate bean of type " + type.getType().getName());
+                }
+            }
 
-        state.popType();
-        state.popBean();
+            state.popType();
+        }
         state.popContent();
 
         return bean;
@@ -122,7 +140,10 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
                 // the parent bean to resolve the class
 
                 Object childBean = toBean(childNode, true, transformer, state);
-                map.put(childNode.getName(), childBean);
+                // can be null if forceCreation is true
+                if(childBean != null){
+                    map.put(childNode.getName(), childBean);
+                }
             }
         }
 
@@ -153,6 +174,16 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
                 transformer.setProperty(state, descriptor, values);
             }
         }
+    }
+
+
+    public boolean isForceCreation() {
+        return this.forceCreation;
+    }
+
+
+    public void setForceCreation(boolean handleExceptions) {
+        this.forceCreation = handleExceptions;
     }
 
 }
