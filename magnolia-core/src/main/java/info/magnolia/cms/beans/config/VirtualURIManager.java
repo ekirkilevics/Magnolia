@@ -51,6 +51,10 @@ public final class VirtualURIManager extends ObservedManager {
      */
     private static Logger log = LoggerFactory.getLogger(VirtualURIManager.class);
 
+    public static final String FROM_URI_NODEDATANAME = "fromURI";
+
+    public static final String TO_URI_NODEDATANAME = "toURI";
+
     /**
      * Instantiated by the system.
      */
