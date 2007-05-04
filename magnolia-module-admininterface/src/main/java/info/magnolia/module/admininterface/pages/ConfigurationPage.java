@@ -55,7 +55,7 @@ public class ConfigurationPage extends TemplatedMVCHandler {
     }
 
     public Collection getVirtualUriMappings() {
-        return VirtualURIManager.getInstance().getURIMappings().values();
+        return VirtualURIManager.getInstance().getURIMappings();
     }
 
     public List getShutdownTasks() {
