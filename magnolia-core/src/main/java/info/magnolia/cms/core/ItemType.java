@@ -86,6 +86,8 @@ public final class ItemType implements Serializable {
      */
     public static final String MIX_VERSIONABLE = "mix:versionable"; //$NON-NLS-1$
 
+    public static final String MIX_LOCKABLE = "mix:lockable"; //$NON-NLS-1$
+
     /**
      * Magnolia content.
      * @deprecated use ItemType.CONTENT
