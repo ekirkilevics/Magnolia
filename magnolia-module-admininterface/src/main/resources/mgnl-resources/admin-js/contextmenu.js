@@ -145,6 +145,15 @@ function mgnlTreeMenuItemConditionBoolean(bool){
     }
 }
 
+function mgnlTreeMenuItemConditionSelectedRoot(tree){
+    this.tree = tree;
+
+    this.test = function(){
+        if (this.tree.selectedNode.id==this.tree.path) return true;
+        else return false;
+    }
+}
+
 function mgnlTreeMenuItemConditionSelectedNotRoot(tree){
     this.tree = tree;
 
