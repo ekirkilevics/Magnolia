@@ -22,6 +22,7 @@ import info.magnolia.api.HierarchyManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Locale;
 
 /**
  * This is the system context using the not secured HierarchyManagers. The context uses only one scope.
@@ -39,6 +40,8 @@ public class SystemContextImpl extends AbstractMapBasedContext implements System
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
+
+    private Locale systemLocale;
 
     /**
      * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself. Init the scopes
@@ -60,22 +63,14 @@ public class SystemContextImpl extends AbstractMapBasedContext implements System
 
     public void setAttribute(String name, Object value, int scope) {
         if (scope == Context.LOCAL_SCOPE || scope == Context.SESSION_SCOPE) {
-            log
-                .warn(
-                    "you should not set an attribute in the system context in request or session scope. You are setting {}={}",
-                    name,
-                    value);
+            log.warn("you should not set an attribute in the system context in request or session scope. You are setting {}={}", name, value);
         }
         super.setAttribute(name, value, scope);
     }
 
     public void removeAttribute(String name, Object value, int scope) {
         if (scope == Context.LOCAL_SCOPE || scope == Context.SESSION_SCOPE) {
-            log
-                .warn(
-                    "you should not manipulate an attribute in the system context in request or session scope. You are setting {}={}",
-                    name,
-                    value);
+            log.warn("you should not manipulate an attribute in the system context in request or session scope. You are setting {}={}", name, value);
         }
         super.removeAttribute(name, scope);
     }
@@ -91,5 +86,15 @@ public class SystemContextImpl extends AbstractMapBasedContext implements System
             this.user = Security.getUserManager().getSystemUser();
         }
         return this.user;
+    }
+
+    public Locale getLocale() {
+        return systemLocale;
+    }
+
+
+    public void setLocale(Locale locale) {
+        this.systemLocale = locale;
+       // servletCtx.setAttribute(Config.FMT_LOCALE + ".application", locale); //$NON-NLS-1$
     }
 }
