@@ -365,14 +365,12 @@ public class MgnlUser implements User, Serializable {
             }
         }
         catch (RepositoryException e) {
-            log.debug(
-                "Unable to set the last access date due to a " + e.getClass().getName() + " - " + e.getMessage(),
-                e);
+            log.debug("Unable to set the last access date due to a " + e.getClass().getName() + " - " + e.getMessage(), e);
         }
 
     }
 
-    private Content getUserNode() {
+    protected Content getUserNode() {
         if (null == userNode) {
             reInitialize();
         }
