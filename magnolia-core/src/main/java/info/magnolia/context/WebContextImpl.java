@@ -88,11 +88,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     }
 
     /**
-     * Make the language available for JSTL
+     * Make the locale available for JSTL
      */
     public void setLocale(Locale locale) {
         super.setLocale(locale);
-        this.setAttribute(Config.FMT_LOCALE + ".session", locale.getLanguage(), Context.SESSION_SCOPE); //$NON-NLS-1$
+        this.setAttribute(Config.FMT_LOCALE + ".session", locale, Context.SESSION_SCOPE); //$NON-NLS-1$
     }
 
     /**
@@ -293,17 +293,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                     obj = this.getParameter(name);
                 }
                 if(obj == null){
-                    try {
-                        obj = BeanUtils.getProperty(request, name);
-                    }
-                    catch (IllegalAccessException e) {
-                        // expected
-                    }
-                    catch (InvocationTargetException e) {
-                        // expected
-                    }
-                    catch (NoSuchMethodException e) {
-                        // expected
+                    // we also expose some of the request properties as attributes
+                    if (ATTRIBUTE_REQUEST_CHARACTER_ENCODING.equals(name)) {
+                        obj = request.getCharacterEncoding();
+                    } else if (ATTRIBUTE_REQUEST_URI.equals(name)) {
+                        obj = request.getRequestURI();
                     }
                 }
                 return obj;
@@ -316,7 +310,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
             case Context.APPLICATION_SCOPE:
                 return MgnlContext.getSystemContext().getAttribute(name, Context.APPLICATION_SCOPE);
             default:
-                log.error("no illegal scope passed");
+                log.error("illegal scope passed");
                 return null;
         }
     }
