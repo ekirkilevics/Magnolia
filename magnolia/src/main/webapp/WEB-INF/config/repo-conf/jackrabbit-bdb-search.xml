@@ -43,6 +43,7 @@
                org.apache.jackrabbit.extractor.OpenOfficeTextExtractor,
                org.apache.jackrabbit.extractor.RTFTextExtractor,
                org.apache.jackrabbit.extractor.HTMLTextExtractor,
+               org.apache.jackrabbit.extractor.PlainTextExtractor,
                org.apache.jackrabbit.extractor.XMLTextExtractor" />
     </SearchIndex>
   </Workspace>
