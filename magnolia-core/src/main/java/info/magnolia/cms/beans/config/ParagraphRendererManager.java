@@ -77,11 +77,11 @@ public class ParagraphRendererManager extends ObservedManager {
                 registererParagraphRenderer(name, renderer);
                 log.debug("Registered template render [{}] with name {}", clazz, name);
             } catch (InstantiationException e) {
-                throw new IllegalStateException("Can't register paragraph renderer with name [" + name + "] and class [" + clazz + "] : " + e.getClass().getName() + " : " + e.getMessage(), e);
+                throw newInstanciationException(name, clazz, e);
             } catch (IllegalAccessException e) {
-                throw new IllegalStateException("Can't register paragraph renderer with name [" + name + "] and class [" + clazz + "] : " + e.getClass().getName() + " : " + e.getMessage(), e);
+                throw newInstanciationException(name, clazz, e);
             } catch (ClassNotFoundException e) {
-                throw new IllegalStateException("Can't register paragraph renderer with name [" + name + "] and class [" + clazz + "] : " + e.getClass().getName() + " : " + e.getMessage(), e);
+                throw newInstanciationException(name, clazz, e);
             }
         }
     }
@@ -95,5 +95,9 @@ public class ParagraphRendererManager extends ObservedManager {
 
     protected void onClear() {
         paragraphRenderers.clear();
+    }
+
+    private IllegalStateException newInstanciationException(String name, String clazz, Exception e) {
+        return new IllegalStateException("Can't register paragraph renderer with name [" + name + "] and class [" + clazz + "] : " + e.getClass().getName() + " : " + e.getMessage());
     }
 }
