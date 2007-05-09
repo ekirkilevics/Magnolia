@@ -184,11 +184,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
         RepositoryException, AccessDeniedException {
         Content content = new Content(this.getRootNode(), this.getNodePath(path, label), contentType, this.accessManager);
-        content.addMixin(ItemType.MIX_VERSIONABLE);
-        // todo
-        // add mix:lockable as defualt for all nodes created using this manager
-        // for version 3.1 we cannot change node type definitions because of compatibility reasons
-        content.addMixin(ItemType.MIX_LOCKABLE);
         setMetaData(content.getMetaData());
         return content;
     }

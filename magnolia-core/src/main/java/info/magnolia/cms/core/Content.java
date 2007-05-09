@@ -150,6 +150,11 @@ public class Content extends ContentHandler implements Cloneable {
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, contentType);
         this.setAccessManager(manager);
+        this.addMixin(ItemType.MIX_VERSIONABLE);
+        // add mix:lockable as defualt for all nodes created using this manager
+        // for version 3.1 we cannot change node type definitions because of compatibility reasons
+        // MAGNOLIA-1518
+        this.addMixin(ItemType.MIX_LOCKABLE);
     }
 
     /**
