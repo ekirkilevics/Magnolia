@@ -171,10 +171,6 @@ public class RolesACLPage extends SimplePageMVCHandler {
         return html.toString();
     }
 
-    /**
-     * @throws Exception
-     * @see info.magnolia.cms.servlets.BasePageServlet#render(HttpServletRequest, HttpServletResponse)
-     */
     protected void render(HttpServletRequest request, HttpServletResponse response) throws Exception {
         PrintWriter out = response.getWriter();
         Messages msgs = MessagesManager.getMessages();
