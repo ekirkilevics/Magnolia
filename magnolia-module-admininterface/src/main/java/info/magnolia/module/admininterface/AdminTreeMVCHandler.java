@@ -21,6 +21,8 @@ import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.MessagesUtil;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.AlertUtil;
@@ -128,6 +130,8 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     protected String newPath;
 
     private String repository;
+
+    private String i18nBasename;
 
     /**
      * Used to display the same tree in the linkbrowser
@@ -829,6 +833,8 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         if (this.configuration == null) {
             this.configuration = (AdminTreeConfiguration) FactoryUtil.newInstanceWithoutDiscovery(this
                 .getConfigurationClass(), new Object[]{});
+            final Messages messages = MessagesUtil.chainWithDefault(getI18nBasename());
+            configuration.setMessages(messages);
         }
         return this.configuration;
     }
@@ -856,4 +862,11 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         this.treeClass = treeClass;
     }
 
+    public String getI18nBasename() {
+        return i18nBasename;
+    }
+
+    public void setI18nBasename(String i18nBasename) {
+        this.i18nBasename = i18nBasename;
+    }
 }

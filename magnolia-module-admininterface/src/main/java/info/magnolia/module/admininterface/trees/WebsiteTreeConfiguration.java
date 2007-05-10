@@ -26,11 +26,10 @@ import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admininterface.AdminTreeConfiguration;
+import info.magnolia.module.admininterface.AbstractTreeConfiguration;
 
 import java.util.Iterator;
 
@@ -43,14 +42,14 @@ import org.apache.commons.lang.StringUtils;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
+public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
 
     /**
      * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareTree(info.magnolia.cms.gui.control.Tree,
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages();
+        final Messages msgs = getMessages();
 
         tree.setIconOndblclick("mgnlTreeMenuItemOpen(" + tree.getJavascriptTree() + ");"); //$NON-NLS-1$ //$NON-NLS-2$
 
@@ -136,7 +135,7 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages();
+        final Messages msgs = getMessages();
         ContextMenuItem menuOpen = new ContextMenuItem("open");
         menuOpen.setLabel(msgs.get("tree.web.menu.open")); //$NON-NLS-1$
         menuOpen.setIcon(request.getContextPath() + "/.resources/icons/16/document_plain_earth.gif"); //$NON-NLS-1$
@@ -289,7 +288,7 @@ public class WebsiteTreeConfiguration implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages();
+        final Messages msgs = getMessages();
         ContextMenu cm = tree.getMenu();
         ContextMenuItem cmItem = cm.getMenuItemByName("open");
         if (cmItem != null) {

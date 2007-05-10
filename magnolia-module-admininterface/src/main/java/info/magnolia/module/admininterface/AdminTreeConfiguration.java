@@ -13,6 +13,7 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.gui.control.Tree;
+import info.magnolia.cms.i18n.Messages;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -23,6 +24,11 @@ import javax.servlet.http.HttpServletRequest;
  * @version $Revision$ ($Author$)
  */
 public interface AdminTreeConfiguration {
+
+    /**
+     * Sets the messages bundle to be used. Must be called by instanciator.
+     */
+    public void setMessages(Messages m);
 
     /**
      * Override this method to configure the tree control (define the columns, ...)

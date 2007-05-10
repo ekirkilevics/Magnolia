@@ -22,8 +22,7 @@ import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.module.admininterface.AdminTreeConfiguration;
+import info.magnolia.module.admininterface.AbstractTreeConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -34,14 +33,14 @@ import org.apache.commons.lang.StringUtils;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class GroupsTreeConfiguration implements AdminTreeConfiguration {
+public class GroupsTreeConfiguration extends AbstractTreeConfiguration {
 
     /**
      * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareTree(info.magnolia.cms.gui.control.Tree,
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages();
+        final Messages msgs = getMessages();
 
         tree.setDrawShifter(false);
 
@@ -92,7 +91,7 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages();
+        final Messages msgs = getMessages();
 
         ContextMenuItem menuOpen = new ContextMenuItem("edit");
         menuOpen.setLabel(msgs.get("tree.groups.menu.edit")); //$NON-NLS-1$
@@ -181,7 +180,6 @@ public class GroupsTreeConfiguration implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
-        // AbstractMessagesImpl msgs = MessagesManager.getMessages();
         ContextMenu cm = tree.getMenu();
         ContextMenuItem cmItem = cm.getMenuItemByName("edit");
         if (cmItem != null) {

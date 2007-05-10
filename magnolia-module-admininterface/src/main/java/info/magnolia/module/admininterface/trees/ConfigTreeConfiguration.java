@@ -23,8 +23,7 @@ import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.module.admininterface.AdminTreeConfiguration;
+import info.magnolia.module.admininterface.AbstractTreeConfiguration;
 
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
@@ -36,14 +35,14 @@ import org.apache.commons.lang.StringUtils;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class ConfigTreeConfiguration implements AdminTreeConfiguration {
+public class ConfigTreeConfiguration extends AbstractTreeConfiguration {
 
     /**
      * @see info.magnolia.module.admininterface.AdminTreeConfiguration#prepareTree(info.magnolia.cms.gui.control.Tree,
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages();
+        final Messages msgs = getMessages();
 
         tree.setIconPage(Tree.ICONDOCROOT + "folder_cubes.gif"); //$NON-NLS-1$
 
@@ -108,7 +107,7 @@ public class ConfigTreeConfiguration implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages();
+        final Messages msgs = getMessages();
 
         ContextMenuItem menuNewPage = new ContextMenuItem("newFolder");
         menuNewPage.setLabel(msgs.get("tree.config.menu.newFolder")); //$NON-NLS-1$
@@ -268,7 +267,7 @@ public class ConfigTreeConfiguration implements AdminTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
-        Messages msgs = MessagesManager.getMessages();
+        final Messages msgs = getMessages();
         ContextMenu cm = tree.getMenu();
         ContextMenuItem cmItem = cm.getMenuItemByName("newFolder");
         if (cmItem != null) {
