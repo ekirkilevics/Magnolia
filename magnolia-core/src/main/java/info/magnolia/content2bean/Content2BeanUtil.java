@@ -11,9 +11,11 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.LanguageDefinition;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -49,6 +51,22 @@ public class Content2BeanUtil {
             return TypeMapping.MAP_TYPE;
         }
     };
+
+    /**
+     * Provide a default class.
+     */
+    public static final class DefaultClassTransformer extends Content2BeanTransformerImpl {
+
+        private TypeDescriptor defaultType;
+
+        public DefaultClassTransformer(Class defaultClass) {
+            this.defaultType = TypeMapping.Factory.getDefaultMapping().getTypeDescriptor(defaultClass);
+        }
+
+        protected TypeDescriptor onResolveClass(TransformationState state) {
+            return this.defaultType;
+        }
+    }
 
     /**
      * Get the current processor
@@ -90,13 +108,14 @@ public class Content2BeanUtil {
      * @see Content2BeanProcessor
      */
     public static Object toBean(Content node, final Class defaultClass) throws Content2BeanException {
-        return toBean(node, false, new Content2BeanTransformerImpl() {
-            TypeDescriptor defaultType = TypeMapping.Factory.getDefaultMapping().getTypeDescriptor(defaultClass);
+        return toBean(node, false, new DefaultClassTransformer(defaultClass));
+    }
 
-            protected TypeDescriptor onResolveClass(TransformationState state) {
-                return defaultType;
-            }
-        });
+    /**
+     * @see Content2BeanProcessor
+     */
+    public static Object toBean(Content node, boolean recursive, final Class defaultClass) throws Content2BeanException {
+        return toBean(node, recursive, new DefaultClassTransformer(defaultClass));
     }
 
     /**
@@ -131,11 +150,15 @@ public class Content2BeanUtil {
         return (Map) setProperties(new LinkedHashMap(), node, recursive);
     }
 
+    public static Map toMap(Content node, boolean recursive, Class defaultClass) throws Content2BeanException {
+        return (Map) setProperties(new LinkedHashMap(), node, recursive, defaultClass);
+    }
+
     /**
      * Transforms the nodes data into a map containting the names and values. In case recursive is true the subnodes are
      * transformed to maps as well
      */
-    public static Map toMaps(Content node, boolean recursive) throws Content2BeanException {
+    public static Map toPureMaps(Content node, boolean recursive) throws Content2BeanException {
         return (Map) toBean(node, recursive, TO_MAP_TRANSFORMER);
     }
 
@@ -153,8 +176,10 @@ public class Content2BeanUtil {
         return setProperties(bean, node, recursive, getContent2BeanTransformer());
     }
 
+    public static Object setProperties(Object bean, Content node, boolean recursive, Class defaultClass) throws Content2BeanException {
+        return setProperties(bean, node, recursive, new DefaultClassTransformer(defaultClass));
+    }
     /**
-
      * @see Content2BeanProcessor
      */
     public static Object setProperties(Object bean, Content node, boolean recursive, Content2BeanTransformer transformer) throws Content2BeanException {
@@ -214,6 +239,8 @@ public class Content2BeanUtil {
             throw new Content2BeanException("can't read properties from bean", e);
         }
     }
+
+
 
 }
 
