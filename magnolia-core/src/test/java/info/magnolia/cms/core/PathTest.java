@@ -12,10 +12,12 @@
  */
 package info.magnolia.cms.core;
 
-import java.io.File;
-
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import junit.framework.TestCase;
+import static org.easymock.EasyMock.*;
 
+import java.io.File;
 
 /**
  * @author fgiust
@@ -31,6 +33,32 @@ public class PathTest extends TestCase {
         assertTrue(Path.isAbsolute("d:/test"));
         assertTrue(Path.isAbsolute(File.separator + "test"));
         assertFalse(Path.isAbsolute("test"));
+    }
+
+    public void testUriDecodingShouldStripCtxPath() {
+        WebContext webCtx = createMock(WebContext.class);
+        expect(webCtx.getContextPath()).andReturn("/foo");
+        final AggregationState aggState = new AggregationState();
+        aggState.setCharacterEncoding("UTF-8");
+        expect(webCtx.getAggregationState()).andReturn(aggState);
+        MgnlContext.setInstance(webCtx);
+        replay(webCtx);
+
+        assertEquals("/pouet", Path.decodedURI("/foo/pouet"));
+        verify(webCtx);
+    }
+
+    public void testUriDecodingShouldReturnPassedURIDoesntContainCtxPath() {
+        WebContext webCtx = createMock(WebContext.class);
+        expect(webCtx.getContextPath()).andReturn("/foo");
+        final AggregationState aggState = new AggregationState();
+        aggState.setCharacterEncoding("UTF-8");
+        expect(webCtx.getAggregationState()).andReturn(aggState);
+        MgnlContext.setInstance(webCtx);
+        replay(webCtx);
+
+        assertEquals("/pouet", Path.decodedURI("/pouet"));
+        verify(webCtx);
     }
 
 }
