@@ -49,6 +49,8 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class DialogControlImpl implements DialogControl {
 
+    public static final String DEFAULT_VALUE_PROPERTY = "defaultValue";
+
     private static final String I18N_BASENAME_PROPERTY = "i18nBasename";
 
     public static final String SESSION_ATTRIBUTENAME_DIALOGOBJECT = "mgnlSessionAttribute"; //$NON-NLS-1$
@@ -186,8 +188,8 @@ public abstract class DialogControlImpl implements DialogControl {
                 this.value = params.getParameter(this.getName());
             }
 
-            if (this.value == null && StringUtils.isNotEmpty(getConfigValue("defaultValue"))) {
-                return this.getMessage(this.getConfigValue("defaultValue"));
+            if (this.value == null && StringUtils.isNotEmpty(getConfigValue(DEFAULT_VALUE_PROPERTY))) {
+                return this.getMessage(this.getConfigValue(DEFAULT_VALUE_PROPERTY));
             }
 
             if (this.value == null) {
@@ -198,6 +200,15 @@ public abstract class DialogControlImpl implements DialogControl {
     }
 
     protected String readValue() {
+        try {
+            if(!this.getWebsiteNode().hasNodeData(this.getName())){
+                return null;
+            }
+        }
+        catch (RepositoryException e) {
+            log.error("can't read nodedata [" + this.getName() + "]", e);
+            return null;
+        }
         return this.getWebsiteNode().getNodeData(this.getName()).getString();
     }
 
@@ -362,10 +373,10 @@ public abstract class DialogControlImpl implements DialogControl {
     public List getValues() {
         if (this.values == null) {
             this.values = readValues();
-            
+
             if(this instanceof UUIDDialogControl){
                 String repository = ((UUIDDialogControl)this).getRepository();
-                List pathes = new ArrayList(); 
+                List pathes = new ArrayList();
                 for (Iterator iter = this.values.iterator(); iter.hasNext();) {
                     String uuid = (String) iter.next();
                     String path = ContentUtil.uuid2path(repository, uuid);
