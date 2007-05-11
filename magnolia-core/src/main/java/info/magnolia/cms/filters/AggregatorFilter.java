@@ -14,7 +14,8 @@ import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.runtime.File;
-import info.magnolia.cms.core.Aggregator;
+import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -92,10 +93,11 @@ public class AggregatorFilter extends AbstractMagnoliaFilter{
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
-    protected boolean collect() throws PathNotFoundException, RepositoryException {
-        String handle = Aggregator.getHandle();
-        String extension = Aggregator.getExtension();
-        String repository = Aggregator.getRepository();
+    protected boolean collect() throws RepositoryException {
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        String handle = aggregationState.getHandle();
+        String extension = aggregationState.getExtension();
+        String repository = aggregationState.getRepository();
 
         HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(repository);
 
@@ -127,9 +129,7 @@ public class AggregatorFilter extends AbstractMagnoliaFilter{
             template = TemplateManager.getInstance().getInfo(templateName, extension);
 
             if (template == null) {
-                log.error("Template [{}] for page [{}] not found.", //$NON-NLS-1$
-                    templateName,
-                    requestedPage.getHandle());
+                log.error("Template [{}] for page [{}] not found.", templateName, requestedPage.getHandle());
             }
         }
         else {
@@ -146,7 +146,7 @@ public class AggregatorFilter extends AbstractMagnoliaFilter{
 
                     try {
                         requestedData = hierarchyManager.getNodeData(handle);
-                        Aggregator.setHandle(handle);
+                        aggregationState.setHandle(handle);
 
                         // this is needed for binary nodedata, e.g. images are found using the path:
                         // /features/integration/headerImage instead of /features/integration/headerImage/header30_2
@@ -164,7 +164,7 @@ public class AggregatorFilter extends AbstractMagnoliaFilter{
             }
 
             if (requestedData != null) {
-                String templateName = requestedData.getAttribute(Aggregator.NODE_DATA_TEMPLATE);
+                String templateName = requestedData.getAttribute(FileProperties.PROPERTY_TEMPLATE);
 
                 if (!StringUtils.isEmpty(templateName)) {
                     template = TemplateManager.getInstance().getInfo(templateName, extension);
@@ -177,15 +177,15 @@ public class AggregatorFilter extends AbstractMagnoliaFilter{
 
         // Attach all collected information to the HttpServletRequest.
         if (requestedPage != null) {
-            Aggregator.setMainContent(requestedPage);
-            Aggregator.setCurrentContent(requestedPage);
+            aggregationState.setMainContent(requestedPage);
+            aggregationState.setCurrentContent(requestedPage);
         }
         if ((requestedData != null) && (requestedData.getType() == PropertyType.BINARY)) {
             File file = new File(requestedData);
-            Aggregator.setFile(file);
+            aggregationState.setFile(file);
         }
 
-        Aggregator.setTemplate(template);
+        aggregationState.setTemplate(template);
 
         return true;
     }

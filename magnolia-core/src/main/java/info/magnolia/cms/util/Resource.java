@@ -15,14 +15,12 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
 
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
@@ -59,7 +57,7 @@ public final class Resource {
      * @return currently active page, as requested from the URI
      */
     public static Content getActivePage() {
-        return Aggregator.getMainContent();
+        return MgnlContext.getAggregationState().getMainContent();
     }
 
     /**
@@ -76,9 +74,9 @@ public final class Resource {
      * @return currently active page, as requested from the URI
      */
     public static Content getCurrentActivePage() {
-        Content currentActpage = Aggregator.getCurrentContent();
+        Content currentActpage = MgnlContext.getAggregationState().getCurrentContent();
         if (currentActpage == null) {
-            currentActpage = Aggregator.getMainContent();
+            currentActpage = MgnlContext.getAggregationState().getMainContent();
         }
         return currentActpage;
     }
@@ -97,7 +95,7 @@ public final class Resource {
      * @return currently atom
      */
     public static File getFile() {
-        return Aggregator.getFile();
+        return MgnlContext.getAggregationState().getFile();
     }
 
     /**
@@ -134,8 +132,7 @@ public final class Resource {
      * repository, in order to swith between user and website repositories, use method (changeContext) on this object.
      * @param req HttpServletRequest as received in JSP or servlet
      * @return hierarchy manager, for the website repository
-     * @deprecated as on magnolia 3.0, use MglnContext instead
-     * @see info.magnolia.cms.security.SessionAccessControl#getHierarchyManager(javax.servlet.http.HttpServletRequest)
+     * @deprecated as of magnolia 3.0, use MglnContext instead
      */
     public static HierarchyManager getHierarchyManager(HttpServletRequest req) {
         return MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
@@ -201,15 +198,13 @@ public final class Resource {
      * </p>
      * @return selector String as requested from the URI
      */
-
     public static String getSelector() {
-        return Aggregator.getSelector();
+        return MgnlContext.getAggregationState().getSelector();
     }
 
     /**
      * @deprecated don't pass the request
      */
-
     public static String getSelector(HttpServletRequest req) {
         return getSelector();
     }
@@ -220,7 +215,7 @@ public final class Resource {
      * @return the selector value
      */
     public static String getSelector(int index) {
-        String[] selectors = StringUtils.split(Aggregator.getSelector(), ".");
+        String[] selectors = StringUtils.split(getSelector(), ".");
         if(selectors.length > index){
             return selectors[index];
         }
@@ -286,7 +281,7 @@ public final class Resource {
      * Set the request's <code>actpage</code> attribute to <code>page</code>
      */
     public static void setCurrentActivePage(Content page) {
-        Aggregator.setCurrentContent(page);
+        MgnlContext.getAggregationState().setCurrentContent(page);
     }
 
     /**
@@ -300,7 +295,6 @@ public final class Resource {
      * <p>
      * set ContentNode object in resources, scope:page
      * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
      * @param node to be set
      */
     public static void setGlobalContentNode(Content node) {
@@ -318,7 +312,6 @@ public final class Resource {
      * <p>
      * set ContentNode object in resources , scope:TAG
      * </p>
-     * @param req HttpServletRequest as received in JSP or servlet
      * @param node to be set
      */
     public static void setLocalContentNode(Content node) {
@@ -345,7 +338,6 @@ public final class Resource {
 
     /**
      * Check for preview mode.
-     * @param req HttpServletRequest as received in JSP or servlet
      * @return boolean , true if preview is enabled
      */
     public static boolean showPreview() {

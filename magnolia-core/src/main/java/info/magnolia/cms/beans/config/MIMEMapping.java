@@ -12,12 +12,11 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
 import java.util.Hashtable;
@@ -53,6 +52,7 @@ public final class MIMEMapping {
     private static final String START_PAGE = "server"; //$NON-NLS-1$
 
     private static Map cachedContent = new Hashtable();
+    private static final String DEFAULT_CHAR_ENCODING = "UTF-8";
 
     /**
      * Used to keep the configuration in memory
@@ -176,13 +176,21 @@ public final class MIMEMapping {
     /**
      * Get MIME type String.
      * @return MIME type of the current context
+     * @deprecated use getMIMEType(String s) or getMIMETypeOrDefault(String s)
      */
     public static String getMIMEType() {
-        String extension = Aggregator.getExtension();
+        final String extension = MgnlContext.getAggregationState().getExtension();
+        return getMIMETypeOrDefault(extension);
+    }
+
+    /**
+     * Returns the mime-type associated with this extension, or the server's default.
+     */
+    public static String getMIMETypeOrDefault(String extension) {
         String mimeType = getMIMEType(extension);
 
         if (mimeType == null && StringUtils.isNotEmpty(extension)) {
-            log.info("Cannot find MIME type for extension \"{}\"", extension); //$NON-NLS-1$
+            log.info("Cannot find MIME type for extension \"{}\"", extension);
             mimeType = ((MIMEMappingItem) MIMEMapping.cachedContent.get(Server.getDefaultExtension())).mime;
         }
         return mimeType;
@@ -190,9 +198,14 @@ public final class MIMEMapping {
 
     /**
      * @param request
+     * @deprecated not used
      */
     public static String getContentEncoding(HttpServletRequest request) {
-        String contentType = MIMEMapping.getMIMEType(request);
+        final String contentType = MIMEMapping.getMIMEType(request);
+        return getContentEncoding(contentType);
+    }
+
+    public static String getContentEncoding(String contentType) {
         if (contentType != null) {
             int index = contentType.lastIndexOf(";"); //$NON-NLS-1$
             if (index > -1) {
@@ -202,6 +215,16 @@ public final class MIMEMapping {
             }
         }
         return StringUtils.EMPTY;
+    }
+
+    public static String getContentEncodingOrDefault(String contentType) {
+        final String characterEncoding = getContentEncoding(contentType);
+
+        if (StringUtils.isEmpty(characterEncoding)) {
+            return DEFAULT_CHAR_ENCODING;
+        } else {
+            return characterEncoding;
+        }
     }
 
     /**

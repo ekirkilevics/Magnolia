@@ -1,7 +1,7 @@
 package info.magnolia.voting.voters;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
-import info.magnolia.cms.core.Aggregator;
+import info.magnolia.context.MgnlContext;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -31,7 +31,7 @@ public class ExtensionVoter extends AbstractBoolVoter {
             extension = StringUtils.substringAfterLast((String)value, ".");
         }
         else{
-            extension = Aggregator.getExtension();
+            extension = MgnlContext.getAggregationState().getExtension();
         }
 
         if (StringUtils.isEmpty(MIMEMapping.getMIMEType(extension))) {

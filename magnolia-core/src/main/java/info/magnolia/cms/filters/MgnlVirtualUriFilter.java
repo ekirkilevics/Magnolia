@@ -13,7 +13,8 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.VirtualURIManager;
-import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
@@ -30,15 +31,12 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Handle redirects configured using VirtualURIMappings.
+ *
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class MgnlVirtualUriFilter extends AbstractMagnoliaFilter  {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MgnlVirtualUriFilter.class);
+public class MgnlVirtualUriFilter extends AbstractMagnoliaFilter {
+    private static final Logger log = LoggerFactory.getLogger(MgnlVirtualUriFilter.class);
 
     private static final int REDIRECT = 1;
 
@@ -63,39 +61,37 @@ public class MgnlVirtualUriFilter extends AbstractMagnoliaFilter  {
      * @return <code>true</code> if request has been redirected, <code>false</code> otherwise
      */
     private int redirect(HttpServletRequest request, HttpServletResponse response) {
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        String targetUri = getURIMapping(aggregationState.getCurrentURI());
 
-        String uri = this.getURIMap(request);
-
-        if (StringUtils.isNotEmpty(uri)) {
+        if (StringUtils.isNotEmpty(targetUri)) {
             if (!response.isCommitted()) {
 
-                if (uri.startsWith("redirect:")) {
+                if (targetUri.startsWith("redirect:")) {
                     try {
-                        response.sendRedirect(request.getContextPath() + StringUtils.substringAfter(uri, "redirect:"));
+                        response.sendRedirect(request.getContextPath() + StringUtils.substringAfter(targetUri, "redirect:"));
                         return REDIRECT;
                     }
                     catch (IOException e) {
-                        log.error("Failed to redirect to {}:{}", //$NON-NLS-1$
-                            new Object[]{uri, e.getMessage()});
+                        log.error("Failed to redirect to {}:{}", targetUri, e.getMessage());
                     }
-                } else if (uri.startsWith("forward:")) {
-                    uri = StringUtils.substringAfter(uri, "forward:");
+                    
+                } else if (targetUri.startsWith("forward:")) {
+                    targetUri = StringUtils.substringAfter(targetUri, "forward:");
                     try {
-                        request.getRequestDispatcher(uri).forward(request, response);
+                        request.getRequestDispatcher(targetUri).forward(request, response);
                         return REDIRECT;
                     } catch (Exception e) {
-                        log.error("Failed to forward to {} - {}:{}", //$NON-NLS-1$
-                            new Object[]{uri, ClassUtils.getShortClassName(e.getClass()), e.getMessage()});
+                        log.error("Failed to forward to {} - {}:{}", new Object[]{targetUri, ClassUtils.getShortClassName(e.getClass()), e.getMessage()});
                     }
+
                 } else {
-                    Path.setURI(uri);
+                    aggregationState.setCurrentURI(targetUri);
                     return INCLUDE;
                 }
             }
             else {
-                log.warn("Response is already committed, cannot forward to {} (original URI was {})",//$NON-NLS-1$
-                    uri,
-                    request.getRequestURI());
+                log.warn("Response is already committed, cannot forward to {} (original URI was {})", targetUri, request.getRequestURI());
             }
 
             //return true;
@@ -106,10 +102,9 @@ public class MgnlVirtualUriFilter extends AbstractMagnoliaFilter  {
 
     /**
      * @return URI mapping as in ServerInfo
-     * @param request HttpServletRequest
      */
-    protected String getURIMap(HttpServletRequest request) {
-        return VirtualURIManager.getInstance().getURIMapping(Path.getURI());
+    protected String getURIMapping(String currentURI) {
+        return VirtualURIManager.getInstance().getURIMapping(currentURI);
     }
 
 

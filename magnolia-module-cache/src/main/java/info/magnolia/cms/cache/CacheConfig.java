@@ -4,9 +4,9 @@ import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -89,8 +89,7 @@ public class CacheConfig {
      * @return true if the uri is allowed to be cached, false otherwise
      */
     public boolean isUriCacheable(HttpServletRequest request) {
-
-        String uri = Path.getURI(request);
+        final String uri = MgnlContext.getAggregationState().getCurrentURI();
         boolean isAllowed = false;
         int lastMatchedPatternlength = 0;
 

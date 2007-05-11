@@ -19,20 +19,18 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.core.Access;
 import info.magnolia.context.MgnlContext;
 
 /**
  * @author Sameer Charles
- * $Id$
+ * $Id: ContentSecurityFilter.java 9391 2007-05-11 15:48:02Z scharles $
  */
 public class ContentSecurityFilter extends BaseSecurityFilter {
-
     private static final Logger log = LoggerFactory.getLogger(ContentSecurityFilter.class);
 
     public boolean isAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String repositoryName = Aggregator.getRepository();
+        String repositoryName = MgnlContext.getAggregationState().getRepository();
         AccessManager accessManager = MgnlContext.getAccessManager(repositoryName);
         return isAuthorized(accessManager);
     }
@@ -43,7 +41,8 @@ public class ContentSecurityFilter extends BaseSecurityFilter {
     protected boolean isAuthorized(AccessManager accessManager) {
         if (null == accessManager) return false;
         try {
-            Access.isGranted(accessManager, Aggregator.getHandle(), Permission.READ);
+            final String handle = MgnlContext.getAggregationState().getHandle();
+            Access.isGranted(accessManager, handle, Permission.READ);
             return true;
         } catch (AccessDeniedException ade) {
             log.debug(ade.getMessage(), ade);

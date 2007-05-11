@@ -13,13 +13,13 @@
 package info.magnolia.cms.gui.inline;
 
 import info.magnolia.cms.beans.config.Server;
-import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
@@ -184,7 +184,7 @@ public class BarMain extends Bar {
     public void setButtonSiteAdmin(String path) {
         Button b = new Button();
         b.setLabel(MessagesManager.get("buttons.admincentral")); //$NON-NLS-1$
-        String repository = Aggregator.getRepository();
+        String repository = MgnlContext.getAggregationState().getRepository();
         b.setOnclick("MgnlAdminCentral.showTree('"+repository+"','" + path + "');"); //$NON-NLS-1$ //$NON-NLS-2$
         this.setButtonSiteAdmin(b);
     }

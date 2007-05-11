@@ -17,7 +17,7 @@ import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
-import info.magnolia.cms.core.Aggregator;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
 
@@ -63,7 +63,8 @@ public class MgnlCmsFilter extends AbstractMagnoliaFilter {
             return;
         }
 
-        Template template = Aggregator.getTemplate();
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        final Template template = aggregationState.getTemplate();
 
         if (template != null) {
             try {
@@ -95,7 +96,7 @@ public class MgnlCmsFilter extends AbstractMagnoliaFilter {
         }
         else {
             // direct request
-            handleResourceRequest(request, response);
+            handleResourceRequest(aggregationState, request, response);
         }
 
         // TODO don't make it a dead end
@@ -109,15 +110,15 @@ public class MgnlCmsFilter extends AbstractMagnoliaFilter {
      * @param response HttpServletResponse as given by the servlet container
      * @throws IOException standard servlet exception
      */
-    protected void handleResourceRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    protected void handleResourceRequest(AggregationState aggregationState, HttpServletRequest request, HttpServletResponse response) throws IOException {
 
-        String resourceHandle = Aggregator.getHandle();
+        final String resourceHandle = aggregationState.getHandle();
 
         log.debug("handleResourceRequest, resourceHandle=\"{}\"", resourceHandle); //$NON-NLS-1$
 
         if (StringUtils.isNotEmpty(resourceHandle)) {
 
-            HierarchyManager hm = MgnlContext.getHierarchyManager(Aggregator.getRepository());
+            HierarchyManager hm = MgnlContext.getHierarchyManager(aggregationState.getRepository());
 
             InputStream is = null;
             try {
@@ -133,8 +134,7 @@ public class MgnlCmsFilter extends AbstractMagnoliaFilter {
                 // don't log at error level since tomcat tipically throws a
                 // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
                 if (log.isDebugEnabled()) {
-                    log.debug(
-                        "Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                    log.debug("Exception while dispatching resource " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
                 }
             }
             catch (Exception e) {

@@ -15,7 +15,7 @@ package info.magnolia.context;
 import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.Aggregator;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
@@ -58,9 +58,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     private static final String ATTRIBUTE_QM_PREFIX = "mgnlQueryMgr_";
 
-    protected HttpServletRequest request;
+    private static final String ATTRIBUTE_AGGREGATIONSTATE = AggregationState.class.getName();
 
-    protected HttpServletResponse response;
+    private HttpServletRequest request;
+
+    private HttpServletResponse response;
 
     /**
      * Use init to initialize the object.
@@ -193,18 +195,29 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * Get currently active page
      *
      * @return content object
+     * @deprecated use getAggregationState().getMainContent();
      */
     public Content getActivePage() {
-        return Aggregator.getMainContent();
+        return getAggregationState().getMainContent();
     }
 
     /**
      * Get aggregated file, its used from image templates to manipulate
      *
      * @return file object
+     * @deprecated use getAggregationState().getFile();
      */
     public File getFile() {
-        return Aggregator.getFile();
+        return getAggregationState().getFile();
+    }
+
+    public AggregationState getAggregationState() {
+        AggregationState aggregationState = (AggregationState) request.getAttribute(ATTRIBUTE_AGGREGATIONSTATE);
+        if (aggregationState == null) {
+            aggregationState = new AggregationState();
+            request.setAttribute(ATTRIBUTE_AGGREGATIONSTATE, aggregationState);
+        }
+        return aggregationState;
     }
 
     /**

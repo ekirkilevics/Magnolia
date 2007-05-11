@@ -14,7 +14,7 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Aggregator;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Resource;
@@ -102,13 +102,14 @@ public class MgnlInterceptFilter extends AbstractMagnoliaFilter {
      * could be called from here once this action finishes, it will continue loading the requested page.
      */
     public void intercept(HttpServletRequest request, HttpServletResponse response) {
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
         String action = request.getParameter(INTERCEPT);
         String repository = request.getParameter(PARAM_REPOSITORY);
         String nodePath = request.getParameter(PARAM_PATH);
-        String handle = Aggregator.getHandle();
+        String handle = aggregationState.getHandle();
 
         if (repository == null) {
-            repository = Aggregator.getRepository();
+            repository = aggregationState.getRepository();
         }
 
         if (repository == null) {

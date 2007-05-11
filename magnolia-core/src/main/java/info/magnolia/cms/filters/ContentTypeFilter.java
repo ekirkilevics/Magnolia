@@ -13,52 +13,61 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
-
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 /**
  * @author Sameer Charles
  * @author Fabrizio Giustina
+ * @author gjoseph
  * @version $Id$
  */
 public class ContentTypeFilter extends AbstractMagnoliaFilter {
-    private static final Logger log = LoggerFactory.getLogger(ContentTypeFilter.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ContentTypeFilter.class);
 
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
-        this.setContentType(request, response);
+
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        final String originalUri = request.getRequestURI();
+        final String ext = getUriExtension(originalUri);
+
+        final String characterEncoding = setupContentTypeAndCharacterEncoding(ext, request, response);
+
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        aggregationState.setCharacterEncoding(characterEncoding);
+        aggregationState.setOriginalURI(originalUri);
+        aggregationState.setExtension(ext);
+
         chain.doFilter(request, response);
     }
 
-    private void setContentType(HttpServletRequest req, HttpServletResponse resp) {
-        resp.setContentType(MIMEMapping.getMIMEType(req));
-        String characterEncoding = MIMEMapping.getContentEncoding(req);
+    // TODO : test + simplification (substringAfterLast(uri, ".") probably does the trick !?
+    protected String getUriExtension(String originalUri) {
+        final String fileName = StringUtils.substringAfterLast(originalUri, "/");
+        return StringUtils.substringAfterLast(fileName, ".");
+    }
 
-        if (StringUtils.isEmpty(characterEncoding)) {
-            characterEncoding = "UTF-8"; //$NON-NLS-1$
-        }
-
-        resp.setCharacterEncoding(characterEncoding);
+    protected String setupContentTypeAndCharacterEncoding(String extension, HttpServletRequest req, HttpServletResponse resp) {
+        final String mimeType = MIMEMapping.getMIMEType(extension);
+        final String characterEncoding = MIMEMapping.getContentEncodingOrDefault(mimeType);
 
         try {
             req.setCharacterEncoding(characterEncoding);
+        } catch (UnsupportedEncodingException e) {
+            log.error("Can't set character encoding for the request (extension=" + extension + ",mimetype=" + mimeType + ")", e);
         }
-        catch (IllegalStateException e) {
-            log.debug("can't set character encoding for the request", e); //$NON-NLS-1$
-        }
-        catch (UnsupportedEncodingException e) {
-            log.error("can't set character encoding for the request", e); //$NON-NLS-1$
-        }
+
+        resp.setContentType(mimeType);
+        resp.setCharacterEncoding(characterEncoding);
+
+        return characterEncoding;
     }
 
 }

@@ -236,10 +236,8 @@ public abstract class AbstractList extends TemplatedMVCHandler {
         return "";
     }
 
-
     public String getURI() {
-        String uri = Path.getURI();
-        return uri;
+        return MgnlContext.getAggregationState().getCurrentURI();
     }
 
 }

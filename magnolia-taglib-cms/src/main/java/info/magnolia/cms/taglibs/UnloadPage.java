@@ -12,11 +12,10 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.core.Aggregator;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 
@@ -35,7 +34,9 @@ public class UnloadPage extends BodyTagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
-        Aggregator.setCurrentContent(Aggregator.getMainContent());
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        final Content mainContent = aggregationState.getMainContent();
+        aggregationState.setCurrentContent(mainContent);
         return EVAL_PAGE;
     }
 }

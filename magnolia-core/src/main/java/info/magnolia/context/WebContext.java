@@ -15,6 +15,7 @@ package info.magnolia.context;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.AggregationState;
 
 import java.util.Map;
 import java.io.IOException;
@@ -32,10 +33,13 @@ public interface WebContext extends Context {
 
     /**
      * Attribute name to get the requests character encoding
+     * @deprecated use AggregationState
      */
     public static final String ATTRIBUTE_REQUEST_CHARACTER_ENCODING = "characterEncoding";
+
     /**
      * Attribute name to get the request uri
+     * @deprecated use AggregationState
      */
     public static final String ATTRIBUTE_REQUEST_URI = "requestURI";
 
@@ -45,14 +49,22 @@ public interface WebContext extends Context {
     public void init(HttpServletRequest request, HttpServletResponse response);
 
     /**
+     * Retrieves the Aggregator instance, which gathers all info regarding the current request (paths, etc)
+     * @return
+     */
+    public AggregationState getAggregationState();
+
+    /**
      * Get currently active page
      * @return content object
+     * @deprecated use getAggregator().getMainContent()
      */
     public Content getActivePage();
 
     /**
      * Get aggregated file, its used from image templates to manipulate
      * @return file object
+     * @deprecated use getAggregator().getFile()
      */
     public File getFile();
 

@@ -12,12 +12,12 @@
  */
 package info.magnolia.cms.gui.inline;
 
-import info.magnolia.cms.core.Aggregator;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
@@ -79,7 +79,7 @@ public class BarNew extends Bar {
         Button b = new Button();
         b.setLabel(MessagesManager.getMessages().get("buttons.new")); //$NON-NLS-1$
 
-        String repository = Aggregator.getRepository();
+        String repository = MgnlContext.getAggregationState().getRepository();
         // if there are multiple paragraphs show the selectParagraph dialog
         if (StringUtils.contains(paragraph, ',')) {
             b.setOnclick("mgnlOpenDialog('" // //$NON-NLS-1$

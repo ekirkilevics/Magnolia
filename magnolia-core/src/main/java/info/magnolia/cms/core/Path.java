@@ -44,6 +44,7 @@ public final class Path {
 
     /**
      * The current set URI. This is the URI after the virtual uri mapping
+     * @deprecated use AggregationState.getCurrentURI()
      */
     public static final String MGNL_REQUEST_URI_CURRENT = "mgnl.request.uri.current"; //$NON-NLS-1$
 
@@ -54,6 +55,7 @@ public final class Path {
 
     /**
      * The original request URI. Once set never overwritten
+     * @deprecated use AggregationState.getOriginalURI()
      */
     public static final String MGNL_REQUEST_URI_ORIGINAL = "mgnl.request.uri.original"; //$NON-NLS-1$
 
@@ -157,18 +159,13 @@ public final class Path {
     }
 
     /**
-     * Returns the URI of the current request, without the context path. This is the URI after the virtual uri mapping
+     * Returns the URI of the current request, without the context path.
+     * This is the URI after the virtual uri mapping.
      * @return request URI without servlet context
+     * @deprecated use AggregationState.getCurrentURI()
      */
     public static String getURI() {
-        String uri = (String) MgnlContext.getAttribute(MGNL_REQUEST_URI_CURRENT);
-        if(uri != null){
-            return uri;
-        }
-        uri = (String) MgnlContext.getAttribute(WebContext.ATTRIBUTE_REQUEST_URI);
-        // this decodes the uri and removes the context
-        setURI(uri);
-        return getURI();
+        return MgnlContext.getAggregationState().getCurrentURI();
     }
 
     /**
@@ -181,28 +178,42 @@ public final class Path {
     /**
      * Set the current URI. If the original URI was not set, this URI is set as the original URI too.
      * @param uri
+     * @deprecated use AggregationState
      */
     public static void setURI(String uri) {
-        String decodedURI = decodedURI(uri);
-        MgnlContext.setAttribute(MGNL_REQUEST_URI_CURRENT, decodedURI);
-        setOriginalURI(uri);
+        MgnlContext.getAggregationState().setCurrentURI(uri);
     }
 
     /**
      * @deprecated do not pass the request
      */
     public static String getHandle(HttpServletRequest req) {
-        return Aggregator.getHandle();
+        return MgnlContext.getAggregationState().getHandle();
     }
 
     /**
      * Returns the URI of the current request, but uses the uri to repository mapping to remove any prefix.
-     * @param req request
      * @return request URI without servlet context and without repository mapping prefix
-     * @deprecated Use {@link Aggregator#getHandle()} instead
+     * @deprecated Use {@link info.magnolia.cms.core.AggregationState#getHandle()} instead
      */
     public static String getHandle() {
-        return Aggregator.getHandle();
+        return MgnlContext.getAggregationState().getHandle();
+    }
+
+    /**
+     * @deprecated do not pass the request
+     */
+    public static String getExtension(HttpServletRequest req) {
+        return getExtension();
+    }
+
+    /**
+     * Get the current extesion of the request
+     * @return
+     * @deprecated Use {@link info.magnolia.cms.core.AggregationState#getExtension()} instead
+     */
+    public static String getExtension() {
+        return MgnlContext.getAggregationState().getExtension();
     }
 
     /**
@@ -214,31 +225,27 @@ public final class Path {
 
     /**
      * This is the URI (without context) when the request started.
-     * @param req
+     * @deprecated use AggregationState.getOriginalURI()
      */
     public static String getOriginalURI() {
-        String uri = (String)MgnlContext.getAttribute(MGNL_REQUEST_URI_ORIGINAL);
-        if(StringUtils.isEmpty(uri)){
-            uri = getURI();
-            setOriginalURI(uri);
-        }
-        return uri;
+        return MgnlContext.getAggregationState().getOriginalURI();
     }
 
     /**
      * URI is only set if there was no original uri set
      * @param uri
+     *
+     *
+     * @deprecated use AggregationState
      */
     public static void setOriginalURI(String uri) {
-        if(!MgnlContext.hasAttribute(MGNL_REQUEST_URI_ORIGINAL)){
-            String decodedURI = decodedURI(uri);
-            MgnlContext.setAttribute(MGNL_REQUEST_URI_ORIGINAL, decodedURI);
-        }
+        MgnlContext.getAggregationState().setOriginalURI(uri);
     }
 
     /**
      * Decodes the URI with the passed encoding and removes the context path.
      * @return URI without servlet context
+     * TODO : move to AggregationState ?
      */
     public static String decodedURI(String uri, String encoding) {
         String decodedURL = null;
@@ -248,33 +255,19 @@ public final class Path {
         catch (UnsupportedEncodingException e) {
             decodedURL = uri;
         }
-        return StringUtils.defaultIfEmpty(StringUtils.substringAfter(decodedURL, MgnlContext.getContextPath()), uri);
+        return StringUtils.removeStart(decodedURL, MgnlContext.getContextPath());
     }
 
     /**
      * Use the requests encoding
      * @param uri
      * @return
+     *
+     * @deprecated pass an encoding
      */
     public static String decodedURI(String uri) {
-        String encoding = StringUtils.defaultString((String)MgnlContext.getAttribute(WebContext.ATTRIBUTE_REQUEST_CHARACTER_ENCODING), ENCODING_DEFAULT);
+        String encoding = StringUtils.defaultString(MgnlContext.getAggregationState().getCharacterEncoding(), ENCODING_DEFAULT);
         return decodedURI(uri, encoding);
-    }
-
-    /**
-     * @deprecated do not pass the request
-     */
-    public static String getExtension(HttpServletRequest req) {
-        return Aggregator.getExtension();
-    }
-
-    /**
-     * Get the current extesion of the request
-     * @return
-     * @deprecated Use {@link Aggregator#getExtension()} instead
-     */
-    public static String getExtension() {
-        return Aggregator.getExtension();
     }
 
     public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent, String label) {

@@ -15,6 +15,7 @@ package info.magnolia.context;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
@@ -162,6 +163,7 @@ public class MgnlContext {
     /**
      * Get currently active page
      * @return content object
+     * @deprecated use WebContext.getAggregationState()
      */
     public static Content getActivePage() {
 
@@ -175,6 +177,7 @@ public class MgnlContext {
     /**
      * Get aggregated file, its used from image templates to manipulate
      * @return file object
+     * @deprecated use WebContext.getAggregationState()
      */
     public static File getFile() {
         WebContext ctx = getWebContextIfExisting(getInstance());
@@ -187,6 +190,7 @@ public class MgnlContext {
     /**
      * Get form object assembled by <code>MultipartRequestFilter</code>
      * @return multipart form object
+     * @deprecated use WebContext.getAggregationState() TODO ?
      */
     public static MultipartForm getPostedForm() {
         WebContext ctx = getWebContextIfExisting(getInstance());
@@ -231,6 +235,19 @@ public class MgnlContext {
             return ctx.getContextPath();
         }
         return StringUtils.EMPTY;
+    }
+
+    /**
+     * Returns the AggregationState if we're in a WebContext, throws an
+     * IllegalStateException otherwise.
+     */
+    public static AggregationState getAggregationState() {
+        final WebContext ctx = getWebContextIfExisting(getInstance());
+        if (ctx != null) {
+            return ctx.getAggregationState();
+        } else {
+            throw new IllegalStateException("Should be in a WebContext !");
+        }
     }
 
     /**

@@ -13,7 +13,6 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.core.Access;
-import info.magnolia.cms.core.Aggregator;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -74,7 +73,8 @@ public class URISecurityFilter extends BaseSecurityFilter {
             permission = Permission.READ;
         }
         try {
-            Access.isGranted(accessManager, Aggregator.getHandle(), permission);
+            final String handle = MgnlContext.getAggregationState().getHandle();
+            Access.isGranted(accessManager, handle, permission);
             return true;
         } catch (AccessDeniedException ade) {
             log.debug(ade.getMessage(), ade);
