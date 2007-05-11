@@ -25,9 +25,6 @@
   <sv:property sv:name="defaultExtension" sv:type="String">
     <sv:value>html</sv:value>
   </sv:property>
-  <sv:property sv:name="defaultMailServer" sv:type="String">
-    <sv:value/>
-  </sv:property>
   <sv:property sv:name="admin" sv:type="String">
     <sv:value>true</sv:value>
   </sv:property>
