@@ -37,11 +37,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class MagnoliaMainFilter extends AbstractMagnoliaFilter {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ContentTypeFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(MagnoliaMainFilter.class);
 
     private MagnoliaFilter[] filters = new MagnoliaFilter[0];
 
