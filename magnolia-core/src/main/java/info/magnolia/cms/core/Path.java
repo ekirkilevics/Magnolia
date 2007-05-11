@@ -248,7 +248,7 @@ public final class Path {
         catch (UnsupportedEncodingException e) {
             decodedURL = uri;
         }
-        return StringUtils.substringAfter(decodedURL, MgnlContext.getContextPath());
+        return StringUtils.defaultIfEmpty(StringUtils.substringAfter(decodedURL, MgnlContext.getContextPath()), uri);
     }
 
     /**
