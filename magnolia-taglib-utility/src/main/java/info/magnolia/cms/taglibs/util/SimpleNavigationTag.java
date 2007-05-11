@@ -12,8 +12,10 @@
  */
 package info.magnolia.cms.taglibs.util;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.i18n.I18NSupportFactory;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
@@ -42,13 +44,13 @@ import org.slf4j.LoggerFactory;
  * <li><code>navTitle</code>: a title to use for the navigation menu, if different from the real page title</li>
  * <li><code>accessKey</code>: an optional access key which will be added to the link</li>
  * </ul>
- * 
+ *
  * <pre>
  *   &lt;cmsu:simpleNavigation startLevel="3" style="mystyle"/>
  * </pre>
- * 
+ *
  * Will output the following:
- * 
+ *
  * <pre>
  *   &lt;ul class="level3 mystyle">
  *     &lt;li>&lt;a href="...">page 1 name &lt;/a>&lt;/li>
@@ -63,7 +65,7 @@ import org.slf4j.LoggerFactory;
  *     &lt;li>&lt;a href="...">page 4 name &lt;/a>&lt;/li>
  *   &lt;/ul>
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -387,7 +389,7 @@ public class SimpleNavigationTag extends TagSupport {
 
             out.print("<a href=\""); //$NON-NLS-1$
             out.print(((HttpServletRequest) this.pageContext.getRequest()).getContextPath());
-            out.print(child.getHandle());
+            out.print(I18NSupportFactory.getI18nSupport().toI18NURI(child.getHandle()));
             out.print(".html\""); //$NON-NLS-1$
 
             if (StringUtils.isNotEmpty(accesskey)) {
