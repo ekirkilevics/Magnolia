@@ -10,7 +10,7 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.security.auth;
+package info.magnolia.cms.security.auth.callback;
 
 import java.io.IOException;
 

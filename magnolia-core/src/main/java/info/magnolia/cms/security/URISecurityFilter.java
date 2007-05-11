@@ -18,7 +18,6 @@ import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
-import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -59,23 +58,7 @@ public class URISecurityFilter extends BaseSecurityFilter {
             return false;
         }
 
-        AccessManager accessManager = null;
-        if (Authenticator.isAuthenticated(request)) {
-            accessManager = MgnlContext.getAccessManager(URI_REPOSITORY, URI_WORKSPACE);
-        } else {
-            try {
-                if (Authenticator.authenticate(request)) {
-                    accessManager = MgnlContext.getAccessManager(URI_REPOSITORY, URI_WORKSPACE);
-                } else {
-                    // todo
-                    // use AnonymousContextImpl
-                    accessManager = MgnlContext.getAccessManager(URI_REPOSITORY, URI_WORKSPACE);
-                }
-            } catch (LoginException le) {
-                log.warn(le.getMessage(), le);
-            }
-        }
-
+        AccessManager accessManager = MgnlContext.getAccessManager(URI_REPOSITORY, URI_WORKSPACE);
         return isAuthorized(accessManager, request);
     }
 

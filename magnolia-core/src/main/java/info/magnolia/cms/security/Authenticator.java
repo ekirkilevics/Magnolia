@@ -12,9 +12,9 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.security.auth.Base64CallbackHandler;
-import info.magnolia.cms.security.auth.CredentialsCallbackHandler;
-import info.magnolia.cms.security.auth.PlainTextCallbackHandler;
+import info.magnolia.cms.security.auth.callback.Base64CallbackHandler;
+import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
+import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 
 import javax.security.auth.Subject;
 import javax.security.auth.login.FailedLoginException;
@@ -65,8 +65,6 @@ public final class Authenticator {
      */
     protected static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
 
-    private static Subject anonymousSubject = createAnonymousSubject();
-
     /**
      * Utility class, don't instantiate.
      */
@@ -78,9 +76,10 @@ public final class Authenticator {
      * Authenticate authorization request using JAAS login module as configured
      * @param request as received by the servlet engine
      * @return boolean
+     * @deprecated Since 3.1 use LoginFilter->LoginHandlers
      */
     public static boolean authenticate(HttpServletRequest request) throws LoginException {
-
+        log.warn("Deprecated: Since 3.1 use LoginFilter->LoginHandlers");
         String credentials = request.getHeader("Authorization");
         CredentialsCallbackHandler callbackHandler;
 
@@ -166,22 +165,6 @@ public final class Authenticator {
         return true;
     }
 
-    public static Subject createAnonymousSubject() {
-        User aUser = Security.getUserManager().getAnonymousUser();
-        CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(aUser.getName(), aUser
-            .getPassword()
-            .toCharArray());
-        try {
-            LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
-            loginContext.login();
-            return loginContext.getSubject();
-        }
-        catch (LoginException le) {
-            log.error("Failed to login as Anonymous user", le);
-            return null;
-        }
-    }
-
     /**
      * @param credentials to be decoded
      * @return String decoded credentials <b>name:password </b>
@@ -255,7 +238,6 @@ public final class Authenticator {
         if (httpsession != null) {
             return (Subject) httpsession.getAttribute(ATTRIBUTE_JAAS_SUBJECT);
         }
-
-        return anonymousSubject;
+        return null;
     }
 }

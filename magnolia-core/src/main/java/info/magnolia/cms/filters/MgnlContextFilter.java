@@ -13,6 +13,7 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.AnonymousContext;
 
 import java.io.IOException;
 
@@ -31,7 +32,9 @@ public class MgnlContextFilter extends AbstractMagnoliaFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
         if (!MgnlContext.hasInstance()) {
-            MgnlContext.initAsWebContext(request, response);
+            AnonymousContext ctx = new AnonymousContext();
+            ctx.init(request, response);
+            MgnlContext.setInstance(ctx);
         }
 
         chain.doFilter(request, response);

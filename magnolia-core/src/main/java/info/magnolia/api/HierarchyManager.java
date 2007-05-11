@@ -37,6 +37,9 @@ public interface HierarchyManager {
 
     QueryManager getQueryManager();
 
+    /**
+     * @deprecated use createContent(String path, String label, String contentType)
+     * */
     Content createPage(String path, String label) throws RepositoryException;
 
     Content createContent(String path, String label, String contentType) throws RepositoryException;

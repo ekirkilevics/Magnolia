@@ -58,9 +58,9 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     private static final String ATTRIBUTE_QM_PREFIX = "mgnlQueryMgr_";
 
-    private HttpServletRequest request;
+    protected HttpServletRequest request;
 
-    private HttpServletResponse response;
+    protected HttpServletResponse response;
 
     /**
      * Use init to initialize the object.
@@ -374,7 +374,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     /**
      * Get repository session
      */
-    private Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {
+    protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {
         Session jcrSession = null;
         HttpSession httpSession = request.getSession(false);
 

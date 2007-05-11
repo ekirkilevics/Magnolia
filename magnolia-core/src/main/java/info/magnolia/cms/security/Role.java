@@ -14,7 +14,7 @@ package info.magnolia.cms.security;
 
 /**
  * @author philipp
- * @version $Revision$ ($Author$)
+ * @version $Revision:2558 $ ($Author:scharles $)
  */
 public interface Role {
 

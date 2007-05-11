@@ -80,13 +80,11 @@ public interface User {
 
     /**
      * get groups that user is in
-     * @return
      */
     public abstract Collection getGroups();
 
     /**
      * get roles tha are assigned to user
-     * @return
      */
     public abstract Collection getRoles();
 }
