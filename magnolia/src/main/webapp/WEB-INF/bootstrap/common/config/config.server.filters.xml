@@ -2,8 +2,7 @@
 <sv:node sv:name="filters" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
   xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
-  xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
+  xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:content</sv:value>
   </sv:property>
@@ -18,7 +17,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>5d0efe45-ff9e-4404-9227-0fbcfca04292</sv:value>
+      <sv:value>2d7c88c0-e851-4cf0-be9c-afea1d9d86bf</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
       <sv:value>2007-05-02T16:22:29.116+02:00</sv:value>
@@ -37,12 +36,15 @@
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.filters.MgnlContextFilter</sv:value>
     </sv:property>
+    <sv:property sv:name="enabled" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>d6ab59cb-fc79-47c0-a9a6-51f51bae2867</sv:value>
+        <sv:value>51026c7e-9883-4a96-9ad4-31c0c1589cd6</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -77,12 +79,15 @@
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.filters.ContentTypeFilter</sv:value>
     </sv:property>
+    <sv:property sv:name="enabled" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>b2dc5c6b-a86c-401f-ba16-851978e9d975</sv:value>
+        <sv:value>a02e9e3d-9b26-4a9a-bf37-e31ceb4e8fd9</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -117,12 +122,15 @@
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.security.LogoutFilter</sv:value>
     </sv:property>
+    <sv:property sv:name="enabled" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>b2dc5c6b-a86c-401f-ba16-651978e9d965</sv:value>
+        <sv:value>5716f530-c04a-4926-9369-04601c8001b7</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -157,12 +165,15 @@
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.security.URISecurityFilter</sv:value>
     </sv:property>
+    <sv:property sv:name="enabled" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>038fc44b-b0d5-4bb7-851f-e05ab81499c5</sv:value>
+        <sv:value>f461f4bf-d49e-4aba-83e1-1f48d730b836</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -198,7 +209,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>e6b92ee4-5007-4d31-b8b4-b47b3bad03e6</sv:value>
+          <sv:value>d59abd39-7cd7-4713-872a-2228955e5c95</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -240,7 +251,7 @@
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>80afb3e1-b538-47bc-8075-1e7ea0cfb4ce</sv:value>
+            <sv:value>1e2f0578-452f-43fa-aa60-7f15fb0f99cd</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -283,7 +294,7 @@
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>3f5e7a65-dd7f-472e-bbea-5a9f19f3cd74</sv:value>
+            <sv:value>e04ff944-f953-4814-89bc-11564ef4d1a7</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -326,7 +337,7 @@
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>7104b03e-9b3b-4339-9232-35c6d1c226d5</sv:value>
+            <sv:value>770d36b6-3455-4ed1-9a19-d52c260660de</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -350,6 +361,49 @@
       </sv:node>
     </sv:node>
   </sv:node>
+  <sv:node sv:name="i18n">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:content</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>640d5a35-2508-47d4-846b-048cb2819e1a</sv:value>
+    </sv:property>
+    <sv:property sv:name="class" sv:type="String">
+      <sv:value>info.magnolia.cms.i18n.I18NSupportFilter</sv:value>
+    </sv:property>
+    <sv:property sv:name="enabled" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>04da54ec-234d-46e7-b047-37ef5296bc24</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2006-07-28T23:39:30.812+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2007-05-11T14:37:12.414+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2007-05-02T16:57:12.027+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
   <sv:node sv:name="virtualURI">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:content</sv:value>
@@ -363,12 +417,15 @@
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.filters.MgnlVirtualUriFilter</sv:value>
     </sv:property>
+    <sv:property sv:name="enabled" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>80181b62-5911-4dd2-abf6-916f0954ca89</sv:value>
+        <sv:value>3256b42a-3668-413d-b0d3-5f246125e9a8</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -403,12 +460,15 @@
     <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.cms.filters.MultipartRequestFilter</sv:value>
     </sv:property>
+    <sv:property sv:name="enabled" sv:type="Boolean">
+      <sv:value>true</sv:value>
+    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>6f6ef58d-e287-4455-8d5f-bcd1bc5397c4</sv:value>
+        <sv:value>39bb57d8-f994-44de-bc6c-39cd5adc4261</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -445,7 +505,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>42539d7a-fa67-4722-9979-4147658a5424</sv:value>
+        <sv:value>ab1f99a1-85a0-48b1-96ce-33095bc49fae</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -479,12 +539,15 @@
       <sv:property sv:name="class" sv:type="String">
         <sv:value>info.magnolia.cms.filters.RepositoryMappingFilter</sv:value>
       </sv:property>
+      <sv:property sv:name="enabled" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>877c330a-139b-4956-9c5d-73cc1d82f5ea</sv:value>
+          <sv:value>06b60a73-83c8-46e5-bd1f-f4e34f3dca6b</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -519,12 +582,15 @@
       <sv:property sv:name="class" sv:type="String">
         <sv:value>info.magnolia.cms.security.ContentSecurityFilter</sv:value>
       </sv:property>
+      <sv:property sv:name="enabled" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>956238d6-93de-4802-a7dc-2021e51ef572</sv:value>
+          <sv:value>ccef537d-1024-4307-9c74-2460bb6c26fa</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -559,12 +625,15 @@
       <sv:property sv:name="class" sv:type="String">
         <sv:value>info.magnolia.cms.filters.AggregatorFilter</sv:value>
       </sv:property>
+      <sv:property sv:name="enabled" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>1470a6ce-3757-4975-a31a-39a2ab55f187</sv:value>
+          <sv:value>62430af9-d4bd-434c-8ee1-97c8efb760c0</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -599,12 +668,15 @@
       <sv:property sv:name="class" sv:type="String">
         <sv:value>info.magnolia.cms.filters.MgnlInterceptFilter</sv:value>
       </sv:property>
+      <sv:property sv:name="enabled" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>4bdae3e9-3c1c-4613-ac59-ef6762e379cb</sv:value>
+          <sv:value>3aecb598-52bb-46b9-a4b3-3e01782d4d80</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -639,12 +711,15 @@
       <sv:property sv:name="class" sv:type="String">
         <sv:value>info.magnolia.cms.filters.MgnlCmsFilter</sv:value>
       </sv:property>
+      <sv:property sv:name="enabled" sv:type="Boolean">
+        <sv:value>true</sv:value>
+      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>da162c8e-fa03-4829-8acb-6a5f71499599</sv:value>
+          <sv:value>3409a0a0-8025-4336-a5ce-600dd891cffe</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -681,7 +756,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>cc7ae61c-465c-4bd8-8f1a-12f25c6e5cbb</sv:value>
+          <sv:value>41bdf9ad-9a26-45cf-9677-70d37803eb21</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -723,7 +798,7 @@
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>c2fe5f80-a6af-4181-aee8-04b24283c496</sv:value>
+            <sv:value>4936c24d-32d1-4fab-ba11-28e3dd699357</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -755,18 +830,18 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>7d1ead14-38bc-47e7-9f46-8858aaa431c6</sv:value>
         </sv:property>
-        <sv:property sv:name="pattern" sv:type="String">
-          <sv:value>/docroot</sv:value>
-        </sv:property>
         <sv:property sv:name="class" sv:type="String">
           <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
+        </sv:property>
+        <sv:property sv:name="pattern" sv:type="String">
+          <sv:value>/docroot</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>598ff79e-006d-4c83-9307-056382cedafe</sv:value>
+            <sv:value>4ebecb89-8cc4-4bb2-9c8d-c93c1a24ca6a</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -809,7 +884,7 @@
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>679f289d-abba-4afa-8c75-16779df08cc5</sv:value>
+            <sv:value>d13a9ed5-2842-4b0a-8b8f-7e6885aa3237</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -852,7 +927,7 @@
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>cfbdaea3-dce4-4b6b-961a-795850b63a7d</sv:value>
+            <sv:value>74bef737-9f88-41c2-a598-446fad17e334</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -884,18 +959,18 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>f78afd02-63c8-4a88-9eb9-6f107d4d2f02</sv:value>
         </sv:property>
-        <sv:property sv:name="pattern" sv:type="String">
-          <sv:value>/ActivationHandler</sv:value>
-        </sv:property>
         <sv:property sv:name="class" sv:type="String">
           <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
         </sv:property>
-         <sv:node sv:name="MetaData">
+        <sv:property sv:name="pattern" sv:type="String">
+          <sv:value>/ActivationHandler</sv:value>
+        </sv:property>
+        <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>df237243-38d6-45ce-ab0f-bf584d55e39f</sv:value>
+            <sv:value>e0109206-b287-443e-98a4-c0db8bccff19</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -934,7 +1009,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>18745101-ba0f-42bf-b0c6-bc961daa4de5</sv:value>
+        <sv:value>e850de02-9f41-4db3-a518-0af5f6a3f0bc</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
