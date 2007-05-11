@@ -12,14 +12,14 @@
  */
 package info.magnolia.cms.i18n;
 
+import info.magnolia.api.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.api.HierarchyManager;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,7 +29,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.servlet.ServletContext;
@@ -69,17 +68,17 @@ public final class MessagesManager {
     /**
      * The node name where the configuration for i18n is stored
      */
-    private static final String I18N_CONFIG_NAME = "i18n"; //$NON-NLS-1$
+    private static final String I18N_CONFIG_PATH = "/server/i18n/system"; //$NON-NLS-1$
 
     /**
      * The name of the property to store the current system language
      */
-    private static final String LOCALE_CONFIG_NAME = "language"; //$NON-NLS-1$
+    private static final String FALLBACK_NODEDATA = "fallbackLanguage"; //$NON-NLS-1$
 
     /**
      * Under this node all the available languages are stored. They are showed in the user dialog.
      */
-    private static final String AVAILABLE_LOCALES_CONFIG_NAME = "availableLanguages"; //$NON-NLS-1$
+    private static final String LANGUAGES_NODE_NAME = "languages"; //$NON-NLS-1$
 
     /**
      * The current locale of the application
@@ -164,71 +163,30 @@ public final class MessagesManager {
 
         // reading the configuration from the repository, no need for context
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+
         try {
-            log.info("Config : loading i18n configuration - " + I18N_CONFIG_NAME); //$NON-NLS-1$
+            log.info("Config : loading i18n configuration - " + I18N_CONFIG_PATH); //$NON-NLS-1$
 
-            Content serverNode = hm.getContent("/server"); //$NON-NLS-1$
+            Content configNode = hm.getContent(I18N_CONFIG_PATH); //$NON-NLS-1$
 
-            Content configNode;
-            try {
-                configNode = serverNode.getContent(I18N_CONFIG_NAME);
-            }
-            catch (javax.jcr.PathNotFoundException e) {
-                configNode = serverNode.createContent(I18N_CONFIG_NAME, ItemType.CONTENTNODE);
-                hm.save();
-            }
-
-            NodeData languageNodeData = configNode.getNodeData(LOCALE_CONFIG_NAME);
-
-            if (StringUtils.isEmpty(languageNodeData.getName())) {
-                languageNodeData = configNode.createNodeData(LOCALE_CONFIG_NAME);
-                languageNodeData.setValue(MessagesManager.FALLBACK_LOCALE);
-                hm.save();
-            }
-
-            MessagesManager.setDefaultLocale(languageNodeData.getString());
+            MessagesManager.setDefaultLocale(NodeDataUtil.getString(configNode, FALLBACK_NODEDATA, FALLBACK_LOCALE));
 
             // get the available languages
-            Content availableLanguagesContentNode;
-
-            NodeData availableLanguage;
-
-            try {
-                availableLanguagesContentNode = configNode.getContent(AVAILABLE_LOCALES_CONFIG_NAME);
-            }
-            catch (javax.jcr.PathNotFoundException e) {
-                availableLanguagesContentNode = configNode.createContent(
-                    AVAILABLE_LOCALES_CONFIG_NAME,
-                    ItemType.CONTENTNODE);
-
-                availableLanguage = availableLanguagesContentNode.createNodeData(MessagesManager.FALLBACK_LOCALE);
-                availableLanguage.setValue(MessagesManager.FALLBACK_LOCALE);
-                hm.save();
-            }
-
-            Collection locales = availableLanguagesContentNode.getNodeDataCollection();
+            Content languagesNode = configNode.getContent(LANGUAGES_NODE_NAME);
+            Map languageDefinitinos = Content2BeanUtil.toMap(languagesNode, true, LanguageDefinition.class);
 
             // clear collection for reload
             MessagesManager.availableLocales.clear();
 
-            for (Iterator iter = locales.iterator(); iter.hasNext();) {
-                availableLanguage = (NodeData) iter.next();
-                String name = availableLanguage.getString();
-                String language = name;
-                String country = StringUtils.EMPTY;
-
-                if (name.indexOf("_") == 2) { //$NON-NLS-1$
-                    language = name.substring(0, 2);
-                    country = name.substring(3);
+            for (Iterator iter = languageDefinitinos.values().iterator(); iter.hasNext();) {
+                LanguageDefinition ld = (LanguageDefinition) iter.next();
+                if(ld.isEnabled()){
+                    availableLocales.add(ld.getLocale());
                 }
-                Locale locale = new Locale(language, country);
-                MessagesManager.availableLocales.add(locale);
             }
-
         }
-        catch (RepositoryException re) {
-            log.error("Config : Failed to load i18n configuration - " + I18N_CONFIG_NAME); //$NON-NLS-1$
-            log.error(re.getMessage(), re);
+        catch (Exception e) {
+            log.error("Config : Failed to load i18n configuration - " + I18N_CONFIG_PATH, e); //$NON-NLS-1$
         }
     }
 
@@ -240,7 +198,7 @@ public final class MessagesManager {
         log.info("Registering event listener for i18n"); //$NON-NLS-1$
         ObservationUtil.registerChangeListener(
             ContentRepository.CONFIG,
-            "/server/" + I18N_CONFIG_NAME,
+            I18N_CONFIG_PATH,
             new EventListener() {
 
                 public void onEvent(EventIterator iterator) {
@@ -393,18 +351,11 @@ public final class MessagesManager {
 
         Locale locale;
 
-        /**
-         * @param basename
-         * @param locale
-         */
         public MessagesID(String basename, Locale locale) {
             this.basename = basename;
             this.locale = locale;
         }
 
-        /**
-         * @see java.lang.Object#hashCode()
-         */
         public int hashCode() {
             return basename.hashCode();
         }
