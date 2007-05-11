@@ -31,6 +31,7 @@ import java.util.Iterator;
 
 /**
  * @author Chris Miner
+ * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, TemplateScalarModel {
@@ -85,14 +86,6 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
             }
         });
         return new SimpleCollection(it);
-//        ArrayList propertyNames = new ArrayList();
-//
-//        Iterator properties = content.getNodeDataCollection().iterator();
-//        while (properties.hasNext()) {
-//            NodeData property = (NodeData) properties.next();
-//            propertyNames.add(property.getName());
-//        }
-//        return (TemplateCollectionModel) wrapper.wrap(propertyNames.iterator());
     }
 
     public TemplateCollectionModel values() throws TemplateModelException {
@@ -110,8 +103,11 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
         }
     }
 
+    /**
+     * This returns all children, no matter what their type is.
+     */
     public TemplateSequenceModel getChildNodes() throws TemplateModelException {
-        final Collection children = content.getChildren();
+        final Collection children = content.getChildren((String) null);
         return (TemplateSequenceModel) wrapper.wrap(children);
     }
 

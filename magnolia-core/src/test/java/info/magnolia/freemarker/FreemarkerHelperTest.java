@@ -192,6 +192,19 @@ public class FreemarkerHelperTest extends TestCase {
         assertRendereredContent("greg:yes:my test page:" + expectedDate, c, "test.ftl");
     }
 
+    public void testMetaDataIsOneOfTheChildrenRetrievedByTheChildrenBuiltIn() throws TemplateException, IOException, AccessDeniedException {
+        final MockContent f = new MockContent("foo");
+        final MockMetaData md = f.createMetaData();
+        md.setAuthorId("greg");
+        md.setActivated();
+        md.setTitle("my test page");
+        md.setCreationDate();
+        final MockContent c = new MockContent("pouet");
+        f.addContent(c);
+        tplLoader.putTemplate("test.ftl", "[#list c?children as n]${n},[/#list]");
+        assertRendereredContent("MetaData,pouet," , Collections.singletonMap("c", f), "test.ftl");
+    }
+
     public void testBooleanPropertiesAreHandledProperly() throws TemplateException, IOException {
         final MockContent c = new MockContent("root");
         final MockContent foo = new MockContent("foo");
