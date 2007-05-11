@@ -38,9 +38,10 @@ public class PathTest extends TestCase {
     public void testUriDecodingShouldStripCtxPath() {
         WebContext webCtx = createMock(WebContext.class);
         expect(webCtx.getContextPath()).andReturn("/foo");
-        final AggregationState aggState = new AggregationState();
-        aggState.setCharacterEncoding("UTF-8");
-        expect(webCtx.getAggregationState()).andReturn(aggState);
+//        final AggregationState aggState = new AggregationState();
+//        aggState.setCharacterEncoding("UTF-8");
+//        expect(webCtx.getAggregationState()).andReturn(aggState);
+        expect(webCtx.getAttribute(WebContext.ATTRIBUTE_REQUEST_CHARACTER_ENCODING)).andReturn("UTF-8");
         MgnlContext.setInstance(webCtx);
         replay(webCtx);
 
@@ -51,9 +52,10 @@ public class PathTest extends TestCase {
     public void testUriDecodingShouldReturnPassedURIDoesntContainCtxPath() {
         WebContext webCtx = createMock(WebContext.class);
         expect(webCtx.getContextPath()).andReturn("/foo");
-        final AggregationState aggState = new AggregationState();
-        aggState.setCharacterEncoding("UTF-8");
-        expect(webCtx.getAggregationState()).andReturn(aggState);
+//        final AggregationState aggState = new AggregationState();
+//        aggState.setCharacterEncoding("UTF-8");
+//        expect(webCtx.getAggregationState()).andReturn(aggState);
+        expect(webCtx.getAttribute(WebContext.ATTRIBUTE_REQUEST_CHARACTER_ENCODING)).andReturn("UTF-8");
         MgnlContext.setInstance(webCtx);
         replay(webCtx);
 
