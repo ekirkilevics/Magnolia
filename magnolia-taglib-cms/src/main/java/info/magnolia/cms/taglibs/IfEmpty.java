@@ -14,7 +14,7 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.i18n.I18NSupport;
+import info.magnolia.cms.i18n.I18NSupportFactory;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -82,7 +82,7 @@ public class IfEmpty extends BaseConditionalContentTag {
      * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
      */
     protected boolean condition() {
-        Content node = this.getFirtMatchingNode();
+        Content node = this.getFirstMatchingNode();
 
         if (node == null) {
             return true;
@@ -93,7 +93,7 @@ public class IfEmpty extends BaseConditionalContentTag {
             return true;
         }
 
-        NodeData nodeData = I18NSupport.getInstance().getNodeData(node, this.nodeDataName);
+        NodeData nodeData = I18NSupportFactory.getI18nSupport().getNodeData(node, this.nodeDataName);
 
         if ((nodeData == null) || !nodeData.isExist() || StringUtils.isEmpty(nodeData.getString())) {
             return true;
