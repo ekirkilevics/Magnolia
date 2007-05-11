@@ -47,9 +47,6 @@ public class MgnlVirtualUriFilter extends AbstractMagnoliaFilter  {
     private static final int NO_ACTION = 3;
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
-        // set original uri if not yet set
-        Path.setURI(request.getRequestURI());
-
         int result = redirect(request, response);
         if (result == REDIRECT) {
             return;
@@ -111,7 +108,7 @@ public class MgnlVirtualUriFilter extends AbstractMagnoliaFilter  {
      * @return URI mapping as in ServerInfo
      * @param request HttpServletRequest
      */
-    private String getURIMap(HttpServletRequest request) {
+    protected String getURIMap(HttpServletRequest request) {
         return VirtualURIManager.getInstance().getURIMapping(Path.getURI());
     }
 
