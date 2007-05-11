@@ -12,10 +12,8 @@
  */
 package info.magnolia.cms.filters;
 
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.EasyMock.replay;
-import info.magnolia.cms.core.Path;
+import static org.easymock.EasyMock.*;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.MgnlTestCase;
@@ -40,6 +38,11 @@ import javax.servlet.http.HttpServletResponse;
  * @version $Revision$ ($Author$)
  */
 public class FilterTest extends MgnlTestCase {
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        org.apache.log4j.Logger.getLogger(MagnoliaMainFilter.class).setLevel(org.apache.log4j.Level.INFO);
+    }
 
     public void testInitialization() throws IOException, RepositoryException, ServletException{
         String conf =
@@ -84,14 +87,18 @@ public class FilterTest extends MgnlTestCase {
         HttpServletResponse response = createMock(HttpServletResponse.class);
         FilterChain chain = createMock(FilterChain.class);
 
+        replay(filterConfig, request, response, chain);
+
         fd.init(filterConfig);
         fd.doFilter(request, response, chain);
 
         assertEquals("value1", ((NotMagnoliaFilter)fd.getDecoratedFilter()).param1);
         assertEquals(true, ((NotMagnoliaFilter)fd.getDecoratedFilter()).executed);
+
+        verify(filterConfig, request, response, chain);
     }
 
-    public void testBypassing() throws UnsupportedRepositoryOperationException, IOException, RepositoryException, ServletException{
+    public void testBypassing() throws IOException, RepositoryException, ServletException {
         // first filter ignores all uris starting with a .
         String conf =
             "server.filters.first.class=info.magnolia.cms.filters.FilterTest$TestFilter\n" +
@@ -105,7 +112,10 @@ public class FilterTest extends MgnlTestCase {
 
         HttpServletRequest request = createMock(HttpServletRequest.class);
         WebContext webCtx = createMock(WebContext.class);
-        expect(webCtx.getAttribute(Path.MGNL_REQUEST_URI_CURRENT)).andStubReturn(".magnolia/something.html");
+        AggregationState aggState = new AggregationState();
+        aggState.setCharacterEncoding("UTF-8");
+        aggState.setCurrentURI(".magnolia/something.html");
+        expect(webCtx.getAggregationState()).andStubReturn(aggState);
 
         MgnlContext.setInstance(webCtx);
 
@@ -118,6 +128,7 @@ public class FilterTest extends MgnlTestCase {
 
         assertEquals(false, ((TestFilter)mf.getFilters()[0]).executed);
         assertEquals(true, ((TestFilter)mf.getFilters()[1]).executed);
+        verify(request, webCtx);
     }
 
     public static class TestFilter extends AbstractMagnoliaFilter{
