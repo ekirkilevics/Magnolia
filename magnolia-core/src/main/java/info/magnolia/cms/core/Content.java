@@ -14,7 +14,7 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
-import info.magnolia.cms.i18n.I18NSupport;
+import info.magnolia.cms.i18n.I18NSupportFactory;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
@@ -307,7 +307,7 @@ public class Content extends ContentHandler implements Cloneable {
      * @return String, title
      */
     public String getTitle() {
-        return I18NSupport.getInstance().getNodeData(this, "title").getString();
+        return I18NSupportFactory.getI18nSupport().getNodeData(this, "title").getString();
     }
 
     /**
