@@ -79,5 +79,7 @@ public class LanguageSelect extends DialogSelect {
         });
 
         this.setOptions(options);
+
+        this.setConfig(DEFAULT_VALUE_PROPERTY, MessagesManager.getDefaultLocale().toString());
     }
 }
