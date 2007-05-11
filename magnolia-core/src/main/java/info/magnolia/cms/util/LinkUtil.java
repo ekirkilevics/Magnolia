@@ -18,7 +18,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.cms.i18n.I18NSupport;
+import info.magnolia.cms.i18n.I18NSupportFactory;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Iterator;
@@ -136,7 +136,7 @@ public final class LinkUtil {
     public static String convertUUIDsToAbsoluteLinks(String str) {
         return convertUUIDsToLinks(str, new PathToLinkTransformer(){
             public String transform(String absolutePath, String repository) {
-                return I18NSupport.getInstance().toI18NURI(absolutePath, repository);
+                return I18NSupportFactory.getI18nSupport().toI18NURI(absolutePath);
             }
         });
 
@@ -152,7 +152,7 @@ public final class LinkUtil {
         return convertUUIDsToLinks(str, new PathToLinkTransformer(){
             public String transform(String absolutePath, String repository) {
                 String relativePath = makeRelativePath(absolutePath, page);
-                 return I18NSupport.getInstance().toI18NURI(relativePath, repository);
+                 return I18NSupportFactory.getI18nSupport().toI18NURI(relativePath);
             }
         });
     }
