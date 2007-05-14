@@ -33,7 +33,6 @@ import java.io.UnsupportedEncodingException;
 public class ContentTypeFilter extends AbstractMagnoliaFilter {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ContentTypeFilter.class);
 
-
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         final String originalUri = request.getRequestURI();
         final String ext = getUriExtension(originalUri);
@@ -59,7 +58,10 @@ public class ContentTypeFilter extends AbstractMagnoliaFilter {
         final String characterEncoding = MIMEMapping.getContentEncodingOrDefault(mimeType);
 
         try {
-            req.setCharacterEncoding(characterEncoding);
+            // let's not override the request encoding if set by the app server
+            if (req.getCharacterEncoding() == null) {
+                req.setCharacterEncoding(characterEncoding);
+            }
         } catch (UnsupportedEncodingException e) {
             log.error("Can't set character encoding for the request (extension=" + extension + ",mimetype=" + mimeType + ")", e);
         }
