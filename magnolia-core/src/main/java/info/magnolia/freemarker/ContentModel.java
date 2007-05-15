@@ -22,6 +22,7 @@ import freemarker.template.TemplateScalarModel;
 import freemarker.template.TemplateSequenceModel;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ContentUtil;
 import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.collections.Transformer;
 
@@ -104,10 +105,10 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
     }
 
     /**
-     * This returns all children, no matter what their type is.
+     * This returns all children, except nodes or jcr: types and mgnl:metaData
      */
     public TemplateSequenceModel getChildNodes() throws TemplateModelException {
-        final Collection children = content.getChildren((String) null);
+        final Collection children = ContentUtil.getAllChildren(content);
         return (TemplateSequenceModel) wrapper.wrap(children);
     }
 
