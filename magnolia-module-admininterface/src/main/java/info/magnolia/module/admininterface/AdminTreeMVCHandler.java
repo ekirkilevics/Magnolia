@@ -831,19 +831,21 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      */
     public AdminTreeConfiguration getConfiguration() {
         if (this.configuration == null) {
-            this.configuration = (AdminTreeConfiguration) FactoryUtil.newInstanceWithoutDiscovery(this
-                .getConfigurationClass(), new Object[]{});
-            final Messages messages = MessagesUtil.chainWithDefault(getI18nBasename());
-            configuration.setMessages(messages);
+            setConfiguration((AdminTreeConfiguration) FactoryUtil.newInstanceWithoutDiscovery(this
+                .getConfigurationClass(), new Object[]{}));
         }
         return this.configuration;
     }
 
     /**
      * @param configuration The configuration to set.
+     *
+     * @deprecated don't set this manually !
      */
     public void setConfiguration(AdminTreeConfiguration configuration) {
         this.configuration = configuration;
+        final Messages messages = MessagesUtil.chainWithDefault(getI18nBasename());
+        configuration.setMessages(messages);
     }
 
     public String getConfigurationClass() {
