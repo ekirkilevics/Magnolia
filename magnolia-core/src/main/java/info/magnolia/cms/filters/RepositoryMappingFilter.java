@@ -12,8 +12,8 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.URI2RepositoryMapping;
-import info.magnolia.cms.core.Aggregator;
-import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
@@ -33,29 +33,22 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class RepositoryMappingFilter extends AbstractMagnoliaFilter {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(RepositoryMappingFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(RepositoryMappingFilter.class);
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        String uri = Path.getURI();
+        String uri = MgnlContext.getAggregationState().getCurrentURI();
         int firstDotPos = StringUtils.indexOf(uri, '.', StringUtils.lastIndexOf(uri, '/'));
         String handle;
         String selector;
-        String extension;
         if (firstDotPos > -1) {
             int lastDotPos = StringUtils.lastIndexOf(uri, '.');
             handle = StringUtils.substring(uri, 0, firstDotPos);
             selector = StringUtils.substring(uri, firstDotPos + 1, lastDotPos);
-            extension = StringUtils.substring(uri, lastDotPos + 1);
         }
         else {
             // no dots (and no extension)
             handle = uri;
             selector = "";
-            extension = "";
         }
 
         URI2RepositoryMapping mapping = URI2RepositoryManager.getInstance().getMapping(uri);
@@ -63,10 +56,13 @@ public class RepositoryMappingFilter extends AbstractMagnoliaFilter {
         // remove prefix if any
         handle = mapping.getHandle(handle);
 
-        Aggregator.setRepository(mapping.getRepository());
-        Aggregator.setHandle(handle);
-        Aggregator.setSelector(selector);
-        Aggregator.setExtension(extension);
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        aggregationState.setRepository(mapping.getRepository());
+        aggregationState.setHandle(handle);
+
+        // selector could potentially be set from some other place, but we have no better idea for now :)
+        aggregationState.setSelector(selector);
+
         chain.doFilter(request, response);
     }
 }

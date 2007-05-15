@@ -1,6 +1,6 @@
 package info.magnolia.cms.cache;
 
-import info.magnolia.cms.core.Path;
+import info.magnolia.context.MgnlContext;
 
 import java.io.Serializable;
 
@@ -36,9 +36,11 @@ public class CacheKey implements Serializable {
     /**
      * The constructor used by default
      * @param request the request from which we get the path
+     *
+     * TODO : we should probably use the AggregationState instead of the HttpServletRequest
      */
     public CacheKey(HttpServletRequest request) {
-        key = Path.getOriginalURI();
+        key = MgnlContext.getAggregationState().getOriginalURI();
     }
 
     /**

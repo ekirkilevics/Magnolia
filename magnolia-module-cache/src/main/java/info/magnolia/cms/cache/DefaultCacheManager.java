@@ -31,6 +31,7 @@ public class DefaultCacheManager extends BaseCacheManager {
 
     /**
      * @see info.magnolia.cms.cache.CacheManager#getCacheKey(javax.servlet.http.HttpServletRequest)
+     * TODO : we should probably use the AggregationState instead of the HttpServletRequest
      */
     public CacheKey getCacheKey(HttpServletRequest request) {
         return new CacheKey(request);

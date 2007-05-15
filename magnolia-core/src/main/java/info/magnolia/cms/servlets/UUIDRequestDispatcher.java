@@ -13,7 +13,7 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Path;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 
@@ -29,6 +29,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ *
+ * @deprecated 
+ *
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -69,7 +72,7 @@ public class UUIDRequestDispatcher extends HttpServlet {
         String repositoryName = request.getParameter(ATTRIBUTE_REPOSITRY_NAME);
         String workspaceName = request.getParameter(ATTRIBUTE_WORKSPACE_NAME);
         String uuid = request.getParameter(ATTRIBUTE_UUID);
-        String extension = Path.getExtension(request);
+        String extension = MgnlContext.getAggregationState().getExtension();
         if (StringUtils.isEmpty(repositoryName)) {
             repositoryName = ContentRepository.WEBSITE;
         }

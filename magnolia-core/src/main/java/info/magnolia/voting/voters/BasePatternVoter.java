@@ -69,7 +69,7 @@ public abstract class BasePatternVoter extends AbstractBoolVoter {
         }
         else{
             if(MgnlContext.hasInstance()){
-                uri = Path.getURI();
+                uri = MgnlContext.getAggregationState().getCurrentURI();
             }
             else{
                 if (value instanceof HttpServletRequest) {
