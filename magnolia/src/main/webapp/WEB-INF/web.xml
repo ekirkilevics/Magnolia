@@ -47,10 +47,13 @@
     <servlet-name>log4j</servlet-name>
     <servlet-class>it.openutils.log4j.Log4jConfigurationServlet</servlet-class>
   </servlet>
+  <!-- This servlet is deprecated, should not be used.
+       See http://jira.magnolia.info/browse/MAGNOLIA-1535
   <servlet>
     <servlet-name>uuidRequestDispatcher</servlet-name>
     <servlet-class>info.magnolia.cms.servlets.UUIDRequestDispatcher</servlet-class>
   </servlet>
+  -->
   <!--  used for fckeditor inline images and files -->
   <servlet>
     <servlet-name>FCKEditorSimpleUploadServlet</servlet-name>
@@ -105,10 +108,13 @@
     <servlet-name>log4j</servlet-name>
     <url-pattern>/.magnolia/log4j/*</url-pattern>
   </servlet-mapping>
+  <!-- This servlet is deprecated, should not be used.
+       See http://jira.magnolia.info/browse/MAGNOLIA-1535
   <servlet-mapping>
     <servlet-name>uuidRequestDispatcher</servlet-name>
     <url-pattern>/uuid/*</url-pattern>
   </servlet-mapping>
+  -->
   <servlet-mapping>
     <servlet-name>FCKEditorSimpleUploadServlet</servlet-name>
     <url-pattern>/.magnolia/fckeditor/upload</url-pattern>
