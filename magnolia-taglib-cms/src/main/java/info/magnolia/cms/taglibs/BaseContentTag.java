@@ -95,9 +95,7 @@ public class BaseContentTag extends TagSupport {
      * @return the active node, or the first matching one if nodedata is null and inherit is set.
      */
     protected Content getFirstMatchingNode() {
-
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        Content currentPage = Resource.getCurrentActivePage(request);
+        Content currentPage = Resource.getCurrentActivePage();
         Content contentNode = resolveNode(currentPage);
         if (contentNode == null) {
             return null;
