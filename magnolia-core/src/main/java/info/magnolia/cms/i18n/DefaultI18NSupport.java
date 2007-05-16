@@ -126,39 +126,36 @@ public class DefaultI18NSupport implements I18NSupport {
     }
 
     /**
-     * Returns the nodedata with the name &lt;name&gt;_&lt;current language&gt; in case &lt;name&gt; does not exist!
+     * Returns the nodedata with the name &lt;name&gt;_&lt;current language&gt; or &lt;name&gt;_&lt;fallback language&gt otherwise returns &lt;name&gt;.
      */
     public NodeData getNodeData(Content node, String name) {
         NodeData nd = null;
 
-        try {
-            // this is not an i18n field
-            if (!isEnabled() || node.hasNodeData(name)) {
-                return node.getNodeData(name);
-            }
+        if (isEnabled()) {
+            try {
+                // test for the current language
+                String lang = getCurrentLanguage();
+                if(languageSupported(lang)){
+                    nd = getNodeData(node, name, lang);
+                    if (!isEmpty(nd)) {
+                        return nd;
+                    }
+                }
 
-            // test for the current language
-            String lang = getCurrentLanguage();
-            if(languageSupported(lang)){
+                // fallback
+                lang = getFallbackLanguage();
+
                 nd = getNodeData(node, name, lang);
                 if (!isEmpty(nd)) {
                     return nd;
                 }
             }
-
-            // fallback
-            lang = getFallbackLanguage();
-
-            nd = getNodeData(node, name, lang);
-            if (!isEmpty(nd)) {
-                return nd;
+            catch (RepositoryException e) {
+                log.error("can't read i18n nodeData " + name + " from node " + node, e);
             }
         }
-        catch (RepositoryException e) {
-            log.error("can't read i18n nodeData " + name + " from node " + node, e);
-        }
 
-        // return the not existing node data
+        // return the node data
         return node.getNodeData(name);
     }
 
