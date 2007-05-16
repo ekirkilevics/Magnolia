@@ -41,13 +41,16 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * CMS filter responsible for content aggregation and dispatching
+ * Filter responsible for rendering the current aggregation state,
+ * by delegating to the appropriate TemplateRenderer or by serving
+ * binary content.
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class MgnlCmsFilter extends AbstractMagnoliaFilter {
+public class RenderingFilter extends AbstractMagnoliaFilter {
 
-    private static Logger log = LoggerFactory.getLogger(MgnlCmsFilter.class);
+    private static Logger log = LoggerFactory.getLogger(RenderingFilter.class);
 
     /**
      * All HTTP/s requests are handled here.
