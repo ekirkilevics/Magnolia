@@ -88,7 +88,13 @@ public class FactoryUtil {
             }
             else{
                 Class clazz = ClassUtil.classForName(className);
-                return clazz.newInstance();
+                Object instance = clazz.newInstance();
+
+                if(instance instanceof InstanceFactory){
+                    setInstanceFactory(interf, (InstanceFactory)instance);
+                    return ((InstanceFactory)instance).newInstance();
+                }
+                return instance;
             }
         }
         catch (Exception e) {

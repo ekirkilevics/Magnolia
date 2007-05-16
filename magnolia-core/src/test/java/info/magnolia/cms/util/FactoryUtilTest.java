@@ -8,57 +8,90 @@ import info.magnolia.test.MgnlTestCase;
 
 public class FactoryUtilTest extends MgnlTestCase {
 
+    public static interface TestInterface{
+
+    }
+
+    public static class TestImplementation implements TestInterface{
+
+    }
+
+    public static class TestOtherImplementation extends TestImplementation{
+
+    }
+
+    public static final class TestInstanceFactory implements FactoryUtil.InstanceFactory {
+
+        public Object newInstance() {
+               return new TestOtherImplementation();
+           }
+    }
+
     public void testConfiguredImplementation(){
-       FactoryUtil.setDefaultImplementation(FactoryUtilTestInterface.class, FactoryUtilTestImplementation.class);
-       Object obj = FactoryUtil.getSingleton(FactoryUtilTestInterface.class);
-       assertTrue(obj instanceof FactoryUtilTestImplementation);
+       FactoryUtil.setDefaultImplementation(TestInterface.class, TestImplementation.class);
+       Object obj = FactoryUtil.getSingleton(TestInterface.class);
+       assertTrue(obj instanceof TestImplementation);
    }
 
     public void testDontRedefineTheDefaultImplementation(){
-        FactoryUtil.setDefaultImplementation(FactoryUtilTestInterface.class, FactoryUtilTestImplementation.class);
-        FactoryUtil.setDefaultImplementation(FactoryUtilTestInterface.class, "a.wrong.class.not.set");
-        Object obj = FactoryUtil.getSingleton(FactoryUtilTestInterface.class);
-        assertTrue(obj instanceof FactoryUtilTestImplementation);
+        FactoryUtil.setDefaultImplementation(TestInterface.class, TestImplementation.class);
+        FactoryUtil.setDefaultImplementation(TestInterface.class, "a.wrong.class.not.set");
+        Object obj = FactoryUtil.getSingleton(TestInterface.class);
+        assertTrue(obj instanceof TestImplementation);
     }
 
    public void testDefaultImplementation(){
-       Object obj = FactoryUtil.getSingleton(FactoryUtilTestImplementation.class);
-       assertTrue(obj instanceof FactoryUtilTestImplementation);
+       Object obj = FactoryUtil.getSingleton(TestImplementation.class);
+       assertTrue(obj instanceof TestImplementation);
    }
 
    public void testSingleton(){
-       assertEquals(FactoryUtil.getSingleton(FactoryUtilTestImplementation.class), FactoryUtil.getSingleton(FactoryUtilTestImplementation.class));
+       assertEquals(FactoryUtil.getSingleton(TestImplementation.class), FactoryUtil.getSingleton(TestImplementation.class));
    }
 
    public void testNewInstance(){
-       assertNotSame(FactoryUtil.newInstance(FactoryUtilTestImplementation.class), FactoryUtil.newInstance(FactoryUtilTestImplementation.class));
+       assertNotSame(FactoryUtil.newInstance(TestImplementation.class), FactoryUtil.newInstance(TestImplementation.class));
    }
 
    public void testSetSingletonInstance(){
-       FactoryUtilTestImplementation instance = new FactoryUtilTestImplementation();
-       FactoryUtil.setInstance(FactoryUtilTestInterface.class, instance);
-       assertSame(instance, FactoryUtil.getSingleton(FactoryUtilTestInterface.class));
+       TestImplementation instance = new TestImplementation();
+       FactoryUtil.setInstance(TestInterface.class, instance);
+       assertSame(instance, FactoryUtil.getSingleton(TestInterface.class));
    }
 
    public void testInstanceFactory(){
-       FactoryUtil.setInstanceFactory(FactoryUtilTestInterface.class, new FactoryUtil.InstanceFactory(){
-           public Object newInstance() {
-               return new FactoryUtilTestOtherImplementation();
-           }
-       });
+       FactoryUtil.setInstanceFactory(TestInterface.class, new TestInstanceFactory());
 
-       assertTrue(FactoryUtil.getSingleton(FactoryUtilTestInterface.class) instanceof FactoryUtilTestOtherImplementation);
+       assertTrue(FactoryUtil.getSingleton(TestInterface.class) instanceof TestOtherImplementation);
    }
 
    public void testSingletonDefinedInRepository() throws RepositoryException, IOException{
-       FactoryUtil.setDefaultImplementation(FactoryUtilTestInterface.class, "/test");
+       FactoryUtil.setDefaultImplementation(TestInterface.class, "/test");
        initConfigRepository(
-           "test.class=" + FactoryUtilTestImplementation.class.getName()
+           "test.class=" + TestImplementation.class.getName()
        );
-       Object obj = FactoryUtil.getSingleton(FactoryUtilTestInterface.class);
+       Object obj = FactoryUtil.getSingleton(TestInterface.class);
        assertNotNull(obj);
-       assertTrue(obj instanceof FactoryUtilTestInterface);
+       assertTrue(obj instanceof TestImplementation);
    }
+
+   public void testSingletonDefinedInRepositoryUsingRepositoryPrefix() throws RepositoryException, IOException{
+       FactoryUtil.setDefaultImplementation(TestInterface.class, "config:/test");
+       initConfigRepository(
+           "test.class=" + TestImplementation.class.getName()
+       );
+       Object obj = FactoryUtil.getSingleton(TestInterface.class);
+       assertNotNull(obj);
+       assertTrue(obj instanceof TestImplementation);
+   }
+
+   public void testUseInstanceFactoryAsProperty() throws RepositoryException, IOException{
+       FactoryUtil.setDefaultImplementation(TestInterface.class, TestInstanceFactory.class.getName());
+       Object obj = FactoryUtil.getSingleton(TestInterface.class);
+       assertNotNull(obj);
+       assertTrue(obj instanceof TestImplementation);
+   }
+
 
 
 }
