@@ -12,10 +12,17 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ObservedManager;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.util.HashMap;
 import java.util.Map;
+
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.lang.StringUtils;
@@ -68,9 +75,21 @@ public class FactoryUtil {
             if (factories.containsKey(interf)) {
                 return ((InstanceFactory) factories.get(interf)).newInstance();
             }
-            // make interf the default implementation
-            Class clazz =  getImplementation(interf);
-            return clazz.newInstance();
+
+            String className = StringUtils.defaultIfEmpty(SystemProperty.getProperty(interf.getName()), interf.getName());
+            if(className.startsWith("/") || className.contains(":")){
+                String repository = ContentRepository.CONFIG;
+                String path = className;
+                if(className.contains(":")){
+                    repository = StringUtils.substringBefore(className, ":");
+                    path = StringUtils.substringAfter(className, ":");
+                }
+                return new ObservedObjectFactory(repository, path);
+            }
+            else{
+                Class clazz = ClassUtil.classForName(className);
+                return clazz.newInstance();
+            }
         }
         catch (Exception e) {
             log.error("can't instantiate an implementation of this class [" + interf.getName() + "]", e);
@@ -136,6 +155,9 @@ public class FactoryUtil {
             instance = newInstance(interf);
             instances.put(interf, instance);
         }
+        if(instance instanceof ObservedObjectFactory){
+            instance = ((ObservedObjectFactory)instance).getObservedObject();
+        }
         return instance;
     }
 
@@ -189,6 +211,72 @@ public class FactoryUtil {
     public static void clear() {
         factories.clear();
         instances.clear();
+    }
+
+    /**
+     * Generic observerd singleton factory.
+     * @author philipp
+     * @version $Id$
+     *
+     */
+    public static class ObservedObjectFactory extends ObservedManager{
+
+        /**
+         * Path to the node in the config repository
+         */
+        private String path;
+
+        /**
+         * Repository name used
+         */
+        private String repository;
+
+        /**
+         * Logger.
+         */
+        private static Logger log = LoggerFactory.getLogger(ObservedObjectFactory.class);
+
+        /**
+         * The object delivered by this factory
+         */
+        protected Object observedObject;
+
+        public ObservedObjectFactory(String repository, String path) {
+            this.path = path;
+            this.repository = repository;
+
+            Content node;
+            try {
+                node = MgnlContext.getSystemContext().getHierarchyManager(repository).getContent(path);
+                register(node);
+            }
+            catch (RepositoryException e) {
+                log.error("can't read configuration for object [" + repository + ":" + path + "]", e);
+            }
+        }
+
+        protected void onRegister(Content node) {
+            try {
+                this.observedObject = Content2BeanUtil.toBean(node, true);
+            }
+            catch (Exception e) {
+                log.error("can't instantiate object [" + repository + ":" + path + "]", e);
+            }
+        }
+
+        /**
+         * We do not unset the instance. This allows getObject() to be unsynchronized.
+         */
+        protected void onClear() {
+            this.observedObject = null;
+        }
+
+        /**
+         * Is not synchronized!
+         */
+        public Object getObservedObject() {
+            return this.observedObject;
+        }
     }
 
 }
