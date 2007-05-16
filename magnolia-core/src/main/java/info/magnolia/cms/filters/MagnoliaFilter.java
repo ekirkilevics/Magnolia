@@ -15,12 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 
 
 /**
- * Used to define the order of the filters.
+ * Interface for filters managed by Magnolia, exposing support for
+ * the bypass mechanism. 
+ *
  * @author philipp
  * @version $Id$
- *
  */
-public interface MagnoliaFilter extends Filter{
+public interface MagnoliaFilter extends Filter {
     public String getName();
     public void setName(String name);
     public boolean bypasses(HttpServletRequest request);
