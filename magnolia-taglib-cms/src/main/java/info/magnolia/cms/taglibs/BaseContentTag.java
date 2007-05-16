@@ -120,9 +120,7 @@ public class BaseContentTag extends TagSupport {
     }
 
     protected Content resolveNode(Content currentPage) {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-
-        Content currentParagraph = Resource.getLocalContentNode(request);
+        Content currentParagraph = Resource.getLocalContentNode();
 
         if (StringUtils.isNotEmpty(contentNodeName)) {
             // contentNodeName is defined
