@@ -14,6 +14,7 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.api.HierarchyManager;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
 
@@ -26,7 +27,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Manages the JAAS users.
  * @author philipp
- * @version $Revision$ ($Author$)
+ * @version $Revision:9391 $ ($Author:scharles $)
  */
 public class ExternalUserManager implements UserManager {
 
@@ -36,6 +37,11 @@ public class ExternalUserManager implements UserManager {
     public static Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
     public User getUser(String name) throws UnsupportedOperationException {
+        // we only support accessing current User object
+        // - implement source specific UserManager if needed
+        if (name.equalsIgnoreCase(MgnlContext.getUser().getName())) {
+            return MgnlContext.getUser();
+        }
         throw new UnsupportedOperationException("not implemented yet");
     }
 

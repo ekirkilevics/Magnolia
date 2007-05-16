@@ -15,6 +15,7 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.security.auth.Entity;
 import info.magnolia.cms.security.auth.GroupList;
 import info.magnolia.cms.security.auth.RoleList;
+import info.magnolia.cms.i18n.MessagesManager;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -120,9 +121,12 @@ public class ExternalUser implements User, Serializable {
      * (non-Javadoc)
      * @see info.magnolia.cms.security.UserInterface#getLanguage()
      */
-
     public String getLanguage() {
-        return (String) this.userDetails.getProperty(Entity.LANGUAGE);
+        String language = (String) this.userDetails.getProperty(Entity.LANGUAGE);
+        if (null == language) {
+              language = MessagesManager.getDefaultLocale().getLanguage();
+        }
+        return language;
     }
 
     /*
