@@ -15,27 +15,17 @@ package info.magnolia.jaas.sp.jcr;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.security.auth.ACL;
-import info.magnolia.cms.security.auth.GroupList;
-import info.magnolia.cms.security.auth.PrincipalCollection;
-import info.magnolia.cms.security.auth.RoleList;
+import info.magnolia.cms.security.auth.*;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
-import info.magnolia.jaas.principal.ACLImpl;
-import info.magnolia.jaas.principal.GroupListImpl;
-import info.magnolia.jaas.principal.PrincipalCollectionImpl;
-import info.magnolia.jaas.principal.RoleListImpl;
+import info.magnolia.jaas.principal.*;
 import info.magnolia.api.HierarchyManager;
 
 import java.security.Principal;
 import java.util.Iterator;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.security.auth.login.LoginException;
@@ -57,48 +47,21 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
-
-    /**
-     * Set of role names.
-     */
-    protected Set rolesNames = new LinkedHashSet();
-
-    /**
-     * Set of group names.
-     */
-    protected Set groupsNames = new LinkedHashSet();
+    private static final Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
 
     /**
      * {@inheritDoc}
      */
     public boolean validateUser() throws FailedLoginException ,LoginException {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-        try {
-            this.user = hm.getContent(this.name);
-            return true;
-        }
-        catch (PathNotFoundException pe) {
-            log.info("Unable to locate user '{}', authentication failed", this.name);
-        }
-        catch (RepositoryException re) {
-            log.error("Unable to locate user ["
-                + this.name
-                + "], authentication failed due to a "
-                + re.getClass().getName(), re);
-        }
-        return false;
+        return true;
     }
 
     /**
      * set access control list from the user, roles and groups
      */
     public void setACL() {
-        collectGroups(this.user);
-        collectRoles(this.user);
-
-        String[] roles = (String[]) rolesNames.toArray(new String[rolesNames.size()]);
-        String[] groups = (String[]) groupsNames.toArray(new String[groupsNames.size()]);
+        String[] roles = (String[]) getRoleNames().toArray(new String[getRoleNames().size()]);
+        String[] groups = (String[]) getGroupNames().toArray(new String[getGroupNames().size()]);
 
         if (log.isDebugEnabled()) {
             log.debug("Roles: {}", ArrayUtils.toString(roles));
@@ -109,7 +72,6 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
         addGroups(groups);
 
         PrincipalCollection principalList = new PrincipalCollectionImpl();
-        setACL(this.user, principalList);
         setACLForRoles(roles, principalList);
         setACLForGroups(groups, principalList);
 
@@ -125,13 +87,16 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
         this.subject.getPrincipals().add(principalList);
     }
 
+    // do nothing here, we are only responsible for adding ACL passed on via shared state
+    public void setEntity() {}
+
     /**
      * Set the list of groups, info.magnolia.jaas.principal.GroupList.
      * @param groups array of group names
      */
     protected void addGroups(String[] groups) {
         GroupList groupList = new GroupListImpl();
-        for (Iterator iterator = groupsNames.iterator(); iterator.hasNext();) {
+        for (Iterator iterator = getGroupNames().iterator(); iterator.hasNext();) {
             String group = (String) iterator.next();
             groupList.add(group);
         }
@@ -144,99 +109,11 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      */
     protected void addRoles(String[] roles) {
         RoleList roleList = new RoleListImpl();
-        for (Iterator iterator = rolesNames.iterator(); iterator.hasNext();) {
+        for (Iterator iterator = getRoleNames().iterator(); iterator.hasNext();) {
             String role = (String) iterator.next();
             roleList.add(role);
         }
         this.subject.getPrincipals().add(roleList);
-    }
-
-    /**
-     * Extract all the configured roles from the given node (which can be the user node or a group node)
-     * @param node user or group node
-     */
-    protected void collectRoles(Content node) {
-
-        HierarchyManager rolesHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
-        try {
-            if (!node.hasContent("roles")) {
-                return;
-            }
-            Content rolesNode = node.getContent("roles");
-            Iterator children = rolesNode.getNodeDataCollection().iterator();
-            while (children.hasNext()) {
-                String roleUUID = ((NodeData) children.next()).getString();
-                Content role;
-                try {
-                    role = rolesHierarchy.getContentByUUID(roleUUID);
-                }
-                catch (ItemNotFoundException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Role does not exist", e);
-                    }
-                    continue;
-                }
-                catch (IllegalArgumentException e) {
-                    // this can happen if the roleUUID is not a valid uuid string
-                    if (log.isDebugEnabled()) {
-                        log.debug("Exception caught", e);
-                    }
-                    continue;
-                }
-                rolesNames.add(role.getName());
-            }
-        }
-        catch (PathNotFoundException e) {
-            log.debug(e.getMessage(), e);
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-
-    }
-
-    /**
-     * Extract all the configured groups from the given node (which can be the user node or a group node)
-     * @param node user or group node
-     */
-    protected void collectGroups(Content node) {
-        HierarchyManager groupsHierarchy = ContentRepository.getHierarchyManager(ContentRepository.USER_GROUPS);
-        try {
-            if (!node.hasContent("groups")) {
-                return;
-            }
-            Content groupNode = node.getContent("groups");
-            Iterator children = groupNode.getNodeDataCollection().iterator();
-            while (children.hasNext()) {
-                String groupUUID = ((NodeData) children.next()).getString();
-                Content group;
-                try {
-                    group = groupsHierarchy.getContentByUUID(groupUUID);
-
-                }
-                catch (ItemNotFoundException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Group does not exist", e);
-                    }
-                    continue;
-                }
-
-                // ignore if this groups is already in a list to avoid infinite recursion
-                if (!groupsNames.contains(group.getName())) {
-                    groupsNames.add(group.getName());
-                    collectRoles(group);
-                    // check for any sub groups
-                    collectGroups(group);
-                }
-
-            }
-        }
-        catch (PathNotFoundException e) {
-            log.debug(e.getMessage(), e);
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
     }
 
     /**

@@ -5,6 +5,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
+import java.util.LinkedHashSet;
+import java.util.Set;
 import java.io.IOException;
 
 import javax.security.auth.Subject;
@@ -20,7 +22,7 @@ import javax.security.auth.spi.LoginModule;
  */
 public abstract class AbstractLoginModule implements LoginModule {
 
-    public static Logger log = LoggerFactory.getLogger(AbstractLoginModule.class);
+    public static final Logger log = LoggerFactory.getLogger(AbstractLoginModule.class);
 
     // magnolia specific option to define if "this" module needs to be
     // skipped based on previous (in JAAS module chain) module status
@@ -75,15 +77,22 @@ public abstract class AbstractLoginModule implements LoginModule {
     // this status is sent back to the LoginModule chain
     public boolean success;
 
+    private boolean skip;
 
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
         this.subject = subject;
         this.callbackHandler = callbackHandler;
         this.sharedState = sharedState;
         this.options = options;
+        this.sharedState.put("groupNames",new LinkedHashSet());
+        this.sharedState.put("roleNames",new LinkedHashSet());
     }
 
     public boolean login() throws LoginException {
+
+        // we need to set the status for this module now because of the sequence
+        // login and commit are called by the container
+        this.setSkip();
 
         if (this.getSkip()) {
             return true;
@@ -148,11 +157,6 @@ public abstract class AbstractLoginModule implements LoginModule {
     }
 
     /**
-     * Releases all associated memory
-     */
-    public abstract boolean release();
-
-    /**
      * @return shared status value as set by this LoginModule
      * */
     public int getSharedStatus() {
@@ -180,21 +184,50 @@ public abstract class AbstractLoginModule implements LoginModule {
 
 
     /**
-     * private utility to test if the option skip_on_previous_success is set to true
+     * test if the option skip_on_previous_success is set to true
      * and preceding LoginModule was successful
      * */
-    public boolean getSkip() {
-        if ("true".equalsIgnoreCase(getOptionValue(SKIP_ON_PREVIOUS_SUCCESS))) {
-            if (this.getSharedStatus() == STATUS_SUCCEDED) {
-                return true;
-            }
-        }
-        return false;
+    private boolean getSkip() {
+        return this.skip;
     }
 
+    private void setSkip() {
+        if ("true".equalsIgnoreCase(getOptionValue(SKIP_ON_PREVIOUS_SUCCESS))) {
+            this.skip = (this.getSharedStatus() == STATUS_SUCCEDED);
+        }
+    }
+
+    public void setGroupNames(Set names) {
+        this.getGroupNames().addAll(names);
+    }
+
+    public void addGroupName(String groupName) {
+        getGroupNames().add(groupName);
+    }
+
+    public Set getGroupNames() {
+        return (Set) this.sharedState.get("groupNames");
+    }
+
+    public void setRoleNames(Set names) {
+        this.getRoleNames().addAll(names);
+    }
+
+    public void addRoleName(String roleName) {
+        getRoleNames().add(roleName);
+    }
+
+    public Set getRoleNames() {
+        return (Set) this.sharedState.get("roleNames");
+    }
 
     /**
-     * checks is the credentials exist in the repository
+     * Releases all associated memory
+     */
+    public abstract boolean release();
+
+    /**
+     * checks if the credentials exist in the repository
      * @return boolean
      */
     public abstract boolean validateUser() throws FailedLoginException, LoginException;
