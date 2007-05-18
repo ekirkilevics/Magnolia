@@ -3,7 +3,7 @@
 To see a better example look at the original fckstyles.xml.
 -->
 <Styles>
-  <Style name="YYYYYYYY Page Title" element="h1">
+  <Style name="Page Title" element="h1">
   </Style>
   <Style name="Title" element="h2">
     <!-- <Attribute name="class" value="head1"/> -->
