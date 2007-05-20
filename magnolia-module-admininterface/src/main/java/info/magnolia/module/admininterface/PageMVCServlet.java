@@ -41,18 +41,20 @@ public class PageMVCServlet extends MVCServlet {
     private static Logger log = LoggerFactory.getLogger(PageMVCServlet.class);
 
     /**
-     *
+     * {@inheritDoc}
      */
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
 
         String pageName = RequestFormUtil.getParameter(request, "mgnlPage"); //$NON-NLS-1$
         if (StringUtils.isEmpty(pageName)) {
-            if(StringUtils.isNotEmpty((String) request.getAttribute("javax.servlet.include.servlet_path")))
+            if (StringUtils.isNotEmpty((String) request.getAttribute("javax.servlet.include.servlet_path"))) {
                 pageName = (String) request.getAttribute("javax.servlet.include.path_info");
-            
-            if (StringUtils.isEmpty(pageName))
+            }
+
+            if (StringUtils.isEmpty(pageName)) {
                 pageName = request.getPathInfo();
-            
+            }
+
             // strip off leading path
             pageName = StringUtils.substringAfterLast(pageName, "/");
             // strip any extension
@@ -61,17 +63,17 @@ public class PageMVCServlet extends MVCServlet {
 
         PageMVCHandler handler = null;
 
-        if (pageName != null) {
+        if (StringUtils.isNotEmpty(pageName)) {
             // try to get a registered handler
             try {
                 handler = PageHandlerManager.getInstance().getPageHandler(pageName, request, response);
             }
             catch (InvalidDialogPageHandlerException e) {
-                log.error("no page found: [" + pageName + "]"); //$NON-NLS-1$
+                log.error("no page found with name \"{}\"", pageName); //$NON-NLS-1$
             }
         }
         else {
-            log.error("no dialogpage name passed"); //$NON-NLS-1$
+            log.warn("No dialogpage name passed for url {}", request.getRequestURI()); //$NON-NLS-1$
         }
 
         return handler;
