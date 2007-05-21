@@ -39,14 +39,14 @@ public class BootstrapFilesComparatorTest extends TestCase {
         assertStrictOrder("foo.xml", "foo.properties.gz");
     }
 
-    // this is probably not the actual desired behaviour
     public void testFilesAreOrderedByFileNameLength() {
+        // this is not the actual desired behaviour, see MAGNOLIA-1541
         assertStrictOrder("mama.xml", "bebebebebebebe.xml");
-        assertStrictOrder("/a/a/a/a/a/a/a/a/a.xml", "/z/z/z.xml");
-        assertStrictOrder("/z/z/z.xml", "/a/a/a/a/a/a/a/a/aa.xml");
 
         // this is definitely the opposite of what we want - but is ok since bootstrap files are all in one single directory
         assertStrictOrder("/foo/b.xml", "/foo.xml");
+        assertStrictOrder("/a/a/a/a/a/a/a/a/a.xml", "/z/z/z.xml");
+        assertStrictOrder("/z/z/z.xml", "/a/a/a/a/a/a/a/a/aa.xml");
 
         // this is what we want:
         assertStrictOrder("foo.xml", "foo.b.xml");
