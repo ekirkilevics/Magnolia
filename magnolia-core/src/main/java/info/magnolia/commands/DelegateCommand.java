@@ -20,10 +20,14 @@ public class DelegateCommand implements Command {
     /**
      * The command name used to delegate to
      */
-    String commandName;
-    
+    private String commandName;
+
+    public DelegateCommand() {
+    }
+
     /**
      * @param commandName
+     * @deprecated not used
      */
     public DelegateCommand(String commandName) {
         this.commandName = commandName;
@@ -38,6 +42,16 @@ public class DelegateCommand implements Command {
             log.error("can't find command {}", this.commandName);
         }
         return false;
+    }
+
+
+    public String getCommandName() {
+        return this.commandName;
+    }
+
+
+    public void setCommandName(String commandName) {
+        this.commandName = commandName;
     }
 
 }

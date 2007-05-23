@@ -24,8 +24,9 @@ import org.slf4j.LoggerFactory;
  * A command catalog using a repository node as a configuration. Chains are supported. Date: Mar 27, 2006 Time: 10:58:22
  * AM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
+ * @deprecated we use content2bean in CommandsManager
  */
-public class MgnlRepositoryCatalog extends CatalogBase {
+public class MgnlRepositoryCatalog extends MgnlCatalog {
 
     private static Logger log = LoggerFactory.getLogger(MgnlRepositoryCatalog.class);
 
