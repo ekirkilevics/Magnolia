@@ -125,6 +125,9 @@
         <sv:value>6bc37b49-d4d5-49f1-8ff3-755f693c78ee</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
+        <sv:value>info.magnolia.commands.DelegateCommand</sv:value>
+      </sv:property>
+      <sv:property sv:name="commandName" sv:type="String">
         <sv:value>default-activate</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
