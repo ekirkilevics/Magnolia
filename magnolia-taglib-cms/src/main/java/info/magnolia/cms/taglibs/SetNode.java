@@ -21,7 +21,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.PropertyType;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -117,9 +116,7 @@ public class SetNode extends BaseContentTag {
      * @return int
      */
     public int doEndTag() {
-
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        Content currentPage = Resource.getCurrentActivePage(request);
+        Content currentPage = Resource.getCurrentActivePage();
 
         // Evaluated content node.
         Content contentNode;
@@ -132,8 +129,7 @@ public class SetNode extends BaseContentTag {
 
         // set attribute
         if (contentNode != null) {
-            pageContext.setAttribute(this.var, new NodeMapWrapper(contentNode, Resource
-                .getActivePage((HttpServletRequest) pageContext.getRequest())), this.scope);
+            pageContext.setAttribute(this.var, new NodeMapWrapper(contentNode, Resource.getActivePage()), this.scope);
         }
         else {
             pageContext.removeAttribute(this.var);
