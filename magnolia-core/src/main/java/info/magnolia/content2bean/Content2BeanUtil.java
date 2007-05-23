@@ -60,7 +60,7 @@ public class Content2BeanUtil {
         private TypeDescriptor defaultType;
 
         public DefaultClassTransformer(Class defaultClass) {
-            this.defaultType = TypeMapping.Factory.getDefaultMapping().getTypeDescriptor(defaultClass);
+            this.defaultType = getTypeMapping().getTypeDescriptor(defaultClass);
         }
 
         protected TypeDescriptor onResolveClass(TransformationState state) {
