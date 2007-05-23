@@ -17,7 +17,6 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.Resource;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,10 +35,7 @@ public class BaseContentTag extends TagSupport {
      */
     private static final long serialVersionUID = 222L;
 
-    /**
-     * Logger.
-     */
-    protected Logger log = LoggerFactory.getLogger(getClass());
+    private final static Logger log = LoggerFactory.getLogger(BaseContentTag.class);
 
     protected String nodeDataName;
 
