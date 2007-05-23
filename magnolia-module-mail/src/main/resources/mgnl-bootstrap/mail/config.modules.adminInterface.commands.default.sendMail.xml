@@ -12,7 +12,7 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>d3ce3d3f-80b8-43c8-941c-97cefdfd2ec1</sv:value>
   </sv:property>
-  <sv:property sv:name="impl" sv:type="String">
+  <sv:property sv:name="class" sv:type="String">
     <sv:value>info.magnolia.cms.mail.commands.MailCommand</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
