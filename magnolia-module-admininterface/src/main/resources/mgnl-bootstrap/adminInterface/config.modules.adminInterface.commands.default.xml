@@ -48,7 +48,7 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>b9fb5af5-bac2-4911-9d37-4896fb549f5f</sv:value>
     </sv:property>
-    <sv:property sv:name="impl" sv:type="String">
+    <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.module.admininterface.commands.ActivationCommand</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
@@ -88,7 +88,7 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>f71af942-e426-4c6e-b40e-bef6caa9de62</sv:value>
     </sv:property>
-    <sv:property sv:name="impl" sv:type="String">
+    <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.module.admininterface.commands.DeactivationCommand</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
