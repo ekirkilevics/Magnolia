@@ -48,7 +48,7 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>8a1ea257-31c6-4fca-9880-89676c71a3e7</sv:value>
     </sv:property>
-    <sv:property sv:name="impl" sv:type="String">
+    <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.module.admininterface.commands.VersionCommand</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
@@ -88,7 +88,7 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>728ab272-ccae-486c-bb88-c780dcf97d83</sv:value>
     </sv:property>
-    <sv:property sv:name="impl" sv:type="String">
+    <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.module.workflow.commands.ActivationFlowCommand</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
@@ -131,7 +131,7 @@
     <sv:property sv:name="message" sv:type="String">
       <sv:value>workflow.started</sv:value>
     </sv:property>
-    <sv:property sv:name="impl" sv:type="String">
+    <sv:property sv:name="class" sv:type="String">
       <sv:value>info.magnolia.module.admininterface.commands.MessageCommand</sv:value>
     </sv:property>
     <sv:property sv:name="i18nBasename" sv:type="String">
