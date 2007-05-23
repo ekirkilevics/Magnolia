@@ -31,6 +31,7 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.CatalogFactory;
+import org.apache.commons.chain.Chain;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.impl.ChainBase;
 import org.apache.commons.lang.StringUtils;
@@ -167,20 +168,40 @@ public class CommandsManager extends ObservedManager {
             return null;
         }
 
-        public void initBean(TransformationState state, Map properties) throws Content2BeanException {
+        public void initBean(TransformationState state, Map values) throws Content2BeanException {
             // we add the commands here (reflection does not work)
             if(state.getCurrentBean() instanceof Catalog){
                 Catalog catalog = (Catalog) state.getCurrentBean();
-                for (Iterator iter = properties.keySet().iterator(); iter.hasNext();) {
+                for (Iterator iter = values.keySet().iterator(); iter.hasNext();) {
                     String name = (String) iter.next();
-                    if(properties.get(name) instanceof Command){
-                        Command command = (Command) properties.get(name);
+                    if(values.get(name) instanceof Command){
+                        Command command = (Command) values.get(name);
                         catalog.addCommand(name, command);
                     }
                 }
             }
 
-            super.initBean(state, properties);
+            // support chains
+            if(state.getCurrentBean() instanceof Chain){
+                Chain chain = (Chain) state.getCurrentBean();
+                for (Iterator iter = values.keySet().iterator(); iter.hasNext();) {
+                    String name = (String) iter.next();
+                    if(values.get(name) instanceof Command){
+                        Command command = (Command) values.get(name);
+                        chain.addCommand(command);
+                    }
+                }
+            }
+
+            // support old way (using impl) of configuring delegate commands
+            if(state.getCurrentBean() instanceof DelegateCommand){
+                DelegateCommand delegateCommand = (DelegateCommand) state.getCurrentBean();
+                if(StringUtils.isEmpty(delegateCommand.getCommandName())){
+                    log.warn("You should define the commandName property on [{}]", state.getCurrentContent());
+                    delegateCommand.setCommandName((String) values.get(DEPRECATED_IMPL_NODE_DATA));
+                }
+            }
+            super.initBean(state, values);
         }
 
         public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
@@ -199,15 +220,6 @@ public class CommandsManager extends ObservedManager {
                     catch (RepositoryException e) {
                         log.error("can't resolve catalog name by using parent node [" + state.getCurrentContent() + "]", e);
                     }
-                }
-            }
-
-            // support old way (using impl) of configuring delegate commands
-            if(bean instanceof DelegateCommand){
-                DelegateCommand delegateCommand = (DelegateCommand) state.getCurrentBean();
-                if(StringUtils.isEmpty(delegateCommand.getCommandName())){
-                    log.warn("You should define the commandName property on [{}]", state.getCurrentContent());
-                    delegateCommand.setCommandName((String) values.get(DEPRECATED_IMPL_NODE_DATA));
                 }
             }
 
