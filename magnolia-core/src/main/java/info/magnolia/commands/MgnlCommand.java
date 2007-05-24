@@ -15,9 +15,11 @@ package info.magnolia.commands;
 import info.magnolia.cms.util.AlertUtil;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 import org.apache.commons.lang.exception.NestableException;
@@ -182,7 +184,7 @@ public abstract class MgnlCommand implements Command {
 
     private void initDefaultProperties() {
         try {
-            this.defaultProperties = BeanUtils.describe(this);
+            this.defaultProperties = PropertyUtils.describe(this);
         }
         catch (Exception e) {
             this.defaultProperties = Collections.EMPTY_MAP;
