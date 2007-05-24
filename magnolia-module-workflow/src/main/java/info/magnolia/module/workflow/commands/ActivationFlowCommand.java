@@ -14,17 +14,23 @@ package info.magnolia.module.workflow.commands;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.DateUtil;
 import info.magnolia.context.Context;
 import info.magnolia.module.workflow.WorkflowConstants;
+import info.magnolia.module.workflow.WorkflowModule;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
 import javax.jcr.RepositoryException;
+import javax.mail.Message;
 
+import openwfe.org.engine.workitem.AttributeException;
 import openwfe.org.engine.workitem.LaunchItem;
+import openwfe.org.engine.workitem.StringAttribute;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,10 +40,11 @@ import org.slf4j.LoggerFactory;
  * The activation command which will launch a flow to do scheduled activation by "sleep" functionality of owfe
  * @author jackie
  */
-public class ActivationFlowCommand extends
-PathMappedFlowCommand {
+public class ActivationFlowCommand extends PathMappedFlowCommand {
 
     private static final Logger log = LoggerFactory.getLogger(ActivationFlowCommand.class);
+
+    private boolean recursive;
 
     /**
      * Set the start and end date for this page
@@ -49,6 +56,11 @@ PathMappedFlowCommand {
             Content node = ContentRepository.getHierarchyManager(getRepository()).getContent(getPath());
             updateDateAttribute(node, launchItem, WorkflowConstants.ATTRIBUTE_START_DATE);
             updateDateAttribute(node, launchItem, WorkflowConstants.ATTRIBUTE_END_DATE);
+
+            if(isRecursive()){
+                Messages msgs = MessagesManager.getMessages(WorkflowModule.class.getPackage().getName() + ".messages");
+                launchItem.getAttributes().puts(Context.ATTRIBUTE_COMMENT, msgs.get("workItem.comment.recursive"));
+            }
         }
         catch (RepositoryException e) {
             log.error("can't find node for path [" + getPath() + "]", e);
@@ -87,6 +99,16 @@ PathMappedFlowCommand {
 
     private boolean isActivationDate(String attributeName) {
         return ((attributeName.equals(WorkflowConstants.ATTRIBUTE_START_DATE)) || (attributeName.equals(WorkflowConstants.ATTRIBUTE_END_DATE)));
+    }
+
+
+    public boolean isRecursive() {
+        return this.recursive;
+    }
+
+
+    public void setRecursive(boolean recursive) {
+        this.recursive = recursive;
     }
 
 }
