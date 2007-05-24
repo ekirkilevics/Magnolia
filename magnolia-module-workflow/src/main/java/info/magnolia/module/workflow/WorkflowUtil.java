@@ -211,12 +211,12 @@ public class WorkflowUtil {
         StringBuffer queryString = new StringBuffer();
         queryString.append("//*[(@assignTo=\"");
         queryString.append(userName);
-        queryString.append("\") or (@participant=\"user-");
+        queryString.append("\") or (@participant=\""+WorkflowConstants.PARTICIPANT_PREFIX_USER);
         queryString.append(userName);
         queryString.append("\" and not(@assignTo))");
         for (Iterator iter = groups.iterator(); iter.hasNext();) {
             Object group = iter.next();
-            queryString.append(" or (@participant=\"group-");
+            queryString.append(" or (@participant=\""+WorkflowConstants.PARTICIPANT_PREFIX_GROUP);
             queryString.append(group);
             // FIXME
             // queryString.append("\" and @assignTo!=\"");
@@ -226,7 +226,7 @@ public class WorkflowUtil {
         for (Iterator iter = roles.iterator(); iter.hasNext();) {
             Object role = iter.next();
             // FIXME
-            queryString.append(" or (@participant=\"role-");
+            queryString.append(" or (@participant=\""+WorkflowConstants.PARTICIPANT_PREFIX_ROLE);
             queryString.append(role);
             // queryString.append("\" and @assignTo!=\"");
             // queryString.append(userName);
@@ -306,7 +306,7 @@ public class WorkflowUtil {
         }
 
         StringBuffer queryString = new StringBuffer();
-        queryString.append("//*[@participant=\"group-");
+        queryString.append("//*[@participant=\""+WorkflowConstants.PARTICIPANT_PREFIX_GROUP);
         queryString.append(GroupName);
         queryString.append("\"]");
 
@@ -327,7 +327,7 @@ public class WorkflowUtil {
         }
 
         StringBuffer queryString = new StringBuffer();
-        queryString.append("//*[@participant=\"group-");
+        queryString.append("//*[@participant=\""+WorkflowConstants.PARTICIPANT_PREFIX_GROUP);
         queryString.append(roleName);
         queryString.append("\"]");
 

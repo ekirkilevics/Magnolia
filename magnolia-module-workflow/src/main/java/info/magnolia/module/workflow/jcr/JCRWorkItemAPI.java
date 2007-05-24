@@ -66,7 +66,7 @@ public class JCRWorkItemAPI {
             throw e;
         }
 
-        shouldBackupWorkItems = WorkflowModule.shouldBackupWorkItems();
+        shouldBackupWorkItems = WorkflowModule.backupWorkitems();
         if (shouldBackupWorkItems) {
             // ensure the backup directory is there.
             if (!hm.isExist(BACKUP)) {

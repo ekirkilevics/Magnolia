@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package info.magnolia.module.workflow.flows;
 
@@ -23,7 +23,7 @@ import org.slf4j.LoggerFactory;
  * Used in the community edition. Only the default activation flow is supported.
  * @author philipp
  * @version $Id$
- *
+ * @deprecated this was used in the comunity edition to restrict to a single flow definition
  */
 public class SimpleFlowDefinitionManager implements FlowDefinitionManager {
 
@@ -36,7 +36,7 @@ public class SimpleFlowDefinitionManager implements FlowDefinitionManager {
         if(!StringUtils.equals(workflowName, WorkflowConstants.DEFAULT_WORKFLOW)){
             throw new FlowDefinitionException("only default workflow supported in Community Edition, will fallback to default flow");
         }
-        
+
         launchItem.setWorkflowDefinitionUrl(WorkflowConstants.ATTRIBUTE_WORKFLOW_DEFINITION_URL);
         String flowDef = readDefinition(WorkflowConstants.DEFAULT_WORKFLOW);
         launchItem.getAttributes().puts(WorkflowConstants.ATTRIBUTE_DEFINITION, flowDef);

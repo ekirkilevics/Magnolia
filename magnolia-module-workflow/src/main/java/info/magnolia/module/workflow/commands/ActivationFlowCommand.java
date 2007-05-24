@@ -34,7 +34,8 @@ import org.slf4j.LoggerFactory;
  * The activation command which will launch a flow to do scheduled activation by "sleep" functionality of owfe
  * @author jackie
  */
-public class ActivationFlowCommand extends FlowCommand {
+public class ActivationFlowCommand extends
+PathMappedFlowCommand {
 
     private static final Logger log = LoggerFactory.getLogger(ActivationFlowCommand.class);
 
@@ -44,16 +45,13 @@ public class ActivationFlowCommand extends FlowCommand {
     public void prepareLaunchItem(Context context, LaunchItem launchItem) {
         super.prepareLaunchItem(context, launchItem);
 
-        String repository = (String) context.get(Context.ATTRIBUTE_REPOSITORY);
-        String path = (String) context.get(Context.ATTRIBUTE_PATH);
-
         try {
-            Content node = ContentRepository.getHierarchyManager(repository).getContent(path);
+            Content node = ContentRepository.getHierarchyManager(getRepository()).getContent(getPath());
             updateDateAttribute(node, launchItem, WorkflowConstants.ATTRIBUTE_START_DATE);
             updateDateAttribute(node, launchItem, WorkflowConstants.ATTRIBUTE_END_DATE);
         }
         catch (RepositoryException e) {
-            log.error("can't find node for path [" + path + "]", e);
+            log.error("can't find node for path [" + getPath() + "]", e);
         }
 
     }
@@ -88,8 +86,7 @@ public class ActivationFlowCommand extends FlowCommand {
     }
 
     private boolean isActivationDate(String attributeName) {
-        return ((attributeName.equals(WorkflowConstants.ATTRIBUTE_START_DATE)) || (attributeName
-            .equals(WorkflowConstants.ATTRIBUTE_END_DATE)));
+        return ((attributeName.equals(WorkflowConstants.ATTRIBUTE_START_DATE)) || (attributeName.equals(WorkflowConstants.ATTRIBUTE_END_DATE)));
     }
 
 }

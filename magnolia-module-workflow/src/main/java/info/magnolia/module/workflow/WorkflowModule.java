@@ -14,10 +14,11 @@ package info.magnolia.module.workflow;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
@@ -40,30 +41,27 @@ import javax.jcr.RepositoryException;
 public class WorkflowModule extends AbstractAdminModule {
 
     /**
-     *
-     */
-    public static final String COMMANDS_CATALOG_PATH = "/modules/workflow/config/commands";
-
-    public static final String CACHE_URL_DEFINITION = "/modules/workflow/config/cache";
-
-    private static final String DEFERRED_EXPRESSION_STORAGE = "deferredExpressionStorage";
-    private static final String BACKUP_WORKITEMS = "backupWorkitems";
-
-    /**
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(WorkflowModule.class);
 
+    private static WorkflowModule instance;
+
     /**
      * The current used engine
      */
-    private static JCRPersistedEngine wfEngine;
-    private static boolean shouldBackupWorkItems;
-    private static String cacheURL;
+    private JCRPersistedEngine wfEngine;
 
     /**
-     * @see info.magnolia.module.admininterface.AbstractAdminModule#onRegister(int)
+     * Do we backup the deleted workitems?
      */
+    private boolean backupWorkItems = false;
+
+    /**
+     * Is the saving deferred? This increases the response time.
+     */
+    private boolean deferredExpressionStorage = false;
+
     protected void onRegister(int registerState) throws RegisterException {
         Content menu = ContentUtil.getContent(ContentRepository.CONFIG, "/modules/adminInterface/config/menu");
         try {
@@ -75,47 +73,25 @@ public class WorkflowModule extends AbstractAdminModule {
         }
     }
 
-    /**
-     * register commands and start OWFE engine
-     */
     protected void onInit() {
-        registerCacheUrl();
-        shouldBackupWorkItems = getBooleanConfigProperty(BACKUP_WORKITEMS);
-        final boolean deferredExprStorage = getBooleanConfigProperty(DEFERRED_EXPRESSION_STORAGE);
-        startEngine(deferredExprStorage);
-    }
-
-    private boolean getBooleanConfigProperty(final String propertyName) {
-        final NodeData deferredExprStorageProperty = getConfigNode().getNodeData(propertyName);
-        return deferredExprStorageProperty.isExist() && deferredExprStorageProperty.getBoolean();
-    }
-
-    private void registerCacheUrl() {
-        Content node = ContentUtil.getContent(ContentRepository.CONFIG, CACHE_URL_DEFINITION);
         try {
-            if(node!=null && node.hasNodeData("serverURL")) {
-                String serverURL = node.getNodeData("serverURL").getString();
-                if(serverURL !=null) {
-                    cacheURL = serverURL;
-                    log.info("Cache server base url for flows is set to:"+cacheURL);
-                }
-            }
-        } catch (Exception e) {
-
+            Content2BeanUtil.setProperties(this, getConfigNode());
         }
+        catch (Content2BeanException e) {
+            log.error("can't initialize workflow module",e);
+        }
+        instance = this;
+        startEngine();
     }
 
-    /**
-     *
-     */
-    private void startEngine(final boolean deferredExprStorage) {
+    private void startEngine() {
         try {
             log.info("Starting openwfe engine");
-            wfEngine = new JCRPersistedEngine(deferredExprStorage);
-            wfEngine.registerParticipant(new MgnlParticipant("user-.*"));
-            wfEngine.registerParticipant(new MgnlParticipant("group-.*"));
-            wfEngine.registerParticipant(new MgnlParticipant("role-.*"));
-            wfEngine.registerParticipant(new MgnlParticipant("command-.*"));
+            wfEngine = new JCRPersistedEngine(deferredExpressionStorage);
+            wfEngine.registerParticipant(new MgnlParticipant(WorkflowConstants.PARTICIPANT_PREFIX_USER+".*"));
+            wfEngine.registerParticipant(new MgnlParticipant(WorkflowConstants.PARTICIPANT_PREFIX_GROUP+".*"));
+            wfEngine.registerParticipant(new MgnlParticipant(WorkflowConstants.PARTICIPANT_PREFIX_ROLE+".*"));
+            wfEngine.registerParticipant(new MgnlParticipant(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND+".*"));
         }
         catch (Exception e) {
             log.error("An exception arised when creating the workflow engine", e);
@@ -143,20 +119,36 @@ public class WorkflowModule extends AbstractAdminModule {
      * return the global work flow engine
      */
     static public JCRPersistedEngine getEngine() {
-        return wfEngine;
+        return instance.wfEngine;
     }
 
     // an easy and ugly way to access this config param
-    public static boolean shouldBackupWorkItems() {
-        return shouldBackupWorkItems;
-    }
-
-    public static String getCacheURL() {
-        return cacheURL;
+    public static boolean backupWorkitems() {
+        return instance.backupWorkItems;
     }
 
     public static FlowDefinitionManager getFlowDefinitionManager() {
         return (FlowDefinitionManager) FactoryUtil.getSingleton(FlowDefinitionManager.class);
+    }
+
+
+    public boolean isBackupWorkItems() {
+        return this.backupWorkItems;
+    }
+
+
+    public void setBackupWorkItems(boolean backupWorkItems) {
+        this.backupWorkItems = backupWorkItems;
+    }
+
+
+    public boolean isDeferredExpressionStorage() {
+        return this.deferredExpressionStorage;
+    }
+
+
+    public void setDeferredExpressionStorage(boolean deferredExpressionStorage) {
+        this.deferredExpressionStorage = deferredExpressionStorage;
     }
 
 }
