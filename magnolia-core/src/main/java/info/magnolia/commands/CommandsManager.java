@@ -155,7 +155,18 @@ public class CommandsManager extends ObservedManager {
                         }
                     }
                     else{
-                        klass = ChainBase.class;
+                        // In case we are not yet building a concreate command we are creating a chain.
+                        // Otherwise we are building command properties
+                        boolean buildingCommand = false;
+                        for (int i = 0; i < state.getLevel() -1; i++) {
+                            TypeDescriptor td = state.peekType(i);
+                            if(ClassUtil.isSubClass(td.getType(), Command.class) && !ClassUtil.isSubClass(td.getType(), Chain.class)){
+                                buildingCommand = true;
+                            }
+                        }
+                        if(!buildingCommand){
+                            klass = ChainBase.class;
+                        }
                     }
                 }
                 catch (RepositoryException e) {
