@@ -21,6 +21,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
@@ -69,7 +70,7 @@ public class CommandsManager extends ObservedManager {
 
     protected void registerCatalog(Content node) {
         try {
-            MgnlCatalog catalog = (MgnlCatalog) Content2BeanUtil.toBean(node, true, new CatalogTransfomer());
+            MgnlCatalog catalog = (MgnlCatalog) Content2BeanUtil.toBean(node, true, COMMAND_TRANSFORMER);
             CatalogFactory.getInstance().addCatalog(catalog.getName(), catalog);
 
             if(log.isDebugEnabled()){
@@ -129,8 +130,7 @@ public class CommandsManager extends ObservedManager {
         return (CommandsManager) FactoryUtil.getSingleton(CommandsManager.class);
     }
 
-
-    protected static class CatalogTransfomer extends Content2BeanTransformerImpl {
+    protected static Content2BeanTransformer COMMAND_TRANSFORMER = new Content2BeanTransformerImpl() {
 
         private static final String DEPRECATED_CATALOG_NAME_NODE_DATA = "catalogName";
 
@@ -187,7 +187,9 @@ public class CommandsManager extends ObservedManager {
                     String name = (String) iter.next();
                     if(values.get(name) instanceof Command){
                         Command command = (Command) values.get(name);
-                        catalog.addCommand(name, command);
+                        if(!(command instanceof MgnlCommand) || ((MgnlCommand)command).isEnabled()){
+                            catalog.addCommand(name, command);
+                        }
                     }
                 }
             }
@@ -199,7 +201,9 @@ public class CommandsManager extends ObservedManager {
                     String name = (String) iter.next();
                     if(values.get(name) instanceof Command){
                         Command command = (Command) values.get(name);
-                        chain.addCommand(command);
+                        if(!(command instanceof MgnlCommand) || ((MgnlCommand)command).isEnabled()){
+                            chain.addCommand(command);
+                        }
                     }
                 }
             }
@@ -236,6 +240,6 @@ public class CommandsManager extends ObservedManager {
 
             super.setProperty(state, descriptor, values);
         }
-    }
+    };
 
 }

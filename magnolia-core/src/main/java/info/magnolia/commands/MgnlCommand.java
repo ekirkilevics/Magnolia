@@ -51,6 +51,8 @@ public abstract class MgnlCommand implements Command {
 
     private boolean isClone = false;
 
+    private boolean isEnabled = true;
+
     /**
      * Create clones
      * @author Philipp Bracher
@@ -211,6 +213,16 @@ public abstract class MgnlCommand implements Command {
      */
     protected void setClone(boolean isClone) {
         this.isClone = isClone;
+    }
+
+
+    public boolean isEnabled() {
+        return this.isEnabled;
+    }
+
+
+    public void setEnabled(boolean isEnabled) {
+        this.isEnabled = isEnabled;
     }
 
 }
