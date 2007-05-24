@@ -14,12 +14,13 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 
 import java.lang.reflect.Constructor;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -27,6 +28,7 @@ import java.util.Map;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,10 +39,6 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  */
 public class PageHandlerManager extends ObservedManager {
-
-    private static final String ND_CLASS = "class";
-
-    private static final String ND_NAME = "name";
 
     /**
      * Logger
@@ -61,7 +59,8 @@ public class PageHandlerManager extends ObservedManager {
      */
     public PageMVCHandler getPageHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 
-        Class dialogPageHandlerClass = (Class) dialogPageHandlers.get(name);
+        PageDefinition pageDefinition = (PageDefinition) dialogPageHandlers.get(name);
+        Class dialogPageHandlerClass = pageDefinition.getHandlerClass();
         if (dialogPageHandlerClass == null) {
             throw new InvalidDialogPageHandlerException(name);
         }
@@ -71,19 +70,14 @@ public class PageHandlerManager extends ObservedManager {
                 String.class,
                 HttpServletRequest.class,
                 HttpServletResponse.class});
-            return (PageMVCHandler) constructor.newInstance(new Object[]{name, request, response});
+            PageMVCHandler page = (PageMVCHandler) constructor.newInstance(new Object[]{name, request, response});
+            BeanUtils.populate(page, pageDefinition.getDefaultProperties());
+            return page;
         }
         catch (Exception e) {
             log.error("can't instantiate page [" + name + "]", e);
             throw new InvalidDialogPageHandlerException(name, e);
         }
-    }
-
-    protected void registerPageHandler(String name, Class dialogPageHandler) {
-        if (log.isDebugEnabled()) {
-            log.debug("Registering page handler [{}]", name); //$NON-NLS-1$ 
-        }
-        dialogPageHandlers.put(name, dialogPageHandler);
     }
 
     /**
@@ -92,28 +86,29 @@ public class PageHandlerManager extends ObservedManager {
      */
     protected void onRegister(Content defNode) {
         // read the dialog configuration
-        try {
-            Collection pages = defNode.getChildren(ItemType.CONTENT.getSystemName());
-            pages.addAll(defNode.getChildren(ItemType.CONTENTNODE.getSystemName()));
-            for (Iterator iter = pages.iterator(); iter.hasNext();) {
-                Content page = (Content) iter.next();
-                String name = page.getNodeData(ND_NAME).getString();
-                if (StringUtils.isEmpty(name)) {
-                    name = page.getName();
-                }
 
-                String className = page.getNodeData(ND_CLASS).getString();
+            for (Iterator iter = ContentUtil.getAllChildren(defNode).iterator(); iter.hasNext();) {
+                Content pageNode = (Content) iter.next();
+
                 try {
-                    registerPageHandler(name, ClassUtil.classForName(className));
+                    Map properties = Content2BeanUtil.toMap(pageNode, true);
+                    String handlerClassName = (String) properties.get("class");
+                    Class handlerClass = ClassUtil.classForName(handlerClassName);
+                    String name = StringUtils.defaultIfEmpty((String)properties.get("name"), pageNode.getName());
+                    properties.remove("class");
+                    properties.remove("name");
+                    PageDefinition pd = new PageDefinition(name, handlerClass);
+                    pd.setDefaultProperties(properties);
+                    dialogPageHandlers.put(name, pd);
+                }
+                catch (Content2BeanException e) {
+                    log.error("can't read page properties [" + pageNode.getHandle() + "]", e);
                 }
                 catch (ClassNotFoundException e) {
-                    log.warn("can't find dialogpage handler class " + className, e); //$NON-NLS-1$
+                    log.error("can't find class for the page [" + pageNode.getHandle() + "]", e);
                 }
             }
-        }
-        catch (Exception e) {
-            log.warn("can't find pages configuration", e); //$NON-NLS-1$
-        }
+
     }
 
     /**
@@ -125,6 +120,44 @@ public class PageHandlerManager extends ObservedManager {
 
     protected void onClear() {
         this.dialogPageHandlers.clear();
+    }
+
+    protected static class PageDefinition{
+
+        private Map defaultProperties = new HashMap();
+
+        private Class handlerClass;
+
+        private String name;
+
+        public PageDefinition(String name, Class handlerClass) {
+            this.name = name;
+            this.handlerClass = handlerClass;
+        }
+
+        public Map getDefaultProperties() {
+            return this.defaultProperties;
+        }
+
+        public void setDefaultProperties(Map defaultProperties) {
+            this.defaultProperties = defaultProperties;
+        }
+
+        public Class getHandlerClass() {
+            return this.handlerClass;
+        }
+
+        public void setHandlerClass(Class handlerClass) {
+            this.handlerClass = handlerClass;
+        }
+
+        public String getName() {
+            return this.name;
+        }
+
+        public void setName(String name) {
+            this.name = name;
+        }
     }
 
 }
