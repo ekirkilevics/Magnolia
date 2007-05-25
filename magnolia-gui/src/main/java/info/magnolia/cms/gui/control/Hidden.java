@@ -44,7 +44,7 @@ public class Hidden extends ControlImpl {
         html.append("<input type=\"hidden\""); //$NON-NLS-1$
         html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(" id=\"" + id + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-        html.append(" value=\"" + this.getValue() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" value=\"" + escapeHTML(this.getValue()) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(" />"); //$NON-NLS-1$
         html.append(this.getHtmlSaveInfo());
         return html.toString();
