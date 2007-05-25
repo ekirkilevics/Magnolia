@@ -7,80 +7,59 @@
  * If you reproduce or distribute the document without making any substantive modifications to its content,
  * please use the following attribution line:
  *
- * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Copyright 1993-2005 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
 package info.magnolia.cms.exchange.simple;
 
+import info.magnolia.cms.filters.AbstractMagnoliaFilter;
+import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.exchange.ExchangeException;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.*;
+import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.api.HierarchyManager;
+import info.magnolia.context.MgnlContext;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
-
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.ItemNotFoundException;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.Property;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.lock.LockException;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.jcr.*;
+import javax.jcr.lock.LockException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.Iterator;
+import java.util.zip.GZIPInputStream;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-import org.safehaus.uuid.UUIDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
+import org.jdom.input.SAXBuilder;
+import org.jdom.Element;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.safehaus.uuid.UUIDGenerator;
 
 /**
- * todo refactor and move to ReceiveFilter
- * @author Sameer Charles $Id$
- * @deprecated
+ * todo
+ * @author Sameer Charles
+ * $Id$
  */
-public class SimpleExchangeServlet extends HttpServlet {
+public class ReceiveFilter extends AbstractMagnoliaFilter {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
+    private static Logger log = LoggerFactory.getLogger(ReceiveFilter.class);
 
-    /**
-     * Logger
-     */
-    private static final Logger log = LoggerFactory.getLogger(SimpleExchangeServlet.class);
-
-    /**
-     * @param request
-     * @param response
-     * @throws javax.servlet.ServletException
-     * @throws java.io.IOException
-     */
-    public void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
         String statusMessage = "";
         String status = "";
         try {
@@ -113,17 +92,6 @@ public class SimpleExchangeServlet extends HttpServlet {
             response.setHeader(SimpleSyndicator.ACTIVATION_ATTRIBUTE_STATUS, status);
             response.setHeader(SimpleSyndicator.ACTIVATION_ATTRIBUTE_MESSAGE, statusMessage);
         }
-
-    }
-
-    /**
-     * @param request
-     * @param response
-     * @throws javax.servlet.ServletException
-     * @throws java.io.IOException
-     */
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        doGet(request, response);
     }
 
     /**
@@ -154,7 +122,7 @@ public class SimpleExchangeServlet extends HttpServlet {
     private synchronized void update(HttpServletRequest request) throws Exception {
         MultipartForm data = Resource.getPostedForm();
         if (null != data) {
-            String parentPath = this.getParentPath(request);
+            String parentPath = request.getHeader(SimpleSyndicator.PARENT_PATH);
             String resourceFileName = request.getHeader(SimpleSyndicator.RESOURCE_MAPPING_FILE);
             HierarchyManager hm = getHierarchyManager(request);
             Document resourceDocument = data.getDocument(resourceFileName);
@@ -232,7 +200,7 @@ public class SimpleExchangeServlet extends HttpServlet {
                     destinationNode.setProperty(nodeData.getName(), property.getValues());
                 }
                 else {
-                    throw new AccessDeniedException(
+                    throw new info.magnolia.cms.security.AccessDeniedException(
                         "User not allowed to " + Permission.PERMISSION_NAME_WRITE + " at [" + nodeData.getHandle() + "]"); //$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
                 }
             }
@@ -268,11 +236,11 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @param data
      * @param hierarchyManager
      * @param parentPath
-     * @throws ExchangeException
+     * @throws info.magnolia.cms.exchange.ExchangeException
      * @throws RepositoryException
      */
     private synchronized void importFresh(Element topContentElement, MultipartForm data,
-        HierarchyManager hierarchyManager, String parentPath) throws ExchangeException, RepositoryException {
+                                          HierarchyManager hierarchyManager, String parentPath) throws ExchangeException, RepositoryException {
         try {
             importResource(data, topContentElement, hierarchyManager, parentPath);
             hierarchyManager.save();
@@ -294,7 +262,7 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @throws RepositoryException
      */
     private synchronized void importOnExisting(Element topContentElement, MultipartForm data,
-        HierarchyManager hierarchyManager, Content existingContent) throws ExchangeException, RepositoryException {
+                                               HierarchyManager hierarchyManager, Content existingContent) throws ExchangeException, RepositoryException {
         Iterator fileListIterator = topContentElement
             .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)
             .iterator();
@@ -340,7 +308,7 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @throws Exception
      */
     private synchronized void importResource(MultipartForm data, Element resourceElement, HierarchyManager hm,
-        String parentPath) throws Exception {
+                                             String parentPath) throws Exception {
 
         String name = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
         String fileName = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
@@ -371,15 +339,18 @@ public class SimpleExchangeServlet extends HttpServlet {
      * @throws Exception if fails to update
      */
     private synchronized void remove(HttpServletRequest request) throws Exception {
-        String uuid = request.getHeader(SimpleSyndicator.NODE_UUID);
+        String path = request.getHeader(SimpleSyndicator.PATH);
+        if (log.isDebugEnabled()) {
+            log.debug("Exchange : remove request received for " + path);
+        }
         HierarchyManager hm = getHierarchyManager(request);
         try {
-            hm.delete(hm.getContentByUUID(uuid).getHandle());
+            hm.delete(path);
             hm.save();
         }
-        catch (ItemNotFoundException e) {
+        catch (PathNotFoundException e) {
             if (log.isDebugEnabled()) {
-                log.debug("Unable to delete node", e);
+                log.debug("Unable to delete node " + path + ": " + e.getMessage());
             }
         }
     }
@@ -419,6 +390,13 @@ public class SimpleExchangeServlet extends HttpServlet {
             }
         }
         String action = request.getHeader(SimpleSyndicator.ACTION);
+        String path = "";
+        if (SimpleSyndicator.ACTIVATE.equalsIgnoreCase(action)) {
+            path = request.getHeader(SimpleSyndicator.PARENT_PATH);
+        }
+        else if (SimpleSyndicator.DE_ACTIVATE.equalsIgnoreCase(action)) {
+            path = request.getHeader(SimpleSyndicator.PATH);
+        }
         try {
             getHierarchyManager(request).getWorkspace().getSession().logout();
             HttpSession httpSession = request.getSession(false);
@@ -427,15 +405,8 @@ public class SimpleExchangeServlet extends HttpServlet {
             // its only a test so just dump
             log.error("failed to invalidate session", t);
         }
-        String pathOrUUID = "";
-        if (SimpleSyndicator.ACTIVATE.equalsIgnoreCase(action)) {
-            pathOrUUID = this.getParentPath(request);
-        }
-        else if (SimpleSyndicator.DE_ACTIVATE.equalsIgnoreCase(action)) {
-            pathOrUUID = request.getHeader(SimpleSyndicator.NODE_UUID);
-        }
         try {
-            Content content = this.getNode(pathOrUUID, request);
+            Content content = getHierarchyManager(request).getContent(path);
             if (content.isLocked()) {
                 content.unlock();
             }
@@ -462,22 +433,20 @@ public class SimpleExchangeServlet extends HttpServlet {
      */
     private void applyLock(HttpServletRequest request) throws ExchangeException {
         String action = request.getHeader(SimpleSyndicator.ACTION);
-        String pathOrUUID = "";
+        String path = "";
 
         if (SimpleSyndicator.ACTIVATE.equalsIgnoreCase(action)) {
-            pathOrUUID = this.getParentPath(request);
+            path = request.getHeader(SimpleSyndicator.PARENT_PATH);
         }
         else if (SimpleSyndicator.DE_ACTIVATE.equalsIgnoreCase(action)) {
-            pathOrUUID = request.getHeader(SimpleSyndicator.NODE_UUID);
+            path = request.getHeader(SimpleSyndicator.PATH);
         }
         try {
-            this.getNode(pathOrUUID, request);
-
-            Content content = this.getNode(pathOrUUID, request);
+            Content content = getHierarchyManager(request).getContent(path);
             if (content.isLocked()) {
-
-                throw new ExchangeException("Operation not permitted, " + pathOrUUID + " is locked");
+                throw new ExchangeException("Operation not permitted, " + path + " is locked");
             }
+
             // get a new deep lock
             content.lock(true, true);
 
@@ -496,23 +465,6 @@ public class SimpleExchangeServlet extends HttpServlet {
         }
     }
 
-    /**
-     * todo refactor in ReceiveFilter
-     * */
-    private Content getNode(String pathOrUUID, HttpServletRequest request)
-            throws ExchangeException, RepositoryException {
-        if (pathOrUUID.startsWith("/") || pathOrUUID.equals("")) {
-            return getHierarchyManager(request).getContent(pathOrUUID);
-        }
-        return getHierarchyManager(request).getContentByUUID(pathOrUUID);
-    }
 
-    private String getParentPath(HttpServletRequest request) {
-        String parentPath = request.getHeader(SimpleSyndicator.PARENT_PATH);
-        if (StringUtils.isNotEmpty(parentPath)) {
-            return parentPath;
-        }
-        return "";
-    }
 
 }

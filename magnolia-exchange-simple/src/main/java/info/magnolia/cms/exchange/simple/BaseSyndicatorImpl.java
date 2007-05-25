@@ -31,10 +31,7 @@ import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.exchange.ExchangeException;
-import info.magnolia.cms.exchange.ActivationContent;
-import info.magnolia.cms.exchange.Syndicator;
-import info.magnolia.cms.beans.config.Subscriber;
+import info.magnolia.cms.exchange.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
@@ -53,29 +50,26 @@ import java.io.*;
  */
 public abstract class BaseSyndicatorImpl implements Syndicator {
 
+     private static final Logger log = LoggerFactory.getLogger(SimpleSyndicator.class);
+
     /**
       * activation handler servlet name as mapped in web descriptor
       */
      public static final String DEFAULT_HANDLER = "ActivationHandler"; //$NON-NLS-1$
 
-     /**
-      * parent path
-      */
      public static final String PARENT_PATH = "mgnlExchangeParentPath";
+
+     public static final String MAPPED_PARENT_PATH = "mgnlExchangeMappedParent";
 
      /**
       * activated/deactivated path
       */
      public static final String PATH = "mgnlExchangePath";
 
-     /**
-      * repository name
-      */
+     public static final String NODE_UUID = "mgnlExchangeNodeUUID";
+
      public static final String REPOSITORY_NAME = "mgnlExchangeRepositoryName";
 
-     /**
-      * workspace name
-      */
      public static final String WORKSPACE_NAME = "mgnlExchangeWorkspaceName";
 
      /**
@@ -90,69 +84,30 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       */
      public static final String SIBLINGS_ROOT_ELEMENT = "NodeSiblings";
 
-     /**
-      * sibling
-      * */
      public static final String SIBLINGS_ELEMENT = "sibling";
 
-     /**
-      * sibling UUID
-      * */
-     public static final String SIBLING_UUID = "UUID";
+     public static final String SIBLING_UUID = "siblingUUID";
 
-     /**
-      * resource file, File element
-      */
      public static final String RESOURCE_MAPPING_FILE_ELEMENT = "File";
 
-     /**
-      * resource file, name attribute
-      */
      public static final String RESOURCE_MAPPING_NAME_ATTRIBUTE = "name";
 
-     /**
-      * resource file, name attribute
-      */
      public static final String RESOURCE_MAPPING_UUID_ATTRIBUTE = "contentUUID";
 
-     /**
-      * resource file, resourceId attribute
-      */
      public static final String RESOURCE_MAPPING_ID_ATTRIBUTE = "resourceId";
 
-     /**
-      * resource file, root element
-      */
      public static final String RESOURCE_MAPPING_ROOT_ELEMENT = "Resources";
 
-     /**
-      * Action
-      */
      public static final String ACTION = "mgnlExchangeAction";
 
-     /**
-      * possible value for attribute "ACTION"
-      */
      public static final String ACTIVATE = "activate"; //$NON-NLS-1$
 
-     /**
-      * possible value for attribute "ACTION"
-      */
      public static final String DE_ACTIVATE = "deactivate"; //$NON-NLS-1$
 
-     /**
-      * request authorization exception
-      */
      public static final String AUTHORIZATION = "Authorization";
 
-     /**
-      * attribute rule
-      */
      public static final String CONTENT_FILTER_RULE = "mgnlExchangeFilterRule";
 
-     /**
-      * return status values all simple activation headers start from sa_
-      */
      public static final String ACTIVATION_SUCCESSFUL = "sa_success"; //$NON-NLS-1$
 
      public static final String ACTIVATION_FAILED = "sa_failed"; //$NON-NLS-1$
@@ -161,11 +116,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
      public static final String ACTIVATION_ATTRIBUTE_MESSAGE = "sa_attribute_message"; //$NON-NLS-1$
 
-     /**
-      * Logger.
-      */
-     private static Logger log = LoggerFactory.getLogger(SimpleSyndicator.class);
-
      protected String repositoryName;
 
      protected String workspaceName;
@@ -173,6 +123,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      protected String parent;
 
      protected String path;
+
+     protected String nodeUUID;
 
      protected Content.ContentFilter contentFilter;
 
@@ -209,7 +161,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws info.magnolia.cms.exchange.ExchangeException
       */
      public synchronized void activate(String parent, String path) throws ExchangeException, RepositoryException {
-         log.info("Method activate(String, String) is deprecated, use Syndicator#activate(String, info.magnolia.cms.core.Content)");
          HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
          this.activate(parent, hm.getContent(path));
      }
@@ -240,27 +191,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       */
      public void activate(String parent, Content content, List orderBefore)
              throws ExchangeException, RepositoryException {
-         this.parent = parent;
-         this.path = content.getHandle();
-         ActivationContent activationContent = null;
-         try {
-             activationContent = this.collect(content, orderBefore);
-             this.activate(activationContent);
-             this.updateActivationDetails();
-             log.info("Exchange: activation succeeded [{}]", content.getHandle());
-         }
-         catch (Exception e) {
-             if (log.isDebugEnabled()) {
-                 log.error("Excahnge: activation failed for path:" + ((path != null) ? path : "[null]"), e);
-             }
-             throw new ExchangeException(e);
-         }
-         finally {
-             if (log.isDebugEnabled()) {
-                 log.debug("Cleaning temporary files");
-             }
-             cleanTemporaryStore(activationContent);
-         }
+         this.activate(null, parent, content, orderBefore);
      }
 
      /**
@@ -274,7 +205,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       */
      public void activate(Subscriber subscriber, String parent, Content content)
              throws ExchangeException, RepositoryException {
-         throw new ExchangeException("Not implemented");
+         this.activate(subscriber, parent, content, null);
      }
 
      /**
@@ -292,7 +223,31 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       */
      public void activate(Subscriber subscriber, String parent, Content content, List orderBefore)
              throws ExchangeException, RepositoryException {
-         throw new ExchangeException("Not implemented");
+         this.parent = parent;
+         this.path = content.getHandle();
+         ActivationContent activationContent = null;
+         try {
+             activationContent = this.collect(content, orderBefore);
+             if (null == subscriber) {
+                 this.activate(activationContent);
+             } else {
+                 this.activate(subscriber, activationContent);
+             }
+             this.updateActivationDetails();
+             log.info("Exchange: activation succeeded [{}]", content.getHandle());
+         }
+         catch (Exception e) {
+             if (log.isDebugEnabled()) {
+                 log.error("Excahnge: activation failed for path:" + ((path != null) ? path : "[null]"), e);
+             }
+             throw new ExchangeException(e);
+         }
+         finally {
+             if (log.isDebugEnabled()) {
+                 log.debug("Cleaning temporary files");
+             }
+             cleanTemporaryStore(activationContent);
+         }
      }
 
      /**
@@ -331,50 +286,48 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          }
      }
 
-     /**
-      * Check if this subscriber is subscribed to this uri
-      * @param subscriber
-      * @return a boolean
-      */
-     protected boolean isSubscribed(Subscriber subscriber) {
-         boolean isSubscribed = false;
-         List subscribedURIList = subscriber.getContext(this.repositoryName);
-         for (int i = 0; i < subscribedURIList.size(); i++) {
-             String uri = (String) subscribedURIList.get(i);
-             if (this.path.equals(uri)) {
-                 isSubscribed = true;
-             }
-             else if (this.path.startsWith(uri + "/")) { //$NON-NLS-1$
-                 isSubscribed = true;
-             }
-             else if (uri.endsWith("/") && (this.path.startsWith(uri))) { //$NON-NLS-1$
-                 isSubscribed = true;
-             }
-         }
-         return isSubscribed;
-     }
-
-     /**
-      * @param path , to deactivate
-      * @throws RepositoryException
-      * @throws ExchangeException
-      */
      public synchronized void deActivate(String path) throws ExchangeException, RepositoryException {
-         this.path = path;
+         Content node = getHierarchyManager().getContent(path);
+         this.nodeUUID = node.getUUID();
+         this.path = node.getHandle();
          this.doDeActivate();
          updateDeActivationDetails();
      }
 
-     /**
-      * @param path , to deactivate
-      * @param subscriber
-      * @throws RepositoryException
-      * @throws ExchangeException
-      */
      public synchronized void deActivate(Subscriber subscriber, String path) throws ExchangeException,
          RepositoryException {
-         throw new ExchangeException("Not implemented");
+         Content node = getHierarchyManager().getContent(path);
+         this.nodeUUID = node.getUUID();
+         this.path = node.getHandle();
+         this.doDeActivate(subscriber);
+         updateDeActivationDetails();
      }
+
+    /**
+     * @param node , to deactivate
+     * @throws RepositoryException
+     * @throws ExchangeException
+     */
+    public synchronized void deActivate(Content node) throws ExchangeException, RepositoryException {
+        this.nodeUUID = node.getUUID();
+        this.path = node.getHandle();
+        this.doDeActivate();
+        updateDeActivationDetails();
+    }
+
+    /**
+     * @param node , to deactivate
+     * @param subscriber
+     * @throws RepositoryException
+     * @throws ExchangeException
+     */
+    public synchronized void deActivate(Subscriber subscriber, Content node) throws ExchangeException,
+        RepositoryException {
+        this.nodeUUID = node.getUUID();
+        this.path = node.getHandle();
+        this.doDeActivate(subscriber);
+        updateDeActivationDetails();
+    }
 
      /**
       * @throws ExchangeException
@@ -404,7 +357,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          connection.setRequestProperty(AUTHORIZATION, this.basicCredentials);
          connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
          connection.addRequestProperty(WORKSPACE_NAME, this.workspaceName);
-         connection.addRequestProperty(PATH, this.path);
+         connection.addRequestProperty(NODE_UUID, this.nodeUUID);
          connection.addRequestProperty(ACTION, DE_ACTIVATE);
      }
 
@@ -414,6 +367,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @return activation handle
       */
      protected String getActivationURL(Subscriber subscriberInfo) {
+         if (!subscriberInfo.getURL().endsWith("/")) {
+             return subscriberInfo.getURL() + "/" + DEFAULT_HANDLER;
+         }
          return subscriberInfo.getURL() + DEFAULT_HANDLER;
      }
 
@@ -436,8 +392,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws RepositoryException
       */
      protected void updateActivationDetails() throws RepositoryException {
-         HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
-         Content page = hm.getContent(this.path);
+         Content page = getHierarchyManager().getContent(this.path);
          updateMetaData(page, SimpleSyndicator.ACTIVATE);
          page.save();
      }
@@ -447,10 +402,14 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws RepositoryException
       */
      protected void updateDeActivationDetails() throws RepositoryException {
-         HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
-         Content page = hm.getContent(this.path);
+         Content page = getHierarchyManager().getContentByUUID(this.nodeUUID);
          updateMetaData(page, SimpleSyndicator.DE_ACTIVATE);
          page.save();
+     }
+
+
+     private HierarchyManager getHierarchyManager() {
+         return MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
      }
 
      /**

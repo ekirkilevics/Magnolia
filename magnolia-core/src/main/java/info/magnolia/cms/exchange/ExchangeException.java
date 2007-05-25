@@ -18,7 +18,7 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * @author Sameer Charles $Id$
+ * @author Sameer Charles $Id: ExchangeException.java 6341 2006-09-12 09:18:27Z philipp $
  */
 public class ExchangeException extends BaseException {
 

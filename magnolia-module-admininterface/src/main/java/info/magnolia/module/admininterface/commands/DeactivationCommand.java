@@ -18,7 +18,9 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.cms.core.Content;
 import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -36,7 +38,12 @@ public class DeactivationCommand extends BaseRepositoryCommand {
         try{
             Syndicator syndicator = (Syndicator) FactoryUtil.newInstance(Syndicator.class);
             syndicator.init(ctx.getUser(), this.getRepository(), ContentRepository.getDefaultWorkspace(this.getRepository()), new Rule());
-            syndicator.deActivate(getPath());
+            if (null != getUuid()) {
+                Content node = MgnlContext.getHierarchyManager(getRepository()).getContentByUUID(getUuid());
+                syndicator.deActivate(node);
+            } else {
+                syndicator.deActivate(getPath());
+            }
         }
         catch(Exception e){
             AlertUtil.setException(MessagesManager.get("tree.error.deactivate"), e, ctx);

@@ -12,14 +12,13 @@
  */
 package info.magnolia.cms.exchange.simple;
 
-import info.magnolia.cms.beans.config.Subscriber;
-import info.magnolia.cms.exchange.ActivationContent;
-import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.exchange.*;
 
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.io.*;
+import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -31,25 +30,19 @@ import org.slf4j.LoggerFactory;
  */
 public class SimpleSyndicator extends BaseSyndicatorImpl {
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(SimpleSyndicator.class);
+    private static final Logger log = LoggerFactory.getLogger(SimpleSyndicator.class);
 
-    /**
-     *
-     */
     public SimpleSyndicator() {
 
     }
 
-    /**
-     * @throws ExchangeException
-     */
     public synchronized void activate(ActivationContent activationContent) throws ExchangeException {
-        Subscriber si = Subscriber.getSubscriber();
-        if (si.isActive()) {
-            activate(si, activationContent);
+        Iterator subscribers = ActivationManagerFactory.getActivationManager().getSubscribers().iterator();
+        while (subscribers.hasNext()) {
+            Subscriber subscriber = (Subscriber) subscribers.next();
+            if (subscriber.isActive()) {
+                activate(subscriber, activationContent);
+            }
         }
     }
 
@@ -60,8 +53,16 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @throws ExchangeException
      */
     public synchronized void activate(Subscriber subscriber, ActivationContent activationContent)
-        throws ExchangeException {
-        if (!isSubscribed(subscriber)) {
+            throws ExchangeException {
+        if (null == subscriber) {
+            throw new ExchangeException("Null Subscriber");
+        }
+        Subscription subscription = subscriber.getMatchedSubscription(this.path, this.repositoryName);
+        if (null != subscription) {
+            // its subscribed since we found the matching subscription
+            String mappedPath = this.getMappedPath(this.parent, subscription);
+            activationContent.setProperty(PARENT_PATH, mappedPath);
+        } else {
             if (log.isDebugEnabled()) {
                 log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), this.path);
             }
@@ -87,7 +88,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 throw new ExchangeException("Message received from subscriber: " + message);
             }
             urlConnection.getContent();
-            log.debug("Exchange : activation to subscriber {} succeeded", subscriber.getName()); //$NON-NLS-1$
+            log.debug("Exchange : activation request sent to {}", subscriber.getName()); //$NON-NLS-1$
         }
         catch (ExchangeException e) {
             throw e;
@@ -103,16 +104,13 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
     }
 
-    /**
-     * @throws ExchangeException
-     */
     public synchronized void doDeActivate() throws ExchangeException {
-        Subscriber si = Subscriber.getSubscriber();
-        if (si.isActive()) {
-            if (log.isDebugEnabled()) {
-                log.debug("Removing [{}] from [{}]", this.path, si.getURL()); //$NON-NLS-1$
+        Iterator subscribers = ActivationManagerFactory.getActivationManager().getSubscribers().iterator();
+        while (subscribers.hasNext()) {
+            Subscriber subscriber = (Subscriber) subscribers.next();
+            if (subscriber.isActive()) {
+                doDeActivate(subscriber);
             }
-            doDeActivate(si);
         }
     }
 
@@ -122,25 +120,43 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @throws ExchangeException
      */
     public synchronized void doDeActivate(Subscriber subscriber) throws ExchangeException {
-        if (!isSubscribed(subscriber)) {
-            return;
+        Subscription subscription = subscriber.getMatchedSubscription(this.path, this.repositoryName);
+        if (null != subscription) {
+            String handle = getDeactivationURL(subscriber);
+            try {
+                URL url = new URL(handle);
+                URLConnection urlConnection = url.openConnection();
+                this.addDeactivationHeaders(urlConnection);
+                urlConnection.getContent();
+            }
+            catch (MalformedURLException e) {
+                throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
+            }
+            catch (IOException e) {
+                throw new ExchangeException("Not able to send the deactivation request [" + handle + "]: " + e.getMessage());
+            }
+            catch (Exception e) {
+                throw new ExchangeException(e);
+            }
         }
-        String handle = getDeactivationURL(subscriber);
-        try {
-            URL url = new URL(handle);
-            URLConnection urlConnection = url.openConnection();
-            this.addDeactivationHeaders(urlConnection);
-            urlConnection.getContent();
+    }
+
+    private String getMappedPath(String path, Subscription subscription) {
+        if (null != subscription.getToURI()) {
+            String fromURI = subscription.getFromURI();
+            String toURI = subscription.getToURI();
+            if (!path.equals(fromURI)) {
+                // make sure from and to URI both have trailing slash
+                if (!fromURI.endsWith("/")) {
+                    fromURI += "/";
+                }
+                if (!toURI.endsWith("/")) {
+                    toURI += "/";
+                }
+            }
+            return path.replaceFirst(fromURI, toURI);
         }
-        catch (MalformedURLException e) {
-            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
-        }
-        catch (IOException e) {
-            throw new ExchangeException("Not able to send the deactivation request [" + handle + "]: " + e.getMessage());
-        }
-        catch (Exception e) {
-            throw new ExchangeException(e);
-        }
+        return path;
     }
 
 }

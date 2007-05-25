@@ -13,8 +13,8 @@
 package info.magnolia.cms.exchange;
 
 import java.io.File;
-import java.util.Hashtable;
 import java.util.Map;
+import java.util.HashMap;
 
 
 /**
@@ -26,12 +26,12 @@ public class ActivationContent {
     /**
      * File list
      */
-    private Map fileList = new Hashtable();
+    private Map fileList = new HashMap();
 
     /**
      * properties
      */
-    private Map properties = new Hashtable();
+    private Map properties = new HashMap();
 
     /**
      * add file
@@ -76,6 +76,19 @@ public class ActivationContent {
         if (value == null) {
             value = "";
         }
+        this.properties.put(key, value);
+    }
+
+    /**
+     * set property
+     * @param key
+     * @param value
+     */
+    public void setProperty(String key, String value) {
+        if (value == null) {
+            value = "";
+        }
+        // HashMap replaces existing value on put
         this.properties.put(key, value);
     }
 

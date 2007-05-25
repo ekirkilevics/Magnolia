@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.exchange;
 
-import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.Rule;
@@ -23,7 +22,7 @@ import java.util.List;
 
 /**
  * @author Sameer Charles
- * $Id$
+ * $Id: Syndicator.java 6443 2006-09-21 10:14:34Z scharles $
  */
 public interface Syndicator {
 
@@ -106,6 +105,7 @@ public interface Syndicator {
      * @param path , to deactivate
      * @throws RepositoryException
      * @throws ExchangeException
+     * @deprecated Use deActivate(Content node)
      */
     public void deActivate(String path)
             throws ExchangeException, RepositoryException;
@@ -115,8 +115,26 @@ public interface Syndicator {
      * @param subscriber
      * @throws RepositoryException
      * @throws ExchangeException
+     * @deprecated Use (Subscriber subscriber, Content node)
      */
     public void deActivate(Subscriber subscriber, String path)
+            throws ExchangeException, RepositoryException;
+
+    /**
+     * @param node , to deactivate
+     * @throws RepositoryException
+     * @throws ExchangeException
+     */
+    public void deActivate(Content node)
+            throws ExchangeException, RepositoryException;
+
+    /**
+     * @param node , to deactivate
+     * @param subscriber
+     * @throws RepositoryException
+     * @throws ExchangeException
+     */
+    public void deActivate(Subscriber subscriber, Content node)
             throws ExchangeException, RepositoryException;
 
 }

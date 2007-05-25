@@ -84,7 +84,7 @@ public class FactoryUtil {
                     repository = StringUtils.substringBefore(className, ":");
                     path = StringUtils.substringAfter(className, ":");
                 }
-                return new ObservedObjectFactory(repository, path);
+                return new ObservedObjectFactory(repository, path, interf);
             }
             else{
                 Class clazz = ClassUtil.classForName(className);
@@ -247,9 +247,12 @@ public class FactoryUtil {
          */
         protected Object observedObject;
 
-        public ObservedObjectFactory(String repository, String path) {
+        protected Class interf;
+
+        public ObservedObjectFactory(String repository, String path, Class interf) {
             this.path = path;
             this.repository = repository;
+            this.interf = interf;
 
             Content node;
             try {
@@ -264,6 +267,7 @@ public class FactoryUtil {
         protected void onRegister(Content node) {
             try {
                 this.observedObject = Content2BeanUtil.toBean(node, true);
+                log.info(this.interf.getName()+" realoaded [ "+node.getHandle()+" ]");
             }
             catch (Exception e) {
                 log.error("can't instantiate object [" + repository + ":" + path + "]", e);

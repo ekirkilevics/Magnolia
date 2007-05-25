@@ -15,7 +15,6 @@ package info.magnolia.cms.module;
 import info.magnolia.cms.beans.config.Bootstrapper;
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
@@ -27,6 +26,9 @@ import info.magnolia.cms.security.Role;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.exchange.ActivationManager;
+import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -707,35 +709,23 @@ public final class ModuleUtil {
      * @param repository
      */
     public static void subscribeRepository(String repository) {
-        List collectedNodes = new ArrayList();
-        
-        // singel subscriber schema
-        Content subscriberNode = ContentUtil.getContent(ContentRepository.CONFIG, "/" + Subscriber.SUBSCRIBER_NODE_NAME);
-        if(subscriberNode != null){
-            collectedNodes.add(subscriberNode);
-        }
-        
-        // multiple subscriber schema
-        Content subscribersNode = ContentUtil.getContent(ContentRepository.CONFIG, "/" + Subscriber.SUBSCRIBERS_NODE_NAME);
-        if (subscribersNode != null) {
-            collectedNodes.addAll(subscribersNode.getChildren(ItemType.CONTENTNODE));
-        }
-        
-        for (Iterator iter = collectedNodes.iterator(); iter.hasNext();) {
-            Content node = (Content) iter.next();
-            Content context = ContentUtil.getCaseInsensitive(node, Subscriber.CONTEXT_NODE_NAME);
-            try {
-                if (context != null && !context.hasContent(repository)) {
-                    Content rep = context.createContent(repository, ItemType.CONTENTNODE);
-                    Content entry = rep.createContent("0001", ItemType.CONTENTNODE);
-                    entry.createNodeData("subscribedURI").setValue("/");
-                    node.save();
+        ActivationManager sManager = ActivationManagerFactory.getActivationManager();
+        Iterator subscribers = sManager.getSubscribers().iterator();
+        while (subscribers.hasNext()) {
+            Subscriber subscriber = (Subscriber) subscribers.next();
+            if (!subscriber.isSubscribed("/", repository)) {
+                Content subscriptionsNode
+                        = ContentUtil.getContent(ContentRepository.CONFIG, sManager.getConfigPath()+"/"+subscriber.getName()+"/subscriptions");
+                try {
+                    Content newSubscription = subscriptionsNode.createContent(repository, ItemType.CONTENTNODE);
+                    newSubscription.createNodeData("toURI").setValue("/");
+                    newSubscription.createNodeData("repository").setValue(repository);
+                    newSubscription.createNodeData("fromURI").setValue("/");
+                    subscriptionsNode.save();
+                } catch (RepositoryException re) {
+                    log.error("wasn't able to subscribe repository [" + repository + "]", re);
                 }
             }
-            catch (RepositoryException e) {
-                log.error("wasn't able to subscribe repository [" + repository + "]", e);
-            }
-
         }
     }
 }

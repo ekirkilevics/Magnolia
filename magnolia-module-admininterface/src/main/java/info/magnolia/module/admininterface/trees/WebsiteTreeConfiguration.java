@@ -14,7 +14,6 @@ package info.magnolia.module.admininterface.trees;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
-import info.magnolia.cms.beans.config.Subscriber;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.core.ItemType;
@@ -28,6 +27,7 @@ import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AbstractTreeConfiguration;
 
@@ -121,7 +121,7 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
 
         if (!browseMode) {
             tree.addColumn(column1);
-            if (Server.isAdmin() || Subscriber.isSubscribersEnabled()) {
+            if (Server.isAdmin() || ActivationManagerFactory.getActivationManager().hasAnyActiveSubscriber()) {
                 tree.addColumn(columnIcons);
             }
             tree.addColumn(column2);
@@ -236,7 +236,7 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
         menuImport.setOnclick(tree.getJavascriptTree() + ".importNode(this);"); //$NON-NLS-1$
 
         // is there a subscriber?
-        if (!Subscriber.isSubscribersEnabled()) {
+        if (!ActivationManagerFactory.getActivationManager().hasAnyActiveSubscriber()) {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
             menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
             menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
