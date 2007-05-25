@@ -39,10 +39,11 @@ public class Hidden extends ControlImpl {
     }
 
     public String getHtml() {
-        StringBuffer html = new StringBuffer();
+        final String id = getId() != null ? getId() : getName();
+        final StringBuffer html = new StringBuffer();
         html.append("<input type=\"hidden\""); //$NON-NLS-1$
         html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-        html.append(" id=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" id=\"" + id + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(" value=\"" + this.getValue() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(" />"); //$NON-NLS-1$
         html.append(this.getHtmlSaveInfo());
