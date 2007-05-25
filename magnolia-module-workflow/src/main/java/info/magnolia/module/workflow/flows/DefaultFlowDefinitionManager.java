@@ -69,7 +69,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
         else{
             InputStream is = null;
             String surl = getFlowDefinitionURLPattern();
-            surl = MessageFormat.format(surl, workflowName);
+            surl = MessageFormat.format(surl, new String[]{workflowName});
             try {
                 URL url = new URL(surl);
                 URLConnection connection = url.openConnection();
