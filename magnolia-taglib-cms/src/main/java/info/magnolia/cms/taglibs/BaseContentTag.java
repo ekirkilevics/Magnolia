@@ -46,6 +46,11 @@ public class BaseContentTag extends TagSupport {
     protected boolean inherit;
 
     /**
+     * This is historically. Meaning that we work on the page node itself even when we are in an iterator.
+     */
+    protected boolean actpage;
+
+    /**
      * Set the node data name, e.g. "mainText".
      * @param name
      */
@@ -92,6 +97,10 @@ public class BaseContentTag extends TagSupport {
      */
     protected Content getFirstMatchingNode() {
         Content currentPage = Resource.getCurrentActivePage();
+        if(actpage){
+            return currentPage;
+        }
+
         Content contentNode = resolveNode(currentPage);
         if (contentNode == null) {
             return null;
@@ -176,6 +185,16 @@ public class BaseContentTag extends TagSupport {
         this.contentNodeName = null;
         this.contentNodeCollectionName = null;
         this.inherit = false;
+    }
+
+
+    public boolean isActpage() {
+        return this.actpage;
+    }
+
+
+    public void setActpage(boolean actpage) {
+        this.actpage = actpage;
     }
 
 }

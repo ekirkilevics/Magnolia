@@ -47,16 +47,6 @@ public class IfExisting extends BaseConditionalContentTag {
         this.nodeDataName = name;
     }
 
-
-    /**
-     * Set the actpage.
-     * @deprecated do not pass any parameter to get the same effect
-     * @param set
-     */
-    public void setActpage(boolean set) {
-        log.error("attribute actpage is not supported anymore!");
-    }
-
     /**
      * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
      */
