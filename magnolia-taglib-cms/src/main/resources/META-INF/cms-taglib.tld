@@ -290,6 +290,13 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <type>boolean</type>
       <description>Inherit the value from parent pages, if not set in the current one.</description>
     </attribute>
+    <attribute>
+      <name>actpage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>If true we work on the current page instead of the cuu</description>
+    </attribute>
     <example>
       <![CDATA[
 <cms:out nodeDataName="title"/>
@@ -566,7 +573,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description></description>
+      <description>If true we work on the current page instead of the current paragraph</description>
     </attribute>
   </tag>
   <tag>
@@ -615,7 +622,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description></description>
+      <description>If true we work on the current page instead of the current paragraph</description>
     </attribute>
   </tag>
   <tag>
@@ -646,7 +653,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description></description>
+      <description>If true we work on the current page instead of the current paragraph</description>
     </attribute>
   </tag>
   <tag>
@@ -677,7 +684,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description></description>
+      <description>If true we work on the current page instead of the current paragraph</description>
     </attribute>
   </tag>
   <tag>
