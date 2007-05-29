@@ -42,15 +42,34 @@ public class DateUtil {
 
     public static final TimeZone UTC_TIME_ZONE = TimeZone.getTimeZone("UTC");
 
+    /**
+     * This is a util
+     */
+    private DateUtil() {
+    }
+
+    /**
+     * @deprecated
+     */
     public String getFormattedDate(Date date) {
         return this.getFormattedDate(date, FORMAT_DEFAULTPATTERN);
     }
 
+    /**
+     * @deprecated
+     */
     public String getFormattedDate(Date date, String formatPattern) {
         if (formatPattern == null) {
             formatPattern = FORMAT_DEFAULTPATTERN;
         }
-        return DateFormatUtils.formatUTC(date, formatPattern);
+        return DateFormatUtils.format(date, formatPattern);
+    }
+
+    public static String format(Date date, String formatPattern) {
+        if (formatPattern == null) {
+            formatPattern = FORMAT_DEFAULTPATTERN;
+        }
+        return DateFormatUtils.format(date, formatPattern);
     }
 
     /**
@@ -65,7 +84,7 @@ public class DateUtil {
             MgnlContext.getLocale());
         return format.format(val);
     }
-    
+
     /**
      * Uses the current locale (user) to format the date
      * @param val Date or Calendar
@@ -82,7 +101,7 @@ public class DateUtil {
      * Uses the current locale (user) to parse the date and time
      * @param val Date or Calendar
      * @return the String
-     * @throws ParseException 
+     * @throws ParseException
      */
     public static Date parseDateTime(String dateStr) throws ParseException {
         DateFormat format = SimpleDateFormat.getDateTimeInstance(
@@ -91,12 +110,12 @@ public class DateUtil {
             MgnlContext.getLocale());
         return (Date)format.parseObject(dateStr);
     }
-    
+
     /**
      * Uses the current locale (user) to parse the date
      * @param val Date or Calendar
      * @return the String
-     * @throws ParseException 
+     * @throws ParseException
      */
     public static Date parseDate(String dateStr) throws ParseException {
         DateFormat format = SimpleDateFormat.getDateInstance(
@@ -104,7 +123,7 @@ public class DateUtil {
             MgnlContext.getLocale());
         return format.parse(dateStr);
     }
-    
+
     /**
      * Get the equivalent UTC calendar to a local calendar
      */

@@ -62,7 +62,8 @@ public class MetaDataUtil {
                 || propertyName.equals(MetaData.LAST_MODIFIED)
                 || propertyName.equals(MetaData.LAST_ACTION)) {
                 Date date = this.getContent().getMetaData().getDateProperty(propertyName).getTime();
-                return new DateUtil().getFormattedDate(date, dateFormat);
+
+                return DateUtil.format(date, dateFormat);
             }
             else if (propertyName.equals(MetaData.ACTIVATED)) {
                 return Boolean.toString(this.getContent().getMetaData().getBooleanProperty(propertyName));

@@ -167,7 +167,7 @@ public class NodeDataUtil {
                     return Boolean.toString(value.getBoolean());
                 case (PropertyType.DATE):
                     Date valueDate = value.getDate().getTime();
-                    return new DateUtil().getFormattedDate(valueDate, dateFormat);
+                    return DateUtil.format(valueDate, dateFormat);
                 case (PropertyType.BINARY):
                     // ???
                 default:
