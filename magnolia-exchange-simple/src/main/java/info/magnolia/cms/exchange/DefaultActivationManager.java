@@ -37,7 +37,7 @@ public class DefaultActivationManager implements ActivationManager {
     }
 
     public String getConfigPath() {
-        return "/subscribers";
+        return "/server/activation/subscribers";
     }
 
     public boolean hasAnyActiveSubscriber() {
