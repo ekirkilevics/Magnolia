@@ -73,7 +73,7 @@ public class URISecurityFilter extends BaseSecurityFilter {
             permission = Permission.READ;
         }
         try {
-            final String handle = MgnlContext.getAggregationState().getHandle();
+            final String handle = MgnlContext.getAggregationState().getCurrentURI();
             Access.isGranted(accessManager, handle, permission);
             return true;
         } catch (AccessDeniedException ade) {
