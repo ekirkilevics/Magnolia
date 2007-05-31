@@ -575,7 +575,7 @@ public abstract class DialogControlImpl implements DialogControl {
         }
         if(StringUtils.isNotEmpty(getValidationPattern())){
             if(!Pattern.matches(getValidationPattern(), this.getValue())){
-                AlertUtil.setMessage(this.getMessage("dialogs.validation.invalid", new Object[]{name}));
+                AlertUtil.setMessage(this.getMessage("dialogs.validation.invalid", new Object[]{this.getValue(), name}));
                 return false;
             }
         }
