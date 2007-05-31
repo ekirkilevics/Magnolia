@@ -28,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -136,7 +137,7 @@ public class Dialog extends DialogControlImpl {
         // alert if a message was set
         if (AlertUtil.isMessageSet()) {
             out.write("<script>mgnl.util.DHTMLUtil.addOnLoad(function(){alert('"
-                + AlertUtil.getMessage()
+                + StringEscapeUtils.escapeJavaScript(AlertUtil.getMessage())
                 + "');})</script>");
         }
         out.write("<script>mgnl.util.DHTMLUtil.addOnLoad(mgnlDialogInit);</script>");
