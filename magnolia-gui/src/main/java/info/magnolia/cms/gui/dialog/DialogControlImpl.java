@@ -25,12 +25,12 @@ import info.magnolia.cms.util.RequestFormUtil;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.regex.Pattern;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -38,18 +38,20 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
  */
 public abstract class DialogControlImpl implements DialogControl {
+
+    private static final String REQUIRED_PROPERTY = "required";
+
+    public static final String VALIDATION_PATTERN_PROPERTY = "validationPattern";
 
     public static final String DEFAULT_VALUE_PROPERTY = "defaultValue";
 
@@ -555,6 +557,8 @@ public abstract class DialogControlImpl implements DialogControl {
      * @return true if valid
      */
     public boolean validate() {
+        String name = this.getMessage(this.getLabel());
+
         if (this.isRequired()) {
             boolean valueFound = false;
             for (Iterator iter = this.getValues().iterator(); iter.hasNext();) {
@@ -565,8 +569,13 @@ public abstract class DialogControlImpl implements DialogControl {
                 }
             }
             if (!valueFound && StringUtils.isEmpty(this.getValue())) {
-                String name = this.getMessage(this.getLabel());
                 AlertUtil.setMessage(this.getMessage("dialogs.validation.required", new Object[]{name}));
+                return false;
+            }
+        }
+        if(StringUtils.isNotEmpty(getValidationPattern())){
+            if(!Pattern.matches(getValidationPattern(), this.getValue())){
+                AlertUtil.setMessage(this.getMessage("dialogs.validation.invalid", new Object[]{name}));
                 return false;
             }
         }
@@ -582,19 +591,23 @@ public abstract class DialogControlImpl implements DialogControl {
         return true;
     }
 
+    public String getValidationPattern() {
+        return this.getConfigValue(VALIDATION_PATTERN_PROPERTY);
+    }
+
     /**
      * True if a value is required. Set it in the configuration
      * @return
      */
     public boolean isRequired() {
-        if (BooleanUtils.toBoolean(this.getConfigValue("required"))) {
+        if (BooleanUtils.toBoolean(this.getConfigValue(REQUIRED_PROPERTY))) {
             return true;
         }
         return false;
     }
 
     public void setRequired(boolean required) {
-        this.setConfig("required", BooleanUtils.toStringTrueFalse(required));
+        this.setConfig(REQUIRED_PROPERTY, BooleanUtils.toStringTrueFalse(required));
     }
 
 }
