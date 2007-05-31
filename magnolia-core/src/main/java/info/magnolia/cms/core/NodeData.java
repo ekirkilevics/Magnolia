@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collection;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.Property;
@@ -315,13 +316,52 @@ public class NodeData extends ContentHandler {
     }
 
     /**
-     * @return the Content that this NodeData references (if its type
-     * is PropertyType.REFERENCE, otherwise throws an exception)
-     * @see javax.jcr.Property#getNode()
+     * Returns the Content that this NodeData references (if its type is PropertyType.REFERENCE). If it is of type PATH
+     * or STRING it tries to resolve the node by using the path. The path can be relative or absolut. If the property
+     * type is STRING, it trys finally to get the node by using the vlue as an uuid.
+     * @throws RepositoryException
      */
-    public Content getReferencedContent() throws RepositoryException {
-        final Node n = property.getNode();
-        return new Content(n, getAccessManager());
+    public Content getReferencedContent() throws RepositoryException, PathNotFoundException, RepositoryException  {
+        // node containing this property
+        Node node = property.getParent();
+        Node refNode = null;
+
+        if (property.getType() == PropertyType.REFERENCE) {
+            refNode = property.getNode();
+        }
+
+        else if (property.getType() == PropertyType.PATH || property.getType() == PropertyType.STRING) {
+            String path = this.getString();
+            // is this relative path?
+            if (path.startsWith("/")) {
+                Node root = node.getSession().getRootNode();
+                path = StringUtils.removeStart(path, "/");
+                if(root.hasNode(path)){
+                    refNode = root.getNode(path);
+                }
+            }
+            else{
+                if(node.hasNode(path)){
+                    refNode = node.getNode(path);
+                }
+            }
+
+            // we support uuids as strings
+            if (refNode == null && property.getType() == PropertyType.STRING && !StringUtils.contains(path, "/")) {
+                try {
+                    refNode = node.getSession().getNodeByUUID(path);
+                }
+                catch (ItemNotFoundException e) {
+                    // this is not an uuid
+                }
+            }
+        }
+
+        if(refNode==null){
+            throw new ItemNotFoundException("can't find referenced node for value [" + getString() + "]");
+        }
+
+        return new Content(refNode, getAccessManager());
     }
 
     /**
