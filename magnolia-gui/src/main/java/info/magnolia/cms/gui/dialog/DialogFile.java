@@ -13,6 +13,8 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.beans.config.MIMEMapping;
+import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.File;
 import info.magnolia.cms.gui.misc.CssConstants;
@@ -225,6 +227,32 @@ public class DialogFile extends DialogBox {
         control.setNodeDataTemplate(this.getConfigValue("nodeDataTemplate", null)); //$NON-NLS-1$
         out.write(control.getHtmlNodeDataTemplate());
         this.drawHtmlPost(out);
+    }
+
+    protected boolean doValidate() {
+        boolean result = true;
+        if (isRequired()) {
+            // if we have a form, then this is going to the database
+            MultipartForm form = (MultipartForm) getRequest().getAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME);
+            if (form != null) {
+                Document doc = form.getDocument(getName());
+                if (doc != null) { // we're submitting a document for this required field
+                    result = true;
+                }
+                // we're removing the document
+                // for this required field but
+                // not uploading one
+                else if (form.getParameter(getName() + "_" + File.REMOVE) != null) {
+                    return false;
+                }
+            }
+            else {
+                // otherwise we are reading from the db
+                result = getWebsiteNode().getNodeData(getName()).isExist();
+            }
+        }
+
+        return result;
     }
 
     /**

@@ -25,6 +25,7 @@ import info.magnolia.cms.util.RequestFormUtil;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -37,6 +38,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -447,6 +449,7 @@ public abstract class DialogControlImpl implements DialogControl {
     }
 
     private void initializeConfig(Content configNodeParent) throws RepositoryException {
+
         // create config and subs out of dialog structure
         Map config = new Hashtable();
 
@@ -474,6 +477,12 @@ public abstract class DialogControlImpl implements DialogControl {
         Iterator it = configNodeParent.getChildren(ItemType.CONTENTNODE).iterator();
         while (it.hasNext()) {
             Content configNode = (Content) it.next();
+
+            // allow references
+            while(configNode.hasNodeData("reference")){
+                configNode = configNode.getNodeData("reference").getReferencedContent();
+            }
+
             String controlType = configNode.getNodeData("controlType").getString(); //$NON-NLS-1$
 
             if (StringUtils.isEmpty(controlType)) {
@@ -547,7 +556,15 @@ public abstract class DialogControlImpl implements DialogControl {
      */
     public boolean validate() {
         if (this.isRequired()) {
-            if (StringUtils.isEmpty(this.getValue()) && this.getValues().size() == 0) {
+            boolean valueFound = false;
+            for (Iterator iter = this.getValues().iterator(); iter.hasNext();) {
+                String value = (String) iter.next();
+                if(!StringUtils.isEmpty(value)){
+                    valueFound = true;
+                    break;
+                }
+            }
+            if (!valueFound && StringUtils.isEmpty(this.getValue())) {
                 String name = this.getMessage(this.getLabel());
                 AlertUtil.setMessage(this.getMessage("dialogs.validation.required", new Object[]{name}));
                 return false;
