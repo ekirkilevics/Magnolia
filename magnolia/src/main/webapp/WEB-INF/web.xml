@@ -16,12 +16,6 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
   <servlet>
-    <description>Activation handler servlet</description>
-    <display-name>magnolia ActivationHandler</display-name>
-    <servlet-name>ActivationHandler</servlet-name>
-    <servlet-class>info.magnolia.cms.exchange.simple.SimpleExchangeServlet</servlet-class>
-  </servlet>
-  <servlet>
     <description>Admin interface tree servlet</description>
     <display-name>magnolia AdminTreeServlet</display-name>
     <servlet-name>AdminTreeServlet</servlet-name>
@@ -84,10 +78,6 @@
     </init-param>
     <load-on-startup>1</load-on-startup>
   </servlet>
-  <servlet-mapping>
-    <servlet-name>ActivationHandler</servlet-name>
-    <url-pattern>/ActivationHandler</url-pattern>
-  </servlet-mapping>
   <servlet-mapping>
     <servlet-name>classpathspool</servlet-name>
     <url-pattern>/.resources/*</url-pattern>
