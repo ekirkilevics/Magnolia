@@ -45,14 +45,14 @@ public class Aggregator {
     private static final String TEMPLATE = "mgnl_Template"; //$NON-NLS-1$
 
     /**
-     * @deprecated
+     * @deprecated use MgnlContext.getAggrigationStatus()
      */
-    private static final String ACTPAGE = MAIN_CONTENT;
+    public static final String ACTPAGE = MAIN_CONTENT;
 
     /**
-     * @deprecated
+     * @deprecated use MgnlContext.getAggrigationStatus()
      */
-    private static final String CURRENT_ACTPAGE = CURRENT_CONTENT;
+    public static final String CURRENT_ACTPAGE = CURRENT_CONTENT;
 
     /**
      * Don't instantiate.
