@@ -195,7 +195,7 @@ function mgnlOpenWindow(url,width,height)
     }
     url+="mgnlCK="+mgnlGetCacheKiller();
 
-    var w=window.open(url,"mgnlDialog"+mgnlGetCacheKiller(),"width="+width+",height="+height+"scrollbars=no,status=yes,resizable=yes");
+    var w=window.open(url,"mgnlDialog"+mgnlGetCacheKiller(),"width="+width+",height="+height+",scrollbars=no,status=yes,resizable=yes");
     if (w) w.focus();
     }
 
