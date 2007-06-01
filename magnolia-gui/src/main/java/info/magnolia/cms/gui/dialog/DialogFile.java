@@ -229,30 +229,31 @@ public class DialogFile extends DialogBox {
         this.drawHtmlPost(out);
     }
 
-    protected boolean doValidate() {
-        boolean result = true;
+    public boolean validate() {
         if (isRequired()) {
             // if we have a form, then this is going to the database
             MultipartForm form = (MultipartForm) getRequest().getAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME);
             if (form != null) {
                 Document doc = form.getDocument(getName());
                 if (doc != null) { // we're submitting a document for this required field
-                    result = true;
+                    return true;
                 }
                 // we're removing the document
                 // for this required field but
                 // not uploading one
-                else if (form.getParameter(getName() + "_" + File.REMOVE) != null) {
+                if (form.getParameter(getName() + "_" + File.REMOVE) != null) {
+                    setValidationMessage("dialogs.validation.required");
                     return false;
                 }
             }
-            else {
-                // otherwise we are reading from the db
-                result = getWebsiteNode().getNodeData(getName()).isExist();
+            // we are not uploading or removing
+            // check if there is a binary stored
+            if(this.getWebsiteNode() == null || !getWebsiteNode().getNodeData(getName()).isExist()){
+                setValidationMessage("dialogs.validation.required");
+                return false;
             }
         }
-
-        return result;
+        return true;
     }
 
     /**
