@@ -146,6 +146,9 @@ public abstract class DialogControlImpl implements DialogControl {
 
     public void addSub(Object o) {
         this.getSubs().add(o);
+        if(o instanceof DialogControlImpl){
+            ((DialogControlImpl)o).setParent(this);
+        }
     }
 
     public void setConfig(String key, String value) {
@@ -290,14 +293,10 @@ public abstract class DialogControlImpl implements DialogControl {
         while (it.hasNext()) {
             // use underscore (not divis)! could be used as js variable names
             String dsId = this.getId() + "_" + i; //$NON-NLS-1$
-
             DialogControlImpl ds = (DialogControlImpl) it.next();
-            ds.setId(dsId);
+            // set the parent in case not yet set. this is the case when custom code manipulates the subs list manually
             ds.setParent(this);
-            if (this.getParent() == null) {
-                this.setTopParent(this);
-            }
-            ds.setTopParent(this.getTopParent());
+            ds.setId(dsId);
             ds.drawHtml(out);
             i++;
         }
@@ -316,6 +315,13 @@ public abstract class DialogControlImpl implements DialogControl {
     }
 
     public DialogControlImpl getTopParent() {
+        DialogControlImpl topParent = this;
+        if(this.topParent ==  null){
+            while(topParent.getParent() != null){
+                topParent = topParent.getParent();
+            }
+            this.topParent = topParent;
+        }
         return this.topParent;
     }
 
@@ -557,7 +563,6 @@ public abstract class DialogControlImpl implements DialogControl {
      * @return true if valid
      */
     public boolean validate() {
-        String name = this.getMessage(this.getLabel());
 
         if (this.isRequired()) {
             boolean valueFound = false;
@@ -569,13 +574,13 @@ public abstract class DialogControlImpl implements DialogControl {
                 }
             }
             if (!valueFound && StringUtils.isEmpty(this.getValue())) {
-                AlertUtil.setMessage(this.getMessage("dialogs.validation.required", new Object[]{name}));
+                setValidationMessage("dialogs.validation.required");
                 return false;
             }
         }
-        if(StringUtils.isNotEmpty(getValidationPattern())){
+        if(StringUtils.isNotEmpty(getValidationPattern()) && StringUtils.isNotEmpty(this.getValue())){
             if(!Pattern.matches(getValidationPattern(), this.getValue())){
-                AlertUtil.setMessage(this.getMessage("dialogs.validation.invalid", new Object[]{this.getValue(), name}));
+                setValidationMessage("dialogs.validation.invalid");
                 return false;
             }
         }
@@ -589,6 +594,16 @@ public abstract class DialogControlImpl implements DialogControl {
 
         }
         return true;
+    }
+
+    protected void setValidationMessage(String msg) {
+        String name = this.getMessage(this.getLabel());
+        String tabName = "";
+        if (this.getParent() instanceof DialogTab) {
+            DialogTab tab = (DialogTab) this.getParent();
+            tabName = tab.getMessage(tab.getLabel());
+        }
+        AlertUtil.setMessage(this.getMessage(msg, new Object[]{name, tabName, this.getValue()}));
     }
 
     public String getValidationPattern() {
