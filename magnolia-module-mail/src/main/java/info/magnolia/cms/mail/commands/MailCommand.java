@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 /**
  * the command for sending mail
  * @author jackie
- * @authro niko
+ * @author niko
  */
 public class MailCommand implements Command {
 
@@ -81,7 +81,7 @@ public class MailCommand implements Command {
                 	}
                 	else if(attachment instanceof List) {
                 		email.setAttachments((List) attachment);
-                	};
+                	}
                 }
 
                 email.setCcList(factory.convertEmailList(cc));
