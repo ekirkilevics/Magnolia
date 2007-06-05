@@ -200,6 +200,10 @@ public class MockContent extends Content {
         return this.name;
     }
 
+    public void setName(String name) {
+        this.name = name;
+    }
+
     public String getNodeTypeName() throws RepositoryException {
         return this.nodeTypeName;
     }

@@ -103,8 +103,33 @@ public class MockUtilTest extends TestCase {
         assertEquals("/parent/sub1/MetaData", metaData.getHandle());
     }
 
+    public void testSyntax() throws IOException, RepositoryException{
+        String content =
+            "/parent1/sub1.prop1=one\n"+
+            "parent2/sub2.prop1=two\n"+
+            "parent3.sub3.prop1=three";
+
+        HierarchyManager hm = MockUtil.createHierarchyManager(content);
+        assertEquals("one", hm.getContent("/parent1/sub1").getNodeData("prop1").getString());
+        assertEquals("two", hm.getContent("/parent2/sub2").getNodeData("prop1").getString());
+        assertEquals("three", hm.getContent("/parent3/sub3").getNodeData("prop1").getString());
+
+        content =
+            "/parent1/sub1@uuid=1\n"+
+            "parent2/sub2.@uuid=2\n"+
+            "parent3.sub3@uuid=3\n"+
+            "parent4.sub4.@uuid=4";
+
+        hm = MockUtil.createHierarchyManager(content);
+        assertEquals("1", hm.getContent("/parent1/sub1").getUUID());
+        assertEquals("2", hm.getContent("/parent2/sub2").getUUID());
+        assertEquals("3", hm.getContent("/parent3/sub3").getUUID());
+        assertEquals("4", hm.getContent("/parent4/sub4").getUUID());
+    }
+
     protected HierarchyManager initTestData() throws IOException, RepositoryException {
         return MockUtil.createHierarchyManager(this.getClass().getResourceAsStream("testcontent.properties"));
     }
+
 
 }

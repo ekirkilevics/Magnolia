@@ -10,6 +10,13 @@
  */
 package info.magnolia.test.mock;
 
+import static org.easymock.EasyMock.anyBoolean;
+import static org.easymock.EasyMock.anyInt;
+import static org.easymock.EasyMock.anyObject;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.EasyMock.isA;
+import static org.easymock.EasyMock.replay;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
@@ -25,6 +32,10 @@ import java.util.Properties;
 import java.util.Set;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.Workspace;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.ObservationManager;
 
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.OrderedMap;
@@ -88,6 +99,32 @@ public class MockUtil {
         return ctx;
     }
 
+    public static MockContext getMockContext() {
+        return getMockContext(false);
+    }
+
+    public static MockContext getMockContext(boolean create) {
+        MockContext ctx = (MockContext) MgnlContext.getInstance();
+        if(ctx == null && create){
+            initMockContext();
+            ctx = getMockContext(false);
+        }
+        return ctx;
+    }
+
+    public static MockContext getSystemMockContext() {
+        return getSystemMockContext(false);
+    }
+
+    public static MockContext getSystemMockContext(boolean create) {
+        MockContext ctx = (MockContext) MgnlContext.getSystemContext();
+        if(ctx == null && create){
+            initMockContext();
+            ctx = getSystemMockContext(false);
+        }
+        return ctx;
+    }
+
     public static MockHierarchyManager createHierarchyManager(InputStream propertiesStream) throws IOException, RepositoryException {
         MockHierarchyManager hm = new MockHierarchyManager();
         Content root = hm.getRoot();
@@ -100,15 +137,28 @@ public class MockUtil {
         return createHierarchyManager(in);
     }
 
+    public static MockHierarchyManager createAndSetHierarchyManager(String repository, String propertiesStr) throws IOException, RepositoryException {
+        MockHierarchyManager hm = createHierarchyManager(propertiesStr);
+        getMockContext(true).addHierarchyManager(repository, hm);
+        getSystemMockContext(true).addHierarchyManager(repository, hm);
+        return hm;
+    }
+
     public static void createContent(Content root, InputStream propertiesStream) throws IOException, RepositoryException {
         Properties properties = new OrderedProperties();
 
         properties.load(propertiesStream);
 
         for (Object o : properties.keySet()) {
-            String key = (String) o;
+            String orgKey = (String) o;
+            String valueStr = properties.getProperty(orgKey);
+
+            String key = StringUtils.replace(orgKey, "/", ".");
+            key = StringUtils.removeStart(key, ".");
+            // guarantee a dot in front of @ to make it a property
+            key = StringUtils.replace(StringUtils.replace(key, "@", ".@"), "..@", ".@");
+
             String name = StringUtils.substringAfterLast(key, ".");
-            String valueStr = properties.getProperty(key);
             String path = StringUtils.substringBeforeLast(key, ".");
             path = StringUtils.replace(path, ".", "/");
 
@@ -173,4 +223,18 @@ public class MockUtil {
         }
         return nodeDatas;
     }
+
+    public static void mockObservation(MockHierarchyManager hm) throws RepositoryException, UnsupportedRepositoryOperationException {
+        // fake observation
+        Workspace ws = createMock(Workspace.class);
+        ObservationManager om = createMock(ObservationManager.class);
+
+        om.addEventListener(isA(EventListener.class), anyInt(),isA(String.class),anyBoolean(), (String[])anyObject(), (String[]) anyObject(), anyBoolean());
+
+        expect(ws.getObservationManager()).andStubReturn(om);
+        hm.setWorkspace(ws);
+        replay(ws, om);
+    }
+
+
 }
