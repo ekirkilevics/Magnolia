@@ -178,7 +178,7 @@ public final class LinkUtil {
             }
 
             // to relative path
-            link = transformer.transform(absolutePath, repository);
+            link = transformer.transform(link, repository);
             // TODO support other extensions than html. used for MGNLDMS-84
             link += "." + DEFAULT_EXTENSION;
             matcher.appendReplacement(res, link);
