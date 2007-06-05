@@ -24,9 +24,9 @@ public abstract class AbstractMailTest extends TestCase {
      */
     protected Logger log = LoggerFactory.getLogger(getClass());
 
-    public final static String TEST_RECIPIENT = "niko@macnica.com";
+    public final static String TEST_RECIPIENT = "recipient@example.com";
 
-    public final static String TEST_SENDER = "niko@magnolia.com";
+    public final static String TEST_SENDER = "sender@example.com";
 
     public static final String TEST_FILE_JPG = "magnolia.jpg";
 
