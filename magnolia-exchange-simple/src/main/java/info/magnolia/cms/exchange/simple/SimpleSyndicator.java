@@ -141,23 +141,25 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
     }
 
+    /**
+     * path should be without trailing slash
+     * */
     private String getMappedPath(String path, Subscription subscription) {
         if (null != subscription.getToURI()) {
             String fromURI = subscription.getFromURI();
             String toURI = subscription.getToURI();
             if (!path.equals(fromURI)) {
-                // make sure from and to URI both have trailing slash
-                if (!fromURI.endsWith("/")) {
-                    fromURI += "/";
+                if (fromURI.endsWith("/")) {
+                    fromURI = StringUtils.substringBeforeLast(fromURI, "/");
                 }
-                if (!toURI.endsWith("/")) {
-                    toURI += "/";
+                if (toURI.endsWith("/")) {
+                    toURI = StringUtils.substringBeforeLast(toURI, "/");
                 }
             }
-            if (path.length() < fromURI.length()) {
-                return toURI;
+            path = path.replaceFirst(fromURI, toURI);
+            if (path.equals("")) {
+                return "/";
             }
-            return path.replaceFirst(fromURI, toURI);
         }
         return path;
     }
