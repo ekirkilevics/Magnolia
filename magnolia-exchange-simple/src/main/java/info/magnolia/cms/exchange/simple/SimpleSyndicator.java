@@ -154,6 +154,9 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                     toURI += "/";
                 }
             }
+            if (path.length() < fromURI.length()) {
+                return toURI;
+            }
             return path.replaceFirst(fromURI, toURI);
         }
         return path;
