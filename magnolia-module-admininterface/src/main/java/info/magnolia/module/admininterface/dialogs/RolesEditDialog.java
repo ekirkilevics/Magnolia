@@ -71,7 +71,6 @@ public class RolesEditDialog extends ConfiguredDialog {
 
         Dialog dialog = super.createDialog(configNode, storageNode);
 
-        dialog.setJavascriptSources(request.getContextPath() + "/.resources/admin-js/dialogs/DynamicTable.js"); //$NON-NLS-1$
         dialog.setJavascriptSources(request.getContextPath() + "/.resources/admin-js/dialogs/pages/rolesACLPage.js"); //$NON-NLS-1$
         dialog.setCssSources(request.getContextPath() + "/.resources/admin-css/dialogs/pages/rolesEditPage.css"); //$NON-NLS-1$
         return dialog;
