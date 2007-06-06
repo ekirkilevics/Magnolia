@@ -54,7 +54,7 @@ public class ContentTypeFilter extends AbstractMagnoliaFilter {
     }
 
     protected String setupContentTypeAndCharacterEncoding(String extension, HttpServletRequest req, HttpServletResponse resp) {
-        final String mimeType = MIMEMapping.getMIMEType(extension);
+        final String mimeType = MIMEMapping.getMIMETypeOrDefault(extension);
         final String characterEncoding = MIMEMapping.getContentEncodingOrDefault(mimeType);
 
         try {
