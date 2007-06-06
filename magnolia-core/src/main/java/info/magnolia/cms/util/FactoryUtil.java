@@ -267,7 +267,7 @@ public class FactoryUtil {
         protected void onRegister(Content node) {
             try {
                 this.observedObject = Content2BeanUtil.toBean(node, true);
-                log.info(this.interf.getName()+" realoaded [ "+node.getHandle()+" ]");
+                log.info(this.interf.getName()+" reloaded [ "+node.getHandle()+" ]");
             }
             catch (Exception e) {
                 log.error("can't instantiate object [" + repository + ":" + path + "]", e);
