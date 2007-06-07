@@ -12,39 +12,23 @@
  */
 package info.magnolia.cms.exchange;
 
+import info.magnolia.voting.Voter;
+
 /**
  * @author Sameer Charles
  * $Id$
  */
-public class Subscription {
+public interface Subscription extends Voter {
 
-    private String fromURI;
+    public String getFromURI();
 
-    private String toURI;
+    public void setFromURI(String fromURI);
 
-    private String repository;
+    public String getToURI();
 
-    public String getFromURI() {
-        return fromURI;
-    }
+    public void setToURI(String toURI);
 
-    public void setFromURI(String fromURI) {
-        this.fromURI = fromURI;
-    }
+    public String getRepository();
 
-    public String getToURI() {
-        return toURI;
-    }
-
-    public void setToURI(String toURI) {
-        this.toURI = toURI;
-    }
-
-    public String getRepository() {
-        return repository;
-    }
-
-    public void setRepository(String repository) {
-        this.repository = repository;
-    }
+    public void setRepository(String repository);
 }

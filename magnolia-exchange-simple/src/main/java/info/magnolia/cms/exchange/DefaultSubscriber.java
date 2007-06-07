@@ -68,22 +68,19 @@ public class DefaultSubscriber implements Subscriber {
 
     public Subscription getMatchedSubscription(String path, String repositoryId) {
         Iterator subscriptions = this.getSubscriptions().iterator();
+        Subscription matchedSubscription = null;
+        int highestVote = -1;
         while (subscriptions.hasNext()) {
             Subscription subscription = (Subscription) subscriptions.next();
             if (repositoryId.equalsIgnoreCase(subscription.getRepository())) {
-                String subscribedPath = subscription.getFromURI();
-                if (path.equals(subscribedPath)) {
-                    return subscription;
-                }
-                if (!subscribedPath.endsWith("/")) {
-                    subscribedPath += "/";
-                }
-                if (path.startsWith(subscribedPath)) {
-                    return subscription;
+                int vote = subscription.vote(path);
+                if (highestVote < vote) {
+                    highestVote = vote;
+                    matchedSubscription = subscription;
                 }
             }
         }
-        return null;
+        return matchedSubscription;
     }
 
     public boolean isSubscribed(String path, String repositoryId) {
