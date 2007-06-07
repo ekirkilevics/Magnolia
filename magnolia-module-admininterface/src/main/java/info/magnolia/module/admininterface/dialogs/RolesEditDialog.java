@@ -147,7 +147,10 @@ public class RolesEditDialog extends ConfiguredDialog {
                     }
 
                     if (StringUtils.isNotEmpty(path)) {
-                        if (path.equals("/")) { //$NON-NLS-1$
+                        if (repository.equalsIgnoreCase("uri")) { //$NON-NLS-1$
+                            // write ACL as is for URI security 
+                            accessType = RolesACLPage.TYPE_THIS;
+                        } else if (path.equals("/")) { //$NON-NLS-1$
                             accessType = RolesACLPage.TYPE_SUBS;
                             path = StringUtils.EMPTY;
                         }
