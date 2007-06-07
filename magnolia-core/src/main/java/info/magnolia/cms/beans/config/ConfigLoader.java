@@ -125,7 +125,6 @@ public class ConfigLoader {
             Server.init();
             ModuleLoader.getInstance().init();
             Listener.init();
-            Subscriber.init();
             MIMEMapping.init();
             VersionConfig.getInstance().init();
 
