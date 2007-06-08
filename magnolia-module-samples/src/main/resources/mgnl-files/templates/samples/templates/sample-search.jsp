@@ -15,7 +15,7 @@
       <cms:mainBar paragraph="samplesPageProperties" />
       <div id="contentDivMainColumn">
         <c:import url="/templates/samples/templates/inc/columnMain.jsp" />
-        <form name="mgnlsearch" action="">
+        <form name="mgnlsearch" action="" method="post">
           <input id="query" name="query" value="${fn:escapeXml(param.query)}" />
           <input type="submit" name="search" value="search" />
         </form>
