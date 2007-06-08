@@ -64,7 +64,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
         super(name, request, response);
     }
 
-    private static String getHtmlRowInner(HttpServletRequest request, String dynamicTable, String repository) {
+    private static String getHtmlRowInner(String dynamicTable, String repository) {
         boolean small = true;
         Messages msgs = MessagesManager.getMessages();
 
@@ -125,19 +125,11 @@ public class RolesACLPage extends SimplePageMVCHandler {
         // set as table since ie/win does not support setting of innerHTML of a
         // tr
         html.append("<table cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr>"); //$NON-NLS-1$
-        html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\">" //$NON-NLS-1$
-            + accessRight.getHtml()
-            + "</td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(accessRight.getHtml()).append("</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\" class=\"mgnlDialogBoxInput\"></td>"); //$NON-NLS-1$
 
         if (!repository.equals(URI_FAKE_REPOSITORY) && !repository.equals(ContentRepository.USERS) && !repository.equals(ContentRepository.USER_ROLES)) {
-            html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-                + CssConstants.CSSCLASS_EDITWITHBUTTON
-                + "\">" //$NON-NLS-1$
-                + accessType.getHtml()
-                + "</td>"); //$NON-NLS-1$
+            html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(accessType.getHtml()).append("</td>"); //$NON-NLS-1$
             html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         }
         else {
@@ -145,27 +137,15 @@ public class RolesACLPage extends SimplePageMVCHandler {
                 .append("<input type=\"hidden\" id=\"' + prefix + 'AccessType\" name=\"' + prefix + 'AccessType\" value=\"sub\"/>"); //$NON-NLS-1$
         }
 
-        html.append("<td width=\"100%\"class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\">" //$NON-NLS-1$
-            + path.getHtml()
-            + "</td>"); //$NON-NLS-1$
+        html.append("<td width=\"100%\"class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(path.getHtml()).append("</td>"); //$NON-NLS-1$
         html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
 
         if(choose != null){
-            html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-                + CssConstants.CSSCLASS_EDITWITHBUTTON
-                + "\">" //$NON-NLS-1$
-                + choose.getHtml()
-                + "</td>"); //$NON-NLS-1$
+            html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(choose.getHtml()).append("</td>"); //$NON-NLS-1$
             html.append("<td width=\"1\"></td>"); //$NON-NLS-1$
         }
 
-        html.append("<td width=\"1\" class=\"" //$NON-NLS-1$
-            + CssConstants.CSSCLASS_EDITWITHBUTTON
-            + "\">" //$NON-NLS-1$
-            + delete.getHtml()
-            + "</td>"); //$NON-NLS-1$
+        html.append("<td width=\"1\" class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">").append(delete.getHtml()).append("</td>"); //$NON-NLS-1$
         html.append("</tr></table>"); //$NON-NLS-1$
 
         return html.toString();
@@ -179,7 +159,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
         Content role = dialogControl.getWebsiteNode();
 
         // select the repository
-        Select repositorySelect = getRepositorySelect(request);
+        Select repositorySelect = getRepositorySelect();
 
         out.print(repositorySelect.getHtml());
         out.print("<p><p/>"); //$NON-NLS-1$
@@ -244,7 +224,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
 
         // get some debug informations
         out.println("mgnlDebug('acl" + repository + "RenderFunction: prefix = ' + prefix, 'acl', object)");
-        out.println("cell.innerHTML= '" + getHtmlRowInner(request, dynamicTableName, repository) + "';\n"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.println("cell.innerHTML= '" + getHtmlRowInner(dynamicTableName, repository) + "';\n"); //$NON-NLS-1$ //$NON-NLS-2$
         out.println("document.getElementById(prefix + 'AccessType').value = object.accessType;\n"); //$NON-NLS-1$
         out.println("document.getElementById(prefix + 'AccessRight').value = object.accessRight;\n"); //$NON-NLS-1$
 
@@ -285,7 +265,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
             Content c = (Content) it.next();
             String path = c.getNodeData("path").getString(); //$NON-NLS-1$
             String accessRight = c.getNodeData("permissions").getString(); //$NON-NLS-1$
-            acls.register(path, Integer.valueOf(accessRight).intValue());
+            acls.register(path, Integer.valueOf(accessRight).intValue(), repository);
         }
 
         for (Iterator iter = acls.values().iterator(); iter.hasNext();) {
@@ -300,11 +280,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
         }
     }
 
-    /**
-     * @param request
-     * @return
-     */
-    private Select getRepositorySelect(HttpServletRequest request) {
+    private Select getRepositorySelect() {
         Select repositorySelect = new Select();
         repositorySelect.setName("aclRepository"); //$NON-NLS-1$
         repositorySelect.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
@@ -373,8 +349,11 @@ public class RolesACLPage extends SimplePageMVCHandler {
          * @param path the not cleaned path
          * @param accessRight the access right
          */
-        void register(String path, int accessRight) {
-            String cleanPath = StringUtils.removeEnd(path, "/*");
+        void register(String path, int accessRight, String repository) {
+            String cleanPath = path;
+            if (!repository.equalsIgnoreCase(RolesACLPage.URI_FAKE_REPOSITORY)) {
+                cleanPath = StringUtils.removeEnd(path, "/*");
+            }
             if (StringUtils.isEmpty(cleanPath)) {
                 cleanPath = "/";
             }
