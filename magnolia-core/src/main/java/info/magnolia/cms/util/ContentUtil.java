@@ -22,9 +22,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.api.HierarchyManager;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
@@ -33,9 +31,6 @@ import java.util.Map;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -160,7 +155,6 @@ public class ContentUtil {
      * Get a subnode case insensitive.
      * @param node
      * @param name
-     * @param type
      * @return
      */
     public static Content getCaseInsensitive(Content node, String name) {
@@ -251,7 +245,7 @@ public class ContentUtil {
     /**
      * Get all children of a particular type
      * @param node
-     * @param type
+     * @param types
      * @return
      */
     public static List collectAllChildren(Content node, ItemType[] types) {
