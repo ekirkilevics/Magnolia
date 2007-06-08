@@ -232,7 +232,7 @@ public class SimpleSearchTag extends TagSupport {
         if (StringUtils.isNotEmpty(startPath)) {
             xpath.append(startPath);
         }
-        xpath.append("//*[@jcr:primaryType=\'mgnl:content\']/*/*["); //$NON-NLS-1$
+        xpath.append("//*[@jcr:primaryType=\'mgnl:content\']//*["); //$NON-NLS-1$
 
         String joinOperator = "and"; //$NON-NLS-1$
         boolean emptyQuery = true;
