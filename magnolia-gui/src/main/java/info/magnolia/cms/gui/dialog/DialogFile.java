@@ -87,7 +87,10 @@ public class DialogFile extends DialogBox {
         this.drawHtmlPre(out);
 
         String width = this.getConfigValue("width", "100%"); //$NON-NLS-1$ //$NON-NLS-2$
-        boolean showImage = this.getImageExtensions().contains(control.getExtension().toLowerCase());
+
+        final boolean preview = Boolean.valueOf(getConfigValue("preview", "true")).booleanValue();
+        final boolean extensionIsDisplayableImage = this.getImageExtensions().contains(control.getExtension().toLowerCase());
+        final boolean showImage = extensionIsDisplayableImage && preview;
 
         String htmlControlBrowse = control.getHtmlBrowse();
         StringBuffer htmlControlFileName = new StringBuffer();
