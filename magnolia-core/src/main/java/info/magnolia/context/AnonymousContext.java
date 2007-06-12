@@ -19,6 +19,8 @@ import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
+import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.api.HierarchyManager;
 
 import javax.servlet.http.HttpServletRequest;
@@ -27,6 +29,8 @@ import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.EventIterator;
 import java.util.Map;
 import java.util.HashMap;
 
@@ -41,15 +45,27 @@ public class AnonymousContext extends WebContextImpl {
 
     private static final Logger log = LoggerFactory.getLogger(AnonymousContext.class);
 
-    private static Map accessManagerMap = new HashMap();
+    private static final Map accessManagerMap = new HashMap();
 
-    private static Map queryManagerMap = new HashMap();
+    private static final Map queryManagerMap = new HashMap();
 
-    private static Map hierarchyManagerMap = new HashMap();
+    private static final Map hierarchyManagerMap = new HashMap();
 
-    private static Subject anonymousSubject;
+    private static Subject anonymousSubject = createAnonymousSubject();
 
-    private static User anonymousUser;
+    private static User anonymousUser = Security.getUserManager().getAnonymousUser();
+
+    static {
+        // todo : Ideally we should allow anonymous user to have any role or group but in that case
+        // we would need to observe and update this subject on any changes in users, userroles and usergroups workspaces
+        ObservationUtil.registerChangeListener(ContentRepository.USER_ROLES, "/anonymous", new EventListener() {
+            public void onEvent(EventIterator events) {
+                anonymousSubject = createAnonymousSubject();
+                anonymousUser = Security.getUserManager().getAnonymousUser();
+                log.info("Updated anonymous subject");
+            }
+        });
+    }
 
     public void init(HttpServletRequest request, HttpServletResponse response) {
         super.init(request, response);
@@ -57,9 +73,6 @@ public class AnonymousContext extends WebContextImpl {
     }
 
     public User getUser() {
-        if (null == anonymousUser) {
-            anonymousUser = Security.getUserManager().getAnonymousUser();
-        }
         return anonymousUser;
     }
 
@@ -83,7 +96,7 @@ public class AnonymousContext extends WebContextImpl {
         AccessManager accessManager = (AccessManager) accessManagerMap.get(repositoryName+workspaceName);
         if (null == accessManager) {
             accessManager
-                    = WorkspaceAccessUtil.getInstance().createAccessManager(getAnonymousSubject(), repositoryName, workspaceName);
+                    = WorkspaceAccessUtil.getInstance().createAccessManager(anonymousSubject, repositoryName, workspaceName);
             accessManagerMap.put(repositoryName+workspaceName, accessManager);
         }
         return accessManager;
@@ -104,13 +117,9 @@ public class AnonymousContext extends WebContextImpl {
         return queryManager;
     }
 
-    private Subject getAnonymousSubject() {
-        if (null != anonymousSubject) {
-            return anonymousSubject;
-        }
-        CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(getUser().getName(), getUser()
-            .getPassword()
-            .toCharArray());
+    private static Subject createAnonymousSubject() {
+        CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(anonymousUser.getName(),
+                anonymousUser.getPassword().toCharArray());
         try {
             LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
             loginContext.login();
