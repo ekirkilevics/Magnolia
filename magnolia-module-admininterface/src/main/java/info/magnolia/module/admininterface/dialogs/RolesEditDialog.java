@@ -23,6 +23,7 @@ import info.magnolia.module.admininterface.pages.RolesACLPage;
 import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.PathNotFoundException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -86,20 +87,29 @@ public class RolesEditDialog extends ConfiguredDialog {
 
     protected boolean onPostSave(SaveHandler saveControl) {
         Content role = this.getStorageNode();
+        try {
+            saveACLs(role, "uri");
 
-        saveACLs(role, "uri");
+            // for each repository
+            Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
+            while (repositoryNames.hasNext()) {
+                saveACLs(role, (String) repositoryNames.next());
+            }
 
-        // for each repository
-        Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
-        while (repositoryNames.hasNext()) {
-            String repository = (String) repositoryNames.next();
-
-            saveACLs(role, repository);
+            role.save();
+            return true;
+        } catch (RepositoryException re) {
+            log.error("Failed to update role, reverting all transient modifications made for this node", re);
+            try {
+                role.refresh(false);
+            } catch (RepositoryException e) {
+                log.error("Failed to revert transient modifications", e);
+            }
         }
-        return true;
+        return false;
     }
 
-    protected void saveACLs(Content role, String repository) {
+    protected void saveACLs(Content role, String repository) throws RepositoryException {
         // ######################
         // # acl
         // ######################
@@ -107,84 +117,78 @@ public class RolesEditDialog extends ConfiguredDialog {
         try {
             role.delete("acl_" + repository); //$NON-NLS-1$
         }
-        catch (RepositoryException re) {
+        catch (PathNotFoundException re) {
             // ignore, not existing
         }
         // rewrite
-        try {
-            Content acl = role.createContent("acl_" + repository, ItemType.CONTENTNODE); //$NON-NLS-1$
-            String aclValueStr = form.getParameter("acl" + repository + "List"); //$NON-NLS-1$ //$NON-NLS-2$
-            if (StringUtils.isNotEmpty(aclValueStr)) {
-                String[] aclEntries = aclValueStr.split(";"); //$NON-NLS-1$
-                for (int i = 0; i < aclEntries.length; i++) {
-                    String path = StringUtils.EMPTY;
-                    long accessRight = 0;
-                    int accessType = 0;
+        Content acl = role.createContent("acl_" + repository, ItemType.CONTENTNODE); //$NON-NLS-1$
+        String aclValueStr = form.getParameter("acl" + repository + "List"); //$NON-NLS-1$ //$NON-NLS-2$
+        if (StringUtils.isNotEmpty(aclValueStr)) {
+            String[] aclEntries = aclValueStr.split(";"); //$NON-NLS-1$
+            for (int i = 0; i < aclEntries.length; i++) {
+                String path = StringUtils.EMPTY;
+                long accessRight = 0;
+                int accessType = 0;
 
-                    String[] aclValuePairs = aclEntries[i].split(","); //$NON-NLS-1$
-                    for (int j = 0; j < aclValuePairs.length; j++) {
-                        String[] aclValuePair = aclValuePairs[j].split(":"); //$NON-NLS-1$
-                        String aclName = aclValuePair[0].trim();
-                        String aclValue = StringUtils.EMPTY;
-                        if (aclValuePair.length > 1) {
-                            aclValue = aclValuePair[1].trim();
-                        }
+                String[] aclValuePairs = aclEntries[i].split(","); //$NON-NLS-1$
+                for (int j = 0; j < aclValuePairs.length; j++) {
+                    String[] aclValuePair = aclValuePairs[j].split(":"); //$NON-NLS-1$
+                    String aclName = aclValuePair[0].trim();
+                    String aclValue = StringUtils.EMPTY;
+                    if (aclValuePair.length > 1) {
+                        aclValue = aclValuePair[1].trim();
+                    }
 
-                        if (aclName.equals("path")) { //$NON-NLS-1$
-                            path = aclValue;
+                    if (aclName.equals("path")) { //$NON-NLS-1$
+                        path = aclValue;
+                    }
+                    else if (aclName.equals("accessType")) { //$NON-NLS-1$
+                        accessType = Integer.valueOf(aclValue).intValue();
+                    }
+                    else if (aclName.equals("accessRight")) { //$NON-NLS-1$
+                        try {
+                            accessRight = Long.parseLong(aclValue);
                         }
-                        else if (aclName.equals("accessType")) { //$NON-NLS-1$
-                            accessType = Integer.valueOf(aclValue).intValue();
+                        catch (NumberFormatException e) {
+                            accessRight = 0;
                         }
-                        else if (aclName.equals("accessRight")) { //$NON-NLS-1$
-                            try {
-                                accessRight = Long.parseLong(aclValue);
-                            }
-                            catch (NumberFormatException e) {
-                                accessRight = 0;
-                            }
+                    }
+                }
+
+                if (StringUtils.isNotEmpty(path)) {
+                    if (repository.equalsIgnoreCase("uri")) { //$NON-NLS-1$
+                        // write ACL as is for URI security
+                        accessType = RolesACLPage.TYPE_THIS;
+                    } else if (path.equals("/")) { //$NON-NLS-1$
+                        accessType = RolesACLPage.TYPE_SUBS;
+                        path = StringUtils.EMPTY;
+                    }
+
+                    if ((accessType & RolesACLPage.TYPE_THIS) != 0) {
+                        try {
+                            String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
+                            Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
+                            r.createNodeData("path").setValue(path); //$NON-NLS-1$
+                            r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
+                        }
+                        catch (Exception e) {
+                            log.error(e.getMessage(), e);
                         }
                     }
 
-                    if (StringUtils.isNotEmpty(path)) {
-                        if (repository.equalsIgnoreCase("uri")) { //$NON-NLS-1$
-                            // write ACL as is for URI security 
-                            accessType = RolesACLPage.TYPE_THIS;
-                        } else if (path.equals("/")) { //$NON-NLS-1$
-                            accessType = RolesACLPage.TYPE_SUBS;
-                            path = StringUtils.EMPTY;
+                    if ((accessType & RolesACLPage.TYPE_SUBS) != 0) {
+                        try {
+                            String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
+                            Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
+                            r.createNodeData("path").setValue(path + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
+                            r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
                         }
-
-                        if ((accessType & RolesACLPage.TYPE_THIS) != 0) {
-                            try {
-                                String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
-                                Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
-                                r.createNodeData("path").setValue(path); //$NON-NLS-1$
-                                r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
-                            }
-                            catch (Exception e) {
-                                log.error(e.getMessage(), e);
-                            }
-                        }
-
-                        if ((accessType & RolesACLPage.TYPE_SUBS) != 0) {
-                            try {
-                                String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
-                                Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
-                                r.createNodeData("path").setValue(path + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
-                                r.createNodeData("permissions").setValue(accessRight); //$NON-NLS-1$
-                            }
-                            catch (Exception e) {
-                                log.error(e.getMessage(), e);
-                            }
+                        catch (Exception e) {
+                            log.error(e.getMessage(), e);
                         }
                     }
                 }
             }
-            hm.save();
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
         }
     }
 

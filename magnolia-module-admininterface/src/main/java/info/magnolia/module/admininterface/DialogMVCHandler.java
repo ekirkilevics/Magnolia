@@ -168,6 +168,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     /**
      * Uses the SaveControl. Override to take influence.
+     * todo - this should take care of exceptions thrown while writing
+     * - onPreSave, Save and onPostSave should be allowed to throw an exception on failure
      * @return close view name
      */
     public String save() {

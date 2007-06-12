@@ -145,7 +145,7 @@ public class UserEditDialog extends ConfiguredDialog {
      * Write ACL entries under the given user node
      * @param node under which ACL for all workspaces needs to be created
      */
-    protected void writeACL(Content node) {
+    protected void writeACL(Content node) throws RepositoryException {
         // remove existing
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
@@ -159,108 +159,66 @@ public class UserEditDialog extends ConfiguredDialog {
         }
 
         // rewrite
-        try {
+        Content aclUsers;
 
-            Content aclUsers;
+        aclUsers = node.createContent(NODE_ACLUSERS, ItemType.CONTENTNODE);
 
-            aclUsers = node.createContent(NODE_ACLUSERS, ItemType.CONTENTNODE);
+        node.createContent(NODE_ACLROLES, ItemType.CONTENTNODE);
+        node.createContent(NODE_ACLCONFIG, ItemType.CONTENTNODE);
 
-            node.createContent(NODE_ACLROLES, ItemType.CONTENTNODE);
-            node.createContent(NODE_ACLCONFIG, ItemType.CONTENTNODE);
-
-            // give user permission to read and edit himself
-            Content u3 = aclUsers.createContent("0", ItemType.CONTENTNODE); //$NON-NLS-1$
-            u3.createNodeData("path").setValue(node.getHandle() + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
-            u3.createNodeData("permissions").setValue(Permission.ALL); //$NON-NLS-1$
-
-            hm.save();
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
+        // give user permission to read and edit himself
+        Content u3 = aclUsers.createContent("0", ItemType.CONTENTNODE); //$NON-NLS-1$
+        u3.createNodeData("path").setValue(node.getHandle() + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
+        u3.createNodeData("permissions").setValue(Permission.ALL); //$NON-NLS-1$
     }
 
     protected boolean onPostSave(SaveHandler saveControl) {
 
         Content node = this.getStorageNode();
 
-        Content groups = null;
+        HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(
+            ContentRepository.USER_GROUPS);
+        HierarchyManager rolesHM = MgnlContext.getSystemContext().getHierarchyManager(
+            ContentRepository.USER_ROLES);
+
         try {
-            HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(
-                ContentRepository.USER_GROUPS);
-            groups = node.getContent("groups");
-            // remove existing roles, leave the node as is
-            Iterator existingRoles = groups.getNodeDataCollection().iterator();
-            while (existingRoles.hasNext()) {
-                ((NodeData) existingRoles.next()).delete();
+            this.writeRolesOrGroups(groupsHM, node, "groups");
+            this.writeRolesOrGroups(rolesHM, node, "roles");
+            this.writeACL(node);
+            node.save();
+            return true;
+        } catch (RepositoryException re) {
+            log.error("Failed to update user, reverting all transient modifications made for this node", re);
+            try {
+                node.refresh(false);
+            } catch (RepositoryException e) {
+                log.error("Failed to revert transient modifications", re);
             }
-            List values = getDialog().getSub("groups").getValues();
-            for (int index = 0; index < values.size(); index++) {
-                String rolePath = (String) values.get(index);
-                if (StringUtils.isNotEmpty(rolePath)) {
-                    groups.createNodeData(Integer.toString(index)).setValue(groupsHM.getContent(rolePath).getUUID());
-                }
-            }
-            groups.save();
         }
-        catch (PathNotFoundException e) {
-            // it might happen if all groups are deleted via dialog
-        }
-        catch (RepositoryException re) {
-            // revert transient changes
-            if (groups != null) {
-                try {
-                    groups.refresh(false);
-                }
-                catch (RepositoryException e) {
-                    // should never come here
-                    re = e;
-                }
-            }
-            log.error("Failed to update groups", re);
-        }
-
-        Content roles = null;
-        try {
-            HierarchyManager rolesHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
-            roles = node.getContent("roles");
-            // remove existing roles, leave the node as is
-            Iterator existingRoles = roles.getNodeDataCollection().iterator();
-            while (existingRoles.hasNext()) {
-                ((NodeData) existingRoles.next()).delete();
-            }
-            List values = getDialog().getSub("roles").getValues();
-            for (int index = 0; index < values.size(); index++) {
-                String rolePath = (String) values.get(index);
-                if (StringUtils.isNotEmpty(rolePath)) {
-                    roles.createNodeData(Integer.toString(index)).setValue(rolesHM.getContent(rolePath).getUUID());
-                }
-            }
-            roles.save();
-        }
-        catch (PathNotFoundException e) {
-            // it might happen if all roles are deleted via dialog
-        }
-        catch (RepositoryException re) {
-            // revert transient changes
-            if (roles != null) {
-                try {
-                    roles.refresh(false);
-                }
-                catch (RepositoryException e) {
-                    // should never come here
-                    re = e;
-                }
-            }
-            log.error("Failed to update roles", re);
-        }
-
-        // ######################
-        // # write users and roles acl
-        // ######################
-        this.writeACL(node);
-
-        return true;
+        return false;
     }
+
+    private void writeRolesOrGroups(HierarchyManager hm, Content parentNode, String nodeName)
+            throws RepositoryException {
+        try {
+            Content groupOrRoleNode = parentNode.getContent(nodeName);
+            // remove existing roles, leave the node as is
+            Iterator existingNodes = groupOrRoleNode.getNodeDataCollection().iterator();
+            while (existingNodes.hasNext()) {
+                ((NodeData) existingNodes.next()).delete();
+            }
+            List values = getDialog().getSub(nodeName).getValues();
+            for (int index = 0; index < values.size(); index++) {
+                String path = (String) values.get(index);
+                if (StringUtils.isNotEmpty(path)) {
+                    groupOrRoleNode.createNodeData(Integer.toString(index)).setValue(hm.getContent(path).getUUID());
+                }
+            }
+        }
+        catch (PathNotFoundException e) {
+            // this might happen if all groups are deleted via dialog
+        }
+    }
+
 
 }
