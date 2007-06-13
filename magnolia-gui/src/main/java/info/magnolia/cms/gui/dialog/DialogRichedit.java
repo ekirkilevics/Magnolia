@@ -47,6 +47,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Vinzenz Wyser
  * @version 2.0
+ * @deprecated
  */
 public class DialogRichedit extends DialogBox {
 
