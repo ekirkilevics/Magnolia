@@ -15,22 +15,18 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.search.Query;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.cms.i18n.I18NSupportFactory;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.cms.link.AbsolutePathTransformer;
+import info.magnolia.cms.link.LinkHelper;
+import info.magnolia.cms.link.PathToLinkTransformer;
+import info.magnolia.cms.link.RelativePathTransformer;
+import info.magnolia.cms.link.UUIDLink;
 
-import java.util.Iterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Util to store links in a format so that one can make relative pathes on the public site. Later we will store the
@@ -46,28 +42,22 @@ public final class LinkUtil {
 
     public static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
 
-    public interface PathToLinkTransformer {
-        String transform(String uuid, String absolutePath);
-    }
-
     /**
      * Pattern to find a link
      */
-    private static final Pattern linkPattern = Pattern
-        .compile("(<a[^>]+href[ ]*=[ ]*\")(/[^\"]*).html((#[^\"]*)?\"[^>]*>)"); //$NON-NLS-1$
+    public static final Pattern LINK_OR_IMAGE_PATTERN = Pattern.compile(
+        "(<(a|img) " + // start <a or <img
+        "[^>]*" +  // some attributes
+        "(href|src)[ ]*=[ ]*\")" + // start href or src
+        "([^\"]*)" + // the link
+        "(\"" + // ending "
+        "[^>]*" + // any attributes
+        ">)"); // end the tag
 
     /**
      * Pattern that matches external and mailto: links.
      */
-    private static final Pattern externalLinkPattern = Pattern.compile("^(\\w*://|mailto:|javascript:).*");
-
-    /**
-     * Pattern to find a magnolia formatted link
-     */
-    private static Pattern uuidPattern = Pattern.compile("\\$\\{link:\\{uuid:\\{([^\\}]*)\\}," //$NON-NLS-1$
-        + "repository:\\{([^\\}]*)\\}," // has value website unless we support it //$NON-NLS-1$
-        + "workspace:\\{[^\\}]*\\}," // has value default unless we support it //$NON-NLS-1$
-        + "path:\\{([^\\}]*)\\}\\}\\}"); //$NON-NLS-1$
+    public static final Pattern EXTERNAL_LINK_PATTERN = Pattern.compile("^(\\w*://|mailto:|javascript:).*");
 
     /**
      * Logger.
@@ -82,10 +72,10 @@ public final class LinkUtil {
 
     /**
      * Determines if the given link is internal and relative.
+     * @deprecated Use {@link LinkHelper#isInternalRelativeLink(String)} instead
      */
     public static boolean isInternalRelativeLink(String href) {
-        // TODO : this could definitely be improved
-        return !externalLinkPattern.matcher(href).matches() && !href.startsWith("/") && !href.startsWith("#");
+        return LinkHelper.isInternalRelativeLink(href);
     }
 
     /**
@@ -95,21 +85,11 @@ public final class LinkUtil {
      */
     public static String convertAbsoluteLinksToUUIDs(String str) {
         // get all link tags
-        Matcher matcher = linkPattern.matcher(str);
+        Matcher matcher = LINK_OR_IMAGE_PATTERN.matcher(str);
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
-            String path = matcher.group(2);
-            String repository = mapPathToRepository(path);
-            String uuid = makeUUIDFromAbsolutePath(path, repository);
-            matcher.appendReplacement(res, "$1\\${link:{" //$NON-NLS-1$
-                + "uuid:{" //$NON-NLS-1$
-                + uuid
-                + "}," //$NON-NLS-1$
-                + "repository:{" + repository + "}," //$NON-NLS-1$
-                + "workspace:{default}," //$NON-NLS-1$
-                + "path:{" //$NON-NLS-1$
-                + path
-                + "}}}$3"); //$NON-NLS-1$
+           UUIDLink link = new UUIDLink().parseLink(matcher.group(4));
+           matcher.appendReplacement(res, "$1" + StringUtils.replace(link.toPattern(), "$", "\\$") + "$5");
         }
         matcher.appendTail(res);
         return res.toString();
@@ -134,12 +114,11 @@ public final class LinkUtil {
      * @return html with absolute links
      */
     public static String convertUUIDsToAbsoluteLinks(String str) {
-        return convertUUIDsToLinks(str, new PathToLinkTransformer(){
-            public String transform(String absolutePath, String repository) {
-                return I18NSupportFactory.getI18nSupport().toI18NURI(absolutePath);
-            }
-        });
+        return convertUUIDsToAbsoluteLinks(str, false);
+    }
 
+    public static String convertUUIDsToAbsoluteLinks(String str, boolean addContextPath) {
+        return convertUUIDsToLinks(str, new AbsolutePathTransformer(addContextPath, true, true));
     }
 
     /**
@@ -149,39 +128,16 @@ public final class LinkUtil {
      * @return html with proper links
      */
     public static String convertUUIDsToRelativeLinks(String str, final Content page) {
-        return convertUUIDsToLinks(str, new PathToLinkTransformer(){
-            public String transform(String absolutePath, String repository) {
-                String relativePath = makeRelativePath(absolutePath, page);
-                 return I18NSupportFactory.getI18nSupport().toI18NURI(relativePath);
-            }
-        });
+        return convertUUIDsToLinks(str, new RelativePathTransformer(page, true, true));
     }
 
     public static String convertUUIDsToLinks(String str, PathToLinkTransformer transformer) {
-        Matcher matcher = uuidPattern.matcher(str);
+        Matcher matcher = UUIDLink.UUID_PATTERN.matcher(str);
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
-            String uuid = matcher.group(1);
-            String repository = StringUtils.defaultIfEmpty(matcher.group(2), DEFAULT_REPOSITORY);
-            String absolutePath = matcher.group(3);
-
-            String link = null;
-
-            if (StringUtils.isNotEmpty(uuid)) {
-                link = LinkUtil.makeAbsolutePathFromUUID(uuid, repository);
-            }
-
-            // can't find the uuid
-            if (StringUtils.isEmpty(link)) {
-                link = absolutePath;
-                log.warn("Was not able to get the page by uuid. Will use the saved path {}", absolutePath);
-            }
-
-            // to relative path
-            link = transformer.transform(link, repository);
-            // TODO support other extensions than html. used for MGNLDMS-84
-            link += "." + DEFAULT_EXTENSION;
-            matcher.appendReplacement(res, link);
+            String pattern = matcher.group();
+            UUIDLink link = new UUIDLink().parseUUIDLink(pattern);
+            matcher.appendReplacement(res, transformer.transform(link));
         }
         matcher.appendTail(res);
         return res.toString();
@@ -202,35 +158,10 @@ public final class LinkUtil {
      * @return path
      */
     public static String makeAbsolutePathFromUUID(String uuid, String repository) {
-        Content content = null;
-
-        // first use the jcr:uuid (since 3.0)
-        try {
-            content = MgnlContext.getHierarchyManager(repository).getContentByUUID(uuid);
-        }
-
-        // then the old mgnl:uuid
-        // TODO remove this in later versions
-        catch (Exception e) {
-            log.debug("Was not able to get the page by the jcr:uuid. will try the old mgnl:uuid");
-
-            QueryManager qmanager = MgnlContext.getHierarchyManager(repository).getQueryManager();
-
-            if (qmanager != null) {
-                // this uses magnolia uuid
-                content = getContentByMgnlUUID(qmanager, uuid);
-            }
-            else {
-                log.info(
-                    "SearchManager not configured for website repositoy, unable to generate absolute path for UUID {}",
-                    uuid);
-            }
-        }
-
-        if (content != null) {
-            return content.getHandle();
-        }
-        return null;
+        UUIDLink link = new UUIDLink();
+        link.setRepository(repository);
+        link.setUUID(uuid);
+        return link.getHandle();
     }
 
     /**
@@ -240,27 +171,7 @@ public final class LinkUtil {
      * @return relative path
      */
     public static String makeRelativePath(String absolutePath, Content page) {
-        StringBuffer relativePath = new StringBuffer();
-        int level;
-        try {
-            level = page.getLevel();
-        }
-        catch (RepositoryException e) {
-            level = 0;
-        }
-
-        for (int i = 1; i < level; i++) {
-            relativePath.append("../"); //$NON-NLS-1$
-        }
-
-        if (absolutePath.startsWith("/")) {
-            relativePath.append(StringUtils.substringAfter(absolutePath, "/"));
-        }
-        else {
-            relativePath.append(absolutePath);
-        }
-
-        return relativePath.toString();
+       return  LinkHelper.makePathRelative(page.getHandle(), absolutePath);
     }
 
     /**
@@ -278,36 +189,10 @@ public final class LinkUtil {
      * @return the uuid if found
      */
     public static String makeUUIDFromAbsolutePath(String path, String repository) {
-        try {
-            return MgnlContext.getHierarchyManager(repository).getContent(path).getUUID();
-        }
-        catch (RepositoryException e) {
-            return path;
-        }
-    }
-
-    /**
-     * Used for old content
-     * @param queryManager
-     * @param uuid
-     * @return
-     * @deprecated
-     */
-    private static Content getContentByMgnlUUID(QueryManager queryManager, String uuid) {
-        try {
-            String statement = "SELECT * FROM nt:base where mgnl:uuid like '" + uuid + "'"; //$NON-NLS-1$ //$NON-NLS-2$
-            Query q = queryManager.createQuery(statement, Query.SQL);
-            QueryResult result = q.execute();
-            Iterator it = result.getContent().iterator();
-            while (it.hasNext()) {
-                Content foundObject = (Content) it.next();
-                return foundObject;
-            }
-        }
-        catch (RepositoryException e) {
-            log.error("Exception caught", e);
-        }
-        return null;
+        UUIDLink link = new UUIDLink();
+        link.setRepository(repository);
+        link.setHandle(path);
+        return link.getUUID();
     }
 
 }
