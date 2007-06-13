@@ -103,6 +103,39 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         this.root = root;
     }
 
+    public boolean isExist(String path) {
+        try {
+            this.getContent(path);
+            return true;
+        }
+        catch (RepositoryException e) {
+            try {
+                this.getNodeData(path);
+            }
+            catch (RepositoryException e1) {
+                return false;
+            }
+            return true;
+        }
+    }
+
+    public boolean isNodeData(String path) throws AccessDeniedException {
+        try {
+            getNodeData(path);
+        }
+        catch (RepositoryException e) {
+            return false;
+        }
+        return true;
+    }
+
+    public NodeData getNodeData(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        Content node = getContent(StringUtils.substringBeforeLast(path, "/"));
+        return node.getNodeData(StringUtils.substringAfterLast(path, "/"));
+    }
+
+
+
     public String toString() {
         final StringBuffer str = new StringBuffer();
         try {
