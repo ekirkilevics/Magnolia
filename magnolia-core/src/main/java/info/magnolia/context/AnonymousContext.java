@@ -51,17 +51,22 @@ public class AnonymousContext extends WebContextImpl {
 
     private static final Map hierarchyManagerMap = new HashMap();
 
-    private static Subject anonymousSubject = createAnonymousSubject();
+    /**
+     * kept as static for performance reasons on live instance.
+     * reinitialized on any modification event on anonymous role
+     * */
+    private static Subject anonymousSubject;
 
-    private static User anonymousUser = Security.getUserManager().getAnonymousUser();
+    private static User anonymousUser;
 
     static {
         // todo : Ideally we should allow anonymous user to have any role or group but in that case
         // we would need to observe and update this subject on any changes in users, userroles and usergroups workspaces
         ObservationUtil.registerChangeListener(ContentRepository.USER_ROLES, "/anonymous", new EventListener() {
             public void onEvent(EventIterator events) {
-                anonymousSubject = createAnonymousSubject();
-                anonymousUser = Security.getUserManager().getAnonymousUser();
+                // relogin
+                setAnonymousSubject();
+                setAnonymousUser();
                 log.info("Updated anonymous subject");
             }
         });
@@ -73,7 +78,7 @@ public class AnonymousContext extends WebContextImpl {
     }
 
     public User getUser() {
-        return anonymousUser;
+        return getAnonymousUser();
     }
 
     public HierarchyManager getHierarchyManager(String repositoryName, String workspaceName) {
@@ -96,7 +101,7 @@ public class AnonymousContext extends WebContextImpl {
         AccessManager accessManager = (AccessManager) accessManagerMap.get(repositoryName+workspaceName);
         if (null == accessManager) {
             accessManager
-                    = WorkspaceAccessUtil.getInstance().createAccessManager(anonymousSubject, repositoryName, workspaceName);
+                    = WorkspaceAccessUtil.getInstance().createAccessManager(getAnonymousSubject(), repositoryName, workspaceName);
             accessManagerMap.put(repositoryName+workspaceName, accessManager);
         }
         return accessManager;
@@ -111,15 +116,22 @@ public class AnonymousContext extends WebContextImpl {
                         getAccessManager(repositoryName, workspaceName));
                 queryManagerMap.put(repositoryName+workspaceName, queryManager);
             } catch (RepositoryException re) {
-                log.error("Failed to creare QueryManager for anonymous user", re);
+                log.error("Failed to create QueryManager for anonymous user", re);
             }
         }
         return queryManager;
     }
 
-    private static Subject createAnonymousSubject() {
-        CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(anonymousUser.getName(),
-                anonymousUser.getPassword().toCharArray());
+    private static Subject getAnonymousSubject() {
+        if (null == anonymousSubject) {
+            setAnonymousSubject();
+        }
+        return anonymousSubject;
+    }
+
+    private static void setAnonymousSubject() {
+        CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(getAnonymousUser().getName(),
+                getAnonymousUser().getPassword().toCharArray());
         try {
             LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
             loginContext.login();
@@ -128,8 +140,16 @@ public class AnonymousContext extends WebContextImpl {
         catch (LoginException le) {
             log.error("Failed to login as anonymous user", le);
         }
-        return anonymousSubject;
     }
 
+    private static User getAnonymousUser() {
+        if (null == anonymousUser) {
+            setAnonymousUser();
+        }
+        return anonymousUser;
+    }
 
+    private static void setAnonymousUser() {
+        anonymousUser = Security.getUserManager().getAnonymousUser();
+    }
 }
