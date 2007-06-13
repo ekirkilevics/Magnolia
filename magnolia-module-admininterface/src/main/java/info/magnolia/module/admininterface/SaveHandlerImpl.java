@@ -360,20 +360,18 @@ public class SaveHandlerImpl implements SaveHandler {
      * @throws RepositoryException
      * @throws PathNotFoundException
      */
-    private String updateLinks(Content node, String name, String valueStr) throws AccessDeniedException,
+    protected String updateLinks(Content node, String name, String valueStr) throws AccessDeniedException,
         RepositoryException, PathNotFoundException {
-        // encode the internal links to avoid dependences from the contextpath, position of the page
-        valueStr = LinkUtil.convertAbsoluteLinksToUUIDs(valueStr);
+
+        System.out.println(valueStr);
 
         // process the images and uploaded files
         HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
 
         Pattern imageOrDowloadPattern = Pattern.compile("(<(a|img)[^>]+(href|src)[ ]*=[ ]*\")([^\"]*)(\"[^>]*>)");
-        Pattern tmpFilePattern = Pattern.compile(MgnlContext.getContextPath() + "/tmp/fckeditor/([^/]*)/[^\"]*");
+        Pattern tmpFilePattern = Pattern.compile("/tmp/fckeditor/([^/]*)/[^\"]*");
 
         Content filesNode = ContentUtil.getOrCreateContent(node, name + "_files", ItemType.CONTENTNODE);
-
-        String pageName = StringUtils.substringAfterLast(this.getPath(), "/");
 
         // not usedFiles are removed after saving
         List usedFiles = new ArrayList();
@@ -384,15 +382,10 @@ public class SaveHandlerImpl implements SaveHandler {
         while (imageOrDowloadMatcher.find()) {
             String src = imageOrDowloadMatcher.group(4);
 
-            // the editor creates relative links after moving an absolute path: ../../../ replace them
-            src = StringUtils.replace(src, "../../../", MgnlContext.getContextPath() + "/");
-
-            String link = src;
+            String link = StringUtils.removeStart(src, MgnlContext.getContextPath());
 
             // process the tmporary uploaded files
             Matcher tmpFileMatcher = tmpFilePattern.matcher(src);
-
-            String subpath = StringUtils.removeStart(filesNode.getHandle(), this.getPath() + "/");
 
             if (tmpFileMatcher.find()) {
                 String uuid = tmpFileMatcher.group(1);
@@ -400,7 +393,7 @@ public class SaveHandlerImpl implements SaveHandler {
                 Document doc = FCKEditorTmpFiles.getDocument(uuid);
                 String fileNodeName = Path.getUniqueLabel(hm, filesNode.getHandle(), "file");
                 SaveHandlerImpl.saveDocument(filesNode, doc, fileNodeName, "", "");
-                link = pageName + "/" + subpath + "/" + fileNodeName + "/" + doc.getFileNameWithExtension();
+                link = filesNode.getHandle() + "/" + fileNodeName + "/" + doc.getFileNameWithExtension();
                 doc.delete();
                 try {
                     FileUtils.deleteDirectory(new java.io.File(Path.getTempDirectory() + "/fckeditor/" + uuid));
@@ -409,19 +402,13 @@ public class SaveHandlerImpl implements SaveHandler {
                     log.error("can't delete tmp file [" + Path.getTempDirectory() + "/fckeditor/" + uuid + "]");
                 }
             }
-            // make internal links relative
-            // note MgnlContext.getContextPath() can be empty and url may be absolute (http:// ftp:// mailto: ...)
-            // @todo this only handles links to children pages
-            else if (src.startsWith(MgnlContext.getContextPath() + this.getPath())) {
-                link = pageName + StringUtils.removeStart(src, MgnlContext.getContextPath() + this.getPath());
-            }
 
             // internal uuid links have a leading $
             link = StringUtils.replace(link, "$", "\\$");
 
             imageOrDowloadMatcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
-            if(link.startsWith(pageName + "/" + subpath)){
-                String fileNodeName = StringUtils.removeStart(link, pageName + "/" + subpath + "/");
+            if(link.startsWith(filesNode.getHandle())){
+                String fileNodeName = StringUtils.removeStart(link, filesNode.getHandle() + "/");
                 fileNodeName = StringUtils.substringBefore(fileNodeName, "/");
                 usedFiles.add(fileNodeName);
             }
@@ -431,12 +418,20 @@ public class SaveHandlerImpl implements SaveHandler {
         for (Iterator iter = filesNode.getNodeDataCollection().iterator(); iter.hasNext();) {
             NodeData fileNodeData = (NodeData) iter.next();
             if(!usedFiles.contains(fileNodeData.getName())){
+                System.out.println("delete" + fileNodeData.getHandle());
                 fileNodeData.delete();
             }
         }
 
         imageOrDowloadMatcher.appendTail(res);
         valueStr = res.toString();
+
+        System.out.println(valueStr);
+
+        // encode the internal links to avoid dependences from the contextpath, position of the page
+        valueStr = LinkUtil.convertAbsoluteLinksToUUIDs(valueStr);
+
+        System.out.println(valueStr);
         return valueStr;
     }
 
