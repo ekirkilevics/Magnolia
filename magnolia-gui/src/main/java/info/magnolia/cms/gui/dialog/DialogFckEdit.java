@@ -14,6 +14,9 @@ package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ControlImpl;
+import info.magnolia.cms.link.AbsolutePathTransformer;
+import info.magnolia.cms.link.LinkHelper;
+import info.magnolia.cms.link.UUIDLink;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.context.MgnlContext;
 
@@ -232,7 +235,7 @@ public class DialogFckEdit extends DialogBox {
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
                 + this.getRequest().getContextPath()
                 + "/.resources/fckeditor/fckeditor.js\"></script>"); //$NON-NLS-1$
-            getRequest().setAttribute(ATTRIBUTE_FCKED_LOADED, "true"); //$NON-NLS-1$ 
+            getRequest().setAttribute(ATTRIBUTE_FCKED_LOADED, "true"); //$NON-NLS-1$
         }
 
         String id = getName();
@@ -355,7 +358,18 @@ public class DialogFckEdit extends DialogBox {
             value = value.replaceAll("\r\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
             value = value.replaceAll("\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
 
-            value = LinkUtil.convertUUIDsToAbsoluteLinks(value);
+            // we have to add the context path for images and files but not for pages!
+            value = LinkUtil.convertUUIDsToLinks(value, new AbsolutePathTransformer(true, true, false){
+                public String transform(UUIDLink uuidLink) {
+                    // not a link to a binary
+                    if(uuidLink.getNodeData() == null){
+                        setAddContextPath(false);
+                    }
+                    String link = super.transform(uuidLink);
+                    setAddContextPath(true);
+                    return link;
+                }
+            });
 
             Pattern imagePattern = Pattern.compile("(<(a|img)[^>]+(src|href)[ ]*=[ ]*\")([^\"]*)(\"[^>]*>)"); //$NON-NLS-1$
 
@@ -365,7 +379,7 @@ public class DialogFckEdit extends DialogBox {
                 String src = matcher.group(4);
 
                 // process only internal and relative links
-                if (LinkUtil.isInternalRelativeLink(src)) {
+                if (LinkHelper.isInternalRelativeLink(src)) {
                     String link = this.getRequest().getContextPath()
                         + this.getTopParent().getConfigValue("path")
                         + "/"
