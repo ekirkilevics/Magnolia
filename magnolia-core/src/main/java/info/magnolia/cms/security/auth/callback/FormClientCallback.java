@@ -40,8 +40,8 @@ public class FormClientCallback extends AbstractHttpClientCallback {
     public void doCallback(HttpServletRequest request, HttpServletResponse response) {
         try {
             if (!response.isCommitted()) {
+                response.setContentType("text/html");
                 if (null == request.getCharacterEncoding()) {
-                    response.setContentType("text/html");
                     response.setCharacterEncoding(MIMEMapping.getContentEncodingOrDefault("text/html"));
                 }
             }
