@@ -13,6 +13,7 @@
 package info.magnolia.cms.security.auth.callback;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Sameer Charles
@@ -22,7 +23,7 @@ public class BasicClientCallback extends AbstractHttpClientCallback {
 
     private String realmName;
 
-    public void doCallback(HttpServletResponse response) {
+    public void doCallback(HttpServletRequest request, HttpServletResponse response) {
         response.setHeader("WWW-Authenticate", "BASIC realm=\"" + getRealmName() + "\"");
     }
 

@@ -13,6 +13,7 @@
 package info.magnolia.cms.security.auth.callback;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Sameer Charles
@@ -20,6 +21,6 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface HttpClientCallback {
 
-    public void handle(HttpServletResponse response);
+    public void handle(HttpServletRequest request, HttpServletResponse response);
 
 }

@@ -55,7 +55,7 @@ public abstract class BaseSecurityFilter extends AbstractMagnoliaFilter {
         if (httpsession != null) {
             httpsession.invalidate();
         }
-        getClientCallback().handle(response);
+        getClientCallback().handle(request, response);
     }
 
     public HttpClientCallback getClientCallback() {

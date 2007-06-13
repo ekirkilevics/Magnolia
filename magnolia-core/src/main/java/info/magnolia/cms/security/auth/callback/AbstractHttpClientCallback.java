@@ -13,6 +13,7 @@
 package info.magnolia.cms.security.auth.callback;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Sameer Charles
@@ -20,11 +21,11 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class AbstractHttpClientCallback implements HttpClientCallback {
 
-    public void handle(HttpServletResponse response) {
+    public void handle(HttpServletRequest request, HttpServletResponse response) {
         response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-        this.doCallback(response);
+        this.doCallback(request, response);
     }
 
-    public abstract void doCallback(HttpServletResponse response);
+    public abstract void doCallback(HttpServletRequest request, HttpServletResponse response);
 
 }
