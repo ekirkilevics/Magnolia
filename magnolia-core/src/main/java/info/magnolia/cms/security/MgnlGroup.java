@@ -127,10 +127,10 @@ public class MgnlGroup implements Group {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
+                hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
             }
 
             Content node = groupNode.getContent(nodeName);
