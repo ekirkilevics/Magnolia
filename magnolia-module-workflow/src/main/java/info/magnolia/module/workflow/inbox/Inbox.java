@@ -12,7 +12,6 @@
  */
 package info.magnolia.module.workflow.inbox;
 
-import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBar;
@@ -25,7 +24,6 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.DateUtil;
 import info.magnolia.freemarker.FreemarkerUtil;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.lists.AbstractList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
@@ -100,7 +98,7 @@ public class Inbox extends AbstractList {
                 String path = ObjectUtils.toString(list.getIteratorValue("path"));
 
                 StringBuffer js = new StringBuffer();
-                js.append("mgnl.owfe.Inbox.current = {");
+                js.append("mgnl.workflow.Inbox.current = {");
                 js.append("id : '").append(list.getIteratorValue("id")).append("',");
                 js.append("path : '").append(path).append("',");
                 js.append("version : '").append(list.getIteratorValue("version")).append("',");
@@ -108,13 +106,13 @@ public class Inbox extends AbstractList {
                 js.append("workItemPath : '").append(list.getIteratorValue("workItemPath")).append("',");
                 js.append("editDialog : '").append(editDialog).append("'");
                 js.append("};");
-                js.append("mgnl.owfe.Inbox.show = ").append(getShowJSFunction(repository, path)).append(";");
+                js.append("mgnl.workflow.Inbox.show = ").append(getShowJSFunction(repository, path)).append(";");
                 js.append(super.onSelect(list, index));
                 return js.toString();
             }
 
             public String onDblClick(ListControl list, Integer index) {
-                return "mgnl.owfe.Inbox.edit();";
+                return "mgnl.workflow.Inbox.edit();";
             }
         });
 
@@ -127,7 +125,7 @@ public class Inbox extends AbstractList {
             {
                 setName("icon");
                 setLabel("");
-                setWidth("25px");
+                setWidth("30px");
                 setSeparator(false);
             }
 
@@ -137,7 +135,7 @@ public class Inbox extends AbstractList {
                 return "<img src=\""
                     + MgnlContext.getContextPath()
                     + "/"
-                    + getIcon(repository, path)
+                    + InboxHelper.getIcon(repository, path)
                     + "\" alt=\"\" border=\"0\" />";
             }
         });
@@ -169,20 +167,8 @@ public class Inbox extends AbstractList {
 
     }
 
-    protected String getIcon(String repository, String path) {
-        if (StringUtils.equals(repository, "website")) {
-            return ".resources/icons/16/document_plain_earth.gif";
-        }
-        if (StringUtils.equals(repository, "dms")) {
-            String type = NodeDataUtil.getString(repository, path + "/type");
-            return MIMEMapping.getMIMETypeIcon(type);
-        }
-
-        return ".resources/icons/16/mail.gif";
-    }
-
     protected String getShowJSFunction(String repository, String path) {
-        return "mgnl.owfe.Inbox.showFunctions." + repository;
+        return "mgnl.workflow.Inbox.showFunctions." + repository;
     }
 
     /**
@@ -191,33 +177,33 @@ public class Inbox extends AbstractList {
     public void configureContextMenu(ContextMenu menu) {
         ContextMenuItem edit = new ContextMenuItem("edit");
         edit.setLabel(msgs.get("inbox.edit"));
-        edit.setOnclick("mgnl.owfe.Inbox.edit();");
+        edit.setOnclick("mgnl.workflow.Inbox.edit();");
         edit.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/mail_write.gif");
-        edit.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
+        edit.addJavascriptCondition("{test: function(){return mgnl.workflow.Inbox.current.id!=null}}");
 
         ContextMenuItem show = new ContextMenuItem("show");
         show.setLabel(msgs.get("inbox.show"));
-        show.setOnclick("mgnl.owfe.Inbox.show();");
+        show.setOnclick("mgnl.workflow.Inbox.show();");
         show.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/note_view.gif");
-        show.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
+        show.addJavascriptCondition("{test: function(){return mgnl.workflow.Inbox.current.id!=null}}");
 
         ContextMenuItem proceed = new ContextMenuItem("proceed");
         proceed.setLabel(msgs.get("inbox.proceed"));
-        proceed.setOnclick("mgnl.owfe.Inbox.proceed();");
+        proceed.setOnclick("mgnl.workflow.Inbox.proceed();");
         proceed.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/navigate_right2_green.gif");
-        proceed.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
+        proceed.addJavascriptCondition("{test: function(){return mgnl.workflow.Inbox.current.id!=null}}");
 
         ContextMenuItem reject = new ContextMenuItem("reject");
         reject.setLabel(msgs.get("inbox.reject"));
-        reject.setOnclick("mgnl.owfe.Inbox.reject();");
+        reject.setOnclick("mgnl.workflow.Inbox.reject();");
         reject.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/navigate_left2_red.gif");
-        reject.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
+        reject.addJavascriptCondition("{test: function(){return mgnl.workflow.Inbox.current.id!=null}}");
 
         ContextMenuItem cancel = new ContextMenuItem("cancel");
         cancel.setLabel(msgs.get("inbox.cancel"));
-        cancel.setOnclick("mgnl.owfe.Inbox.cancel();");
+        cancel.setOnclick("mgnl.workflow.Inbox.cancel();");
         cancel.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/delete2.gif");
-        cancel.addJavascriptCondition("{test: function(){return mgnl.owfe.Inbox.current.id!=null}}");
+        cancel.addJavascriptCondition("{test: function(){return mgnl.workflow.Inbox.current.id!=null}}");
 
         menu.addMenuItem(edit);
         menu.addMenuItem(null);
