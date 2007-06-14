@@ -26,7 +26,7 @@ public class DialogLine {
     /**
      * Empty constructor should only be used by DialogFactory.
      */
-    protected DialogLine() {
+    public DialogLine() {
     }
 
     public String getHtml() {
