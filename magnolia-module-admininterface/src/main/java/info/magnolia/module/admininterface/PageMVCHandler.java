@@ -65,6 +65,11 @@ public abstract class PageMVCHandler extends CommandBasedMVCServletHandler {
     private RequestFormUtil params;
 
     /**
+     * Basename used to get messages
+     */
+    private String i18nBasename = MessagesManager.DEFAULT_BASENAME;
+
+    /**
      * Constuctor
      * @param name
      * @param request
@@ -75,7 +80,6 @@ public abstract class PageMVCHandler extends CommandBasedMVCServletHandler {
 
         setForm(Resource.getPostedForm(request));
         setParams(new RequestFormUtil(request, getForm()));
-        setMsgs(MessagesManager.getMessages());
     }
 
     /**
@@ -121,6 +125,9 @@ public abstract class PageMVCHandler extends CommandBasedMVCServletHandler {
      * @return Returns the msgs.
      */
     protected Messages getMsgs() {
+        if(msgs == null){
+            msgs = MessagesManager.getMessages(getI18nBasename());
+        }
         return msgs;
     }
 
@@ -136,5 +143,15 @@ public abstract class PageMVCHandler extends CommandBasedMVCServletHandler {
      */
     protected RequestFormUtil getParams() {
         return params;
+    }
+
+
+    public String getI18nBasename() {
+        return this.i18nBasename;
+    }
+
+
+    public void setI18nBasename(String basename) {
+        this.i18nBasename = basename;
     }
 }
