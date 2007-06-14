@@ -10,62 +10,62 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
- 
-classDef("mgnl.owfe.Inbox", {
+
+classDef("mgnl.workflow.Inbox", {
     /**
      * Some default show functions
      */
-	showFunctions:{
-		website: function(){
-			var url = this.current.path;
+    showFunctions:{
+        website: function(){
+            var url = this.current.path;
 
-		    if(contextPath.length != 0){
-    			url = contextPath + url;
-    		}
-			url += ".html";
-			if(this.current.version != null && this.current.version.length >0){
-				url += "?mgnlVersion=" + this.current.version;
-			}
-			var w = window.open(url);
-			w.focus();
-		},
-		
-		dms: function(){
-			if(this.current.version != null && this.current.version.length >0){
-				mgnl.dms.DMS.showVersion(this.current.path, this.current.version);
-			}
-			else{
-				mgnl.dms.DMS.show(this.current.path);
-			}
-		}
-	},
+            if(contextPath.length != 0){
+                url = contextPath + url;
+            }
+            url += ".html";
+            if(this.current.version != null && this.current.version.length >0){
+                url += "?mgnlVersion=" + this.current.version;
+            }
+            var w = window.open(url);
+            w.focus();
+        },
+
+        dms: function(){
+            if(this.current.version != null && this.current.version.length >0){
+                mgnl.dms.DMS.showVersion(this.current.path, this.current.version);
+            }
+            else{
+                mgnl.dms.DMS.show(this.current.path);
+            }
+        }
+    },
 
     /**
      * The currently selected objects.
      */
     current: {
-    	id:null, 
-    	path:null, 
-    	repository: null,
-    	workItemPath: null,
-    	editDialog: 'inboxComment'
+        id:null,
+        path:null,
+        repository: null,
+        workItemPath: null,
+        editDialog: 'inboxComment'
     },
-    
+
     /**
      * The inbox will override this function depending on what you select
      */
-	show: function(){},
-	
+    show: function(){},
+
     edit: function(){
-    	mgnlOpenDialog(this.current.workItemPath + '/value/attributes','','',this.current.editDialog, 'Store');
+        mgnlOpenDialog(this.current.workItemPath + '/value/attributes','','',this.current.editDialog, 'Store');
     },
-    
+
     proceed: function(){
         $('flowItemId').value = this.current.id;
         $('command').value = "proceed";
         document.mgnlForm.submit();
     },
-    
+
     reject: function(id){
         id = id==null ? this.current.id : id;
         $('flowItemId').value = id;
@@ -79,7 +79,6 @@ classDef("mgnl.owfe.Inbox", {
         $('command').value = "cancel";
         document.mgnlForm.submit();
     }
-    
+
 });
- 
- 
+
