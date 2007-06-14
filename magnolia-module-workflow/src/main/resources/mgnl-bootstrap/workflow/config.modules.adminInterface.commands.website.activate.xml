@@ -17,7 +17,7 @@
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>dcdab6ae-ce37-4017-bdd5-aaa46b200c4c</sv:value>
+      <sv:value>69094877-d781-495b-8d4a-e4266764e4b6</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -59,7 +59,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>c6d63767-1668-48f7-81e6-b01924670636</sv:value>
+        <sv:value>5f11ea81-dd23-4fc9-8c2c-774cc765211b</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -97,6 +97,9 @@
     <sv:property sv:name="workflowName" sv:type="String">
       <sv:value>activation</sv:value>
     </sv:property>
+    <sv:property sv:name="dialogName" sv:type="String">
+      <sv:value>editActivationWorkItem</sv:value>
+    </sv:property>
     <sv:property sv:name="enabled" sv:type="Boolean">
       <sv:value>true</sv:value>
     </sv:property>
@@ -105,7 +108,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>691d8d8a-bf55-4564-96a7-a851a8173b07</sv:value>
+        <sv:value>fa2bacac-915b-4251-96ff-d612139dc710</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -114,7 +117,7 @@
         <sv:value>2006-03-28T16:32:00.154+08:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2007-05-24T11:20:14.313+02:00</sv:value>
+        <sv:value>2007-05-29T16:02:47.530+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:activated" sv:type="Boolean">
         <sv:value>false</sv:value>
@@ -142,7 +145,7 @@
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>c843ff77-e64b-4e0c-89c7-1841494f76cd</sv:value>
+          <sv:value>2b97b4db-9598-42d6-961a-f400858e8f30</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -168,6 +171,9 @@
         <sv:property sv:name="workflowName" sv:type="String">
           <sv:value>activation-special</sv:value>
         </sv:property>
+        <sv:property sv:name="dialogName" sv:type="String">
+          <sv:value/>
+        </sv:property>
         <sv:property sv:name="enabled" sv:type="Boolean">
           <sv:value>false</sv:value>
         </sv:property>
@@ -179,7 +185,7 @@
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>278bcf2f-4f3f-4b2e-ad43-0d2cfae0d71d</sv:value>
+            <sv:value>1734830d-6cec-4b43-92b9-ba74e219bbce</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:authorid" sv:type="String">
             <sv:value>superuser</sv:value>
@@ -188,7 +194,7 @@
             <sv:value>2007-05-23T18:29:24.095+02:00</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2007-05-24T11:17:27.092+02:00</sv:value>
+            <sv:value>2007-05-29T16:02:24.583+02:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
@@ -221,7 +227,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>cfa35f14-434f-411b-9b88-d62a3ab17c06</sv:value>
+        <sv:value>f75f7e6c-953b-4c36-afdc-d0fba663a106</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
