@@ -26,12 +26,9 @@ import java.util.Calendar;
 import java.util.Date;
 
 import javax.jcr.RepositoryException;
-import javax.mail.Message;
-
-import openwfe.org.engine.workitem.AttributeException;
 import openwfe.org.engine.workitem.LaunchItem;
-import openwfe.org.engine.workitem.StringAttribute;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,6 +98,13 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
         return ((attributeName.equals(WorkflowConstants.ATTRIBUTE_START_DATE)) || (attributeName.equals(WorkflowConstants.ATTRIBUTE_END_DATE)));
     }
 
+    public String getDialogName() {
+        String dialogName = super.getDialogName();
+        if(StringUtils.isEmpty(WorkflowConstants.DEFAULT_EDIT_DIALOG)){
+            return WorkflowConstants.DEFAULT_ACTIVATION_EDIT_DIALOG;
+        }
+        return dialogName;
+    }
 
     public boolean isRecursive() {
         return this.recursive;
@@ -110,5 +114,6 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
     public void setRecursive(boolean recursive) {
         this.recursive = recursive;
     }
+
 
 }
