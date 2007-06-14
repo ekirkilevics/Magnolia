@@ -14,6 +14,8 @@ package info.magnolia.cms.util;
 
 import java.util.regex.Pattern;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * An implementation of URLPattern which matches strings using simple <code>*</code> or <code>?</code> wildcards.
@@ -61,7 +63,7 @@ public final class SimpleUrlPattern implements UrlPattern {
      * @return a RegExp pattern
      */
     public SimpleUrlPattern(String string) {
-        this.length = string.length();
+        this.length = StringUtils.removeEnd(string, "*").length();
         this.pattern = Pattern.compile(getEncodedString(string));
         this.patternString = string;
     }
