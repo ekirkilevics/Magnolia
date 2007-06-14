@@ -48,28 +48,13 @@ public class WorkflowUtil {
     private final static Logger log = LoggerFactory.getLogger(WorkflowUtil.class.getName());
 
     /**
-     * Where the work items are stored
-     */
-    private static JCRWorkItemStore storage;
-
-    static {
-
-        try {
-            storage = new JCRWorkItemStore();
-        }
-        catch (Exception e) {
-            log.error("can't initialize the workflow util", e);
-        }
-    }
-
-    /**
      * Util: don't instantiate
      */
     private WorkflowUtil() {
     }
 
     public static JCRWorkItemStore getWorkItemStore(){
-        return storage;
+        return WorkflowModule.getWorkItemStore();
     }
 
     public static void launchFlow(LaunchItem li) {
@@ -185,7 +170,7 @@ public class WorkflowUtil {
     public static InFlowWorkItem getWorkItem(String id) {
         InFlowWorkItem wi = null;
         try {
-            wi = storage.retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(id));
+            wi = getWorkItemStore().retrieveWorkItem(StringUtils.EMPTY, FlowExpressionId.fromParseableString(id));
         }
         catch (StoreException e) {
             log.error("can't get the workitem by expression [" + id + "]", e);
@@ -194,7 +179,7 @@ public class WorkflowUtil {
     }
 
     public static String getPath(String id){
-        return storage.createPathFromId(FlowExpressionId.fromParseableString(id));
+        return getWorkItemStore().createPathFromId(FlowExpressionId.fromParseableString(id));
     }
 
     /**
@@ -242,7 +227,7 @@ public class WorkflowUtil {
             log.info("xpath query string = " + queryString);
         }
 
-        final List doQuery = storage.doQuery(queryString.toString());
+        final List doQuery = getWorkItemStore().doQuery(queryString.toString());
         long end = System.currentTimeMillis();
         log.debug("Retrieving workitems done. (Took " + (end - start) + " ms)");
         return doQuery;
@@ -285,7 +270,7 @@ public class WorkflowUtil {
 
         try {
             wi.addAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, new StringAttribute(userName));
-            storage.storeWorkItem(StringUtils.EMPTY, wi);
+            getWorkItemStore().storeWorkItem(StringUtils.EMPTY, wi);
         }
         catch (Exception e) {
             log.error("assign work item to user " + userName + " failed.)", e);
@@ -317,7 +302,7 @@ public class WorkflowUtil {
         if (log.isDebugEnabled()) {
             log.debug("xpath query string = " + queryString);
         }
-        return storage.doQuery(queryString.toString());
+        return getWorkItemStore().doQuery(queryString.toString());
 
     }
 
@@ -338,7 +323,7 @@ public class WorkflowUtil {
         if (log.isDebugEnabled()) {
             log.debug("xpath query string = " + queryString);
         }
-        return storage.doQuery(queryString.toString());
+        return getWorkItemStore().doQuery(queryString.toString());
     }
 
     /**
@@ -346,7 +331,7 @@ public class WorkflowUtil {
      */
     private static void removeWorkItem(InFlowWorkItem wi) {
         try {
-            storage.removeWorkItem(wi.getId());
+            getWorkItemStore().removeWorkItem(wi.getId());
         }
         catch (StoreException e) {
             log.error("can't remove workitem", e);

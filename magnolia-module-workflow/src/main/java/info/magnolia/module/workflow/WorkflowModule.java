@@ -22,8 +22,11 @@ import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.module.admininterface.AbstractAdminModule;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
+import info.magnolia.module.workflow.jcr.JCRWorkItemStore;
 import openwfe.org.ServiceException;
 import openwfe.org.engine.impl.expool.SimpleExpressionPool;
+import openwfe.org.worklist.store.WorkItemStore;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -51,6 +54,8 @@ public class WorkflowModule extends AbstractAdminModule {
      * The current used engine
      */
     private JCRPersistedEngine wfEngine;
+
+    private JCRWorkItemStore workItemStore;
 
     /**
      * Do we backup the deleted workitems?
@@ -82,9 +87,10 @@ public class WorkflowModule extends AbstractAdminModule {
         }
         instance = this;
         startEngine();
+        initializeWorkItemStore();
     }
 
-    private void startEngine() {
+    protected void startEngine() {
         try {
             log.info("Starting openwfe engine");
             wfEngine = new JCRPersistedEngine(deferredExpressionStorage);
@@ -95,6 +101,15 @@ public class WorkflowModule extends AbstractAdminModule {
         }
         catch (Exception e) {
             log.error("An exception arised when creating the workflow engine", e);
+        }
+    }
+
+    protected void initializeWorkItemStore() {
+        try {
+            workItemStore = new JCRWorkItemStore();
+        }
+        catch (Exception e) {
+            log.error("can't initialize the workflow util", e);
         }
     }
 
@@ -120,6 +135,13 @@ public class WorkflowModule extends AbstractAdminModule {
      */
     static public JCRPersistedEngine getEngine() {
         return instance.wfEngine;
+    }
+
+    /**
+     * return the global work flow engine
+     */
+    static public JCRWorkItemStore getWorkItemStore() {
+        return instance.workItemStore;
     }
 
     // an easy and ugly way to access this config param

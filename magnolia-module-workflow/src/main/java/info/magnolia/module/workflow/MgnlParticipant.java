@@ -15,7 +15,7 @@ package info.magnolia.module.workflow;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
+import info.magnolia.module.workflow.jcr.JCRWorkItemStore;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.CancelItem;
 import openwfe.org.engine.workitem.InFlowWorkItem;
@@ -41,17 +41,17 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
      */
     private static Logger log = LoggerFactory.getLogger(AbstractEmbeddedParticipant.class);
 
-    JCRWorkItemAPI storage = null;
+    JCRWorkItemStore storage = null;
 
     public MgnlParticipant() throws Exception {
         super();
-        this.storage = new JCRWorkItemAPI();
+        this.storage = WorkflowUtil.getWorkItemStore();
         log.debug("storage = {}", this.storage);
     }
 
     public MgnlParticipant(String name) throws Exception {
         super(name);
-        this.storage = new JCRWorkItemAPI();
+        this.storage = WorkflowUtil.getWorkItemStore();
         log.debug("storage = {}", this.storage);
     }
 
