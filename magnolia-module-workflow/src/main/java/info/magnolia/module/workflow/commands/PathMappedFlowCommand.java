@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * Map paths to workflows.
  * @author philipp
@@ -29,42 +31,6 @@ public class PathMappedFlowCommand extends FlowCommand {
     private String path;
 
     /**
-     * Used to definen the mappings
-     */
-    public static class Mapping {
-
-        private String path;
-
-        private String workflowName;
-
-        private boolean enabled = true;
-
-        public String getPath() {
-            return this.path;
-        }
-
-        public void setPath(String path) {
-            this.path = path;
-        }
-
-        public String getWorkflowName() {
-            return this.workflowName;
-        }
-
-        public void setWorkflowName(String workflowName) {
-            this.workflowName = workflowName;
-        }
-
-        public boolean isEnabled() {
-            return this.enabled;
-        }
-
-        public void setEnabled(boolean enabled) {
-            this.enabled = enabled;
-        }
-    }
-
-    /**
      * In case there is a mapping defined the mapping is used otherwise we fall back to the normal behavior.
      */
     public String getWorkflowName() {
@@ -75,6 +41,15 @@ public class PathMappedFlowCommand extends FlowCommand {
             }
         }
         return super.getWorkflowName();
+    }
+    public String getDialogName() {
+        for (Iterator iter = getMappings().iterator(); iter.hasNext();) {
+            Mapping mapping = (Mapping) iter.next();
+            if(path.startsWith(mapping.getPath()) && StringUtils.isNotEmpty(mapping.getDialogName())){
+                return mapping.getDialogName();
+            }
+        }
+        return super.getDialogName();
     }
 
     public Collection getMappings() {
@@ -105,6 +80,54 @@ public class PathMappedFlowCommand extends FlowCommand {
 
     public void setRepository(String repository) {
         this.repository = repository;
+    }
+
+    /**
+     * Used to definen the mappings
+     */
+    public static class Mapping {
+
+        private String path;
+
+        private String workflowName;
+
+        private String dialogName;
+
+        private boolean enabled = true;
+
+        public String getPath() {
+            return this.path;
+        }
+
+        public void setPath(String path) {
+            this.path = path;
+        }
+
+        public String getWorkflowName() {
+            return this.workflowName;
+        }
+
+        public void setWorkflowName(String workflowName) {
+            this.workflowName = workflowName;
+        }
+
+        public boolean isEnabled() {
+            return this.enabled;
+        }
+
+        public void setEnabled(boolean enabled) {
+            this.enabled = enabled;
+        }
+
+
+        public String getDialogName() {
+            return this.dialogName;
+        }
+
+
+        public void setDialogName(String dialogName) {
+            this.dialogName = dialogName;
+        }
     }
 
 }
