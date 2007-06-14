@@ -33,12 +33,17 @@ import org.slf4j.LoggerFactory;
 
 public class FlowCommand extends MgnlCommand {
 
+    private static Logger log = LoggerFactory.getLogger(FlowCommand.class);
+
     /**
      * The name of the workflow to start
      */
     private String workflowName = WorkflowConstants.DEFAULT_WORKFLOW;
 
-    private static Logger log = LoggerFactory.getLogger(FlowCommand.class);
+    /**
+     * The dialog used in the inbox
+     */
+    private String dialogName = WorkflowConstants.DEFAULT_EDIT_DIALOG;
 
     public boolean execute(Context ctx) throws FlowDefinitionException {
         // Get the references
@@ -67,6 +72,8 @@ public class FlowCommand extends MgnlCommand {
         serializableMap.put(WorkflowConstants.ATTRIBUTE_USERNAME, context.getUser().getName());
         StringMapAttribute attrs = AttributeUtils.java2attributes(serializableMap);
         launchItem.setAttributes(attrs);
+        // set the dialog to use in the inbox
+        launchItem.getAttributes().sput(WorkflowConstants.ATTRIBUTE_EDIT_DIALOG, getDialogName());
     }
 
     public String getWorkflowName() {
@@ -75,5 +82,15 @@ public class FlowCommand extends MgnlCommand {
 
     public void setWorkflowName(String flowName) {
         this.workflowName = flowName;
+    }
+
+
+    public String getDialogName() {
+        return this.dialogName;
+    }
+
+
+    public void setDialogName(String dialogName) {
+        this.dialogName = dialogName;
     }
 }
