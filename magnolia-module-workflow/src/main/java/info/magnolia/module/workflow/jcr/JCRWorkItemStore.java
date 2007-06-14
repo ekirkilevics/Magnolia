@@ -49,8 +49,8 @@ import java.util.List;
  * @author Nicolas Modrzyk
  * @author John Mettraux
  */
-public class JCRWorkItemAPI {
-    private final static Logger log = LoggerFactory.getLogger(JCRWorkItemAPI.class.getName());
+public class JCRWorkItemStore {
+    private final static Logger log = LoggerFactory.getLogger(JCRWorkItemStore.class.getName());
 
     private static final String BACKUP_REL = "backup";
     private static final String BACKUP = "/" + BACKUP_REL;
@@ -58,7 +58,7 @@ public class JCRWorkItemAPI {
     private final HierarchyManager hm;
     private final boolean shouldBackupWorkItems;
 
-    public JCRWorkItemAPI() throws Exception {
+    public JCRWorkItemStore() throws Exception {
         this.hm = MgnlContext.getSystemContext().getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
         if (this.hm == null) {
             Exception e = new Exception("Can't get HierarchyManager Object for workitems repository");
@@ -141,7 +141,7 @@ public class JCRWorkItemAPI {
      * @return
      * @throws Exception
      */
-    public static InFlowWorkItem loadWorkItem(Content ct) throws Exception {
+    public InFlowWorkItem loadWorkItem(Content ct) throws Exception {
         OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null, new MgnlNode(ct.getContent(WorkflowConstants.NODEDATA_VALUE)));
         return (InFlowWorkItem) coder.decode();
     }

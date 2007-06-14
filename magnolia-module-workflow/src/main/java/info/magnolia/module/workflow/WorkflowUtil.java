@@ -19,7 +19,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.flows.FlowDefinitionException;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
-import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
+import info.magnolia.module.workflow.jcr.JCRWorkItemStore;
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowItem;
 import openwfe.org.engine.workitem.InFlowWorkItem;
@@ -50,12 +50,12 @@ public class WorkflowUtil {
     /**
      * Where the work items are stored
      */
-    private static JCRWorkItemAPI storage;
+    private static JCRWorkItemStore storage;
 
     static {
-        
+
         try {
-            storage = new JCRWorkItemAPI();
+            storage = new JCRWorkItemStore();
         }
         catch (Exception e) {
             log.error("can't initialize the workflow util", e);
@@ -68,6 +68,10 @@ public class WorkflowUtil {
     private WorkflowUtil() {
     }
 
+    public static JCRWorkItemStore getWorkItemStore(){
+        return storage;
+    }
+
     public static void launchFlow(LaunchItem li) {
         try {
             JCRPersistedEngine engine = WorkflowModule.getEngine();
@@ -78,7 +82,7 @@ public class WorkflowUtil {
             log.error("Launching flow failed", e);
         }
     }
-    
+
     /**
      * Simply launch a flow for the specified node
      */
@@ -110,12 +114,12 @@ public class WorkflowUtil {
      */
     public static void launchFlow(LaunchItem li, String flowName) throws FlowDefinitionException {
         FlowDefinitionManager configurator = WorkflowModule.getFlowDefinitionManager();
-        
+
         configurator.configure(li, flowName);
-        
+
         launchFlow(li);
     }
-    
+
     /**
      * @param id
      */
@@ -143,7 +147,7 @@ public class WorkflowUtil {
         }
         wi.getAttributes().puts(WorkflowConstants.ATTRIBUTE_ACTION, action);
         wi.getAttributes().puts(WorkflowConstants.ATTRIBUTE_USERNAME, MgnlContext.getUser().getName());
-        
+
         if (StringUtils.isNotEmpty(comment)) {
             wi.getAttributes().puts(Context.ATTRIBUTE_COMMENT, comment);
         }
@@ -192,7 +196,7 @@ public class WorkflowUtil {
     public static String getPath(String id){
         return storage.createPathFromId(FlowExpressionId.fromParseableString(id));
     }
-    
+
     /**
      * get all work items for the user
      */
