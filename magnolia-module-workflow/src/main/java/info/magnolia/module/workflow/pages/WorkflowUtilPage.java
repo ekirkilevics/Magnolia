@@ -19,7 +19,7 @@ import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.WorkflowUtil;
 import info.magnolia.module.workflow.flows.FlowDefinitionException;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
-import info.magnolia.module.workflow.jcr.JCRWorkItemAPI;
+import info.magnolia.module.workflow.jcr.JCRWorkItemStore;
 import info.magnolia.api.HierarchyManager;
 
 import java.io.IOException;
@@ -52,7 +52,7 @@ public class WorkflowUtilPage extends TemplatedMVCHandler {
      */
     private static Logger log = LoggerFactory.getLogger(WorkflowUtilPage.class);
 
-    protected FlowDefinitionManager fdm = WorkflowModule.getFlowDefinitionManager(); 
+    protected FlowDefinitionManager fdm = WorkflowModule.getFlowDefinitionManager();
 
     /**
      * @param name
@@ -210,7 +210,7 @@ public class WorkflowUtilPage extends TemplatedMVCHandler {
     public String showFlow() throws FlowDefinitionException {
         String flow;
         flow = fdm.readDefinition(flowName);
-        
+
         // get flow by name
         if (StringUtils.isEmpty(flow)) {
             log.error("can not find flow definition for {}", flowName);
@@ -232,9 +232,7 @@ public class WorkflowUtilPage extends TemplatedMVCHandler {
 
     public String doQuery() throws Exception {
         if (query != null && query.length() > 0) {
-
-            result = new JCRWorkItemAPI().doQuery(query).toString();
-
+            result = WorkflowUtil.getWorkItemStore().doQuery(query).toString();
         }
         return VIEW_SHOW;
     }
