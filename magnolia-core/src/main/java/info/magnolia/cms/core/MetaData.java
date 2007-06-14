@@ -57,9 +57,18 @@ public class MetaData {
 
     public static final String ACTIVATED = "activated"; //$NON-NLS-1$
 
+    /**
+     * @deprecated we use jcr ordering instead
+     */
     public static final String SEQUENCE_POS = "sequenceposition"; //$NON-NLS-1$
 
     public static final String DEFAULT_META_NODE = "MetaData"; //$NON-NLS-1$
+
+    public static final int ACTIVATION_STATUS_NOT_ACTIVATED = 0;
+
+    public static final int ACTIVATION_STATUS_MODIFIED = 1;
+
+    public static final int ACTIVATION_STATUS_ACTIVATED = 2;
 
     /**
      * @deprecated unused
@@ -238,6 +247,26 @@ public class MetaData {
      */
     public boolean getIsActivated() {
         return getBooleanProperty(this.getInternalPropertyName(ACTIVATED));
+    }
+
+    /**
+     * Returns one of the ACTIVATION_STATUS_* constants
+     */
+    public int getActivationStatus(){
+        if (getIsActivated()) {
+            if (getModificationDate() != null && getModificationDate().after(getLastActionDate())) {
+                // node has been modified after last activation
+                return ACTIVATION_STATUS_MODIFIED;
+            }
+            else {
+                // activated and not modified ever since
+                return ACTIVATION_STATUS_ACTIVATED;
+            }
+        }
+        else {
+            // never activated or deactivated
+            return ACTIVATION_STATUS_NOT_ACTIVATED;
+        }
     }
 
     /**
