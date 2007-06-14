@@ -17,6 +17,7 @@ import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Calendar;
 
@@ -64,27 +65,8 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
     private String getHtmlIcons(TreeColumn treeColumn, Content content) {
         StringBuffer html = new StringBuffer();
         if (treeColumn.getIconsActivation()) {
-            MetaData activationMetaData = content.getMetaData();
-            MetaData generalMetaData = content.getMetaData();
-            boolean isActivated = activationMetaData.getIsActivated();
-            Calendar actionDate = activationMetaData.getLastActionDate();
-            Calendar lastModifiedDate = generalMetaData.getModificationDate();
-            String imgSrc;
-            if (isActivated) {
-                if (lastModifiedDate != null && lastModifiedDate.after(actionDate)) {
-                    // node has been modified after last activation
-                    imgSrc = Tree.ICONDOCROOT + "indicator_yellow.gif"; //$NON-NLS-1$
-                }
-                else {
-                    // activated and not modified ever since
-                    imgSrc = Tree.ICONDOCROOT + "indicator_green.gif"; //$NON-NLS-1$
-                }
-            }
-            else {
-                // never activated or deactivated
-                imgSrc = Tree.ICONDOCROOT + "indicator_red.gif"; //$NON-NLS-1$
-            }
-            html.append("<img src=\"" + treeColumn.getRequest().getContextPath() + imgSrc + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
+            String imgSrc = Tree.ICONDOCROOT + MetaDataUtil.getActivationStatusIcon(content);
+            html.append("<img src=\"" + MgnlContext.getContextPath() + imgSrc + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (treeColumn.getIconsPermission()) {
             if (!content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
