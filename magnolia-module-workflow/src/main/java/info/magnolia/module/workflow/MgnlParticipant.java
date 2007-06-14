@@ -41,18 +41,12 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
      */
     private static Logger log = LoggerFactory.getLogger(AbstractEmbeddedParticipant.class);
 
-    JCRWorkItemStore storage = null;
-
     public MgnlParticipant() throws Exception {
         super();
-        this.storage = WorkflowUtil.getWorkItemStore();
-        log.debug("storage = {}", this.storage);
     }
 
     public MgnlParticipant(String name) throws Exception {
         super(name);
-        this.storage = WorkflowUtil.getWorkItemStore();
-        log.debug("storage = {}", this.storage);
     }
 
     public void cancel(CancelItem cancelItem) throws Exception {
@@ -66,7 +60,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         if (!parName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND)) {
             //
             // remove workitem from inbox
-            this.storage.removeWorkItem(cancelItem.getId());
+            WorkflowUtil.getWorkItemStore().removeWorkItem(cancelItem.getId());
         }
         // else {
         // // ignore
@@ -133,9 +127,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             }
         }
         else {
-            log.debug("storage = {}", this.storage);
-
-            this.storage.storeWorkItem(StringUtils.EMPTY, (InFlowWorkItem) wi);
+            WorkflowUtil.getWorkItemStore().storeWorkItem(StringUtils.EMPTY, (InFlowWorkItem) wi);
         }
 
         log.debug("leave consume()..");
