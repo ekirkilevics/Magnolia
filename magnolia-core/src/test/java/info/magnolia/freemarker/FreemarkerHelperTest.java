@@ -50,6 +50,7 @@ public class FreemarkerHelperTest extends TestCase {
         tplLoader = new StringTemplateLoader();
         fmHelper = new FreemarkerHelper();
         fmHelper.getConfiguration().setTemplateLoader(tplLoader);
+        freemarker.log.Logger.selectLoggerLibrary(freemarker.log.Logger.LIBRARY_NONE);
     }
 
     private void assertRendereredContent(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {
