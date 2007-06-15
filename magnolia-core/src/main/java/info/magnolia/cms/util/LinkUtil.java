@@ -88,8 +88,11 @@ public final class LinkUtil {
         Matcher matcher = LINK_OR_IMAGE_PATTERN.matcher(str);
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
-           UUIDLink link = new UUIDLink().parseLink(matcher.group(4));
-           matcher.appendReplacement(res, "$1" + StringUtils.replace(link.toPattern(), "$", "\\$") + "$5");
+            final String href = matcher.group(4);
+            if (!LinkHelper.isExternalLink(href)) {
+                final UUIDLink link = new UUIDLink().parseLink(href);
+                matcher.appendReplacement(res, "$1" + StringUtils.replace(link.toPattern(), "$", "\\$") + "$5");
+            }
         }
         matcher.appendTail(res);
         return res.toString();

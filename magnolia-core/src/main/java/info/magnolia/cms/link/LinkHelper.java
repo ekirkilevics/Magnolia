@@ -60,6 +60,11 @@ public class LinkHelper {
      */
     public static boolean isInternalRelativeLink(String href) {
         // TODO : this could definitely be improved
-        return !LinkUtil.EXTERNAL_LINK_PATTERN.matcher(href).matches() && !href.startsWith("/") && !href.startsWith("#");
+        return !isExternalLink(href) && !href.startsWith("/") && !href.startsWith("#");
     }
+
+    public static boolean isExternalLink(String href) {
+       return LinkUtil.EXTERNAL_LINK_PATTERN.matcher(href).matches();
+    }
+
 }
