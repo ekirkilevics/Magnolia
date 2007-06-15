@@ -363,8 +363,6 @@ public class SaveHandlerImpl implements SaveHandler {
     protected String updateLinks(Content node, String name, String valueStr) throws AccessDeniedException,
         RepositoryException, PathNotFoundException {
 
-        System.out.println(valueStr);
-
         // process the images and uploaded files
         HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
 
@@ -418,7 +416,6 @@ public class SaveHandlerImpl implements SaveHandler {
         for (Iterator iter = filesNode.getNodeDataCollection().iterator(); iter.hasNext();) {
             NodeData fileNodeData = (NodeData) iter.next();
             if(!usedFiles.contains(fileNodeData.getName())){
-                System.out.println("delete" + fileNodeData.getHandle());
                 fileNodeData.delete();
             }
         }
@@ -426,12 +423,9 @@ public class SaveHandlerImpl implements SaveHandler {
         imageOrDowloadMatcher.appendTail(res);
         valueStr = res.toString();
 
-        System.out.println(valueStr);
-
         // encode the internal links to avoid dependences from the contextpath, position of the page
         valueStr = LinkUtil.convertAbsoluteLinksToUUIDs(valueStr);
 
-        System.out.println(valueStr);
         return valueStr;
     }
 
