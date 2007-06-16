@@ -89,7 +89,7 @@ public final class LinkUtil {
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
             final String href = matcher.group(4);
-            if (!LinkHelper.isExternalLink(href)) {
+            if (!LinkHelper.isExternalLinkOrAnchor(href)) {
                 final UUIDLink link = new UUIDLink().parseLink(href);
                 matcher.appendReplacement(res, "$1" + StringUtils.replace(link.toPattern(), "$", "\\$") + "$5");
             }

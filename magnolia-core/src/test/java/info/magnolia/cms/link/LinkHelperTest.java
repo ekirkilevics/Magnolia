@@ -57,30 +57,30 @@ public class LinkHelperTest extends TestCase {
     }
 
     public void testInternalLinksAreProperlyDetermined() {
-        assertFalse(LinkHelper.isExternalLink("foo"));
-        assertFalse(LinkHelper.isExternalLink("foo/bar"));
-        assertFalse(LinkHelper.isExternalLink("foo/bar.gif"));
+        assertFalse(LinkHelper.isExternalLinkOrAnchor("foo"));
+        assertFalse(LinkHelper.isExternalLinkOrAnchor("foo/bar"));
+        assertFalse(LinkHelper.isExternalLinkOrAnchor("foo/bar.gif"));
 
-        assertFalse(LinkHelper.isExternalLink("/foo"));
-        assertFalse(LinkHelper.isExternalLink("/foo/bar"));
-        assertFalse(LinkHelper.isExternalLink("/foo/bar.gif"));
+        assertFalse(LinkHelper.isExternalLinkOrAnchor("/foo"));
+        assertFalse(LinkHelper.isExternalLinkOrAnchor("/foo/bar"));
+        assertFalse(LinkHelper.isExternalLinkOrAnchor("/foo/bar.gif"));
 
-        assertTrue(LinkHelper.isExternalLink("http://foo.com/bar.gif"));
-        assertTrue(LinkHelper.isExternalLink("http://foo.com/bar/baz.gif"));
-        assertTrue(LinkHelper.isExternalLink("http://foo.com/bar/"));
-        assertTrue(LinkHelper.isExternalLink("http://foo.com/bar"));
-        assertTrue(LinkHelper.isExternalLink("http://foo.com/"));
-        assertTrue(LinkHelper.isExternalLink("http://foo.com"));
-        assertTrue(LinkHelper.isExternalLink("https://foo.com"));
-        assertTrue(LinkHelper.isExternalLink("https://foo.com/bar"));
-        assertTrue(LinkHelper.isExternalLink("ftp://user:pass@server.com/foo/bar"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("http://foo.com/bar.gif"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("http://foo.com/bar/baz.gif"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("http://foo.com/bar/"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("http://foo.com/bar"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("http://foo.com/"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("http://foo.com"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("https://foo.com"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("https://foo.com/bar"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("ftp://user:pass@server.com/foo/bar"));
 
-        assertTrue(LinkHelper.isExternalLink("mailto:murdock@a-team.org"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("mailto:murdock@a-team.org"));
 
-        assertFalse(LinkHelper.isExternalLink("#anchor"));
-        assertFalse(LinkHelper.isExternalLink("#another-anchor"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("#anchor"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("#another-anchor"));
 
-        assertTrue(LinkHelper.isExternalLink("javascript:void(window.open('http://www.google.com','','resizable=no,location=no,menubar=no,scrollbars=no,status=no,toolbar=no,fullscreen=no,dependent=no,width=200,height=200'))"));
-        assertTrue(LinkHelper.isExternalLink("javascript:void(window.open('/foo/bar','','resizable=no,location=no,menubar=no,scrollbars=no,status=no,toolbar=no,fullscreen=no,dependent=no,width=200,height=200'))"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("javascript:void(window.open('http://www.google.com','','resizable=no,location=no,menubar=no,scrollbars=no,status=no,toolbar=no,fullscreen=no,dependent=no,width=200,height=200'))"));
+        assertTrue(LinkHelper.isExternalLinkOrAnchor("javascript:void(window.open('/foo/bar','','resizable=no,location=no,menubar=no,scrollbars=no,status=no,toolbar=no,fullscreen=no,dependent=no,width=200,height=200'))"));
     }
 }

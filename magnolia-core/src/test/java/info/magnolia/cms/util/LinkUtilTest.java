@@ -36,12 +36,18 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     public void testConvertAbsoluteLinksToUUIDsDoesNotTryToConvertExternalLinks() {
-        doTestConvertAbsoluteLinksToUUIDsDoesNotTryToConvertExternalLinks("this is a <a href=\"http://www.magnolia.info\">test</a>, yo.");
-        doTestConvertAbsoluteLinksToUUIDsDoesNotTryToConvertExternalLinks("http://foo.bar.org/File%20Box/Quick%20Reference%20Guides/EMR/upgrade_brief_2007.pdf");
-        doTestConvertAbsoluteLinksToUUIDsDoesNotTryToConvertExternalLinks("http://foo.bar.org/File Box/Quick Reference Guides/EMR/upgrade_brief_2007.pdf");
+        doTestConvertAbsoluteLinksToUUIDsShouldNotConvert("http://www.magnolia.info");
+        doTestConvertAbsoluteLinksToUUIDsShouldNotConvert("http://foo.bar.org/File%20Box/Quick%20Reference%20Guides/EMR/upgrade_brief_2007.pdf");
+        doTestConvertAbsoluteLinksToUUIDsShouldNotConvert("http://foo.bar.org/File Box/Quick Reference Guides/EMR/upgrade_brief_2007.pdf");
     }
 
-    private void doTestConvertAbsoluteLinksToUUIDsDoesNotTryToConvertExternalLinks(String html) {
+    public void testConvertAbsoluteLinksToUUIDsDoesNotTryToConvertPageAnchors() {
+        doTestConvertAbsoluteLinksToUUIDsShouldNotConvert("#");
+        doTestConvertAbsoluteLinksToUUIDsShouldNotConvert("#foo");
+    }
+
+    private void doTestConvertAbsoluteLinksToUUIDsShouldNotConvert(String href) {
+        final String html = "this is a <a href=\"" + href + "\">test</a>, yo.";
         final String res = LinkUtil.convertAbsoluteLinksToUUIDs(html);
         assertEquals(html, res);
     }
