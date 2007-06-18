@@ -14,6 +14,7 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.Rule;
 
 import javax.jcr.Node;
@@ -688,6 +689,12 @@ public interface Content extends Cloneable {
      * @throws RepositoryException if unable to get this node session
      */
     Workspace getWorkspace() throws RepositoryException;
+
+    /**
+     * @return the underlying AccessManager
+     * TODO : this should probably not be exposed, but was used by some code ...
+     */
+    AccessManager getAccessManager();
 
     /**
      * checks if this node has a sub node with name MetaData
