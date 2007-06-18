@@ -46,12 +46,11 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class CommandsManager extends ObservedManager {
+    private static final Logger log = LoggerFactory.getLogger(CommandsManager.class);
 
     public static final String DEFAULT_CATALOG = "default";
 
     public static final String COMMAND_DELIM = "-";
-
-    protected static Logger log = LoggerFactory.getLogger(CommandsManager.class);
 
     /**
      * Register this catalogue

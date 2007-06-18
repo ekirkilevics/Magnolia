@@ -38,8 +38,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class Content2BeanTransformerImpl implements Content2BeanTransformer {
-
-    private static Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
 
     /**
      * Resolves in this order
