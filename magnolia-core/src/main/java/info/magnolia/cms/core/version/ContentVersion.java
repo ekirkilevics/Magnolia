@@ -15,6 +15,7 @@ package info.magnolia.cms.core.version;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
@@ -42,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * $Id$
  */
-public class ContentVersion extends Content {
+public class ContentVersion extends DefaultContent {
 
     /**
      * Logger.
@@ -67,7 +68,7 @@ public class ContentVersion extends Content {
     /**
      * base content
      */
-    private Content base;
+    private DefaultContent base;
 
     /**
      * Rule used to create this version
@@ -80,7 +81,7 @@ public class ContentVersion extends Content {
      * @param base content on which this version is based on
      * @throws RepositoryException
      */
-    public ContentVersion(Version thisVersion, Content base) throws RepositoryException {
+    public ContentVersion(Version thisVersion, DefaultContent base) throws RepositoryException {
         if (thisVersion == null) {
             throw new RepositoryException("Failed to get ContentVersion, version does not exist");
         }

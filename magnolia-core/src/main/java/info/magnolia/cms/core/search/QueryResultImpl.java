@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.core.search;
 
-import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessManager;
@@ -95,7 +95,7 @@ public class QueryResultImpl implements QueryResult {
             if (this.dirtyHandles.get(node.getPath()) == null) {
                 boolean isAllowed = this.accessManager.isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
                 if (isAllowed) {
-                    collection.add(new Content(node, this.accessManager));
+                    collection.add(new DefaultContent(node, this.accessManager));
                     this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);
                 }
             }

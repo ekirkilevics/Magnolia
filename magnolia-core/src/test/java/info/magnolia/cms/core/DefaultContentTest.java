@@ -23,7 +23,7 @@ import javax.jcr.Property;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ContentTest extends TestCase {
+public class DefaultContentTest extends TestCase {
 
     public void testIsNodeTypeForNodeChecksPrimaryType() throws RepositoryException {
         final Node node = createStrictMock(Node.class);
@@ -32,7 +32,7 @@ public class ContentTest extends TestCase {
         expect(nodeTypeProp.getString()).andReturn("foo").times(3);
 
         replay(node, nodeTypeProp);
-        final Content c = new Content();
+        final DefaultContent c = new DefaultContent();
         c.setNode(node);
         assertTrue(c.isNodeType(node, "foo"));
         assertTrue(c.isNodeType(node, "fOO"));
@@ -56,7 +56,7 @@ public class ContentTest extends TestCase {
         expect(nodeFrozenTypeProp.getString()).andReturn(returnedType);
 
         replay(node, nodeTypeProp, nodeFrozenTypeProp);
-        final Content c = new Content();
+        final DefaultContent c = new DefaultContent();
         c.setNode(node);
         assertEquals(expectedResult, c.isNodeType(node, requiredType));
 
@@ -70,7 +70,7 @@ public class ContentTest extends TestCase {
         expect(nodeTypeProp.getString()).andReturn(ItemType.NT_FROZENNODE);
 
         replay(node, nodeTypeProp);
-        final Content c = new Content();
+        final DefaultContent c = new DefaultContent();
         c.setNode(node);
         assertTrue(c.isNodeType(node, ItemType.NT_FROZENNODE));
         verify(node, nodeTypeProp);

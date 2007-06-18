@@ -12,6 +12,7 @@ package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -36,7 +37,7 @@ import org.apache.commons.lang.StringUtils;
  * @author philipp
  * @version $Id$
  */
-public class MockContent extends Content {
+public class MockContent extends DefaultContent {
 
     private String uuid;
 

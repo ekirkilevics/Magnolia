@@ -11,7 +11,7 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
 
@@ -25,7 +25,7 @@ import javax.jcr.RepositoryException;
  * @author philipp
  * @version $Id$
  */
-public class MockNodeData extends NodeData {
+public class MockNodeData extends DefaultNodeData {
 
     private String name;
 

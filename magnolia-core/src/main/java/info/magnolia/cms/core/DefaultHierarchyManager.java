@@ -157,11 +157,13 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @return Content newly created hierarchy node
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
+     *
+     * @deprecated use createContent(String path, String label, String contentType)
      */
     public Content createPage(String path, String label) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
         log.warn("Deprecated: Use createContent(String path, String label, String contentType)");
-        Content newPage = (new Content(
+        Content newPage = (new DefaultContent(
             this.getRootNode(),
             this.getNodePath(path, label),
             ItemType.CONTENT.getSystemName(),
@@ -182,7 +184,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      */
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
         RepositoryException, AccessDeniedException {
-        Content content = new Content(this.getRootNode(), this.getNodePath(path, label), contentType, this.accessManager);
+        Content content = new DefaultContent(this.getRootNode(), this.getNodePath(path, label), contentType, this.accessManager);
         setMetaData(content.getMetaData());
         return content;
     }
@@ -253,7 +255,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         if (path.equals("/")) { //$NON-NLS-1$
             return this.getRoot();
         }
-        return (new Content(this.getRootNode(), getNodePath(path), this.accessManager));
+        return (new DefaultContent(this.getRootNode(), getNodePath(path), this.accessManager));
     }
 
     /**
@@ -293,7 +295,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @deprecated use getContent(String path) instead
      */
     public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return new Content(this.getRootNode(), getNodePath(path), this.accessManager);
+        return new DefaultContent(this.getRootNode(), getNodePath(path), this.accessManager);
     }
 
     /**
@@ -309,7 +311,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             return null;
         }
 
-        return new NodeData(this.getRootNode(), nodePath, this.accessManager);
+        return new DefaultNodeData(this.getRootNode(), nodePath, this.accessManager);
     }
 
     /**
@@ -378,7 +380,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @return rootNode of the current working repository-workspace
      */
     public Content getRoot() throws RepositoryException, AccessDeniedException {
-        return (new Content(this.getRootNode(), this.accessManager));
+        return (new DefaultContent(this.getRootNode(), this.accessManager));
     }
 
     /**
@@ -481,7 +483,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      */
     public Content getContentByUUID(String uuid) throws ItemNotFoundException, RepositoryException,
         AccessDeniedException {
-        return new Content(this.getJcrSession().getNodeByUUID(uuid), this.accessManager);
+        return new DefaultContent(this.getJcrSession().getNodeByUUID(uuid), this.accessManager);
     }
 
     /**
