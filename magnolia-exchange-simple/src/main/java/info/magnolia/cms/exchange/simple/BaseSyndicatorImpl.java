@@ -25,16 +25,22 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.XMLReaderFactory;
-import info.magnolia.cms.core.*;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.MetaData;
+import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.exchange.*;
+import info.magnolia.cms.exchange.Syndicator;
+import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.cms.exchange.ActivationContent;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.cms.core.HierarchyManager;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
@@ -42,7 +48,11 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.zip.GZIPOutputStream;
 import java.net.URLConnection;
-import java.io.*;
+import java.io.IOException;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
+import java.io.FileInputStream;
 
 /**
  * @author Sameer Charles
