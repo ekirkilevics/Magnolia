@@ -23,10 +23,10 @@ import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.*;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.exchange.ExchangeException;
-import info.magnolia.api.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 
 import javax.servlet.http.HttpServletRequest;

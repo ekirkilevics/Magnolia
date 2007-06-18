@@ -27,7 +27,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.freemarker.FreemarkerUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;

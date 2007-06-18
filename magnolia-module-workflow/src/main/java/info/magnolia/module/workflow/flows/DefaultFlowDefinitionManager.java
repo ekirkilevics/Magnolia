@@ -15,11 +15,11 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContextImpl;
 import info.magnolia.module.workflow.WorkflowConstants;
-import info.magnolia.api.HierarchyManager;
 
 import java.io.IOException;
 import java.io.InputStream;

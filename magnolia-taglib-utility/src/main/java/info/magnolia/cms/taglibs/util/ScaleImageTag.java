@@ -15,10 +15,10 @@ package info.magnolia.cms.taglibs.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.api.HierarchyManager;
 
 import java.awt.Graphics2D;
 import java.awt.Image;

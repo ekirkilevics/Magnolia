@@ -16,7 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

@@ -15,13 +15,13 @@ package info.magnolia.jaas.sp.jcr;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.security.auth.*;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.jaas.principal.*;
-import info.magnolia.api.HierarchyManager;
 
 import java.security.Principal;
 import java.util.Iterator;

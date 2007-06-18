@@ -17,7 +17,7 @@ import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 
 import java.net.URL;
 import java.util.ArrayList;

@@ -10,7 +10,7 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.runtime.File;

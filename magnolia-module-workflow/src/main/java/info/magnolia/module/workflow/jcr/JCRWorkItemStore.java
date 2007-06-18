@@ -24,7 +24,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.beancoder.OwfeJcrBeanCoder;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.StringAttribute;

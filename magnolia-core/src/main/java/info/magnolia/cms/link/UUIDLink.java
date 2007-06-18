@@ -10,7 +10,7 @@
  */
 package info.magnolia.cms.link;
 
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;

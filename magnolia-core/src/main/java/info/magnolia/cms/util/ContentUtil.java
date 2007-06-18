@@ -14,12 +14,12 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.api.HierarchyManager;
 
 import java.util.ArrayList;
 import java.util.Collection;

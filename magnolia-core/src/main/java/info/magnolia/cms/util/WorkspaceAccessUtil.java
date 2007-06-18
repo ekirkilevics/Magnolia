@@ -20,7 +20,7 @@ import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.SearchFactory;
 import info.magnolia.cms.core.DefaultHierarchyManager;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;

@@ -2,9 +2,9 @@ package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.PageMVCHandler;
-import info.magnolia.api.HierarchyManager;
 
 import java.awt.Graphics2D;
 import java.awt.Image;

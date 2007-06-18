@@ -17,13 +17,13 @@ import info.magnolia.cms.beans.config.ModuleLoader;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
-import info.magnolia.api.HierarchyManager;
 
 import java.io.File;
 import java.io.FileNotFoundException;

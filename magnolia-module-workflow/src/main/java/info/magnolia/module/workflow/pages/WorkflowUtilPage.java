@@ -19,8 +19,7 @@ import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.WorkflowUtil;
 import info.magnolia.module.workflow.flows.FlowDefinitionException;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
-import info.magnolia.module.workflow.jcr.JCRWorkItemStore;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 
 import java.io.IOException;
 import java.sql.Date;

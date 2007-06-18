@@ -18,10 +18,10 @@ import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.api.HierarchyManager;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

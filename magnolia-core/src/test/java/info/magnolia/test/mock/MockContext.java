@@ -10,7 +10,7 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.AbstractMapBasedContext;

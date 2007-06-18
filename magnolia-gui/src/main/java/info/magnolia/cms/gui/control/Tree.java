@@ -19,13 +19,13 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.MetaDataUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.api.HierarchyManager;
 import info.magnolia.freemarker.FreemarkerUtil;
 
 import java.util.ArrayList;

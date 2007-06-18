@@ -14,12 +14,12 @@ package info.magnolia.context;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
-import info.magnolia.api.HierarchyManager;
 
 import java.util.Collection;
 import java.util.HashMap;

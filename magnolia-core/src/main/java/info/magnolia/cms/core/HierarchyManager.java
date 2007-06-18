@@ -10,12 +10,8 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.api;
+package info.magnolia.cms.core;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -39,7 +35,7 @@ public interface HierarchyManager {
 
     /**
      * @deprecated use createContent(String path, String label, String contentType)
-     * */
+     */
     Content createPage(String path, String label) throws RepositoryException;
 
     Content createContent(String path, String label, String contentType) throws RepositoryException;

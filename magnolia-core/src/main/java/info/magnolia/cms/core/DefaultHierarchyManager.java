@@ -18,7 +18,6 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.api.HierarchyManager;
 
 import java.util.Collection;
 import java.util.Iterator;

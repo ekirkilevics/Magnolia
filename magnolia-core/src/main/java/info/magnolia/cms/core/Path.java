@@ -13,7 +13,6 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 
 import java.io.File;
 import java.io.UnsupportedEncodingException;
@@ -26,7 +25,6 @@ import org.apache.commons.lang.StringUtils;
 import org.safehaus.uuid.UUIDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import info.magnolia.api.HierarchyManager;
 
 
 /**

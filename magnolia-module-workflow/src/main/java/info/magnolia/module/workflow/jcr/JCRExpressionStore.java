@@ -19,7 +19,7 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 import openwfe.org.ApplicationContext;
 import openwfe.org.ServiceException;
 import openwfe.org.engine.expool.PoolException;

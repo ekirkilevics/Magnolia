@@ -25,7 +25,7 @@ import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
 import info.magnolia.repository.RepositoryNameMap;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 
 import java.io.File;
 import java.io.FileInputStream;

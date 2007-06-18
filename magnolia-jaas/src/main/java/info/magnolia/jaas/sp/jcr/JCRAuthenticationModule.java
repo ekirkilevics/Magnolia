@@ -15,10 +15,10 @@ package info.magnolia.jaas.sp.jcr;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.auth.Entity;
 import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
-import info.magnolia.api.HierarchyManager;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;

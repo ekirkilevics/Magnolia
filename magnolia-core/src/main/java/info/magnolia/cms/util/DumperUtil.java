@@ -14,7 +14,7 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 
 import java.io.PrintStream;
 import java.io.PrintWriter;

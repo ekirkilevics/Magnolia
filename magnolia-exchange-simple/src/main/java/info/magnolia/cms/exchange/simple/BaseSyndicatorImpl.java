@@ -34,7 +34,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.exchange.*;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.api.HierarchyManager;
+import info.magnolia.cms.core.HierarchyManager;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
