@@ -21,6 +21,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.FastDateFormat;
 
@@ -66,6 +67,9 @@ public class DateUtil {
     }
 
     public static String format(Date date, String formatPattern) {
+        if(date == null){
+            return StringUtils.EMPTY;
+        }
         if (formatPattern == null) {
             formatPattern = FORMAT_DEFAULTPATTERN;
         }
@@ -78,6 +82,9 @@ public class DateUtil {
      * @return the String
      */
     public static String formatDateTime(Object val) {
+        if(val == null){
+            return StringUtils.EMPTY;
+        }
         FastDateFormat format = FastDateFormat.getDateTimeInstance(
             FastDateFormat.SHORT,
             FastDateFormat.SHORT,
@@ -91,6 +98,9 @@ public class DateUtil {
      * @return the String
      */
     public static String formatDate(Object val) {
+        if(val == null){
+            return StringUtils.EMPTY;
+        }
         FastDateFormat format = FastDateFormat.getDateInstance(
             FastDateFormat.SHORT,
             MgnlContext.getLocale());
