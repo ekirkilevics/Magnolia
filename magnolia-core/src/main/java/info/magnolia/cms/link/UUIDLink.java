@@ -45,6 +45,8 @@ public class UUIDLink{
     private NodeData nodeData;
     private String fileName;
     private String fallbackHandle;
+    private String anchor;
+    private String parameters;
 
     /**
      * Pattern to find a magnolia formatted link
@@ -56,13 +58,15 @@ public class UUIDLink{
         + "(path|handle):\\{([^\\}]*)\\}"        // fallback handle should not be used unless the uuid is invalid
         + "(,nodeData:\\{([^\\}]*)\\}," // in case we point to a binary (node data has no uuid!)
         + "extension:\\{([^\\}]*)\\})?" // the extension to be used in rendering
-        +"\\}\\}"); // the handle
+        + "\\}\\}"  // the handle
+        + "(#([^\\?\"]*))?" // anchor
+        + "(\\?([^\"]*))?"); // parameters
 
     protected static final Pattern LINK_PATTERN = Pattern.compile(
-        "(/[^\\.\"#]*)" + // the handle
-        "(\\.(\\w+))?" + // extension (if any)
-        "(#([^\\?\"])*)?" + // anchor
-        "(\\?([^\"])*)?" // parameters
+        "(/[^\\.\"#\\?]*)" + // the handle
+        "(\\.([\\w[^#\\?]]+))?" + // extension (if any)
+        "(#([^\\?\"]*))?" + // anchor
+        "(\\?([^\"]*))?" // parameters
     );
 
     /**
@@ -84,6 +88,9 @@ public class UUIDLink{
             fallbackHandle = matcher.group(5);
             nodeDataName = matcher.group(7);
             extension = matcher.group(8);
+            anchor = matcher.group(10);
+            parameters = matcher.group(12);
+
         }
         else{
             log.error("can't parse [{}]", uuidLink);
@@ -100,6 +107,8 @@ public class UUIDLink{
             handle = URI2RepositoryManager.getInstance().getHandle(matcher.group(1));
             repository = URI2RepositoryManager.getInstance().getRepository(handle);
             extension = StringUtils.defaultIfEmpty(matcher.group(3), Server.getDefaultExtension());
+            anchor = matcher.group(5);
+            parameters = matcher.group(7);
 
             try {
                 HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
@@ -143,7 +152,9 @@ public class UUIDLink{
             + "handle:{" + getHandle() + "}," // original handle represented by the uuid
             + "nodeData:{" + StringUtils.defaultString(getNodeDataName()) + "}," // in case of binaries
             + "extension:{" + StringUtils.defaultString(getExtension()) + "}" // the extension to use if no extension can be resolved otherwise
-            + "}}";
+            + "}}"
+            + (StringUtils.isNotEmpty(getAnchor())? "#" + getAnchor():"")
+            + (StringUtils.isNotEmpty(getParameters())? "?" + getParameters() : "");
     }
 
 
@@ -282,6 +293,26 @@ public class UUIDLink{
 
     public void setFallbackHandle(String fallbackPath) {
         this.fallbackHandle = fallbackPath;
+    }
+
+
+    public String getAnchor() {
+        return this.anchor;
+    }
+
+
+    public void setAnchor(String anchor) {
+        this.anchor = anchor;
+    }
+
+
+    public String getParameters() {
+        return this.parameters;
+    }
+
+
+    public void setParameters(String parameters) {
+        this.parameters = parameters;
     }
 
 }

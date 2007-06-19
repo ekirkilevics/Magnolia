@@ -46,14 +46,15 @@ public class LinkUtilTest extends BaseLinkTest {
         doTestConvertAbsoluteLinksToUUIDsShouldNotConvert("#foo");
     }
 
-    public void testConvertLinksToUUIDShouldPreserverParameters() {
+    public void testConvertLinksToUUIDShouldPreserverParameters() throws IOException, RepositoryException {
+        setUpLinkTest();
         doTestConvertAbsoluteLinksToUUIDs("http://www.magnolia.info/foo?bar=baz", "http://www.magnolia.info/foo?bar=baz");
-        doTestConvertAbsoluteLinksToUUIDs("/foo?bar=baz", "/foo?bar=baz");
+        doTestConvertAbsoluteLinksToUUIDs(UUID_PATTNER_SIMPLE + "?bar=baz", HREF_SIMPLE + "?bar=baz");
     }
 
-    public void testConvertLinksToUUIDShouldPreserveAnchors() {
-        doTestConvertAbsoluteLinksToUUIDs("/foo#bar", "/foo#bar");
-        doTestConvertAbsoluteLinksToUUIDs("foo#bar", "foo#bar");
+    public void testConvertLinksToUUIDShouldPreserveAnchors() throws IOException, RepositoryException {
+        setUpLinkTest();
+        doTestConvertAbsoluteLinksToUUIDs(UUID_PATTNER_SIMPLE + "#bar", HREF_SIMPLE + "#bar");
         doTestConvertAbsoluteLinksToUUIDs("http://www.magnolia.info/foo#bar", "http://www.magnolia.info/foo#bar");
     }
 

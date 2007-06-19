@@ -50,7 +50,10 @@ public class AbsolutePathTransformer implements PathToLinkTransformer{
     public String getURISuffix(UUIDLink uuidLink) {
         return (StringUtils.isNotEmpty(uuidLink.getNodeDataName())? "/" + uuidLink.getNodeDataName() : "") +
         (StringUtils.isNotEmpty(uuidLink.getFileName())? "/" + uuidLink.getFileName() : "") +
-        (StringUtils.isNotEmpty(uuidLink.getExtension())? "." + uuidLink.getExtension() : "");
+        (StringUtils.isNotEmpty(uuidLink.getExtension())? "." + uuidLink.getExtension() : "") +
+        (StringUtils.isNotEmpty(uuidLink.getAnchor())? "#" + uuidLink.getAnchor() : "") +
+        (StringUtils.isNotEmpty(uuidLink.getParameters())? "?" + uuidLink.getParameters() : "");
+
     }
 
 

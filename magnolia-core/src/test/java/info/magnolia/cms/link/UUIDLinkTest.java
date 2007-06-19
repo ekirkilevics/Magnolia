@@ -61,6 +61,25 @@ public class UUIDLinkTest extends BaseLinkTest {
         assertEquals(UUID_PATTNER_SIMPLE, link.toPattern());
     }
 
+    public void testLinkWithAnchor() throws IOException, RepositoryException {
+        setUpLinkTest();
+
+        UUIDLink link = new UUIDLink().parseLink(HREF_SIMPLE + "#bar");
+        assertEquals(UUID_PATTNER_SIMPLE + "#bar", link.toPattern());
+
+        link = new UUIDLink().parseUUIDLink(UUID_PATTNER_SIMPLE + "#bar");
+        assertEquals(HREF_SIMPLE + "#bar", NOP_TRANSFORMER.transform(link));
+    }
+
+    public void testLinkWithParameters() throws IOException, RepositoryException {
+        setUpLinkTest();
+
+        UUIDLink link = new UUIDLink().parseLink(HREF_SIMPLE + "?bar=test");
+        assertEquals(UUID_PATTNER_SIMPLE + "?bar=test", link.toPattern());
+
+        link = new UUIDLink().parseUUIDLink(UUID_PATTNER_SIMPLE + "?bar=test");
+        assertEquals(HREF_SIMPLE + "?bar=test", NOP_TRANSFORMER.transform(link));
+    }
 
     public void testUUIDToAbsoluteLinksAfterRenaming() throws IOException, RepositoryException{
         setUpLinkTest();
@@ -92,6 +111,7 @@ public class UUIDLinkTest extends BaseLinkTest {
         UUIDLink link = new UUIDLink().parseUUIDLink(UUID_PATTNER_BINARY);
         assertEquals(StringUtils.replace(HREF_BINARY, "sub", "subRenamed"), NOP_TRANSFORMER.transform(link));
     }
+
 
 
 }
