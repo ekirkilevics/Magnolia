@@ -46,10 +46,26 @@ public class LinkUtilTest extends BaseLinkTest {
         doTestConvertAbsoluteLinksToUUIDsShouldNotConvert("#foo");
     }
 
+    public void testConvertLinksToUUIDShouldPreserverParameters() {
+        doTestConvertAbsoluteLinksToUUIDs("http://www.magnolia.info/foo?bar=baz", "http://www.magnolia.info/foo?bar=baz");
+        doTestConvertAbsoluteLinksToUUIDs("/foo?bar=baz", "/foo?bar=baz");
+    }
+
+    public void testConvertLinksToUUIDShouldPreserveAnchors() {
+        doTestConvertAbsoluteLinksToUUIDs("/foo#bar", "/foo#bar");
+        doTestConvertAbsoluteLinksToUUIDs("foo#bar", "foo#bar");
+        doTestConvertAbsoluteLinksToUUIDs("http://www.magnolia.info/foo#bar", "http://www.magnolia.info/foo#bar");
+    }
+
     private void doTestConvertAbsoluteLinksToUUIDsShouldNotConvert(String href) {
-        final String html = "this is a <a href=\"" + href + "\">test</a>, yo.";
-        final String res = LinkUtil.convertAbsoluteLinksToUUIDs(html);
-        assertEquals(html, res);
+        doTestConvertAbsoluteLinksToUUIDs(href, href);
+    }
+
+    private void doTestConvertAbsoluteLinksToUUIDs(String expectedHref, String originalHref) {
+        final String originalHtml = "this is a <a href=\"" + originalHref + "\">test</a>, yo.";
+        final String expectedHtml = "this is a <a href=\"" + expectedHref + "\">test</a>, yo.";
+        final String res = LinkUtil.convertAbsoluteLinksToUUIDs(originalHtml);
+        assertEquals(expectedHtml, res);
     }
 
     public void testUUIDToAbsoluteLinks() throws IOException, RepositoryException {
