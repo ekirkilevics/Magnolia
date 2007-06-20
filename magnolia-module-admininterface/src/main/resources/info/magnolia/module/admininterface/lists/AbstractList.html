@@ -1,17 +1,17 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
-<!-- doctype is bad, should be XHTML strict with the dtd url -->
+
 <html>
     <head>
         <script type="text/javascript" src="${contextPath}/.magnolia/pages/javascript.js"></script>
         <script type="text/javascript" src="${contextPath}/.resources/admin-js/dialogs/dialogs.js"></script>
         <script type="text/javascript" src="${contextPath}/.resources/admin-js/dialogs/calendar.js"></script>
         <script type="text/javascript" src="${contextPath}/.resources/js-libs/json/json.js"></script>
-        <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/admin-css/admin-all.css" />
-		
-		<meta http-equiv="cache-control" content="no-cache" /> 	
-		<meta http-equiv="pragma" content="no-cache" />
-		<meta http-equiv="expires" content="0"> 
-		        
+        <link rel="stylesheet" type="text/css" href="${contextPath}/.resources/admin-css/admin-all.css"/>
+
+        <meta http-equiv="cache-control" content="no-cache" />
+        <meta http-equiv="pragma" content="no-cache" />
+        <meta http-equiv="expires" content="0"/>
+
         <title>magnolia</title>
 
         <script type="text/javascript">
@@ -46,33 +46,33 @@
     </head>
 
     <body style="padding: 0px;margin: 0px">
-        
+
         <form name="mgnlForm" style="margin: 0 0 0 0;" method="post" action="${contextPath}${this.URI}" >
             <input type="hidden" id="command" name="command" value="show"/>
 
             <!--  used by subclasses mainly to add additional hiddenfields or js -->
             ${this.onRender()}
-            	
+
             <div id="${this.list.name}Div" style="position:absolute;">
                 ${this.list.render()}
             </div>
-            
+
             [#if this.list.contextMenu?exists]
-			    ${this.list.contextMenu.html}
-			    <script type="text/javascript">
-			        ${this.list.contextMenu.javascript}
-			    </script>
-			[/#if]
+                ${this.list.contextMenu.html}
+                <script type="text/javascript">
+                    ${this.list.contextMenu.javascript}
+                </script>
+            [/#if]
 
             [#if this.functionBar.menuItems?has_content]
                 ${this.functionBar.html}
-                <script>
+                <script type="text/javascript">
                     ${this.functionBar.javascript}
                 </script>
             [/#if]
 
             [#if message?exists]
-                <script>MgnlDHTMLUtil.addOnLoad(function(){alert("${message}")});</script>
+                <script type="text/javascript">MgnlDHTMLUtil.addOnLoad(function(){alert("${message}")});</script>
             [/#if]
         </form>
 

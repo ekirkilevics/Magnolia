@@ -1,104 +1,109 @@
 .mgnlListText,.mgnlListHeader {
-	font-family: Verdana, sans-serif;
-	font-size: 11px;
-	vertical-align: top;
-	color: #000;
-	position: relative;
-	top: 2px;
+    font-family: Verdana, sans-serif;
+    font-size: 11px;
+    vertical-align: top;
+    color: #000;
+    position: relative;
+    top: 2px;
 }
 
 .mgnlListHeader {
-	padding-top: 2px;
-	font-weight: bold;
+    padding-top: 2px;
+    font-weight: bold;
 }
 
 .mgnlListColumnLine {
-	width: 1px;
-	background-color: #D8EFB6;
-	position: absolute;
-	z-index: 1;
+    width: 1px;
+    background-color: #D8EFB6;
+    position: absolute;
+    z-index: 1;
 }
 
 .mgnlListColumnResizer {
-	position: absolute;
-	left: -1000px;
-	background-image:
-		url(../../.resources/controls/list/headerDelimiterGreen.gif);
-	height: 20px;
-	width: 9px;
-	z-index: 1;
-	cursor: e-resize;
+    position: absolute;
+    left: -1000px;
+    background-image:
+        url(../../.resources/controls/list/headerDelimiterGreen.gif);
+    height: 20px;
+    width: 9px;
+    z-index: 1;
+    cursor: e-resize;
 }
 
 .mgnlListHeaderBackground {
-	border-left: 1px #999999 solid;
-	border-right: 1px #CCCCCC solid;
-	position: relative;
-	background-image:
-		url(../../.resources/controls/list/headerBackgroundGreen.gif);
-	background-repeat: repeat-x;
-	height: 20px;
+    border-left: 1px #999999 solid;
+    border-right: 1px #CCCCCC solid;
+    position: relative;
+    background-image:
+        url(../../.resources/controls/list/headerBackgroundGreen.gif);
+    background-repeat: repeat-x;
+    height: 20px;
 }
 
 .mgnlListContentDiv {
-	position: absolute;
+    position: absolute;
+    /* borders are switched on and of by code*/
+    border-bottom-width: 1px;
+    border-bottom-color: silver;
+    border-right-width: 1px;
+    border-right-color: silver;
 }
 
 .mgnlListInnerContentDiv {
-	border-left: 1px solid #999;
-	overflow: auto;
+    border-left: 1px solid #999;
+    overflow: auto;
 }
 
 .mgnlListSortGroupDiv {
-	position: absolute;
-	width: 160px;
-	border: 1px solid silver;
-	background-color: #EDEEE9;
-	padding: 10px 5px 5px 5px;
-	visibility: hidden;
+    position: absolute;
+    width: 160px;
+    border: 1px solid silver;
+    background-color: #EDEEE9;
+    padding: 10px 5px 5px 5px;
+    visibility: hidden;
 }
 
 .mgnlListSortGroupTitle {
-	font-weight: bold;
+    font-weight: bold;
 }
 
 .mgnlListSortGroupLine {
-	background-image: url("../../.resources/controls/list/separator.gif");
-	background-repeat: repeat;
-	margin: 10px 0 10px 0;
-	height: 2px;
-	overflow: hidden;
+    background-image: url("../../.resources/controls/list/separator.gif");
+    background-repeat: repeat;
+    margin: 10px 0 10px 0;
+    height: 2px;
+    overflow: hidden;
 }
 
 .mgnlListSortGroupLink,.mgnlListSortGroupLinkASC,.mgnlListSortGroupLinkDESC
-	{
-	padding-top: 5px;
+    {
+    padding-top: 5px;
 }
 
 .mgnlListSortGroupLink a,.mgnlListSortGroupLinkASC a,.mgnlListSortGroupLinkDESC a
-	{
-	text-decoration: none;
+    {
+    text-decoration: none;
 }
 
 .mgnlListSortGroupLink a {
-	color: gray;
+    color: gray;
 }
 
 .mgnlListSortGroupLinkASC a,.mgnlListSortGroupLinkDESC a {
-	color: #28506A;
-	font-weight: bold;
+    color: #28506A;
+    font-weight: bold;
 }
 
 .mgnlListRow,.mgnlListRowHover,.mgnlListRowSelected {
-	position: relative;
-	margin-top: 5px;
-	height: 18px;
+    position: relative;
+    margin-top: 5px;
+    height: 18px;
 }
 
 .mgnlListRowHover {
-	background-color: #EDF2FA;
+    background-color: #EDF2FA;
 }
 
 .mgnlListRowSelected {
-	background-color: #D1E1ED;
+    background-color: #D1E1ED;
 }

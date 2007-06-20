@@ -23,6 +23,8 @@ import info.magnolia.cms.gui.controlx.list.ListControlRenderer;
  */
 public class AdminListControlRenderer extends ListControlRenderer {
 
+    private boolean border = false;
+
     /**
      * Set the admin interface list template
      */
@@ -46,5 +48,15 @@ public class AdminListControlRenderer extends ListControlRenderer {
             return list.getContextMenu().getName() + ".show(event);";
         }
         return "";
+    }
+
+
+    public boolean isBorder() {
+        return this.border;
+    }
+
+
+    public void setBorder(boolean border) {
+        this.border = border;
     }
 }

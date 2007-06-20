@@ -24,16 +24,22 @@
     MgnlDHTMLUtil.addOnResize(function(){${this.name}.resize();});
 </script>
 
-
-
 <div style="position:relative">
+    [#assign style = ""]
+
     [#if this.groupableFields?has_content || this.sortableFields?has_content]
         <div id="${this.name}SortGroupDiv" class="mgnlListSortGroupDiv mgnlText">
             [#include "ListControlSortGroup.html"/]
         </div>
+    [#elseif this.renderer.border]
+        [#assign style = "border-right-style: solid;"]
     [/#if]
 
-    <div id="${this.name}ContentDiv" class="mgnlListContentDiv mgnlBgLight" >
+    [#if this.renderer.border]
+        [#assign style = style + "border-bottom-style: solid;"]
+    [/#if]
+
+    <div id="${this.name}ContentDiv" class="mgnlListContentDiv mgnlBgLight" style="${style}" >
         [#include "ListControlContent.html"/]
     </div>
 </div>

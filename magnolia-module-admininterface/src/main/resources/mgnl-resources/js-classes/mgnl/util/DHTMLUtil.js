@@ -139,7 +139,7 @@ classDef("mgnl.util.DHTMLUtil", {
         element.style.visibility='visible';
         element.style.display='block';
     },
-    
+
     addOnLoad: function(handler){
         var orgHandler = window.onload;
         window.onload = function(){
@@ -157,35 +157,66 @@ classDef("mgnl.util.DHTMLUtil", {
             handler();
         };
     },
-    
+
     getHeight: function(element){
         return element.offsetHeight;
     },
-    
+
+    /**
+     * Get the width including borders, margins, ...
+     */
     getWidth: function(element){
         return element.offsetWidth;
     },
-    
-    getCSSClass: function(name){
-	    var rulesKey;
-	    if (document.all){
-	        rulesKey="rules";
-	    }
-	    else if (document.getElementById){
-	        rulesKey="cssRules";
-	    }
-	    for (var elem0 = document.styleSheets.length-1; elem0>=0; elem0--) {
-		    var rules=document.styleSheets[elem0][rulesKey];
-		
-		    //for (var elem1 in rule) //does not work in firebird 0.8, safari 1.2
-		    for (var elem1=0; elem1<rules.length; elem1++){
-		        var cssClass=rules[elem1].selectorText;
-		        // in safar 1.3 the selectorText is in lower case
-		        if (cssClass && cssClass.toLowerCase().indexOf("." + name.toLowerCase())!=-1){
-		            return rules[elem1];
-		        }
-		    }
+
+    /**
+     * Set the width. In case of borders this width includes the borders.
+     */
+    setWidth: function(element, width){
+        // a very simple first approach
+        var border = 0;
+        if(element.style.borderLeftStyle && element.style.borderLeftStyle != "hidden"){
+            border +=1;
         }
-    }   
+        if(element.style.borderRightStyle && element.style.borderRightStyle != "hidden"){
+            border +=1;
+        }
+        element.style.width = width - border;
+    },
+
+    setHeight: function(element, height){
+        // a very simple first approach
+        var border = 0;
+        if(element.style.borderTopStyle && element.style.borderTopStyle != "hidden"){
+            border +=1;
+        }
+        if(element.style.borderBottomStyle && element.style.borderBottomStyle != "hidden"){
+            border +=1;
+        }
+        element.style.height = height - border;
+    },
+
+
+    getCSSClass: function(name){
+        var rulesKey;
+        if (document.all){
+            rulesKey="rules";
+        }
+        else if (document.getElementById){
+            rulesKey="cssRules";
+        }
+        for (var elem0 = document.styleSheets.length-1; elem0>=0; elem0--) {
+            var rules=document.styleSheets[elem0][rulesKey];
+
+            //for (var elem1 in rule) //does not work in firebird 0.8, safari 1.2
+            for (var elem1=0; elem1<rules.length; elem1++){
+                var cssClass=rules[elem1].selectorText;
+                // in safar 1.3 the selectorText is in lower case
+                if (cssClass && cssClass.toLowerCase().indexOf("." + name.toLowerCase())!=-1){
+                    return rules[elem1];
+                }
+            }
+        }
+    }
 
 });
