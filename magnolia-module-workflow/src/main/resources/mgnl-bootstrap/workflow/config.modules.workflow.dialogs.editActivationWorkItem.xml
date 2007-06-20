@@ -20,14 +20,14 @@
     <sv:value>info.magnolia.module.workflow.messages</sv:value>
   </sv:property>
   <sv:property sv:name="height" sv:type="String">
-    <sv:value>500</sv:value>
+    <sv:value>600</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>922779c5-7357-45e7-a86a-78caa72e0522</sv:value>
+      <sv:value>05aff4bf-be68-4643-94f0-400c4e51ec62</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
@@ -36,7 +36,7 @@
       <sv:value>2006-03-16T16:46:25.976+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2007-05-29T16:10:35.711+02:00</sv:value>
+      <sv:value>2007-06-20T17:50:26.114+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
@@ -69,7 +69,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>dc3d1118-5f49-44b6-807f-03ec8abb7535</sv:value>
+        <sv:value>aae03012-de32-4193-ae6e-472d32555ac4</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
@@ -106,18 +106,18 @@
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialogs.editWorkItem.repository</sv:value>
       </sv:property>
-      <sv:property sv:name="name" sv:type="String">
-        <sv:value>repository</sv:value>
-      </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>static</sv:value>
+      </sv:property>
+      <sv:property sv:name="name" sv:type="String">
+        <sv:value>repository</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>bebb5049-a028-4256-8c07-ba088bf5d80e</sv:value>
+          <sv:value>f5f947fd-7c66-41b9-91c0-e060b3064e54</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -155,18 +155,18 @@
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialogs.editWorkItem.path</sv:value>
       </sv:property>
-      <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>static</sv:value>
-      </sv:property>
       <sv:property sv:name="name" sv:type="String">
         <sv:value>path</sv:value>
+      </sv:property>
+      <sv:property sv:name="controlType" sv:type="String">
+        <sv:value>static</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>afcd022c-313f-4adf-a989-8a7b4ebf3491</sv:value>
+          <sv:value>017bec80-7f21-4d49-86ff-c11f9128b4f0</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -204,18 +204,18 @@
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialogs.editActivationWorkItem.tabActivation.recursive</sv:value>
       </sv:property>
-      <sv:property sv:name="name" sv:type="String">
-        <sv:value>recursive</sv:value>
-      </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>checkboxSwitch</sv:value>
+      </sv:property>
+      <sv:property sv:name="name" sv:type="String">
+        <sv:value>recursive</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>63931f2b-95dc-45d5-925f-1f576af1fbbb</sv:value>
+          <sv:value>f627e983-5f49-4762-b1bd-94289f048b9d</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -253,18 +253,21 @@
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialogs.editActivationWorkItem.tabActivation.subpages</sv:value>
       </sv:property>
-      <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>info.magnolia.module.workflow.inbox.SubPagesControl</sv:value>
-      </sv:property>
       <sv:property sv:name="name" sv:type="String">
         <sv:value>subpages</sv:value>
+      </sv:property>
+      <sv:property sv:name="boxType" sv:type="String">
+        <sv:value>1Col</sv:value>
+      </sv:property>
+      <sv:property sv:name="controlType" sv:type="String">
+        <sv:value>info.magnolia.module.workflow.inbox.SubPagesControl</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>0066eefa-f959-46d2-9a71-61843f978915</sv:value>
+          <sv:value>b2931959-f7ea-41a1-8f4d-d20cb8012a51</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:authorid" sv:type="String">
           <sv:value>superuser</sv:value>
@@ -273,7 +276,7 @@
           <sv:value>2006-03-16T16:46:26.044+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2007-05-29T16:17:43.912+02:00</sv:value>
+          <sv:value>2007-06-20T15:18:14.715+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activated" sv:type="Boolean">
           <sv:value>false</sv:value>
@@ -306,7 +309,7 @@
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>3ee5c8c6-d8e9-4d50-8d35-a1b6a2998b2f</sv:value>
+        <sv:value>a5308edf-9f43-467e-bf91-b76df3249847</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>

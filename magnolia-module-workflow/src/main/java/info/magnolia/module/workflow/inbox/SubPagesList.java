@@ -105,12 +105,12 @@ public class SubPagesList extends AbstractList {
     }
 
     public void configureList(ListControl list) {
-        ListColumn iconColumn = new ListColumn("icon", "", "23px", true);
+        ListColumn iconColumn = new ListColumn("icon", "", "30px", true);
         iconColumn.setRenderer(new IconListColumnRenderer());
         list.addColumn(iconColumn);
 
         list.addColumn(new ListColumn("label", "", "200", true));
-        list.addColumn(new ListColumn("version", this.getMsgs().get("subpages.version"), "100px", true));
+        list.addColumn(new ListColumn("version", this.getMsgs().get("subpages.version"), "70px", true));
         list.addColumn(new ListColumn("modDate", this.getMsgs().get("subpages.date"), "150px", true));
 
         ListColumn statusColumn = new ListColumn("activationStatusIcon", this.getMsgs().get("subpages.status"), "50px", true);
@@ -118,6 +118,10 @@ public class SubPagesList extends AbstractList {
         list.addColumn(statusColumn);
 
         list.setRenderer(new AdminListControlRenderer() {
+
+            {
+                setBorder(true);
+            }
 
             public String onDblClick(ListControl list, Integer index) {
                 return "mgnl.workflow.Inbox.show();";

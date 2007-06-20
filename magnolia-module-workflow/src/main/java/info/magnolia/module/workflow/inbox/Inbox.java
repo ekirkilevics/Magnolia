@@ -147,16 +147,16 @@ public class Inbox extends AbstractList {
                     + "\" alt=\"\" border=\"0\" />";
             }
         });
-        list.addColumn(new ListColumn("name", msgs.get("inbox.item"), "100px", true));
-        list.addColumn(new ListColumn("repository", msgs.get("inbox.repository"), "100", true));
-        list.addColumn(new ListColumn("workflow", msgs.get("inbox.workflow"), "100", true));
+        list.addColumn(new ListColumn("name", msgs.get("inbox.item"), "100", true));
+        list.addColumn(new ListColumn("repository", msgs.get("inbox.repository"), "100px", true));
+        list.addColumn(new ListColumn("workflow", msgs.get("inbox.workflow"), "100px", true));
         list.addColumn(new ListColumn("comment", msgs.get("inbox.comment"), "200", true));
         list.addColumn(new ListColumn() {
 
             {
                 setName("lastModified");
                 setLabel(msgs.get("inbox.date"));
-                setWidth("100");
+                setWidth("150px");
             }
 
             public Object getValue() {
