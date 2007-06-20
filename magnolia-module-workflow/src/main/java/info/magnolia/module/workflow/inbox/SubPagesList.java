@@ -36,11 +36,13 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.lists.AbstractList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
+import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.WorkflowUtil;
 
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.ListAttribute;
 
+import org.apache.commons.lang.ObjectUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,11 +120,25 @@ public class SubPagesList extends AbstractList {
         list.setRenderer(new AdminListControlRenderer() {
 
             public String onDblClick(ListControl list, Integer index) {
-                return "mgnl.workflow.SubPagesList.open();";
+                return "mgnl.workflow.Inbox.show();";
             }
 
             public String onSelect(ListControl list, Integer index) {
-                return super.onSelect(list, index) + "mgnl.workflow.SubPagesList.url= '" + list.getIteratorValue("link") + "';";
+
+                String path = ObjectUtils.toString(list.getIteratorValue("path"));
+
+                StringBuffer js = new StringBuffer();
+                js.append("mgnl.workflow.Inbox.current = ");
+                js.append("{");
+                js.append("id : '").append(list.getIteratorValue("id")).append("',");
+                js.append("path : '").append(path).append("',");
+                js.append("version : '").append(list.getIteratorValue("version")).append("',");
+                js.append("repository : '").append(repository).append("'");
+                js.append("};");
+                js.append("mgnl.workflow.Inbox.show = ").append(InboxHelper.getShowJSFunction(repository, path)).append(";");
+                js.append(super.onSelect(list, index));
+
+                return js.toString();
             }
         });
     }
@@ -130,10 +146,9 @@ public class SubPagesList extends AbstractList {
     protected void configureContextMenu(ContextMenu menu) {
         ContextMenuItem show = new ContextMenuItem("show");
         show.setLabel(this.getMsgs().get("subpages.show"));
-        show.setOnclick("mgnl.workflow.SubPagesList.open();");
+        show.setOnclick("mgnl.workflow.Inbox.show();");
         show.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/note_view.gif");
-        show.addJavascriptCondition("{test: function(){return mgnl.workflow.SubPagesList!=null}}");
-
+        show.addJavascriptCondition("{test: function(){return mgnl.workflow.Inbox.current.id!=null}}");
         menu.addMenuItem(show);
     }
 
@@ -168,15 +183,12 @@ public class SubPagesList extends AbstractList {
             versionedNode = node.getVersionedContent(version);
         }
 
-        public String getIcon() {
-            return "/" + InboxHelper.getIcon(repository, node.getHandle());
+        public String getPath(){
+            return node.getHandle();
         }
 
-        public String getLink() {
-            if (repository.equals("dms")) {
-                return MgnlContext.getContextPath() + "/dms" + node.getHandle() + ".html?mgnlVersion=" + version;
-            }
-            return MgnlContext.getContextPath() + node.getHandle() + ".html?mgnlVersion=" + version;
+        public String getIcon() {
+            return "/" + InboxHelper.getIcon(repository, node.getHandle());
         }
 
         public String getLabel() {

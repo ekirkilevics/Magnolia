@@ -80,6 +80,13 @@ public class Inbox extends AbstractList {
         return new InboxListModel(MgnlContext.getUser().getName());
     }
 
+    public String getSortBy() {
+        if(StringUtils.isEmpty(super.getSortBy())){
+            setSortBy("lastModified");
+        }
+        return super.getSortBy();
+    }
+
     /**
      * Sets the select js code and defines the columns
      */
@@ -98,7 +105,8 @@ public class Inbox extends AbstractList {
                 String path = ObjectUtils.toString(list.getIteratorValue("path"));
 
                 StringBuffer js = new StringBuffer();
-                js.append("mgnl.workflow.Inbox.current = {");
+                js.append("mgnl.workflow.Inbox.current = ");
+                js.append("{");
                 js.append("id : '").append(list.getIteratorValue("id")).append("',");
                 js.append("path : '").append(path).append("',");
                 js.append("version : '").append(list.getIteratorValue("version")).append("',");
@@ -135,7 +143,7 @@ public class Inbox extends AbstractList {
                 return "<img src=\""
                     + MgnlContext.getContextPath()
                     + "/"
-                    + InboxHelper.getIcon(repository, path)
+                    + getIcon(path, repository)
                     + "\" alt=\"\" border=\"0\" />";
             }
         });
@@ -167,13 +175,14 @@ public class Inbox extends AbstractList {
 
     }
 
-    protected String getShowJSFunction(String repository, String path) {
-        return "mgnl.workflow.Inbox.showFunctions." + repository;
+    protected String getIcon(String path, String repository) {
+        return InboxHelper.getIcon(repository, path);
     }
 
-    /**
-     * @see info.magnolia.module.admininterface.lists.AbstractList#getContextMenu()
-     */
+    protected String getShowJSFunction(String repository, String path) {
+        return InboxHelper.getShowJSFunction(repository, path);
+    }
+
     public void configureContextMenu(ContextMenu menu) {
         ContextMenuItem edit = new ContextMenuItem("edit");
         edit.setLabel(msgs.get("inbox.edit"));

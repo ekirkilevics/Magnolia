@@ -34,11 +34,21 @@ public class InboxHelper {
         if (StringUtils.equals(repository, "website")) {
             return ".resources/icons/16/document_plain_earth.gif";
         }
+
         if (StringUtils.equals(repository, "dms")) {
             String type = NodeDataUtil.getString(repository, path + "/type");
-            return StringUtils.removeStart(MIMEMapping.getMIMETypeIcon(type), "/");
+            if("folder".equals(type)){
+                return ".resources/icons/16/folder.gif";
+            }
+            else{
+                return StringUtils.removeStart(MIMEMapping.getMIMETypeIcon(type), "/");
+            }
         }
-    
+
         return ".resources/icons/16/mail.gif";
+    }
+
+    public static String getShowJSFunction(String repository, String path) {
+        return "mgnl.workflow.Inbox.showFunctions." + repository;
     }
 }
