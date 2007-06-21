@@ -1,9 +1,0 @@
-<info>
-	<element name="module">
-		<element name="class" property="className"/>
-		<element name="displayName" property="displayName"/>
-                <!-- this is deprecated : -->
-                <element name="display-name" property="displayName"/>
-		<addDefaults/>
-	</element>
-</info>

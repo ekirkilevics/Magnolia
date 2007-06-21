@@ -26,6 +26,8 @@ import org.apache.commons.lang.StringUtils;
  * Defines a module to register. The definition is constructed by the modules xml definition (using betwixt).
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated use info.magnolia.module.model.ModuleDefinition
  */
 public class ModuleDefinition {
 

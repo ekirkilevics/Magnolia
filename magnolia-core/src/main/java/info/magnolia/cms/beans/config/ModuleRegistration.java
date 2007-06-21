@@ -24,6 +24,7 @@ import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleDefinitionReader;
 
 import java.io.File;
 import java.io.IOException;
@@ -74,6 +75,7 @@ public class ModuleRegistration {
      */
     public synchronized static ModuleRegistration getInstance() {
         ModuleRegistration registration = (ModuleRegistration) FactoryUtil.getSingleton(ModuleRegistration.class);
+        // TODO : couldn't this be in the ctor !?
         if(!registration.initialized) {
             registration.init();
         }
@@ -96,7 +98,7 @@ public class ModuleRegistration {
     private boolean restartNeeded = false;
 
     /**
-     * Don't instantiate! Warum dann nicht private?????
+     * Don't instantiate! (use getInstance)
      */
     public ModuleRegistration() {
     }
@@ -146,8 +148,7 @@ public class ModuleRegistration {
      */
     protected void readModuleDefinitions() {
         try {
-            BeanReader beanReader = new BeanReader();
-            beanReader.registerBeanClass(ModuleDefinition.class);
+            final ModuleDefinitionReader moduleDefinitionReader = new ModuleDefinitionReader();
 
             log.info("Reading module definition");
 
@@ -167,7 +168,7 @@ public class ModuleRegistration {
                 log.info("Parsing module file {} for module @ {}", name, moduleRoot.getAbsolutePath());
 
                 try {
-                    ModuleDefinition def = (ModuleDefinition) beanReader.parse(new StringReader(getXML(name)));
+                    ModuleDefinition def = moduleDefinitionReader.read(new StringReader(getXML(name)));
                     def.setModuleRoot(moduleRoot);
                     this.moduleDefinitions.put(def.getName(), def);
                 }
@@ -271,7 +272,7 @@ public class ModuleRegistration {
                 + def.getName()
                 + "] needs version ["
                 + dep.getName() + " " + depVersion
-                + "] and [" + dep.getName() + " " + instVersion + "] is installed. This version seams to be ok");
+                + "] and [" + dep.getName() + " " + instVersion + "] is installed. This version seems to be ok");
         }
     }
 

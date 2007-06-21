@@ -15,6 +15,8 @@ package info.magnolia.cms.module;
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated use info.magnolia.module.model.DependencyDefinition
  */
 public class DependencyDefinition {
 
