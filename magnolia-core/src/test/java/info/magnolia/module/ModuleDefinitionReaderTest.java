@@ -48,6 +48,26 @@ public class ModuleDefinitionReaderTest extends TestCase {
         assertEquals("The Display Name", mod.getDisplayName());
     }
 
+    public void testClassIsResolvedToClassNameAsAString() throws Exception {
+        String xml = "<module>\n" +
+                "  <name>the name</name>\n" +
+                "  <class>java.lang.Integer</class>\n" +
+                "</module>";
+        ModuleDefinition mod = new ModuleDefinitionReader().read(new StringReader(xml));
+        assertTrue(mod.getClassName() instanceof String);
+        assertEquals("java.lang.Integer", mod.getClassName());
+    }
+
+    public void testVersionHandlerIsResolvedToAClass() throws Exception {
+        String xml = "<module>\n" +
+                "  <name>the name</name>\n" +
+                "  <class>java.lang.Integer</class>\n" +
+                "  <versionHandler>java.lang.String</versionHandler>" +
+                "</module>";
+        ModuleDefinition mod = new ModuleDefinitionReader().read(new StringReader(xml));
+        assertEquals(String.class, mod.getVersionHandler());
+    }
+
     public void testModuleVersionIsProperlyRead() {
         String xml = "<module>\n" +
                 "  <name>the name</name>\n" +

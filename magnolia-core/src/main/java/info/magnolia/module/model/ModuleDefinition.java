@@ -18,7 +18,15 @@ package info.magnolia.module.model;
  * @version $Revision: $ ($Author: $)
  */
 public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition {
-//    private final Collection dependencies = new ArrayList();
+    private Class versionHandler;
+
+    public Class getVersionHandler() {
+        return versionHandler;
+    }
+
+    public void setVersionHandler(Class versionHandler) {
+        this.versionHandler = versionHandler;
+    }
 
     /**
      * TODO : rename to getVersion once we got rid of info.magnolia.cms.module.ModuleDefinition
