@@ -305,7 +305,7 @@ public class ContentUtil {
     public static void visit(Content node, Visitor visitor, ContentFilter filter) throws Exception{
         visitor.visit(node);
         for (Iterator iter = node.getChildren(filter).iterator(); iter.hasNext();) {
-            visit((Content) iter.next(), visitor);
+            visit((Content) iter.next(), visitor, filter);
         }
     }
 
