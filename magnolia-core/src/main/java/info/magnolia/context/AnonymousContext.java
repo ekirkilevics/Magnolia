@@ -168,6 +168,5 @@ public class AnonymousContext extends WebContextImpl {
         accessManagerMap.clear();
         hierarchyManagerMap.clear();
         queryManagerMap.clear();
-        log.info("Updated anonymous subject");
     }
 }
