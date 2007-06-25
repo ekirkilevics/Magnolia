@@ -15,7 +15,7 @@ package info.magnolia.module.model;
 import java.util.regex.Pattern;
 
 /**
- * Represents a module version. Format is x.y.z-classifier, where y,z and classifier are
+ * Represents a module version. Format is x.y.z-classifier. y,z and classifier are
  * optional. The classifier string is ignored in version comparisons.
  *
  * @author gjoseph
