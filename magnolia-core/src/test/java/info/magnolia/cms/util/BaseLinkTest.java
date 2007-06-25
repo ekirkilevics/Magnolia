@@ -10,28 +10,21 @@
  */
 package info.magnolia.cms.util;
 
-import static org.easymock.EasyMock.anyObject;
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.DefaultI18NSupport;
 import info.magnolia.cms.i18n.I18NSupport;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.BinaryMockNodeData;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockUtil;
-
-import java.io.IOException;
-import java.text.MessageFormat;
+import org.easymock.IAnswer;
+import static org.easymock.classextension.EasyMock.*;
 
 import javax.jcr.RepositoryException;
-
-import org.easymock.IAnswer;
-import org.easymock.classextension.EasyMock;
-
+import java.io.IOException;
+import java.text.MessageFormat;
 
 /**
  * @author philipp
@@ -60,18 +53,18 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         page.addNodeData(new BinaryMockNodeData("file", null, "test.jpg", "image/jpeg", 5000));
 
         URI2RepositoryManager uri2repo = createMock(URI2RepositoryManager.class);
-        expect(uri2repo.getURI((String)anyObject(), (String) anyObject())).andStubAnswer(new IAnswer<String>(){
+        expect(uri2repo.getURI((String) anyObject(), (String) anyObject())).andStubAnswer(new IAnswer<String>() {
             public String answer() throws Throwable {
-                return (String)EasyMock.getCurrentArguments()[1];
+                return (String) getCurrentArguments()[1];
             }
         });
-        expect(uri2repo.getHandle((String)anyObject())).andStubAnswer(new IAnswer<String>(){
+        expect(uri2repo.getHandle((String) anyObject())).andStubAnswer(new IAnswer<String>() {
             public String answer() throws Throwable {
-                return (String)EasyMock.getCurrentArguments()[0];
+                return (String) getCurrentArguments()[0];
             }
         });
 
-        expect(uri2repo.getRepository((String)anyObject())).andStubReturn(ContentRepository.WEBSITE);
+        expect(uri2repo.getRepository((String) anyObject())).andStubReturn(ContentRepository.WEBSITE);
 
         replay(uri2repo);
         FactoryUtil.setInstance(URI2RepositoryManager.class, uri2repo);
