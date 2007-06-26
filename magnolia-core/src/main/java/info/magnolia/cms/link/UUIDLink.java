@@ -199,7 +199,7 @@ public class UUIDLink{
                     node = hm.getContentByUUID(uuid);
                 }
                 catch (RepositoryException e) {
-                    log.warn("can't get node with uuid [{}] will try stored handle [{}]", new String[]{uuid, handle});
+                    log.warn("can't get node with uuid [{}] will try stored handle [{}]", new String[]{uuid, handle});
                 }
             }
 
