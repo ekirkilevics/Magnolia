@@ -28,19 +28,35 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class ObservationUtil {
+    private final static Logger log = LoggerFactory.getLogger(ObservationUtil.class);
 
     /**
-     * Logger
+     * Registers an EventListener for any node type.
+     * @see #registerChangeListener(String,String,String[],javax.jcr.observation.EventListener)
      */
-    private static Logger log = LoggerFactory.getLogger(ObservationUtil.class);
+    public static void registerChangeListener(String repository, String observationPath, EventListener listener) {
+        registerChangeListener(repository, observationPath, (String[]) null, listener);
+    }
+
+    /**
+     * Registers an EventListener for a specific node type.
+     * @see #registerChangeListener(String,String,String[],javax.jcr.observation.EventListener)
+     */
+    public static void registerChangeListener(String repository, String observationPath, String nodeType, EventListener listener) {
+        registerChangeListener(repository, observationPath, new String[]{nodeType}, listener);
+    }
 
     /**
      * Register a single event listener, bound to the given path.
+     * Be careful that if you observe "/", events are going to be generated for jcr:system, which is "shared" accross all workspaces.
+     *
      * @param repository
      * @param observationPath repository path
+     * @param nodeTypes the node types to filter events for
      * @param listener event listener
+     * @see ObservationManager.addEventListener
      */
-    public static void registerChangeListener(String repository, String observationPath, EventListener listener) {
+    public static void registerChangeListener(String repository, String observationPath, String[] nodeTypes, EventListener listener) {
         log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$
 
         try {
@@ -54,7 +70,7 @@ public class ObservationUtil {
                 | Event.NODE_REMOVED
                 | Event.PROPERTY_ADDED
                 | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, observationPath, true, null, null, false);
+                | Event.PROPERTY_REMOVED, observationPath, true, null, nodeTypes, false);
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$

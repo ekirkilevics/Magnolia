@@ -60,21 +60,19 @@ public class AnonymousContext extends WebContextImpl {
     private static User anonymousUser;
 
     static {
-        // todo : Ideally we should allow anonymous user to have any role or group but in that case
-        // we would need to observe and update this subject on any changes in users, userroles and usergroups workspaces
-        ObservationUtil.registerChangeListener(ContentRepository.USER_ROLES, "/", new EventListener() {
+        ObservationUtil.registerChangeListener(ContentRepository.USERS, "/anonymous", "mgnl:user", new EventListener() {
             public void onEvent(EventIterator events) {
                 reset();
             }
         });
 
-        ObservationUtil.registerChangeListener(ContentRepository.USERS, "/anonymous", new EventListener() {
+        ObservationUtil.registerChangeListener(ContentRepository.USER_GROUPS, "/", "mgnl:group", new EventListener() {
             public void onEvent(EventIterator events) {
                 reset();
             }
         });
 
-        ObservationUtil.registerChangeListener(ContentRepository.USER_GROUPS, "/", new EventListener() {
+        ObservationUtil.registerChangeListener(ContentRepository.USER_ROLES, "/", "mgnl:role", new EventListener() {
             public void onEvent(EventIterator events) {
                 reset();
             }
