@@ -37,7 +37,7 @@ public class RequestHasParametersVoter extends AbstractBoolVoter {
             return true;
         }
 
-        return true;
+        return false;
     }
 
 }
