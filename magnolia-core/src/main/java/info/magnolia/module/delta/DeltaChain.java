@@ -14,6 +14,7 @@ package info.magnolia.module.delta;
 
 import info.magnolia.module.InstallContext;
 
+import javax.jcr.RepositoryException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -30,7 +31,7 @@ public class DeltaChain implements Delta {
         this.deltas = deltas;
     }
 
-    public void apply(InstallContext ctx) {
+    public void apply(InstallContext ctx) throws RepositoryException {
         final Iterator it = deltas.iterator();
         while (it.hasNext()) {
             final Delta d = (Delta) it.next();

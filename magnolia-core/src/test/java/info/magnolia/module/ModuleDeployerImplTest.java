@@ -29,7 +29,7 @@ public class ModuleDeployerImplTest extends TestCase {
     /**
      * TODO : should check that d1 is actually called before d2
      */
-    public void testUpdateAppliesSuppliedDeltas() {
+    public void testUpdateAppliesSuppliedDeltas() throws Exception {
         final InstallContext ctx = createStrictMock(InstallContext.class);
         final Delta d1 = createStrictMock(Delta.class);
         final Delta d2 = createStrictMock(Delta.class);

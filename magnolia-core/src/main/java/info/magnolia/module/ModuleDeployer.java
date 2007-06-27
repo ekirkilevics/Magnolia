@@ -14,6 +14,8 @@ package info.magnolia.module;
 
 import info.magnolia.module.model.Version;
 
+import javax.jcr.RepositoryException;
+
 /**
  *
  * @author gjoseph
@@ -23,7 +25,8 @@ public interface ModuleDeployer {
     
     void install(ModuleVersionHandler moduleVersionHandler);
 
-    void update(ModuleVersionHandler moduleVersionHandler, Version installedVersion);
+    // TODO : exception handling (see note in Delta)
+    void update(ModuleVersionHandler moduleVersionHandler, Version installedVersion) throws RepositoryException;
 
     void unInstall(ModuleVersionHandler moduleVersionHandler);
 

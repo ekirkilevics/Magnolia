@@ -79,6 +79,12 @@ public class MockContent extends DefaultContent {
         nodeDatas.put(nd.getName(), nd);
     }
 
+    public NodeData createNodeData(String name, Object obj) throws RepositoryException {
+        final MockNodeData nd = new MockNodeData(name, obj);
+        addNodeData(nd);
+        return nd;
+    }
+
     public MockMetaData createMetaData() {
         addContent(new MockContent("MetaData"));//, ItemType."mgnl:metaData"));
         return getMetaData();
@@ -141,7 +147,13 @@ public class MockContent extends DefaultContent {
 
     public NodeData getNodeData(String name) {
         final MockNodeData nodeData = (MockNodeData) this.nodeDatas.get(name);
-        return nodeData !=null ? nodeData : new MockNodeData(name, null);
+        if (nodeData != null) {
+            return nodeData;
+        } else {
+            final MockNodeData fakeNodeData= new MockNodeData(name, null);
+            fakeNodeData.setParent(this);
+            return fakeNodeData;
+        }
     }
 
     public boolean hasNodeData(String name) throws RepositoryException {

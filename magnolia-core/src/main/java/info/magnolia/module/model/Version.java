@@ -31,10 +31,13 @@ public class Version {
     private final short patch;
     private final String classifier;
 
-    private Version(short major, short minor, short patch) {
-        this.major = major;
-        this.minor = minor;
-        this.patch = patch;
+    /**
+     * Convenience constructor that could be used to register Deltas or update tasks.
+     */
+    public Version(int major, int minor, int patch) {
+        this.major = (short) major;
+        this.minor = (short) minor;
+        this.patch = (short) patch;
         this.classifier = null;
     }
 

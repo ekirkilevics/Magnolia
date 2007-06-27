@@ -13,22 +13,29 @@
 package info.magnolia.module.delta;
 
 import info.magnolia.module.InstallContext;
+import info.magnolia.cms.module.ModuleUtil;
+import info.magnolia.cms.module.RegisterException;
 
 import javax.jcr.RepositoryException;
+import java.io.IOException;
 
 /**
- * A Delta represents the differences from one version of a module to another.
- * Each module is responsible for handing the appropriate deltas to the deployer.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface Delta {
-    /**
-     * Returns the version number for which this is needed.
-     */
-    // Version getVersion();
+public abstract class BootstrapDelta implements Delta {
 
-    // TODO : have a specific exception - or none at all, only a specific exception in Tasks ?
-    void apply(InstallContext ctx) throws RepositoryException;
+    // TODO : check if nodes were already there
+    public void apply(InstallContext ctx) throws RepositoryException {
+        try {
+            ModuleUtil.bootstrap(getResourcesToBootstrap());
+        } catch (IOException e) {
+            throw new RuntimeException(e); // TODO
+        } catch (RegisterException e) {
+            throw new RuntimeException(e); // TODO
+        }
+    }
+
+    protected abstract String[] getResourcesToBootstrap();
 }

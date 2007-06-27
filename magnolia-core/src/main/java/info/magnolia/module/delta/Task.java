@@ -10,27 +10,23 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
+package info.magnolia.module.delta;
 
 /**
+ * A Task represents an atomic operation to be performed when installing,
+ * updating or uninstalling a module, as part of a Delta.
+ *
+ * TODO : this is work in progress / sketch
+ *
+ * @see info.magnolia.module.delta.Delta
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface InstallContext { // implements Context ?
+public interface Task {
+    String getName();
+    String getDescription();
+    
+    void execute();
 
-    void debug(String message);
-
-    // TODO : pass a reference to the Module/versionHandler/Delta/... here  
-    // TODO : so that we can make something useful out of the message ?
-    void log(String message);
-
-    HierarchyManager getHierarchyManager(String workspace);
-
-    Content getModuleConfigNode();
-
-    // TODO methods to retrieve HierarchyManager and other services ?
 }

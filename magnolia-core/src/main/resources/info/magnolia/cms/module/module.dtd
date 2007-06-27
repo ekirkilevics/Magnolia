@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- main definition -->
-<!ELEMENT module (name, (displayName|display-name)?,  description?, class, version, properties?, dependencies?, servlets?, repositories?)>
+<!ELEMENT module (name, (displayName|display-name)?,  description?, class, versionHandler, version, properties?, dependencies?, servlets?, repositories?)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT displayName (#PCDATA)>
 <!ELEMENT version (#PCDATA)>
 <!ELEMENT description (#PCDATA)>
 <!ELEMENT class (#PCDATA)>
+<!ELEMENT versionHandler (#PCDATA)>
 <!ELEMENT value (#PCDATA)>
 <!-- deprecated : -->
 <!ELEMENT display-name (#PCDATA)>

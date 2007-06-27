@@ -15,6 +15,7 @@ package info.magnolia.module;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.model.Version;
 
+import javax.jcr.RepositoryException;
 import java.util.Iterator;
 import java.util.List;
 
@@ -34,7 +35,7 @@ public class ModuleDeployerImpl implements ModuleDeployer {
         throw new IllegalStateException("not implemented yet");
     }
 
-    public void update(ModuleVersionHandler moduleVersionHandler, Version installedVersion) {
+    public void update(ModuleVersionHandler moduleVersionHandler, Version installedVersion) throws RepositoryException {
         final List deltas = moduleVersionHandler.getDeltas(installedVersion, moduleVersionHandler.getLatestVersion());
         apply(deltas);
     }
@@ -43,7 +44,7 @@ public class ModuleDeployerImpl implements ModuleDeployer {
         throw new IllegalStateException("not implemented yet");
     }
 
-    protected void apply(List deltas) {
+    protected void apply(List deltas) throws RepositoryException {
         final Iterator it = deltas.iterator();
         while (it.hasNext()) {
             final Delta d = (Delta) it.next();
