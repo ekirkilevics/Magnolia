@@ -358,8 +358,9 @@ public class CacheImpl implements Cache {
     }
 
     private File getFile(CacheKey key, boolean compressed) {
-
         String fileName = key.toString();
+        // we add .cache extension to directories to distinguish them from files cached without extensions
+        fileName = StringUtils.removeStart(StringUtils.replace(fileName, File.separator, ".cache" + File.separator), ".cache");
         File cacheFile;
         if (compressed) {
             cacheFile = new File(getCacheDirectory(), fileName + ".gzip");
