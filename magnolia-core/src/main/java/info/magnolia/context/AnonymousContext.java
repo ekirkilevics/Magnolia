@@ -29,6 +29,7 @@ import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.EventIterator;
 import java.util.Map;
@@ -92,8 +93,11 @@ public class AnonymousContext extends WebContextImpl {
         HierarchyManager hierarchyManager = (HierarchyManager) hierarchyManagerMap.get(repositoryName+workspaceName);
         if (null == hierarchyManager) {
             try {
+                WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
+                Session jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
+
                 hierarchyManager = WorkspaceAccessUtil.getInstance().createHierarchyManager(getUser().getName(),
-                        getRepositorySession(repositoryName, workspaceName),
+                        jcrSession,
                         getAccessManager(repositoryName, workspaceName),
                         getQueryManager(repositoryName, workspaceName));
                 hierarchyManagerMap.put(repositoryName+workspaceName, hierarchyManager);
