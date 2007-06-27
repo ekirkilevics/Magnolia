@@ -36,7 +36,7 @@ public class SessionDebugger extends AbstractMagnoliaFilter implements HttpSessi
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SessionDebugger.class);
 
     public boolean bypasses(HttpServletRequest request) {
-        return false;
+        return !isEnabled();
     }
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
