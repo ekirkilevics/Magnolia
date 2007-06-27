@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A single filter that in turn executed a chain of other filters not configured in web.xml.
+ * A single filter which in turn executes a chain of other filters not configured in web.xml.
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
@@ -153,13 +153,13 @@ public class MagnoliaMainFilter extends AbstractMagnoliaFilter {
             MagnoliaFilter filter = filters[j];
 
             try {
+                log.info("Initializing filter [{}]", filter.getName());
                 filter.init(filterConfig);
             }
             catch (ServletException e) {
                 log.error("Error initializing filter [" + filter.getName() + "]", e);
             }
 
-            log.info("Initializing filter [{}]", filter.getName());
         }
     }
 
