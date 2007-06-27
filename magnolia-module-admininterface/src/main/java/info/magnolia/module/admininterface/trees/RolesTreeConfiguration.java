@@ -52,14 +52,12 @@ public class RolesTreeConfiguration extends AbstractTreeConfiguration {
 
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
-        if (Server.isAdmin()) {
-            column0.setHtmlEdit();
-        }
+        column0.setHtmlEdit();
         column0.setWidth(2);
         column0.setTitle(msgs.get("tree.roles.name")); //$NON-NLS-1$
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName("title"); //$NON-NLS-1$
-        if (Server.isAdmin() && !browseMode) {
+        if (!browseMode) {
             column1.setHtmlEdit();
         }
         column1.setWidth(2);
