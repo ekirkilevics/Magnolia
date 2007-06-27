@@ -113,8 +113,8 @@ public class SessionDebugger extends AbstractMagnoliaFilter implements HttpSessi
 
     protected void dumpSessionBindingEvent(HttpSessionBindingEvent event, StringBuffer sb) {
         sb.append("-- Session event :").append("\n");
-        sb.append("Event: attribute name: ").append(event.getName()).append("\n");
-        sb.append("Event: attribute value: ").append(event.getValue()).append("\n");
+        sb.append("  Event: attribute name: ").append(event.getName()).append("\n");
+        sb.append("  Event: attribute value: ").append(event.getValue()).append("\n");
     }
 
 }
