@@ -69,7 +69,7 @@ public class GroupsTreeConfiguration extends AbstractTreeConfiguration {
         columnIcons.setIconsActivation(true);
 
         TreeColumn column2 = new TreeColumn(tree.getJavascriptTree(), request);
-        column2.setName(MetaData.CREATION_DATE);
+        column2.setName(MetaData.LAST_MODIFIED);
         // column2.setName(MetaData.SEQUENCE_POS);
         column2.setIsMeta(true);
         column2.setDateFormat("yyyy-MM-dd, HH:mm"); //$NON-NLS-1$
