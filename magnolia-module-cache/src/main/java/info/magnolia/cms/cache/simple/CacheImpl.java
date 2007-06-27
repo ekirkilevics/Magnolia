@@ -42,6 +42,11 @@ public class CacheImpl implements Cache {
     private static final Logger log = LoggerFactory.getLogger(CacheImpl.class);
 
     /**
+     * We add this extions to directories to avoid conflicts with files not having an extension
+     */
+    public static final String CACHE_DIRECTORY_EXTENTION = ".cache";
+
+    /**
      * Cached items: the key is the URI of the cached request and the entry is a Cache instance
      */
     private Map cachedURIList = new Hashtable();
@@ -360,7 +365,7 @@ public class CacheImpl implements Cache {
     private File getFile(CacheKey key, boolean compressed) {
         String fileName = key.toString();
         // we add .cache extension to directories to distinguish them from files cached without extensions
-        fileName = StringUtils.removeStart(StringUtils.replace(fileName, File.separator, ".cache" + File.separator), ".cache");
+        fileName = StringUtils.removeStart(StringUtils.replace(fileName, "/", CACHE_DIRECTORY_EXTENTION + "/"), CACHE_DIRECTORY_EXTENTION);
         File cacheFile;
         if (compressed) {
             cacheFile = new File(getCacheDirectory(), fileName + ".gzip");
