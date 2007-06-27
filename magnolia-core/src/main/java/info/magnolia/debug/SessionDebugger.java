@@ -96,14 +96,18 @@ public class SessionDebugger extends AbstractMagnoliaFilter implements HttpSessi
     }
 
     protected void dumpSession(HttpSession session, StringBuffer sb) {
-        sb.append("-- Session attributes :").append("\n");
-        final Enumeration sessAttrNames = session.getAttributeNames();
-        while (sessAttrNames.hasMoreElements()) {
-            final String attr = (String) sessAttrNames.nextElement();
-            sb.append("    ").append(attr).append(" = ").append(session.getAttribute(attr)).append("\n");
+        try {
+            sb.append("-- Session attributes :").append("\n");
+            final Enumeration sessAttrNames = session.getAttributeNames();
+            while (sessAttrNames.hasMoreElements()) {
+                final String attr = (String) sessAttrNames.nextElement();
+                sb.append("    ").append(attr).append(" = ").append(session.getAttribute(attr)).append("\n");
+            }
+            sb.append("-- Session is new : ");
+            sb.append(session.isNew()).append("\n");
+        } catch (IllegalStateException e) {
+            sb.append("-- ").append(e.getMessage());
         }
-        sb.append("-- Session is new : ");
-        sb.append(session.isNew()).append("\n");
         sb.append("----------").append("\n");
     }
 
