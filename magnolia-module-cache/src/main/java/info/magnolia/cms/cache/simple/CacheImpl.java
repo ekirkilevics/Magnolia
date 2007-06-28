@@ -177,7 +177,6 @@ public class CacheImpl implements Cache {
         // register to observe on any changes if configured
         try {
             this.registerChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
-
                 public void onEvent(EventIterator events) {
                     DeferredCleaner.getInstance().consume(events);
                 }
@@ -233,14 +232,15 @@ public class CacheImpl implements Cache {
                 if (item.getName().lastIndexOf("gzip") < 0) {
                     // use this as key
                     String cacheHome = getCacheDirectory().getPath();
-                    CacheKey key = new CacheKey(StringUtils.substringAfter(item.getPath(), cacheHome));
+                    String key = StringUtils.substringAfter(item.getPath(), cacheHome);
+                    key = StringUtils.replace(key, CACHE_DIRECTORY_EXTENTION, "");
                     int size = (int) item.length();
                     File compressedFile = new File(item.getPath() + ".gzip");
                     int compressedSize = -1;
                     if (compressedFile.exists()) {
                         compressedSize = (int) compressedFile.length();
                     }
-                    addToCachedURIList(key, item.lastModified(), size, compressedSize);
+                    addToCachedURIList(new CacheKey(key), item.lastModified(), size, compressedSize);
                 }
             }
         }
