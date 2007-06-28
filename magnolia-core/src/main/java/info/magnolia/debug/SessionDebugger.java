@@ -35,10 +35,6 @@ import java.util.Enumeration;
 public class SessionDebugger extends AbstractMagnoliaFilter implements HttpSessionListener, HttpSessionAttributeListener {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SessionDebugger.class);
 
-    public boolean bypasses(HttpServletRequest request) {
-        return !isEnabled();
-    }
-
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         final HttpSession session = request.getSession(false);
         if (session == null) {
@@ -72,6 +68,9 @@ public class SessionDebugger extends AbstractMagnoliaFilter implements HttpSessi
     }
 
     protected void logSessionEvent(HttpSessionEvent event, String s) {
+        if(!isEnabled()){
+            return;
+        }
         final StringBuffer msg = new StringBuffer("-- ");
         msg.append(s).append("\n");
         dumpStacktrace(msg);
