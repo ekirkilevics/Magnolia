@@ -110,7 +110,7 @@ public class CacheFilter extends AbstractMagnoliaFilter {
                 // If an If-None-Match header has been specified, if modified since
                 // is ignored.
                 if ((request.getHeader("If-None-Match") == null)
-                    && (lastModified <= headerValue + 1000)) {
+                    && (lastModified > 0 && lastModified <= headerValue + 1000)) {
                     return false;
                 }
             }
