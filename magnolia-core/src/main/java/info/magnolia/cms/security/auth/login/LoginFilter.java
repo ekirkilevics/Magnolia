@@ -18,12 +18,14 @@ import info.magnolia.context.MgnlContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.ArrayList;
+import java.util.Enumeration;
 
 /**
  * @author Sameer Charles
@@ -33,28 +35,29 @@ public class LoginFilter extends AbstractMagnoliaFilter {
 
     private Collection loginHandlers = new ArrayList();
 
+    /**
+     * todo - temporary fix
+     * */
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
-        if (Authenticator.isAuthenticated(request)) {
-            // Switch anonymous context to WebContextImpl
-            MgnlContext.initAsWebContext(request, response);
-        } else {
-            Iterator handlers = this.getLoginHandlers().iterator();
-            int status = LoginHandler.STATUS_NOT_HANDLED;
-            while (handlers.hasNext()) {
-                LoginHandler handler = (LoginHandler) handlers.next();
-                int retVal = handler.handle(request, response);
-                if (retVal == LoginHandler.STATUS_IN_PROCESS) {
-                    // special handling to support multi step login mechanisms like ntlm
-                    // do not continue with the filter chain
-                    return;
-                } else if (retVal == LoginHandler.STATUS_SUCCEDED) {
-                    status = LoginHandler.STATUS_SUCCEDED;
-                }
+        Iterator handlers = this.getLoginHandlers().iterator();
+        int status = LoginHandler.STATUS_NOT_HANDLED;
+        while (handlers.hasNext()) {
+            LoginHandler handler = (LoginHandler) handlers.next();
+            int retVal = handler.handle(request, response);
+            if (retVal == LoginHandler.STATUS_IN_PROCESS) {
+                // special handling to support multi step login mechanisms like ntlm
+                // do not continue with the filter chain
+                return;
+            } else if (retVal == LoginHandler.STATUS_SUCCEDED) {
+                status = LoginHandler.STATUS_SUCCEDED;
             }
-            // if any of the handlers succeed we have a session and can use WebContext
+        }
+        // if any of the handlers succeed we have a session and can use WebContext
+        if (Authenticator.isAuthenticated(request)) {
+            MgnlContext.initAsWebContext(request, response);
             if (status == LoginHandler.STATUS_SUCCEDED) {
-                MgnlContext.initAsWebContext(request, response);
+                resetSessionAttributes(request.getSession());
             }
         }
         // continue even if all login handlers failed
@@ -73,4 +76,17 @@ public class LoginFilter extends AbstractMagnoliaFilter {
         this.loginHandlers.add(handler);
     }
 
+    /**
+     * todo : temporary fix for MAGNOLIA-1598 & MAGNOLIA-1605 
+     * */
+    private void resetSessionAttributes(HttpSession session) {
+        Enumeration names = session.getAttributeNames();
+        while (names.hasMoreElements()) {
+            String attributeName = (String) names.nextElement();
+            if ("mgnlJAASSubject".equals(attributeName)) {
+                continue;
+            }
+            session.removeAttribute(attributeName);
+        }
+    }
 }

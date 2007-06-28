@@ -18,7 +18,6 @@ import info.magnolia.cms.security.auth.callback.HttpClientCallback;
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 /**
@@ -51,10 +50,12 @@ public abstract class BaseSecurityFilter extends AbstractMagnoliaFilter {
      * other login strategies
      * */
     public void doAuthenticate(HttpServletRequest request, HttpServletResponse response) {
+        /*
         HttpSession httpsession = request.getSession(false);
         if (httpsession != null) {
             httpsession.invalidate();
         }
+        */
         getClientCallback().handle(request, response);
     }
 

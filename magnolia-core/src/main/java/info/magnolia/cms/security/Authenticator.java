@@ -146,16 +146,16 @@ public final class Authenticator {
             request.removeAttribute(ATTRIBUTE_LOGINERROR);
         }
         catch (FailedLoginException fle) {
-
             request.setAttribute(ATTRIBUTE_LOGINERROR, fle);
-
             if (log.isDebugEnabled()) {
                 log.debug("Wrong credentials", fle);
             }
+            /*
             HttpSession httpsession = request.getSession(false);
             if (httpsession != null) {
                 httpsession.invalidate();
             }
+            */
             return false;
         }
         catch (LoginException le) {
