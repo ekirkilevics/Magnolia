@@ -16,6 +16,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
+import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
 
 import java.util.*;
@@ -51,45 +52,47 @@ public class ActivationCommand extends BaseActivationCommand {
      * Execute activation
      */
     public boolean execute(Context ctx) {
-        try {
-            Content thisState;
-            if (StringUtils.isNotEmpty(getUuid())) {
-                thisState = ctx.getHierarchyManager(getRepository()).getContentByUUID(getUuid());
-            } else {
-                thisState = ctx.getHierarchyManager(getRepository()).getContent(getPath());
-            }
-            String parentPath = StringUtils.substringBeforeLast(thisState.getHandle(), "/");
-            if (StringUtils.isEmpty(parentPath)) {
-                parentPath = "/";
-            }
-            // make multiple activations instead of a big bulp
-            if (recursive) {
-                List versionMap = getVersionMap();
-                if (versionMap == null) {
-                    activateRecursive(parentPath, thisState, ctx);
+        synchronized(ExclusiveWrite.getInstance()) {
+            try {
+                Content thisState;
+                if (StringUtils.isNotEmpty(getUuid())) {
+                    thisState = ctx.getHierarchyManager(getRepository()).getContentByUUID(getUuid());
                 } else {
-                    activateRecursive(ctx, versionMap);
+                    thisState = ctx.getHierarchyManager(getRepository()).getContent(getPath());
                 }
-            }
-            else {
-                List orderInfo = getOrderingInfo(thisState);
-                if (StringUtils.isNotEmpty(getVersion())) {
-                    try {
-                        thisState = thisState.getVersionedContent(getVersion());
-                    } catch (RepositoryException re) {
-                        log.error("Failed to get version "+getVersion()+" for "+thisState.getHandle(), re);
+                String parentPath = StringUtils.substringBeforeLast(thisState.getHandle(), "/");
+                if (StringUtils.isEmpty(parentPath)) {
+                    parentPath = "/";
+                }
+                // make multiple activations instead of a big bulp
+                if (recursive) {
+                    List versionMap = getVersionMap();
+                    if (versionMap == null) {
+                        activateRecursive(parentPath, thisState, ctx);
+                    } else {
+                        activateRecursive(ctx, versionMap);
                     }
                 }
-                getSyndicator().activate(parentPath, thisState, orderInfo);
+                else {
+                    List orderInfo = getOrderingInfo(thisState);
+                    if (StringUtils.isNotEmpty(getVersion())) {
+                        try {
+                            thisState = thisState.getVersionedContent(getVersion());
+                        } catch (RepositoryException re) {
+                            log.error("Failed to get version "+getVersion()+" for "+thisState.getHandle(), re);
+                        }
+                    }
+                    getSyndicator().activate(parentPath, thisState, orderInfo);
+                }
             }
+            catch (Exception e) {
+                log.error("can't activate", e);
+                AlertUtil.setException(MessagesManager.get("tree.error.activate"), e, ctx);
+                return false;
+            }
+            log.info("exec successfully.");
+            return true;
         }
-        catch (Exception e) {
-            log.error("can't activate", e);
-            AlertUtil.setException(MessagesManager.get("tree.error.activate"), e, ctx);
-            return false;
-        }
-        log.info("exec successfully.");
-        return true;
     }
 
     /**
