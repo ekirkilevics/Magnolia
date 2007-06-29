@@ -105,6 +105,16 @@ public class AnonymousContext extends WebContextImpl {
                 log.error("Failed to create HierarchyManager for anonymous user",re);
             }
         }
+        else{
+            // FIXME This is a hack. The session should be alive!
+            if(!hierarchyManager.getWorkspace().getSession().isLive()){
+                log.error("Jcr session of anonymous context is not alive anymore. FIX THAT!");
+                log.error("Try to reset the context now!");
+                reset();
+                hierarchyManager = this.getHierarchyManager(repositoryName, workspaceName);
+
+            }
+        }
         return hierarchyManager;
     }
 
@@ -164,11 +174,12 @@ public class AnonymousContext extends WebContextImpl {
         anonymousUser = Security.getUserManager().getAnonymousUser();
     }
 
-    private static void reset() {
+    private synchronized static void reset() {
         setAnonymousSubject();
         setAnonymousUser();
         accessManagerMap.clear();
         hierarchyManagerMap.clear();
         queryManagerMap.clear();
+        log.info("Anonymous context reloaded");
     }
 }
