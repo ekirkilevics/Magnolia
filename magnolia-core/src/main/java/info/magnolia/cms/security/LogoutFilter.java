@@ -13,6 +13,7 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.context.AnonymousContext;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 
@@ -55,7 +56,9 @@ public class LogoutFilter extends BaseSecurityFilter {
         }
         HttpSession session = request.getSession(false);
         if (session != null) {
-            if (!(MgnlContext.getInstance() instanceof SystemContext)) {
+            // FIXME we check if this is an anonymous context. if so we do not close the sessions
+            // this shoulg be replaced by a ctx.logout() call
+            if (!(MgnlContext.getInstance() instanceof SystemContext) && !(MgnlContext.getInstance() instanceof AnonymousContext)) {
                 Iterator configuredStores = ContentRepository.getAllRepositoryNames();
                 while (configuredStores.hasNext()) {
                     String store = (String) configuredStores.next();
