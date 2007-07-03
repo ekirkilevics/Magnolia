@@ -22,6 +22,8 @@ import javax.servlet.http.HttpServletRequest;
  * helpful in restricting any authoring or publishing from unwanted sources.
  * @author Sameer Charles
  * @version 1.1
+ *
+ * @deprecated rename+merge with info.magnolia.cms.beans.config.Listener
  */
 public final class Listener {
 

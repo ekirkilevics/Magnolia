@@ -35,6 +35,8 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Sameer Charles
  * @version 1.1
+ *
+ * @deprecated rename+merge with info.magnolia.cms.security.Listener
  */
 public final class Listener {
 
