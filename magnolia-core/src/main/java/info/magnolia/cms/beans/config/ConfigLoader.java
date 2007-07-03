@@ -41,19 +41,15 @@ import org.slf4j.LoggerFactory;
  * @version 1.1
  */
 public class ConfigLoader {
+    private static final Logger log = LoggerFactory.getLogger(ConfigLoader.class);
+    private static final String JAAS_PROPERTYNAME = "java.security.auth.login.config";
 
     public final class BootstrapFileFilter implements Bootstrapper.BootstrapFilter {
-
         // do not import modules configuration files yet. the module will do it after the registration process
         public boolean accept(String filename) {
             return !filename.startsWith("config.modules");
         }
     }
-
-    /**
-     * Logger.
-     */
-    protected static Logger log = LoggerFactory.getLogger(ConfigLoader.class);
 
     /**
      * Is this magnolia istance configured?
@@ -73,13 +69,12 @@ public class ConfigLoader {
      */
     public ConfigLoader(ServletContext context) {
 
-        if (StringUtils.isEmpty(System.getProperty("java.security.auth.login.config"))) { //$NON-NLS-1$
+        if (StringUtils.isEmpty(System.getProperty(JAAS_PROPERTYNAME))) {
             try {
-                System.setProperty("java.security.auth.login.config", Path //$NON-NLS-1$
-                    .getAbsoluteFileSystemPath("WEB-INF/config/jaas.config")); //$NON-NLS-1$
+                System.setProperty(JAAS_PROPERTYNAME, Path.getAbsoluteFileSystemPath("WEB-INF/config/jaas.config"));
             }
             catch (SecurityException se) {
-                log.error("Failed to set java.security.auth.login.config, check application server settings"); //$NON-NLS-1$
+                log.error("Failed to set " + JAAS_PROPERTYNAME + ", check application server settings");
                 log.error(se.getMessage(), se);
                 log.info("Aborting startup");
                 return;
@@ -88,9 +83,8 @@ public class ConfigLoader {
         else {
             if (log.isInfoEnabled()) {
                 log.info("JAAS config file set by parent container or some other application"); //$NON-NLS-1$
-                log.info("Config in use " + System.getProperty("java.security.auth.login.config")); //$NON-NLS-1$ //$NON-NLS-2$
-                log
-                    .info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
+                log.info("Config in use " + System.getProperty(JAAS_PROPERTYNAME)); //$NON-NLS-1$ //$NON-NLS-2$
+                log.info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
             }
         }
 
@@ -179,10 +173,8 @@ public class ConfigLoader {
                     
                     try {
                         if (ArrayUtils.contains(forceRepositories, repository)) {
-                            log.info(
-                                "will clean and bootstrap the repository {} because the property {} is set",
-                                repository,
-                                SystemProperty.BOOTSTRAP_FORCE);
+                            log.info("will clean and bootstrap the repository {} because the property {} is set",
+                                    repository, SystemProperty.BOOTSTRAP_FORCE);
                             Content root = MgnlContext.getHierarchyManager(repository).getRoot();
                             for (Iterator iterator = ContentUtil.getAllChildren(root).iterator(); iterator.hasNext();) {
                                 Content node = (Content) iterator.next();
@@ -194,10 +186,8 @@ public class ConfigLoader {
                         }
 
                         else if (ArrayUtils.contains(ifEmptyRepositories, repository) && !ContentRepository.checkIfInitialized(repository)) {
-                            log.info(
-                                "will bootstrap the repository {} because the property {} is set",
-                                repository,
-                                SystemProperty.BOOTSTRAP_IF_EMPTY);
+                            log.info("will bootstrap the repository {} because the property {} is set",
+                                    repository, SystemProperty.BOOTSTRAP_IF_EMPTY);
                             Bootstrapper.bootstrapRepository(repository, new BootstrapFileFilter(), bootDirs);
                         }
                     }
