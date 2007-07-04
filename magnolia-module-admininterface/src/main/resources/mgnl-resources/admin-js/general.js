@@ -328,18 +328,12 @@ function mgnlOpenAdminCentral(path,repository)
 
 function mgnlUpdateCK(href)
     {
-    if (!href) href=document.location.href;
-    tmp=href.split("?")
-    var href2=tmp[0]+"?mgnlCK="+new Date().getTime();
-    if (tmp[1])
-        {
-        var qs=tmp[1].split("&");
-        for (var elem=0; elem<qs.length; elem++)
-            {
-            if (qs[elem].indexOf("mgnlCK=")!=0) href2+="&"+qs[elem];
-            }
-        }
-    return href2;
+    if (!href)
+       href=document.location.href;
+
+    href = mgnlRemoveParameter(href, 'mgnlCK');
+    href = mgnlAddParameter(href, 'mgnlCK', new Date().getTime());
+    return href;
     }
 
 

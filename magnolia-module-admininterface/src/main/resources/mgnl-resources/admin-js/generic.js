@@ -152,34 +152,28 @@ function mgnlGetCacheKiller() {
 ### add/remove parameter to query string
 ################################### */
 
-function mgnlAddParameter(href,name,value)
-    {
+function mgnlAddParameter(href, name, value)
+{
+    var anchorSplit = href.split("#");
+    var anchor = (anchorSplit.length == 2) ? "#"+anchorSplit[1] : "";
+    href=anchorSplit[0];
+
     var delimiter;
-    if (href.indexOf("?")==-1) delimiter="?";
-    else delimiter="&";
-    return href+delimiter+name+"="+value;
-    }
+    if (href.indexOf("?") == -1)
+        delimiter = "?";
+    else
+        delimiter = "&";
+        
+    return href + delimiter + name + "=" + value + anchor;
+}
 
 
-function mgnlRemoveParameter(href,name)
+function mgnlRemoveParameter(href, name)
     {
-    //works only for a single paramter
-    /*
-    var nameExtended;
-    var delimiter
-    var tmp;
-    if (href.indexOf("?"+name+"=")!=-1) delimiter="?";
-    else delimiter="&";
+    var anchorSplit = href.split("#");
+    var anchor = (anchorSplit.length == 2) ? "#"+anchorSplit[1] : "";
 
-    var tmp=href.split(delimiter+name+"=");
-    var href2=tmp[0];
-    if (tmp[1])
-        {
-        if (tmp[1].indexOf("&")!=-1) href2+=delimiter+tmp[1].substring(tmp[1].indexOf("&")+1);
-        }
-    return href2;
-    */
-
+    href=anchorSplit[0];
     var tmp=href.split("?");
 
     var newHref=tmp[0];
@@ -206,6 +200,6 @@ function mgnlRemoveParameter(href,name)
         }
     }
 
-    return newHref;
+    return newHref + anchor;
 }
 
