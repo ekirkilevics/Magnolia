@@ -13,11 +13,7 @@
 package info.magnolia.module;
 
 import info.magnolia.module.model.ModuleDefinition;
-import org.apache.commons.betwixt.io.BeanReader;
-import org.xml.sax.SAXException;
 
-import java.beans.IntrospectionException;
-import java.io.IOException;
 import java.io.Reader;
 
 /**
@@ -25,26 +21,9 @@ import java.io.Reader;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ModuleDefinitionReader {
-    private final BeanReader beanReader;
+public interface ModuleDefinitionReader {
 
-    public ModuleDefinitionReader() {
-        beanReader = new BeanReader();
-        try {
-            beanReader.registerBeanClass(ModuleDefinition.class);
-        } catch (IntrospectionException e) {
-            throw new RuntimeException(e); // TODO
-        }
-    }
+    ModuleDefinition read(Reader in);
 
-    public ModuleDefinition read(Reader in) {
-        try {
-            return (ModuleDefinition) beanReader.parse(in);
-        } catch (IOException e) {
-            throw new RuntimeException(e); // TODO
-        } catch (SAXException e) {
-            throw new RuntimeException(e); // TODO
-        }
-
-    }
+    ModuleDefinition readFromResource(String resourcePath);
 }

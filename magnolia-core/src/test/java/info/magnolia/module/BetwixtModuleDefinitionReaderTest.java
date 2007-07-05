@@ -28,14 +28,14 @@ import java.util.Iterator;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ModuleDefinitionReaderTest extends TestCase {
+public class BetwixtModuleDefinitionReaderTest extends TestCase {
 
     public void testDisplayNameCanBeWrittenWithDashEventhoughThisIsDeprecated() throws Exception {
         String xml = "<module>\n" +
                 "  <name>the name</name>\n" +
                 "  <display-name>The Display Name</display-name>" +
                 "</module>";
-        ModuleDefinition mod = new ModuleDefinitionReader().read(new StringReader(xml));
+        ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertEquals("The Display Name", mod.getDisplayName());
     }
 
@@ -44,7 +44,7 @@ public class ModuleDefinitionReaderTest extends TestCase {
                 "  <name>the name</name>\n" +
                 "  <displayName>The Display Name</displayName>" +
                 "</module>";
-        ModuleDefinition mod = new ModuleDefinitionReader().read(new StringReader(xml));
+        ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertEquals("The Display Name", mod.getDisplayName());
     }
 
@@ -53,7 +53,7 @@ public class ModuleDefinitionReaderTest extends TestCase {
                 "  <name>the name</name>\n" +
                 "  <class>java.lang.Integer</class>\n" +
                 "</module>";
-        ModuleDefinition mod = new ModuleDefinitionReader().read(new StringReader(xml));
+        ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertTrue(mod.getClassName() instanceof String);
         assertEquals("java.lang.Integer", mod.getClassName());
     }
@@ -64,7 +64,7 @@ public class ModuleDefinitionReaderTest extends TestCase {
                 "  <class>java.lang.Integer</class>\n" +
                 "  <versionHandler>java.lang.String</versionHandler>" +
                 "</module>";
-        ModuleDefinition mod = new ModuleDefinitionReader().read(new StringReader(xml));
+        ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertEquals(String.class, mod.getVersionHandler());
     }
 
@@ -73,7 +73,7 @@ public class ModuleDefinitionReaderTest extends TestCase {
                 "  <name>the name</name>\n" +
                 "  <version>1.2.3</version>\n" +
                 "</module>";
-        final ModuleDefinition def = new ModuleDefinitionReader().read(new StringReader(xml));
+        final ModuleDefinition def = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
 
         final Version version = def.getVersionDefinition();
         assertNotNull(version);
@@ -98,7 +98,7 @@ public class ModuleDefinitionReaderTest extends TestCase {
                 "    </dependency>\n" +
                 "  </dependencies>\n" +
                 "</module>";
-        final ModuleDefinition def = new ModuleDefinitionReader().read(new StringReader(xml));
+        final ModuleDefinition def = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         final Collection deps = def.getDependencies();
         assertEquals(2, deps.size());
         final Iterator it = deps.iterator();
@@ -123,4 +123,19 @@ public class ModuleDefinitionReaderTest extends TestCase {
         VersionTest.assertVersion(5, 6, 7, null, dep2versionRange.getFrom());
         VersionTest.assertVersion(8, 9, 0, null, dep2versionRange.getTo());
     }
+
+    // TODO 
+//    public void testInvalidXmlIsCheckedAgainstDTD() {
+//        String xmlWithVersionElementMisplaced = "<module>\n" +
+//                "  <version>2.3.4</version>\n" +
+//                "  <name>the name</name>\n" +
+//                "</module>";
+//        try {
+//            final ModuleDefinition def = new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithVersionElementMisplaced));
+//            fail("should have failed");
+//        } catch (Exception e) {
+//            assertEquals("blah", e.getMessage());
+//        }
+//    }
+    
 }

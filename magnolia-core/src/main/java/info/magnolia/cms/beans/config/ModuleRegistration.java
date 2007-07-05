@@ -24,6 +24,7 @@ import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.BetwixtModuleDefinitionReader;
 import info.magnolia.module.ModuleDefinitionReader;
 
 import java.io.File;
@@ -42,7 +43,6 @@ import java.util.regex.Pattern;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
-import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.collections.MapIterator;
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.LinkedMap;
@@ -60,10 +60,12 @@ import org.slf4j.LoggerFactory;
 /**
  * Executes the registration of the modules. It searches the META-INF/magnolia/*.xml module descriptors, instantiate the
  * engine object and calls the register method on it.
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
 public class ModuleRegistration {
+    private static final Logger log = LoggerFactory.getLogger(ModuleRegistration.class);
     
     /**
      * getInstance() used this flag to init the instance if not yet done.
@@ -81,11 +83,6 @@ public class ModuleRegistration {
         }
         return registration;
     }
-
-    /**
-     * Logger
-     */
-    private Logger log = LoggerFactory.getLogger(ModuleRegistration.class);
 
     /**
      * All the module definitions.
@@ -148,7 +145,7 @@ public class ModuleRegistration {
      */
     protected void readModuleDefinitions() {
         try {
-            final ModuleDefinitionReader moduleDefinitionReader = new ModuleDefinitionReader();
+            final ModuleDefinitionReader moduleDefinitionReader = new BetwixtModuleDefinitionReader();
 
             log.info("Reading module definition");
 
@@ -168,7 +165,8 @@ public class ModuleRegistration {
                 log.info("Parsing module file {} for module @ {}", name, moduleRoot.getAbsolutePath());
 
                 try {
-                    ModuleDefinition def = moduleDefinitionReader.read(new StringReader(getXML(name)));
+                    final String xml = getXML(name);
+                    ModuleDefinition def = moduleDefinitionReader.read(new StringReader(xml));
                     def.setModuleRoot(moduleRoot);
                     this.moduleDefinitions.put(def.getName(), def);
                 }
