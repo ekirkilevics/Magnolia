@@ -73,6 +73,17 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertEquals(0, deltas.size());
     }
 
+    public void testDeltasAreSorted() {
+        // yes, this test might pass by accident.
+        final List deltas = versionHandler.getDeltas(new Version("0.4"), new Version("2.0"));
+        assertEquals(5, deltas.size());
+        assertEquals(d1, deltas.get(0));
+        assertEquals(d2, deltas.get(1));
+        assertEquals(d3, deltas.get(2));
+        assertEquals(d4, deltas.get(3));
+        assertEquals(d5, deltas.get(4));
+    }
+
     private final static class DummyModuleVersionHandler extends AbstractModuleVersionHandler {
         protected DummyModuleVersionHandler() {
             super(null);

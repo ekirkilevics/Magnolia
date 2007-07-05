@@ -146,4 +146,40 @@ public class Version {
             return "*";
         }
     }
+
+    // generated methods:
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        Version version = (Version) o;
+
+        if (major != version.major) {
+            return false;
+        }
+        if (minor != version.minor) {
+            return false;
+        }
+        if (patch != version.patch) {
+            return false;
+        }
+        if (classifier != null ? !classifier.equals(version.classifier) : version.classifier != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public int hashCode() {
+        int result;
+        result = (int) major;
+        result = 31 * result + (int) minor;
+        result = 31 * result + (int) patch;
+        result = 31 * result + (classifier != null ? classifier.hashCode() : 0);
+        return result;
+    }
 }

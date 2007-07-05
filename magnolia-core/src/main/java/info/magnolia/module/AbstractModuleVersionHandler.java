@@ -14,13 +14,14 @@ package info.magnolia.module;
 
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.model.Version;
+import info.magnolia.module.model.VersionComparator;
 import info.magnolia.module.model.VersionRange;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Implement this and register your deltas in the constructor using the register method.
@@ -34,7 +35,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
 
     protected AbstractModuleVersionHandler(Version latestVersion) {
         this.latestVersion = latestVersion;
-        allDeltas = new HashMap();
+        allDeltas = new TreeMap(new VersionComparator());
     }
 
     /**
