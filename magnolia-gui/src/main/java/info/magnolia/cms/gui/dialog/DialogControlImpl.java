@@ -587,7 +587,9 @@ public abstract class DialogControlImpl implements DialogControl {
         for (Iterator iter = this.getSubs().iterator(); iter.hasNext();) {
             DialogControl sub = (DialogControl) iter.next();
             if (sub instanceof DialogControlImpl) {
-                if (!((DialogControlImpl) sub).validate()) {
+            	DialogControlImpl subImpl = (DialogControlImpl) sub;
+            	subImpl.setParent(this);
+                if (!subImpl.validate()) {
                     return false;
                 }
             }
