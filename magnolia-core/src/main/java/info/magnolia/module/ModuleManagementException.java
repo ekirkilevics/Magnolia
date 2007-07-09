@@ -12,18 +12,18 @@
  */
 package info.magnolia.module;
 
-import info.magnolia.module.model.ModuleDefinition;
-
-import java.io.Reader;
-
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface ModuleDefinitionReader {
+public class ModuleManagementException extends Exception {
 
-    ModuleDefinition read(Reader in) throws ModuleManagementException;
+    public ModuleManagementException(String message) {
+        super(message);
+    }
 
-    ModuleDefinition readFromResource(String resourcePath) throws ModuleManagementException;
+    public ModuleManagementException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

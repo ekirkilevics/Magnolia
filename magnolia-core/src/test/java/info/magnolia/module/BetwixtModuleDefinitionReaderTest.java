@@ -30,10 +30,20 @@ import java.util.Iterator;
  */
 public class BetwixtModuleDefinitionReaderTest extends TestCase {
 
+    protected void setUp() throws Exception {
+        super.setUp();
+        // shunt Digester logging ...
+        org.apache.log4j.Logger.getLogger("org.apache.commons.digester.Digester").setLevel(org.apache.log4j.Level.OFF);
+    }
+
     public void testDisplayNameCanBeWrittenWithDashEventhoughThisIsDeprecated() throws Exception {
-        String xml = "<module>\n" +
+        String xml = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n" +
+                "<module>\n" +
                 "  <name>the name</name>\n" +
                 "  <display-name>The Display Name</display-name>" +
+                "  <class>foo</class>\n" +
+                "  <versionHandler>java.lang.String</versionHandler>\n" +
+                "  <version>1.0</version>\n" +
                 "</module>";
         ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertEquals("The Display Name", mod.getDisplayName());
@@ -42,7 +52,10 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
     public void testDisplayNameShouldBeWrittenWithCapitalN() throws Exception {
         String xml = "<module>\n" +
                 "  <name>the name</name>\n" +
-                "  <displayName>The Display Name</displayName>" +
+                "  <displayName>The Display Name</displayName>\n" +
+                "  <class>foo</class>\n" +
+                "  <versionHandler>java.lang.String</versionHandler>\n" +
+                "  <version>1.0</version>\n" +
                 "</module>";
         ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertEquals("The Display Name", mod.getDisplayName());
@@ -52,6 +65,8 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         String xml = "<module>\n" +
                 "  <name>the name</name>\n" +
                 "  <class>java.lang.Integer</class>\n" +
+                "  <versionHandler>java.lang.String</versionHandler>\n" +
+                "  <version>1.0</version>\n" +
                 "</module>";
         ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertTrue(mod.getClassName() instanceof String);
@@ -63,14 +78,17 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
                 "  <name>the name</name>\n" +
                 "  <class>java.lang.Integer</class>\n" +
                 "  <versionHandler>java.lang.String</versionHandler>" +
+                "  <version>1.0</version>\n" +
                 "</module>";
         ModuleDefinition mod = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
         assertEquals(String.class, mod.getVersionHandler());
     }
 
-    public void testModuleVersionIsProperlyRead() {
+    public void testModuleVersionIsProperlyRead() throws ModuleManagementException {
         String xml = "<module>\n" +
                 "  <name>the name</name>\n" +
+                "  <class>foo</class>\n" +
+                "  <versionHandler>java.lang.String</versionHandler>\n" +
                 "  <version>1.2.3</version>\n" +
                 "</module>";
         final ModuleDefinition def = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
@@ -82,9 +100,11 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertEquals("1.2.3", def.getVersion());
     }
 
-    public void testDependenciesVersionAreProperlyRead() {
+    public void testDependenciesVersionAreProperlyRead() throws ModuleManagementException {
         String xml = "<module>\n" +
                 "  <name>myName</name>\n" +
+                "  <class>foo</class>\n" +
+                "  <versionHandler>java.lang.String</versionHandler>\n" +
                 "  <version>1.2.3</version>\n" +
                 "  <dependencies>\n" +
                 "    <dependency>\n" +
@@ -124,18 +144,31 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         VersionTest.assertVersion(8, 9, 0, null, dep2versionRange.getTo());
     }
 
-    // TODO 
-//    public void testInvalidXmlIsCheckedAgainstDTD() {
-//        String xmlWithVersionElementMisplaced = "<module>\n" +
-//                "  <version>2.3.4</version>\n" +
-//                "  <name>the name</name>\n" +
-//                "</module>";
-//        try {
-//            final ModuleDefinition def = new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithVersionElementMisplaced));
-//            fail("should have failed");
-//        } catch (Exception e) {
-//            assertEquals("blah", e.getMessage());
-//        }
-//    }
-    
+    public void testInvalidXmlIsCheckedAgainstDTD() {
+        String xmlWithVersionElementMisplaced = "<module>\n" +
+                "  <version>2.3.4</version>\n" +
+                "  <name>the name</name>\n" +
+                "</module>";
+        try {
+            new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithVersionElementMisplaced));
+            fail("should have failed");
+        } catch (Exception e) {
+            assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class,versionHandler,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
+        }
+    }
+
+    public void testGivenDtdIsIgnoredAndCheckedAgainstOurs() {
+        String xmlWithWrongDtd = "<!DOCTYPE log4j:configuration SYSTEM \"log4j.dtd\">\n" +
+                "<module>\n" +
+                "  <version>2.3.4</version>\n" +
+                "  <name>the name</name>\n" +
+                "</module>";
+        try {
+            new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithWrongDtd));
+            fail("should have failed");
+        } catch (Exception e) {
+            assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class,versionHandler,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
+        }
+
+    }
 }
