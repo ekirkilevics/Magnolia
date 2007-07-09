@@ -74,7 +74,7 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
     }
 
     /**
-     * Very ugly hack to force documents to be validated against OUR DTD.
+     * @deprecated TODO very ugly hack to force documents to be validated against OUR DTD.
      */
     private Reader replaceDtd(Reader reader) throws IOException {
         URL dtdUrl = getClass().getResource(DTD);
