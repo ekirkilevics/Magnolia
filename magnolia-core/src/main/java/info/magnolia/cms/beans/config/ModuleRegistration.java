@@ -474,7 +474,7 @@ public class ModuleRegistration {
      * @throws JDOMException
      */
     private String getXML(String name) throws IOException, JDOMException {
-        URL dtdUrl = getClass().getResource("/info/magnolia/cms/module/module.dtd");
+        URL dtdUrl = getClass().getResource("/info/magnolia/module/model/module.dtd");
 
         String content = IOUtils.toString(getClass().getResourceAsStream(name));
 
