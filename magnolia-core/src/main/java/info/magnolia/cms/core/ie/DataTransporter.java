@@ -39,7 +39,6 @@ import javax.xml.transform.stream.StreamSource;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.apache.xml.serialize.OutputFormat;
 import org.apache.xml.serialize.XMLSerializer;
 import org.slf4j.Logger;
@@ -286,7 +285,7 @@ public class DataTransporter {
             }
         }
         catch (Exception e) {
-            throw new NestableRuntimeException(e);
+            throw new RuntimeException(e);
         }
         finally {
             IOUtils.closeQuietly(xmlStream);
@@ -376,13 +375,13 @@ public class DataTransporter {
             }
         }
         catch (IOException e) {
-            throw new NestableRuntimeException(e);
+            throw new RuntimeException(e);
         }
         catch (SAXException e) {
-            throw new NestableRuntimeException(e);
+            throw new RuntimeException(e);
         }
         catch (RepositoryException e) {
-            throw new NestableRuntimeException(e);
+            throw new RuntimeException(e);
         }
 
         // finish the stream properly if zip stream
