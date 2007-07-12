@@ -177,6 +177,7 @@ public class CacheImpl implements Cache {
         // register to observe on any changes if configured
         try {
             this.registerChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
+
                 public void onEvent(EventIterator events) {
                     DeferredCleaner.getInstance().consume(events);
                 }
@@ -285,16 +286,15 @@ public class CacheImpl implements Cache {
             if (canCompress) {
                 response.setContentLength(getCompressedSize(key));
                 response.setHeader("Content-Encoding", "gzip");
-                IOUtils.copy(fin, out);
             }
             else {
                 response.setContentLength(getSize(key));
-                IOUtils.copy(fin, out);
             }
+            IOUtils.copy(fin, out);
             out.flush();
         }
         catch (IOException e) {
-            log.error("Error while reading cache for: '" + key + "'.", e);
+            log.debug("Error while reading cache for: '" + key + "'.", e);
             return false;
         }
         finally {
@@ -365,7 +365,9 @@ public class CacheImpl implements Cache {
     private File getFile(CacheKey key, boolean compressed) {
         String fileName = key.toString();
         // we add .cache extension to directories to distinguish them from files cached without extensions
-        fileName = StringUtils.removeStart(StringUtils.replace(fileName, "/", CACHE_DIRECTORY_EXTENTION + "/"), CACHE_DIRECTORY_EXTENTION);
+        fileName = StringUtils.removeStart(
+            StringUtils.replace(fileName, "/", CACHE_DIRECTORY_EXTENTION + "/"),
+            CACHE_DIRECTORY_EXTENTION);
         File cacheFile;
         if (compressed) {
             cacheFile = new File(getCacheDirectory(), fileName + ".gzip");
