@@ -280,7 +280,7 @@ public class NodeDataUtil {
      * @param type
      * @return
      */
-    public String getTypeName(int type) {
+    public static String getTypeName(int type) {
         return PropertyType.nameFromValue(type);
     }
 
