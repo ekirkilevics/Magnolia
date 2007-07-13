@@ -946,12 +946,12 @@ public class Tree extends ControlImpl {
                         }
                     }
                     else {
-                        NodeDataUtil util = new NodeDataUtil(d);
                         if (tc.getIsNodeDataType()) {
-                            str = util.getTypeName(d.getType());
+                            str = NodeDataUtil.getTypeName(d);
                         }
                         else if (tc.getIsNodeDataValue()) {
-                            str = StringEscapeUtils.escapeXml(util.getValueString());
+                            final String stringValue = NodeDataUtil.getValueString(d);
+                            str = StringEscapeUtils.escapeXml(stringValue);
                         }
                         if (StringUtils.isEmpty(str)) {
                             str = TreeColumn.EMPTY;

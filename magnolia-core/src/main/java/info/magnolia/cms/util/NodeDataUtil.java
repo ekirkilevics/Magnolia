@@ -279,9 +279,19 @@ public class NodeDataUtil {
      * String representation of the jcr property type
      * @param type
      * @return
+     *
+     * @deprecated do not instanciate NodeDataUtil
      */
-    public static String getTypeName(int type) {
+    public String getTypeName(int type) {
         return PropertyType.nameFromValue(type);
+    }
+
+
+    /**
+     * String representation of the jcr property type
+     */
+    public static String getTypeName(NodeData nd) {
+        return PropertyType.nameFromValue(nd.getType());
     }
 
     /**
