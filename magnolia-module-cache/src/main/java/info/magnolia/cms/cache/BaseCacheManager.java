@@ -76,8 +76,8 @@ public abstract class BaseCacheManager implements CacheManager {
 
     /**
      * This method must be called once and only once. It loads the configuration from the repository and starts the
-     * cache if it is enabled. Normally called by ConfigLoader.
-     * @see info.magnolia.cms.beans.config.ConfigLoader
+     * cache if it is enabled.
+     * 
      * @throws ConfigurationException if the configuration is invalid
      * @throws IllegalStateException if called more than once
      */
