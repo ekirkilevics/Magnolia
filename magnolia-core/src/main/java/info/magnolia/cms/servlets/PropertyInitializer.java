@@ -165,9 +165,7 @@ public class PropertyInitializer implements ServletContextListener {
 
         String webapp = initWebappName(rootPath);
 
-        if (log.isDebugEnabled()) {
-            log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$ 
-        }
+        log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$
 
         loadBeanProperties();
 
@@ -210,10 +208,7 @@ public class PropertyInitializer implements ServletContextListener {
         String propertiesLocationString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
 
         if (StringUtils.isEmpty(propertiesLocationString)) {
-            log.debug(
-                "{} value in web.xml is undefined, falling back to default: {}",
-                MAGNOLIA_INITIALIZATION_FILE,
-                DEFAULT_INITIALIZATION_PARAMETER);
+            log.debug("{} value in web.xml is undefined, falling back to default: {}", MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);
             propertiesLocationString = DEFAULT_INITIALIZATION_PARAMETER;
         }
         else {
@@ -250,20 +245,14 @@ public class PropertyInitializer implements ServletContextListener {
 
                     if (loadPropertiesFile(rootPath, location)) {
                         found = true;
-                        log.warn(
-                            "Deprecated: found a configuration file using server name {}, you should use {} instead.",
-                            fqServerName,
-                            servername);
+                        log.warn("Deprecated: found a configuration file using server name {}, you should use {} instead.", fqServerName, servername);
                     }
                 }
             }
         }
 
         if (!found) {
-            String msg = MessageFormat
-                .format(
-                    "No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", //$NON-NLS-1$
-                    new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath});
+            String msg = MessageFormat.format("No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath}); //$NON-NLS-1$
             log.error(msg);
             throw new ConfigurationException(msg);
         }
@@ -319,10 +308,7 @@ public class PropertyInitializer implements ServletContextListener {
 
         }
         else {
-            log
-                .warn(
-                    "{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.",
-                    MGNL_BEANS_PROPERTIES);
+            log.warn("{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.", MGNL_BEANS_PROPERTIES);
         }
     }
 
@@ -336,10 +322,7 @@ public class PropertyInitializer implements ServletContextListener {
         File initFile = new File(rootPath, location);
 
         if (!initFile.exists() || initFile.isDirectory()) {
-            if (log.isDebugEnabled()) {
-                log.debug("Configuration file not found with path [{}]", //$NON-NLS-1$
-                    initFile.getAbsolutePath());
-            }
+            log.debug("Configuration file not found with path [{}]", initFile.getAbsolutePath()); //$NON-NLS-1$
             return false;
         }
 
@@ -348,8 +331,7 @@ public class PropertyInitializer implements ServletContextListener {
             fileStream = new FileInputStream(initFile);
         }
         catch (FileNotFoundException e1) {
-            log.debug("Configuration file not found with path [{}]", //$NON-NLS-1$
-                initFile.getAbsolutePath());
+            log.debug("Configuration file not found with path [{}]", initFile.getAbsolutePath());
             return false;
         }
 
@@ -376,7 +358,7 @@ public class PropertyInitializer implements ServletContextListener {
             String key = (String) it.next();
             if (System.getProperties().containsKey(key)) {
                 log.info("system property found: {}", key);
-                String value = (String) System.getProperty(key);
+                String value = System.getProperty(key);
                 SystemProperty.setProperty(key, value);
             }
         }
