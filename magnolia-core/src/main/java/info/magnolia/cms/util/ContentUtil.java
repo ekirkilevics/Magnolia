@@ -95,7 +95,7 @@ public class ContentUtil {
      * @author Philipp Bracher
      * @version $Id$
      *
-     */
+     */ // TODO : throws RepositoryException or none, but not Exception !?
     public interface Visitor {
         void visit(Content node) throws Exception;
     }
@@ -330,35 +330,36 @@ public class ContentUtil {
         return createPath(node, path, type, save);
     }
 
-    public static Content createPath(Content node, String path, ItemType type) throws RepositoryException,
+    public static Content createPath(Content parent, String path, ItemType type) throws RepositoryException,
         PathNotFoundException, AccessDeniedException {
-        return createPath(node, path, type, false);
+        return createPath(parent, path, type, false);
     }
 
-    public static Content createPath(Content node, String path, ItemType type, boolean save) throws RepositoryException,
+    public static Content createPath(Content parent, String path, ItemType type, boolean save) throws RepositoryException,
         PathNotFoundException, AccessDeniedException {
         // remove leading /
         path = StringUtils.removeStart(path, "/");
 
         if (StringUtils.isEmpty(path)) {
-            return node;
+            return parent;
         }
 
         String[] names = path.split("/"); //$NON-NLS-1$
 
         for (int i = 0; i < names.length; i++) {
             String name = names[i];
-            if (node.hasContent(name)) {
-                node = node.getContent(name);
+            if (parent.hasContent(name)) {
+                parent = parent.getContent(name);
             }
             else {
-                node = node.createContent(name, type);
+                final Content newNode = parent.createContent(name, type);
                 if(save){
-                    node.save();
+                    parent.save();
                 }
+                parent = newNode;
             }
         }
-        return node;
+        return parent;
     }
 
     /**
