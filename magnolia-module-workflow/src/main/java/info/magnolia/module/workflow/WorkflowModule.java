@@ -25,7 +25,6 @@ import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 import info.magnolia.module.workflow.jcr.JCRWorkItemStore;
 import openwfe.org.ServiceException;
 import openwfe.org.engine.impl.expool.SimpleExpressionPool;
-import openwfe.org.worklist.store.WorkItemStore;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -42,11 +41,7 @@ import javax.jcr.RepositoryException;
  * @version 3.0
  */
 public class WorkflowModule extends AbstractAdminModule {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(WorkflowModule.class);
+    private static final Logger log = LoggerFactory.getLogger(WorkflowModule.class);
 
     private static WorkflowModule instance;
 
