@@ -153,7 +153,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
             new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithVersionElementMisplaced));
             fail("should have failed");
         } catch (Exception e) {
-            assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class,versionHandler,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
+            assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class,versionHandler?,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
         }
     }
 
@@ -167,7 +167,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
             new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithWrongDtd));
             fail("should have failed");
         } catch (Exception e) {
-            assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class,versionHandler,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
+            assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class,versionHandler?,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
         }
 
     }
