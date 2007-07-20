@@ -61,19 +61,19 @@ public class AnonymousContext extends WebContextImpl {
     private static User anonymousUser;
 
     static {
-        ObservationUtil.registerChangeListener(ContentRepository.USERS, "/anonymous", "mgnl:user", new EventListener() {
+        ObservationUtil.registerChangeListener(ContentRepository.USERS, "/anonymous", true, "mgnl:user", new EventListener() {
             public void onEvent(EventIterator events) {
                 reset();
             }
         });
 
-        ObservationUtil.registerChangeListener(ContentRepository.USER_GROUPS, "/", "mgnl:group", new EventListener() {
+        ObservationUtil.registerChangeListener(ContentRepository.USER_GROUPS, "/", true, "mgnl:group", new EventListener() {
             public void onEvent(EventIterator events) {
                 reset();
             }
         });
 
-        ObservationUtil.registerChangeListener(ContentRepository.USER_ROLES, "/", "mgnl:role", new EventListener() {
+        ObservationUtil.registerChangeListener(ContentRepository.USER_ROLES, "/", true, "mgnl:role", new EventListener() {
             public void onEvent(EventIterator events) {
                 reset();
             }

@@ -32,18 +32,26 @@ public class ObservationUtil {
 
     /**
      * Registers an EventListener for any node type.
-     * @see #registerChangeListener(String,String,String[],javax.jcr.observation.EventListener)
+     * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
      */
     public static void registerChangeListener(String repository, String observationPath, EventListener listener) {
-        registerChangeListener(repository, observationPath, (String[]) null, listener);
+        registerChangeListener(repository, observationPath, true, listener);
+    }
+
+    /**
+     * Registers an EventListener for any node type.
+     * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
+     */
+    public static void registerChangeListener(String repository, String observationPath, boolean includeSubnodes, EventListener listener) {
+        registerChangeListener(repository, observationPath, includeSubnodes, (String[]) null, listener);
     }
 
     /**
      * Registers an EventListener for a specific node type.
-     * @see #registerChangeListener(String,String,String[],javax.jcr.observation.EventListener)
+     * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
      */
-    public static void registerChangeListener(String repository, String observationPath, String nodeType, EventListener listener) {
-        registerChangeListener(repository, observationPath, new String[]{nodeType}, listener);
+    public static void registerChangeListener(String repository, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener) {
+        registerChangeListener(repository, observationPath, includeSubnodes, new String[]{nodeType}, listener);
     }
 
     /**
@@ -52,25 +60,26 @@ public class ObservationUtil {
      *
      * @param repository
      * @param observationPath repository path
+     * @param includeSubnodes the isDeep parameter of ObservationManager.addEventListener()
      * @param nodeTypes the node types to filter events for
      * @param listener event listener
-     * @see ObservationManager.addEventListener
+     * @see ObservationManager#addEventListener
      */
-    public static void registerChangeListener(String repository, String observationPath, String[] nodeTypes, EventListener listener) {
+    public static void registerChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener) {
         log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$
 
         try {
 
             ObservationManager observationManager = MgnlContext.getSystemContext()
-                .getHierarchyManager(repository)
-                .getWorkspace()
-                .getObservationManager();
+                    .getHierarchyManager(repository)
+                    .getWorkspace()
+                    .getObservationManager();
 
             observationManager.addEventListener(listener, Event.NODE_ADDED
-                | Event.NODE_REMOVED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, observationPath, true, null, nodeTypes, false);
+                    | Event.NODE_REMOVED
+                    | Event.PROPERTY_ADDED
+                    | Event.PROPERTY_CHANGED
+                    | Event.PROPERTY_REMOVED, observationPath, includeSubnodes, null, nodeTypes, false);
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$
