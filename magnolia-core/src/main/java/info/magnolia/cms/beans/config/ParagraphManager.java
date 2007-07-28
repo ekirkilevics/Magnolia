@@ -30,10 +30,10 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Manages the paragraphs on the system. Modules can register the nodes where the paragraph are defined.
- *
  * @author philipp
  */
 public class ParagraphManager extends ObservedManager {
+
     private static final Logger log = LoggerFactory.getLogger(Paragraph.class);
 
     private static final String DEFAULT_PARA_TYPE = "jsp";
@@ -70,7 +70,7 @@ public class ParagraphManager extends ObservedManager {
     public Map getParagraphs() {
         return paragraphs;
     }
-    
+
     /**
      * Register all the paragraphs under this and subnodes.
      */
@@ -99,17 +99,25 @@ public class ParagraphManager extends ObservedManager {
     protected void addParagraphToCache(Content c) {
         try {
             final Paragraph p = (Paragraph) Content2BeanUtil.toBean(c, Paragraph.class);
-            if (StringUtils.isEmpty(p.getType())) {
-                p.setType(DEFAULT_PARA_TYPE);
-            }
-            if (StringUtils.isEmpty(p.getDialog())) {
-                p.setDialog(p.getName());
-            }
-            log.debug("Registering pi [{}] of type [{}]", p.getName(), p.getType()); //$NON-NLS-1$
-            paragraphs.put(p.getName(), p);
-        } catch (Content2BeanException e) {
+            addParagraphToCache(p);
+        }
+        catch (Content2BeanException e) {
             throw new RuntimeException(e); // TODO
         }
+    }
+
+    /**
+     * @param paragraph
+     */
+    public void addParagraphToCache(final Paragraph paragraph) {
+        if (StringUtils.isEmpty(paragraph.getType())) {
+            paragraph.setType(DEFAULT_PARA_TYPE);
+        }
+        if (StringUtils.isEmpty(paragraph.getDialog())) {
+            paragraph.setDialog(paragraph.getName());
+        }
+        log.debug("Registering pi [{}] of type [{}]", paragraph.getName(), paragraph.getType()); //$NON-NLS-1$
+        paragraphs.put(paragraph.getName(), paragraph);
     }
 
     public void onClear() {
