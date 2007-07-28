@@ -189,11 +189,15 @@ public final class MIMEMapping {
     public static String getMIMETypeOrDefault(String extension) {
         String mimeType = getMIMEType(extension);
 
-        if (StringUtils.isEmpty(mimeType)) {
-            log.info("Cannot find MIME type for extension \"{}\"", extension);
-            mimeType = getMIMEType(Server.getDefaultExtension());
+        if (StringUtils.isNotEmpty(mimeType)) {
+            return mimeType;
         }
-        return mimeType;
+
+        if (StringUtils.isNotEmpty(extension)) {
+            log.info("Cannot find MIME type for extension \"{}\"", extension);
+        }
+
+        return getMIMEType(Server.getDefaultExtension());
     }
 
     /**
