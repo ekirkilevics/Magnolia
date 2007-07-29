@@ -1,5 +1,6 @@
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
@@ -34,6 +35,15 @@ public class CmsFunctions {
      */
     public static Content currentParagraph() {
         return Resource.getLocalContentNode();
+    }
+
+    /**
+     * Output a full url given a content handle (usually a page)
+     * @param handle page handle
+     * @return url formed using context path + handle + default extension
+     */
+    public static String link(String handle) {
+        return MgnlContext.getContextPath() + handle + '.' + Server.getDefaultExtension();
     }
 
 }

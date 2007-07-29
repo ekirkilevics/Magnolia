@@ -24,4 +24,12 @@
     <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
     <function-signature>info.magnolia.cms.core.Content currentParagraph()</function-signature>
   </function>
+  <function>
+    <description>
+      Output the url of a given content (usually a page), as context path + page handle + default extension
+    </description>
+    <name>link</name>
+    <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
+    <function-signature>java.lang.String link(java.lang.String)</function-signature>
+  </function>
 </taglib>
