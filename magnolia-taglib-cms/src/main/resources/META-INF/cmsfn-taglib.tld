@@ -1,0 +1,27 @@
+<taglib xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
+  version="2.0">
+  <description>Core functions for CMS</description>
+  <display-name>cms funtions</display-name>
+  <tlib-version>3.1</tlib-version>
+  <short-name>cmsfn</short-name>
+  <uri>http://www.magnolia.info/tlds/cmsfn-taglib.tld</uri>
+  <function>
+    <description>Returns the current active page (can be set using the loadPage tag).</description>
+    <name>currentPage</name>
+    <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
+    <function-signature>info.magnolia.cms.core.Content currentPage()</function-signature>
+  </function>
+  <function>
+    <description>Returns the main loaded page (doesn't change when using the loadPage tag).</description>
+    <name>mainPage</name>
+    <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
+    <function-signature>info.magnolia.cms.core.Content mainPage()</function-signature>
+  </function>
+  <function>
+    <description>Returns the current paragraph.</description>
+    <name>currentParagraph</name>
+    <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
+    <function-signature>info.magnolia.cms.core.Content currentParagraph()</function-signature>
+  </function>
+</taglib>
