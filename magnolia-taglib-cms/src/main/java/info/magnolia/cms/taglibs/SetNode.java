@@ -35,14 +35,14 @@ import java.util.Set;
  * Since JSTL doesn't allow calling a method like <code>Content.getNodeData(String)</code> the <code>Content</code>
  * is wrapped into a <code>NodeMapWrapper</code> which exposes NodeData using a map interface. This tag can be useful
  * in similar situations: <p/>
- * 
+ *
  * <pre>
  * &lt;cms:setNode var="currentNode"/>
  * &lt;c:if test="${!empty currentNode.title}">
  *   &lt;c:out value="${currentNode.title}"/>
  * &lt;/c:if>
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -156,6 +156,11 @@ public class SetNode extends BaseContentTag {
     public class NodeMapWrapper implements Map {
 
         /**
+         * The special "handle" property, which is exposed by NodeMapWrapper just like any other property.
+         */
+        private static final String HANDLE_PROPERTY = "handle";
+
+        /**
          * The wrapped Content.
          */
         private Content wrappedNode;
@@ -192,7 +197,7 @@ public class SetNode extends BaseContentTag {
          * @see java.util.Map#containsKey(java.lang.Object)
          */
         public boolean containsKey(Object key) {
-            return this.wrappedNode.getNodeData((String) key).isExist();
+            return this.wrappedNode.getNodeData((String) key).isExist() || HANDLE_PROPERTY.equals(key);
         }
 
         /**
@@ -208,9 +213,13 @@ public class SetNode extends BaseContentTag {
          * @see java.util.Map#get(Object)
          */
         public Object get(Object key) {
-            NodeData nodeData;
 
-            nodeData = this.wrappedNode.getNodeData((String) key);
+            // the special "handle" property
+            if (HANDLE_PROPERTY.equals(key)) {
+                return wrappedNode.getHandle();
+            }
+
+            NodeData nodeData = this.wrappedNode.getNodeData((String) key);
             Object value;
             int type = nodeData.getType();
             if (type == PropertyType.DATE) {
