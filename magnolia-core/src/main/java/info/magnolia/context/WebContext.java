@@ -23,7 +23,10 @@ import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.jsp.JspPage;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.ServletException;
+
 
 /**
  * @author Philipp Bracher
@@ -103,10 +106,21 @@ public interface WebContext extends Context {
     public HttpServletResponse getResponse();
 
     /**
-     * Includes/render the given path into the given Writer, by wrapping it in the
-     * current HttpServletResponse.
-     *
+     * Includes/render the given path into the given Writer, by wrapping it in the current HttpServletResponse.
      * @see javax.servlet.ServletRequest#getRequestDispatcher(String)
      */
     void include(final String path, final Writer out) throws ServletException, IOException;
+
+    /**
+     * Sets the current jsp page context.
+     * @param pageContext jsp page context
+     */
+    void setPageContext(PageContext pageContext);
+
+    /**
+     * Returns the current jsp page context, <strong>if any</strong>
+     * @return jsp page context or null if it has not been populated by calling setPageContext
+     */
+    PageContext getPageContext();
+
 }

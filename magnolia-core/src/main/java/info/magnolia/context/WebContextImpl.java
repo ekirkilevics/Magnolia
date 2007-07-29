@@ -33,6 +33,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.Config;
 import java.io.IOException;
 import java.io.Writer;
@@ -41,11 +42,13 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+
 /**
  * @author Sameer Charles
  * @version $Id$
  */
 public class WebContextImpl extends AbstractContext implements WebContext {
+
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebContextImpl.class);
 
     private static final long serialVersionUID = 222L;
@@ -65,6 +68,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     private HttpServletResponse response;
 
     /**
+     * the jsp page context.
+     */
+    private PageContext pageContext;
+
+    /**
      * Use init to initialize the object.
      */
     public WebContextImpl() {
@@ -77,7 +85,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Create the subject on demand.
-     *
      * @see info.magnolia.context.AbstractContext#getUser()
      */
     public User getUser() {
@@ -108,25 +115,28 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         if (hm == null) {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             try {
-                hm = util.createHierarchyManager(this.getUser().getName(),
-                        getRepositorySession(repositoryName, workspaceName),
-                        getAccessManager(repositoryName, workspaceName),
-                        getQueryManager(repositoryName, workspaceName));
+                hm = util.createHierarchyManager(this.getUser().getName(), getRepositorySession(
+                    repositoryName,
+                    workspaceName), getAccessManager(repositoryName, workspaceName), getQueryManager(
+                    repositoryName,
+                    workspaceName));
                 if (httpSession != null) {
                     httpSession.setAttribute(hmAttrName, hm); //$NON-NLS-1$
                 }
-            } catch (Throwable t) {
+            }
+            catch (Throwable t) {
                 log.error("Failed to create HierarchyManager", t);
             }
         }
 
-        //TODO remove this after we found the session refreshing issues
+        // TODO remove this after we found the session refreshing issues
         // check only once per session
         if (this.request.getAttribute("jcr.session. " + repositoryName + ".checked") == null) {
             this.request.setAttribute("jcr.session. " + repositoryName + ".checked", "true");
             try {
                 if (hm.getWorkspace().getSession().hasPendingChanges()) {
-                    log.error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
+                    log
+                        .error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
                     if (log.isDebugEnabled()) {
                         DumperUtil.dumpChanges(hm);
                     }
@@ -155,7 +165,10 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
         if (accessManager == null) {
             Subject subject = Authenticator.getSubject(request);
-            accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(subject, repositoryName, workspaceName);
+            accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(
+                subject,
+                repositoryName,
+                workspaceName);
             if (httpSession != null) {
                 httpSession.setAttribute(amAttrName, accessManager);
             }
@@ -178,9 +191,10 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         if (queryManager == null) {
             try {
                 queryManager = WorkspaceAccessUtil.getInstance().createQueryManager(
-                        getRepositorySession(repositoryName, workspaceName),
-                        getAccessManager(repositoryName, workspaceName));
-            } catch (Throwable t) {
+                    getRepositorySession(repositoryName, workspaceName),
+                    getAccessManager(repositoryName, workspaceName));
+            }
+            catch (Throwable t) {
                 log.error("Failed to create QueryManager", t);
             }
             if (httpSession != null) {
@@ -193,7 +207,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Get currently active page
-     *
      * @return content object
      * @deprecated use getAggregationState().getMainContent();
      */
@@ -203,7 +216,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Get aggregated file, its used from image templates to manipulate
-     *
      * @return file object
      * @deprecated use getAggregationState().getFile();
      */
@@ -222,7 +234,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Get form object assembled by <code>MultipartRequestFilter</code>
-     *
      * @return multipart form object
      */
     public MultipartForm getPostedForm() {
@@ -231,7 +242,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Get parameter value as string.
-     *
      * @return parameter value
      */
     public String getParameter(String name) {
@@ -239,10 +249,8 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     }
 
     /**
-     * Get parameter values as a Map<String, String>
-     * (unlike HttpServletRequest.getParameterMap() which returns a Map<String, String[]>,
-     * so don't expect to retrieve multiple-valued form parameters here)
-     *
+     * Get parameter values as a Map<String, String> (unlike HttpServletRequest.getParameterMap() which returns a Map<String,
+     * String[]>, so don't expect to retrieve multiple-valued form parameters here)
      * @return parameter values
      */
     public Map getParameters() {
@@ -257,8 +265,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Set attribute value, scope of the attribute is defined.
-     *
-     * @param name  is used as a key
+     * @param name is used as a key
      * @param value
      * @param scope , highest level of scope from which this attribute is visible
      */
@@ -270,7 +277,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
             case Context.SESSION_SCOPE:
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
-                    log.warn("Session initialized in order to setting attribute '{}' to '{}'. You should avoid using session when possible!", name, value);
+                    log
+                        .warn(
+                            "Session initialized in order to setting attribute '{}' to '{}'. You should avoid using session when possible!",
+                            name,
+                            value);
                     httpsession = request.getSession(true);
                 }
 
@@ -289,7 +300,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Get attribute value.
-     *
      * @param name to which value is associated to
      * @return attribute value
      */
@@ -304,7 +314,8 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                     // we also expose some of the request properties as attributes
                     if (ATTRIBUTE_REQUEST_CHARACTER_ENCODING.equals(name)) {
                         obj = request.getCharacterEncoding();
-                    } else if (ATTRIBUTE_REQUEST_URI.equals(name)) {
+                    }
+                    else if (ATTRIBUTE_REQUEST_URI.equals(name)) {
                         obj = request.getRequestURI();
                     }
                 }
@@ -387,7 +398,8 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     /**
      * Get repository session
      */
-    protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {
+    protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException,
+        RepositoryException {
         Session jcrSession = null;
         HttpSession httpSession = request.getSession(false);
 
@@ -408,7 +420,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     /**
      * Avoid the call to this method where ever possible.
-     *
      * @return Returns the request.
      */
     public HttpServletRequest getRequest() {
@@ -427,10 +438,26 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         try {
             final WriterResponseWrapper wrappedResponse = new WriterResponseWrapper(response, out);
             request.getRequestDispatcher(path).include(request, wrappedResponse);
-        } catch (ServletException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
+        }
+        catch (ServletException e) {
             throw new RuntimeException(e);
         }
+        catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public PageContext getPageContext() {
+        return pageContext;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setPageContext(PageContext pageContext) {
+        this.pageContext = pageContext;
     }
 }
