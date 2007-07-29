@@ -157,7 +157,7 @@ public class Include extends BodyTagSupport {
                 pageContext.include(this.path);
             }
 
-            ParagraphRenderingFacade.getInstance().render(content, pageContext.getOut());
+            ParagraphRenderingFacade.getInstance().render(content, pageContext.getOut(), pageContext);
 
         } catch (IOException e) {
             // should never happen
