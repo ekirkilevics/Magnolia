@@ -7,14 +7,15 @@ import info.magnolia.cms.util.Resource;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
+ * Iterates over subpages.
  * @author Andreas Brenk
- * @since 18.01.2006
+ * @author Fabrizio Giustina
+ * @version $Revision: $ ($Author: $)
  */
 public class PageIterator extends TagSupport {
 
@@ -27,6 +28,9 @@ public class PageIterator extends TagSupport {
 
     private String hiddenAttribute = "hidden";
 
+    /**
+     * s{@inheritDoc}
+     */
     public int doAfterBody() throws JspException {
         boolean hasNext = nextContent();
 
@@ -37,13 +41,17 @@ public class PageIterator extends TagSupport {
         return SKIP_BODY;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public int doEndTag() throws JspException {
-        HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-        Resource.restoreCurrentActivePage(request);
-
+        Resource.restoreCurrentActivePage();
         return EVAL_PAGE;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public int doStartTag() throws JspException {
         initContentIterator();
 
@@ -55,8 +63,12 @@ public class PageIterator extends TagSupport {
         return SKIP_BODY;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public void release() {
         this.contentIterator = null;
+        hiddenAttribute = "hidden";
         super.release();
     }
 
@@ -65,8 +77,7 @@ public class PageIterator extends TagSupport {
     }
 
     private void initContentIterator() {
-        HttpServletRequest req = (HttpServletRequest) this.pageContext.getRequest();
-        Content activePage = Resource.getCurrentActivePage(req);
+        Content activePage = Resource.getCurrentActivePage();
         Collection children = activePage.getChildren(ItemType.CONTENT);
 
         for (Iterator i = children.iterator(); i.hasNext();) {
@@ -85,11 +96,8 @@ public class PageIterator extends TagSupport {
      */
     private boolean nextContent() {
         if (this.contentIterator.hasNext()) {
-            HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
             Content page = (Content) this.contentIterator.next();
-
-            Resource.setCurrentActivePage(request, page);
-
+            Resource.setCurrentActivePage(page);
             return true;
         }
 
