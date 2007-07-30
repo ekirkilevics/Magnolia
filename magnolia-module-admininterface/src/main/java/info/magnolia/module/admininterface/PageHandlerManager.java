@@ -87,27 +87,27 @@ public class PageHandlerManager extends ObservedManager {
     protected void onRegister(Content defNode) {
         // read the dialog configuration
 
-            for (Iterator iter = ContentUtil.getAllChildren(defNode).iterator(); iter.hasNext();) {
-                Content pageNode = (Content) iter.next();
+        for (Iterator iter = ContentUtil.getAllChildren(defNode).iterator(); iter.hasNext();) {
+            Content pageNode = (Content) iter.next();
 
-                try {
-                    Map properties = Content2BeanUtil.toMap(pageNode, true);
-                    String handlerClassName = (String) properties.get("class");
-                    Class handlerClass = ClassUtil.classForName(handlerClassName);
-                    String name = StringUtils.defaultIfEmpty((String)properties.get("name"), pageNode.getName());
-                    properties.remove("class");
-                    properties.remove("name");
-                    PageDefinition pd = new PageDefinition(name, handlerClass);
-                    pd.setDefaultProperties(properties);
-                    dialogPageHandlers.put(name, pd);
-                }
-                catch (Content2BeanException e) {
-                    log.error("can't read page properties [" + pageNode.getHandle() + "]", e);
-                }
-                catch (ClassNotFoundException e) {
-                    log.error("can't find class for the page [" + pageNode.getHandle() + "]", e);
-                }
+            try {
+                Map properties = Content2BeanUtil.toMap(pageNode, true);
+                String handlerClassName = (String) properties.get("class");
+                Class handlerClass = ClassUtil.classForName(handlerClassName);
+                String name = StringUtils.defaultIfEmpty((String) properties.get("name"), pageNode.getName());
+                properties.remove("class");
+                properties.remove("name");
+                PageDefinition pd = new PageDefinition(name, handlerClass);
+                pd.setDefaultProperties(properties);
+                dialogPageHandlers.put(name, pd);
             }
+            catch (Content2BeanException e) {
+                log.error("can't read page properties [" + pageNode.getHandle() + "]", e);
+            }
+            catch (ClassNotFoundException e) {
+                log.error("can't find class for the page [" + pageNode.getHandle() + "]", e);
+            }
+        }
 
     }
 
@@ -122,7 +122,7 @@ public class PageHandlerManager extends ObservedManager {
         this.dialogPageHandlers.clear();
     }
 
-    protected static class PageDefinition{
+    protected static class PageDefinition {
 
         private Map defaultProperties = new HashMap();
 
