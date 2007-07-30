@@ -64,8 +64,6 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     private boolean roles;
 
-    private boolean secure;
-
     private String rootdir;
 
     private String parentpath;
@@ -170,14 +168,6 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         return ContentRepository.getAllRepositoryNames();
     }
 
-    /**
-     * Setter for <code>secure</code>.
-     * @param secure The secure to set.
-     */
-    public void setSecure(boolean secure) {
-        this.secure = secure;
-    }
-
     public String backup() {
 
         Iterator modules = ModuleLoader.getInstance().getModuleInstances().keySet().iterator();
@@ -219,11 +209,6 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
                 AlertUtil.setMessage("Error while processing module " + moduleName, e);
             }
 
-        }
-
-        if (secure) {
-            backupChildren(ContentRepository.CONFIG, "/server/secureURIList");
-            backupChildren(ContentRepository.CONFIG, "/server/unsecureURIList");
         }
 
         if (website) {
