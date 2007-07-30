@@ -91,7 +91,7 @@ public abstract class MVCServlet extends ContextSensitiveServlet {
         MVCServletHandler handler = getHandler(request, response);
 
         if (handler == null) {
-            log.error("no handler found for url {}", request.getRequestURI()); //$NON-NLS-1$
+            log.warn("no handler found for url {}", request.getRequestURI()); //$NON-NLS-1$
             response.sendError(404);
             return;
         }
