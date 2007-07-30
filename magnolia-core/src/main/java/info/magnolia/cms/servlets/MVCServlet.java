@@ -88,17 +88,18 @@ public abstract class MVCServlet extends ContextSensitiveServlet {
             log.error("can't set character encoding for the request", e); //$NON-NLS-1$
         }
 
-        // why do i have to change it if request was setted? But i have to!
-        response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
-
-        response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
-
         MVCServletHandler handler = getHandler(request, response);
 
         if (handler == null) {
             log.error("no handler found for url {}", request.getRequestURI()); //$NON-NLS-1$
+            response.sendError(404);
             return;
         }
+
+        // why do i have to change it if request was setted? But i have to!
+        response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
+
+        response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
 
         try {
             handler.init();
