@@ -6,6 +6,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ie.filters.ImportXmlRootFilter;
 import info.magnolia.cms.core.ie.filters.MagnoliaV2Filter;
+import info.magnolia.cms.core.ie.filters.MetadataUuidFilter;
 import info.magnolia.cms.core.ie.filters.VersionFilter;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -71,7 +72,7 @@ public class DataTransporter {
     public static final String XML = ".xml";
 
     public static final String PROPERTIES = ".properties";
-    
+
     public static final String DOT = ".";
 
     public static final String SLASH = "/";
@@ -170,7 +171,7 @@ public class DataTransporter {
                 }
             }
         }
-        
+
     }
 
     /**
@@ -417,7 +418,7 @@ public class DataTransporter {
         }
 
         // write to a temp file and then re-read it to remove version history
-        File tempFile = File.createTempFile("export-" + repository + session.getUserID(), "xml"); //$NON-NLS-1$ //$NON-NLS-2$
+        File tempFile = File.createTempFile("export-" + repository + session.getUserID(), ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
         OutputStream fileStream = new FileOutputStream(tempFile);
 
         try {
@@ -467,8 +468,9 @@ public class DataTransporter {
         outputFormat.setIndent(INDENT_VALUE);
         outputFormat.setLineWidth(120); // need to be set after setIndenting()!
 
-        reader.setContentHandler(new XMLSerializer(outputStream, outputFormat));
-        reader.parse(new InputSource(inputStream));
+        MetadataUuidFilter metadataUuidFilter = new MetadataUuidFilter(reader); // MAGNOLIA-1650
+        metadataUuidFilter.setContentHandler(new XMLSerializer(outputStream, outputFormat));
+        metadataUuidFilter.parse(new InputSource(inputStream));
 
         IOUtils.closeQuietly(inputStream);
     }

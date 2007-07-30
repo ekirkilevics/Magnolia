@@ -17,8 +17,7 @@
     sv:type="Boolean">
     <sv:value>true</sv:value>
   </sv:property>
-  <sv:property sv:name="headerImageAlt"
-    sv:type="String">
+  <sv:property sv:name="headerImageAlt" sv:type="String">
     <sv:value>Magnolia CMS</sv:value>
   </sv:property>
   <sv:property sv:name="hideInNav"
@@ -33,8 +32,8 @@
     sv:name="title" sv:type="String">
     <sv:value>Help</sv:value>
   </sv:property>
-  <sv:property
-    sv:name="footerText" sv:type="String">
+  <sv:property sv:name="footerText"
+    sv:type="String">
       <sv:value>
       
         &lt;center&gt;&lt;a href="http://www.magnolia.info" 
@@ -49,4 +48,43 @@
 
 </sv:value>
     </sv:property>
+  <sv:node
+      sv:name="MetaData">
+    <sv:property sv:name="jcr:primaryType"
+      sv:type="Name">
+      <sv:value>mgnl:metaData</sv:value>
+    </sv:property>
+    
+    <sv:property
+      sv:name="mgnl:authorid" sv:type="String">
+      <sv:value>superuser</sv:value>
+    </sv:property>
+    <sv:property
+      sv:name="mgnl:creationdate"
+      sv:type="Date">
+      <sv:value>2005-05-16T20:46:43.549+02:00</sv:value>
+    </sv:property>
+    <sv:property
+      sv:name="mgnl:lastaction"
+      sv:type="Date">
+      <sv:value>2007-07-30T13:24:53.458+01:00</sv:value>
+    </sv:property>
+    <sv:property
+      sv:name="mgnl:lastmodified"
+      sv:type="Date">
+      <sv:value>2007-07-30T13:26:54.591+01:00</sv:value>
+    </sv:property>
+    <sv:property
+      sv:name="mgnl:activatorid"
+      sv:type="String">
+      <sv:value>superuser</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:Data"
+      sv:type="String">
+      <sv:value>MetaData</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+      <sv:value>false</sv:value>
+    </sv:property>
+  </sv:node>
 </sv:node>
