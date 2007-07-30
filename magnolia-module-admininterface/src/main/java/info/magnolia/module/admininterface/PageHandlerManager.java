@@ -105,7 +105,7 @@ public class PageHandlerManager extends ObservedManager {
                 properties.remove("name");
                 PageDefinition pd = new PageDefinition(name, handlerClass);
                 pd.setDefaultProperties(properties);
-                dialogPageHandlers.put(name, pd);
+                registerPageDefinition(name, pd);
             }
             catch (Content2BeanException e) {
                 log.error("can't read page properties [" + pageNode.getHandle() + "]", e);
@@ -115,6 +115,14 @@ public class PageHandlerManager extends ObservedManager {
             }
         }
 
+    }
+
+    /**
+     * @param name
+     * @param pageDefinition
+     */
+    public void registerPageDefinition(String name, PageDefinition pageDefinition) {
+        dialogPageHandlers.put(name, pageDefinition);
     }
 
     /**
@@ -128,7 +136,7 @@ public class PageHandlerManager extends ObservedManager {
         this.dialogPageHandlers.clear();
     }
 
-    protected static class PageDefinition {
+    public static class PageDefinition {
 
         private Map defaultProperties = new HashMap();
 
