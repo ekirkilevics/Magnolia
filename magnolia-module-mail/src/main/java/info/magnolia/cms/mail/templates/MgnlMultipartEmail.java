@@ -68,7 +68,13 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
             // DataSource fd = new FileDataSource(file);
             messageBodyPart.setDataHandler(new DataHandler(fds));
             // Add a header to connect to the HTML
+
+            // MAGNOLIA-1649 this is really important!
+            if (!key.startsWith("<")) {
+                key = "<" + key + ">";
+            }
             messageBodyPart.setHeader(CONTENT_ID, key);
+
             // set the header as well as the content type do this AFTER setting the data source
             messageBodyPart.setHeader(CONTENT_TYPE, contentType + "; name=\"" + name + "\"");
 
