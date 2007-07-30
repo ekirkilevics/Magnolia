@@ -60,6 +60,12 @@ public class PageHandlerManager extends ObservedManager {
     public PageMVCHandler getPageHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 
         PageDefinition pageDefinition = (PageDefinition) dialogPageHandlers.get(name);
+
+        if (pageDefinition == null) {
+            log.warn("Page definition not found: \"{}\"", name);
+            return null;
+        }
+
         Class dialogPageHandlerClass = pageDefinition.getHandlerClass();
         if (dialogPageHandlerClass == null) {
             throw new InvalidDialogPageHandlerException(name);
