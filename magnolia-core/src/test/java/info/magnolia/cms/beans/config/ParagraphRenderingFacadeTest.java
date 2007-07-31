@@ -24,6 +24,7 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
 
     protected void setUp() throws Exception {
         MgnlContext.setInstance(null);
+        super.setUp();
     }
 
     public void testRenderCallsTheAppropriateRenderer() throws IOException, RepositoryException {
@@ -43,7 +44,7 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
         tru.setType("bar");
         final StringWriter res2 = new StringWriter();
         prf.render(null, tru, res2);
-        assertEquals("tr�l�l�:para-two", res2.toString());
+        assertEquals("trululu:para-two", res2.toString());
     }
 
     public void testRenderSetJspPageContext() throws IOException, RepositoryException {

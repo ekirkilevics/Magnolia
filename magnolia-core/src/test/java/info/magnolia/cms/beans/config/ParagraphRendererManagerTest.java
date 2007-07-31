@@ -135,7 +135,7 @@ public class ParagraphRendererManagerTest extends TestCase {
 
     public static final class OtherDummyParagraphRenderer implements ParagraphRenderer {
         public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
-            out.write("trülülü:" + paragraph.getName());
+            out.write("trululu:" + paragraph.getName());
         }
     }
 
