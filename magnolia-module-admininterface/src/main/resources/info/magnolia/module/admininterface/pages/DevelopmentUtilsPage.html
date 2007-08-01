@@ -6,74 +6,86 @@
     <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
   </head>
   <body id="mgnl">
-    <div class="pageframe">
-      <h3>Backup configuration</h3>
-      <form action="">
-        <input type="hidden" name="command" value="backup" />
+    <form action="">
+      <div class="pageframe">
         <div class="formelement">
-          <label for="templates">Templates</label>
-          <input type="checkbox" name="templates" checked="checked" />
+          <label for="rootdir">Root dir, relative to webapp</label>
+          <input type="text" name="rootdir" value="${this.rootdir}" class="text" />
+          <input type="hidden" name="command" value="backup" />
         </div>
-        <div class="formelement">
-          <label for="paragraphs">Paragraphs</label>
-          <input type="checkbox" name="paragraphs" checked="checked" />
-        </div>
-        <div class="formelement">
-          <label for="dialogs">Dialogs</label>
-          <input type="checkbox" name="dialogs" checked="checked" />
-        </div>
+      </div>
+      <div class="pageframe">
+        <h3>Standard configuration</h3>
         <div class="formelement">
           <label for="website">Website</label>
-          <input type="checkbox" name="website" checked="checked" />
+          <input type="checkbox" name="website" [#if this.website] checked="checked" [/#if] />
         </div>
         <div class="formelement">
           <label for="users">Users</label>
-          <input type="checkbox" name="users" />
+          <input type="checkbox" name="users" [#if this.users] checked="checked" [/#if] />
         </div>
         <div class="formelement">
           <label for="groups">Groups</label>
-          <input type="checkbox" name="groups" />
+          <input type="checkbox" name="groups" [#if this.groups] checked="checked" [/#if] />
         </div>
         <div class="formelement">
           <label for="roles">Roles</label>
-          <input type="checkbox" name="roles" />
+          <input type="checkbox" name="roles" [#if this.roles] checked="checked" [/#if] />
         </div>
+        <h3>Templating</h3>
         <div class="formelement">
-          <label for="rootdir">Root dir, relative to webapp</label>
-          <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" class="text" />
-        </div>
-        <input type="submit" value="backup" class="mgnlControlButton" />
-      </form>
-    </div>
-    <div class="pageframe">
-      <h3>Backup subnodes to separate files</h3>
-      <form action="">
-        <input type="hidden" name="command" value="backupChildren" />
-        <div class="formelement">
-          <label for="repository">Repository</label>
-          <select name="repository">
-            [#list this.repositories as item]
-            <option>${item}</option>
+          <label for="repository">Module</label>
+          <select name="module">
+            [#list this.modules as item]
+            <option [#if this.module=item] selected="selected" [/#if]>${item}</option>
             [/#list]
           </select>
         </div>
         <div class="formelement">
-          <label for="parentpath">
-            Parent path
-            <small>(all the children will be saved)</small>
-          </label>
-          <input type="text" name="parentpath" class="text" />
+          <label for="templates">Templates</label>
+          <input type="checkbox" name="templates" [#if this.templates] checked="checked" [/#if] />
         </div>
         <div class="formelement">
-          <label for="rootdir">Root dir, relative to webapp</label>
-          <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" class="text" />
+          <label for="paragraphs">Paragraphs</label>
+          <input type="checkbox" name="paragraphs" [#if this.paragraphs] checked="checked" [/#if] />
         </div>
-        <input type="submit" value="backupChildren" class="mgnlControlButton" />
-      </form>
-    </div>
-    [#if message?exists]
-    <hr />
-    <pre>${message}</pre>
-    [/#if]
+        <div class="formelement">
+          <label for="dialogs">Dialogs</label>
+          <input type="checkbox" name="dialogs" [#if this.dialogs] checked="checked" [/#if] />
+        </div>
+        <input type="submit" value="backup" class="mgnlControlButton" />
+      </div>
+    </form>
+    <form action="">
+      <div class="pageframe">
+        <h3>Backup subnodes to separate files</h3>
+        <form action="">
+          <input type="hidden" name="command" value="backupChildren" />
+          <div class="formelement">
+            <label for="repository">Repository</label>
+            <select name="repository">
+              [#list this.repositories as item]
+              <option>${item}</option>
+              [/#list]
+            </select>
+          </div>
+          <div class="formelement">
+            <label for="parentpath">
+              Parent path
+              <small>(all the children will be saved)</small>
+            </label>
+            <input type="text" name="parentpath" class="text" />
+          </div>
+          <div class="formelement">
+            <label for="rootdir">Root dir, relative to webapp</label>
+            <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" class="text" />
+          </div>
+          <input type="submit" value="backupChildren" class="mgnlControlButton" />
+        </form>
+      </div>
+      [#if message?exists]
+      <hr />
+      <pre>${message}</pre>
+      [/#if]
   </body>
 </html>

@@ -15,9 +15,9 @@ package info.magnolia.module.admininterface.pages;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ModuleLoader;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
@@ -30,6 +30,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Set;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -50,13 +51,13 @@ import org.slf4j.LoggerFactory;
  */
 public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
-    private boolean templates;
+    private boolean templates = true;
 
-    private boolean paragraphs;
+    private boolean paragraphs = true;
 
-    private boolean dialogs;
+    private boolean dialogs = true;
 
-    private boolean website;
+    private boolean website = true;
 
     private boolean users;
 
@@ -64,11 +65,13 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     private boolean roles;
 
-    private String rootdir;
+    private String rootdir = "WEB-INF/bootstrap/common";
 
     private String parentpath;
 
     private String repository;
+
+    private String module = "templating";
 
     /**
      * Logger.
@@ -82,6 +85,86 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
      */
     public DevelopmentUtilsPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
+    }
+
+    /**
+     * Getter for <code>templates</code>.
+     * @return Returns the templates.
+     */
+    public boolean isTemplates() {
+        return this.templates;
+    }
+
+    /**
+     * Getter for <code>paragraphs</code>.
+     * @return Returns the paragraphs.
+     */
+    public boolean isParagraphs() {
+        return this.paragraphs;
+    }
+
+    /**
+     * Getter for <code>dialogs</code>.
+     * @return Returns the dialogs.
+     */
+    public boolean isDialogs() {
+        return this.dialogs;
+    }
+
+    /**
+     * Getter for <code>website</code>.
+     * @return Returns the website.
+     */
+    public boolean isWebsite() {
+        return this.website;
+    }
+
+    /**
+     * Getter for <code>users</code>.
+     * @return Returns the users.
+     */
+    public boolean isUsers() {
+        return this.users;
+    }
+
+    /**
+     * Getter for <code>groups</code>.
+     * @return Returns the groups.
+     */
+    public boolean isGroups() {
+        return this.groups;
+    }
+
+    /**
+     * Getter for <code>roles</code>.
+     * @return Returns the roles.
+     */
+    public boolean isRoles() {
+        return this.roles;
+    }
+
+    /**
+     * Getter for <code>rootdir</code>.
+     * @return Returns the rootdir.
+     */
+    public String getRootdir() {
+        return this.rootdir;
+    }
+
+    /**
+     * Getter for <code>parentpath</code>.
+     * @return Returns the parentpath.
+     */
+    public String getParentpath() {
+        return this.parentpath;
+    }
+
+    /**
+     * Getter for <code>repository</code>.
+     * @return Returns the repository.
+     */
+    public String getRepository() {
+        return this.repository;
     }
 
     /**
@@ -157,6 +240,22 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     }
 
     /**
+     * Getter for <code>module</code>.
+     * @return Returns the module.
+     */
+    public String getModule() {
+        return this.module;
+    }
+
+    /**
+     * Setter for <code>module</code>.
+     * @param module The module to set.
+     */
+    public void setModule(String module) {
+        this.module = module;
+    }
+
+    /**
      * Setter for <code>repository</code>.
      * @param repository The repository to set.
      */
@@ -168,64 +267,49 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         return ContentRepository.getAllRepositoryNames();
     }
 
-    public String backup() {
+    public Set getModules() {
+        return ModuleLoader.getInstance().getModuleInstances().keySet();
+    }
 
-        Iterator modules = ModuleLoader.getInstance().getModuleInstances().keySet().iterator();
+    public String backup() {
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
         Session session = hm.getWorkspace().getSession();
 
-        while (modules.hasNext()) {
-            String moduleName = (String) modules.next();
-
-            if (!"templating".equals(moduleName)) {
-                // @todo temporary, this is what I need for now...
-                continue;
+        try {
+            Content moduleroot = hm.getContent("/modules/" + module);
+            if (templates) {
+                exportChildren(ContentRepository.CONFIG, session, moduleroot, "templates", new ItemType[]{
+                    ItemType.CONTENT,
+                    ItemType.CONTENTNODE}, false);
             }
-            try {
-                Content moduleroot = hm.getContent("/modules/" + moduleName);
-                if (templates) {
-                    exportChildren(ContentRepository.CONFIG, session, moduleroot, "templates", new ItemType[]{
-                        ItemType.CONTENT,
-                        ItemType.CONTENTNODE}, false);
-                }
-                if (paragraphs) {
-                    exportChildren(ContentRepository.CONFIG, session, moduleroot, "paragraphs", new ItemType[]{
-                        ItemType.CONTENT,
-                        ItemType.CONTENTNODE}, false);
-                }
-                if (dialogs) {
-                    exportChildren(
-                        ContentRepository.CONFIG,
-                        session,
-                        moduleroot,
-                        "dialogs",
-                        new ItemType[]{ItemType.CONTENT},
-                        true);
-                }
-                AlertUtil.setMessage("Backup done!");
+            if (paragraphs) {
+                exportChildren(ContentRepository.CONFIG, session, moduleroot, "paragraphs", new ItemType[]{
+                    ItemType.CONTENT,
+                    ItemType.CONTENTNODE}, false);
             }
-            catch (Exception e) {
-                log.error(e.getMessage(), e);
-                AlertUtil.setMessage("Error while processing module " + moduleName, e);
+            if (dialogs) {
+                exportChildren(
+                    ContentRepository.CONFIG,
+                    session,
+                    moduleroot,
+                    "dialogs",
+                    new ItemType[]{ItemType.CONTENT},
+                    true);
             }
-
+            AlertUtil.setMessage("Backup done!");
+        }
+        catch (Exception e) {
+            log.error(e.getMessage(), e);
+            AlertUtil.setMessage("Error while processing module " + module, e);
         }
 
-        if (website) {
-            extractWorkspaceRoots(ContentRepository.WEBSITE);
-        }
+        extractWorkspaceRoots(ContentRepository.WEBSITE);
 
-        if (users) {
-            extractWorkspaceRoots(ContentRepository.USERS);
-        }
+        extractWorkspaceRoots(ContentRepository.USERS);
 
-        if (groups) {
-            extractWorkspaceRoots(ContentRepository.USER_GROUPS);
-        }
+        extractWorkspaceRoots(ContentRepository.USER_GROUPS);
 
-        if (roles) {
-            extractWorkspaceRoots(ContentRepository.USER_ROLES);
-        }
+        extractWorkspaceRoots(ContentRepository.USER_ROLES);
 
         return this.show();
     }
