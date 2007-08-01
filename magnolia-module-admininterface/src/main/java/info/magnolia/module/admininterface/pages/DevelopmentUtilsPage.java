@@ -57,6 +57,8 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     private boolean dialogs = true;
 
+    private boolean pages;
+
     private boolean website = true;
 
     private boolean users;
@@ -109,6 +111,22 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
      */
     public boolean isDialogs() {
         return this.dialogs;
+    }
+
+    /**
+     * Getter for <code>pages</code>.
+     * @return Returns the pages.
+     */
+    public boolean isPages() {
+        return this.pages;
+    }
+
+    /**
+     * Setter for <code>pages</code>.
+     * @param pages The pages to set.
+     */
+    public void setPages(boolean pages) {
+        this.pages = pages;
     }
 
     /**
@@ -287,6 +305,11 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
                     ItemType.CONTENT,
                     ItemType.CONTENTNODE}, false);
             }
+            if (pages) {
+                exportChildren(ContentRepository.CONFIG, session, moduleroot, "pages", new ItemType[]{
+                    ItemType.CONTENT,
+                    ItemType.CONTENTNODE}, false);
+            }
             if (dialogs) {
                 exportChildren(
                     ContentRepository.CONFIG,
@@ -343,8 +366,16 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     private void backupChildren(String repository, String parentpath) {
         HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+
+        Content parentNode = null;
         try {
-            Content parentNode = hm.getContent(parentpath);
+            parentNode = hm.getContent(parentpath);
+        }
+        catch (RepositoryException e) {
+            // ignore
+            return;
+        }
+        try {
             Iterator children = parentNode.getChildren(ContentUtil.ALL_NODES_EXCEPT_JCR_CONTENT_FILTER).iterator();
             while (children.hasNext()) {
                 Content exported = (Content) children.next();
@@ -372,7 +403,14 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     private void exportChildren(String repository, Session session, Content moduleroot, String path,
         ItemType[] itemTypes, boolean exportContentContainingContentNodes) throws PathNotFoundException,
         RepositoryException, AccessDeniedException, FileNotFoundException, IOException {
-        Content templateRoot = moduleroot.getContent(path);
+        Content templateRoot = null;
+        try {
+            templateRoot = moduleroot.getContent(path);
+        }
+        catch (PathNotFoundException e) {
+            // ignore
+            return;
+        }
 
         Iterator children = ContentUtil.collectAllChildren(templateRoot, itemTypes).iterator();
         while (children.hasNext()) {
