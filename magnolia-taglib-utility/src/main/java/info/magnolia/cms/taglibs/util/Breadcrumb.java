@@ -79,6 +79,11 @@ public class Breadcrumb extends TagSupport {
     private String titleProperty;
 
     /**
+     * Css class for active page.
+     */
+    private String activeCss = "active";
+
+    /**
      * Setter for the <code>delimeter</code> tag attribute.
      * @param delimiter delimeter between links
      */
@@ -126,11 +131,19 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
+     * Setter for <code>activeCss</code>.
+     * @param activeCss The activeCss to set.
+     */
+    public void setActiveCss(String activeCss) {
+        this.activeCss = activeCss;
+    }
+
+    /**
      * {@inheritDoc}
      */
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-        Content actpage = Resource.getCurrentActivePage(request);
+        Content actpage = Resource.getCurrentActivePage();
         int endLevel = 0;
 
         try {
@@ -166,7 +179,13 @@ public class Breadcrumb extends TagSupport {
                     out.print(page.getHandle());
                     out.print("."); //$NON-NLS-1$
                     out.print(Server.getDefaultExtension());
+                    if (actpage.getHandle().equals(page.getHandle())) {
+                        out.print("\" class=\""); //$NON-NLS-1$
+                        out.print(activeCss);
+                    }
+
                     out.print("\">"); //$NON-NLS-1$
+
                 }
                 out.print(title);
                 if (this.link) {
@@ -194,6 +213,7 @@ public class Breadcrumb extends TagSupport {
         this.link = true;
         this.hideProperty = null;
         this.titleProperty = null;
+        this.activeCss = "active";
         super.release();
     }
 

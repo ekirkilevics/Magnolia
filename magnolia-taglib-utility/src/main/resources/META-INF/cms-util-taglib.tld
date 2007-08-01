@@ -180,6 +180,12 @@
       <type>boolean</type>
       <description>Create links to pages. Defaults to true</description>
     </attribute>
+    <attribute>
+      <name>activeCss</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Css class added to the current page link</description>
+    </attribute>
   </tag>
   <tag>
     <name>fileSrc</name>
@@ -361,7 +367,9 @@
       <name>itemType</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>The itemTypes search/returned by this tag. Default is mgnl:content which is used for pages</description>
+      <description>
+        The itemTypes search/returned by this tag. Default is mgnl:content which is used for pages
+      </description>
     </attribute>
     <attribute>
       <name>scope</name>
