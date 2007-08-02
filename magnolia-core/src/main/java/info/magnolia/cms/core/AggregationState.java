@@ -33,10 +33,12 @@ public class AggregationState {
     private Template template;
 
     public void setOriginalURI(String originalURI) {
+
+        String decodedURI = Path.decodedURI(originalURI, getCharacterEncoding());
         if (this.originalURI != null) {
-            throw new IllegalStateException("Original URI can only be set once ! Existing value is [" + this.originalURI + "], tried to replace it with [" + originalURI + "]");
+            throw new IllegalStateException("Original URI can only be set once ! Existing value is [" + this.originalURI + "], tried to replace it with [" + decodedURI + "]");
         }
-        this.originalURI = Path.decodedURI(originalURI, getCharacterEncoding());
+        this.originalURI = decodedURI;
     }
 
     public void setCurrentURI(String currentURI) {
