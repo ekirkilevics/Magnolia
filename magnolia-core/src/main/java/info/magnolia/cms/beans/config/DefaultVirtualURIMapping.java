@@ -13,12 +13,12 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 
+
 /**
  * @author philipp
  * @version $Id$
- *
  */
-public class DefaultVirtualURIMapping implements VirtualURIMapping{
+public class DefaultVirtualURIMapping implements VirtualURIMapping {
 
     private String fromURI;
 
@@ -36,22 +36,18 @@ public class DefaultVirtualURIMapping implements VirtualURIMapping{
         return r;
     }
 
-
     public String getFromURI() {
         return this.fromURI;
     }
-
 
     public void setFromURI(String fromURI) {
         this.fromURI = fromURI;
         this.pattern = new SimpleUrlPattern(fromURI);
     }
 
-
     public String getToURI() {
         return this.toURI;
     }
-
 
     public void setToURI(String toURI) {
         this.toURI = toURI;
