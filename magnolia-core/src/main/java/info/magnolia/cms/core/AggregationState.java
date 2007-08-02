@@ -35,8 +35,8 @@ public class AggregationState {
     public void setOriginalURI(String originalURI) {
 
         String decodedURI = Path.decodedURI(originalURI, getCharacterEncoding());
-        if (this.originalURI != null) {
-            throw new IllegalStateException("Original URI can only be set once ! Existing value is [" + this.originalURI + "], tried to replace it with [" + decodedURI + "]");
+        if (this.originalURI != null && !this.originalURI.equals(decodedURI)) {
+            throw new IllegalStateException("Original URI can only be set once ! Existing value is \"" + this.originalURI + "\", tried to replace it with \"" + decodedURI + "\"");
         }
         this.originalURI = decodedURI;
     }
