@@ -10,15 +10,35 @@
  */
 package info.magnolia.cms.beans.config;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 
 
 /**
+ * Default virtual uri mapping. Uris can be fixed or regular expressions. By default fromURI and toURI are interpreted
+ * as fixed strings, you can use regular expression by prefixing fromURI with <code>regexp:</code>. When using regexp
+ * toURI can contain references to the regexp matches. For example:
+ *
+ * <pre>
+ * fromURI=regexp:/products/([0-9A-Z]+)\.html
+ * toURI=/product/detail.html?productId=$1
+ * </pre>
+ *
+ * @author Fabrizio Giustina
  * @author philipp
  * @version $Id$
  */
 public class DefaultVirtualURIMapping implements VirtualURIMapping {
+
+    /**
+     * Prefix for regexp virtual URIs.
+     */
+    private static final String REGEXP_PREFIX = "regexp:";
 
     private String fromURI;
 
@@ -26,10 +46,26 @@ public class DefaultVirtualURIMapping implements VirtualURIMapping {
 
     private String toURI;
 
+    private Pattern regexp;
+
     public MappingResult mapURI(String uri) {
         MappingResult r = new MappingResult();
 
-        if (pattern.match(uri)) {
+        if (regexp != null) {
+            Matcher matcher = regexp.matcher(uri);
+            if (matcher.find()) {
+                String replaced = toURI;
+                int matcherCount = matcher.groupCount();
+                for (int j = 0; j <= matcherCount; j++) {
+                    // @todo of course we should improve this using a stringbuffer
+                    replaced = StringUtils.replace(replaced, "$" + j, matcher.group(j));
+                }
+
+                r.setLevel(matcherCount + 1);
+                r.setToURI(replaced);
+            }
+        }
+        else if (pattern.match(uri)) {
             r.setLevel(pattern.getLength());
             r.setToURI(toURI);
         }
@@ -42,7 +78,13 @@ public class DefaultVirtualURIMapping implements VirtualURIMapping {
 
     public void setFromURI(String fromURI) {
         this.fromURI = fromURI;
-        this.pattern = new SimpleUrlPattern(fromURI);
+
+        if (fromURI.startsWith(REGEXP_PREFIX)) {
+            this.regexp = Pattern.compile(StringUtils.removeStart(fromURI, REGEXP_PREFIX));
+        }
+        else {
+            this.pattern = new SimpleUrlPattern(fromURI);
+        }
     }
 
     public String getToURI() {
