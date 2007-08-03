@@ -6,6 +6,11 @@
     <version>3.1-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
+  <modelVersion>4.0.0</modelVersion>
+  <artifactId>magnolia</artifactId>
+  <packaging>war</packaging>
+  <name>magnolia</name>
+  <version>3.1-SNAPSHOT</version>
   <profiles>
     <profile>
       <id>author</id>
@@ -85,10 +90,6 @@
       </build>
     </profile>
   </profiles>
-  <modelVersion>4.0.0</modelVersion>
-  <artifactId>magnolia</artifactId>
-  <packaging>war</packaging>
-  <name>magnolia</name>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
