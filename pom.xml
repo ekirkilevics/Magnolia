@@ -378,8 +378,7 @@
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>clirr-maven-plugin</artifactId>
-        <!-- custom built snapshot until http://jira.codehaus.org/browse/MCLIRR-6 is fixed -->
-        <version>2.1.1-magnolia-SNAPSHOT</version>
+        <version>2.1.1</version>
         <configuration>
           <minSeverity>info</minSeverity>
           <!-- this is detected automatically by default: -->
