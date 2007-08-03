@@ -29,6 +29,7 @@ public class BasicDelta implements Delta {
     private final List tasks;
 
     /**
+     * TODO : maybe the title could be generated from module name + version + DeltaType
      *
      * @param tasks should not be a read-only List, as the ModuleVersionHandler might add tasks to it.
      */
