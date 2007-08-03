@@ -4,7 +4,7 @@
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>3.1-SNAPSHOT</version>
+  <version>3.1-m2</version>
   <description>
     Magnolia is a free enterprise class content management system developed by Magnolia International based on the
     standard API for java content repositories (JCR).
@@ -94,9 +94,9 @@
     </developer>
   </developers>
   <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
-    <url>http://svn.magnolia.info/view/magnolia/trunk/</url>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-project-3.1-m2</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-project-3.1-m2</developerConnection>
+    <url>http://svn.magnolia.info/view/magnolia/tags/magnolia-project-3.1-m2</url>
   </scm>
   <organization>
     <name>Magnolia International</name>
@@ -189,6 +189,11 @@
               <version>2.4</version>
             </dependency>
           </dependencies>
+        </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-release-plugin</artifactId>
+          <version>2.0-beta-4</version>
         </plugin>
       </plugins>
     </pluginManagement>
