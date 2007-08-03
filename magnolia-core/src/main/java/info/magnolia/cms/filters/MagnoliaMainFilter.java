@@ -2,18 +2,16 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.module.ModuleManagerUI;
 import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.TypeDescriptor;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleManager;
 
 import java.io.IOException;
-import java.util.Iterator;
+import java.io.Writer;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
@@ -29,6 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.ArrayUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import freemarker.template.TemplateException;
 
 
 /**
@@ -50,38 +49,55 @@ public class MagnoliaMainFilter extends AbstractMagnoliaFilter {
 
     public static final String SERVER_FILTERS = "/server/filters";
 
-    /**
-     * We do not have an additional filters node for the main filter
-     */
-    private static final Content2BeanTransformer FILTER_TRANSFORMER = new Content2BeanTransformerImpl() {
-
-        public void initBean(TransformationState state, Map values) throws Content2BeanException {
-            super.initBean(state, values);
-
-            Object bean = state.getCurrentBean();
-            // we do not have a filters subnode again
-            if (bean instanceof MagnoliaMainFilter) {
-                for (Iterator iter = values.values().iterator(); iter.hasNext();) {
-                    Object value = iter.next();
-                    if (value instanceof MagnoliaFilter) {
-                        ((MagnoliaMainFilter) bean).addFilter((MagnoliaFilter) value);
-                    }
-                }
-            }
-        }
-
-        /**
-         * The default class to use is MagnoliaMainFilter
-         */
-        protected TypeDescriptor onResolveClass(TransformationState state) {
-            if(state.getCurrentContent().isNodeType(ItemType.CONTENT.getSystemName())){
-                return this.getTypeMapping().getTypeDescriptor(MagnoliaMainFilter.class);
-            }
-            return super.onResolveClass(state);
+    // reusing the same instance prevents from registering multiple listeners when the filter gets reinitialized
+    // TODO : but woops, this means we instanciate this for each and every filter
+    private final EventListener filtersEventListener = new EventListener() {
+        public void onEvent(EventIterator arg0) {
+            MgnlContext.setInstance(MgnlContext.getSystemContext());
+            destroy();
+            createFilters();
+            initFilters();
+            // TODO reset MgnlContext ??
         }
     };
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        // TODO : instead, instanciate a specific (hardcoded) chain of filters, including login, etc.
+        // one could imagine that only /.magnolia responds to this, while other requests are still
+        // going through the original chain, hoping the pages can be displayed
+        // or at least serve a "work in progress" kind of page.
+        final ModuleManager moduleManager = ModuleManager.Factory.getInstance();
+        if (moduleManager.getStatus().needsUpdateOrInstall()) {
+            final String contextPath = request.getContextPath();
+            final ModuleManagerUI ui = new ModuleManagerUI(contextPath);
+            final Writer out = response.getWriter();
+            final String uri = request.getRequestURI();
+            try {
+                if (uri.startsWith(contextPath + ModuleManagerUI.INSTALLER_PATH)) {
+                    final Map parameterMap = request.getParameterMap();
+                    final boolean shouldContinue = ui.execute(moduleManager, out, parameterMap);
+                    if (!shouldContinue) {
+                        return;
+                    } else {
+                        // reinit filter when update done.
+                        this.filters = new MagnoliaFilter[0];
+                        init(filterConfig);
+                        // redirect to root
+                        response.sendRedirect(contextPath);
+                    }
+                } else {
+                    ui.renderTempPage(moduleManager, out);
+                    return;
+                }
+            } catch (TemplateException e) {
+                log.error(e.getMessage(), e);
+                throw new RuntimeException(e); // TODO
+            } catch (RepositoryException e) {
+                log.error(e.getMessage(), e);
+                throw new RuntimeException(e); // TODO
+            }
+        }
 
         FilterChain fullchain = new MagnoliaFilterChain(chain, filters);
 
@@ -110,36 +126,25 @@ public class MagnoliaMainFilter extends AbstractMagnoliaFilter {
         this.filterConfig = filterConfig;
 
         // am I the root filter?
-        if (rootFilter == null) {
+        if (rootFilter == null || rootFilter == this) {
             rootFilter = this;
             setName("root");
-            ObservationUtil.registerChangeListener(ContentRepository.CONFIG, SERVER_FILTERS, new EventListener() {
-
-                public void onEvent(EventIterator arg0) {
-                    MgnlContext.setInstance(MgnlContext.getSystemContext());
-                    destroy();
-                    createFilters();
-                    initFilters();
-                }
-            });
+            ObservationUtil.registerChangeListener(ContentRepository.CONFIG, SERVER_FILTERS, filtersEventListener);
             createFilters();
         }
+
         initFilters();
     }
 
     protected void createFilters() {
-        Content node;
-
         try {
-            node = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG).getContent(SERVER_FILTERS);
+            final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+            final Content node = hm.getContent(SERVER_FILTERS);
 
-            Content2BeanUtil.getContent2BeanProcessor().setProperties(this, node, true, FILTER_TRANSFORMER);
-        }
-        catch (RepositoryException e) {
+            Content2BeanUtil.getContent2BeanProcessor().setProperties(this, node, true, new FilterContent2BeanTransformer());
+        } catch (RepositoryException e) {
             log.error("can't read filter definitions", e);
-            return;
-        }
-        catch (Content2BeanException e) {
+        } catch (Content2BeanException e) {
             log.error("can't create filter objects", e);
         }
 
@@ -159,7 +164,6 @@ public class MagnoliaMainFilter extends AbstractMagnoliaFilter {
             catch (ServletException e) {
                 log.error("Error initializing filter [" + filter.getName() + "]", e);
             }
-
         }
     }
 

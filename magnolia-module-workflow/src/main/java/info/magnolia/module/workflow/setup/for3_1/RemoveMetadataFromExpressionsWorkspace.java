@@ -16,7 +16,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.AbstractRepositoryTask;
+import info.magnolia.module.delta.TaskExecutionException;
 
 import javax.jcr.RepositoryException;
 
@@ -26,16 +27,21 @@ import javax.jcr.RepositoryException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class RemoveMetadataFromExpressionsWorkspace implements Delta {
+public class RemoveMetadataFromExpressionsWorkspace extends AbstractRepositoryTask {
 
-    public void apply(InstallContext ctx) throws RepositoryException {
+    public RemoveMetadataFromExpressionsWorkspace() {
+        super("Nodetypes changed", "Removes the metadata nodes from the Expressions workspace");
+    }
+
+    protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager("Expressions");
         final Content root = hm.getRoot();
         final MetadataRemover metadataRemover = new MetadataRemover(ctx);
         try {
             ContentUtil.visit(root, metadataRemover, ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER);
         } catch (Exception e) {
-            throw new RuntimeException(e); // TODO
+            // TODO : visit() should not throw Exception ...
+            throw new TaskExecutionException("Cant' removed MetaData from the Expression workspace: " + e.getMessage(), e);
         }
     }
 
@@ -48,8 +54,10 @@ public class RemoveMetadataFromExpressionsWorkspace implements Delta {
 
         public void visit(Content node) throws Exception {
             final Content metadata = node.getChildByName("MetaData");
-            ctx.debug("Will remove MetaData at " + metadata.getHandle());
-            metadata.delete();
+            if (metadata != null) {
+                ctx.debug("Will remove MetaData at " + metadata.getHandle());
+                metadata.delete();
+            }
         }
     }
 }

@@ -12,10 +12,6 @@
  */
 package info.magnolia.module.workflow;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.module.RegisterException;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
@@ -28,8 +24,6 @@ import openwfe.org.engine.impl.expool.SimpleExpressionPool;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
 
 
 /**
@@ -61,17 +55,6 @@ public class WorkflowModule extends AbstractAdminModule {
      * Is the saving deferred? This increases the response time.
      */
     private boolean deferredExpressionStorage = false;
-
-    protected void onRegister(int registerState) throws RegisterException {
-        Content menu = ContentUtil.getContent(ContentRepository.CONFIG, "/modules/adminInterface/config/menu");
-        try {
-            menu.orderBefore("inbox", "security");
-            menu.save();
-        }
-        catch (RepositoryException e) {
-            log.warn("can't move menupoint", e);
-        }
-    }
 
     protected void onInit() {
         try {

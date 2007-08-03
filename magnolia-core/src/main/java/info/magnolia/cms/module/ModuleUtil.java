@@ -18,14 +18,12 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.Role;
 import info.magnolia.cms.security.Security;
-import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.exchange.ActivationManager;
 import info.magnolia.cms.exchange.Subscriber;
@@ -33,16 +31,15 @@ import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
+import info.magnolia.module.files.BasicFileExtractor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -78,6 +75,8 @@ import org.slf4j.LoggerFactory;
  * This is a util providing some methods for the registration process of a module.
  * @author philipp
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated most methods here should be replaced by implementations of info.magnolia.module.delta.Task
  */
 public final class ModuleUtil {
 
@@ -140,7 +139,15 @@ public final class ModuleUtil {
         }
     }
 
+    /**
+     * Bootstraps the given resources and save.
+     * @deprecated use bootstrap(String[] resourceNames, boolean saveAfterImport), saving explicitely.
+     */
     public static void bootstrap(String[] resourceNames) throws IOException, RegisterException {
+        bootstrap(resourceNames, true);
+    }
+
+    public static void bootstrap(String[] resourceNames, boolean saveAfterImport) throws IOException, RegisterException {
         // sort by length --> import parent node first
         List list = new ArrayList(Arrays.asList(resourceNames));
 
@@ -192,6 +199,7 @@ public final class ModuleUtil {
             } catch (Exception e) {
                 throw new RegisterException("can't register bootstrap file: [" + name + "]", e);
             }
+            log.debug("Will bootstrap {}", resourceName);
             InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
             DataTransporter.importXmlStream(
                 stream,
@@ -199,8 +207,9 @@ public final class ModuleUtil {
                 pathName,
                 name,
                 false,
+                    // TODO !! this ImportUUIDBehavior might import nodes in the wrong place !!!
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,
-                true,
+                saveAfterImport,
                 true);
         }
     }
@@ -210,59 +219,13 @@ public final class ModuleUtil {
      * @param names a list of resource names
      * @param prefix prefix which is not part of the magolia path (in common 'mgnl-files')
      * @throws Exception io exception
+     *
+     * @deprecated
+     * @see info.magnolia.module.files.FileExtractor
      */
     public static void installFiles(String[] names, String prefix) throws Exception {
-
-        String root = null;
-        // Try to get root
-        try {
-            File f = new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR));
-            if (f.isDirectory()) {
-                root = f.getAbsolutePath();
-            }
-        }
-        catch (Exception e) {
-            // nothing
-        }
-
-        if (root == null) {
-            throw new Exception("Invalid magnolia " + SystemProperty.MAGNOLIA_APP_ROOTDIR + " path"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-
-        // Loop throgh files and check writeable
-        String error = StringUtils.EMPTY;
-        for (int j = 0; j < names.length; j++) {
-            String name = names[j];
-
-            InputStream resourceStream = ClasspathResourcesUtil.getStream(name, false);
-
-            File targetFile = new File(Path.getAbsoluteFileSystemPath(StringUtils.removeStart(name, prefix)));
-
-            String s = StringUtils.EMPTY;
-            if (!targetFile.getParentFile().exists() && !targetFile.getParentFile().mkdirs()) {
-                s = "Can't create directories for " + targetFile.getAbsolutePath(); //$NON-NLS-1$
-            }
-            else if (!targetFile.getParentFile().canWrite()) {
-                s = "Can't write to " + targetFile.getAbsolutePath(); //$NON-NLS-1$
-            }
-            if (s.length() > 0) {
-                if (error.length() > 0) {
-                    error += "\r\n"; //$NON-NLS-1$
-                }
-                error += s;
-            }
-
-            OutputStream out = new FileOutputStream(targetFile);
-            IOUtils.copy(resourceStream, out);
-
-            IOUtils.closeQuietly(resourceStream);
-            IOUtils.closeQuietly(out);
-        }
-
-        if (error.length() > 0) {
-            throw new Exception("Errors while installing files: " + error); //$NON-NLS-1$
-        }
-
+        final BasicFileExtractor fileExtractor = new BasicFileExtractor();
+        fileExtractor.installFiles(names, prefix);
     }
 
     /**
@@ -275,6 +238,8 @@ public final class ModuleUtil {
      * @throws AccessDeniedException exception
      * @throws PathNotFoundException exception
      * @throws RepositoryException exception
+     *
+     * @deprecated 
      */
     public static Content createMinimalConfiguration(Content node, String name, String displayName, String className,
         String version) throws AccessDeniedException, PathNotFoundException, RepositoryException {

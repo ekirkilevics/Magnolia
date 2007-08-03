@@ -67,6 +67,8 @@ public class ClasspathResourcesUtil {
      * Return a collection containing the resource names which passed the filter.
      * @param filter
      * @return string array of found resources
+     *
+     * TODO : (lazy) cache ?
      */
     public static String[] findResources(Filter filter) {
 

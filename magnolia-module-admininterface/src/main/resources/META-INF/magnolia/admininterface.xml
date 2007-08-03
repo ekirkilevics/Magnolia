@@ -6,4 +6,12 @@
   <description>Magnolia Administration GUI</description>
   <class>info.magnolia.module.admininterface.AdminInterfaceModule</class>
   <version>${project.version}</version>
+
+  <dependencies>
+    <dependency>
+      <name>core</name>
+      <version>3.1</version>
+    </dependency>
+  </dependencies>
+
 </module>

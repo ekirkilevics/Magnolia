@@ -223,6 +223,14 @@ public class MockContent extends DefaultContent {
         this.nodeTypeName = nodeTypeName;
     }
 
+    public void delete() throws RepositoryException {
+        final MockContent parent = (MockContent) getParent();
+        final boolean removed = parent.children.values().remove(this);
+        if (!removed) {
+            throw new RepositoryException("MockContent could not delete itself");
+        }
+    }
+
     public Content getParent() {
         return this.parent;
     }

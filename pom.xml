@@ -829,7 +829,7 @@
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
     <module>magnolia-gui</module>
-    <module>magnolia-exchange-simple</module>
+    <module>magnolia-module-exchange-simple</module>
     <module>magnolia-module-mail</module>
     <module>magnolia-module-admininterface</module>
     <module>magnolia-module-templating</module>

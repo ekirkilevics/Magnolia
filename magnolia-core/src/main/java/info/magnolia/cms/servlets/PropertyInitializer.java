@@ -14,9 +14,10 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ConfigurationException;
-import info.magnolia.cms.beans.config.ModuleRegistration;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.module.ModuleDefinition;
+import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleManagementException;
+import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.cms.module.PropertyDefinition;
 import info.magnolia.logging.Log4jConfigurer;
 
@@ -30,13 +31,12 @@ import java.net.UnknownHostException;
 import java.text.MessageFormat;
 import java.util.Iterator;
 import java.util.Properties;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.commons.collections.OrderedMap;
-import org.apache.commons.collections.OrderedMapIterator;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -167,10 +167,19 @@ public class PropertyInitializer implements ServletContextListener {
 
         log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$
 
+        // load mgnl-beans.properties first
         loadBeanProperties();
 
-        loadModuleProperties();
+        // complete or override with modules' properties
+        final ModuleManager moduleManager = ModuleManager.Factory.getInstance();
+        try {
+            final List moduleDefinitions = moduleManager.loadDefinitions();
+            loadModuleProperties(moduleDefinitions);
+        } catch (ModuleManagementException e) {
+            throw new RuntimeException(e); // TODO
+        }
 
+        // complete or override with WEB-INF properties files
         loadPropertiesFiles(context, servername, rootPath, webapp);
 
         // system property initialization
@@ -180,6 +189,7 @@ public class PropertyInitializer implements ServletContextListener {
             log.info("Setting the magnolia root system property: {} to {}", magnoliaRootSysproperty, rootPath); //$NON-NLS-1$
         }
 
+        // complete or override with JVM system properties
         overloadWithSystemProperties();
 
         Log4jConfigurer.initLogging(context);
@@ -192,13 +202,13 @@ public class PropertyInitializer implements ServletContextListener {
      * Load the properties defined in the module descriptors. They can get overridden later in the properties files in
      * WEB-INF
      */
-    protected void loadModuleProperties() {
-        OrderedMap defs = ModuleRegistration.getInstance().getModuleDefinitions();
-        for (OrderedMapIterator iter = defs.orderedMapIterator(); iter.hasNext();) {
-            iter.next();
-            ModuleDefinition def = (ModuleDefinition) iter.getValue();
-            for (Iterator iter2 = def.getProperties().iterator(); iter2.hasNext();) {
-                PropertyDefinition property = (PropertyDefinition) iter2.next();
+    protected void loadModuleProperties(List moduleDefinitions) {
+        final Iterator it = moduleDefinitions.iterator();
+        while (it.hasNext()) {
+            final ModuleDefinition module = (ModuleDefinition) it.next();
+            final Iterator propsIt = module.getProperties().iterator();
+            while (propsIt.hasNext()) {
+                final PropertyDefinition property = (PropertyDefinition) propsIt.next();
                 SystemProperty.setProperty(property.getName(), property.getValue());
             }
         }
@@ -286,7 +296,6 @@ public class PropertyInitializer implements ServletContextListener {
     }
 
     protected void loadBeanProperties() {
-        // load mgnl-beans.properties first
         InputStream mgnlbeansStream = getClass().getResourceAsStream(MGNL_BEANS_PROPERTIES);
 
         if (mgnlbeansStream != null) {

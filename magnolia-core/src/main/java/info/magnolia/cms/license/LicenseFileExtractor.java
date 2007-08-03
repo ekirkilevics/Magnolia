@@ -15,6 +15,9 @@ package info.magnolia.cms.license;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.io.InputStream;
+import java.io.Writer;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -145,5 +148,18 @@ public class LicenseFileExtractor {
 
         values.put(IMPLEMENTATION_VERSION, getVersionFromManifest());
 
+    }
+
+    /**
+     * Print version info to System.out
+     */
+    public void printVersionInfo() {
+        System.out.println("---------------------------------------------"); //$NON-NLS-1$
+        System.out.println("MAGNOLIA LICENSE"); //$NON-NLS-1$
+        System.out.println("---------------------------------------------"); //$NON-NLS-1$
+        System.out.println("Version number : " + get(LicenseFileExtractor.VERSION_NUMBER)); //$NON-NLS-1$
+        System.out.println("Build          : " + get(LicenseFileExtractor.BUILD_NUMBER)); //$NON-NLS-1$
+        System.out.println("Edition        : " + get(LicenseFileExtractor.EDITION)); //$NON-NLS-1$
+        System.out.println("Provider       : " + get(LicenseFileExtractor.PROVIDER) + " (" + get(LicenseFileExtractor.PRIVIDER_EMAIL) + ")"); //$NON-NLS-1$ $NON-NLS-3$ $NON-NLS-5$
     }
 }

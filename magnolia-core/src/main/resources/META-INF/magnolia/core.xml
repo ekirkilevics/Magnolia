@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>core</name>
+  <displayName>Magnolia Core</displayName>
+  <class>info.magnolia.setup.CoreModule</class>
+  <versionHandler>info.magnolia.setup.CoreModuleVersionHandler</versionHandler>
+  <version>${project.version}</version>
+</module>

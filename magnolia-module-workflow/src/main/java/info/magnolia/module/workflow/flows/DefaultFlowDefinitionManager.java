@@ -96,10 +96,10 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
             node = getDefinitionNode(workflowName);
         }
         catch (RepositoryException e) {
-            throw new FlowDefinitionException("could not access the node definition for name:" + workflowName, e);
+            throw new FlowDefinitionException("can't read workflow definition [" + workflowName + "]", e);
         }
         if (node == null){
-            throw new FlowDefinitionException("could not access the node definition for name:" + workflowName);
+            throw new FlowDefinitionException("can't read workflow definition [" + workflowName + "]") ;
         }
         return node.getNodeData("value").getString();
     }

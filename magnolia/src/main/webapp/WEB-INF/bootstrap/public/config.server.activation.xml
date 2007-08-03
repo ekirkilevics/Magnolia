@@ -14,7 +14,7 @@
     <sv:value>276ff398-cf13-494a-bf01-7df0e6f7abcd</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.cms.exchange.DefaultActivationManager</sv:value>
+    <sv:value>info.magnolia.module.exchangesimple.DefaultActivationManager</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

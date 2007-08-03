@@ -94,6 +94,10 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         return null;
     }
 
+    public void delete(String path) throws RepositoryException {
+        getContent(path).delete();
+    }
+
     public MockContent getRoot() {
         return this.root;
     }
@@ -161,7 +165,6 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
 
         return str.toString();
     }
-
 
     public Workspace getWorkspace() {
         return this.workspace;

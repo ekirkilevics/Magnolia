@@ -18,6 +18,8 @@ import java.util.List;
 
 /**
  * This class provides Delta's to be applied to install/update/uninstall modules.
+ * A module that needs to handle its own install/updates should provide an implementation
+ * of this interface.
  *
  * @see AbstractModuleVersionHandler for a convenient super class.
  *
@@ -25,11 +27,21 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public interface ModuleVersionHandler {
-    Version getLatestVersion();
 
     /**
-     * Returns the deltas to be applied to update from Version from to Version to.
+     * Gets the currently installed version number of this module.
      */
-    List getDeltas(Version from, Version to);
+    Version getCurrentlyInstalled(InstallContext ctx);
 
+    /**
+     * Returns the deltas to be applied to update from the given Version from
+     * to the current one. If from is null, it means the module is being installed,
+     * and we should thus return the necessary deltas to <strong>install</strong>
+     * it.
+     * It is also responsible for updating the current version number of the module,
+     * wherever it is stored.
+     */
+    List getDeltas(InstallContext installContext, Version from);
+
+    // TODO : the two methods can maybe be merged, since they're called sequentially in ModuleManager
 }

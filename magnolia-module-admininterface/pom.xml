@@ -17,7 +17,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-exchange-simple</artifactId>
+      <artifactId>magnolia-module-exchange-simple</artifactId>
       <version>3.1-m2</version>
     </dependency>
     <dependency>
@@ -99,6 +99,10 @@
     <dependency>
       <groupId>org.devlib.schmidt</groupId>
       <artifactId>imageinfo</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.slf4j</groupId>
+      <artifactId>slf4j-api</artifactId>
     </dependency>
   </dependencies>
 </project>

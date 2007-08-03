@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>webapp</name>
+  <displayName>Magnolia Webapp</displayName>
+  <versionHandler>info.magnolia.module.webapp.WebappVersionHandler</versionHandler>
+  <version>${project.version}</version>
+</module>

@@ -107,7 +107,8 @@ public class MockUtilTest extends TestCase {
         String content =
             "/parent1/sub1.prop1=one\n"+
             "parent2/sub2.prop1=two\n"+
-            "parent3.sub3.prop1=three";
+            "parent3.sub3.prop1=three"; // TODO : this syntax is deprecated
+        // TODO : "/parent3/sub2.prop2" should be supported, should create a property in node parent3/sub2, with no value
 
         HierarchyManager hm = MockUtil.createHierarchyManager(content);
         assertEquals("one", hm.getContent("/parent1/sub1").getNodeData("prop1").getString());
@@ -116,15 +117,29 @@ public class MockUtilTest extends TestCase {
 
         content =
             "/parent1/sub1@uuid=1\n"+
-            "parent2/sub2.@uuid=2\n"+
-            "parent3.sub3@uuid=3\n"+
-            "parent4.sub4.@uuid=4";
+            "parent2/sub2.@uuid=2\n"+ // TODO : this syntax is deprecated
+            "parent3.sub3@uuid=3\n"+  // TODO : this syntax is deprecated
+            "parent4.sub4.@uuid=4"; // TODO : this syntax is deprecated
 
         hm = MockUtil.createHierarchyManager(content);
         assertEquals("1", hm.getContent("/parent1/sub1").getUUID());
         assertEquals("2", hm.getContent("/parent2/sub2").getUUID());
         assertEquals("3", hm.getContent("/parent3/sub3").getUUID());
         assertEquals("4", hm.getContent("/parent4/sub4").getUUID());
+    }
+
+    public void testNodesCanBeCreatedWithoutProperties() throws IOException, RepositoryException{
+        String content =
+            "/node1/sub1.prop1=one\n"+
+            "/node2/sub2/\n"+
+            "/node3/sub3\n"+
+            "/node4\n";
+
+        HierarchyManager hm = MockUtil.createHierarchyManager(content);
+        assertEquals("one", hm.getContent("/node1/sub1").getNodeData("prop1").getString());
+        assertEquals(0, hm.getContent("/node2/sub2").getNodeDataCollection().size());
+ //       assertEquals(0, hm.getContent("/node3/sub3").getNodeDataCollection().size());
+        assertEquals(0, hm.getContent("/node4").getNodeDataCollection().size());
     }
 
     protected HierarchyManager initTestData() throws IOException, RepositoryException {

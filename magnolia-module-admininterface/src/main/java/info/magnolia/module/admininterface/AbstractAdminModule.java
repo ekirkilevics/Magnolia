@@ -14,18 +14,10 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.cms.beans.config.ParagraphManager;
-import info.magnolia.cms.beans.config.ShutdownManager;
-import info.magnolia.cms.beans.config.TemplateManager;
-import info.magnolia.cms.beans.config.TemplateRendererManager;
-import info.magnolia.cms.beans.config.VirtualURIManager;
-import info.magnolia.cms.beans.config.ParagraphRendererManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.dialog.ControlsManager;
 import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.commands.CommandsManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -34,6 +26,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Default implementation. registers dialogs , paragraphs, ...
  * @author philipp
+ * @deprecated see info.magnolia.module
  */
 public abstract class AbstractAdminModule extends AbstractModule {
 
@@ -43,31 +36,12 @@ public abstract class AbstractAdminModule extends AbstractModule {
     protected Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * The node containing the configuration for this module
-     */
-    private Content configNode;
-
-    /**
      * Initialize the module. Registers the dialogs, paragraphs and templates of this modules. Calls the abstract onInit
      * method.
      * @throws InitializationException
      */
     public final void init(Content configNode) throws InitializationException {
-        this.setConfigNode(configNode);
         try {
-
-            initEntry("virtualURIMapping", VirtualURIManager.getInstance());
-            initEntry("templates", TemplateManager.getInstance());
-            initEntry("template-renderers", TemplateRendererManager.getInstance());
-            initEntry("paragraphs", ParagraphManager.getInstance());
-            initEntry("paragraph-renderers", ParagraphRendererManager.getInstance());
-            initEntry("dialogs", DialogHandlerManager.getInstance());
-            initEntry("controls", ControlsManager.getInstance());
-            initEntry("pages", PageHandlerManager.getInstance());
-            initEntry("trees", TreeHandlerManager.getInstance());
-            initEntry("commands", CommandsManager.getInstance());
-            initEntry("shutdown", ShutdownManager.getInstance());
-
             onInit();
 
             this.setInitialized(true);
@@ -77,10 +51,6 @@ public abstract class AbstractAdminModule extends AbstractModule {
         }
     }
 
-    /**
-     * @param nodeName
-     * @param manager
-     */
     private void initEntry(String nodeName, ObservedManager manager) {
         Content node = ContentUtil.getCaseInsensitive(moduleNode, nodeName);
         if (node != null) {
@@ -92,19 +62,5 @@ public abstract class AbstractAdminModule extends AbstractModule {
      * Template pattern. Implement to perfome somem module specific stuff
      */
     protected abstract void onInit() throws InitializationException;
-
-    /**
-     * @return Returns the config node of the modules node.
-     */
-    public Content getConfigNode() {
-        return this.configNode;
-    }
-
-    /**
-     * @param configNode The configNode to set.
-     */
-    protected void setConfigNode(Content configNode) {
-        this.configNode = configNode;
-    }
 
 }

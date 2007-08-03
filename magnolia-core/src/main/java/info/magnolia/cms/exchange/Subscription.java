@@ -20,6 +20,10 @@ import info.magnolia.voting.Voter;
  */
 public interface Subscription extends Voter {
 
+    public String getName();
+
+    public void setName(String name);
+
     public String getFromURI();
 
     public void setFromURI(String fromURI);

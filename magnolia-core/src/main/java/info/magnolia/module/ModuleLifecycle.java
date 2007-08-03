@@ -21,9 +21,10 @@ package info.magnolia.module;
  */
 public interface ModuleLifecycle {
 
-    void start();
+    void start(ModuleLifecycleContext moduleLifecycleContext);
 
-    void stop();
+//    void stop(ModuleLifecycleContext moduleLifecycleContext);
 
-    void restart(); // event ? maybe this can be in an abstract subclass
+    // TODO pass an event ? maybe this can be in an abstract subclass
+//    void restart(ModuleLifecycleContext moduleLifecycleContext);
 }

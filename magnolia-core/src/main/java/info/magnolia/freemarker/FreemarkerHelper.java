@@ -59,16 +59,19 @@ public class FreemarkerHelper {
         final Locale locale = determineLocale();
         if (root instanceof Map) {
             final Map data = (Map) root;
-            final Context mgnlCtx = MgnlContext.getInstance();
-            if (mgnlCtx instanceof WebContext) {
-                data.put("contextPath", ((WebContext) mgnlCtx).getContextPath());
-            }
-            // TODO : this is currently still in FreemarkerUtil. If we add it here,
-            // the attribute "message" we put in the freemarker context should have a less generic name
-            // (-> update all templates)
+
+            if (MgnlContext.hasInstance()) {
+                final Context mgnlCtx = MgnlContext.getInstance();
+                if (mgnlCtx instanceof WebContext) {
+                    data.put("contextPath", ((WebContext) mgnlCtx).getContextPath());
+                }
+                // TODO : this is currently still in FreemarkerUtil. If we add it here,
+                // the attribute "message" we put in the freemarker context should have a less generic name
+                // (-> update all templates)
 //            if (AlertUtil.isMessageSet(mgnlCtx)) {
 //                data.put("message", AlertUtil.getMessage(mgnlCtx));
 //            }
+            }
         }
         cfg.getTemplate(templatePath, locale).process(root, out);
     }

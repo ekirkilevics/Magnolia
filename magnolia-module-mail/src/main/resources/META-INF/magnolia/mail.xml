@@ -4,11 +4,11 @@
   <name>mail</name>
   <displayName>Magnolia templating mail</displayName>
   <class>info.magnolia.cms.mail.MailModule</class>
-  <version>3.1</version>
+  <version>${project.version}</version>
   <dependencies>
     <dependency>
       <name>templating</name>
-      <version>3.1</version>
+      <version>3.1/*</version>
     </dependency>
   </dependencies>
   <servlets>

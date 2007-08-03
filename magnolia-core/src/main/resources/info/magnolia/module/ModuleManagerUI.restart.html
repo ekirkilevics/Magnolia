@@ -1,0 +1,20 @@
+[#include "ModuleManagerUI.header.html" /]
+<div id="content">
+<h2>Restart required</h2>
+
+<p>Magnolia needs to be restarted before it can be used.</p>
+
+
+<h2>Messages</h2>
+
+[#list context.messages?keys as module]
+<h3>${module}</h3>
+<ul>
+[#list context.messages[module] as msg]
+    <li>${msg.priority} - ${msg.timestamp?time} : ${msg.message}</li>
+[/#list]
+</ul>
+[/#list]
+</div>
+
+[#include "ModuleManagerUI.footer.html" /]

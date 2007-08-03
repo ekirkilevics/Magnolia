@@ -92,5 +92,5 @@ public final class WorkflowConstants {
 
     public static final String DEFAULT_WORKFLOW = "default";
 
-
+    public static final String DEFAULT_ACTIVATION_WORKFLOW = "activation";
 }

@@ -4,5 +4,13 @@
   <name>cache</name>
   <displayName>Magnolia pluggable Cache</displayName>
   <class>info.magnolia.cms.cache.CacheModule</class>
-  <version>3.0</version>
+  <version>${project.version}</version>
+
+  <dependencies>
+    <dependency>
+      <name>core</name>
+      <version>3.1</version>
+    </dependency>
+  </dependencies>
+
 </module>

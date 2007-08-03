@@ -14,6 +14,12 @@ package info.magnolia.module;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.module.model.ModuleDefinition;
+import org.apache.commons.lang.exception.ExceptionUtils;
+
+import javax.jcr.RepositoryException;
+import java.util.Date;
+import java.util.Map;
 
 /**
  *
@@ -24,13 +30,94 @@ public interface InstallContext { // implements Context ?
 
     void debug(String message);
 
-    // TODO : pass a reference to the Module/versionHandler/Delta/... here  
-    // TODO : so that we can make something useful out of the message ?
-    void log(String message);
+    void info(String message);
+
+    void warn(String message);
+
+    void error(String message, Throwable th);
+
+    void restartNeeded(String message);
+
+    boolean isRestartNeeded();
+
+    /**
+     * &lt;String (module), List&lt;Message&gt;&gt;
+     */
+    Map getMessages();
 
     HierarchyManager getHierarchyManager(String workspace);
 
-    Content getModuleConfigNode();
+    HierarchyManager getConfigHierarchyManager();
 
-    // TODO methods to retrieve HierarchyManager and other services ?
+    boolean hasModulesNode();
+
+    /**
+     * @return the root node for all modules in the config workspace.
+     */
+    Content getModulesNode() throws RepositoryException;
+
+    Content getOrCreateCurrentModuleNode() throws RepositoryException;
+
+    Content getOrCreateCurrentModuleConfigNode() throws RepositoryException;
+
+    /**
+     * Allows generic tasks to know what's being installed/updated.
+     */
+    ModuleDefinition getCurrentModuleDefinition();
+
+    public static final class Message {
+        private final Date timestamp;
+        private final String message;
+        private final String details;
+        private final MessagePriority priority;
+
+        public Message(MessagePriority priority, String message) {
+            this(priority, message, (String) null);
+        }
+
+        public Message(MessagePriority priority, String message, Throwable th) {
+            this(priority, message, th != null ? ExceptionUtils.getStackTrace(th) : null);
+        }
+
+        public Message(MessagePriority priority, String message, String details) {
+            this.timestamp = new Date();
+            this.priority = priority;
+            this.message = message;
+            this.details = details;
+        }
+
+        public Date getTimestamp() {
+            return timestamp;
+        }
+
+        public String getMessage() {
+            return message;
+        }
+
+        public String getDetails() {
+            return details;
+        }
+
+        public MessagePriority getPriority() {
+            return priority;
+        }
+    }
+
+    public class MessagePriority {
+        public static final MessagePriority debug = new MessagePriority("debug");
+        public static final MessagePriority info = new MessagePriority("info");
+        public static final MessagePriority warning = new MessagePriority("warning");
+        public static final MessagePriority error = new MessagePriority("error");
+        public static final MessagePriority restartNeeded = new MessagePriority("restartNeeded");
+
+        private final String name;
+
+        private MessagePriority(String name) {
+            this.name = name;
+        }
+
+        public String toString() {
+            return name;
+        }
+    }
 }

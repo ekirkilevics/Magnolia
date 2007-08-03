@@ -15,7 +15,8 @@ package info.magnolia.module.workflow.setup.for3_1;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.PropertyValuesDelta;
+import info.magnolia.module.delta.PropertyValuesTask;
+import info.magnolia.module.delta.TaskExecutionException;
 
 import javax.jcr.RepositoryException;
 
@@ -24,13 +25,24 @@ import javax.jcr.RepositoryException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class I18nMenuPoint extends PropertyValuesDelta {
+public class I18nMenuPoint extends PropertyValuesTask {
+    private static final String MENU_PATH = "modules/adminInterface/config/menu/inbox";
 
-    public void apply(InstallContext ctx) throws RepositoryException {
-        final HierarchyManager cfgHm = ctx.getHierarchyManager("config");
-        final Content menu = cfgHm.getContentNode("modules/adminInterface/config/menu/inbox");
-        checkPropertyValue(ctx, menu, "label", "Inbox", "menu.inbox");
-        newProperty(ctx, menu, "i18nBasename" ,"info.magnolia.module.workflow.messages");
+    public I18nMenuPoint() {
+        super("i18n", "Internationalization of the Inbox menu entry.");
     }
 
+    public void execute(InstallContext ctx) throws TaskExecutionException {
+        final HierarchyManager hm = ctx.getHierarchyManager("config");
+        if (!hm.isExist(MENU_PATH)) {
+            ctx.warn("Inbox menu does not exist at " + MENU_PATH);
+        }
+        try {
+            final Content menu = hm.getContentNode(MENU_PATH);
+            checkAndModifyPropertyValue(ctx, menu, "label", "Inbox", "menu.inbox");
+            newProperty(ctx, menu, "i18nBasename", "info.magnolia.module.workflow.messages");
+        } catch (RepositoryException e) {
+            throw new TaskExecutionException("Could not execute task: " + e.getMessage(), e);
+        }
+    }
 }

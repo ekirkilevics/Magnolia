@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>exchange-simple</name>
+  <displayName>Exchange-Simple</displayName>
+  <description>Exchange-Simple: default activation implementation</description>
+  <versionHandler>info.magnolia.module.exchangesimple.setup.ExchangeSimpleModuleVersionHandler</versionHandler>
+  <version>${project.version}</version>
+
+  <properties>
+    <property>
+      <name>info.magnolia.cms.exchange.Syndicator</name>
+      <value>info.magnolia.module.exchangesimple.SimpleSyndicator</value>
+      </property>
+    <property>
+      <name>info.magnolia.cms.exchange.Subscription</name>
+      <value>info.magnolia.module.exchangesimple.DefaultSubscription</value>
+    </property>
+  </properties>
+
+  <dependencies>
+    <dependency>
+      <name>core</name>
+      <version>3.1</version>
+    </dependency>
+  </dependencies>
+
+</module>

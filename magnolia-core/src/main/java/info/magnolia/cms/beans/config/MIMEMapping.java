@@ -14,42 +14,33 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
-
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * @author Sameer Charles
  * @version 1.1
  */
-public final class MIMEMapping {
+public class MIMEMapping {
+    private static final Logger log = LoggerFactory.getLogger(MIMEMapping.class);
 
-    /**
-     *
-     */
-    private static final String DEFAULT_ICON = "/.resources/file-icons/general.png";
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MIMEMapping.class);
-
-    private static final String START_PAGE = "server"; //$NON-NLS-1$
+    public static final String ICONS_PATH = "/.resources/file-icons/"; //$NON-NLS-1$
+    private static final String DEFAULT_ICON = ICONS_PATH + "general.png";
+    private static final String NODEPATH = "/server/MIMEMapping"; //$NON-NLS-1$
 
     private static Map cachedContent = new Hashtable();
     private static final String DEFAULT_CHAR_ENCODING = "UTF-8";
@@ -66,7 +57,6 @@ public final class MIMEMapping {
         protected String icon;
     }
 
-    public static final String ICONS_PATH = "/.resources/file-icons/"; //$NON-NLS-1$
 
     /**
      * Utility class, don't instantiate.
@@ -90,8 +80,8 @@ public final class MIMEMapping {
         MIMEMapping.cachedContent.clear();
         try {
             log.info("Config : loading MIMEMapping"); //$NON-NLS-1$
-            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(START_PAGE);
-            Collection mimeList = startPage.getContent("MIMEMapping").getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
+            final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
             MIMEMapping.cacheContent(mimeList);
             log.info("Config : MIMEMapping loaded"); //$NON-NLS-1$
         }
@@ -110,19 +100,14 @@ public final class MIMEMapping {
      * Register an event listener: reload cache configuration when something changes.
      */
     private static void registerEventListener() {
-
         log.info("Registering event listener for MIMEMapping"); //$NON-NLS-1$
 
-        ObservationUtil.registerChangeListener(
-            ContentRepository.CONFIG,
-            "/" + START_PAGE + "/" + "MIMEMapping",
-            new EventListener() {
-
-                public void onEvent(EventIterator iterator) {
-                    // reload everything
-                    reload();
-                }
-            });
+        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, NODEPATH, new EventListener() {
+            public void onEvent(EventIterator iterator) {
+                // reload everything
+                reload();
+            }
+        });
     }
 
     /**

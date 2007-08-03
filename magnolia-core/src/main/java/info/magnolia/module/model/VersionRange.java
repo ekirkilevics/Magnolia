@@ -63,11 +63,10 @@ public class VersionRange {
     }
 
     public boolean contains(Version other) {
-        return other.isStrictlyAfter(from) && other.isBeforeOrEquivalent(to);
+        return other.isEquivalent(from) || (other.isStrictlyAfter(from) && other.isBeforeOrEquivalent(to));
     }
 
     public String toString() {
-        return  from + "/" + to;
-
+        return from + "/" + to;
     }
 }

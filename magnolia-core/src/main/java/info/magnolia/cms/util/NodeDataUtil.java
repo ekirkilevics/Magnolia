@@ -416,6 +416,27 @@ public class NodeDataUtil {
         return getOrCreate(node, name, getJCRPropertyType(obj));
     }
 
+
+    public static NodeData getOrCreateAndSet(Content node, String name, Object obj) throws AccessDeniedException, RepositoryException {
+        // TODO we should not use the jcr node
+        ValueFactory valueFactory = node.getJCRNode().getSession().getValueFactory();
+        NodeData nd = getOrCreate(node, name, getJCRPropertyType(obj));
+        nd.setValue(createValue(obj, valueFactory));
+        return nd;
+    }
+
+    public static NodeData getOrCreateAndSet(Content node, String name, long value) throws AccessDeniedException, RepositoryException {
+        return getOrCreateAndSet(node, name, new Long(value));
+    }
+
+    public static NodeData getOrCreateAndSet(Content node, String name, int value) throws AccessDeniedException, RepositoryException {
+        return getOrCreateAndSet(node, name, new Long(value));
+    }
+
+    public static NodeData getOrCreateAndSet(Content node, String name, boolean value) throws AccessDeniedException, RepositoryException {
+        return getOrCreateAndSet(node, name, new Boolean(value));
+    }
+
     /**
      * Uses the i18n mechanism to translate the message if the resulting string is a key
      * @param node

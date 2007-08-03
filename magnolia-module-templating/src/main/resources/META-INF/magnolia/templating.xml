@@ -5,11 +5,12 @@
   <displayName>Templating</displayName>
   <description>Custom templates</description>
   <class>info.magnolia.module.templating.TemplatingModule</class>
-  <version>3.1</version>
+  <versionHandler>info.magnolia.module.templating.setup.TemplatingModuleVersionHandler</versionHandler>
+  <version>${project.version}</version>
   <dependencies>
     <dependency>
       <name>adminInterface</name>
-      <version>3.1</version>
+      <version>3.1/*</version>
     </dependency>
   </dependencies>
 </module>

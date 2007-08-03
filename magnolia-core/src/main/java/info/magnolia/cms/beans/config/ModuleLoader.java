@@ -124,6 +124,7 @@ public class ModuleLoader {
         try {
             Module module = this.getModuleInstance(def.getName());
 
+            // TODO : this should be removed !
             // instantiate if not yet done (due registraion)
             if (module == null) {
                 try {
@@ -188,6 +189,8 @@ public class ModuleLoader {
      * @throws PathNotFoundException
      * @throws RepositoryException
      * @throws AccessDeniedException
+     *
+     * @deprecated ModuleManager does this.
      */
     public Content getModulesNode() throws PathNotFoundException, RepositoryException, AccessDeniedException {
         HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);

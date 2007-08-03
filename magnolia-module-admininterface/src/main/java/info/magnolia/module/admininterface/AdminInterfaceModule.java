@@ -13,10 +13,10 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.gui.controlx.RenderKitFactory;
+import info.magnolia.cms.gui.dialog.ControlsManager;
 import info.magnolia.cms.module.RegisterException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.module.ModuleLifecycle;
+import info.magnolia.module.ModuleLifecycleContext;
 
 
 /**
@@ -24,12 +24,15 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version 2.0
  */
-public class AdminInterfaceModule extends AbstractAdminModule {
+public class AdminInterfaceModule extends AbstractAdminModule implements ModuleLifecycle {
 
-    /**
-     * Logger.
-     */
-    protected static Logger log = LoggerFactory.getLogger(AdminInterfaceModule.class);
+    public void start(ModuleLifecycleContext ctx) {
+        // TODO maybe this one needs to be in gui ?
+        ctx.registerModuleObservingComponent("controls", ControlsManager.getInstance());
+        ctx.registerModuleObservingComponent("dialogs", DialogHandlerManager.getInstance());
+        ctx.registerModuleObservingComponent("pages", PageHandlerManager.getInstance());
+        ctx.registerModuleObservingComponent("trees", TreeHandlerManager.getInstance());
+    }
 
     /**
      * @see info.magnolia.module.admininterface.AbstractAdminModule#onInit()

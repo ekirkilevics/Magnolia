@@ -24,8 +24,8 @@ import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.BetwixtModuleDefinitionReader;
-import info.magnolia.module.ModuleDefinitionReader;
+import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
+import info.magnolia.module.model.reader.ModuleDefinitionReader;
 
 import java.io.File;
 import java.io.IOException;
@@ -63,6 +63,9 @@ import org.slf4j.LoggerFactory;
  *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
+ *
+ *
+ * @deprecated 
  */
 public class ModuleRegistration {
     private static final Logger log = LoggerFactory.getLogger(ModuleRegistration.class);
@@ -142,6 +145,8 @@ public class ModuleRegistration {
 
     /**
      * Read the xml files and make the objects
+     *
+     * @deprecated see info.magnolia.module.ModuleManager
      */
     protected void readModuleDefinitions() {
         try {
@@ -198,7 +203,7 @@ public class ModuleRegistration {
             String name = moduleNode.getName();
             String version = NodeDataUtil.getString(moduleNode, "version", "");
             String className = NodeDataUtil.getString(ContentRepository.CONFIG, moduleNode.getHandle()
-                + "/Register/class", null);
+                + "/Register/class", null); // TODO Register ??
 
             if (!this.moduleDefinitions.containsKey(name) && StringUtils.isNotEmpty(className)) {
                 log.warn("no proper module definition file found for [{}]: will add an adhoc definition", name);
@@ -211,6 +216,7 @@ public class ModuleRegistration {
     /**
      * Check if the dependencies are ok
      * @throws MissingDependencyException
+     * @deprecated see info.magnolia.module.reader.DependencyChecker
      */
     protected void checkDependencies() throws MissingDependencyException {
         for (MapIterator iter = this.moduleDefinitions.orderedMapIterator(); iter.hasNext();) {
@@ -226,6 +232,9 @@ public class ModuleRegistration {
         }
     }
 
+    /**
+     * @deprecated see info.magnolia.module.reader.DependencyChecker
+     */
     protected void checkDependency(ModuleDefinition def, DependencyDefinition dep) throws MissingDependencyException {
         if (!this.moduleDefinitions.containsKey(dep.getName())){
             String msg = "missing dependency: module ["
@@ -238,21 +247,24 @@ public class ModuleRegistration {
         }
 
         ModuleDefinition instDef = this.getModuleDefinition(dep.getName());
-        
+
         checkDependencyVersion(def, dep, instDef);
     }
 
+    /**
+     * @deprecated see info.magnolia.module.reader.DependencyChecker
+     */
     protected void checkDependencyVersion(ModuleDefinition def, DependencyDefinition dep, ModuleDefinition instDef) throws MissingDependencyException {
-        // check version 
+        // check version
         String depVersion = dep.getVersion();
         String instVersion = instDef.getVersion();
-        
+
         // ignore ${project.version}
         if(instVersion.equals("${project.version}")){
             log.info("module " + dep.getName() + " has a dynamic version [" + instVersion + "]. checks ignored" );
             return;
         }
-        
+
         // check if only bugfix release is different
         // TODO better check
         int indexOfDifference = StringUtils.indexOfDifference(depVersion, instVersion);
@@ -276,6 +288,7 @@ public class ModuleRegistration {
 
     /**
      * Sort all the definitions by the dependency level
+     * @deprecated see info.magnolia.module.reader.DependencyChecker
      */
     private void sortByDependencyLevel() {
         // order by dependencies
@@ -433,6 +446,7 @@ public class ModuleRegistration {
      * ...
      * @param def module definition
      * @return the level
+     * @deprecated see info.magnolia.module.reader.DependencyChecker
      */
     protected int calcDependencyLevel(ModuleDefinition def) {
         if (def.getDependencies() == null || def.getDependencies().size() == 0) {
@@ -454,6 +468,8 @@ public class ModuleRegistration {
     /**
      * Returns the definition of this module
      * @param moduleName
+     *
+     * @deprecated use ModuleRegistry
      */
     public ModuleDefinition getModuleDefinition(String moduleName) {
         return (ModuleDefinition) this.moduleDefinitions.get(moduleName);
@@ -461,6 +477,7 @@ public class ModuleRegistration {
 
     /**
      * @return Returns the moduleDefinitions.
+     * @deprecated use ModuleRegistry
      */
     public OrderedMap getModuleDefinitions() {
         return this.moduleDefinitions;

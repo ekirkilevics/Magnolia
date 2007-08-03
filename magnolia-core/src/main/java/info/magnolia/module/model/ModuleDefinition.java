@@ -12,13 +12,26 @@
  */
 package info.magnolia.module.model;
 
+import java.io.File;
+import java.util.ArrayList;
+import java.util.Collection;
+
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition {
+    private final Collection dependencies = new ArrayList();
     private Class versionHandler;
+
+    public ModuleDefinition() {
+    }
+
+    public ModuleDefinition(String name, String version, String className, Class versionHandler) {
+        super(name, version, className);
+        this.versionHandler = versionHandler;
+    }
 
     public Class getVersionHandler() {
         return versionHandler;
@@ -35,13 +48,33 @@ public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition 
         return new Version(getVersion());
     }
 
-    // making sure betwixt adds the right type
-    public void addDependency(info.magnolia.cms.module.DependencyDefinition dep) {
-        this.addDependency((DependencyDefinition)dep);
-    }
-
     public void addDependency(DependencyDefinition dep) {
-        super.addDependency(dep);
+        dependencies.add(dep);
     }
 
+    /**
+     * making sure betwixt adds the right type
+     * @deprecated
+     */
+    public void addDependency(info.magnolia.cms.module.DependencyDefinition dep) {
+        this.addDependency(new DependencyDefinition(dep.getName(), dep.getVersion(), dep.isOptional()));
+    }
+
+    public Collection getDependencies() {
+        return dependencies;
+    }
+
+    /** @deprecated should not be used */
+    public File getModuleRoot() {
+        return super.getModuleRoot();
+    }
+
+    /** @deprecated should not be used */
+    public void setModuleRoot(File moduleRoot) {
+        super.setModuleRoot(moduleRoot);
+    }
+
+    public String toString() {
+        return getDisplayName() + " version " + getVersion();
+    }
 }

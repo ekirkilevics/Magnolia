@@ -14,7 +14,8 @@ package info.magnolia.module.workflow.setup.for3_1;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.TaskExecutionException;
 
 import javax.jcr.RepositoryException;
 
@@ -23,19 +24,29 @@ import javax.jcr.RepositoryException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class AddNewDefaultConfig implements Delta {
-    public void apply(InstallContext ctx) throws RepositoryException {
-        final Content configNode = ctx.getModuleConfigNode();
+public class AddNewDefaultConfig extends AbstractTask {
+    //TODO why not extend PropertyValuesTask ??
 
-        final Content flowDefinitionManagerCfg = configNode.createContent("flowDefinitionManager");
-        flowDefinitionManagerCfg.createNodeData("class").setValue("info.magnolia.module.workflow.flows.DefaultFlowDefinitionManager");
+    public AddNewDefaultConfig() {
+        super("New config items", "Adding some new configuration items with their default values.");
+    }
 
-        // these two should not be necessary, associated code should be removed
-        flowDefinitionManagerCfg.createNodeData("flowDefinitionURLPattern").setValue("auto");
-        flowDefinitionManagerCfg.createNodeData("saveWorkflowDefinitionInWorkItem").setValue("true");
+    public void execute(InstallContext ctx) throws TaskExecutionException {
+        try {
+            final Content configNode = ctx.getOrCreateCurrentModuleConfigNode();
 
-        // the following two properties should not be made public - untested code
-        configNode.createNodeData("backupWorkItems").setValue(false);
-        configNode.createNodeData("deferredExpressionStorage").setValue(false);
+            final Content flowDefinitionManagerCfg = configNode.createContent("flowDefinitionManager");
+            flowDefinitionManagerCfg.createNodeData("class").setValue("info.magnolia.module.workflow.flows.DefaultFlowDefinitionManager");
+
+            // these two should not be necessary, associated code should be removed
+            flowDefinitionManagerCfg.createNodeData("flowDefinitionURLPattern").setValue("auto");
+            flowDefinitionManagerCfg.createNodeData("saveWorkflowDefinitionInWorkItem").setValue("true");
+
+            // TODO the following two properties should not be made public - untested code
+            configNode.createNodeData("backupWorkItems").setValue(false);
+            configNode.createNodeData("deferredExpressionStorage").setValue(false);
+        } catch (RepositoryException e) {
+            throw new TaskExecutionException("Could not add new default workflow configuration.", e);
+        }
     }
 }

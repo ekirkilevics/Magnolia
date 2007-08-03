@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <!-- main definition -->
-<!ELEMENT module (name, (displayName|display-name)?,  description?, class, versionHandler?, version, properties?, dependencies?, servlets?, repositories?)>
+<!ELEMENT module (name, (displayName|display-name)?,  description?, class?, versionHandler?, version, properties?, dependencies?, servlets?, repositories?)>
 <!ELEMENT name (#PCDATA)>
 <!ELEMENT displayName (#PCDATA)>
 <!ELEMENT version (#PCDATA)>

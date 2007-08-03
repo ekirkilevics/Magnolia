@@ -19,7 +19,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-exchange-simple</artifactId>
+      <artifactId>magnolia-module-exchange-simple</artifactId>
       <version>3.1-m2</version>
     </dependency>
     <dependency>

@@ -17,16 +17,49 @@ package info.magnolia.module.model;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DependencyDefinition extends info.magnolia.cms.module.DependencyDefinition {
+public class DependencyDefinition {
+    private String name;
+    private String version;
+    private boolean optional;
 
-    /**
-     * TODO : deprecate once we got rid of info.magnolia.cms.module.DependencyDefinition
-     */
-//    public String getVersion() {
-//        return getVersionRange().toString();
-//    }
+    public DependencyDefinition() {
+    }
+
+    public DependencyDefinition(String name, String version, boolean optional) {
+        this.name = name;
+        this.version = version;
+        this.optional = optional;
+    }
 
     public VersionRange getVersionRange() {
-        return new VersionRange(super.getVersion());
+        return new VersionRange(version);
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public void setVersion(String version) {
+        this.version = version;
+    }
+
+    public boolean isOptional() {
+        return optional;
+    }
+
+    public void setOptional(boolean optional) {
+        this.optional = optional;
+    }
+
+    public String toString() {
+        return name + " version " + version;
     }
 }

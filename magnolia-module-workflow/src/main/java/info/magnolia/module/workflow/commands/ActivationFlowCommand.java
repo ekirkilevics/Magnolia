@@ -110,10 +110,16 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
         return this.recursive;
     }
 
-
     public void setRecursive(boolean recursive) {
         this.recursive = recursive;
     }
 
+    public String getWorkflowName() {
+        String workflowName = super.getWorkflowName();
+        if(super.getWorkflowName().equals(WorkflowConstants.DEFAULT_WORKFLOW)){
+            workflowName = WorkflowConstants.DEFAULT_ACTIVATION_WORKFLOW;
+        }
+        return workflowName;
+    }
 
 }

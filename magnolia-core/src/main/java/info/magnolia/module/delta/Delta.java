@@ -12,13 +12,11 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.module.InstallContext;
-
-import javax.jcr.RepositoryException;
+import java.util.List;
 
 /**
  * A Delta represents the differences from one version of a module to another.
- * Each module is responsible for handing the appropriate deltas to the deployer.
+ * It holds a set of Tasks and should provide a description of what it does.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -29,6 +27,12 @@ public interface Delta {
      */
     // Version getVersion();
 
-    // TODO : have a specific exception - or none at all, only a specific exception in Tasks ?
-    void apply(InstallContext ctx) throws RepositoryException;
+    /**
+     * Should not return a read-only List, as the version handler might add tasks as appropriate.
+     */
+    List getTasks();
+
+    String getTitle();
+
+    String getDescription();
 }

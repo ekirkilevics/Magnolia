@@ -20,6 +20,8 @@ import info.magnolia.cms.core.Content;
  * specific / shared repositories
  * @author philipp
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated see info.magnolia.module
  */
 
 public interface Module {

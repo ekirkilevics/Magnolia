@@ -20,6 +20,8 @@ import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleManagementException;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -44,6 +46,9 @@ public class ConfigLoader {
     private static final Logger log = LoggerFactory.getLogger(ConfigLoader.class);
     private static final String JAAS_PROPERTYNAME = "java.security.auth.login.config";
 
+    /**
+     * @deprecated only used in bootstrap(), which is deprecated and should be reimplemented.
+     */
     public final class BootstrapFileFilter implements Bootstrapper.BootstrapFilter {
         // do not import modules configuration files yet. the module will do it after the registration process
         public boolean accept(String filename) {
@@ -99,25 +104,32 @@ public class ConfigLoader {
         // first check for the license information, will fail if this class does not exist
         LicenseFileExtractor license = LicenseFileExtractor.getInstance();
         license.init();
-        printVersionInfo(license);
+        license.printVersionInfo();
 
-        log.info("Init content repositories"); //$NON-NLS-1$
+        log.info("Initializing content repositories"); //$NON-NLS-1$
         ContentRepository.init();
 
-        log.info("Set system context"); //$NON-NLS-1$
+        log.info("Setting system context"); //$NON-NLS-1$
         MgnlContext.setInstance(MgnlContext.getSystemContext());
 
-        if (!bootstrap()) {
-            return;
-        }
-
-        log.info("Init i18n"); //$NON-NLS-1$
-        MessagesManager.init(context);
-
         try {
-            ModuleRegistration.getInstance().registerModules();
+            final ModuleManager moduleManager = ModuleManager.Factory.getInstance();
+            // ModuleRegistration.getInstance().registerModules();
+
+            final ModuleManager.ModuleManagementState moduleMgtState = moduleManager.checkForInstallOrUpdates();
+            if (moduleMgtState.needsUpdateOrInstall()) {
+                log.info("System needs module updates or installs, point your browser to your Magnolia instance and confirm !");
+                // TODO : we should re-execute this (ConfigLoader.load()) when update done ?
+                // return;
+            } else {
+                // ModuleLoader.getInstance().init();
+                moduleManager.startModules();
+            }
+
+            // TODO make these regular ObservedManagers
+            log.info("Init i18n"); //$NON-NLS-1$
+            MessagesManager.init(context); // TODO this was done before module init??
             Server.init();
-            ModuleLoader.getInstance().init();
             Listener.init();
             MIMEMapping.init();
             VersionConfig.getInstance().init();
@@ -126,12 +138,16 @@ public class ConfigLoader {
             setConfigured(true);
             log.info("Configuration loaded!"); //$NON-NLS-1$
 
-            if (ModuleRegistration.getInstance().isRestartNeeded()) {
-                printSystemRestartInfo();
-            }
+            // TODO >> this is now in MagnoliaMainFilter
+            //if (ModuleRegistration.getInstance().isRestartNeeded()) {
+//            if (moduleManager.isRestartNeeded()) {
+//                printSystemRestartInfo();
+//            }
 
-        }
-        catch (ConfigurationException e) {
+        } catch (ModuleManagementException e) {
+            log.error("An error occurred during initialization", e); //$NON-NLS-1$
+            enterListeningMode();
+        } catch (ConfigurationException e) {
             log.error("An error occurred during initialization", e); //$NON-NLS-1$
             enterListeningMode();
         }
@@ -140,6 +156,7 @@ public class ConfigLoader {
 
     /**
      * Bootstrap the system
+     * @deprecated See WebappDelta !
      */
     protected boolean bootstrap() {
         // check for initialized repositories
@@ -212,24 +229,6 @@ public class ConfigLoader {
             Bootstrapper.bootstrapRepositories(bootDirs, new BootstrapFileFilter());
         }
         return true;
-    }
-
-    /**
-     * Print version info to console.
-     * @param license loaded License
-     */
-    private void printVersionInfo(LicenseFileExtractor license) {
-        System.out.println("---------------------------------------------"); //$NON-NLS-1$
-        System.out.println("MAGNOLIA LICENSE"); //$NON-NLS-1$
-        System.out.println("---------------------------------------------"); //$NON-NLS-1$
-        System.out.println("Version number : " + license.get(LicenseFileExtractor.VERSION_NUMBER)); //$NON-NLS-1$
-        System.out.println("Build          : " + license.get(LicenseFileExtractor.BUILD_NUMBER)); //$NON-NLS-1$
-        System.out.println("Edition        : " + license.get(LicenseFileExtractor.EDITION)); //$NON-NLS-1$
-        System.out.println("Provider       : " //$NON-NLS-1$
-            + license.get(LicenseFileExtractor.PROVIDER)
-            + " (" //$NON-NLS-1$
-            + license.get(LicenseFileExtractor.PRIVIDER_EMAIL)
-            + ")"); //$NON-NLS-1$
     }
 
     /**

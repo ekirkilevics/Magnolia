@@ -13,13 +13,20 @@
 package info.magnolia.cms.module;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
+import info.magnolia.module.ModuleLifecycle;
+import info.magnolia.module.ModuleLifecycleContext;
+import info.magnolia.module.files.BasicFileExtractor;
+import info.magnolia.module.files.ModuleFileExtractorTransformer;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-import org.apache.commons.lang.StringUtils;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,8 +37,10 @@ import org.slf4j.LoggerFactory;
  * the jar. For a more sophisticated version see the AbstractAdminModule from the admin interface sub-project.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated see info.magnolia.module
  */
-public abstract class AbstractModule implements Module {
+public abstract class AbstractModule implements Module, ModuleLifecycle {
 
     /**
      * The modules definition built by the modules xml file
@@ -42,6 +51,11 @@ public abstract class AbstractModule implements Module {
      * The node of this module
      */
     protected Content moduleNode;
+
+    /**
+     * The config node of the module
+     */
+    protected Content configNode;
 
     /**
      * True after a registration.
@@ -58,27 +72,39 @@ public abstract class AbstractModule implements Module {
      */
     private static Logger log = LoggerFactory.getLogger(AbstractModule.class);
 
+
+    public AbstractModule() {
+        log.warn("This module extends the deprecated AbstractModule class [{}]", this.getClass());
+    }
+
+    public void start(ModuleLifecycleContext moduleLifecycleContext) {
+        try {
+            register(this.getModuleDefinition(), this.getModuleNode(), Module.REGISTER_STATE_NONE);
+        }
+        catch (RegisterException e) {
+            log.error("error during starting module",e);
+        }
+        try {
+            init(this.getConfigNode());
+        }
+        catch (InvalidConfigException e) {
+            log.error("error during starting module", e);
+        }
+        catch (InitializationException e) {
+            log.error("error during starting module", e);
+        }
+    }
+
     /**
      * Calles onRegister if not yet installed after it loaded the bootstrapfiles of this module
      */
     public final void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
-        this.setDefinition(def);
-        this.setModuleNode(moduleNode);
+        // will be reset by the ModuleManager before the init method is called
+        setModuleNode(moduleNode);
 
         if (registerState == REGISTER_STATE_INSTALLATION || registerState == REGISTER_STATE_NEW_VERSION) {
             try {
-            	
-                final String moduleName = this.getName();
-
-                registerServlets(def);
-
-                registerRepositories(def);
-
-                bootstrap(moduleName);
-                
-                installFiles(moduleName, def.getModuleRoot());
-
-                // let the module do it's stuff
+                // let the module do its stuff
                 onRegister(registerState);
             }
             catch (Exception e) {
@@ -87,7 +113,7 @@ public abstract class AbstractModule implements Module {
         }
     }
 
-	/**
+    /**
      * @see info.magnolia.cms.module.Module#unregister(info.magnolia.cms.module.ModuleDefinition,
      * info.magnolia.cms.core.Content)
      */
@@ -141,6 +167,13 @@ public abstract class AbstractModule implements Module {
     }
 
     /**
+     * Set by the ModuleManager
+     */
+    public void setModuleDefinition(ModuleDefinition md){
+       setDefinition(md);
+    }
+
+    /**
      * @return Returns the initialized.
      */
     public boolean isInitialized() {
@@ -175,7 +208,7 @@ public abstract class AbstractModule implements Module {
     /**
      * @param moduleNode The moduleNode to set.
      */
-    protected void setModuleNode(Content moduleNode) {
+    public void setModuleNode(Content moduleNode) {
         this.moduleNode = moduleNode;
     }
 
@@ -191,25 +224,21 @@ public abstract class AbstractModule implements Module {
      * @param moduleName
      * @param moduleRoot module root dir or jar file.
      * @throws Exception
+     *
+     * @deprecated should not be used directly. Use FileExtractor instead
      */
     protected void installFiles(final String moduleName, File moduleRoot) throws Exception {
-        // copy the content of mgnl-files to the webapp
-        String[] moduleFiles = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
-
-            public boolean accept(String name) {
-                return name.startsWith("/mgnl-files/") && StringUtils.contains(name, "/" + moduleName + "/");
-            }
-        });
-
         log.info("installing files for module {}", moduleName);
-
-        ModuleUtil.installFiles(moduleFiles, "/mgnl-files/");
+        final ModuleFileExtractorTransformer fileExtractorTransformer = new ModuleFileExtractorTransformer(moduleName);
+        new BasicFileExtractor().extractFiles(fileExtractorTransformer);
     }
 
     /**
      * Register the repositories defined in the descriptor.
      * @param def
      * @throws RegisterException
+     *
+     * @deprecated see info.magnolia.module.delta.RegisterRepositoriesAndWorkspacesTask
      */
     protected void registerRepositories(ModuleDefinition def) throws RegisterException {
         boolean restartNeeded = false;
@@ -244,6 +273,7 @@ public abstract class AbstractModule implements Module {
      * @param def
      * @throws JDOMException
      * @throws IOException
+     * @deprecated see info.magnolia.module.delta.RegisterModuleServletsTask
      */
     protected void registerServlets(ModuleDefinition def) throws JDOMException, IOException {
         boolean restartNeeded = false;
@@ -258,14 +288,15 @@ public abstract class AbstractModule implements Module {
             this.setRestartNeeded(true);
         }
     }
-    
-    
+
+
 
     /**
      * Bootsrap the files in mgnl-bootsrap/modulename directory
      * @param moduleName
      * @throws IOException
      * @throws RegisterException
+     * @deprecated see info.magnolia.module.delta.BootstrapResourcesTask
      */
     protected void bootstrap(final String moduleName) throws IOException, RegisterException {
         // bootstrap the module files
@@ -283,6 +314,32 @@ public abstract class AbstractModule implements Module {
      */
     public String toString() {
         return getClass().getName() + " (" + getName() + " module)";
+    }
+
+
+    /**
+     * @return the configNode
+     */
+    public Content getConfigNode() {
+        if(this.configNode==null && getModuleNode()!=null){
+            try {
+                if(getModuleNode().hasContent("config")){
+                    this.configNode = getModuleNode().getContent("config");
+                }
+            }
+            catch (RepositoryException e) {
+                // ignored
+            }
+        }
+        return this.configNode;
+    }
+
+
+    /**
+     * @param configNode the configNode to set
+     */
+    public void setConfigNode(Content configNode) {
+        this.configNode = configNode;
     }
 
 }

@@ -97,6 +97,7 @@ public class FilterTest extends MgnlTestCase {
 
         verify(filterConfig, request, response, chain);
     }
+/*
 
     public void testBypassing() throws IOException, RepositoryException, ServletException {
         // first filter ignores all uris starting with a .
@@ -130,6 +131,7 @@ public class FilterTest extends MgnlTestCase {
         assertEquals(true, ((TestFilter)mf.getFilters()[1]).executed);
         verify(request, webCtx);
     }
+*/
 
     public static class TestFilter extends AbstractMagnoliaFilter{
         public boolean executed = false;

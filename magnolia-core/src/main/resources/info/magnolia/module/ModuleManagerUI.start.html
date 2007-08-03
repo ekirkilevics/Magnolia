@@ -1,0 +1,25 @@
+[#include "ModuleManagerUI.header.html" /]
+
+<div id="content">
+[#list status.list as moduleStatus]
+<div class="module">
+<h2>${moduleStatus.type?cap_first} : ${moduleStatus.module}</h2>
+  [#list moduleStatus.deltas as delta]
+    <div class="delta">
+    <h3>${delta.title?cap_first?html} <span>${delta.description?cap_first?html}</span></h3>
+    <ul class="tasks">
+      [#list delta.tasks as task]
+        <li class="task">${task.name?cap_first?html} <span class="taskDescription">${task.description?cap_first?html}</span></li>
+      [/#list]
+    </ul>
+    </div>
+  [/#list]
+</div>
+[/#list]
+</div>
+
+<div id="actions">
+<p><a href="${contextPath}${installerPath}?ok=ok">ok, go</a> !</p>
+</div>
+
+[#include "ModuleManagerUI.footer.html" /]

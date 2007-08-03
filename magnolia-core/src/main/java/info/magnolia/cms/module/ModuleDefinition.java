@@ -33,6 +33,7 @@ public class ModuleDefinition {
 
     /**
      * The dependencies to other modules. This modules are loaded or registerd in advance
+     * @deprecated
      */
     private Collection dependencies = new ArrayList();
 

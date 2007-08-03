@@ -19,6 +19,8 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
@@ -30,6 +32,8 @@ import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Properties;
 import java.util.Set;
+import java.util.Collection;
+import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
@@ -168,6 +172,10 @@ public class MockUtil {
     }
 
     public static void populateContent(MockContent c, String name, String valueStr) {
+        if (StringUtils.isEmpty(name) && StringUtils.isEmpty(valueStr)) {
+            // happens if the input properties file just created a node with no properties
+            return;
+        }
         if (name.equals("@type")) {
             c.setNodeTypeName(valueStr);
         }
@@ -222,6 +230,27 @@ public class MockUtil {
             nodeDatas.put(name, new MockNodeData(name, value));
         }
         return nodeDatas;
+    }
+
+    // TODO : does not take property type into account
+    public static Properties toProperties(HierarchyManager hm) throws Exception {
+        final Properties out = new Properties();
+        ContentUtil.visit(hm.getRoot(), new ContentUtil.Visitor(){
+            public void visit(Content node) throws Exception {
+                appendNodeProperties(node, out);
+            }
+        });
+        return out;
+    }
+
+    private static void appendNodeProperties(Content node, Properties out) {
+        final Collection props = node.getNodeDataCollection();
+        final Iterator it = props.iterator();
+        while (it.hasNext()) {
+            final NodeData prop = (NodeData) it.next();
+            final String path = node.getHandle() + "." + prop.getName();
+            out.setProperty(path, prop.getString());
+        }
     }
 
     public static void mockObservation(MockHierarchyManager hm) throws RepositoryException, UnsupportedRepositoryOperationException {

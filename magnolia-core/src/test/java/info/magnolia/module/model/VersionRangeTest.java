@@ -120,9 +120,11 @@ public class VersionRangeTest extends TestCase {
         doTestIsInRange(true, "1.2.3/*", "3.4.5");
         doTestIsInRange(false, "1.2.3/*", "1.0.0");
         doTestIsInRange(false, "1.2.3/*", "0.1");
-        // TODO : this should pass in the case of a dependency specification,
-        // TODO : but not for AbstractModuleVersionHandler.getDeltas() - maybe we just need 2 different methods ?
-        // doTestIsInRange(true, "1.2.3/*", "1.2.3");
+        doTestIsInRange(true, "1.2.3/*", "1.2.3");
+    }
+
+    public void testSingleVersionRangeShouldContainItSelf() {
+        doTestIsInRange(true, "1.2.3", "1.2.3");
     }
 
     private void doTestIsInRange(boolean expected, String range, String otherVersion) {

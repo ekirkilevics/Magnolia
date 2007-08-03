@@ -12,25 +12,51 @@
  */
 package info.magnolia.module.workflow.setup;
 
-import info.magnolia.module.AbstractModuleVersionHandler;
-import info.magnolia.module.workflow.setup.for3_1.*;
+import info.magnolia.module.DefaultModuleVersionHandler;
+import info.magnolia.module.InstallContext;
+import info.magnolia.module.admininterface.setup.AddMainMenuPointTask;
+import info.magnolia.module.delta.BasicDelta;
+import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.Version;
+import info.magnolia.module.workflow.setup.for3_1.AddNewDefaultConfig;
+import info.magnolia.module.workflow.setup.for3_1.BootstrapDefaultWorkflowDef;
+import info.magnolia.module.workflow.setup.for3_1.I18nMenuPoint;
+import info.magnolia.module.workflow.setup.for3_1.RemoveMetadataFromExpressionsWorkspace;
+import info.magnolia.module.workflow.setup.for3_1.SetDefaultWorkflowForActivationFlowCommands;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class WorkflowModuleVersionHandler extends AbstractModuleVersionHandler {
+public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
+    private final BasicDelta delta31 = new BasicDelta("Updating to 3.1", "",
+            new Task[]{
+                    new I18nMenuPoint(),
+                    new AddNewDefaultConfig(),
+                    new BootstrapDefaultWorkflowDef(),
+                    new RemoveMetadataFromExpressionsWorkspace(),
+                    new SetDefaultWorkflowForActivationFlowCommands()
+            });
 
-    protected WorkflowModuleVersionHandler(Version latestVersion) {
-        super(latestVersion);
-
+    public WorkflowModuleVersionHandler() {
+        super();
         final Version version3_1 = new Version(3, 1, 0);
-        register(version3_1, new I18nMenuPoint());
-        register(version3_1, new AddNewDefaultConfig());
-        register(version3_1, new BootstrapDefaultWorkflowDef());
-        register(version3_1, new RemoveMetadataFromExpressionsWorkspace());
-        
+        register(version3_1, delta31);
+    }
+
+    // TODO : check install
+
+    // TODO : add config submenu item ?
+
+    protected List getExtraInstallTasks(InstallContext installContext) {
+        final AddMainMenuPointTask t = new AddMainMenuPointTask("inbox", "menu.inbox", "info.magnolia.module.workflow.messages",
+                "MgnlAdminCentral.showContent('/.magnolia/pages/inbox.html', false, false)", "/.resources/icons/24/mail.gif",
+                "security");
+
+        return Collections.singletonList(t);
     }
 }

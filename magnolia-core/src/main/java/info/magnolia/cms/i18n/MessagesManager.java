@@ -15,8 +15,10 @@ package info.magnolia.cms.i18n;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -167,18 +169,29 @@ public final class MessagesManager {
         try {
             log.info("Config : loading i18n configuration - " + I18N_CONFIG_PATH); //$NON-NLS-1$
 
-            Content configNode = hm.getContent(I18N_CONFIG_PATH); //$NON-NLS-1$
-
+            // checks if node exists - creates it if not - necessary to update to 3.1
+            final Content configNode;
+            if (!hm.isExist(I18N_CONFIG_PATH)) {
+                configNode = ContentUtil.createPath(hm, I18N_CONFIG_PATH, ItemType.CONTENT, true);
+            } else {
+                configNode = hm.getContent(I18N_CONFIG_PATH); //$NON-NLS-1$
+            }
             MessagesManager.setDefaultLocale(NodeDataUtil.getString(configNode, FALLBACK_NODEDATA, FALLBACK_LOCALE));
 
-            // get the available languages
-            Content languagesNode = configNode.getContent(LANGUAGES_NODE_NAME);
-            Map languageDefinitinos = Content2BeanUtil.toMap(languagesNode, true, LanguageDefinition.class);
+            // get the available languages - creates it if it does not exist - necessary to update to 3.1
+            final Content languagesNode;
+            if (configNode.hasContent(LANGUAGES_NODE_NAME)) {
+                languagesNode = configNode.getContent(LANGUAGES_NODE_NAME);
+            } else {
+                languagesNode = configNode.createContent(LANGUAGES_NODE_NAME, ItemType.CONTENT);
+            }
+            
+            Map languageDefinitions = Content2BeanUtil.toMap(languagesNode, true, LanguageDefinition.class);
 
             // clear collection for reload
             MessagesManager.availableLocales.clear();
 
-            for (Iterator iter = languageDefinitinos.values().iterator(); iter.hasNext();) {
+            for (Iterator iter = languageDefinitions.values().iterator(); iter.hasNext();) {
                 LanguageDefinition ld = (LanguageDefinition) iter.next();
                 if(ld.isEnabled()){
                     availableLocales.add(ld.getLocale());
