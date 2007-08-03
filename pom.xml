@@ -96,7 +96,7 @@
   <scm>
     <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
     <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
-    <url>http://svn.magnolia.info/view/magnolia/trunk</url>
+    <url>http://svn.magnolia.info/view/magnolia/trunk/</url>
   </scm>
   <organization>
     <name>Magnolia International</name>
