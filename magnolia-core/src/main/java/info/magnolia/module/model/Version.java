@@ -170,23 +170,14 @@ public class Version {
     }
 
     private static final class UndefinedDevelopmentVersion extends Version {
-
         public UndefinedDevelopmentVersion() {
             super(0, 0, 0);
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
         public boolean isBeforeOrEquivalent(Version other) {
             return true;
         }
 
-        /**
-         * {@inheritDoc}
-         */
-        @Override
         public boolean isEquivalent(Version other) {
             return true;
         }
