@@ -86,7 +86,7 @@ public final class SystemProperty {
      * @return true only if the request property has a value of <code>true</code>
      */
     public static boolean getBooleanProperty(String name) {
-        return Boolean.parseBoolean(getProperty(name));
+        return "true".equals(getProperty(name));
     }
 
     /**
