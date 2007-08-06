@@ -10,29 +10,52 @@
  */
 package info.magnolia.cms.beans.config;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 
 
 /**
+ * Virtual uri mapping implementation that uses regular expressions in fromURI/toURI. When using regular expression in
+ * <code>fromURI</code>, <code>toURI</code> can contain references to the regexp matches. For example:
+ *
+ * <pre>
+ * fromURI=/products/([0-9A-Z]+)\.html
+ * toURI=/product/detail.html?productId=$1
+ * </pre>
+ *
+ * @author Fabrizio Giustina
  * @author philipp
- * @version $Id$
+ * @version $Id: DefaultVirtualURIMapping.java 10295 2007-08-02 21:33:58Z fgiust $
  */
-public class DefaultVirtualURIMapping implements VirtualURIMapping {
+public class RegexpVirtualURIMapping implements VirtualURIMapping {
 
     private String fromURI;
 
-    private UrlPattern pattern;
-
     private String toURI;
+
+    private Pattern regexp;
 
     public MappingResult mapURI(String uri) {
         MappingResult r = new MappingResult();
 
-        if (pattern.match(uri)) {
-            r.setLevel(pattern.getLength());
-            r.setToURI(toURI);
+        Matcher matcher = regexp.matcher(uri);
+        if (matcher.find()) {
+            String replaced = toURI;
+            int matcherCount = matcher.groupCount();
+            for (int j = 0; j <= matcherCount; j++) {
+                // @todo of course we should improve this using a stringbuffer
+                replaced = StringUtils.replace(replaced, "$" + j, matcher.group(j));
+            }
+
+            r.setLevel(matcherCount + 1);
+            r.setToURI(replaced);
         }
+
         return r;
     }
 
@@ -42,7 +65,8 @@ public class DefaultVirtualURIMapping implements VirtualURIMapping {
 
     public void setFromURI(String fromURI) {
         this.fromURI = fromURI;
-        this.pattern = new SimpleUrlPattern(fromURI);
+
+        this.regexp = Pattern.compile(fromURI);
     }
 
     public String getToURI() {

@@ -22,6 +22,9 @@
   <sv:property sv:name="fromURI" sv:type="String">
     <sv:value>/.magnolia/adminCentral/about.html</sv:value>
   </sv:property>
+  <sv:property sv:name="class" sv:type="String">
+    <sv:value>info.magnolia.cms.beans.config.DefaultVirtualURIMapping</sv:value>
+  </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
