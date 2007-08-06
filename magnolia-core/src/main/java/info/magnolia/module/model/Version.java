@@ -36,7 +36,7 @@ public class Version {
     /**
      * Convenience constructor that could be used to register Deltas or update tasks.
      */
-    private Version(int major, int minor, int patch) {
+    protected Version(int major, int minor, int patch) {
         this.major = (short) major;
         this.minor = (short) minor;
         this.patch = (short) patch;
@@ -44,11 +44,6 @@ public class Version {
     }
 
     private Version(String versionStr) {
-        versionStr = versionStr.trim();
-        if (StringUtils.equals("${project.version}", versionStr)) {
-            // development mode.
-            versionStr = "0";
-        }
 
         final int classifierIdx = versionStr.indexOf('-');
         if (classifierIdx > 0) {
@@ -79,7 +74,21 @@ public class Version {
         }
     }
 
+    /**
+     * Factory method that will parse a version string and return the correct Version implementatio,
+     * @param versionStr version as string, for example <code>1.2.3-test</code>. The String
+     * <code>${project.version}</code> is interpreted as an undefined version during development ant it will always
+     * match version ranges
+     * @return a Version implementation, never null
+     */
     public static Version parseVersion(String versionStr) {
+
+        versionStr = versionStr.trim();
+        if (StringUtils.equals("${project.version}", versionStr)) {
+            // development mode.
+            return new UndefinedDevelopmentVersion();
+        }
+
         return new Version(versionStr);
     }
 
@@ -92,9 +101,7 @@ public class Version {
      */
     public boolean isEquivalent(final Version other) {
         return (this.getMajor() == other.getMajor() && this.getMinor() == other.getMinor() && this.getPatch() == other
-            .getPatch())
-            || // development
-            (this.isUndefinedDevelopmentVersion() || other.isUndefinedDevelopmentVersion());
+            .getPatch());
     }
 
     public boolean isStrictlyAfter(final Version other) {
@@ -108,10 +115,6 @@ public class Version {
             return this.getPatch() > other.getPatch();
         }
         return false;
-    }
-
-    public boolean isUndefinedDevelopmentVersion() {
-        return this.getMajor() == 0 && this.getMinor() == 0 && this.getPatch() == 0;
     }
 
     public boolean isBeforeOrEquivalent(final Version other) {
@@ -163,6 +166,33 @@ public class Version {
 
         public String toString() {
             return "*";
+        }
+    }
+
+    private static final class UndefinedDevelopmentVersion extends Version {
+
+        public UndefinedDevelopmentVersion() {
+            super(0, 0, 0);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean isBeforeOrEquivalent(Version other) {
+            return true;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        @Override
+        public boolean isEquivalent(Version other) {
+            return true;
+        }
+
+        public String toString() {
+            return "(dev)";
         }
     }
 
