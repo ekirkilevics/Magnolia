@@ -39,7 +39,7 @@ public final class SystemProperty {
     public static final String MAGNOLIA_WEBAPP = "magnolia.webapp";
 
     public static final String MAGNOLIA_SERVERNAME = "magnolia.servername";
-    
+
     /**
      * If this repository/workspace is empty bootstrap this repository. This will be the config repository in the most
      * cases.
@@ -50,7 +50,7 @@ public final class SystemProperty {
      * Force bootstrapping of the listed workspaces
      */
     public static final String BOOTSTRAP_FORCE = "magnolia.bootstrap.force";
-    
+
     private static Properties properties = new Properties();
 
     /**
@@ -81,6 +81,15 @@ public final class SystemProperty {
     }
 
     /**
+     * Returns a boolean property, returning <code>false</code> if the property is not set.
+     * @param name property name
+     * @return true only if the request property has a value of <code>true</code>
+     */
+    public static boolean getBooleanProperty(String name) {
+        return Boolean.parseBoolean(getProperty(name));
+    }
+
+    /**
      * @param name
      * @param defaultValue
      */
@@ -102,5 +111,5 @@ public final class SystemProperty {
     public static Properties getProperties() {
         return SystemProperty.properties;
     }
-    
+
 }
