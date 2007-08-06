@@ -418,10 +418,12 @@ public class CacheImpl implements Cache {
             canonFile = file.getCanonicalFile();
         }
         catch (IOException e) {
+            log.warn("Can't get canonical file for path {}", file.getAbsolutePath());
             return false;
         }
         File parent = canonFile.getParentFile();
         if (null == parent) {
+            log.warn("Parent of {} (canonical file for path {}) is null!", canonFile.getAbsoluteFile(), file.getAbsolutePath());
             return false;
         }
 
