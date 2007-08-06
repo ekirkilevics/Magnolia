@@ -28,15 +28,15 @@ import java.util.Map;
 public class DependencyLevelComparatorTest extends TestCase {
 
     public void testCalcDepencyLevelWithNonOptionalDependencies() {
-        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", "v1", "fake.Module", null);
-        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", "v1", "fake.Module", null);
-        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", "v1", "fake.Module", null);
+        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", "1", "fake.Module", null);
+        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", "1", "fake.Module", null);
+        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", "1", "fake.Module", null);
         final DependencyDefinition depOnA = new DependencyDefinition();
         depOnA.setName("mod-a");
-        depOnA.setVersion("v1");
+        depOnA.setVersion("1");
         final DependencyDefinition depOnB = new DependencyDefinition();
         depOnB.setName("mod-b");
-        depOnB.setVersion("v1");
+        depOnB.setVersion("1");
         modDefB.addDependency(depOnA);
         modDefC.addDependency(depOnB);
 
@@ -53,15 +53,15 @@ public class DependencyLevelComparatorTest extends TestCase {
     }
 
     public void testCalcDepencyLevelIgnoresUnregisteredOptionalDependencies() {
-        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", "v1", "fake.Module", null);
-        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", "v1", "fake.Module", null);
+        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", "1", "fake.Module", null);
+        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", "1", "fake.Module", null);
         final DependencyDefinition depOnA = new DependencyDefinition();
         depOnA.setName("mod-a");
-        depOnA.setVersion("v1");
+        depOnA.setVersion("1");
         depOnA.setOptional(true);
         final DependencyDefinition depOnB = new DependencyDefinition();
         depOnB.setName("mod-b");
-        depOnB.setVersion("v1");
+        depOnB.setVersion("1");
         modDefC.addDependency(depOnA);
         modDefC.addDependency(depOnB);
 
@@ -77,16 +77,16 @@ public class DependencyLevelComparatorTest extends TestCase {
     }
 
     public void testCalcDepencyLevelDoesNotIgnoreRegisteredOptionalDependencies() {
-        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", "v1", "fake.Module", null);
-        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", "v1", "fake.Module", null);
-        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", "v1", "fake.Module", null);
+        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", "1", "fake.Module", null);
+        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", "1", "fake.Module", null);
+        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", "1", "fake.Module", null);
         final DependencyDefinition depOnA = new DependencyDefinition();
         depOnA.setName("mod-a");
-        depOnA.setVersion("v1");
+        depOnA.setVersion("1");
         depOnA.setOptional(true);
         final DependencyDefinition depOnB = new DependencyDefinition();
         depOnB.setName("mod-b");
-        depOnB.setVersion("v1");
+        depOnB.setVersion("1");
         modDefB.addDependency(depOnA);
         modDefC.addDependency(depOnA);
         modDefC.addDependency(depOnB);
