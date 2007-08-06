@@ -23,6 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.servlet.http.HttpServletRequest;
@@ -82,17 +83,12 @@ public class MIMEMapping {
             log.info("Config : loading MIMEMapping"); //$NON-NLS-1$
             final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
 
-            try {
-                Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
-                MIMEMapping.cacheContent(mimeList);
-            }
-            catch (javax.jcr.PathNotFoundException e) {
-                log.warn("Config : no MIMEMapping info configured"); //$NON-NLS-1$
-                return;
-            }
+            Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
+            MIMEMapping.cacheContent(mimeList);
             log.info("Config : MIMEMapping loaded"); //$NON-NLS-1$
-        }
-        catch (RepositoryException re) {
+        } catch (PathNotFoundException e) {
+            log.warn("Config : no MIMEMapping info configured at " + NODEPATH); //$NON-NLS-1$
+        }catch (RepositoryException re) {
             log.error("Config : Failed to load MIMEMapping"); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
