@@ -110,9 +110,7 @@ public class CacheImpl implements Cache {
             try {
                 boolean parentDirectoryReady = mkdirs(file.getParentFile());
                 if (!parentDirectoryReady) {
-                    log.warn("Failed to cache {}, unable to create parent directory", key.toString(), file
-                        .getParentFile()
-                        .getAbsolutePath());
+                    log.warn("Failed to cache {}, unable to create parent directory {}", key.toString(), file.getParentFile().getAbsolutePath());
                     return 0;
                 }
                 file.createNewFile();
