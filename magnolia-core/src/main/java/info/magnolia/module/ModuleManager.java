@@ -79,7 +79,7 @@ public interface ModuleManager {
             return !(list.isEmpty() && done);
         }
 
-        void done() {
+        public void done() {
             done = true;
         }
 

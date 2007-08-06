@@ -118,6 +118,18 @@ public class ConfigLoader {
 
             final ModuleManager.ModuleManagementState moduleMgtState = moduleManager.checkForInstallOrUpdates();
             if (moduleMgtState.needsUpdateOrInstall()) {
+
+                if (SystemProperty.getBooleanProperty("magnolia.update.auto")) {
+                    log.info("magnolia.update.auto is set to true, will start bootstrapping/update automatically");
+                    try {
+                        moduleManager.performInstallOrUpdate();
+                        moduleManager.startModules();
+                        moduleManager.getStatus().done();
+                    }
+                    catch (RepositoryException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
                 log.info("System needs module updates or installs, point your browser to your Magnolia instance and confirm !");
                 // TODO : we should re-execute this (ConfigLoader.load()) when update done ?
                 // return;
@@ -176,7 +188,7 @@ public class ConfigLoader {
             // define the system property to (re)bootstrap a singel repository
             String bootstrapIfEmpty = StringUtils.defaultString(SystemProperty.getProperty(SystemProperty.BOOTSTRAP_IF_EMPTY));
             String bootstrapForce = StringUtils.defaultString(SystemProperty.getProperty(SystemProperty.BOOTSTRAP_FORCE));
-            
+
             if (StringUtils.isNotEmpty(bootstrapIfEmpty) || StringUtils.isNotEmpty(bootstrapForce)) {
                 Set repositories = new HashSet();
                 String[] ifEmptyRepositories = StringUtils.split(bootstrapIfEmpty,", ");
@@ -184,10 +196,10 @@ public class ConfigLoader {
 
                 repositories.addAll(Arrays.asList(ifEmptyRepositories));
                 repositories.addAll(Arrays.asList(forceRepositories));
-                
+
                 for (Iterator iter = repositories.iterator(); iter.hasNext();) {
                     String repository = (String) iter.next();
-                    
+
                     try {
                         if (ArrayUtils.contains(forceRepositories, repository)) {
                             log.info("will clean and bootstrap the repository {} because the property {} is set",
@@ -198,7 +210,7 @@ public class ConfigLoader {
                                 node.delete();
                             }
                             root.save();
-                            
+
                             Bootstrapper.bootstrapRepository(repository, new BootstrapFileFilter(), bootDirs);
                         }
 
