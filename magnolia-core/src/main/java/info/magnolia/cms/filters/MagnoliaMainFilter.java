@@ -1,10 +1,8 @@
 package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.module.ModuleManagerUI;
 import info.magnolia.content2bean.Content2BeanException;
@@ -14,7 +12,6 @@ import info.magnolia.module.ModuleManager;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Collection;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
