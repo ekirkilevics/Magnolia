@@ -130,7 +130,9 @@ public class ConfigLoader {
                         throw new RuntimeException(e);
                     }
                 }
-                log.info("System needs module updates or installs, point your browser to your Magnolia instance and confirm !");
+                else {
+                    log.info("System needs module updates or installs, point your browser to your Magnolia instance and confirm !");
+                }
                 // TODO : we should re-execute this (ConfigLoader.load()) when update done ?
                 // return;
             } else {
