@@ -14,6 +14,7 @@ package info.magnolia.module;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -30,6 +31,10 @@ import java.util.Arrays;
  * @version $Revision: $ ($Author: $)
  */
 public class ModuleManagerImplTest extends TestCase {
+    protected void setUp() throws Exception {
+        super.setUp();
+        FactoryUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
+    }
 
     // TODO : assert saves after each module?
     // TODO : assert rollbs back with TaskExecutionException
