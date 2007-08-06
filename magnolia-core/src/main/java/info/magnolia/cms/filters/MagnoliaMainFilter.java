@@ -18,6 +18,7 @@ import java.util.Collection;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.servlet.Filter;
@@ -143,22 +144,10 @@ public class MagnoliaMainFilter extends AbstractMagnoliaFilter {
         try {
             final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
-            Content node = null;
-            try {
-                node = hm.getContent(SERVER_FILTERS);
-            }
-            catch (javax.jcr.PathNotFoundException e) {
-                log.warn("Config : no filters configured"); //$NON-NLS-1$
-                return;
-            }
-            if (node != null) {
-                Content2BeanUtil.getContent2BeanProcessor().setProperties(
-                    this,
-                    node,
-                    true,
-                    new FilterContent2BeanTransformer());
-            }
-
+            final Content node = hm.getContent(SERVER_FILTERS);
+            Content2BeanUtil.getContent2BeanProcessor().setProperties(this, node, true, new FilterContent2BeanTransformer());
+        } catch (PathNotFoundException e) {
+            log.warn("Config : no filters configured at " + SERVER_FILTERS); //$NON-NLS-1$
         } catch (RepositoryException e) {
             log.error("can't read filter definitions", e);
         } catch (Content2BeanException e) {
