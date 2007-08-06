@@ -12,13 +12,11 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.BaseRuntimeException;
-
-
 /**
- *
+ * @author
+ * @version $Revision: $ ($Author: $)
  */
-public class ConfigurationException extends BaseRuntimeException {
+public class ConfigurationException extends RuntimeException {
 
     /**
      * Stable serialVersionUID.
@@ -30,7 +28,7 @@ public class ConfigurationException extends BaseRuntimeException {
     }
 
     public ConfigurationException(String message, Exception cause) {
-        super(message, (cause instanceof ConfigurationException) ? ((ConfigurationException) cause).getCause() : cause);
+        super(message, (cause instanceof ConfigurationException) ? cause.getCause() : cause);
     }
 
     public ConfigurationException(Exception root) {

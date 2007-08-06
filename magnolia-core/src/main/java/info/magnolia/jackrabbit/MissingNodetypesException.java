@@ -12,26 +12,19 @@
  */
 package info.magnolia.jackrabbit;
 
-import info.magnolia.cms.core.BaseRuntimeException;
-
-
 /**
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
-public class MissingNodetypesException extends BaseRuntimeException {
+public class MissingNodetypesException extends RuntimeException {
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    /**
-     * @param message
-     */
     public MissingNodetypesException() {
-        super(
-            "No nodetype configuration file found, the default magnolia nodetype config is missing from the classpath");
+        super("No nodetype configuration file found, the default magnolia nodetype config is missing from the classpath");
     }
 
 }
