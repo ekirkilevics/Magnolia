@@ -76,7 +76,15 @@ public final class Listener {
         try {
 
             Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
-            Content configNode = startPage.getContent("IPConfig");
+
+            Content configNode;
+            try {
+                configNode = startPage.getContent("IPConfig");
+            }
+            catch (javax.jcr.PathNotFoundException e) {
+                log.warn("Config : no Listener info configured"); //$NON-NLS-1$
+                return;
+            }
             children = configNode.getChildren(ItemType.CONTENTNODE);
         }
         catch (RepositoryException re) {
