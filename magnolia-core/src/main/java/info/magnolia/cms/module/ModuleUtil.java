@@ -75,7 +75,6 @@ import org.slf4j.LoggerFactory;
  * This is a util providing some methods for the registration process of a module.
  * @author philipp
  * @version $Revision$ ($Author$)
- *
  * @deprecated most methods here should be replaced by implementations of info.magnolia.module.delta.Task
  */
 public final class ModuleUtil {
@@ -189,25 +188,22 @@ public final class ModuleUtil {
                     if (ContentRepository.CONFIG.equals(repository) && pathName.startsWith("/server/")) {
                         log.debug("Not bootstrapping {} as the node already exists.", fullPath);
                         continue;
-                    } else {
+                    }
+                    else {
                         hm.delete(fullPath);
                         if (log.isDebugEnabled()) {
                             log.debug("already existing node [{}] deleted", fullPath);
                         }
                     }
                 }
-            } catch (Exception e) {
+            }
+            catch (Exception e) {
                 throw new RegisterException("can't register bootstrap file: [" + name + "]", e);
             }
             log.debug("Will bootstrap {}", resourceName);
             InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
-            DataTransporter.importXmlStream(
-                stream,
-                repository,
-                pathName,
-                name,
-                false,
-                    // TODO !! this ImportUUIDBehavior might import nodes in the wrong place !!!
+            DataTransporter.importXmlStream(stream, repository, pathName, name, false,
+            // TODO !! this ImportUUIDBehavior might import nodes in the wrong place !!!
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,
                 saveAfterImport,
                 true);
@@ -219,7 +215,6 @@ public final class ModuleUtil {
      * @param names a list of resource names
      * @param prefix prefix which is not part of the magolia path (in common 'mgnl-files')
      * @throws Exception io exception
-     *
      * @deprecated
      * @see info.magnolia.module.files.FileExtractor
      */
@@ -238,8 +233,7 @@ public final class ModuleUtil {
      * @throws AccessDeniedException exception
      * @throws PathNotFoundException exception
      * @throws RepositoryException exception
-     *
-     * @deprecated 
+     * @deprecated
      */
     public static Content createMinimalConfiguration(Content node, String name, String displayName, String className,
         String version) throws AccessDeniedException, PathNotFoundException, RepositoryException {
@@ -402,10 +396,11 @@ public final class ModuleUtil {
      * @return <code>true</code> if a repository is registered or <code>false</code> if it was already existing
      * @throws RegisterException
      */
-    public static boolean registerRepository(final String repositoryName, final String nodeTypeFile) throws RegisterException {
+    public static boolean registerRepository(final String repositoryName, final String nodeTypeFile)
+        throws RegisterException {
 
         boolean registered = false;
-        
+
         Document doc;
         try {
             doc = getRepositoryDefinitionDocument();
@@ -484,7 +479,7 @@ public final class ModuleUtil {
                 // save it
                 XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
                 outputter.output(doc, new FileWriter(getRepositoryDefinitionFile()));
-                
+
                 RepositoryMapping mapping = new RepositoryMapping();
                 mapping.setName(repositoryName);
                 mapping.addWorkspace(repositoryName);
@@ -497,17 +492,17 @@ public final class ModuleUtil {
                 parameters.put("providerURL", providerURL);
                 parameters.put("bindName", bindName);
                 parameters.put("customNodeTypes", nodeTypeFile);
-                
-                
+
                 mapping.setParameters(parameters);
-                
+
                 // bootstrap the new workspace if empty
                 try {
                     // load new workspace
                     ContentRepository.loadRepository(mapping);
 
-                    if(!ContentRepository.checkIfInitialized(repositoryName)){
-                        Bootstrapper.bootstrapRepository(repositoryName, new Bootstrapper.BootstrapFilter(){
+                    if (!ContentRepository.checkIfInitialized(repositoryName)) {
+                        Bootstrapper.bootstrapRepository(repositoryName, new Bootstrapper.BootstrapFilter() {
+
                             public boolean accept(String filename) {
                                 return filename.startsWith(repositoryName + ".");
                             }
@@ -534,7 +529,7 @@ public final class ModuleUtil {
             log.error("can't register repository", e);
             throw new RegisterException("can't register repository", e);
         }
-        
+
         return registered;
     }
 
@@ -589,7 +584,8 @@ public final class ModuleUtil {
      * @param workspaceName
      * @throws RegisterException if the workspace could not be register
      */
-    public static boolean registerWorkspace(final String repositoryName, final String workspaceName) throws RegisterException {
+    public static boolean registerWorkspace(final String repositoryName, final String workspaceName)
+        throws RegisterException {
 
         boolean changed = false;
 
@@ -630,7 +626,6 @@ public final class ModuleUtil {
                     repositoryNode.addContent(workspaceNode);
                 }
 
-
                 changed = true;
             }
 
@@ -638,20 +633,21 @@ public final class ModuleUtil {
             if (changed) {
                 XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
                 outputter.output(doc, new FileWriter(getRepositoryDefinitionFile()));
-                
+
                 // load new workspace
                 ContentRepository.loadWorkspace(repositoryName, workspaceName);
             }
-            
+
             // bootstrap the new workspace if empty
-            if(!ContentRepository.checkIfInitialized(workspaceName)){
-                Bootstrapper.bootstrapRepository(workspaceName, new Bootstrapper.BootstrapFilter(){
+            if (!ContentRepository.checkIfInitialized(workspaceName)) {
+                Bootstrapper.bootstrapRepository(workspaceName, new Bootstrapper.BootstrapFilter() {
+
                     public boolean accept(String filename) {
                         return filename.startsWith(workspaceName + ".");
                     }
                 });
             }
-            
+
         }
         catch (Exception e) {
             log.error("Can't register workspace [" + workspaceName + "]", e);
@@ -679,15 +675,18 @@ public final class ModuleUtil {
         while (subscribers.hasNext()) {
             Subscriber subscriber = (Subscriber) subscribers.next();
             if (!subscriber.isSubscribed("/", repository)) {
-                Content subscriptionsNode
-                        = ContentUtil.getContent(ContentRepository.CONFIG, sManager.getConfigPath()+"/"+subscriber.getName()+"/subscriptions");
+                Content subscriptionsNode = ContentUtil.getContent(ContentRepository.CONFIG, sManager.getConfigPath()
+                    + "/"
+                    + subscriber.getName()
+                    + "/subscriptions");
                 try {
                     Content newSubscription = subscriptionsNode.createContent(repository, ItemType.CONTENTNODE);
                     newSubscription.createNodeData("toURI").setValue("/");
                     newSubscription.createNodeData("repository").setValue(repository);
                     newSubscription.createNodeData("fromURI").setValue("/");
                     subscriptionsNode.save();
-                } catch (RepositoryException re) {
+                }
+                catch (RepositoryException re) {
                     log.error("wasn't able to subscribe repository [" + repository + "]", re);
                 }
             }
