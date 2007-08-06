@@ -50,20 +50,20 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         expect(d5.getTasks()).andReturn(new ArrayList());
         replay(d1, d2, d3, d4, d5);
         versionHandler = new DefaultModuleVersionHandler() {};
-        versionHandler.register(new Version("1.0.0"), d1);
-        versionHandler.register(new Version("1.0.1"), d2);
-        versionHandler.register(new Version("1.1"), d3);
-        versionHandler.register(new Version("1.2"), d4);
-        versionHandler.register(new Version("1.3"), d5);
+        versionHandler.register(Version.parseVersion("1.0.0"), d1);
+        versionHandler.register(Version.parseVersion("1.0.1"), d2);
+        versionHandler.register(Version.parseVersion("1.1"), d3);
+        versionHandler.register(Version.parseVersion("1.2"), d4);
+        versionHandler.register(Version.parseVersion("1.3"), d5);
     }
 
     public void testCantRegisterMultipleDeltasForSameVersion() {
         final Delta d1 = new BasicDelta("", "", new NullTask("", ""));
         final Delta d2 = new BasicDelta("", "", new NullTask("", ""));
         final AbstractModuleVersionHandler versionHandler = new DefaultModuleVersionHandler() {};
-        versionHandler.register(new Version("1.0.0"), d1);
+        versionHandler.register(Version.parseVersion("1.0.0"), d1);
         try {
-            versionHandler.register(new Version("1.0.0"), d2);
+            versionHandler.register(Version.parseVersion("1.0.0"), d2);
             fail("should have failed");
         } catch (IllegalStateException e) {
             assertEquals("Version 1.0.0 was already registered in this ModuleVersionHandler.", e.getMessage());
@@ -74,7 +74,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         final Delta d1 = new BasicDelta("", "", new NullTask("", ""));
         final Delta d2 = new BasicDelta("", "", new NullTask("", ""));
         final AbstractModuleVersionHandler versionHandler = new DefaultModuleVersionHandler() {};
-        versionHandler.register(new Version("1.1.0"), d1);
+        versionHandler.register(Version.parseVersion("1.1.0"), d1);
         try {
             versionHandler.register("1.1.0", d2);
             fail("should have failed");
@@ -84,7 +84,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     }
 
     public void testRetrievesTheAppropriateListOfDeltas() {
-        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), new Version("1.0.1"));//, new Version("1.2"));
+        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), Version.parseVersion("1.0.1"));//, new Version("1.2"));
         assertEquals(3, deltas.size());
         assertEquals(d3, deltas.get(0));
         assertEquals(d4, deltas.get(1));
@@ -92,19 +92,19 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     }
 
     public void testRetrievesTheAppropriateDeltaForIntermediateUnregisteredVersion() {
-        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), new Version("1.2.5"));//, new Version("1.2"));
+        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), Version.parseVersion("1.2.5"));//, new Version("1.2"));
         assertEquals(1, deltas.size());
         assertEquals(d5, deltas.get(0));
     }
 
     public void testReturnsEmptyListIfNoDeltaWasRegisteredForNewerVersion() {
-        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), new Version("1.4"));//, new Version("1.4"));
+        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), Version.parseVersion("1.4"));//, new Version("1.4"));
         assertNotNull(deltas);
         assertEquals(0, deltas.size());
     }
 
     public void testReturnsEmptyListIfLatestDeltaWasRegisteredForCurrentVersion() {
-        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), new Version("1.3"));//, new Version("1.4"));
+        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), Version.parseVersion("1.3"));//, new Version("1.4"));
         assertNotNull(deltas);
         assertEquals(0, deltas.size());
     }
@@ -117,14 +117,14 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
 
     public void testReturnsEmptyListIfNoDeltaWasRegisteredAtAll() {
         final AbstractModuleVersionHandler versionHandler = new DefaultModuleVersionHandler() {};
-        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), new Version("1.0.1"));//, new Version("1.2"));
+        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), Version.parseVersion("1.0.1"));//, new Version("1.2"));
         assertNotNull(deltas);
         assertEquals(0, deltas.size());
     }
 
     public void testDeltasAreSorted() {
         // yes, this test might pass by accident.
-        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), new Version("0.4"));//, new Version("2.0"));
+        final List deltas = versionHandler.getDeltas(new InstallContextImpl(), Version.parseVersion("0.4"));//, new Version("2.0"));
         assertEquals(5, deltas.size());
         assertEquals(d1, deltas.get(0));
         assertEquals(d2, deltas.get(1));
@@ -157,7 +157,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     private void doTestVersionUpdateTaskIsAddedWhenUsingBasicDeltaConstructor(Delta delta) {
         final AbstractModuleVersionHandler versionHandler = new DefaultModuleVersionHandler() {};
         versionHandler.register("2.0", delta);
-        final List list = versionHandler.getDeltas(new InstallContextImpl(), new Version("1.0"));
+        final List list = versionHandler.getDeltas(new InstallContextImpl(), Version.parseVersion("1.0"));
         assertEquals(1, list.size());
         final Delta retrievedDelta = (Delta) list.get(0);
         final List tasks = retrievedDelta.getTasks();

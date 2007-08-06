@@ -45,7 +45,7 @@ public class VersionRange {
         if ("*".equals(rangeDef.trim())) {
             return ifUndefined;
         }
-        return new Version(rangeDef);
+        return Version.parseVersion(rangeDef);
     }
 
     private void validate() {

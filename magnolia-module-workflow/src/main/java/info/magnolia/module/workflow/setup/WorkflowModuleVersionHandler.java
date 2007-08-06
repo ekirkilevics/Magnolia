@@ -44,7 +44,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
 
     public WorkflowModuleVersionHandler() {
         super();
-        final Version version3_1 = new Version(3, 1, 0);
+        final Version version3_1 = Version.parseVersion(3, 1, 0);
         register(version3_1, delta31);
     }
 

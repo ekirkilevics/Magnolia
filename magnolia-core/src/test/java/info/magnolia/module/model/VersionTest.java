@@ -21,39 +21,39 @@ import junit.framework.TestCase;
  */
 public class VersionTest extends TestCase {
     public void testShouldSupportSingleDigitVersions() {
-        assertVersion(3, 0, 0, null, new Version("3"));
+        assertVersion(3, 0, 0, null, Version.parseVersion("3"));
     }
 
     public void testShouldSupportTwoDigitVersions() {
-        assertVersion(3, 0, 0, null, new Version("3.0"));
-        assertVersion(3, 1, 0, null, new Version("3.1"));
+        assertVersion(3, 0, 0, null, Version.parseVersion("3.0"));
+        assertVersion(3, 1, 0, null, Version.parseVersion("3.1"));
     }
 
     public void testShouldSupportThreeDigitVersions() {
-        assertVersion(3, 0, 0, null, new Version("3.0.0"));
-        assertVersion(3, 2, 0, null, new Version("3.2.0"));
-        assertVersion(3, 4, 5, null, new Version("3.4.5"));
+        assertVersion(3, 0, 0, null, Version.parseVersion("3.0.0"));
+        assertVersion(3, 2, 0, null, Version.parseVersion("3.2.0"));
+        assertVersion(3, 4, 5, null, Version.parseVersion("3.4.5"));
     }
 
     public void testShouldSupportAlphanumericClassifiers() {
-        assertVersion(3, 0, 0, "x", new Version("3.0.0-x"));
-        assertVersion(3, 0, 0, "Y", new Version("3.0.0-Y"));
-        assertVersion(3, 0, 0, "5", new Version("3.0.0-5"));
-        assertVersion(3, 0, 0, "20060622gregYO", new Version("3.0.0-20060622gregYO"));
+        assertVersion(3, 0, 0, "x", Version.parseVersion("3.0.0-x"));
+        assertVersion(3, 0, 0, "Y", Version.parseVersion("3.0.0-Y"));
+        assertVersion(3, 0, 0, "5", Version.parseVersion("3.0.0-5"));
+        assertVersion(3, 0, 0, "20060622gregYO", Version.parseVersion("3.0.0-20060622gregYO"));
 
     }
 
     public void testShouldSupportClassifierIndependentlyOfTheVersionNumberPrecision() {
-        assertVersion(3, 0, 0, "foo", new Version("3-foo"));
-        assertVersion(3, 0, 0, "foo", new Version("3.0-foo"));
-        assertVersion(3, 0, 0, "foo", new Version("3.0.0-foo"));
-        assertVersion(3, 1, 0, "foo", new Version("3.1-foo"));
-        assertVersion(3, 1, 0, "foo", new Version("3.1.0-foo"));
-        assertVersion(3, 1, 7, "foo", new Version("3.1.7-foo"));
+        assertVersion(3, 0, 0, "foo", Version.parseVersion("3-foo"));
+        assertVersion(3, 0, 0, "foo", Version.parseVersion("3.0-foo"));
+        assertVersion(3, 0, 0, "foo", Version.parseVersion("3.0.0-foo"));
+        assertVersion(3, 1, 0, "foo", Version.parseVersion("3.1-foo"));
+        assertVersion(3, 1, 0, "foo", Version.parseVersion("3.1.0-foo"));
+        assertVersion(3, 1, 7, "foo", Version.parseVersion("3.1.7-foo"));
     }
 
     public void testShouldTrimInput() {
-        assertVersion(3, 1, 7, "foo", new Version(" 3.1.7-foo\t\n "));
+        assertVersion(3, 1, 7, "foo", Version.parseVersion(" 3.1.7-foo\t\n "));
     }
 
     public void testShouldRejectInvalidInput() {
@@ -73,19 +73,19 @@ public class VersionTest extends TestCase {
     }
 
     public void test3and300shouldBeEquivalent() {
-        assertTrue(new Version("3").isEquivalent(new Version("3.0.0")));
-        assertFalse(new Version("3.0.1").isEquivalent(new Version("3.0.0")));
-        assertFalse(new Version("3.1.1").isEquivalent(new Version("3.0.0")));
-        assertFalse(new Version("4.1.1").isEquivalent(new Version("3.0.0")));
-        assertFalse(new Version("3.0.1").isEquivalent(new Version("3.0.2")));
-        assertFalse(new Version("3.0.1").isEquivalent(new Version("3.2.2")));
-        assertFalse(new Version("3.0.1").isEquivalent(new Version("2.2.2")));
+        assertTrue(Version.parseVersion("3").isEquivalent(Version.parseVersion("3.0.0")));
+        assertFalse(Version.parseVersion("3.0.1").isEquivalent(Version.parseVersion("3.0.0")));
+        assertFalse(Version.parseVersion("3.1.1").isEquivalent(Version.parseVersion("3.0.0")));
+        assertFalse(Version.parseVersion("4.1.1").isEquivalent(Version.parseVersion("3.0.0")));
+        assertFalse(Version.parseVersion("3.0.1").isEquivalent(Version.parseVersion("3.0.2")));
+        assertFalse(Version.parseVersion("3.0.1").isEquivalent(Version.parseVersion("3.2.2")));
+        assertFalse(Version.parseVersion("3.0.1").isEquivalent(Version.parseVersion("2.2.2")));
     }
 
     public void testClassifiersShouldBeIgnoredInEquivalenceComparison() {
-        assertTrue(new Version("3-foo").isEquivalent(new Version("3.0.0")));
-        assertTrue(new Version("3.0.0").isEquivalent(new Version("3.0.0-bar")));
-        assertTrue(new Version("3.0.0-baz").isEquivalent(new Version("3.0.0-bar")));
+        assertTrue(Version.parseVersion("3-foo").isEquivalent(Version.parseVersion("3.0.0")));
+        assertTrue(Version.parseVersion("3.0.0").isEquivalent(Version.parseVersion("3.0.0-bar")));
+        assertTrue(Version.parseVersion("3.0.0-baz").isEquivalent(Version.parseVersion("3.0.0-bar")));
     }
 
     public void testStrictlyAfter() {
@@ -152,16 +152,16 @@ public class VersionTest extends TestCase {
     }
 
     private void doTestStrictlyAfter(boolean expected, String v1, String arg) {
-        assertEquals(expected, new Version(v1).isStrictlyAfter(new Version(arg)));
+        assertEquals(expected, Version.parseVersion(v1).isStrictlyAfter(Version.parseVersion(arg)));
     }
 
     private void doTestBefore(boolean expected, String v1, String arg) {
-        assertEquals(expected, new Version(v1).isBeforeOrEquivalent(new Version(arg)));
+        assertEquals(expected, Version.parseVersion(v1).isBeforeOrEquivalent(Version.parseVersion(arg)));
     }
 
     public static void assertInvalidVersion(String expectedMessage, String versionStr) {
         try {
-            new Version(versionStr);
+            Version.parseVersion(versionStr);
             fail("Should have failed for input " + versionStr);
         } catch (RuntimeException e) {
             assertEquals(expectedMessage, e.getMessage());

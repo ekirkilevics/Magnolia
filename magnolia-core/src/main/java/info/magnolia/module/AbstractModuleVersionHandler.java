@@ -67,7 +67,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
      * @see #register(info.magnolia.module.model.Version,info.magnolia.module.delta.Delta)
      */
     protected void register(String versionStr, Delta delta) {
-        register(new Version(versionStr), delta);
+        register(Version.parseVersion(versionStr), delta);
     }
 
     public Version getCurrentlyInstalled(InstallContext ctx) {
@@ -82,7 +82,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
                 return null;
             }
 
-            return new Version(versionProp.getString());
+            return Version.parseVersion(versionProp.getString());
         } catch (RepositoryException e) {
             throw new RuntimeException(e); // TODO
         }

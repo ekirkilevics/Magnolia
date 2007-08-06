@@ -45,7 +45,7 @@ public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition 
      * TODO : rename to getVersion once we got rid of info.magnolia.cms.module.ModuleDefinition
      */
     public Version getVersionDefinition() {
-        return new Version(getVersion());
+        return Version.parseVersion(getVersion());
     }
 
     public void addDependency(DependencyDefinition dep) {

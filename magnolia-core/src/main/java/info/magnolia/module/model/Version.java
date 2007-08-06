@@ -36,14 +36,14 @@ public class Version {
     /**
      * Convenience constructor that could be used to register Deltas or update tasks.
      */
-    public Version(int major, int minor, int patch) {
+    private Version(int major, int minor, int patch) {
         this.major = (short) major;
         this.minor = (short) minor;
         this.patch = (short) patch;
         this.classifier = null;
     }
 
-    public Version(String versionStr) {
+    private Version(String versionStr) {
         versionStr = versionStr.trim();
         if (StringUtils.equals("${project.version}", versionStr)) {
             // development mode.
@@ -77,6 +77,14 @@ public class Version {
         } else {
             patch = 0;
         }
+    }
+
+    public static Version parseVersion(String versionStr) {
+        return new Version(versionStr);
+    }
+
+    public static Version parseVersion(int major, int minor, int patch) {
+        return new Version(major, minor, patch);
     }
 
     /**

@@ -20,10 +20,10 @@ import junit.framework.TestCase;
  * @version $Revision: $ ($Author: $)
  */
 public class VersionComparatorTest extends TestCase {
-    private static final Version V100 = new Version("1.0.0");
-    private static final Version V101 = new Version("1.0.1");
-    private static final Version V110 = new Version("1.1.0");
-    private static final Version V200 = new Version("2.0.0");
+    private static final Version V100 = Version.parseVersion("1.0.0");
+    private static final Version V101 = Version.parseVersion("1.0.1");
+    private static final Version V110 = Version.parseVersion("1.1.0");
+    private static final Version V200 = Version.parseVersion("2.0.0");
 
     public void testBasic() {
         final VersionComparator vc = new VersionComparator();
@@ -49,9 +49,9 @@ public class VersionComparatorTest extends TestCase {
 
     public void testClassifiersAreIgnored() {
         final VersionComparator vc = new VersionComparator();
-        assertTrue(vc.compare(new Version("1.0-foo"), V100) == 0);
-        assertTrue(vc.compare(V100, new Version("1.0-bar")) == 0);
-        assertTrue(vc.compare(V100, new Version("2.0-bar")) < 0);
-        assertTrue(vc.compare(new Version("2.0.5-foo"), V101) > 0);
+        assertTrue(vc.compare(Version.parseVersion("1.0-foo"), V100) == 0);
+        assertTrue(vc.compare(V100, Version.parseVersion("1.0-bar")) == 0);
+        assertTrue(vc.compare(V100, Version.parseVersion("2.0-bar")) < 0);
+        assertTrue(vc.compare(Version.parseVersion("2.0.5-foo"), V101) > 0);
     }
 }

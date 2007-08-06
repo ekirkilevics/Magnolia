@@ -52,7 +52,7 @@ public class ModuleManagerImplTest extends TestCase {
         final Task t3 = createStrictMock(Task.class);
         final Task t4 = createStrictMock(Task.class);
 
-        final Version fromVersion = new Version("1.2.3");
+        final Version fromVersion = Version.parseVersion("1.2.3");
 
         ctx.setCurrentModule(mod);
         ctx.setCurrentModule(null);
@@ -88,7 +88,7 @@ public class ModuleManagerImplTest extends TestCase {
 
         replay(ctx, d1, t1, t2);
 
-        final ModuleManager.ModuleAndDeltas moduleAndDeltas = new ModuleManager.ModuleAndDeltas(null, mod, new Version("1.2.3"), Arrays.asList(d1));
+        final ModuleManager.ModuleAndDeltas moduleAndDeltas = new ModuleManager.ModuleAndDeltas(null, mod, Version.parseVersion("1.2.3"), Arrays.asList(d1));
         new ModuleManagerImpl().installOrUpdateModule(moduleAndDeltas, ctx);
 
         verify(ctx, d1, t1, t2);

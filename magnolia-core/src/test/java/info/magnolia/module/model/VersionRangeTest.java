@@ -128,7 +128,7 @@ public class VersionRangeTest extends TestCase {
     }
 
     private void doTestIsInRange(boolean expected, String range, String otherVersion) {
-        assertEquals(expected, new VersionRange(range).contains(new Version(otherVersion)));
+        assertEquals(expected, new VersionRange(range).contains(Version.parseVersion(otherVersion)));
     }
 
 }
