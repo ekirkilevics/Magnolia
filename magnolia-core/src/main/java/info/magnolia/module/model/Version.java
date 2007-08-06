@@ -14,8 +14,6 @@ package info.magnolia.module.model;
 
 import java.util.regex.Pattern;
 
-import org.apache.commons.lang.StringUtils;
-
 /**
  * Represents a module version. Format is x.y.z-classifier. y,z and classifier are
  * optional. The classifier string is ignored in version comparisons.
@@ -44,7 +42,6 @@ public class Version {
     }
 
     private Version(String versionStr) {
-
         final int classifierIdx = versionStr.indexOf('-');
         if (classifierIdx > 0) {
             classifier = versionStr.substring(classifierIdx + 1);
@@ -84,7 +81,7 @@ public class Version {
     public static Version parseVersion(String versionStr) {
 
         versionStr = versionStr.trim();
-        if (StringUtils.equals("${project.version}", versionStr)) {
+        if ("${project.version}".equals(versionStr)) {
             // development mode.
             return new UndefinedDevelopmentVersion();
         }
@@ -97,11 +94,13 @@ public class Version {
     }
 
     /**
-     * Compares major, minor and patch revisions of this Version against the given Version. Classifier is ignored.
+     * Compares major, minor and patch revisions of this Version against the given Version.
+     * Classifier is ignored.
      */
     public boolean isEquivalent(final Version other) {
-        return (this.getMajor() == other.getMajor() && this.getMinor() == other.getMinor() && this.getPatch() == other
-            .getPatch());
+        return this.getMajor() == other.getMajor() &&
+                this.getMinor() == other.getMinor() &&
+                this.getPatch() == other.getPatch();
     }
 
     public boolean isStrictlyAfter(final Version other) {
