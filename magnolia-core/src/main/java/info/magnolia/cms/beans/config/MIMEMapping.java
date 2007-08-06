@@ -81,8 +81,15 @@ public class MIMEMapping {
         try {
             log.info("Config : loading MIMEMapping"); //$NON-NLS-1$
             final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-            Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
-            MIMEMapping.cacheContent(mimeList);
+
+            try {
+                Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
+                MIMEMapping.cacheContent(mimeList);
+            }
+            catch (javax.jcr.PathNotFoundException e) {
+                log.warn("Config : no MIMEMapping info configured"); //$NON-NLS-1$
+                return;
+            }
             log.info("Config : MIMEMapping loaded"); //$NON-NLS-1$
         }
         catch (RepositoryException re) {
