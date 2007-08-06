@@ -14,6 +14,7 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.HierarchyManager;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -22,6 +23,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.PathNotFoundException;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
@@ -39,13 +41,9 @@ import org.slf4j.LoggerFactory;
  * @deprecated rename+merge with info.magnolia.cms.security.Listener
  */
 public final class Listener {
+    private static final String CONFIG_PATH = "/server/IPConfig";
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(Listener.class);
-
-    private static final String CONFIG_PAGE = "server"; //$NON-NLS-1$
+    private static final Logger log = LoggerFactory.getLogger(Listener.class);
 
     private static Map cachedContent = new Hashtable();
 
@@ -74,20 +72,13 @@ public final class Listener {
         Collection children = Collections.EMPTY_LIST;
 
         try {
-
-            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
-
-            Content configNode;
-            try {
-                configNode = startPage.getContent("IPConfig");
-            }
-            catch (javax.jcr.PathNotFoundException e) {
-                log.warn("Config : no Listener info configured"); //$NON-NLS-1$
-                return;
-            }
+            final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            final Content configNode = hm.getContent(CONFIG_PATH);
             children = configNode.getChildren(ItemType.CONTENTNODE);
-        }
-        catch (RepositoryException re) {
+        } catch (PathNotFoundException e) {
+            log.warn("Config : no Listener info configured at " + CONFIG_PATH); //$NON-NLS-1$
+            return;
+        } catch (RepositoryException re) {
             log.error("Config : Failed to load Listener info"); //$NON-NLS-1$
             log.error(re.getMessage(), re);
         }
@@ -125,7 +116,7 @@ public final class Listener {
                 | Event.NODE_REMOVED
                 | Event.PROPERTY_ADDED
                 | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + "/" + "IPConfig", true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                | Event.PROPERTY_REMOVED, CONFIG_PATH, true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for Listeners", e); //$NON-NLS-1$
