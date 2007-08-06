@@ -24,6 +24,8 @@ import java.util.Collection;
 public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition {
     private final Collection dependencies = new ArrayList();
     private Class versionHandler;
+    private Version versionDefinition;
+
 
     public ModuleDefinition() {
     }
@@ -31,6 +33,7 @@ public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition 
     public ModuleDefinition(String name, String version, String className, Class versionHandler) {
         super(name, version, className);
         this.versionHandler = versionHandler;
+        this.versionDefinition = Version.parseVersion(version);
     }
 
     public Class getVersionHandler() {
@@ -45,11 +48,19 @@ public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition 
      * TODO : rename to getVersion once we got rid of info.magnolia.cms.module.ModuleDefinition
      */
     public Version getVersionDefinition() {
-        return Version.parseVersion(getVersion());
+        return versionDefinition;
     }
 
     public void addDependency(DependencyDefinition dep) {
         dependencies.add(dep);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public void setVersion(String version) {
+        super.setVersion(version);
+        this.versionDefinition = Version.parseVersion(version);
     }
 
     /**
@@ -75,7 +86,6 @@ public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition 
     }
 
     public String toString() {
-        // explicitely use the String version number to avoid unnecessary parsing (and potential exceptions if said version number is invalid)
-        return getDisplayName() + " version " + getVersion();
+        return getDisplayName() + " version " + getVersionDefinition();
     }
 }
