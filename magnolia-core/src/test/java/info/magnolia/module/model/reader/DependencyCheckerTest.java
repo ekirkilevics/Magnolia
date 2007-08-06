@@ -59,7 +59,7 @@ public class DependencyCheckerTest extends TestCase {
             depChecker.checkDependencies(modules);
             fail("should have failed");
         } catch (ModuleDependencyException e) {
-            assertEquals("Module module2 version 1.2 is dependent on module1 version 1.0/2.0, but module1 version 3.0 is currently installed.", e.getMessage());
+            assertEquals("Module module2 version 1.2.0 is dependent on module1 version 1.0/2.0, but module1 version 3.0.0 is currently installed.", e.getMessage());
         }
     }
 
@@ -69,7 +69,7 @@ public class DependencyCheckerTest extends TestCase {
             depChecker.checkDependencies(modules);
             fail("should have failed");
         } catch (ModuleDependencyException e) {
-            assertEquals("Module module2 version 1.2 is dependent on module1 version 4.0/5.0, but module1 version 3.0 is currently installed.", e.getMessage());
+            assertEquals("Module module2 version 1.2.0 is dependent on module1 version 4.0/5.0, but module1 version 3.0.0 is currently installed.", e.getMessage());
         }
     }
 
@@ -79,7 +79,7 @@ public class DependencyCheckerTest extends TestCase {
             depChecker.checkDependencies(modules);
             fail("should have failed");
         } catch (ModuleDependencyException e) {
-            assertEquals("Module module2 version 1.2 is dependent on module1 version */2.0, but module1 version 3.0 is currently installed.", e.getMessage());
+            assertEquals("Module module2 version 1.2.0 is dependent on module1 version */2.0, but module1 version 3.0.0 is currently installed.", e.getMessage());
         }
     }
 
@@ -89,7 +89,7 @@ public class DependencyCheckerTest extends TestCase {
             depChecker.checkDependencies(modules);
             fail("should have failed");
         } catch (ModuleDependencyException e) {
-            assertEquals("Module module2 version 1.2 is dependent on module1 version 4.0/*, but module1 version 3.0 is currently installed.", e.getMessage());
+            assertEquals("Module module2 version 1.2.0 is dependent on module1 version 4.0/*, but module1 version 3.0.0 is currently installed.", e.getMessage());
         }
     }
 
@@ -100,7 +100,7 @@ public class DependencyCheckerTest extends TestCase {
             depChecker.checkDependencies(modules);
             fail("should have failed");
         } catch (ModuleDependencyException e) {
-            assertEquals("Module module2 version 1.2 is dependent on module1 version Q.W, which was not found.", e.getMessage());
+            assertEquals("Module module2 version 1.2.0 is dependent on module1 version Q.W, which was not found.", e.getMessage());
         }
     }
 
