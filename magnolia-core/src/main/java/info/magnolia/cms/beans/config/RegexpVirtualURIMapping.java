@@ -15,9 +15,6 @@ import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 
-import info.magnolia.cms.util.SimpleUrlPattern;
-import info.magnolia.cms.util.UrlPattern;
-
 
 /**
  * Virtual uri mapping implementation that uses regular expressions in fromURI/toURI. When using regular expression in
