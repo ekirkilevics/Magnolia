@@ -10,7 +10,7 @@
   <artifactId>magnolia</artifactId>
   <packaging>war</packaging>
   <name>magnolia</name>
-  <version>3.1-m3</version>
+  <version>3.1-SNAPSHOT</version>
   <profiles>
     <profile>
       <id>author</id>
@@ -224,10 +224,4 @@
       </plugin>
     </plugins>
   </reporting>
-
-  <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-3.1-m3</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-3.1-m3</developerConnection>
-    <url>http://svn.magnolia.info/view/magnolia/tags/magnolia-3.1-m3</url>
-  </scm>
 </project>
