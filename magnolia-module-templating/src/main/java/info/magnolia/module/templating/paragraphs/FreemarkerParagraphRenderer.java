@@ -23,12 +23,17 @@ import org.apache.commons.beanutils.BeanUtils;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Renders a paragraph using freemarker. Optionally supports the execution of an action
+ * class whose constructor can either be empty or take exactly one Content parameter and
+ * one ActionBasedParagraph parameter.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -61,7 +66,7 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
             if (actionClass == null) {
                 throw new IllegalStateException("Can't render paragraph " + paragraph.getName() + " in page " + content.getHandle() + ": actionClass not set.");
             }
-            actionResult = execute(actionClass, abp.getAllowedParametersList());
+            actionResult = execute(actionClass, content, abp, abp.getAllowedParametersList());
         } else {
             actionResult = null;
         }
@@ -81,13 +86,13 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
         }
     }
 
-    protected ActionResult execute(Class actionClass, String[] allowedParametersList) {
+    protected ActionResult execute(Class actionClass, Content content, ActionBasedParagraph paragraph, String[] allowedParametersList) {
         // see MVCServletHandlerImpl.init() if we need to populate the action bean
 
         // TODO : refactoring w/ Pages ?
 
         try {
-            final Object actionBean = actionClass.newInstance();
+            final Object actionBean = instanciate(actionClass, content, paragraph);
             final Map params = MgnlContext.getParameters();
             if (params != null && allowedParametersList != null) {
                 final Map filteredParams = new HashMap();
@@ -110,6 +115,18 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
         } catch (InvocationTargetException e) {
             throw new RuntimeException(e); // TODO
         }
+    }
+
+    protected Object instanciate(Class actionClass, Content content, ActionBasedParagraph paragraph) throws InstantiationException, IllegalAccessException, InvocationTargetException {
+        final Constructor[] constructors = actionClass.getConstructors();
+        for (int i = 0; i < constructors.length; i++) {
+            final Constructor c = constructors[i];
+            final Class[] params = c.getParameterTypes();
+            if (params.length == 2 && params[0].equals(Content.class) && params[1].equals(ActionBasedParagraph.class)) {
+                return c.newInstance(new Object[]{content, paragraph});
+            }
+        }
+        return actionClass.newInstance();
     }
 
     /**
