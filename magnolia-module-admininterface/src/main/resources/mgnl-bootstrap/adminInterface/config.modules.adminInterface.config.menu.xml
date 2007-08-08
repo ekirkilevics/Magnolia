@@ -57,52 +57,6 @@
       </sv:property>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="inbox">
-    <sv:property sv:name="jcr:primaryType" sv:type="Name">
-      <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>f508d107-f016-445f-95d8-f8bb0fdb414f</sv:value>
-    </sv:property>
-    <sv:property sv:name="label" sv:type="String">
-      <sv:value>menu.inbox</sv:value>
-    </sv:property>
-    <sv:property sv:name="onclick" sv:type="String">
-      <sv:value>MgnlAdminCentral.showContent('/.magnolia/pages/inbox.html', false, false)</sv:value>
-    </sv:property>
-    <sv:property sv:name="icon" sv:type="String">
-      <sv:value>/.resources/icons/24/mail.gif</sv:value>
-    </sv:property>
-    <sv:property sv:name="i18nBasename" sv:type="String">
-      <sv:value>info.magnolia.module.workflow.messages</sv:value>
-    </sv:property>
-    <sv:node sv:name="MetaData">
-      <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:metaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2006-02-16T11:16:28.704+09:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-        <sv:value>2006-02-16T11:16:36.541+09:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2007-04-05T08:57:24.337+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:activatorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-        <sv:value>false</sv:value>
-      </sv:property>
-    </sv:node>
-  </sv:node>
   <sv:node sv:name="security">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
