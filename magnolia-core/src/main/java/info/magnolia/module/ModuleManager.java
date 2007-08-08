@@ -83,9 +83,9 @@ public interface ModuleManager {
             done = true;
         }
 
-        void addModule(DeltaType type, ModuleDefinition module, Version currentVersion, List deltas) {
+        void addModule(ModuleDefinition module, Version currentVersion, List deltas) {
             done = false;
-            list.add(new ModuleAndDeltas(type, module, currentVersion, deltas));
+            list.add(new ModuleAndDeltas(module, currentVersion, deltas));
         }
 
         public List getList() {
@@ -97,20 +97,14 @@ public interface ModuleManager {
      * Represents what's to be done for each module.
      */
     public final static class ModuleAndDeltas {
-        private final DeltaType type;
         private final ModuleDefinition module;
         private final Version currentVersion;
         private final List deltas;
 
-        public ModuleAndDeltas(DeltaType type, ModuleDefinition module, Version currentVersion, List deltas) {
-            this.type = type;
+        public ModuleAndDeltas(ModuleDefinition module, Version currentVersion, List deltas) {
             this.module = module;
             this.currentVersion = currentVersion;
             this.deltas = deltas;
-        }
-
-        public DeltaType getType() {
-            return type;
         }
 
         public ModuleDefinition getModule() {

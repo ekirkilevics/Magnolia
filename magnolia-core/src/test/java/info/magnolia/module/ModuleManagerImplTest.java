@@ -71,7 +71,7 @@ public class ModuleManagerImplTest extends TestCase {
 
         replay(ctx, d1, d2, t1, t2, t3, t4, moduleNode, versionProp, allModulesNode);
 
-        final ModuleManager.ModuleAndDeltas moduleAndDeltas = new ModuleManager.ModuleAndDeltas(null, mod, fromVersion, Arrays.asList(d1, d2));
+        final ModuleManager.ModuleAndDeltas moduleAndDeltas = new ModuleManager.ModuleAndDeltas(mod, fromVersion, Arrays.asList(d1, d2));
         new ModuleManagerImpl().installOrUpdateModule(moduleAndDeltas, ctx);
 
         verify(ctx, d1, d2, t1, t2, t3, t4, moduleNode, versionProp, allModulesNode);
@@ -93,7 +93,7 @@ public class ModuleManagerImplTest extends TestCase {
 
         replay(ctx, d1, t1, t2);
 
-        final ModuleManager.ModuleAndDeltas moduleAndDeltas = new ModuleManager.ModuleAndDeltas(null, mod, Version.parseVersion("1.2.3"), Arrays.asList(d1));
+        final ModuleManager.ModuleAndDeltas moduleAndDeltas = new ModuleManager.ModuleAndDeltas(mod, Version.parseVersion("1.2.3"), Arrays.asList(d1));
         new ModuleManagerImpl().installOrUpdateModule(moduleAndDeltas, ctx);
 
         verify(ctx, d1, t1, t2);

@@ -14,6 +14,7 @@ package info.magnolia.module.templating.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.delta.BasicDelta;
+import info.magnolia.module.delta.Delta;
 import info.magnolia.module.templating.setup.for3_1.IntroduceParagraphRenderers;
 
 /**
@@ -23,7 +24,7 @@ import info.magnolia.module.templating.setup.for3_1.IntroduceParagraphRenderers;
  */
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
 
-    private final BasicDelta delta31 = new BasicDelta("Updating to 3.1", "", new IntroduceParagraphRenderers());
+    private final Delta delta31 = BasicDelta.createBasicDelta("Updating to 3.1", "", new IntroduceParagraphRenderers());
 
     public TemplatingModuleVersionHandler() {
         super();

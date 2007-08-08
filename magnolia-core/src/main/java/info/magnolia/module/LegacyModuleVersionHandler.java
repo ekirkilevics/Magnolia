@@ -56,7 +56,7 @@ class LegacyModuleVersionHandler extends DefaultModuleVersionHandler {
             return Collections.emptyList();
         }
 
-        return Collections.singletonList(new BasicDelta(
+        return Collections.singletonList(BasicDelta.createBasicDelta(
             "Nothing",
             "There's nothing we can do if the module developer did not provide a version handler for this module",
             new ModuleVersionToLatestTask()));

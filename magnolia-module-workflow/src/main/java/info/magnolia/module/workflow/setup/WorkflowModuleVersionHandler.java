@@ -16,6 +16,7 @@ import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuPointTask;
 import info.magnolia.module.delta.BasicDelta;
+import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.workflow.setup.for3_1.AddNewDefaultConfig;
@@ -33,7 +34,7 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
-    private final BasicDelta delta31 = new BasicDelta("Updating to 3.1", "",
+    private final Delta delta31 = BasicDelta.createBasicDelta("Updating to 3.1", "",
             new Task[]{
                     new I18nMenuPoint(),
                     new AddNewDefaultConfig(),

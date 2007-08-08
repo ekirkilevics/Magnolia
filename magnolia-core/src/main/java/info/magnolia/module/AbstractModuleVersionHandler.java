@@ -111,8 +111,8 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
      * module definition, bootstrap the module's mgnl-bootstrap files and
      * extract the module's mgnl-files files.
      * This method should generally not be overridden.
-     * @see #getBasicInstallTasks() override this method if you need a different set of default install tasks.
-     * @see #getExtraInstallTasks() override this method if you need extra tasks for install.
+     * @see #getBasicInstallTasks(InstallContext) override this method if you need a different set of default install tasks.
+     * @see #getExtraInstallTasks(InstallContext) override this method if you need extra tasks for install.
      */
     protected Delta getInstall(InstallContext installContext) {
         final List basicInstallTasks = new ArrayList();
@@ -120,7 +120,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         basicInstallTasks.addAll(getExtraInstallTasks(installContext));
         basicInstallTasks.add(new ModuleVersionToLatestTask());
 
-        return new BasicDelta("Installation", "", basicInstallTasks);
+        return BasicDelta.createInstallDelta("Installation", "", basicInstallTasks);
     }
 
     protected abstract List getBasicInstallTasks(InstallContext installContext);

@@ -13,6 +13,7 @@
 package info.magnolia.module.webapp;
 
 import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.DeltaType;
 
 import java.util.Collections;
 import java.util.List;
@@ -37,5 +38,9 @@ public class WebappDelta implements Delta {
 
     public List getTasks() {
         return Collections.singletonList(new WebappBootstrap());
+    }
+
+    public DeltaType getType() {
+        return DeltaType.install;
     }
 }

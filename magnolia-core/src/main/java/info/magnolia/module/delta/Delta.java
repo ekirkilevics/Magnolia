@@ -35,4 +35,6 @@ public interface Delta {
     String getTitle();
 
     String getDescription();
+
+    DeltaType getType();
 }

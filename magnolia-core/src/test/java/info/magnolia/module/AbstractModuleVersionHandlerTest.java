@@ -58,8 +58,8 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     }
 
     public void testCantRegisterMultipleDeltasForSameVersion() {
-        final Delta d1 = new BasicDelta("", "", new NullTask("", ""));
-        final Delta d2 = new BasicDelta("", "", new NullTask("", ""));
+        final Delta d1 = BasicDelta.createBasicDelta("", "", new NullTask("", ""));
+        final Delta d2 = BasicDelta.createBasicDelta("", "", new NullTask("", ""));
         final AbstractModuleVersionHandler versionHandler = new DefaultModuleVersionHandler() {};
         versionHandler.register(Version.parseVersion("1.0.0"), d1);
         try {
@@ -71,8 +71,8 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     }
 
     public void testCantRegisterMultipleDeltasForSameVersionEvenIfRegisteredWithString() {
-        final Delta d1 = new BasicDelta("", "", new NullTask("", ""));
-        final Delta d2 = new BasicDelta("", "", new NullTask("", ""));
+        final Delta d1 = BasicDelta.createBasicDelta("", "", new NullTask("", ""));
+        final Delta d2 = BasicDelta.createBasicDelta("", "", new NullTask("", ""));
         final AbstractModuleVersionHandler versionHandler = new DefaultModuleVersionHandler() {};
         versionHandler.register(Version.parseVersion("1.1.0"), d1);
         try {
@@ -137,20 +137,20 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         final NullTask nullTask = new NullTask("test", "test");
         final ArrayList tasks = new ArrayList();
         tasks.add(nullTask);
-        final Delta delta = new BasicDelta("", "", tasks);
+        final Delta delta = BasicDelta.createBasicDelta("", "", tasks);
         doTestVersionUpdateTaskIsAddedWhenUsingBasicDeltaConstructor(delta);
     }
 
     public void testVersionUpdateTaskIsAddedWhenUsingBasicDeltaArrayConstructor() {
         final NullTask nullTask = new NullTask("test", "test");
         final Task[] tasks = new Task[]{nullTask};
-        final Delta delta = new BasicDelta("", "", tasks);
+        final Delta delta = BasicDelta.createBasicDelta("", "", tasks);
         doTestVersionUpdateTaskIsAddedWhenUsingBasicDeltaConstructor(delta);
     }
 
     public void testVersionUpdateTaskIsAddedWhenUsingBasicDeltaSingleTaskConstructor() {
         final NullTask nullTask = new NullTask("test", "test");
-        final Delta delta = new BasicDelta("", "", nullTask);
+        final Delta delta = BasicDelta.createBasicDelta("", "", nullTask);
         doTestVersionUpdateTaskIsAddedWhenUsingBasicDeltaConstructor(delta);
     }
 

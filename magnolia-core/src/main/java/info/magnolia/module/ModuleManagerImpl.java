@@ -105,8 +105,7 @@ public class ModuleManagerImpl implements ModuleManager {
             final Version currentVersion = versionHandler.getCurrentlyInstalled(installContext);
             final List deltas = versionHandler.getDeltas(installContext, currentVersion);
             if (deltas.size() > 0) {
-                // TODO : add the correct DeltaType (install if version is null)
-                state.addModule(DeltaType.update, module, currentVersion, deltas);
+                state.addModule(module, currentVersion, deltas);
             }
         }
         // TODO handle modules found in repo but not found on classpath
