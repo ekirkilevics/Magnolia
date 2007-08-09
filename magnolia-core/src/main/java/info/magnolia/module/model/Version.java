@@ -13,6 +13,7 @@
 package info.magnolia.module.model;
 
 import java.util.regex.Pattern;
+import java.util.Map;
 
 /**
  * Represents a module version. Format is x.y.z-classifier. y,z and classifier are
@@ -72,7 +73,7 @@ public class Version {
     }
 
     /**
-     * Factory method that will parse a version string and return the correct Version implementatio,
+     * Factory method that will parse a version string and return the correct Version implementation,
      * @param versionStr version as string, for example <code>1.2.3-test</code>. The String
      * <code>${project.version}</code> is interpreted as an undefined version during development ant it will always
      * match version ranges
@@ -81,7 +82,7 @@ public class Version {
     public static Version parseVersion(String versionStr) {
 
         versionStr = versionStr.trim();
-        if ("${project.version}".equals(versionStr)) {
+        if (UndefinedDevelopmentVersion.KEY.equals(versionStr)) {
             // development mode.
             return new UndefinedDevelopmentVersion();
         }
@@ -169,6 +170,8 @@ public class Version {
     }
 
     private static final class UndefinedDevelopmentVersion extends Version {
+        private static final String KEY = "${project.version}";
+
         public UndefinedDevelopmentVersion() {
             super(0, 0, 0);
         }
@@ -182,7 +185,7 @@ public class Version {
         }
 
         public String toString() {
-            return "(dev)";
+            return KEY;
         }
     }
 
