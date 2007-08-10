@@ -108,12 +108,18 @@ public class Version {
      * Classifier is ignored.
      */
     public boolean isEquivalent(final Version other) {
+        if(other == UNDEFINED_DEVELOPMENT_VERSION){
+            return true;
+        }
         return this.getMajor() == other.getMajor() &&
                 this.getMinor() == other.getMinor() &&
                 this.getPatch() == other.getPatch();
     }
 
     public boolean isStrictlyAfter(final Version other) {
+        if(isEquivalent(other)){
+            return false;
+        }
         if (this.getMajor() != other.getMajor()) {
             return this.getMajor() > other.getMajor();
         }
@@ -178,16 +184,16 @@ public class Version {
         }
     }
 
-    private static final class UndefinedDevelopmentVersion extends Version {
+    /**
+     * A undefined developer version being always equivalent to other versions.
+     * This is mainly used to avoid updates during
+     */
+    static final class UndefinedDevelopmentVersion extends Version {
 
-        private static final String KEY = "${project.version}";
+        static final String KEY = "${project.version}";
 
         public UndefinedDevelopmentVersion() {
             super(0, 0, 0);
-        }
-
-        public boolean isBeforeOrEquivalent(Version other) {
-            return true;
         }
 
         public boolean isEquivalent(Version other) {

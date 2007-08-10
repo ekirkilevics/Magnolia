@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.model;
 
+import info.magnolia.module.model.Version.UndefinedDevelopmentVersion;
 import junit.framework.TestCase;
 
 /**
@@ -149,6 +150,20 @@ public class VersionTest extends TestCase {
         doTestBefore(true, "2-foo", "3.0-bar");
         doTestBefore(true, "2.0.0", "3.1.0-bar");
         doTestBefore(true, "3.0.0-foo", "3.1.0");
+    }
+
+    public void testUndefinedDeveloperVersion(){
+        Version realVersion = new Version(3,1,1);
+        assertTrue(Version.parseVersion(Version.UndefinedDevelopmentVersion.KEY) instanceof UndefinedDevelopmentVersion);
+        assertTrue(Version.UNDEFINED_DEVELOPMENT_VERSION.isEquivalent(realVersion));
+        assertTrue(Version.UNDEFINED_DEVELOPMENT_VERSION.isBeforeOrEquivalent(realVersion));
+        assertFalse(Version.UNDEFINED_DEVELOPMENT_VERSION.isStrictlyAfter(realVersion));
+        assertTrue(realVersion.isEquivalent(Version.UNDEFINED_DEVELOPMENT_VERSION));
+        assertTrue(realVersion.isBeforeOrEquivalent(Version.UNDEFINED_DEVELOPMENT_VERSION));
+        assertFalse(realVersion.isStrictlyAfter(Version.UNDEFINED_DEVELOPMENT_VERSION));
+        assertTrue(Version.UNDEFINED_DEVELOPMENT_VERSION.isEquivalent(Version.UNDEFINED_DEVELOPMENT_VERSION));
+        assertTrue(Version.UNDEFINED_DEVELOPMENT_VERSION.isBeforeOrEquivalent(Version.UNDEFINED_DEVELOPMENT_VERSION));
+        assertFalse(Version.UNDEFINED_DEVELOPMENT_VERSION.isStrictlyAfter(Version.UNDEFINED_DEVELOPMENT_VERSION));
     }
 
     private void doTestStrictlyAfter(boolean expected, String v1, String arg) {

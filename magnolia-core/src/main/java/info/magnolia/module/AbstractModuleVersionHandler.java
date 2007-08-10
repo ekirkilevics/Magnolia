@@ -101,16 +101,17 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
             return Collections.singletonList(getInstall(installContext));
         }
 
-        final List deltas = new LinkedList();
+        return getUpdateDeltas(from);
+    }
 
-        // no update for versions like ${project.version}
-        if(from != Version.UNDEFINED_DEVELOPMENT_VERSION){
-            final Iterator it = allDeltas.keySet().iterator();
-            while (it.hasNext()) {
-                final Version v = (Version) it.next();
-                if (v.isStrictlyAfter(from)) {
-                    deltas.add(allDeltas.get(v));
-                }
+    protected List getUpdateDeltas(Version from) {
+        final List deltas = new LinkedList();
+        final Iterator it = allDeltas.keySet().iterator();
+        while (it.hasNext()) {
+            final Version v = (Version) it.next();
+
+            if (v.isStrictlyAfter(from)) {
+                deltas.add(allDeltas.get(v));
             }
         }
         return deltas;
