@@ -12,24 +12,27 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.module.ModuleUtil;
-import info.magnolia.cms.module.RegisterException;
+import info.magnolia.cms.beans.config.Bootstrapper;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.module.RepositoryDefinition;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.Role;
+import info.magnolia.cms.security.Security;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
 
 import java.util.Iterator;
 
+
 /**
- * Register repositories, nodetypes and workspaces describer in the module definition.
- * Also grants ALL permissions to the superuser role on newly created workspaces.
- *
+ * Bootstrap empty repositories for the current module (loading is already performed before install tasks)
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class RegisterRepositoriesNodetypesAndWorkspacesTask extends AbstractTask {
-    public RegisterRepositoriesNodetypesAndWorkspacesTask() {
-        super("Repositories, nodetypes and workspaces", "Registers repositories, nodetypes and workspaces for the current module.");
+public class BootstrapEmptyRepositoriesTask extends AbstractTask {
+
+    public BootstrapEmptyRepositoriesTask() {
+        super("Bootstrap module repositories", "Bootstrap empty repositories for the current module.");
     }
 
     // TODO finer exception handling ?
@@ -39,25 +42,28 @@ public class RegisterRepositoriesNodetypesAndWorkspacesTask extends AbstractTask
             // register repositories
             for (Iterator iter = def.getRepositories().iterator(); iter.hasNext();) {
                 final RepositoryDefinition repDef = (RepositoryDefinition) iter.next();
-                final String repositoryName = repDef.getName();
-
-                final String nodetypeFile = repDef.getNodeTypeFile();
-                boolean repositoryAdded = ModuleUtil.registerRepository(repositoryName, nodetypeFile);
-                if (repositoryAdded) {
-                    ctx.restartNeeded("New repository: " + repositoryName);
-                }
 
                 for (Iterator iterator = repDef.getWorkspaces().iterator(); iterator.hasNext();) {
-                    final String workspaceName = (String) iterator.next();
+                    final String workspace = (String) iterator.next();
 
-                    if (ModuleUtil.registerWorkspace(repositoryName, workspaceName)) {
-                        ModuleUtil.grantRepositoryToSuperuser(workspaceName);
-                        ctx.restartNeeded("New workspace: " + workspaceName);
+                    // bootstrap the workspace if empty
+                    if (!ContentRepository.checkIfInitialized(workspace)) {
+                        Bootstrapper.bootstrapRepository(workspace, new Bootstrapper.BootstrapFilter() {
+
+                            public boolean accept(String filename) {
+                                return filename.startsWith(workspace + ".");
+                            }
+                        });
                     }
+
+                    // grant workspace to superuser
+                    Role superuser = Security.getRoleManager().getRole("superuser");
+                    superuser.addPermission(workspace, "/*", Permission.ALL);
                 }
             }
-        } catch (RegisterException e) {
-            throw new TaskExecutionException("Could not register repository, node types or workspace: " + e.getMessage());
+        }
+        catch (Throwable e) {
+            throw new TaskExecutionException("Could not bootstrap workspace: " + e.getMessage(), e);
         }
 
     }

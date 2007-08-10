@@ -12,25 +12,21 @@
  */
 package info.magnolia.cms.module;
 
-import info.magnolia.cms.beans.config.Bootstrapper;
-import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ie.DataTransporter;
+import info.magnolia.cms.exchange.ActivationManager;
+import info.magnolia.cms.exchange.ActivationManagerFactory;
+import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.Role;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.exchange.ActivationManager;
-import info.magnolia.cms.exchange.Subscriber;
-import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.repository.Provider;
-import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.module.files.BasicFileExtractor;
 
 import java.io.File;
@@ -45,7 +41,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -395,164 +390,23 @@ public final class ModuleUtil {
      * @param nodeTypeFile
      * @return <code>true</code> if a repository is registered or <code>false</code> if it was already existing
      * @throws RegisterException
+     * @deprecated repositories in modules are automatically loaded by ModuleManager
      */
     public static boolean registerRepository(final String repositoryName, final String nodeTypeFile)
         throws RegisterException {
 
-        boolean registered = false;
-
-        Document doc;
-        try {
-            doc = getRepositoryDefinitionDocument();
-        }
-        catch (JDOMException e) {
-            throw new RegisterException("Failed to read magnolia repositories config file", e);
-        }
-        catch (IOException e) {
-            throw new RegisterException("Failed to read magnolia repositories config file", e);
-        }
-
-        // check if there
-        try {
-            Element node = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='" + repositoryName + "']");
-            if (node == null) {
-                // create
-                node = new Element("Repository");
-
-                String provider = ((Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='magnolia']"))
-                    .getAttributeValue("provider");
-                String configFile = ((Element) XPath.selectSingleNode(
-                    doc,
-                    "/JCR/Repository[@name='magnolia']/param[@name='configFile']")).getAttributeValue("value");
-                String repositoryHome = ((Element) XPath.selectSingleNode(
-                    doc,
-                    "/JCR/Repository[@name='magnolia']/param[@name='repositoryHome']")).getAttributeValue("value");
-                repositoryHome = StringUtils.substringBeforeLast(repositoryHome, "/") + "/" + repositoryName;
-                String contextFactoryClass = ((Element) XPath.selectSingleNode(
-                    doc,
-                    "/JCR/Repository[@name='magnolia']/param[@name='contextFactoryClass']")).getAttributeValue("value");
-                String providerURL = ((Element) XPath.selectSingleNode(
-                    doc,
-                    "/JCR/Repository[@name='magnolia']/param[@name='providerURL']")).getAttributeValue("value");
-                String bindName = ((Element) XPath.selectSingleNode(
-                    doc,
-                    "/JCR/Repository[@name='magnolia']/param[@name='bindName']")).getAttributeValue("value");
-                bindName = StringUtils.replace(bindName, "magnolia", "");
-                bindName = repositoryName + bindName;
-
-                node.setAttribute("name", repositoryName);
-                node.setAttribute("id", repositoryName);
-                node.setAttribute("loadOnStartup", "true");
-                node.setAttribute("provider", provider);
-
-                node.addContent(new Element("param").setAttribute("name", "configFile").setAttribute(
-                    "value",
-                    configFile));
-                node.addContent(new Element("param").setAttribute("name", "repositoryHome").setAttribute(
-                    "value",
-                    repositoryHome));
-                node.addContent(new Element("param").setAttribute("name", "contextFactoryClass").setAttribute(
-                    "value",
-                    contextFactoryClass));
-                node.addContent(new Element("param").setAttribute("name", "providerURL").setAttribute(
-                    "value",
-                    providerURL));
-                node.addContent(new Element("param").setAttribute("name", "bindName").setAttribute("value", bindName));
-
-                if (StringUtils.isNotEmpty(nodeTypeFile)) {
-                    node.addContent(new Element("param").setAttribute("name", "customNodeTypes").setAttribute(
-                        "value",
-                        nodeTypeFile));
-                }
-
-                // add a workspace
-                node.addContent(new Element("workspace").setAttribute("name", repositoryName));
-
-                doc.getRootElement().addContent(node);
-
-                // make the mapping
-                node = new Element("Map");
-                node.setAttribute("name", repositoryName).setAttribute("repositoryName", repositoryName);
-                // add it
-                doc.getRootElement().getChild("RepositoryMapping").addContent(node);
-
-                // save it
-                XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-                outputter.output(doc, new FileWriter(getRepositoryDefinitionFile()));
-
-                RepositoryMapping mapping = new RepositoryMapping();
-                mapping.setName(repositoryName);
-                mapping.addWorkspace(repositoryName);
-                mapping.setProvider(providerURL);
-                mapping.setLoadOnStartup(true);
-                Map parameters = new HashMap();
-                parameters.put("configFile", configFile);
-                parameters.put("repositoryHome", repositoryHome);
-                parameters.put("contextFactoryClass", contextFactoryClass);
-                parameters.put("providerURL", providerURL);
-                parameters.put("bindName", bindName);
-                parameters.put("customNodeTypes", nodeTypeFile);
-
-                mapping.setParameters(parameters);
-
-                // bootstrap the new workspace if empty
-                try {
-                    // load new workspace
-                    ContentRepository.loadRepository(mapping);
-
-                    if (!ContentRepository.checkIfInitialized(repositoryName)) {
-                        Bootstrapper.bootstrapRepository(repositoryName, new Bootstrapper.BootstrapFilter() {
-
-                            public boolean accept(String filename) {
-                                return filename.startsWith(repositoryName + ".");
-                            }
-                        });
-                    }
-                }
-                catch (Exception e) {
-                    log.error("can't load or bootstrap newly registered repository " + repositoryName, e);
-                }
-
-                registered = true;
-            }
-            else if (nodeTypeFile != null) {
-                // this never requires a restart
-                ModuleUtil.registerNodetypes(repositoryName, nodeTypeFile);
-            }
-
-        }
-        catch (IOException e) {
-            log.error("Can't register repository. Unable to write modified file.", e);
-            throw new RegisterException("Can't register repository. Unable to write modified file.", e);
-        }
-        catch (JDOMException e) {
-            log.error("can't register repository", e);
-            throw new RegisterException("can't register repository", e);
-        }
-
-        return registered;
+        log.warn("ModuleUtil.registerRepository will not perform any action: "
+            + "repositories in modules are automatically loaded by ModuleManager");
+        return false;
     }
 
+    /**
+     * @deprecated repositories in modules are automatically loaded by ModuleManager
+     */
     public static boolean registerNodetypes(String repositoryName, String customNodetypes) throws RegisterException {
-        Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
 
-        if (provider == null) {
-            throw new RegisterException("before registering nodetypes you need to register the repository ["
-                + repositoryName
-                + "]");
-        }
-
-        try {
-            provider.registerNodeTypes(customNodetypes);
-        }
-        catch (RepositoryException e) {
-            throw new RegisterException("Error registering nodetypes for repository ["
-                + repositoryName
-                + "]: "
-                + e.getMessage(), e);
-        }
-
-        // this never requires a restart
+        log.warn("ModuleUtil.registerNodetypes will not perform any action: "
+            + "repositories in modules are automatically loaded by ModuleManager");
         return false;
 
     }
@@ -583,78 +437,15 @@ public final class ModuleUtil {
      * @param repositoryName
      * @param workspaceName
      * @throws RegisterException if the workspace could not be register
+     * @deprecated repositories in modules are automatically loaded by ModuleManager
      */
     public static boolean registerWorkspace(final String repositoryName, final String workspaceName)
         throws RegisterException {
 
-        boolean changed = false;
+        log.warn("ModuleUtil.registerWorkspace will not perform any action: "
+            + "repositories in modules are automatically loaded by ModuleManager");
 
-        try {
-            Document doc = getRepositoryDefinitionDocument();
-            // check if there
-            Element repositoryNode = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='"
-                + repositoryName
-                + "']");
-            if (repositoryNode == null) {
-                throw new ConfigurationException("before registering a workspace ["
-                    + workspaceName
-                    + "] you need to register the repository ["
-                    + repositoryName
-                    + "]");
-            }
-
-            // make the mapping
-            Element mappingNode = (Element) XPath.selectSingleNode(doc, "/JCR/RepositoryMapping/Map[@name='"
-                + workspaceName
-                + "']");
-            if (mappingNode == null) {
-                mappingNode = new Element("Map");
-                mappingNode.setAttribute("name", workspaceName).setAttribute("repositoryName", repositoryName);
-                // add it
-                doc.getRootElement().getChild("RepositoryMapping").addContent(mappingNode);
-
-                // check only if mapping not existing
-                Element workspaceNode = (Element) XPath.selectSingleNode(doc, "/JCR/Repository[@name='"
-                    + repositoryName
-                    + "']/workspace[@name='"
-                    + workspaceName
-                    + "']");
-
-                if (workspaceNode == null) {
-                    workspaceNode = new Element("workspace");
-                    workspaceNode.setAttribute("name", workspaceName);
-                    repositoryNode.addContent(workspaceNode);
-                }
-
-                changed = true;
-            }
-
-            // save it
-            if (changed) {
-                XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-                outputter.output(doc, new FileWriter(getRepositoryDefinitionFile()));
-
-                // load new workspace
-                ContentRepository.loadWorkspace(repositoryName, workspaceName);
-            }
-
-            // bootstrap the new workspace if empty
-            if (!ContentRepository.checkIfInitialized(workspaceName)) {
-                Bootstrapper.bootstrapRepository(workspaceName, new Bootstrapper.BootstrapFilter() {
-
-                    public boolean accept(String filename) {
-                        return filename.startsWith(workspaceName + ".");
-                    }
-                });
-            }
-
-        }
-        catch (Exception e) {
-            log.error("Can't register workspace [" + workspaceName + "]", e);
-            throw new RegisterException("can't register workspace [" + workspaceName + "]", e);
-        }
-
-        return changed;
+        return false;
     }
 
     /**

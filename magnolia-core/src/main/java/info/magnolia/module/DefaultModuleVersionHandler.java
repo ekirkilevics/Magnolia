@@ -12,7 +12,7 @@ package info.magnolia.module;
 
 import info.magnolia.module.delta.ModuleBootstrapTask;
 import info.magnolia.module.delta.ModuleFilesExtraction;
-import info.magnolia.module.delta.RegisterRepositoriesNodetypesAndWorkspacesTask;
+import info.magnolia.module.delta.BootstrapEmptyRepositoriesTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 
 import java.util.ArrayList;
@@ -39,7 +39,7 @@ public class DefaultModuleVersionHandler extends AbstractModuleVersionHandler {
      */
     protected List getBasicInstallTasks(InstallContext installContext) {
         final List basicInstallTasks = new ArrayList();
-        basicInstallTasks.add(new RegisterRepositoriesNodetypesAndWorkspacesTask());
+        basicInstallTasks.add(new BootstrapEmptyRepositoriesTask());
         basicInstallTasks.add(new ModuleBootstrapTask());
         basicInstallTasks.add(new ModuleFilesExtraction());
         basicInstallTasks.add(new RegisterModuleServletsTask(installContext.getCurrentModuleDefinition()));

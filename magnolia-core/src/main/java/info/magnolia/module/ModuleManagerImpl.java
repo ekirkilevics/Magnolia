@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.module.Module;
+import info.magnolia.cms.module.RepositoryDefinition;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
@@ -29,6 +30,8 @@ import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
+import info.magnolia.repository.Provider;
+import info.magnolia.repository.RepositoryMapping;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -41,6 +44,7 @@ import java.util.Map;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -115,6 +119,11 @@ public class ModuleManagerImpl implements ModuleManager {
         // TODO : do in finally{}
         installContext.setCurrentModule(null);
 
+        // if we don't have to perform any update load repositories now
+        if (!state.needsUpdateOrInstall()) {
+            loadRepositories();
+        }
+
         // TODO : check the force bootstrap properties
 
         return state;
@@ -163,6 +172,9 @@ public class ModuleManagerImpl implements ModuleManager {
         if (!state.needsUpdateOrInstall()) {
             throw new IllegalStateException("ModuleManager has nothing to do !");
         }
+
+        // complete repository loading before install or update
+        loadRepositories();
 
         final Context previousCtx = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
         try {
@@ -313,6 +325,107 @@ public class ModuleManagerImpl implements ModuleManager {
             }
             catch (RepositoryException e) {
                 throw new RuntimeException(e); // TODO
+            }
+        }
+
+    }
+
+    /**
+     * Perform repository registration tasks (create repositories or workspace, setup nodetypes) that should be done
+     * always before starting the new module.
+     */
+    private void loadRepositories() {
+
+        final Iterator it = orderedModuleDescriptors.iterator();
+
+        while (it.hasNext()) {
+            final ModuleDefinition def = (ModuleDefinition) it.next();
+            // register repositories
+            for (Iterator iter = def.getRepositories().iterator(); iter.hasNext();) {
+                final RepositoryDefinition repDef = (RepositoryDefinition) iter.next();
+                final String repositoryName = repDef.getName();
+
+                final String nodetypeFile = repDef.getNodeTypeFile();
+
+                List wsList = repDef.getWorkspaces();
+                String[] workSpaces = (String[]) wsList.toArray(new String[wsList.size()]);
+
+                loadRepository(repositoryName, nodetypeFile, workSpaces);
+            }
+        }
+    }
+
+    /**
+     * Loads a single repository plus its workspaces, register nodetypes and grant permissions to superuser
+     * @param repositoryName
+     * @param nodeTypeFile
+     * @param workspaces
+     */
+    private void loadRepository(String repositoryName, String nodeTypeFile, String[] workspaces) {
+
+        RepositoryMapping rm = ContentRepository.getRepositoryMapping(repositoryName);
+
+        if (rm == null) {
+
+            RepositoryMapping defaultRepositoryMapping = ContentRepository.getRepositoryMapping("magnolia");
+            Map defaultParamenters = defaultRepositoryMapping.getParameters();
+
+            rm = new RepositoryMapping();
+            rm.setName(repositoryName);
+            rm.addWorkspace(repositoryName);
+            rm.setProvider(defaultRepositoryMapping.getProvider());
+            rm.setLoadOnStartup(true);
+
+            Map parameters = new HashMap();
+            parameters.putAll(defaultParamenters);
+
+            // override changed parameters
+            String bindName = repositoryName
+                + StringUtils.replace((String) defaultParamenters.get("bindName"), "magnolia", "");
+            String repositoryHome = StringUtils.substringBeforeLast((String) defaultParamenters.get("configFile"), "/")
+                + "/"
+                + repositoryName;
+
+            parameters.put("repositoryHome", repositoryHome);
+            parameters.put("bindName", bindName);
+            parameters.put("customNodeTypes", nodeTypeFile);
+
+            rm.setParameters(parameters);
+
+            try {
+                ContentRepository.loadRepository(rm);
+            }
+            catch (Exception e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+
+        if (nodeTypeFile != null) {
+            // register nodetypes
+            Provider provider = ContentRepository.getRepositoryProvider(repositoryName);
+            try {
+                provider.registerNodeTypes(nodeTypeFile);
+            }
+            catch (RepositoryException e) {
+                log.error(e.getMessage(), e);
+            }
+        }
+
+        if (workspaces != null) {
+            for (int j = 0; j < workspaces.length; j++) {
+                String workspace = workspaces[j];
+
+                if (!rm.getWorkspaces().contains(workspace)) {
+                    log.debug("Loading new workspace: {}", workspace);
+
+                    try {
+                        ContentRepository.loadWorkspace(repositoryName, workspace);
+                    }
+                    catch (RepositoryException e) {
+                        // should never happen, the only exception we can get here is during login
+                        log.error(e.getMessage(), e);
+                    }
+                }
             }
         }
 
