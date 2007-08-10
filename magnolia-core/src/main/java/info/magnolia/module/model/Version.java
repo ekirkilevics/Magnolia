@@ -13,7 +13,9 @@
 package info.magnolia.module.model;
 
 import java.util.regex.Pattern;
-import java.util.Map;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Represents a module version. Format is x.y.z-classifier. y,z and classifier are
@@ -23,8 +25,12 @@ import java.util.Map;
  * @version $Revision: $ ($Author: $)
  */
 public class Version {
+
+    public static final Logger log = LoggerFactory.getLogger(Version.class);
+
     public static final Version UNDEFINED_FROM = new UndefinedEarlierVersion();
     public static final Version UNDEFINED_TO = new UndefinedLaterVersion();
+    public static final Version UNDEFINED_DEVELOPMENT_VERSION = new UndefinedDevelopmentVersion();
 
     private static final Pattern classifierValidation = Pattern.compile("[A-Za-z0-9]+");
     private final short major;
@@ -82,9 +88,12 @@ public class Version {
     public static Version parseVersion(String versionStr) {
 
         versionStr = versionStr.trim();
+
+        log.debug("parsing version [{}]", versionStr);
+
         if (UndefinedDevelopmentVersion.KEY.equals(versionStr)) {
             // development mode.
-            return new UndefinedDevelopmentVersion();
+            return UNDEFINED_DEVELOPMENT_VERSION;
         }
 
         return new Version(versionStr);
@@ -170,6 +179,7 @@ public class Version {
     }
 
     private static final class UndefinedDevelopmentVersion extends Version {
+
         private static final String KEY = "${project.version}";
 
         public UndefinedDevelopmentVersion() {

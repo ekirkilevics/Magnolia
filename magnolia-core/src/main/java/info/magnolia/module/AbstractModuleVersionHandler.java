@@ -34,6 +34,9 @@ import java.util.TreeMap;
 
 import javax.jcr.RepositoryException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Implement this and register your deltas in the constructor using the register method.
  *
@@ -44,6 +47,9 @@ import javax.jcr.RepositoryException;
  * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractModuleVersionHandler implements ModuleVersionHandler {
+
+    private static Logger log = LoggerFactory.getLogger(AbstractModuleVersionHandler.class);
+
     private final Map allDeltas; // <Version, Delta>
 
     public AbstractModuleVersionHandler() {
@@ -72,6 +78,8 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
 
     public Version getCurrentlyInstalled(InstallContext ctx) {
         try {
+            log.debug("checking currently installed version of module [{}]", ctx.getCurrentModuleDefinition());
+
             // check if this module was ever installed
             if (!ctx.hasModulesNode()) {
                 return null;
@@ -94,11 +102,15 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         }
 
         final List deltas = new LinkedList();
-        final Iterator it = allDeltas.keySet().iterator();
-        while (it.hasNext()) {
-            final Version v = (Version) it.next();
-            if (v.isStrictlyAfter(from)) {
-                deltas.add(allDeltas.get(v));
+
+        // no update for versions like ${project.version}
+        if(from != Version.UNDEFINED_DEVELOPMENT_VERSION){
+            final Iterator it = allDeltas.keySet().iterator();
+            while (it.hasNext()) {
+                final Version v = (Version) it.next();
+                if (v.isStrictlyAfter(from)) {
+                    deltas.add(allDeltas.get(v));
+                }
             }
         }
         return deltas;

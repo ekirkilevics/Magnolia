@@ -98,6 +98,7 @@ public class ModuleManagerImpl implements ModuleManager {
         final Iterator it = orderedModuleDescriptors.iterator();
         while (it.hasNext()) {
             final ModuleDefinition module = (ModuleDefinition) it.next();
+            log.debug("checking for installation or update [{}]", module);
             final ModuleVersionHandler versionHandler = getVersionHandler(module);
             registry.registerModuleVersionHandler(module.getName(), versionHandler);
             installContext.setCurrentModule(module);
