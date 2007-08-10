@@ -22,7 +22,6 @@ import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.delta.Delta;
-import info.magnolia.module.delta.DeltaType;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.model.ModuleDefinition;
@@ -30,9 +29,7 @@ import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
-import org.apache.commons.beanutils.BeanUtils;
 
-import javax.jcr.RepositoryException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -41,17 +38,19 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.beanutils.BeanUtils;
+
+
 /**
- * TODO where do we setup ModuleRegistry ?
- *
- * TODO where do we setup module configs observation ?
- *
- * TODO : factor out into simpler units
- *
+ * TODO where do we setup ModuleRegistry ? TODO where do we setup module configs observation ? TODO : factor out into
+ * simpler units
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class ModuleManagerImpl implements ModuleManager {
+
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModuleManagerImpl.class);
 
     // TODO : expose a method to retrieve a given module's node ?
@@ -62,7 +61,9 @@ public class ModuleManagerImpl implements ModuleManager {
      * List<ModuleDefinition> of modules found to be deployed.
      */
     private List orderedModuleDescriptors;
+
     private ModuleManagementState state;
+
     // here we use the implementation, since it has extra methods that should not be exposed to Task methods.
     private final InstallContextImpl installContext;
 
@@ -132,7 +133,8 @@ public class ModuleManagerImpl implements ModuleManager {
             final Class versionHandlerClass = module.getVersionHandler();
             if (versionHandlerClass != null) {
                 return (ModuleVersionHandler) versionHandlerClass.newInstance();
-            } else {
+            }
+            else {
                 final String moduleClassName = module.getClassName();
                 if (moduleClassName != null) {
                     final Class moduleClass = ClassUtil.classForName(moduleClassName);
@@ -142,11 +144,14 @@ public class ModuleManagerImpl implements ModuleManager {
                 }
                 return new DefaultModuleVersionHandler();
             }
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             throw new RuntimeException(e); // TODO
-        } catch (InstantiationException e) {
+        }
+        catch (InstantiationException e) {
             throw new RuntimeException(e); // TODO
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             throw new RuntimeException(e); // TODO
         }
     }
@@ -170,7 +175,8 @@ public class ModuleManagerImpl implements ModuleManager {
                 it.remove();
             }
 
-        } finally {
+        }
+        finally {
             MgnlContext.setInstance(previousCtx);
         }
     }
@@ -181,7 +187,8 @@ public class ModuleManagerImpl implements ModuleManager {
 
     public void startModules() {
         try {
-            // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle methods.
+            // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle
+            // methods.
             final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
             final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             final Content modulesParentNode = hm.getContent(MODULES_NODE);
@@ -226,7 +233,8 @@ public class ModuleManagerImpl implements ModuleManager {
 
                     if (moduleProperties.get("configNode") != null) {
                         try {
-                            Content2BeanUtil.setProperties(moduleInstance, (Content) moduleProperties.get("configNode"));
+                            Content2BeanUtil
+                                .setProperties(moduleInstance, (Content) moduleProperties.get("configNode"));
                         }
                         catch (Content2BeanException e) {
                             log.error("wasn't able to configure module", e);
@@ -240,17 +248,20 @@ public class ModuleManagerImpl implements ModuleManager {
                 }
             }
             lifecycleContext.start(moduleNodes);
-        } catch (RepositoryException e) {
+        }
+        catch (RepositoryException e) {
             throw new RuntimeException(e); // TODO
-        } catch (IllegalAccessException e) {
+        }
+        catch (IllegalAccessException e) {
             throw new RuntimeException(e); // TODO
-        } catch (ClassNotFoundException e) {
+        }
+        catch (ClassNotFoundException e) {
             throw new RuntimeException(e); // TODO
-        } catch (InstantiationException e) {
+        }
+        catch (InstantiationException e) {
             throw new RuntimeException(e); // TODO
         }
     }
-
 
     public void stopModules() {
         // TODO
@@ -274,10 +285,14 @@ public class ModuleManagerImpl implements ModuleManager {
                     task.execute(ctx);
                 }
             }
-        } catch (TaskExecutionException e) {
-            ctx.error("Could not install or update module. Please remove or update faulty jar. (" + e.getMessage() + ")", e);
+        }
+        catch (TaskExecutionException e) {
+            ctx.error("Could not install or update module. Please remove or update faulty jar. ("
+                + e.getMessage()
+                + ")", e);
             success = false;
-        } finally {
+        }
+        finally {
             // TODO : ctx.info("Successful installation/update."); after save ?
             ctx.setCurrentModule(null);
         }
@@ -291,10 +306,12 @@ public class ModuleManagerImpl implements ModuleManager {
             try {
                 if (success) {
                     hm.save();
-                } else {
+                }
+                else {
                     hm.refresh(false);
                 }
-            } catch (RepositoryException e) {
+            }
+            catch (RepositoryException e) {
                 throw new RuntimeException(e); // TODO
             }
         }
