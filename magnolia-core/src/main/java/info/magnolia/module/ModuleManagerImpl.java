@@ -137,7 +137,7 @@ public class ModuleManagerImpl implements ModuleManager {
                 if (moduleClassName != null) {
                     final Class moduleClass = ClassUtil.classForName(moduleClassName);
                     if (ClassUtil.isSubClass(moduleClass, Module.class)) {
-                        return new LegacyModuleVersionHandler(module.getVersionDefinition());
+                        return new LegacyModuleVersionHandler();
                     }
                 }
                 return new DefaultModuleVersionHandler();
