@@ -15,14 +15,9 @@ package info.magnolia.module;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.module.delta.AbstractTask;
-import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.model.ModuleDefinition;
-import info.magnolia.module.model.Version;
-
-import java.util.Collections;
-import java.util.List;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,29 +33,6 @@ class LegacyModuleVersionHandler extends DefaultModuleVersionHandler {
     private static final String EXCEPTION_DURING_INSTALLING_MODULE = "Exception during installing module using the old model";
 
     private Logger log = LoggerFactory.getLogger(LegacyModuleVersionHandler.class);
-
-    private final Version currentModuleVersion;
-
-    LegacyModuleVersionHandler(Version version) {
-        this.currentModuleVersion = version;
-    }
-
-    public List getDeltas(InstallContext installContext, Version from) {
-        if (from == null) {
-            return Collections.singletonList(getInstall(installContext));
-        }
-
-        if (currentModuleVersion.isBeforeOrEquivalent(from)) {
-            // we could be in the situation where the module version in the repo is > than the module definition's, but
-            // we ignore it
-            return Collections.emptyList();
-        }
-
-        return Collections.singletonList(BasicDelta.createBasicDelta(
-            "Nothing",
-            "There's nothing we can do if the module developer did not provide a version handler for this module",
-            new ModuleVersionToLatestTask()));
-    }
 
     public Delta getInstall(InstallContext installContext) {
         Delta delta = super.getInstall(installContext);
