@@ -23,6 +23,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.DateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -70,7 +71,7 @@ public class SimpleMailTag extends TagSupport {
     private String redirect;
 
     private String type;
-    
+
     /**
      * Alternatively to the type you can use a template to render the email dynamically.
      */
@@ -82,7 +83,7 @@ public class SimpleMailTag extends TagSupport {
     private boolean logging;
 
     /**
-     * encoding of the log file 
+     * encoding of the log file
      */
     private String loggingEncoding = "UTF8";
 
@@ -95,12 +96,12 @@ public class SimpleMailTag extends TagSupport {
      * The extension for the log files
      */
     private String loggingExtension = "log";
-    
+
     /**
      * Name of the file. Prefix only.
      */
     private String loggingFilename;
-    
+
     /**
      * Logger.
      */
@@ -113,7 +114,7 @@ public class SimpleMailTag extends TagSupport {
     public void setBcc(String bcc) {
         this.bcc = bcc;
     }
-    
+
     /**
      * Setter for <code>replyTo</code>.
      * @param replyTo The replyTo to set.
@@ -177,21 +178,18 @@ public class SimpleMailTag extends TagSupport {
     public void setType(String type) {
         this.type = type;
     }
-    
+
     public void setLogging(boolean trackMail) {
         this.logging = trackMail;
     }
 
-    
     public String getTemplate() {
         return template;
     }
 
-    
     public void setTemplate(String template) {
         this.template = template;
     }
-
 
     /**
      * @see javax.servlet.jsp.tagext.TagSupport#doEndTag()
@@ -201,26 +199,26 @@ public class SimpleMailTag extends TagSupport {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
 
         StringBuffer body = new StringBuffer(); // build and send email
-        
+
         // tracking mail: Excel friendly csv format
         StringBuffer mailTitles = new StringBuffer();
         StringBuffer mailValues = new StringBuffer();
         // timestamp
         mailValues.append(DateFormat.getDateTimeInstance().format(new Date(System.currentTimeMillis()))).append(';');
-        
-        if(nodeCollectionName == null){
-            this.nodeCollectionName = Resource.getLocalContentNodeCollectionName(request);
+
+        if (nodeCollectionName == null) {
+            this.nodeCollectionName = Resource.getLocalContentNodeCollectionName();
         }
-        
-        Content activePage = Resource.getActivePage(request);
+
+        Content activePage = Resource.getActivePage();
         Content fieldsNode = null;
         Iterator it;
         try {
-            Content localContentNode = Resource.getLocalContentNode(request);
-            if(localContentNode != null && localContentNode.hasContent(nodeCollectionName)){
+            Content localContentNode = Resource.getLocalContentNode();
+            if (localContentNode != null && localContentNode.hasContent(nodeCollectionName)) {
                 fieldsNode = localContentNode.getContent(nodeCollectionName);
             }
-            else{
+            else {
                 fieldsNode = activePage.getContent(nodeCollectionName);
             }
             it = fieldsNode.getChildren().iterator();
@@ -242,8 +240,8 @@ public class SimpleMailTag extends TagSupport {
                 for (int i = 0; i < values.length; i++) {
                     body.append(values[i]).append('\n');
                     csvValue.append(values[i]);
-                    if(i < values.length-1){
-                    	csvValue.append('\n');
+                    if (i < values.length - 1) {
+                        csvValue.append('\n');
                     }
                 }
                 mailValues.append(excelCSVFormat(csvValue.toString())).append(';');
@@ -251,10 +249,10 @@ public class SimpleMailTag extends TagSupport {
             }
         }
 
-        if(logging){
-        	trackMail(request, activePage.getHandle(), mailTitles, mailValues);
+        if (logging) {
+            trackMail(request, activePage.getHandle(), mailTitles, mailValues);
         }
-        
+
         String mailType = type;
         if (StringUtils.isEmpty(mailType)) {
             mailType = MailConstants.MAIL_TEMPLATE_TEXT;
@@ -263,11 +261,11 @@ public class SimpleMailTag extends TagSupport {
         MgnlEmail email;
         try {
             // TODO: avoid those kinds of redundacies in the mail system
-            if(StringUtils.isEmpty(template)){
+            if (StringUtils.isEmpty(template)) {
                 email = MgnlMailFactory.getInstance().getEmailFromType(mailType);
                 email.setBody(body.toString(), null);
             }
-            else{
+            else {
                 Map parameters = new HashMap(request.getParameterMap());
                 parameters.put("all", body.toString());
                 email = MgnlMailFactory.getInstance().getEmailFromTemplate(template, parameters);
@@ -300,45 +298,45 @@ public class SimpleMailTag extends TagSupport {
     }
 
     protected String excelCSVFormat(String str) {
-        if(!StringUtils.containsNone(str, "\n;")){
-            return "\"" + StringUtils.replace(str, "\"","\"\"") + "\"";
+        if (!StringUtils.containsNone(str, "\n;")) {
+            return "\"" + StringUtils.replace(str, "\"", "\"\"") + "\"";
         }
         return str;
     }
-    
-    protected void trackMail(HttpServletRequest request, String activePagePath, StringBuffer titles, StringBuffer values){
-        String fileName =  this.getLoggingFilename();
-        if(StringUtils.isEmpty(fileName)){
+
+    protected void trackMail(HttpServletRequest request, String activePagePath, StringBuffer titles, StringBuffer values) {
+        String fileName = this.getLoggingFilename();
+        if (StringUtils.isEmpty(fileName)) {
             activePagePath = StringUtils.removeStart(activePagePath, "/");
             fileName = StringUtils.replace(activePagePath, "/", "_");
         }
-        
-    	fileName = fileName + "_" + new GregorianCalendar().get(GregorianCalendar.WEEK_OF_YEAR) + "." + getLoggingExtension();
-    	String folder = pageContext.getServletContext().getRealPath(this.getLoggingDirectory()); 
-    	
-    	synchronized (ExclusiveWrite.getInstance()) {
-	    	new File(folder).mkdirs();
-	    	
-	    	File file = new File(folder + File.separator + fileName);
-	    	boolean exists = file.exists();
-	    	
-	    	
-	    	try {
-	    		FileOutputStream out = new FileOutputStream(file, true);
-	    		if(!exists){
-	        		out.write("Timestamp;".toString().getBytes(this.getLoggingEncoding()));
-                    titles.replace(titles.length()-1, titles.length(), "\n");
-	        		out.write(titles.toString().getBytes(this.getLoggingEncoding()));
-	        	}
-	    		values.replace(values.length()-1, values.length(), "\n");
-	        	out.write(values.toString().getBytes(this.getLoggingEncoding()));
-	        	out.flush();
-	        	out.close();
-	        	
-			} catch (Exception e) {
-				log.error("Exception while tracking mail", e);
-			} 
-		} 
+
+        fileName = fileName + "_" + new GregorianCalendar().get(Calendar.WEEK_OF_YEAR) + "." + getLoggingExtension();
+        String folder = pageContext.getServletContext().getRealPath(this.getLoggingDirectory());
+
+        synchronized (ExclusiveWrite.getInstance()) {
+            new File(folder).mkdirs();
+
+            File file = new File(folder + File.separator + fileName);
+            boolean exists = file.exists();
+
+            try {
+                FileOutputStream out = new FileOutputStream(file, true);
+                if (!exists) {
+                    out.write("Timestamp;".toString().getBytes(this.getLoggingEncoding()));
+                    titles.replace(titles.length() - 1, titles.length(), "\n");
+                    out.write(titles.toString().getBytes(this.getLoggingEncoding()));
+                }
+                values.replace(values.length() - 1, values.length(), "\n");
+                out.write(values.toString().getBytes(this.getLoggingEncoding()));
+                out.flush();
+                out.close();
+
+            }
+            catch (Exception e) {
+                log.error("Exception while tracking mail", e);
+            }
+        }
     }
 
     /**
@@ -356,27 +354,22 @@ public class SimpleMailTag extends TagSupport {
         super.release();
     }
 
-    
     public String getLoggingDirectory() {
         return loggingDirectory;
     }
 
-    
     public void setLoggingDirectory(String loggingDirectory) {
         this.loggingDirectory = loggingDirectory;
     }
 
-    
     public String getLoggingEncoding() {
         return loggingEncoding;
     }
 
-    
     public void setLoggingEncoding(String loggingEncoding) {
         this.loggingEncoding = loggingEncoding;
     }
 
-    
     public boolean isLogging() {
         return logging;
     }
@@ -396,6 +389,5 @@ public class SimpleMailTag extends TagSupport {
     public String getLoggingFilename() {
         return loggingFilename;
     }
-
 
 }

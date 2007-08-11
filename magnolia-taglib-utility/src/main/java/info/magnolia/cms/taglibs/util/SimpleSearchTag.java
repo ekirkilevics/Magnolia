@@ -23,7 +23,6 @@ import info.magnolia.context.MgnlContext;
 import java.text.MessageFormat;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -207,7 +206,7 @@ public class SimpleSearchTag extends TagSupport {
         // search only in a specific subtree
         if (this.startLevel != 0) {
             try {
-                Content activePage = Resource.getActivePage((HttpServletRequest) this.pageContext.getRequest());
+                Content activePage = Resource.getActivePage();
                 if (activePage != null) {
                     startPath = StringUtils.strip(activePage.getAncestor(this.startLevel).getHandle(), "/"); //$NON-NLS-1$
                 }

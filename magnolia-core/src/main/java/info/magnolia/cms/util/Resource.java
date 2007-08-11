@@ -61,7 +61,7 @@ public final class Resource {
     }
 
     /**
-     * @deprecated don't pass the request
+     * @deprecated Use {@link #getActivePage()} instead
      */
     public static Content getActivePage(HttpServletRequest req) {
         return getActivePage();
@@ -82,7 +82,7 @@ public final class Resource {
     }
 
     /**
-     * @deprecated don't pass the request
+     * @deprecated Use {@link #getCurrentActivePage()} instead
      */
     public static Content getCurrentActivePage(HttpServletRequest req) {
         return getCurrentActivePage();
@@ -99,10 +99,10 @@ public final class Resource {
     }
 
     /**
-     * @deprecated don't pass the request
+     * @deprecated Use {@link #getFile()} instead
      */
     public static File getFile(HttpServletRequest req) {
-       return getFile();
+        return getFile();
     }
 
     /**
@@ -121,7 +121,7 @@ public final class Resource {
     }
 
     /**
-     * @deprecated don't pass the request
+     * @deprecated Use {@link #getGlobalContentNode()} instead
      */
     public static Content getGlobalContentNode(HttpServletRequest req) {
         return getGlobalContentNode();
@@ -150,6 +150,7 @@ public final class Resource {
 
     /**
      * @deprecated don't pass the request
+     * @deprecated Use {@link #getLocalContentNode()} instead
      */
     public static Content getLocalContentNode(HttpServletRequest req) {
         return getLocalContentNode();
@@ -168,7 +169,7 @@ public final class Resource {
     }
 
     /**
-     * @deprecated do not pass the request
+     * @deprecated Use {@link #getLocalContentNodeCollectionName()} instead
      */
     public static String getLocalContentNodeCollectionName(HttpServletRequest req) {
         return getLocalContentNodeCollectionName();
@@ -216,7 +217,7 @@ public final class Resource {
      */
     public static String getSelector(int index) {
         String[] selectors = StringUtils.split(getSelector(), ".");
-        if(selectors.length > index){
+        if (selectors.length > index) {
             return selectors[index];
         }
         return null;
@@ -243,10 +244,10 @@ public final class Resource {
     }
 
     /**
-     * @deprecated don't pass the request
+     * @deprecated Use {@link #removeLocalContentNode()} instead
      */
     public static void removeLocalContentNode(HttpServletRequest req) {
-       removeLocalContentNode();
+        removeLocalContentNode();
     }
 
     /**
@@ -257,7 +258,7 @@ public final class Resource {
     }
 
     /**
-     * @deprecated do not pass the request
+     * @deprecated Use {@link #removeLocalContentNodeCollectionName()} instead
      */
     public static void removeLocalContentNodeCollectionName(HttpServletRequest req) {
         removeLocalContentNodeCollectionName();
@@ -271,7 +272,7 @@ public final class Resource {
     }
 
     /**
-     * @deprecated do not pass the request
+     * @deprecated Use {@link #restoreCurrentActivePage()} instead
      */
     public static void restoreCurrentActivePage(HttpServletRequest request) {
         restoreCurrentActivePage();
@@ -302,7 +303,7 @@ public final class Resource {
     }
 
     /**
-     * @deprecated don't pass the request
+     * @deprecated Use {@link #setGlobalContentNode(Content)} instead
      */
     public static void setGlobalContentNode(HttpServletRequest req, Content node) {
         setGlobalContentNode(node);
@@ -319,7 +320,7 @@ public final class Resource {
     }
 
     /**
-     * @deprecated don't pass the request
+     * @deprecated Use {@link #setLocalContentNode(Content)} instead
      */
     public static void setLocalContentNode(HttpServletRequest req, Content node) {
         setLocalContentNode(node);
@@ -351,7 +352,7 @@ public final class Resource {
     }
 
     /**
-     * @deprecated do not pass the request
+     * @deprecated Use {@link #showPreview()} instead
      */
     public static boolean showPreview(HttpServletRequest req) {
         return showPreview();

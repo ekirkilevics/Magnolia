@@ -19,7 +19,6 @@ import info.magnolia.cms.util.Resource;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -121,12 +120,12 @@ public class Date extends TagSupport {
      */
     public int doStartTag() {
         if (this.actpage) {
-            this.contentNode = Resource.getCurrentActivePage((HttpServletRequest) pageContext.getRequest());
+            this.contentNode = Resource.getCurrentActivePage();
         }
         else {
-            this.contentNode = Resource.getLocalContentNode((HttpServletRequest) pageContext.getRequest());
+            this.contentNode = Resource.getLocalContentNode();
             if (this.contentNode == null) {
-                this.contentNode = Resource.getGlobalContentNode((HttpServletRequest) pageContext.getRequest());
+                this.contentNode = Resource.getGlobalContentNode();
             }
         }
         String printDate = getDateString();

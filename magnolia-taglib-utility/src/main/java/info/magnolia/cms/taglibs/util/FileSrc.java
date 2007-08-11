@@ -110,7 +110,7 @@ public class FileSrc extends TagSupport {
      */
     public int doStartTag() {
         this.request = (HttpServletRequest) pageContext.getRequest();
-        this.actpage = Resource.getCurrentActivePage(request);
+        this.actpage = Resource.getCurrentActivePage();
         if (StringUtils.isNotEmpty(this.contentNodeName)) {
             try {
                 this.contentNode = this.actpage.getContent(this.contentNodeName);
@@ -124,9 +124,9 @@ public class FileSrc extends TagSupport {
             }
         }
         else {
-            this.contentNode = Resource.getLocalContentNode(request);
+            this.contentNode = Resource.getLocalContentNode();
             if (this.contentNode == null) {
-                this.contentNode = Resource.getGlobalContentNode(request);
+                this.contentNode = Resource.getGlobalContentNode();
             }
             if (this.contentNode != null) {
                 this.contentNodeName = this.contentNode.getName();
@@ -182,7 +182,7 @@ public class FileSrc extends TagSupport {
             }
             else {
                 try {
-                    writeSrc(Resource.getLocalContentNode(request).getHandle() + "/" //$NON-NLS-1$
+                    writeSrc(Resource.getLocalContentNode().getHandle() + "/" //$NON-NLS-1$
                         + this.nodeDataName
                         + this.slash
                         + this.fileExtendedName);
@@ -220,7 +220,7 @@ public class FileSrc extends TagSupport {
         if (contentNodeCollectionName == null) {
             // we are not in a loop
             try {
-                properties = Resource.getGlobalContentNode(this.request).getContent(this.nodeDataName + "_properties"); //$NON-NLS-1$
+                properties = Resource.getGlobalContentNode().getContent(this.nodeDataName + "_properties"); //$NON-NLS-1$
             }
             catch (Exception e) {
                 if (log.isDebugEnabled()) {
@@ -230,7 +230,7 @@ public class FileSrc extends TagSupport {
         }
         else {
             try {
-                properties = Resource.getLocalContentNode(this.request).getContent(this.nodeDataName + "_properties"); //$NON-NLS-1$
+                properties = Resource.getLocalContentNode().getContent(this.nodeDataName + "_properties"); //$NON-NLS-1$
             }
             catch (Exception e) {
                 if (log.isDebugEnabled()) {

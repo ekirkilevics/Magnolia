@@ -234,7 +234,7 @@ public class BarMain extends Bar {
     public void drawHtml(JspWriter out) throws IOException {
         if (Server.isAdmin()) {
 
-            boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
+            boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
             if (isGranted) {
 
                 // check if links have already been added.
@@ -246,7 +246,7 @@ public class BarMain extends Bar {
                 int top = this.getTop();
                 int left = this.getLeft();
 
-                if (!Resource.showPreview(this.getRequest())) {
+                if (!Resource.showPreview()) {
                     // is edit mode
                     this.setSmall(false);
                     if (this.getOverlay()) {

@@ -16,7 +16,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.util.Resource;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
 
@@ -81,12 +80,10 @@ public class ButtonTag extends TagSupport {
             throw new JspException("button tag should be enclosed in a mainbar or newbar tag");
         }
 
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
-
         Button button = new Button();
         button.setLabel(label);
         button.setOnclick("mgnlOpenDialog('"
-            + Resource.getActivePage(request).getHandle()
+            + Resource.getActivePage().getHandle()
             + "','','','"
             + dialogName
             + "','"

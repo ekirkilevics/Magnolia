@@ -99,7 +99,7 @@ public class RedirectTag extends BodyTagSupport {
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         String location = getRedirectLocation(request);
-        if (!Server.isAdmin() || Resource.showPreview(request)) {
+        if (!Server.isAdmin() || Resource.showPreview()) {
 
             if (location != null) {
                 try {
@@ -130,7 +130,7 @@ public class RedirectTag extends BodyTagSupport {
      * @return A URI if a child page is available, or null.
      */
     private String getRedirectLocation(HttpServletRequest request) {
-        Content page = Resource.getActivePage(request);
+        Content page = Resource.getActivePage();
         Iterator it = page.getChildren().iterator();
         if (it.hasNext()) {
             Content c = (Content) it.next();

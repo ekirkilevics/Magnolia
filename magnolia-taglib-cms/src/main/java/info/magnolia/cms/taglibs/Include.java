@@ -169,7 +169,7 @@ public class Include extends BodyTagSupport {
         finally {
             // if we set the local content node we have to reset it again else we keep the node
             if(localContentNodeSet){
-                Resource.removeLocalContentNode((HttpServletRequest) pageContext.getRequest());
+                Resource.removeLocalContentNode();
 
             }
         }

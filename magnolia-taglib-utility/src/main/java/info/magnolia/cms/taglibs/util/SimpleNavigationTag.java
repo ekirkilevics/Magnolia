@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.taglibs.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.i18n.I18NSupportFactory;
@@ -241,7 +240,7 @@ public class SimpleNavigationTag extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() throws JspException {
-        Content activePage = Resource.getCurrentActivePage((HttpServletRequest) this.pageContext.getRequest());
+        Content activePage = Resource.getCurrentActivePage();
         JspWriter out = this.pageContext.getOut();
 
         if (startLevel > endLevel) {

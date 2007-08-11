@@ -69,9 +69,7 @@ public class EditButton extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-
-        if (Server.isAdmin() && Resource.getActivePage(request).isGranted(Permission.SET)) {
+        if (Server.isAdmin() && Resource.getActivePage().isGranted(Permission.SET)) {
 
             try {
                 if (this.getNodeCollectionName() != null && this.getNodeName() == null) {
@@ -113,10 +111,10 @@ public class EditButton extends TagSupport {
      */
     private String getNodeName() {
         if (this.nodeName == null) {
-            if (Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest())) == null) {
+            if (Resource.getLocalContentNode() == null) {
                 return null;
             }
-            return Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest())).getName();
+            return Resource.getLocalContentNode().getName();
         }
         return this.nodeName;
     }
@@ -134,7 +132,7 @@ public class EditButton extends TagSupport {
      */
     private String getNodeCollectionName() {
         if (this.nodeCollectionName == null) {
-            return Resource.getLocalContentNodeCollectionName(((HttpServletRequest) pageContext.getRequest()));
+            return Resource.getLocalContentNodeCollectionName();
         }
         return this.nodeCollectionName;
     }
@@ -161,8 +159,7 @@ public class EditButton extends TagSupport {
     private String getParagraph() {
         if (this.paragraph == null) {
 
-            return Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest())).getNodeData(
-                "paragraph").getString(); //$NON-NLS-1$
+            return Resource.getLocalContentNode().getNodeData("paragraph").getString(); //$NON-NLS-1$
 
         }
         return this.paragraph;
@@ -181,7 +178,7 @@ public class EditButton extends TagSupport {
      */
     public String getTemplate() {
         if (this.displayHandler == null) {
-            Content localContainer = Resource.getLocalContentNode(((HttpServletRequest) pageContext.getRequest()));
+            Content localContainer = Resource.getLocalContentNode();
             String templateName = localContainer.getNodeData("paragraph").getString(); //$NON-NLS-1$
             return ParagraphManager.getInstance().getInfo(templateName).getTemplatePath();
         }
@@ -194,7 +191,7 @@ public class EditButton extends TagSupport {
      */
     private String getPath() {
         try {
-            return Resource.getCurrentActivePage(((HttpServletRequest) pageContext.getRequest())).getHandle();
+            return Resource.getCurrentActivePage().getHandle();
         }
         catch (Exception re) {
             return StringUtils.EMPTY;

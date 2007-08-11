@@ -109,8 +109,8 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         info.magnolia.cms.security.AccessDeniedException {
 
         Content imageContentNode;
-        Content currentActivePage = Resource.getCurrentActivePage(getRequest());
-        Content paragraph = Resource.getLocalContentNode(getRequest());
+        Content currentActivePage = Resource.getCurrentActivePage();
+        Content paragraph = Resource.getLocalContentNode();
         Content parentContentNode = null;
         // set the image parent node
         if (StringUtils.isEmpty(this.parentContentNodeName)) {

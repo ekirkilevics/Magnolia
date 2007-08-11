@@ -160,8 +160,8 @@ public class BarEdit extends Bar {
      * </p>
      */
     public void drawHtml(JspWriter out) throws IOException {
-        boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
-        if (!Resource.showPreview(this.getRequest()) && isGranted && Server.isAdmin()) {
+        boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
+        if (!Resource.showPreview() && isGranted && Server.isAdmin()) {
             this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);"); //$NON-NLS-1$ //$NON-NLS-2$
             this.setEvent("onmouseout", "mgnlMoveNodeReset(this);"); //$NON-NLS-1$ //$NON-NLS-2$

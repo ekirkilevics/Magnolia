@@ -132,7 +132,7 @@ public class MainBar extends TagSupport implements BarTag {
     public int doEndTag() {
 
         HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-        Content activePage = Resource.getActivePage(request);
+        Content activePage = Resource.getActivePage();
         if (Server.isAdmin() && activePage != null && activePage.isGranted(Permission.SET)) {
             try {
                 BarMain bar = new BarMain(request);
@@ -171,9 +171,8 @@ public class MainBar extends TagSupport implements BarTag {
      * @return String path
      */
     private String getPath() {
-        HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
         try {
-            return Resource.getCurrentActivePage(request).getHandle();
+            return Resource.getCurrentActivePage().getHandle();
         }
         catch (Exception re) {
             return StringUtils.EMPTY;

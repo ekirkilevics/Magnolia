@@ -122,15 +122,12 @@ public class EditBar extends TagSupport {
 
         if (!adminOnly || Server.isAdmin()) {
 
-            HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-
-            if (Server.isAdmin() && Resource.getActivePage(request).isGranted(Permission.SET)) {
+            if (Server.isAdmin() && Resource.getActivePage().isGranted(Permission.SET)) {
                 try {
                     BarEdit bar = new BarEdit((HttpServletRequest) this.pageContext.getRequest());
-                    
-                    Content localContentNode = Resource.getLocalContentNode((HttpServletRequest) this.pageContext
-                        .getRequest());
-                    
+
+                    Content localContentNode = Resource.getLocalContentNode();
+
                     if (this.paragraph == null) {
                         Content contentParagraph = localContentNode;
                         if (contentParagraph != null) {
@@ -141,7 +138,7 @@ public class EditBar extends TagSupport {
 
                     if (this.nodeCollectionName == null) {
                         this.nodeCollectionName = StringUtils.defaultString(Resource
-                            .getLocalContentNodeCollectionName((HttpServletRequest) this.pageContext.getRequest()));
+                            .getLocalContentNodeCollectionName());
                     }
                     bar.setNodeCollectionName(this.nodeCollectionName);
 
@@ -154,21 +151,21 @@ public class EditBar extends TagSupport {
 
                     try {
                         String path;
-                        if (localContentNode != null){
+                        if (localContentNode != null) {
                             path = localContentNode.getHandle();
-                            if(path.endsWith(this.nodeCollectionName + "/" + this.nodeName )){
+                            if (path.endsWith(this.nodeCollectionName + "/" + this.nodeName)) {
                                 path = StringUtils.removeEnd(path, "/" + this.nodeCollectionName + "/" + this.nodeName);
                             }
                         }
-                        else{
-                            path = Resource.getCurrentActivePage((HttpServletRequest) this.pageContext.getRequest()).getHandle();
+                        else {
+                            path = Resource.getCurrentActivePage().getHandle();
                         }
                         bar.setPath(path);
                     }
                     catch (Exception re) {
                         bar.setPath(StringUtils.EMPTY);
                     }
-                    
+
                     bar.setDefaultButtons();
 
                     if (this.editLabel != null) {
@@ -206,11 +203,11 @@ public class EditBar extends TagSupport {
             }
         }
         reset();
-        
+
         return EVAL_PAGE;
     }
-    
-    protected void reset(){
+
+    protected void reset() {
         this.nodeName = null;
         this.nodeCollectionName = null;
         this.paragraph = null;

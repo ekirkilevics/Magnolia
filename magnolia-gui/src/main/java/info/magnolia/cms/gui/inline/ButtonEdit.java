@@ -96,8 +96,8 @@ public class ButtonEdit extends Button {
      */
     public void drawHtml(JspWriter out) throws IOException {
         if (this.getRequest() != null) {
-            boolean isGranted = Resource.getActivePage(this.getRequest()).isGranted(Permission.SET);
-            if (!Resource.showPreview(this.getRequest()) && isGranted) {
+            boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
+            if (!Resource.showPreview() && isGranted) {
                 out.println(this.getHtml());
             }
         }

@@ -19,7 +19,6 @@ import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 import org.apache.commons.lang.StringUtils;
@@ -89,7 +88,6 @@ public class LoadPage extends BodyTagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         Content newActpage = Resource.getCurrentActivePage();
 
         String actPageHandle = newActpage.getHandle();
@@ -102,7 +100,15 @@ public class LoadPage extends BodyTagSupport {
                 newActpage = hm.getPage(startPage.getHandle(), this.templateName);
             }
             catch (RepositoryException e) {
-                log.error(e.getClass().getName() + " caught while loading page with template " + this.templateName + " (start level=" + this.level + ") from " + actPageHandle + ": " + e.getMessage());
+                log.error(e.getClass().getName()
+                    + " caught while loading page with template "
+                    + this.templateName
+                    + " (start level="
+                    + this.level
+                    + ") from "
+                    + actPageHandle
+                    + ": "
+                    + e.getMessage());
                 return EVAL_PAGE;
             }
         }
@@ -111,7 +117,13 @@ public class LoadPage extends BodyTagSupport {
                 newActpage = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).getContent(this.path);
             }
             catch (RepositoryException e) {
-                log.error(e.getClass().getName() + " caught while loading path " + this.path + " from " + actPageHandle + ": " + e.getMessage());
+                log.error(e.getClass().getName()
+                    + " caught while loading path "
+                    + this.path
+                    + " from "
+                    + actPageHandle
+                    + ": "
+                    + e.getMessage());
                 return EVAL_PAGE;
             }
         }
@@ -120,7 +132,13 @@ public class LoadPage extends BodyTagSupport {
                 newActpage = Resource.getCurrentActivePage().getAncestor(this.level);
             }
             catch (RepositoryException e) {
-                log.error(e.getClass().getName() + " caught while loading page with level " + this.level + " from " + actPageHandle + ": " + e.getMessage());
+                log.error(e.getClass().getName()
+                    + " caught while loading page with level "
+                    + this.level
+                    + " from "
+                    + actPageHandle
+                    + ": "
+                    + e.getMessage());
                 return EVAL_PAGE;
             }
         }

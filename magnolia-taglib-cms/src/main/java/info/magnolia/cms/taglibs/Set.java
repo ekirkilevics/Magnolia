@@ -78,12 +78,12 @@ public class Set extends TagSupport {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         Resource.removeGlobalContentNode(req);
         if (this.contentNodeName == null) {
-            Resource.setGlobalContentNode(req, this.contentNode);
+            Resource.setGlobalContentNode(this.contentNode);
         }
         else {
             try {
-                this.contentNode = Resource.getCurrentActivePage(req).getContent(this.contentNodeName);
-                Resource.setGlobalContentNode(req, this.contentNode);
+                this.contentNode = Resource.getCurrentActivePage().getContent(this.contentNodeName);
+                Resource.setGlobalContentNode(this.contentNode);
             }
             catch (RepositoryException re) {
                 log.error(re.getMessage());

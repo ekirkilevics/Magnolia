@@ -14,7 +14,6 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.i18n.DefaultI18NSupport;
 import info.magnolia.cms.i18n.I18NSupportFactory;
 
 import org.apache.commons.lang.StringUtils;
@@ -57,7 +56,7 @@ public class IfExisting extends BaseConditionalContentTag {
         if (StringUtils.isEmpty(this.nodeDataName)) {
             return node != null;
         }
-        else{
+        else {
             NodeData nodeData = I18NSupportFactory.getI18nSupport().getNodeData(node, this.nodeDataName);
             return (nodeData != null) && nodeData.isExist();
         }

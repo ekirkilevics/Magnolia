@@ -125,7 +125,7 @@ public class ContentNodeIterator extends TagSupport {
     private Content outerLocalContentNode = null;
 
     /** Flag indicating the previous node state should be restored. */
-    private boolean restorePreviousState = false ;
+    private boolean restorePreviousState = false;
 
     /**
      * @param name content node name on which this tag will iterate
@@ -187,10 +187,10 @@ public class ContentNodeIterator extends TagSupport {
         else if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
             // If this is a nested iterator, the collection should be from the local content node.
             Content page = null;
-            if (Resource.getLocalContentNode(request) != null)
-                page = Resource.getLocalContentNode(request);
+            if (Resource.getLocalContentNode() != null)
+                page = Resource.getLocalContentNode();
             else
-                page = Resource.getCurrentActivePage(request);
+                page = Resource.getCurrentActivePage();
 
             return page.getContent(this.contentNodeCollectionName).getChildren(ItemType.CONTENTNODE);
         }
@@ -300,7 +300,6 @@ public class ContentNodeIterator extends TagSupport {
      * @return
      */
     private boolean doIteration() {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         if (this.contentNodeIterator.hasNext()) {
 
             if (this.end != null && this.index > this.end.intValue()) {
@@ -318,7 +317,7 @@ public class ContentNodeIterator extends TagSupport {
 
             for (int j = 0; j < this.step; j++) {
                 current = this.contentNodeIterator.next();
-                Resource.setLocalContentNode(request, (Content) current);
+                Resource.setLocalContentNode((Content) current);
             }
 
             this.index++;
@@ -342,9 +341,9 @@ public class ContentNodeIterator extends TagSupport {
         if (varStatus != null) {
             pageContext.removeAttribute(varStatus, PageContext.PAGE_SCOPE);
         }
-        
+
         reset();
-        
+
         return EVAL_PAGE;
     }
 
@@ -374,8 +373,8 @@ public class ContentNodeIterator extends TagSupport {
     private void savePrevState() {
         HttpServletRequest req = (HttpServletRequest) this.pageContext.getRequest();
 
-        // savePrevState() was invoked.  Enable restorePrevState()
-        this.restorePreviousState = true ;
+        // savePrevState() was invoked. Enable restorePrevState()
+        this.restorePreviousState = true;
 
         if (req.getAttribute(ContentNodeIterator.SIZE) != null) {
             this.outerSize = (Integer) pageContext.getAttribute(ContentNodeIterator.SIZE, PageContext.REQUEST_SCOPE);
@@ -385,25 +384,25 @@ public class ContentNodeIterator extends TagSupport {
             this.outerCurrIdx = (Integer) pageContext.getAttribute(
                 ContentNodeIterator.CURRENT_INDEX,
                 PageContext.REQUEST_SCOPE);
-            this.outerLocalContentNode = Resource.getLocalContentNode(req);
-            this.outerResCollName = Resource.getLocalContentNodeCollectionName(req);
+            this.outerLocalContentNode = Resource.getLocalContentNode();
+            this.outerResCollName = Resource.getLocalContentNodeCollectionName();
         }
 
     }
 
     private void restorePrevState() {
-        if ( this.restorePreviousState ) {
+        if (this.restorePreviousState) {
             HttpServletRequest req = (HttpServletRequest) this.pageContext.getRequest();
             if (this.outerSize != null) {
                 pageContext.setAttribute(ContentNodeIterator.SIZE, this.outerSize);
                 pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, this.outerCurrIdx);
                 pageContext.setAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME, this.outerCollName);
-                Resource.setLocalContentNode(req, this.outerLocalContentNode);
+                Resource.setLocalContentNode(this.outerLocalContentNode);
                 Resource.setLocalContentNodeCollectionName(req, this.outerResCollName);
             }
             else {
-                Resource.removeLocalContentNode(req);
-                Resource.removeLocalContentNodeCollectionName(req);
+                Resource.removeLocalContentNode();
+                Resource.removeLocalContentNodeCollectionName();
                 pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
                 pageContext.removeAttribute(ContentNodeIterator.SIZE);
                 pageContext.removeAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME);

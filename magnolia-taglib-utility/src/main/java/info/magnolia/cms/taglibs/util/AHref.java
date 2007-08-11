@@ -15,8 +15,8 @@ package info.magnolia.cms.taglibs.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
@@ -27,7 +27,6 @@ import java.util.List;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
@@ -150,15 +149,14 @@ public class AHref extends BodyTagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         if (StringUtils.isEmpty(this.templateName)) {
             if (this.nodeDataName == null) {
                 this.writeLink(StringUtils.EMPTY);
                 return EVAL_BODY_BUFFERED;
             }
-            Content contentNode = Resource.getLocalContentNode(req);
+            Content contentNode = Resource.getLocalContentNode();
             if (contentNode == null) {
-                contentNode = Resource.getGlobalContentNode(req);
+                contentNode = Resource.getGlobalContentNode();
                 if (contentNode == null) {
                     this.writeLink(StringUtils.EMPTY);
                     return EVAL_BODY_BUFFERED;
@@ -184,7 +182,7 @@ public class AHref extends BodyTagSupport {
         else {
             Content startPage;
             try {
-                startPage = Resource.getCurrentActivePage(req).getAncestor(this.level);
+                startPage = Resource.getCurrentActivePage().getAncestor(this.level);
                 HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
                 Content resultPage = hm.getPage(startPage.getHandle(), this.templateName);
                 this.writeLink(resultPage.getHandle());

@@ -14,8 +14,8 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
@@ -33,10 +33,8 @@ import javax.imageio.ImageIO;
 import javax.jcr.AccessDeniedException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.PageContext;
 
 import org.apache.log4j.Logger;
 
@@ -144,7 +142,6 @@ public class ScaleImageTag extends BaseImageTag {
      */
     public void doTag() throws JspException {
         // initialize everything
-        HttpServletRequest req = (HttpServletRequest) ((PageContext) this.getJspContext()).getRequest();
         Content parentContentNode;
         Content imageContentNode;
         JspWriter out = this.getJspContext().getOut();
@@ -153,7 +150,7 @@ public class ScaleImageTag extends BaseImageTag {
 
             // set the parent node that contains the original image
             if ((this.parentContentNodeName == null) || (this.parentContentNodeName.equals(""))) {
-                parentContentNode = Resource.getLocalContentNode(req);
+                parentContentNode = Resource.getLocalContentNode();
             }
             else {
                 HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
@@ -163,7 +160,7 @@ public class ScaleImageTag extends BaseImageTag {
                     parentContentNode = hm.getContent(this.parentContentNodeName);
                 }
                 else {
-                    String handle = Resource.getLocalContentNode(req).getHandle();
+                    String handle = Resource.getLocalContentNode().getHandle();
                     parentContentNode = hm.getContent(handle + "/" + this.parentContentNodeName);
                 }
             }
@@ -207,26 +204,25 @@ public class ScaleImageTag extends BaseImageTag {
     }
 
     /**
-     * Checks to see if the previously scaled image needs to be rescaled.
-     * This is true when the parent content node has been updated or the height or width
-     * parameters have changed.
-     *
+     * Checks to see if the previously scaled image needs to be rescaled. This is true when the parent content node has
+     * been updated or the height or width parameters have changed.
      * @param parentContentNode The node containing the scaled image node
      * @param imageContentNode The scaled image node
      * @return
      */
     protected boolean rescale(Content parentContentNode, Content imageContentNode) {
-        Calendar parentModified = parentContentNode.getMetaData().getModificationDate() != null ?
-                parentContentNode.getMetaData().getModificationDate() :
-                    parentContentNode.getMetaData().getCreationDate();
+        Calendar parentModified = parentContentNode.getMetaData().getModificationDate() != null ? parentContentNode
+            .getMetaData()
+            .getModificationDate() : parentContentNode.getMetaData().getCreationDate();
 
-        Calendar imageModified = imageContentNode.getMetaData().getModificationDate() != null ?
-                imageContentNode.getMetaData().getModificationDate() :
-                    imageContentNode.getMetaData().getCreationDate();
+        Calendar imageModified = imageContentNode.getMetaData().getModificationDate() != null ? imageContentNode
+            .getMetaData()
+            .getModificationDate() : imageContentNode.getMetaData().getCreationDate();
 
         if (parentModified.after(imageModified)) {
             return true;
-        } else {
+        }
+        else {
             int originalHeight = (int) imageContentNode.getNodeData("maxHeight").getLong();
             int originalWidth = (int) imageContentNode.getNodeData("maxWidth").getLong();
 
