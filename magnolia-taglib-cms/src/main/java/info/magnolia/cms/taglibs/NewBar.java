@@ -142,13 +142,14 @@ public class NewBar extends TagSupport implements BarTag {
      * @return String path
      */
     private String getPath() {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         try {
             // Detect if the new bar is being displayed from inside a paragraph and use that instead.
-            if (Resource.getLocalContentNode(request) != null)
-                return Resource.getLocalContentNode(request).getHandle();
-            else
-                return Resource.getCurrentActivePage(request).getHandle();
+            if (Resource.getLocalContentNode() != null) {
+                return Resource.getLocalContentNode().getHandle();
+            }
+            else {
+                return Resource.getCurrentActivePage().getHandle();
+            }
         }
         catch (Exception re) {
             return StringUtils.EMPTY;
@@ -170,11 +171,11 @@ public class NewBar extends TagSupport implements BarTag {
         if (!adminOnly || Server.isAdmin()) {
             HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
 
-            if (Server.isAdmin() && Resource.getActivePage(request).isGranted(Permission.SET)) {
+            if (Server.isAdmin() && Resource.getActivePage().isGranted(Permission.SET)) {
                 try {
                     BarNew bar = new BarNew(request);
                     bar.setPath(this.getPath());
-                    bar.setParagraph(this.paragraph);
+                    bar.setParagraph(StringUtils.deleteWhitespace(this.paragraph));
                     bar.setNodeCollectionName(this.contentNodeCollectionName);
                     bar.setNodeName("mgnlNew"); //$NON-NLS-1$
                     bar.setDefaultButtons();
