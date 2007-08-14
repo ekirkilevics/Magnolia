@@ -270,6 +270,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * @param scope , highest level of scope from which this attribute is visible
      */
     public void setAttribute(String name, Object value, int scope) {
+
+        if (value == null) {
+            removeAttribute(name, scope);
+        }
+
         switch (scope) {
             case Context.LOCAL_SCOPE:
                 this.request.setAttribute(name, value);
