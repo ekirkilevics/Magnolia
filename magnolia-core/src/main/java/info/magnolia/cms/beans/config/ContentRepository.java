@@ -425,7 +425,7 @@ public final class ContentRepository {
             throw new FileNotFoundException("Failed to locate magnolia repositories config file at " //$NON-NLS-1$
                 + source.getAbsolutePath());
         }
-        
+
         return ConfigUtil.string2JDOM(ConfigUtil.replaceTokens(new FileInputStream(source)));
     }
 
@@ -566,7 +566,7 @@ public final class ContentRepository {
         if (name != null && ContentRepository.repositoryMapping.containsKey(name)) {
             return (RepositoryMapping) ContentRepository.repositoryMapping.get(getMappedRepositoryName(repositoryID));
         }
-        log.warn("no mapping for the repository [" + repositoryID + "]");
+        log.debug("no mapping for the repository {}", repositoryID);
         return null;
     }
 
