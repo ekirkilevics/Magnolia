@@ -14,6 +14,8 @@ package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
@@ -115,8 +117,6 @@ public class ControlImpl implements Control {
 
     private String paragraph;
 
-    private HttpServletRequest request;
-
     public ControlImpl() {
     }
 
@@ -183,12 +183,17 @@ public class ControlImpl implements Control {
         return this.paragraph;
     }
 
+    /**
+     * @deprecated
+     */
     public void setRequest(HttpServletRequest request) {
-        this.request = request;
     }
 
+    /**
+     * @return
+     */
     public HttpServletRequest getRequest() {
-        return this.request;
+        return ((WebContext)MgnlContext.getInstance()).getRequest();
     }
 
     public void setName(String s) {

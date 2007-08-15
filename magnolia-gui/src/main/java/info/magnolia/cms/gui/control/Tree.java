@@ -57,7 +57,7 @@ public class Tree extends ControlImpl {
     public static final String DOCROOT = "/.resources/controls/tree/"; //$NON-NLS-1$
 
     public static final String ICONDOCROOT = "/.resources/icons/16/"; //$NON-NLS-1$
-    
+
     public static final String DEFAULT_ICON = ICONDOCROOT + "cubes.gif";
 
     public static final String DEFAULT_ICON_CONTENT = ICONDOCROOT + "document_plain_earth.gif";
@@ -140,15 +140,20 @@ public class Tree extends ControlImpl {
     private HierarchyManager hm;
 
     /**
+     * @deprecated don't pass the request
+     */
+    public Tree(String name, String repository, HttpServletRequest request) {
+        this(name, repository);
+    }
+
+    /**
      * Constructor.
      * @param name name of the tree (name of the treehandler)
      * @param repository name of the repository (i.e. "website", "users")
-     * @param request
      */
-    public Tree(String name, String repository, HttpServletRequest request) {
+    public Tree(String name, String repository) {
         this.setName(name);
         this.setRepository(repository);
-        this.setRequest(request);
         this.setMenu(new ContextMenu(this.getJavascriptTree()));
         this.setFunctionBar(new FunctionBar(this.getJavascriptTree()));
 
@@ -233,10 +238,15 @@ public class Tree extends ControlImpl {
 
     /**
      * Add a itemType to the itemTypes that will be shown in this branch.
-     * @param s itemType (one of: ItemType.NT_CONTENT, ItemType.NT_CONTENTNODE, ItemType.NT_NODEDATA)
+     * @deprecated pass the icon to use as a second parameter
      */
     public void addItemType(String s) {
         this.itemTypes.add(s);
+    }
+
+    public void addItemType(String type, String icon) {
+        addItemType(type);
+        setIcon(type, icon);
     }
 
     /**
@@ -382,6 +392,7 @@ public class Tree extends ControlImpl {
     }
 
     public void addColumn(TreeColumn tc) {
+        tc.setJavascriptTree(this.getJavascriptTree());
         this.getColumns().add(tc);
     }
 
@@ -619,6 +630,8 @@ public class Tree extends ControlImpl {
 
     public String getHtml() {
         StringBuffer html = new StringBuffer();
+        html.append(this.getHtmlPre());
+
         if (!this.getSnippetMode()) {
             html.append(this.getHtmlHeader());
         }
@@ -627,6 +640,7 @@ public class Tree extends ControlImpl {
         if (!this.getSnippetMode()) {
             html.append(this.getHtmlFooter());
         }
+        html.append(this.getHtmlPost());
         return html.toString();
     }
 
@@ -640,7 +654,6 @@ public class Tree extends ControlImpl {
         catch (Exception e) {
             log.error("can't render tree header", e);
         }
-
         return str.toString();
     }
 
@@ -1141,4 +1154,6 @@ public class Tree extends ControlImpl {
     public void setSortComparator(Comparator sortComperator) {
         this.sortComparator = sortComperator;
     }
+
+
 }
