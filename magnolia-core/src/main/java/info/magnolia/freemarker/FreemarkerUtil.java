@@ -23,14 +23,13 @@ import java.io.Writer;
 import java.io.StringWriter;
 import java.io.PrintWriter;
 
-import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.util.AlertUtil;
 
 /**
  * A bunch of utility methods to render freemarker templates into Strings.
  *
  * @see info.magnolia.freemarker.FreemarkerHelper
- * 
+ *
  * @author Philipp Bracher
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -46,6 +45,10 @@ public class FreemarkerUtil {
         return process(thisObj.getClass(), thisObj);
     }
 
+    public static String process(Object thisObj, String classifier, String ext) {
+        return process(thisObj.getClass(), thisObj, classifier, ext);
+    }
+
     /**
      * Default extension is html
      */
@@ -55,13 +58,19 @@ public class FreemarkerUtil {
 
     /**
      * Uses the class to create the templates name and passes the object under the name 'this'
-     *
-     * @deprecated not used (only by this class)
      */
     public static String process(Class klass, Object thisObj, String ext) {
         final Map data = new HashMap();
         data.put("this", thisObj);
-        return process(klass, data, ext);
+        String template = createTemplateName(klass, ext);
+        return process(template, data);
+    }
+
+    public static String process(Class klass, Object thisObj, String classifier, String ext) {
+        final Map data = new HashMap();
+        data.put("this", thisObj);
+        String template = createTemplateName(klass, classifier, ext);
+        return process(template, data);
     }
 
     /**
@@ -102,6 +111,10 @@ public class FreemarkerUtil {
 
     public static String createTemplateName(Class klass, String ext) {
         return "/" + StringUtils.replace(klass.getName(), ".", "/") + "." + ext;
+    }
+
+    public static String createTemplateName(Class klass, String classifier , String ext) {
+        return "/" + StringUtils.replace(klass.getName(), ".", "/") + StringUtils.capitalize(classifier) + "." + ext;
     }
 
     /**
