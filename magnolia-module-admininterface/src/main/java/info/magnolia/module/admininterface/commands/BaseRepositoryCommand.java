@@ -13,6 +13,13 @@
 package info.magnolia.module.admininterface.commands;
 
 import info.magnolia.commands.MgnlCommand;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.Context;
+
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 
 public abstract class BaseRepositoryCommand extends MgnlCommand {
@@ -22,6 +29,15 @@ public abstract class BaseRepositoryCommand extends MgnlCommand {
     private String repository;
 
     private String uuid;
+
+    protected Content getNode(Context ctx) throws RepositoryException {
+        final HierarchyManager hm = ctx.getHierarchyManager(getRepository());
+        if (StringUtils.isNotEmpty(getUuid())) {
+            return hm.getContentByUUID(getUuid());
+        } else {
+            return hm.getContent(getPath());
+        }
+    }
 
     /**
      * @return the repository

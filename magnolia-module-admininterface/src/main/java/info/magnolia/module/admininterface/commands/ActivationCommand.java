@@ -54,12 +54,7 @@ public class ActivationCommand extends BaseActivationCommand {
     public boolean execute(Context ctx) {
         synchronized(ExclusiveWrite.getInstance()) {
             try {
-                Content thisState;
-                if (StringUtils.isNotEmpty(getUuid())) {
-                    thisState = ctx.getHierarchyManager(getRepository()).getContentByUUID(getUuid());
-                } else {
-                    thisState = ctx.getHierarchyManager(getRepository()).getContent(getPath());
-                }
+                Content thisState = getNode(ctx);
                 String parentPath = StringUtils.substringBeforeLast(thisState.getHandle(), "/");
                 if (StringUtils.isEmpty(parentPath)) {
                     parentPath = "/";

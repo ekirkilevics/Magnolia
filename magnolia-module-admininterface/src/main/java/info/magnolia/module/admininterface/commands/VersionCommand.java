@@ -42,12 +42,7 @@ public class VersionCommand extends RuleBasedCommand {
      */
     public boolean execute(Context ctx) {
         try {
-            Content node;
-            if (StringUtils.isNotEmpty(getUuid())) {
-                node = ctx.getHierarchyManager(this.getRepository()).getContentByUUID(this.getUuid());
-            } else {
-                node = ctx.getHierarchyManager(this.getRepository()).getContent(this.getPath());
-            }
+            final Content node = getNode(ctx);
             if (isRecursive()) {
                 // set versionMap and version name for this node
                 List versionMap = new ArrayList();
