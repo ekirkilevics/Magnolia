@@ -235,12 +235,18 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
     }
 
 
-    url=contextPath;
+    var url=contextPath;
     url+="/"+ dialogPage;
     url+="?mgnlPath="+path;
-    url+="&mgnlNodeCollection="+nodeCollection;
-    url+="&mgnlNode="+node;
-    url+="&mgnlParagraph="+paragraph;
+    if (nodeCollection) {
+        url += "&mgnlNodeCollection=" + nodeCollection;
+    }
+    if (node) {
+        url += "&mgnlNode=" + node;
+    }
+    if (paragraph) {
+        url += "&mgnlParagraph=" + paragraph;
+    }
     url+="&mgnlRichE="+richE;
     url+="&mgnlRichEPaste="+richEPaste;
     url+="&mgnlRepository="+repository;
