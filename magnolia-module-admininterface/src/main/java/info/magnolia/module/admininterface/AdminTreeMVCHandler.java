@@ -798,8 +798,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         if (tree == null) {
             tree = (Tree) FactoryUtil.newInstanceWithoutDiscovery(this.getTreeClass(), new Object[]{
                 super.getName(),
-                getRepository(),
-                super.getRequest()});
+                getRepository()});
         }
         return tree;
     }
