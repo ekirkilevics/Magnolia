@@ -267,16 +267,22 @@ public class TreeColumn extends ControlImpl {
         this.htmlRenderer = htmlRenderer;
     }
 
-    public static TreeColumn createLabelColum() {
+    public static TreeColumn createLabelColum(boolean editable) {
         TreeColumn treeColumn = new TreeColumn();
         treeColumn.setIsLabel(true);
+        if(editable){
+            treeColumn.setHtmlEdit();
+        }
         return treeColumn;
     }
 
-    public static TreeColumn createNodeDataColum(String name) {
+    public static TreeColumn createNodeDataColum(String name, boolean editable) {
         TreeColumn treeColumn = new TreeColumn();
         treeColumn.setIsNodeDataValue(true);
         treeColumn.setNodeName(name);
+        if(editable){
+            treeColumn.setHtmlEdit();
+        }
         return treeColumn;
     }
 
