@@ -109,8 +109,8 @@ public class DialogFile extends DialogBox {
         out.write("<div id=\"" + this.getName() + "_contentDiv\" style=\"width:100%;\">"); //$NON-NLS-1$ //$NON-NLS-2$
         boolean exists = false;
 
-        if (this.getWebsiteNode() != null) {
-            exists = this.getWebsiteNode().getNodeData(this.getName()).isExist();
+        if (this.getStorageNode() != null) {
+            exists = this.getStorageNode().getNodeData(this.getName()).isExist();
         }
 
         if (!exists) {
@@ -251,7 +251,7 @@ public class DialogFile extends DialogBox {
             }
             // we are not uploading or removing
             // check if there is a binary stored
-            if(this.getWebsiteNode() == null || !getWebsiteNode().getNodeData(getName()).isExist()){
+            if(this.getStorageNode() == null || !getStorageNode().getNodeData(getName()).isExist()){
                 setValidationMessage("dialogs.validation.required");
                 return false;
             }
@@ -272,7 +272,7 @@ public class DialogFile extends DialogBox {
      * Configures the inner file upload control
      */
     protected File getFileControl() {
-        File control = new File(this.getName(), this.getWebsiteNode());
+        File control = new File(this.getName(), this.getStorageNode());
         return control;
     }
 }

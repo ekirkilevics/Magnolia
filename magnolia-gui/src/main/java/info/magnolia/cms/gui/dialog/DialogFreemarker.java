@@ -113,12 +113,12 @@ public class DialogFreemarker extends DialogBox {
      */
     protected List readValues() {
         List values = new ArrayList();
-        if (this.getWebsiteNode() != null) {
+        if (this.getStorageNode() != null) {
             try {
                 // cycles on website content node to get multiple value
-                int size = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().size();
+                int size = this.getStorageNode().getContent(this.getName()).getNodeDataCollection().size();
                 for (int i = 0; i < size; i++) {
-                    NodeData data = this.getWebsiteNode().getContent(this.getName()).getNodeData("" + i);
+                    NodeData data = this.getStorageNode().getContent(this.getName()).getNodeData("" + i);
                     values.add(data.getString());
                 }
             }

@@ -571,8 +571,8 @@ public class DialogRichedit extends DialogBox {
         if (value != null) {
             return value.replaceAll("\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        else if (this.getWebsiteNode() != null) {
-            return this.getWebsiteNode().getNodeData(this.getName()).getString(lineBreak);
+        else if (this.getStorageNode() != null) {
+            return this.getStorageNode().getNodeData(this.getName()).getString(lineBreak);
         }
         else {
             return StringUtils.EMPTY;

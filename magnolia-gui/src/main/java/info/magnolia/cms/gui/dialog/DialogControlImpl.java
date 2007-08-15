@@ -40,6 +40,7 @@ import javax.servlet.http.HttpSession;
 
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.pdfbox.util.operator.SetStrokingColorSpace;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,7 +80,7 @@ public abstract class DialogControlImpl implements DialogControl {
     /**
      * content data.
      */
-    private Content websiteNode;
+    private Content storageNode;
 
     /**
      * config data.
@@ -121,14 +122,14 @@ public abstract class DialogControlImpl implements DialogControl {
 
     /**
      */
-    public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
+    public void init(HttpServletRequest request, HttpServletResponse response, Content storageNode, Content configNode)
         throws RepositoryException {
 
         if (log.isDebugEnabled()) {
             log.debug("Init " + getClass().getName()); //$NON-NLS-1$
         }
 
-        this.websiteNode = websiteNode;
+        this.storageNode = storageNode;
         this.request = request;
         this.response = response;
 
@@ -183,7 +184,7 @@ public abstract class DialogControlImpl implements DialogControl {
 
     public String getValue() {
         if (this.value == null) {
-            if (this.getWebsiteNode() != null) {
+            if (this.getStorageNode() != null) {
                 this.value = readValue();
                 if(this instanceof UUIDDialogControl){
                     String repository = ((UUIDDialogControl)this).getRepository();
@@ -208,7 +209,7 @@ public abstract class DialogControlImpl implements DialogControl {
 
     protected String readValue() {
         try {
-            if(!this.getWebsiteNode().hasNodeData(this.getName())){
+            if(!this.getStorageNode().hasNodeData(this.getName())){
                 return null;
             }
         }
@@ -216,7 +217,7 @@ public abstract class DialogControlImpl implements DialogControl {
             log.error("can't read nodedata [" + this.getName() + "]", e);
             return null;
         }
-        return this.getWebsiteNode().getNodeData(this.getName()).getString();
+        return this.getStorageNode().getNodeData(this.getName()).getString();
     }
 
     public void setSaveInfo(boolean b) {
@@ -244,8 +245,8 @@ public abstract class DialogControlImpl implements DialogControl {
         this.getOptions().add(o);
     }
 
-    public Content getWebsiteNode() {
-        return this.websiteNode;
+    public Content getStorageNode() {
+        return this.storageNode;
     }
 
     public void setLabel(String s) {
@@ -361,7 +362,7 @@ public abstract class DialogControlImpl implements DialogControl {
      * @deprecated websitenode should only be set in init(), this is a workaround used in DialogDate
      */
     protected void clearWebsiteNode() {
-        this.websiteNode = null;
+        this.storageNode = null;
     }
 
     public String getId() {
@@ -413,9 +414,9 @@ public abstract class DialogControlImpl implements DialogControl {
 
     protected List readValues() {
         List values = new ArrayList();
-        if (this.getWebsiteNode() != null) {
+        if (this.getStorageNode() != null) {
             try {
-                Iterator it = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().iterator();
+                Iterator it = this.getStorageNode().getContent(this.getName()).getNodeDataCollection().iterator();
                 while (it.hasNext()) {
                     NodeData data = (NodeData) it.next();
                     values.add(data.getString());
@@ -505,7 +506,7 @@ public abstract class DialogControlImpl implements DialogControl {
                 log.debug("Loading control \"" + controlType + "\" for " + configNode.getHandle()); //$NON-NLS-1$ //$NON-NLS-2$
             }
             DialogControl dialogControl = DialogFactory
-                .loadDialog(request, response, this.getWebsiteNode(), configNode);
+                .loadDialog(request, response, this.getStorageNode(), configNode);
             this.addSub(dialogControl);
         }
     }
@@ -587,8 +588,8 @@ public abstract class DialogControlImpl implements DialogControl {
         for (Iterator iter = this.getSubs().iterator(); iter.hasNext();) {
             DialogControl sub = (DialogControl) iter.next();
             if (sub instanceof DialogControlImpl) {
-            	DialogControlImpl subImpl = (DialogControlImpl) sub;
-            	subImpl.setParent(this);
+                DialogControlImpl subImpl = (DialogControlImpl) sub;
+                subImpl.setParent(this);
                 if (!subImpl.validate()) {
                     return false;
                 }
@@ -625,6 +626,13 @@ public abstract class DialogControlImpl implements DialogControl {
 
     public void setRequired(boolean required) {
         this.setConfig(REQUIRED_PROPERTY, BooleanUtils.toStringTrueFalse(required));
+    }
+
+    /**
+     * @deprecated use getStorageNode()
+     */
+    public Content getWebsiteNode() {
+        return getStorageNode();
     }
 
 }

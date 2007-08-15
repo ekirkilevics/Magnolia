@@ -79,8 +79,8 @@ public class DialogDate extends DialogEditWithButton {
 
         this.getButton().setHtmlPost(calendarScript);
 
-        if (this.getWebsiteNode() != null && this.getWebsiteNode().getNodeData(this.getName()).isExist()) {
-            Calendar valueCalendar = this.getWebsiteNode().getNodeData(this.getName()).getDate();
+        if (this.getStorageNode() != null && this.getStorageNode().getNodeData(this.getName()).isExist()) {
+            Calendar valueCalendar = this.getStorageNode().getNodeData(this.getName()).getDate();
 
             // valueCalendar is in UTC turn it back into the current timezone
             if (valueCalendar != null) {
