@@ -77,17 +77,23 @@ public class TreeColumn extends ControlImpl {
     // test it well ;)
     private Map keyValue = new Hashtable();
 
+    public TreeColumn() {
+        this.setCssClass("mgnlTreeText"); //$NON-NLS-1$
+        // default delegate
+        this.setHtmlRenderer(new TreeColumnHtmlRendererImpl());
+
+    }
+
     /**
      * Constructor.
      * @param javascriptTree name of the js variable
      * @param request http request, needed for context path
+     * @deprecated use the empty constuctor
      */
     public TreeColumn(String javascriptTree, HttpServletRequest request) {
+        this();
         this.setJavascriptTree(javascriptTree);
-        this.setCssClass("mgnlTreeText"); //$NON-NLS-1$
         this.setRequest(request);
-        // default delegate
-        this.setHtmlRenderer(new TreeColumnHtmlRendererImpl());
     }
 
     public void setIsMeta(boolean b) {
@@ -260,4 +266,25 @@ public class TreeColumn extends ControlImpl {
     public void setHtmlRenderer(TreeColumnHtmlRenderer htmlRenderer) {
         this.htmlRenderer = htmlRenderer;
     }
+
+    public static TreeColumn createLabelColum() {
+        TreeColumn treeColumn = new TreeColumn();
+        treeColumn.setIsLabel(true);
+        return treeColumn;
+    }
+
+    public static TreeColumn createNodeDataColum(String name) {
+        TreeColumn treeColumn = new TreeColumn();
+        treeColumn.setIsNodeDataValue(true);
+        treeColumn.setNodeName(name);
+        return treeColumn;
+    }
+
+    public static TreeColumn createMetaDataColum(String name) {
+        TreeColumn treeColumn = new TreeColumn();
+        treeColumn.setIsMeta(true);
+        treeColumn.setNodeName(name);
+        return treeColumn;
+    }
+
 }
