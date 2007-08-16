@@ -797,8 +797,17 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
     protected Tree getTree() {
         if (tree == null) {
             tree = (Tree) FactoryUtil.newInstanceWithoutDiscovery(this.getTreeClass(), new Object[]{
-                super.getName(),
+                getName(),
                 getRepository()});
+
+            if (tree == null) {
+                // try to get the Tree with the deprecated constructor !
+                log.warn("The {} Tree class is probably using the deprecated (String name, String repository, HttpServletRequest request) constructor. Please use the (String name, String repository) constructor instead.", getTreeClass());
+                tree = (Tree) FactoryUtil.newInstanceWithoutDiscovery(this.getTreeClass(), new Object[]{
+                getName(),
+                getRepository(),
+                getRequest()});
+            }
         }
         return tree;
     }

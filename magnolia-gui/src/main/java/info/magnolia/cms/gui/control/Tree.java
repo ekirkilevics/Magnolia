@@ -169,7 +169,7 @@ public class Tree extends ControlImpl {
      * Constructor: the name of the tree is the same as the name of the repository
      * @param repository
      * @param request
-     * @deprecated use Tree(name, repository, request) instead
+     * @deprecated use Tree(name, repository) instead
      */
     public Tree(String repository, HttpServletRequest request) {
         this(repository, repository, request);
