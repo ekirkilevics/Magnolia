@@ -35,7 +35,7 @@ public interface Content2BeanTransformer extends Content.ContentFilter {
     /**
      * Instantiates the bean
      */
-    public Object newBeanInstance(TransformationState state, Map values);
+    public Object newBeanInstance(TransformationState state, Map values) throws Content2BeanException;
 
     /**
      * Called after all properties are set
