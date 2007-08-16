@@ -157,6 +157,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
      */
     protected void setProperties(Map values, final Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException {
         Object bean = state.getCurrentBean();
+        log.debug("will populate bean {} with the values {}", bean.getClass().getName(), values);
 
         if(bean instanceof Map){
             ((Map)bean).putAll(values);

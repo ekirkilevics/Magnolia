@@ -93,10 +93,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
 
         if (typeDscr == null || typeDscr.isMap() || typeDscr.isCollection()) {
             if(typeDscr== null && log.isDebugEnabled()){
-                log.debug("was not able to resolve type for node []", node );
+                log.debug("was not able to resolve type for node [] will use a map", node );
             }
             typeDscr = TypeMapping.MAP_TYPE;
         }
+
+        log.debug("{} --> {}", node.getHandle(), typeDscr.getType());
 
         return typeDscr;
     }
@@ -119,12 +121,13 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
      * Do not set class property. In case of a map/collection try to use adder method.
      */
     public void setProperty(TransformationState state, PropertyTypeDescriptor descriptor, Map values) {
+        TypeMapping mapping = getTypeMapping();
+
         String propertyName = descriptor.getName();
         if(propertyName.equals("class")){
             return;
         }
         Object value = values.get(propertyName);
-        TypeMapping mapping = getTypeMapping();
         Object bean = state.getCurrentBean();
 
         if (propertyName.equals("content") && value == null) {
@@ -145,6 +148,8 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             return;
         }
 
+        log.debug("try to set {}.{} with value {}", new Object[]{bean, propertyName, value});
+
         // if the parent bean is a map, we can't guess the types.
         if (!(bean instanceof Map)) {
             try {
@@ -156,6 +161,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
                         Method method = dscr.getAddMethod();
 
                         if (method != null) {
+                            log.debug("will add values by using adder method {}", method.getName());
                             Class entryClass = dscr.getCollectionEntryType().getClass();
 
                             for (Iterator iter = ((Map) value).keySet().iterator(); iter.hasNext();) {
@@ -163,6 +169,8 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
                                 Object entryValue = ((Map) value).get(key);
                                 entryValue = convertPropertyValue(entryClass, entryValue);
                                 if (dscr.isCollection()) {
+                                    log.debug("will add value {}", entryValue);
+
                                     method.invoke(bean, new Object[]{entryValue});
                                 }
                                 // is a map
@@ -210,7 +218,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
     /**
      * Use the factory util to instantiate. This is usefull to get default implementation of interfaces
      */
-    public Object newBeanInstance(TransformationState state, Map properties) {
+    public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException{
         return FactoryUtil.newInstance(state.getCurrentType().getType());
     }
 
@@ -223,6 +231,12 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         Method init;
         try {
             init = bean.getClass().getMethod("init", new Class[]{});
+            try {
+                init.invoke(bean, null);
+            }
+            catch (Exception e) {
+                throw new Content2BeanException("can't call init method", e);
+            }
         }
         catch (SecurityException e) {
             return;
@@ -230,12 +244,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         catch (NoSuchMethodException e) {
             return;
         }
-        try {
-            init.invoke(bean, null);
-        }
-        catch (Exception e) {
-            throw new Content2BeanException("can't call init method", e);
-        }
+        log.debug("{} is initialized" , bean);
     }
 
     public TransformationState newState() {
