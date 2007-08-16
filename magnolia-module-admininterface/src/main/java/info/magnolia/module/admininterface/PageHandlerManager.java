@@ -14,11 +14,13 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.content2bean.TransformationState;
+import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -29,7 +31,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
+import org.apache.commons.beanutils.ConstructorUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -65,25 +67,7 @@ public class PageHandlerManager extends ObservedManager {
             log.warn("Page definition not found: \"{}\"", name);
             return null;
         }
-
-        Class dialogPageHandlerClass = pageDefinition.getHandlerClass();
-        if (dialogPageHandlerClass == null) {
-            throw new InvalidDialogPageHandlerException(name);
-        }
-
-        try {
-            Constructor constructor = dialogPageHandlerClass.getConstructor(new Class[]{
-                String.class,
-                HttpServletRequest.class,
-                HttpServletResponse.class});
-            PageMVCHandler page = (PageMVCHandler) constructor.newInstance(new Object[]{name, request, response});
-            BeanUtils.populate(page, pageDefinition.getDefaultProperties());
-            return page;
-        }
-        catch (Exception e) {
-            log.error("can't instantiate page [" + name + "]", e);
-            throw new InvalidDialogPageHandlerException(name, e);
-        }
+        return pageDefinition.newInstance(name, request, response);
     }
 
     /**
@@ -96,30 +80,18 @@ public class PageHandlerManager extends ObservedManager {
         for (Iterator iter = ContentUtil.getAllChildren(defNode).iterator(); iter.hasNext();) {
             Content pageNode = (Content) iter.next();
 
-            try {
-                Map properties = Content2BeanUtil.toMap(pageNode, true);
-                String handlerClassName = (String) properties.get("class");
-                Class handlerClass = ClassUtil.classForName(handlerClassName);
-                String name = StringUtils.defaultIfEmpty((String) properties.get("name"), pageNode.getName());
-                properties.remove("class");
-                properties.remove("name");
-                PageDefinition pd = new PageDefinition(name, handlerClass);
-                pd.setDefaultProperties(properties);
-                registerPageDefinition(name, pd);
-            }
-            catch (Content2BeanException e) {
-                log.error("can't read page properties [" + pageNode.getHandle() + "]", e);
-            }
-            catch (ClassNotFoundException e) {
-                log.error("can't find class for the page [" + pageNode.getHandle() + "]", e);
-            }
+            PageDefinition pd = new RepositoryPageDefinition(pageNode);
+            registerPageDefinition(pd);
         }
 
     }
 
+    public void registerPageDefinition(PageDefinition pageDefinition) {
+        dialogPageHandlers.put(pageDefinition.getName(), pageDefinition);
+    }
+
     /**
-     * @param name
-     * @param pageDefinition
+     * @deprecated
      */
     public void registerPageDefinition(String name, PageDefinition pageDefinition) {
         dialogPageHandlers.put(name, pageDefinition);
@@ -136,7 +108,19 @@ public class PageHandlerManager extends ObservedManager {
         this.dialogPageHandlers.clear();
     }
 
-    public static class PageDefinition {
+    public static interface PageDefinition {
+
+        public String getName();
+
+        public PageMVCHandler newInstance(String name, HttpServletRequest request, HttpServletResponse response);
+    }
+
+    /**
+     * This class is used if you want to register a page that is not stored in the repository.
+     * @author philipp
+     * @version $Id$
+     */
+    public static class BasePageDefinition implements PageDefinition {
 
         private Map defaultProperties = new HashMap();
 
@@ -144,7 +128,7 @@ public class PageHandlerManager extends ObservedManager {
 
         private String name;
 
-        public PageDefinition(String name, Class handlerClass) {
+        public BasePageDefinition(String name, Class handlerClass) {
             this.name = name;
             this.handlerClass = handlerClass;
         }
@@ -171,6 +155,62 @@ public class PageHandlerManager extends ObservedManager {
 
         public void setName(String name) {
             this.name = name;
+        }
+
+        public PageMVCHandler newInstance(String name, HttpServletRequest request, HttpServletResponse response) {
+
+            try {
+                Constructor constructor = getHandlerClass().getConstructor(
+                    new Class[]{String.class, HttpServletRequest.class, HttpServletResponse.class});
+                PageMVCHandler page = (PageMVCHandler) constructor.newInstance(new Object[]{name, request, response});
+                BeanUtils.populate(page, getDefaultProperties());
+                return page;
+            }
+            catch (Exception e) {
+                log.error("can't instantiate page [" + name + "]", e);
+                throw new InvalidDialogPageHandlerException(name, e);
+            }
+
+        }
+    }
+
+    public static class RepositoryPageDefinition implements PageDefinition {
+
+        private Content node;
+
+        public RepositoryPageDefinition(Content node) {
+            this.node = node;
+        }
+
+        public String getName() {
+            return NodeDataUtil.getString(this.node, "name", this.node.getName());
+        }
+
+        public PageMVCHandler newInstance(String name, final HttpServletRequest request,
+            final HttpServletResponse response) {
+            try {
+                return (PageMVCHandler) Content2BeanUtil.toBean(node, true, new Content2BeanTransformerImpl() {
+
+                    public Object newBeanInstance(TransformationState state, Map properties)
+                        throws Content2BeanException {
+                        if (state.getLevel() == 1) {
+                            try {
+                                return ConstructorUtils.invokeConstructor(
+                                    state.getCurrentType().getType(),
+                                    new Object[]{getName(), request, response});
+                            }
+                            catch (Exception e) {
+                                throw new Content2BeanException("no proper constuctor found", e);
+                            }
+                        }
+
+                        return super.newBeanInstance(state, properties);
+                    }
+                });
+            }
+            catch (Content2BeanException e) {
+                throw new InvalidDialogPageHandlerException(this.getName(), e);
+            }
         }
     }
 
