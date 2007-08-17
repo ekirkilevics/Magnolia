@@ -267,7 +267,7 @@ public class TreeColumn extends ControlImpl {
         this.htmlRenderer = htmlRenderer;
     }
 
-    public static TreeColumn createLabelColum(boolean editable) {
+    public static TreeColumn createLabelColumn(boolean editable) {
         TreeColumn treeColumn = new TreeColumn();
         treeColumn.setIsLabel(true);
         if(editable){
@@ -276,7 +276,7 @@ public class TreeColumn extends ControlImpl {
         return treeColumn;
     }
 
-    public static TreeColumn createNodeDataColum(String name, boolean editable) {
+    public static TreeColumn createNodeDataColumn(String name, boolean editable) {
         TreeColumn treeColumn = new TreeColumn();
         treeColumn.setIsNodeDataValue(true);
         treeColumn.setNodeName(name);
@@ -286,7 +286,7 @@ public class TreeColumn extends ControlImpl {
         return treeColumn;
     }
 
-    public static TreeColumn createMetaDataColum(String name) {
+    public static TreeColumn createMetaDataColumn(String name) {
         TreeColumn treeColumn = new TreeColumn();
         treeColumn.setIsMeta(true);
         treeColumn.setNodeName(name);
