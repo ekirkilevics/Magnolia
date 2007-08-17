@@ -28,9 +28,10 @@ import java.util.Map;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.beanutils.MethodUtils;
+import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 
 /**
  * Concrete implementation using reflection and adder methods.
@@ -158,28 +159,47 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
 
                     // try to use an adder method for a Collection property of the bean
                     if (dscr.isCollection() || dscr.isMap()) {
+                        log.debug("{} is of type collection, map or /array", propertyName );
                         Method method = dscr.getAddMethod();
 
                         if (method != null) {
-                            log.debug("will add values by using adder method {}", method.getName());
+                            log.debug("clearing the current content of the collection/map");
+                            try {
+                                Object col = PropertyUtils.getProperty(bean, propertyName);
+                                if(col != null){
+                                    MethodUtils.invokeExactMethod(col, "clear", new Object[]{});
+                                }
+                            }
+                            catch (Exception e) {
+                                log.debug("no clear method found on collection {}", propertyName);
+                            }
+
                             Class entryClass = dscr.getCollectionEntryType().getClass();
 
+                            log.debug("will add values by using adder method {}", method.getName());
                             for (Iterator iter = ((Map) value).keySet().iterator(); iter.hasNext();) {
                                 Object key = iter.next();
                                 Object entryValue = ((Map) value).get(key);
                                 entryValue = convertPropertyValue(entryClass, entryValue);
                                 if (dscr.isCollection()) {
                                     log.debug("will add value {}", entryValue);
-
                                     method.invoke(bean, new Object[]{entryValue});
                                 }
                                 // is a map
                                 else {
+                                    log.debug("will add key {} with value {}", key, entryValue);
                                     method.invoke(bean, new Object[]{key, entryValue});
                                 }
                             }
 
                             return;
+                        }
+                        else{
+                            log.debug("no add method found for property {}", propertyName);
+                            if(dscr.isCollection()){
+                                log.debug("transform the valus to a collection", propertyName);
+                                value = ((Map)value).values();
+                            }
                         }
                     }
                     else {
