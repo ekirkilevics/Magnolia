@@ -18,7 +18,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.module.admininterface.SaveHandler;
-import info.magnolia.module.admininterface.pages.RolesACLPage;
+import info.magnolia.module.admininterface.config.AclTypeConfiguration;
 
 import java.util.Iterator;
 
@@ -158,13 +158,13 @@ public class RolesEditDialog extends ConfiguredDialog {
                 if (StringUtils.isNotEmpty(path)) {
                     if (repository.equalsIgnoreCase("uri")) { //$NON-NLS-1$
                         // write ACL as is for URI security
-                        accessType = RolesACLPage.TYPE_THIS;
+                        accessType = AclTypeConfiguration.TYPE_THIS;
                     } else if (path.equals("/")) { //$NON-NLS-1$
-                        accessType = RolesACLPage.TYPE_SUBS;
+                        accessType = AclTypeConfiguration.TYPE_SUBS;
                         path = StringUtils.EMPTY;
                     }
 
-                    if ((accessType & RolesACLPage.TYPE_THIS) != 0) {
+                    if ((accessType & AclTypeConfiguration.TYPE_THIS) != 0) {
                         try {
                             String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
                             Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
@@ -176,7 +176,7 @@ public class RolesEditDialog extends ConfiguredDialog {
                         }
                     }
 
-                    if ((accessType & RolesACLPage.TYPE_SUBS) != 0) {
+                    if ((accessType & AclTypeConfiguration.TYPE_SUBS) != 0) {
                         try {
                             String newLabel = Path.getUniqueLabel(hm, acl.getHandle(), "0"); //$NON-NLS-1$
                             Content r = acl.createContent(newLabel, ItemType.CONTENTNODE);
