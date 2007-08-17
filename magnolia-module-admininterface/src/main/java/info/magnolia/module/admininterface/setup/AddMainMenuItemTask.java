@@ -35,7 +35,8 @@ public class AddMainMenuItemTask extends AbstractTask {
     private final String orderBefore;
 
     /**
-     * @param orderBefore the menu name before which this new menu should be positioned 
+     * @param orderBefore the menu name before which this new menu should be positioned. ignored if null.
+     * @param i18nBasename ignored if null.
      */
     public AddMainMenuItemTask(String menuName, String label, String i18nBasename, String onClick, String icon, String orderBefore) {
         super("Menu", "Adds an item in the admin interface menu for " + menuName);
@@ -49,20 +50,24 @@ public class AddMainMenuItemTask extends AbstractTask {
 
     public void execute(InstallContext ctx) throws TaskExecutionException {
         try {
-            final Content mainMenu = getMainMenuNode(ctx);
-            final Content menu = mainMenu.createContent(menuName, ItemType.CONTENTNODE);
+            final Content parent = getParentNode(ctx);
+            final Content menu = parent.createContent(menuName, ItemType.CONTENTNODE);
             menu.createNodeData("icon", icon);
             menu.createNodeData("onclick", onClick);
             menu.createNodeData("label", label);
-            menu.createNodeData("i18nBasename", i18nBasename);
+            if (i18nBasename != null) {
+                menu.createNodeData("i18nBasename", i18nBasename);
+            }
 
-            mainMenu.orderBefore(menuName, orderBefore);
+            if (orderBefore != null){
+                parent.orderBefore(menuName, orderBefore);
+            }
         } catch (RepositoryException e) {
             throw new TaskExecutionException("Could not create or place " + menuName + " menu item.", e);
         }
     }
 
-    protected Content getMainMenuNode(InstallContext ctx) throws RepositoryException {
+    protected Content getParentNode(InstallContext ctx) throws RepositoryException {
         return ctx.getConfigHierarchyManager().getContent("/modules/adminInterface/config/menu");
     }
 }
