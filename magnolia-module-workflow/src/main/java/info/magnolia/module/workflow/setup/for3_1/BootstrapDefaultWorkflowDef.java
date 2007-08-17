@@ -31,7 +31,6 @@ public class BootstrapDefaultWorkflowDef extends BootstrapResourcesTask {
     protected String[] getResourcesToBootstrap(InstallContext installContext) {
         return new String[]{
                 "/mgnl-bootstrap/workflow/config.modules.workflow.config.flows.activation.xml",
-                "/mgnl-bootstrap/workflow/config.modules.adminInterface.config.menu.config.workflows.xml",
                 "/mgnl-bootstrap/workflow/config.modules.workflow.pages.flows.xml",
                 // TODO : we might want to rename this class since this is just a new feature
                 "/mgnl-bootstrap/workflow/config.modules.workflow.pages.inboxSubPages.xml",

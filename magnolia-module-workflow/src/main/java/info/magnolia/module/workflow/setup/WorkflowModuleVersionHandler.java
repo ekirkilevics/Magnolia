@@ -15,6 +15,7 @@ package info.magnolia.module.workflow.setup;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
+import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
 import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.Task;
@@ -25,7 +26,7 @@ import info.magnolia.module.workflow.setup.for3_1.I18nMenuPoint;
 import info.magnolia.module.workflow.setup.for3_1.RemoveMetadataFromExpressionsWorkspace;
 import info.magnolia.module.workflow.setup.for3_1.SetDefaultWorkflowForActivationFlowCommands;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -54,10 +55,13 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
     // TODO : add config submenu item ?
 
     protected List getExtraInstallTasks(InstallContext installContext) {
-        final AddMainMenuItemTask t = new AddMainMenuItemTask("inbox", "menu.inbox", "info.magnolia.module.workflow.messages",
+        final List tasks = new ArrayList();
+        tasks.add(new AddMainMenuItemTask("inbox", "menu.inbox", "info.magnolia.module.workflow.messages",
                 "MgnlAdminCentral.showContent('/.magnolia/pages/inbox.html', false, false)", "/.resources/icons/24/mail.gif",
-                "security");
+                "security"));
+        tasks.add(new AddSubMenuItemTask("config", "workflows", "menu.config.workflows",
+                "MgnlAdminCentral.showContent('/.magnolia/pages/flows.html');", "/.resources/icons/16/dot.gif"));
 
-        return Collections.singletonList(t);
+        return tasks;
     }
 }
