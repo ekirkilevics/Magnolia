@@ -26,8 +26,14 @@ import info.magnolia.module.InstallContext;
  * @version $Revision: $ ($Author: $)
  */
 public interface Task {
+    /**
+     * Description of what has changed. Example: New ACL configuration
+     */
     String getName();
 
+    /**
+     * Description what will happen during the execution. Example: "Bootstraps the new configuration for the ACL dialogs"
+     */
     String getDescription();
 
     /**
