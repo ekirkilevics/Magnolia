@@ -45,14 +45,16 @@ public interface ModuleLifecycleContext {
      */
     ModuleDefinition getCurrentModuleDefinition();
 
+
+    /**
+     * Returns the phase the lifecycle is in. This is one of the phase constants.
+     */
+    int getPhase();
+
     /**
      * Registers a component which will observe other modules' config node with
      * the given nodeName.
      */
     void registerModuleObservingComponent(String nodeName, ObservedManager component);
 
-    /**
-     * Returns the phase the lifecycle is in. This is one of the phase constants.
-     */
-    int getPhase();
 }
