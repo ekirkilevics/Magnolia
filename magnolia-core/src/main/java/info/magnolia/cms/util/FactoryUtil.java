@@ -77,7 +77,7 @@ public class FactoryUtil {
             }
 
             String className = StringUtils.defaultIfEmpty(SystemProperty.getProperty(interf.getName()), interf.getName());
-            if(className.startsWith("/") || className.contains(":")){
+            if(className.startsWith("/") || className.indexOf(':') >= 0){
                 String repository = ContentRepository.CONFIG;
                 String path = className;
                 if(className.contains(":")){
@@ -98,6 +98,7 @@ public class FactoryUtil {
             }
         }
         catch (Exception e) {
+            // TODO throw exception ! the system can't work !!!!
             log.error("can't instantiate an implementation of this class [" + interf.getName() + "]", e);
         }
         return null;
