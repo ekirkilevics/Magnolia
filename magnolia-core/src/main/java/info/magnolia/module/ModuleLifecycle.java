@@ -13,9 +13,7 @@
 package info.magnolia.module;
 
 /**
- * Manages the lifecyle of an installed instance of a Magnolia Module.
- * Implementing this interface is optional.
- *
+ * Manages the lifecyle of an installed instance of a Magnolia Module. Implementing this interface is optional.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -23,8 +21,6 @@ public interface ModuleLifecycle {
 
     void start(ModuleLifecycleContext moduleLifecycleContext);
 
-//    void stop(ModuleLifecycleContext moduleLifecycleContext);
+    void stop(ModuleLifecycleContext moduleLifecycleContext);
 
-    // TODO pass an event ? maybe this can be in an abstract subclass
-//    void restart(ModuleLifecycleContext moduleLifecycleContext);
 }

@@ -18,6 +18,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.RepositoryDefinition;
 import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.Context;
@@ -42,9 +43,12 @@ import java.util.List;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.core.config.RepositoryConfig;
 
 
 /**
@@ -201,7 +205,8 @@ public class ModuleManagerImpl implements ModuleManager {
         try {
             // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle
             // methods.
-            final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
+            ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
+            lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_STARTUP);
             final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             final Content modulesParentNode = hm.getContent(MODULES_NODE);
             final Collection moduleNodes = new ArrayList();
@@ -209,22 +214,23 @@ public class ModuleManagerImpl implements ModuleManager {
 
             while (it.hasNext()) {
 
-                final ModuleDefinition moduleDefinition = (ModuleDefinition) it.next();
-                lifecycleContext.setCurrentModuleDefinition(moduleDefinition);
-                final String moduleClassName = moduleDefinition.getClassName();
+                ModuleDefinition moduleDefinition = (ModuleDefinition) it.next();
+                String moduleClassName = moduleDefinition.getClassName();
 
-                Map moduleProperties = new HashMap();
+                final Map moduleProperties = new HashMap();
                 moduleProperties.put("moduleDefinition", moduleDefinition);
-                String moduleName = moduleDefinition.getName();
+                final String moduleName = moduleDefinition.getName();
                 moduleProperties.put("name", moduleName);
+
+                Content configNode = null;
 
                 if (modulesParentNode.hasContent(moduleName)) {
                     final Content moduleNode = modulesParentNode.getChildByName(moduleName);
                     moduleNodes.add(moduleNode);
                     moduleProperties.put("moduleNode", moduleNode);
-
                     if (moduleNode.hasContent("config")) {
-                        moduleProperties.put("configNode", moduleNode.getContent("config"));
+                        configNode = moduleNode.getContent("config");
+                        moduleProperties.put("configNode", configNode);
                     }
                 }
 
@@ -236,27 +242,27 @@ public class ModuleManagerImpl implements ModuleManager {
                 }
 
                 if (moduleInstance != null) {
-                    try {
-                        BeanUtils.populate(moduleInstance, moduleProperties);
-                    }
-                    catch (InvocationTargetException e) {
-                        log.error("can't set default properties", e);
-                    }
+                    populateModuleInstance(moduleInstance, moduleProperties);
 
-                    if (moduleProperties.get("configNode") != null) {
-                        try {
-                            Content2BeanUtil
-                                .setProperties(moduleInstance, (Content) moduleProperties.get("configNode"));
-                        }
-                        catch (Content2BeanException e) {
-                            log.error("wasn't able to configure module", e);
-                        }
-                    }
+                    startModule(moduleInstance, moduleDefinition, lifecycleContext);
 
-                    if (moduleInstance instanceof ModuleLifecycle) {
-                        log.debug("starting module {}", moduleName);
-                        ((ModuleLifecycle) moduleInstance).start(lifecycleContext);
-                    }
+                    // start observation
+                    ObservationUtil.registerChangeListener(ContentRepository.CONFIG, "/modules/" + moduleName + "/config", new EventListener() {
+
+                        public void onEvent(EventIterator events) {
+                            Object moduleInstance = registry.getModuleInstance(moduleName);
+                            ModuleDefinition moduleDefinition = registry.getDefinition(moduleName);
+
+                            // TODO we should keep only one instance of the lifecycle context
+                            ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
+                            lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_MODULE_RESTART);
+                            stopModule(moduleInstance, moduleDefinition, lifecycleContext);
+
+                            populateModuleInstance(moduleInstance, moduleProperties);
+
+                            startModule(moduleInstance, moduleDefinition, lifecycleContext);
+                        }
+                    });
                 }
             }
             lifecycleContext.start(moduleNodes);
@@ -272,6 +278,41 @@ public class ModuleManagerImpl implements ModuleManager {
         }
         catch (InstantiationException e) {
             throw new RuntimeException(e); // TODO
+        }
+    }
+
+    protected void startModule(Object moduleInstance, final ModuleDefinition moduleDefinition, final ModuleLifecycleContextImpl lifecycleContext) {
+        if (moduleInstance instanceof ModuleLifecycle) {
+            lifecycleContext.setCurrentModuleDefinition(moduleDefinition);
+            log.info("starting module {}", moduleDefinition.getName());
+            ((ModuleLifecycle) moduleInstance).start(lifecycleContext);
+        }
+    }
+
+    protected void stopModule(Object moduleInstance, final ModuleDefinition moduleDefinition, final ModuleLifecycleContextImpl lifecycleContext) {
+        if (moduleInstance instanceof ModuleLifecycle) {
+            lifecycleContext.setCurrentModuleDefinition(moduleDefinition);
+            log.info("stopping module {}", moduleDefinition.getName());
+            ((ModuleLifecycle) moduleInstance).stop(lifecycleContext);
+        }
+    }
+
+    protected void populateModuleInstance(Object moduleInstance, Map moduleProperties){
+        try {
+            BeanUtils.populate(moduleInstance, moduleProperties);
+        }
+        catch (Exception e) {
+            log.error("can't set default properties", e);
+        }
+
+        if (moduleProperties.get("configNode") != null) {
+            try {
+                Content2BeanUtil
+                    .setProperties(moduleInstance, (Content) moduleProperties.get("configNode"), true);
+            }
+            catch (Content2BeanException e) {
+                log.error("wasn't able to configure module", e);
+            }
         }
     }
 

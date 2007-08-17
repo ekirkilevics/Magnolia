@@ -33,6 +33,8 @@ public class ModuleLifecycleContextImpl implements ModuleLifecycleContext {
      */
     private final Map components;
 
+    private int phase;
+
     private ModuleDefinition currentModuleDefinition;
 
     ModuleLifecycleContextImpl() {
@@ -77,5 +79,15 @@ public class ModuleLifecycleContextImpl implements ModuleLifecycleContext {
 
     public void setCurrentModuleDefinition(ModuleDefinition currentModuleDefinition) {
         this.currentModuleDefinition = currentModuleDefinition;
+    }
+
+
+    public int getPhase() {
+        return this.phase;
+    }
+
+
+    public void setPhase(int phase) {
+        this.phase = phase;
     }
 }

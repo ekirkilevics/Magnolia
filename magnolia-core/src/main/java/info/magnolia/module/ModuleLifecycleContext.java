@@ -25,6 +25,22 @@ import info.magnolia.module.model.ModuleDefinition;
 public interface ModuleLifecycleContext {
 
     /**
+     * System is starting up
+     */
+    public int PHASE_SYSTEM_STARTUP = 1;
+
+    /**
+     * A module is restarted. This is triggered through observation (change in the config node).
+     */
+    public int PHASE_MODULE_RESTART = 2;
+
+    /**
+     * The system is shutting down
+     */
+    public int PHASE_SYSTEM_SHUTDOWN = 3;
+
+
+    /**
      * Get the current module defintion
      */
     ModuleDefinition getCurrentModuleDefinition();
@@ -34,4 +50,9 @@ public interface ModuleLifecycleContext {
      * the given nodeName.
      */
     void registerModuleObservingComponent(String nodeName, ObservedManager component);
+
+    /**
+     * Returns the phase the lifecycle is in. This is one of the phase constants.
+     */
+    int getPhase();
 }
