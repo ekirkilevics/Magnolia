@@ -16,13 +16,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
+import info.magnolia.cms.i18n.Messages;
 
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Vinzenz Wyser
  * @version 2.0
  */
 public class ContextMenuItem extends ControlImpl {
+
+    public static ContextMenuItem getRefreshMenuItem(Tree tree, Messages msgs, HttpServletRequest request) {
+        ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
+        menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
+        menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
+        menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
+        return menuRefresh;
+    }
 
     private String icon;
 

@@ -15,7 +15,6 @@ package info.magnolia.module.admininterface.trees;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.control.Tree;
@@ -167,11 +166,7 @@ public class GroupsTreeConfiguration extends AbstractTreeConfiguration {
             tree.addMenuItem(menuDeActivate);
         }
         else {
-            ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
-            menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
-            menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
-            menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
-            tree.addMenuItem(menuRefresh);
+            tree.addMenuItem(ContextMenuItem.getRefreshMenuItem(tree, msgs, request));            
         }
     }
 
@@ -180,31 +175,13 @@ public class GroupsTreeConfiguration extends AbstractTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
-        ContextMenu cm = tree.getMenu();
-        ContextMenuItem cmItem = cm.getMenuItemByName("edit");
-        if (cmItem != null) {
-            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
-        }
-        cmItem = cm.getMenuItemByName("new");
-        if (cmItem != null) {
-            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
-        }
-        // null is separator :)
+        tree.addFunctionBarItemFromContextMenu("edit");
+        tree.addFunctionBarItemFromContextMenu("new");
         tree.addFunctionBarItem(null);
-        cmItem = cm.getMenuItemByName("activate");
-        if (cmItem != null) {
-            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
-        }
-        cmItem = cm.getMenuItemByName("deactivate");
-        if (cmItem != null) {
-            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
-        }
+        tree.addFunctionBarItemFromContextMenu("activate");
+        tree.addFunctionBarItemFromContextMenu("deactivate");
         tree.addFunctionBarItem(null);
-        ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
-        menuRefresh.setLabel("refresh"); //$NON-NLS-1$
-        menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
-        menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
-        tree.addFunctionBarItem(new FunctionBarItem(menuRefresh));
+        tree.addFunctionBarItem(FunctionBarItem.getRefreshFunctionBarItem(tree, getMessages(), request));
     }
 
 }

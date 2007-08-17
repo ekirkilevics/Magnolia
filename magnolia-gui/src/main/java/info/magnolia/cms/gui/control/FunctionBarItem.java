@@ -12,6 +12,9 @@
  */
 package info.magnolia.cms.gui.control;
 
+import info.magnolia.cms.i18n.Messages;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.Iterator;
 
 
@@ -20,6 +23,10 @@ import java.util.Iterator;
  * @author higi
  */
 public class FunctionBarItem extends ContextMenuItem {
+
+    public static FunctionBarItem getRefreshFunctionBarItem(Tree tree, Messages msgs, HttpServletRequest request) {
+        return new FunctionBarItem(ContextMenuItem.getRefreshMenuItem(tree, msgs, request));
+    }
 
     private boolean active = false;
 

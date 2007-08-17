@@ -1089,6 +1089,16 @@ public class Tree extends ControlImpl {
     }
 
     /**
+     * Convenience method to add a function bar item that already exists in the context menu.
+     */
+    public void addFunctionBarItemFromContextMenu(String itemName) {
+        final ContextMenuItem menuItem = getMenu().getMenuItemByName(itemName);
+        if (menuItem != null) {
+           addFunctionBarItem(new FunctionBarItem(menuItem));
+        }
+    }
+
+    /**
      * Add a separator line between context menu items.
      */
     public void addSeparator() {

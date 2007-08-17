@@ -15,7 +15,6 @@ package info.magnolia.module.admininterface.trees;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
-import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.control.Select;
@@ -254,11 +253,7 @@ public class ConfigTreeConfiguration extends AbstractTreeConfiguration {
             tree.addMenuItem(menuImport);
         }
         else {
-            ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
-            menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
-            menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
-            menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
-            tree.addMenuItem(menuRefresh);
+            tree.addMenuItem(ContextMenuItem.getRefreshMenuItem(tree, msgs, request));
         }
 
     }
@@ -269,37 +264,17 @@ public class ConfigTreeConfiguration extends AbstractTreeConfiguration {
      */
     public void prepareFunctionBar(Tree tree, boolean browseMode, HttpServletRequest request) {
         final Messages msgs = getMessages();
-        ContextMenu cm = tree.getMenu();
-        ContextMenuItem cmItem = cm.getMenuItemByName("newFolder");
-        if (cmItem != null) {
-            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
-        }
-        cmItem = cm.getMenuItemByName("newNode");
-        if (cmItem != null) {
-            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
-        }
-        cmItem = cm.getMenuItemByName("newData");
-        if (cmItem != null) {
-            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
-        }
+        tree.addFunctionBarItemFromContextMenu("newFolder");
+        tree.addFunctionBarItemFromContextMenu("newNode");
+        tree.addFunctionBarItemFromContextMenu("newData");
         // null is separator :)
         tree.addFunctionBarItem(null);
-        cmItem = cm.getMenuItemByName("activate");
-        if (cmItem != null) {
-            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
-        }
-        cmItem = cm.getMenuItemByName("deactivate");
-        if (cmItem != null) {
-            tree.addFunctionBarItem(new FunctionBarItem(cmItem));
-        }
+        tree.addFunctionBarItemFromContextMenu("activate");
+        tree.addFunctionBarItemFromContextMenu("deactivate");
         // null is separator :)
         tree.addFunctionBarItem(null);
 
-        ContextMenuItem menuRefresh = new ContextMenuItem("refresh");
-        menuRefresh.setLabel(msgs.get("tree.menu.refresh")); //$NON-NLS-1$
-        menuRefresh.setIcon(request.getContextPath() + "/.resources/icons/16/refresh.gif"); //$NON-NLS-1$
-        menuRefresh.setOnclick(tree.getJavascriptTree() + ".refresh();"); //$NON-NLS-1$
-        tree.addFunctionBarItem(new FunctionBarItem(menuRefresh));
+        tree.addFunctionBarItem(FunctionBarItem.getRefreshFunctionBarItem(tree, msgs, request));
     }
 
 }
