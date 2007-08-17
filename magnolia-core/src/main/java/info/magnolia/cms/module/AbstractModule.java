@@ -93,6 +93,10 @@ public abstract class AbstractModule implements Module, ModuleLifecycle {
         }
     }
 
+    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+
+    }
+
     /**
      * Calles onRegister if not yet installed after it loaded the bootstrapfiles of this module
      */
