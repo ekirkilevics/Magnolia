@@ -70,6 +70,6 @@ public class LanguageDefinition {
      * Uses the locals toString() method
      */
     public String toString() {
-        return getLocale().toString();
+        return "country: " + getCountry() + " language: " + getLanguage();
     }
 }
