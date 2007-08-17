@@ -26,7 +26,7 @@ import javax.jcr.RepositoryException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class AddMainMenuPointTask extends AbstractTask {
+public class AddMainMenuItemTask extends AbstractTask {
     private final String menuName;
     private final String label;
     private final String i18nBasename;
@@ -37,7 +37,7 @@ public class AddMainMenuPointTask extends AbstractTask {
     /**
      * @param orderBefore the menu name before which this new menu should be positioned 
      */
-    public AddMainMenuPointTask(String menuName, String label, String i18nBasename, String onClick, String icon, String orderBefore) {
+    public AddMainMenuItemTask(String menuName, String label, String i18nBasename, String onClick, String icon, String orderBefore) {
         super("Menu", "Adds an item in the admin interface menu for " + menuName);
         this.menuName = menuName;
         this.label = label;

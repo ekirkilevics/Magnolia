@@ -14,7 +14,7 @@ package info.magnolia.module.workflow.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.admininterface.setup.AddMainMenuPointTask;
+import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.Task;
@@ -54,7 +54,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
     // TODO : add config submenu item ?
 
     protected List getExtraInstallTasks(InstallContext installContext) {
-        final AddMainMenuPointTask t = new AddMainMenuPointTask("inbox", "menu.inbox", "info.magnolia.module.workflow.messages",
+        final AddMainMenuItemTask t = new AddMainMenuItemTask("inbox", "menu.inbox", "info.magnolia.module.workflow.messages",
                 "MgnlAdminCentral.showContent('/.magnolia/pages/inbox.html', false, false)", "/.resources/icons/24/mail.gif",
                 "security");
 
