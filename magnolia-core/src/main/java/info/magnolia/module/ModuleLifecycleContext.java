@@ -16,8 +16,9 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.module.model.ModuleDefinition;
 
 /**
- * This interface provides a hook allowing modules to register ObserverManager
- * instances, which can observer other modules' nodes.
+ * This interface currently provides a hook allowing modules to register ObserverManager
+ * instances, which can observer other modules' nodes. In the future, it might provide
+ * other callback methods relevant to the lifecycle management of a module.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
