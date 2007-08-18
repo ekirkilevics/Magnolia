@@ -112,7 +112,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
      public static final String ACTIVATE = "activate"; //$NON-NLS-1$
 
-     public static final String DE_ACTIVATE = "deactivate"; //$NON-NLS-1$
+     public static final String DEACTIVATE = "deactivate"; //$NON-NLS-1$
 
      public static final String AUTHORIZATION = "Authorization";
 
@@ -296,21 +296,21 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          }
      }
 
-     public synchronized void deActivate(String path) throws ExchangeException, RepositoryException {
+     public synchronized void deactivate(String path) throws ExchangeException, RepositoryException {
          Content node = getHierarchyManager().getContent(path);
          this.nodeUUID = node.getUUID();
          this.path = node.getHandle();
-         this.doDeActivate();
-         updateDeActivationDetails();
+         this.doDeactivate();
+         updateDeactivationDetails();
      }
 
-     public synchronized void deActivate(Subscriber subscriber, String path) throws ExchangeException,
+     public synchronized void deactivate(Subscriber subscriber, String path) throws ExchangeException,
          RepositoryException {
          Content node = getHierarchyManager().getContent(path);
          this.nodeUUID = node.getUUID();
          this.path = node.getHandle();
-         this.doDeActivate(subscriber);
-         updateDeActivationDetails();
+         this.doDeactivate(subscriber);
+         updateDeactivationDetails();
      }
 
     /**
@@ -318,11 +318,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public synchronized void deActivate(Content node) throws ExchangeException, RepositoryException {
+    public synchronized void deactivate(Content node) throws ExchangeException, RepositoryException {
         this.nodeUUID = node.getUUID();
         this.path = node.getHandle();
-        this.doDeActivate();
-        updateDeActivationDetails();
+        this.doDeactivate();
+        updateDeactivationDetails();
     }
 
     /**
@@ -331,25 +331,25 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public synchronized void deActivate(Subscriber subscriber, Content node) throws ExchangeException,
+    public synchronized void deactivate(Subscriber subscriber, Content node) throws ExchangeException,
         RepositoryException {
         this.nodeUUID = node.getUUID();
         this.path = node.getHandle();
-        this.doDeActivate(subscriber);
-        updateDeActivationDetails();
+        this.doDeactivate(subscriber);
+        updateDeactivationDetails();
     }
 
      /**
       * @throws ExchangeException
       */
-     public abstract void doDeActivate() throws ExchangeException;
+     public abstract void doDeactivate() throws ExchangeException;
 
      /**
       * deactivate from a specified subscriber
       * @param subscriber
       * @throws ExchangeException
       */
-     public abstract void doDeActivate(Subscriber subscriber) throws ExchangeException;
+     public abstract void doDeactivate(Subscriber subscriber) throws ExchangeException;
 
      /**
       * get deactivation URL
@@ -368,7 +368,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
          connection.addRequestProperty(WORKSPACE_NAME, this.workspaceName);
          connection.addRequestProperty(NODE_UUID, this.nodeUUID);
-         connection.addRequestProperty(ACTION, DE_ACTIVATE);
+         connection.addRequestProperty(ACTION, DEACTIVATE);
      }
 
      /**
@@ -411,9 +411,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * Update de-activation meta data
       * @throws RepositoryException
       */
-     protected void updateDeActivationDetails() throws RepositoryException {
+     protected void updateDeactivationDetails() throws RepositoryException {
          Content page = getHierarchyManager().getContentByUUID(this.nodeUUID);
-         updateMetaData(page, SimpleSyndicator.DE_ACTIVATE);
+         updateMetaData(page, SimpleSyndicator.DEACTIVATE);
          page.save();
      }
 

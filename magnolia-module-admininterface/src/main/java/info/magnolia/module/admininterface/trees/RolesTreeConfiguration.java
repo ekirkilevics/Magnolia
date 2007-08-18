@@ -136,17 +136,17 @@ public class RolesTreeConfiguration extends AbstractTreeConfiguration {
         menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree()
             + ")"); //$NON-NLS-1$
-        ContextMenuItem menuDeActivate = new ContextMenuItem("deactivate");
-        menuDeActivate.setLabel(msgs.get("tree.roles.menu.deactivate")); //$NON-NLS-1$
-        menuDeActivate.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_left_red.gif"); //$NON-NLS-1$
-        menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
-        menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+        ContextMenuItem menuDeactivate = new ContextMenuItem("deactivate");
+        menuDeactivate.setLabel(msgs.get("tree.roles.menu.deactivate")); //$NON-NLS-1$
+        menuDeactivate.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_left_red.gif"); //$NON-NLS-1$
+        menuDeactivate.setOnclick(tree.getJavascriptTree() + ".deactivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
+        menuDeactivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree()
             + ")"); //$NON-NLS-1$
 
         if (!ActivationManagerFactory.getActivationManager().hasAnyActiveSubscriber()) {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-            menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
+            menuDeactivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
         }
 
         if (!browseMode) {
@@ -158,7 +158,7 @@ public class RolesTreeConfiguration extends AbstractTreeConfiguration {
 
             tree.addMenuItem(null); // line
             tree.addMenuItem(menuActivateExcl);
-            tree.addMenuItem(menuDeActivate);
+            tree.addMenuItem(menuDeactivate);
         }
         else {
             tree.addMenuItem(ContextMenuItem.getRefreshMenuItem(tree, msgs, request));

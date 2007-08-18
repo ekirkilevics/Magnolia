@@ -105,12 +105,12 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
     }
 
-    public synchronized void doDeActivate() throws ExchangeException {
+    public synchronized void doDeactivate() throws ExchangeException {
         Iterator subscribers = ActivationManagerFactory.getActivationManager().getSubscribers().iterator();
         while (subscribers.hasNext()) {
             Subscriber subscriber = (Subscriber) subscribers.next();
             if (subscriber.isActive()) {
-                doDeActivate(subscriber);
+                doDeactivate(subscriber);
             }
         }
     }
@@ -120,7 +120,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param subscriber
      * @throws ExchangeException
      */
-    public synchronized void doDeActivate(Subscriber subscriber) throws ExchangeException {
+    public synchronized void doDeactivate(Subscriber subscriber) throws ExchangeException {
         Subscription subscription = subscriber.getMatchedSubscription(this.path, this.repositoryName);
         if (null != subscription) {
             String handle = getDeactivationURL(subscriber);

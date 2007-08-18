@@ -189,14 +189,14 @@ public class ConfigTreeConfiguration extends AbstractTreeConfiguration {
             + tree.getJavascriptTree()
             + ")"); //$NON-NLS-1$
 
-        ContextMenuItem menuDeActivate = new ContextMenuItem("deactivate");
-        menuDeActivate.setLabel(msgs.get("tree.config.menu.deactivate")); //$NON-NLS-1$
-        menuDeActivate.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_left_red.gif"); //$NON-NLS-1$
-        menuDeActivate.setOnclick(tree.getJavascriptTree() + ".deActivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
-        menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
+        ContextMenuItem menuDeactivate = new ContextMenuItem("deactivate");
+        menuDeactivate.setLabel(msgs.get("tree.config.menu.deactivate")); //$NON-NLS-1$
+        menuDeactivate.setIcon(request.getContextPath() + "/.resources/icons/16/arrow_left_red.gif"); //$NON-NLS-1$
+        menuDeactivate.setOnclick(tree.getJavascriptTree() + ".deactivateNode(" + Tree.ACTION_DEACTIVATE + ");"); //$NON-NLS-1$ //$NON-NLS-2$
+        menuDeactivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotRoot(" //$NON-NLS-1$
             + tree.getJavascriptTree()
             + ")"); //$NON-NLS-1$
-        menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
+        menuDeactivate.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotNodeData(" //$NON-NLS-1$
             + tree.getJavascriptTree()
             + ")"); //$NON-NLS-1$
 
@@ -220,7 +220,7 @@ public class ConfigTreeConfiguration extends AbstractTreeConfiguration {
         if (!ActivationManagerFactory.getActivationManager().hasAnyActiveSubscriber()) {
             menuActivateExcl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
             menuActivateIncl.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
-            menuDeActivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
+            menuDeactivate.addJavascriptCondition("new mgnlTreeMenuItemConditionBoolean(false)"); //$NON-NLS-1$
         }
 
         menuImport.addJavascriptCondition("new mgnlTreeMenuItemConditionPermissionWrite(" //$NON-NLS-1$
@@ -246,7 +246,7 @@ public class ConfigTreeConfiguration extends AbstractTreeConfiguration {
             tree.addSeparator();
             tree.addMenuItem(menuActivateExcl);
             tree.addMenuItem(menuActivateIncl);
-            tree.addMenuItem(menuDeActivate);
+            tree.addMenuItem(menuDeactivate);
 
             tree.addSeparator();
             tree.addMenuItem(menuExport);

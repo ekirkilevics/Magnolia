@@ -105,9 +105,9 @@ public interface Syndicator {
      * @param path , to deactivate
      * @throws RepositoryException
      * @throws ExchangeException
-     * @deprecated Use deActivate(Content node)
+     * @deprecated Use deactivate(Content node)
      */
-    public void deActivate(String path)
+    public void deactivate(String path)
             throws ExchangeException, RepositoryException;
 
     /**
@@ -117,7 +117,7 @@ public interface Syndicator {
      * @throws ExchangeException
      * @deprecated Use (Subscriber subscriber, Content node)
      */
-    public void deActivate(Subscriber subscriber, String path)
+    public void deactivate(Subscriber subscriber, String path)
             throws ExchangeException, RepositoryException;
 
     /**
@@ -125,7 +125,7 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void deActivate(Content node)
+    public void deactivate(Content node)
             throws ExchangeException, RepositoryException;
 
     /**
@@ -134,7 +134,7 @@ public interface Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public void deActivate(Subscriber subscriber, Content node)
+    public void deactivate(Subscriber subscriber, Content node)
             throws ExchangeException, RepositoryException;
 
 }

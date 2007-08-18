@@ -104,7 +104,7 @@ public class ReceiveFilter extends AbstractMagnoliaFilter {
          if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
              update(request);
          }
-         else if (action.equalsIgnoreCase(SimpleSyndicator.DE_ACTIVATE)) {
+         else if (action.equalsIgnoreCase(SimpleSyndicator.DEACTIVATE)) {
              remove(request);
          }
          else {
@@ -450,7 +450,7 @@ public class ReceiveFilter extends AbstractMagnoliaFilter {
          if (SimpleSyndicator.ACTIVATE.equalsIgnoreCase(action)) {
              return this.getHierarchyManager(request).getContent(this.getParentPath(request));
          }
-         else if (SimpleSyndicator.DE_ACTIVATE.equalsIgnoreCase(action)) {
+         else if (SimpleSyndicator.DEACTIVATE.equalsIgnoreCase(action)) {
              return this.getHierarchyManager(request).getContent(request.getHeader(SimpleSyndicator.NODE_UUID));
          }
          throw new ExchangeException("Node not found");

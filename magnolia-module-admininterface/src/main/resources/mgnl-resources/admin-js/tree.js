@@ -727,7 +727,7 @@
         nodeToReload.expand(params);
         }
 
-    mgnlTree.prototype.deActivateNode = function(action)
+    mgnlTree.prototype.deactivateNode = function(action)
         {
         var parentPath=this.selectedNode.id.substring(0,this.selectedNode.id.lastIndexOf("/"));
         if (parentPath=="") parentPath=this.path; //root

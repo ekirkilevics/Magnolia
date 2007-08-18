@@ -356,7 +356,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         else {
             path = "/" + label; //$NON-NLS-1$
         }
-        this.deActivateNode(path);
+        this.deactivateNode(path);
         parentNode.delete(label);
         parentNode.save();
     }
@@ -398,7 +398,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      * @throws ExchangeException
      * @throws RepositoryException
      */
-    public void deActivateNode(String path) throws ExchangeException, RepositoryException {
+    public void deactivateNode(String path) throws ExchangeException, RepositoryException {
         if (MgnlContext.getHierarchyManager(this.getRepository()).isNodeData(path)) {
             return;
         }
@@ -442,7 +442,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
                 // move source into destinatin not possible
                 return null;
             }
-            this.deActivateNode(source);
+            this.deactivateNode(source);
             try {
                 getHierarchyManager().moveTo(source, destination);
             }
@@ -493,7 +493,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
             newLabel = Path.getUniqueLabel(getHierarchyManager(), parentPath, newLabel);
             dest = parentPath + "/" + newLabel; //$NON-NLS-1$
         }
-        this.deActivateNode(this.getPath());
+        this.deactivateNode(this.getPath());
 
         if (log.isInfoEnabled()) {
             log.info("Moving node from " + this.getPath() + " to " + dest); //$NON-NLS-1$ //$NON-NLS-2$
@@ -657,7 +657,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
                     if (move) {
                         tomove.getParent().orderBefore(nameOrigin, nameSelected);
                         // deactivate
-                        this.deActivateNode(pathOrigin);
+                        this.deactivateNode(pathOrigin);
                         tomove.getParent().save();
                     }
                     else {
