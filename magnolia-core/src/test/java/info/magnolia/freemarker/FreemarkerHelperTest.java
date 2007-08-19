@@ -38,6 +38,8 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
+
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -261,7 +263,7 @@ public class FreemarkerHelperTest extends TestCase {
         tplLoader.putTemplate("test.ftl", "this is a test template.");
         tplLoader.putTemplate("test_en.ftl", "this is a test template in english.");
         tplLoader.putTemplate("test_fr_BE.ftl", "Ceci est une template belge hein une fois.");
-        tplLoader.putTemplate("test_fr.ftl", "Ceci est une template de test en français.");
+        tplLoader.putTemplate("test_fr.ftl", "Ceci est une template de test en franÔøΩais.");
 
         final MockContent c = new MockContent("pouet");
         c.setUUID("123");
@@ -285,11 +287,13 @@ public class FreemarkerHelperTest extends TestCase {
 
     public void testContextPathIsAddedWithWebContext() throws IOException, TemplateException {
         tplLoader.putTemplate("pouet", ":${contextPath}:");
-        final WebContext context = createStrictMock(WebContext.class);
+        final WebContext context = createMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.US);
-        expect(context.getContextPath()).andReturn("tralala");
 
+        expect(context.getContextPath()).andReturn("tralala");
+        expect(context.getServletContext()).andReturn(null);
         replay(context);
+
         MgnlContext.setInstance(context);
 
         final StringWriter out = new StringWriter();

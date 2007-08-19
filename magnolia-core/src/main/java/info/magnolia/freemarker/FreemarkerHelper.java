@@ -12,6 +12,10 @@
  */
 package info.magnolia.freemarker;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
+import freemarker.cache.TemplateLoader;
+import freemarker.cache.WebappTemplateLoader;
 import freemarker.template.Configuration;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
@@ -24,6 +28,8 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
+
+import javax.servlet.ServletContext;
 
 /**
  * A generic helper to render Content instances with freemarker templates.
@@ -63,6 +69,15 @@ public class FreemarkerHelper {
             if (MgnlContext.hasInstance()) {
                 final Context mgnlCtx = MgnlContext.getInstance();
                 if (mgnlCtx instanceof WebContext) {
+                    ServletContext sc = ((WebContext) MgnlContext.getInstance()).getServletContext();
+                    if (sc != null) {
+                        if (cfg.getTemplateLoader() instanceof ClassTemplateLoader) {
+                            // allow loading templates from servlet resources too
+                            cfg.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[]{
+                                cfg.getTemplateLoader(),
+                                new WebappTemplateLoader(sc, "")}));
+                        }
+                    }
                     data.put("contextPath", ((WebContext) mgnlCtx).getContextPath());
                 }
                 // TODO : this is currently still in FreemarkerUtil. If we add it here,
