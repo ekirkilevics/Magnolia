@@ -23,8 +23,8 @@ import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.JspPage;
 import javax.servlet.jsp.PageContext;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 
 
@@ -48,8 +48,15 @@ public interface WebContext extends Context {
 
     /**
      * Method used to initialize the context
+     * @deprecated Use {@link #init(HttpServletRequest,HttpServletResponse,ServletContext)} instead
      */
     public void init(HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * Method used to initialize the context
+     * @param servletContext @todo
+     */
+    public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext);
 
     /**
      * Retrieves the Aggregator instance, which gathers all info regarding the current request (paths, etc)
@@ -104,6 +111,12 @@ public interface WebContext extends Context {
      * Avoid depending on this as much as possible.
      */
     public HttpServletResponse getResponse();
+
+    /**
+     * Returns the current servlet context.
+     * @return ServletContext instance
+     */
+    ServletContext getServletContext();
 
     /**
      * Includes/render the given path into the given Writer, by wrapping it in the current HttpServletResponse.

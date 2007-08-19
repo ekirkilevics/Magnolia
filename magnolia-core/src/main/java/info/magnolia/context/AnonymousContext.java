@@ -23,6 +23,7 @@ import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.beans.config.ContentRepository;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.security.auth.Subject;
@@ -80,8 +81,15 @@ public class AnonymousContext extends WebContextImpl {
         });
     }
 
+    /**
+     * @deprecated Use {@link #init(HttpServletRequest,HttpServletResponse,ServletContext)} instead
+     */
     public void init(HttpServletRequest request, HttpServletResponse response) {
-        super.init(request, response);
+        init(request, response, null);
+    }
+
+    public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+        super.init(request, response, servletContext);
 
     }
 

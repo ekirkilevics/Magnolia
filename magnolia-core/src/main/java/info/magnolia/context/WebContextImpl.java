@@ -29,6 +29,7 @@ import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.security.auth.Subject;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -67,6 +68,8 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     private HttpServletResponse response;
 
+    private ServletContext servletContext;
+
     /**
      * the jsp page context.
      */
@@ -78,9 +81,17 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     public WebContextImpl() {
     }
 
+    /**
+     * @deprecated Use {@link #init(HttpServletRequest,HttpServletResponse,ServletContext)} instead
+     */
     public void init(HttpServletRequest request, HttpServletResponse response) {
+        init(request, response, null);
+    }
+
+    public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         this.request = request;
         this.response = response;
+        this.servletContext = servletContext;
     }
 
     /**
@@ -464,5 +475,12 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public void setPageContext(PageContext pageContext) {
         this.pageContext = pageContext;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public ServletContext getServletContext() {
+        return servletContext;
     }
 }

@@ -77,7 +77,7 @@ public class FreemarkerControl extends ControlImpl {
 
         if (stream == null) {
             // from filesystem
-            String filePath = ((WebContext) MgnlContext.getInstance()).getRequest().getRealPath(path);
+            String filePath = ((WebContext) MgnlContext.getInstance()).getServletContext().getRealPath(path);
             if (filePath != null) {
                 stream = new FileInputStream(filePath);
             }

@@ -20,6 +20,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.io.IOException;
 import java.util.Collection;
@@ -34,6 +36,12 @@ import java.util.Enumeration;
 public class LoginFilter extends AbstractMagnoliaFilter {
 
     private Collection loginHandlers = new ArrayList();
+
+    private ServletContext servletContext;
+
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.servletContext = filterConfig.getServletContext();
+    }
 
     /**
      * todo - temporary fix
@@ -55,7 +63,7 @@ public class LoginFilter extends AbstractMagnoliaFilter {
         }
         // if any of the handlers succeed we have a session and can use WebContext
         if (Authenticator.isAuthenticated(request)) {
-            MgnlContext.initAsWebContext(request, response);
+            MgnlContext.initAsWebContext(request, response, servletContext);
             if (status == LoginHandler.STATUS_SUCCEDED) {
                 resetSessionAttributes(request.getSession());
             }
@@ -77,7 +85,7 @@ public class LoginFilter extends AbstractMagnoliaFilter {
     }
 
     /**
-     * todo : temporary fix for MAGNOLIA-1598 & MAGNOLIA-1605 
+     * todo : temporary fix for MAGNOLIA-1598 & MAGNOLIA-1605
      * */
     private void resetSessionAttributes(HttpSession session) {
         Enumeration names = session.getAttributeNames();

@@ -26,6 +26,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -349,10 +350,21 @@ public class MgnlContext {
     /**
      * Sets this context as a web context.
      * @param request
+     * @deprecated Use {@link #initAsWebContext(HttpServletRequest,HttpServletResponse,ServletContext)} instead
      */
     public static void initAsWebContext(HttpServletRequest request, HttpServletResponse response) {
+        initAsWebContext(request, response, null);
+    }
+
+    /**
+     * Sets this context as a web context.
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @param servletContext ServletContext instance
+     */
+    public static void initAsWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         WebContext ctx = (WebContext) FactoryUtil.newInstance(WebContext.class);
-        ctx.init(request, response);
+        ctx.init(request, response, servletContext);
         setInstance(ctx);
     }
 
