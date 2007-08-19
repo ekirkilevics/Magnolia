@@ -34,8 +34,7 @@ import org.slf4j.LoggerFactory;
  * A Magnolia dialog that renders by a freemarker template. There are two main properties for the dialog:<br/> <table>
  * <tr>
  * <td>path (required)</td>
- * <td>Path to freemarker template: if path starts with "classpath:" the template will be searched in classpath,
- * otherwise in filesystem</td>
+ * <td>Path to freemarker template: will be loaded from classpath or from filesystem</td>
  * </tr>
  * <tr>
  * <td>multiple</td>

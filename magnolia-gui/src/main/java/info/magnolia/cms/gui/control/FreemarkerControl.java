@@ -15,6 +15,8 @@ package info.magnolia.cms.gui.control;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -53,8 +55,8 @@ public class FreemarkerControl extends ControlImpl {
     /**
      * Draw control on writer
      * @param out writer to write on
-     * @param path path of freemarker template. If path starts with "classpath:" the template will be searched in
-     * classpath, otherwise in filesystem
+     * @param path path of freemarker template. The template will be automatically searched in classpath or in
+     * filesystem
      * @param parameters map of parameters to be used in template
      * @throws IOException exception in template loading
      * @throws TemplateException exception in template rendering
@@ -65,14 +67,20 @@ public class FreemarkerControl extends ControlImpl {
 
         // get inputstream
         InputStream stream = null;
+
         if (path.startsWith("classpath:")) {
-            // from classpath
-            stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(
-                StringUtils.substringAfter(path, "classpath:"));
+            path = StringUtils.substringAfter(path, "classpath:");
         }
-        else {
+
+        // try from classpath
+        stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
+
+        if (stream == null) {
             // from filesystem
-            stream = new FileInputStream(path);
+            String filePath = ((WebContext) MgnlContext.getInstance()).getRequest().getRealPath(path);
+            if (filePath != null) {
+                stream = new FileInputStream(filePath);
+            }
         }
 
         if (stream == null) {
