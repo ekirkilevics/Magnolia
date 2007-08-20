@@ -37,7 +37,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public final class Bootstrapper {
-    
+
     /**
      * Logger.
      */
@@ -111,7 +111,7 @@ public final class Bootstrapper {
         Set xmlfileset = getBootstrapFiles(bootdirs, repositoryName, filter);
 
         if (xmlfileset.isEmpty()) {
-            log.info("No bootstrap files found for repository [{}], skipping...", repositoryName); //$NON-NLS-1$
+            log.debug("No bootstrap files found for repository [{}], skipping...", repositoryName); //$NON-NLS-1$
             return true;
         }
 
@@ -196,10 +196,10 @@ public final class Bootstrapper {
 
             xmlfileset.addAll(files);
         }
-        
+
         return xmlfileset;
     }
-    
+
     /**
      * Return the standard bootstrap dirs defined in the magnolia.properies file
      * @return Array of directory names
