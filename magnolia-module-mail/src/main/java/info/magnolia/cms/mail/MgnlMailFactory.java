@@ -241,7 +241,7 @@ public class MgnlMailFactory extends ObservedManager {
             while (iter.hasNext()) {
                 Content temp = (Content) iter.next();
                 String templateName = temp.getName();
-                log.info("Loading template:" + templateName);
+                log.debug("Loading template: {}", templateName);
                 list.add(templateName);
             }
         }
@@ -297,11 +297,11 @@ public class MgnlMailFactory extends ObservedManager {
     protected void initParam(Content configNode, String paramName, String defaultValue) {
         String value = configNode.getNodeData(paramName).getString();
         if (!StringUtils.isEmpty(value)) {
-            log.info("Init param[{}] with value:[{}]", paramName, value);
+            log.debug("Init param[{}] with value:[{}]", paramName, value);
             initParam(paramName, value);
         }
         else {
-            log.info("Init param[{}] with value:[{}] (default)", paramName, defaultValue);
+            log.debug("Init param[{}] with value:[{}] (default)", paramName, defaultValue);
             initParam(paramName, defaultValue);
         }
     }
