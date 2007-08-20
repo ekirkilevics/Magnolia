@@ -6,17 +6,12 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.voting.Voter;
-import info.magnolia.voting.voters.AuthenticatedVoter;
-import info.magnolia.voting.voters.ExtensionVoter;
-import info.magnolia.voting.voters.OnAdminVoter;
-import info.magnolia.voting.voters.RequestHasParametersVoter;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
@@ -77,7 +72,6 @@ public abstract class BaseCacheManager implements CacheManager {
     /**
      * This method must be called once and only once. It loads the configuration from the repository and starts the
      * cache if it is enabled.
-     *
      * @throws ConfigurationException if the configuration is invalid
      * @throws IllegalStateException if called more than once
      */
@@ -93,45 +87,6 @@ public abstract class BaseCacheManager implements CacheManager {
         List cacheVotersList = new ArrayList();
         Content votersNode = content.getChildByName("voters");
 
-        // @todo use info.magnolia.module.delta.AddCacheVoterTask
-        if (votersNode == null) {
-            log.info("Missing voters configuration in CacheManager. Adding default config.");
-            try {
-                votersNode = content.createContent("voters");
-                Content voter = votersNode.createContent("notWithParametersVoter", ItemType.CONTENTNODE);
-                voter.createNodeData("class", RequestHasParametersVoter.class.getName());
-                voter.createNodeData("enabled", Boolean.TRUE);
-                voter.createNodeData("trueValue", new Long(-1));
-
-                voter = votersNode.createContent("extensionVoter", ItemType.CONTENTNODE);
-                voter.createNodeData("class", ExtensionVoter.class.getName());
-                voter.createNodeData("enabled", Boolean.TRUE);
-                voter.createNodeData("falseValue", new Long(-1));
-                voter.createNodeData("trueValue", new Long(0));
-
-                voter = votersNode.createContent("notOnAdminVoter", ItemType.CONTENTNODE);
-                voter.createNodeData("class", OnAdminVoter.class.getName());
-                voter.createNodeData("enabled", Boolean.TRUE);
-                voter.createNodeData("trueValue", new Long(-1));
-
-                voter = votersNode.createContent("notAuthenticatedVoter", ItemType.CONTENTNODE);
-                voter.createNodeData("class", AuthenticatedVoter.class.getName());
-                voter.createNodeData("enabled", Boolean.FALSE);
-                voter.createNodeData("trueValue", new Long(-1));
-            }
-            catch (RepositoryException e) {
-                log.error("Unable to create default cache manager configuration.", e);
-            }
-            finally {
-                try {
-                    content.save();
-                }
-                catch (RepositoryException e) {
-                    log.error("Unable to save changes to default cache manager configuration.", e);
-                }
-            }
-        }
-
         Collection childrens = votersNode.getChildren(ItemType.CONTENTNODE);
         Iterator it = childrens.iterator();
         while (it.hasNext()) {
@@ -144,9 +99,7 @@ public abstract class BaseCacheManager implements CacheManager {
                 log.error("Unable to unmarshall config at " + cnt.getHandle(), e);
             }
             catch (ClassCastException e) {
-                log.error(
-                    "Invalid class configured at " + cnt.getHandle() + ". Expected " + Voter.class.getName(),
-                    e);
+                log.error("Invalid class configured at " + cnt.getHandle() + ". Expected " + Voter.class.getName(), e);
             }
         }
 

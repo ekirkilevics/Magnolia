@@ -44,7 +44,7 @@ public class AddCacheVoterTask extends AbstractRepositoryTask {
 
         if (!voters.hasContent(name)) {
             Content m = voters.createContent(name, ItemType.CONTENTNODE);
-            m.createNodeData("class").setValue(voterClass.getClass().getName());
+            m.createNodeData("class").setValue(voterClass.getName());
 
             if (properties != null) {
                 Iterator it = properties.entrySet().iterator();

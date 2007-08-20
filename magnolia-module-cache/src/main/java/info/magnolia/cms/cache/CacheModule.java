@@ -2,12 +2,10 @@ package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.filters.MagnoliaMainFilter;
-import info.magnolia.cms.module.AbstractModule;
-import info.magnolia.cms.module.InitializationException;
-import info.magnolia.cms.module.InvalidConfigException;
-import info.magnolia.cms.module.RegisterException;
-import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleLifecycle;
+import info.magnolia.module.ModuleLifecycleContext;
 
 import javax.jcr.RepositoryException;
 
@@ -19,42 +17,36 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class CacheModule extends AbstractModule {
+public class CacheModule implements ModuleLifecycle {
 
     private static final Logger log = LoggerFactory.getLogger(CacheModule.class);
 
     private final CacheManager cacheManager = CacheManagerFactory.getCacheManager();
 
     /**
-     * Init cache manager
+     * {@inheritDoc}
      */
-    public void init(Content configNode) throws InvalidConfigException, InitializationException {
-        this.cacheManager.init(configNode);
-        this.setInitialized(true);
+    public void start(ModuleLifecycleContext moduleLifecycleContext) {
+
+        // @todo should be refactored, it's a step in removing the old module configuration
+        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+        Content configNode;
+        try {
+            configNode = hm.getContent("/modules/cache/config");
+            this.cacheManager.init(configNode);
+        }
+        catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+        }
     }
 
     /**
-     * @see info.magnolia.cms.module.Module#destroy()
+     * {@inheritDoc}
      */
-    public void destroy() {
+    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
         if (this.cacheManager.isRunning()) {
             this.cacheManager.stop();
         }
-    }
-
-    /**
-     * @see info.magnolia.cms.module.AbstractModule#onRegister(int)
-     */
-    protected void onRegister(int registerState) throws RegisterException {
-        // order the filter
-        Content filters = ContentUtil.getContent(ContentRepository.CONFIG, MagnoliaMainFilter.SERVER_FILTERS);
-        try {
-            filters.orderBefore("cache", "virtualURI");
-        }
-        catch (RepositoryException e) {
-            log.error("can't reorder filter", e);
-        }
-
     }
 
 }
