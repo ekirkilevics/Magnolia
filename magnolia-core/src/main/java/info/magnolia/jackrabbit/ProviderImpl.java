@@ -139,6 +139,16 @@ public class ProviderImpl implements Provider {
         configFile = Path.getAbsoluteFileSystemPath(configFile);
         String repositoryHome = (String) params.get(REPOSITORY_HOME_KEY);
         repositoryHome = getRepositoryHome(repositoryHome);
+
+        // cleanup the path, to remove eventual ../.. and make it absolute
+        try {
+            File repoHomeFile = new File(repositoryHome);
+            repositoryHome = repoHomeFile.getCanonicalPath();
+        }
+        catch (IOException e1) {
+            // should never happen and it's not a problem at this point, just pass it to jackrabbit and see
+        }
+
         if (log.isInfoEnabled()) {
             log.info("Loading repository at {} (config file: {})", repositoryHome, configFile); //$NON-NLS-1$
         }
