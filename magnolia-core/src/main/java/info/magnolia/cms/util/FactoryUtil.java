@@ -77,10 +77,10 @@ public class FactoryUtil {
             }
 
             String className = StringUtils.defaultIfEmpty(SystemProperty.getProperty(interf.getName()), interf.getName());
-            if(className.startsWith("/") || className.indexOf(':') >= 0){
+            if (className.startsWith("/") || className.indexOf(':') >= 0) {
                 String repository = ContentRepository.CONFIG;
                 String path = className;
-                if(className.contains(":")){
+                if (className.indexOf(':') >= 0) {
                     repository = StringUtils.substringBefore(className, ":");
                     path = StringUtils.substringAfter(className, ":");
                 }
