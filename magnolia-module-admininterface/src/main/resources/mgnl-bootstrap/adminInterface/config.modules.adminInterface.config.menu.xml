@@ -262,7 +262,7 @@
         <sv:value>false</sv:value>
       </sv:property>
     </sv:node>
-    <sv:node sv:name="subscriber">
+    <sv:node sv:name="subscribers">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -273,7 +273,7 @@
         <sv:value>f92d687d-9425-4303-82af-753c986dedce</sv:value>
       </sv:property>
       <sv:property sv:name="label" sv:type="String">
-        <sv:value>menu.config.subscriber</sv:value>
+        <sv:value>menu.config.subscribers</sv:value>
       </sv:property>
       <sv:property sv:name="onclick" sv:type="String">
         <sv:value>MgnlAdminCentral.showTree('config','/server/activation/subscribers/magnoliaPublic8080/active')</sv:value>
