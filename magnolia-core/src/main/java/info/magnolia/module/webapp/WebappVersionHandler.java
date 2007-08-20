@@ -42,7 +42,7 @@ public class WebappVersionHandler implements ModuleVersionHandler {
 
         } catch (RepositoryException e) {
             //TODO
-            throw new IllegalStateException("Couldn't check if repositories were empty: " + e.getMessage(), e);
+            throw new RuntimeException("Couldn't check if repositories were empty: " + e.getMessage(), e);
         }
     }
 

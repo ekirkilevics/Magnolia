@@ -41,7 +41,7 @@ public abstract class PropertyValuesTask extends AbstractTask {
             prop.setValue(newValue);
         } else {
             final String msg = format("{0} was expected to exist with value {1} but {2,choice,0#does not exist|1#has the value {3} instead}.",
-                    prop.getHandle(), expectedCurrentValue, Integer.valueOf(prop.isExist() ? 1 : 0), currentvalue);
+                    prop.getHandle(), expectedCurrentValue, new Integer(prop.isExist() ? 1 : 0), currentvalue);
             ctx.warn(msg);
         }
     }
@@ -52,7 +52,7 @@ public abstract class PropertyValuesTask extends AbstractTask {
             final String currentvalue = prop.getString();
             if (!currentvalue.equals(expectedValue)) {
                 final String msg = format("{0} was expected to exist with value {1} but {2,choice,0#does not exist|1#has the value {3} instead}.",
-                        prop.getHandle(), expectedValue, Integer.valueOf(prop.isExist() ? 1 : 0), currentvalue);
+                        prop.getHandle(), expectedValue, new Integer(prop.isExist() ? 1 : 0), currentvalue);
                 ctx.warn(msg);
             }
         } else {
