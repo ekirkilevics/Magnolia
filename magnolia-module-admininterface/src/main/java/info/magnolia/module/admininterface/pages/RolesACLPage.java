@@ -23,9 +23,7 @@ import info.magnolia.module.admininterface.config.SecurityConfiguration;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -332,7 +330,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
         /**
          * Register an entry
          * @param path the not cleaned path
-         * @param value the access right
+         * @param accessRight the access right
          */
         void register(String path, int accessRight, RepositoryConfiguration repoConf) {
             String cleanPath = repoConf.toViewPattern(path);
