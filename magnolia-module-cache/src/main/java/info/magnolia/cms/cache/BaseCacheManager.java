@@ -77,7 +77,7 @@ public abstract class BaseCacheManager implements CacheManager {
     /**
      * This method must be called once and only once. It loads the configuration from the repository and starts the
      * cache if it is enabled.
-     * 
+     *
      * @throws ConfigurationException if the configuration is invalid
      * @throws IllegalStateException if called more than once
      */
@@ -93,6 +93,7 @@ public abstract class BaseCacheManager implements CacheManager {
         List cacheVotersList = new ArrayList();
         Content votersNode = content.getChildByName("voters");
 
+        // @todo use info.magnolia.module.delta.AddCacheVoterTask
         if (votersNode == null) {
             log.info("Missing voters configuration in CacheManager. Adding default config.");
             try {
