@@ -18,21 +18,12 @@ import info.magnolia.module.delta.RegisterModuleServletsTask;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author philipp
  * @version $Id$
  *
  */
 public class DefaultModuleVersionHandler extends AbstractModuleVersionHandler {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(DefaultModuleVersionHandler.class);
 
     /**
      * Returns the most common installation tasks.

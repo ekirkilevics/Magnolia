@@ -34,9 +34,6 @@ import java.util.TreeMap;
 
 import javax.jcr.RepositoryException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * Implement this and register your deltas in the constructor using the register method.
  *
@@ -48,7 +45,7 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractModuleVersionHandler implements ModuleVersionHandler {
 
-    private static Logger log = LoggerFactory.getLogger(AbstractModuleVersionHandler.class);
+    private static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(AbstractModuleVersionHandler.class);
 
     private final Map allDeltas; // <Version, Delta>
 

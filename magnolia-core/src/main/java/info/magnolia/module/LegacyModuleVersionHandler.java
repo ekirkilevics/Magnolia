@@ -19,10 +19,6 @@ import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.model.ModuleDefinition;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * A ModuleVersionHandler used for modules which don't specify one.
  * @author gjoseph
@@ -31,8 +27,6 @@ import org.slf4j.LoggerFactory;
 class LegacyModuleVersionHandler extends DefaultModuleVersionHandler {
 
     private static final String EXCEPTION_DURING_INSTALLING_MODULE = "Exception during installing module using the old model";
-
-    private Logger log = LoggerFactory.getLogger(LegacyModuleVersionHandler.class);
 
     public Delta getInstall(InstallContext installContext) {
         Delta delta = super.getInstall(installContext);
