@@ -104,8 +104,9 @@ public class UUIDLink{
 
         Matcher matcher = LINK_PATTERN.matcher(link);
         if(matcher.matches()){
-            handle = URI2RepositoryManager.getInstance().getHandle(matcher.group(1));
-            repository = URI2RepositoryManager.getInstance().getRepository(handle);
+            String orgHandle = matcher.group(1);
+            handle = URI2RepositoryManager.getInstance().getHandle(orgHandle);
+            repository = URI2RepositoryManager.getInstance().getRepository(orgHandle);
             extension = StringUtils.defaultIfEmpty(matcher.group(3), Server.getDefaultExtension());
             anchor = matcher.group(5);
             parameters = matcher.group(7);
