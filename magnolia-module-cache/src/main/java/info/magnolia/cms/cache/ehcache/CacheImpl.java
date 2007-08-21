@@ -5,6 +5,7 @@ import info.magnolia.cms.cache.CacheConfig;
 import info.magnolia.cms.cache.CacheKey;
 import info.magnolia.cms.cache.CacheableEntry;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.Path;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,8 +18,12 @@ import net.sf.ehcache.Cache;
 import net.sf.ehcache.CacheException;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Element;
+import net.sf.ehcache.bootstrap.BootstrapCacheLoader;
+import net.sf.ehcache.event.RegisteredEventListeners;
+import net.sf.ehcache.store.MemoryStoreEvictionPolicy;
 
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -129,31 +134,47 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
     }
 
     private Cache createCache() throws ConfigurationException {
-
-        // commented lines require ehcache 1.2
         try {
             Content configNode = this.config.getContent("ehcache");
             String name = configNode.getNodeData("name").getString();
             int maxElements = (int) configNode.getNodeData("maxElementsInMemory").getLong();
 
-            // MemoryStoreEvictionPolicy evictionPolicy =
-            // MemoryStoreEvictionPolicy.fromString(configNode.getNodeData("memoryStoreEvictionPolicy").getString());
+            MemoryStoreEvictionPolicy evictionPolicy = MemoryStoreEvictionPolicy.fromString(configNode.getNodeData(
+                "memoryStoreEvictionPolicy").getString());
             boolean overflow = configNode.getNodeData("overflowToDisk").getBoolean();
 
-            // String diskStore = configNode.getNodeData("diskStorePath").getString();
+            String diskStore = configNode.getNodeData("diskStorePath").getString();
             boolean eternal = configNode.getNodeData("eternal").getBoolean();
             long ttl = configNode.getNodeData("timeToLiveSeconds").getLong();
             long tti = configNode.getNodeData("timeToIdleSeconds").getLong();
             boolean persistent = configNode.getNodeData("diskPersistent").getBoolean();
             long expiryInterval = configNode.getNodeData("diskExpiryThreadIntervalSeconds").getLong();
-            // RegisteredEventListeners listeners = null;
+            RegisteredEventListeners listeners = null;
+            BootstrapCacheLoader bootstrapCacheLoader = null;
 
-            // if (StringUtils.isBlank(diskStore)) { diskStore = Path.getCacheDirectoryPath(); }
+            int maxElementsOnDisk = (int) configNode.getNodeData("maxElementsOnDisk").getLong();
+            int diskSpoolBufferSizeMB = (int) configNode.getNodeData("diskSpoolBufferSizeMB").getLong();
 
-            // return new Cache(name, maxElements, evictionPolicy, overflow, diskStore, eternal, ttl, tti, persistent,
-            // expiryInterval,
-            // listeners);
-            return new Cache(name, maxElements, overflow, eternal, ttl, tti, persistent, expiryInterval);
+            if (StringUtils.isBlank(diskStore)) {
+                diskStore = Path.getCacheDirectoryPath();
+            }
+
+            return new Cache(
+                name,
+                maxElements,
+                evictionPolicy,
+                overflow,
+                diskStore,
+                eternal,
+                ttl,
+                tti,
+                persistent,
+                expiryInterval,
+                listeners,
+                bootstrapCacheLoader,
+                maxElementsOnDisk,
+                diskSpoolBufferSizeMB);
+
         }
         catch (RepositoryException e) {
             throw new ConfigurationException(e);
