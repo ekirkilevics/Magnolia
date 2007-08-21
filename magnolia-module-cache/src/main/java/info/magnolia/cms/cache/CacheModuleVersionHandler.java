@@ -4,7 +4,6 @@ import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AddCacheVoterTask;
 import info.magnolia.module.delta.FilterOrderingTask;
-import info.magnolia.module.delta.Task;
 import info.magnolia.voting.voters.RequestHasParametersVoter;
 
 import java.util.HashMap;
@@ -18,12 +17,8 @@ import java.util.Map;
  */
 public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
-    /**
-     * {@inheritDoc}
-     */
-    protected List getBasicInstallTasks(InstallContext installContext) {
-
-        List<Task> installTasks = super.getBasicInstallTasks(installContext);
+    protected List getExtraInstallTasks(InstallContext installContext) {
+        final List installTasks = super.getBasicInstallTasks(installContext);
         installTasks.add(new FilterOrderingTask("cache", new String[]{"activation", "i18n"}));
 
         Map config = new HashMap();
