@@ -55,4 +55,11 @@ public class WebappVersionHandler implements ModuleVersionHandler {
             return Collections.EMPTY_LIST;
         }
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public List getStartupTasks(InstallContext installContext) {
+        return Collections.EMPTY_LIST;
+    }
 }

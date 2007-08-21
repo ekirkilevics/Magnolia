@@ -180,5 +180,12 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         }
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public List getStartupTasks(InstallContext installContext) {
+        return Collections.EMPTY_LIST;
+    }
+
 
 }

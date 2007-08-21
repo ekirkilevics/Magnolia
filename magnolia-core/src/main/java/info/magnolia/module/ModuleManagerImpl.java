@@ -201,7 +201,60 @@ public class ModuleManagerImpl implements ModuleManager {
         return installContext;
     }
 
+    /**
+     * Process startup tasks. Tasks retured by <code>ModuleDefinition.getStartupTasks()</code> are always executed and
+     * do not require manual intervention.
+     */
+    private void processStartupTasks() {
+        final Context previousCtx = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
+        try {
+            MgnlContext.setInstance(MgnlContext.getSystemContext());
+            final Iterator it = orderedModuleDescriptors.iterator();
+            boolean success = true;
+            while (it.hasNext()) {
+                final ModuleDefinition module = (ModuleDefinition) it.next();
+                String moduleName = module.getName();
+                final ModuleVersionHandler versionHandler = registry.getVersionHandler(moduleName);
+
+                installContext.setCurrentModule(module);
+
+                List tasks = versionHandler.getStartupTasks(installContext);
+                if (tasks == null || tasks.isEmpty()) {
+                    continue;
+                }
+
+                Task task = null;
+                try {
+                    final Iterator itT = tasks.iterator();
+                    while (itT.hasNext()) {
+                        task = (Task) itT.next();
+                        log.debug("Module {}, executing {}", module, task);
+                        task.execute(installContext);
+                    }
+                }
+                catch (TaskExecutionException e) {
+                    log.error(
+                        "Startup task " + task + " for module " + moduleName + " failed: " + e.getMessage() + ".",
+                        e);
+                    success = false;
+                }
+                finally {
+                    installContext.setCurrentModule(null);
+                }
+
+                saveChanges(success);
+            }
+        }
+        finally {
+            MgnlContext.setInstance(previousCtx);
+        }
+    }
+
     public void startModules() {
+
+        // process startup tasks before actually starting modules
+        processStartupTasks();
+
         try {
             // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle
             // methods.
@@ -350,14 +403,22 @@ public class ModuleManagerImpl implements ModuleManager {
             ctx.setCurrentModule(null);
         }
 
+        saveChanges(success);
+    }
+
+    /**
+     * Save changes to jcr, or revert them if something went wrong (set persist=false)
+     * @param persist if <code>false</code> changes will be reverted
+     */
+    private void saveChanges(boolean persist) {
         // save all repositories once a module was properly installed/updated, or rollback changes.
         final Iterator reposIt = ContentRepository.getAllRepositoryNames();
         while (reposIt.hasNext()) {
             final String repoName = (String) reposIt.next();
-            log.debug((success ? "Saving" : "Rolling back") + " repository " + repoName);
+            log.debug((persist ? "Saving" : "Rolling back") + " repository " + repoName);
             final HierarchyManager hm = MgnlContext.getHierarchyManager(repoName);
             try {
-                if (success) {
+                if (persist) {
                     hm.save();
                 }
                 else {
@@ -368,7 +429,6 @@ public class ModuleManagerImpl implements ModuleManager {
                 throw new RuntimeException(e); // TODO
             }
         }
-
     }
 
     /**

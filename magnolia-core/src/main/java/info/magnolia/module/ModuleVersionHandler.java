@@ -12,6 +12,7 @@
  */
 package info.magnolia.module;
 
+import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.Version;
 
 import java.util.List;
@@ -44,4 +45,13 @@ public interface ModuleVersionHandler {
     List getDeltas(InstallContext installContext, Version from);
 
     // TODO : the two methods can maybe be merged, since they're called sequentially in ModuleManager
+
+    /**
+     * Returns a list of {@link Task} that needs to be executed always before this module is started. These tasks will
+     * be silently applied at startup.
+     * @param installContext InstallContext
+     * @return List of {@link Task}
+     */
+     List getStartupTasks(InstallContext installContext);
+
 }

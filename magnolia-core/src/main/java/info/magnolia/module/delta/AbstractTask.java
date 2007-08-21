@@ -12,6 +12,9 @@
  */
 package info.magnolia.module.delta;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author gjoseph
@@ -20,6 +23,11 @@ package info.magnolia.module.delta;
 public abstract class AbstractTask implements Task {
     private final String name;
     private final String description;
+
+    /**
+     * Logger that can be reused in subclasses.
+     */
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     public AbstractTask(String taskName, String taskDescription) {
         this.name = taskName;
