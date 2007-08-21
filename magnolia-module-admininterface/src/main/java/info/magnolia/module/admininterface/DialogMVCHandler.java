@@ -302,6 +302,10 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         // hm is null if this dialog is not used to show content
         if (storageNode == null && hm != null) {
             try {
+                if(this.path == null){
+                    log.warn("No path defined for a dialog called by the url [{}]", this.getRequest().getRequestURL());
+                    return null;
+                }
                 Content parentContent = hm.getContent(path);
                 if (StringUtils.isEmpty(nodeName)) {
                     if (StringUtils.isEmpty(nodeCollectionName)) {
