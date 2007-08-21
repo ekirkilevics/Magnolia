@@ -1,4 +1,4 @@
-package info.magnolia.module.delta;
+package info.magnolia.cms.cache.delta;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
@@ -6,6 +6,8 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AbstractRepositoryTask;
+import info.magnolia.module.delta.TaskExecutionException;
 
 import java.util.Iterator;
 import java.util.Map;

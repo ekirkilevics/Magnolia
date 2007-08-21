@@ -1,8 +1,8 @@
 package info.magnolia.cms.cache;
 
+import info.magnolia.cms.cache.delta.AddCacheVoterTask;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AddCacheVoterTask;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.voting.voters.RequestHasParametersVoter;
 
