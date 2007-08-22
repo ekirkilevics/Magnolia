@@ -1,4 +1,4 @@
-package info.magnolia.cms.cache.delta;
+package info.magnolia.cms.cache.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
