@@ -60,14 +60,18 @@ public abstract class MVCServletHandlerImpl implements MVCServletHandler {
     }
 
     public void init() {
+        populateFromRequest(this);
+    }
 
+    protected void populateFromRequest(Object bean) {
         RequestFormUtil requestFormUtil = new RequestFormUtil(this.getRequest());
         Map parameters = new HashMap(); // needed, can't directly modify the map returned by request.getParameterMap()
         parameters.putAll(requestFormUtil.getParameters());
         parameters.putAll(requestFormUtil.getDocuments()); // handle uploaded files too
 
         try {
-            BeanUtils.populate(this, parameters);
+            // TODO : we could filter the parameters
+            BeanUtils.populate(bean, parameters);
         }
         catch (Exception e) {
             log.error("can't set properties on the handler", e);
