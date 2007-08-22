@@ -69,7 +69,7 @@ public class PageMVCServlet extends MVCServlet {
                 handler = PageHandlerManager.getInstance().getPageHandler(pageName, request, response);
             }
             catch (InvalidDialogPageHandlerException e) {
-                log.error("no page found with name \"{}\"", pageName); //$NON-NLS-1$
+                log.error("no page found with name \"{}\" ({})", pageName, e.getMessage()); //$NON-NLS-1$
             }
         }
         else {
