@@ -21,6 +21,8 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Iterator;
+import java.util.Collection;
+import java.util.ArrayList;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
@@ -116,6 +118,16 @@ public class MgnlGroup implements Group {
      */
     public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException {
         return this.hasAny(roleName, NODE_ROLES);
+    }
+
+    public Collection getRoles() {
+        log.warn("Not yet implemented");
+        return new ArrayList();
+    }
+
+    public Collection getAllRoles() {
+        log.warn("Not yet implemented");
+        return new ArrayList();
     }
 
     /**

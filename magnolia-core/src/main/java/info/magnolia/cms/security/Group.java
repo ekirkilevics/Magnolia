@@ -12,8 +12,10 @@
  */
 package info.magnolia.cms.security;
 
+import java.util.Collection;
+
 /**
- * @author Sameer Charles $Id$
+ * @author Sameer Charles $Id:Group.java 9391 2007-05-11 15:48:02Z scharles $
  */
 public interface Group {
 
@@ -62,5 +64,15 @@ public interface Group {
      * @throws AccessDeniedException if loggen in repository user does not sufficient rights
      */
     public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
+
+    /**
+     * get roles that are directly assigned to group
+     */
+    public Collection getRoles();
+
+    /**
+     * get all roles assigned to this group, collected recursively from subgroups
+     * */
+    public Collection getAllRoles();
 
 }

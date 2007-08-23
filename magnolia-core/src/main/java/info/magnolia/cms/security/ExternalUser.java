@@ -152,10 +152,18 @@ public class ExternalUser implements User, Serializable {
         return this.groupList.getList();
     }
 
+    public Collection getAllGroups() {
+        return this.getGroups();
+    }
+
     /**
      * @see info.magnolia.cms.security.User#getRoles()
      */
     public Collection getRoles() {
         return this.roleList.getList();
+    }
+
+    public Collection getAllRoles() {
+        return this.getRoles();
     }
 }

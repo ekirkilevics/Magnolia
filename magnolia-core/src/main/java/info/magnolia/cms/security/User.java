@@ -84,7 +84,17 @@ public interface User {
     public abstract Collection getGroups();
 
     /**
-     * get roles tha are assigned to user
+     * get all groups to which this user belongs to, collected recursively including
+     * */
+    public abstract Collection getAllGroups();
+
+    /**
+     * get roles that are directly assigned to user
      */
     public abstract Collection getRoles();
+
+    /**
+     * get all roles assigned to this user, collected recursively including groups/subgroups
+     * */
+    public abstract Collection getAllRoles();
 }

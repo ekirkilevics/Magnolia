@@ -282,70 +282,70 @@ public class MgnlUser implements User, Serializable {
     }
 
     public Collection getGroups() {
-        ArrayList list = new ArrayList();
-
         try {
-            Content groups = null;
-            try {
-                // get "groups" node under node "user"
-                groups = this.getUserNode().getContent("groups");
-            }
-            catch (javax.jcr.PathNotFoundException e) {
-                log.warn("the user " + getName() + " does have not groups node");
-            }
-
-            if (groups != null) {
-                Collection c = groups.getNodeDataCollection();
-                Iterator it = c.iterator();
-                while (it.hasNext()) {
-                    NodeData nd = (NodeData) it.next();
-                    String uuid = nd.getString();
-                    Content group = MgnlContext
-                        .getSystemContext()
-                        .getHierarchyManager(ContentRepository.USER_GROUPS)
-                        .getContentByUUID(uuid);
-                    list.add(group.getName());
-                }
-            }
-
+            Content groups = this.getUserNode().getContent("groups");
+            return this.getGroups(groups);
+        } catch (PathNotFoundException e) {
+            log.warn("the user " + getName() + " not a member of any group");
+        } catch (Throwable t) {
+            log.error("Failed to read groups", t);
         }
-        catch (Exception e) {
-            log.warn("cant read groups of user.", e);
-        }
+        return new ArrayList();
+    }
 
-        return list;
+    public Collection getAllGroups() {
+        // todo
+        log.warn("Not yet implemented");
+        return getGroups();
+    }
+
+
+    private Collection getGroups(Content node) throws Throwable {
+        return (ArrayList) this.getPropertyNames(node, ContentRepository.USER_GROUPS);
     }
 
     public Collection getRoles() {
+        try {
+            Content roles = this.getUserNode().getContent("roles");
+            return this.getRoles(roles);
+        } catch (PathNotFoundException e) {
+            log.warn("the user " + getName() + " does not have any roles assigned");
+        } catch (Throwable t) {
+            log.error("Failed to read roles", t);
+        }
+        return new ArrayList();
+    }
+
+    private Collection getRoles(Content node) throws Throwable {
+        return (ArrayList) this.getPropertyNames(node, ContentRepository.USER_ROLES);
+    }
+
+    public Collection getAllRoles() {
+        // todo
+        log.warn("Not yet implemented");
+        return getRoles();
+    }
+
+    public Collection getPropertyNames(Content node, String repositoryName) throws Throwable {
         ArrayList list = new ArrayList();
 
-        try {
-            Content roles = null;
+        Collection c = node.getNodeDataCollection();
+        Iterator it = c.iterator();
+        while (it.hasNext()) {
+            NodeData nd = (NodeData) it.next();
+            String uuid = nd.getString();
             try {
-                // get "groups" node under node "user"
-                roles = this.getUserNode().getContent("roles");
+                Content targetNode = MgnlContext
+                    .getSystemContext()
+                    .getHierarchyManager(repositoryName)
+                    .getContentByUUID(uuid);
+                list.add(targetNode.getName());
+            } catch (Throwable t) {
+                log.error(t.getMessage());
+                log.debug("Failed while reading node by UUID", t);
+                // we continue since it can happen that target node is removed
+                // - UUID's are kept as simple strings thus have no  referential integrity   
             }
-            catch (javax.jcr.PathNotFoundException e) {
-                log.warn("the user " + getName() + " does have not roles node");
-            }
-
-            if (roles != null) {
-                Collection c = roles.getNodeDataCollection();
-                Iterator it = c.iterator();
-                while (it.hasNext()) {
-                    NodeData nd = (NodeData) it.next();
-                    String uuid = nd.getString();
-                    Content role = MgnlContext
-                        .getSystemContext()
-                        .getHierarchyManager(ContentRepository.USER_ROLES)
-                        .getContentByUUID(uuid);
-                    list.add(role.getName());
-                }
-            }
-
-        }
-        catch (Exception e) {
-            log.warn("can't read roles of user.", e);
         }
 
         return list;
@@ -376,4 +376,6 @@ public class MgnlUser implements User, Serializable {
         }
         return userNode;
     }
+
+
 }

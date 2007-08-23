@@ -2,6 +2,7 @@ package info.magnolia.cms.security;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.ArrayList;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -11,7 +12,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Date: Oct 26, 2005 Time: 5:02:46 PM
  * @author Sameer Charles
- * @version $Revision$ ($Author$)
+ * @version $Revision:9391 $ ($Author:scharles $)
  */
 public class DummyUser implements User {
 
@@ -111,10 +112,18 @@ public class DummyUser implements User {
         return Collections.EMPTY_LIST;
     }
 
+    public Collection getAllGroups() {
+        return new ArrayList();
+    }
+
     /**
      * @see info.magnolia.cms.security.User#getRoles()
      */
     public Collection getRoles() {
         return Collections.EMPTY_LIST;
+    }
+
+    public Collection getAllRoles() {
+        return new ArrayList();
     }
 }
