@@ -105,6 +105,14 @@ public class DummyUser implements User {
         return StringUtils.EMPTY;
     }
 
+    public String getProperty(String propertyName) {
+        return null;
+    }
+
+    public void setProperty(String propertyName, String value) {
+        log.debug("Can not set properties on dummy user (name: {}, value: {})", propertyName, value);
+    }
+
     /**
      * @see info.magnolia.cms.security.User#getGroups()
      */

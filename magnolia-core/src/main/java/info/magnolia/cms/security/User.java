@@ -27,61 +27,71 @@ public interface User {
      * @param roleName the name of the role
      * @return true if in role
      */
-    public boolean hasRole(String roleName);
+    boolean hasRole(String roleName);
 
     /**
      * Remove a role. Implementation is optional
      */
-    public void removeRole(String roleName) throws UnsupportedOperationException;
+    void removeRole(String roleName) throws UnsupportedOperationException;
 
     /**
      * Adds a role to this user. Implementation is optional
      * @param roleName the name of the role
      */
-    public void addRole(String roleName) throws UnsupportedOperationException;
+    void addRole(String roleName) throws UnsupportedOperationException;
 
     /**
      * Is this user in a specified group?
      * @param groupName
      * @return true if in group
      */
-    public boolean inGroup(String groupName);
+    boolean inGroup(String groupName);
 
     /**
      * Remove a group. Implementation is optional
      * @param groupName
      */
-    public void removeGroup(String groupName) throws UnsupportedOperationException;
+    void removeGroup(String groupName) throws UnsupportedOperationException;
 
     /**
      * Adds this user to a group. Implementation is optional
      * @param groupName
      */
-    public void addGroup(String groupName) throws UnsupportedOperationException;
+    void addGroup(String groupName) throws UnsupportedOperationException;
 
     /**
      * get user language
      * @return language string
      */
-
-    public abstract String getLanguage();
+    String getLanguage();
 
     /**
      * get user name
      * @return name string
      */
-    public abstract String getName();
+    String getName();
 
     /**
      * get user password
      * @return password string
      */
-    public abstract String getPassword();
+    String getPassword();
+
+    /**
+     * Gets an arbitrary property from this user.
+     */
+    String getProperty(String propertyName);
+
+    /**
+     * Sets an arbitrary property for this user.
+     * Values are currently Strings; we'd need some kind of abstract encoding mechanism to allow other types if needed.
+     */
+    void setProperty(String propertyName, String value);
 
     /**
      * get groups that user is in
      */
-    public abstract Collection getGroups();
+    Collection getGroups();
 
     /**
      * get all groups to which this user belongs to, collected recursively including
@@ -91,7 +101,7 @@ public interface User {
     /**
      * get roles that are directly assigned to user
      */
-    public abstract Collection getRoles();
+    Collection getRoles();
 
     /**
      * get all roles assigned to this user, collected recursively including groups/subgroups

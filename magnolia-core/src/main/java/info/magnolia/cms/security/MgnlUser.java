@@ -281,6 +281,19 @@ public class MgnlUser implements User, Serializable {
         return this.getUserNode().getNodeData("language").getString(); //$NON-NLS-1$
     }
 
+    public String getProperty(String propertyName) {
+        return NodeDataUtil.getString(getUserNode(), propertyName, null);
+    }
+
+    public void setProperty(String propertyName, String value) {
+        try {
+            NodeDataUtil.getOrCreateAndSet(getUserNode(), propertyName, value);
+            getUserNode().save();
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e); // TODO
+        }
+    }
+
     public Collection getGroups() {
         try {
             Content groups = this.getUserNode().getContent("groups");

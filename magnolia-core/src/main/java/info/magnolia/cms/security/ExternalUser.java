@@ -145,6 +145,14 @@ public class ExternalUser implements User, Serializable {
         return (String) this.userDetails.getProperty(Entity.PASSWORD);
     }
 
+    public String getProperty(String propertyName) {
+        throw new UnsupportedOperationException("not implemented for this ExternalUser");
+    }
+
+    public void setProperty(String propertyName, String value) {
+        throw new UnsupportedOperationException("not implemented for this ExternalUser");
+    }
+
     /**
      * @see info.magnolia.cms.security.User#getGroups()
      */
