@@ -153,11 +153,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>fcc4ae28-a93e-4344-92a1-94cff4ef9508</sv:value>
           </sv:property>
-          <sv:property sv:name="value" sv:type="String">
-            <sv:value>63</sv:value>
-          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>roles.permission.readWrite</sv:value>
+          </sv:property>
+          <sv:property sv:name="value" sv:type="String">
+            <sv:value>63</sv:value>
           </sv:property>
           <sv:property sv:name="i18nBasename" sv:type="String">
             <sv:value/>
@@ -197,11 +197,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>254c11dd-c85c-4426-888b-d41716f8ed57</sv:value>
           </sv:property>
-          <sv:property sv:name="label" sv:type="String">
-            <sv:value>roles.permission.readOnly</sv:value>
-          </sv:property>
           <sv:property sv:name="value" sv:type="String">
             <sv:value>8</sv:value>
+          </sv:property>
+          <sv:property sv:name="label" sv:type="String">
+            <sv:value>roles.permission.readOnly</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -238,11 +238,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>c716ae78-a3a7-44f6-bca5-96b84784d5c7</sv:value>
           </sv:property>
-          <sv:property sv:name="value" sv:type="String">
-            <sv:value>0</sv:value>
-          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>roles.permission.deny</sv:value>
+          </sv:property>
+          <sv:property sv:name="value" sv:type="String">
+            <sv:value>0</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -398,6 +398,9 @@
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>3cc69ac8-05fe-408f-afce-b72d9ab7ffe2</sv:value>
       </sv:property>
+      <sv:property sv:name="class" sv:type="String">
+        <sv:value>info.magnolia.module.admininterface.config.URIRepositoryConfiguration</sv:value>
+      </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>repository.uri</sv:value>
       </sv:property>
@@ -412,7 +415,7 @@
           <sv:value>2007-08-16T10:54:07.522+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2007-08-17T12:08:07.665+02:00</sv:value>
+          <sv:value>2007-08-23T11:36:59.100+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activated" sv:type="Boolean">
           <sv:value>false</sv:value>
@@ -469,11 +472,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>494cbb5e-f6d1-4012-985d-3fccb150133a</sv:value>
           </sv:property>
-          <sv:property sv:name="label" sv:type="String">
-            <sv:value>roles.permission.getAndPost</sv:value>
-          </sv:property>
           <sv:property sv:name="value" sv:type="String">
             <sv:value>63</sv:value>
+          </sv:property>
+          <sv:property sv:name="label" sv:type="String">
+            <sv:value>roles.permission.getAndPost</sv:value>
           </sv:property>
           <sv:property sv:name="i18nBasename" sv:type="String">
             <sv:value/>
@@ -513,11 +516,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>c43075ac-8510-4d7e-a6ac-59560e6ac233</sv:value>
           </sv:property>
-          <sv:property sv:name="value" sv:type="String">
-            <sv:value>8</sv:value>
-          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>roles.permission.get</sv:value>
+          </sv:property>
+          <sv:property sv:name="value" sv:type="String">
+            <sv:value>8</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -554,11 +557,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>649e0a01-1ea1-443a-b108-288d6f790c54</sv:value>
           </sv:property>
-          <sv:property sv:name="label" sv:type="String">
-            <sv:value>roles.permission.deny</sv:value>
-          </sv:property>
           <sv:property sv:name="value" sv:type="String">
             <sv:value>0</sv:value>
+          </sv:property>
+          <sv:property sv:name="label" sv:type="String">
+            <sv:value>roles.permission.deny</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -618,88 +621,6 @@
           <sv:property sv:name="mgnl:activatorid" sv:type="String">
             <sv:value>superuser</sv:value>
           </sv:property>
-        </sv:node>
-        <sv:node sv:name="thisAndSubPages">
-          <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
-          </sv:property>
-          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-            <sv:value>mix:versionable</sv:value>
-            <sv:value>mix:lockable</sv:value>
-          </sv:property>
-          <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>e6909d90-ac71-46f8-8167-57560906f643</sv:value>
-          </sv:property>
-          <sv:property sv:name="type" sv:type="String">
-            <sv:value>3</sv:value>
-          </sv:property>
-          <sv:property sv:name="label" sv:type="String">
-            <sv:value>roles.edit.thisAndSubPages</sv:value>
-          </sv:property>
-          <sv:node sv:name="MetaData">
-            <sv:property sv:name="jcr:primaryType" sv:type="Name">
-              <sv:value>mgnl:metaData</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:authorid" sv:type="String">
-              <sv:value>superuser</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-              <sv:value>2007-08-16T10:56:53.378+02:00</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2007-08-16T18:07:15.673+02:00</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-              <sv:value>false</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-              <sv:value>2007-08-17T12:06:35.919+02:00</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:activatorid" sv:type="String">
-              <sv:value>superuser</sv:value>
-            </sv:property>
-          </sv:node>
-        </sv:node>
-        <sv:node sv:name="subPages">
-          <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
-          </sv:property>
-          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-            <sv:value>mix:versionable</sv:value>
-            <sv:value>mix:lockable</sv:value>
-          </sv:property>
-          <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>a3b79444-f5f7-4ff7-b79d-cb612e43509f</sv:value>
-          </sv:property>
-          <sv:property sv:name="type" sv:type="String">
-            <sv:value>2</sv:value>
-          </sv:property>
-          <sv:property sv:name="label" sv:type="String">
-            <sv:value>roles.edit.subPages</sv:value>
-          </sv:property>
-          <sv:node sv:name="MetaData">
-            <sv:property sv:name="jcr:primaryType" sv:type="Name">
-              <sv:value>mgnl:metaData</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:authorid" sv:type="String">
-              <sv:value>superuser</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-              <sv:value>2007-08-16T10:56:53.378+02:00</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2007-08-16T18:09:52.620+02:00</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-              <sv:value>false</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-              <sv:value>2007-08-17T12:06:35.919+02:00</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:activatorid" sv:type="String">
-              <sv:value>superuser</sv:value>
-            </sv:property>
-          </sv:node>
         </sv:node>
       </sv:node>
     </sv:node>
@@ -785,11 +706,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>63da557d-6343-4a5e-9b83-10ab09b21c94</sv:value>
           </sv:property>
-          <sv:property sv:name="label" sv:type="String">
-            <sv:value>roles.permission.readWrite</sv:value>
-          </sv:property>
           <sv:property sv:name="value" sv:type="String">
             <sv:value>63</sv:value>
+          </sv:property>
+          <sv:property sv:name="label" sv:type="String">
+            <sv:value>roles.permission.readWrite</sv:value>
           </sv:property>
           <sv:property sv:name="i18nBasename" sv:type="String">
             <sv:value/>
@@ -829,11 +750,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>1fdc7df5-41ac-4a1b-b906-324950367b88</sv:value>
           </sv:property>
-          <sv:property sv:name="value" sv:type="String">
-            <sv:value>8</sv:value>
-          </sv:property>
           <sv:property sv:name="label" sv:type="String">
             <sv:value>roles.permission.readOnly</sv:value>
+          </sv:property>
+          <sv:property sv:name="value" sv:type="String">
+            <sv:value>8</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -870,11 +791,11 @@
           <sv:property sv:name="jcr:uuid" sv:type="String">
             <sv:value>8cc6df9c-44e0-4120-a423-df95fbc591c1</sv:value>
           </sv:property>
-          <sv:property sv:name="label" sv:type="String">
-            <sv:value>roles.permission.deny</sv:value>
-          </sv:property>
           <sv:property sv:name="value" sv:type="String">
             <sv:value>0</sv:value>
+          </sv:property>
+          <sv:property sv:name="label" sv:type="String">
+            <sv:value>roles.permission.deny</sv:value>
           </sv:property>
           <sv:node sv:name="MetaData">
             <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -1140,11 +1061,11 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>e1884ce9-a81b-4da3-a9d0-b06b4d073392</sv:value>
         </sv:property>
-        <sv:property sv:name="value" sv:type="String">
-          <sv:value>63</sv:value>
-        </sv:property>
         <sv:property sv:name="label" sv:type="String">
           <sv:value>roles.permission.readWrite</sv:value>
+        </sv:property>
+        <sv:property sv:name="value" sv:type="String">
+          <sv:value>63</sv:value>
         </sv:property>
         <sv:property sv:name="i18nBasename" sv:type="String">
           <sv:value/>
@@ -1184,11 +1105,11 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>db0ba7ac-acaa-4c79-930f-d8b413afe1db</sv:value>
         </sv:property>
-        <sv:property sv:name="label" sv:type="String">
-          <sv:value>roles.permission.readOnly</sv:value>
-        </sv:property>
         <sv:property sv:name="value" sv:type="String">
           <sv:value>8</sv:value>
+        </sv:property>
+        <sv:property sv:name="label" sv:type="String">
+          <sv:value>roles.permission.readOnly</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -1225,11 +1146,11 @@
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>d0d32f1e-bc9f-42b8-855a-0127678ec0d4</sv:value>
         </sv:property>
-        <sv:property sv:name="value" sv:type="String">
-          <sv:value>0</sv:value>
-        </sv:property>
         <sv:property sv:name="label" sv:type="String">
           <sv:value>roles.permission.deny</sv:value>
+        </sv:property>
+        <sv:property sv:name="value" sv:type="String">
+          <sv:value>0</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
