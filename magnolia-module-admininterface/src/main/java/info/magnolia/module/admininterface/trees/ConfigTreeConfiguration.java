@@ -49,21 +49,22 @@ public class ConfigTreeConfiguration extends AbstractTreeConfiguration {
         tree.addItemType(ItemType.CONTENTNODE.getSystemName());
         tree.addItemType(Tree.ITEM_TYPE_NODEDATA);
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
-        column0.setWidth(1);
         column0.setHtmlEdit();
         column0.setIsLabel(true);
         column0.setWidth(3);
+
         TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
         column1.setName(StringUtils.EMPTY);
         column1.setTitle(msgs.get("tree.config.value")); //$NON-NLS-1$
         column1.setIsNodeDataValue(true);
-        column1.setWidth(2);
+        column1.setWidth(3);
         column1.setHtmlEdit();
+
         TreeColumn column2 = new TreeColumn(tree.getJavascriptTree(), request);
         column2.setName(StringUtils.EMPTY);
         column2.setTitle(msgs.get("tree.config.type")); //$NON-NLS-1$
         column2.setIsNodeDataType(true);
-        column2.setWidth(2);
+        column2.setWidth(1);
         Select typeSelect = new Select();
         typeSelect.setName(tree.getJavascriptTree() + TreeColumn.EDIT_NAMEADDITION);
         typeSelect.setSaveInfo(false);
@@ -76,12 +77,14 @@ public class ConfigTreeConfiguration extends AbstractTreeConfiguration {
         typeSelect.setOptions(PropertyType.TYPENAME_DOUBLE, Integer.toString(PropertyType.DOUBLE));
         // todo: typeSelect.setOptions(PropertyType.TYPENAME_DATE,Integer.toString(PropertyType.DATE));
         column2.setHtmlEdit(typeSelect.getHtml());
+
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
         columnIcons.setCssClass(StringUtils.EMPTY);
         columnIcons.setWidth(1);
         columnIcons.setIsIcons(true);
         columnIcons.setIconsActivation(true);
         columnIcons.setIconsPermission(true);
+
         TreeColumn column4 = new TreeColumn(tree.getJavascriptTree(), request);
         column4.setName(MetaData.LAST_MODIFIED);
         column4.setIsMeta(true);
