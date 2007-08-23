@@ -4,7 +4,6 @@ import info.magnolia.cms.filters.AbstractMagnoliaFilter;
 
 import java.io.IOException;
 
-import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
@@ -60,8 +59,7 @@ public class CacheFilter extends AbstractMagnoliaFilter {
             // cache
             // if this time there are parameters.
             if (cacheable) {
-
-                CacheKey key = cacheManager.getCacheKey(request);
+                CacheKey key = this.getCacheKey(request);
                 if (!this.ifModifiedSince(request, cacheManager.getCreationTime(key))) {
                     response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     return;
@@ -103,7 +101,7 @@ public class CacheFilter extends AbstractMagnoliaFilter {
      * @param request The servlet request we are processing
      * @return boolean true if the server resource is newer
      */
-    private boolean ifModifiedSince(HttpServletRequest request, long lastModified) {
+    public boolean ifModifiedSince(HttpServletRequest request, long lastModified) {
         try {
             long headerValue = request.getDateHeader("If-Modified-Since");
             if (headerValue != -1) {
@@ -120,7 +118,18 @@ public class CacheFilter extends AbstractMagnoliaFilter {
         return true;
     }
 
-    private boolean clientAcceptsGzip(HttpServletRequest request) {
+    /**
+     * @return computed cache key
+     * */
+    public CacheKey getCacheKey(HttpServletRequest request) {
+        return getCacheManager().getCacheKey(request);
+    }
+
+    public CacheManager getCacheManager() {
+        return this.cacheManager;
+    }
+
+    public boolean clientAcceptsGzip(HttpServletRequest request) {
         return StringUtils.contains(request.getHeader("Accept-Encoding"), "gzip");
     }
 
