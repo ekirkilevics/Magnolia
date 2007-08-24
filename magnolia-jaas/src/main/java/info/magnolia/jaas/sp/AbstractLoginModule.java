@@ -1,8 +1,14 @@
 package info.magnolia.jaas.sp;
 
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import info.magnolia.cms.security.Realm;
+import info.magnolia.cms.security.auth.callback.RealmCallback;
 
 import java.util.Map;
 import java.util.LinkedHashSet;
@@ -26,8 +32,12 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     // magnolia specific option to define if "this" module needs to be
     // skipped based on previous (in JAAS module chain) module status
-    public static final String SKIP_ON_PREVIOUS_SUCCESS = "skip_on_previous_success";
+    public static final String OPTION_SKIP_ON_PREVIOUS_SUCCESS = "skip_on_previous_success";
 
+    public static final String OPTION_REALM = "realm";
+
+    public static final String OPTION_USE_REALM_CALLBACK= "use_realm_callback";
+    
     public static final String STATUS = "statusValue";
 
     public static final int STATUS_SUCCEDED = 1;
@@ -74,10 +84,28 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     public char[] pswd;
 
+    /**
+     * The realm we login into. Initialized by the option realm.
+     */
+    protected String realm = Realm.REALM_ALL;
+
+    /**
+     * Allow the client to define the realm he logs into. Default value is false
+     */
+    protected boolean useRealmCallback;
+
     // this status is sent back to the LoginModule chain
     public boolean success;
 
-    private boolean skip;
+    private boolean skipOnPreviousSuccess;
+
+
+    /**
+     *
+     */
+    public AbstractLoginModule() {
+
+    }
 
     public void initialize(Subject subject, CallbackHandler callbackHandler, Map sharedState, Map options) {
         this.subject = subject;
@@ -86,14 +114,14 @@ public abstract class AbstractLoginModule implements LoginModule {
         this.options = options;
         this.sharedState.put("groupNames",new LinkedHashSet());
         this.sharedState.put("roleNames",new LinkedHashSet());
+        this.realm = StringUtils.defaultIfEmpty((String) options.get(OPTION_REALM), Realm.DEFAULT_REALM);
+
+        // null --> false
+        this.useRealmCallback = BooleanUtils.toBoolean(StringUtils.defaultIfEmpty((String) options.get(OPTION_USE_REALM_CALLBACK), "false"));
+        this.skipOnPreviousSuccess = BooleanUtils.toBoolean(StringUtils.defaultIfEmpty((String) options.get(OPTION_SKIP_ON_PREVIOUS_SUCCESS), "false"));
     }
 
     public boolean login() throws LoginException {
-
-        // we need to set the status for this module now because of the sequence
-        // login and commit are called by the container
-        this.setSkip();
-
         if (this.getSkip()) {
             return true;
         }
@@ -106,11 +134,20 @@ public abstract class AbstractLoginModule implements LoginModule {
         callbacks[0] = new NameCallback("name");
         callbacks[1] = new PasswordCallback("pswd", false);
 
+        // if the realm is not defined in the jaas configuration
+        // we ask use a callback to get the value
+        if(this.useRealmCallback){
+            callbacks = (Callback[]) ArrayUtils.add(callbacks, new RealmCallback());
+        }
+
         this.success = false;
         try {
             this.callbackHandler.handle(callbacks);
             this.name = ((NameCallback) callbacks[0]).getName();
             this.pswd = ((PasswordCallback) callbacks[1]).getPassword();
+            if(this.useRealmCallback){
+                this.realm = StringUtils.defaultIfEmpty(((RealmCallback)callbacks[2]).getRealm(), this.realm);
+            }
             this.success = this.validateUser();
         } catch (IOException ioe) {
             if (log.isDebugEnabled()) {
@@ -174,27 +211,12 @@ public abstract class AbstractLoginModule implements LoginModule {
         this.sharedState.put(STATUS, new Integer(status));
     }
 
-    public String getOptionValue(String attribute) {
-        String value = (String) this.options.get(attribute);
-        if (null != value) {
-            return value;
-        }
-        return "";
-    }
-
-
     /**
      * test if the option skip_on_previous_success is set to true
      * and preceding LoginModule was successful
      * */
     private boolean getSkip() {
-        return this.skip;
-    }
-
-    private void setSkip() {
-        if ("true".equalsIgnoreCase(getOptionValue(SKIP_ON_PREVIOUS_SUCCESS))) {
-            this.skip = (this.getSharedStatus() == STATUS_SUCCEDED);
-        }
+        return skipOnPreviousSuccess && this.getSharedStatus() == STATUS_SUCCEDED;
     }
 
     public void setGroupNames(Set names) {

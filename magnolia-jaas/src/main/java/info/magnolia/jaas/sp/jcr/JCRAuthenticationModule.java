@@ -14,9 +14,14 @@ package info.magnolia.jaas.sp.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.search.Query;
+import info.magnolia.cms.core.search.QueryManager;
+import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.auth.Entity;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 
@@ -31,6 +36,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.Iterator;
 
 
@@ -54,10 +60,14 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
      * checks is the credentials exist in the repository
      * @return boolean
      */
-    public boolean validateUser() throws FailedLoginException ,LoginException {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+    public boolean validateUser() throws FailedLoginException,LoginException {
+
         try {
-            this.user = hm.getContent(this.name);
+            this.user = findUserNode();
+            if(this.user == null){
+                log.debug("Unable to locate user [{}], authentication failed", this.name);
+                throw new FailedLoginException("user " + this.name + " not found");
+            }
             String serverPassword = this.user.getNodeData("pswd").getString().trim();
             // we do not allow users with no password
             if (StringUtils.isEmpty(serverPassword)) return false;
@@ -65,14 +75,33 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
             serverPassword = new String(Base64.decodeBase64(serverPassword.getBytes()));
             return StringUtils.equals(serverPassword, new String(this.pswd));
         }
-        catch (PathNotFoundException pe) {
-            log.debug("Unable to locate user [{}], authentication failed", this.name);
-            throw new FailedLoginException(pe.getMessage());
-        }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
             throw new LoginException(re.getMessage());
         }
+    }
+
+
+    protected Content findUserNode() throws RepositoryException {
+        String jcrPath ="%/" + this.name;
+
+        if(!Realm.REALM_ALL.equals(this.realm)){
+            jcrPath = "/" + this.realm + "/" + jcrPath;
+        }
+
+        String statement = "select * from " + ItemType.USER + " where jcr:path like '" + jcrPath + "'";
+
+        QueryManager qm = MgnlContext.getSystemContext().getQueryManager(ContentRepository.USERS);
+        Query query = qm.createQuery(statement, Query.SQL);
+        Collection users = query.execute().getContent(ItemType.USER.getSystemName());
+        if(users.size() == 1){
+            return (Content) users.iterator().next();
+        }
+        else if(users.size() >1){
+            log.error("More than one user found with name [{}] in realm [{}]");
+        }
+
+        return null;
     }
 
     /**
