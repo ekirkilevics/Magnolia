@@ -36,13 +36,23 @@ public class FormLogin implements LoginHandler {
 
     public static final String PARAMETER_PSWD = "mgnlUserPSWD";
 
+    public static final String PARAMETER_REALM = "mgnlRealm";
+
+    /**
+     * The JAAS chain/module to use.
+     */
+
+    private String jaasChain = "magnolia";
+
     public int handle(HttpServletRequest request, HttpServletResponse response) {
         String userid = request.getParameter(PARAMETER_USER_ID);
         if (StringUtils.isNotEmpty(userid)) {
             String pswd = StringUtils.defaultString(request.getParameter(PARAMETER_PSWD));
-            CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(userid, pswd.toCharArray());
+            String realm = StringUtils.defaultString(request.getParameter(PARAMETER_REALM));
+
+            CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(userid, pswd.toCharArray(), realm);
             try {
-                if (Authenticator.authenticate(request, callbackHandler, null)) {
+                if (Authenticator.authenticate(request, callbackHandler, getJaasChain())) {
                     return LoginHandler.STATUS_SUCCEDED;
                 }
             } catch (LoginException le) {
@@ -51,6 +61,16 @@ public class FormLogin implements LoginHandler {
             return LoginHandler.STATUS_FAILED;
         }
         return LoginHandler.STATUS_NOT_HANDLED;
+    }
+
+
+    public String getJaasChain() {
+        return this.jaasChain;
+    }
+
+
+    public void setJaasChain(String jaasChain) {
+        this.jaasChain = jaasChain;
     }
 
 }

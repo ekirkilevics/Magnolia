@@ -1,5 +1,4 @@
 /**
- *
  * Magnolia and its source-code is licensed under the LGPL.
  * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
  * When copying, adapting, or redistributing this document in keeping with the guidelines above,
@@ -8,30 +7,37 @@
  * please use the following attribution line:
  *
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
- *
  */
 package info.magnolia.cms.security.auth.callback;
 
+import info.magnolia.cms.security.Realm;
+
+import javax.security.auth.callback.Callback;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
- * Plain text callback handler supporting Form based authentication
- * @author Sameer Charles $Id$
+ * The JCR JAAS module uses this callback to get the realm we login into.
+ * @author philipp
+ * @version $Id$
  */
-public class PlainTextCallbackHandler extends CredentialsCallbackHandler {
+public class RealmCallback implements Callback {
 
     /**
-     * default
+     * Logger.
      */
-    public PlainTextCallbackHandler() {
-        // do not instanciate with this constructor
+    private static Logger log = LoggerFactory.getLogger(RealmCallback.class);
+
+    private String realm = Realm.DEFAULT_REALM;
+
+    public String getRealm() {
+        return this.realm;
     }
 
-    public PlainTextCallbackHandler(String name, char[] pswd) {
-        super(name, pswd);
-    }
-
-    public PlainTextCallbackHandler(String name, char[] pswd, String realm) {
-        super(name, pswd, realm);
+    public void setRealm(String realm) {
+        this.realm = realm;
     }
 
 }

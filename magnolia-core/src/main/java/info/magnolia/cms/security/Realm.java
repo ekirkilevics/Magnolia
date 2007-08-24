@@ -1,5 +1,4 @@
 /**
- *
  * Magnolia and its source-code is licensed under the LGPL.
  * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
  * When copying, adapting, or redistributing this document in keeping with the guidelines above,
@@ -8,30 +7,28 @@
  * please use the following attribution line:
  *
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
- *
  */
-package info.magnolia.cms.security.auth.callback;
-
+package info.magnolia.cms.security;
 
 /**
- * Plain text callback handler supporting Form based authentication
- * @author Sameer Charles $Id$
+ * Provides the name for the default realm.
+ * @author philipp
+ * @version $Id$
  */
-public class PlainTextCallbackHandler extends CredentialsCallbackHandler {
+public interface Realm {
 
     /**
-     * default
+     * The realm for the admin interface
      */
-    public PlainTextCallbackHandler() {
-        // do not instanciate with this constructor
-    }
+    public static final String REALM_ADMIN = "admin";
 
-    public PlainTextCallbackHandler(String name, char[] pswd) {
-        super(name, pswd);
-    }
+    /**
+     * No realm --> all users
+     */
+    public static final String REALM_ALL = "all";
 
-    public PlainTextCallbackHandler(String name, char[] pswd, String realm) {
-        super(name, pswd, realm);
-    }
-
+    /**
+     * The default realm is REALM_ADMIN
+     */
+    public static final String DEFAULT_REALM = REALM_ALL;
 }

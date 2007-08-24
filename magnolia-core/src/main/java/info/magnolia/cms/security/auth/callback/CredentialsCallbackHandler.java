@@ -48,19 +48,25 @@ public class CredentialsCallbackHandler implements CallbackHandler {
     protected char[] pswd;
 
     /**
+     * The realm to which we login
+     */
+    protected String realm;
+
+    /**
      * default constructor required by java security framework
      */
     public CredentialsCallbackHandler() {
         // do not instanciate with this constructor
     }
 
-    /**
-     * @param name
-     * @param pswd
-     */
     public CredentialsCallbackHandler(String name, char[] pswd) {
         this.name = name;
         this.pswd = pswd;
+    }
+
+    public CredentialsCallbackHandler(String name, char[] pswd, String realm) {
+        this(name, pswd);
+        this.realm = realm;
     }
 
     /**
@@ -74,6 +80,10 @@ public class CredentialsCallbackHandler implements CallbackHandler {
             else if (callbacks[i] instanceof PasswordCallback) {
                 ((PasswordCallback) callbacks[i]).setPassword(this.pswd);
             }
+            else if (callbacks[i] instanceof RealmCallback) {
+                ((RealmCallback) callbacks[i]).setRealm(this.realm);
+            }
+
             else if (callbacks[i] instanceof TextOutputCallback) {
                 TextOutputCallback outputCallback = (TextOutputCallback) callbacks[i];
                 switch (outputCallback.getMessageType()) {
