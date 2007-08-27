@@ -164,6 +164,12 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
     }
 
     /**
+     * Utility class that has methods which allow passing multiple parameters 
+     * from a freemarker template to a message string using the square bracket 
+     * syntax (e.g. ${i18n.get('message', ['param1', 'param2']}). There are 
+     * convenience methods which allow selecting the message bundle directly 
+     * from within the template as well (by passing the basename parameter).   
+     * 
      * @author vsteller
      * @version $Revision: $ ($Author: $)
      *
@@ -213,7 +219,8 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
         }
         
         protected String get(String key, List args, Messages messages) {
-            return messages.get(key, args.toArray());
+            Object[] argsArray = new Object[args.size()];
+            return messages.get(key, args.toArray(argsArray));
         }
         
         protected String getWithDefault(String key, String defaultMsg, Messages messages) {
@@ -221,7 +228,8 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
         }
         
         protected String getWithDefault(String key, List args, String defaultMsg, Messages messages) {
-            return messages.getWithDefault(key, args.toArray(), defaultMsg);
+            Object[] argsArray = new Object[args.size()];
+            return messages.getWithDefault(key, args.toArray(argsArray), defaultMsg);
         }
     }
 }
