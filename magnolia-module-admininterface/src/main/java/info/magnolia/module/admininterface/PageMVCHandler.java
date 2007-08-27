@@ -84,6 +84,8 @@ public abstract class PageMVCHandler extends CommandBasedMVCServletHandler {
 
     /**
      * @see info.magnolia.cms.servlets.MVCServletHandlerImpl#init()
+     * 
+     * TODO ! init is called twice !!! once by content2bean, once by MVCServlet !
      */
     public void init() {
         super.init();
