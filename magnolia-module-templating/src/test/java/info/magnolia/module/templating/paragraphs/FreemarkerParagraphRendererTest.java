@@ -17,6 +17,7 @@ import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.ActionBasedParagraph;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.EmptyMessages;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -101,6 +102,7 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         params.put("pouet", "oh oh this shouldn't have been set");
         params.put("foo", "bar");
         expect(context.getParameters()).andReturn(params);
+        expect(context.getMessages("testmessages")).andReturn(new EmptyMessages());
         expect(context.getLocale()).andReturn(Locale.ENGLISH);
         expect(context.getServletContext()).andReturn(null);
         expect(context.getContextPath()).andReturn("/pouet");
@@ -110,6 +112,7 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${action.pouet} : ${action.blah} : ${result}");
         final ActionBasedParagraph par = new ActionBasedParagraph();
         par.setName("test-with-action");
+        par.setI18nBasename("testmessages");
         par.setTemplatePath("test_action.ftl");
         par.setActionClass(SimpleTestAction.class);
         par.setAllowedParameters("blah");
