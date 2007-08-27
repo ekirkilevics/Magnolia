@@ -20,6 +20,8 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Collection;
 import java.util.ArrayList;
@@ -121,8 +123,38 @@ public class MgnlGroup implements Group {
     }
 
     public Collection getRoles() {
-        log.warn("Not yet implemented");
-        return new ArrayList();
+        ArrayList list = new ArrayList();
+
+        try {
+            Content roles = null;
+            try {
+                // get "groups" node under node "user"
+                roles = groupNode.getContent("roles");
+            }
+            catch (javax.jcr.PathNotFoundException e) {
+                log.warn("The group " + getName() + " does not have roles node");
+            }
+
+            if (roles != null) {
+                Collection c = roles.getNodeDataCollection();
+                Iterator it = c.iterator();
+                while (it.hasNext()) {
+                    NodeData nd = (NodeData) it.next();
+                    String uuid = nd.getString();
+                    Content role = MgnlContext
+                        .getSystemContext()
+                        .getHierarchyManager(ContentRepository.USER_ROLES)
+                        .getContentByUUID(uuid);
+                    list.add(role.getName());
+                }
+            }
+
+        }
+        catch (Exception e) {
+            log.warn("can't read roles of user.", e);
+        }
+
+        return list;
     }
 
     public Collection getAllRoles() {
@@ -253,11 +285,15 @@ public class MgnlGroup implements Group {
         }
     }
 
+
+
+
     /**
      * return the role HierarchyManager
      */
     protected HierarchyManager getHierarchyManager() {
         return MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
     }
+
 
 }

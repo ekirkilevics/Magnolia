@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.security;
 
+import java.util.Collection;
+
 /**
  * @author Sameer Charles $Id$
  */
@@ -34,5 +36,10 @@ public interface GroupManager {
      * @throws AccessDeniedException if logged in repository user does not sufficient rights
      */
     public Group getGroup(String name) throws UnsupportedOperationException, AccessDeniedException;
+
+    /**
+     * Get all groups defined in the system
+     */
+    public Collection getAllGroups() throws UnsupportedOperationException;
 
 }

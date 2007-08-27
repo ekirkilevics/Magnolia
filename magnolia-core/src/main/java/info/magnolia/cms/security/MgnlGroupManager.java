@@ -12,6 +12,10 @@
  */
 package info.magnolia.cms.security;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -63,6 +67,23 @@ public class MgnlGroupManager implements GroupManager {
             log.info("can't find group [" + name + "]", e);
             return null;
         }
+    }
+    
+    /**
+     * All groups
+     */
+    public Collection getAllGroups() {
+        Collection groups = new ArrayList();
+        try {
+            Collection nodes = getHierarchyManager().getRoot().getChildren(ItemType.GROUP);
+            for (Iterator iter = nodes.iterator(); iter.hasNext();) {
+                groups.add(new MgnlGroup((Content) iter.next()));
+            }
+        }
+        catch (Exception e) {
+            log.error("can't find user");
+        }
+        return groups;
     }
 
     /**
