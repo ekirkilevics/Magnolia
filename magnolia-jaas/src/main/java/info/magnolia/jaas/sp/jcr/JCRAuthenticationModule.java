@@ -60,14 +60,11 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
      * checks is the credentials exist in the repository
      * @return boolean
      */
-    public boolean validateUser() throws FailedLoginException,LoginException {
+    public boolean validateUser() throws FailedLoginException, LoginException {
 
         try {
             this.user = findUserNode();
-            if(this.user == null){
-                log.debug("Unable to locate user [{}], authentication failed", this.name);
-                throw new FailedLoginException("user " + this.name + " not found");
-            }
+
             String serverPassword = this.user.getNodeData("pswd").getString().trim();
             // we do not allow users with no password
             if (StringUtils.isEmpty(serverPassword)) return false;
@@ -82,7 +79,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
     }
 
 
-    protected Content findUserNode() throws RepositoryException {
+    protected Content findUserNode() throws RepositoryException, FailedLoginException {
         String jcrPath ="%/" + this.name;
 
         if(!Realm.REALM_ALL.equals(this.realm)){
@@ -100,8 +97,8 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
         else if(users.size() >1){
             log.error("More than one user found with name [{}] in realm [{}]");
         }
-
-        return null;
+        log.debug("Unable to locate user [{}], authentication failed", this.name);
+        throw new FailedLoginException("user " + this.name + " not found");
     }
 
     /**
