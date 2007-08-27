@@ -28,13 +28,8 @@ public abstract class OncePerRequestAbstractMagnoliaFilter extends AbstractMagno
         request.setAttribute(requestKeyName, Boolean.TRUE);
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
-
-    public boolean isEnabled() {
-
-        if (!super.isEnabled()) {
-            return false;
-        }
-
-        return MgnlContext.getAttribute(requestKeyName, Context.LOCAL_SCOPE) == null;
+    
+    public boolean bypasses(HttpServletRequest request) {
+        return MgnlContext.getAttribute(requestKeyName, Context.LOCAL_SCOPE) != null;
     }
 }

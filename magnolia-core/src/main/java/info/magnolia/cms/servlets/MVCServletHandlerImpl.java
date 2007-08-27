@@ -37,6 +37,8 @@ import org.slf4j.LoggerFactory;
 public abstract class MVCServletHandlerImpl implements MVCServletHandler {
 
     protected static final String VIEW_ERROR = "error"; //$NON-NLS-1$
+    
+    protected static final String VIEW_SUCCESS = "success"; //$NON-NLS-1$
 
     /**
      * Logger.
