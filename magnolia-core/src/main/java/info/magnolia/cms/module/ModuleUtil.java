@@ -179,16 +179,9 @@ public final class ModuleUtil {
 
                 // hm can be null if module is not properly registered and the repository has not been created
                 if (hm != null && hm.isExist(fullPath)) {
-                    // MAGNOLIA-1380 : do not overwrite nodes in config:server
-                    if (ContentRepository.CONFIG.equals(repository) && pathName.startsWith("/server/")) {
-                        log.debug("Not bootstrapping {} as the node already exists.", fullPath);
-                        continue;
-                    }
-                    else {
-                        hm.delete(fullPath);
-                        if (log.isDebugEnabled()) {
-                            log.debug("already existing node [{}] deleted", fullPath);
-                        }
+                    hm.delete(fullPath);
+                    if (log.isDebugEnabled()) {
+                        log.debug("already existing node [{}] deleted", fullPath);
                     }
                 }
             }
