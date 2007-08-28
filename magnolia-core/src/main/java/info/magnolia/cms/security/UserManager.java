@@ -47,6 +47,13 @@ public interface UserManager {
     public User getUser(String name) throws UnsupportedOperationException;
 
     /**
+     * Initialize new user using JAAS authenticated/authorized subject
+     * @param subject
+     * @throws UnsupportedOperationException
+     */
+    public User getUser(Subject subject) throws UnsupportedOperationException;
+
+    /**
      * Get system user, this user must always exist in magnolia repository.
      * @return system user
      */
@@ -74,10 +81,4 @@ public interface UserManager {
      */
     public User createUser(String name, String pw) throws UnsupportedOperationException;
 
-    /**
-     * Initialize new user using JAAS authenticated/authorized subject
-     * @param subject
-     * @throws UnsupportedOperationException
-     */
-    public User getUser(Subject subject) throws UnsupportedOperationException;
 }

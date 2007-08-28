@@ -67,19 +67,46 @@ public class MgnlUserManager implements UserManager {
      */
     public User getUser(String name) {
         try {
-            Content node = findUserNode(this.realmName, name);
-            if(node == null){
-                log.debug("User not found: [{}]", name);
-                return null;
-            }
-            MgnlUser user = new MgnlUser(node);
-            user.setLastAccess();
-            return user;
+            return getFromRepository(name);
         }
         catch (RepositoryException e) {
             log.info("Unable to load user [" + name + "] due to: " + e.toString(), e);
             return null;
         }
+    }
+
+    public User getUser(Subject subject) throws UnsupportedOperationException {
+        // this could be the case if no one is logged in yet
+        if (subject == null) {
+            return new DummyUser();
+        }
+
+        Set principalSet = subject.getPrincipals(Entity.class);
+        Iterator entityIterator = principalSet.iterator();
+        Entity userDetails = (Entity) entityIterator.next();
+        String name = (String) userDetails.getProperty(Entity.NAME);
+        try {
+            return getFromRepository(name);
+        }
+        catch (PathNotFoundException e) {
+            log.error("user not registered in magnolia itself [" + name + "]");
+        }
+        catch (Exception e) {
+            log.error("can't get jcr-node of current user", e);
+        }
+
+        return new DummyUser();
+    }
+
+    protected User getFromRepository(String name) throws RepositoryException {
+        final Content node = findUserNode(this.realmName, name);
+        if (node == null){
+            log.debug("User not found: [{}]", name);
+            return null;
+        }
+        final MgnlUser user = new MgnlUser(node);
+        user.setLastAccess();
+        return user;
     }
 
     /**
@@ -111,13 +138,7 @@ public class MgnlUserManager implements UserManager {
      * @return system user
      */
     public User getSystemUser() {
-        User user =  getUser(UserManager.SYSTEM_USER);
-        if(user == null){
-            log.error("failed to get system user [{}]", UserManager.SYSTEM_USER);
-            log.info("Try to create new system user with default password");
-            user = this.createUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
-        }
-        return user;
+        return getOrCreateUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
     }
 
     /**
@@ -125,14 +146,19 @@ public class MgnlUserManager implements UserManager {
      * @return anonymous user
      */
     public User getAnonymousUser() {
-        User user =  getUser(UserManager.ANONYMOUS_USER);
+        return getOrCreateUser(UserManager.ANONYMOUS_USER, "");
+    }
+
+    protected User getOrCreateUser(String userName, String password) {
+        User user = getUser(userName);
         if(user == null){
-            log.error("failed to get anonymous user [{}]", UserManager.ANONYMOUS_USER);
-            log.info("Try to create new anonymous user with default password");
-            user = this.createUser(UserManager.ANONYMOUS_USER, "");
+            log.error("failed to get system or anonymous user [{}]", userName);
+            log.info("Try to create new system user with default password");
+            user = this.createUser(userName, password);
         }
         return user;
     }
+
 
     /**
      * All users
@@ -158,8 +184,7 @@ public class MgnlUserManager implements UserManager {
      */
     public User createUser(String name, String pw) {
         try {
-            Content node;
-            node = getHierarchyManager().createContent("/", name, ItemType.USER.getSystemName());
+            final Content node = createUserNode(name);
             node.createNodeData("name").setValue(name);
             node.createNodeData("pswd").setValue(new String(Base64.encodeBase64(pw.getBytes())));
             node.createNodeData("language").setValue("en");
@@ -172,38 +197,8 @@ public class MgnlUserManager implements UserManager {
         }
     }
 
-    /**
-     * Initialize new user using JAAS authenticated/authorized subject
-     * @param subject
-     * @throws UnsupportedOperationException
-     */
-    public User getUser(Subject subject) throws UnsupportedOperationException {
-        User user = null;
-        // this could be the case if no one is logged in yet
-        if (subject == null) {
-            return new DummyUser();
-        }
-
-        Set principalSet = subject.getPrincipals(Entity.class);
-        Iterator entityIterator = principalSet.iterator();
-        Entity userDetails = (Entity) entityIterator.next();
-        String name = (String) userDetails.getProperty(Entity.NAME);
-        try {
-            Content node = getHierarchyManager().getContent(name);
-            user = new MgnlUser(node);
-            ((MgnlUser) user).setLastAccess();
-        }
-        catch (PathNotFoundException e) {
-            log.error("user not registered in magnolia itself [" + name + "]");
-        }
-        catch (Exception e) {
-            log.error("can't get jcr-node of current user", e);
-        }
-        if (user == null) {
-            user = new DummyUser();
-        }
-
-        return user;
+    protected Content createUserNode(String name) throws RepositoryException {
+        return getHierarchyManager().createContent("/", name, ItemType.USER.getSystemName());
     }
 
     /**
