@@ -18,7 +18,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -169,13 +168,15 @@ public final class MessagesManager {
         try {
             log.info("Config : loading i18n configuration - " + I18N_CONFIG_PATH); //$NON-NLS-1$
 
-            // checks if node exists - creates it if not - necessary to update to 3.1
-            final Content configNode;
+            // checks if node exists
             if (!hm.isExist(I18N_CONFIG_PATH)) {
-                configNode = ContentUtil.createPath(hm, I18N_CONFIG_PATH, ItemType.CONTENT, true);
-            } else {
-                configNode = hm.getContent(I18N_CONFIG_PATH); //$NON-NLS-1$
+                // configNode = ContentUtil.createPath(hm, I18N_CONFIG_PATH, ItemType.CONTENT, true);
+                log.warn(I18N_CONFIG_PATH + " does not exist yet; skipping.");
+                return;
             }
+
+            final Content configNode = hm.getContent(I18N_CONFIG_PATH); //$NON-NLS-1$
+
             MessagesManager.setDefaultLocale(NodeDataUtil.getString(configNode, FALLBACK_NODEDATA, FALLBACK_LOCALE));
 
             // get the available languages - creates it if it does not exist - necessary to update to 3.1

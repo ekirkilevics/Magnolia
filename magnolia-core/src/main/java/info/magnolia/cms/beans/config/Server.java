@@ -15,6 +15,7 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.core.HierarchyManager;
 
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -38,7 +39,7 @@ import org.slf4j.LoggerFactory;
  */
 public final class Server {
 
-    public static final String CONFIG_PAGE = "server"; //$NON-NLS-1$
+    public static final String CONFIG_PATH = "/server"; //$NON-NLS-1$
 
     /**
      * server properties
@@ -89,7 +90,13 @@ public final class Server {
         Server.loginSettings.clear();
         try {
             log.info("Config : loading Server"); //$NON-NLS-1$
-            Content startPage = ContentRepository.getHierarchyManager(ContentRepository.CONFIG).getContent(CONFIG_PAGE);
+            final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            // checks if node exists
+            if (!hm.isExist(CONFIG_PATH)) {
+                log.warn(CONFIG_PATH + " does not exist yet; skipping.");
+                return;
+            }
+            Content startPage = hm.getContent(CONFIG_PATH);
             cacheServerConfiguration(startPage);
             cacheMailSettings(startPage);
             cacheLoginSettings(startPage);
@@ -160,7 +167,7 @@ public final class Server {
                         log.error(e.getMessage(), e);
                     }
                 }
-            }, Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE, //$NON-NLS-1$
+            }, Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, CONFIG_PATH, //$NON-NLS-1$
                 false,
                 null,
                 null,
@@ -200,7 +207,7 @@ public final class Server {
                 | Event.NODE_REMOVED
                 | Event.PROPERTY_ADDED
                 | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, "/" + CONFIG_PAGE + path, true, null, null, false); //$NON-NLS-1$
+                | Event.PROPERTY_REMOVED, CONFIG_PATH + path, true, null, null, false); //$NON-NLS-1$
         }
         catch (RepositoryException e) {
             log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
