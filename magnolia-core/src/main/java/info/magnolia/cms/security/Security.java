@@ -25,7 +25,6 @@ public class Security {
      * Returns the configured RoleManager.
      */
     public static RoleManager getRoleManager() {
-//        return (RoleManager) FactoryUtil.getSingleton(RoleManager.class);
         return getSecurityManager().getRoleManager();
     }
 
@@ -33,7 +32,6 @@ public class Security {
      * Returns the configured UserManager.
      */
     public static UserManager getUserManager() {
-//        return (UserManager) FactoryUtil.getSingleton(UserManager.class);
         return getSecurityManager().getUserManager();
     }
 
@@ -41,7 +39,6 @@ public class Security {
      * Returns the configured GroupManager.
      */
     public static GroupManager getGroupManager() {
-//        return (GroupManager) FactoryUtil.getSingleton(GroupManager.class);
         return getSecurityManager().getGroupManager();
     }
 
