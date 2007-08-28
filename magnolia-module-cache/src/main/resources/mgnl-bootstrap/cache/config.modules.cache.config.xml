@@ -17,7 +17,7 @@
     <sv:value>61f4c0ed-d1dc-4738-a9e6-b9d56e2eecd5</sv:value>
   </sv:property>
   <sv:property sv:name="active" sv:type="String">
-    <sv:value>true</sv:value>
+    <sv:value>false</sv:value>
   </sv:property>
   <sv:property sv:name="cacheImplementation" sv:type="String">
     <sv:value>info.magnolia.cms.cache.simple.CacheImpl</sv:value>
