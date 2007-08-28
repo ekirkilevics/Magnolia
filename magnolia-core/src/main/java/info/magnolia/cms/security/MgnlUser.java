@@ -21,10 +21,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.Iterator;
+import java.util.*;
 import java.io.Serializable;
 import java.io.ObjectStreamField;
 
@@ -295,53 +292,58 @@ public class MgnlUser implements User, Serializable {
     }
 
     public Collection getGroups() {
+        SortedSet groupSet = new TreeSet(String.CASE_INSENSITIVE_ORDER);
         try {
             Content groups = this.getUserNode().getContent("groups");
-            return this.getGroups(groups);
+            this.collectPropertyNames(groups, ContentRepository.USER_GROUPS, groupSet, false);
         } catch (PathNotFoundException e) {
             log.warn("the user " + getName() + " not a member of any group");
         } catch (Throwable t) {
             log.error("Failed to read groups", t);
         }
-        return new ArrayList();
+        return groupSet;
     }
 
     public Collection getAllGroups() {
-        // todo
-        log.warn("Not yet implemented");
-        return getGroups();
-    }
-
-
-    private Collection getGroups(Content node) throws Throwable {
-        return (ArrayList) this.getPropertyNames(node, ContentRepository.USER_GROUPS);
+        SortedSet groupSet = new TreeSet(String.CASE_INSENSITIVE_ORDER);
+        try {
+            Content groups = this.getUserNode().getContent("groups");
+            this.collectPropertyNames(groups, ContentRepository.USER_GROUPS, groupSet, true);
+        } catch (PathNotFoundException e) {
+            log.warn("the user " + getName() + " not a member of any group");
+        } catch (Throwable t) {
+            log.error("Failed to read groups", t);
+        }
+        return groupSet;
     }
 
     public Collection getRoles() {
+        SortedSet roleSet = new TreeSet(String.CASE_INSENSITIVE_ORDER);
         try {
             Content roles = this.getUserNode().getContent("roles");
-            return this.getRoles(roles);
+            this.collectPropertyNames(roles, ContentRepository.USER_ROLES, roleSet, false);
         } catch (PathNotFoundException e) {
             log.warn("the user " + getName() + " does not have any roles assigned");
         } catch (Throwable t) {
             log.error("Failed to read roles", t);
         }
-        return new ArrayList();
-    }
-
-    private Collection getRoles(Content node) throws Throwable {
-        return (ArrayList) this.getPropertyNames(node, ContentRepository.USER_ROLES);
+        return roleSet;
     }
 
     public Collection getAllRoles() {
-        // todo
-        log.warn("Not yet implemented");
-        return getRoles();
+        SortedSet roleSet = new TreeSet(String.CASE_INSENSITIVE_ORDER);
+        try {
+            Content roles = this.getUserNode().getContent("roles");
+            this.collectPropertyNames(roles, ContentRepository.USER_ROLES, roleSet, true);
+        } catch (PathNotFoundException e) {
+            log.warn("the user " + getName() + " does not have any roles assigned");
+        } catch (Throwable t) {
+            log.error("Failed to read roles", t);
+        }
+        return roleSet;
     }
 
-    public Collection getPropertyNames(Content node, String repositoryName) throws Throwable {
-        ArrayList list = new ArrayList();
-
+    public void collectPropertyNames(Content node, String repositoryName, Collection set, boolean isDeep) throws Throwable {
         Collection c = node.getNodeDataCollection();
         Iterator it = c.iterator();
         while (it.hasNext()) {
@@ -352,7 +354,10 @@ public class MgnlUser implements User, Serializable {
                     .getSystemContext()
                     .getHierarchyManager(repositoryName)
                     .getContentByUUID(uuid);
-                list.add(targetNode.getName());
+                set.add(targetNode.getName());
+                if (isDeep) {
+                    this.collectPropertyNames(targetNode, repositoryName, set, true);
+                }
             } catch (Throwable t) {
                 log.error(t.getMessage());
                 log.debug("Failed while reading node by UUID", t);
@@ -360,8 +365,6 @@ public class MgnlUser implements User, Serializable {
                 // - UUID's are kept as simple strings thus have no  referential integrity   
             }
         }
-
-        return list;
     }
 
     /**
