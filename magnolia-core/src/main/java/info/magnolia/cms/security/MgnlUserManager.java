@@ -16,7 +16,10 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.search.Query;
+import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.auth.Entity;
+import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -58,20 +61,20 @@ public class MgnlUserManager implements UserManager {
     }
 
     /**
-     * Get the user object
+     * Get the user object. Uses a search
      * @param name
      * @return the user object
      */
     public User getUser(String name) {
         try {
-            Content node = getHierarchyManager().getContent(name);
+            Content node = findUserNode(this.realmName, name);
+            if(node == null){
+                log.debug("User not found: [{}]", name);
+                return null;
+            }
             MgnlUser user = new MgnlUser(node);
             user.setLastAccess();
             return user;
-        }
-        catch (PathNotFoundException e) {
-            log.debug("User not found: [{}]", name);
-            return null;
         }
         catch (RepositoryException e) {
             log.info("Unable to load user [" + name + "] due to: " + e.toString(), e);
@@ -80,18 +83,41 @@ public class MgnlUserManager implements UserManager {
     }
 
     /**
+     * Helper method to find a user in a certain realm. Uses JCR Query.
+     */
+    protected Content findUserNode(String realm, String name) throws RepositoryException {
+        String jcrPath ="%/" + name;
+
+        if(!Realm.REALM_ALL.equals(realm)){
+            jcrPath = "/" + realm + "/" + jcrPath;
+        }
+
+        String statement = "select * from " + ItemType.USER + " where jcr:path like '" + jcrPath + "'";
+
+        QueryManager qm = MgnlContext.getSystemContext().getQueryManager(ContentRepository.USERS);
+        Query query = qm.createQuery(statement, Query.SQL);
+        Collection users = query.execute().getContent(ItemType.USER.getSystemName());
+        if(users.size() == 1){
+            return (Content) users.iterator().next();
+        }
+        else if(users.size() >1){
+            log.error("More than one user found with name [{}] in realm [{}]");
+        }
+        return null;
+    }
+
+    /**
      * Get system user, this user must always exist in magnolia repository.
      * @return system user
      */
     public User getSystemUser() {
-        try {
-            return new MgnlUser(getHierarchyManager().getContent(UserManager.SYSTEM_USER));
-        }
-        catch (Exception e) {
-            log.error("failed to get System user", e);
+        User user =  getUser(UserManager.SYSTEM_USER);
+        if(user == null){
+            log.error("failed to get system user [{}]", UserManager.SYSTEM_USER);
             log.info("Try to create new system user with default password");
-            return this.createUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
+            user = this.createUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
         }
+        return user;
     }
 
     /**
@@ -99,14 +125,13 @@ public class MgnlUserManager implements UserManager {
      * @return anonymous user
      */
     public User getAnonymousUser() {
-        try {
-            return new MgnlUser(getHierarchyManager().getContent(UserManager.ANONYMOUS_USER));
+        User user =  getUser(UserManager.ANONYMOUS_USER);
+        if(user == null){
+            log.error("failed to get anonymous user [{}]", UserManager.ANONYMOUS_USER);
+            log.info("Try to create new anonymous user with default password");
+            user = this.createUser(UserManager.ANONYMOUS_USER, "");
         }
-        catch (Exception e) {
-            log.error("failed to get Anonymous user", e);
-            log.info("Try to create new system user with default password");
-            return this.createUser(UserManager.ANONYMOUS_USER, "");
-        }
+        return user;
     }
 
     /**
