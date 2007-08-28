@@ -13,6 +13,7 @@
 package info.magnolia.context;
 
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
@@ -40,6 +41,7 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -482,5 +484,28 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      */
     public ServletContext getServletContext() {
         return servletContext;
+    }
+
+    /**
+     * Closes JCR session and invalidates the current HttpSession.
+     */
+    public void logout() {
+        HttpSession session = this.request.getSession(false);
+        if (session != null) {
+            Iterator configuredStores = ContentRepository.getAllRepositoryNames();
+            while (configuredStores.hasNext()) {
+                String store = (String) configuredStores.next();
+                try {
+                    Session jcrSession = MgnlContext.getHierarchyManager(store).getWorkspace().getSession();
+                    if (jcrSession.isLive()) {
+                        jcrSession.logout();
+                    }
+                }
+                catch (Throwable t) {
+                    log.debug("Failed to close JCR session", t);
+                }
+            }
+            session.invalidate();
+        }
     }
 }

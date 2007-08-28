@@ -136,4 +136,8 @@ public interface WebContext extends Context {
      */
     PageContext getPageContext();
 
+    /**
+     * Logs out the user. E.g. close JCR sessions and invalidate the HttpSession properly.
+     */
+    void logout();
 }

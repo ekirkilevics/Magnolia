@@ -16,8 +16,10 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.filters.MagnoliaFilterChain;
 import info.magnolia.cms.filters.OncePerRequestAbstractMagnoliaFilter;
 import info.magnolia.context.AnonymousContext;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import info.magnolia.context.WebContext;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -47,37 +49,21 @@ public class LogoutFilter extends OncePerRequestAbstractMagnoliaFilter {
     private static Logger log = LoggerFactory.getLogger(LogoutFilter.class);
 
     /**
-     * Check if a request parameter PARAMETER_LOGOUT is set and logout user.
+     * Check if a request parameter PARAMETER_LOGOUT is set. If so logout user,  
+     * unset the context and restart the filter chain.
      */
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
         if (null != request.getParameter(PARAMETER_LOGOUT)) {
-            HttpSession session = request.getSession(false);
-            if (session != null) {
-                // FIXME we check if this is an anonymous context. if so we do not close the sessions
-                // this shoulg be replaced by a ctx.logout() call
-                if (!(MgnlContext.getInstance() instanceof SystemContext) && !(MgnlContext.getInstance() instanceof AnonymousContext)) {
-                    Iterator configuredStores = ContentRepository.getAllRepositoryNames();
-                    while (configuredStores.hasNext()) {
-                        String store = (String) configuredStores.next();
-                        try {
-                            Session jcrSession = MgnlContext.getHierarchyManager(store).getWorkspace().getSession();
-                            if (jcrSession.isLive()) {
-                                jcrSession.logout();
-                            }
-                        }
-                        catch (Throwable t) {
-                            log.debug("Failed to close JCR session", t);
-                        }
-                    }
-                }
-                session.invalidate();
+            Context ctx = MgnlContext.getInstance();
+            if (ctx instanceof WebContext) {
+                ((WebContext) ctx).logout();
             }
             MgnlContext.setInstance(null);
-        }
-        
-        if (chain instanceof MagnoliaFilterChain) {
-            ((MagnoliaFilterChain) chain).reset();
+
+            if (chain instanceof MagnoliaFilterChain) {
+                ((MagnoliaFilterChain) chain).reset();
+            }
         }
         
         chain.doFilter(request, response);

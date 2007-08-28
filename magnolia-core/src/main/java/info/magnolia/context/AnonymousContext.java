@@ -190,4 +190,13 @@ public class AnonymousContext extends WebContextImpl {
         queryManagerMap.clear();
         log.info("Anonymous context reloaded");
     }
+    
+    /**
+     * We do not want to loose the hierarchy managers of the anonymous 
+     * (default) user. Overriding super class' logout method prevents from 
+     * closing JCR sessions.
+     */
+    public void logout() {
+        // do nothing
+    }
 }
