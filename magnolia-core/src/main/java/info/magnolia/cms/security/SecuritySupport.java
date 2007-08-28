@@ -19,7 +19,7 @@ import info.magnolia.cms.util.FactoryUtil;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface SecurityManager {
+public interface SecuritySupport {
 
     /**
      * Returns a generic UserManager, either for a default realm, or an implementation which delegates to other UserManager instances.
@@ -36,8 +36,8 @@ public interface SecurityManager {
     RoleManager getRoleManager();
 
     public final static class Factory {
-        public static SecurityManager getInstance() {
-            return (SecurityManager) FactoryUtil.getSingleton(SecurityManager.class);
+        public static SecuritySupport getInstance() {
+            return (SecuritySupport) FactoryUtil.getSingleton(SecuritySupport.class);
         }
     }
 }

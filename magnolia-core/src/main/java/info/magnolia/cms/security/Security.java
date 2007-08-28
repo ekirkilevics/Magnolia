@@ -17,7 +17,7 @@ package info.magnolia.cms.security;
  * @author philipp
  * @version $Revision$ ($Author$)
  *
- * @deprecated use SecurityManager.Factory.getInstance()
+ * @deprecated use SecuritySupport.Factory.getInstance()
  */
 public class Security {
 
@@ -42,7 +42,7 @@ public class Security {
         return getSecurityManager().getGroupManager();
     }
 
-    private static SecurityManager getSecurityManager() {
-        return SecurityManager.Factory.getInstance();
+    private static SecuritySupport getSecurityManager() {
+        return SecuritySupport.Factory.getInstance();
     }
 }

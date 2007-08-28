@@ -14,7 +14,7 @@
     <sv:value>9c6df7a3-6a9b-4a67-accd-e2202c3ecbec</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.cms.security.SecurityManagerImpl</sv:value>
+    <sv:value>info.magnolia.cms.security.SecuritySupportImpl</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

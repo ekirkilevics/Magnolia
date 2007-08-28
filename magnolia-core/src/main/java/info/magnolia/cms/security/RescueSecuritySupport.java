@@ -13,39 +13,39 @@
 package info.magnolia.cms.security;
 
 /**
- * To be used as a replacement of /server/security or SecurityManagerImpl in mgnl-beans.properties
+ * To be used as a replacement of /server/security or SecuritySupportImpl in mgnl-beans.properties
  * in case the configuration is messed up. For instance, edit
  * <code>WEB-INF/config/default/magnolia.properties</code> and add
- * <pre>info.magnolia.cms.security.SecurityManager=info.magnolia.cms.security.RescueSecurityManager</pre>
+ * <pre>info.magnolia.cms.security.SecuritySupport=info.magnolia.cms.security.RescueSecuritySupport</pre>
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class RescueSecurityManager implements SecurityManager {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RescueSecurityManager.class);
+public class RescueSecuritySupport implements SecuritySupport {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RescueSecuritySupport.class);
 
-    public RescueSecurityManager() {
+    public RescueSecuritySupport() {
         super();
-        log.warn("Using RescueSecurityManager !");
+        log.warn("Using RescueSecuritySupport !");
     }
 
     public UserManager getUserManager() {
-        log.warn("Using RescueSecurityManager, will instanciate MgnlUserManager, please fix your configuration !");
+        log.warn("Using RescueSecuritySupport, will instanciate MgnlUserManager, please fix your configuration !");
         return new MgnlUserManager();
     }
 
     public UserManager getUserManager(String realmName) {
-        log.warn("Using RescueSecurityManager, will instanciate MgnlUserManager, please fix your configuration !");
+        log.warn("Using RescueSecuritySupport, will instanciate MgnlUserManager, please fix your configuration !");
         return new MgnlUserManager();
     }
 
     public GroupManager getGroupManager() {
-        log.warn("Using RescueSecurityManager, will instanciate MgnlGroupManager, please fix your configuration !");
+        log.warn("Using RescueSecuritySupport, will instanciate MgnlGroupManager, please fix your configuration !");
         return new MgnlGroupManager();
     }
 
     public RoleManager getRoleManager() {
-        log.warn("Using RescueSecurityManager, will instanciate MgnlRoleManager, please fix your configuration !");
+        log.warn("Using RescueSecuritySupport, will instanciate MgnlRoleManager, please fix your configuration !");
         return new MgnlRoleManager();
     }
 }
