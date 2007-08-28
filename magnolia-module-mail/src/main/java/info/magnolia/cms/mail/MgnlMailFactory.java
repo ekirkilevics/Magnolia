@@ -316,6 +316,7 @@ public class MgnlMailFactory extends ObservedManager {
      * <code>group-</code> will
      */
     public String convertEmailList(String mailTo) {
+        final UserManager manager = Security.getUserManager();
         StringBuffer ret = new StringBuffer();
         if(StringUtils.isEmpty(mailTo)){
             return "";
@@ -335,7 +336,8 @@ public class MgnlMailFactory extends ObservedManager {
                 if (log.isDebugEnabled()) {
                     log.debug("username =" + userName);
                 }
-                ret.append(getUserMail(userName));
+                User user = manager.getUser(userName);
+                ret.append(getUserMail(user));
             }
             else if (userName.startsWith(MailConstants.PREFIX_GROUP)) {
                 userName = StringUtils.removeStart(userName, MailConstants.PREFIX_GROUP);
@@ -345,10 +347,9 @@ public class MgnlMailFactory extends ObservedManager {
                     Iterator iter = users.iterator();
                     while(iter.hasNext()){
                         Content userNode = ((Content) iter.next());
-                        UserManager manager = Security.getUserManager();
                         User user = manager.getUser(userNode.getName());
                         if (user.getGroups().contains(userName)){
-                            ret.append(getUserMail(user.getName()));
+                            ret.append(getUserMail(user));
                         }
                     }
                 }
@@ -364,10 +365,9 @@ public class MgnlMailFactory extends ObservedManager {
                     Iterator iter = users.iterator();
                     while(iter.hasNext()){
                         Content userNode = ((Content) iter.next());
-                        UserManager manager = Security.getUserManager();
                         User user = manager.getUser(userNode.getName());
                         if (user.getRoles().contains(userName)){
-                            ret.append(getUserMail(user.getName()));
+                            ret.append(getUserMail(user));
                         }
                     }
                 }
@@ -383,10 +383,15 @@ public class MgnlMailFactory extends ObservedManager {
         return ret.toString();
     }
 
+    protected String getUserMail(User user) {
+        return user.getProperty("email");
+    }
+
     /**
-     * retrieve email address fo user
-     * @param userName
+     * retrieve email address of user
      * @return the email of the user as stored in the repository, if not found returns the parameter userName
+     *
+     * @deprecated use getUserMail(User user)
      */
     public String getUserMail(String userName) {
         try {
