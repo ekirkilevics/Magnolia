@@ -316,7 +316,7 @@ public class ContentUtil {
 
     public static Content createPath(HierarchyManager hm, String path, boolean save) throws AccessDeniedException,
         PathNotFoundException, RepositoryException {
-        return ContentUtil.createPath(hm, path, ItemType.CONTENT, save);
+        return createPath(hm, path, ItemType.CONTENT, save);
     }
 
     public static Content createPath(HierarchyManager hm, String path, ItemType type) throws AccessDeniedException,
@@ -326,8 +326,8 @@ public class ContentUtil {
 
     public static Content createPath(HierarchyManager hm, String path, ItemType type, boolean save) throws AccessDeniedException,
         PathNotFoundException, RepositoryException {
-        Content node = hm.getRoot();
-        return createPath(node, path, type, save);
+        Content root = hm.getRoot();
+        return createPath(root, path, type, save);
     }
 
     public static Content createPath(Content parent, String path, ItemType type) throws RepositoryException,
