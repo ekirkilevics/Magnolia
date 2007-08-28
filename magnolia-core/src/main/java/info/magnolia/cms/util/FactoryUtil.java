@@ -17,6 +17,7 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.context.MgnlContext;
 
 import java.util.HashMap;
@@ -267,12 +268,16 @@ public class FactoryUtil {
 
         protected void onRegister(Content node) {
             try {
-                this.observedObject = Content2BeanUtil.toBean(node, true);
+                this.observedObject = Content2BeanUtil.toBean(node, true, getContent2BeanTransformer());
                 log.info(this.interf.getName()+" reloaded [ "+node.getHandle()+" ]");
             }
             catch (Exception e) {
                 log.error("can't instantiate object [" + repository + ":" + path + "]", e);
             }
+        }
+
+        protected Content2BeanTransformer getContent2BeanTransformer() {
+            return Content2BeanUtil.getContent2BeanTransformer();
         }
 
         /**
