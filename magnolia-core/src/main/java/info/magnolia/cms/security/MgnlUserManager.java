@@ -38,16 +38,23 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class MgnlUserManager implements UserManager {
+    private static final Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
-    /**
-     * Logger
-     */
-    public static Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
+    private String realmName;
 
     /**
      * Do not instantiate it!
      */
     public MgnlUserManager() {
+    }
+
+    // TODO : rename to getRealmName and setRealmName (and make sure Content2Bean still sets realmName using the parent's node name)
+    public String getName() {
+        return realmName;
+    }
+
+    public void setName(String name) {
+        this.realmName = name;
     }
 
     /**
@@ -67,10 +74,7 @@ public class MgnlUserManager implements UserManager {
             return null;
         }
         catch (RepositoryException e) {
-            log.info("Unable to load user [" + name + "] due to: " //
-                + e.getClass().getName()
-                + " - "
-                + e.getMessage(), e);
+            log.info("Unable to load user [" + name + "] due to: " + e.toString(), e);
             return null;
         }
     }

@@ -12,13 +12,12 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.util.FactoryUtil;
-
-
 /**
  * Get the current role or user manager.
  * @author philipp
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated use SecurityManager.Factory.getInstance()
  */
 public class Security {
 
@@ -26,21 +25,27 @@ public class Security {
      * Returns the configured RoleManager.
      */
     public static RoleManager getRoleManager() {
-        return (RoleManager) FactoryUtil.getSingleton(RoleManager.class);
+//        return (RoleManager) FactoryUtil.getSingleton(RoleManager.class);
+        return getSecurityManager().getRoleManager();
     }
 
     /**
      * Returns the configured UserManager.
      */
     public static UserManager getUserManager() {
-        return (UserManager) FactoryUtil.getSingleton(UserManager.class);
+//        return (UserManager) FactoryUtil.getSingleton(UserManager.class);
+        return getSecurityManager().getUserManager();
     }
 
     /**
      * Returns the configured GroupManager.
      */
     public static GroupManager getGroupManager() {
-        return (GroupManager) FactoryUtil.getSingleton(GroupManager.class);
+//        return (GroupManager) FactoryUtil.getSingleton(GroupManager.class);
+        return getSecurityManager().getGroupManager();
     }
 
+    private static SecurityManager getSecurityManager() {
+        return SecurityManager.Factory.getInstance();
+    }
 }
