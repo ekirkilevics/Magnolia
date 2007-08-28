@@ -17,8 +17,6 @@ import info.magnolia.cms.security.Digester;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
-import java.util.Collections;
-import java.util.List;
 
 import org.apache.commons.lang.ArrayUtils;
 
@@ -44,7 +42,6 @@ public class RoleBasedCacheFilter extends CacheFilter {
      * @param key as created by configured CacheManager
      * */
     private CacheKey generateMD5Key(Collection assignedRoles, CacheKey key) {
-        Collections.sort((List) assignedRoles);
         String asString = ArrayUtils.toString(assignedRoles);
         StringBuffer buffer = new StringBuffer(key.toString()).append(".").append(Digester.getMD5Hex(asString));
         key.setValue(new String(buffer));
