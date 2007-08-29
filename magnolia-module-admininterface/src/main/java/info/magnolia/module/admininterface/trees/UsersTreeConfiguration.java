@@ -92,11 +92,14 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
         final Messages msgs = getMessages();
 
+        // might be usefull ;-)
+        /*
         ContextMenuItem menuNewFolder = new ContextMenuItem("newFolder");
         menuNewFolder.setLabel(msgs.get("tree.users.menu.newFolder")); //$NON-NLS-1$
         menuNewFolder.setIcon(request.getContextPath() + "/.resources/icons/16/folder_add.gif"); //$NON-NLS-1$
         menuNewFolder.setOnclick(tree.getJavascriptTree() + ".createNode('"
             + ItemType.NT_FOLDER + "');"); //$NON-NLS-1$
+        */
 
         ContextMenuItem menuOpen = new ContextMenuItem("edit");
         menuOpen.setLabel(msgs.get("tree.users.menu.edit")); //$NON-NLS-1$
@@ -161,7 +164,7 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
         }
 
         if (!browseMode) {
-            tree.addMenuItem(menuNewFolder);
+            // tree.addMenuItem(menuNewFolder);
             tree.addMenuItem(menuOpen);
             tree.addMenuItem(menuNew);
             tree.addMenuItem(null); // line
