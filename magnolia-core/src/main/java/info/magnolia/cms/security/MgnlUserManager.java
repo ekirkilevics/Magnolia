@@ -213,7 +213,8 @@ public class MgnlUserManager implements UserManager {
     }
 
     protected Content createUserNode(String name) throws RepositoryException {
-        return getHierarchyManager().createContent("/", name, ItemType.USER.getSystemName());
+        final String path = "/" + getRealmName();
+        return getHierarchyManager().createContent(path, name, ItemType.USER.getSystemName());
     }
 
     /**
