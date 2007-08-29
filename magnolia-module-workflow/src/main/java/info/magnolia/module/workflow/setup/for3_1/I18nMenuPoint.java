@@ -26,7 +26,7 @@ import javax.jcr.RepositoryException;
  * @version $Revision: $ ($Author: $)
  */
 public class I18nMenuPoint extends PropertyValuesTask {
-    private static final String MENU_PATH = "modules/adminInterface/config/menu/inbox";
+    private static final String MENU_PATH = "/modules/adminInterface/config/menu/inbox";
 
     public I18nMenuPoint() {
         super("i18n", "Internationalization of the Inbox menu entry.");
