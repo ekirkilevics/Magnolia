@@ -16,8 +16,8 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.Content2BeanTransformer;
+import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.HashMap;
@@ -268,8 +268,12 @@ public class FactoryUtil {
 
         protected void onRegister(Content node) {
             try {
-                this.observedObject = Content2BeanUtil.toBean(node, true, getContent2BeanTransformer());
-                log.info(this.interf.getName()+" reloaded [ "+node.getHandle()+" ]");
+                Object instance = Content2BeanUtil.toBean(node, true, getContent2BeanTransformer());
+
+                if(this.observedObject != null){
+                    log.info(this.interf.getName()+" reloaded [ "+node.getHandle()+" ]");
+                }
+                this.observedObject = instance;
             }
             catch (Exception e) {
                 log.error("can't instantiate object [" + repository + ":" + path + "]", e);
@@ -284,7 +288,7 @@ public class FactoryUtil {
          * We do not unset the instance. This allows getObject() to be unsynchronized.
          */
         protected void onClear() {
-            this.observedObject = null;
+
         }
 
         /**
