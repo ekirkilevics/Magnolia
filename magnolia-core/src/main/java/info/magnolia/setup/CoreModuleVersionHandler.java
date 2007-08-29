@@ -12,8 +12,13 @@
  */
 package info.magnolia.setup;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.MgnlUserManager;
+import info.magnolia.cms.security.Realm;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AddNodeTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckOrCreatePropertyTask;
@@ -21,6 +26,7 @@ import info.magnolia.module.delta.CopyOrReplaceNodePropertiesTask;
 import info.magnolia.module.delta.ModuleBootstrapTask;
 import info.magnolia.module.delta.ModuleFilesExtraction;
 import info.magnolia.module.delta.MoveAndRenamePropertyTask;
+import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.NullTask;
 import info.magnolia.module.delta.PropertyExistsDelegateTask;
@@ -29,6 +35,7 @@ import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.setup.for3_1.LoginAuthTypePropertyMovedToFilter;
 import info.magnolia.setup.for3_1.LoginFormPropertyMovedToFilter;
+import info.magnolia.setup.for3_1.MoveMagnoliaUsersToRealmFolders;
 import info.magnolia.setup.for3_1.ReconfigureCommands;
 import info.magnolia.setup.for3_1.RemoveModuleDescriptorDetailsFromRepo;
 import info.magnolia.setup.for3_1.RenamedRenderersToTemplateRenderers;
@@ -45,6 +52,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final List tasks31 = Arrays.asList(new Task[]{
             new NullTask("web.xml updates", "CacheGeneratorServlet has been removed in Magnolia 3.1: please remove the corresponding <servlet> and <servlet-mapping> elements in your web.xml file."),
             new NullTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."),
+
+            new AddNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
+            new AddNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
 
             new ModuleBootstrapTask(), // TODO we should prbly avoid this since we don't know if we're installing or updating
             new ModuleFilesExtraction(),
@@ -84,6 +94,30 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
             // TODO : do we keep this ?
             new RemoveModuleDescriptorDetailsFromRepo(),
+
+            new NodeExistsDelegateTask(
+                "Moves anonymous user",
+                "Anonymous user must exist in the system realm",
+                ContentRepository.USERS,
+                "/" + MgnlUserManager.ANONYMOUS_USER,
+                new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/"
+                    + Realm.REALM_SYSTEM
+                    + "/"
+                    + MgnlUserManager.ANONYMOUS_USER, true)),
+
+            new NodeExistsDelegateTask(
+                "Moves superuser user",
+                "Superuser user must exist in the system realm",
+                ContentRepository.USERS,
+                "/" + MgnlUserManager.SYSTEM_USER,
+                new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/"
+                    + Realm.REALM_SYSTEM
+                    + "/"
+                    + MgnlUserManager.SYSTEM_USER, true)),
+
+            // other users are moved to the admin realm
+            new MoveMagnoliaUsersToRealmFolders(),
+
 
             // new BootstrapSingleResource("new i18n", /*TODO*/"blah blah", "/mgnl-bootstrap/core/config.server.i18n.content.xml"),
             // new BootstrapSingleResource("superuser role", /*TODO*/"blah blah", "/mgnl-bootstrap/core/userroles.superuser.xml"),
