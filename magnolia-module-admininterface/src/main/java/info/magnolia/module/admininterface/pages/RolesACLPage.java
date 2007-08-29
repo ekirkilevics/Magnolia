@@ -56,19 +56,6 @@ public class RolesACLPage extends SimplePageMVCHandler {
         accessRight.setName("'+prefix+'AccessRight"); //$NON-NLS-1$
         accessRight.setCssClass("mgnlDialogControlSelect"); //$NON-NLS-1$
 
-
-//        if (repository.equals(URI_FAKE_REPOSITORY)) {
-//            accessRight.setOptions(escapeJs(msgs.get("roles.permission.getAndPost")), Long.toString(PERMISSION_ALL));
-//            accessRight.setOptions(escapeJs(msgs.get("roles.permission.get")), Long.toString(PERMISSION_READ)); //$NON-NLS-1$
-//            accessRight.setOptions(escapeJs(msgs.get("roles.permission.deny")), Long.toString(PERMISSION_NO));
-//        }
-//        else {
-//            accessRight.setOptions(escapeJs(msgs.get("roles.permission.readWrite")), Long.toString(PERMISSION_ALL)); //$NON-NLS-1$
-//            accessRight.setOptions(escapeJs(msgs.get("roles.permission.readOnly")), Long.toString(PERMISSION_READ));
-//
-//            accessRight.setOptions(escapeJs(msgs.get("roles.permission.deny")), Long.toString(PERMISSION_NO)); //$NON-NLS-1$
-//        }
-//
         for (Iterator iter = repoConf.getPermissions().iterator(); iter.hasNext();) {
             PermissionConfiguration permission = (PermissionConfiguration) iter.next();
             accessRight.setOptions(escapeJs(permission.getI18nLabel()), Long.toString(permission.getValue())); //$NON-NLS-1$
@@ -85,20 +72,6 @@ public class RolesACLPage extends SimplePageMVCHandler {
             AclTypeConfiguration patternType = (AclTypeConfiguration) iter.next();
             accessType.setOptions(escapeJs(patternType.getI18nLabel()), String.valueOf(patternType.getType())); //$NON-NLS-1$
         }
-
-//
-//        if (repository.equals(ContentRepository.WEBSITE)) {
-//            accessType.setOptions(escapeJs(msgs.get("roles.edit.thisAndSubPages")), String.valueOf(TYPE_ALL));
-//            accessType.setOptions(escapeJs(msgs.get("roles.edit.subPages")), String.valueOf(TYPE_SUBS));
-//        }
-//        else {
-//            if (repository.equals(ContentRepository.CONFIG)) {
-//                accessType.setOptions(escapeJs(msgs.get("roles.edit.thisNode")), String.valueOf(TYPE_THIS));
-//            }
-//            accessType.setOptions(escapeJs(msgs.get("roles.edit.thisAndSubNodes")), String.valueOf(TYPE_ALL));
-//            accessType.setOptions(escapeJs(msgs.get("roles.edit.subNodes")), String.valueOf(TYPE_SUBS));
-//        }
-
 
         accessType.setValue("' + object.accessType + '"); //$NON-NLS-1$
 
