@@ -118,27 +118,25 @@ public class ObservationUtil {
      * Defered event handling. Uses the DelayedExecutor class
      */
     public static class ObservationBasedDelayedExecutor {
-
-        private List events = new ArrayList();
-
-        private DelayedExecutor delayedExecutor;
+        private final DelayedExecutor delayedExecutor;
+        private final List eventsBuffer = new ArrayList();
 
         public ObservationBasedDelayedExecutor(final EventListener listener, long delay, long maxDelay) {
             delayedExecutor = new DelayedExecutor(new Runnable(){
                         public void run() {
                             // during execution consume is blocked
-                            synchronized (events) {
-                                listener.onEvent(new ListBasedEventIterator(events));
-                                events.clear();
+                            synchronized (eventsBuffer) {
+                                listener.onEvent(new ListBasedEventIterator(eventsBuffer));
+                                eventsBuffer.clear();
                             }
                         }
                     }, delay, maxDelay);
         }
 
         protected void consume(EventIterator events) {
-            synchronized (this.events) {
+            synchronized (this.eventsBuffer) {
                 while(events.hasNext()) {
-                    this.events.add(events.next());
+                    this.eventsBuffer.add(events.next());
                 }
                 delayedExecutor.trigger();
             }
@@ -148,13 +146,14 @@ public class ObservationUtil {
     /**
      * List based event iterator. Used to collect events in a list which are later on passed to the listener.
      */
-    public static class ListBasedEventIterator implements EventIterator{
+    public static class ListBasedEventIterator implements EventIterator {
         private Iterator iterator;
         private List events;
         private int pos = 0;
 
         public ListBasedEventIterator(List events) {
             this.events = events;
+            this.iterator = events.iterator();
         }
 
         public boolean hasNext() {
