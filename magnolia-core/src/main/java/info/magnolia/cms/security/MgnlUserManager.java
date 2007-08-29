@@ -105,7 +105,9 @@ public class MgnlUserManager implements UserManager {
             return null;
         }
         final MgnlUser user = new MgnlUser(node);
-        user.setLastAccess();
+        if(!user.getName().equals(ANONYMOUS_USER)){
+            user.setLastAccess();
+        }
         return user;
     }
 
@@ -114,6 +116,11 @@ public class MgnlUserManager implements UserManager {
      */
     protected Content findUserNode(String realm, String name) throws RepositoryException {
         String jcrPath ="%/" + name;
+
+        if(Realm.REALM_ADMIN.equals(realm)){
+            log.warn("TEMPORARY SOLUTION WILL RESET THE REALM TO ALL");
+            realm = Realm.REALM_ALL;
+        }
 
         if(!Realm.REALM_ALL.equals(realm)){
             jcrPath = "/" + realm + "/" + jcrPath;
