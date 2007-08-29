@@ -53,7 +53,7 @@ public class DelayedExecutorTest extends TestCase {
         TestRunnable runnable = new TestRunnable();
         DelayedExecutor executor = new DelayedExecutor(runnable, 100, 200);
 
-        for(int i=0; i<3; i++){
+        for(int i=0; i<4; i++){
             executor.trigger();
             Thread.sleep(100);
         }
