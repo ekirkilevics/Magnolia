@@ -14,23 +14,26 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.auth.Entity;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.codec.binary.Base64;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.security.auth.Subject;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.security.auth.Subject;
+
+import org.apache.commons.codec.binary.Base64;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * Manages the users stored in magnolia itself.
@@ -38,6 +41,7 @@ import java.util.Set;
  * @version $Revision$ ($Author$)
  */
 public class MgnlUserManager implements UserManager {
+
     private static final Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
     private String realmName;
@@ -55,10 +59,6 @@ public class MgnlUserManager implements UserManager {
 
     public void setName(String name) {
         this.realmName = name;
-    }
-
-    public String getRealmName() {
-        return realmName;
     }
 
     /**
@@ -101,12 +101,12 @@ public class MgnlUserManager implements UserManager {
 
     protected User getFromRepository(String name) throws RepositoryException {
         final Content node = findUserNode(this.realmName, name);
-        if (node == null) {
+        if (node == null){
             log.debug("User not found: [{}]", name);
             return null;
         }
         final MgnlUser user = new MgnlUser(node);
-        if (!user.getName().equals(ANONYMOUS_USER)) {
+        if(!user.getName().equals(ANONYMOUS_USER)){
             user.setLastAccess();
         }
         return user;
@@ -116,25 +116,23 @@ public class MgnlUserManager implements UserManager {
      * Helper method to find a user in a certain realm. Uses JCR Query.
      */
     protected Content findUserNode(String realm, String name) throws RepositoryException {
-        String jcrPath = "%/" + name;
+        String where = "where jcr:path = '/" + realm + "/" + name + "'";
+        where += " or jcr:path like '/" + realm + "/%/" + name + "'";
 
-        if (Realm.REALM_ADMIN.equals(realm)) {
-            log.warn("TEMPORARY SOLUTION WILL RESET THE REALM TO ALL");
-            realm = Realm.REALM_ALL;
+        // the all realm searches the repository
+        if(Realm.REALM_ALL.equals(realm)){
+            where = "where jcr:path like '%/" + name + "'";
         }
 
-        if (!Realm.REALM_ALL.equals(realm)) {
-            jcrPath = "/" + realm + "/" + jcrPath;
-        }
-
-        String statement = "select * from " + ItemType.USER + " where jcr:path like '" + jcrPath + "'";
+        String statement = "select * from " + ItemType.USER + " " + where ;
 
         QueryManager qm = MgnlContext.getSystemContext().getQueryManager(ContentRepository.USERS);
         Query query = qm.createQuery(statement, Query.SQL);
         Collection users = query.execute().getContent(ItemType.USER.getSystemName());
-        if (users.size() == 1) {
+        if(users.size() == 1){
             return (Content) users.iterator().next();
-        } else if (users.size() > 1) {
+        }
+        else if(users.size() >1){
             log.error("More than one user found with name [{}] in realm [{}]");
         }
         return null;
@@ -145,6 +143,9 @@ public class MgnlUserManager implements UserManager {
      * @return system user
      */
     public User getSystemUser() {
+        if(!Realm.REALM_SYSTEM.equals(this.realmName)){
+            return SecuritySupport.Factory.getInstance().getUserManager(Realm.REALM_SYSTEM).getSystemUser();
+        }
         return getOrCreateUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
     }
 
@@ -153,12 +154,16 @@ public class MgnlUserManager implements UserManager {
      * @return anonymous user
      */
     public User getAnonymousUser() {
+        if(!Realm.REALM_SYSTEM.equals(this.realmName)){
+            return SecuritySupport.Factory.getInstance().getUserManager(Realm.REALM_SYSTEM).getAnonymousUser();
+        }
+
         return getOrCreateUser(UserManager.ANONYMOUS_USER, "");
     }
 
     protected User getOrCreateUser(String userName, String password) {
         User user = getUser(userName);
-        if (user == null) {
+        if(user == null){
             log.error("failed to get system or anonymous user [{}]", userName);
             log.info("Try to create new system user with default password");
             user = this.createUser(userName, password);
@@ -205,8 +210,7 @@ public class MgnlUserManager implements UserManager {
     }
 
     protected Content createUserNode(String name) throws RepositoryException {
-        final String path = "/" + getRealmName();
-        return getHierarchyManager().createContent(path, name, ItemType.USER.getSystemName());
+        return getHierarchyManager().createContent("/", name, ItemType.USER.getSystemName());
     }
 
     /**
