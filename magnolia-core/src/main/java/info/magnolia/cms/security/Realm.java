@@ -28,7 +28,13 @@ public interface Realm {
     public static final String REALM_ALL = "all";
 
     /**
+     * Contains not removable system users: anonymous, superuser
+     */
+    public static final String REALM_SYSTEM = "system";
+
+    /**
      * The default realm is REALM_ADMIN
      */
     public static final String DEFAULT_REALM = REALM_ALL;
+
 }
