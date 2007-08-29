@@ -4,8 +4,10 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.cache.Cache;
 import info.magnolia.cms.cache.CacheConfig;
 import info.magnolia.cms.cache.CacheKey;
+import info.magnolia.cms.cache.CacheManagerFactory;
 import info.magnolia.cms.cache.CacheableEntry;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.util.ObservationUtil;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,11 +18,8 @@ import java.util.Hashtable;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.FileUtils;
@@ -172,21 +171,14 @@ public class CacheImpl implements Cache {
     public void start(CacheConfig config) {
         this.config = config;
 
+        // TODO this should be more flexible in cases you want to handle events on other repositories
         // register to observe on any changes if configured
-        try {
-            this.registerChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
+        ObservationUtil.registerDefferedChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
 
-                public void onEvent(EventIterator events) {
-                    DeferredCleaner.getInstance().consume(events);
-                }
-            });
-        }
-        catch (RepositoryException re) {
-            log.error("Failed to register Simple-Cache deferred cleaner", re);
-            // abort, else public site will be inconsistent
-            this.stop();
-            return;
-        }
+            public void onEvent(EventIterator events) {
+                handleChangeEvents(events);
+            }
+        }, 5000, 30000);
 
         File cacheDir = getCacheDirectory();
 
@@ -201,19 +193,11 @@ public class CacheImpl implements Cache {
         }
     }
 
-    private void registerChangeListener(String repository, String observationPath, EventListener listener)
-        throws RepositoryException {
-        log.debug("Registering deferred cleaner");
-        ObservationManager observationManager = ContentRepository
-            .getHierarchyManager(repository)
-            .getWorkspace()
-            .getObservationManager();
-
-        observationManager.addEventListener(listener, Event.NODE_ADDED
-            | Event.NODE_REMOVED
-            | Event.PROPERTY_ADDED
-            | Event.PROPERTY_CHANGED
-            | Event.PROPERTY_REMOVED, observationPath, true, null, null, false);
+    /**
+     * Called based on the observation. The default implementation flushes the whole cache.
+     */
+    protected void handleChangeEvents(EventIterator events) {
+        CacheManagerFactory.getCacheManager().flushAll();
     }
 
     /**
