@@ -12,6 +12,7 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Security;
@@ -74,11 +75,11 @@ public class AnonymousContext extends WebContextImpl {
             }
         });
 
-        ObservationUtil.registerChangeListener(ContentRepository.USER_ROLES, "/", true, "mgnl:role", new EventListener() {
+        ObservationUtil.registerDefferedChangeListener(ContentRepository.USER_ROLES, "/", true, "mgnl:role", new EventListener() {
             public void onEvent(EventIterator events) {
                 reset();
             }
-        });
+        }, 1000, 5000);
     }
 
     /**
@@ -160,7 +161,7 @@ public class AnonymousContext extends WebContextImpl {
 
     private static void setAnonymousSubject() {
         CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(getAnonymousUser().getName(),
-                getAnonymousUser().getPassword().toCharArray());
+                getAnonymousUser().getPassword().toCharArray(), Realm.REALM_SYSTEM);
         try {
             LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
             loginContext.login();
@@ -190,10 +191,10 @@ public class AnonymousContext extends WebContextImpl {
         queryManagerMap.clear();
         log.info("Anonymous context reloaded");
     }
-    
+
     /**
-     * We do not want to loose the hierarchy managers of the anonymous 
-     * (default) user. Overriding super class' logout method prevents from 
+     * We do not want to loose the hierarchy managers of the anonymous
+     * (default) user. Overriding super class' logout method prevents from
      * closing JCR sessions.
      */
     public void logout() {
