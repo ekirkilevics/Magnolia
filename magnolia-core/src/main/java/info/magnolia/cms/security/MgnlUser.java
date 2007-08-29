@@ -50,7 +50,7 @@ public class MgnlUser implements User, Serializable {
      * serialized
      * */
     private static final ObjectStreamField[] serialPersistentFields = {
-            new ObjectStreamField("userId", String.class)
+            new ObjectStreamField("uuid", String.class)
     };
 
     public static Logger log = LoggerFactory.getLogger(MgnlUser.class);
@@ -64,14 +64,21 @@ public class MgnlUser implements User, Serializable {
 
     private Content userNode;
 
-    private String userId;
+    /**
+     * Used to refetch the user node after deserializing
+     */
+    private String uuid;
 
     /**
      * @param userNode the Content object representing this user
      */
     protected MgnlUser(Content userNode) {
+        init(userNode);
+    }
+
+    protected void init(Content userNode) {
         this.userNode = userNode;
-        this.userId = userNode.getName();
+        this.uuid = userNode.getUUID();
     }
 
     /**
@@ -79,7 +86,8 @@ public class MgnlUser implements User, Serializable {
      * */
     private void reInitialize() {
         try {
-            this.userNode = ContentRepository.getHierarchyManager(ContentRepository.USERS).getContent(this.userId);
+            HierarchyManager usersHm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USERS);
+            init(usersHm.getContentByUUID(uuid));
         } catch (RepositoryException re) {
             log.error("Failed to load MgnlUser from persistent storage", re);
         }
@@ -362,7 +370,7 @@ public class MgnlUser implements User, Serializable {
                 log.error(t.getMessage());
                 log.debug("Failed while reading node by UUID", t);
                 // we continue since it can happen that target node is removed
-                // - UUID's are kept as simple strings thus have no  referential integrity   
+                // - UUID's are kept as simple strings thus have no  referential integrity
             }
         }
     }
