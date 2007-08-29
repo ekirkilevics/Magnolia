@@ -13,6 +13,8 @@
 package info.magnolia.module;
 
 import freemarker.template.TemplateException;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.freemarker.FreemarkerUtil;
 
@@ -59,8 +61,18 @@ public class ModuleManagerUI {
             if (restartNeeded) {
                 render("restart", moduleManager, out);
             } else {
-                moduleManager.startModules();
-                moduleManager.getStatus().done();
+                Context ctx = null;
+                if(MgnlContext.hasInstance()){
+                    ctx = MgnlContext.getInstance();
+                }
+                try{
+                    MgnlContext.setInstance(MgnlContext.getSystemContext());
+                    moduleManager.startModules();
+                    moduleManager.getStatus().done();
+                }
+                finally{
+                    MgnlContext.setInstance(ctx);
+                }
                 return true;
             }
         }
