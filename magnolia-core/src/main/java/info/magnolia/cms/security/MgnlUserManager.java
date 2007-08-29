@@ -60,6 +60,10 @@ public class MgnlUserManager implements UserManager {
         this.realmName = name;
     }
 
+    public String getRealmName() {
+        return realmName;
+    }
+
     /**
      * Get the user object. Uses a search
      * @param name

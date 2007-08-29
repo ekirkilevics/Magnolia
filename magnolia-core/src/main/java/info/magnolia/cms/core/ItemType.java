@@ -129,6 +129,9 @@ public final class ItemType implements Serializable {
 
     public static final ItemType JCR_CONTENT = new ItemType("jcr:content"); //$NON-NLS-1$
 
+    public static final ItemType FOLDER = new ItemType(NT_FOLDER); //$NON-NLS-1$
+
+
     /**
      * Stable serialVersionUID.
      */
