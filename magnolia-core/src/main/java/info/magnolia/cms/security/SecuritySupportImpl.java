@@ -34,6 +34,9 @@ public class SecuritySupportImpl implements SecuritySupport {
     }
 
     public UserManager getUserManager(String realmName) {
+        if(Realm.REALM_ALL.equals(realmName)){
+            return getUserManager();
+        }
         return (UserManager) userManagers.get(realmName);
     }
 
