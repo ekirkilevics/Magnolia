@@ -101,10 +101,22 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * @see info.magnolia.context.AbstractContext#getUser()
      */
     public User getUser() {
-        if (this.user == null) {
-            this.user = Security.getUserManager().getUser(Authenticator.getSubject(request));
+        if (user == null) {
+            user = (User) getAttribute("user", Context.SESSION_SCOPE);
+            if(user == null){
+                user = Security.getUserManager().getUser(Authenticator.getSubject(request));
+                setUser(user);
+            }
         }
         return this.user;
+    }
+
+    /**
+     * In additon to the field user we put the user object into the session as well.
+     */
+    public void setUser(User user) {
+        super.setUser(user);
+        setAttribute("user", user, Context.SESSION_SCOPE);
     }
 
     /**
