@@ -41,13 +41,13 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
         final Messages msgs = getMessages();
 
-        tree.setDrawShifter(false);
         // context path is already added by Tree
         tree.setIcon(ItemType.USER.getSystemName(), Tree.ICONDOCROOT + "pawn_glass_yellow.gif"); //$NON-NLS-1$
         tree.setIconOndblclick("mgnlTreeMenuOpenDialog(" + tree.getJavascriptTree() //$NON-NLS-1$
             // + ",'.magnolia/adminCentral/users/dialog.html');");
             + ",'.magnolia/dialogs/useredit.html');"); //$NON-NLS-1$
         tree.addItemType(ItemType.USER);
+        tree.addItemType(ItemType.NT_FOLDER, Tree.ICONDOCROOT + "folder.gif");
 
         TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
         column0.setIsLabel(true);
@@ -92,6 +92,12 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
         final Messages msgs = getMessages();
 
+        ContextMenuItem menuNewFolder = new ContextMenuItem("newFolder");
+        menuNewFolder.setLabel(msgs.get("tree.users.menu.newFolder")); //$NON-NLS-1$
+        menuNewFolder.setIcon(request.getContextPath() + "/.resources/icons/16/folder_add.gif"); //$NON-NLS-1$
+        menuNewFolder.setOnclick(tree.getJavascriptTree() + ".createNode('"
+            + ItemType.NT_FOLDER + "');"); //$NON-NLS-1$
+
         ContextMenuItem menuOpen = new ContextMenuItem("edit");
         menuOpen.setLabel(msgs.get("tree.users.menu.edit")); //$NON-NLS-1$
         menuOpen.setIcon(request.getContextPath() + "/.resources/icons/16/pawn_glass_yellow.gif"); //$NON-NLS-1$
@@ -105,7 +111,7 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
         ContextMenuItem menuNew = new ContextMenuItem("new");
         menuNew.setLabel(msgs.get("tree.users.menu.new")); //$NON-NLS-1$
         menuNew.setIcon(request.getContextPath() + "/.resources/icons/16/pawn_glass_yellow_add.gif"); //$NON-NLS-1$
-        menuNew.setOnclick(tree.getJavascriptTree() + ".createRootNode('" //$NON-NLS-1$
+        menuNew.setOnclick(tree.getJavascriptTree() + ".createNode('" //$NON-NLS-1$
             + ItemType.USER.getSystemName()
             + "');"); //$NON-NLS-1$
 
@@ -155,6 +161,7 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
         }
 
         if (!browseMode) {
+            tree.addMenuItem(menuNewFolder);
             tree.addMenuItem(menuOpen);
             tree.addMenuItem(menuNew);
             tree.addMenuItem(null); // line
