@@ -13,6 +13,7 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.DelayedExecutor;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
@@ -43,24 +44,27 @@ public abstract class ObservedManager {
     protected Logger log = LoggerFactory.getLogger(getClass());
 
     /**
-     * Count of reload request
-     */
-    private int reloadRequestCount = 0;
-
-    /**
-     * True if this manager is realoading. used to avoid cycles.
-     */
-    private boolean reloading = false;
-
-    /**
      * milli second the Reloader Thread sleeps
      */
-    private static final long SLEEP_MILLIS = 1000;
+    private static final long SLEEP_MILLIS = 500;
 
     /**
      * UUIDs of the registered main nodes. They will get registered again after a change.
      */
     protected Set registeredUUIDs = new HashSet();
+
+    /**
+     * Deffered reloading.
+     */
+    protected DelayedExecutor reloader;
+
+    public ObservedManager() {
+        reloader = new DelayedExecutor(new Runnable(){
+            public void run() {
+                reload();
+            }
+        }, SLEEP_MILLIS, 10 * SLEEP_MILLIS);
+    }
 
     /**
      * Register a node. The uuid is cached and then onRegister() called.
@@ -92,16 +96,26 @@ public abstract class ObservedManager {
      * Calls onClear and reregister the nodes by calling onRegister
      */
     public synchronized void reload() {
-        // if recalled in the same thread only
-        if (this.reloading == true) {
-            log.debug("this manager waiting for reloading: [{}]", this.getClass().getName());
-            this.reloadRequestCount++;
-            return;
+        // Call onClear and reregister the nodes by calling onRegister
+        onClear();
+
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+
+        // copy to avoid ConcurrentModificationException since the list get changed during iteration
+        List uuids = new ArrayList(registeredUUIDs);
+
+        for (Iterator iter = uuids.iterator(); iter.hasNext();) {
+            String uuid = (String) iter.next();
+            try {
+                Content node = hm.getContentByUUID(uuid);
+                reload(node);
+            }
+            catch (Exception e) {
+                registeredUUIDs.remove(uuid);
+                log.warn("can't reload the the node [" + uuid + "]");
+            }
         }
-        setReloading(true);
-        this.reloadRequestCount = 0;
-        Reloader reloader = new Reloader(this, this.reloadRequestCount);
-        new Thread(reloader).start();
+        return;
     }
 
     /**
@@ -131,99 +145,4 @@ public abstract class ObservedManager {
      */
     protected abstract void onClear();
 
-    /**
-     * @return Returns the reloading.
-     */
-    public boolean isReloading() {
-        return reloading;
-    }
-
-    /**
-     * Sets the reloading flag
-     * @param reloading boolean
-     */
-    protected void setReloading(boolean reloading) {
-        this.reloading = reloading;
-    }
-
-    /**
-     * @return Returns the reloadRequestCount
-     */
-    protected int getReloadRequestCount() {
-        return reloadRequestCount;
-    }
-
-    /**
-     * Reloading is done in a separate thread. The thread sleeps for SLEEP_MILLIS milliseconds and checks if the
-     * reloadRequestCount of the observedManager has changed. If true it will remain sleeping. If false the real
-     * reloading starts.
-     * @author Ralf Hirning
-     */
-    private class Reloader implements Runnable {
-
-        /**
-         * reloadRequestCount before sleeping
-         */
-        private int lastReloadRequestCount = 0;
-
-        /**
-         * the ObservedManager
-         */
-        private ObservedManager observedManager;
-
-        /**
-         * Constructor
-         * @param observedManager ObservedManager
-         * @param reloadRequestCount reloadRequestCount of the observedManager
-         */
-        protected Reloader(ObservedManager observedManager, int reloadRequestCount) {
-            this.observedManager = observedManager;
-            this.lastReloadRequestCount = reloadRequestCount;
-        }
-
-        /**
-         * The Reloader thread's run method
-         */
-        public void run() {
-            while (true) {
-                try {
-                    Thread.sleep(SLEEP_MILLIS);
-                }
-                catch (InterruptedException e) {
-                    // ok, go on
-                }
-
-                // check if the reloadRequestCount of the observedManager has changed
-                int currentReloadRequestCount = this.observedManager.getReloadRequestCount();
-                if (currentReloadRequestCount > lastReloadRequestCount) {
-                    lastReloadRequestCount = currentReloadRequestCount;
-                }
-                else {
-                    // allow creation of a new Reloader
-                    this.observedManager.setReloading(false);
-
-                    // Call onClear and reregister the nodes by calling onRegister
-                    this.observedManager.onClear();
-
-                    HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
-                    
-                    // copy to avoid ConcurrentModificationException since the list get changed during iteration
-                    List uuids = new ArrayList(this.observedManager.registeredUUIDs);
-
-                    for (Iterator iter = uuids.iterator(); iter.hasNext();) {
-                        String uuid = (String) iter.next();
-                        try {
-                            Content node = hm.getContentByUUID(uuid);
-                            this.observedManager.reload(node);
-                        }
-                        catch (Exception e) {
-                            this.observedManager.registeredUUIDs.remove(uuid);
-                            log.warn("can't reload the the node [" + uuid + "]");
-                        }
-                    }
-                    return;
-                }
-            }
-        }
-    }
 }
