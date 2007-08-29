@@ -41,7 +41,6 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class MgnlUserManager implements UserManager {
-
     private static final Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
     private String realmName;
@@ -59,6 +58,10 @@ public class MgnlUserManager implements UserManager {
 
     public void setName(String name) {
         this.realmName = name;
+    }
+
+    public String getRealmName() {
+        return realmName;
     }
 
     /**
