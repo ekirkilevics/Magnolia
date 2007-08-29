@@ -46,25 +46,12 @@ public abstract class ObservedManager {
     /**
      * milli second the Reloader Thread sleeps
      */
-    private static final long SLEEP_MILLIS = 500;
+    private static final long SLEEP_MILLIS = 1000;
 
     /**
      * UUIDs of the registered main nodes. They will get registered again after a change.
      */
     protected Set registeredUUIDs = new HashSet();
-
-    /**
-     * Deffered reloading.
-     */
-    protected DelayedExecutor reloader;
-
-    public ObservedManager() {
-        reloader = new DelayedExecutor(new Runnable(){
-            public void run() {
-                reload();
-            }
-        }, SLEEP_MILLIS, 10 * SLEEP_MILLIS);
-    }
 
     /**
      * Register a node. The uuid is cached and then onRegister() called.
@@ -76,12 +63,12 @@ public abstract class ObservedManager {
             return;
         }
 
-        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, node.getHandle(), new EventListener() {
+        ObservationUtil.registerDefferedChangeListener(ContentRepository.CONFIG, node.getHandle(), new EventListener() {
 
             public void onEvent(EventIterator events) {
                 reload();
             }
-        });
+        }, 1000, 5000);
 
         try {
             registeredUUIDs.add(node.getUUID());
