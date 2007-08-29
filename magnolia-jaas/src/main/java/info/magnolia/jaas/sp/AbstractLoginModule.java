@@ -37,7 +37,7 @@ public abstract class AbstractLoginModule implements LoginModule {
     public static final String OPTION_REALM = "realm";
 
     public static final String OPTION_USE_REALM_CALLBACK= "use_realm_callback";
-    
+
     public static final String STATUS = "statusValue";
 
     public static final int STATUS_SUCCEDED = 1;
@@ -117,7 +117,7 @@ public abstract class AbstractLoginModule implements LoginModule {
         this.realm = StringUtils.defaultIfEmpty((String) options.get(OPTION_REALM), Realm.DEFAULT_REALM);
 
         // null --> false
-        this.useRealmCallback = BooleanUtils.toBoolean(StringUtils.defaultIfEmpty((String) options.get(OPTION_USE_REALM_CALLBACK), "false"));
+        this.useRealmCallback = BooleanUtils.toBoolean(StringUtils.defaultIfEmpty((String) options.get(OPTION_USE_REALM_CALLBACK), "true"));
         this.skipOnPreviousSuccess = BooleanUtils.toBoolean(StringUtils.defaultIfEmpty((String) options.get(OPTION_SKIP_ON_PREVIOUS_SUCCESS), "false"));
     }
 
