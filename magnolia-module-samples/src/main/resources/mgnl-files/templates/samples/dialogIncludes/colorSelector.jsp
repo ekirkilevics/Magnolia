@@ -7,7 +7,7 @@
 
     <table cellpadding="0" cellspacing="2" border="0" height="60">
         <tr>
-            <jsp:scriptlet>
+            <jsp:scriptlet>HHHHHHHHHH
     DialogControlImpl control=(DialogControlImpl) pageContext.getRequest().getAttribute("dialogObject");
 
     //access all the values of the dialog definition with getConfigValue
