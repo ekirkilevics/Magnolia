@@ -146,10 +146,7 @@ public class MgnlUserManager implements UserManager {
      * @return system user
      */
     public User getSystemUser() {
-        if(!Realm.REALM_SYSTEM.equals(this.realmName)){
-            return SecuritySupport.Factory.getInstance().getUserManager(Realm.REALM_SYSTEM).getSystemUser();
-        }
-        return getOrCreateUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
+        return SecuritySupport.Factory.getInstance().getUserManager(Realm.REALM_SYSTEM).getSystemUser();
     }
 
     /**
@@ -157,23 +154,8 @@ public class MgnlUserManager implements UserManager {
      * @return anonymous user
      */
     public User getAnonymousUser() {
-        if(!Realm.REALM_SYSTEM.equals(this.realmName)){
-            return SecuritySupport.Factory.getInstance().getUserManager(Realm.REALM_SYSTEM).getAnonymousUser();
-        }
-
-        return getOrCreateUser(UserManager.ANONYMOUS_USER, "");
+        return SecuritySupport.Factory.getInstance().getUserManager(Realm.REALM_SYSTEM).getAnonymousUser();
     }
-
-    protected User getOrCreateUser(String userName, String password) {
-        User user = getUser(userName);
-        if(user == null){
-            log.error("failed to get system or anonymous user [{}]", userName);
-            log.info("Try to create new system user with default password");
-            user = this.createUser(userName, password);
-        }
-        return user;
-    }
-
 
     /**
      * All users

@@ -76,7 +76,7 @@
         <sv:value>304febf5-a4f6-4821-a500-efb0ca8f454d</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.cms.security.MgnlUserManager</sv:value>
+        <sv:value>info.magnolia.cms.security.SystemUserManger</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
