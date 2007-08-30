@@ -31,6 +31,7 @@ import javax.jcr.RepositoryException;
 import javax.security.auth.Subject;
 
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -180,6 +181,7 @@ public class MgnlUserManager implements UserManager {
      * @return the created User
      */
     public User createUser(String name, String pw) {
+        validateUsername(name);
         try {
             final Content node = createUserNode(name);
             node.createNodeData("name").setValue(name);
@@ -191,6 +193,12 @@ public class MgnlUserManager implements UserManager {
         catch (Exception e) {
             log.info("can't create user [" + name + "]", e);
             return null;
+        }
+    }
+
+    protected void validateUsername(String name) {
+        if (StringUtils.isBlank(name)) {
+            throw new IllegalArgumentException(name + " is not a valid username.");
         }
     }
 
