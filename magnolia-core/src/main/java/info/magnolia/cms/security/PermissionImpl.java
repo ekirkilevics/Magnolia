@@ -67,14 +67,15 @@ public class PermissionImpl implements Permission, Serializable {
         return this.pattern.match(path);
     }
 
-    public static String getPermissionAsName(long permission) {
-        return (String) nameStrings.get(new Long(permission));
+    public String toString() {
+        return getPermissionAsName(permissions) + " " + pattern;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public String toString() {
-        return nameStrings.get(new Long(permissions)) + " " + pattern;
+    public static String getPermissionAsName(long permission) {
+        final String name = (String) nameStrings.get(new Long(permission));
+        if (name == null) {
+            return "[unknown permission]";
+        }
+        return name;
     }
 }
