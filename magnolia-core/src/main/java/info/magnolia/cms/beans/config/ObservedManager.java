@@ -13,7 +13,6 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.DelayedExecutor;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
@@ -42,11 +41,6 @@ public abstract class ObservedManager {
      * Logger
      */
     protected Logger log = LoggerFactory.getLogger(getClass());
-
-    /**
-     * milli second the Reloader Thread sleeps
-     */
-    private static final long SLEEP_MILLIS = 1000;
 
     /**
      * UUIDs of the registered main nodes. They will get registered again after a change.
