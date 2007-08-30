@@ -30,13 +30,13 @@ public class RescueSecuritySupport implements SecuritySupport {
     }
 
     public UserManager getUserManager() {
-        log.warn("Using RescueSecuritySupport, will instanciate MgnlUserManager, please fix your configuration !");
-        return new MgnlUserManager();
+        log.warn("Using RescueSecuritySupport, will instanciate SystemUserManger, please fix your configuration !");
+        return new SystemUserManger();
     }
 
     public UserManager getUserManager(String realmName) {
-        log.warn("Using RescueSecuritySupport, will instanciate MgnlUserManager, please fix your configuration !");
-        return new MgnlUserManager();
+        log.warn("Using RescueSecuritySupport, will instanciate SystemUserManger, please fix your configuration !");
+        return new SystemUserManger();
     }
 
     public GroupManager getGroupManager() {
