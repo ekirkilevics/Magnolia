@@ -2,13 +2,13 @@ package info.magnolia.jaas.sp;
 
 
 import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.auth.callback.RealmCallback;
+import info.magnolia.cms.util.BooleanUtil;
 
 import java.util.Map;
 import java.util.LinkedHashSet;
@@ -116,9 +116,8 @@ public abstract class AbstractLoginModule implements LoginModule {
         this.sharedState.put("roleNames",new LinkedHashSet());
         this.realm = StringUtils.defaultIfEmpty((String) options.get(OPTION_REALM), Realm.DEFAULT_REALM);
 
-        // null --> false
-        this.useRealmCallback = BooleanUtils.toBoolean(StringUtils.defaultIfEmpty((String) options.get(OPTION_USE_REALM_CALLBACK), "true"));
-        this.skipOnPreviousSuccess = BooleanUtils.toBoolean(StringUtils.defaultIfEmpty((String) options.get(OPTION_SKIP_ON_PREVIOUS_SUCCESS), "false"));
+        this.useRealmCallback = BooleanUtil.toBoolean((String) options.get(OPTION_USE_REALM_CALLBACK), true);
+        this.skipOnPreviousSuccess = BooleanUtil.toBoolean((String) options.get(OPTION_SKIP_ON_PREVIOUS_SUCCESS), false);
     }
 
     public boolean login() throws LoginException {
