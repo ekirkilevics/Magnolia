@@ -64,11 +64,16 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
     }
 
     protected void initUser() {
-        SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
-        UserManager userManager = securitySupport.getUserManager(this.realm);
-        user = userManager.getUser(name);
+        user = getUserManager().getUser(name);
     }
 
+    /**
+     * override this to support any configured/non-configured user manager
+     * */
+    public UserManager getUserManager() {
+        SecuritySupport securitySupport = SecuritySupport.Factory.getInstance();
+        return securitySupport.getUserManager(this.realm);
+    }
 
     /**
      * set user details
