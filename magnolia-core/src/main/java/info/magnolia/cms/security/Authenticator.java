@@ -62,7 +62,7 @@ public final class Authenticator {
     /**
      * request attribute holding the login exception
      */
-    protected static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
+    public static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
 
     /**
      * Utility class, don't instantiate.
