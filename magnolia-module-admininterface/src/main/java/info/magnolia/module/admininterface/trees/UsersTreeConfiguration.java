@@ -117,6 +117,10 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
         menuNew.setOnclick(tree.getJavascriptTree() + ".createNode('" //$NON-NLS-1$
             + ItemType.USER.getSystemName()
             + "');"); //$NON-NLS-1$
+        menuNew.addJavascriptCondition("new mgnlTreeMenuItemConditionSelectedNotItemType(" //$NON-NLS-1$
+                + tree.getJavascriptTree() + ","
+                + "'" + ItemType.USER.getSystemName() + "'" 
+                + ")"); //$NON-NLS-1$
 
         ContextMenuItem menuDelete = new ContextMenuItem("delete");
         menuDelete.setLabel(msgs.get("tree.users.menu.delete")); //$NON-NLS-1$
