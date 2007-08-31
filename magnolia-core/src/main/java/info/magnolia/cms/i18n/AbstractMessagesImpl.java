@@ -124,7 +124,7 @@ public abstract class AbstractMessagesImpl implements Messages {
      * Nice string
      */
     public String toString() {
-        return this.basename + "(" + this.locale.toString() + ")";
+        return this.basename + "(" + this.locale + ")";
     }
 
 }
