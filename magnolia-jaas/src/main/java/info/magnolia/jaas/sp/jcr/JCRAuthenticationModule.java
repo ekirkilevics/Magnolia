@@ -21,8 +21,10 @@ import info.magnolia.jaas.sp.AbstractLoginModule;
 
 import java.util.Iterator;
 
+import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
+import javax.security.auth.login.AccountNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -47,24 +49,36 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
 
     /**
      * checks is the credentials exist in the repository
-     * @return boolean
+     * @throws LoginException or specific subclasses (which will be handled further for user feedback)
      */
-    public boolean validateUser() throws FailedLoginException, LoginException {
+    public void validateUser() throws LoginException {
         initUser();
 
         if(this.user == null){
-            throw new FailedLoginException("user " + this.name + " not found");
+            throw new AccountNotFoundException("user " + this.name + " not found");
         }
 
-        String serverPassword = user.getPassword();
-        // we do not allow users with no password
-        if (StringUtils.isEmpty(serverPassword)) return false;
+        matchPassword();
 
-        return StringUtils.equals(serverPassword, new String(this.pswd));
+        if (!this.user.isEnabled()) {
+            throw new AccountLockedException();
+        }
     }
 
     protected void initUser() {
         user = getUserManager().getUser(name);
+    }
+
+    protected void matchPassword() throws LoginException {
+        String serverPassword = user.getPassword();
+
+        if (StringUtils.isEmpty(serverPassword)) {
+            throw new FailedLoginException("we do not allow users with no password");
+        }
+
+        if (!StringUtils.equals(serverPassword, new String(this.pswd))) {
+            throw new FailedLoginException("passwords do not match");
+        }
     }
 
     /**

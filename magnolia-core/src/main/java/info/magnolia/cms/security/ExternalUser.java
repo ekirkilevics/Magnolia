@@ -68,26 +68,14 @@ public class ExternalUser implements User, Serializable {
         this.groupList = (GroupList) groupListIterator.next();
     }
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserInterface#hasRole(java.lang.String)
-     */
     public boolean hasRole(String roleName) {
         return this.roleList.has(roleName);
     }
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserInterface#removeRole(java.lang.String)
-     */
     public void removeRole(String roleName) {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserInterface#addRole(java.lang.String)
-     */
     public void addRole(String roleName) {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
@@ -117,10 +105,10 @@ public class ExternalUser implements User, Serializable {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserInterface#getLanguage()
-     */
+    public boolean isEnabled() {
+        return true;
+    }
+
     public String getLanguage() {
         String language = (String) this.userDetails.getProperty(Entity.LANGUAGE);
         if (null == language) {
@@ -129,10 +117,6 @@ public class ExternalUser implements User, Serializable {
         return language;
     }
 
-    /*
-     * (non-Javadoc)
-     * @see info.magnolia.cms.security.UserInterface#getName()
-     */
     public String getName() {
         return (String) this.userDetails.getProperty(Entity.NAME);
     }
@@ -153,9 +137,6 @@ public class ExternalUser implements User, Serializable {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
     }
 
-    /**
-     * @see info.magnolia.cms.security.User#getGroups()
-     */
     public Collection getGroups() {
         return this.groupList.getList();
     }
@@ -164,9 +145,6 @@ public class ExternalUser implements User, Serializable {
         return this.getGroups();
     }
 
-    /**
-     * @see info.magnolia.cms.security.User#getRoles()
-     */
     public Collection getRoles() {
         return this.roleList.getList();
     }

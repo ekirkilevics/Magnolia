@@ -14,7 +14,7 @@ package info.magnolia.cms.security.auth.callback;
 
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpServletRequest;
-import javax.security.auth.login.FailedLoginException;
+import javax.security.auth.login.LoginException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,8 +22,10 @@ import java.util.Map;
 import info.magnolia.freemarker.FreemarkerUtil;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.Messages;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.ClassUtils;
 
 /**
  * @author Sameer Charles
@@ -61,17 +63,18 @@ public class FormClientCallback extends AbstractHttpClientCallback {
     }
 
     /**
-     * simply sets "errorString" in case of login exception
+     * simply sets "errorString" in case of login exception.
+     * override this to pass more objects to the freemarker template.
      * @return an empty map
-     * override this to pass on any customized map
-     * */
+     */
     public Map getMessages(HttpServletRequest request) {
-        FailedLoginException exception = (FailedLoginException) request.getAttribute("mgnlLoginError");
+        LoginException exception = (LoginException) request.getAttribute("mgnlLoginError");
         Map messages = new HashMap();
         if (null != exception) {
-            messages.put(ERROR_STRING, MessagesManager.getMessages().get("login.relogin"));
-        } else {
-            messages.put(ERROR_STRING, "");
+            final String exName = ClassUtils.getShortClassName(exception, null);
+            final Messages mm = MessagesManager.getMessages();
+            final String defaultMessage = mm.get("login.defaultError");
+            messages.put(ERROR_STRING, mm.getWithDefault("login." + exName, defaultMessage));
         }
         return messages;
     }

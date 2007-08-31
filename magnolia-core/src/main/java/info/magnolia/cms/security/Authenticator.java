@@ -17,7 +17,6 @@ import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 
 import javax.security.auth.Subject;
-import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
@@ -116,6 +115,7 @@ public final class Authenticator {
      * @param callbackHandler CredentialsCallbackHandler instance
      * @return <code>true</code> if the authentication request succeeds
      * @throws LoginException if the authentication request is not valid
+     * @deprecated Since 3.1 use LoginFilter->LoginHandlers
      */
     public static boolean authenticate(HttpServletRequest request, CredentialsCallbackHandler callbackHandler)
         throws LoginException {
@@ -145,24 +145,25 @@ public final class Authenticator {
 
             request.removeAttribute(ATTRIBUTE_LOGINERROR);
         }
-        catch (FailedLoginException fle) {
-            request.setAttribute(ATTRIBUTE_LOGINERROR, fle);
-            if (log.isDebugEnabled()) {
-                log.debug("Wrong credentials", fle);
-            }
-            /*
-            HttpSession httpsession = request.getSession(false);
-            if (httpsession != null) {
-                httpsession.invalidate();
-            }
-            */
-            return false;
-        }
         catch (LoginException le) {
-            throw le;
+            handleLoginException(le, request);
+            return false;
         }
 
         return true;
+    }
+
+    /**
+     * Any subclass of LoginException will be stored as a request attribute,
+     * but a plain LoginException will just be re-thrown.
+     */
+    protected static void handleLoginException(LoginException e, HttpServletRequest request) throws LoginException {
+        if (LoginException.class.equals(e.getClass())) {
+            throw e;
+        } else {
+            request.setAttribute(ATTRIBUTE_LOGINERROR, e);
+            log.debug("Wrong credentials or locked account... or else.", e);
+        }
     }
 
     /**

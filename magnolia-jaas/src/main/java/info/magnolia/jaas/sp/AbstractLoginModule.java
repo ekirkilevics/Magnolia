@@ -147,7 +147,7 @@ public abstract class AbstractLoginModule implements LoginModule {
             if(this.useRealmCallback){
                 this.realm = StringUtils.defaultIfEmpty(((RealmCallback)callbacks[2]).getRealm(), this.realm);
             }
-            this.success = this.validateUser();
+            this.validateUser();
         } catch (IOException ioe) {
             if (log.isDebugEnabled()) {
                 log.debug("Exception caught", ioe);
@@ -160,9 +160,7 @@ public abstract class AbstractLoginModule implements LoginModule {
             throw new LoginException(ce.getCallback().toString() + " not available");
         }
 
-        if (!this.success) {
-            throw new FailedLoginException("failed to authenticate " + this.name);
-        }
+        this.success = true;
 
         this.setSharedStatus(STATUS_SUCCEDED);
         return this.success;
@@ -249,9 +247,9 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     /**
      * checks if the credentials exist in the repository
-     * @return boolean
+     * @throws LoginException or specific subclasses to report failures.
      */
-    public abstract boolean validateUser() throws FailedLoginException, LoginException;
+    public abstract void validateUser() throws LoginException;
 
     /**
      * set user details

@@ -49,11 +49,7 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      */
     private static final Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
 
-    /**
-     * {@inheritDoc}
-     */
-    public boolean validateUser() throws FailedLoginException ,LoginException {
-        return true;
+    public void validateUser() throws LoginException {
     }
 
     /**

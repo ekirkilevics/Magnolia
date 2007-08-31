@@ -60,6 +60,12 @@ public interface User {
     void addGroup(String groupName) throws UnsupportedOperationException;
 
     /**
+     * Returns false if the user was explicitely disabled. Implementations should return
+     * true by default if the status is unknown.
+     */
+    boolean isEnabled();
+
+    /**
      * get user language
      * @return language string
      */

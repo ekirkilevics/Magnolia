@@ -118,6 +118,10 @@ public class MgnlUser implements User, Serializable {
         this.add(groupName, NODE_GROUPS);
     }
 
+    public boolean isEnabled() {
+        return NodeDataUtil.getBoolean(getUserNode(), "enabled", true);
+    }
+
     /**
      * Is this user in a specified role?
      * @param roleName the name of the role

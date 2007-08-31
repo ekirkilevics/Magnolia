@@ -84,6 +84,10 @@ public class DummyUser implements User {
         log.debug("No groups can be attached to user [ Anonymous ]");
     }
 
+    public boolean isEnabled() {
+        return true;
+    }
+
     /**
      * get user language
      * @return language string

@@ -61,6 +61,7 @@ h1 {
   color: #690;
 }
 #error {
+  text-align: center;
   font-size: 10px;
   color: #993333;
 }
@@ -101,9 +102,11 @@ h1 {
         <br />
         Magnolia is a registered trademark of Magnolia International Ltd.
       </div>
-      <div id="error" style="text-align: center">
+      [#if errorString?exists]
+      <div id="error">
         ${errorString}
       </div>
+      [/#if]
     </div>
   </body>
 </html>
