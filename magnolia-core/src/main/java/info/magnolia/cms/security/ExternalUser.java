@@ -109,6 +109,9 @@ public class ExternalUser implements User, Serializable {
         return true;
     }
 
+    public void setEnabled(boolean enabled) {
+    }
+
     public String getLanguage() {
         String language = (String) this.userDetails.getProperty(Entity.LANGUAGE);
         if (null == language) {

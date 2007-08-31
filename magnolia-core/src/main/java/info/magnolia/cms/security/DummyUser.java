@@ -88,6 +88,9 @@ public class DummyUser implements User {
         return true;
     }
 
+    public void setEnabled(boolean enabled) {
+    }
+
     /**
      * get user language
      * @return language string

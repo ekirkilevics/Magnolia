@@ -122,6 +122,15 @@ public class MgnlUser implements User, Serializable {
         return NodeDataUtil.getBoolean(getUserNode(), "enabled", true);
     }
 
+    public void setEnabled(boolean enabled) {
+        try {
+            NodeDataUtil.getOrCreateAndSet(getUserNode(), "enabled", enabled);
+            getUserNode().save();
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e); // TODO
+        }
+    }
+
     /**
      * Is this user in a specified role?
      * @param roleName the name of the role

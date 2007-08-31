@@ -65,6 +65,8 @@ public interface User {
      */
     boolean isEnabled();
 
+    void setEnabled(boolean enabled);
+
     /**
      * get user language
      * @return language string
