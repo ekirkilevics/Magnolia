@@ -128,10 +128,17 @@ function MgnlAdminCentral(){
     /**
      * Show the tree
      */
-    this.showTree = function(name, path){
+    this.showTree = function(name, path, usePathAsRoot){
+    	usePathAsRoot = usePathAsRoot!=null?true:false;
+    	
         var url = "/.magnolia/trees/" + name + ".html"; 
-        if(path && path.length >0)
-            url += "?pathSelected="+path +"&pathOpen="+path;
+        if(path && path.length >0) {
+        	if (!usePathAsRoot) {
+            	url += "?pathSelected="+path +"&pathOpen="+path;
+            } else {
+            	url += "?pathSelected="+path +"&pathOpen="+path+"&path="+path;
+            }	
+        }
         this.showContent(url, false, false);
     }
 
@@ -161,15 +168,15 @@ MgnlAdminCentral.openInNewWindow = function(onOpenedInNewWindow){
 /**
  * Some static methods useabe from everywhere.
  */
-MgnlAdminCentral.showTree = function(name, path){
+MgnlAdminCentral.showTree = function(name, path, usePathAsRoot){
     mgnlAdminCentral = MgnlDHTMLUtil.findVariable("mgnlAdminCentral")
     if(mgnlAdminCentral){
-        mgnlAdminCentral.showTree(name, path);
+        mgnlAdminCentral.showTree(name, path, usePathAsRoot);
         mgnlAdminCentral.window.focus();
     }
     else{
         this.openInNewWindow(function(mgnlAdminCentral){
-            mgnlAdminCentral.showTree(name, path);
+            mgnlAdminCentral.showTree(name, path, usePathAsRoot);
             // remove the handler again
             MgnlAdminCentral.onOpenedInNewWindow = null;
         });
