@@ -17,9 +17,9 @@ import info.magnolia.cms.beans.config.ActionBasedParagraph;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.i18n.DefaultMessagesImpl;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.MessagesChain;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import org.apache.commons.beanutils.BeanUtils;
@@ -30,9 +30,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -86,8 +84,7 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
             freemarkerCtx.put("result", actionResult.getResult());
             freemarkerCtx.put("action", actionResult.getActionBean());
         }
-        final Messages msgs = MgnlContext.getMessages(paragraph.getI18nBasename());
-        freemarkerCtx.put("i18n", new MessagesWrapper(msgs));
+        freemarkerCtx.put("i18n", new MessagesWrapper(paragraph.getI18nBasename()));
         try {
             fmHelper.render(template, freemarkerCtx, out);
         } catch (TemplateException e) {
@@ -175,11 +172,12 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
      *
      */
     public class MessagesWrapper {
+        private final Messages messages;
 
-        protected Messages messages;
-
-        public MessagesWrapper(Messages messages) { 
-            this.messages = messages;
+        public MessagesWrapper(String basename) {
+            final Messages msg = MgnlContext.getMessages(basename);
+            final Messages defMsg = MgnlContext.getMessages();
+            this.messages = new MessagesChain(msg).chain(defMsg);
         }
         
         public String get(String key) {

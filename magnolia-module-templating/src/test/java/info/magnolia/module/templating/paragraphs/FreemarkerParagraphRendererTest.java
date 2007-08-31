@@ -48,6 +48,8 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         renderer = new FreemarkerParagraphRenderer(freemarkerHelper);
         final Context context = createNiceMock(Context.class);
         expect(context.getLocale()).andReturn(Locale.US);
+        expect(context.getMessages()).andReturn(new EmptyMessages());
+        expect(context.getMessages(null)).andReturn(new EmptyMessages());
         MgnlContext.setInstance(context);
         replay(context);
     }
@@ -103,6 +105,7 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         params.put("foo", "bar");
         expect(context.getParameters()).andReturn(params);
         expect(context.getMessages("testmessages")).andReturn(new EmptyMessages());
+        expect(context.getMessages()).andReturn(new EmptyMessages());
         expect(context.getLocale()).andReturn(Locale.ENGLISH);
         expect(context.getServletContext()).andReturn(null);
         expect(context.getContextPath()).andReturn("/pouet");
