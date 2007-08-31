@@ -347,6 +347,20 @@ public class MgnlContext {
         return (SystemContext) FactoryUtil.getSingleton(SystemContext.class);
     }
 
+    public static void doInSystemContext(SystemContextOperation op) {
+        final Context originalCtx = MgnlContext.getInstance();
+        try {
+            MgnlContext.setInstance(MgnlContext.getSystemContext());
+            op.exec();
+        } finally {
+            MgnlContext.setInstance(originalCtx);
+        }
+    }
+
+    public static interface SystemContextOperation {
+        void exec();
+    }
+
     /**
      * Sets this context as a web context.
      * @param request
