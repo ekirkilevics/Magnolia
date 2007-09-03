@@ -350,6 +350,7 @@ public class MgnlMailFactory extends ObservedManager {
                         User user = manager.getUser(userNode.getName());
                         if (user.getGroups().contains(userName)){
                             ret.append(getUserMail(user));
+                            ret.append("\n");
                         }
                     }
                 }
@@ -368,6 +369,7 @@ public class MgnlMailFactory extends ObservedManager {
                         User user = manager.getUser(userNode.getName());
                         if (user.getRoles().contains(userName)){
                             ret.append(getUserMail(user));
+                            ret.append("\n");
                         }
                     }
                 }
