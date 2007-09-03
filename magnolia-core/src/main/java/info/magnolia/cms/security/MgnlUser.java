@@ -407,7 +407,7 @@ public class MgnlUser implements User, Serializable {
 
     }
 
-    protected Content getUserNode() {
+    public Content getUserNode() {
         if (null == userNode) {
             reInitialize();
         }
