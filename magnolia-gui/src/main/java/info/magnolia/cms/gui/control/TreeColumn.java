@@ -278,15 +278,15 @@ public class TreeColumn extends ControlImpl {
     public static TreeColumn createColumn(Tree tree, String title, TreeColumnHtmlRenderer htmlRenderer) {
         TreeColumn treeColumn = createColumn(tree, title);
         if (htmlRenderer != null) {
-        	treeColumn.setHtmlRenderer(htmlRenderer);
+            treeColumn.setHtmlRenderer(htmlRenderer);
         }
         return treeColumn;
     }
-    
+
     public static TreeColumn createLabelColumn(Tree tree, String title, boolean editable) {
         TreeColumn treeColumn = createColumn(tree, title);
         treeColumn.setIsLabel(true);
-        if(editable){
+        if (editable) {
             treeColumn.setHtmlEdit();
         }
         return treeColumn;
@@ -295,7 +295,7 @@ public class TreeColumn extends ControlImpl {
     public static TreeColumn createNodeDataColumn(Tree tree, String title, String nodeDataName, boolean editable) {
         TreeColumn treeColumn = createColumn(tree, title);
         treeColumn.setName(nodeDataName);
-        if(editable){
+        if (editable) {
             treeColumn.setHtmlEdit();
         }
         return treeColumn;
@@ -313,7 +313,7 @@ public class TreeColumn extends ControlImpl {
         treeColumn.setIsMeta(true);
         treeColumn.setName(name);
         if (dateFormat != null) {
-        	treeColumn.setDateFormat(dateFormat);
+            treeColumn.setDateFormat(dateFormat);
         }
         return treeColumn;
     }
@@ -325,10 +325,10 @@ public class TreeColumn extends ControlImpl {
         return treeColumn;
     }
 
-	public static TreeColumn createActivationColumn(Tree tree) {
+    public static TreeColumn createActivationColumn(Tree tree) {
         TreeColumn columnActivation = TreeColumn.createIconColumn(tree, "", null);
         columnActivation.setIconsActivation(true);
         return columnActivation;
-	}
+    }
 
 }
