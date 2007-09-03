@@ -347,6 +347,10 @@ public class MgnlContext {
         return (SystemContext) FactoryUtil.getSingleton(SystemContext.class);
     }
 
+    /**
+     * Executes the given operation in the system context and sets it back to the original once done
+     * (also if an exception is thrown)
+     */
     public static void doInSystemContext(SystemContextOperation op) {
         final Context originalCtx = MgnlContext.getInstance();
         try {
