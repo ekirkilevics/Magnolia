@@ -241,7 +241,7 @@ public class TreeColumn extends ControlImpl {
     public String getHtml() {
         String html = null;
         try {
-            html = htmlRenderer.renderHtml(this, this.getWebsiteNode());
+            html = getHtmlRenderer().renderHtml(this, this.getWebsiteNode());
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -267,8 +267,24 @@ public class TreeColumn extends ControlImpl {
         this.htmlRenderer = htmlRenderer;
     }
 
-    public static TreeColumn createLabelColumn(boolean editable) {
+    public static TreeColumn createColumn(Tree tree, String title) {
         TreeColumn treeColumn = new TreeColumn();
+        treeColumn.setJavascriptTree(tree.getJavascriptTree());
+        treeColumn.setTitle(title);
+        treeColumn.setWidth(8);
+        return treeColumn;
+    }
+
+    public static TreeColumn createColumn(Tree tree, String title, TreeColumnHtmlRenderer htmlRenderer) {
+        TreeColumn treeColumn = createColumn(tree, title);
+        if (htmlRenderer != null) {
+        	treeColumn.setHtmlRenderer(htmlRenderer);
+        }
+        return treeColumn;
+    }
+    
+    public static TreeColumn createLabelColumn(Tree tree, String title, boolean editable) {
+        TreeColumn treeColumn = createColumn(tree, title);
         treeColumn.setIsLabel(true);
         if(editable){
             treeColumn.setHtmlEdit();
@@ -276,21 +292,43 @@ public class TreeColumn extends ControlImpl {
         return treeColumn;
     }
 
-    public static TreeColumn createNodeDataColumn(String name, boolean editable) {
-        TreeColumn treeColumn = new TreeColumn();
-        treeColumn.setIsNodeDataValue(true);
-        treeColumn.setNodeName(name);
+    public static TreeColumn createNodeDataColumn(Tree tree, String title, String nodeDataName, boolean editable) {
+        TreeColumn treeColumn = createColumn(tree, title);
+        treeColumn.setName(nodeDataName);
         if(editable){
             treeColumn.setHtmlEdit();
         }
         return treeColumn;
     }
 
-    public static TreeColumn createMetaDataColumn(String name) {
-        TreeColumn treeColumn = new TreeColumn();
-        treeColumn.setIsMeta(true);
-        treeColumn.setNodeName(name);
+    public static TreeColumn createNodeDataColumn(Tree tree, String title, String nodeDataName, String dateFormat) {
+        TreeColumn treeColumn = createColumn(tree, title);
+        treeColumn.setName(nodeDataName);
+        treeColumn.setDateFormat(dateFormat);
         return treeColumn;
     }
+
+    public static TreeColumn createMetaDataColumn(Tree tree, String title, String name, String dateFormat) {
+        TreeColumn treeColumn = createColumn(tree, title);
+        treeColumn.setIsMeta(true);
+        treeColumn.setName(name);
+        if (dateFormat != null) {
+        	treeColumn.setDateFormat(dateFormat);
+        }
+        return treeColumn;
+    }
+
+    public static TreeColumn createIconColumn(Tree tree, String title, TreeColumnHtmlRenderer htmlRenderer) {
+        TreeColumn treeColumn = createColumn(tree, title, htmlRenderer);
+        treeColumn.setIsIcons(true);
+        treeColumn.setWidth(1);
+        return treeColumn;
+    }
+
+	public static TreeColumn createActivationColumn(Tree tree) {
+        TreeColumn columnActivation = TreeColumn.createIconColumn(tree, "", null);
+        columnActivation.setIconsActivation(true);
+        return columnActivation;
+	}
 
 }
