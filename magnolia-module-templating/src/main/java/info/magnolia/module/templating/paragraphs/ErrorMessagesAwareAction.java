@@ -53,7 +53,7 @@ public abstract class ErrorMessagesAwareAction {
 
     public static String addErrorMessagesToUrl(String uri, Map errorMessages) throws UnsupportedEncodingException {
         final StringBuffer sb = new StringBuffer(uri);
-        if (!errorMessages.isEmpty()) {
+        if (errorMessages !=null && !errorMessages.isEmpty()) {
             if (uri.indexOf('?') < 0) {
                 sb.append('?');
             } else {
