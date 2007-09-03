@@ -470,7 +470,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
     }
 
     public void save() throws RepositoryException {
-        this.property.getSession().save();
+        this.property.save();
     }
 
     public boolean isGranted(long permissions) {
