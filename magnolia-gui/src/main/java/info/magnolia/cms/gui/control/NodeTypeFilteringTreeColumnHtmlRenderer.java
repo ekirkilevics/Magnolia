@@ -20,20 +20,28 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.RepositoryException;
 
 /**
- * @author vsteller
+ * A tree column renderer which delegates to another one if the node's type is one
+ * of the allows ones.
  *
+ * @author vsteller
  */
-public class NodeTypeFilteringTreeColumnHtmlRenderer extends ConditionalTreeColumnHtmlRenderer {
-    private static final Logger log = LoggerFactory.getLogger(ConditionalTreeColumnHtmlRenderer.class);
+public class NodeTypeFilteringTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
+    private static final Logger log = LoggerFactory.getLogger(NodeTypeFilteringTreeColumnHtmlRenderer.class);
 
-    protected final String[] allowedNodeTypeNames;
+    private final TreeColumnHtmlRenderer delegate;
+    private final String[] allowedNodeTypeNames;
 
-    public NodeTypeFilteringTreeColumnHtmlRenderer(TreeColumnHtmlRenderer interceptedRenderer, String[] allowedNodeTypeNames) {
-        super(interceptedRenderer);
+    public NodeTypeFilteringTreeColumnHtmlRenderer(TreeColumnHtmlRenderer delegate, String[] allowedNodeTypeNames) {
+        this.delegate = delegate;
         this.allowedNodeTypeNames = allowedNodeTypeNames;
     }
 
-    public boolean evaluate(Content content) {
+    public String renderHtml(TreeColumn treeColumn, Content content) {
+        final boolean shouldRender = shouldRender(content);
+        return shouldRender ? delegate.renderHtml(treeColumn, content) : " "; // space avoids underscore
+    }
+
+    protected boolean shouldRender(Content content) {
         try {
             return ArrayUtils.contains(allowedNodeTypeNames, content.getNodeTypeName());
         } catch (RepositoryException e) {
