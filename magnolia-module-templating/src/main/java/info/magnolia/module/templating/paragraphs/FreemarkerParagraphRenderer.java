@@ -18,8 +18,8 @@ import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesChain;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import org.apache.commons.beanutils.BeanUtils;
@@ -37,7 +37,7 @@ import java.util.Map;
  * Renders a paragraph using freemarker. Optionally supports the execution of an action
  * class whose constructor can either be empty or take exactly one Content parameter and
  * one ActionBasedParagraph parameter.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -84,7 +84,9 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
             freemarkerCtx.put("result", actionResult.getResult());
             freemarkerCtx.put("action", actionResult.getActionBean());
         }
+        // TODO : move this to FreemarkerHelper ?
         freemarkerCtx.put("i18n", new MessagesWrapper(paragraph.getI18nBasename()));
+
         try {
             fmHelper.render(template, freemarkerCtx, out);
         } catch (TemplateException e) {
@@ -166,7 +168,7 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
      * syntax (e.g. ${i18n.get('message', ['param1', 'param2']}). There are 
      * convenience methods which allow selecting the message bundle directly 
      * from within the template as well (by passing the basename parameter).   
-     * 
+     *
      * @author vsteller
      * @version $Revision: $ ($Author: $)
      *
@@ -183,7 +185,7 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
         public String get(String key) {
             return this.get(key, this.messages);
         }
-        
+
         public String get(String key, String basename) {
             return this.get(key, MessagesManager.getMessages(basename));
         }
@@ -191,15 +193,15 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
         public String get(String key, List args) {
             return this.get(key, args, this.messages);
         }
-        
+
         public String get(String key, List args, String basename) {
             return this.get(key, args, MessagesManager.getMessages(basename));
         }
-        
+
         public String getWithDefault(String key, String defaultMsg) {
             return this.getWithDefault(key, defaultMsg, this.messages);
         }
-        
+
         public String getWithDefault(String key, String defaultMsg, String basename) {
             return this.getWithDefault(key, defaultMsg, MessagesManager.getMessages(basename));
         }
@@ -207,24 +209,24 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
         public String getWithDefault(String key, List args, String defaultMsg) {
             return this.getWithDefault(key, args, defaultMsg, this.messages);
         }
-        
+
         public String getWithDefault(String key, List args, String defaultMsg, String basename) {
             return this.getWithDefault(key, defaultMsg, MessagesManager.getMessages(basename));
         }
-        
+
         protected String get(String key, Messages messages) {
             return messages.get(key);
         }
-        
+
         protected String get(String key, List args, Messages messages) {
             Object[] argsArray = new Object[args.size()];
             return messages.get(key, args.toArray(argsArray));
         }
-        
+
         protected String getWithDefault(String key, String defaultMsg, Messages messages) {
             return messages.getWithDefault(key, defaultMsg);
         }
-        
+
         protected String getWithDefault(String key, List args, String defaultMsg, Messages messages) {
             Object[] argsArray = new Object[args.size()];
             return messages.getWithDefault(key, args.toArray(argsArray), defaultMsg);
