@@ -139,6 +139,8 @@ public final class Server {
         String basicRealm = page.getNodeData("basicRealm").getString(); //$NON-NLS-1$
         Server.cachedContent.put("basicRealm", basicRealm); //$NON-NLS-1$
 
+        String defaultBaseUrl = page.getNodeData("defaultBaseUrl").getString();
+        Server.cachedContent.put("defaultBaseUrl", defaultBaseUrl); //$NON-NLS-1$
     }
 
     /**
@@ -238,6 +240,13 @@ public final class Server {
      */
     public static String getBasicRealm() {
         return (String) Server.cachedContent.get("basicRealm"); //$NON-NLS-1$
+    }
+
+    /**
+     * @return default base url (empty by default)
+     */
+    public static String getDefaultBaseUrl() {
+        return StringUtils.defaultIfEmpty((String) Server.cachedContent.get("defaultBaseUrl"), "");
     }
 
     /**
