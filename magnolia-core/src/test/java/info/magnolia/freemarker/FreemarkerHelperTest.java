@@ -16,18 +16,27 @@ import freemarker.cache.StringTemplateLoader;
 import freemarker.core.InvalidReferenceException;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.i18n.I18NSupport;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockMetaData;
 import info.magnolia.test.mock.MockNodeData;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.model.Color;
 import info.magnolia.test.model.Pair;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
+import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
@@ -37,8 +46,6 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
 
 /**
  * @author gjoseph
@@ -73,12 +80,18 @@ public class FreemarkerHelperTest extends TestCase {
 //        }
         replay(context);
         MgnlContext.setInstance(context);
+        assertRendereredContentWithoutCheckingContext(expectedOutput, o, templateName);
+        verify(context);
+    }
 
+    /**
+     * assert rendered content using the given mock Context
+     */
+    private void assertRendereredContentWithoutCheckingContext(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {
         final StringWriter out = new StringWriter();
         fmHelper.render(templateName, o, out);
 
         assertEquals(expectedOutput, out.toString());
-        verify(context);
     }
 
     public void testWeCanUseAnyObjectTypeAsOurRoot() throws IOException, TemplateException {
@@ -211,7 +224,7 @@ public class FreemarkerHelperTest extends TestCase {
         final MockContent c = new MockContent("pouet");
         f.addContent(c);
         tplLoader.putTemplate("test.ftl", "[#list c?children as n]${n},[/#list]");
-        assertRendereredContent("MetaData,pouet," , Collections.singletonMap("c", f), "test.ftl");
+        assertRendereredContent("MetaData,pouet,", Collections.singletonMap("c", f), "test.ftl");
     }
 
     public void testBooleanPropertiesAreHandledProperly() throws TemplateException, IOException {
@@ -263,7 +276,7 @@ public class FreemarkerHelperTest extends TestCase {
         tplLoader.putTemplate("test.ftl", "this is a test template.");
         tplLoader.putTemplate("test_en.ftl", "this is a test template in english.");
         tplLoader.putTemplate("test_fr_BE.ftl", "Ceci est une template belge hein une fois.");
-        tplLoader.putTemplate("test_fr.ftl", "Ceci est une template de test en fran�ais.");
+        tplLoader.putTemplate("test_fr.ftl", "Ceci est une template de test en français.");
 
         final MockContent c = new MockContent("pouet");
         c.setUUID("123");
@@ -293,13 +306,8 @@ public class FreemarkerHelperTest extends TestCase {
         expect(context.getContextPath()).andReturn("tralala");
         expect(context.getServletContext()).andReturn(null);
         replay(context);
-
         MgnlContext.setInstance(context);
-
-        final StringWriter out = new StringWriter();
-        fmHelper.render("pouet", new HashMap(), out);
-
-        assertEquals(":tralala:", out.toString());
+        assertRendereredContentWithoutCheckingContext(":tralala:", new HashMap(), "pouet");
         verify(context);
     }
 
@@ -329,7 +337,7 @@ public class FreemarkerHelperTest extends TestCase {
         c.setUUID("123");
         c.addNodeData(new MockNodeData("title", "This is my title"));
         c.addNodeData(new MockNodeData("other", "other-value"));
-        Map m=new HashMap();
+        Map m = new HashMap();
         m.put("content", c);
 
         assertRendereredContent("evaluated title: This is my title", m, "test.ftl");
@@ -342,7 +350,7 @@ public class FreemarkerHelperTest extends TestCase {
         c.setUUID("123");
         c.addNodeData(new MockNodeData("title", "This is my ${content.other} title"));
         c.addNodeData(new MockNodeData("other", "other-value"));
-        Map m=new HashMap();
+        Map m = new HashMap();
         m.put("content", c);
 
         assertRendereredContent("evaluated title: This is my other-value title", m, "test.ftl");
@@ -355,9 +363,88 @@ public class FreemarkerHelperTest extends TestCase {
         c.setUUID("123");
         c.addNodeData(new MockNodeData("title", "This is my plain title"));
         c.addNodeData(new MockNodeData("other", "other-value"));
-        Map m=new HashMap();
+        Map m = new HashMap();
         m.put("content", c);
 
         assertRendereredContent("evaluated title: This is my plain title", m, "test.ftl");
+    }
+
+    private final static String SOME_UUID = "deb0c7d0-402f-4e04-9db3-cb308695733e";
+
+    public void testUuidLinksAreTransformedToRelativeLinksInWebContext() throws IOException, TemplateException, RepositoryException {
+        final MockContent page = new MockContent("baz");
+        final MockHierarchyManager hm = prepareHM(page);
+
+        final AggregationState agg = new AggregationState();
+        agg.setMainContent(page);
+        final WebContext context = createStrictMock(WebContext.class);
+        expect(context.getLocale()).andReturn(Locale.CANADA);
+        expect(context.getAggregationState()).andReturn(agg);
+        expect(context.getHierarchyManager("website")).andReturn(hm);
+
+        replay(context);
+        doTestUuidLinksAreTransformed(context, "== Some text... blah blah... <a href=\"baz.html\">Bleh</a> ! ==");
+        verify(context);
+    }
+
+    public void testUuidLinksAreTransformedToFullUrlLinksInNonWebContext() throws IOException, TemplateException, RepositoryException {
+        final String defaultBaseUrl = ""; // TODO : MAGNOLIA-1671 : this should be configured in Server
+        doTestUuidLinksAreTransformed(null, "== Some text... blah blah... <a href=\"" + defaultBaseUrl + "/foo/bar/baz.html\">Bleh</a> ! ==");
+    }
+
+    private void doTestUuidLinksAreTransformed(Context webCtx, String expectedOutput) throws IOException, TemplateException, RepositoryException {
+        MockHierarchyManager cfgHM = MockUtil.createHierarchyManager("fakeemptyrepo");
+        MockUtil.mockObservation(cfgHM);
+
+        final SystemContext sysMockCtx = createStrictMock(SystemContext.class);
+        expect(sysMockCtx.getHierarchyManager(ContentRepository.CONFIG)).andReturn(cfgHM);
+        if (webCtx == null) {
+            expect(sysMockCtx.getLocale()).andReturn(Locale.KOREA);
+            final MockHierarchyManager hm = prepareHM(new MockContent("baz"));
+            expect(sysMockCtx.getHierarchyManager("website")).andReturn(hm);
+        }
+        FactoryUtil.setInstance(SystemContext.class, sysMockCtx);
+        replay(sysMockCtx);
+
+        FactoryUtil.setInstance(URI2RepositoryManager.class, new FakeURI2RepoMan());
+        final I18NSupport i18NSupportMock = createStrictMock(I18NSupport.class);
+        FactoryUtil.setInstance(I18NSupport.class, i18NSupportMock);
+
+        expect(i18NSupportMock.toI18NURI("/foo/bar/baz.html")).andReturn("/foo/bar/baz.html");
+        if (webCtx != null) {
+            // we're in the test using a WebContext, so i18nSupport is called twice (by linktransformer)
+            expect(i18NSupportMock.toI18NURI("/foo/bar/baz.html")).andReturn("/foo/bar/baz.html");            
+        }
+
+        final String text = "Some text... blah blah... <a href=\"${link:{uuid:{" + SOME_UUID + "},repository:{website},handle:{/foo/bar},nodeData:{},extension:{html}}}\">Bleh</a> !";
+        final MockContent c = new MockContent("content");
+        c.addNodeData(new MockNodeData("text", text));
+        tplLoader.putTemplate("test", "== ${text} ==");
+
+        replay(i18NSupportMock);
+        MgnlContext.setInstance(webCtx == null ? sysMockCtx : webCtx);
+        assertRendereredContentWithoutCheckingContext(expectedOutput, c, "test");
+        verify(i18NSupportMock);
+        verify(sysMockCtx);
+    }
+
+    private MockHierarchyManager prepareHM(MockContent page) {
+        final MockContent root = new MockContent("foo");
+        final MockContent bar = new MockContent("bar");
+        page.setUUID(SOME_UUID);
+        root.addContent(bar);
+        bar.addContent(page);
+        final MockHierarchyManager hm = new MockHierarchyManager();
+        hm.setRoot(root);
+        return hm;
+    }
+
+    public final static class FakeURI2RepoMan extends URI2RepositoryManager {
+
+        // do nothing
+        public void init() {
+        }
+
+
     }
 }

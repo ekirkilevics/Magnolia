@@ -17,6 +17,7 @@ import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.ActionBasedParagraph;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.EmptyMessages;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -109,6 +110,7 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         expect(context.getLocale()).andReturn(Locale.ENGLISH);
         expect(context.getServletContext()).andReturn(null);
         expect(context.getContextPath()).andReturn("/pouet");
+        expect(context.getAggregationState()).andReturn(new AggregationState());
         replay(context);
         MgnlContext.setInstance(context);
 

@@ -22,6 +22,12 @@ import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.link.AbsolutePathTransformer;
+import info.magnolia.cms.link.PathToLinkTransformer;
+import info.magnolia.cms.link.RelativePathTransformer;
+import info.magnolia.cms.util.LinkUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -55,7 +61,20 @@ public class MagnoliaContentWrapper extends DefaultObjectWrapper {
                     return new SimpleNumber(nodeData.getLong());
 
                 case PropertyType.STRING:
-                    return new SimpleScalar(nodeData.getString());
+                    final String s = nodeData.getString();
+                    final PathToLinkTransformer t;
+                    if (MgnlContext.getInstance() instanceof WebContext) {
+                        final Content page = MgnlContext.getAggregationState().getMainContent();
+                        if (page != null) {
+                            t = new RelativePathTransformer(page, true, true);
+                        } else {
+                            t = new AbsolutePathTransformer(true, true, true);
+                        }
+                    } else {
+                        t = new AbsolutePathTransformer(true, true, true);
+                    }
+                    final String transformedString = LinkUtil.convertUUIDsToLinks(s, t);
+                    return new SimpleScalar(transformedString);
 
                 case PropertyType.BINARY:
                     return new BinaryNodeData(nodeData, this);
@@ -67,7 +86,7 @@ public class MagnoliaContentWrapper extends DefaultObjectWrapper {
                     } catch (RepositoryException e) {
                         throw new TemplateModelException(e);
                     }
-                    
+
 //                case PropertyType.PATH:
 //                case PropertyType.NAME:
                 default:
