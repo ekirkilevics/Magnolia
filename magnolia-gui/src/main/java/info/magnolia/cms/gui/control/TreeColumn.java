@@ -271,7 +271,6 @@ public class TreeColumn extends ControlImpl {
         TreeColumn treeColumn = new TreeColumn();
         treeColumn.setJavascriptTree(tree.getJavascriptTree());
         treeColumn.setTitle(title);
-        treeColumn.setWidth(8);
         return treeColumn;
     }
 
@@ -307,6 +306,13 @@ public class TreeColumn extends ControlImpl {
         treeColumn.setDateFormat(dateFormat);
         return treeColumn;
     }
+    
+    public static TreeColumn createNodeDataColumn(Tree tree, String title, String nodeDataName, TreeColumnHtmlRenderer renderer) {
+    	TreeColumn treeColumn = createColumn(tree, title);
+    	treeColumn.setName(nodeDataName);
+    	treeColumn.setHtmlRenderer(renderer);
+    	return treeColumn;
+    }
 
     public static TreeColumn createMetaDataColumn(Tree tree, String title, String name, String dateFormat) {
         TreeColumn treeColumn = createColumn(tree, title);
@@ -321,7 +327,6 @@ public class TreeColumn extends ControlImpl {
     public static TreeColumn createIconColumn(Tree tree, String title, TreeColumnHtmlRenderer htmlRenderer) {
         TreeColumn treeColumn = createColumn(tree, title, htmlRenderer);
         treeColumn.setIsIcons(true);
-        treeColumn.setWidth(1);
         return treeColumn;
     }
 
