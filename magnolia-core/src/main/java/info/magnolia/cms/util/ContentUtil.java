@@ -129,6 +129,16 @@ public class ContentUtil {
             return null;
         }
     }
+    
+    /**
+     * Get content identified by specified uuid from given repository
+     * @param repository
+     * @param uuid
+     * @return
+     */
+    public static Content getContentByUUID(String repository, String uuid) {
+        return getContent(repository, uuid2path(repository, uuid));
+    }
 
     /**
      * If the node doesn't exist just create it.
