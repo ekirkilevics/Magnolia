@@ -5,6 +5,16 @@
     color: #000;
 }
 
+.mgnlTreeTextNoValue {
+    font-style: italic;
+    color: #999999;   
+}
+
+.mgnlTreeTextDefaultValue {
+    font-style: italic;
+    color: #666666;   
+}
+
 .mgnlTreeTextLoading {
     padding-top: 5px;
     height: 18px;
