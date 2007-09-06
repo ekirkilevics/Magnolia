@@ -12,18 +12,18 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.DefaultI18NSupport;
 import info.magnolia.cms.i18n.I18NSupport;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.BinaryMockNodeData;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.MockHierarchyManager;
+import info.magnolia.context.WebContext;
+import info.magnolia.context.MgnlContext;
 import org.easymock.IAnswer;
 import static org.easymock.classextension.EasyMock.*;
 
-import javax.jcr.RepositoryException;
-import java.io.IOException;
 import java.text.MessageFormat;
 
 /**
@@ -39,18 +39,27 @@ public abstract class BaseLinkTest extends MgnlTestCase {
     protected static final String UUID_PATTNER_SIMPLE_OLD_FORMAT = MessageFormat.format(UUID_PATTNER_OLD_FORMAT, new String[]{"2", ContentRepository.WEBSITE, "/parent/sub"});
 
     protected static final String HREF_SIMPLE = "/parent/sub.html";
+    private WebContext webContext;
 
-    protected void setUpLinkTest() throws IOException, RepositoryException {
+    protected void setUp() throws Exception {
+        super.setUp();
+
         String website =
             "/parent@uuid=1\n" +
             "/parent/sub@uuid=2\n" +
             "/parent/sub2@uuid=3";
 
-        HierarchyManager hm = MockUtil.createAndSetHierarchyManager(ContentRepository.WEBSITE, website);
+        MockHierarchyManager hm = MockUtil.createHierarchyManager(website);
+        webContext = createMock(WebContext.class);
+        expect(webContext.getHierarchyManager(ContentRepository.WEBSITE)).andReturn(hm).anyTimes();
+        expect(webContext.getContextPath()).andReturn("some-context").anyTimes();
 
         // add a binary
         MockContent page = (MockContent) hm.getContent("/parent/sub");
         page.addNodeData(new BinaryMockNodeData("file", null, "test.jpg", "image/jpeg", 5000));
+
+        replay(webContext);
+        MgnlContext.setInstance(webContext);
 
         URI2RepositoryManager uri2repo = createMock(URI2RepositoryManager.class);
         expect(uri2repo.getURI((String) anyObject(), (String) anyObject())).andStubAnswer(new IAnswer<String>() {
@@ -72,4 +81,8 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         FactoryUtil.setInstance(I18NSupport.class, new DefaultI18NSupport());
     }
 
+    protected void tearDown() throws Exception {
+        verify(webContext);
+        super.tearDown();
+    }
 }

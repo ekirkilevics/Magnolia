@@ -25,6 +25,7 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.link.AbsolutePathTransformer;
 import info.magnolia.cms.link.PathToLinkTransformer;
 import info.magnolia.cms.link.RelativePathTransformer;
+import info.magnolia.cms.link.CompleteUrlPathTransformer;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -63,6 +64,7 @@ public class MagnoliaContentWrapper extends DefaultObjectWrapper {
                 case PropertyType.STRING:
                     final String s = nodeData.getString();
                     final PathToLinkTransformer t;
+                    // TODO : maybe this could be moved to LinkUtil
                     if (MgnlContext.getInstance() instanceof WebContext) {
                         final Content page = MgnlContext.getAggregationState().getMainContent();
                         if (page != null) {
@@ -71,7 +73,7 @@ public class MagnoliaContentWrapper extends DefaultObjectWrapper {
                             t = new AbsolutePathTransformer(true, true, true);
                         }
                     } else {
-                        t = new AbsolutePathTransformer(true, true, true);
+                        t = new CompleteUrlPathTransformer(true, true);
                     }
                     final String transformedString = LinkUtil.convertUUIDsToLinks(s, t);
                     return new SimpleScalar(transformedString);

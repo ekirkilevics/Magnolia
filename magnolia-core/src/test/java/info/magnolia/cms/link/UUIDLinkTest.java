@@ -13,8 +13,6 @@
 package info.magnolia.cms.link;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.link.PathToLinkTransformer;
-import info.magnolia.cms.link.UUIDLink;
 import info.magnolia.cms.util.BaseLinkTest;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.test.mock.MockContent;
@@ -45,7 +43,6 @@ public class UUIDLinkTest extends BaseLinkTest {
     protected static final PathToLinkTransformer NOP_TRANSFORMER = new AbsolutePathTransformer(false, false, false);
 
     public void testParseFromUUIDPattern() throws IOException, RepositoryException {
-        setUpLinkTest();
         UUIDLink link = new UUIDLink().parseUUIDLink(UUID_PATTNER_SIMPLE);
 
         assertEquals(HREF_SIMPLE, NOP_TRANSFORMER.transform(link));
@@ -53,7 +50,6 @@ public class UUIDLinkTest extends BaseLinkTest {
     }
 
     public void testParseFromLink() throws IOException, RepositoryException {
-        setUpLinkTest();
         UUIDLink link = new UUIDLink().parseLink(HREF_SIMPLE);
 
         assertEquals(HREF_SIMPLE, NOP_TRANSFORMER.transform(link));
@@ -62,8 +58,6 @@ public class UUIDLinkTest extends BaseLinkTest {
     }
 
     public void testLinkWithAnchor() throws IOException, RepositoryException {
-        setUpLinkTest();
-
         UUIDLink link = new UUIDLink().parseLink(HREF_SIMPLE + "#bar");
         assertEquals(UUID_PATTNER_SIMPLE + "#bar", link.toPattern());
 
@@ -72,8 +66,6 @@ public class UUIDLinkTest extends BaseLinkTest {
     }
 
     public void testLinkWithParameters() throws IOException, RepositoryException {
-        setUpLinkTest();
-
         UUIDLink link = new UUIDLink().parseLink(HREF_SIMPLE + "?bar=test");
         assertEquals(UUID_PATTNER_SIMPLE + "?bar=test", link.toPattern());
 
@@ -82,29 +74,22 @@ public class UUIDLinkTest extends BaseLinkTest {
     }
 
     public void testUUIDToAbsoluteLinksAfterRenaming() throws IOException, RepositoryException{
-        setUpLinkTest();
         ((MockContent)ContentUtil.getContent(ContentRepository.WEBSITE, "/parent/sub")).setName("subRenamed");
         UUIDLink link = new UUIDLink().parseUUIDLink(UUID_PATTNER_SIMPLE);
         assertEquals("/parent/subRenamed.html", NOP_TRANSFORMER.transform(link));
     }
 
     public void testLinkToBinary() throws IOException, RepositoryException {
-        setUpLinkTest();
-
         UUIDLink link = new UUIDLink().parseLink(HREF_BINARY);
         assertEquals(UUID_PATTNER_BINARY, link.toPattern());
     }
 
     public void testUUIDToBinary() throws IOException, RepositoryException {
-        setUpLinkTest();
-
         UUIDLink link = new UUIDLink().parseUUIDLink(UUID_PATTNER_BINARY);
         assertEquals(HREF_BINARY, NOP_TRANSFORMER.transform(link));
     }
 
     public void testUUIDToBinaryAfterRenaming() throws IOException, RepositoryException {
-        setUpLinkTest();
-
         // now rename the the page
         ((MockContent)ContentUtil.getContent(ContentRepository.WEBSITE, "/parent/sub")).setName("subRenamed");
 

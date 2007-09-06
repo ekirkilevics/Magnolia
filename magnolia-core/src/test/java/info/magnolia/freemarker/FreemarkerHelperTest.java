@@ -387,6 +387,21 @@ public class FreemarkerHelperTest extends TestCase {
         verify(context);
     }
 
+    public void testUuidLinksAreTransformedToAbsoluteLinksInWebContextWithoutAggregationState() throws IOException, TemplateException, RepositoryException {
+        final MockContent page = new MockContent("baz");
+        final MockHierarchyManager hm = prepareHM(page);
+        
+        final WebContext context = createStrictMock(WebContext.class);
+        expect(context.getLocale()).andReturn(Locale.CANADA);
+        expect(context.getAggregationState()).andReturn(new AggregationState());
+        expect(context.getHierarchyManager("website")).andReturn(hm);
+        expect(context.getContextPath()).andReturn("/some-context");
+        
+        replay(context);
+        doTestUuidLinksAreTransformed(context, "== Some text... blah blah... <a href=\"/some-context/foo/bar/baz.html\">Bleh</a> ! ==");
+        verify(context);
+    }
+
     public void testUuidLinksAreTransformedToFullUrlLinksInNonWebContext() throws IOException, TemplateException, RepositoryException {
         final String defaultBaseUrl = ""; // TODO : MAGNOLIA-1671 : this should be configured in Server
         doTestUuidLinksAreTransformed(null, "== Some text... blah blah... <a href=\"" + defaultBaseUrl + "/foo/bar/baz.html\">Bleh</a> ! ==");
@@ -410,11 +425,7 @@ public class FreemarkerHelperTest extends TestCase {
         final I18NSupport i18NSupportMock = createStrictMock(I18NSupport.class);
         FactoryUtil.setInstance(I18NSupport.class, i18NSupportMock);
 
-        expect(i18NSupportMock.toI18NURI("/foo/bar/baz.html")).andReturn("/foo/bar/baz.html");
-        if (webCtx != null) {
-            // we're in the test using a WebContext, so i18nSupport is called twice (by linktransformer)
-            expect(i18NSupportMock.toI18NURI("/foo/bar/baz.html")).andReturn("/foo/bar/baz.html");            
-        }
+        expect(i18NSupportMock.toI18NURI("/foo/bar/baz.html")).andReturn("/foo/bar/baz.html").times(1, 2);
 
         final String text = "Some text... blah blah... <a href=\"${link:{uuid:{" + SOME_UUID + "},repository:{website},handle:{/foo/bar},nodeData:{},extension:{html}}}\">Bleh</a> !";
         final MockContent c = new MockContent("content");

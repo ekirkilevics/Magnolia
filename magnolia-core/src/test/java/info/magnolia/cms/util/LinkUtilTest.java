@@ -30,7 +30,6 @@ public class LinkUtilTest extends BaseLinkTest {
     private static final String HTML_WITH_UUIDS = "this is a <a href=\"" + UUID_PATTNER_SIMPLE + "\">test</a>";
 
     public void testLinkToUUID() throws IOException, RepositoryException {
-        setUpLinkTest();
         String res = LinkUtil.convertAbsoluteLinksToUUIDs(HTML_WITH_LINK);
         assertEquals(HTML_WITH_UUIDS, res);
     }
@@ -47,13 +46,11 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     public void testConvertLinksToUUIDShouldPreserverParameters() throws IOException, RepositoryException {
-        setUpLinkTest();
         doTestConvertAbsoluteLinksToUUIDs("http://www.magnolia.info/foo?bar=baz", "http://www.magnolia.info/foo?bar=baz");
         doTestConvertAbsoluteLinksToUUIDs(UUID_PATTNER_SIMPLE + "?bar=baz", HREF_SIMPLE + "?bar=baz");
     }
 
     public void testConvertLinksToUUIDShouldPreserveAnchors() throws IOException, RepositoryException {
-        setUpLinkTest();
         doTestConvertAbsoluteLinksToUUIDs(UUID_PATTNER_SIMPLE + "#bar", HREF_SIMPLE + "#bar");
         doTestConvertAbsoluteLinksToUUIDs("http://www.magnolia.info/foo#bar", "http://www.magnolia.info/foo#bar");
     }
@@ -70,26 +67,22 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     public void testUUIDToAbsoluteLinks() throws IOException, RepositoryException {
-        setUpLinkTest();
         String res = LinkUtil.convertUUIDsToAbsoluteLinks(HTML_WITH_UUIDS);
         assertEquals(HTML_WITH_LINK, res);
     }
 
     public void testUUIDToRelativeLinks() throws IOException, RepositoryException {
-        setUpLinkTest();
         Content sub2 = ContentUtil.getContent(ContentRepository.WEBSITE, "/parent/sub2");
         String res = LinkUtil.convertUUIDsToRelativeLinks(HTML_WITH_UUIDS, sub2);
         assertEquals(StringUtils.replace(HTML_WITH_LINK, "/parent/sub.html", "sub.html"), res);
     }
 
     public void testMakeAbsolutePathFromUUID() throws IOException, RepositoryException {
-        setUpLinkTest();
         String absolutePath = LinkUtil.makeAbsolutePathFromUUID("2", ContentRepository.WEBSITE);
         assertEquals("/parent/sub", absolutePath);
     }
 
     public void testMakeUUIDFromAbsolutePath() throws IOException, RepositoryException {
-        setUpLinkTest();
         String uuid = LinkUtil.makeUUIDFromAbsolutePath("/parent/sub", ContentRepository.WEBSITE);
         assertEquals("2", uuid);
     }

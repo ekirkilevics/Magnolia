@@ -39,9 +39,13 @@ public class AbsolutePathTransformer implements PathToLinkTransformer{
             linkStr = I18NSupportFactory.getI18nSupport().toI18NURI(linkStr);
         }
         if(addContextPath){
-            linkStr = MgnlContext.getContextPath() + linkStr;
+            linkStr = prefixLink(linkStr);
         }
         return linkStr;
+    }
+
+    protected String prefixLink(String linkStr) {
+        return MgnlContext.getContextPath() + linkStr;
     }
 
     /**
