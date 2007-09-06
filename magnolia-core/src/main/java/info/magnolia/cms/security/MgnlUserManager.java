@@ -185,7 +185,7 @@ public class MgnlUserManager implements UserManager {
         try {
             final Content node = createUserNode(name);
             node.createNodeData("name").setValue(name);
-            node.createNodeData("pswd").setValue(new String(Base64.encodeBase64(pw.getBytes())));
+            node.createNodeData("pswd").setValue(encodePassword(pw));
             node.createNodeData("language").setValue("en");
             getHierarchyManager().save();
             return new MgnlUser(node);
@@ -194,6 +194,10 @@ public class MgnlUserManager implements UserManager {
             log.info("can't create user [" + name + "]", e);
             return null;
         }
+    }
+
+    protected String encodePassword(String clearPassword) {
+        return new String(Base64.encodeBase64(clearPassword.getBytes()));
     }
 
     protected void validateUsername(String name) {
