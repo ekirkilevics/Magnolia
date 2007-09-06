@@ -27,12 +27,13 @@ import info.magnolia.module.delta.ModuleBootstrapTask;
 import info.magnolia.module.delta.ModuleFilesExtraction;
 import info.magnolia.module.delta.MoveAndRenamePropertyTask;
 import info.magnolia.module.delta.MoveNodeTask;
+import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
-import info.magnolia.module.delta.NullTask;
 import info.magnolia.module.delta.PropertyExistsDelegateTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.WarnTask;
 import info.magnolia.setup.for3_1.LoginAuthTypePropertyMovedToFilter;
 import info.magnolia.setup.for3_1.LoginFormPropertyMovedToFilter;
 import info.magnolia.setup.for3_1.MoveMagnoliaUsersToRealmFolders;
@@ -50,8 +51,8 @@ import java.util.List;
  */
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final List tasks31 = Arrays.asList(new Task[]{
-            new NullTask("web.xml updates", "CacheGeneratorServlet has been removed in Magnolia 3.1: please remove the corresponding <servlet> and <servlet-mapping> elements in your web.xml file."),
-            new NullTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."),
+            new WarnTask("web.xml updates", "CacheGeneratorServlet has been removed in Magnolia 3.1: please remove the corresponding <servlet> and <servlet-mapping> elements in your web.xml file."),
+            new WarnTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."),
 
             new AddNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
             new AddNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
@@ -71,10 +72,15 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
             // the two following tasks replace the config.server.xml bootstrap file
             new CheckOrCreatePropertyTask("defaultExtension property", "Checks that the defaultExtension property exists in config:/server", "config", "/server", "defaultExtension", "html"),
-            new CheckOrCreatePropertyTask("admin property",  "Checks that the admin property exists in config:/server", "config", "/server", "admin", "true"),
+            new CheckOrCreatePropertyTask("admin property", "Checks that the admin property exists in config:/server", "config", "/server", "admin", "true"),
             new MoveAndRenamePropertyTask("basicRealm property",
                     "/server", "basicRealm", "magnolia 3.0",
                     "/server/filters/uriSecurity/clientCallback", "realmName", "Magnolia"),
+            new ArrayDelegateTask("defaultBaseUrl property",
+                    new NewPropertyTask("defaultBaseUrl property", "Adds the new defaultBaseUrl property with a default value.",
+                            "config", "/server", "defaultBaseUrl", "http://localhost:8080/magnolia"),
+                    new WarnTask("defaultBaseUrl property", "Please set the config:/server/defaultBaseUrl property to a full URL to be used when generating absolute URLs for external systems.")
+            ),
 
             // this is only valid when updating - if /server/login exists
             new NodeExistsDelegateTask("Login configuration", "The login configuration was moved to filters configuration",

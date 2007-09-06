@@ -12,9 +12,9 @@
  */
 package info.magnolia.module;
 
+import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.Delta;
-import info.magnolia.module.delta.NullTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.Version;
 import junit.framework.TestCase;
@@ -165,4 +165,14 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertTrue(tasks.get(0) instanceof NullTask);
         assertTrue(tasks.get(1) instanceof AbstractModuleVersionHandler.ModuleVersionUpdateTask);
     }
+
+    private final static class NullTask extends AbstractTask {
+        public NullTask(String name, String description) {
+            super(name, description);
+        }
+
+        public void execute(InstallContext installContext) {
+        }
+    }
+
 }

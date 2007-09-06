@@ -15,19 +15,20 @@ package info.magnolia.module.delta;
 import info.magnolia.module.InstallContext;
 
 /**
- * A task that does nothing, i.e is only a name and a description.
- * Can be used to describe manual operations users have to take, for
- * instance.
+ * A task which does nothing else than logging a warning message.
+ * Can be used to remind users about some manual operations to be
+ * done after installation/update.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NullTask extends AbstractTask {
+public class WarnTask extends AbstractTask {
 
-    public NullTask(String name, String description) {
-        super(name, description);
+    public WarnTask(String name, String warningMessage) {
+        super(name, warningMessage);
     }
 
-    public void execute(InstallContext installContext) {
+    public void execute(InstallContext installContext) throws TaskExecutionException {
+        installContext.warn(getDescription());
     }
 }
