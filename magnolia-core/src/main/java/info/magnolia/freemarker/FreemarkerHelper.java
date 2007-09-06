@@ -17,19 +17,20 @@ import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
 import freemarker.template.Configuration;
+import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
+import javax.servlet.ServletContext;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.ServletContext;
 
 /**
  * A generic helper to render Content instances with freemarker templates.
@@ -60,35 +61,21 @@ public class FreemarkerHelper {
      * handled by MagnoliaContentWrapper) to the given Writer.
      * If the root is an instance of a Map, the following elements are added to it:
      * - contextPath, if we have an available WebContext
+     * - defaultBaseUrl, as per Server.getDefaultBaseUrl()
+     *
+     * @see Server#getDefaultBaseUrl()
      */
     public void render(String templatePath, Object root, Writer out) throws TemplateException, IOException {
         final Locale locale = determineLocale();
         if (root instanceof Map) {
             final Map data = (Map) root;
-
-            if (MgnlContext.hasInstance()) {
-                final Context mgnlCtx = MgnlContext.getInstance();
-                if (mgnlCtx instanceof WebContext) {
-                    ServletContext sc = ((WebContext) MgnlContext.getInstance()).getServletContext();
-                    if (sc != null) {
-                        if (cfg.getTemplateLoader() instanceof ClassTemplateLoader) {
-                            // allow loading templates from servlet resources too
-                            cfg.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[]{
-                                cfg.getTemplateLoader(),
-                                new WebappTemplateLoader(sc, "")}));
-                        }
-                    }
-                    data.put("contextPath", ((WebContext) mgnlCtx).getContextPath());
-                }
-                // TODO : this is currently still in FreemarkerUtil. If we add it here,
-                // the attribute "message" we put in the freemarker context should have a less generic name
-                // (-> update all templates)
-//            if (AlertUtil.isMessageSet(mgnlCtx)) {
-//                data.put("message", AlertUtil.getMessage(mgnlCtx));
-//            }
-            }
+            addDefaultData(data);
         }
-        cfg.getTemplate(templatePath, locale).process(root, out);
+
+        checkTemplateLoader();
+
+        final Template template = cfg.getTemplate(templatePath, locale);
+        template.process(root, out);
     }
 
     protected Locale determineLocale() {
@@ -99,7 +86,47 @@ public class FreemarkerHelper {
         }
     }
 
+    protected void addDefaultData(Map data) {
+        final WebContext webCtx = getWebContextOrNull();
+
+        if (webCtx != null) {
+            data.put("contextPath", webCtx.getContextPath());
+        }
+        data.put("defaultBaseUrl", Server.getDefaultBaseUrl());
+
+        // TODO : this is currently still in FreemarkerUtil. If we add it here,
+        // the attribute "message" we put in the freemarker context should have a less generic name
+        // (-> update all templates)
+//            if (AlertUtil.isMessageSet(mgnlCtx)) {
+//                data.put("message", AlertUtil.getMessage(mgnlCtx));
+//            }
+    }
+
+    protected void checkTemplateLoader() {
+        // adds a WebappTemplateLoader if needed
+        final WebContext webCtx = getWebContextOrNull();
+        if (webCtx != null) {
+            ServletContext sc = ((WebContext) MgnlContext.getInstance()).getServletContext();
+            if (sc != null && cfg.getTemplateLoader() instanceof ClassTemplateLoader) {
+                // allow loading templates from servlet resources too
+                cfg.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[]{
+                        cfg.getTemplateLoader(),
+                        new WebappTemplateLoader(sc, "")}));
+            }
+        }
+    }
+
     protected Configuration getConfiguration() {
         return cfg;
+    }
+
+    private WebContext getWebContextOrNull() {
+        if (MgnlContext.hasInstance()) {
+            final Context mgnlCtx = MgnlContext.getInstance();
+            if (mgnlCtx instanceof WebContext) {
+                return (WebContext) mgnlCtx;
+            }
+        }
+        return null;
     }
 }

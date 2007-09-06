@@ -108,8 +108,8 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         expect(context.getMessages("testmessages")).andReturn(new EmptyMessages());
         expect(context.getMessages()).andReturn(new EmptyMessages());
         expect(context.getLocale()).andReturn(Locale.ENGLISH);
-        expect(context.getServletContext()).andReturn(null);
         expect(context.getContextPath()).andReturn("/pouet");
+        expect(context.getServletContext()).andReturn(null);
         expect(context.getAggregationState()).andReturn(new AggregationState());
         replay(context);
         MgnlContext.setInstance(context);

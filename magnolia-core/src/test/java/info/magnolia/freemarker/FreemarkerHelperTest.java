@@ -40,7 +40,6 @@ import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.StringWriter;
 import java.text.SimpleDateFormat;
-import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashMap;
@@ -105,8 +104,8 @@ public class FreemarkerHelperTest extends TestCase {
         foo.addContent(new MockContent("bar"));
         foo.addContent(new MockContent("baz"));
         foo.addContent(new MockContent("gazonk"));
-        Pair pair = new Pair(Color.ORANGE, foo);
-        Map<String, Pair> map = Collections.singletonMap("pair", pair);
+        final Pair pair = new Pair(Color.ORANGE, foo);
+        final Map map = createSingleValueMap("pair", pair);
 
         tplLoader.putTemplate("test.ftl", "${pair.right} ${pair.right.gazonk} ${pair.left?string} ${pair.right?string} ${pair.right.gazonk?string}");
 
@@ -158,8 +157,9 @@ public class FreemarkerHelperTest extends TestCase {
         foo.addContent(new MockContent("bar"));
         foo.addContent(new MockContent("baz"));
         foo.addContent(new MockContent("gazonk"));
-        Pair pair = new Pair(Color.ORANGE, foo);
-        Map<String, Pair> map = Collections.singletonMap("pair", pair);
+        final Object pair = new Pair(Color.ORANGE, foo);
+        final String key = "pair";
+        Map map = createSingleValueMap(key, pair);
 
         tplLoader.putTemplate("test.ftl", "${pair.right?children?size}: <#list pair.right?children as n>${n.@handle} </#list>");
 
@@ -224,7 +224,7 @@ public class FreemarkerHelperTest extends TestCase {
         final MockContent c = new MockContent("pouet");
         f.addContent(c);
         tplLoader.putTemplate("test.ftl", "[#list c?children as n]${n},[/#list]");
-        assertRendereredContent("MetaData,pouet,", Collections.singletonMap("c", f), "test.ftl");
+        assertRendereredContent("MetaData,pouet,", createSingleValueMap("c", f), "test.ftl");
     }
 
     public void testBooleanPropertiesAreHandledProperly() throws TemplateException, IOException {
@@ -269,7 +269,7 @@ public class FreemarkerHelperTest extends TestCase {
         foo.addNodeData(new MockNodeData("some-ref", bar));
         bar.addNodeData(new MockNodeData("baz", "gazonk"));
         tplLoader.putTemplate("test.ftl", "${foo['some-ref']} ${foo['some-ref'].baz}");
-        assertRendereredContent("bar gazonk", Collections.singletonMap("foo", foo), "test.ftl");
+        assertRendereredContent("bar gazonk", createSingleValueMap("foo", foo), "test.ftl");
     }
 
     public void testRendereredWithCurrentLocale() throws TemplateException, IOException {
@@ -288,7 +288,7 @@ public class FreemarkerHelperTest extends TestCase {
     public void testMissingAndDefaultValueOperatorsActsAsIExceptThemTo() throws IOException, TemplateException {
         tplLoader.putTemplate("test.ftl", "[#if content.title?has_content]<h2>${content.title}</h2>[/#if]");
         final MockContent c = new MockContent("pouet");
-        final Map m = Collections.singletonMap("content", c);
+        final Map m = createSingleValueMap("content", c);
         assertRendereredContent("", m, "test.ftl");
 
         c.addNodeData(new MockNodeData("title", ""));
@@ -379,6 +379,7 @@ public class FreemarkerHelperTest extends TestCase {
         agg.setMainContent(page);
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.CANADA);
+        expect(context.getServletContext()).andReturn(null);
         expect(context.getAggregationState()).andReturn(agg);
         expect(context.getHierarchyManager("website")).andReturn(hm);
 
@@ -390,13 +391,14 @@ public class FreemarkerHelperTest extends TestCase {
     public void testUuidLinksAreTransformedToAbsoluteLinksInWebContextWithoutAggregationState() throws IOException, TemplateException, RepositoryException {
         final MockContent page = new MockContent("baz");
         final MockHierarchyManager hm = prepareHM(page);
-        
+
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.CANADA);
+        expect(context.getServletContext()).andReturn(null);
         expect(context.getAggregationState()).andReturn(new AggregationState());
         expect(context.getHierarchyManager("website")).andReturn(hm);
         expect(context.getContextPath()).andReturn("/some-context");
-        
+
         replay(context);
         doTestUuidLinksAreTransformed(context, "== Some text... blah blah... <a href=\"/some-context/foo/bar/baz.html\">Bleh</a> ! ==");
         verify(context);
@@ -451,11 +453,14 @@ public class FreemarkerHelperTest extends TestCase {
     }
 
     public final static class FakeURI2RepoMan extends URI2RepositoryManager {
-
         // do nothing
         public void init() {
         }
+    }
 
-
+    private Map createSingleValueMap(Object key, Object value) {
+        final HashMap map = new HashMap();
+        map.put(key, value);
+        return map;
     }
 }
