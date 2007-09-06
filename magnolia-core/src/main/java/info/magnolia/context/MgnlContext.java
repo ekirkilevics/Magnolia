@@ -30,7 +30,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -234,8 +233,9 @@ public class MgnlContext {
         WebContext ctx = getWebContextIfExisting(getInstance());
         if (ctx != null) {
             return ctx.getContextPath();
+        } else {
+            throw new IllegalStateException("Can only get the context path within a WebContext.");
         }
-        return StringUtils.EMPTY;
     }
 
     /**
@@ -247,7 +247,7 @@ public class MgnlContext {
         if (ctx != null) {
             return ctx.getAggregationState();
         } else {
-            throw new IllegalStateException("Should be in a WebContext !");
+            throw new IllegalStateException("Can only get the aggregation state within a WebContext.");
         }
     }
 
