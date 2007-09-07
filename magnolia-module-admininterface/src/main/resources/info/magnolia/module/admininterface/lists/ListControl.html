@@ -8,7 +8,7 @@
     var ${this.name};
 
     MgnlDHTMLUtil.addOnLoad(function(){
-        ${this.name} = new mgnl.controls.List('${this.name}', document.mgnlForm);
+        ${this.name} = new ${renderer.javaScriptClass}('${this.name}', document.mgnlForm);
         // add the columns
         [#list this.children as column]
             new mgnl.controls.ListColumn(
