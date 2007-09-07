@@ -8,128 +8,135 @@ import java.util.NoSuchElementException;
 
 public class MultipleSearchListModel extends AbstractSearchableListModel {
 
-	protected final AbstractSearchableListModel[] models;
-	protected final String[] modelNames;
-	
-	public MultipleSearchListModel(AbstractSearchableListModel[] models, String[] modelNames) {
-		this.models = models;
-		this.modelNames = modelNames;
-	}
+    protected final AbstractSearchableListModel[] models;
+    protected final String[] modelNames;
 
-	public ListModelIterator getListModel() {
-		return new MultipleListIterator();
-	}
+    public MultipleSearchListModel(AbstractSearchableListModel[] models, String[] modelNames) {
+        this.models = models;
+        this.modelNames = modelNames;
+    }
 
-	private class MultipleListIterator implements ListModelIterator {
+    public ListModelIterator getListModel() {
+        return new MultipleListIterator();
+    }
 
-		private ListModelIterator current, previous;
-		private int pos;
-		
-		public Object getValue(String name) {
-			if(previous != null){
-				return previous.getValue(name);
-			}
-			return current.getValue(name);
-		}
+    private class MultipleListIterator implements ListModelIterator {
 
-		public Object getValueObject() {
-			if(previous != null){
-				return previous.getValueObject();
-			}
-			return current.getValueObject();
-		}
+        private ListModelIterator current, previous;
+        private int pos;
 
-		public String getGroupName() {
-			if(previous != null){
-				return previous.getGroupName();
-			}
-			return current.getGroupName();
-		}
+        public Object getValue(String name) {
+            if(previous != null){
+                return previous.getValue(name);
+            }
+            return current.getValue(name);
+        }
 
-		public Object nextGroup() {
-			if(previous != null){
-				return previous.nextGroup();
-			}
-			return current.nextGroup();
-		}
+        public Object getValueObject() {
+            if(previous != null){
+                return previous.getValueObject();
+            }
+            return current.getValueObject();
+        }
 
-		public boolean hasNextInGroup() {
-			if(previous != null){
-				return previous.hasNext();
-			}
-			return current.hasNextInGroup();
-		}
+        public String getId() {
+            if(previous != null){
+                return previous.getId();
+            }
+            return current.getId();
+        }
 
-		public void remove() {
-			current.remove();
-		}
+        public String getGroupName() {
+            if(previous != null){
+                return previous.getGroupName();
+            }
+            return current.getGroupName();
+        }
 
-		public boolean hasNext() {
-			if(current == null && models.length > 0){
-				current = models[pos].getListModelIterator();
-			}
-			while(!current.hasNext()){
-				if(++pos < models.length){
-					previous = current;
-					current = models[pos].getListModelIterator();
-				}else{
-					return false;
-				}
-			}
-			return true;
-		}
+        public Object nextGroup() {
+            if(previous != null){
+                return previous.nextGroup();
+            }
+            return current.nextGroup();
+        }
 
-		public Object next() {
-			previous = null;
-			if(current == null) {
-				throw new NoSuchElementException();
-			}
-			current.next();
-			return getName();
-		}
+        public boolean hasNextInGroup() {
+            if(previous != null){
+                return previous.hasNext();
+            }
+            return current.hasNextInGroup();
+        }
 
-		public String getName() {
-			return modelNames[pos];
-		}
-		
-	}
+        public void remove() {
+            current.remove();
+        }
 
-	public void setGroupBy(String name, String order) {
-		super.setGroupBy(name, order);
-		for(int i = 0; i < models.length; i++) {
-			models[i].setGroupBy(name, order);
-		}
-	}
+        public boolean hasNext() {
+            if(current == null && models.length > 0){
+                current = models[pos].getListModelIterator();
+            }
+            while(!current.hasNext()){
+                if(++pos < models.length){
+                    previous = current;
+                    current = models[pos].getListModelIterator();
+                }else{
+                    return false;
+                }
+            }
+            return true;
+        }
 
-	public void setGroupBy(String name) {
-		super.setGroupBy(name);
-		for(int i = 0; i < models.length; i++) {
-			models[i].setGroupBy(name);
-		}
-	}
+        public Object next() {
+            previous = null;
+            if(current == null) {
+                throw new NoSuchElementException();
+            }
+            current.next();
+            return getName();
+        }
 
-	public void setSortBy(String name, String order) {
-		super.setSortBy(name, order);
-		for(int i = 0; i < models.length; i++) {
-			models[i].setSortBy(name, order);
-		}
-	}
+        public String getName() {
+            return modelNames[pos];
+        }
 
-	public void setSortBy(String name) {
-		super.setSortBy(name);
-		for(int i = 0; i < models.length; i++) {
-			models[i].setSortBy(name);
-		}
-	}
+    }
 
-	public void setQuery(SearchQuery query) {
-		super.setQuery(query);
-		for(int i = 0; i < models.length; i++) {
-			models[i].setQuery(query);
-		}
-	}
+    public void setGroupBy(String name, String order) {
+        super.setGroupBy(name, order);
+        for(int i = 0; i < models.length; i++) {
+            models[i].setGroupBy(name, order);
+        }
+    }
 
-	protected Collection getResult() throws Exception {
-		throw new RuntimeException("this method should never be called since the iterator creation was overwritten");
-	}
+    public void setGroupBy(String name) {
+        super.setGroupBy(name);
+        for(int i = 0; i < models.length; i++) {
+            models[i].setGroupBy(name);
+        }
+    }
+
+    public void setSortBy(String name, String order) {
+        super.setSortBy(name, order);
+        for(int i = 0; i < models.length; i++) {
+            models[i].setSortBy(name, order);
+        }
+    }
+
+    public void setSortBy(String name) {
+        super.setSortBy(name);
+        for(int i = 0; i < models.length; i++) {
+            models[i].setSortBy(name);
+        }
+    }
+
+    public void setQuery(SearchQuery query) {
+        super.setQuery(query);
+        for(int i = 0; i < models.length; i++) {
+            models[i].setQuery(query);
+        }
+    }
+
+    protected Collection getResult() throws Exception {
+        throw new RuntimeException("this method should never be called since the iterator creation was overwritten");
+    }
 }
