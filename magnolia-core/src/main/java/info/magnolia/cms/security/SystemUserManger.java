@@ -13,9 +13,8 @@ package info.magnolia.cms.security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
- * Responsible to handle system users like anonymous and supperuser
+ * Responsible to handle system users like anonymous and superuser.
  * @author philipp
  * @version $Id$
  */
@@ -36,9 +35,8 @@ public class SystemUserManger extends MgnlUserManager {
 
     protected User getOrCreateUser(String userName, String password) {
         User user = getUser(userName);
-        if(user == null){
-            log.error("failed to get system or anonymous user [{}]", userName);
-            log.info("Try to create new system user with default password");
+        if (user == null) {
+            log.error("Failed to get system or anonymous user [{}], will try to create new system user with default password", userName);
             user = this.createUser(userName, password);
         }
         return user;

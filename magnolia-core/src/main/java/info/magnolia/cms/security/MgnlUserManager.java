@@ -143,19 +143,17 @@ public class MgnlUserManager implements UserManager {
     }
 
     /**
-     * Get system user, this user must always exist in magnolia repository.
-     * @return system user
+     * SystemUserManager does this.
      */
-    public User getSystemUser() {
-        return SecuritySupport.Factory.getInstance().getUserManager(Realm.REALM_SYSTEM).getSystemUser();
+    public User getSystemUser() throws UnsupportedOperationException {
+         throw new UnsupportedOperationException();
     }
 
     /**
-     * Get Anonymous user, this user must always exist in magnolia repository.
-     * @return anonymous user
+     * SystemUserManager does this.
      */
-    public User getAnonymousUser() {
-        return SecuritySupport.Factory.getInstance().getUserManager(Realm.REALM_SYSTEM).getAnonymousUser();
+    public User getAnonymousUser() throws UnsupportedOperationException {
+        throw new UnsupportedOperationException();
     }
 
     /**

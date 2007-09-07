@@ -57,13 +57,13 @@ public interface UserManager {
      * Get system user, this user must always exist in magnolia repository.
      * @return system user
      */
-    public User getSystemUser();
+    public User getSystemUser() throws UnsupportedOperationException;
 
     /**
      * Get Anonymous user, this user must always exist in magnolia repository.
      * @return anonymous user
      */
-    public User getAnonymousUser();
+    public User getAnonymousUser() throws UnsupportedOperationException;
 
     /**
      * Get all users.

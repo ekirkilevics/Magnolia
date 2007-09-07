@@ -42,7 +42,7 @@ public class DelegatingUserManager implements UserManager {
     }
 
     public User getAnonymousUser() {
-        return (User) delegateUntilNotNull(new Op() {
+        return (User) delegateUntilSupported(new Op() {
             public Object delegate(UserManager um) {
                 return um.getAnonymousUser();
             }
@@ -50,7 +50,7 @@ public class DelegatingUserManager implements UserManager {
     }
 
     public User getSystemUser() {
-        return (User) delegateUntilNotNull(new Op() {
+        return (User) delegateUntilSupported(new Op() {
             public Object delegate(UserManager um) {
                 return um.getSystemUser();
             }
