@@ -936,6 +936,8 @@ public class Tree extends ControlImpl {
         html.append(">");
         html.append(name);
         html.append("</span></span></span>"); //$NON-NLS-1$
+
+        // this is done because js is not executed when you get it with ajax
         html.append(new Hidden(idPre + "_PermissionWrite", Boolean.toString(permissionWrite), false).getHtml()); //$NON-NLS-1$
         html.append(new Hidden(idPre + "_ItemType", itemType, false).getHtml()); //$NON-NLS-1$
         html.append(new Hidden(idPre + "_IsActivated", Boolean.toString(isActivated), false).getHtml()); //$NON-NLS-1$
