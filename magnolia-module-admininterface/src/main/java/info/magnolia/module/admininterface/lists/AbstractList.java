@@ -14,6 +14,7 @@ package info.magnolia.module.admininterface.lists;
 
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.ContextMenu;
+import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBar;
 import info.magnolia.cms.gui.controlx.RenderKit;
 import info.magnolia.cms.gui.controlx.RenderKitFactory;
@@ -134,6 +135,19 @@ public abstract class AbstractList extends TemplatedMVCHandler {
      */
     protected void configureContextMenu(ContextMenu menu) {
     }
+
+    /**
+     * Helper method to creat menu items for the list
+     */
+    protected void addContextMenuItem(ContextMenu menu, String name, String label, String iconName, String methodName, String isActiveMethodName) {
+        final ContextMenuItem showInTree = new ContextMenuItem(name);
+        showInTree.setLabel(getMsgs().get(label));
+        showInTree.setIcon(MgnlContext.getContextPath() + "/.resources/icons/16/" + iconName+".gif");
+        showInTree.setOnclick(this.getList().getName() + "." + methodName + "();");
+        showInTree.addJavascriptCondition("function(){return " + this.getList().getName() + "." + isActiveMethodName + "()}");
+        menu.addMenuItem(showInTree);
+    }
+
 
     /**
      * Returns the default admin interface render kit.
