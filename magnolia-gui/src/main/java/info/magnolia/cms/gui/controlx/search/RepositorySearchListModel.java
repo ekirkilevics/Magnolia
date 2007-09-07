@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.gui.controlx.search;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.gui.query.SearchQuery;
@@ -51,7 +52,7 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
     private String nodeType = "nt:base";
 
     private String resultNodeType = "mgnl:content";
-    
+
     /**
      * search path (optional)
      */
@@ -73,8 +74,12 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
      * Returns the jcr query statement used by the model.
      */
     protected String buildQuery() {
-        QueryBuilder builder = new QueryBuilder(this);
+        QueryBuilder builder = getQueryBuilder();
         return builder.getSQLStatement();
+    }
+
+    protected QueryBuilder getQueryBuilder() {
+        return new QueryBuilder(this);
     }
 
     /**
@@ -95,16 +100,24 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
             log.debug("query: " + query);
         }
         QueryResult result = this.getResult(query);
-        Collection items = getResult(result);
-        return items;
+        return getResult(result);
     }
 
     /**
      * Gets the items from the query (possibility to post filter)
      */
     protected Collection getResult(QueryResult result) {
-        Collection items = result.getContent(this.getResultNodeType());
-        return items;
+        return result.getContent(this.getResultNodeType());
+    }
+
+    /**
+     * Returns the uuid of the node
+     */
+    protected String resolveId(int index, Object value) {
+        if(value instanceof Content){
+            return ((Content)value).getUUID();
+        }
+        return super.resolveId(index, value);
     }
 
     /**
@@ -184,6 +197,10 @@ public class RepositorySearchListModel extends AbstractSearchableListModel {
      * @return query
      */
     public SearchQuery getQuery() {
+        // this is needed in case the list page is not a searchable list
+        if(this.query == null){
+            this.query = new SearchQuery();
+        }
         return this.query;
     }
 
