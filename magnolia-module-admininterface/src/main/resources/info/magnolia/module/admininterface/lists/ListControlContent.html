@@ -38,10 +38,15 @@
 <!-- content -->
 <div id="${this.name}InnerContentDiv" class="mgnlListInnerContentDiv">
     [#list this.iterator as item]
-    <div id="${this.name}Row${item_index}" class="mgnlListRow" onmouseover="${this.name}.mouseover(${item_index})" onmouseout="${this.name}.mouseout(${item_index})" onclick="${renderer.onSelect(this, item_index)} ${renderer.onClick(this, item_index)}" ondblclick="${renderer.onSelect(this, item_index)} ${renderer.onDblClick(this, item_index)}" oncontextmenu="${renderer.onSelect(this, item_index)} ${renderer.onRightClick(this, item_index)} return false;">
+    <div id="${this.name}Row${item_index}" class="mgnlListRow" onmouseover="${this.name}.mouseover(${item_index})" onmouseout="${this.name}.mouseout(${item_index})" onclick="this.onSelect(); ${renderer.onClick(this, item_index)}" ondblclick="this.onSelect(); ${renderer.onDblClick(this, item_index)}" oncontextmenu="this.onSelect(); ${renderer.onRightClick(this, item_index)} return false;">
         [#list this.children as column]
             <span class="mgnlTreeColumn ${this.name}CssClassColumn${column_index}"><span class="mgnlText">${column.render()}</span></span>
         [/#list]
     </div>
+    <script>
+        document.getElementById('${this.name}Row${item_index}').onSelect = function(){
+            ${renderer.onSelect(this, item_index)}
+        }
+    </script>
     [/#list]
 </div>
