@@ -25,6 +25,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public class ListModelIteratorImpl implements ListModelIterator {
 
+    private AbstractListModel model;
+
     /**
      * list holding all objects/records
      */
@@ -49,25 +51,18 @@ public class ListModelIteratorImpl implements ListModelIterator {
      * key name on which provided list is grouped
      */
     private String groupKey;
-    
+
     private ValueProvider valueProvider;
 
-    public ListModelIteratorImpl(List list, String groupKey, ValueProvider valueProvider) {
+    public ListModelIteratorImpl(AbstractListModel model, List list) {
+        this.model = model;
         this.list = new ArrayList(list);
-        this.groupKey = groupKey;
+        this.groupKey = model.getGroupBy();
         this.pos = 0;
-        this.setValueProvider(valueProvider);
+        this.setValueProvider(model.getValueProvider());
 
         // prefetch next object
         prefetchNext();
-    }
-
-    /**
-     * creates a new ListModelIterator
-     * @param list of content objects
-     */
-    public ListModelIteratorImpl(List list, String groupKey) {
-        this(list, groupKey, DefaultValueProvider.getInstance());
     }
 
     /**
@@ -169,9 +164,10 @@ public class ListModelIteratorImpl implements ListModelIterator {
         return true;
     }
 
-    /**
-     * @see java.util.Iterator#remove()
-     */
+    public String getId() {
+        return this.model.resolveId(pos-1, this.getValueObject());
+    }
+
     public void remove() {
         // not implemented
     }
