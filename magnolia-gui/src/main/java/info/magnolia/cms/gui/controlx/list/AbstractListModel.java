@@ -61,7 +61,7 @@ public abstract class AbstractListModel implements ListModel {
      * group by order
      */
     protected String groupByOrder;
-    
+
     /**
      * Used to get values out of the nodes/objects handled by the list
      */
@@ -74,14 +74,16 @@ public abstract class AbstractListModel implements ListModel {
      */
     public ListModelIterator getListModelIterator() {
         try {
-            return createIterator(getResult());
+            Collection items = getResult();
+            items = doSort(items);
+            return createIterator(items);
         }
         catch (Exception re) {
             log.error("can't create the list model iterator, will return an empty list", re);
-            return new ListModelIteratorImpl(new ArrayList(), this.getGroupBy());
+            return new ListModelIteratorImpl(this, new ArrayList());
         }
     }
-    
+
     public Iterator iterator() {
         return getListModelIterator();
     }
@@ -97,7 +99,10 @@ public abstract class AbstractListModel implements ListModel {
      * @return
      */
     protected ListModelIterator createIterator(Collection items) {
-        return new ListModelIteratorImpl((List) this.doSort(items), this.getGroupBy(), this.getValueProvider());
+        if(!(items instanceof List)){
+            throw new RuntimeException("items must be a List");
+        }
+        return new ListModelIteratorImpl(this, (List) items);
     }
 
     /**
@@ -174,26 +179,31 @@ public abstract class AbstractListModel implements ListModel {
      * @return sorted collection
      */
     protected Collection doSort(Collection collection) {
+        if(!(collection instanceof List)){
+            log.warn("can sort only collections of type {} but got a {}", List.class, collection.getClass());
+            return collection;
+        }
+        List list = (List) collection;
         if (StringUtils.isNotEmpty(this.getGroupBy())) {
             ListComparator comparator = newComparator();
             comparator.setSortBy(this.getGroupBy());
             comparator.setOrder(this.getGroupByOrder());
-            Collections.sort((List) collection, comparator);
+            Collections.sort(list, comparator);
         }
         if (StringUtils.isNotEmpty(this.getGroupBy()) && StringUtils.isNotEmpty(this.getSortBy())) { // sub sort
             ListComparator comparator = newComparator();
             comparator.setPreSort(this.getGroupBy());
             comparator.setSortBy(this.getSortBy());
             comparator.setOrder(this.getSortByOrder());
-            Collections.sort((List) collection, comparator);
+            Collections.sort(list, comparator);
         }
         if (StringUtils.isEmpty(this.getGroupBy()) && StringUtils.isNotEmpty(this.getSortBy())) {
             ListComparator comparator = newComparator();
             comparator.setSortBy(this.getSortBy());
             comparator.setOrder(this.getSortByOrder());
-            Collections.sort((List) collection, comparator);
+            Collections.sort(list, comparator);
         }
-        return collection;
+        return list;
     }
 
     protected ListComparator newComparator() {
@@ -215,6 +225,13 @@ public abstract class AbstractListModel implements ListModel {
             valueProvider = DefaultValueProvider.getInstance();
         }
         return valueProvider;
+    }
+
+    /**
+     * Use by the list iterator to resolve the id
+     */
+    protected String resolveId(int index, Object value){
+        return Integer.toString(index);
     }
 
     /**
