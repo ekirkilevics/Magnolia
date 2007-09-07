@@ -37,14 +37,20 @@ mgnlContextMenu.prototype.show = function(event){
             //reset class name: remove _DISABLED (if existing)
             item.div.className=item.div.className.replace("_DISABLED","");
             var disabled=false;
-            for (var elem in item.conditions)
-                {
-                if (item.conditions[elem].test()==false)
-                    {
+            for (var elem in item.conditions) {
+                var condition = item.conditions[elem];
+                var testResult;
+                if(typeof condition == "function"){
+                    testResult = condition();
+                }
+                else{
+                    testResult = condition.test();
+                }
+                if (testResult == false){
                     disabled=true;
                     break;
-                    }
                 }
+            }
 
             img = item.div.firstChild;
             if (disabled) {
@@ -63,7 +69,7 @@ mgnlContextMenu.prototype.show = function(event){
                 if (img && img.tagName && img.tagName.toUpperCase () == 'IMG') {
                     if (img.src.substr (img.src.length - '_inactive.gif'.length) == '_inactive.gif') {
                         img.src = img.src.substr (0, img.src.length - '_inactive.gif'.length) + '.gif';
-                	   }  
+                    }
                 }
             }
         }
@@ -168,10 +174,10 @@ function mgnlTreeMenuItemConditionSelectedNotItemType(tree, itemType){
     this.itemType = itemType;
 
     this.test = function(){
-        if (this.tree.selectedNode.itemType!=this.itemType) 
-        	return true;
-        else 
-        	return false;
+        if (this.tree.selectedNode.itemType!=this.itemType)
+            return true;
+        else
+            return false;
     }
 }
 
@@ -180,10 +186,10 @@ function mgnlTreeMenuItemConditionSelectedItemType(tree, itemType){
     this.itemType = itemType;
 
     this.test = function(){
-        if (this.tree.selectedNode.itemType==this.itemType) 
-        	return true;
-        else 
-        	return false;
+        if (this.tree.selectedNode.itemType==this.itemType)
+            return true;
+        else
+            return false;
     }
 }
 
@@ -234,7 +240,7 @@ function mgnlTreeMenuItemConditionPermissionWrite(tree)
 function mgnlTreeMenuItemOpen(tree){
     var url= contextPath + tree.selectedNode.path+".html";
     var w=window.open(url,"mgnlInline","");
-    if (w) 
+    if (w)
         w.focus();
 }
 

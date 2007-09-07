@@ -10,7 +10,7 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
- 
+
 classDef("mgnl.controls.FunctionBar", MgnlFunctionBar);
 
 MgnlFunctionBar.classActive = 'mgnlFunctionBarButton';
@@ -43,7 +43,16 @@ function MgnlFunctionBar (name, active, iconActive, iconInactive, onClick) {
             for (var i = 0; i < conditions.length; i++) {
                 //var condition = eval (conditions[i]);
                 condition = conditions[i];
-                active = (active && condition.test ());
+
+                var testResult;
+                if(typeof condition == "function"){
+                    testResult = condition();
+                }
+                else{
+                    testResult = condition.test();
+                }
+
+                active = (active && testResult);
             }
             // set icon and css-class corresponding to the nodes state
             if (active) {
@@ -98,9 +107,9 @@ function MgnlFunctionBar (name, active, iconActive, iconInactive, onClick) {
             if (n) n.setActive (nodeName, state);
         }
     }
-    
+
     this.isActive = function () { return active; }
-    
+
     this.getOnClick = function () { return onClick; }
 
     this.addCondition = function (condition) {
