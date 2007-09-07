@@ -12,6 +12,7 @@
  */
 package info.magnolia.module.admininterface.lists;
 
+import info.magnolia.cms.gui.control.FunctionBar;
 import info.magnolia.cms.gui.controlx.list.ListControl;
 import info.magnolia.cms.gui.controlx.search.SearchConfig;
 import info.magnolia.cms.gui.controlx.search.SearchableListModel;
@@ -75,7 +76,17 @@ public abstract class AbstractSimpleSearchList extends AbstractList {
      * @return
      */
     public SearchQuery getQuery() {
+        if(this.getSearchConfig() == null){
+            return SimpleSearchUtil.getSimpleSearchQuery(this.getSearchStr());
+        }
         return SimpleSearchUtil.getSimpleSearchQuery(this.getSearchStr(), this.getSearchConfig());
+    }
+
+    protected void configureFunctionBar(FunctionBar bar) {
+        super.configureFunctionBar(bar);
+        bar.setSearchable(true);
+        bar.setSearchStr(this.getSearchStr());
+        bar.setOnSearchFunction(this.getList().getName() + ".search");
     }
 
     /**
