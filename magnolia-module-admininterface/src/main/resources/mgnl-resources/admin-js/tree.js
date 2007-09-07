@@ -485,12 +485,12 @@
         {
         var text;
         if(this.getNode(this.selectedNode.id).isActivated){
-        	text = mgnlMessages.get('tree.deletenode.confirm.deactivation.text.js', null, [this.selectedNode.id]);
+            text = mgnlMessages.get('tree.deletenode.confirm.deactivation.text.js', null, [this.selectedNode.id]);
         }
         else{
-        	text = mgnlMessages.get('tree.deletenode.confirm.text.js', null, [this.selectedNode.id]);
+            text = mgnlMessages.get('tree.deletenode.confirm.text.js', null, [this.selectedNode.id]);
         }
-        
+
         var title=mgnlMessages.get('tree.deletenode.confirm.title.js');
         if (mgnlConfirm(text,title))
             {
@@ -714,9 +714,7 @@
 
     mgnlTree.prototype.activateNode = function(action,recursive)
         {
-        var parentPath=this.selectedNode.id.substring(0,this.selectedNode.id.lastIndexOf("/"));
-        if (parentPath=="") parentPath=this.path; //root
-        var nodeToReload=this.getNode(parentPath);
+        var nodeToReload=this.selectedNode.getParten();
 
         var params=new Object();
         params.forceReload=true;
@@ -729,9 +727,7 @@
 
     mgnlTree.prototype.deactivateNode = function(action)
         {
-        var parentPath=this.selectedNode.id.substring(0,this.selectedNode.id.lastIndexOf("/"));
-        if (parentPath=="") parentPath=this.path; //root
-        var nodeToReload=this.getNode(parentPath);
+        var nodeToReload=this.selectedNode.getParten();
 
         var params=new Object();
         params.forceReload=true;
@@ -1048,6 +1044,14 @@
                 this.url=document.location.href.substring(0,document.location.href.indexOf("?"));
         else
             this.url=document.location.href;
+    }
+
+    mgnlTreeNode.prototype.getParent = function(){
+        var parentPath=this.id.substring(0,this.id.lastIndexOf("/"));
+        if (parentPath == ""){
+            parentPath = this.treeControl.path; //root
+        }
+        return this.tree.getNode(parentPath);
     }
 
     mgnlTreeNode.prototype.getHttpRequest = function()
