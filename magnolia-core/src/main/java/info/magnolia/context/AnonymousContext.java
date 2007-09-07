@@ -16,6 +16,7 @@ import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Security;
+import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 import info.magnolia.cms.core.search.QueryManager;
@@ -63,7 +64,8 @@ public class AnonymousContext extends WebContextImpl {
     private static User anonymousUser;
 
     static {
-        ObservationUtil.registerChangeListener(ContentRepository.USERS, "/anonymous", true, "mgnl:user", new EventListener() {
+        final String anonymousUserPath = "/" + Realm.REALM_SYSTEM + "/" + UserManager.ANONYMOUS_USER;
+        ObservationUtil.registerChangeListener(ContentRepository.USERS, anonymousUserPath, true, "mgnl:user", new EventListener() {
             public void onEvent(EventIterator events) {
                 reset();
             }
