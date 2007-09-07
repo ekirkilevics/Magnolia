@@ -77,6 +77,12 @@ public class FunctionBar extends ContextMenu {
         return !this.getMenuItems().isEmpty();
     }
 
+    public void addMenuItem(ContextMenuItem item) {
+        if(item != null && !(item instanceof FunctionBarItem)){
+            item = new FunctionBarItem(item);
+        }
+        super.addMenuItem(item);
+    }
     /**
      * @return Returns the javascriptName.
      */
