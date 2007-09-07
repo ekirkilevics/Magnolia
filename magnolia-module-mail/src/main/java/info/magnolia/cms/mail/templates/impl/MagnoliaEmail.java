@@ -1,6 +1,11 @@
 package info.magnolia.cms.mail.templates.impl;
 
 import freemarker.template.Template;
+import freemarker.template.Configuration;
+import freemarker.template.DefaultObjectWrapper;
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.TemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.security.User;
@@ -75,6 +80,17 @@ public class MagnoliaEmail extends FreemarkerEmail {
 
     private static final String SLASH = "/";
 
+    private static final Configuration freemarkerCfg = new Configuration();
+
+    static {
+        freemarkerCfg.setObjectWrapper(new DefaultObjectWrapper());
+        ClassTemplateLoader ctl = new ClassTemplateLoader(FreemarkerEmail.class, "/");
+        TemplateLoader[] loaders = new TemplateLoader[]{ctl};
+        MultiTemplateLoader mtl = new MultiTemplateLoader(loaders);
+        freemarkerCfg.setTemplateLoader(mtl);
+        freemarkerCfg.setDefaultEncoding("UTF8");
+    }
+
     public MagnoliaEmail(Session _session) throws Exception {
         super(_session);
     }
@@ -90,10 +106,17 @@ public class MagnoliaEmail extends FreemarkerEmail {
         reader = FilterImages(urlBasePath, reader);
 
         // create the template from the previously filtered stream
-        Template template = new Template(MAGNOLIA, reader, FreemarkerEmail.cfg, UTF_8);
+        Template template = new Template(MAGNOLIA, reader, freemarkerCfg, UTF_8);
 
         // execute the template, calling super will make use of Freemarker capabilities
-        super.setBodyFromTemplate(template, _map);
+        setBodyFromTemplate(template, _map);
+    }
+
+    public void setBodyFromTemplate(Template template, Map _map) throws Exception {
+        final StringWriter writer = new StringWriter();
+        template.process(_map, writer);
+        writer.flush();
+        setBody(writer.toString(), _map);
     }
 
     /**
