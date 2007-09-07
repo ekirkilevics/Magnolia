@@ -26,17 +26,11 @@ import org.apache.commons.lang.time.DateFormatUtils;
 
 
 /**
- * @author Sameer Charles
- * $Id$
- * package private helper class Implement this class if you need any further operations in
- * future <b>NOTE</b> : its a very simple in-order binary traversal, order of operation is not preserved
+ * @author Sameer Charles $Id$ package private helper class
+ * Implement this class if you need any further operations in future <b>NOTE</b> : its a very simple in-order binary
+ * traversal, order of operation is not preserved
  */
-class QueryBuilder {
-
-    /**
-     * statement
-     */
-    private StringBuffer statement = new StringBuffer();
+public class QueryBuilder {
 
     /**
      * search model using which query will be created
@@ -44,68 +38,96 @@ class QueryBuilder {
     private RepositorySearchListModel model;
 
     /**
+     * Use JCR order by clause to sort the items. Default is false.
+     */
+    private boolean useJCROrderBy = false;
+
+    /**
      * package private
      * @param model
      */
-    protected QueryBuilder(RepositorySearchListModel model) {
+    public QueryBuilder(RepositorySearchListModel model) {
         this.model = model;
-        this.build(this.model.getQuery().getRootExpression());
-        this.addSelect();
     }
 
     /**
      * get SQL statement based on SearchQuery
      * @return SQL statement
      */
-    protected String getSQLStatement() {
-        return this.statement.toString();
+    public String getSQLStatement() {
+        StringBuffer statement = new StringBuffer("select * from ");
+        statement.append(this.model.getNodeType());
+
+        String where = buildWhereClause();
+        if (where.length() > 0) {
+            statement.append(" where ").append(where);
+        }
+        String orderBy = buildOrderByClause();
+        if (orderBy.length() > 0) {
+            statement.append(" order by ").append(orderBy);
+        }
+
+        return statement.toString();
     }
 
     /**
-     * prepend select statement
+     * Build the complete where clause
      */
-    private void addSelect() {
-        StringBuffer select = new StringBuffer("select * from ");
-        select.append(this.model.getNodeType());
+    protected String buildWhereClause() {
+        StringBuffer where = new StringBuffer();
         if (StringUtils.isNotEmpty(this.model.getSearchPath())) {
-            this.statement.append(" jcr:path like '");
-            this.statement.append(this.model.getSearchPath());
-            this.statement.append("%'");
+            where.append(" jcr:path like '");
+            where.append(this.model.getSearchPath());
+            where.append("%'");
         }
-        if (this.statement.length() > 0) {
-            select.append(" where");
+        if(this.model.getQuery() !=null){
+            where.append(buildWhereClause(this.model.getQuery().getRootExpression()));
         }
-        this.statement.insert(0, select.toString());
+        return where.toString();
     }
 
     /**
-     * add orgering
+     * Order clause
      */
-    /*
-     * private void addOrder() { if (StringUtils.isNotEmpty(this.model.getGroupBy()) &&
-     * StringUtils.isNotEmpty(this.model.getSortBy())) { statement.append(" order by ");
-     * statement.append(this.model.getGroupBy()); statement.append(" "); statement.append(this.model.getGroupByOrder());
-     * statement.append(", "); statement.append(this.model.getSortBy()); statement.append(" ");
-     * statement.append(this.model.getSortByOrder()); } else if (StringUtils.isNotEmpty(this.model.getGroupBy()) &&
-     * StringUtils.isEmpty(this.model.getSortBy())) { statement.append(" order by ");
-     * statement.append(this.model.getGroupBy()); statement.append(" "); statement.append(this.model.getGroupByOrder()); }
-     * else if (StringUtils.isEmpty(this.model.getGroupBy()) && StringUtils.isNotEmpty(this.model.getSortBy())) {
-     * statement.append(" order by "); statement.append(this.model.getSortBy()); statement.append(" ");
-     * statement.append(this.model.getSortByOrder()); } }
-     */
+    protected String buildOrderByClause() {
+        StringBuffer orderBy = new StringBuffer();
+        if(useJCROrderBy){
+            if (StringUtils.isNotEmpty(this.model.getGroupBy()) && StringUtils.isNotEmpty(this.model.getSortBy())) {
+                orderBy.append(this.model.getGroupBy());
+                orderBy.append(" ");
+                orderBy.append(this.model.getGroupByOrder());
+                orderBy.append(", ");
+                orderBy.append(this.model.getSortBy());
+                orderBy.append(" ");
+                orderBy.append(this.model.getSortByOrder());
+            }
+            else if (StringUtils.isNotEmpty(this.model.getGroupBy()) && StringUtils.isEmpty(this.model.getSortBy())) {
+                orderBy.append(this.model.getGroupBy());
+                orderBy.append(" ");
+                orderBy.append(this.model.getGroupByOrder());
+            }
+            else if (StringUtils.isEmpty(this.model.getGroupBy()) && StringUtils.isNotEmpty(this.model.getSortBy())) {
+                orderBy.append(this.model.getSortBy());
+                orderBy.append(" ");
+                orderBy.append(this.model.getSortByOrder());
+            }
+        }
+        return orderBy.toString();
+    }
 
     /**
      * NOTE : its a very simple in-order binary traversal, order of operation is not preserved
      * @param expression
      */
-    private void build(SearchQueryExpression expression) {
-        if (expression == null) {
-            return;
+    protected String buildWhereClause(SearchQueryExpression expression) {
+        StringBuffer where = new StringBuffer();
+        if (expression != null) {
+            where.append(buildWhereClause(expression.getLeft()));
+            where.append(" ");
+            where.append(toJCRExpression(expression));
+            where.append(buildWhereClause(expression.getRight()));
         }
-        this.build(expression.getLeft());
-        this.statement.append(" ");
-        this.statement.append(toJCRExpression(expression));
-        this.build(expression.getRight());
+        return where.toString();
     }
 
     /**
@@ -113,7 +135,7 @@ class QueryBuilder {
      * @param expression
      * @return the expression as string
      */
-    private String toJCRExpression(SearchQueryExpression expression) {
+    protected String toJCRExpression(SearchQueryExpression expression) {
         if (expression instanceof SearchQueryOperator) {
             // operator is 1:1 usable in jcr
             return StringUtils.defaultString(((SearchQueryOperator) expression).getOperator());
@@ -122,7 +144,7 @@ class QueryBuilder {
             return toStringJCRExpression((StringSearchQueryParameter) expression);
         }
         else if (expression instanceof DateSearchQueryParameter) {
-            return getDateJCRExpression((DateSearchQueryParameter) expression);
+            return toDateJCRExpression((DateSearchQueryParameter) expression);
         }
         return StringUtils.EMPTY;
     }
@@ -132,7 +154,7 @@ class QueryBuilder {
      * @param param
      * @return the expression as a string
      */
-    private String getDateJCRExpression(DateSearchQueryParameter param) {
+    protected String toDateJCRExpression(DateSearchQueryParameter param) {
         Date date = param.getValue();
         if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.TODAY)) {
             date = new Date();
@@ -149,26 +171,26 @@ class QueryBuilder {
         else if (param.getConstraint().equalsIgnoreCase(DateSearchQueryParameter.IS)) {
             buffer.append(" = ");
         }
-        
+
         buffer.append("TIMESTAMP '");
         buffer.append(DateFormatUtils.format(date, "yyyy-MM-dd"));
         buffer.append("T00:00:00.000");
-        
+
         TimeZone timezone = TimeZone.getDefault();
         int milis = Math.abs(timezone.getRawOffset());
-        if(milis == 0){
+        if (milis == 0) {
             buffer.append("Z");
         }
-        else{
-            if(timezone.getRawOffset() > 0){
+        else {
+            if (timezone.getRawOffset() > 0) {
                 buffer.append("+");
             }
-            else{
+            else {
                 buffer.append("-");
             }
 
             int hours = milis / (1000 * 60 * 60);
-            int minutes =  (milis - hours * 1000 * 60 * 60) / (1000 * 60);
+            int minutes = (milis - hours * 1000 * 60 * 60) / (1000 * 60);
             DecimalFormat format = new DecimalFormat("00");
             buffer.append(format.format(hours)).append(":").append(format.format(minutes));
         }
@@ -180,7 +202,7 @@ class QueryBuilder {
      * @param param
      * @return jcr search expression
      */
-    private String toStringJCRExpression(StringSearchQueryParameter param) {
+    protected String toStringJCRExpression(StringSearchQueryParameter param) {
         if (param.getConstraint().equals(StringSearchQueryParameter.CONTAINS)) {
             return "contains(" + param.getName() + ",'" + param.getValue() + "*')";
         }
@@ -204,9 +226,19 @@ class QueryBuilder {
         else if (param.getConstraint().equals(StringSearchQueryParameter.IS_NOT)) {
             return param.getName() + " <> '" + param.getValue() + "'";
         }
-        else{
+        else {
             return param.getName() + " " + param.getConstraint() + " '" + param.getValue() + "'";
         }
+    }
+
+
+    public boolean isUseJCROrderBy() {
+        return this.useJCROrderBy;
+    }
+
+
+    public void setUseJCROrderBy(boolean useJCROrderBy) {
+        this.useJCROrderBy = useJCROrderBy;
     }
 
 }
