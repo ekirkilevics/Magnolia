@@ -49,4 +49,9 @@ public interface ListModelIterator extends Iterator {
      */
     public boolean hasNextInGroup();
 
+    /**
+     * An id to identify the current row
+     */
+    public String getId();
+
 }
