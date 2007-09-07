@@ -20,6 +20,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
@@ -37,6 +38,7 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
@@ -729,307 +731,9 @@ public class Tree extends ControlImpl {
     public String getHtmlChildrenOfOneType(Content parentNode, String itemType) {
         StringBuffer html = new StringBuffer();
         try {
-            Iterator it;
-            if (itemType.equalsIgnoreCase(ITEM_TYPE_NODEDATA)) {
-                List nodeDatas = new ArrayList(parentNode.getNodeDataCollection());
-                // order them alphabetically
-                Collections.sort(nodeDatas, new Comparator() {
-
-                    public int compare(Object arg0, Object arg1) {
-                        return ((NodeData) arg0).getName().compareTo(((NodeData) arg1).getName());
-                    }
-                });
-                it = nodeDatas.iterator();
-            }
-            else {
-                Collection nodes = parentNode.getChildren(itemType);
-                Comparator comp = this.getSortComparator();
-                if(comp != null){
-                    List sortedNodes = new ArrayList(nodes);
-                    Collections.sort(sortedNodes, comp);
-                    nodes = sortedNodes;
-                }
-                it = nodes.iterator();
-            }
+            Iterator it = collectRenderedItems(parentNode, itemType);
             while (it.hasNext()) {
-                Object o = it.next();
-                Content c = null;
-                NodeData d = null;
-                String handle;
-                String name;
-                boolean hasSub = false;
-                boolean showSub = false;
-                boolean isActivated = false;
-                boolean permissionWrite = false;
-                boolean permissionWriteParent = false;
-                if (itemType.equals(ITEM_TYPE_NODEDATA)) {
-                    d = (NodeData) o;
-                    handle = d.getHandle();
-                    name = d.getName();
-
-                    if (d.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-                        permissionWrite = true;
-                    }
-                }
-                else {
-                    c = (Content) o;
-
-                    handle = c.getHandle();
-                    if (this.getColumns().size() == 0) {
-                        name = c.getName();
-                    }
-                    else {
-                        this.getColumns(0).setWebsiteNode(c);
-                        name = this.getColumns(0).getHtml();
-                    }
-                    if (c.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-                        permissionWrite = true;
-                    }
-                    if (c.getAncestor(c.getLevel() - 1).isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-                        permissionWriteParent = true;
-                    }
-                    isActivated = c.getMetaData().getIsActivated();
-                    for (int i = 0; i < this.getItemTypes().size(); i++) {
-                        String type = (String) this.getItemTypes().get(i);
-
-                        hasSub = hasSub(c, type);
-
-                        if (hasSub) {
-                            if (this.getPathOpen() != null
-                                && (this.getPathOpen().indexOf(handle + "/") == 0 || this.getPathOpen().equals(handle))) { //$NON-NLS-1$
-                                showSub = true;
-                            }
-                            break;
-                        }
-                    }
-                }
-
-                // get next if this node is not shown
-                if (!showNode(c, d, itemType)) {
-                    continue;
-                }
-
-                String icon = getIcon(c, d, itemType);
-
-                String idPre = this.javascriptTree + "_" + handle; //$NON-NLS-1$
-                String jsHighlightNode = this.javascriptTree + ".nodeHighlight(this,'" //$NON-NLS-1$
-                    + handle
-                    + "'," //$NON-NLS-1$
-                    + Boolean.toString(permissionWrite)
-                    + ");"; //$NON-NLS-1$
-                String jsResetNode = this.javascriptTree + ".nodeReset(this,'" + handle + "');"; //$NON-NLS-1$ //$NON-NLS-2$
-                String jsSelectNode = this.javascriptTree + ".selectNode('" //$NON-NLS-1$
-                    + handle
-                    + "'," //$NON-NLS-1$
-                    + Boolean.toString(permissionWrite)
-                    + ",'" //$NON-NLS-1$
-                    + itemType
-                    + "');"; //$NON-NLS-1$
-                String jsExpandNode;
-                if (this.getDrawShifter()) {
-                    jsExpandNode = this.javascriptTree + ".expandNode('" + handle + "');"; //$NON-NLS-1$ //$NON-NLS-2$
-                }
-                else {
-                    jsExpandNode = jsSelectNode;
-                }
-                String jsHighlightLine = this.javascriptTree + ".moveNodeHighlightLine('" + idPre + "_LineInter');"; //$NON-NLS-1$ //$NON-NLS-2$
-                String jsResetLine = this.javascriptTree + ".moveNodeResetLine('" + idPre + "_LineInter');"; //$NON-NLS-1$ //$NON-NLS-2$
-
-                // lineInter: line between nodes, to allow set cursor between nodes
-                // try to avoid blank images, setting js actions on divs should be ok
-                if (permissionWriteParent) {
-                    html.append("<div id=\"");
-                    html.append(idPre);
-                    html.append("_LineInter\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\"");
-                    html.append(jsHighlightLine);
-                    html.append("\" onmouseout=\"");
-                    html.append(jsResetLine);
-                    html.append("\" onmousedown=\"");
-                    html.append(this.javascriptTree);
-                    html.append(".pasteNode('");
-                    html.append(handle);
-                    html.append("'," + Tree.PASTETYPE_ABOVE + ",true);\" ></div>");
-                }
-                else {
-                    html.append("<div id=\"");
-                    html.append(idPre);
-                    html.append("_LineInter\" class=\"mgnlTreeLineInter mgnlLineDisabled\"></div>");
-                }
-
-                html.append("<div id=\"");
-                html.append(idPre);
-                html.append("_DivMain\" style=\"position:relative;top:0;left:0;width:100%;height:18px;\">");
-                html.append("&nbsp;"); // do not remove! //$NON-NLS-1$
-
-                html.append("<span id=\"");
-                html.append(idPre);
-                html.append("_Column0Outer\" class=\"mgnlTreeColumn ");
-                html.append(this.javascriptTree);
-                html.append("CssClassColumn0\" style=\"padding-left:");
-
-                html.append(getPaddingLeft(parentNode));
-                html.append("px;\">");
-                if (this.getDrawShifter()) {
-                    String shifter = StringUtils.EMPTY;
-                    if (hasSub) {
-                        if (showSub) {
-                            if (this.getShifterCollapse() != null) {
-                                shifter = this.getShifterCollapse();
-                            }
-                        }
-                        else {
-                            if (this.getShifterExpand() != null) {
-                                shifter = this.getShifterExpand();
-                            }
-                        }
-                    }
-                    else {
-                        if (this.getShifterEmpty() != null) {
-                            shifter = this.getShifterEmpty();
-                        }
-                    }
-                    if (StringUtils.isNotEmpty(shifter)) {
-                        html.append("<img id=\"");
-                        html.append(idPre);
-                        html.append("_Shifter\" onmousedown=\"");
-                        html.append(this.javascriptTree);
-                        html.append(".shifterDown('");
-                        html.append(handle);
-                        html.append("');\" onmouseout=\"");
-                        html.append(this.javascriptTree);
-                        html.append(".shifterOut();\" class=\"mgnlTreeShifter\" src=\"");
-                        html.append(this.getRequest().getContextPath());
-                        html.append(shifter);
-                        html.append("\" />");
-                    }
-                }
-                html.append("<span id=");
-                html.append(idPre);
-                html.append("_Name onmouseover=\"");
-                html.append(jsHighlightNode);
-                html.append("\" onmouseout=\"");
-                html.append(jsResetNode);
-                html.append("\" onmousedown=\"");
-                html.append(jsSelectNode);
-                html.append(this.javascriptTree);
-                html.append(".pasteNode('");
-                html.append(handle);
-                html.append("'," + Tree.PASTETYPE_SUB + ",");
-                html.append(permissionWrite);
-                html.append(");\">");
-                if (StringUtils.isNotEmpty(icon)) {
-                    html.append("<img id=\"");
-                    html.append(idPre);
-                    html.append("_Icon\" class=\"mgnlTreeIcon\" src=\"");
-                    html.append(this.getRequest().getContextPath());
-                    html.append(icon);
-                    html.append("\" onmousedown=\"");
-                    html.append(jsExpandNode);
-                    html.append("\"");
-                    if (this.getIconOndblclick() != null) {
-                        html.append(" ondblclick=\"");
-                        html.append(this.getIconOndblclick());
-                        html.append("\"");
-                    }
-                    html.append(" />"); //$NON-NLS-1$
-                }
-                String dblclick = StringUtils.EMPTY;
-                if (permissionWrite && StringUtils.isNotEmpty(this.getColumns(0).getHtmlEdit())) {
-                    dblclick = " ondblclick=\"" + this.javascriptTree + ".editNodeData(this,'" + handle + "',0);\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                }
-                html.append("<span class=\"mgnlTreeText\" id=\"");
-                html.append(idPre);
-                html.append("_Column0Main\"");
-                html.append(dblclick);
-                html.append(">");
-                html.append(name);
-                html.append("</span></span></span>"); //$NON-NLS-1$
-                html.append(new Hidden(idPre + "_PermissionWrite", Boolean.toString(permissionWrite), false).getHtml()); //$NON-NLS-1$
-                html.append(new Hidden(idPre + "_ItemType", itemType, false).getHtml()); //$NON-NLS-1$
-                html.append(new Hidden(idPre + "_IsActivated", Boolean.toString(isActivated), false).getHtml()); //$NON-NLS-1$
-                for (int i = 1; i < this.getColumns().size(); i++) {
-                    String str = StringUtils.EMPTY;
-                    TreeColumn tc = this.getColumns(i);
-                    if (!itemType.equals(ITEM_TYPE_NODEDATA)) {
-                        // content node ItemType.NT_CONTENTNODE and ItemType.NT_CONTENT
-                        if (!tc.getIsNodeDataType() && !tc.getIsNodeDataValue()) {
-                            tc.setWebsiteNode(c);
-                            tc.setId(handle);
-                            str = tc.getHtml();
-                        }
-                    }
-                    else {
-                        if (tc.getIsNodeDataType()) {
-                            str = NodeDataUtil.getTypeName(d);
-                        }
-                        else if (tc.getIsNodeDataValue()) {
-                            final String stringValue = NodeDataUtil.getValueString(d);
-                            str = StringEscapeUtils.escapeXml(stringValue);
-                        }
-                        if (StringUtils.isEmpty(str)) {
-                            str = TreeColumn.EMPTY;
-                        }
-                        tc.setName(name); // workaround, will be passed to js TreeColumn object
-                    }
-                    tc.setEvent("onmouseover", jsHighlightNode, true); //$NON-NLS-1$
-                    tc.setEvent("onmouseout", jsResetNode, true); //$NON-NLS-1$
-                    tc.setEvent("onmousedown", jsSelectNode, true); //$NON-NLS-1$
-                    html.append("<span class=\"mgnlTreeColumn ");
-                    html.append(this.javascriptTree);
-                    html.append("CssClassColumn");
-                    html.append(i);
-                    html.append("\"><span id=\"");
-                    html.append(idPre);
-                    html.append("_Column");
-                    html.append(i);
-                    html.append("Main\"");
-                    html.append(tc.getHtmlCssClass());
-                    html.append(tc.getHtmlEvents());
-                    if (permissionWrite && StringUtils.isNotEmpty(tc.getHtmlEdit())) {
-                        html.append(" ondblclick=\"");
-                        html.append(this.javascriptTree);
-                        html.append(".editNodeData(this,'");
-                        html.append(handle);
-                        html.append("',");
-                        html.append(i);
-                        html.append(");\"");
-                    }
-                    html.append(">");
-                    html.append(str);
-                    html.append("</span></span>");
-                }
-                html.append("</div>"); //$NON-NLS-1$
-                String display = "none"; //$NON-NLS-1$
-                if (showSub) {
-                    display = "block"; //$NON-NLS-1$
-                }
-                html.append("<div id=\"");
-                html.append(idPre);
-                html.append("_DivSub\" style=\"display:");
-                html.append(display);
-                html.append(";\">");
-                if (hasSub) {
-                    if (showSub) {
-                        String pathRemaining = this.getPathOpen().substring(this.getPathCurrent().length());
-                        if (pathRemaining.length() > 0) {
-                            // get rid of first slash (/people/franz -> people/franz)
-                            String slash = "/"; //$NON-NLS-1$
-                            if (this.getPathCurrent().equals("/")) { //$NON-NLS-1$
-                                // first slash already removed
-                                slash = StringUtils.EMPTY; // no slash needed between pathCurrent and nextChunk
-                            }
-                            else {
-                                pathRemaining = pathRemaining.substring(1);
-                            }
-                            String nextChunk = StringUtils.substringBefore(pathRemaining, "/"); //$NON-NLS-1$
-
-                            String pathNext = this.getPathCurrent() + slash + nextChunk;
-                            this.setPathCurrent(pathNext);
-                            html.append(this.getHtmlChildren());
-                        }
-                    }
-                }
-                html.append("</div>\n"); //$NON-NLS-1$
+                getHtmlOfSingleItem(html, parentNode, itemType, it.next());
             }
         }
         catch (RepositoryException e) {
@@ -1038,6 +742,320 @@ public class Tree extends ControlImpl {
             }
         }
         return html.toString();
+    }
+
+    protected void getHtmlOfSingleItem(StringBuffer html, Content parentNode, String itemType, Object item) throws RepositoryException {
+        Content c = null;
+        NodeData d = null;
+        String handle;
+        String name;
+        boolean hasSub = false;
+        boolean showSub = false;
+        boolean isActivated = false;
+        boolean permissionWrite = false;
+        boolean permissionWriteParent = false;
+        if (itemType.equals(ITEM_TYPE_NODEDATA)) {
+            d = (NodeData) item;
+            handle = d.getHandle();
+            name = d.getName();
+
+            if (d.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
+                permissionWrite = true;
+            }
+        }
+        else {
+            c = (Content) item;
+
+            handle = c.getHandle();
+            if (this.getColumns().size() == 0) {
+                name = c.getName();
+            }
+            else {
+                this.getColumns(0).setWebsiteNode(c);
+                name = this.getColumns(0).getHtml();
+            }
+            if (c.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
+                permissionWrite = true;
+            }
+            if (c.getAncestor(c.getLevel() - 1).isGranted(info.magnolia.cms.security.Permission.WRITE)) {
+                permissionWriteParent = true;
+            }
+            isActivated = c.getMetaData().getIsActivated();
+            for (int i = 0; i < this.getItemTypes().size(); i++) {
+                String type = (String) this.getItemTypes().get(i);
+
+                hasSub = hasSub(c, type);
+
+                if (hasSub) {
+                    if (this.getPathOpen() != null
+                        && (this.getPathOpen().indexOf(handle + "/") == 0 || this.getPathOpen().equals(handle))) { //$NON-NLS-1$
+                        showSub = true;
+                    }
+                    break;
+                }
+            }
+        }
+
+        // get next if this node is not shown
+        if (!showNode(c, d, itemType)) {
+            return;
+        }
+
+        String icon = getIcon(c, d, itemType);
+
+        String idPre = this.javascriptTree + "_" + handle; //$NON-NLS-1$
+        String jsHighlightNode = this.javascriptTree + ".nodeHighlight(this,'" //$NON-NLS-1$
+            + handle
+            + "'," //$NON-NLS-1$
+            + Boolean.toString(permissionWrite)
+            + ");"; //$NON-NLS-1$
+        String jsResetNode = this.javascriptTree + ".nodeReset(this,'" + handle + "');"; //$NON-NLS-1$ //$NON-NLS-2$
+        String jsSelectNode = this.javascriptTree + ".selectNode('" //$NON-NLS-1$
+            + handle
+            + "'," //$NON-NLS-1$
+            + Boolean.toString(permissionWrite)
+            + ",'" //$NON-NLS-1$
+            + itemType
+            + "');"; //$NON-NLS-1$
+        String jsExpandNode;
+        if (this.getDrawShifter()) {
+            jsExpandNode = this.javascriptTree + ".expandNode('" + handle + "');"; //$NON-NLS-1$ //$NON-NLS-2$
+        }
+        else {
+            jsExpandNode = jsSelectNode;
+        }
+        String jsHighlightLine = this.javascriptTree + ".moveNodeHighlightLine('" + idPre + "_LineInter');"; //$NON-NLS-1$ //$NON-NLS-2$
+        String jsResetLine = this.javascriptTree + ".moveNodeResetLine('" + idPre + "_LineInter');"; //$NON-NLS-1$ //$NON-NLS-2$
+
+        // lineInter: line between nodes, to allow set cursor between nodes
+        // try to avoid blank images, setting js actions on divs should be ok
+        if (permissionWriteParent) {
+            html.append("<div id=\"");
+            html.append(idPre);
+            html.append("_LineInter\" class=\"mgnlTreeLineInter mgnlLineEnabled\" onmouseover=\"");
+            html.append(jsHighlightLine);
+            html.append("\" onmouseout=\"");
+            html.append(jsResetLine);
+            html.append("\" onmousedown=\"");
+            html.append(this.javascriptTree);
+            html.append(".pasteNode('");
+            html.append(handle);
+            html.append("'," + Tree.PASTETYPE_ABOVE + ",true);\" ></div>");
+        }
+        else {
+            html.append("<div id=\"");
+            html.append(idPre);
+            html.append("_LineInter\" class=\"mgnlTreeLineInter mgnlLineDisabled\"></div>");
+        }
+
+        html.append("<div id=\"");
+        html.append(idPre);
+        html.append("_DivMain\" style=\"position:relative;top:0;left:0;width:100%;height:18px;\">");
+        html.append("&nbsp;"); // do not remove! //$NON-NLS-1$
+
+        html.append("<span id=\"");
+        html.append(idPre);
+        html.append("_Column0Outer\" class=\"mgnlTreeColumn ");
+        html.append(this.javascriptTree);
+        html.append("CssClassColumn0\" style=\"padding-left:");
+
+        html.append(getPaddingLeft(parentNode));
+        html.append("px;\">");
+        if (this.getDrawShifter()) {
+            String shifter = StringUtils.EMPTY;
+            if (hasSub) {
+                if (showSub) {
+                    if (this.getShifterCollapse() != null) {
+                        shifter = this.getShifterCollapse();
+                    }
+                }
+                else {
+                    if (this.getShifterExpand() != null) {
+                        shifter = this.getShifterExpand();
+                    }
+                }
+            }
+            else {
+                if (this.getShifterEmpty() != null) {
+                    shifter = this.getShifterEmpty();
+                }
+            }
+            if (StringUtils.isNotEmpty(shifter)) {
+                html.append("<img id=\"");
+                html.append(idPre);
+                html.append("_Shifter\" onmousedown=\"");
+                html.append(this.javascriptTree);
+                html.append(".shifterDown('");
+                html.append(handle);
+                html.append("');\" onmouseout=\"");
+                html.append(this.javascriptTree);
+                html.append(".shifterOut();\" class=\"mgnlTreeShifter\" src=\"");
+                html.append(this.getRequest().getContextPath());
+                html.append(shifter);
+                html.append("\" />");
+            }
+        }
+        html.append("<span id=");
+        html.append(idPre);
+        html.append("_Name onmouseover=\"");
+        html.append(jsHighlightNode);
+        html.append("\" onmouseout=\"");
+        html.append(jsResetNode);
+        html.append("\" onmousedown=\"");
+        html.append(jsSelectNode);
+        html.append(this.javascriptTree);
+        html.append(".pasteNode('");
+        html.append(handle);
+        html.append("'," + Tree.PASTETYPE_SUB + ",");
+        html.append(permissionWrite);
+        html.append(");\">");
+        if (StringUtils.isNotEmpty(icon)) {
+            html.append("<img id=\"");
+            html.append(idPre);
+            html.append("_Icon\" class=\"mgnlTreeIcon\" src=\"");
+            html.append(this.getRequest().getContextPath());
+            html.append(icon);
+            html.append("\" onmousedown=\"");
+            html.append(jsExpandNode);
+            html.append("\"");
+            if (this.getIconOndblclick() != null) {
+                html.append(" ondblclick=\"");
+                html.append(this.getIconOndblclick());
+                html.append("\"");
+            }
+            html.append(" />"); //$NON-NLS-1$
+        }
+        String dblclick = StringUtils.EMPTY;
+        if (permissionWrite && StringUtils.isNotEmpty(this.getColumns(0).getHtmlEdit())) {
+            dblclick = " ondblclick=\"" + this.javascriptTree + ".editNodeData(this,'" + handle + "',0);\""; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
+        html.append("<span class=\"mgnlTreeText\" id=\"");
+        html.append(idPre);
+        html.append("_Column0Main\"");
+        html.append(dblclick);
+        html.append(">");
+        html.append(name);
+        html.append("</span></span></span>"); //$NON-NLS-1$
+        html.append(new Hidden(idPre + "_PermissionWrite", Boolean.toString(permissionWrite), false).getHtml()); //$NON-NLS-1$
+        html.append(new Hidden(idPre + "_ItemType", itemType, false).getHtml()); //$NON-NLS-1$
+        html.append(new Hidden(idPre + "_IsActivated", Boolean.toString(isActivated), false).getHtml()); //$NON-NLS-1$
+
+        // Put your own stuff here. Good luck!
+        onGetHtmlOfSingleItem(html, parentNode, itemType, item , idPre);
+
+        for (int i = 1; i < this.getColumns().size(); i++) {
+            String str = StringUtils.EMPTY;
+            TreeColumn tc = this.getColumns(i);
+            if (!itemType.equals(ITEM_TYPE_NODEDATA)) {
+                // content node ItemType.NT_CONTENTNODE and ItemType.NT_CONTENT
+                if (!tc.getIsNodeDataType() && !tc.getIsNodeDataValue()) {
+                    tc.setWebsiteNode(c);
+                    tc.setId(handle);
+                    str = tc.getHtml();
+                }
+            }
+            else {
+                if (tc.getIsNodeDataType()) {
+                    str = NodeDataUtil.getTypeName(d);
+                }
+                else if (tc.getIsNodeDataValue()) {
+                    final String stringValue = NodeDataUtil.getValueString(d);
+                    str = StringEscapeUtils.escapeXml(stringValue);
+                }
+                if (StringUtils.isEmpty(str)) {
+                    str = TreeColumn.EMPTY;
+                }
+                tc.setName(name); // workaround, will be passed to js TreeColumn object
+            }
+            tc.setEvent("onmouseover", jsHighlightNode, true); //$NON-NLS-1$
+            tc.setEvent("onmouseout", jsResetNode, true); //$NON-NLS-1$
+            tc.setEvent("onmousedown", jsSelectNode, true); //$NON-NLS-1$
+            html.append("<span class=\"mgnlTreeColumn ");
+            html.append(this.javascriptTree);
+            html.append("CssClassColumn");
+            html.append(i);
+            html.append("\"><span id=\"");
+            html.append(idPre);
+            html.append("_Column");
+            html.append(i);
+            html.append("Main\"");
+            html.append(tc.getHtmlCssClass());
+            html.append(tc.getHtmlEvents());
+            if (permissionWrite && StringUtils.isNotEmpty(tc.getHtmlEdit())) {
+                html.append(" ondblclick=\"");
+                html.append(this.javascriptTree);
+                html.append(".editNodeData(this,'");
+                html.append(handle);
+                html.append("',");
+                html.append(i);
+                html.append(");\"");
+            }
+            html.append(">");
+            html.append(str);
+            html.append("</span></span>");
+        }
+        html.append("</div>"); //$NON-NLS-1$
+        String display = "none"; //$NON-NLS-1$
+        if (showSub) {
+            display = "block"; //$NON-NLS-1$
+        }
+        html.append("<div id=\"");
+        html.append(idPre);
+        html.append("_DivSub\" style=\"display:");
+        html.append(display);
+        html.append(";\">");
+        if (hasSub) {
+            if (showSub) {
+                String pathRemaining = this.getPathOpen().substring(this.getPathCurrent().length());
+                if (pathRemaining.length() > 0) {
+                    // get rid of first slash (/people/franz -> people/franz)
+                    String slash = "/"; //$NON-NLS-1$
+                    if (this.getPathCurrent().equals("/")) { //$NON-NLS-1$
+                        // first slash already removed
+                        slash = StringUtils.EMPTY; // no slash needed between pathCurrent and nextChunk
+                    }
+                    else {
+                        pathRemaining = pathRemaining.substring(1);
+                    }
+                    String nextChunk = StringUtils.substringBefore(pathRemaining, "/"); //$NON-NLS-1$
+
+                    String pathNext = this.getPathCurrent() + slash + nextChunk;
+                    this.setPathCurrent(pathNext);
+                    html.append(this.getHtmlChildren());
+                }
+            }
+        }
+        html.append("</div>\n"); //$NON-NLS-1$
+
+    }
+
+    protected void onGetHtmlOfSingleItem(StringBuffer html, Content parentNode, String itemType, Object item, String idPre) {
+    }
+
+    protected Iterator collectRenderedItems(Content parentNode, String itemType) {
+        Iterator it;
+        if (itemType.equalsIgnoreCase(ITEM_TYPE_NODEDATA)) {
+            List nodeDatas = new ArrayList(parentNode.getNodeDataCollection());
+            // order them alphabetically
+            Collections.sort(nodeDatas, new Comparator() {
+
+                public int compare(Object arg0, Object arg1) {
+                    return ((NodeData) arg0).getName().compareTo(((NodeData) arg1).getName());
+                }
+            });
+            it = nodeDatas.iterator();
+        }
+        else {
+            Collection nodes = parentNode.getChildren(itemType);
+            Comparator comp = this.getSortComparator();
+            if(comp != null){
+                List sortedNodes = new ArrayList(nodes);
+                Collections.sort(sortedNodes, comp);
+                nodes = sortedNodes;
+            }
+            it = nodes.iterator();
+        }
+        return it;
     }
 
     protected int getPaddingLeft(Content parentNode) throws RepositoryException {
