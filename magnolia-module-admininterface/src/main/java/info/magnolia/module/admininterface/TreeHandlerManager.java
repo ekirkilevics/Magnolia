@@ -6,7 +6,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.commands.CommandsManager;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;

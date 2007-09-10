@@ -12,7 +12,6 @@
  */
 package info.magnolia.module.admininterface.lists;
 
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBar;

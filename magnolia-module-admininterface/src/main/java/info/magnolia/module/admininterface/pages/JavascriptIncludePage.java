@@ -16,9 +16,6 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 import info.magnolia.module.admininterface.PageMVCHandler;
 
 import java.io.IOException;

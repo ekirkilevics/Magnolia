@@ -3,18 +3,17 @@
  */
 package info.magnolia.module.admininterface;
 
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.gui.dialog.UUIDDialogControl;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ContentUtil;
+
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+
+import org.apache.commons.lang.StringUtils;
 
 
 /**

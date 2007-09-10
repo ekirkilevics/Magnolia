@@ -14,7 +14,6 @@ package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.AlertUtil;

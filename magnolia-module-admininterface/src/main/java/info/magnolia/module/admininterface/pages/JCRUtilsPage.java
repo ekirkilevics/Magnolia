@@ -1,5 +1,14 @@
 package info.magnolia.module.admininterface.pages;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.search.Query;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.DumperUtil;
+import info.magnolia.cms.util.QueryUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.admininterface.TemplatedMVCHandler;
+
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -7,16 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.search.Query;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.DumperUtil;
-import info.magnolia.cms.util.QueryUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.admininterface.TemplatedMVCHandler;
 
 
 public class JCRUtilsPage extends TemplatedMVCHandler {
