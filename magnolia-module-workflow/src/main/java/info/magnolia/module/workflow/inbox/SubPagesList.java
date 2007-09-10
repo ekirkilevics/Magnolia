@@ -10,18 +10,8 @@
  */
 package info.magnolia.module.workflow.inbox;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.control.ContextMenu;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.Tree;
@@ -36,8 +26,17 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.lists.AbstractList;
 import info.magnolia.module.admininterface.lists.AdminListControlRenderer;
-import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.WorkflowUtil;
+
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.ListAttribute;

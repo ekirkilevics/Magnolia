@@ -15,7 +15,6 @@ package info.magnolia.module.workflow;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.workflow.jcr.JCRWorkItemStore;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.CancelItem;
 import openwfe.org.engine.workitem.InFlowWorkItem;
