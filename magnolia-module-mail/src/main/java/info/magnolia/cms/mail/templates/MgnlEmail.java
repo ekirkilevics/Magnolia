@@ -12,7 +12,6 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.activation.MimetypesFileTypeMap;
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
