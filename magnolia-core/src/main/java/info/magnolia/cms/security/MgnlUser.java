@@ -288,8 +288,12 @@ public class MgnlUser implements User, Serializable {
      * @return password string
      */
     public String getPassword() {
-        String pswd = this.getUserNode().getNodeData("pswd").getString().trim();
-        return new String(Base64.decodeBase64(pswd.getBytes()));
+        final String encodedPassword = this.getUserNode().getNodeData("pswd").getString().trim();
+        return decodePassword(encodedPassword);
+    }
+
+    protected String decodePassword(String encodedPassword) {
+        return new String(Base64.decodeBase64(encodedPassword.getBytes()));
     }
 
     /**
