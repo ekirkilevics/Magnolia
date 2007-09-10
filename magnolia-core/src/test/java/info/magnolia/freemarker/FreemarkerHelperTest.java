@@ -21,6 +21,7 @@ import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18NSupport;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -439,6 +440,20 @@ public class FreemarkerHelperTest extends TestCase {
         assertRendereredContentWithoutCheckingContext(expectedOutput, c, "test");
         verify(i18NSupportMock);
         verify(sysMockCtx);
+    }
+
+    public void testUserPropertiesAreAvailable() throws IOException, TemplateException {
+        tplLoader.putTemplate("test.ftl", "${user.name} is my name, is speak ${user.language}, I'm ${user.enabled?string('', 'not ')}enabled, and testProp has a value of ${user.testProp} !");
+
+        final User user = createStrictMock(User.class);
+        expect(user.getName()).andReturn("myName");
+        expect(user.getLanguage()).andReturn("fr");
+        expect(user.isEnabled()).andReturn(false);
+        expect(user.getProperty("testProp")).andReturn("testValue");
+
+        replay(user);
+        assertRendereredContent("myName is my name, is speak fr, I'm not enabled, and testProp has a value of testValue !", createSingleValueMap("user", user), "test.ftl");
+        verify(user);
     }
 
     private MockHierarchyManager prepareHM(MockContent page) {

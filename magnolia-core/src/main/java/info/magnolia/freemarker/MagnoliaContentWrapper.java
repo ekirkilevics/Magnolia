@@ -23,9 +23,10 @@ import freemarker.template.TemplateModelException;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.link.AbsolutePathTransformer;
+import info.magnolia.cms.link.CompleteUrlPathTransformer;
 import info.magnolia.cms.link.PathToLinkTransformer;
 import info.magnolia.cms.link.RelativePathTransformer;
-import info.magnolia.cms.link.CompleteUrlPathTransformer;
+import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -98,6 +99,9 @@ public class MagnoliaContentWrapper extends DefaultObjectWrapper {
             return new ContentModel((Content) obj, this);
         } else if (obj instanceof Calendar) { // this is needed ie. for MetaData dates
             return handleCalendar((Calendar) obj);
+        } else if (obj instanceof User) {
+            final User user = (User) obj;
+            return new UserModel(user, this);
         } else {
             return super.wrap(obj);
         }
