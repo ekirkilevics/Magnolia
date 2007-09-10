@@ -3,9 +3,6 @@ package info.magnolia.cms.cache;
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.cache.noop.NoOpCache;
 import info.magnolia.cms.util.ClassUtil;
-import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.voting.Voter;
 import info.magnolia.voting.Voting;
 
 import javax.servlet.http.HttpServletRequest;
