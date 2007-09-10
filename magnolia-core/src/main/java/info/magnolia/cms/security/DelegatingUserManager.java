@@ -41,6 +41,10 @@ public class DelegatingUserManager implements UserManager {
         return (User) delegateUntilSupported(op);
     }
 
+    public void changePassword(User user, String newPassword) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("Please use a specific instance of UserManager to do this.");
+    }
+
     public User getAnonymousUser() {
         return (User) delegateUntilSupported(new Op() {
             public Object delegate(UserManager um) {
@@ -94,7 +98,7 @@ public class DelegatingUserManager implements UserManager {
                 // try the next delegate
             }
         }
-        return null;
+        throw new UnsupportedOperationException("None of the delegate UserManager supports this operation.");
     }
 
     private Object delegateUntilNotNull(Op op) {

@@ -51,6 +51,10 @@ public class ExternalUserManager implements UserManager {
         throw new UnsupportedOperationException("not implemented yet");
     }
 
+    public void changePassword(User user, String newPassword) throws UnsupportedOperationException {
+        throw new UnsupportedOperationException("not implemented yet");
+    }
+
     /**
      * SystemUserManager does this.
      */

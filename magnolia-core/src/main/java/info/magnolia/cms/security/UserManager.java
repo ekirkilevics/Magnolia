@@ -81,4 +81,6 @@ public interface UserManager {
      */
     public User createUser(String name, String pw) throws UnsupportedOperationException;
 
+    public void changePassword(User user, String newPassword) throws UnsupportedOperationException;
+
 }
