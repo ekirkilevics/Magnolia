@@ -12,9 +12,6 @@ package info.magnolia.cms.security;
 
 import info.magnolia.context.MgnlContext;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author vsteller
  * @version $Id$

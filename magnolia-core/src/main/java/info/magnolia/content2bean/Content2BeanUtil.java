@@ -11,15 +11,12 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.i18n.LanguageDefinition;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
-import java.util.Collection;
 import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
 import java.util.LinkedHashMap;
+import java.util.Map;
 
 import javax.jcr.RepositoryException;
 

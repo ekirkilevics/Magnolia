@@ -1,12 +1,11 @@
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.module.DependencyDefinition;
-import info.magnolia.cms.module.ModuleDefinition;
 import info.magnolia.cms.util.FactoryUtil;
-import junit.framework.TestCase;
 
 import java.io.File;
 import java.net.URL;
+
+import junit.framework.TestCase;
 
 /**
  * @author fgiust

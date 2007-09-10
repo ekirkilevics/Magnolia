@@ -14,17 +14,15 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.Collection;
-import java.util.ArrayList;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;

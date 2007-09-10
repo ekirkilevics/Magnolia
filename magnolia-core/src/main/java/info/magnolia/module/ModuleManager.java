@@ -13,13 +13,13 @@
 package info.magnolia.module;
 
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.module.delta.DeltaType;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 
-import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
 
 /**
  * ModuleManager is responsible for the lifecycle of modules.

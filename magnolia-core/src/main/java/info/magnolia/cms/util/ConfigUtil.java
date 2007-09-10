@@ -12,10 +12,7 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
 
 import java.io.File;
 import java.io.FileInputStream;

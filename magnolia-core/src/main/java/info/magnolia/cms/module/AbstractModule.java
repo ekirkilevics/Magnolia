@@ -13,7 +13,6 @@
 package info.magnolia.cms.module;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
@@ -24,7 +23,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
 
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.jdom.JDOMException;

@@ -10,12 +10,8 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.ServletDefinition;
 import info.magnolia.module.InstallContext;
-import org.jdom.JDOMException;
-
-import java.io.IOException;
 
 
 /**

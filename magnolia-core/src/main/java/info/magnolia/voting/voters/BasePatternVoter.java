@@ -10,7 +10,6 @@
  */
 package info.magnolia.voting.voters;
 
-import info.magnolia.cms.core.Path;
 import info.magnolia.context.MgnlContext;
 
 import javax.servlet.http.HttpServletRequest;

@@ -15,9 +15,6 @@ package info.magnolia.cms.license;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.io.InputStream;
-import java.io.Writer;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;

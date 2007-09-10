@@ -11,7 +11,6 @@
 package info.magnolia.content2bean;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 
@@ -19,8 +18,6 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
-
-import junit.framework.TestCase;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

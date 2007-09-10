@@ -12,12 +12,10 @@
  */
 package info.magnolia.cms.filters;
 
-import static org.easymock.EasyMock.*;
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
+import static org.easymock.EasyMock.createMock;
+import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 import info.magnolia.test.MgnlTestCase;
-import info.magnolia.voting.voters.URIStartsWithVoter;
 
 import java.io.IOException;
 

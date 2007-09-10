@@ -6,14 +6,12 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.content2bean.impl.Content2BeanProcessorImpl;
 
 import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.chain.Chain;
 import org.apache.commons.chain.Command;
-import org.apache.commons.chain.impl.CatalogBase;
 import org.apache.commons.chain.impl.ChainBase;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

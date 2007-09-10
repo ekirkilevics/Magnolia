@@ -15,7 +15,6 @@ package info.magnolia.commands;
 import info.magnolia.cms.util.AlertUtil;
 
 import java.util.Collections;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.beanutils.BeanUtils;

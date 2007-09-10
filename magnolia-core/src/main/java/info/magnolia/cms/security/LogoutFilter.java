@@ -12,24 +12,18 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.filters.MagnoliaFilterChain;
 import info.magnolia.cms.filters.OncePerRequestAbstractMagnoliaFilter;
-import info.magnolia.context.AnonymousContext;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
 
 import java.io.IOException;
-import java.util.Iterator;
 
-import javax.jcr.Session;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

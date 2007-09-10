@@ -34,7 +34,6 @@ import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,7 +47,6 @@ import javax.jcr.observation.EventListener;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.lang.StringUtils;
-import org.apache.jackrabbit.core.config.RepositoryConfig;
 
 
 /**

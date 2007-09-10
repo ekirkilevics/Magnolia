@@ -10,13 +10,12 @@
  */
 package info.magnolia.module;
 
+import info.magnolia.module.model.ModuleDefinition;
+
 import java.util.HashMap;
 import java.util.Map;
 
-import info.magnolia.module.model.ModuleDefinition;
-
 import org.apache.commons.collections.MapUtils;
-import org.apache.commons.collections.map.LazyMap;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

@@ -2,8 +2,6 @@ package info.magnolia.cms.module;
 
 import info.magnolia.api.MgnlException;
 
-import org.apache.commons.lang.exception.NestableException;
-
 
 public class InitializationException extends MgnlException {
 
