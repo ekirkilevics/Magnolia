@@ -13,7 +13,6 @@
 package info.magnolia.module.exchangesimple.setup;
 
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.BootstrapSingleResource;
