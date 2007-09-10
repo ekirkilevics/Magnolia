@@ -14,14 +14,20 @@ package info.magnolia.jaas.sp.jcr;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.security.auth.*;
+import info.magnolia.cms.security.auth.ACL;
+import info.magnolia.cms.security.auth.GroupList;
+import info.magnolia.cms.security.auth.PrincipalCollection;
+import info.magnolia.cms.security.auth.RoleList;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
-import info.magnolia.jaas.principal.*;
+import info.magnolia.jaas.principal.ACLImpl;
+import info.magnolia.jaas.principal.GroupListImpl;
+import info.magnolia.jaas.principal.PrincipalCollectionImpl;
+import info.magnolia.jaas.principal.RoleListImpl;
 
 import java.security.Principal;
 import java.util.Iterator;
@@ -29,7 +35,6 @@ import java.util.Iterator;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.security.auth.login.LoginException;
-import javax.security.auth.login.FailedLoginException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
