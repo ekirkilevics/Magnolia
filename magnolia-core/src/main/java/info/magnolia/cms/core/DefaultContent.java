@@ -826,15 +826,12 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public boolean isGranted(long permissions) {
         try {
-            Access.isGranted(this.accessManager, Path.getAbsolutePath(node.getPath()), permissions);
-            return true;
+            return accessManager.isGranted(Path.getAbsolutePath(node.getPath()), permissions);
         }
         catch (RepositoryException re) {
-            if (log.isDebugEnabled()) {
-                log.debug(this.getHandle() + " says: no access"); //$NON-NLS-1$
-            }
+            log.error("Could not get node path: " + re, re);
+            return false;
         }
-        return false;
     }
 
     public void delete() throws RepositoryException {
