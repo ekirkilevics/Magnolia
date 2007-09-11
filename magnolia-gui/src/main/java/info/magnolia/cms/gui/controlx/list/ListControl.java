@@ -114,7 +114,7 @@ public class ListControl extends AbstractControl {
         return this.getIterator().getValueObject();
     }
 
-    public Object getIteratorId() {
+    public String getIteratorId() {
         return this.getIterator().getId();
     }
 
