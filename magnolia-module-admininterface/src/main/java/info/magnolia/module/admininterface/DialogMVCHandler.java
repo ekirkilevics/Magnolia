@@ -16,6 +16,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.gui.dialog.DialogFactory;
@@ -106,6 +107,10 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
     private SaveHandler saveHandler;
 
+    private String jsExecutedAfterSaving;
+
+    private String itemType = ItemType.CONTENTNODE.getSystemName();
+
     /**
      * Initialize the used parameters: path, nodeCollectionName, nodeName, ..
      * @param request
@@ -127,6 +132,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             hm = MgnlContext.getHierarchyManager(repository);
         }
         msgs = MessagesManager.getMessages();
+
     }
 
     /*
@@ -272,6 +278,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         saveHandler.setNodeName(form.getParameter("mgnlNode")); //$NON-NLS-1$
         saveHandler.setParagraph(form.getParameter("mgnlParagraph")); //$NON-NLS-1$
         saveHandler.setRepository(form.getParameter("mgnlRepository")); //$NON-NLS-1$
+        saveHandler.setCreationItemType(new ItemType(getItemType()));
 
         if (this.saveHandler instanceof DialogAwareSaveHandler) {
             ((DialogAwareSaveHandler) saveHandler).setDialog(this.getDialog());
@@ -351,7 +358,8 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             out.println("<html>"); //$NON-NLS-1$
             out.println(new Sources(this.getRequest().getContextPath()).getHtmlJs());
             out.println("<script type=\"text/javascript\">"); //$NON-NLS-1$
-            out.println("mgnlDialogReloadOpener();"); //$NON-NLS-1$
+            out.println("var path = '" + this.path + "'");
+            out.println(StringUtils.defaultIfEmpty(getJsExecutedAfterSaving(), "mgnlDialogReloadOpener();")); //$NON-NLS-1$
             out.println("window.close();"); //$NON-NLS-1$
             out.println("</script></html>"); //$NON-NLS-1$
         }
@@ -406,5 +414,25 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
             configureDialog(this.dialog);
         }
         return this.dialog;
+    }
+
+
+    public String getJsExecutedAfterSaving() {
+        return this.jsExecutedAfterSaving;
+    }
+
+
+    public void setJsExecutedAfterSaving(String jsExecutedAfterSaving) {
+        this.jsExecutedAfterSaving = jsExecutedAfterSaving;
+    }
+
+
+    public String getItemType() {
+        return this.itemType;
+    }
+
+
+    public void setItemType(String itemType) {
+        this.itemType = itemType;
     }
 }

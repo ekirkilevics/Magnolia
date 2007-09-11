@@ -14,6 +14,7 @@ package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
 import java.lang.reflect.Constructor;
@@ -39,6 +40,10 @@ public class ConfiguredDialog extends DialogMVCHandler {
     public ConfiguredDialog(String name, HttpServletRequest request, HttpServletResponse response, Content configNode) {
         super(name, request, response);
         this.configNode = configNode;
+
+        // TODO content2bean should be used
+        this.setItemType(NodeDataUtil.getString(configNode, "itemType", this.getItemType()));
+        this.setJsExecutedAfterSaving(NodeDataUtil.getString(configNode, "jsExecutedAfterSaving", this.getJsExecutedAfterSaving()));
     }
 
     /**
