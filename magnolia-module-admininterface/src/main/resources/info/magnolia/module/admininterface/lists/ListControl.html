@@ -7,6 +7,9 @@
 <script type="text/javascript">
     var ${this.name};
 
+    // must be ready before the list is loaded
+    var ${this.name}Items = new Object;
+
     MgnlDHTMLUtil.addOnLoad(function(){
         ${this.name} = new ${renderer.javaScriptClass}('${this.name}', document.mgnlForm);
         // add the columns
@@ -17,6 +20,8 @@
                 ${column_index} // index of this column
             );
         [/#list]
+        // set the items now
+        ${this.name}.items = ${this.name}Items;
 
         ${this.name}.resize();
     });

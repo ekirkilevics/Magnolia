@@ -21,9 +21,6 @@ classDef("mgnl.controls.List",
         // the row of the list
         this.selected = -1;
 
-        // the id used by the list model
-        this.selectedId = null;
-
         this.mainDiv = $(name + "Div");
         this.sortGroupDiv = $(name + "SortGroupDiv");
         this.contentDiv = $(name + "ContentDiv");
@@ -32,6 +29,7 @@ classDef("mgnl.controls.List",
 
         this.columns = new Array();
 
+        this.items = new Object();
     },
 
     // members
@@ -53,7 +51,6 @@ classDef("mgnl.controls.List",
         select: function(index, id){
             this.unselect();
             this.selected = index;
-            this.selectedId = id;
 
             var row = $(this.name + 'Row' + this.selected);
             row.className = this.css.row.selected;
@@ -70,11 +67,14 @@ classDef("mgnl.controls.List",
             var row = $(this.name + 'Row' + this.selected);
             row.className= this.css.row.normal;
             this.selected = -1;
-            this.selectedId = null;
         },
 
         show: function(){
-            alert(this.selectedId);
+            alert(this.getSelectedItem().id);
+        },
+
+        getSelectedItem: function(){
+            return this.items[this.selected];
         },
 
         startResizeColumn: function(index){

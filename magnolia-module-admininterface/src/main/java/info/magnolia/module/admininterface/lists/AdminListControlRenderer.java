@@ -46,8 +46,7 @@ public class AdminListControlRenderer extends ListControlRenderer {
      * Sets the selected id in the js object
      */
     public String onSelect(ListControl list, Integer index) {
-        String id = list.getIterator().getId();
-        return list.getName() + ".select(" + index + ", '" + toViewId(id) + "');";
+        return list.getName() + ".select(" + index + ");";
     }
 
     /**
@@ -64,12 +63,13 @@ public class AdminListControlRenderer extends ListControlRenderer {
         return list.getName() + ".show();";
     }
 
-    // will do that after the commit
-    /*
-    public String getJavascriptObject(ListControl list, Integer index){
-        return toJavascriptObject(list, list.getIteratorValueObject());
+    public String getJavaScriptObject(ListControl list, Integer index){
+        return "{" + buildJavaScriptObject(list, list.getIteratorValueObject()) + "}";
     }
-    */
+
+    protected String buildJavaScriptObject(ListControl list, Object value) {
+        return "id: '" + toViewId(list.getIteratorId()) + "'";
+    }
 
     public String toViewId(String id) {
         return StringEscapeUtils.escapeJavaScript(id);

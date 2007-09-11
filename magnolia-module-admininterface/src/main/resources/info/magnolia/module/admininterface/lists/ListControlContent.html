@@ -45,8 +45,9 @@
     </div>
     <script>
         document.getElementById('${this.name}Row${item_index}').onSelect = function(){
-            ${renderer.onSelect(this, item_index)}
+            ${renderer.onSelect(this, item_index)};
         }
+        ${this.name}Items[${item_index}] = ${renderer.getJavaScriptObject(this, item_index)};
     </script>
     [/#list]
 </div>
