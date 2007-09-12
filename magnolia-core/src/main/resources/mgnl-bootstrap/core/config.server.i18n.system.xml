@@ -344,7 +344,7 @@
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="cz">
+    <sv:node sv:name="cs">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -358,7 +358,7 @@
         <sv:value/>
       </sv:property>
       <sv:property sv:name="language" sv:type="String">
-        <sv:value>cz</sv:value>
+        <sv:value>cs</sv:value>
       </sv:property>
       <sv:property sv:name="enabled" sv:type="Boolean">
         <sv:value>true</sv:value>
