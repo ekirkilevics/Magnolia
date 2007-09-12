@@ -78,7 +78,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                     "/server/filters/uriSecurity/clientCallback", "realmName", "Magnolia"),
             new ArrayDelegateTask("defaultBaseUrl property",
                     new NewPropertyTask("defaultBaseUrl property", "Adds the new defaultBaseUrl property with a default value.",
-                            "config", "/server", "defaultBaseUrl", "http://localhost:8080/magnolia"),
+                            "config", "/server", "defaultBaseUrl", "http://localhost:8080/magnolia/"),
                     new WarnTask("defaultBaseUrl property", "Please set the config:/server/defaultBaseUrl property to a full URL to be used when generating absolute URLs for external systems.")
             ),
 
