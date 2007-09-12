@@ -171,14 +171,7 @@ public class CacheImpl implements Cache {
     public void start(CacheConfig config) {
         this.config = config;
 
-        // TODO this should be more flexible in cases you want to handle events on other repositories
-        // register to observe on any changes if configured
-        ObservationUtil.registerDefferedChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
-
-            public void onEvent(EventIterator events) {
-                handleChangeEvents(events);
-            }
-        }, 5000, 30000);
+        registerObservation();
 
         File cacheDir = getCacheDirectory();
 
@@ -191,6 +184,20 @@ public class CacheImpl implements Cache {
         else {
             updateInMemoryCache(cacheDir);
         }
+    }
+
+    /**
+     * override this to register different workspaces 
+     * */
+    protected void registerObservation() {
+        // TODO this should be more flexible in cases you want to handle events on other repositories
+        // register to observe on any changes if configured
+        ObservationUtil.registerDefferedChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
+
+            public void onEvent(EventIterator events) {
+                handleChangeEvents(events);
+            }
+        }, 5000, 30000);
     }
 
     /**
