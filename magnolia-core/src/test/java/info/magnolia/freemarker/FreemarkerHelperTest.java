@@ -301,7 +301,7 @@ public class FreemarkerHelperTest extends TestCase {
 
     public void testContextPathIsAddedWithWebContext() throws IOException, TemplateException {
         tplLoader.putTemplate("pouet", ":${contextPath}:");
-        final WebContext context = createMock(WebContext.class);
+        final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.US);
 
         expect(context.getContextPath()).andReturn("tralala");
@@ -329,6 +329,34 @@ public class FreemarkerHelperTest extends TestCase {
         }
 
         verify(context);
+    }
+
+    public void testContextPathIsAlsoAvailableThroughMagnoliaContext() throws IOException, TemplateException {
+        tplLoader.putTemplate("pouet", ":${ctx.contextPath}:");
+        final WebContext context = createStrictMock(WebContext.class);
+        expect(context.getLocale()).andReturn(Locale.US);
+
+        expect(context.getContextPath()).andReturn("tralala"); // called when preparing the freemarker data model
+        expect(context.getServletContext()).andReturn(null);
+        expect(context.getContextPath()).andReturn("tralala"); // actual call from the template
+        replay(context);
+        MgnlContext.setInstance(context);
+        assertRendereredContentWithoutCheckingContext(":tralala:", new HashMap(), "pouet");
+        verify(context);
+    }
+
+    public void testMagnoliaContextIsExposed() throws IOException, TemplateException {
+        tplLoader.putTemplate("pouet", ":${ctx.user.name}:");
+        final Context context = createStrictMock(Context.class);
+        final User user = createStrictMock(User.class);
+        expect(context.getLocale()).andReturn(Locale.US);
+
+        expect(context.getUser()).andReturn(user);
+        expect(user.getName()).andReturn("Hiro Nakamura");
+        replay(context, user);
+        MgnlContext.setInstance(context);
+        assertRendereredContentWithoutCheckingContext(":Hiro Nakamura:", new HashMap(), "pouet");
+        verify(context, user);
     }
 
     public void testEvalCanEvaluateDynamicNodeProperties() throws IOException, TemplateException {

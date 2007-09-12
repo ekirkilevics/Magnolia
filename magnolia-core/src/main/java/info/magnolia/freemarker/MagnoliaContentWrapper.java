@@ -12,6 +12,7 @@
  */
 package info.magnolia.freemarker;
 
+import freemarker.ext.beans.BeanModel;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.SimpleDate;
 import freemarker.template.SimpleNumber;
@@ -28,6 +29,7 @@ import info.magnolia.cms.link.PathToLinkTransformer;
 import info.magnolia.cms.link.RelativePathTransformer;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.LinkUtil;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
@@ -102,6 +104,9 @@ public class MagnoliaContentWrapper extends DefaultObjectWrapper {
         } else if (obj instanceof User) {
             final User user = (User) obj;
             return new UserModel(user, this);
+        } else if (obj instanceof Context) {
+            // by default, Context would be considering like a map and we would not be able to use its specific methods.
+            return new BeanModel(obj, this);
         } else {
             return super.wrap(obj);
         }

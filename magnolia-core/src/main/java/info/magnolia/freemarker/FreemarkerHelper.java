@@ -88,10 +88,14 @@ public class FreemarkerHelper {
 
     protected void addDefaultData(Map data) {
         final WebContext webCtx = getWebContextOrNull();
-
         if (webCtx != null) {
+            // deprecated
             data.put("contextPath", webCtx.getContextPath());
         }
+        if (MgnlContext.hasInstance()) {
+            data.put("ctx", MgnlContext.getInstance());
+        }
+
         data.put("defaultBaseUrl", Server.getDefaultBaseUrl());
 
         // TODO : this is currently still in FreemarkerUtil. If we add it here,
