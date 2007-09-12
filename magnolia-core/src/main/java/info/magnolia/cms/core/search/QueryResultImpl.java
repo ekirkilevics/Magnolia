@@ -62,6 +62,14 @@ public class QueryResultImpl implements QueryResult {
         this.accessManager = accessManager;
     }
 
+    public AccessManager getAccessManager() {
+        return accessManager;
+    }
+
+    public javax.jcr.query.QueryResult getJcrResult() {
+        return result;
+    }
+
     /**
      * Build required result objects
      */
