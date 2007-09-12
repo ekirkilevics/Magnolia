@@ -13,11 +13,10 @@
 package info.magnolia.module.templating.paragraphs;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.cms.util.LinkUtil;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.Collections;
 import java.util.Map;
 
@@ -51,19 +50,15 @@ public abstract class ErrorMessagesAwareAction {
         return errorMessages;
     }
 
-    public static String addErrorMessagesToUrl(String uri, Map errorMessages) throws UnsupportedEncodingException {
+    public static String addErrorMessagesToUrl(String uri, Map errorMessages) {
         final StringBuffer sb = new StringBuffer(uri);
         if (errorMessages !=null && !errorMessages.isEmpty()) {
-            if (uri.indexOf('?') < 0) {
-                sb.append('?');
-            } else {
-                sb.append('&');
-            }
-            sb.append("errorMessages=");
             final JSONObject json = new JSONObject(errorMessages);
             final String jsonStr = json.toString();
-            sb.append(URLEncoder.encode(jsonStr, "UTF-8"));
+
+            LinkUtil.addParameter(sb, "errorMessages", jsonStr);
         }
         return sb.toString();
     }
+
 }

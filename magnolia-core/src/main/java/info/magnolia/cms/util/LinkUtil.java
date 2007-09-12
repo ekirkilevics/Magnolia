@@ -23,6 +23,8 @@ import info.magnolia.cms.link.UUIDLink;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.net.URLEncoder;
+import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -198,4 +200,22 @@ public final class LinkUtil {
         return link.getUUID();
     }
 
+    /**
+     * Appends a parameter to the given url, using ?, or & if there are already
+     * parameters in the given url. <strong>Warning:</strong> It does not
+     * <strong>replace</strong> an existing parameter with the same name.
+     */
+    public static void addParameter(StringBuffer uri, String name, String value) {
+        if (uri.indexOf("?") < 0) {
+            uri.append('?');
+        } else {
+            uri.append('&');
+        }
+        uri.append(name).append('=');
+        try {
+            uri.append(URLEncoder.encode(value, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("It seems your system does not support UTF-8 !?", e);
+        }
+    }
 }
