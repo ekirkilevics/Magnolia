@@ -28,8 +28,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class MgnlRoleManager implements RoleManager {
-
-    public static Logger log = LoggerFactory.getLogger(MgnlRoleManager.class);
+    private static final Logger log = LoggerFactory.getLogger(MgnlRoleManager.class);
 
     /**
      * Do not instantiate it!
@@ -60,7 +59,7 @@ public class MgnlRoleManager implements RoleManager {
     }
 
     /**
-     * return the role HierarchyManager
+     * return the role HierarchyManager (through the current context)
      */
     protected HierarchyManager getHierarchyManager() {
         return MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);

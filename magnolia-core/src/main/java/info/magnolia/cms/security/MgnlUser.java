@@ -53,7 +53,7 @@ public class MgnlUser implements User, Serializable {
             new ObjectStreamField("uuid", String.class)
     };
 
-    public static Logger log = LoggerFactory.getLogger(MgnlUser.class);
+    private static final Logger log = LoggerFactory.getLogger(MgnlUser.class);
 
     /**
      * Under this subnodes the assigned roles are saved
@@ -86,7 +86,7 @@ public class MgnlUser implements User, Serializable {
      * */
     private void reInitialize() {
         try {
-            HierarchyManager usersHm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USERS);
+            HierarchyManager usersHm = getSystemHierarchyManager(ContentRepository.USERS);
             init(usersHm.getContentByUUID(uuid));
         } catch (RepositoryException re) {
             log.error("Failed to load MgnlUser from persistent storage", re);
@@ -161,10 +161,10 @@ public class MgnlUser implements User, Serializable {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
+                hm = getSystemHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = getSystemHierarchyManager(ContentRepository.USER_GROUPS);
             }
 
             Content node = this.getUserNode().getContent(nodeName);
@@ -203,10 +203,10 @@ public class MgnlUser implements User, Serializable {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
+                hm = getContextHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = getContextHierarchyManager(ContentRepository.USER_GROUPS);
             }
             Content node = this.getUserNode().getContent(nodeName);
 
@@ -243,10 +243,10 @@ public class MgnlUser implements User, Serializable {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_ROLES);
+                hm = getContextHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = getContextHierarchyManager(ContentRepository.USER_GROUPS);
             }
 
             if (!this.hasAny(name, nodeName)) {
@@ -258,7 +258,7 @@ public class MgnlUser implements User, Serializable {
                 try {
                     String value = hm.getContent("/" + name).getUUID(); // assuming that there is a flat hierarchy
                     // used only to get the unique label
-                    HierarchyManager usersHM = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+                    HierarchyManager usersHM = getSystemHierarchyManager(ContentRepository.USERS);
                     String newName = Path.getUniqueLabel(usersHM, node.getHandle(), "0");
                     node.createNodeData(newName).setValue(value);
                     this.getUserNode().save();
@@ -375,10 +375,8 @@ public class MgnlUser implements User, Serializable {
             NodeData nd = (NodeData) it.next();
             String uuid = nd.getString();
             try {
-                Content targetNode = MgnlContext
-                    .getSystemContext()
-                    .getHierarchyManager(repositoryName)
-                    .getContentByUUID(uuid);
+                final HierarchyManager hierarchyManager = getSystemHierarchyManager(repositoryName);
+                Content targetNode = hierarchyManager.getContentByUUID(uuid);
                 set.add(targetNode.getName());
                 if (isDeep) {
                     this.collectPropertyNames(targetNode, repositoryName, set, true);
@@ -416,6 +414,14 @@ public class MgnlUser implements User, Serializable {
             reInitialize();
         }
         return userNode;
+    }
+
+    protected HierarchyManager getContextHierarchyManager(String repositoryId) {
+        return MgnlContext.getHierarchyManager(repositoryId);
+    }
+
+    protected HierarchyManager getSystemHierarchyManager(String repositoryName) {
+        return MgnlContext.getSystemContext().getHierarchyManager(repositoryName);
     }
 
 

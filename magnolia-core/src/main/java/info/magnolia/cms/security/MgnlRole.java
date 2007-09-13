@@ -17,6 +17,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -34,8 +35,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class MgnlRole implements Role {
-
-    public static Logger log = LoggerFactory.getLogger(MgnlRole.class);
+    private static final Logger log = LoggerFactory.getLogger(MgnlRole.class);
 
     /**
      * Add or remove any permission
@@ -63,7 +63,7 @@ public class MgnlRole implements Role {
         try {
             Content aclNode = getAclNode(repository);
             if (!this.existsPermission(aclNode, path, permission)) {
-                HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
+                HierarchyManager hm = getSystemHierarchyManager(ContentRepository.USER_ROLES);
                 String nodename = Path.getUniqueLabel(hm, aclNode.getHandle(), "0");
                 Content node = aclNode.createContent(nodename, ItemType.CONTENTNODE);
                 node.createNodeData("path").setValue(path);
@@ -139,4 +139,14 @@ public class MgnlRole implements Role {
         }
         return false;
     }
+
+    protected HierarchyManager getContextHierarchyManager(String repositoryId) {
+        return MgnlContext.getHierarchyManager(repositoryId);
+    }
+
+    protected HierarchyManager getSystemHierarchyManager(String repositoryId) {
+        return MgnlContext.getSystemContext().getHierarchyManager(repositoryId);
+    }
+
+
 }

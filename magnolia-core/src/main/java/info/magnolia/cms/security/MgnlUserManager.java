@@ -130,7 +130,7 @@ public class MgnlUserManager implements UserManager {
 
         String statement = "select * from " + ItemType.USER + " " + where ;
 
-        QueryManager qm = MgnlContext.getSystemContext().getQueryManager(ContentRepository.USERS);
+        QueryManager qm = getHierarchyManager().getQueryManager();
         Query query = qm.createQuery(statement, Query.SQL);
         Collection users = query.execute().getContent(ItemType.USER.getSystemName());
         if(users.size() == 1){
@@ -224,10 +224,10 @@ public class MgnlUserManager implements UserManager {
     }
 
     /**
-     * return the user HierarchyManager
+     * return the user HierarchyManager (through the system context)
      */
     protected HierarchyManager getHierarchyManager() {
-        return ContentRepository.getHierarchyManager(ContentRepository.USERS);
+        return MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USERS);
     }
 
 }

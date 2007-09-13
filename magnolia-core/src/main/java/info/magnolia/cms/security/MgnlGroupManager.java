@@ -30,8 +30,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles $Id$
  */
 public class MgnlGroupManager implements GroupManager {
-
-    public static Logger log = LoggerFactory.getLogger(MgnlRoleManager.class);
+    private static final Logger log = LoggerFactory.getLogger(MgnlGroupManager.class);
 
     /**
      * Create a group
@@ -87,7 +86,7 @@ public class MgnlGroupManager implements GroupManager {
     }
 
     /**
-     * return the role HierarchyManager
+     * return the groups HierarchyManager (through the current context)
      */
     protected HierarchyManager getHierarchyManager() {
         return MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
