@@ -12,13 +12,22 @@
  */
 package info.magnolia.cms.util;
 
-/**
- * @deprecated Please use CreationDateComparator
- * @see info.magnolia.cms.util.CreationDateComparator
- *
- * @author Marcel Salathe
- * @version 1.1
- */
-public class DateComparator extends CreationDateComparator {
+import info.magnolia.cms.core.Content;
 
+import java.util.Comparator;
+
+/**
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
+ */
+public abstract class AbstractContentComparator implements Comparator {
+
+    public int compare(Object o1, Object o2) throws ClassCastException {
+        final Content c1 = ((Content) o1);
+        final Content c2 = ((Content) o2);
+        return compare(c1, c2);
+    }
+
+    protected abstract int compare(Content c1, Content c2);
 }

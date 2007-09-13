@@ -12,13 +12,21 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.Content;
+
+import java.util.Date;
+
 /**
- * @deprecated Please use CreationDateComparator
- * @see info.magnolia.cms.util.CreationDateComparator
  *
- * @author Marcel Salathe
- * @version 1.1
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class DateComparator extends CreationDateComparator {
+public class CreationDateComparator extends AbstractContentComparator {
+
+    protected int compare(Content c1, Content c2) {
+        final Date date1 = c1.getMetaData().getCreationDate().getTime();
+        final Date date2 = c2.getMetaData().getCreationDate().getTime();
+        return date1.compareTo(date2);
+    }
 
 }

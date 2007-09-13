@@ -12,34 +12,15 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.core.Content;
-
-import java.util.Comparator;
-
-
 /**
+ * @deprecated Please use NodeDataStringComparator
+ * @see info.magnolia.cms.util.NodeDataStringComparator
+ *
  * @author Sameer Charles
  * @version 1.1
  */
-public class StringComparator implements Comparator {
-
-    /**
-     * Logger.
-     */
-
-    private String nodeDataName;
-
+public class StringComparator extends NodeDataStringComparator {
     public StringComparator(String nodeDataName) {
-        this.nodeDataName = nodeDataName;
-    }
-
-    public int compare(Object o, Object o1) throws ClassCastException {
-        String uri1;
-        String uri2;
-
-        uri1 = ((Content) o).getNodeData(this.nodeDataName).getString();
-        uri2 = ((Content) o1).getNodeData(this.nodeDataName).getString();
-
-        return uri1.compareTo(uri2);
+        super(nodeDataName);
     }
 }

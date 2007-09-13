@@ -12,13 +12,25 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.core.Content;
+
 /**
- * @deprecated Please use CreationDateComparator
- * @see info.magnolia.cms.util.CreationDateComparator
  *
- * @author Marcel Salathe
- * @version 1.1
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class DateComparator extends CreationDateComparator {
+public class NodeDataStringComparator extends AbstractContentComparator {
+    private final String nodeDataName;
+
+    public NodeDataStringComparator(String nodeDataName) {
+        this.nodeDataName = nodeDataName;
+    }
+
+    protected int compare(Content c1, Content c2) {
+        final String s1 = c1.getNodeData(this.nodeDataName).getString();
+        final String s2 = c2.getNodeData(this.nodeDataName).getString();
+
+        return s1.compareTo(s2);
+    }
 
 }
