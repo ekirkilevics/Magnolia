@@ -34,9 +34,6 @@ import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
-
-
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
@@ -54,24 +51,14 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
 
         tree.addItemType(ItemType.CONTENT);
 
-        TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
-        column0.setIsLabel(true);
-        column0.setTitle(msgs.get("tree.web.page"));
+        TreeColumn column0 = TreeColumn.createLabelColumn(tree, msgs.get("tree.web.page"), true);
         column0.setWidth(3);
-        column0.setHtmlEdit();
 
-        TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
-        columnIcons.setCssClass(StringUtils.EMPTY);
-        columnIcons.setWidth(1);
-        columnIcons.setIsIcons(true);
-        columnIcons.setIconsActivation(true);
+        TreeColumn columnIcons = TreeColumn.createActivationColumn(tree);
         columnIcons.setIconsPermission(true);
 
-        TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
-        column1.setName("title"); //$NON-NLS-1$
-        column1.setTitle(msgs.get("tree.web.title")); //$NON-NLS-1$
+        TreeColumn column1 = TreeColumn.createNodeDataColumn(tree, msgs.get("tree.web.title"), "title", true);
         column1.setWidth(2);
-        column1.setHtmlEdit();
 
         TreeColumn column2 = new TreeColumn(tree.getJavascriptTree(), request);
         column2.setName(MetaData.TEMPLATE);
@@ -108,13 +95,9 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
 
         // todo: key/value -> column2.addKeyValue("sampleBasic","Samples: Basic Template");
         // todo: preselection (set on createPage)
-        TreeColumn column3 = new TreeColumn(tree.getJavascriptTree(), request);
-        column3.setName(MetaData.LAST_MODIFIED);
-        // column3.setName(MetaData.SEQUENCE_POS);
-        column3.setIsMeta(true);
-        column3.setDateFormat("yy-MM-dd, HH:mm"); //$NON-NLS-1$
+
+        TreeColumn column3 = TreeColumn.createMetaDataColumn(tree, msgs.get("tree.web.date"), MetaData.LAST_MODIFIED, "yy-MM-dd, HH:mm");
         column3.setWidth(2);
-        column3.setTitle(msgs.get("tree.web.date")); //$NON-NLS-1$
 
         tree.addColumn(column0);
 
