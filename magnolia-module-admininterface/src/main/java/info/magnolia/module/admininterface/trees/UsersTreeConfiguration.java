@@ -26,9 +26,6 @@ import info.magnolia.module.admininterface.AbstractTreeConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
-
-
 /**
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
