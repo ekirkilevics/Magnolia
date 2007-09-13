@@ -269,6 +269,7 @@ public class TreeColumn extends ControlImpl {
 
     public static TreeColumn createColumn(Tree tree, String title) {
         TreeColumn treeColumn = new TreeColumn();
+        // this is done by tree.addColum() !
         treeColumn.setJavascriptTree(tree.getJavascriptTree());
         treeColumn.setTitle(title);
         return treeColumn;
@@ -333,6 +334,8 @@ public class TreeColumn extends ControlImpl {
     public static TreeColumn createActivationColumn(Tree tree) {
         TreeColumn columnActivation = TreeColumn.createIconColumn(tree, "", null);
         columnActivation.setIconsActivation(true);
+        columnActivation.setCssClass(StringUtils.EMPTY);
+        columnActivation.setWidth(1);
         return columnActivation;
     }
 

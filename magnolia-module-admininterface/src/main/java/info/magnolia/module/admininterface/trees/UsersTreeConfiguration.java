@@ -21,6 +21,7 @@ import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.exchange.ActivationManagerFactory;
+import info.magnolia.cms.util.NodeNameComparator;
 import info.magnolia.module.admininterface.AbstractTreeConfiguration;
 
 import javax.servlet.http.HttpServletRequest;
@@ -39,7 +40,9 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
      * boolean, javax.servlet.http.HttpServletRequest)
      */
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
-        final Messages msgs = getMessages();
+        tree.setSortComparator(new NodeNameComparator());
+
+        tree.setDrawShifter(true); // users can be in folders
 
         // context path is already added by Tree
         tree.setIcon(ItemType.USER.getSystemName(), Tree.ICONDOCROOT + "pawn_glass_yellow.gif"); //$NON-NLS-1$
@@ -49,33 +52,19 @@ public class UsersTreeConfiguration extends AbstractTreeConfiguration {
         tree.addItemType(ItemType.USER);
         tree.addItemType(ItemType.NT_FOLDER, Tree.ICONDOCROOT + "folder.gif");
 
-        TreeColumn column0 = new TreeColumn(tree.getJavascriptTree(), request);
-        column0.setIsLabel(true);
-        column0.setHtmlEdit();
-        column0.setTitle(msgs.get("tree.users.name")); //$NON-NLS-1$
+        final Messages msgs = getMessages();
+        TreeColumn column0 = TreeColumn.createLabelColumn(tree, msgs.get("tree.users.name"), !browseMode);
         column0.setWidth(2);
 
-        TreeColumn column1 = new TreeColumn(tree.getJavascriptTree(), request);
-        column1.setName("title"); //$NON-NLS-1$
-        column1.setHtmlEdit();
-        column1.setTitle(msgs.get("tree.users.fullname")); //$NON-NLS-1$
+        TreeColumn column1 = TreeColumn.createNodeDataColumn(tree, msgs.get("tree.users.fullname"), "title", !browseMode);
         column1.setWidth(2);
 
-        TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
-        columnIcons.setCssClass(StringUtils.EMPTY);
-        columnIcons.setWidth(1);
-        columnIcons.setIsIcons(true);
-        columnIcons.setIconsActivation(true);
+        TreeColumn columnIcons = TreeColumn.createActivationColumn(tree);
 
-        TreeColumn column2 = new TreeColumn(tree.getJavascriptTree(), request);
-        column2.setName(MetaData.LAST_MODIFIED);
-        column2.setIsMeta(true);
-        column2.setDateFormat("yyyy-MM-dd, HH:mm"); //$NON-NLS-1$
-        column2.setTitle(msgs.get("tree.users.date")); //$NON-NLS-1$
+        TreeColumn column2 = TreeColumn.createMetaDataColumn(tree, msgs.get("tree.users.date"), MetaData.LAST_MODIFIED, "yyyy-MM-dd, HH:mm");
         column2.setWidth(2);
 
         tree.addColumn(column0);
-
         if (!browseMode) {
             tree.addColumn(column1);
             if (Server.isAdmin() || ActivationManagerFactory.getActivationManager().hasAnyActiveSubscriber()) {
