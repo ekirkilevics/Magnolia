@@ -72,6 +72,8 @@ public class MagnoliaMainFilter extends AbstractMagnoliaFilter {
         if (moduleManager.getStatus().needsUpdateOrInstall()) {
             final String contextPath = request.getContextPath();
             final ModuleManagerUI ui = new ModuleManagerUI(contextPath);
+            // TODO : this will be invalid the day we allow other resources (css, images) to be served through the installer
+            response.setContentType("text/html");
             final Writer out = response.getWriter();
             final String uri = request.getRequestURI();
             try {
