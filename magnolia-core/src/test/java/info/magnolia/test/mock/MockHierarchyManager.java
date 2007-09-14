@@ -79,7 +79,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
        return getContentByUUID(getRoot(), uuid);
     }
 
-    protected Content getContentByUUID(Content node, final String uuid) {
+    protected Content getContentByUUID(Content node, final String uuid) throws ItemNotFoundException {
         if(uuid.equals(node.getUUID())){
             return node;
         }
@@ -91,7 +91,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
                 return found;
             }
         }
-        return null;
+        throw new ItemNotFoundException("Can't find item with uuid " + uuid);
     }
 
     public void delete(String path) throws RepositoryException {
