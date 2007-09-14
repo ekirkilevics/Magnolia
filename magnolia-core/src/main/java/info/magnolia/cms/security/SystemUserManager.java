@@ -18,12 +18,12 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  */
-public class SystemUserManger extends MgnlUserManager {
+public class SystemUserManager extends MgnlUserManager {
 
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(SystemUserManger.class);
+    private static Logger log = LoggerFactory.getLogger(SystemUserManager.class);
 
     public User getSystemUser() {
         return getOrCreateUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
