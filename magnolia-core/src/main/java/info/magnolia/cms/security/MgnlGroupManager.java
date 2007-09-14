@@ -86,9 +86,9 @@ public class MgnlGroupManager implements GroupManager {
     }
 
     /**
-     * return the groups HierarchyManager (through the current context)
+     * return the groups HierarchyManager (through the system context)
      */
     protected HierarchyManager getHierarchyManager() {
-        return MgnlContext.getHierarchyManager(ContentRepository.USER_GROUPS);
+        return MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
     }
 }
