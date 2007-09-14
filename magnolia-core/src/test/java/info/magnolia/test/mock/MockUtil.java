@@ -141,11 +141,16 @@ public class MockUtil {
         return createHierarchyManager(in);
     }
 
-    public static MockHierarchyManager createAndSetHierarchyManager(String repository, String propertiesStr) throws IOException, RepositoryException {
-        MockHierarchyManager hm = createHierarchyManager(propertiesStr);
+    public static MockHierarchyManager createAndSetHierarchyManager(String repository, InputStream propertiesStream) throws IOException, RepositoryException {
+        MockHierarchyManager hm = createHierarchyManager(propertiesStream);
         getMockContext(true).addHierarchyManager(repository, hm);
         getSystemMockContext(true).addHierarchyManager(repository, hm);
         return hm;
+    }
+
+    public static MockHierarchyManager createAndSetHierarchyManager(String repository, String propertiesStr) throws IOException, RepositoryException {
+        final ByteArrayInputStream in = new ByteArrayInputStream(propertiesStr.getBytes());
+        return createAndSetHierarchyManager(repository, in);
     }
 
     public static void createContent(Content root, InputStream propertiesStream) throws IOException, RepositoryException {
