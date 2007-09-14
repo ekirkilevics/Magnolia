@@ -66,13 +66,18 @@ public interface Group {
     public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
+     * get groups that are directly assigned to group
+     */
+    public Collection getGroups();
+
+    /**
+     * get all groups assigned to this group, collected recursively from subgroups
+     * */
+    public Collection getAllGroups();
+
+    /**
      * get roles that are directly assigned to group
      */
     public Collection getRoles();
-
-    /**
-     * get all roles assigned to this group, collected recursively from subgroups
-     * */
-    public Collection getAllRoles();
 
 }

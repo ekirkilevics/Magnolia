@@ -18,19 +18,15 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.context.MgnlContext;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Collection;
+import java.util.Iterator;
 
 
 /**
@@ -117,41 +113,15 @@ public class MgnlGroup implements Group {
     }
 
     public Collection getRoles() {
-        ArrayList list = new ArrayList();
-
-        try {
-            Content roles = null;
-            try {
-                // get "groups" node under node "user"
-                roles = groupNode.getContent("roles");
-            }
-            catch (PathNotFoundException e) {
-                log.warn("The group " + getName() + " does not have roles node");
-            }
-
-            if (roles != null) {
-                Collection c = roles.getNodeDataCollection();
-                Iterator it = c.iterator();
-                while (it.hasNext()) {
-                    NodeData nd = (NodeData) it.next();
-                    String uuid = nd.getString();
-                    final HierarchyManager hm = getSystemHierarchyManager(ContentRepository.USER_ROLES);
-                    Content role = hm.getContentByUUID(uuid);
-                    list.add(role.getName());
-                }
-            }
-
-        }
-        catch (Exception e) {
-            log.warn("can't read roles of user.", e);
-        }
-
-        return list;
+        return MgnlSecurityUtil.collectPropertyNames(groupNode, "roles", ContentRepository.USER_ROLES, false);
     }
 
-    public Collection getAllRoles() {
-        log.warn("Not yet implemented");
-        return new ArrayList();
+    public Collection getGroups() {
+        return MgnlSecurityUtil.collectPropertyNames(groupNode, "groups", ContentRepository.USER_GROUPS, false);
+    }
+
+    public Collection getAllGroups() {
+        return MgnlSecurityUtil.collectPropertyNames(groupNode, "groups", ContentRepository.USER_GROUPS, true);
     }
 
     /**
@@ -163,10 +133,10 @@ public class MgnlGroup implements Group {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = getSystemHierarchyManager(ContentRepository.USER_ROLES);
+                hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = getSystemHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_GROUPS);
             }
 
             Content node = groupNode.getContent(nodeName);
@@ -205,10 +175,10 @@ public class MgnlGroup implements Group {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = getContextHierarchyManager(ContentRepository.USER_ROLES);
+                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = getContextHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_GROUPS);
             }
             Content node = groupNode.getContent(nodeName);
 
@@ -245,10 +215,10 @@ public class MgnlGroup implements Group {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = getContextHierarchyManager(ContentRepository.USER_ROLES);
+                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = getContextHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_GROUPS);
             }
 
             if (!this.hasAny(name, nodeName)) {
@@ -260,7 +230,7 @@ public class MgnlGroup implements Group {
                 try {
                     String value = hm.getContent("/" + name).getUUID(); // assuming that there is a flat hierarchy
                     // used only to get the unique label
-                    HierarchyManager usersHM = getSystemHierarchyManager(ContentRepository.USERS);
+                    HierarchyManager usersHM = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USERS);
                     String newName = Path.getUniqueLabel(usersHM, node.getHandle(), "0");
                     node.createNodeData(newName).setValue(value);
                     groupNode.save();
@@ -275,14 +245,6 @@ public class MgnlGroup implements Group {
         catch (RepositoryException e) {
             log.error("failed to add " + name + " to user [" + this.getName() + "]", e);
         }
-    }
-
-    protected HierarchyManager getContextHierarchyManager(String repositoryId) {
-        return MgnlContext.getHierarchyManager(repositoryId);
-    }
-
-    protected HierarchyManager getSystemHierarchyManager(String repositoryId) {
-        return MgnlContext.getSystemContext().getHierarchyManager(repositoryId);
     }
 
 

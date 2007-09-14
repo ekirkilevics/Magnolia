@@ -14,6 +14,7 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
 
@@ -30,6 +31,9 @@ public class MgnlUserTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        final SecuritySupportImpl sec = new SecuritySupportImpl();
+        sec.setGroupManager(new MgnlGroupManager());
+        FactoryUtil.setInstance(SecuritySupport.class, sec);
         MockUtil.initMockContext();
         MockUtil.createAndSetHierarchyManager(ContentRepository.USERS, getClass().getResourceAsStream("sample-users.properties"));
         MockUtil.createAndSetHierarchyManager(ContentRepository.USER_GROUPS, getClass().getResourceAsStream("sample-usergroups.properties"));
@@ -59,7 +63,6 @@ public class MgnlUserTest extends TestCase {
         assertTrue(groups.contains("groupB"));
     }
 
-    /** TODO : this is currently failing - see MAGNOLIA-1594
     public void testGetAllGroupsReturnsDirectAndInheritedGroups() {
         final Collection groups = uman.getUser("georges").getAllGroups();
         assertEquals(4, groups.size());
@@ -68,11 +71,11 @@ public class MgnlUserTest extends TestCase {
         assertTrue(groups.contains("groupC"));
         assertTrue(groups.contains("groupD"));
     }
-    */
 
     public void testGetRolesReturnsDirectRoles() {
         final Collection roles = uman.getUser("georges").getRoles();
-        assertEquals(2, roles.size());
+        assertEquals(3, roles.size());
+        assertTrue(roles.contains("roleV"));
         assertTrue(roles.contains("roleW"));
         assertTrue(roles.contains("roleX"));
     }
@@ -84,20 +87,20 @@ public class MgnlUserTest extends TestCase {
         assertTrue(roles.contains("roleX"));
     }
 
-    /** TODO : this is currently failing - see MAGNOLIA-1594
-    public void testGetAllRolesReturnsDirectAndInheritedRoles() {
-        final Collection rolesG = uman.getUser("georges").getRoles();
-        assertEquals(4, rolesG.size());
+    public void testGetAllRolesReturnsDirectAndInheritedRoles() throws AccessDeniedException {
+        final Collection rolesG = uman.getUser("georges").getAllRoles();
+        assertEquals(5, rolesG.size());
+        assertTrue(rolesG.contains("roleV"));
         assertTrue(rolesG.contains("roleW"));
         assertTrue(rolesG.contains("roleX"));
         assertTrue(rolesG.contains("roleY"));
         assertTrue(rolesG.contains("roleZ"));
 
-        final Collection rolesJ = uman.getUser("julien").getRoles();
+        final Collection rolesJ = uman.getUser("julien").getAllRoles();
         assertEquals(3, rolesJ.size());
         assertTrue(rolesJ.contains("roleX"));
         assertTrue(rolesJ.contains("roleY"));
         assertTrue(rolesJ.contains("roleZ"));
     }
-    */
+
 }

@@ -14,26 +14,27 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.context.MgnlContext;
-
-import java.util.*;
-import java.io.Serializable;
-import java.io.ObjectStreamField;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.ObjectStreamField;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.GregorianCalendar;
+import java.util.Iterator;
+import java.util.Set;
+import java.util.TreeSet;
 
 
 /**
@@ -86,7 +87,7 @@ public class MgnlUser implements User, Serializable {
      * */
     private void reInitialize() {
         try {
-            HierarchyManager usersHm = getSystemHierarchyManager(ContentRepository.USERS);
+            HierarchyManager usersHm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USERS);
             init(usersHm.getContentByUUID(uuid));
         } catch (RepositoryException re) {
             log.error("Failed to load MgnlUser from persistent storage", re);
@@ -161,10 +162,10 @@ public class MgnlUser implements User, Serializable {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = getSystemHierarchyManager(ContentRepository.USER_ROLES);
+                hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = getSystemHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_GROUPS);
             }
 
             Content node = this.getUserNode().getContent(nodeName);
@@ -203,10 +204,10 @@ public class MgnlUser implements User, Serializable {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = getContextHierarchyManager(ContentRepository.USER_ROLES);
+                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = getContextHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_GROUPS);
             }
             Content node = this.getUserNode().getContent(nodeName);
 
@@ -243,10 +244,10 @@ public class MgnlUser implements User, Serializable {
         try {
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = getContextHierarchyManager(ContentRepository.USER_ROLES);
+                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_ROLES);
             }
             else {
-                hm = getContextHierarchyManager(ContentRepository.USER_GROUPS);
+                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_GROUPS);
             }
 
             if (!this.hasAny(name, nodeName)) {
@@ -258,7 +259,7 @@ public class MgnlUser implements User, Serializable {
                 try {
                     String value = hm.getContent("/" + name).getUUID(); // assuming that there is a flat hierarchy
                     // used only to get the unique label
-                    HierarchyManager usersHM = getSystemHierarchyManager(ContentRepository.USERS);
+                    HierarchyManager usersHM = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USERS);
                     String newName = Path.getUniqueLabel(usersHM, node.getHandle(), "0");
                     node.createNodeData(newName).setValue(value);
                     this.getUserNode().save();
@@ -317,53 +318,54 @@ public class MgnlUser implements User, Serializable {
     }
 
     public Collection getGroups() {
-        return collectPropertyNames("groups", ContentRepository.USER_GROUPS, false);
+        return MgnlSecurityUtil.collectPropertyNames(getUserNode(), "groups", ContentRepository.USER_GROUPS, false);
     }
 
     public Collection getAllGroups() {
-        return collectPropertyNames("groups", ContentRepository.USER_GROUPS, true);
+        final Set allGroups = new TreeSet(String.CASE_INSENSITIVE_ORDER);
+        try {
+            // add the user's direct groups
+            final Collection groups = getGroups();
+            allGroups.addAll(groups);
+
+            // add all groups from direct groups
+            final GroupManager gm = SecuritySupport.Factory.getInstance().getGroupManager();
+            final Iterator it = groups.iterator();
+            while (it.hasNext()) {
+                final String groupName = (String) it.next();
+                final Group g = gm.getGroup(groupName);
+                allGroups.addAll(g.getAllGroups());
+            }
+
+            return allGroups;
+        } catch (AccessDeniedException e) {
+            throw new RuntimeException(e); // TODO
+        }
     }
 
     public Collection getRoles() {
-        return collectPropertyNames("roles", ContentRepository.USER_ROLES, false);
+        return MgnlSecurityUtil.collectPropertyNames(getUserNode(), "roles", ContentRepository.USER_ROLES, false);
     }
 
     public Collection getAllRoles() {
-        return collectPropertyNames("roles", ContentRepository.USER_ROLES, true);
-    }
-
-    protected Set collectPropertyNames(String nodeName, String repositoryName, boolean isDeep) {
-        final SortedSet set = new TreeSet(String.CASE_INSENSITIVE_ORDER);
+        final Set allRoles = new TreeSet(String.CASE_INSENSITIVE_ORDER);
         try {
-            Content groups = this.getUserNode().getContent(nodeName);
-            this.collectPropertyNames(groups, repositoryName, set, isDeep);
-        } catch (PathNotFoundException e) {
-            log.warn("the user " + getName() + " does not have any " + repositoryName);
-        } catch (Throwable t) {
-            log.error("Failed to read " + repositoryName, t);
-        }
-        return set;
-    }
+            // add the user's direct roles
+            allRoles.addAll(getRoles());
 
-    protected void collectPropertyNames(Content node, String repositoryName, Collection set, boolean isDeep) throws Throwable {
-        Collection c = node.getNodeDataCollection();
-        Iterator it = c.iterator();
-        while (it.hasNext()) {
-            NodeData nd = (NodeData) it.next();
-            String uuid = nd.getString();
-            try {
-                final HierarchyManager hierarchyManager = getSystemHierarchyManager(repositoryName);
-                Content targetNode = hierarchyManager.getContentByUUID(uuid);
-                set.add(targetNode.getName());
-                if (isDeep) {
-                    this.collectPropertyNames(targetNode, repositoryName, set, true);
-                }
-            } catch (Throwable t) {
-                log.error(t.getMessage());
-                log.debug("Failed while reading node by UUID", t);
-                // we continue since it can happen that target node is removed
-                // - UUID's are kept as simple strings thus have no  referential integrity
+            // add roles from all groups
+            final GroupManager gm = SecuritySupport.Factory.getInstance().getGroupManager();
+            final Collection allGroups = getAllGroups();
+            final Iterator it = allGroups.iterator();
+            while (it.hasNext()) {
+                final String groupName = (String) it.next();
+                final Group g = gm.getGroup(groupName);
+                allRoles.addAll(g.getRoles());
             }
+
+            return allRoles;
+        } catch (AccessDeniedException e) {
+            throw new RuntimeException(e); // TODO
         }
     }
 
@@ -392,14 +394,4 @@ public class MgnlUser implements User, Serializable {
         }
         return userNode;
     }
-
-    protected HierarchyManager getContextHierarchyManager(String repositoryId) {
-        return MgnlContext.getHierarchyManager(repositoryId);
-    }
-
-    protected HierarchyManager getSystemHierarchyManager(String repositoryName) {
-        return MgnlContext.getSystemContext().getHierarchyManager(repositoryName);
-    }
-
-
 }
