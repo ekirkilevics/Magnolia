@@ -9,13 +9,9 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.context.MgnlContext;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
-import java.util.GregorianCalendar;
 
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
@@ -30,7 +26,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class QueryUtil {
-    private static Logger log = LoggerFactory.getLogger(QueryUtilTest.class);
+    private static Logger log = LoggerFactory.getLogger(QueryUtil.class);
 
     /**
      * Execute a query
@@ -69,7 +65,7 @@ public class QueryUtil {
             return result.getContent(returnItemType);
         }
         catch (Exception e) {
-            log.error("can't query, will return empty collection", e);
+            log.error("can't execute query [" + statement  + "], will return empty collection", e);
         }
         
         return Collections.EMPTY_LIST;
