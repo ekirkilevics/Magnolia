@@ -12,6 +12,8 @@ package info.magnolia.cms.i18n;
 
 import java.util.Locale;
 
+import org.apache.commons.lang.StringUtils;
+
 
 /**
  * General language definition. Used to configure the i18n components.
@@ -71,5 +73,12 @@ public class LanguageDefinition {
      */
     public String toString() {
         return "country: " + getCountry() + " language: " + getLanguage();
+    }
+    
+    public String getId() {
+        if(StringUtils.isNotEmpty(getCountry())){
+            return getCountry() + "_" + getLanguage();
+        }
+        return getLanguage();
     }
 }

@@ -173,7 +173,7 @@ public class DefaultI18NSupport implements I18NSupport {
 
     public void addLanguages(LanguageDefinition ld) {
         if (ld.isEnabled()) {
-            this.languages.put(ld.toString(), ld.getLocale());
+            this.languages.put(ld.getId(), ld.getLocale());
         }
     }
 
