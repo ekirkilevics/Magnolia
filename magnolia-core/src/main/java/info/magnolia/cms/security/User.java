@@ -14,9 +14,9 @@ package info.magnolia.cms.security;
 
 import java.util.Collection;
 
-
 /**
  * Represents a magnolia user.
+ *
  * @author philipp
  * @version $Revision:2558 $ ($Author:scharles $)
  */
@@ -42,20 +42,17 @@ public interface User {
 
     /**
      * Is this user in a specified group?
-     * @param groupName
      * @return true if in group
      */
     boolean inGroup(String groupName);
 
     /**
      * Remove a group. Implementation is optional
-     * @param groupName
      */
     void removeGroup(String groupName) throws UnsupportedOperationException;
 
     /**
      * Adds this user to a group. Implementation is optional
-     * @param groupName
      */
     void addGroup(String groupName) throws UnsupportedOperationException;
 
@@ -104,7 +101,7 @@ public interface User {
     /**
      * get all groups to which this user belongs to, collected recursively including
      * */
-    public abstract Collection getAllGroups();
+    Collection getAllGroups();
 
     /**
      * get roles that are directly assigned to user
@@ -114,5 +111,5 @@ public interface User {
     /**
      * get all roles assigned to this user, collected recursively including groups/subgroups
      * */
-    public abstract Collection getAllRoles();
+    Collection getAllRoles();
 }
