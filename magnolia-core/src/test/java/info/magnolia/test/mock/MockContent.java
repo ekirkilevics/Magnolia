@@ -79,6 +79,12 @@ public class MockContent extends DefaultContent {
         nodeDatas.put(nd.getName(), nd);
     }
 
+    public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        final MockNodeData nd = new MockNodeData(name, type);
+        addNodeData(nd);
+        return nd;
+    }
+
     public NodeData createNodeData(String name, Object obj) throws RepositoryException {
         final MockNodeData nd = new MockNodeData(name, obj);
         addNodeData(nd);

@@ -30,12 +30,19 @@ public class MockNodeData extends DefaultNodeData {
     private String name;
 
     private Object value;
+    private int type;
 
     private Content parent;
 
     public MockNodeData(String name, Object value) {
         this.name = name;
         this.value = value;
+        this.type = NodeDataUtil.getJCRPropertyType(value);
+    }
+
+    public MockNodeData(String name, int type) {
+        this.name = name;
+        this.type = type;
     }
 
     public String getName() {
@@ -47,7 +54,7 @@ public class MockNodeData extends DefaultNodeData {
     }
 
     public int getType() {
-        return NodeDataUtil.getJCRPropertyType(value);
+        return type;
     }
 
     public Content getParent() {
@@ -122,6 +129,10 @@ public class MockNodeData extends DefaultNodeData {
 
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
         this.value = value;
+    }
+
+    public void save() throws RepositoryException {
+        // nothing to do
     }
 
     public String toString() {
