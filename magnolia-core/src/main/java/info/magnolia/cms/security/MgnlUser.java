@@ -317,58 +317,35 @@ public class MgnlUser implements User, Serializable {
     }
 
     public Collection getGroups() {
-        SortedSet groupSet = new TreeSet(String.CASE_INSENSITIVE_ORDER);
-        try {
-            Content groups = this.getUserNode().getContent("groups");
-            this.collectPropertyNames(groups, ContentRepository.USER_GROUPS, groupSet, false);
-        } catch (PathNotFoundException e) {
-            log.warn("the user " + getName() + " not a member of any group");
-        } catch (Throwable t) {
-            log.error("Failed to read groups", t);
-        }
-        return groupSet;
+        return collectPropertyNames("groups", ContentRepository.USER_GROUPS, false);
     }
 
     public Collection getAllGroups() {
-        SortedSet groupSet = new TreeSet(String.CASE_INSENSITIVE_ORDER);
-        try {
-            Content groups = this.getUserNode().getContent("groups");
-            this.collectPropertyNames(groups, ContentRepository.USER_GROUPS, groupSet, true);
-        } catch (PathNotFoundException e) {
-            log.warn("the user " + getName() + " not a member of any group");
-        } catch (Throwable t) {
-            log.error("Failed to read groups", t);
-        }
-        return groupSet;
+        return collectPropertyNames("groups", ContentRepository.USER_GROUPS, true);
     }
 
     public Collection getRoles() {
-        SortedSet roleSet = new TreeSet(String.CASE_INSENSITIVE_ORDER);
-        try {
-            Content roles = this.getUserNode().getContent("roles");
-            this.collectPropertyNames(roles, ContentRepository.USER_ROLES, roleSet, false);
-        } catch (PathNotFoundException e) {
-            log.warn("the user " + getName() + " does not have any roles assigned");
-        } catch (Throwable t) {
-            log.error("Failed to read roles", t);
-        }
-        return roleSet;
+        return collectPropertyNames("roles", ContentRepository.USER_ROLES, false);
     }
 
     public Collection getAllRoles() {
-        SortedSet roleSet = new TreeSet(String.CASE_INSENSITIVE_ORDER);
-        try {
-            Content roles = this.getUserNode().getContent("roles");
-            this.collectPropertyNames(roles, ContentRepository.USER_ROLES, roleSet, true);
-        } catch (PathNotFoundException e) {
-            log.warn("the user " + getName() + " does not have any roles assigned");
-        } catch (Throwable t) {
-            log.error("Failed to read roles", t);
-        }
-        return roleSet;
+        return collectPropertyNames("roles", ContentRepository.USER_ROLES, true);
     }
 
-    public void collectPropertyNames(Content node, String repositoryName, Collection set, boolean isDeep) throws Throwable {
+    protected Set collectPropertyNames(String nodeName, String repositoryName, boolean isDeep) {
+        final SortedSet set = new TreeSet(String.CASE_INSENSITIVE_ORDER);
+        try {
+            Content groups = this.getUserNode().getContent(nodeName);
+            this.collectPropertyNames(groups, repositoryName, set, isDeep);
+        } catch (PathNotFoundException e) {
+            log.warn("the user " + getName() + " does not have any " + repositoryName);
+        } catch (Throwable t) {
+            log.error("Failed to read " + repositoryName, t);
+        }
+        return set;
+    }
+
+    protected void collectPropertyNames(Content node, String repositoryName, Collection set, boolean isDeep) throws Throwable {
         Collection c = node.getNodeDataCollection();
         Iterator it = c.iterator();
         while (it.hasNext()) {
