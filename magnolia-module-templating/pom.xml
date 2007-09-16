@@ -23,11 +23,16 @@
     <dependency>
       <groupId>net.sf.json-lib</groupId>
       <artifactId>json-lib</artifactId>
+      <!-- <classifier>jdk13</classifier>-->
       <version>0.9</version>
       <exclusions>
         <exclusion>
           <groupId>commons-logging</groupId>
           <artifactId>commons-logging</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>xom</groupId>
+          <artifactId>xom</artifactId>
         </exclusion>
       </exclusions>
     </dependency>
