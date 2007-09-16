@@ -154,7 +154,7 @@ public class DialogFreemarker extends DialogBox {
         // cycle on children
         Collection children = node.getChildren(ItemType.CONTENTNODE);
         if (children != null && children.size() > 0) {
-            Iterator childrenIt = properties.iterator();
+            Iterator childrenIt = children.iterator();
             while (childrenIt.hasNext()) {
                 Content child = (Content) childrenIt.next();
                 // gets sub map
