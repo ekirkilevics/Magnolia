@@ -12,21 +12,14 @@
  */
 package info.magnolia.cms.gui.control;
 
-import freemarker.template.Configuration;
-import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
+import info.magnolia.freemarker.FreemarkerHelper;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Map;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -62,44 +55,13 @@ public class FreemarkerControl extends ControlImpl {
      * @throws TemplateException exception in template rendering
      */
     public void drawHtml(Writer out, String path, Map parameters) throws IOException, TemplateException {
-        // create base freemarker configuration
-        Configuration configuration = new Configuration();
-
-        // get inputstream
-        InputStream stream = null;
 
         if (path.startsWith("classpath:")) {
             path = StringUtils.substringAfter(path, "classpath:");
         }
 
-        // try from classpath
-        stream = Thread.currentThread().getContextClassLoader().getResourceAsStream(path);
-
-        if (stream == null) {
-            // from filesystem
-            String filePath = ((WebContext) MgnlContext.getInstance()).getServletContext().getRealPath(path);
-            if (filePath != null) {
-                stream = new FileInputStream(filePath);
-            }
-        }
-
-        if (stream == null) {
-            throw new IOException("Freemarker template " + path + " not found.");
-        }
-
-        // get reader from inputstream
-        InputStreamReader reader = new InputStreamReader(stream);
-
-        // create template
-        Template template = new Template(null, reader, configuration, null);
-        try {
-            // render
-            template.process(parameters, out);
-        }
-        finally {
-            IOUtils.closeQuietly(reader);
-            IOUtils.closeQuietly(stream);
-        }
+        // render
+        FreemarkerHelper.getInstance().render(path, parameters, out);
 
         // write generic html save info
         ((PrintWriter) out).print(this.getHtmlSaveInfo());
