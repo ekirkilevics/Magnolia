@@ -32,4 +32,16 @@
     <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
     <function-signature>java.lang.String link(java.lang.String)</function-signature>
   </function>
+  <function>
+    <description>Returns the value of a system property</description>
+    <name>systemProperty</name>
+    <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
+    <function-signature>java.lang.String systemProperty(java.lang.String)</function-signature>
+  </function>
+  <function>
+    <description>Returns the system properties</description>
+    <name>systemProperties</name>
+    <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
+    <function-signature>java.util.Properties systemProperties()</function-signature>
+  </function>
 </taglib>

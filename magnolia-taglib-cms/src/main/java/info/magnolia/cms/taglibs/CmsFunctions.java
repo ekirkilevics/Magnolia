@@ -2,8 +2,11 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
+
+import java.util.Properties;
 
 
 /**
@@ -46,4 +49,20 @@ public class CmsFunctions {
         return MgnlContext.getContextPath() + handle + '.' + Server.getDefaultExtension();
     }
 
+    /**
+     * Returns the value of a system property
+     * @param key property key
+     * @return property value
+     */
+    public static String systemProperty(String key) {
+        return SystemProperty.getProperty(key);
+    }
+
+    /**
+     * Returns the system properties
+     * @return Property instance
+     */
+    public static Properties systemProperties() {
+        return SystemProperty.getProperties();
+    }
 }
