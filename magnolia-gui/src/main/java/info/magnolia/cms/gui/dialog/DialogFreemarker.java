@@ -6,7 +6,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.FreemarkerControl;
-import info.magnolia.cms.gui.dialog.DialogBox;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.NodeDataUtil;
 
@@ -153,7 +152,7 @@ public class DialogFreemarker extends DialogBox {
         }
 
         // cycle on children
-        Collection children = node.getChildren(ItemType.CONTENT.getSystemName());
+        Collection children = node.getChildren(ItemType.CONTENTNODE);
         if (children != null && children.size() > 0) {
             Iterator childrenIt = properties.iterator();
             while (childrenIt.hasNext()) {
