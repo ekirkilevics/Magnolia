@@ -44,4 +44,16 @@
     <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
     <function-signature>java.util.Properties systemProperties()</function-signature>
   </function>
+  <function>
+    <description>Check if a user is currently logged in (not anonymous)</description>
+    <name>isLoggedIn</name>
+    <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
+    <function-signature>boolean isLoggedIn()</function-signature>
+  </function>
+  <function>
+    <description>Check if the current user can edit the active page</description>
+    <name>canEdit</name>
+    <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
+    <function-signature>boolean canEdit()</function-signature>
+  </function>
 </taglib>
