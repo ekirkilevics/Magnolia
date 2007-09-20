@@ -12,11 +12,11 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>bce8770b-d32b-4797-bde5-741d672dac70</sv:value>
   </sv:property>
-  <sv:property sv:name="fallbackLanguage" sv:type="String">
+  <sv:property sv:name="fallbackLocale" sv:type="String">
     <sv:value>en</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.cms.i18n.DefaultI18NSupport</sv:value>
+    <sv:value>info.magnolia.cms.i18n.DefaultI18nContentSupport</sv:value>
   </sv:property>
   <sv:property sv:name="enabled" sv:type="Boolean">
     <sv:value>false</sv:value>
@@ -47,7 +47,7 @@
       <sv:value>superuser</sv:value>
     </sv:property>
   </sv:node>
-  <sv:node sv:name="languages">
+  <sv:node sv:name="locales">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
