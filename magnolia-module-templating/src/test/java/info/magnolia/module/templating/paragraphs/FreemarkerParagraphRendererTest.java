@@ -12,33 +12,34 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createNiceMock;
+import static org.easymock.classextension.EasyMock.replay;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.ActionBasedParagraph;
 import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.EmptyMessages;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.FreemarkerHelper;
+import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-import java.util.HashMap;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class FreemarkerParagraphRendererTest extends TestCase {
+public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     private StringTemplateLoader tplLoader;
     private FreemarkerParagraphRenderer renderer;
 
@@ -47,10 +48,13 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         tplLoader = new StringTemplateLoader();
         final FreemarkerHelper freemarkerHelper = new TestFreemarkerHelper(tplLoader);
         renderer = new FreemarkerParagraphRenderer(freemarkerHelper);
-        final Context context = createNiceMock(Context.class);
-        expect(context.getLocale()).andReturn(Locale.US);
-        expect(context.getMessages()).andReturn(new EmptyMessages());
-        expect(context.getMessages(null)).andReturn(new EmptyMessages());
+        
+        final WebContext context = createNiceMock(WebContext.class);
+        AggregationState state = new AggregationState();
+        state.setLocale(Locale.ENGLISH);
+        expect(context.getAggregationState()).andStubReturn(state);
+        expect(context.getLocale()).andReturn(Locale.ENGLISH);
+       
         MgnlContext.setInstance(context);
         replay(context);
     }
@@ -99,7 +103,7 @@ public class FreemarkerParagraphRendererTest extends TestCase {
     }
 
     public void testActionGetsPopulatedWithAllowedFields() throws IOException {
-        final WebContext context = createStrictMock(WebContext.class);
+        final WebContext context = createNiceMock(WebContext.class);
         Map<String,String> params=new HashMap<String,String>();
         params.put("blah", "tralala");
         params.put("pouet", "oh oh this shouldn't have been set");
@@ -107,10 +111,10 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         expect(context.getParameters()).andReturn(params);
         expect(context.getMessages("testmessages")).andReturn(new EmptyMessages());
         expect(context.getMessages()).andReturn(new EmptyMessages());
-        expect(context.getLocale()).andReturn(Locale.ENGLISH);
+        expect(context.getLocale()).andStubReturn(Locale.ENGLISH);
         expect(context.getContextPath()).andReturn("/pouet");
         expect(context.getServletContext()).andReturn(null);
-        expect(context.getAggregationState()).andReturn(new AggregationState());
+        expect(context.getAggregationState()).andStubReturn(new AggregationState());
         replay(context);
         MgnlContext.setInstance(context);
 
@@ -126,7 +130,6 @@ public class FreemarkerParagraphRendererTest extends TestCase {
         final StringWriter out = new StringWriter();
         renderer.render(c, par, out);
         assertEquals("yay : it works : tralala : success", out.toString());
-        verify(context);
     }
 
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws IOException {

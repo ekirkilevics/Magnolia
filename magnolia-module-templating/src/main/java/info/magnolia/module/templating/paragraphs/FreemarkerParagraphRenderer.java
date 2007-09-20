@@ -31,6 +31,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -85,7 +86,8 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
             freemarkerCtx.put("action", actionResult.getActionBean());
         }
         // TODO : move this to FreemarkerHelper ?
-        freemarkerCtx.put("i18n", new MessagesWrapper(paragraph.getI18nBasename()));
+        Locale locale = MgnlContext.getAggregationState().getLocale(); 
+        freemarkerCtx.put("i18n", new MessagesWrapper(paragraph.getI18nBasename(), locale));
 
         try {
             fmHelper.render(template, freemarkerCtx, out);
@@ -176,9 +178,9 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
     public class MessagesWrapper {
         private final Messages messages;
 
-        public MessagesWrapper(String basename) {
-            final Messages msg = MgnlContext.getMessages(basename);
-            final Messages defMsg = MgnlContext.getMessages();
+        public MessagesWrapper(String basename, Locale locale) {
+            final Messages msg = MessagesManager.getMessages(basename, locale);
+            final Messages defMsg = MessagesManager.getMessages(locale);
             this.messages = new MessagesChain(msg).chain(defMsg);
         }
         
