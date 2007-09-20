@@ -576,7 +576,7 @@
       <sv:value>640d5a35-2508-47d4-846b-048cb2819e1a</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.cms.i18n.I18NSupportFilter</sv:value>
+      <sv:value>info.magnolia.cms.i18n.I18nContentSupportFilter</sv:value>
     </sv:property>
     <sv:property sv:name="enabled" sv:type="Boolean">
       <sv:value>true</sv:value>

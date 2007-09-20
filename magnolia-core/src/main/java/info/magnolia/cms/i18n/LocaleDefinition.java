@@ -20,7 +20,7 @@ import org.apache.commons.lang.StringUtils;
  * @author philipp
  * @version $Id$
  */
-public class LanguageDefinition {
+public class LocaleDefinition {
 
     private String country;
 
@@ -30,12 +30,21 @@ public class LanguageDefinition {
 
     private Locale locale;
 
+    public LocaleDefinition() {
+    }
+    
+    public LocaleDefinition(String language, String country, boolean enabled) {
+        this.language = language;
+        this.country = country;
+        this.enabled = enabled;
+    }
+
     /**
      * Creates the locale for this definition if not yet set.
      */
     public Locale getLocale() {
         if (locale == null) {
-            locale = new Locale(getLanguage(), getCountry());
+            locale = new Locale(getLanguage(), StringUtils.defaultString(getCountry()));
         }
         return locale;
     }
@@ -72,13 +81,10 @@ public class LanguageDefinition {
      * Uses the locals toString() method
      */
     public String toString() {
-        return "country: " + getCountry() + " language: " + getLanguage();
+        return getLocale() != null ? getLocale().toString() : "none";
     }
     
     public String getId() {
-        if(StringUtils.isNotEmpty(getCountry())){
-            return getCountry() + "_" + getLanguage();
-        }
-        return getLanguage();
+        return getLocale().toString();
     }
 }

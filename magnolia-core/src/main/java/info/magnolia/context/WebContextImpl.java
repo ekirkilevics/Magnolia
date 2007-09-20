@@ -12,12 +12,12 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
@@ -25,6 +25,13 @@ import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.DumperUtil;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
+
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
@@ -36,14 +43,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
-import javax.servlet.jsp.jstl.core.Config;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Locale;
-import java.util.Map;
 
 
 /**
@@ -117,14 +116,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     public void setUser(User user) {
         super.setUser(user);
         setAttribute("user", user, Context.SESSION_SCOPE);
-    }
-
-    /**
-     * Make the locale available for JSTL
-     */
-    public void setLocale(Locale locale) {
-        super.setLocale(locale);
-        this.setAttribute(Config.FMT_LOCALE + ".session", locale, Context.SESSION_SCOPE); //$NON-NLS-1$
     }
 
     /**

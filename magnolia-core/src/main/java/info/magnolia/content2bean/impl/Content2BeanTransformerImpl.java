@@ -23,6 +23,7 @@ import info.magnolia.content2bean.TypeMapping;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
@@ -30,6 +31,7 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -232,6 +234,20 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
      * Most of the conversion is done by the BeanUtils.
      */
     public Object convertPropertyValue(Class propertyType, Object value) throws Content2BeanException {
+        if(propertyType == Locale.class){
+            if(value instanceof String){
+                String localeStr = (String) value;
+                if(StringUtils.isNotEmpty(localeStr)){
+                    String[] localeArr = StringUtils.split(localeStr, "_");
+                    if(localeArr.length ==1){
+                        return new Locale(localeArr[0]);
+                    }
+                    else if(localeArr.length == 2){
+                        return new Locale(localeArr[0],localeArr[1]);
+                    }
+                }
+            }
+        }
         return value;
     }
 

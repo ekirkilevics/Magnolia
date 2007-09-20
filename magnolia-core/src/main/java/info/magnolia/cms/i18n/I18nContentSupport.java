@@ -10,6 +10,8 @@
  */
 package info.magnolia.cms.i18n;
 
+import java.util.Locale;
+
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 
@@ -21,28 +23,41 @@ import javax.jcr.RepositoryException;
  * @author philipp
  * @version $Id$
  */
-public interface I18NSupport {
+public interface I18nContentSupport {
 
-    public String getCurrentLanguage();
+    /**
+     * Get the current locale used for rendering content
+     */
+    public Locale getLocale();
 
-    public void setCurrentLanguage(String currentLanguage);
+    public void setLocale(Locale locale);
 
-    public void setSessionLanguage(String currentLanguage);
+    /**
+     * The default locale to be used. Can be used to fix the system to a certain language.
+     */
+    public Locale getFallbackLocale();
 
-    public String getFallbackLanguage();
+    public void setFallbackLocale(Locale fallbackLocale);
 
-    public void setFallbackLanguage(String fallbackLanguage);
-
+    /**
+     * Transform the internal uri to a i18n uri. This method may add a prefix or suffix
+     */
     public String toI18NURI(String uri);
 
-    public String toURI(String i18nURI);
+    /**
+     * Remove all i18n tokens form the uri. The uri can then be used to get the content.
+     */
+    public String toRawURI(String i18nURI);
 
-    public String languageFromURI(String i18nURI);
+    /**
+     * This method uses the current agregation state to set the locale used for the rendering process 
+     */
+    public Locale determineLocale();
 
     /**
      * Returns the NodeData object based on the language passes.
      */
-    public NodeData getNodeData(Content node, String name, String lang) throws RepositoryException;
+    public NodeData getNodeData(Content node, String name, Locale locale) throws RepositoryException;
 
     /**
      * Returns the NodeData object based on the current language.

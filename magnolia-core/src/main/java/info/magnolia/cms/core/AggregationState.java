@@ -12,8 +12,11 @@
  */
 package info.magnolia.cms.core;
 
+import java.util.Locale;
+
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.File;
+import info.magnolia.context.MgnlContext;
 
 /**
  * @author gjoseph
@@ -31,6 +34,7 @@ public class AggregationState {
     private String repository;
     private String selector;
     private Template template;
+    private Locale locale;
 
     public void setOriginalURI(String originalURI) {
 
@@ -140,5 +144,24 @@ public class AggregationState {
 
     public void setTemplate(Template template) {
         this.template = template;
+    }
+    
+    /**
+     * If the aggregation state local is not set explicitly the contexts locale is returned. 
+     * @return The aggregation state level locale, i.e. the locale that should be used for contents
+     */
+    public Locale getLocale() {
+        if (locale == null) {
+            return MgnlContext.getLocale();
+        }
+        
+        return locale;
+    }
+    
+    /**
+     * @param locale The aggregation state level locale, i.e. the locale that should be used for contents
+     */
+    public void setLocale(Locale locale) {
+        this.locale = locale;
     }
 }

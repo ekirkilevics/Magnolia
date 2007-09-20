@@ -19,7 +19,7 @@ import freemarker.template.TemplateExceptionHandler;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.i18n.I18NSupport;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.FactoryUtil;
@@ -453,8 +453,8 @@ public class FreemarkerHelperTest extends TestCase {
         replay(sysMockCtx);
 
         FactoryUtil.setInstance(URI2RepositoryManager.class, new FakeURI2RepoMan());
-        final I18NSupport i18NSupportMock = createStrictMock(I18NSupport.class);
-        FactoryUtil.setInstance(I18NSupport.class, i18NSupportMock);
+        final I18nContentSupport i18NSupportMock = createStrictMock(I18nContentSupport.class);
+        FactoryUtil.setInstance(I18nContentSupport.class, i18NSupportMock);
 
         expect(i18NSupportMock.toI18NURI("/foo/bar/baz.html")).andReturn("/foo/bar/baz.html").times(1, 2);
 

@@ -10,17 +10,17 @@
  */
 package info.magnolia.cms.i18n;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
+import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -33,45 +33,36 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  */
-public class DefaultI18NSupport implements I18NSupport {
+public class DefaultI18NSupport implements I18nContentSupport {
 
     private static Logger log = LoggerFactory.getLogger(DefaultI18NSupport.class);
 
     /**
-     * Used to save the current language in the context
-     */
-    protected static final String CURRENT_LANGUAGE = "info.magnolia.cms.i18n.support.current";
-
-    /**
      * English is the default fallback language
      */
-    private String fallbackLanguage = "en";
+    private Locale fallbackLocale = new Locale("en");
 
     private boolean enabled = false;
 
     /**
-     * The active languages
+     * The active locales
      */
-    private Map languages = new HashMap();
+    private Map locales = new HashMap();
 
-    public String getCurrentLanguage() {
-        return (String) MgnlContext.getAttribute(CURRENT_LANGUAGE);
+    public Locale getLocale() {
+        return MgnlContext.getAggregationState().getLocale();
     }
 
-    public void setCurrentLanguage(String currentLanguage) {
-        MgnlContext.setAttribute(CURRENT_LANGUAGE, currentLanguage);
+    public void setLocale(Locale locale) {
+        MgnlContext.getAggregationState().setLocale(locale);
     }
 
-    public void setSessionLanguage(String currentLanguage) {
-        MgnlContext.setAttribute(CURRENT_LANGUAGE, currentLanguage, Context.SESSION_SCOPE);
+    public Locale getFallbackLocale() {
+        return this.fallbackLocale;
     }
 
-    public String getFallbackLanguage() {
-        return this.fallbackLanguage;
-    }
-
-    public void setFallbackLanguage(String fallbackLanguage) {
-        this.fallbackLanguage = fallbackLanguage;
+    public void setFallbackLocale(Locale fallbackLocale) {
+        this.fallbackLocale = fallbackLocale;
     }
 
     /**
@@ -81,11 +72,11 @@ public class DefaultI18NSupport implements I18NSupport {
         if (!isEnabled()) {
             return uri;
         }
-        String lang = getCurrentLanguage();
-        if (languageSupported(lang)) {
+        Locale locale = getLocale();
+        if (isLocaleSupported(locale)) {
             // nothing to do for relative links
             if(uri.startsWith("/")){
-                return "/" + lang + uri;
+                return "/" + locale.toString() + uri;
             }
         }
         return uri;
@@ -94,14 +85,14 @@ public class DefaultI18NSupport implements I18NSupport {
     /**
      * Removes the prefix
      */
-    public String toURI(String i18nURI) {
+    public String toRawURI(String i18nURI) {
         if (!isEnabled()) {
             return i18nURI;
         }
 
-        String lang = languageFromURI(i18nURI);
-        if (languageSupported(lang)) {
-            return StringUtils.removeStart(i18nURI, "/" + lang);
+        Locale locale = getLocale();
+        if (isLocaleSupported(locale)) {
+            return StringUtils.removeStart(i18nURI, "/" + locale.toString());
         }
         return i18nURI;
     }
@@ -109,16 +100,28 @@ public class DefaultI18NSupport implements I18NSupport {
     /**
      * Extracts the language from the uri
      */
-    public String languageFromURI(String i18nURI) {
-        String lang = StringUtils.substringBetween(i18nURI, "/", "/");
-        if(languageSupported(lang)){
-            return lang;
+    public Locale determineLocale() {
+        final String i18nURI = MgnlContext.getAggregationState().getCurrentURI();
+        Locale locale = getFallbackLocale();
+
+        String localeStr = StringUtils.substringBetween(i18nURI, "/", "/");
+        if(StringUtils.isNotEmpty(localeStr)){
+            String[] localeArr = StringUtils.split(localeStr, "_");
+            if(localeArr.length ==1){
+                locale = new Locale(localeArr[0]);
+            }
+            else if(localeArr.length == 2){
+                locale = new Locale(localeArr[0],localeArr[1]);
+            }
         }
-        return null;
+        if(!isLocaleSupported(locale)){
+            locale = getFallbackLocale();
+        }
+        return locale;
     }
 
-    public NodeData getNodeData(Content node, String name, String lang) throws RepositoryException {
-        String nodeDataName = name + "_" + lang;
+    public NodeData getNodeData(Content node, String name, Locale locale) throws RepositoryException {
+        String nodeDataName = name + "_" + locale;
         if (node.hasNodeData(nodeDataName)) {
             return node.getNodeData(nodeDataName);
         }
@@ -134,18 +137,16 @@ public class DefaultI18NSupport implements I18NSupport {
         if (isEnabled()) {
             try {
                 // test for the current language
-                String lang = getCurrentLanguage();
-                if(languageSupported(lang)){
-                    nd = getNodeData(node, name, lang);
-                    if (!isEmpty(nd)) {
-                        return nd;
-                    }
+                Locale locale = getLocale();
+                nd = getNodeData(node, name, locale);
+                if (!isEmpty(nd)) {
+                    return nd;
                 }
 
                 // fallback
-                lang = getFallbackLanguage();
+                locale = getFallbackLocale();
 
-                nd = getNodeData(node, name, lang);
+                nd = getNodeData(node, name, locale);
                 if (!isEmpty(nd)) {
                     return nd;
                 }
@@ -167,18 +168,18 @@ public class DefaultI18NSupport implements I18NSupport {
         this.enabled = enabled;
     }
 
-    public Collection getLanguages() {
-        return this.languages.values();
+    public Collection getLocales() {
+        return this.locales.values();
     }
 
-    public void addLanguages(LanguageDefinition ld) {
+    public void addLocale(LocaleDefinition ld) {
         if (ld.isEnabled()) {
-            this.languages.put(ld.getId(), ld.getLocale());
+            this.locales.put(ld.getId(), ld.getLocale());
         }
     }
 
-    protected boolean languageSupported(String lang) {
-        return StringUtils.isNotEmpty(lang) && languages.containsKey(lang);
+    protected boolean isLocaleSupported(Locale locale) {
+        return locale != null && locales.containsKey(locale.toString());
     }
 
     /**

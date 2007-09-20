@@ -187,13 +187,13 @@ public final class MessagesManager {
                 languagesNode = configNode.createContent(LANGUAGES_NODE_NAME, ItemType.CONTENT);
             }
             
-            Map languageDefinitions = Content2BeanUtil.toMap(languagesNode, true, LanguageDefinition.class);
+            Map languageDefinitions = Content2BeanUtil.toMap(languagesNode, true, LocaleDefinition.class);
 
             // clear collection for reload
             MessagesManager.availableLocales.clear();
 
             for (Iterator iter = languageDefinitions.values().iterator(); iter.hasNext();) {
-                LanguageDefinition ld = (LanguageDefinition) iter.next();
+                LocaleDefinition ld = (LocaleDefinition) iter.next();
                 if(ld.isEnabled()){
                     availableLocales.add(ld.getLocale());
                 }
@@ -242,6 +242,10 @@ public final class MessagesManager {
 
     public static Messages getMessages(String basename) {
         return getMessages(basename, MgnlContext.getLocale());
+    }
+    
+    public static Messages getMessages(Locale locale) {
+        return getMessages(MessagesManager.DEFAULT_BASENAME, locale);
     }
 
     public static Messages getMessages(String basename, Locale locale) {

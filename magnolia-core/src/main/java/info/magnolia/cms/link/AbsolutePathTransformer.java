@@ -11,7 +11,7 @@
 package info.magnolia.cms.link;
 
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
-import info.magnolia.cms.i18n.I18NSupportFactory;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
 
 import org.apache.commons.lang.StringUtils;
@@ -36,7 +36,7 @@ public class AbsolutePathTransformer implements PathToLinkTransformer{
         }
         linkStr += getURISuffix(uuidLink);
         if(useI18N){
-            linkStr = I18NSupportFactory.getI18nSupport().toI18NURI(linkStr);
+            linkStr = I18nContentSupportFactory.getI18nSupport().toI18NURI(linkStr);
         }
         if(addContextPath){
             linkStr = prefixLink(linkStr);

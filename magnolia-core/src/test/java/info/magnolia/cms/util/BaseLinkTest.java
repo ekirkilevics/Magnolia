@@ -13,7 +13,7 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.i18n.DefaultI18NSupport;
-import info.magnolia.cms.i18n.I18NSupport;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.BinaryMockNodeData;
 import info.magnolia.test.mock.MockContent;
@@ -78,7 +78,7 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         replay(uri2repo);
         FactoryUtil.setInstance(URI2RepositoryManager.class, uri2repo);
 
-        FactoryUtil.setInstance(I18NSupport.class, new DefaultI18NSupport());
+        FactoryUtil.setInstance(I18nContentSupport.class, new DefaultI18NSupport());
     }
 
     protected void tearDown() throws Exception {

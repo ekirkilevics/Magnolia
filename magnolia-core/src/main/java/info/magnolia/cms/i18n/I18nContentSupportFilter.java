@@ -13,13 +13,13 @@ package info.magnolia.cms.i18n;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.filters.AbstractMagnoliaFilter;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
+
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
  * Rewrites the i18n uris and sets the current language.
@@ -27,22 +27,17 @@ import java.io.IOException;
  * @author philipp
  * @version $Id$
  */
-public class I18NSupportFilter extends AbstractMagnoliaFilter {
+public class I18nContentSupportFilter extends AbstractMagnoliaFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
 
-        final I18NSupport i18nSupport = I18NSupportFactory.getI18nSupport();
-        final String currentURI = aggregationState.getCurrentURI();
-        String lang = i18nSupport.languageFromURI(currentURI);
-        if (StringUtils.isNotEmpty(lang)) {
-            i18nSupport.setCurrentLanguage(lang);
-            if (request.getSession(false) != null) {
-                i18nSupport.setSessionLanguage(lang);
-            }
-            final String newUri = i18nSupport.toURI(currentURI);
-            aggregationState.setCurrentURI(newUri);
-        }
+        AggregationState aggregationState = MgnlContext.getAggregationState();
+        i18nSupport.setLocale(i18nSupport.determineLocale());
+        
+        String newUri = i18nSupport.toRawURI(aggregationState.getCurrentURI());
+        aggregationState.setCurrentURI(newUri);
+
         chain.doFilter(request, response);
     }
 }

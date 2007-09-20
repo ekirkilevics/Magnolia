@@ -13,15 +13,15 @@ package info.magnolia.cms.i18n;
 import info.magnolia.cms.util.FactoryUtil;
 
 /**
- * Get the current I18NSupport object from this factory. Observation is used.
+ * Get the current I18nContentSupport object from this factory. Observation is used.
  * @author philipp
  * @version $Id$
  *
  */
-public class I18NSupportFactory {
+public class I18nContentSupportFactory {
 
-    public static I18NSupport getI18nSupport() {
-        return (I18NSupport) FactoryUtil.getSingleton(I18NSupport.class);
+    public static I18nContentSupport getI18nSupport() {
+        return (I18nContentSupport) FactoryUtil.getSingleton(I18nContentSupport.class);
     }
 
 }
