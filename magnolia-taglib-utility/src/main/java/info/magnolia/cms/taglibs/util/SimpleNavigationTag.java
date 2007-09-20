@@ -14,7 +14,7 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.i18n.I18NSupportFactory;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
@@ -388,7 +388,7 @@ public class SimpleNavigationTag extends TagSupport {
 
             out.print("<a href=\""); //$NON-NLS-1$
             out.print(((HttpServletRequest) this.pageContext.getRequest()).getContextPath());
-            out.print(I18NSupportFactory.getI18nSupport().toI18NURI(child.getHandle()));
+            out.print(I18nContentSupportFactory.getI18nSupport().toI18NURI(child.getHandle()));
             out.print(".html\""); //$NON-NLS-1$
 
             if (StringUtils.isNotEmpty(accesskey)) {
