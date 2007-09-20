@@ -15,19 +15,21 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.i18n.I18NSupportFactory;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.commons.lang.time.DateFormatUtils;
+
+import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
 
 import javax.jcr.PropertyType;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
-import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
+
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.apache.commons.lang.time.DateFormatUtils;
 
 
 /**
@@ -179,7 +181,7 @@ public class Out extends BaseContentTag {
     }
 
     protected String getFilePropertyValue(Content contentNode) {
-        NodeData nodeData = I18NSupportFactory.getI18nSupport().getNodeData(contentNode, this.nodeDataName);
+        NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(contentNode, this.nodeDataName);
         FileProperties props = new FileProperties(contentNode, nodeData.getName());
         String value = props.getProperty(this.fileProperty);
         return value;
@@ -196,7 +198,7 @@ public class Out extends BaseContentTag {
             return EVAL_PAGE;
         }
 
-        NodeData nodeData = I18NSupportFactory.getI18nSupport().getNodeData(contentNode, this.nodeDataName);
+        NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(contentNode, this.nodeDataName);
 
         if (!nodeData.isExist()) {
             return EVAL_PAGE;
