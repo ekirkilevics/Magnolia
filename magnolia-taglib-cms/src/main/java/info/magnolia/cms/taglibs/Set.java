@@ -15,10 +15,6 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.tagext.TagSupport;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -27,8 +23,19 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
-public class Set extends TagSupport {
+public class Set extends BaseContentTag {
 
+    public static final String SCOPE_GLOBAL = "global";
+    
+    public static final String SCOPE_LOCAL = "local";
+
+    public static final String SCOPE_PARAGRAPH = "paragraph";
+
+    public static final String SCOPE_CURRENT = "current";
+
+    public static final String SCOPE_PAGE = "page";
+
+    
     /**
      * Stable serialVersionUID.
      */
@@ -39,24 +46,18 @@ public class Set extends TagSupport {
      */
     private static Logger log = LoggerFactory.getLogger(Set.class);
 
-    private transient Content contentNode;
-
-    private String contentNodeName;
+    private String scope = SCOPE_GLOBAL;
+    
+    /**
+     * Reset the former status after executing the body.
+     */
+    protected boolean forBodyOnly = false;
 
     /**
-     * @param contentNode to be set
+     * If forBodyOnly is true we have to reset the former status
      */
-    public void setContentNode(Content contentNode) {
-        this.contentNode = contentNode;
-    }
-
-    /**
-     * @param name , contentNode name to be set
-     */
-    public void setContentNodeName(String name) {
-        this.contentNodeName = name;
-    }
-
+    protected Content previousNode;
+    
     /**
      * @deprecated
      */
@@ -75,27 +76,48 @@ public class Set extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() {
-        HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
-        Resource.removeGlobalContentNode(req);
-        if (this.contentNodeName == null) {
-            Resource.setGlobalContentNode(this.contentNode);
+        Content node = getFirstMatchingNode();
+
+        if(isForBodyOnly()){
+            saveCurrentNode();
         }
-        else {
-            try {
-                this.contentNode = Resource.getCurrentActivePage().getContent(this.contentNodeName);
-                Resource.setGlobalContentNode(this.contentNode);
-            }
-            catch (RepositoryException re) {
-                log.error(re.getMessage());
-            }
+
+        setNode(node);
+        
+        return EVAL_BODY_INCLUDE;
+    }
+
+    protected void saveCurrentNode() {
+        if(SCOPE_GLOBAL.equals(this.getScope())){
+            previousNode = Resource.getGlobalContentNode();
         }
-        return SKIP_BODY;
+        else if (SCOPE_LOCAL.equals(this.getScope()) || SCOPE_PARAGRAPH.equals(this.getScope())){
+            previousNode = Resource.getLocalContentNode();
+        }
+        else if (SCOPE_CURRENT.equals(this.getScope()) || SCOPE_PAGE.equals(this.getScope())){
+            previousNode = Resource.getCurrentActivePage();
+        }
+    }
+
+    protected void setNode(Content node) {
+        if(SCOPE_GLOBAL.equals(this.getScope())){
+            Resource.setGlobalContentNode(node);
+        }
+        else if (SCOPE_LOCAL.equals(this.getScope()) || SCOPE_PARAGRAPH.equals(this.getScope())){
+            Resource.setLocalContentNode(node);
+        }
+        else if (SCOPE_CURRENT.equals(this.getScope()) || SCOPE_PAGE.equals(this.getScope())){
+            Resource.setCurrentActivePage(node);
+        }
     }
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
+        if(isForBodyOnly()){
+            setNode(previousNode);
+        }
         return EVAL_PAGE;
     }
 
@@ -106,5 +128,21 @@ public class Set extends TagSupport {
         super.release();
         this.contentNode = null;
         this.contentNodeName = null;
+    }
+    
+    public String getScope() {
+        return this.scope;
+    }
+    
+    public void setScope(String scope) {
+        this.scope = scope;
+    }
+    
+    public boolean isForBodyOnly() {
+        return this.forBodyOnly;
+    }
+    
+    public void setForBodyOnly(boolean forBodyOnly) {
+        this.forBodyOnly = forBodyOnly;
     }
 }

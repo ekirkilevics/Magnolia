@@ -220,7 +220,9 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>nodeDataName</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>the name of the nodeData you wish to write out (required)</description>
+      <description>the name of the nodeData you wish to write out (required). There are following special values supported
+        name, uuid, path, handle
+      </description>
     </attribute>
     <attribute>
       <name>contentNodeName</name>
@@ -263,6 +265,60 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <rtexprvalue>true</rtexprvalue>
       <description>
         defaults to BR-tag. Set to "" to have no line break at all, or any other value to be used as the line break
+      </description>
+    </attribute>
+    <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The content object to use.
+      </description>
+    </attribute>
+    <attribute>
+      <name>uuid</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The uuid to use for finding the content. 
+        You must define the repository attribute if the content is not stored in the website repositoty
+      </description>
+    </attribute>
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The absolute path to the content. 
+        You must define the repository attribute if the content is not stored in the website repositoty
+      </description>
+    </attribute>
+    <attribute>
+      <name>repository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Used if the uuid or path attribute is set. Defaults to website
+      </description>
+    </attribute>
+    <attribute>
+      <name>uuidToLink</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Transform a uuid value to a link. The following values are supported
+        none: no transformation (default value)
+        absolut: path resolved by using the repository mapping feature
+        path: the path of the content
+        relative: relative path to the current page
+      </description>
+    </attribute>
+    <attribute>
+      <name>uuidToLinkRepository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Used if the uuidToLink attribute is set. The content is found in this repository. Defaults to website.
       </description>
     </attribute>
     <attribute>
@@ -391,26 +447,104 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <name>set</name>
     <tag-class>info.magnolia.cms.taglibs.Set</tag-class>
     <body-content>EMPTY</body-content>
-    <description>Set contentNode in resource (globally available for the page)</description>
+    <description>Set contentNode in resource</description>
+
+    <attribute>
+      <name>scope</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Attention this is not the jstl scope but the magnolia scope! Values are
+        local: same as paragraph
+        paragraph: the current paragraph
+        global: a globally use node (default value)
+        page: same as page
+        current: the current page
+      </description>
+    </attribute>
+
+    <attribute>
+      <name>forBodyOnly</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        If true the node is unset after the end tag. Default is false.
+      </description>
+    </attribute>
+
     <attribute>
       <name>contentNodeName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>contentNode's name to be loaded from the current active page</description>
+      <description>
+        Inside a "contentNodeIterator": if not set the current content node is taken, if set empty (contentNodeName="")
+        the top level content is taken, if specified the named content node is taken. Outside a "contentNodeIterator":
+        if not set or empty: the top level content is taken, if specified, the named content node is taken
+      </description>
     </attribute>
+
+    <attribute>
+      <name>contentNodeCollectionName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs"</description>
+    </attribute>
+
+    <attribute>
+      <name>content</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Same as contentNode but deprecated
+      </description>
+    </attribute>
+
+    <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The content object to use.
+      </description>
+    </attribute>    
+
+    <attribute>
+      <name>uuid</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The uuid to use for finding the content. 
+        You must define the repository attribute if the content is not stored in the website repositoty
+      </description>
+    </attribute>
+
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The absolute path to the content. 
+        You must define the repository attribute if the content is not stored in the website repositoty
+      </description>
+    </attribute>
+
+    <attribute>
+      <name>repository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Used if the uuid or path attribute is set. Defaults to website
+      </description>
+    </attribute>
+
+
     <attribute>
       <name>containerName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>@deprecated use contentNodeName</description>
     </attribute>
-    <attribute>
-      <name>contentNode</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <type>info.magnolia.cms.core.Content</type>
-      <description>contentNodeobject to be set as global contentNode for the page</description>
-    </attribute>
+
     <attribute>
       <name>container</name>
       <required>false</required>
@@ -450,6 +584,40 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         if this attribute is set, the tag will iterate on the collection directly passed here instead of fetching the
         collection named by contentNodeCollectionName. This collection must contains info.magnolia.cms.core.Content
         items.
+      </description>
+    </attribute>
+        <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The content object to use.
+      </description>
+    </attribute>
+    <attribute>
+      <name>uuid</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The uuid to use for finding the content. 
+        You must define the repository attribute if the content is not stored in the website repositoty
+      </description>
+    </attribute>
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The absolute path to the content. 
+        You must define the repository attribute if the content is not stored in the website repositoty
+      </description>
+    </attribute>
+    <attribute>
+      <name>repository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Used if the uuid or path attribute is set. Defaults to website
       </description>
     </attribute>
     <attribute>
@@ -758,10 +926,42 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>content</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>info.magnolia.cms.core.Content</type>
       <description>
-        Use the node directly passed using this attribute, instead of fetching a node using
-        contentNodeName/contentNodeCollectionName
+        Same as contentNode but deprecated
+      </description>
+    </attribute>
+    <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The content object to use.
+      </description>
+    </attribute>    
+    <attribute>
+      <name>uuid</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The uuid to use for finding the content. 
+        You must define the repository attribute if the content is not stored in the website repositoty
+      </description>
+    </attribute>
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The absolute path to the content. 
+        You must define the repository attribute if the content is not stored in the website repositoty
+      </description>
+    </attribute>
+    <attribute>
+      <name>repository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Used if the uuid or path attribute is set. Defaults to website
       </description>
     </attribute>
     <attribute>

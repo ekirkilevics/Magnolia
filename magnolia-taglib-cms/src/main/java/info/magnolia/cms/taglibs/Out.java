@@ -12,12 +12,15 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.util.Date;
@@ -40,6 +43,46 @@ import org.apache.commons.lang.time.DateFormatUtils;
 public class Out extends BaseContentTag {
 
     /**
+     * Facke nodeDataName returning the node's name
+     */
+    public static final String NODE_NAME_NODEDATANAME = "name";
+
+    /**
+     * Facke nodeDataName returning the node's handle
+     */
+    private static final String PATH_NODEDATANAME = "path";
+
+    /**
+     * Facke nodeDataName returning the node's handle
+     */
+    private static final String HANDLE_NODEDATANAME = "handle";
+
+    /**
+     * Facke nodeDataName returning the node's uuid
+     */
+    private static final String UUID_NODEDATANAME = "uuid";
+
+    /**
+     * No uuid to link resolving
+     */
+    public static final String LINK_RESOLVING_NONE = "none";
+
+    /**
+     * Resolve to a absolute link but do not use the repository to uri mapping
+     */
+    private static final String LINK_RESOLVING_HANDLE = "handle";
+
+    /**
+     * Resolve to relative path. Path is relative to current page.
+     */
+    public static final String LINK_RESOLVING_RELATIVE = "relative";
+
+    /**
+     * Resolve to a absolute link using the repository to uri mapping 
+     */
+    public static final String LINK_RESOLVING_ABSOLUTE = "absolute";
+
+    /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
@@ -55,7 +98,12 @@ public class Out extends BaseContentTag {
     private String dateLanguage;
 
     private String lineBreak = DEFAULT_LINEBREAK;
-
+    
+    private String uuidToLink = LINK_RESOLVING_NONE;
+    
+    private String uuidToLinkRepository = ContentRepository.WEBSITE;
+    
+    
     /**
      * If set, the result of the evaluation will be set to a variable named from this attribute (and in the scope
      * defined using the "scope" attribute, defaulting to PAGE) instead of being written directly to the page.
@@ -200,36 +248,64 @@ public class Out extends BaseContentTag {
 
         NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(contentNode, this.nodeDataName);
 
-        if (!nodeData.isExist()) {
-            return EVAL_PAGE;
-        }
-
         String value = null;
-        int type = nodeData.getType();
 
-        switch (type) {
-            case PropertyType.DATE:
+        if (!nodeData.isExist()) {
+            if(UUID_NODEDATANAME.equals(this.nodeDataName)){
+                value = contentNode.getUUID();
+            }
+            else if(PATH_NODEDATANAME.equals(this.nodeDataName) || HANDLE_NODEDATANAME.equals(this.nodeDataName)){
+                value = contentNode.getHandle();
+            }
+            else if(NODE_NAME_NODEDATANAME.equals(this.nodeDataName)){
+                value = contentNode.getName();
+            }
+            else{
+                return EVAL_PAGE;
+            }
+        }
+        else{
 
-                Date date = nodeData.getDate().getTime();
-                if (date != null) {
-                    if (this.dateLanguage == null) {
-                        value = DateFormatUtils.format(date, this.datePattern);
+            int type = nodeData.getType();
+    
+            switch (type) {
+                case PropertyType.DATE:
+    
+                    Date date = nodeData.getDate().getTime();
+                    if (date != null) {
+                        if (this.dateLanguage == null) {
+                            value = DateFormatUtils.format(date, this.datePattern);
+                        }
+                        else {
+                            value = DateFormatUtils.format(date, this.datePattern, new Locale(this.dateLanguage));
+                        }
                     }
-                    else {
-                        value = DateFormatUtils.format(date, this.datePattern, new Locale(this.dateLanguage));
+                    break;
+    
+                case PropertyType.BINARY:
+                    value = this.getFilePropertyValue(contentNode);
+                    break;
+    
+                default:
+                    value = StringUtils.isEmpty(this.lineBreak) ? nodeData.getString() : nodeData.getString(this.lineBreak);
+                    // replace internal links using the special pattern
+                    value = LinkUtil.convertUUIDsToRelativeLinks(value, Resource.getActivePage()); // static actpage
+                    if(!StringUtils.equalsIgnoreCase(getUuidToLink(), LINK_RESOLVING_NONE)){
+                        if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_HANDLE)){
+                            value = ContentUtil.uuid2path(this.getUuidToLinkRepository(), value);
+                        }
+                        else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_ABSOLUTE)){
+                            value = LinkUtil.makeAbsolutePathFromUUID(uuid, this.getUuidToLinkRepository());
+                        }
+                        else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_RELATIVE)){
+                            value = LinkUtil.makeRelativePath(LinkUtil.makeAbsolutePathFromUUID(uuid, this.getUuidToLinkRepository()), MgnlContext.getAggregationState().getMainContent());
+                        }
+                        else{
+                            throw new IllegalArgumentException("not supported value for uuidToLink");
+                        }
                     }
-                }
-                break;
-
-            case PropertyType.BINARY:
-                value = this.getFilePropertyValue(contentNode);
-                break;
-
-            default:
-                value = StringUtils.isEmpty(this.lineBreak) ? nodeData.getString() : nodeData.getString(this.lineBreak);
-                // replace internal links
-                value = LinkUtil.convertUUIDsToRelativeLinks(value, Resource.getActivePage()); // static actpage
-                break;
+                    break;
+            }
         }
 
         if (var != null) {
@@ -262,6 +338,26 @@ public class Out extends BaseContentTag {
         this.lineBreak = DEFAULT_LINEBREAK;
         this.var = null;
         this.scope = PageContext.PAGE_SCOPE;
+    }
+
+    
+    public String getUuidToLink() {
+        return this.uuidToLink;
+    }
+
+    
+    public void setUuidToLink(String uuidToLink) {
+        this.uuidToLink = uuidToLink;
+    }
+
+    
+    public String getUuidToLinkRepository() {
+        return this.uuidToLinkRepository;
+    }
+
+    
+    public void setUuidToLinkRepository(String uuidToLinkRepository) {
+        this.uuidToLinkRepository = uuidToLinkRepository;
     }
 
 }

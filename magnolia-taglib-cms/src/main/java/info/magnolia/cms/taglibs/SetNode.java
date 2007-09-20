@@ -21,6 +21,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
 import javax.servlet.jsp.PageContext;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -70,24 +71,18 @@ public class SetNode extends BaseContentTag {
     private int scope = PageContext.PAGE_SCOPE;
 
     /**
-     * Directly set this content node instead of fetching the active node from page or paragraph collection.
-     */
-    private Content content;
-
-    /**
      * Setter fot the <code>var</code> tag attribute.
      * @param var variable name: the content node will be added to the pagecontext with this name
      */
     public void setVar(String var) {
         this.var = var;
     }
-
+    
     /**
-     * Setter for <code>content</code>.
-     * @param content The content to set.
+     * @deprecated use setContentNode(node)
      */
-    public void setContent(Content content) {
-        this.content = content;
+    public void setContent(Content node){
+        this.setContentNode(node);
     }
 
     /**
@@ -116,16 +111,8 @@ public class SetNode extends BaseContentTag {
      * @return int
      */
     public int doEndTag() {
-        Content currentPage = Resource.getCurrentActivePage();
-
         // Evaluated content node.
-        Content contentNode;
-        if (content != null) {
-            contentNode = content;
-        }
-        else {
-            contentNode = resolveNode(currentPage);
-        }
+        Content contentNode = getFirstMatchingNode();
 
         // set attribute
         if (contentNode != null) {
@@ -144,7 +131,7 @@ public class SetNode extends BaseContentTag {
     public void release() {
         super.release();
         this.var = null;
-        this.content = null;
+        this.contentNode = null;
         this.scope = PageContext.PAGE_SCOPE;
     }
 
@@ -154,6 +141,11 @@ public class SetNode extends BaseContentTag {
      * @version $Revision$ ($Author$)
      */
     public class NodeMapWrapper implements Map {
+
+        /**
+         * The special "uuid" property, which is exposed by NodeMapWrapper just like any other property
+         */
+        private static final String UUID_PROPERTY = "uuid";
 
         /**
          * The special "handle" property, which is exposed by NodeMapWrapper just like any other property.
@@ -197,7 +189,7 @@ public class SetNode extends BaseContentTag {
          * @see java.util.Map#containsKey(java.lang.Object)
          */
         public boolean containsKey(Object key) {
-            return this.wrappedNode.getNodeData((String) key).isExist() || HANDLE_PROPERTY.equals(key);
+            return this.wrappedNode.getNodeData((String) key).isExist() || HANDLE_PROPERTY.equals(key) || UUID_PROPERTY.equals(key);
         }
 
         /**
@@ -213,10 +205,22 @@ public class SetNode extends BaseContentTag {
          * @see java.util.Map#get(Object)
          */
         public Object get(Object key) {
-
-            // the special "handle" property
-            if (HANDLE_PROPERTY.equals(key)) {
-                return wrappedNode.getHandle();
+            try {
+                if(!this.wrappedNode.hasNodeData((String)key)){
+                    // the special "handle" property
+                    if (HANDLE_PROPERTY.equals(key)) {
+                        return wrappedNode.getHandle();
+                    }
+                    
+                    // the uuid
+                    if (UUID_PROPERTY.equals(key)) {
+                        return wrappedNode.getUUID();
+                    }
+                }
+            }
+            catch (RepositoryException e) {
+                // should really not happen
+                log.error("can't check for node data {" + key + "}", e);
             }
 
             NodeData nodeData = this.wrappedNode.getNodeData((String) key);

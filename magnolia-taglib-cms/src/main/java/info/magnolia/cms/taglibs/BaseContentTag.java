@@ -12,8 +12,10 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.Resource;
 
 import javax.jcr.RepositoryException;
@@ -39,10 +41,18 @@ public class BaseContentTag extends TagSupport {
 
     protected String nodeDataName;
 
+    protected Content contentNode;
+    
     protected String contentNodeName;
 
     protected String contentNodeCollectionName;
+    
+    protected String uuid;
 
+    protected String path;
+
+    protected String repository = ContentRepository.WEBSITE;
+    
     protected boolean inherit;
 
     /**
@@ -100,8 +110,23 @@ public class BaseContentTag extends TagSupport {
         if(actpage){
             return currentPage;
         }
+        
+        Content contentNode = null;
+        if(this.getContentNode()!=null){
+            contentNode = this.getContentNode();
+        }
+        if(StringUtils.isNotEmpty(this.getUuid())){
+            contentNode = ContentUtil.getContentByUUID(this.getRepository(), this.getUuid());
+        }
 
-        Content contentNode = resolveNode(currentPage);
+        if(StringUtils.isNotEmpty(this.getPath())){
+            contentNode = ContentUtil.getContent(this.getRepository(), this.getPath());
+        }
+
+        if (contentNode == null) {
+            contentNode = resolveNode(currentPage);
+        }
+        
         if (contentNode == null) {
             return null;
         }
@@ -195,6 +220,46 @@ public class BaseContentTag extends TagSupport {
 
     public void setActpage(boolean actpage) {
         this.actpage = actpage;
+    }
+
+    
+    public String getRepository() {
+        return this.repository;
+    }
+
+    
+    public void setRepository(String repository) {
+        this.repository = repository;
+    }
+
+    
+    public String getUuid() {
+        return this.uuid;
+    }
+
+    
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
+
+    
+    public String getPath() {
+        return this.path;
+    }
+
+    
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    
+    public Content getContentNode() {
+        return this.contentNode;
+    }
+
+    
+    public void setContentNode(Content content) {
+        this.contentNode = content;
     }
 
 }
