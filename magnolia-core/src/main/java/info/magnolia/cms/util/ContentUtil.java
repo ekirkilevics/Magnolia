@@ -116,6 +116,19 @@ public class ContentUtil {
     }
 
     /**
+     * @return null if not found
+     */
+    public static Content getContentByUUID(String repository, String uuid) {
+        try {
+            return MgnlContext.getHierarchyManager(repository).getContentByUUID(uuid);
+        }
+        catch (RepositoryException e) {
+            return null;
+        }
+    }
+
+
+    /**
      * Get the node or null if not exists
      * @param node
      * @param name
