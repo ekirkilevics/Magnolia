@@ -714,7 +714,7 @@
 
     mgnlTree.prototype.activateNode = function(action,recursive)
         {
-        var nodeToReload=this.selectedNode.getParten();
+        var nodeToReload=this.selectedNode.getParent();
 
         var params=new Object();
         params.forceReload=true;
@@ -727,7 +727,7 @@
 
     mgnlTree.prototype.deactivateNode = function(action)
         {
-        var nodeToReload=this.selectedNode.getParten();
+        var nodeToReload=this.selectedNode.getParent();
 
         var params=new Object();
         params.forceReload=true;
