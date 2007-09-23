@@ -50,8 +50,9 @@ class MgnlSecurityUtil {
     static void collectPropertyNames(Content node, String repositoryName, Collection set, boolean isDeep) throws Throwable {
         Collection c = node.getNodeDataCollection();
         Iterator it = c.iterator();
+        NodeData nd = null;
         while (it.hasNext()) {
-            NodeData nd = (NodeData) it.next();
+            nd = (NodeData) it.next();
             String uuid = nd.getString();
             try {
                 final HierarchyManager hierarchyManager = getSystemHierarchyManager(repositoryName);
@@ -60,11 +61,20 @@ class MgnlSecurityUtil {
                 if (isDeep && targetNode.hasContent("groups")) {
                     collectPropertyNames(targetNode.getContent("groups"), repositoryName, set, true);
                 }
-            } catch (ItemNotFoundException t) {
-                log.error("Can't find {} node by UUID {}", repositoryName, t.getMessage());
+            }
+            catch (ItemNotFoundException t) {
+                String path = node.getHandle();
+                if (nd != null) {
+                    path = nd.getHandle();
+                }
+                // todo: why we are using UUIDs here? shouldn't be better to use group names, since uuids can change???
+                log.warn("Can't find {} node by UUID {} referred by node {}", new Object[]{
+                    repositoryName,
+                    t.getMessage(),
+                    path});
                 log.debug("Failed while reading node by UUID", t);
                 // we continue since it can happen that target node is removed
-                // - UUID's are kept as simple strings thus have no  referential integrity
+                // - UUID's are kept as simple strings thus have no referential integrity
             }
         }
     }
