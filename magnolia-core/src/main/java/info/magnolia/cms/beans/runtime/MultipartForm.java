@@ -13,6 +13,7 @@
 package info.magnolia.cms.beans.runtime;
 
 import java.io.File;
+import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -101,5 +102,9 @@ public class MultipartForm {
 
     public Map getDocuments() {
         return this.documents;
+    }
+
+    public Enumeration getParameterNames() {
+        return ((Hashtable) this.parameters).keys();
     }
 }

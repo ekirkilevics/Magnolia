@@ -18,13 +18,16 @@ import info.magnolia.cms.core.Path;
 import java.io.File;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
+import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
@@ -80,13 +83,19 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
      * Determine if the request has multipart content and if so parse it into a <code>MultipartForm</code> and store
      * it as a request attribute.
      */
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
 
-        boolean isMultipartContent = FileUploadBase.isMultipartContent(new ServletRequestContext(
-            (HttpServletRequest) request));
+        boolean isMultipartContent = FileUploadBase.isMultipartContent(new ServletRequestContext(request));
         if (isMultipartContent) {
             try {
-                parseRequest((HttpServletRequest) request);
+                MultipartForm mpf = parseRequest(request);
+
+                // wrap the request
+                MultipartRequestWrapper mrw = new MultipartRequestWrapper(request, mpf);
+                chain.doFilter(mrw, response);
+                return;
+
             }
             catch (IOException e) {
                 throw e;
@@ -102,7 +111,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
     /**
      * Parse the request and store it as a request attribute.
      */
-    private void parseRequest(HttpServletRequest request) throws Exception {
+    private MultipartForm parseRequest(HttpServletRequest request) throws Exception {
         MultipartForm form = new MultipartForm();
 
         ServletFileUpload upload = newServletFileUpload();
@@ -120,6 +129,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
         }
 
         request.setAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME, form);
+        return form;
     }
 
     /**
@@ -168,5 +178,47 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
         item.write(file);
 
         form.addDocument(atomName, fileName, type, file);
+    }
+
+    static class MultipartRequestWrapper extends HttpServletRequestWrapper {
+
+        private MultipartForm form;
+
+        /**
+         * @param request
+         */
+        public MultipartRequestWrapper(HttpServletRequest request, MultipartForm form) {
+            super(request);
+            this.form = form;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public String getParameter(String name) {
+            return form.getParameter(name);
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public Map getParameterMap() {
+            return form.getParameters();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public Enumeration getParameterNames() {
+            return form.getParameterNames();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+        public String[] getParameterValues(String name) {
+            return form.getParameterValues(name);
+        }
+
     }
 }
