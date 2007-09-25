@@ -19,6 +19,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Locale;
 import java.util.TimeZone;
 
 import org.apache.commons.lang.StringUtils;
@@ -31,6 +32,24 @@ import org.apache.commons.lang.time.FastDateFormat;
  * @version $Revision$ ($Author$)
  */
 public class DateUtil {
+
+    public static final String FORMAT_DATE_SHORT = "date short";
+
+    public static final String FORMAT_DATE_MEDIUM = "date";
+
+    public static final String FORMAT_DATE_LONG = "date long";
+
+    public static final String FORMAT_DATETIME_SHORT = "datetime short";
+
+    public static final String FORMAT_DATETIME_MEDIUM = "datetime";
+
+    public static final String FORMAT_DATETIME_LONG = "datetime long";
+
+    public static final String FORMAT_TIME_SHORT = "time short";
+
+    public static final String FORMAT_TIME_MEDIUM = "time";
+
+    public static final String FORMAT_TIME_LONG = "time long";
 
     /**
      * Default date format.
@@ -66,14 +85,52 @@ public class DateUtil {
         return DateFormatUtils.format(date, formatPattern);
     }
 
+    /**
+     * Supports implicit formats like: date, date long, datetime, dateime long, time and time long
+     */
     public static String format(Date date, String formatPattern) {
+        return format(date, formatPattern, Locale.getDefault());
+    }
+        
+    public static String format(Date date, String formatPattern, Locale locale) {
         if(date == null){
             return StringUtils.EMPTY;
         }
+
         if (formatPattern == null) {
             formatPattern = FORMAT_DEFAULTPATTERN;
         }
-        return DateFormatUtils.format(date, formatPattern);
+        
+        if(FORMAT_DATE_SHORT.equals(formatPattern)){
+            return SimpleDateFormat.getDateInstance(SimpleDateFormat.SHORT, locale).format(date);
+        }
+        else if (FORMAT_DATE_MEDIUM.equals(formatPattern)){
+            return SimpleDateFormat.getDateInstance(SimpleDateFormat.MEDIUM, locale).format(date);
+        }
+        else if (FORMAT_DATE_LONG.equals(formatPattern)){
+            return SimpleDateFormat.getDateInstance(SimpleDateFormat.LONG, locale).format(date);
+        }
+        else if (FORMAT_TIME_SHORT.equals(formatPattern)){
+            return SimpleDateFormat.getTimeInstance(SimpleDateFormat.SHORT,locale).format(date);
+        }
+        else if (FORMAT_TIME_MEDIUM.equals(formatPattern)){
+            return SimpleDateFormat.getTimeInstance(SimpleDateFormat.MEDIUM,locale).format(date);
+        }
+        else if (FORMAT_TIME_LONG.equals(formatPattern)){
+            return SimpleDateFormat.getTimeInstance(SimpleDateFormat.LONG,locale).format(date);
+        }
+        else if (FORMAT_DATETIME_SHORT.equals(formatPattern)){
+            return SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.SHORT,SimpleDateFormat.SHORT,locale).format(date);
+        }
+        else if (FORMAT_DATETIME_MEDIUM.equals(formatPattern)){
+            return SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.MEDIUM, SimpleDateFormat.MEDIUM, locale).format(date);
+        }
+        else if (FORMAT_DATETIME_LONG.equals(formatPattern)){
+            return SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.LONG, locale).format(date);
+        }
+        else {
+            return DateFormatUtils.format(date, formatPattern);
+        }
     }
 
     /**
