@@ -225,6 +225,14 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       </description>
     </attribute>
     <attribute>
+      <name>defaultValue</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        Default value used if the expresion evaluates to null or an empty string
+      </description>
+    </attribute>
+    <attribute>
       <name>contentNodeName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>

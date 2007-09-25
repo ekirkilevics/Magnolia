@@ -18,6 +18,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.DateUtil;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
@@ -32,7 +33,6 @@ import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.apache.commons.lang.time.DateFormatUtils;
 
 
 /**
@@ -89,7 +89,9 @@ public class Out extends BaseContentTag {
 
     private static final String DEFAULT_LINEBREAK = "<br />"; //$NON-NLS-1$
 
-    private static final String DEFAULT_DATEPATTERN = "yyyy-MM-dd"; //$NON-NLS-1$
+    private static final String DEFAULT_DATEPATTERN = DateUtil.FORMAT_DATE_MEDIUM; //$NON-NLS-1$
+
+    private String defaultValue = StringUtils.EMPTY;
 
     private String fileProperty = StringUtils.EMPTY;
 
@@ -260,7 +262,10 @@ public class Out extends BaseContentTag {
             else if(NODE_NAME_NODEDATANAME.equals(this.nodeDataName)){
                 value = contentNode.getName();
             }
-            else{
+            else if(StringUtils.isNotEmpty(this.getDefaultValue())){
+                value = this.getDefaultValue();
+            }
+            else {
                 return EVAL_PAGE;
             }
         }
@@ -273,12 +278,14 @@ public class Out extends BaseContentTag {
     
                     Date date = nodeData.getDate().getTime();
                     if (date != null) {
+                        Locale locale;
                         if (this.dateLanguage == null) {
-                            value = DateFormatUtils.format(date, this.datePattern);
+                             locale = I18nContentSupportFactory.getI18nSupport().getLocale();
                         }
                         else {
-                            value = DateFormatUtils.format(date, this.datePattern, new Locale(this.dateLanguage));
+                            locale = new Locale(this.dateLanguage);
                         }
+                        value = DateUtil.format(date, this.datePattern, locale);
                     }
                     break;
     
@@ -307,6 +314,8 @@ public class Out extends BaseContentTag {
                     break;
             }
         }
+        
+        value = StringUtils.defaultIfEmpty(value, this.getDefaultValue());
 
         if (var != null) {
             // set result as a variable
@@ -340,24 +349,28 @@ public class Out extends BaseContentTag {
         this.scope = PageContext.PAGE_SCOPE;
     }
 
-    
     public String getUuidToLink() {
         return this.uuidToLink;
     }
 
-    
     public void setUuidToLink(String uuidToLink) {
         this.uuidToLink = uuidToLink;
     }
 
-    
     public String getUuidToLinkRepository() {
         return this.uuidToLinkRepository;
     }
-
     
     public void setUuidToLinkRepository(String uuidToLinkRepository) {
         this.uuidToLinkRepository = uuidToLinkRepository;
+    }
+    
+    public String getDefaultValue() {
+        return this.defaultValue;
+    }
+    
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
 }
