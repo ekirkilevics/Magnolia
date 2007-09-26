@@ -51,8 +51,10 @@ import java.util.List;
  */
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final List tasks31 = Arrays.asList(new Task[]{
-            new WarnTask("web.xml updates", "CacheGeneratorServlet has been removed in Magnolia 3.1: please remove the corresponding <servlet> and <servlet-mapping> elements in your web.xml file."),
-            new WarnTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."),
+
+        // disabled due to MAGNOLIA-1743
+            // new WarnTask("web.xml updates", "CacheGeneratorServlet has been removed in Magnolia 3.1: please remove the corresponding <servlet> and <servlet-mapping> elements in your web.xml file."),
+            // new WarnTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."),
 
             new AddNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
             new AddNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
