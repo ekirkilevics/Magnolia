@@ -80,7 +80,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
-    @Override
+
     public void init(FilterConfig config) throws ServletException {
         super.init(config);
         String maxFileSize = config.getInitParameter(PARAM_MAX_FILE_SIZE);
@@ -95,7 +95,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
      * Determine if the request has multipart content and if so parse it into a <code>MultipartForm</code> and store
      * it as a request attribute.
      */
-    @Override
+
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
 
@@ -212,7 +212,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
         /**
          * {@inheritDoc}
          */
-        @Override
+
         public String getParameter(String name) {
             String value = form.getParameter(name);
             log.debug("getParameter: {}={}", name, value);
@@ -222,7 +222,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
         /**
          * {@inheritDoc}
          */
-        @Override
+
         public Map getParameterMap() {
             return form.getParameters();
         }
@@ -230,7 +230,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
         /**
          * {@inheritDoc}
          */
-        @Override
+
         public Enumeration getParameterNames() {
             return form.getParameterNames();
         }
@@ -238,7 +238,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
         /**
          * {@inheritDoc}
          */
-        @Override
+
         public String[] getParameterValues(String name) {
             String[] value = form.getParameterValues(name);
             log.debug("getParameterValues: {}={}", name, value);
