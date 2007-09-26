@@ -35,21 +35,32 @@ import org.apache.commons.fileupload.FileUploadBase;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
+import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
  * A <code>Filter</code> that determines if a <code>HttpServletRequest</code> contains multipart content and if so
- * parses it into a request attribute for further processing.
+ * parses it into a request attribute for further processing. This implementation uses jakarta commons-fileupload for
+ * parsing multipart requests. Maximum file size can be configured using the "maxFileSize" init parameter, defaulting to
+ * 2 GB.
  * @author Andreas Brenk
+ * @author Fabrizio Giustina
  * @version $Id$
  */
 public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFilter {
 
     /**
-     * Default max file upload size (200 MB).
+     * Logger.
      */
-    private static final int DEFAULT_MAX_FILE_SIZE = 209715200;
+    protected static Logger log = LoggerFactory.getLogger(MultipartRequestFilter.class);
+
+    /**
+     * Default max file upload size (2 GB).
+     */
+    private static final int DEFAULT_MAX_FILE_SIZE = 2000000000; // 2GB
 
     /**
      * Config parameter name for max file size.
@@ -69,6 +80,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
+    @Override
     public void init(FilterConfig config) throws ServletException {
         super.init(config);
         String maxFileSize = config.getInitParameter(PARAM_MAX_FILE_SIZE);
@@ -83,6 +95,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
      * Determine if the request has multipart content and if so parse it into a <code>MultipartForm</code> and store
      * it as a request attribute.
      */
+    @Override
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
 
@@ -159,11 +172,15 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
         catch (UnsupportedEncodingException ex) {
             value = item.getString();
         }
+
         form.addParameter(name, value);
 
-        String[] values = request.getParameterValues(name);
-        if (values != null) {
-            form.addparameterValues(name, values);
+        String[] values = form.getParameterValues(name);
+        if (values == null) {
+            form.addparameterValues(name, new String[]{value});
+        }
+        else {
+            form.addparameterValues(name, (String[]) ArrayUtils.add(values, value));
         }
     }
 
@@ -195,13 +212,17 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
         /**
          * {@inheritDoc}
          */
+        @Override
         public String getParameter(String name) {
-            return form.getParameter(name);
+            String value = form.getParameter(name);
+            log.debug("getParameter: {}={}", name, value);
+            return value;
         }
 
         /**
          * {@inheritDoc}
          */
+        @Override
         public Map getParameterMap() {
             return form.getParameters();
         }
@@ -209,6 +230,7 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
         /**
          * {@inheritDoc}
          */
+        @Override
         public Enumeration getParameterNames() {
             return form.getParameterNames();
         }
@@ -216,8 +238,11 @@ public class CommonsFileUploadMultipartRequestFilter extends AbstractMagnoliaFil
         /**
          * {@inheritDoc}
          */
+        @Override
         public String[] getParameterValues(String name) {
-            return form.getParameterValues(name);
+            String[] value = form.getParameterValues(name);
+            log.debug("getParameterValues: {}={}", name, value);
+            return value;
         }
 
     }
