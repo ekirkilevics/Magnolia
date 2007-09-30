@@ -37,7 +37,7 @@ public class RequestFormUtil {
     private HttpServletRequest request;
 
     public RequestFormUtil(HttpServletRequest request) {
-        this(request, Resource.getPostedForm(request));
+        this(request, Resource.getPostedForm());
     }
 
     public RequestFormUtil(HttpServletRequest request, MultipartForm form) {
@@ -56,7 +56,7 @@ public class RequestFormUtil {
     }
 
     public static String getParameter(HttpServletRequest request, String name) {
-        return RequestFormUtil.getParameter(request, Resource.getPostedForm(request), name);
+        return RequestFormUtil.getParameter(request, Resource.getPostedForm(), name);
     }
 
     /**
@@ -88,7 +88,7 @@ public class RequestFormUtil {
     }
 
     public static String getParameter(HttpServletRequest request, String name, String defaultValue) {
-        return RequestFormUtil.getParameter(request, Resource.getPostedForm(request), name, defaultValue);
+        return RequestFormUtil.getParameter(request, Resource.getPostedForm(), name, defaultValue);
     }
 
     /**
@@ -173,7 +173,7 @@ public class RequestFormUtil {
     }
 
     public static Map getParameters(HttpServletRequest request) {
-        MultipartForm form = Resource.getPostedForm(request);
+        MultipartForm form = Resource.getPostedForm();
         if (form == null) {
             // if get use UTF8 decoding
             if (request.getMethod() == "GET") {
