@@ -14,14 +14,13 @@ package info.magnolia.cms.security.auth.login;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.security.auth.login.LoginException;
 
-import sun.misc.BASE64Decoder;
-import sun.misc.BASE64Encoder;
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 import info.magnolia.cms.security.Authenticator;
@@ -78,7 +77,7 @@ public class NTLMLogin implements LoginHandler {
     }
 
     private void talk() throws IOException {
-        byte[] msg = new BASE64Decoder().decodeBuffer(credentials.substring(5));
+        byte[] msg = Base64.decodeBase64(credentials.substring(5).getBytes());
         if (msg[8] == 1) {
             // Step-3
             byte z = 0;
@@ -86,7 +85,7 @@ public class NTLMLogin implements LoginHandler {
             z,(byte)2, z, z, z, z, z, z, z,(byte)40, z, z, z,
             (byte)1, (byte)130, z, z,z, (byte)2, (byte)2,
             (byte)2, z, z, z, z, z, z, z, z, z, z, z, z};
-            this.response.setHeader("WWW-Authenticate", "NTLM " + new BASE64Encoder().encodeBuffer(msg1));
+            this.response.setHeader("WWW-Authenticate", "NTLM " + Base64.encodeBase64(msg1));
             this.response.sendError(HttpServletResponse.SC_UNAUTHORIZED);
         } else if (msg[8] == 3) {
             // Step-4
