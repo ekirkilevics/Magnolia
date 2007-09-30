@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
@@ -136,6 +137,18 @@
       <artifactId>commons-betwixt</artifactId>
       <exclusions>
         <exclusion>
+          <groupId>xml-apis</groupId>
+          <artifactId>xml-apis</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>commons-beanutils</groupId>
+          <artifactId>commons-beanutils-core</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>commons-logging</groupId>
           <artifactId>commons-logging</artifactId>
         </exclusion>
@@ -195,13 +208,13 @@
   </dependencies>
   <build>
     <!--<resources>-->
-      <!--<resource>-->
-        <!--<filtering>true</filtering>-->
-        <!--<directory>src/main/resources</directory>-->
-        <!--<includes>-->
-          <!--<include>**/*</include>-->
-        <!--</includes>-->
-      <!--</resource>-->
+    <!--<resource>-->
+    <!--<filtering>true</filtering>-->
+    <!--<directory>src/main/resources</directory>-->
+    <!--<includes>-->
+    <!--<include>**/*</include>-->
+    <!--</includes>-->
+    <!--</resource>-->
     <!--</resources>-->
     <plugins>
       <plugin>
