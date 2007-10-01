@@ -23,11 +23,11 @@ public class SecurityUtil {
      */
     public static boolean isAnonymous() {
         User user = MgnlContext.getUser();
-        return (user != null && user.getName().equals(UserManager.ANONYMOUS_USER));
+        return (user != null && UserManager.ANONYMOUS_USER.equals(user.getName()));
     }
     
     public static boolean isAuthenticated() {
         User user = MgnlContext.getUser();
-        return (user != null && !user.getName().equals(UserManager.ANONYMOUS_USER));
+        return (user != null && !UserManager.ANONYMOUS_USER.equals(user.getName()));
     }
 }

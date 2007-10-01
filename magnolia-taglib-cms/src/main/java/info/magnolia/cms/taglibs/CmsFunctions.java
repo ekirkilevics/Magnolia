@@ -4,8 +4,7 @@ import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.UserManager;
+import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
@@ -74,8 +73,7 @@ public class CmsFunctions {
      * @return true if a user is currently logged in.
      */
     public boolean isLoggedIn() {
-        User user = MgnlContext.getUser();
-        return (user != null && !UserManager.ANONYMOUS_USER.equals(user.getName()));
+        return SecurityUtil.isAuthenticated();
     }
 
     /**
