@@ -2,7 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>samples</name>
-  <class>info.magnolia.module.admininterface.SimpleContentModule</class>
+  <class>info.magnolia.module.samples.SamplesConfig</class>
   <version>${project.version}</version>
   <properties>
     <property>

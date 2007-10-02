@@ -39,7 +39,7 @@
         </cms:contentNodeIterator>
         <cms:adminOnly>
           <div style="clear:both;">
-            <cms:newBar contentNodeCollectionName="rightColumnParagraphs" paragraph="samplesRightColumn" />
+            <cms:newBar contentNodeCollectionName="rightColumnParagraphs" paragraph="samplesRightColumn,pollLink,pollVotingForm" />
           </div>
         </cms:adminOnly>
       </div>
