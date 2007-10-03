@@ -43,7 +43,7 @@ public class LocaleDefinition {
      * Creates the locale for this definition if not yet set.
      */
     public Locale getLocale() {
-        if (locale == null) {
+        if (locale == null && getLanguage() != null) {
             locale = new Locale(getLanguage(), StringUtils.defaultString(getCountry()));
         }
         return locale;
