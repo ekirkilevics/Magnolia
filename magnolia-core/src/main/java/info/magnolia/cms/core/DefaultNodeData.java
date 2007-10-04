@@ -272,7 +272,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         }
     }
 
-    public Content getReferencedContent() throws RepositoryException, PathNotFoundException, RepositoryException  {
+    public Content getReferencedContent() throws PathNotFoundException, RepositoryException  {
         // node containing this property
         Node node = property.getParent();
         Node refNode = null;
