@@ -1049,7 +1049,7 @@
     mgnlTreeNode.prototype.getParent = function(){
         var parentPath=this.id.substring(0,this.id.lastIndexOf("/"));
         if (parentPath == ""){
-            parentPath = this.treeControl.path; //root
+            parentPath = this.tree.path; //root
         }
         return this.tree.getNode(parentPath);
     }
