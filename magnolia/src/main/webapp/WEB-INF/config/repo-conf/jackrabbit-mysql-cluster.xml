@@ -57,13 +57,18 @@
     </PersistenceManager>
   </Versioning>
   <Cluster id="magnolia-node1" syncDelay="10">
-    <Journal class="org.apache.jackrabbit.core.cluster.DatabaseJournal">
+    <Journal class="org.apache.jackrabbit.core.journal.DatabaseJournal">
       <param name="driver" value="com.mysql.jdbc.Driver" />
       <param name="schema" value="mysql" />
       <param name="url" value="jdbc:mysql://localhost:3306/magnolia" />
       <param name="user" value="user" />
       <param name="password" value="pwd" />
       <param name="schemaObjectPrefix" value="cluster_" />
+      <!--
+      revision is either the name of the revision file or the complete path to the file.
+      Please note: you must change the name of the revision if multiple nodes of
+      the same cluster reside under single servlet container.
+      -->
       <param name="revision" value="revision" />
     </Journal>
   </Cluster>
