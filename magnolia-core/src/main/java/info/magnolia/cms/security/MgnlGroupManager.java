@@ -25,6 +25,8 @@ import info.magnolia.context.MgnlContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.PathNotFoundException;
+
 
 /**
  * @author Sameer Charles $Id$
@@ -46,7 +48,7 @@ public class MgnlGroupManager implements GroupManager {
             return new MgnlGroup(node);
         }
         catch (Exception e) {
-            log.error("can't create role [" + name + "]", e);
+            log.error("can't create group [" + name + "]", e);
             return null;
         }
     }
@@ -61,13 +63,18 @@ public class MgnlGroupManager implements GroupManager {
     public Group getGroup(String name) throws UnsupportedOperationException, AccessDeniedException {
         try {
             return new MgnlGroup(getHierarchyManager().getContent(name));
+        } catch (PathNotFoundException e) {
+            // this is not an error, once we have MAGNOLIA-1757 implemented we can change this.
+            log.warn("can't find group [" + name + "] in magnolia");
+            log.debug("can't find group [" + name + "] in magnolia", e);
+        } catch (AccessDeniedException e) {
+            throw e;
+        } catch (Throwable e) {
+            log.error("Exception while retrieving group", e);
         }
-        catch (Exception e) {
-            log.info("can't find group [" + name + "]", e);
-            return null;
-        }
+        return null;
     }
-    
+
     /**
      * All groups
      */
