@@ -174,8 +174,12 @@ public abstract class AbstractLoginModule implements LoginModule {
      * Update subject with ACL and other properties
      */
     public boolean commit() throws LoginException {
+        /**
+         * If login module failed to authenticate then this method should simply return false
+         * instead of throwing an exception - refer to specs for more details 
+         * */
         if (!this.success) {
-            throw new LoginException("failed to authenticate " + this.name);
+            return false;
         }
         this.setEntity();
         this.setACL();
