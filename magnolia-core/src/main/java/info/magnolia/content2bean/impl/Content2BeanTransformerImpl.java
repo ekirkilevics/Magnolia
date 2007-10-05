@@ -22,6 +22,7 @@ import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
 
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
@@ -176,7 +177,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
                                 log.debug("no clear method found on collection {}", propertyName);
                             }
 
-                            Class entryClass = dscr.getCollectionEntryType().getClass();
+                            Class entryClass = dscr.getCollectionEntryType().getType();
 
                             log.debug("will add values by using adder method {}", method.getName());
                             for (Iterator iter = ((Map) value).keySet().iterator(); iter.hasNext();) {
@@ -232,6 +233,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
 
     /**
      * Most of the conversion is done by the BeanUtils.
+     * TODO don't use bean utils converion since it can't be used for the adder methods
      */
     public Object convertPropertyValue(Class propertyType, Object value) throws Content2BeanException {
         if(propertyType == Locale.class){
@@ -247,6 +249,9 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
                     }
                 }
             }
+        }
+        if(propertyType == Collection.class && value instanceof Map){
+            return ((Map)value).values();
         }
         return value;
     }
