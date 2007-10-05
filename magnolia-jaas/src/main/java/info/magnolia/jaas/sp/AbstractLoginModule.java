@@ -174,9 +174,6 @@ public abstract class AbstractLoginModule implements LoginModule {
      * Update subject with ACL and other properties
      */
     public boolean commit() throws LoginException {
-        if (this.getSkip()) {
-            return true;
-        }
         if (!this.success) {
             throw new LoginException("failed to authenticate " + this.name);
         }
