@@ -45,6 +45,9 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * @author Sameer Charles
@@ -52,7 +55,7 @@ import javax.servlet.jsp.PageContext;
  */
 public class WebContextImpl extends AbstractContext implements WebContext {
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebContextImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(WebContextImpl.class);
 
     private static final long serialVersionUID = 222L;
 
@@ -298,6 +301,15 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 this.request.setAttribute(name, value);
                 break;
             case Context.SESSION_SCOPE:
+                if (!(value instanceof Serializable)) {
+                    log.warn("Trying to store a non-serializable attribute in session: "
+                        + name
+                        + ". Object type is "
+                        + value.getClass().getName(), new Throwable(
+                        "This stacktrace has been added to provide debugging information"));
+                    return;
+                }
+
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
                     log
@@ -308,16 +320,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                     httpsession = request.getSession(true);
                 }
 
-                if (!(value instanceof Serializable)) {
-                    log.warn("Trying to store a non-serializable attribute in session: "
-                        + name
-                        + ". Object type is "
-                        + value.getClass().getName(), new Throwable(
-                        "This stacktrace has been added to provide debugging information"));
-                    return;
-                }
-
-                setAttribute(name, value, SESSION_SCOPE);
+                httpsession.setAttribute(name, value);
                 break;
             case Context.APPLICATION_SCOPE:
                 MgnlContext.getSystemContext().setAttribute(name, value, Context.APPLICATION_SCOPE);
@@ -433,18 +436,16 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException,
         RepositoryException {
         Session jcrSession = null;
-        HttpSession httpSession = request.getSession(false);
 
         final String repoSessAttrName = ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryName + "_" + workspaceName;
-        if (httpSession != null) {
-            jcrSession = (Session) httpSession.getAttribute(repoSessAttrName);
-        }
+
+        // don't use httpsession, jcr session is not serializable at all
+        jcrSession = (Session) getAttribute(repoSessAttrName, LOCAL_SCOPE);
+
         if (jcrSession == null) {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
-            if (httpSession != null) {
-                setAttribute(repoSessAttrName, jcrSession, SESSION_SCOPE);
-            }
+            setAttribute(repoSessAttrName, jcrSession, LOCAL_SCOPE);
 
         }
         return jcrSession;
