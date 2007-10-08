@@ -3,6 +3,7 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
   <description>Magnolia</description>
   <display-name>magnolia</display-name>
+  <distributable/>
   <filter>
     <display-name>Magnolia global filters</display-name>
     <filter-name>magnoliaFilterChain</filter-name>

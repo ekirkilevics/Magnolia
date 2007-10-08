@@ -27,6 +27,7 @@ import info.magnolia.cms.util.DumperUtil;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.io.Writer;
 import java.util.Enumeration;
 import java.util.HashMap;
@@ -102,7 +103,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     public User getUser() {
         if (user == null) {
             user = (User) getAttribute("user", Context.SESSION_SCOPE);
-            if(user == null){
+            if (user == null) {
                 user = Security.getUserManager().getUser(Authenticator.getSubject(request));
                 setUser(user);
             }
@@ -306,6 +307,15 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                     httpsession = request.getSession(true);
                 }
 
+                if (!(value instanceof Serializable)) {
+                    log.warn("Trying to store a non-serializable attribute in session: "
+                        + name
+                        + ". Object type is "
+                        + value.getClass().getName(), new Throwable(
+                        "This stacktrace has been added to provide debugging information"));
+                    return;
+                }
+
                 httpsession.setAttribute(name, value);
                 break;
             case Context.APPLICATION_SCOPE:
@@ -432,7 +442,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
             if (httpSession != null) {
-                httpSession.setAttribute(repoSessAttrName, jcrSession);
+                setAttribute(repoSessAttrName, jcrSession, SESSION_SCOPE);
             }
 
         }
