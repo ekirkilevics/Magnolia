@@ -1,9 +1,9 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="cms-taglib"
   xmlns:cmsu="cms-util-taglib" xmlns:c="http://java.sun.com/jsp/jstl/core">
-<jsp:directive.page import="java.util.Collection"/>
+<jsp:directive.page import="java.util.Map"/>
 <jsp:directive.page import="org.apache.commons.lang.StringUtils"/>
 <jsp:directive.page import="info.magnolia.module.samples.SamplesConfig"/>
-  <jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
+<jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
   <!-- content title -->
   <cms:out nodeDataName="title" var="title" />
   <c:if test="%{empty(title)}">
@@ -11,8 +11,8 @@
   </c:if>
   <h1>${title}</h1>
   <jsp:scriptlet>
-  	SamplesConfig module = (SamplesConfig) request.getAttribute("module");
-  	pageContext.setAttribute("paragraphs", StringUtils.join((Collection) module.getColumns().get("mainColumnParagraphs"), ","));
+      SamplesConfig module = (SamplesConfig) request.getAttribute("module");
+      pageContext.setAttribute("paragraphs", StringUtils.join(((Map) module.getColumns().get("mainColumnParagraphs")).values(), ","));
   </jsp:scriptlet>
   
   <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
