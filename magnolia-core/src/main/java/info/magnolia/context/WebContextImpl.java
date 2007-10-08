@@ -138,7 +138,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                     repositoryName,
                     workspaceName));
                 if (httpSession != null) {
-                    httpSession.setAttribute(hmAttrName, hm); //$NON-NLS-1$
+                    setAttribute("hmAttrName", hm, Context.SESSION_SCOPE);//$NON-NLS-1$
                 }
             }
             catch (Throwable t) {
@@ -187,7 +187,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 repositoryName,
                 workspaceName);
             if (httpSession != null) {
-                httpSession.setAttribute(amAttrName, accessManager);
+                setAttribute(amAttrName, accessManager, SESSION_SCOPE);
             }
         }
 
@@ -215,7 +215,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 log.error("Failed to create QueryManager", t);
             }
             if (httpSession != null) {
-                httpSession.setAttribute(qmAttrName, queryManager);
+                setAttribute(qmAttrName, queryManager, SESSION_SCOPE);
             }
         }
 
@@ -316,7 +316,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                     return;
                 }
 
-                httpsession.setAttribute(name, value);
+                setAttribute(name, value, SESSION_SCOPE);
                 break;
             case Context.APPLICATION_SCOPE:
                 MgnlContext.getSystemContext().setAttribute(name, value, Context.APPLICATION_SCOPE);
