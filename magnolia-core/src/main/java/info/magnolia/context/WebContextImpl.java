@@ -290,6 +290,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
         if (value == null) {
             removeAttribute(name, scope);
+            return;
         }
 
         switch (scope) {
