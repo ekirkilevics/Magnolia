@@ -27,6 +27,7 @@ import info.magnolia.cms.util.DumperUtil;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.io.Writer;
 import java.util.Enumeration;
@@ -45,6 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
+import org.apache.commons.lang.BooleanUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +61,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     private static final long serialVersionUID = 222L;
 
-    public static final String ATTRIBUTE_REPOSITORY_REQUEST_PREFIX = "mgnlRepositorySession_";
+    private static final String ATTRIBUTE_REPOSITORY_REQUEST_PREFIX = "mgnlRepositorySession_";
 
     private static final String ATTRIBUTE_HM_PREFIX = "mgnlHMgr_";
 
@@ -101,6 +103,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * Create the subject on demand.
      * @see info.magnolia.context.AbstractContext#getUser()
      */
+
     public User getUser() {
         if (user == null) {
             user = (User) getAttribute("user", Context.SESSION_SCOPE);
@@ -113,11 +116,39 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     }
 
     /**
-     * In additon to the field user we put the user object into the session as well.
+     * In addition to the field user we put the user object into the session as well.
+     * @param user magnolia User
      */
+
     public void setUser(User user) {
         super.setUser(user);
         setAttribute("user", user, Context.SESSION_SCOPE);
+    }
+
+    /**
+     * Get repository session
+     */
+    protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException,
+        RepositoryException {
+        Session jcrSession = null;
+
+        final String repoSessAttrName = ATTRIBUTE_REPOSITORY_REQUEST_PREFIX + repositoryName + "_" + workspaceName;
+
+        // don't use httpsession, jcr session is not serializable at all
+        jcrSession = (Session) getAttribute(repoSessAttrName, LOCAL_SCOPE);
+
+        log.debug("getRepositorySession {} (from request? {})", repoSessAttrName, BooleanUtils
+            .toBooleanObject(jcrSession != null));
+
+        if (jcrSession == null) {
+            long time = System.currentTimeMillis();
+            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
+            jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
+            log.debug("creating a new session took {} ms", new Long(System.currentTimeMillis() - time));
+
+            setAttribute(repoSessAttrName, jcrSession, LOCAL_SCOPE);
+        }
+        return jcrSession;
     }
 
     /**
@@ -130,6 +161,8 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         if (httpSession != null) {
             hm = (HierarchyManager) httpSession.getAttribute(hmAttrName);
         }
+
+        log.debug("getHierarchyManager (from session? {})", BooleanUtils.toBooleanObject(hm != null));
         if (hm == null) {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             try {
@@ -147,25 +180,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
             }
         }
 
-        // TODO remove this after we found the session refreshing issues
-        // check only once per session
-        if (this.request.getAttribute("jcr.session. " + repositoryName + ".checked") == null) {
-            this.request.setAttribute("jcr.session. " + repositoryName + ".checked", "true");
-            try {
-                if (hm.getWorkspace().getSession().hasPendingChanges()) {
-                    log
-                        .error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
-                    if (log.isDebugEnabled()) {
-                        DumperUtil.dumpChanges(hm);
-                    }
-                    log.warn("will refresh (cleanup) the session");
-                    hm.getWorkspace().getSession().refresh(false);
-                }
-            }
-            catch (RepositoryException e) {
-                log.error("wasn't able to check pending changes on the session", e);
-            }
-        }
         return hm;
     }
 
@@ -181,10 +195,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
             accessManager = (AccessManager) httpSession.getAttribute(amAttrName);
         }
 
+        log.debug("getAccessManager (from session? {})", BooleanUtils.toBooleanObject(accessManager != null));
+
         if (accessManager == null) {
-            Subject subject = Authenticator.getSubject(request);
             accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(
-                subject,
+                getSubject(),
                 repositoryName,
                 workspaceName);
             if (httpSession != null) {
@@ -195,11 +210,18 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         return accessManager;
     }
 
+    protected Subject getSubject() {
+        Subject subject = Authenticator.getSubject(request);
+        return subject;
+    }
+
     /**
      * Get QueryManager created for this user on the specified repository and workspace.
      */
     public QueryManager getQueryManager(String repositoryName, String workspaceName) {
         QueryManager queryManager = null;
+
+        log.debug("getQueryManager");
 
         try {
             queryManager = WorkspaceAccessUtil.getInstance().createQueryManager(
@@ -419,27 +441,6 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     }
 
     /**
-     * Get repository session
-     */
-    protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException,
-        RepositoryException {
-        Session jcrSession = null;
-
-        final String repoSessAttrName = ATTRIBUTE_REPOSITORY_REQUEST_PREFIX + repositoryName + "_" + workspaceName;
-
-        // don't use httpsession, jcr session is not serializable at all
-        jcrSession = (Session) getAttribute(repoSessAttrName, LOCAL_SCOPE);
-
-        if (jcrSession == null) {
-            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-            jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
-            setAttribute(repoSessAttrName, jcrSession, LOCAL_SCOPE);
-
-        }
-        return jcrSession;
-    }
-
-    /**
      * Avoid the call to this method where ever possible.
      * @return Returns the request.
      */
@@ -509,6 +510,47 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 }
             }
             session.invalidate();
+        }
+    }
+
+    /**
+     * Closes JCR session and invalidates the current HttpSession.
+     */
+    public void release() {
+
+        Enumeration attributes = request.getAttributeNames();
+        while (attributes.hasMoreElements()) {
+            String key = (String) attributes.nextElement();
+
+            if (key.startsWith(WebContextImpl.ATTRIBUTE_REPOSITORY_REQUEST_PREFIX)) {
+                Object objSession = request.getAttribute(key);
+                if (objSession instanceof Session) {
+                    Session jcrSession = (Session) objSession;
+                    try {
+                        if (jcrSession.isLive()) {
+
+                            if (jcrSession.hasPendingChanges()) {
+                                log
+                                    .error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
+                                if (log.isDebugEnabled()) {
+                                    PrintWriter pw = new PrintWriter(System.out);
+                                    DumperUtil.dumpChanges(jcrSession, pw);
+                                    pw.flush();
+                                }
+
+                                log.warn("will refresh (cleanup) the session {}", key);
+                                jcrSession.refresh(false);
+                            }
+
+                            jcrSession.logout();
+                            log.debug("logging out from session {}", key);
+                        }
+                    }
+                    catch (Throwable t) {
+                        log.warn("Failed to close JCR session " + key, t);
+                    }
+                }
+            }
         }
     }
 }

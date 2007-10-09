@@ -109,7 +109,7 @@ public abstract class AbstractContext implements Context {
      */
     public Locale getLocale() {
         if (locale == null) {
-            // MAGNOLIA-1402 - Not valid anymore 
+            // MAGNOLIA-1402 - Not valid anymore
             User user = this.getUser();
             if (user != null) {
                 locale = new Locale(user.getLanguage());
@@ -241,4 +241,11 @@ public abstract class AbstractContext implements Context {
         return this.getAttributes().size();
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public void release() {
+        // @todo cleanup resources
+        // jcr sessions are not thread safe, we should not keep a single session and reuse it across threads
+    }
 }

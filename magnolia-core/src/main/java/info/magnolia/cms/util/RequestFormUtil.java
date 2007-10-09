@@ -121,21 +121,33 @@ public class RequestFormUtil {
      * @return decoded map of all values
      */
     public static Map getURLParametersDecoded(HttpServletRequest request, String charset) {
-        Map map = new HashMap();
+
         String queryString = request.getQueryString();
         if (queryString != null) {
-            String[] params = request.getQueryString().split("&");
-            for (int i = 0; i < params.length; i++) {
-                String name = StringUtils.substringBefore(params[i], "=");
-                String value = StringUtils.substringAfter(params[i], "=");
-                try {
-                    value = URLDecoder.decode(value, charset);
-                }
-                catch (UnsupportedEncodingException e) {
-                    // nothing: return value as is
-                }
-                map.put(name, value);
+            return getURLParametersDecoded(queryString, charset);
+        }
+        return new HashMap();
+    }
+
+    /**
+     * Extract and decodes parameters from a query string
+     * @param queryString query string
+     * @param charset charset (e.g UTF-8)
+     */
+    public static Map getURLParametersDecoded(String queryString, String charset) {
+        Map map = new HashMap();
+        String[] params = queryString.split("&");
+        for (int i = 0; i < params.length; i++) {
+            String name = StringUtils.substringBefore(params[i], "=");
+            String value = StringUtils.substringAfter(params[i], "=");
+            try {
+                value = URLDecoder.decode(value, charset);
             }
+            catch (UnsupportedEncodingException e) {
+                // nothing: return value as is
+            }
+            // @todo what about multi-valued parameters??
+            map.put(name, value);
         }
         return map;
     }

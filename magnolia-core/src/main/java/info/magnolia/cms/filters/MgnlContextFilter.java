@@ -24,6 +24,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This class initializes the current context.
@@ -33,6 +36,11 @@ import javax.servlet.http.HttpServletResponse;
 public class MgnlContextFilter extends AbstractMagnoliaFilter {
 
     private ServletContext servletContext;
+
+    /**
+     * Logger.
+     */
+    private Logger log = LoggerFactory.getLogger(MgnlContextFilter.class);
 
     public void init(FilterConfig filterConfig) throws ServletException {
         this.servletContext = filterConfig.getServletContext();
@@ -45,9 +53,13 @@ public class MgnlContextFilter extends AbstractMagnoliaFilter {
             ctx.init(request, response, servletContext);
             MgnlContext.setInstance(ctx);
         }
-
-        chain.doFilter(request, response);
-
-        MgnlContext.setInstance(null);
+        try {
+            chain.doFilter(request, response);
+        }
+        finally {
+            MgnlContext.getInstance().release();
+            MgnlContext.setInstance(null);
+        }
     }
+
 }

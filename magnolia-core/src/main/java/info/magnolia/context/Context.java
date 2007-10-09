@@ -187,4 +187,9 @@ public interface Context extends org.apache.commons.chain.Context {
      */
     public Messages getMessages(String basename);
 
+    /**
+     * Release any resource used by this Context (e.g. jcr sessions).
+     */
+    public void release();
+
 }
