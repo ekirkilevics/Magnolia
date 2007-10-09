@@ -59,13 +59,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     private static final long serialVersionUID = 222L;
 
-    private static final String ATTRIBUTE_REPOSITORY_SESSION_PREFIX = "mgnlRepositorySession_";
+    public static final String ATTRIBUTE_REPOSITORY_REQUEST_PREFIX = "mgnlRepositorySession_";
 
     private static final String ATTRIBUTE_HM_PREFIX = "mgnlHMgr_";
 
     private static final String ATTRIBUTE_AM_PREFIX = "mgnlAccessMgr_";
-
-    private static final String ATTRIBUTE_QM_PREFIX = "mgnlQueryMgr_";
 
     private static final String ATTRIBUTE_AGGREGATIONSTATE = AggregationState.class.getName();
 
@@ -203,23 +201,13 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     public QueryManager getQueryManager(String repositoryName, String workspaceName) {
         QueryManager queryManager = null;
 
-        HttpSession httpSession = request.getSession(false);
-        final String qmAttrName = ATTRIBUTE_QM_PREFIX + repositoryName + "_" + workspaceName;
-        if (httpSession != null) {
-            queryManager = (QueryManager) httpSession.getAttribute(qmAttrName);
+        try {
+            queryManager = WorkspaceAccessUtil.getInstance().createQueryManager(
+                getRepositorySession(repositoryName, workspaceName),
+                getAccessManager(repositoryName, workspaceName));
         }
-        if (queryManager == null) {
-            try {
-                queryManager = WorkspaceAccessUtil.getInstance().createQueryManager(
-                    getRepositorySession(repositoryName, workspaceName),
-                    getAccessManager(repositoryName, workspaceName));
-            }
-            catch (Throwable t) {
-                log.error("Failed to create QueryManager", t);
-            }
-            if (httpSession != null) {
-                setAttribute(qmAttrName, queryManager, SESSION_SCOPE);
-            }
+        catch (Throwable t) {
+            log.error("Failed to create QueryManager", t);
         }
 
         return queryManager;
@@ -247,7 +235,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         AggregationState aggregationState = (AggregationState) request.getAttribute(ATTRIBUTE_AGGREGATIONSTATE);
         if (aggregationState == null) {
             aggregationState = new AggregationState();
-            request.setAttribute(ATTRIBUTE_AGGREGATIONSTATE, aggregationState);
+            setAttribute(ATTRIBUTE_AGGREGATIONSTATE, aggregationState, LOCAL_SCOPE);
         }
         return aggregationState;
     }
@@ -437,7 +425,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         RepositoryException {
         Session jcrSession = null;
 
-        final String repoSessAttrName = ATTRIBUTE_REPOSITORY_SESSION_PREFIX + repositoryName + "_" + workspaceName;
+        final String repoSessAttrName = ATTRIBUTE_REPOSITORY_REQUEST_PREFIX + repositoryName + "_" + workspaceName;
 
         // don't use httpsession, jcr session is not serializable at all
         jcrSession = (Session) getAttribute(repoSessAttrName, LOCAL_SCOPE);
