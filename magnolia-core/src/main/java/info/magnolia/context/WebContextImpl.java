@@ -524,6 +524,10 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
             if (key.startsWith(WebContextImpl.ATTRIBUTE_REPOSITORY_REQUEST_PREFIX)) {
                 Object objSession = request.getAttribute(key);
+
+                // don't leave dead jcr sessions around
+                request.removeAttribute(key);
+
                 if (objSession instanceof Session) {
                     Session jcrSession = (Session) objSession;
                     try {
