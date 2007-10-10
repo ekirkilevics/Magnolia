@@ -262,6 +262,10 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         return aggregationState;
     }
 
+    public void resetAggregationState() {
+        removeAttribute(ATTRIBUTE_AGGREGATIONSTATE, LOCAL_SCOPE);
+    }
+
     /**
      * Get form object assembled by <code>MultipartRequestFilter</code>
      * @return multipart form object

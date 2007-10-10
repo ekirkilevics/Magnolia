@@ -54,7 +54,8 @@ public interface WebContext extends Context {
 
     /**
      * Method used to initialize the context
-     * @param servletContext @todo
+     * @param servletContext
+     * @todo
      */
     public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext);
 
@@ -63,6 +64,11 @@ public interface WebContext extends Context {
      * @return
      */
     public AggregationState getAggregationState();
+
+    /**
+     * Resets the current aggregator instance.
+     */
+    void resetAggregationState();
 
     /**
      * Get currently active page
