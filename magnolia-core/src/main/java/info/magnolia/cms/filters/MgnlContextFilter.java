@@ -23,6 +23,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+
 /**
  * This class initializes the current context.
  * @author Philipp Bracher
@@ -36,9 +37,11 @@ public class MgnlContextFilter extends AbstractMagnoliaFilter {
         this.servletContext = filterConfig.getServletContext();
     }
 
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
 
-        // if the filter chain was reset, this filter could be called several time. Using this flag so that only the first call will unset the context (which should be the last post-filters operation)
+        // if the filter chain was reset, this filter could be called several time. Using this flag so that only the
+        // first call will unset the context (which should be the last post-filters operation)
         boolean contextSet = false;
         if (!MgnlContext.hasInstance()) {
             MgnlContext.initAsAnonymousContext(request, response, servletContext);
@@ -49,7 +52,11 @@ public class MgnlContextFilter extends AbstractMagnoliaFilter {
         }
         finally {
             if (contextSet) {
-                MgnlContext.getInstance().release();
+
+                if (MgnlContext.hasInstance()) {
+                    MgnlContext.getInstance().release();
+                }
+
                 MgnlContext.setInstance(null);
             }
         }
