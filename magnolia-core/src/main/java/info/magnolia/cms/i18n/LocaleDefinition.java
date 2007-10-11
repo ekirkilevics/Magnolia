@@ -73,7 +73,7 @@ public class LocaleDefinition {
         this.language = language;
     }
 
-    public void setLocal(Locale locale) {
+    public void setLocale(Locale locale) {
         this.locale = locale;
     }
 
