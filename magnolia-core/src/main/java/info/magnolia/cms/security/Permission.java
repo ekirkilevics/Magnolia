@@ -24,6 +24,8 @@ public interface Permission {
     /**
      * All possible permissions
      */
+    long NONE = 0;
+
     long ADD = 1;
 
     long SET = 2;
@@ -60,7 +62,7 @@ public interface Permission {
     long ALL = ADD | REMOVE | SET | READ | EXECUTE | SYNDICATE;
 
     long WRITE = ADD | SET | READ;
-
+    
     void setPattern(UrlPattern value);
 
     UrlPattern getPattern();

@@ -12,28 +12,43 @@
  */
 package info.magnolia.cms.core.version;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.IOUtils;
-
-import javax.jcr.*;
-import javax.jcr.version.Version;
-import javax.jcr.version.VersionHistory;
-import javax.jcr.version.VersionIterator;
-import javax.jcr.version.VersionException;
-
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
-import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.context.MgnlContext;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
+import java.util.Collections;
 import java.util.List;
-import java.io.*;
+
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.NodeIterator;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.version.Version;
+import javax.jcr.version.VersionException;
+import javax.jcr.version.VersionHistory;
+import javax.jcr.version.VersionIterator;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
@@ -444,6 +459,14 @@ public abstract class BaseVersionManager {
       * @param permissions
       */
      protected void impersonateAccessManager(List permissions) {
+         // FIXME: this is a very ugly hack but it needs the lessest change in the code
+         // see MAGNOLIA-1753
+         if(permissions == null){
+             Permission permission = new PermissionImpl();
+             permission.setPermissions(Permission.ALL);
+             permission.setPattern(UrlPattern.MATCH_ALL);
+             permissions = Collections.singletonList(permission);
+         }
          this.getHierarchyManager().getAccessManager().setPermissionList(permissions);
      }
 

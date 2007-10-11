@@ -83,7 +83,7 @@ public class AccessManagerImpl implements AccessManager, Serializable {
      */
     public long getPermissions(String path) {
         if (userPermissions == null) {
-            return Permission.ALL;
+            return Permission.NONE;
         }
         long permission = 0;
         int patternLength = 0;
