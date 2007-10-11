@@ -18,48 +18,44 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
-import java.io.IOException;
-
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.IOException;
 
 /**
  * @author Sameer Charles
  * @author Fabrizio Giustina $Id$
  */
 public class LogoutFilter extends OncePerRequestAbstractMagnoliaFilter {
-
     public static final String PARAMETER_LOGOUT = "mgnlLogout";
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(LogoutFilter.class);
+    private ServletContext servletContext;
+
+    public void init(FilterConfig filterConfig) throws ServletException {
+        this.servletContext = filterConfig.getServletContext();
+    }
 
     /**
      * Check if a request parameter PARAMETER_LOGOUT is set. If so logout user,  
      * unset the context and restart the filter chain.
      */
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (null != request.getParameter(PARAMETER_LOGOUT)) {
             Context ctx = MgnlContext.getInstance();
             if (ctx instanceof WebContext) {
                 ((WebContext) ctx).logout();
             }
-            MgnlContext.setInstance(null);
+            MgnlContext.initAsAnonymousContext(request, response, servletContext);
 
             if (chain instanceof MagnoliaFilterChain) {
                 ((MagnoliaFilterChain) chain).reset();
             }
         }
-        
+
         chain.doFilter(request, response);
     }
 }
