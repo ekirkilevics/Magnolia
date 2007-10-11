@@ -12,7 +12,6 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.context.AnonymousContext;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -24,10 +23,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * This class initializes the current context.
  * @author Philipp Bracher
@@ -37,24 +32,16 @@ public class MgnlContextFilter extends AbstractMagnoliaFilter {
 
     private ServletContext servletContext;
 
-    /**
-     * Logger.
-     */
-    private Logger log = LoggerFactory.getLogger(MgnlContextFilter.class);
-
     public void init(FilterConfig filterConfig) throws ServletException {
         this.servletContext = filterConfig.getServletContext();
     }
 
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         // if the filter chain was reset, this filter could be called several time. Using this flag so that only the first call will unset the context (which should be the last post-filters operation)
         boolean contextSet = false;
         if (!MgnlContext.hasInstance()) {
-            AnonymousContext ctx = new AnonymousContext();
-            ctx.init(request, response, servletContext);
-            MgnlContext.setInstance(ctx);
+            MgnlContext.initAsAnonymousContext(request, response, servletContext);
             contextSet = true;
         }
         try {

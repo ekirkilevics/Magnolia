@@ -366,6 +366,15 @@ public class MgnlContext {
     }
 
     /**
+     * Sets this context as an anonymous context.
+     */
+    public static void initAsAnonymousContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+        AnonymousContext ctx = new AnonymousContext();
+        ctx.init(request, response, servletContext);
+        setInstance(ctx);
+    }
+
+    /**
      * Sets this context as a web context.
      * @param request
      * @deprecated Use {@link #initAsWebContext(HttpServletRequest,HttpServletResponse,ServletContext)} instead

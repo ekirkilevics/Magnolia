@@ -137,8 +137,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         // don't use httpsession, jcr session is not serializable at all
         jcrSession = (Session) getAttribute(repoSessAttrName, LOCAL_SCOPE);
 
-        log.debug("getRepositorySession {} (from request? {})", repoSessAttrName, BooleanUtils
-            .toBooleanObject(jcrSession != null));
+        log.debug("getRepositorySession {} (from request? {})", repoSessAttrName, BooleanUtils.toBooleanObject(jcrSession != null));
 
         if (jcrSession == null) {
             long time = System.currentTimeMillis();
@@ -495,30 +494,20 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     }
 
     /**
-     * Closes JCR session and invalidates the current HttpSession.
+     * Closes opened JCR sessions and invalidates the current HttpSession.
+     * @see #release()
      */
     public void logout() {
+        release();
+
         HttpSession session = this.request.getSession(false);
         if (session != null) {
-            Iterator configuredStores = ContentRepository.getAllRepositoryNames();
-            while (configuredStores.hasNext()) {
-                String store = (String) configuredStores.next();
-                try {
-                    Session jcrSession = MgnlContext.getHierarchyManager(store).getWorkspace().getSession();
-                    if (jcrSession.isLive()) {
-                        jcrSession.logout();
-                    }
-                }
-                catch (Throwable t) {
-                    log.debug("Failed to close JCR session", t);
-                }
-            }
             session.invalidate();
         }
     }
 
     /**
-     * Closes JCR session and invalidates the current HttpSession.
+     * Closes opened JCR sessions.
      */
     public void release() {
 
@@ -527,19 +516,18 @@ public class WebContextImpl extends AbstractContext implements WebContext {
             String key = (String) attributes.nextElement();
 
             if (key.startsWith(WebContextImpl.ATTRIBUTE_REPOSITORY_REQUEST_PREFIX)) {
-                Object objSession = request.getAttribute(key);
+                final Object objSession = request.getAttribute(key);
 
                 // don't leave dead jcr sessions around
                 request.removeAttribute(key);
 
                 if (objSession instanceof Session) {
-                    Session jcrSession = (Session) objSession;
+                    final Session jcrSession = (Session) objSession;
                     try {
                         if (jcrSession.isLive()) {
 
                             if (jcrSession.hasPendingChanges()) {
-                                log
-                                    .error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
+                                log.error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
                                 if (log.isDebugEnabled()) {
                                     PrintWriter pw = new PrintWriter(System.out);
                                     DumperUtil.dumpChanges(jcrSession, pw);
