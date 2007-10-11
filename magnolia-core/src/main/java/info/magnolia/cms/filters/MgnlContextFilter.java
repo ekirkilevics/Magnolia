@@ -48,17 +48,23 @@ public class MgnlContextFilter extends AbstractMagnoliaFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
+
+        // if the filter chain was reset, this filter could be called several time. Using this flag so that only the first call will unset the context (which should be the last post-filters operation)
+        boolean contextSet = false;
         if (!MgnlContext.hasInstance()) {
             AnonymousContext ctx = new AnonymousContext();
             ctx.init(request, response, servletContext);
             MgnlContext.setInstance(ctx);
+            contextSet = true;
         }
         try {
             chain.doFilter(request, response);
         }
         finally {
-            MgnlContext.getInstance().release();
-            MgnlContext.setInstance(null);
+            if (contextSet) {
+                MgnlContext.getInstance().release();
+                MgnlContext.setInstance(null);
+            }
         }
     }
 
