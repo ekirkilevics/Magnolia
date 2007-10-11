@@ -40,7 +40,7 @@ public class JspTemplateRenderer implements TemplateRenderer {
         final String requestReceiver = template.getPath();
 
         if (requestReceiver == null) {
-            log.error("requestReceiver is missing, returning a 404 error"); //$NON-NLS-1$
+            log.error("requestReceiver is missing for {}, returning a 404 error", request.getRequestURL()); //$NON-NLS-1$
             response.sendError(404);
             return;
         }
@@ -48,13 +48,12 @@ public class JspTemplateRenderer implements TemplateRenderer {
         log.debug("Dispatching request for [{}] - forward to [{1}]", request.getRequestURL(), requestReceiver);
 
         if (response.isCommitted()) {
-            log.error("Can't forward to [{}] for request [{}]. Response is already committed.", requestReceiver, request.getRequestURL());
-            return;
+            log.warn("Including {} for request {}, but response is already committed.", requestReceiver, request.getRequestURL());
         }
-        
+
         Config.set(request, Config.FMT_LOCALE, MgnlContext.getAggregationState().getLocale());
         RequestDispatcher rd = request.getRequestDispatcher(requestReceiver);
-        rd.forward(request, response);
+        rd.include(request, response);
     }
 
 }
