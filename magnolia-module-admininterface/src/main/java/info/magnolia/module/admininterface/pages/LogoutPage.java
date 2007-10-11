@@ -32,13 +32,11 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated now done through LogoutFilter
  */
 public class LogoutPage extends PageMVCHandler {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(LogoutPage.class);
+    private static final Logger log = LoggerFactory.getLogger(LogoutPage.class);
 
     /**
      * @param name
@@ -53,6 +51,9 @@ public class LogoutPage extends PageMVCHandler {
      * @see info.magnolia.cms.servlets.MVCServletHandler#renderHtml(java.lang.String)
      */
     public void renderHtml(String view) throws IOException {
+        log.warn("This is deprecated. Usage of the LogoutFilter is recommended.");
+
+
         HttpSession session = getRequest().getSession(false);
         if (session != null) {
             if (!(MgnlContext.getInstance() instanceof SystemContext)) {
