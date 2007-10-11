@@ -252,6 +252,19 @@ public class MgnlContext {
     }
 
     /**
+     * Resets the current aggregator instance if we're in a WebContext, throws an IllegalStateException otherwise.
+     */
+    public static void resetAggregationState() {
+        final WebContext ctx = getWebContextIfExisting(getInstance());
+        if (ctx != null) {
+            ctx.resetAggregationState();
+        }
+        else {
+            throw new IllegalStateException("Can only reset the aggregation state within a WebContext.");
+        }
+    }
+
+    /**
      * Set attribute value, scope of the attribute is defined
      * @param name is used as a key
      * @param value
