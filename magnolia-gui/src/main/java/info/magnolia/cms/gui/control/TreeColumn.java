@@ -331,10 +331,11 @@ public class TreeColumn extends ControlImpl {
         return treeColumn;
     }
 
-    public static TreeColumn createActivationColumn(Tree tree) {
+    public static TreeColumn createActivationColumn(Tree tree, String title) {
         TreeColumn columnActivation = TreeColumn.createIconColumn(tree, "", null);
         columnActivation.setIconsActivation(true);
         columnActivation.setCssClass(StringUtils.EMPTY);
+        columnActivation.setTitle(title);
         columnActivation.setWidth(1);
         return columnActivation;
     }

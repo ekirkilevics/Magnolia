@@ -54,7 +54,7 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
         TreeColumn column0 = TreeColumn.createLabelColumn(tree, msgs.get("tree.web.page"), true);
         column0.setWidth(3);
 
-        TreeColumn columnIcons = TreeColumn.createActivationColumn(tree);
+        TreeColumn columnIcons = TreeColumn.createActivationColumn(tree, msgs.get("tree.web.status"));
         columnIcons.setIconsPermission(true);
 
         TreeColumn column1 = TreeColumn.createNodeDataColumn(tree, msgs.get("tree.web.title"), "title", true);

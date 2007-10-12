@@ -80,6 +80,7 @@ public class ConfigTreeConfiguration extends AbstractTreeConfiguration {
 
         TreeColumn columnIcons = new TreeColumn(tree.getJavascriptTree(), request);
         columnIcons.setCssClass(StringUtils.EMPTY);
+        columnIcons.setTitle(msgs.get("tree.config.status")); //$NON-NLS-1$
         columnIcons.setWidth(1);
         columnIcons.setIsIcons(true);
         columnIcons.setIconsActivation(true);

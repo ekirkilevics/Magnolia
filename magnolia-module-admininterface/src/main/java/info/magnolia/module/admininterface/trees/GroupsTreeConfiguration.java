@@ -54,7 +54,7 @@ public class GroupsTreeConfiguration extends AbstractTreeConfiguration {
         TreeColumn column1 = TreeColumn.createNodeDataColumn(tree, msgs.get("tree.groups.fullname"), "title", !browseMode);
         column1.setWidth(2);
 
-        TreeColumn columnIcons = TreeColumn.createActivationColumn(tree);        
+        TreeColumn columnIcons = TreeColumn.createActivationColumn(tree, msgs.get("tree.groups.status"));        
 
         TreeColumn column2 = TreeColumn.createMetaDataColumn(tree, msgs.get("tree.groups.date"), MetaData.LAST_MODIFIED, "yyyy-MM-dd, HH:mm");
         column2.setWidth(2);
