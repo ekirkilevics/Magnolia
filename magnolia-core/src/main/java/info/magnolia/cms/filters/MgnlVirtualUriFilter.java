@@ -35,7 +35,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class MgnlVirtualUriFilter extends AbstractMagnoliaFilter {
+public class MgnlVirtualUriFilter extends OncePerRequestAbstractMagnoliaFilter {
     private static final Logger log = LoggerFactory.getLogger(MgnlVirtualUriFilter.class);
 
     private static final int REDIRECT = 1;
@@ -75,7 +75,7 @@ public class MgnlVirtualUriFilter extends AbstractMagnoliaFilter {
                     catch (IOException e) {
                         log.error("Failed to redirect to {}:{}", targetUri, e.getMessage());
                     }
-                    
+
                 } else if (targetUri.startsWith("forward:")) {
                     targetUri = StringUtils.substringAfter(targetUri, "forward:");
                     try {
