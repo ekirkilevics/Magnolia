@@ -16,6 +16,7 @@ import info.magnolia.module.admininterface.PageMVCHandler;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.util.DeprecationUtil;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -51,7 +52,7 @@ public class LogoutPage extends PageMVCHandler {
      * @see info.magnolia.cms.servlets.MVCServletHandler#renderHtml(java.lang.String)
      */
     public void renderHtml(String view) throws IOException {
-        log.warn("This is deprecated. Usage of the LogoutFilter is recommended.");
+        DeprecationUtil.isDeprecated("Usage of the LogoutFilter is recommended instead.");
 
 
         HttpSession session = getRequest().getSession(false);

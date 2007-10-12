@@ -36,7 +36,7 @@ public class DeprecationUtil {
     }
 
     private static void internal_isDeprecated(String reason) {
-        final StringBuffer out = new StringBuffer("A deprecated method was called: ");
+        final StringBuffer out = new StringBuffer("A deprecated class or method was used: ");
         out.append(reason);
         out.append(". Check the following trace: ");
         final Throwable fakeException = new Throwable();
