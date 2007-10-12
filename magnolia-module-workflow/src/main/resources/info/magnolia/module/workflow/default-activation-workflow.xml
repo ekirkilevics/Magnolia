@@ -3,7 +3,7 @@
     <set field="activator" field-value="userName"/>
 
     <!--  go to publisher first -->
-    <participant ref="group-publisher"/>
+    <participant ref="group-publishers"/>
 
     <!-- will loop if rejected -->
     <if test="${field:action} == reject">
@@ -34,14 +34,35 @@
   </process-definition>
 
   <process-definition name="to-publisher">
-    <participant ref="group-publisher"/>
+    <sequence>
+      <!--
+       uncomment if you like to use an email notification
+      -->
+
+      <!--
+        <set field="mailTo" value="group-publishers"/>
+        <set field="mailTemplate" value="testMagnolia"/>
+        <participant ref="command-sendMail"/>
+      -->
+    <participant ref="group-publishers"/>
+    </sequence>
   </process-definition>
 
   <process-definition name="to-editor">
     <sequence>
       <!-- assign back to the user who launched the activation -->
       <set field="assignTo" field-value="activator"/>
-      <participant ref="group-editor"/>
+
+      <!--
+       uncomment if you like to use an email notification
+      -->
+
+      <!--
+        <set field="mailTo" value="user-${f:assignTo}"/>
+        <set field="mailTemplate" value="testMagnolia"/>
+        <participant ref="command-sendMail"/>
+      -->
+      <participant ref="group-editors"/>
     </sequence>
   </process-definition>
 
