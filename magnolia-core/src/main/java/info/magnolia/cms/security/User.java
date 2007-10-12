@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.security;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
@@ -20,7 +21,7 @@ import java.util.Collection;
  * @author philipp
  * @version $Revision:2558 $ ($Author:scharles $)
  */
-public interface User {
+public interface User extends Serializable {
 
     /**
      * Is this user in a specified role?

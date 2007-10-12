@@ -12,12 +12,13 @@
  */
 package info.magnolia.cms.security;
 
+import java.io.Serializable;
 import java.util.Collection;
 
 /**
  * @author Sameer Charles $Id:Group.java 9391 2007-05-11 15:48:02Z scharles $
  */
-public interface Group {
+public interface Group extends Serializable {
 
     /**
      * get name of this node

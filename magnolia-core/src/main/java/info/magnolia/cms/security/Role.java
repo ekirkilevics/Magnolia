@@ -12,11 +12,13 @@
  */
 package info.magnolia.cms.security;
 
+import java.io.Serializable;
+
 /**
  * @author philipp
  * @version $Revision:2558 $ ($Author:scharles $)
  */
-public interface Role {
+public interface Role extends Serializable {
 
     public abstract String getName();
 
