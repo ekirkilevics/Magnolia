@@ -65,7 +65,7 @@ public abstract class MgnlEmail extends MimeMessage {
     public abstract void setBody(String body, Map _parameters) throws Exception;
     
     public void setSubject(String arg0) throws MessagingException {
-        this.setSubject(arg0, "UTF8");
+        this.setSubject(arg0, "UTF-8");
     }
 
     public void setTemplate(String _template) {
