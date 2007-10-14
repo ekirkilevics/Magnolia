@@ -14,6 +14,7 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
@@ -39,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * A typical requirement is to have pages with no content which will simply redirect to a child page: using this tag you
  * can easily build a "redirect" template and use it for empty pages:
  * </p>
- * 
+ *
  * <pre>
  *                         Title                    Template               Mod. Date
  * -----------------------^----------------^-------^----------------------^---------------
@@ -48,7 +49,7 @@ import org.slf4j.LoggerFactory;
  *     + home             Home page        o       home                    05-01-01
  *
  * </pre>
- * 
+ *
  * <p>
  * This tag should be put <strong>before</strong> any other tag or include in the page, since response should not be
  * committed yet for it to work.
@@ -56,14 +57,14 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Example:
  * </p>
- * 
+ *
  * <pre>
  * &lt;cmsu:redirect var="destpage" />
  *
  * This page has no content and it will redirect to
  * &lt;a href="${pageContext.request.contextPath}${destpage}">${destpage}&lt;/a> in a public instance.
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @version $Id$
  * @since 2.2
@@ -99,8 +100,11 @@ public class RedirectTag extends BodyTagSupport {
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         String location = getRedirectLocation(request);
-        if (!Server.isAdmin() || Resource.showPreview()) {
 
+        Content activePage = Resource.getActivePage();
+
+        // on public servers, during preview or when the user can't edit the page, just send the redirect
+        if (!Server.isAdmin() || Resource.showPreview() || !activePage.isGranted(Permission.SET)) {
             if (location != null) {
                 try {
                     ((HttpServletResponse) pageContext.getResponse()).sendRedirect(request.getContextPath() + location);
