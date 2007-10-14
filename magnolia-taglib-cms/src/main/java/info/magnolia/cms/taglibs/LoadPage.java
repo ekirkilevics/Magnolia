@@ -108,7 +108,7 @@ public class LoadPage extends BodyTagSupport {
                     + ") from "
                     + actPageHandle
                     + ": "
-                    + e.getMessage());
+                    + e.getMessage(), e);
                 return EVAL_PAGE;
             }
         }
@@ -123,7 +123,7 @@ public class LoadPage extends BodyTagSupport {
                     + " from "
                     + actPageHandle
                     + ": "
-                    + e.getMessage());
+                    + e.getMessage(), e);
                 return EVAL_PAGE;
             }
         }
@@ -138,7 +138,7 @@ public class LoadPage extends BodyTagSupport {
                     + " from "
                     + actPageHandle
                     + ": "
-                    + e.getMessage());
+                    + e.getMessage(), e);
                 return EVAL_PAGE;
             }
         }
