@@ -3,6 +3,9 @@ package info.magnolia.cms.cache.setup;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.FilterOrderingTask;
+import info.magnolia.voting.voters.AuthenticatedVoter;
+import info.magnolia.voting.voters.ExtensionVoter;
+import info.magnolia.voting.voters.OnAdminVoter;
 import info.magnolia.voting.voters.RequestHasParametersVoter;
 
 import java.util.ArrayList;
@@ -44,17 +47,18 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         config.put("enabled", Boolean.TRUE);
         config.put("falseValue", new Long(-1));
         config.put("trueValue", new Long(0));
-        tasks.add(new AddCacheVoterTask("extensionVoter", RequestHasParametersVoter.class, config));
+        config.put("allow", "html,css,js,jpg,gif,png");
+        tasks.add(new AddCacheVoterTask("extensionVoter", ExtensionVoter.class, config));
 
         config = new HashMap();
         config.put("enabled", Boolean.TRUE);
         config.put("trueValue", new Long(-1));
-        tasks.add(new AddCacheVoterTask("notOnAdminVoter", RequestHasParametersVoter.class, config));
+        tasks.add(new AddCacheVoterTask("notOnAdminVoter", OnAdminVoter.class, config));
 
         config = new HashMap();
         config.put("enabled", Boolean.FALSE);
         config.put("trueValue", new Long(-1));
-        tasks.add(new AddCacheVoterTask("notAuthenticatedVoter", RequestHasParametersVoter.class, config));
+        tasks.add(new AddCacheVoterTask("notAuthenticatedVoter", AuthenticatedVoter.class, config));
 
         return tasks;
     }
