@@ -55,7 +55,7 @@ public class InstallContextImpl implements InstallContext {
     }
 
     public void error(String message, Throwable th) {
-        log.error("> " + message);
+        log.error("> " + message, th);
         messages.put(getModuleKey(), new Message(MessagePriority.error, message, th));
     }
 
