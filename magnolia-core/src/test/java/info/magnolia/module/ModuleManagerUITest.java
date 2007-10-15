@@ -36,10 +36,10 @@ public class ModuleManagerUITest extends TestCase {
         expect(context.getLocale()).andReturn(Locale.ENGLISH);
         replay(context);
         MgnlContext.setInstance(context);
+
         // shunt log4j
         final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(InstallContextImpl.class);
         logger.setLevel(org.apache.log4j.Level.OFF);
-
     }
 
     public void testDoneTemplate() throws IOException, TemplateException {
