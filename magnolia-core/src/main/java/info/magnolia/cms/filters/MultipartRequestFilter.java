@@ -51,11 +51,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class MultipartRequestFilter extends AbstractMagnoliaFilter {
-
-    /**
-     * Logger.
-     */
-    protected static Logger log = LoggerFactory.getLogger(CosMultipartRequestFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(MultipartRequestFilter.class);
 
     /**
      * Default max file upload size (2 GB).
