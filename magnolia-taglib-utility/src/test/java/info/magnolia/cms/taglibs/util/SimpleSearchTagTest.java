@@ -13,25 +13,17 @@
 package info.magnolia.cms.taglibs.util;
 
 import junit.framework.TestCase;
-
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.math.RandomUtils;
 import org.apache.jackrabbit.core.query.xpath.TokenMgrError;
 import org.apache.jackrabbit.core.query.xpath.XPathQueryBuilder;
 import org.apache.jackrabbit.name.NamespaceResolver;
-import org.slf4j.Logger; import org.slf4j.LoggerFactory;
-
 
 /**
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public class SimpleSearchTagTest extends TestCase {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(SimpleSearchTagTest.class);
 
     /**
      * Test for GenerateXPathQuery(). Uses Jackrabbit internal XPathQueryBuilder in order to validate the query.
@@ -42,16 +34,13 @@ public class SimpleSearchTagTest extends TestCase {
         tag.setQuery("AND test query AND path OR and OR join AND AND test AND OR");
 
         String xpath = tag.generateXPathQuery();
-        log.debug(xpath);
 
         try {
             NamespaceResolver resolver = null; // session.getNamespaceResolver()
             XPathQueryBuilder.createQuery(xpath, resolver);
-        }
-        catch (TokenMgrError e) {
+        } catch (TokenMgrError e) {
             fail("Invalid query: [" + xpath + "] " + e.getMessage());
-        }
-        catch (Throwable e) {
+        } catch (Throwable e) {
             // ok, we are setting a namespace resolver since we are running "off line", so it's normal to see exceptions
         }
     }
@@ -74,22 +63,13 @@ public class SimpleSearchTagTest extends TestCase {
             }
             tag.setQuery(inputstring.toString());
             String xpath = tag.generateXPathQuery();
-            log.debug(xpath);
 
             try {
                 NamespaceResolver resolver = null; // session.getNamespaceResolver()
                 XPathQueryBuilder.createQuery(xpath, resolver);
-            }
-            catch (TokenMgrError e) {
-                fail("Invalid query: ["
-                    + xpath
-                    + "] "
-                    + e.getMessage()
-                    + ". Input query was: ["
-                    + inputstring.toString()
-                    + "]");
-            }
-            catch (Throwable e) {
+            } catch (TokenMgrError e) {
+                fail("Invalid query: [" + xpath + "] " + e.getMessage() + ". Input query was: [" + inputstring.toString() + "]");
+            } catch (Throwable e) {
                 // ok, we are setting a namespace resolver since we are running "off line", so it's normal to see
                 // exceptions
             }
