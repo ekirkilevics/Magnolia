@@ -331,7 +331,7 @@ public class SaveHandlerImpl implements SaveHandler {
      * @param valueStr
      * @return the cleaned string
      */
-    private String cleanLineBreaks(String valueStr, int isRichEditValue) {
+    protected String cleanLineBreaks(String valueStr, int isRichEditValue) {
         valueStr = StringUtils.replace(valueStr, "\r\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
         valueStr = StringUtils.replace(valueStr, "\n", " "); //$NON-NLS-1$ //$NON-NLS-2$
 

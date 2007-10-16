@@ -10,22 +10,24 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.cms.gui.control;
+package info.magnolia.module.admininterface;
 
 import junit.framework.TestCase;
 
 
 /**
+ * TODO : review, rewrite.
+ * 
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class SaveTest extends TestCase {
+public class SaveHandlerImplTest extends TestCase {
 
     /**
      * Test for rich editor cleanup. IE often insert a br at the beginning of a paragraph.
      */
     public void testGetRichEditValueStrCleanExplorerPs() {
-        Save save = new Save();
-        assertEquals("aaa\n\n  bbb", save.getRichEditValueStr("<P>aaa</P>\r\n<P><BR>bbb</P>", ControlImpl.RICHEDIT_KUPU));
+        SaveHandlerImpl save = new SaveHandlerImpl();
+        assertEquals("aaa\n\n  bbb", save.cleanLineBreaks("<P>aaa</P>\r\n<P><BR>bbb</P>", -1));
     }
 }
