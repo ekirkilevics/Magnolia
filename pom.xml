@@ -166,30 +166,49 @@
         </plugin>
         <!-- precompile/validate JSPs : -->
         <plugin>
-          <groupId>org.codehaus.mojo</groupId>
+          <groupId>org.codehaus.mojo.jspc</groupId>
           <artifactId>jspc-maven-plugin</artifactId>
-          <!-- we need our specific version just because we can't force the plugin to use tomcat5 and jsp2.0 api when building with jdk5 -->
-          <version>1.4.7-magnolia-20070427</version>
+          <version>2.0-alpha-1</version>
           <executions>
             <execution>
-              <id>jspc</id>
               <goals>
                 <goal>compile</goal>
               </goals>
             </execution>
           </executions>
-          <configuration>
-            <warSourceDirectory>${basedir}/src/main/resources</warSourceDirectory>
-            <source>1.4</source>
-            <target>1.4</target>
-          </configuration>
           <dependencies>
             <dependency>
-              <groupId>javax.servlet</groupId>
-              <artifactId>servlet-api</artifactId>
-              <version>2.4</version>
+              <groupId>org.codehaus.mojo.jspc</groupId>
+              <artifactId>jspc-compiler-tomcat5</artifactId>
+              <version>2.0-alpha-1</version>
             </dependency>
+            <!-- for this to work, we'd need to write a specific jspc-compiler- impl for tomcat 5.0
+            <dependency>
+              <groupId>tomcat</groupId>
+              <artifactId>jasper-compiler</artifactId>
+              <version>5.0.28</version>
+            </dependency>
+            <dependency>
+              <groupId>tomcat</groupId>
+              <artifactId>jasper-runtime</artifactId>
+              <version>5.0.28</version>
+            </dependency>
+            <dependency>
+              <groupId>commons-logging</groupId>
+              <artifactId>commons-logging</artifactId>
+              <version>1.0.4</version>
+            </dependency>
+            -->
           </dependencies>
+          <configuration>
+            <sources>
+              <directory>${basedir}/src/main/resources/</directory>
+              <includes><include>**/*.jsp</include></includes>
+            </sources>
+            <source>1.4</source>
+            <target>1.4</target>
+            <verbose>1</verbose>
+          </configuration>
         </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>

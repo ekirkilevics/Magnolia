@@ -29,7 +29,7 @@
   <build>
     <plugins>
       <plugin>
-        <groupId>org.codehaus.mojo</groupId>
+        <groupId>org.codehaus.mojo.jspc</groupId>
         <artifactId>jspc-maven-plugin</artifactId>
       </plugin>
     </plugins>
