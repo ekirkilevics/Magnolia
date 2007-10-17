@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
 public class MgnlUserManager implements UserManager {
     private static final Logger log = LoggerFactory.getLogger(MgnlUserManager.class);
 
+    private static final String PASSWORD_PROPERTY = "pswd";
+
     private String realmName;
 
     /**
@@ -205,7 +207,7 @@ public class MgnlUserManager implements UserManager {
     }
 
     protected void setPasswordProperty(Content userNode, String clearPassword) throws RepositoryException {
-        userNode.createNodeData("pswd").setValue(encodePassword(clearPassword));
+        userNode.createNodeData(PASSWORD_PROPERTY).setValue(encodePassword(clearPassword));
     }
 
     protected String encodePassword(String clearPassword) {
