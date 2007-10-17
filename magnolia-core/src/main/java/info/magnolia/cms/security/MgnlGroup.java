@@ -59,7 +59,7 @@ public class MgnlGroup implements Group {
      * @return group name
      */
     public String getName() {
-        return this.groupNode.getName();
+        return getGroupNode().getName();
     }
 
     /**
@@ -113,15 +113,15 @@ public class MgnlGroup implements Group {
     }
 
     public Collection getRoles() {
-        return MgnlSecurityUtil.collectPropertyNames(groupNode, "roles", ContentRepository.USER_ROLES, false);
+        return MgnlSecurityUtil.collectPropertyNames(getGroupNode(), "roles", ContentRepository.USER_ROLES, false);
     }
 
     public Collection getGroups() {
-        return MgnlSecurityUtil.collectPropertyNames(groupNode, "groups", ContentRepository.USER_GROUPS, false);
+        return MgnlSecurityUtil.collectPropertyNames(getGroupNode(), "groups", ContentRepository.USER_GROUPS, false);
     }
 
     public Collection getAllGroups() {
-        return MgnlSecurityUtil.collectPropertyNames(groupNode, "groups", ContentRepository.USER_GROUPS, true);
+        return MgnlSecurityUtil.collectPropertyNames(getGroupNode(), "groups", ContentRepository.USER_GROUPS, true);
     }
 
     /**
@@ -139,7 +139,7 @@ public class MgnlGroup implements Group {
                 hm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USER_GROUPS);
             }
 
-            Content node = groupNode.getContent(nodeName);
+            Content node = getGroupNode().getContent(nodeName);
             for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
                 NodeData nodeData = (NodeData) iter.next();
                 // check for the existence of this ID
@@ -180,7 +180,7 @@ public class MgnlGroup implements Group {
             else {
                 hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_GROUPS);
             }
-            Content node = groupNode.getContent(nodeName);
+            Content node = getGroupNode().getContent(nodeName);
 
             for (Iterator iter = node.getNodeDataCollection().iterator(); iter.hasNext();) {
                 NodeData nodeData = (NodeData) iter.next();
@@ -201,7 +201,7 @@ public class MgnlGroup implements Group {
                     }
                 }
             }
-            groupNode.save();
+            getGroupNode().save();
         }
         catch (RepositoryException e) {
             log.error("failed to remove " + name + " from user [" + this.getName() + "]", e);
@@ -213,6 +213,7 @@ public class MgnlGroup implements Group {
      */
     private void add(String name, String nodeName) {
         try {
+            final Content groupNode = getGroupNode();
             HierarchyManager hm;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
                 hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_ROLES);
@@ -247,5 +248,7 @@ public class MgnlGroup implements Group {
         }
     }
 
-
+    public Content getGroupNode() {
+        return groupNode;
+    }
 }
