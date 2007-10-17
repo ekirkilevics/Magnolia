@@ -38,8 +38,14 @@ public interface Entity extends Principal, Serializable {
 
     public static final String PASSWORD = "password";
 
+    /**
+     * @return the name of the entity, or a default value if no name was set.
+     */
     public String getName();
 
+    /**
+     * @deprecated not used - use addProperty(Entity.NAME)
+     */
     public void setName(String name);
 
     public void addProperty(String key, Object value);

@@ -33,11 +33,6 @@ public class EntityImpl implements Entity {
 
     private static final String DEFAULT_NAME = "person";
 
-    /**
-     * properties
-     */
-    private String name;
-
     private Map properties;
 
     public EntityImpl() {
@@ -50,19 +45,18 @@ public class EntityImpl implements Entity {
      * @return name
      */
     public String getName() {
-        String result = this.name;
-        if (StringUtils.isEmpty(result)) {
-            result = (String) getProperty(NAME);
-        }
-        if (StringUtils.isEmpty(result)) {
+        final String name = (String) getProperty(NAME);
+        if (StringUtils.isEmpty(name)) {
             return DEFAULT_NAME;
         }
-
-        return result;
+        return name;
     }
 
+    /**
+     * @deprecated use addProperty(NAME, name)
+     */
     public void setName(String name) {
-        this.name = name;
+        addProperty(NAME, name);
     }
 
     public void addProperty(String key, Object value) {
@@ -77,7 +71,7 @@ public class EntityImpl implements Entity {
      * @see java.lang.Object#toString()
      */
     public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", this.name).toString();
+        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", getName()).toString();
     }
 
 }
