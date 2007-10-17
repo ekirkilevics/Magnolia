@@ -18,6 +18,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.util.NodeDataUtil;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -110,6 +111,19 @@ public class MgnlGroup implements Group {
      */
     public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException {
         return this.hasAny(roleName, NODE_ROLES);
+    }
+
+    public String getProperty(String propertyName) {
+        return NodeDataUtil.getString(getGroupNode(), propertyName, null);
+    }
+
+    public void setProperty(String propertyName, String value) {
+        try {
+            NodeDataUtil.getOrCreateAndSet(getGroupNode(), propertyName, value);
+            getGroupNode().save();
+        } catch (RepositoryException e) {
+            throw new RuntimeException(e); // TODO
+        }
     }
 
     public Collection getRoles() {

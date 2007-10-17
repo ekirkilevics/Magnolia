@@ -67,6 +67,16 @@ public interface Group extends Serializable {
     public boolean hasRole(String roleName) throws UnsupportedOperationException, AccessDeniedException;
 
     /**
+     * Gets an arbitrary property from this group.
+     */
+    String getProperty(String propertyName);
+
+    /**
+     * Sets an arbitrary property for this group.
+     */
+    void setProperty(String propertyName, String value);
+
+    /**
      * get groups that are directly assigned to group
      */
     public Collection getGroups();
