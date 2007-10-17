@@ -50,5 +50,8 @@ public interface Entity extends Principal, Serializable {
 
     public void addProperty(String key, Object value);
 
+    /**
+     * @return the property's value, or null if undefined 
+     */
     public Object getProperty(String key);
 }
