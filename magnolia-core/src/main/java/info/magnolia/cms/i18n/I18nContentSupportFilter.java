@@ -11,7 +11,7 @@
 package info.magnolia.cms.i18n;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.filters.AbstractMagnoliaFilter;
+import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author philipp
  * @version $Id$
  */
-public class I18nContentSupportFilter extends AbstractMagnoliaFilter {
+public class I18nContentSupportFilter extends AbstractMgnlFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         I18nContentSupport i18nSupport = I18nContentSupportFactory.getI18nSupport();
