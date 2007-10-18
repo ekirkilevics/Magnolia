@@ -12,8 +12,8 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.filters.MagnoliaFilterChain;
-import info.magnolia.cms.filters.OncePerRequestAbstractMagnoliaFilter;
+import info.magnolia.cms.filters.MgnlFilterChain;
+import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -30,7 +30,7 @@ import java.io.IOException;
  * @author Sameer Charles
  * @author Fabrizio Giustina $Id$
  */
-public class LogoutFilter extends OncePerRequestAbstractMagnoliaFilter {
+public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
     public static final String PARAMETER_LOGOUT = "mgnlLogout";
 
     private ServletContext servletContext;
@@ -51,8 +51,8 @@ public class LogoutFilter extends OncePerRequestAbstractMagnoliaFilter {
             }
             MgnlContext.initAsAnonymousContext(request, response, servletContext);
 
-            if (chain instanceof MagnoliaFilterChain) {
-                ((MagnoliaFilterChain) chain).reset();
+            if (chain instanceof MgnlFilterChain) {
+                ((MgnlFilterChain) chain).reset();
             }
         }
 

@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.security.auth.login;
 
-import info.magnolia.cms.filters.AbstractMagnoliaFilter;
+import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.context.MgnlContext;
 
@@ -33,7 +33,7 @@ import java.util.Enumeration;
  * @author Sameer Charles
  * $Id$
  */
-public class LoginFilter extends AbstractMagnoliaFilter {
+public class LoginFilter extends AbstractMgnlFilter {
 
     private Collection loginHandlers = new ArrayList();
 

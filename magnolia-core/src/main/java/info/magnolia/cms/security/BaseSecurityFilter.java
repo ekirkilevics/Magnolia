@@ -12,7 +12,7 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.filters.AbstractMagnoliaFilter;
+import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.security.auth.callback.HttpClientCallback;
 
 import javax.servlet.*;
@@ -25,7 +25,7 @@ import java.io.IOException;
  * @author Sameer Charles
  * $Id$
  */
-public abstract class BaseSecurityFilter extends AbstractMagnoliaFilter {
+public abstract class BaseSecurityFilter extends AbstractMgnlFilter {
 
     private HttpClientCallback clientCallback;
 
