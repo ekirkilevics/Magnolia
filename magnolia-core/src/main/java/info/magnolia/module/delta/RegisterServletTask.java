@@ -10,8 +10,16 @@
  */
 package info.magnolia.module.delta;
 
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.module.ServletDefinition;
+import info.magnolia.cms.module.ServletParameterDefinition;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.InstallContext;
+
+import java.util.Iterator;
+
+import javax.jcr.RepositoryException;
 
 
 /**
@@ -19,29 +27,45 @@ import info.magnolia.module.InstallContext;
  * @version $Id$
  */
 public class RegisterServletTask extends AbstractTask {
+    public static final String DEFAULT_SERVLET_FILTER_PATH = "/server/filters/servlets";
     private final ServletDefinition servletDefinition;
-
+    
     public RegisterServletTask(ServletDefinition servletDefinition) {
         super("Servlet " + servletDefinition.getName(), "Registers servlet" + servletDefinition.getName() + " (" + servletDefinition.getComment() + ")");
         this.servletDefinition = servletDefinition;
     }
 
     public void execute(InstallContext installContext) throws TaskExecutionException {
-        installContext.warn("We can't register a servlet in web.xml because this would trigger a restart of the container. We will implement a filter, which is able to wrap servlets. Please register the servlet manually!");
-        /*
+        installContext.debug("Registering servlet " + servletDefinition.getName() + " in servlet filter.");
+        
+        final String servletFilterPath = DEFAULT_SERVLET_FILTER_PATH;
+        
         try {
-            boolean webXmlModified = ModuleUtil.registerServlet(getServletDefinition());
-            if (webXmlModified) {
-                installContext.restartNeeded("Servlet " + getServletDefinition().getName() + " registered in web.xml");
+            final Content servletNode = installContext.getConfigHierarchyManager().createContent(servletFilterPath, servletDefinition.getName(), ItemType.CONTENTNODE.getSystemName());
+            NodeDataUtil.getOrCreateAndSet(servletNode, "class", "info.magnolia.cms.filters.ServletDispatchingFilter");
+            NodeDataUtil.getOrCreateAndSet(servletNode, "enabled", true);
+            NodeDataUtil.getOrCreateAndSet(servletNode, "servletClass", servletDefinition.getClassName());
+            NodeDataUtil.getOrCreateAndSet(servletNode, "servletName", servletDefinition.getName());
+            NodeDataUtil.getOrCreateAndSet(servletNode, "comment", servletDefinition.getComment());
+
+            final Content mappingsNode = servletNode.createContent("mappings", ItemType.CONTENTNODE);
+            for (Iterator iter = servletDefinition.getMappings().iterator(); iter.hasNext();) {
+                final String mapping = (String) iter.next();
+                
+                final Content mappingNode = mappingsNode.createContent("mapping", ItemType.CONTENTNODE);
+                NodeDataUtil.getOrCreateAndSet(mappingNode, "value", mapping);
+            }           
+            
+            final Content parametersNode = servletNode.createContent("parameters", ItemType.CONTENTNODE);
+            for (Iterator iter = servletDefinition.getParams().iterator(); iter.hasNext();) {
+                final ServletParameterDefinition parameter = (ServletParameterDefinition) iter.next();
+                
+                NodeDataUtil.getOrCreateAndSet(parametersNode, parameter.getName(), parameter.getValue());
             }
         }
-        catch (JDOMException e) {
-            throw new TaskExecutionException("Can't register servlet [" + getServletDefinition().getName() + "]", e);
+        catch (RepositoryException e) {
+            log.error("Cannot create servlet node in servlet filter.", e);
         }
-        catch (IOException e) {
-            throw new TaskExecutionException("Can't register servlet [" + getServletDefinition().getName() + "]", e);
-        }
-        */
     }
 
     public ServletDefinition getServletDefinition() {

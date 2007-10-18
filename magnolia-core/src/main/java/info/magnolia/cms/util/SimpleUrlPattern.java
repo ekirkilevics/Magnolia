@@ -74,7 +74,7 @@ public final class SimpleUrlPattern implements UrlPattern {
      * @return string where all the occurrences of <code>*</code> and <code>?</code> are replaced with a regexp
      * pattern.
      */
-    private static String getEncodedString(String str) {
+    public static String getEncodedString(String str) {
         StringBuffer stringBuffer = new StringBuffer();
         char[] chars = str.toCharArray();
         int i = 0, last = 0;

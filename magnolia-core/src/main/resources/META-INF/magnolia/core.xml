@@ -1,9 +1,35 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
-  <name>core</name>
-  <displayName>Magnolia Core</displayName>
-  <class>info.magnolia.setup.CoreModule</class>
-  <versionHandler>info.magnolia.setup.CoreModuleVersionHandler</versionHandler>
+  <name>editor-fckeditor</name>
+  <displayName>Magnolia FCKEditor</displayName>
   <version>${project.version}</version>
+
+  <servlets>
+    <servlet>
+      <name>ClasspathSpoolServlet</name>
+      <class>info.magnolia.cms.servlets.ClasspathSpool</class>
+      <comment>Used to spool resources from the classpath.</comment>
+      <mappings>
+        <mapping>/.resources/*</mapping>
+      </mappings>
+    </servlet>
+    <servlet>
+      <name>log4j</name>
+      <class>it.openutils.log4j.Log4jConfigurationServlet</class>
+      <mappings>
+        <mapping>/.magnolia/log4j/*</mapping>
+      </mappings>
+    </servlet>
+    <!-- 
+    <servlet>
+      <name>UuidRequestDispatcherServlet</name>
+      <class>it.openutils.log4j.Log4jConfigurationServlet</class>
+      <comment>Deprecated. See http://jira.magnolia.info/browse/MAGNOLIA-1535</comment>
+      <mappings>
+        <mapping>/uuid/*</mapping>
+      </mappings>
+    </servlet>
+    -->
+  </servlets>
 </module>
