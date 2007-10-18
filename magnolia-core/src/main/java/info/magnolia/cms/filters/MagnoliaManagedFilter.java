@@ -10,9 +10,9 @@ import org.slf4j.LoggerFactory;
 /**
  * @author fgiust
  * @version $Revision$ ($Author$)
- * @deprecated use {@link MagnoliaMainFilter} instead
+ * @deprecated use {@link MgnlMainFilter} instead
  */
-public class MagnoliaManagedFilter extends MagnoliaMainFilter {
+public class MagnoliaManagedFilter extends MgnlMainFilter {
 
     /**
      * Logger.
