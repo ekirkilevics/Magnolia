@@ -32,7 +32,7 @@ import com.oreilly.servlet.MultipartRequest;
  * @author Sameer Charles
  * @version $Id$
  */
-public class CosMultipartRequestFilter extends AbstractMagnoliaFilter {
+public class CosMultipartRequestFilter extends AbstractMgnlFilter {
 
     /**
      * Max file upload size.

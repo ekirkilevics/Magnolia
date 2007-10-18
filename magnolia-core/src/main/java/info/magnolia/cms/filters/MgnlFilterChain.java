@@ -24,15 +24,15 @@ import javax.servlet.http.HttpServletRequest;
  * @version $Id$
  *
  */
-public class MagnoliaFilterChain implements FilterChain {
+public class MgnlFilterChain implements FilterChain {
 
-    private MagnoliaFilter[] filters;
+    private MgnlFilter[] filters;
 
     private int position;
 
     private FilterChain originalChain;
 
-    public MagnoliaFilterChain(FilterChain originalChain, MagnoliaFilter[] filters) {
+    public MgnlFilterChain(FilterChain originalChain, MgnlFilter[] filters) {
         this.filters = filters;
         this.originalChain = originalChain;
     }
@@ -43,7 +43,7 @@ public class MagnoliaFilterChain implements FilterChain {
         }
         else {
             position++;
-            MagnoliaFilter filter = filters[position - 1];
+            MgnlFilter filter = filters[position - 1];
             if (!filter.bypasses((HttpServletRequest)request)) {
                 filter.doFilter(request, response, this);
             } else {

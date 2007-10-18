@@ -50,7 +50,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class MultipartRequestFilter extends AbstractMagnoliaFilter {
+public class MultipartRequestFilter extends AbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(MultipartRequestFilter.class);
 
     /**

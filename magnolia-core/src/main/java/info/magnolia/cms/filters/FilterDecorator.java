@@ -33,7 +33,7 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  */
-public class FilterDecorator extends AbstractMagnoliaFilter {
+public class FilterDecorator extends AbstractMgnlFilter {
 
     /**
      * Decorated Filter

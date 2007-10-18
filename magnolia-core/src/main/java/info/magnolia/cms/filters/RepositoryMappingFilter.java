@@ -32,7 +32,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
-public class RepositoryMappingFilter extends AbstractMagnoliaFilter {
+public class RepositoryMappingFilter extends AbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(RepositoryMappingFilter.class);
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {

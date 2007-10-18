@@ -15,14 +15,16 @@ package info.magnolia.cms.filters;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.StringUtils;
+
+import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.UnsupportedEncodingException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Sameer Charles
@@ -30,7 +32,7 @@ import java.io.UnsupportedEncodingException;
  * @author gjoseph
  * @version $Id$
  */
-public class ContentTypeFilter extends AbstractMagnoliaFilter {
+public class ContentTypeFilter extends AbstractMgnlFilter {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ContentTypeFilter.class);
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {

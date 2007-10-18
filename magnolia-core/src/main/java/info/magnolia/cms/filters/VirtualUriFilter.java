@@ -35,8 +35,8 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class MgnlVirtualUriFilter extends OncePerRequestAbstractMagnoliaFilter {
-    private static final Logger log = LoggerFactory.getLogger(MgnlVirtualUriFilter.class);
+public class VirtualUriFilter extends OncePerRequestAbstractMgnlFilter {
+    private static final Logger log = LoggerFactory.getLogger(VirtualUriFilter.class);
 
     private static final int REDIRECT = 1;
 
@@ -49,7 +49,7 @@ public class MgnlVirtualUriFilter extends OncePerRequestAbstractMagnoliaFilter {
         if (result == REDIRECT) {
             return;
         } else if (result == INCLUDE) {
-            ((MagnoliaFilterChain)chain).reset();
+            ((MgnlFilterChain)chain).reset();
         }
         chain.doFilter(request, response);
     }

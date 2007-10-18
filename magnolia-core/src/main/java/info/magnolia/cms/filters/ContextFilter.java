@@ -29,7 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class MgnlContextFilter extends AbstractMagnoliaFilter {
+public class ContextFilter extends AbstractMgnlFilter {
 
     private ServletContext servletContext;
 

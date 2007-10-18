@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Fabrizio Giustina
  * @version $Revision: $ ($Author: $)
  */
-public abstract class OncePerRequestAbstractMagnoliaFilter extends AbstractMagnoliaFilter {
+public abstract class OncePerRequestAbstractMgnlFilter extends AbstractMgnlFilter {
 
     private String requestKeyName = "__" + getClass() + "_FILTERED";
 

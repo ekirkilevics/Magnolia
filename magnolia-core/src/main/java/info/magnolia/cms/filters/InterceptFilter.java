@@ -12,10 +12,10 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
@@ -40,7 +40,7 @@ import org.slf4j.LoggerFactory;
  * @author Fabrizio Giustina
  * @version $Id$
  */
-public class MgnlInterceptFilter extends AbstractMagnoliaFilter {
+public class InterceptFilter extends AbstractMgnlFilter {
 
     /**
      * Request parameter: the INTERCEPT holds the name of an administrative action to perform.
@@ -85,7 +85,7 @@ public class MgnlInterceptFilter extends AbstractMagnoliaFilter {
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(MgnlInterceptFilter.class);
+    private static Logger log = LoggerFactory.getLogger(InterceptFilter.class);
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
 

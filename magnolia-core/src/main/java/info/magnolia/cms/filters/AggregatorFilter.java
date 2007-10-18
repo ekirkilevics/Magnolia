@@ -10,13 +10,13 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
@@ -41,7 +41,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
-public class AggregatorFilter extends AbstractMagnoliaFilter{
+public class AggregatorFilter extends AbstractMgnlFilter{
 
     private final String VERSION_NUMBER = "mgnlVersion"; //$NON-NLS-1$
 

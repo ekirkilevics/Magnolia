@@ -12,12 +12,12 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.context.MgnlContext;
 
@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class RenderingFilter extends AbstractMagnoliaFilter {
+public class RenderingFilter extends AbstractMgnlFilter {
 
     private static Logger log = LoggerFactory.getLogger(RenderingFilter.class);
 

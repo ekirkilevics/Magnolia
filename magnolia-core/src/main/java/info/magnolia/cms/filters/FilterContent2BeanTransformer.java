@@ -22,7 +22,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 /**
- * A special content2bean transformer for filters.
+ * A special content2bean transformer for filters. For the CompositeFilter we omit the extra filters node.
  *
  * @author Philipp Bracher
  * @version $Revision: $ ($Author: $)
@@ -37,11 +37,11 @@ class FilterContent2BeanTransformer extends Content2BeanTransformerImpl {
 
         Object bean = state.getCurrentBean();
         // we do not have a filters subnode again
-        if (bean instanceof MagnoliaMainFilter) {
+        if (bean instanceof CompositeFilter) {
             for (Iterator iter = values.values().iterator(); iter.hasNext();) {
                 Object value = iter.next();
-                if (value instanceof MagnoliaFilter) {
-                    ((MagnoliaMainFilter) bean).addFilter((MagnoliaFilter) value);
+                if (value instanceof MgnlFilter) {
+                    ((CompositeFilter) bean).addFilter((MgnlFilter) value);
                 }
             }
         }
@@ -52,7 +52,7 @@ class FilterContent2BeanTransformer extends Content2BeanTransformerImpl {
      */
     protected TypeDescriptor onResolveClass(TransformationState state) {
         if (state.getCurrentContent().isNodeType(ItemType.CONTENT.getSystemName())) {
-            return this.getTypeMapping().getTypeDescriptor(MagnoliaMainFilter.class);
+            return this.getTypeMapping().getTypeDescriptor(CompositeFilter.class);
         }
         return super.onResolveClass(state);
     }
