@@ -34,7 +34,7 @@
       <sv:value>660a98c5-c342-4b0c-9ac0-04c8283a1b5f</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.cms.filters.MgnlContextFilter</sv:value>
+      <sv:value>info.magnolia.cms.filters.ContextFilter</sv:value>
     </sv:property>
     <sv:property sv:name="enabled" sv:type="Boolean">
       <sv:value>true</sv:value>
@@ -659,7 +659,7 @@
       <sv:value>92881191-cfa9-44d7-9765-929049b866f6</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.cms.filters.MgnlVirtualUriFilter</sv:value>
+      <sv:value>info.magnolia.cms.filters.VirtualUriFilter</sv:value>
     </sv:property>
     <sv:property sv:name="enabled" sv:type="Boolean">
       <sv:value>true</sv:value>
@@ -902,7 +902,7 @@
         <sv:value>8fcb7811-ec3f-470e-a1bc-23fd4069c828</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.cms.filters.MgnlInterceptFilter</sv:value>
+        <sv:value>info.magnolia.cms.filters.InterceptFilter</sv:value>
       </sv:property>
       <sv:property sv:name="enabled" sv:type="Boolean">
         <sv:value>true</sv:value>
