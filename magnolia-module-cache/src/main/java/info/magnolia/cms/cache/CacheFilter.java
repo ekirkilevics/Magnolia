@@ -1,6 +1,6 @@
 package info.magnolia.cms.cache;
 
-import info.magnolia.cms.filters.AbstractMagnoliaFilter;
+import info.magnolia.cms.filters.AbstractMgnlFilter;
 
 import java.io.IOException;
 
@@ -21,7 +21,7 @@ import org.apache.commons.lang.StringUtils;
  * @since 3.0
  * $Id$
  */
-public class CacheFilter extends AbstractMagnoliaFilter {
+public class CacheFilter extends AbstractMgnlFilter {
 
 
     public static String ALREADY_FILTERED = CacheFilter.class.getName();
