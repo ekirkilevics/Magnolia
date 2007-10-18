@@ -24,6 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.tagext.Tag;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -112,6 +113,7 @@ public class RedirectTag extends BodyTagSupport {
                 catch (IOException e) {
                     log.error("Could not redirect to first child HTML page: " + e.getMessage()); //$NON-NLS-1$
                 }
+                return Tag.SKIP_PAGE;
             }
         }
         else if (StringUtils.isNotBlank(var)) {
