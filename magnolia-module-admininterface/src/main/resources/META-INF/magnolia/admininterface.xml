@@ -15,4 +15,30 @@
     </dependency>
   </dependencies>
 
+  <servlets>
+    <servlet>
+      <name>AdminTreeServlet</name>
+      <class>info.magnolia.module.admininterface.AdminTreeMVCServlet</class>
+      <comment>Used to generate and handle trees within the Admin Interface</comment>
+      <mappings>
+        <mapping>/.magnolia/trees/*</mapping>
+      </mappings>
+    </servlet>
+    <servlet>
+      <name>DialogServlet</name>
+      <class>info.magnolia.module.admininterface.DialogMVCServlet</class>
+      <comment>Used to generate and handle dialogs within the Admin Interface</comment>
+      <mappings>
+        <mapping>/.magnolia/dialogs/*</mapping>
+      </mappings>
+    </servlet>
+    <servlet>
+      <name>PageServlet</name>
+      <class>info.magnolia.module.admininterface.PageMVCServlet</class>
+      <comment></comment>
+      <mappings>
+        <mapping>/.magnolia/pages/*</mapping>
+      </mappings>
+    </servlet>
+  </servlets>
 </module>
