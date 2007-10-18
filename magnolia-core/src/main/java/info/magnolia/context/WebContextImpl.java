@@ -12,7 +12,6 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
@@ -32,7 +31,6 @@ import java.io.Serializable;
 import java.io.Writer;
 import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.LoginException;
@@ -315,21 +313,13 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 break;
             case Context.SESSION_SCOPE:
                 if (!(value instanceof Serializable)) {
-                    log.warn("Trying to store a non-serializable attribute in session: "
-                        + name
-                        + ". Object type is "
-                        + value.getClass().getName(), new Throwable(
-                        "This stacktrace has been added to provide debugging information"));
+                    log.warn("Trying to store a non-serializable attribute in session: " + name + ". Object type is " + value.getClass().getName(), new Throwable("This stacktrace has been added to provide debugging information"));
                     return;
                 }
 
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
-                    log
-                        .warn(
-                            "Session initialized in order to setting attribute '{}' to '{}'. You should avoid using session when possible!",
-                            name,
-                            value);
+                    log.warn("Session initialized in order to setting attribute '{}' to '{}'. You should avoid using session when possible!", name, value);
                     httpsession = request.getSession(true);
                 }
 
@@ -340,9 +330,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 break;
             default:
                 this.request.setAttribute(name, value);
-                if (log.isDebugEnabled()) {
-                    log.debug("Undefined scope, setting attribute [{}] in request scope", name);
-                }
+                log.debug("Undefined scope, setting attribute [{}] in request scope", name);
         }
     }
 
