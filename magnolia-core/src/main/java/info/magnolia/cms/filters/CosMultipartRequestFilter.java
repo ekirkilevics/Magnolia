@@ -17,10 +17,12 @@ import info.magnolia.cms.core.Path;
 
 import java.io.IOException;
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
@@ -39,7 +41,8 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
      */
     private static final int MAX_FILE_SIZE = 2000000000; // 2GB
 
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
 
         String type = null;
         String type1 = request.getHeader("Content-Type"); //$NON-NLS-1$
@@ -55,6 +58,8 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
         }
         if ((type != null) && type.toLowerCase().startsWith("multipart/form-data")) { //$NON-NLS-1$
             parseParameters(request);
+            MultipartForm mpf = (MultipartForm) request.getAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME);
+            request = new MultipartRequestWrapper(request, mpf);
         }
         chain.doFilter(request, response);
     }
@@ -88,5 +93,52 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
             form.addDocument(name, multi.getFilesystemName(name), multi.getContentType(name), multi.getFile(name));
         }
         request.setAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME, form);
+    }
+
+    static class MultipartRequestWrapper extends HttpServletRequestWrapper {
+
+        private MultipartForm form;
+
+        /**
+         * @param request
+         */
+        public MultipartRequestWrapper(HttpServletRequest request, MultipartForm form) {
+            super(request);
+            this.form = form;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+
+        public String getParameter(String name) {
+            String value = form.getParameter(name);
+            return value;
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+
+        public Map getParameterMap() {
+            return form.getParameters();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+
+        public Enumeration getParameterNames() {
+            return form.getParameterNames();
+        }
+
+        /**
+         * {@inheritDoc}
+         */
+
+        public String[] getParameterValues(String name) {
+            String[] value = form.getParameterValues(name);
+            return value;
+        }
     }
 }
