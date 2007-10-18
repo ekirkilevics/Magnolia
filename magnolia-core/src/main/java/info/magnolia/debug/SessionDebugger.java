@@ -12,7 +12,7 @@
  */
 package info.magnolia.debug;
 
-import info.magnolia.cms.filters.AbstractMagnoliaFilter;
+import info.magnolia.cms.filters.AbstractMgnlFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -32,7 +32,7 @@ import java.util.Enumeration;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class SessionDebugger extends AbstractMagnoliaFilter implements HttpSessionListener, HttpSessionAttributeListener {
+public class SessionDebugger extends AbstractMgnlFilter implements HttpSessionListener, HttpSessionAttributeListener {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SessionDebugger.class);
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
