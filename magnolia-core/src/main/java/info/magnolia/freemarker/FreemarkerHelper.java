@@ -57,19 +57,27 @@ public class FreemarkerHelper {
     }
 
     /**
+     * @see #render(String, java.util.Locale, String, Object, java.io.Writer)
+     */
+    public void render(String templatePath, Object root, Writer out) throws TemplateException, IOException {
+        render(templatePath, null, null, root, out);
+    }
+
+    /**
      * Renders the given template, using the given root object (can be a map, or any other type of object
      * handled by MagnoliaContentWrapper) to the given Writer.
      * If the root is an instance of a Map, the following elements are added to it:
-     * - contextPath, if we have an available WebContext
+     * - ctx, the current Context instance retrieved from MgnlContext
+     * - contextPath, if we have an available WebContext (@deprecated)
      * - defaultBaseUrl, as per Server.getDefaultBaseUrl()
      *
      * @see Server#getDefaultBaseUrl()
      */
-    public void render(String templatePath, Object root, Writer out) throws TemplateException, IOException {
-        final Locale locale = determineLocale();
+    public void render(String templatePath, Locale locale, String i18nBasename, Object root, Writer out) throws TemplateException, IOException {
+        locale = locale != null ? locale : determineLocale();
         if (root instanceof Map) {
             final Map data = (Map) root;
-            addDefaultData(data);
+            addDefaultData(data, locale, i18nBasename);
         }
 
         checkTemplateLoader();
@@ -86,10 +94,10 @@ public class FreemarkerHelper {
         }
     }
 
-    protected void addDefaultData(Map data) {
+    protected void addDefaultData(Map data, Locale locale, String i18nBasename) {
         final WebContext webCtx = getWebContextOrNull();
         if (webCtx != null) {
-            // deprecated
+            // @deprecated (-> update all templates)
             data.put("contextPath", webCtx.getContextPath());
         }
         if (MgnlContext.hasInstance()) {
@@ -97,6 +105,10 @@ public class FreemarkerHelper {
         }
 
         data.put("defaultBaseUrl", Server.getDefaultBaseUrl());
+
+        if (i18nBasename != null) {
+            data.put("i18n", new MessagesWrapper(i18nBasename, locale));
+        }
 
         // TODO : this is currently still in FreemarkerUtil. If we add it here,
         // the attribute "message" we put in the freemarker context should have a less generic name

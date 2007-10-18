@@ -68,6 +68,11 @@ public class FreemarkerHelperTest extends TestCase {
         logger.setLevel(org.apache.log4j.Level.OFF);
     }
 
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        FactoryUtil.clear();
+    }
+
     private void assertRendereredContent(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {
         assertRendereredContent(expectedOutput, Locale.US, o, templateName);
     }
@@ -84,14 +89,27 @@ public class FreemarkerHelperTest extends TestCase {
         verify(context);
     }
 
-    /**
-     * assert rendered content using the given mock Context
-     */
     private void assertRendereredContentWithoutCheckingContext(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {
         final StringWriter out = new StringWriter();
         fmHelper.render(templateName, o, out);
 
         assertEquals(expectedOutput, out.toString());
+    }
+
+    private void assertRendereredContentWithSpecifiedLocale(String expectedOutput, Locale l, Object o, String templateName) throws TemplateException, IOException {
+        final SystemContext sysMockCtx = createStrictMock(SystemContext.class);
+        sysMockCtx.setLocale(Locale.ENGLISH);
+        expectLastCall().anyTimes();
+        expect(sysMockCtx.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
+        FactoryUtil.setInstance(SystemContext.class, sysMockCtx);
+
+        replay(sysMockCtx);
+
+        final StringWriter out = new StringWriter();
+        fmHelper.render(templateName, l, "info.magnolia.freemarker.test", o, out);
+
+        assertEquals(expectedOutput, out.toString());
+        verify(sysMockCtx);
     }
 
     public void testWeCanUseAnyObjectTypeAsOurRoot() throws IOException, TemplateException {
@@ -482,6 +500,74 @@ public class FreemarkerHelperTest extends TestCase {
         replay(user);
         assertRendereredContent("myName is my name, is speak fr, I'm not enabled, and testProp has a value of testValue !", createSingleValueMap("user", user), "test.ftl");
         verify(user);
+    }
+
+    public void testGivenLocaleTakesOverAnyContextLocale() throws IOException, TemplateException {
+        tplLoader.putTemplate("test_en.ftl", "in english");
+        tplLoader.putTemplate("test_de.ftl", "in deutscher Sprache");
+        tplLoader.putTemplate("test_fr.ftl", "en francais");
+
+        assertRendereredContentWithSpecifiedLocale("en francais", Locale.FRENCH, new HashMap(), "test.ftl");
+    }
+
+    public void testSimpleI18NMessageCanBeUsedInTemplates() throws Exception {
+        tplLoader.putTemplate("test.ftl", "ouais: ${i18n.get('testMessage')}");
+        assertRendereredContentWithSpecifiedLocale("ouais: mon message en francais", Locale.FRENCH, new HashMap(), "test.ftl");
+    }
+
+    public void testSimpleI18NMessageFallsBackToEnglishIfNotSpecifiedGivenLanguage() throws Exception {
+        tplLoader.putTemplate("test.ftl", "hop: ${i18n.get('testMessage')}");
+        assertRendereredContentWithSpecifiedLocale("hop: my message in english", Locale.GERMAN, new HashMap(), "test.ftl");
+    }
+
+    public void testI18NFallsBackToDefaultBundle() throws Exception {
+        tplLoader.putTemplate("test.ftl", "ouais: ${i18n['buttons.admincentral']}");
+        assertRendereredContentWithSpecifiedLocale("ouais: Console d'administration", Locale.FRENCH, new HashMap(), "test.ftl");
+    }
+
+    public void testCanUseDotSyntaxToGetASimpleI18NMessage() throws Exception {
+        tplLoader.putTemplate("test.ftl", "ouais: ${i18n.testMessage}");
+        assertRendereredContentWithSpecifiedLocale("ouais: mon message en francais", Locale.FRENCH, new HashMap(), "test.ftl");
+    }
+
+    public void testCanUseBracketSyntaxToGetASimpleI18NMessage() throws Exception {
+        tplLoader.putTemplate("test.ftl", "ouais: ${i18n['testMessage']}");
+        assertRendereredContentWithSpecifiedLocale("ouais: mon message en francais", Locale.FRENCH, new HashMap(), "test.ftl");
+    }
+
+    public void testMustUseMethodCallSyntaxToGetAParameterizedI18NMessage() throws Exception {
+        tplLoader.putTemplate("test.ftl", "result: ${i18n.get('withOneParam', ['bar'])}");
+        assertRendereredContentWithSpecifiedLocale("result: foo:bar", Locale.FRENCH, new HashMap(), "test.ftl");
+    }
+
+    public void testSupportsI18NMessagesWithMultipleParameters() throws Exception {
+        tplLoader.putTemplate("test.ftl", "result: ${i18n.get('withMoreParams', ['one', 'two', 'three'])}");
+        assertRendereredContentWithSpecifiedLocale("result: 1:one, 2:two, 3:three", Locale.FRENCH, new HashMap(), "test.ftl");
+    }
+
+    public void testOutputsInterrogationMarksAroundI18NKeyIfUnknown() throws IOException, TemplateException {
+        tplLoader.putTemplate("test.ftl", "ouais: ${i18n['bleh.blah']}");
+        assertRendereredContentWithSpecifiedLocale("ouais: ???bleh.blah???", Locale.FRENCH, new HashMap(), "test.ftl");
+    }
+
+    public void testI18NMessageParametersCanComeFromData() throws IOException, TemplateException {
+        tplLoader.putTemplate("test.ftl", "result: ${i18n.get('withOneParam', [value])}");
+        assertRendereredContentWithSpecifiedLocale("result: foo:wesh t'as vu", Locale.FRENCH, createSingleValueMap("value", "wesh t'as vu"), "test.ftl");
+    }
+
+    public void testCanPassBundleNameFromTemplateWithMethodCallSyntaxToGetSimple18NMessage() throws Exception {
+        tplLoader.putTemplate("test.ftl", "result: ${i18n.get('testMessage', 'info.magnolia.freemarker.other')}");
+        assertRendereredContentWithSpecifiedLocale("result: this is the other bundle", Locale.FRENCH, new HashMap(), "test.ftl");
+    }
+
+    public void testCanPassBundleNameFromTemplateWithMethodCallSyntaxToGetAParameterizedI18NMessage() throws Exception {
+        tplLoader.putTemplate("test.ftl", "result: ${i18n.get('withOneParam', ['bar'], 'info.magnolia.freemarker.other')}");
+        assertRendereredContentWithSpecifiedLocale("result: bling:bar", Locale.FRENCH, new HashMap(), "test.ftl");
+    }
+
+    public void testCanPassBundleNameFromTemplateAndSupportsI18NMessagesWithMultipleParameters() throws Exception {
+        tplLoader.putTemplate("test.ftl", "result: ${i18n.get('withMoreParams', ['one', 'two', 'three'], 'info.magnolia.freemarker.other')}");
+        assertRendereredContentWithSpecifiedLocale("result: bling:one, bling:two, bling:three", Locale.FRENCH, new HashMap(), "test.ftl");
     }
 
     private MockHierarchyManager prepareHM(MockContent page) {
