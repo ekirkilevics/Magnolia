@@ -12,6 +12,7 @@
  */
 package info.magnolia.cms.security;
 
+import java.io.Serializable;
 import java.util.List;
 
 
@@ -19,7 +20,7 @@ import java.util.List;
  * @author Sameer Charles
  * @version $Revision:2558 $ ($Author:scharles $)
  */
-public interface AccessManager {
+public interface AccessManager extends Serializable {
 
     /**
      * Determines wether the specified permissions are granted to the given path.

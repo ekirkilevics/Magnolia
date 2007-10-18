@@ -44,7 +44,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.PageContext;
 
-import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.UnhandledException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,13 +59,15 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     private static final long serialVersionUID = 222L;
 
-    private static final String ATTRIBUTE_REPOSITORY_REQUEST_PREFIX = "mgnlRepositorySession_";
+    private static final String REQUEST_JCRSESSION_PREFIX = WebContextImpl.class.getName() + ".mgnlRepositorySession_";
 
-    private static final String ATTRIBUTE_HM_PREFIX = "mgnlHMgr_";
+    private static final String REQUEST_HIERARCHYMANAGER_PREFIX = WebContextImpl.class.getName() + ".mgnlHMgr_";
 
-    private static final String ATTRIBUTE_AM_PREFIX = "mgnlAccessMgr_";
+    private static final String REQUEST_AGGREGATIONSTATE = AggregationState.class.getName();
 
-    private static final String ATTRIBUTE_AGGREGATIONSTATE = AggregationState.class.getName();
+    private static final String SESSION_ACCESSMANAGER_PREFIX = WebContextImpl.class.getName() + ".mgnlAccessMgr_";
+
+    private static final String SESSION_USER = WebContextImpl.class.getName() + ".user";
 
     private HttpServletRequest request;
 
@@ -104,7 +106,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
 
     public User getUser() {
         if (user == null) {
-            user = (User) getAttribute("user", Context.SESSION_SCOPE);
+            user = (User) getAttribute(SESSION_USER, Context.SESSION_SCOPE);
             if (user == null) {
                 user = Security.getUserManager().getUser(Authenticator.getSubject(request));
                 setUser(user);
@@ -117,10 +119,9 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * In addition to the field user we put the user object into the session as well.
      * @param user magnolia User
      */
-
     public void setUser(User user) {
         super.setUser(user);
-        setAttribute("user", user, Context.SESSION_SCOPE);
+        setAttribute(SESSION_USER, user, Context.SESSION_SCOPE);
     }
 
     /**
@@ -130,19 +131,14 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         RepositoryException {
         Session jcrSession = null;
 
-        final String repoSessAttrName = ATTRIBUTE_REPOSITORY_REQUEST_PREFIX + repositoryName + "_" + workspaceName;
+        final String repoSessAttrName = REQUEST_JCRSESSION_PREFIX + repositoryName + "_" + workspaceName;
 
         // don't use httpsession, jcr session is not serializable at all
         jcrSession = (Session) getAttribute(repoSessAttrName, LOCAL_SCOPE);
 
-        log.debug("getRepositorySession {} (from request? {})", repoSessAttrName, BooleanUtils.toBooleanObject(jcrSession != null));
-
         if (jcrSession == null) {
-            long time = System.currentTimeMillis();
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
-            log.debug("creating a new session took {} ms", new Long(System.currentTimeMillis() - time));
-
             setAttribute(repoSessAttrName, jcrSession, LOCAL_SCOPE);
         }
         return jcrSession;
@@ -152,14 +148,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * Get hierarchy manager initialized for this user.
      */
     public HierarchyManager getHierarchyManager(String repositoryName, String workspaceName) {
-        HttpSession httpSession = request.getSession(false);
-        HierarchyManager hm = null;
-        final String hmAttrName = ATTRIBUTE_HM_PREFIX + repositoryName + "_" + workspaceName;
-        if (httpSession != null) {
-            hm = (HierarchyManager) httpSession.getAttribute(hmAttrName);
-        }
 
-        log.debug("getHierarchyManager (from session? {})", BooleanUtils.toBooleanObject(hm != null));
+        final String hmAttrName = REQUEST_HIERARCHYMANAGER_PREFIX + repositoryName + "_" + workspaceName;
+
+        HierarchyManager hm = (HierarchyManager) getAttribute(hmAttrName, Context.LOCAL_SCOPE);
+
         if (hm == null) {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             try {
@@ -168,13 +161,11 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                     workspaceName), getAccessManager(repositoryName, workspaceName), getQueryManager(
                     repositoryName,
                     workspaceName));
-                if (httpSession != null) {
-                    setAttribute("hmAttrName", hm, Context.SESSION_SCOPE);//$NON-NLS-1$
-                }
             }
-            catch (Throwable t) {
-                log.error("Failed to create HierarchyManager", t);
+            catch (RepositoryException e) {
+                throw new UnhandledException(e);
             }
+            setAttribute(hmAttrName, hm, Context.LOCAL_SCOPE);
         }
 
         return hm;
@@ -187,12 +178,10 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         HttpSession httpSession = request.getSession(false);
         AccessManager accessManager = null;
 
-        final String amAttrName = ATTRIBUTE_AM_PREFIX + repositoryName + "_" + workspaceName;
+        final String amAttrName = SESSION_ACCESSMANAGER_PREFIX + repositoryName + "_" + workspaceName;
         if (httpSession != null) {
             accessManager = (AccessManager) httpSession.getAttribute(amAttrName);
         }
-
-        log.debug("getAccessManager (from session? {})", BooleanUtils.toBooleanObject(accessManager != null));
 
         if (accessManager == null) {
             accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(
@@ -218,14 +207,12 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     public QueryManager getQueryManager(String repositoryName, String workspaceName) {
         QueryManager queryManager = null;
 
-        log.debug("getQueryManager");
-
         try {
             queryManager = WorkspaceAccessUtil.getInstance().createQueryManager(
                 getRepositorySession(repositoryName, workspaceName),
                 getAccessManager(repositoryName, workspaceName));
         }
-        catch (Throwable t) {
+        catch (Exception t) {
             log.error("Failed to create QueryManager", t);
         }
 
@@ -251,16 +238,16 @@ public class WebContextImpl extends AbstractContext implements WebContext {
     }
 
     public AggregationState getAggregationState() {
-        AggregationState aggregationState = (AggregationState) request.getAttribute(ATTRIBUTE_AGGREGATIONSTATE);
+        AggregationState aggregationState = (AggregationState) request.getAttribute(REQUEST_AGGREGATIONSTATE);
         if (aggregationState == null) {
             aggregationState = new AggregationState();
-            setAttribute(ATTRIBUTE_AGGREGATIONSTATE, aggregationState, LOCAL_SCOPE);
+            setAttribute(REQUEST_AGGREGATIONSTATE, aggregationState, LOCAL_SCOPE);
         }
         return aggregationState;
     }
 
     public void resetAggregationState() {
-        removeAttribute(ATTRIBUTE_AGGREGATIONSTATE, LOCAL_SCOPE);
+        removeAttribute(REQUEST_AGGREGATIONSTATE, LOCAL_SCOPE);
     }
 
     /**
@@ -268,7 +255,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
      * @return multipart form object
      */
     public MultipartForm getPostedForm() {
-        return (MultipartForm) this.request.getAttribute("multipartform"); //$NON-NLS-1$
+        return (MultipartForm) getAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME, LOCAL_SCOPE);
     }
 
     /**
@@ -313,13 +300,21 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                 break;
             case Context.SESSION_SCOPE:
                 if (!(value instanceof Serializable)) {
-                    log.warn("Trying to store a non-serializable attribute in session: " + name + ". Object type is " + value.getClass().getName(), new Throwable("This stacktrace has been added to provide debugging information"));
+                    log.warn("Trying to store a non-serializable attribute in session: "
+                        + name
+                        + ". Object type is "
+                        + value.getClass().getName(), new Throwable(
+                        "This stacktrace has been added to provide debugging information"));
                     return;
                 }
 
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
-                    log.warn("Session initialized in order to setting attribute '{}' to '{}'. You should avoid using session when possible!", name, value);
+                    log
+                        .warn(
+                            "Session initialized in order to setting attribute '{}' to '{}'. You should avoid using session when possible!",
+                            name,
+                            value);
                     httpsession = request.getSession(true);
                 }
 
@@ -503,7 +498,7 @@ public class WebContextImpl extends AbstractContext implements WebContext {
         while (attributes.hasMoreElements()) {
             String key = (String) attributes.nextElement();
 
-            if (key.startsWith(WebContextImpl.ATTRIBUTE_REPOSITORY_REQUEST_PREFIX)) {
+            if (key.startsWith(REQUEST_JCRSESSION_PREFIX)) {
                 final Object objSession = request.getAttribute(key);
 
                 // don't leave dead jcr sessions around
@@ -515,7 +510,8 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                         if (jcrSession.isLive()) {
 
                             if (jcrSession.hasPendingChanges()) {
-                                log.error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
+                                log
+                                    .error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
                                 if (log.isDebugEnabled()) {
                                     PrintWriter pw = new PrintWriter(System.out);
                                     DumperUtil.dumpChanges(jcrSession, pw);
@@ -534,6 +530,10 @@ public class WebContextImpl extends AbstractContext implements WebContext {
                         log.warn("Failed to close JCR session " + key, t);
                     }
                 }
+            }
+            else if (key.startsWith(REQUEST_HIERARCHYMANAGER_PREFIX)) {
+                // session is already closed by the above check
+                request.removeAttribute(key);
             }
         }
     }

@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.security;
 
+import java.io.Serializable;
+
 import info.magnolia.cms.util.UrlPattern;
 
 
@@ -19,7 +21,7 @@ import info.magnolia.cms.util.UrlPattern;
  * Date: Jan 5, 2005 Time: 11:32:36 AM
  * @author Sameer Charles
  */
-public interface Permission {
+public interface Permission extends Serializable {
 
     /**
      * All possible permissions
@@ -62,7 +64,7 @@ public interface Permission {
     long ALL = ADD | REMOVE | SET | READ | EXECUTE | SYNDICATE;
 
     long WRITE = ADD | SET | READ;
-    
+
     void setPattern(UrlPattern value);
 
     UrlPattern getPattern();

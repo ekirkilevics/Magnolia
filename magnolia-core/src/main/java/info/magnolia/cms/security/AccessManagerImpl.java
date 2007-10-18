@@ -12,23 +12,19 @@
  */
 package info.magnolia.cms.security;
 
-import java.util.List;
 import java.io.Serializable;
+import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  * @author Sameer Charles
- * $Id$
+ * @version $Id$
  */
 public class AccessManagerImpl implements AccessManager, Serializable {
 
     private static final long serialVersionUID = 222L;
-
-    private static Logger log = LoggerFactory.getLogger(AccessManagerImpl.class);
 
     private List userPermissions;
 
@@ -45,17 +41,6 @@ public class AccessManagerImpl implements AccessManager, Serializable {
 
         long currentPermission = getPermissions(path);
         boolean granted = (currentPermission & permissions) == permissions;
-
-        if (log.isDebugEnabled()) {
-            log.debug("Path: "
-                + path
-                + " -"
-                + PermissionImpl.getPermissionAsName(currentPermission)
-                + "-"
-                + PermissionImpl.getPermissionAsName(permissions)
-                + "="
-                + granted);
-        }
 
         return granted;
     }
