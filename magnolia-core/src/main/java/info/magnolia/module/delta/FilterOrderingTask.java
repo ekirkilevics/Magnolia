@@ -13,7 +13,7 @@
 package info.magnolia.module.delta;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.filters.MagnoliaMainFilter;
+import info.magnolia.cms.filters.MgnlMainFilter;
 import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
@@ -40,7 +40,7 @@ public class FilterOrderingTask extends AbstractRepositoryTask {
     }
 
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        final Content filtersParent = ctx.getConfigHierarchyManager().getContent(MagnoliaMainFilter.SERVER_FILTERS);
+        final Content filtersParent = ctx.getConfigHierarchyManager().getContent(MgnlMainFilter.SERVER_FILTERS);
 
         // assert filter exists // TODO : this does not take nested filters into account
         if (!filtersParent.hasContent(filterToBeOrderedName)) {
