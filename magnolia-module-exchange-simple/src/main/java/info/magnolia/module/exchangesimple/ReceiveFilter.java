@@ -12,7 +12,7 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import info.magnolia.cms.filters.AbstractMagnoliaFilter;
+import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.config.ConfigLoader;
@@ -54,7 +54,7 @@ import org.safehaus.uuid.UUIDGenerator;
  * @author Sameer Charles
  * $Id$
  */
-public class ReceiveFilter extends AbstractMagnoliaFilter {
+public class ReceiveFilter extends AbstractMgnlFilter {
 
     private static Logger log = LoggerFactory.getLogger(ReceiveFilter.class);
 
