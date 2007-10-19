@@ -42,7 +42,7 @@ Overview
 
     * to activate means to start the activation workflow
 
-    * the standard activation workflow simply works in one step, i.e. the flow is automatically launched and all it does is actually publish the page
+    * the standard activation workflow simply works in one step, i.e. the flow is automatically launched and all it does is actually publish the page (to the destination defined via new surround syndication(SM) feature)
 
     * to have a more interesting example, the standard edit/review/publish workflow could be implemented
 
