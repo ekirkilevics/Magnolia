@@ -57,8 +57,7 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
             type = (type1.length() > type2.length() ? type1 : type2);
         }
         if ((type != null) && type.toLowerCase().startsWith("multipart/form-data")) { //$NON-NLS-1$
-            parseParameters(request);
-            MultipartForm mpf = (MultipartForm) request.getAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME);
+            MultipartForm mpf = parseParameters(request);
             request = new MultipartRequestWrapper(request, mpf);
         }
         chain.doFilter(request, response);
@@ -68,7 +67,7 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
      * Adds all request paramaters as request attributes.
      * @param request HttpServletRequest
      */
-    private static void parseParameters(HttpServletRequest request) throws IOException {
+    private static MultipartForm parseParameters(HttpServletRequest request) throws IOException {
         MultipartForm form = new MultipartForm();
         String encoding = StringUtils.defaultString(request.getCharacterEncoding(), "UTF-8"); //$NON-NLS-1$
         MultipartRequest multi = new MultipartRequest(
@@ -93,6 +92,7 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
             form.addDocument(name, multi.getFilesystemName(name), multi.getContentType(name), multi.getFile(name));
         }
         request.setAttribute(MultipartForm.REQUEST_ATTRIBUTE_NAME, form);
+        return form;
     }
 
     static class MultipartRequestWrapper extends HttpServletRequestWrapper {

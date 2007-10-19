@@ -102,7 +102,6 @@ public class MultipartRequestFilterTest extends TestCase {
         assertEquals("xml", document.getExtension());
         assertEquals("pom", document.getFileName());
         assertEquals("pom.xml", document.getFileNameWithExtension());
-        System.out.println("TESTFILE.length() = " + TESTFILE.length());
         assertEquals(TESTFILE.length(), document.getLength());
 
         assertEquals(expectedDocumentType, document.getType());
