@@ -2,7 +2,7 @@
   xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-jsptaglibrary_2_0.xsd"
   version="2.0">
   <description>Core functions for CMS</description>
-  <display-name>cms funtions</display-name>
+  <display-name>cms functions</display-name>
   <tlib-version>3.1</tlib-version>
   <short-name>cmsfn</short-name>
   <uri>http://www.magnolia.info/tlds/cmsfn-taglib.tld</uri>
