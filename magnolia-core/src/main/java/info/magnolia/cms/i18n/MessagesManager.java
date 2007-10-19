@@ -336,7 +336,7 @@ public final class MessagesManager {
      * Set the user language in the session
      * @param language lagnguage to ste
      * @param session current session
-     * @deprecated use MgnlContext instead
+     * @deprecated use MgnlContext instead (this is not used - can be safely removed)
      */
     public static void setUserLanguage(String language, HttpSession session) {
         MgnlContext.setAttribute(Config.FMT_LOCALE + ".session", language, Context.SESSION_SCOPE); //$NON-NLS-1$

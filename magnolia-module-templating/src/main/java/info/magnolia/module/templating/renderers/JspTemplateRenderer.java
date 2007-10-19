@@ -14,13 +14,11 @@ package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
-import info.magnolia.context.MgnlContext;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.jsp.jstl.core.Config;
 
 import java.io.IOException;
 
@@ -51,7 +49,6 @@ public class JspTemplateRenderer implements TemplateRenderer {
             log.warn("Including {} for request {}, but response is already committed.", requestReceiver, request.getRequestURL());
         }
 
-        Config.set(request, Config.FMT_LOCALE, MgnlContext.getAggregationState().getLocale());
         RequestDispatcher rd = request.getRequestDispatcher(requestReceiver);
         rd.include(request, response);
     }
