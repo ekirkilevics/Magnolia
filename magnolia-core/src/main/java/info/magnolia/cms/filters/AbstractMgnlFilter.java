@@ -53,7 +53,8 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
         if(!isEnabled()){
             return true;
         }
-        return Voting.Factory.getDefaultVoting().vote(bypasses, request) > 0;
+        Voting voting = Voting.Factory.getDefaultVoting();
+        return voting.vote(bypasses, request) > 0;
     }
 
     public void destroy() {
