@@ -225,6 +225,10 @@
       <property name="tokens" value="METHOD_DEF, CTOR_DEF" />
     </module>
     <module name="ParameterNumber"></module>
+    <module name="usage.OneMethodPrivateField">
+      <property name="severity" value="ignore" />
+      <property name="ignoreFormat" value="^log$" />
+    </module>
     <module name="EmptyForIteratorPad"></module>
     <module name="NoWhitespaceAfter">
       <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS" />
