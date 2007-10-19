@@ -787,7 +787,7 @@
     <site>
       <id>magnolia.sf</id>
       <name>magnolia</name>
-      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/30</url>
+      <url>scp://shell.sourceforge.net/home/groups/m/ma/magnolia/htdocs/${project.version}</url>
     </site>
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
   </distributionManagement>
