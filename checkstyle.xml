@@ -225,7 +225,7 @@
       <property name="tokens" value="METHOD_DEF, CTOR_DEF" />
     </module>
     <module name="ParameterNumber"></module>
-    <module name="usage.OneMethodPrivateField">
+    <module name="OneMethodPrivateField">
       <property name="severity" value="ignore" />
       <property name="ignoreFormat" value="^log$" />
     </module>
