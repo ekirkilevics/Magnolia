@@ -520,10 +520,11 @@ public class FreemarkerHelperTest extends TestCase {
         assertRendereredContentWithSpecifiedLocale("hop: my message in english", Locale.GERMAN, new HashMap(), "test.ftl");
     }
 
-    public void testI18NFallsBackToDefaultBundle() throws Exception {
-        tplLoader.putTemplate("test.ftl", "ouais: ${i18n['buttons.admincentral']}");
-        assertRendereredContentWithSpecifiedLocale("ouais: Console d'administration", Locale.FRENCH, new HashMap(), "test.ftl");
-    }
+    // TODO this test can't work at the moment since we're in core and the default bundle is in the admininterface module.
+//    public void testI18NFallsBackToDefaultBundle() throws Exception {
+//        tplLoader.putTemplate("test.ftl", "ouais: ${i18n['buttons.admincentral']}");
+//        assertRendereredContentWithSpecifiedLocale("ouais: Console d'administration", Locale.FRENCH, new HashMap(), "test.ftl");
+//    }
 
     public void testCanUseDotSyntaxToGetASimpleI18NMessage() throws Exception {
         tplLoader.putTemplate("test.ftl", "ouais: ${i18n.testMessage}");
