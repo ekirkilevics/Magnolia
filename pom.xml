@@ -293,6 +293,25 @@
           </execution>
         </executions>
       </plugin>
+      <!-- this currently breaks when generating the site in a reactor build with an out of memory exception :( -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clover-plugin</artifactId>
+        <configuration>
+          <targetPercentage>0%</targetPercentage>
+          <licenseLocation>${cloverLicense}</licenseLocation>
+        </configuration>
+        <executions>
+          <execution>
+            <phase>verify</phase>
+            <goals>
+              <goal>instrument</goal>
+              <goal>check</goal>
+              <goal>aggregate</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
     <resources>
       <resource>
@@ -340,8 +359,23 @@
   <reporting>
     <plugins>
       <plugin>
-        <groupId>net.sourceforge.maven-taglib</groupId>
-        <artifactId>maven-taglib-plugin</artifactId>
+        <artifactId>maven-project-info-reports-plugin</artifactId>
+        <reportSets>
+          <reportSet>
+            <reports>
+              <report>index</report>
+              <report>summary</report>
+              <report>dependencies</report>
+              <report>dependency-convergence</report>
+              <report>issue-tracking</report>
+              <report>license</report>
+              <report>mailing-list</report>
+              <report>project-team</report>
+              <report>scm</report>
+              <report>cim</report>
+            </reports>
+          </reportSet>
+        </reportSets>
       </plugin>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
@@ -354,33 +388,42 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <quiet>true</quiet>
+          <aggregate>true</aggregate>          
         </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-pmd-plugin</artifactId>
       </plugin>
       <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-      </plugin>
-      <plugin>
         <artifactId>maven-jxr-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-surefire-report-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>jdepend-maven-plugin</artifactId>
       </plugin>
       <plugin>
         <groupId>org.codehaus.mojo</groupId>
         <artifactId>clirr-maven-plugin</artifactId>
-        <version>2.1.1</version>
         <configuration>
           <minSeverity>info</minSeverity>
           <!-- this is detected automatically by default: -->
           <!--<comparisonVersion>3.0.2</comparisonVersion>-->
         </configuration>
+      </plugin>
+
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-clover-plugin</artifactId>
+      </plugin>
+
+      <!-- this report is pretty useless, since we don't allow building with failing tests ... -->
+      <plugin>
+        <artifactId>maven-surefire-report-plugin</artifactId>
+      </plugin>
+      <!-- this report is very obscure - do we want it ? -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>jdepend-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>net.sourceforge.maven-taglib</groupId>
+        <artifactId>maven-taglib-plugin</artifactId>
       </plugin>
     </plugins>
   </reporting>
