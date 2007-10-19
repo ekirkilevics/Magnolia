@@ -41,7 +41,7 @@ public class DefaultI18NContentSupportTest extends MgnlTestCase {
     private static Logger log = LoggerFactory.getLogger(DefaultI18NContentSupportTest.class);
     
     public void testDetermineLocale(){
-        DefaultI18NSupport defSupport = new DefaultI18NSupport();
+        DefaultI18nContentSupport defSupport = new DefaultI18nContentSupport();
         defSupport.setFallbackLocale(DEFAULT_LOCALE);
         defSupport.addLocale(new LocaleDefinition("de", null, true));
         defSupport.addLocale(new LocaleDefinition("de", "CH", true));
