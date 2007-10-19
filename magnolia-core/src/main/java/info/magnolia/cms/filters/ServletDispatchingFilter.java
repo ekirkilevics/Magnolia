@@ -161,7 +161,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     public void doFilter(final HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
         
-        log.info("Dispatching to servlet " + getServletClass());
+        log.debug("Dispatching to servlet " + getServletClass());
         servlet.service(new HttpServletRequestWrapper(request) {
                 public String getPathInfo() {
                     final String uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
