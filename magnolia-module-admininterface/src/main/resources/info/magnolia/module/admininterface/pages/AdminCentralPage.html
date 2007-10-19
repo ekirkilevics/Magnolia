@@ -66,11 +66,12 @@
     </a>
     <!--  user info -->
     [#if this.user?exists]
-    <div style="position:absolute;top:44px;right:20px;text-align:right;" class="mgnlText">
-      ${this.messages.get("central.user")}: ${this.user.name} |
-      <a href="${this.request.contextPath}/.magnolia/pages/logout.html" style="color: black;">
-        ${this.messages.get("central.logout")}
-      </a>
+    <div style="position:absolute;top:34px;right:20px;text-align:right;" class="mgnlText">
+      <form action="" method="post" style="padding: 0; margin: 0;">
+        <input type="hidden" name="mgnlLogout" value="true"/> 
+        ${this.messages.get("central.user")}: ${this.user.name} | 
+        <input type="submit" name="logout" value="${this.messages.get('central.logout')}" style="font-size: 11px; border: 0; background: transparent; outline: invert none 0; cursor: pointer; padding: 0; margin: 0:" onmouseover="this.style.textDecoration = 'underline';" onmouseout="this.style.textDecoration = 'none';"/>
+      </form>
     </div>
     [/#if]
     <!-- Menu -->
