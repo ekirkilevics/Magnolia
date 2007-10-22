@@ -14,65 +14,55 @@ import freemarker.template.TemplateException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleManagerUI;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Map;
-
 import javax.jcr.RepositoryException;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
 /**
- * Primitive System UI Filter
+ * Filter responsible for executing the update/install mechanism.
+ *
  * @author philipp
  * @version $Id$
- *
  */
-public class InstallFilter extends AbstractMgnlFilter{
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(InstallFilter.class);
+public class InstallFilter extends AbstractMgnlFilter {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstallFilter.class);
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         ModuleManager moduleManager = ModuleManager.Factory.getInstance();
 
-            final String contextPath = request.getContextPath();
-            final ModuleManagerUI ui = new ModuleManagerUI(contextPath);
-            // TODO : this will be invalid the day we allow other resources (css, images) to be served through the installer
-            response.setContentType("text/html");
-            final Writer out = response.getWriter();
-            final String uri = request.getRequestURI();
-            try {
-                if (uri.startsWith(contextPath + ModuleManagerUI.INSTALLER_PATH)) {
-                    final Map parameterMap = request.getParameterMap();
-                    final boolean shouldContinue = ui.execute(moduleManager, out, parameterMap);
-                    if (!shouldContinue) {
-                        return;
-                    } else {
-                        MgnlMainFilter.getInstance().reset();
-                        // redirect to root
-                        response.sendRedirect(contextPath);
-                    }
-                } else {
-                    ui.renderTempPage(moduleManager, out);
+        final String contextPath = request.getContextPath();
+        final ModuleManagerUI ui = new ModuleManagerUI(contextPath);
+        // TODO : this will be invalid the day we allow other resources (css, images) to be served through the installer
+        response.setContentType("text/html");
+        final Writer out = response.getWriter();
+        final String uri = request.getRequestURI();
+        try {
+            if (uri.startsWith(contextPath + ModuleManagerUI.INSTALLER_PATH)) {
+                final Map parameterMap = request.getParameterMap();
+                final boolean shouldContinue = ui.execute(moduleManager, out, parameterMap);
+                if (!shouldContinue) {
                     return;
+                } else {
+                    MgnlMainFilter.getInstance().reset();
+                    // redirect to root
+                    response.sendRedirect(contextPath);
                 }
-            } catch (TemplateException e) {
-                log.error(e.getMessage(), e);
-                throw new RuntimeException(e); // TODO
-            } catch (RepositoryException e) {
-                log.error(e.getMessage(), e);
-                throw new RuntimeException(e); // TODO
+            } else {
+                ui.renderTempPage(moduleManager, out);
+                return;
             }
+        } catch (TemplateException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e); // TODO
+        } catch (RepositoryException e) {
+            log.error(e.getMessage(), e);
+            throw new RuntimeException(e); // TODO
         }
-    
+    }
 }
