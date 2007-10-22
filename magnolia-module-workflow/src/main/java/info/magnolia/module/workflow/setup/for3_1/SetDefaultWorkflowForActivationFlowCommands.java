@@ -24,10 +24,6 @@ import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.commands.ActivationFlowCommand;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author philipp
  * @version $Id$
@@ -36,13 +32,8 @@ import org.slf4j.LoggerFactory;
 public class SetDefaultWorkflowForActivationFlowCommands extends AbstractRepositoryTask {
 
     public SetDefaultWorkflowForActivationFlowCommands() {
-        super("workflow activation", "set default values on workflow activation commands");
+        super("Workflow activation", "Sets default values on workflow activation commands");
     }
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(SetDefaultWorkflowForActivationFlowCommands.class);
 
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         Collection nodes = QueryUtil.query(ContentRepository.CONFIG, "select * from nt:base where class='" + ActivationFlowCommand.class.getName() + "'");
