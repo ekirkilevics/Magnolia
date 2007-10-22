@@ -1,4 +1,3 @@
-// to be included: outStream.writeBytes("\r\n\r\n"); // test for commons-fileupload incompatibity
 /**
  *
  * Magnolia and its source-code is licensed under the LGPL.
