@@ -77,6 +77,10 @@ public class InstallContextImpl implements InstallContext {
         return currentModule;
     }
 
+    public boolean isModuleRegistered(String moduleName)  {
+        return ModuleRegistry.Factory.getInstance().getDefinition(moduleName) != null;
+    }
+
     public HierarchyManager getHierarchyManager(String workspace) {
         // TODO : use MgnlContext ??
         return ContentRepository.getHierarchyManager(workspace);

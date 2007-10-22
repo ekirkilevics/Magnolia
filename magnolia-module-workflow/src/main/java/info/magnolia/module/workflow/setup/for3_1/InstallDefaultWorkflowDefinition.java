@@ -17,9 +17,9 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.workflow.WorkflowConstants;
-import info.magnolia.module.delta.BootstrapResourcesTask;
+import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.module.workflow.WorkflowConstants;
 import org.apache.commons.io.IOUtils;
 
 import javax.jcr.RepositoryException;
@@ -31,7 +31,7 @@ import java.io.InputStream;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class InstallDefaultWorkflowDefinition extends BootstrapResourcesTask {
+public class InstallDefaultWorkflowDefinition extends AbstractTask {
 
     public InstallDefaultWorkflowDefinition() {
         super("Setup default activation workflow definition", "Adds the default activation workflow definition under the /modules/workflow/config/flows/activation config node.");

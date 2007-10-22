@@ -65,6 +65,8 @@ public interface InstallContext { // implements Context ?
      */
     ModuleDefinition getCurrentModuleDefinition();
 
+    boolean isModuleRegistered(String moduleName);
+
     public static final class Message {
         private final Date timestamp;
         private final String message;
