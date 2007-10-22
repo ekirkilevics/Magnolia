@@ -19,8 +19,6 @@ import info.magnolia.module.model.Version;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jcr.RepositoryException;
-
 /**
  * ModuleManager is responsible for the lifecycle of modules.
  * (loads definitions, install/update/uninstall, start/stop)
@@ -39,15 +37,17 @@ public interface ModuleManager {
     /**
      * Checks if we need to do any module installation, update or uninstall.
      */
-    ModuleManagementState checkForInstallOrUpdates() throws ModuleManagementException;
+    void checkForInstallOrUpdates() throws ModuleManagementException;
 
     /**
-     * Returns the same status as checkForInstallOrUpdates(),
+     * Returns the status as discovered by checkForInstallOrUpdates().
      * @throws IllegalStateException if checkForInstallOrUpdates was never called.
      */
     ModuleManagementState getStatus();
 
-    void performInstallOrUpdate() throws RepositoryException;
+    ModuleManagerUI getUI();
+
+    void performInstallOrUpdate() throws ModuleManagementException;
 
     InstallContext getInstallContext();
 

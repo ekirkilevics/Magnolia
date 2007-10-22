@@ -15,6 +15,7 @@ package info.magnolia.module;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.RepositoryDefinition;
 import info.magnolia.cms.util.ClassUtil;
@@ -33,7 +34,12 @@ import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
+import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.lang.StringUtils;
 
+import javax.jcr.RepositoryException;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -41,17 +47,10 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
-import javax.jcr.RepositoryException;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-
-import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.lang.StringUtils;
-
-
 /**
  * TODO where do we setup ModuleRegistry ? TODO where do we setup module configs observation ? TODO : factor out into
  * simpler units
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -99,7 +98,7 @@ public class ModuleManagerImpl implements ModuleManager {
         return orderedModuleDescriptors;
     }
 
-    public ModuleManagementState checkForInstallOrUpdates() throws ModuleManagementException {
+    public void checkForInstallOrUpdates() throws ModuleManagementException {
         // compare and determine if we need to do anything
         state = new ModuleManagementState();
         final Iterator it = orderedModuleDescriptors.iterator();
@@ -127,8 +126,6 @@ public class ModuleManagerImpl implements ModuleManager {
         }
 
         // TODO : check the force bootstrap properties
-
-        return state;
     }
 
     public ModuleManagementState getStatus() {
@@ -139,13 +136,20 @@ public class ModuleManagerImpl implements ModuleManager {
         return state;
     }
 
+    public ModuleManagerUI getUI() {
+        if (SystemProperty.getBooleanProperty("magnolia.update.auto")) {
+            return new ModuleManagerNullUI(this);
+        } else {
+            return new ModuleManagerWebUI(this);
+        }
+    }
+
     protected ModuleVersionHandler getVersionHandler(ModuleDefinition module) {
         try {
             final Class versionHandlerClass = module.getVersionHandler();
             if (versionHandlerClass != null) {
                 return (ModuleVersionHandler) versionHandlerClass.newInstance();
-            }
-            else {
+            } else {
                 final String moduleClassName = module.getClassName();
                 if (moduleClassName != null) {
                     final Class moduleClass = ClassUtil.classForName(moduleClassName);
@@ -167,7 +171,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
     }
 
-    public void performInstallOrUpdate() throws RepositoryException {
+    public void performInstallOrUpdate() throws ModuleManagementException {
         if (state == null) {
             throw new IllegalStateException("ModuleManager was not initialized !");
         }
@@ -231,9 +235,7 @@ public class ModuleManagerImpl implements ModuleManager {
                     }
                 }
                 catch (TaskExecutionException e) {
-                    log.error(
-                        "Startup task " + task + " for module " + moduleName + " failed: " + e.getMessage() + ".",
-                        e);
+                    log.error("Startup task " + task + " for module " + moduleName + " failed: " + e.getMessage() + ".", e);
                     success = false;
                 }
                 finally {
@@ -256,7 +258,7 @@ public class ModuleManagerImpl implements ModuleManager {
         try {
             // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle
             // methods.
-            ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
+            final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
             lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_STARTUP);
             final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
             final Content modulesParentNode = hm.getContent(MODULES_NODE);
@@ -348,7 +350,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
     }
 
-    protected void populateModuleInstance(Object moduleInstance, Map moduleProperties){
+    protected void populateModuleInstance(Object moduleInstance, Map moduleProperties) {
         try {
             BeanUtils.populate(moduleInstance, moduleProperties);
         }
@@ -358,8 +360,7 @@ public class ModuleManagerImpl implements ModuleManager {
 
         if (moduleProperties.get("configNode") != null) {
             try {
-                Content2BeanUtil
-                    .setProperties(moduleInstance, (Content) moduleProperties.get("configNode"), true);
+                Content2BeanUtil.setProperties(moduleInstance, (Content) moduleProperties.get("configNode"), true);
             }
             catch (Content2BeanException e) {
                 log.error("wasn't able to configure module", e);
@@ -391,9 +392,7 @@ public class ModuleManagerImpl implements ModuleManager {
             }
         }
         catch (TaskExecutionException e) {
-            ctx.error("Could not install or update module. Please remove or update faulty jar. ("
-                + e.getMessage()
-                + ")", e);
+            ctx.error("Could not install or update module. Please remove or update faulty jar. (" + e.getMessage() + ")", e);
             success = false;
         }
         finally {
@@ -418,8 +417,7 @@ public class ModuleManagerImpl implements ModuleManager {
             try {
                 if (persist) {
                     hm.save();
-                }
-                else {
+                } else {
                     hm.refresh(false);
                 }
             }

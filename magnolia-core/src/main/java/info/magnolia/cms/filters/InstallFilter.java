@@ -10,12 +10,17 @@
  */
 package info.magnolia.cms.filters;
 
-import freemarker.template.TemplateException;
+import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContextImpl;
+import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleManagerUI;
+import info.magnolia.module.ModuleManagerWebUI;
 
-import javax.jcr.RepositoryException;
 import javax.servlet.FilterChain;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -31,21 +36,35 @@ import java.util.Map;
  */
 public class InstallFilter extends AbstractMgnlFilter {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstallFilter.class);
+    private final ModuleManager moduleManager;
+    private ServletContext servletContext;
+
+    public InstallFilter(ModuleManager moduleManager) {
+        this.moduleManager = moduleManager;
+    }
+
+    public void init(FilterConfig filterConfig) throws ServletException {
+        super.init(filterConfig);
+        servletContext = filterConfig.getServletContext();
+    }
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        // this isn't the cleanest thing, but we're basically tricking FreemarkerHelper into using a Context, while avoiding using WebContextImpl and its depedencies on the repository
+        final InstallWebContext ctx = new InstallWebContext();
+        ctx.init(request, response, servletContext);
+        MgnlContext.setInstance(ctx);
 
-        ModuleManager moduleManager = ModuleManager.Factory.getInstance();
-
-        final String contextPath = request.getContextPath();
-        final ModuleManagerUI ui = new ModuleManagerUI(contextPath);
-        // TODO : this will be invalid the day we allow other resources (css, images) to be served through the installer
-        response.setContentType("text/html");
-        final Writer out = response.getWriter();
-        final String uri = request.getRequestURI();
         try {
-            if (uri.startsWith(contextPath + ModuleManagerUI.INSTALLER_PATH)) {
-                final Map parameterMap = request.getParameterMap();
-                final boolean shouldContinue = ui.execute(moduleManager, out, parameterMap);
+            final String contextPath = request.getContextPath();
+            // TODO : this will be invalid the day we allow other resources (css, images) to be served through the installer
+            response.setContentType("text/html");
+            final Writer out = response.getWriter();
+            final String uri = request.getRequestURI();
+            final Map parameterMap = request.getParameterMap();
+            final ModuleManagerUI ui = moduleManager.getUI();
+
+            if (uri.startsWith(contextPath + ModuleManagerWebUI.INSTALLER_PATH)) {
+                final boolean shouldContinue = ui.execute(out, parameterMap);
                 if (!shouldContinue) {
                     return;
                 } else {
@@ -54,15 +73,20 @@ public class InstallFilter extends AbstractMgnlFilter {
                     response.sendRedirect(contextPath);
                 }
             } else {
-                ui.renderTempPage(moduleManager, out);
+                ui.renderTempPage(out);
                 return;
             }
-        } catch (TemplateException e) {
+        } catch (ModuleManagementException e) {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e); // TODO
-        } catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
-            throw new RuntimeException(e); // TODO
+        } finally {
+            MgnlContext.setInstance(null);
+        }
+    }
+
+    private final static class InstallWebContext extends WebContextImpl {
+        public User getUser() {
+            return null;
         }
     }
 }

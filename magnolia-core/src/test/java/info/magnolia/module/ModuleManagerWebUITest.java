@@ -12,14 +12,12 @@
  */
 package info.magnolia.module;
 
-import freemarker.template.TemplateException;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.module.model.ModuleDefinition;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
-import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Locale;
 
@@ -28,12 +26,15 @@ import java.util.Locale;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ModuleManagerUITest extends TestCase {
+public class ModuleManagerWebUITest extends TestCase {
+    private WebContext context;
 
     protected void setUp() throws Exception {
         super.setUp();
-        final Context context = createStrictMock(Context.class);
+        context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.ENGLISH);
+        expect(context.getContextPath()).andReturn("/bibabu");
+        expect(context.getServletContext()).andReturn(null);
         replay(context);
         MgnlContext.setInstance(context);
 
@@ -42,7 +43,13 @@ public class ModuleManagerUITest extends TestCase {
         logger.setLevel(org.apache.log4j.Level.OFF);
     }
 
-    public void testDoneTemplate() throws IOException, TemplateException {
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        verify(context);
+    }
+
+    public void testDoneTemplate() throws ModuleManagementException {
+
         final ModuleDefinition mod1 = new ModuleDefinition("foo", "1.0", null, null);
         final ModuleDefinition mod2 = new ModuleDefinition("bar", "2.0", null, null);
 
@@ -61,7 +68,7 @@ public class ModuleManagerUITest extends TestCase {
 
         replay(moduleManager);
 
-        new ModuleManagerUI("/bibabu").render("done", moduleManager, out);
+        new ModuleManagerWebUI(moduleManager).render("done", out);
         // just checking model and template work properly together...
 
         verify(moduleManager);

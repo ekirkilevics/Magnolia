@@ -120,7 +120,7 @@ public class MgnlMainFilter implements Filter {
     }
 
     private InstallFilter createSystemUIFilter() {
-        return new InstallFilter();
+        return new InstallFilter(ModuleManager.Factory.getInstance());
     }
 
     protected boolean isSystemUIMode() {

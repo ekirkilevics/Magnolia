@@ -114,31 +114,8 @@ public class ConfigLoader {
 
         try {
             final ModuleManager moduleManager = ModuleManager.Factory.getInstance();
-            // ModuleRegistration.getInstance().registerModules();
-
-            final ModuleManager.ModuleManagementState moduleMgtState = moduleManager.checkForInstallOrUpdates();
-            if (moduleMgtState.needsUpdateOrInstall()) {
-
-                if (SystemProperty.getBooleanProperty("magnolia.update.auto")) {
-                    log.info("magnolia.update.auto is set to true, will start bootstrapping/update automatically");
-                    try {
-                        moduleManager.performInstallOrUpdate();
-                        moduleManager.startModules();
-                        moduleManager.getStatus().done();
-                    }
-                    catch (RepositoryException e) {
-                        throw new RuntimeException(e);
-                    }
-                }
-                else {
-                    log.info("System needs module updates or installs, point your browser to your Magnolia instance and confirm !");
-                }
-                // TODO : we should re-execute this (ConfigLoader.load()) when update done ?
-                // return;
-            } else {
-                // ModuleLoader.getInstance().init();
-                moduleManager.startModules();
-            }
+            moduleManager.checkForInstallOrUpdates();
+            moduleManager.getUI().onStartup();
 
             // TODO make these regular ObservedManagers
             log.info("Init i18n"); //$NON-NLS-1$
