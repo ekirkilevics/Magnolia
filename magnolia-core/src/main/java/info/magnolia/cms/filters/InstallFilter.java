@@ -15,8 +15,8 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContextImpl;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
-import info.magnolia.module.ModuleManagerUI;
-import info.magnolia.module.ModuleManagerWebUI;
+import info.magnolia.module.ui.ModuleManagerUI;
+import info.magnolia.module.ui.ModuleManagerWebUI;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;

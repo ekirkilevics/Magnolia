@@ -10,12 +10,14 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module;
+package info.magnolia.module.ui;
 
 import freemarker.template.TemplateException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.freemarker.FreemarkerUtil;
+import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleManagementException;
 
 import java.io.IOException;
 import java.io.Writer;

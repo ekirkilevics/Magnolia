@@ -15,6 +15,7 @@ package info.magnolia.module;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
+import info.magnolia.module.ui.ModuleManagerUI;
 
 import java.util.ArrayList;
 import java.util.List;

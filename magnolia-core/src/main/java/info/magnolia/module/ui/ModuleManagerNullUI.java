@@ -10,7 +10,10 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module;
+package info.magnolia.module.ui;
+
+import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleManagementException;
 
 import java.io.Writer;
 import java.util.Map;
