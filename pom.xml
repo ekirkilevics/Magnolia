@@ -155,6 +155,32 @@
         </pluginManagement>
       </build>
     </profile>
+    <profile>
+      <id>site</id>
+      <build>
+        <plugins>
+          <!-- this needs some more memory than the defaults ... -->
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-clover-plugin</artifactId>
+            <configuration>
+              <targetPercentage>0%</targetPercentage>
+              <licenseLocation>${cloverLicense}</licenseLocation>
+            </configuration>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>instrument</goal>
+                  <goal>check</goal>
+                  <goal>aggregate</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
   <build>
     <pluginManagement>
@@ -290,25 +316,6 @@
                 </property>
               </properties>
             </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <!-- this currently breaks when generating the site in a reactor build with an out of memory exception :( -->
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-clover-plugin</artifactId>
-        <configuration>
-          <targetPercentage>0%</targetPercentage>
-          <licenseLocation>${cloverLicense}</licenseLocation>
-        </configuration>
-        <executions>
-          <execution>
-            <phase>verify</phase>
-            <goals>
-              <goal>instrument</goal>
-              <goal>check</goal>
-              <goal>aggregate</goal>
-            </goals>
           </execution>
         </executions>
       </plugin>
