@@ -151,6 +151,11 @@ public class Include extends BodyTagSupport {
                     throw new Exception("no content node found"); //$NON-NLS-1$
                 }
             }
+            
+            if (content != Resource.getCurrentActivePage() && !localContentNodeSet && content != null) {
+                Resource.setLocalContentNode(content);
+                localContentNodeSet = true;
+            } 
 
             if (this.path!=null) { // TODO
                 log.warn("You are using the deprecated path attribute of the include tag. Your jsp will be included for now, but you might want to update your code to avoid bad surprises in the future.");
