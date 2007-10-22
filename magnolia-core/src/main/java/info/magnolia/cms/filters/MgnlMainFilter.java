@@ -69,6 +69,9 @@ public class MgnlMainFilter implements Filter {
 
         if (!rootFilter.bypasses(request)) {
             rootFilter.doFilter(request, response, chain);
+        } else {
+            // pass request to next filter in web.xml
+            chain.doFilter(request, response);
         }
     }
 
