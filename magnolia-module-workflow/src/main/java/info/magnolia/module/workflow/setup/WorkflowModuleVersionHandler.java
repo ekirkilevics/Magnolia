@@ -20,7 +20,6 @@ import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.model.Version;
 import info.magnolia.module.workflow.setup.for3_1.AddNewDefaultConfig;
 import info.magnolia.module.workflow.setup.for3_1.AddUserToGroupTask;
 import info.magnolia.module.workflow.setup.for3_1.InstallDefaultWorkflowDefinition;
@@ -63,8 +62,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
 
     public WorkflowModuleVersionHandler() {
         super();
-        final Version version3_1 = Version.parseVersion(3, 1, 0);
-        register(version3_1, delta31);
+        register("3.1.0", delta31);
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {
