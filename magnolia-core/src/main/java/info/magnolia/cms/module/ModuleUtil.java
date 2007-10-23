@@ -232,14 +232,17 @@ public final class ModuleUtil {
 
     /**
      * Register a servlet based on the definition of the modules xml descriptor
-     * @param servlet
-     * @throws JDOMException
-     * @throws IOException
-     *
-     * @deprecated Use WebXmlUtil
+     * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
+     * @see info.magnolia.cms.filters.ServletDispatchingFilter
      */
     public static boolean registerServlet(ServletDefinition servlet) throws JDOMException, IOException {
-        return WebXmlUtil.registerServlet(servlet);
+        String[] urlPatterns = (String[]) servlet.getMappings().toArray(new String[servlet.getMappings().size()]);
+        Hashtable params = new Hashtable();
+        for (Iterator iter = servlet.getParams().iterator(); iter.hasNext();) {
+            ServletParameterDefinition param = (ServletParameterDefinition) iter.next();
+            params.put(param.getName(), param.getValue());
+        }
+        return registerServlet(servlet.getName(), servlet.getClassName(), urlPatterns, servlet.getComment(), params);
     }
 
     /**
@@ -248,7 +251,7 @@ public final class ModuleUtil {
      */
     public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment)
         throws JDOMException, IOException {
-        return WebXmlUtil.registerServlet(name, className, urlPatterns, comment, null);
+        return registerServlet(name, className, urlPatterns, comment, null);
     }
 
     /**

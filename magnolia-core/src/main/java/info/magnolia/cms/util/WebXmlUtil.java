@@ -34,6 +34,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 
 /**
+ * Contains utility methods to register or check for the existence of elements in web.xml
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -42,31 +43,11 @@ public class WebXmlUtil {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebXmlUtil.class);
 
     /**
-     * Register a servlet based on the definition of the modules xml descriptor
-     */
-    public static boolean registerServlet(ServletDefinition servlet) throws JDOMException, IOException {
-        String[] urlPatterns = (String[]) servlet.getMappings().toArray(new String[servlet.getMappings().size()]);
-        Hashtable params = new Hashtable();
-        for (Iterator iter = servlet.getParams().iterator(); iter.hasNext();) {
-            ServletParameterDefinition param = (ServletParameterDefinition) iter.next();
-            params.put(param.getName(), param.getValue());
-        }
-        return registerServlet(servlet.getName(), servlet.getClassName(), urlPatterns, servlet.getComment(), params);
-    }
-
-
-    /**
      * Register a servlet in the web.xml including init parameters. The code checks if the servlet already exists
-     * @param name
-     * @param className
-     * @param urlPatterns
-     * @param comment
-     * @param initParams
-     * @throws JDOMException
-     * @throws IOException
+     * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
+     * @see info.magnolia.cms.filters.ServletDispatchingFilter
      */
     public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment, Hashtable initParams) throws JDOMException, IOException {
-
         boolean changed = false;
 
         // get the web.xml
@@ -88,21 +69,7 @@ public class WebXmlUtil {
             // the same name space must be used
             Namespace ns = doc.getRootElement().getNamespace();
 
-            Element node = new Element("servlet", ns);
-            node.addContent(new Element("servlet-name", ns).addContent(name));
-            node.addContent(new Element("servlet-class", ns).addContent(className));
-
-            if (initParams != null && !(initParams.isEmpty())) {
-                Enumeration params = initParams.keys();
-                while (params.hasMoreElements()) {
-                    String paramName = params.nextElement().toString();
-                    String paramValue = (String) initParams.get(paramName);
-                    Element initParam = new Element("init-param", ns);
-                    initParam.addContent(new Element("param-name", ns).addContent(paramName));
-                    initParam.addContent(new Element("param-value", ns).addContent(paramValue));
-                    node.addContent(initParam);
-                }
-            }
+            Element node = createServletElement(ns, name, className, initParams);
 
             doc.getRootElement().addContent(node);
             changed = true;
@@ -119,6 +86,25 @@ public class WebXmlUtil {
             outputter.output(doc, new FileWriter(source));
         }
         return changed;
+    }
+
+    private static Element createServletElement(Namespace ns, String name, String className, Hashtable initParams) {
+        Element node = new Element("servlet", ns);
+        node.addContent(new Element("servlet-name", ns).addContent(name));
+        node.addContent(new Element("servlet-class", ns).addContent(className));
+
+        if (initParams != null && !(initParams.isEmpty())) {
+            Enumeration params = initParams.keys();
+            while (params.hasMoreElements()) {
+                String paramName = params.nextElement().toString();
+                String paramValue = (String) initParams.get(paramName);
+                Element initParam = new Element("init-param", ns);
+                initParam.addContent(new Element("param-name", ns).addContent(paramName));
+                initParam.addContent(new Element("param-value", ns).addContent(paramValue));
+                node.addContent(initParam);
+            }
+        }
+        return node;
     }
 
     public static boolean registerServletMapping(Document doc, String name, String urlPattern, String comment) throws JDOMException {
