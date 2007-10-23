@@ -2,7 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>adminInterface</name>
-  <displayName>Admin Interface</displayName>
+  <displayName>Magnolia Admin Interface Module</displayName>
   <description>Magnolia Administration GUI</description>
   <class>info.magnolia.module.admininterface.AdminInterfaceModule</class>
   <versionHandler>info.magnolia.module.admininterface.setup.AdminModuleVersionHandler</versionHandler>
