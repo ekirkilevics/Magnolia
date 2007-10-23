@@ -2,8 +2,8 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>exchange-simple</name>
-  <displayName>Exchange-Simple</displayName>
-  <description>Exchange-Simple: default activation implementation</description>
+  <displayName>Magnolia Simple Exchange Module</displayName>
+  <description>Provides the default activation implementation</description>
   <versionHandler>info.magnolia.module.exchangesimple.setup.ExchangeSimpleModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
 
