@@ -55,6 +55,7 @@ public class LicenseFileExtractor {
 
     public static final String PRODUCT_DOMAIN = "ProductDomain"; //$NON-NLS-1$
 
+    /** @deprecated since 3.1, this element has been removed from the license.xml file */
     public static final String VERSION_PAGE_HANDLE = "VersionPageHandle"; //$NON-NLS-1$
 
     private static final String LICENSE_FILE_PATH = "info/magnolia/cms/license/license.xml"; //$NON-NLS-1$

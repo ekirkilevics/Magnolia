@@ -207,15 +207,15 @@
     </dependency>
   </dependencies>
   <build>
-    <!--<resources>-->
-    <!--<resource>-->
-    <!--<filtering>true</filtering>-->
-    <!--<directory>src/main/resources</directory>-->
-    <!--<includes>-->
-    <!--<include>**/*</include>-->
-    <!--</includes>-->
-    <!--</resource>-->
-    <!--</resources>-->
+    <resources>
+      <resource>
+        <filtering>true</filtering>
+        <directory>src/main/resources</directory>
+        <includes>
+          <include>**/*</include>
+        </includes>
+      </resource>
+    </resources>
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

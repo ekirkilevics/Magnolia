@@ -7,8 +7,7 @@
                     Provider,
                     ProviderAddress,
                     ProviderEmail,
-                    ProductDomain,
-                    VersionPageHandle+)>
+                    ProductDomain)>
     <!ELEMENT VersionNumber (#PCDATA)>
     <!ELEMENT Edition (#PCDATA)>
     <!ELEMENT BuildNumber (#PCDATA)>
@@ -16,7 +15,7 @@
     <!ELEMENT ProviderAddress (#PCDATA)>
     <!ELEMENT ProviderEmail (#PCDATA)>
     <!ELEMENT ProductDomain (#PCDATA)>
-    <!ELEMENT VersionPageHandle (#PCDATA)>]>
+]>
 <License>
     <Meta>
         <VersionNumber>${magnolia.niceVersion}</VersionNumber>
@@ -25,15 +24,14 @@
         <Provider>${pom.organization.name}</Provider>
         <ProviderAddress>
             <![CDATA[
-Magnolia organization llc
-Binningerstrasse 15
-4051 Basel
+Magnolia International Ltd.
+Maiengasse 30
+4056 Basel
 Tel +41 61 228 9000
 Switzerland
 ]]>
         </ProviderAddress>
         <ProviderEmail>info@magnolia.info</ProviderEmail>
         <ProductDomain>www.magnolia.info</ProductDomain>
-        <VersionPageHandle>/redirects/version2-1.html</VersionPageHandle>
     </Meta>
 </License>
