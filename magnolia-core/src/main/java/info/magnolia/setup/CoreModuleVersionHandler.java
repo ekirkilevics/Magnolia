@@ -70,33 +70,26 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
             new ReconfigureCommands(),
 
-            new PropertyExistsDelegateTask("Cleanup", "Config property /server/defaultMailServer was unused",
-                            "config", "/server", "defaultMailServer",
-                    new RemovePropertyTask("Cleanup", "Config property /server/defaultMailServer was unused",
-                            "config", "/server", "defaultMailServer")),
+            new PropertyExistsDelegateTask("Cleanup", "Config property /server/defaultMailServer was unused", "config", "/server", "defaultMailServer",
+                    new RemovePropertyTask("", "", "config", "/server", "defaultMailServer")),
 
             // the two following tasks replace the config.server.xml bootstrap file
             new CheckOrCreatePropertyTask("defaultExtension property", "Checks that the defaultExtension property exists in config:/server", "config", "/server", "defaultExtension", "html"),
             new CheckOrCreatePropertyTask("admin property", "Checks that the admin property exists in config:/server", "config", "/server", "admin", "true"),
-            new MoveAndRenamePropertyTask("basicRealm property",
-                    "/server", "basicRealm", "magnolia 3.0",
-                    "/server/filters/uriSecurity/clientCallback", "realmName", "Magnolia"),
+            new MoveAndRenamePropertyTask("basicRealm property", "/server", "basicRealm", "magnolia 3.0", "/server/filters/uriSecurity/clientCallback", "realmName", "Magnolia"),
             new ArrayDelegateTask("defaultBaseUrl property",
-                    new NewPropertyTask("defaultBaseUrl property", "Adds the new defaultBaseUrl property with a default value.",
-                            "config", "/server", "defaultBaseUrl", "http://localhost:8080/magnolia/"),
+                    new NewPropertyTask("defaultBaseUrl property", "Adds the new defaultBaseUrl property with a default value.", "config", "/server", "defaultBaseUrl", "http://localhost:8080/magnolia/"),
                     new WarnTask("defaultBaseUrl property", "Please set the config:/server/defaultBaseUrl property to a full URL to be used when generating absolute URLs for external systems.")
             ),
 
             // this is only valid when updating - if /server/login exists
-            new NodeExistsDelegateTask("Login configuration", "The login configuration was moved to filters configuration",
-                    "config", "/server/login", new ArrayDelegateTask("",
-                    new LoginAuthTypePropertyMovedToFilter(),
-                    new LoginFormPropertyMovedToFilter(),
-                    new MoveAndRenamePropertyTask("unsecuredPath is now handled by the bypass mechanism",
-                            "/server/login", "UnsecuredPath",
-                            "/server/filters/uriSecurity/bypasses/login", "pattern"),
-                    new RemoveNodeTask("Login configuration changed", "Removes /server/login as it is not used anymore", "config", "/server/login")
-            )),
+            new NodeExistsDelegateTask("Login configuration", "The login configuration was moved to filters configuration", "config", "/server/login",
+                    new ArrayDelegateTask("",
+                            new LoginAuthTypePropertyMovedToFilter(),
+                            new LoginFormPropertyMovedToFilter(),
+                            new MoveAndRenamePropertyTask("unsecuredPath is now handled by the bypass mechanism", "/server/login", "UnsecuredPath", "/server/filters/uriSecurity/bypasses/login", "pattern"),
+                            new RemoveNodeTask("Login configuration changed", "Removes /server/login as it is not used anymore", "config", "/server/login")
+                    )),
 
             new CopyOrReplaceNodePropertiesTask("clientCallback configuration for content security", "The clientCallback configuration needs to be configuration for each security filter. This is copying the one from the URI security filter to the content security filter.",
                     "config", "/server/filters/uriSecurity/clientCallback", "/server/filters/cms/contentSecurity/clientCallback"),
@@ -106,25 +99,11 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             // TODO : do we keep this ?
             new RemoveModuleDescriptorDetailsFromRepo(),
 
-            new NodeExistsDelegateTask(
-                "Moves anonymous user",
-                "Anonymous user must exist in the system realm",
-                ContentRepository.USERS,
-                "/" + MgnlUserManager.ANONYMOUS_USER,
-                new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/"
-                    + Realm.REALM_SYSTEM
-                    + "/"
-                    + MgnlUserManager.ANONYMOUS_USER, true)),
+            new NodeExistsDelegateTask("Moves anonymous user", "Anonymous user must exist in the system realm", ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER,
+                    new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.ANONYMOUS_USER, true)),
 
-            new NodeExistsDelegateTask(
-                "Moves superuser user",
-                "Superuser user must exist in the system realm",
-                ContentRepository.USERS,
-                "/" + MgnlUserManager.SYSTEM_USER,
-                new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/"
-                    + Realm.REALM_SYSTEM
-                    + "/"
-                    + MgnlUserManager.SYSTEM_USER, true)),
+            new NodeExistsDelegateTask("Moves superuser user", "Superuser user must exist in the system realm", ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER,
+                    new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.SYSTEM_USER, true)),
 
             // other users are moved to the admin realm
             new MoveMagnoliaUsersToRealmFolders(),
