@@ -2,6 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>samples</name>
+  <displayName>Magnolia Samples Module</displayName>
   <class>info.magnolia.module.samples.SamplesConfig</class>
   <version>${project.version}</version>
   <properties>
