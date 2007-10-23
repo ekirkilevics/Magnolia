@@ -2,7 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>webapp</name>
-  <displayName>Magnolia Webapp</displayName>
+  <displayName>Magnolia Webapp Module</displayName>
   <versionHandler>info.magnolia.module.webapp.WebappVersionHandler</versionHandler>
   <version>${project.version}</version>
 </module>
