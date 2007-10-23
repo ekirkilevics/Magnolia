@@ -2,7 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd" >
 <module>
   <name>mail</name>
-  <displayName>Magnolia templating mail</displayName>
+  <displayName>Magnolia Mail Module</displayName>
   <class>info.magnolia.cms.mail.MailModule</class>
   <version>${project.version}</version>
   <dependencies>
