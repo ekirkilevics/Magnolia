@@ -26,12 +26,12 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.Role;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.WebXmlUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.files.BasicFileExtractor;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -40,7 +40,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
@@ -53,15 +52,9 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jdom.Comment;
 import org.jdom.Document;
-import org.jdom.Element;
 import org.jdom.JDOMException;
-import org.jdom.Namespace;
 import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -242,135 +235,38 @@ public final class ModuleUtil {
      * @param servlet
      * @throws JDOMException
      * @throws IOException
+     *
+     * @deprecated Use WebXmlUtil
      */
     public static boolean registerServlet(ServletDefinition servlet) throws JDOMException, IOException {
-        String[] urlPatterns = (String[]) servlet.getMappings().toArray(new String[servlet.getMappings().size()]);
-        Hashtable params = new Hashtable();
-        for (Iterator iter = servlet.getParams().iterator(); iter.hasNext();) {
-            ServletParameterDefinition param = (ServletParameterDefinition) iter.next();
-            params.put(param.getName(), param.getValue());
-        }
-        return registerServlet(servlet.getName(), servlet.getClassName(), urlPatterns, servlet.getComment(), params);
+        return WebXmlUtil.registerServlet(servlet);
     }
 
     /**
      * Register a servlet in the web.xml. The code checks if the servlet already exists
-     * @param name
-     * @param className
-     * @param urlPatterns
-     * @param comment
-     * @throws JDOMException
-     * @throws IOException
+     * @deprecated Use WebXmlUtil
      */
     public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment)
         throws JDOMException, IOException {
-        return registerServlet(name, className, urlPatterns, comment, null);
+        return WebXmlUtil.registerServlet(name, className, urlPatterns, comment, null);
     }
 
     /**
      * Register a servlet in the web.xml including init parameters. The code checks if the servlet already exists
-     * @param name
-     * @param className
-     * @param urlPatterns
-     * @param comment
-     * @param initParams
-     * @throws JDOMException
-     * @throws IOException
+     * @deprecated Use WebXmlUtil
      */
     public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment,
-        Hashtable initParams) throws JDOMException, IOException {
-
-        boolean changed = false;
-
-        // get the web.xml
-        File source = new File(Path.getAppRootDir() + "/WEB-INF/web.xml");
-        if (!source.exists()) {
-            throw new FileNotFoundException("Failed to locate web.xml " //$NON-NLS-1$
-                + source.getAbsolutePath());
-        }
-        SAXBuilder builder = new SAXBuilder();
-        Document doc = builder.build(source);
-
-        // check if there already registered
-        XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet[webxml:servlet-name='" + name + "']");
-        // must add the namespace and use it: there is no default namespace elsewise
-        xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
-        Element node = (Element) xpath.selectSingleNode(doc);
-
-        if (node == null) {
-            log.info("register servlet " + name);
-
-            // make a nice comment
-            doc.getRootElement().addContent(new Comment(comment));
-
-            // the same name space must be used
-            Namespace ns = doc.getRootElement().getNamespace();
-
-            node = new Element("servlet", ns);
-            node.addContent(new Element("servlet-name", ns).addContent(name));
-            node.addContent(new Element("servlet-class", ns).addContent(className));
-
-            if (initParams != null && !(initParams.isEmpty())) {
-                Enumeration params = initParams.keys();
-                while (params.hasMoreElements()) {
-                    String paramName = params.nextElement().toString();
-                    String paramValue = (String) initParams.get(paramName);
-                    Element initParam = new Element("init-param", ns);
-                    initParam.addContent(new Element("param-name", ns).addContent(paramName));
-                    initParam.addContent(new Element("param-value", ns).addContent(paramValue));
-                    node.addContent(initParam);
-                }
-            }
-
-            doc.getRootElement().addContent(node);
-            changed = true;
-        }
-        else {
-            log.info("servlet {} already registered", name);
-        }
-        for (int i = 0; i < urlPatterns.length; i++) {
-            String urlPattern = urlPatterns[i];
-            changed = changed | registerServletMapping(doc, name, urlPattern, comment);
-        }
-
-        if (changed) {
-            XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-            outputter.output(doc, new FileWriter(source));
-        }
-        return changed;
+            Hashtable initParams) throws JDOMException, IOException {
+        return WebXmlUtil.registerServlet(name, className, urlPatterns, comment, initParams);
     }
 
+    /**
+     * @deprecated Use WebXmlUtil
+     */
     public static boolean registerServletMapping(Document doc, String name, String urlPattern, String comment)
         throws JDOMException {
-        XPath xpath = XPath.newInstance("/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='"
-            + name
-            + "' and webxml:url-pattern='"
-            + urlPattern
-            + "']");
-        // must add the namespace and use it: there is no default namespace elsewise
-        xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
-        Element node = (Element) xpath.selectSingleNode(doc);
 
-        if (node == null) {
-            log.info("register servlet mapping [{}] for servlet [{}]", urlPattern, name);
-
-            // make a nice comment
-            doc.getRootElement().addContent(new Comment(comment));
-
-            // the same name space must be used
-            Namespace ns = doc.getRootElement().getNamespace();
-
-            // create the mapping
-            node = new Element("servlet-mapping", ns);
-            node.addContent(new Element("servlet-name", ns).addContent(name));
-            node.addContent(new Element("url-pattern", ns).addContent(urlPattern));
-            doc.getRootElement().addContent(node);
-            return true;
-
-        }
-
-        log.info("servlet mapping [{}] for servlet [{}] already registered", urlPattern, name);
-        return false;
+        return WebXmlUtil.registerServletMapping(doc, name, urlPattern, comment);
     }
 
     public static boolean registerRepository(String name) throws RegisterException {
