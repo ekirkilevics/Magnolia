@@ -2,7 +2,9 @@ package info.magnolia.cms.cache.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.FilterOrderingTask;
+import info.magnolia.module.delta.WebXmlTaskUtil;
 import info.magnolia.voting.voters.AuthenticatedVoter;
 import info.magnolia.voting.voters.ExtensionVoter;
 import info.magnolia.voting.voters.OnAdminVoter;
@@ -20,18 +22,20 @@ import java.util.Map;
  */
 public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
-    /**
-     * {@inheritDoc}
-     */
+    public CacheModuleVersionHandler() {
+        super();
+        final List tasks31 = new ArrayList();
+        final WebXmlTaskUtil u = new WebXmlTaskUtil(tasks31);
+        u.servletIsRemoved("CacheGeneratorServlet");
+        register("3.1.0", BasicDelta.createBasicDelta("Cache Module 3.1", "Cache Module 3.1", tasks31));
+    }
+
     protected List getExtraInstallTasks(InstallContext installContext) {
         final List tasks = super.getBasicInstallTasks(installContext);
         tasks.add(new FilterOrderingTask("cache", new String[]{"i18n"}));
         return tasks;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public List getStartupTasks(InstallContext installContext) {
         List tasks = new ArrayList();
 

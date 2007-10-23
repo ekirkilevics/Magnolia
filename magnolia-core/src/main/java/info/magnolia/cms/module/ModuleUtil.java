@@ -269,7 +269,7 @@ public final class ModuleUtil {
     public static boolean registerServletMapping(Document doc, String name, String urlPattern, String comment)
         throws JDOMException {
 
-        return WebXmlUtil.registerServletMapping(doc, name, urlPattern, comment);
+        throw new IllegalStateException("This method should never have been public. Use one of the registerServlet methods if needed.");
     }
 
     public static boolean registerRepository(String name) throws RegisterException {

@@ -23,15 +23,5 @@
         <mapping>/.magnolia/log4j/*</mapping>
       </mappings>
     </servlet>
-    <!-- 
-    <servlet>
-      <name>UuidRequestDispatcherServlet</name>
-      <class>it.openutils.log4j.Log4jConfigurationServlet</class>
-      <comment>Deprecated. See http://jira.magnolia.info/browse/MAGNOLIA-1535</comment>
-      <mappings>
-        <mapping>/uuid/*</mapping>
-      </mappings>
-    </servlet>
-    -->
   </servlets>
 </module>

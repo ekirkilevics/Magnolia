@@ -35,6 +35,7 @@ import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
+import info.magnolia.module.delta.WebXmlTaskUtil;
 import info.magnolia.setup.for3_1.LoginAuthTypePropertyMovedToFilter;
 import info.magnolia.setup.for3_1.LoginFormPropertyMovedToFilter;
 import info.magnolia.setup.for3_1.MoveMagnoliaUsersToRealmFolders;
@@ -42,6 +43,7 @@ import info.magnolia.setup.for3_1.ReconfigureCommands;
 import info.magnolia.setup.for3_1.RemoveModuleDescriptorDetailsFromRepo;
 import info.magnolia.setup.for3_1.RenamedRenderersToTemplateRenderers;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -51,12 +53,8 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
-    private final List tasks31 = Arrays.asList(new Task[]{
-
-        // disabled due to MAGNOLIA-1743
-            // new WarnTask("web.xml updates", "CacheGeneratorServlet has been removed in Magnolia 3.1: please remove the corresponding <servlet> and <servlet-mapping> elements in your web.xml file."),
-            // new WarnTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."),
-
+    // tasks which have to be executed wether we're installing or upgrading from 3.0
+    private final List genericTasksFor31 = Arrays.asList(new Task[]{
             new AddNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
             new AddNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
 
@@ -118,7 +116,21 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
     // TODO : review - currently core is always installed since 3.1 is its first version as a module,
     // but we need to behave differently if magnolia was installed previously
-    protected List getBasicInstallTasks(InstallContext installContext) {
-        return tasks31;
+    protected List getBasicInstallTasks(InstallContext ctx) {
+        final ArrayList tasks = new ArrayList(genericTasksFor31);
+        final WebXmlTaskUtil u = new WebXmlTaskUtil(tasks);
+        u.servletIsNowWrapped("ActivationHandler");
+        u.servletIsNowWrapped("AdminTreeServlet");
+        u.servletIsNowWrapped("classpathspool");
+        u.servletIsNowWrapped("DialogServlet");
+        u.servletIsNowWrapped("PageServlet");
+        u.servletIsNowWrapped("log4j");
+        u.servletIsNowWrapped("FCKEditorSimpleUploadServlet");
+        u.servletIsDeprecated("uuidRequestDispatcher");
+
+        tasks.add(new WarnTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."));
+        return tasks;
+
     }
+
 }
