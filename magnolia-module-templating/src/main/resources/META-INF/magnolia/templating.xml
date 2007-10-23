@@ -2,8 +2,7 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>templating</name>
-  <displayName>Templating</displayName>
-  <description>Custom templates</description>
+  <displayName>Magnolia Templating Module</displayName>
   <class>info.magnolia.module.templating.TemplatingModule</class>
   <versionHandler>info.magnolia.module.templating.setup.TemplatingModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
