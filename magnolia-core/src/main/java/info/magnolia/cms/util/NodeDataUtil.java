@@ -506,7 +506,7 @@ public class NodeDataUtil {
             case PropertyType.REFERENCE:
                 return valueFactory.createValue(((Content)obj).getJCRNode());
             default:
-                return valueFactory.createValue(obj.toString());
+                return (obj != null ? valueFactory.createValue(obj.toString()) : valueFactory.createValue(StringUtils.EMPTY));
         }
     }
 
