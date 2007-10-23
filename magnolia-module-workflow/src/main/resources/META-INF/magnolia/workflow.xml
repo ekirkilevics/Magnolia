@@ -2,8 +2,8 @@
 <!DOCTYPE module SYSTEM "module.dtd">
 <module>
   <name>workflow</name>
-  <displayName>Workflow</displayName>
-  <description>Workflow using OpenWFE</description>
+  <displayName>Magnolia Workflow Module</displayName>
+  <description>Provides a workflow engine (OpenWFE)</description>
   <class>info.magnolia.module.workflow.WorkflowModule</class>
   <versionHandler>info.magnolia.module.workflow.setup.WorkflowModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
