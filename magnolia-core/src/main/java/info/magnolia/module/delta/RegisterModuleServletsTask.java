@@ -11,6 +11,7 @@
 package info.magnolia.module.delta;
 
 import info.magnolia.cms.module.ServletDefinition;
+import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
 
 import java.util.Iterator;
@@ -22,13 +23,20 @@ import java.util.Iterator;
  *
  */
 public class RegisterModuleServletsTask extends ArrayDelegateTask {
-    public RegisterModuleServletsTask(ModuleDefinition moduleDefinition) {
-        super("Module servlets");
 
+    public RegisterModuleServletsTask() {
+        super("Register module servlets");
+    }
+    
+    public void execute(InstallContext installContext) throws TaskExecutionException {
+        ModuleDefinition moduleDefinition = installContext.getCurrentModuleDefinition();
+        
         // register servlets
         for (Iterator iter = moduleDefinition.getServlets().iterator(); iter.hasNext();) {
             ServletDefinition servletDefinition = (ServletDefinition) iter.next();
             addTask(new RegisterServletTask(servletDefinition));
         }
+        
+        super.execute(installContext);
     }
 }

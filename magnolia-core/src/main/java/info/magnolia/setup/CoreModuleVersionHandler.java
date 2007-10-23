@@ -30,6 +30,7 @@ import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.PropertyExistsDelegateTask;
+import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
@@ -64,6 +65,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
             // TODO : this should be conditional ? how do we migrate existing filters...
             new BootstrapSingleResource("New filters", "Will override the filter chain configuration with a completely new one.", "/mgnl-bootstrap/core/config.server.filters.xml"),
+
+            new RegisterModuleServletsTask(),
 
             new ReconfigureCommands(),
 
@@ -125,7 +128,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
             // other users are moved to the admin realm
             new MoveMagnoliaUsersToRealmFolders(),
-
 
             // new BootstrapSingleResource("new i18n", /*TODO*/"blah blah", "/mgnl-bootstrap/core/config.server.i18n.content.xml"),
             // new BootstrapSingleResource("superuser role", /*TODO*/"blah blah", "/mgnl-bootstrap/core/userroles.superuser.xml"),

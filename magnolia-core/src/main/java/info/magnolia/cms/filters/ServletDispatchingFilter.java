@@ -145,11 +145,13 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
      * @return
      */
     protected int determineMatchingEnd(String uri) {
-        for (Iterator iter = mappingPatterns.iterator(); iter.hasNext();) {
-            final Matcher matcher = ((Pattern) iter.next()).matcher(uri);
-            
-            if (matcher.find())
-                return matcher.end();
+        if (mappingPatterns != null) {
+            for (Iterator iter = mappingPatterns.iterator(); iter.hasNext();) {
+                final Matcher matcher = ((Pattern) iter.next()).matcher(uri);
+                
+                if (matcher.find())
+                    return matcher.end();
+            }
         }
         
         return -1;

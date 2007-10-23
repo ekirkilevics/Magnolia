@@ -33,7 +33,7 @@ public class DefaultModuleVersionHandler extends AbstractModuleVersionHandler {
         basicInstallTasks.add(new BootstrapEmptyRepositoriesTask());
         basicInstallTasks.add(new ModuleBootstrapTask());
         basicInstallTasks.add(new ModuleFilesExtraction());
-        basicInstallTasks.add(new RegisterModuleServletsTask(installContext.getCurrentModuleDefinition()));
+        basicInstallTasks.add(new RegisterModuleServletsTask());
         return basicInstallTasks;
     }
 
