@@ -38,7 +38,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @author David Smith
- * @version $Revision $ ($Author $)
+ * @version $Revision: $ ($Author: $)
  */
 public class ContentNodeIterator extends TagSupport {
 
@@ -207,24 +207,29 @@ public class ContentNodeIterator extends TagSupport {
              */
             private static final long serialVersionUID = 222L;
 
+            private int indexFromZero() {
+                // the variable index starts from 1, the index property in LoopStatus starts from 0
+                return index - 1;
+            }
+
             public Object getCurrent() {
                 return current;
             }
 
             public int getIndex() {
-                return index;
+                return indexFromZero();
             }
 
             public int getCount() {
-                return size;
+                return index;
             }
 
             public boolean isFirst() {
-                return (index == 0);
+                return (indexFromZero() == 0); // index starts with 1
             }
 
             public boolean isLast() {
-                return (index == (size - 1));
+                return (indexFromZero() == size - 1);
             }
 
             public Integer getBegin() {
@@ -236,9 +241,10 @@ public class ContentNodeIterator extends TagSupport {
             }
 
             public Integer getStep() {
-                return new Integer(size);
+                return new Integer(step);
             }
         }
+
         if (status == null) {
             status = new Status();
         }
