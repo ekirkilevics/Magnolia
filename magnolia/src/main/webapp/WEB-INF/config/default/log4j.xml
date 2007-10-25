@@ -99,19 +99,19 @@
   <category name="openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant">
     <priority value="INFO" />
   </category>
-  <category name="info.magnolia.cms.filters.MgnlMainFilter">
+  <category name="info.magnolia.cms.filters.MgnlMainFilter" additivity="false">
     <priority value="DEBUG" />
     <!--  debug  -->
     <appender-ref ref="console" />
   </category>
   <category name="info.magnolia.cms.exchange" additivity="false">
-    <priority value="info" />
+    <priority value="INFO" />
     <appender-ref ref="log-activation" />
     <!--  debug  -->
     <appender-ref ref="console" />
   </category>
   <category name="info.magnolia.cms.beans.config.Bootstrapper" additivity="false">
-    <priority value="info" />
+    <priority value="INFO" />
     <appender-ref ref="log-bootstrap" />
     <!--  debug  -->
     <appender-ref ref="console" />
