@@ -362,10 +362,11 @@ public class MgnlContext {
 
     /**
      * Executes the given operation in the system context and sets it back to the original once done
-     * (also if an exception is thrown)
+     * (also if an exception is thrown). Also works if there was no context upon calling (sets it back
+     * to null in this case)
      */
     public static void doInSystemContext(SystemContextOperation op) {
-        final Context originalCtx = MgnlContext.getInstance();
+        final Context originalCtx = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
         try {
             MgnlContext.setInstance(MgnlContext.getSystemContext());
             op.exec();

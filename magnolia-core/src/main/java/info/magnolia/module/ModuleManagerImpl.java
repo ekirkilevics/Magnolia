@@ -22,7 +22,6 @@ import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.Task;
@@ -185,21 +184,16 @@ public class ModuleManagerImpl implements ModuleManager {
         // complete repository loading before install or update
         loadRepositories();
 
-        final Context previousCtx = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
-        try {
-            MgnlContext.setInstance(MgnlContext.getSystemContext());
-
-            final Iterator it = state.getList().iterator();
-            while (it.hasNext()) {
-                final ModuleAndDeltas moduleAndDeltas = (ModuleAndDeltas) it.next();
-                installOrUpdateModule(moduleAndDeltas, installContext);
-                it.remove();
+        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
+            public void exec() {
+                final Iterator it = state.getList().iterator();
+                while (it.hasNext()) {
+                    final ModuleAndDeltas moduleAndDeltas = (ModuleAndDeltas) it.next();
+                    installOrUpdateModule(moduleAndDeltas, installContext);
+                    it.remove();
+                }
             }
-
-        }
-        finally {
-            MgnlContext.setInstance(previousCtx);
-        }
+        });
     }
 
     public InstallContext getInstallContext() {
@@ -211,46 +205,43 @@ public class ModuleManagerImpl implements ModuleManager {
      * do not require manual intervention.
      */
     private void processStartupTasks() {
-        final Context previousCtx = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
-        try {
-            MgnlContext.setInstance(MgnlContext.getSystemContext());
-            final Iterator it = orderedModuleDescriptors.iterator();
-            boolean success = true;
-            while (it.hasNext()) {
-                final ModuleDefinition module = (ModuleDefinition) it.next();
-                String moduleName = module.getName();
-                final ModuleVersionHandler versionHandler = registry.getVersionHandler(moduleName);
+        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
+            public void exec() {
+                final Iterator it = orderedModuleDescriptors.iterator();
+                boolean success = true;
+                while (it.hasNext()) {
+                    final ModuleDefinition module = (ModuleDefinition) it.next();
+                    String moduleName = module.getName();
+                    final ModuleVersionHandler versionHandler = registry.getVersionHandler(moduleName);
 
-                installContext.setCurrentModule(module);
+                    installContext.setCurrentModule(module);
 
-                List tasks = versionHandler.getStartupTasks(installContext);
-                if (tasks == null || tasks.isEmpty()) {
-                    continue;
-                }
-
-                Task task = null;
-                try {
-                    final Iterator itT = tasks.iterator();
-                    while (itT.hasNext()) {
-                        task = (Task) itT.next();
-                        log.debug("Module {}, executing {}", module, task);
-                        task.execute(installContext);
+                    List tasks = versionHandler.getStartupTasks(installContext);
+                    if (tasks == null || tasks.isEmpty()) {
+                        continue;
                     }
-                }
-                catch (TaskExecutionException e) {
-                    log.error("Startup task " + task + " for module " + moduleName + " failed: " + e.getMessage() + ".", e);
-                    success = false;
-                }
-                finally {
-                    installContext.setCurrentModule(null);
-                }
 
-                saveChanges(success);
+                    Task task = null;
+                    try {
+                        final Iterator itT = tasks.iterator();
+                        while (itT.hasNext()) {
+                            task = (Task) itT.next();
+                            log.debug("Module {}, executing {}", module, task);
+                            task.execute(installContext);
+                        }
+                    }
+                    catch (TaskExecutionException e) {
+                        log.error("Startup task " + task + " for module " + moduleName + " failed: " + e.getMessage() + ".", e);
+                        success = false;
+                    }
+                    finally {
+                        installContext.setCurrentModule(null);
+                    }
+
+                    saveChanges(success);
+                }
             }
-        }
-        finally {
-            MgnlContext.setInstance(previousCtx);
-        }
+        });
     }
 
     public void startModules() {
