@@ -62,7 +62,7 @@
       permissions to modify the page available for the current user.
     </description>
     <name>editMode</name>
-    <function-class>it.lafeltrinelli.web.util.FcomElFunctions</function-class>
+    <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
     <function-signature>boolean isEditMode()</function-signature>
   </function>
 </taglib>
