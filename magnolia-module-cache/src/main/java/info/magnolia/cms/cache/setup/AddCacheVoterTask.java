@@ -1,6 +1,5 @@
 package info.magnolia.cms.cache.setup;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -39,7 +38,7 @@ public class AddCacheVoterTask extends AbstractRepositoryTask {
      * {@inheritDoc}
      */
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        HierarchyManager hm = ctx.getHierarchyManager(ContentRepository.CONFIG);
+        final HierarchyManager hm = ctx.getConfigHierarchyManager();
         Content configNode = hm.getContent("/modules/cache/config");
 
         Content voters = ContentUtil.getOrCreateContent(configNode, "voters", ItemType.CONTENT);
