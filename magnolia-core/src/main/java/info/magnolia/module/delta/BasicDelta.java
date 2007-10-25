@@ -12,6 +12,8 @@
  */
 package info.magnolia.module.delta;
 
+import info.magnolia.module.model.ModuleDefinition;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -61,6 +63,15 @@ public class BasicDelta implements Delta {
      */
     public static Delta createInstallDelta(String title, String description, List tasks) {
         return new BasicDelta(title, description, DeltaType.install, tasks);
+    }
+
+    /**
+     * Creates a Startup Delta.
+     */
+    public static Delta createStartupDelta(ModuleDefinition moduleDef, List tasks) {
+        final String title = "Startup for module " + moduleDef.getName();
+        final String description = "Tasks executed before starting up module " + moduleDef.getDescription();
+        return new BasicDelta(title, description, DeltaType.startup, tasks);
     }
 
     /**

@@ -23,6 +23,7 @@ import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionComparator;
+import info.magnolia.module.model.ModuleDefinition;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -143,6 +144,19 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         return Collections.EMPTY_LIST;
     }
 
+    public Delta getStartupDelta(InstallContext installContext) {
+        final ModuleDefinition moduleDef = installContext.getCurrentModuleDefinition();
+        final List tasks = getStartupTasks(installContext);
+        return BasicDelta.createStartupDelta(moduleDef, tasks);
+    }
+
+    /**
+     * Override this method to add specific startup tasks to your module.
+     * Returns an empty list by default.
+     */
+    protected List getStartupTasks(InstallContext installContext) {
+        return Collections.EMPTY_LIST;
+    }
 
     // TODO : make this mandatory and "hidden" ?
     public class ModuleVersionToLatestTask extends AbstractRepositoryTask {
@@ -179,13 +193,5 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
             return toVersion;
         }
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public List getStartupTasks(InstallContext installContext) {
-        return Collections.EMPTY_LIST;
-    }
-
 
 }

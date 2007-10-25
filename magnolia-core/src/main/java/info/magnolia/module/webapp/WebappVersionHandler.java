@@ -15,6 +15,8 @@ package info.magnolia.module.webapp;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleVersionHandler;
+import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.model.Version;
 
 import javax.jcr.RepositoryException;
@@ -46,7 +48,7 @@ public class WebappVersionHandler implements ModuleVersionHandler {
         }
     }
 
-    public List getDeltas(InstallContext installContext, Version from) {
+    public List getDeltas(InstallContext ctx, Version from) {
         if (from == null) {
             return Collections.singletonList(new WebappDelta());
         } else if (!from.equals(Version.UNDEFINED_TO)) {
@@ -56,10 +58,7 @@ public class WebappVersionHandler implements ModuleVersionHandler {
         }
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public List getStartupTasks(InstallContext installContext) {
-        return Collections.EMPTY_LIST;
+    public Delta getStartupDelta(InstallContext ctx) {
+        return BasicDelta.createStartupDelta(ctx.getCurrentModuleDefinition(), Collections.EMPTY_LIST);
     }
 }

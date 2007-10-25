@@ -18,6 +18,7 @@ package info.magnolia.module.delta;
  * @version $Revision: $ ($Author: $)
  */
 public class DeltaType {
+    public static final DeltaType startup = new DeltaType("startup");
     public static final DeltaType install = new DeltaType("install");
     public static final DeltaType update = new DeltaType("update");
     public static final DeltaType uninstall = new DeltaType("uninstall");

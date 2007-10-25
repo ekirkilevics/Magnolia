@@ -31,8 +31,8 @@ import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.BetwixtModuleDefinitionReader;
 import info.magnolia.module.model.reader.DependencyChecker;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
-import info.magnolia.module.ui.ModuleManagerUI;
 import info.magnolia.module.ui.ModuleManagerNullUI;
+import info.magnolia.module.ui.ModuleManagerUI;
 import info.magnolia.module.ui.ModuleManagerWebUI;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -44,14 +44,15 @@ import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
 /**
- * TODO where do we setup ModuleRegistry ? TODO where do we setup module configs observation ? TODO : factor out into
- * simpler units
+ * TODO where do we setup ModuleRegistry ?
+ * TODO : factor out into simpler units
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -100,7 +101,7 @@ public class ModuleManagerImpl implements ModuleManager {
         return orderedModuleDescriptors;
     }
 
-    public void checkForInstallOrUpdates() throws ModuleManagementException {
+    public void checkForInstallOrUpdates() {
         // compare and determine if we need to do anything
         state = new ModuleManagementState();
         final Iterator it = orderedModuleDescriptors.iterator();
@@ -119,7 +120,6 @@ public class ModuleManagerImpl implements ModuleManager {
         }
         // TODO handle modules found in repo but not found on classpath
 
-        // TODO : do in finally{}
         installContext.setCurrentModule(null);
 
         // if we don't have to perform any update load repositories now
@@ -161,14 +161,11 @@ public class ModuleManagerImpl implements ModuleManager {
                 }
                 return new DefaultModuleVersionHandler();
             }
-        }
-        catch (ClassNotFoundException e) {
+        } catch (ClassNotFoundException e) {
             throw new RuntimeException(e); // TODO
-        }
-        catch (InstantiationException e) {
+        } catch (InstantiationException e) {
             throw new RuntimeException(e); // TODO
-        }
-        catch (IllegalAccessException e) {
+        } catch (IllegalAccessException e) {
             throw new RuntimeException(e); // TODO
         }
     }
@@ -200,58 +197,12 @@ public class ModuleManagerImpl implements ModuleManager {
         return installContext;
     }
 
-    /**
-     * Process startup tasks. Tasks retured by <code>ModuleDefinition.getStartupTasks()</code> are always executed and
-     * do not require manual intervention.
-     */
-    private void processStartupTasks() {
-        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
-            public void exec() {
-                final Iterator it = orderedModuleDescriptors.iterator();
-                boolean success = true;
-                while (it.hasNext()) {
-                    final ModuleDefinition module = (ModuleDefinition) it.next();
-                    String moduleName = module.getName();
-                    final ModuleVersionHandler versionHandler = registry.getVersionHandler(moduleName);
-
-                    installContext.setCurrentModule(module);
-
-                    List tasks = versionHandler.getStartupTasks(installContext);
-                    if (tasks == null || tasks.isEmpty()) {
-                        continue;
-                    }
-
-                    Task task = null;
-                    try {
-                        final Iterator itT = tasks.iterator();
-                        while (itT.hasNext()) {
-                            task = (Task) itT.next();
-                            log.debug("Module {}, executing {}", module, task);
-                            task.execute(installContext);
-                        }
-                    }
-                    catch (TaskExecutionException e) {
-                        log.error("Startup task " + task + " for module " + moduleName + " failed: " + e.getMessage() + ".", e);
-                        success = false;
-                    }
-                    finally {
-                        installContext.setCurrentModule(null);
-                    }
-
-                    saveChanges(success);
-                }
-            }
-        });
-    }
-
     public void startModules() {
-
         // process startup tasks before actually starting modules
-        processStartupTasks();
+        executeStartupTasks();
 
         try {
-            // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle
-            // methods.
+            // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle methods.
             final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
             lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_STARTUP);
             final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
@@ -269,14 +220,12 @@ public class ModuleManagerImpl implements ModuleManager {
                 final String moduleName = moduleDefinition.getName();
                 moduleProperties.put("name", moduleName);
 
-                Content configNode = null;
-
                 if (modulesParentNode.hasContent(moduleName)) {
                     final Content moduleNode = modulesParentNode.getChildByName(moduleName);
                     moduleNodes.add(moduleNode);
                     moduleProperties.put("moduleNode", moduleNode);
                     if (moduleNode.hasContent("config")) {
-                        configNode = moduleNode.getContent("config");
+                        final Content configNode = moduleNode.getContent("config");
                         moduleProperties.put("configNode", configNode);
                     }
                 }
@@ -328,6 +277,25 @@ public class ModuleManagerImpl implements ModuleManager {
         }
     }
 
+    /**
+     * Process startup tasks. Tasks retured by <code>ModuleDefinition.getStartupTasks()</code> are always executed and
+     * do not require manual intervention.
+     */
+    protected void executeStartupTasks() {
+        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
+            public void exec() {
+                final Iterator it = orderedModuleDescriptors.iterator();
+                while (it.hasNext()) {
+                    final ModuleDefinition module = (ModuleDefinition) it.next();
+                    final ModuleVersionHandler versionHandler = registry.getVersionHandler(module.getName());
+                    installContext.setCurrentModule(module);
+                    final Delta startup = versionHandler.getStartupDelta(installContext);
+                    applyDeltas(module, Collections.singletonList(startup), installContext);
+                }
+            }
+        });
+    }
+
     protected void startModule(Object moduleInstance, final ModuleDefinition moduleDefinition, final ModuleLifecycleContextImpl lifecycleContext) {
         if (moduleInstance instanceof ModuleLifecycle) {
             lifecycleContext.setCurrentModuleDefinition(moduleDefinition);
@@ -369,8 +337,17 @@ public class ModuleManagerImpl implements ModuleManager {
 
     protected void installOrUpdateModule(ModuleAndDeltas moduleAndDeltas, InstallContextImpl ctx) {
         final ModuleDefinition moduleDef = moduleAndDeltas.getModule();
-        ctx.setCurrentModule(moduleDef);
         final List deltas = moduleAndDeltas.getDeltas();
+        ctx.setCurrentModule(moduleDef);
+        applyDeltas(moduleDef, deltas, ctx);
+    }
+
+    /**
+     * Applies to given deltas for the given module. It is NOT responsible for setting the given
+     * module as being the current module in the given context, but it is responsible for unsetting
+     * it when done, and for saving upon success.
+     */
+    protected void applyDeltas(ModuleDefinition moduleDef, List deltas, InstallContextImpl ctx) {
         boolean success = true;
         try {
             final Iterator it = deltas.iterator();
@@ -384,12 +361,10 @@ public class ModuleManagerImpl implements ModuleManager {
                     task.execute(ctx);
                 }
             }
-        }
-        catch (TaskExecutionException e) {
+        } catch (TaskExecutionException e) {
             ctx.error("Could not install or update module. Please remove or update faulty jar. (" + e.getMessage() + ")", e);
             success = false;
-        }
-        finally {
+        } finally {
             // TODO : ctx.info("Successful installation/update."); after save ?
             ctx.setCurrentModule(null);
         }
@@ -448,9 +423,6 @@ public class ModuleManagerImpl implements ModuleManager {
 
     /**
      * Loads a single repository plus its workspaces, register nodetypes and grant permissions to superuser
-     * @param repositoryName
-     * @param nodeTypeFile
-     * @param workspaces
      */
     private void loadRepository(String repositoryName, String nodeTypeFile, String[] workspaces) {
 
