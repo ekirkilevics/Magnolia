@@ -99,7 +99,7 @@
   <category name="openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant">
     <priority value="INFO" />
   </category>
-  <category name="info.magnolia.cms.filters.MagnoliaManagedFilter">
+  <category name="info.magnolia.cms.filters.MgnlMainFilter">
     <priority value="DEBUG" />
     <!--  debug  -->
     <appender-ref ref="console" />
