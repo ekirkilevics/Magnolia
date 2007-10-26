@@ -42,28 +42,28 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     public AdminModuleVersionHandler() {
         register("3.1", BasicDelta.createBasicDelta("Update to 3.1", "", new Task[]{
             new BootstrapSingleResource(
-                "New ACL configuration", 
-                "Bootstraps the new configuration for the ACL dialogs", 
-                "/mgnl-bootstrap/adminInterface/config.module.adminInterface.config.securityConfiguration.xml"),
-            
+                "New ACL configuration",
+                "Bootstraps the new configuration for the ACL dialogs",
+                "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.config.securityConfiguration.xml"),
+
             new RemoveNodeTask(
-                "New ACL Dialog", 
-                "Deletes the old ACL page", 
+                "New ACL Dialog",
+                "Deletes the old ACL page",
                 ContentRepository.CONFIG,
                 "/modules/adminInterface/pages/rolesACL"),
-                
+
             new RemovePropertyTask(
-                "New ACL Dialog", 
-                "Removes the include property", 
+                "New ACL Dialog",
+                "Removes the include property",
                 ContentRepository.CONFIG,
-                "/modules/adminInterface/dialogs/roleedit", 
+                "/modules/adminInterface/dialogs/roleedit",
                 "file"),
-                
+
             new CheckAndModifyPropertyValueTask(
                 "New ACL Dialog",
-                "Change the control type for the ACL ", 
+                "Change the control type for the ACL ",
                 ContentRepository.CONFIG,
-                "/modules/adminInterface/dialogs/roleedit", 
+                "/modules/adminInterface/dialogs/roleedit",
                 "controlType",
                 "include",
                 "info.magnolia.module.admininterface.dialogs.ACLSDialogControl")
