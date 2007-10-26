@@ -8,8 +8,8 @@ import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManager;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -23,26 +23,32 @@ import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * A single filter which in turn executes a chain of other filters not configured in web.xml. This filters delegates to
  * one single filter whih is either the filter chain configured in the config repository or the primitive system UI due
- * to a installation or update process.
- *
+ * to a installation or update process
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
 public class MgnlMainFilter implements Filter {
+
     private static final Logger log = LoggerFactory.getLogger(MgnlMainFilter.class);
 
-    public static final String SERVER_FILTERS = "/server/filters";
+    private static MgnlMainFilter instance;
 
     private MgnlFilter rootFilter;
 
     private FilterConfig filterConfig;
 
+    public static final String SERVER_FILTERS = "/server/filters";
+
     private final EventListener filtersEventListener = new EventListener() {
+
         public void onEvent(EventIterator arg0) {
             MgnlContext.setInstance(MgnlContext.getSystemContext());
             reset();
@@ -50,9 +56,8 @@ public class MgnlMainFilter implements Filter {
     };
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+        throws IOException, ServletException {
 
-        // this block should move away - code readability
         if (log.isDebugEnabled()) {
             String pathInfo = request.getPathInfo();
             String requestURI = request.getRequestURI();
@@ -71,6 +76,7 @@ public class MgnlMainFilter implements Filter {
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
+        instance = this;
         // remember this config
         this.filterConfig = filterConfig;
         if (!isSystemUIMode()) {
@@ -113,18 +119,10 @@ public class MgnlMainFilter implements Filter {
         }
     }
 
-    /**
-     * Initializes the required filter(s) if we need to go through
-     * System initialization screens. (SystemUI)
-     */
-    protected MgnlFilter createSystemUIFilter() {
-        return new InstallFilter(ModuleManager.Factory.getInstance(), this);
+    private InstallFilter createSystemUIFilter() {
+        return new InstallFilter(ModuleManager.Factory.getInstance());
     }
 
-    /**
-     * Checks if Magnolia is ready to operate or if we need to go through
-     * System initialization screens. (SystemUI)
-     */
     protected boolean isSystemUIMode() {
         ModuleManager moduleManager = ModuleManager.Factory.getInstance();
         return moduleManager.getStatus().needsUpdateOrInstall();
@@ -149,7 +147,7 @@ public class MgnlMainFilter implements Filter {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-            ServletException {
+        ServletException {
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
@@ -159,6 +157,11 @@ public class MgnlMainFilter implements Filter {
         initRootFilter();
     }
 
+    public static MgnlMainFilter getInstance() {
+        return instance;
+    }
+
+    
     public MgnlFilter getRootFilter() {
         return this.rootFilter;
     }
