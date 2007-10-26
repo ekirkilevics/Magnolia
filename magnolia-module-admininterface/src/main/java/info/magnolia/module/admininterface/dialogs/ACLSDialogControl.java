@@ -1,4 +1,4 @@
-package info.magnolia.module.admininterface.pages;
+package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
@@ -8,14 +8,12 @@ import info.magnolia.cms.gui.control.Hidden;
 import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.dialog.DialogBox;
 import info.magnolia.cms.gui.dialog.DialogButton;
-import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.misc.CssConstants;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.admininterface.AdminInterfaceModule;
-import info.magnolia.module.admininterface.SimplePageMVCHandler;
 import info.magnolia.module.admininterface.config.AclTypeConfiguration;
 import info.magnolia.module.admininterface.config.PermissionConfiguration;
 import info.magnolia.module.admininterface.config.RepositoryConfiguration;
@@ -23,6 +21,7 @@ import info.magnolia.module.admininterface.config.SecurityConfiguration;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
@@ -37,15 +36,11 @@ import org.apache.commons.lang.StringUtils;
  * @author Fabrizio Giustina
  * @version $Id:RolesACLPage.java 2516 2006-03-31 13:08:03Z philipp $
  */
-public class RolesACLPage extends SimplePageMVCHandler {
+public class ACLSDialogControl extends DialogBox {
 
     private static final String CSS_ACL_DIV = "aclDynamicTable"; //$NON-NLS-1$
 
     private SecurityConfiguration securityConf = AdminInterfaceModule.getInstance().getSecurityConfiguration();
-
-    public RolesACLPage(String name, HttpServletRequest request, HttpServletResponse response) {
-        super(name, request, response);
-    }
 
     private static String getHtmlRowInner(String dynamicTable, RepositoryConfiguration repoConf) {
         boolean small = true;
@@ -125,12 +120,19 @@ public class RolesACLPage extends SimplePageMVCHandler {
         return html.toString();
     }
 
-    protected void render(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        PrintWriter out = response.getWriter();
-        Messages msgs = MessagesManager.getMessages();
+    public void drawHtml(Writer w) throws IOException {
+        PrintWriter out = (PrintWriter) w;
+        this.drawHtmlPre(out);
+        renderACLS(out);
+        this.drawHtmlPost(out);
 
-        DialogControlImpl dialogControl = (DialogControlImpl) request.getAttribute("dialogObject"); //$NON-NLS-1$
-        Content role = dialogControl.getStorageNode();
+    }
+
+    protected void renderACLS(PrintWriter out) throws IOException {
+        Messages msgs = MessagesManager.getMessages();
+        Content role = getStorageNode();
+        HttpServletRequest request = this.getRequest();
+        HttpServletResponse response = this.getResponse();
 
         // select the repository
         Select repositorySelect = getRepositorySelect();
@@ -141,12 +143,16 @@ public class RolesACLPage extends SimplePageMVCHandler {
         // process with the real existing repositories
         for (Iterator iter = securityConf.getVisibleRepositories().iterator(); iter.hasNext();) {
             RepositoryConfiguration repositoryConf = (RepositoryConfiguration) iter.next();
-            writeRepositoryTable(request, response, msgs, out, role, repositoryConf);
+            try {
+                writeRepositoryTable(request, response, msgs, out, role, repositoryConf);
+            }
+            catch (RepositoryException e) {
+                throw new RuntimeException("can't list ", e);
+            }
         }
 
         // out.print("<p>&nbsp;<p>&nbsp;<p>&nbsp;<input type=\"button\" onclick=\"aclChangeRepository('website')\">");
         out.println("<script type=\"text/javascript\">aclChangeRepository('website');</script>"); //$NON-NLS-1$
-
     }
 
     /**
@@ -156,7 +162,7 @@ public class RolesACLPage extends SimplePageMVCHandler {
      * @throws RepositoryException
      * @throws IOException
      */
-    protected void writeRepositoryTable(HttpServletRequest request, HttpServletResponse response, Messages msgs,
+    protected void writeRepositoryTable(HttpServletRequest request,  HttpServletResponse response, Messages msgs,
         PrintWriter out, Content role, RepositoryConfiguration repoConf) throws RepositoryException, IOException {
         String tableName = "acl" + repoConf.getName() + "Table"; //$NON-NLS-1$ //$NON-NLS-2$
         String dynamicTableName = "acl" + repoConf.getName() + "DynamicTable"; //$NON-NLS-1$ //$NON-NLS-2$

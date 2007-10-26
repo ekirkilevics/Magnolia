@@ -253,11 +253,8 @@
       <sv:property sv:name="boxType" sv:type="String">
         <sv:value>1Col</sv:value>
       </sv:property>
-      <sv:property sv:name="file" sv:type="String">
-        <sv:value>/.magnolia/pages/rolesACL.html</sv:value>
-      </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
-        <sv:value>include</sv:value>
+        <sv:value>info.magnolia.module.admininterface.dialogs.ACLSDialogControl</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
