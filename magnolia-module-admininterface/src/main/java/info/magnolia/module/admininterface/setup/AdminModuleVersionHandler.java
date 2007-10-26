@@ -13,10 +13,15 @@ package info.magnolia.module.admininterface.setup;
 import java.util.ArrayList;
 import java.util.List;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.BootstrapSingleResource;
+import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
+import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.delta.RemovePropertyTask;
+import info.magnolia.module.delta.Task;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,7 +40,35 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     private static Logger log = LoggerFactory.getLogger(AdminModuleVersionHandler.class);
 
     public AdminModuleVersionHandler() {
-        register("3.1", BasicDelta.createBasicDelta("Update to 3.1", "", new BootstrapSingleResource("New ACL configuration", "Bootstraps the new configuration for the ACL dialogs", "/mgnl-bootstrap/adminInterface/config.module.adminInterface.config.securityConfiguration.xml")));
+        register("3.1", BasicDelta.createBasicDelta("Update to 3.1", "", new Task[]{
+            new BootstrapSingleResource(
+                "New ACL configuration", 
+                "Bootstraps the new configuration for the ACL dialogs", 
+                "/mgnl-bootstrap/adminInterface/config.module.adminInterface.config.securityConfiguration.xml"),
+            
+            new RemoveNodeTask(
+                "New ACL Dialog", 
+                "Deletes the old ACL page", 
+                ContentRepository.CONFIG,
+                "/modules/adminInterface/pages/rolesACL"),
+                
+            new RemovePropertyTask(
+                "New ACL Dialog", 
+                "Removes the include property", 
+                ContentRepository.CONFIG,
+                "/modules/adminInterface/dialogs/roleedit", 
+                "file"),
+                
+            new CheckAndModifyPropertyValueTask(
+                "New ACL Dialog",
+                "Change the control type for the ACL ", 
+                ContentRepository.CONFIG,
+                "/modules/adminInterface/dialogs/roleedit", 
+                "controlType",
+                "include",
+                "info.magnolia.module.admininterface.dialogs.ACLSDialogControl")
+            })
+        );
     }
     
     protected List getExtraInstallTasks(InstallContext installContext) {
