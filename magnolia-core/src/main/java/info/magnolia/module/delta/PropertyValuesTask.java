@@ -40,7 +40,7 @@ public abstract class PropertyValuesTask extends AbstractTask {
         if (prop.isExist() && currentvalue.equals(expectedCurrentValue)) {
             prop.setValue(newValue);
         } else {
-            final String msg = format("Property {0} was expected to exist at {1} with value {2} but {3,choice,0#does not exist|1#has the value {4} instead}.",
+            final String msg = format("Property \"{0}\" was expected to exist at {1} with value \"{2}\" but {3,choice,0#does not exist|1#has the value \"{4}\" instead}.",
                     propertyName, node.getHandle(), expectedCurrentValue, new Integer(prop.isExist() ? 1 : 0), currentvalue);
             ctx.warn(msg);
         }
@@ -51,7 +51,7 @@ public abstract class PropertyValuesTask extends AbstractTask {
             final NodeData prop = node.getNodeData(propertyName);
             final String currentvalue = prop.getString();
             if (!currentvalue.equals(expectedValue)) {
-                final String msg = format("Property {0} was expected to exist at {1} with value {2} but {3,choice,0#does not exist|1#has the value {4} instead}.",
+                final String msg = format("Property \"{0}\" was expected to exist at {1} with value \"{2}\" but {3,choice,0#does not exist|1#has the value \"{4}\" instead}.",
                         propertyName, node.getHandle(), expectedValue, new Integer(prop.isExist() ? 1 : 0), currentvalue);
                 ctx.warn(msg);
             }
@@ -72,7 +72,7 @@ public abstract class PropertyValuesTask extends AbstractTask {
         if (!prop.isExist()) {
             node.createNodeData(propertyName, value);
         } else if (log) {
-            final String msg = format("Property {0} was expected not to exist at {1}, but exists with value {2} and was going to be created with value {3}.",
+            final String msg = format("Property \"{0}\" was expected not to exist at {1}, but exists with value \"{2}\" and was going to be created with value \"{3}\".",
                     propertyName, node.getHandle(), prop.getString(), value);
             ctx.warn(msg);
         }
