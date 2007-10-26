@@ -40,8 +40,8 @@ public abstract class PropertyValuesTask extends AbstractTask {
         if (prop.isExist() && currentvalue.equals(expectedCurrentValue)) {
             prop.setValue(newValue);
         } else {
-            final String msg = format("{0} was expected to exist with value {1} but {2,choice,0#does not exist|1#has the value {3} instead}.",
-                    prop.getHandle(), expectedCurrentValue, new Integer(prop.isExist() ? 1 : 0), currentvalue);
+            final String msg = format("Property {0} was expected to exist at {1} with value {2} but {3,choice,0#does not exist|1#has the value {4} instead}.",
+                    propertyName, node.getHandle(), expectedCurrentValue, new Integer(prop.isExist() ? 1 : 0), currentvalue);
             ctx.warn(msg);
         }
     }
@@ -51,8 +51,8 @@ public abstract class PropertyValuesTask extends AbstractTask {
             final NodeData prop = node.getNodeData(propertyName);
             final String currentvalue = prop.getString();
             if (!currentvalue.equals(expectedValue)) {
-                final String msg = format("{0} was expected to exist with value {1} but {2,choice,0#does not exist|1#has the value {3} instead}.",
-                        prop.getHandle(), expectedValue, new Integer(prop.isExist() ? 1 : 0), currentvalue);
+                final String msg = format("Property {0} was expected to exist at {1} with value {2} but {3,choice,0#does not exist|1#has the value {4} instead}.",
+                        propertyName, node.getHandle(), expectedValue, new Integer(prop.isExist() ? 1 : 0), currentvalue);
                 ctx.warn(msg);
             }
         } else {
@@ -72,15 +72,19 @@ public abstract class PropertyValuesTask extends AbstractTask {
         if (!prop.isExist()) {
             node.createNodeData(propertyName, value);
         } else if (log) {
-            final String msg = format("{0} was not expected to exist, but exists with value {1} and was going to be created with value {2}.",
-                    prop.getHandle(), prop.getString(), value, null);
+            final String msg = format("Property {0} was expected not to exist at {1}, but exists with value {2} and was going to be created with value {3}.",
+                    propertyName, node.getHandle(), prop.getString(), value);
             ctx.warn(msg);
         }
     }
 
     // TODO move this to the InstallContext interface ?
+    protected String format(String pattern, Object arg0, Object arg1, Object arg2, Object arg3, Object arg4) {
+        return MessageFormat.format(pattern, new Object[]{arg0, arg1, arg2, arg3, arg4});
+    }
+
     protected String format(String pattern, Object arg0, Object arg1, Object arg2, Object arg3) {
-        return MessageFormat.format(pattern, new Object[]{arg0, arg1, arg2, arg3});
+        return format(pattern, arg0, arg1, arg2, arg3, null);
     }
 
     protected String format(String pattern, Object arg0, Object arg1, Object arg2) {

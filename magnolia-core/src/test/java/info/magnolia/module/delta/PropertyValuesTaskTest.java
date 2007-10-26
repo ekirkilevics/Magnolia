@@ -49,7 +49,7 @@ public class PropertyValuesTaskTest extends TestCase {
     }
 
     public void testNonExistingPropertyIsNotReplacedButLogged() throws RepositoryException {
-        ctx.warn("/foo/bar was expected to exist with value old-value but does not exist.");
+        ctx.warn("Property bar was expected to exist at /foo with value old-value but does not exist.");
 
         final MockContent node = new MockContent("foo");
 
@@ -64,7 +64,7 @@ public class PropertyValuesTaskTest extends TestCase {
     }
 
     public void testPropertywithUnexpectedValueIsNotReplacedButLogged() throws RepositoryException {
-        ctx.warn("/foo/bar was expected to exist with value old-value but has the value wrong-value instead.");
+        ctx.warn("Property bar was expected to exist at /foo with value old-value but has the value wrong-value instead.");
 
         final MockContent node = new MockContent("foo");
         node.addNodeData(new MockNodeData("bar", "wrong-value"));
@@ -93,7 +93,7 @@ public class PropertyValuesTaskTest extends TestCase {
     }
 
     public void testUnexpectedlyExistingPropertyIsNotReplacedAndLogged() throws RepositoryException {
-        ctx.warn("/foo/bar was not expected to exist, but exists with value old-value and was going to be created with value newValue.");
+        ctx.warn("Property bar was expected not to exist at /foo, but exists with value old-value and was going to be created with value newValue.");
 
         final MockContent node = new MockContent("foo");
         node.addNodeData(new MockNodeData("bar", "old-value"));
