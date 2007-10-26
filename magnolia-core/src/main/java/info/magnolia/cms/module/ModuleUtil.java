@@ -12,12 +12,12 @@
  */
 package info.magnolia.cms.module;
 
+import info.magnolia.cms.beans.config.BootstrapFilesComparator;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.exchange.ActivationManager;
 import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.cms.exchange.Subscriber;
@@ -25,9 +25,11 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.Role;
 import info.magnolia.cms.security.Security;
+import info.magnolia.cms.util.BootstrapUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.WebXmlUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.files.BasicFileExtractor;
 
 import java.io.File;
@@ -36,16 +38,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.LineNumberReader;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
-import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
@@ -134,37 +133,21 @@ public final class ModuleUtil {
         bootstrap(resourceNames, true);
     }
 
+    /**
+     * @param resourceNames
+     * @param saveAfterImport
+     * @throws IOException
+     * @throws RegisterException
+     * @deprecated use {@link BootstrapResourcesTask}
+     */
     public static void bootstrap(String[] resourceNames, boolean saveAfterImport) throws IOException, RegisterException {
-        // sort by length --> import parent node first
-        List list = new ArrayList(Arrays.asList(resourceNames));
-
-        Collections.sort(list, new Comparator() {
-
-            public int compare(Object name1, Object name2) {
-                return ((String) name1).length() - ((String) name2).length();
-            }
-        });
-
-        for (Iterator iter = list.iterator(); iter.hasNext();) {
-            String resourceName = (String) iter.next();
-
-            // windows again
-            resourceName = StringUtils.replace(resourceName, "\\", "/");
-
-            String name = StringUtils.removeEnd(StringUtils.substringAfterLast(resourceName, "/"), ".xml");
-
-            String repository = StringUtils.substringBefore(name, ".");
-            String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(name, "."), "."); //$NON-NLS-1$
-            String nodeName = StringUtils.substringAfterLast(name, ".");
-            String fullPath;
-            if (StringUtils.isEmpty(pathName)) {
-                pathName = "/";
-                fullPath = "/" + nodeName;
-            }
-            else {
-                pathName = "/" + StringUtils.replace(pathName, ".", "/");
-                fullPath = pathName + "/" + nodeName;
-            }
+        SortedSet files = new TreeSet(new BootstrapFilesComparator());
+        files.addAll(Arrays.asList(resourceNames));
+        
+        for (Iterator iter = files.iterator(); iter.hasNext();) {
+            final String filename = (String) iter.next();
+            final String repository = BootstrapUtil.determineRepository(filename);
+            final String fullPath = BootstrapUtil.determinePath(filename);
 
             // if the path already exists --> delete it
             try {
@@ -174,20 +157,16 @@ public final class ModuleUtil {
                 if (hm != null && hm.isExist(fullPath)) {
                     hm.delete(fullPath);
                     if (log.isDebugEnabled()) {
-                        log.debug("already existing node [{}] deleted", fullPath);
+                        log.debug("Already existing node [{}] deleted", fullPath);
                     }
                 }
+                
+                log.debug("Will bootstrap {}", filename);
+                BootstrapUtil.bootstrap(repository, new File(filename), saveAfterImport);
             }
             catch (Exception e) {
-                throw new RegisterException("can't register bootstrap file: [" + name + "]", e);
+                throw new RegisterException("Can't register bootstrap file: [" + filename + "]", e);
             }
-            log.debug("Will bootstrap {}", resourceName);
-            InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
-            DataTransporter.importXmlStream(stream, repository, pathName, name, false,
-            // TODO !! this ImportUUIDBehavior might import nodes in the wrong place !!!
-                ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,
-                saveAfterImport,
-                true);
         }
     }
 

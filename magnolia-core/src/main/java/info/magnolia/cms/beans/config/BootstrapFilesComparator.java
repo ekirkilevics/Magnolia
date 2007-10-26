@@ -13,21 +13,22 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.ie.DataTransporter;
-import org.apache.commons.lang.StringUtils;
 
 import java.io.File;
 import java.util.Comparator;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-class BootstrapFilesComparator implements Comparator {
+public class BootstrapFilesComparator implements Comparator {
 
     // remove file with the same name in different dirs
     public int compare(Object file1obj, Object file2obj) {
-        File file1 = (File) file1obj;
-        File file2 = (File) file2obj;
+        String file1 = file1obj instanceof File ? ((File) file1obj).getName() : StringUtils.substringAfterLast((String) file1obj, "/");
+        String file2 = file2obj instanceof File ? ((File) file2obj).getName() : StringUtils.substringAfterLast((String) file2obj, "/");
 
         String name1 = getName(file1);
         String name2 = getName(file2);
@@ -52,18 +53,18 @@ class BootstrapFilesComparator implements Comparator {
         return name1.compareTo(name2);
     }
 
-    private static String getExtension(File file) {
-        String ext = StringUtils.substringAfterLast(file.getName(), ".");
+    private static String getExtension(String filename) {
+        String ext = StringUtils.substringAfterLast(filename, ".");
         if (("." + ext).equals(DataTransporter.GZ) || ("." + ext).equals(DataTransporter.ZIP)) {
-            ext = StringUtils.substringAfterLast(StringUtils.substringBeforeLast(file.getName(), "."), ".");
+            ext = StringUtils.substringAfterLast(StringUtils.substringBeforeLast(filename, "."), ".");
         }
-        return ext;
+        return ext;        
     }
 
-    private static String getName(File file) {
-        String name = StringUtils.substringBeforeLast(file.getName(), ".");
+    private static String getName(String filename) {
+        String name = StringUtils.substringBeforeLast(filename, ".");
         if (name.endsWith(DataTransporter.XML) || name.endsWith(DataTransporter.PROPERTIES)) {
-            name = StringUtils.substringBeforeLast(file.getName(), ".");
+            name = StringUtils.substringBeforeLast(filename, ".");
         }
         return name;
     }

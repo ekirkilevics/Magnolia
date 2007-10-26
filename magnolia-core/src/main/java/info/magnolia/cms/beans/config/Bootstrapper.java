@@ -14,9 +14,9 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.ie.DataTransporter;
+import info.magnolia.cms.util.BootstrapUtil;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
@@ -118,7 +118,7 @@ public final class Bootstrapper {
         log.info("Trying to import content from {} files into repository [{}]", //$NON-NLS-1$
                 Integer.toString(xmlfileset.size()), repositoryName);
 
-        return bootstrapFiles(repositoryName, xmlfileset);
+        return BootstrapUtil.bootstrap(repositoryName, (File[]) xmlfileset.toArray(new File[xmlfileset.size()]));
     }
 
     /**
@@ -126,10 +126,11 @@ public final class Bootstrapper {
      * @param repositoryName
      * @param filesSet
      * @return
+     * @deprecated use {@link BootstrapUtil#bootstrap(String, File[])} instead
      */
     public static boolean bootstrapFiles(String repositoryName, Set filesSet) {
         File[] files = (File[]) filesSet.toArray(new File[filesSet.size()]);
-        return bootstrapFiles(repositoryName, files);
+        return BootstrapUtil.bootstrap(repositoryName, files);
     }
 
     /**
@@ -137,30 +138,10 @@ public final class Bootstrapper {
      * @param repositoryName
      * @param files
      * @return
+     * @deprecated use {@link BootstrapUtil#bootstrap(String, File[])} instead
      */
     public static boolean bootstrapFiles(String repositoryName, File[] files) {
-        try {
-            for (int k = 0; k < files.length; k++) {
-                File xmlFile = files[k];
-                if(log.isDebugEnabled()){
-                    log.debug("execute importfile {}", xmlFile);
-                }
-                DataTransporter.executeBootstrapImport(xmlFile, repositoryName);
-            }
-        }
-        catch (IOException ioe) {
-            log.error(ioe.getMessage(), ioe);
-        }
-        catch (OutOfMemoryError e) {
-            int maxMem = (int) (Runtime.getRuntime().maxMemory() / 1024 / 1024);
-            int needed = Math.max(256, maxMem + 128);
-            log.error("Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
-                    + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n" //$NON-NLS-1$
-                    + "You will need to completely remove the magnolia webapp before trying again", //$NON-NLS-1$
-                    Integer.toString(maxMem), Integer.toString(needed));
-            return false;
-        }
-        return true;
+        return BootstrapUtil.bootstrap(repositoryName, files);
     }
 
     /**

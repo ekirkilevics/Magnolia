@@ -12,12 +12,16 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.module.ModuleUtil;
-import info.magnolia.cms.module.RegisterException;
+import info.magnolia.cms.beans.config.BootstrapFilesComparator;
+import info.magnolia.cms.util.BootstrapUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.module.InstallContext;
 
-import java.io.IOException;
+import java.io.InputStream;
+import java.util.Arrays;
+import java.util.Iterator;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 /**
  *
@@ -26,19 +30,36 @@ import java.io.IOException;
  */
 public abstract class BootstrapResourcesTask extends AbstractTask {
 
+    private boolean backup;
+    
     public BootstrapResourcesTask(String name, String description) {
+        this(name, description, false);
+    }
+    
+    public BootstrapResourcesTask(String name, String description, boolean backup) {
         super(name, description);
+        
+        setBackup(backup);
     }
 
     // TODO : check if nodes were already there
     public void execute(final InstallContext installContext) throws TaskExecutionException {
         try {
             final String[] resourcesToBootstrap = getResourcesToBootstrap(installContext);
-            ModuleUtil.bootstrap(resourcesToBootstrap, false);
-        } catch (IOException e) {
-            throw new TaskExecutionException("Could not bootstrap: " + e.getMessage());
-        } catch (RegisterException e) {
-            throw new TaskExecutionException("Could not bootstrap: " + e.getMessage());
+            final SortedSet files = new TreeSet(new BootstrapFilesComparator());
+            files.addAll(Arrays.asList(resourcesToBootstrap));
+            
+            for (Iterator iter = files.iterator(); iter.hasNext();) {
+                final String resourceName = (String) iter.next();
+                final String repositoryName = BootstrapUtil.determineRepository(resourceName);
+                final String basePath = BootstrapUtil.determineBasePath(resourceName);
+                final InputStream resource = BootstrapResourcesTask.class.getResourceAsStream(resourceName);
+
+                BootstrapUtil.bootstrap(repositoryName, basePath, resource, resourceName, false);
+            }
+            
+        } catch (Exception e) {
+            throw new TaskExecutionException("Could not bootstrap: " + e.getMessage().toString(), e);
         }
     }
 
@@ -52,7 +73,6 @@ public abstract class BootstrapResourcesTask extends AbstractTask {
             }
         });
         return resourcesToBootstrap;
-
     }
 
     /**
@@ -60,5 +80,13 @@ public abstract class BootstrapResourcesTask extends AbstractTask {
      */
     protected boolean acceptResource(final InstallContext installContext, final String resourceName) {
         return false;
+    }
+
+    public boolean isBackup() {
+        return backup;
+    }
+    
+    public void setBackup(boolean backup) {
+        this.backup = backup;
     }
 }
