@@ -384,10 +384,14 @@ public class ModuleManagerImpl implements ModuleManager {
             log.debug((persist ? "Saving" : "Rolling back") + " repository " + repoName);
             final HierarchyManager hm = MgnlContext.getHierarchyManager(repoName);
             try {
-                if (persist) {
-                    hm.save();
-                } else {
-                    hm.refresh(false);
+                // don't call save or refresh if useless
+                if (hm.getWorkspace().getSession().hasPendingChanges()) {
+                    if (persist) {
+                        hm.save();
+                    }
+                    else {
+                        hm.refresh(false);
+                    }
                 }
             }
             catch (RepositoryException e) {
