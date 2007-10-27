@@ -59,7 +59,7 @@ public class ArrayDelegateTask implements Task {
         final StringBuffer buf = new StringBuffer();
         for (int i = 0; i < tasks.length; i++) {
             if (i > 0) {
-                buf.append(" "); // TODO : line break ? 
+                buf.append(" "); // TODO : line break ?
             }
             buf.append(tasks[i].getDescription());
         }
@@ -70,5 +70,20 @@ public class ArrayDelegateTask implements Task {
         for (int i = 0; i < tasks.length; i++) {
             tasks[i].execute(ctx);
         }
+    }
+
+
+    public String toString() {
+        final StringBuffer buf = new StringBuffer();
+
+        buf.append("{");
+        for (int i = 0; i < tasks.length; i++) {
+            if (i > 0) {
+                buf.append(", ");
+            }
+            buf.append(tasks[i].toString());
+        }
+        buf.append("}");
+        return buf.toString();
     }
 }
