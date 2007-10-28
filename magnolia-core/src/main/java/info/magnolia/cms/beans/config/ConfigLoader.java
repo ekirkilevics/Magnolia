@@ -106,6 +106,7 @@ public class ConfigLoader {
         license.init();
         license.printVersionInfo();
 
+        long millis = System.currentTimeMillis();
         log.info("Initializing content repositories"); //$NON-NLS-1$
         ContentRepository.init();
 
@@ -127,7 +128,7 @@ public class ConfigLoader {
 
             // finished
             setConfigured(true);
-            log.info("Configuration loaded!"); //$NON-NLS-1$
+            log.info("Configuration loaded (took " + ((System.currentTimeMillis() - millis) / 1000) + " seconds)"); //$NON-NLS-1$
 
             // TODO >> this is now in MagnoliaMainFilter
             //if (ModuleRegistration.getInstance().isRestartNeeded()) {
