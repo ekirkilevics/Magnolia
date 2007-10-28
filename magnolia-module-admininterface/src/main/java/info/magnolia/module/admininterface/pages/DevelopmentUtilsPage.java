@@ -21,9 +21,8 @@ import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.ModuleManagementException;
-import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 
@@ -31,7 +30,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -54,15 +52,15 @@ import org.slf4j.LoggerFactory;
  */
 public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
-    private boolean templates = true;
+    private boolean templates;
 
-    private boolean paragraphs = true;
+    private boolean paragraphs;
 
-    private boolean dialogs = true;
+    private boolean dialogs;
 
     private boolean pages;
 
-    private boolean website = true;
+    private boolean website;
 
     private boolean users;
 
@@ -70,13 +68,13 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     private boolean roles;
 
-    private String rootdir = "WEB-INF/bootstrap/common";
+    private String rootdir;
 
     private String parentpath;
 
     private String repository;
 
-    private String module = "templating";
+    private String module;
 
     /**
      * Logger.
@@ -90,6 +88,13 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
      */
     public DevelopmentUtilsPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
+
+        rootdir = StringUtils.defaultIfEmpty(NodeDataUtil.getString(
+            ContentRepository.CONFIG,
+            "/modules/adminInterface/config/developmentUtils/exportpath"), "WEB-INF/bootstrap/common");
+        module = StringUtils.defaultIfEmpty(NodeDataUtil.getString(
+            ContentRepository.CONFIG,
+            "/modules/adminInterface/config/developmentUtils/module"), "templating");
     }
 
     /**
