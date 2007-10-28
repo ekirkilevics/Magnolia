@@ -327,7 +327,8 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
                     new ItemType[]{ItemType.CONTENT},
                     true);
             }
-            AlertUtil.setMessage("Backup done!");
+            AlertUtil.setMessage("Backup done to "
+                + new File(Path.getAbsoluteFileSystemPath(rootdir)).getCanonicalPath());
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -375,7 +376,17 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     public String backupChildren() {
         backupChildren(this.repository, this.parentpath);
-        AlertUtil.setMessage("Backup done!");
+
+        String path = Path.getAbsoluteFileSystemPath(rootdir);
+
+        try {
+            path = new File(path).getCanonicalPath();
+        }
+        catch (IOException e) {
+            // should never happen
+        }
+
+        AlertUtil.setMessage("Backup done to " + path);
 
         return this.show();
     }
@@ -451,7 +462,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         String xmlName = repository + StringUtils.replace(handle, "/", ".") + ".xml";
 
         // create necessary parent directories
-        File folder = new File(Path.getAbsoluteFileSystemPath(rootdir), repository);
+        File folder = new File(Path.getAbsoluteFileSystemPath(rootdir));
         folder.mkdirs();
         File xmlFile = new File(folder.getAbsoluteFile(), xmlName);
         FileOutputStream fos = new FileOutputStream(xmlFile);
