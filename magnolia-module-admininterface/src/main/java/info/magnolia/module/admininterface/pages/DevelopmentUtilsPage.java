@@ -13,7 +13,6 @@
 package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ModuleLoader;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -23,12 +22,16 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.ModuleManagementException;
+import info.magnolia.module.ModuleManager;
+import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -286,7 +289,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
     }
 
     public Set getModules() {
-        return ModuleLoader.getInstance().getModuleInstances().keySet();
+        return ModuleRegistry.Factory.getInstance().getModuleNames();
     }
 
     public String backup() {
@@ -326,13 +329,21 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
             AlertUtil.setMessage("Error while processing module " + module, e);
         }
 
-        extractWorkspaceRoots(ContentRepository.WEBSITE);
+        if (website) {
+            extractWorkspaceRoots(ContentRepository.WEBSITE);
+        }
 
-        extractWorkspaceRoots(ContentRepository.USERS);
+        if (users) {
+            backupChildren(ContentRepository.USERS, "/admin");
+        }
 
-        extractWorkspaceRoots(ContentRepository.USER_GROUPS);
+        if (groups) {
+            extractWorkspaceRoots(ContentRepository.USER_GROUPS);
+        }
 
-        extractWorkspaceRoots(ContentRepository.USER_ROLES);
+        if (roles) {
+            extractWorkspaceRoots(ContentRepository.USER_ROLES);
+        }
 
         return this.show();
     }
