@@ -4,6 +4,7 @@
   <name>mail</name>
   <displayName>Magnolia Mail Module</displayName>
   <class>info.magnolia.cms.mail.MailModule</class>
+  <versionHandler>info.magnolia.cms.mail.setup.MailModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
   <dependencies>
     <dependency>
