@@ -1,3 +1,15 @@
+[#macro contextMessages]
+<h2>Messages</h2>
+
+[#list context.messages?keys as module]
+<h3>${module}</h3>
+<ul>
+[#list context.messages[module] as msg]
+    <li>${msg.priority} - ${msg.timestamp?time} : ${msg.message?html}</li>
+[/#list]
+</ul>
+[/#list]
+[/#macro]
 <html>
 <head>
     <style type="text/css">

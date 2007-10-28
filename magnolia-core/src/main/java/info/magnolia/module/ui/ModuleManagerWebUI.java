@@ -16,8 +16,8 @@ import freemarker.template.TemplateException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.freemarker.FreemarkerUtil;
-import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleManagementException;
+import info.magnolia.module.ModuleManager;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -68,8 +68,14 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
             render("start", out);
             return false;
         } else if ("ok".equals(ok)) {
+            //TODO : actually check for status before executing
             moduleManager.performInstallOrUpdate();
-            render("done", out);
+            // TODO : be more consistent : state.needsUpdateOrInstall() vs installContext().isRestartNeeded()
+            if (moduleManager.getInstallContext().isInstallDone()) {
+                render("done", out);
+            } else {
+                render("conditions-not-met", out);
+            }
             return false;
         } else if ("done".equals(done)) {
             final boolean restartNeeded = moduleManager.getInstallContext().isRestartNeeded();
@@ -78,6 +84,7 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
             } else {
                 MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
                     public void exec() {
+                        //TODO : actually check for status before executing
                         moduleManager.startModules();
                         moduleManager.getStatus().done();
                     }

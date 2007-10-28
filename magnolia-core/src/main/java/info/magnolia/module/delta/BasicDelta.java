@@ -31,6 +31,7 @@ public class BasicDelta implements Delta {
     private final String description;
     private final DeltaType type;
     private final List tasks;
+    private final List conditions;
 
     /**
      * Convenience factory method which creates an Update Delta and wraps the given array of
@@ -54,15 +55,23 @@ public class BasicDelta implements Delta {
      * @param tasks should not be a read-only List, as the ModuleVersionHandler might add tasks to it.
      */
     public static Delta createBasicDelta(String title, String description, List tasks) {
-        return new BasicDelta(title, description, DeltaType.update, tasks);
+        return createBasicDelta(title, description, tasks, new ArrayList());
+    }
+    
+    /**
+     * Creates an Update Delta.
+     * @param tasks should not be a read-only List, as the ModuleVersionHandler might add tasks to it.
+     */
+    public static Delta createBasicDelta(String title, String description, List tasks, List conditions) {
+        return new BasicDelta(title, description, DeltaType.update, tasks, conditions);
     }
 
     /**
      * Creates an Install Delta.
      * @param tasks should not be a read-only List, as the ModuleVersionHandler might add tasks to it.
      */
-    public static Delta createInstallDelta(String title, String description, List tasks) {
-        return new BasicDelta(title, description, DeltaType.install, tasks);
+    public static Delta createInstallDelta(String title, String description, List tasks, List conditions) {
+        return new BasicDelta(title, description, DeltaType.install, tasks, conditions);
     }
 
     /**
@@ -71,13 +80,14 @@ public class BasicDelta implements Delta {
     public static Delta createStartupDelta(ModuleDefinition moduleDef, List tasks) {
         final String title = "Startup for module " + moduleDef.getName();
         final String description = "Tasks executed before starting up module " + moduleDef.getDescription();
-        return new BasicDelta(title, description, DeltaType.startup, tasks);
+        return new BasicDelta(title, description, DeltaType.startup, tasks, new ArrayList());
     }
 
     /**
      * TODO : maybe the title could be generated from module name + version + DeltaType
      */
-    protected BasicDelta(String title, String description, DeltaType type, List tasks) {
+    protected BasicDelta(String title, String description, DeltaType type, List tasks, List conditions) {
+        this.conditions = conditions;
         this.tasks = tasks;
         this.title = title;
         this.type = type;
@@ -92,12 +102,20 @@ public class BasicDelta implements Delta {
         return description;
     }
 
+    public List getConditions() {
+        return conditions;
+    }
+
     public List getTasks() {
         return tasks;
     }
 
     public DeltaType getType() {
         return type;
+    }
+
+    public void addCondition(Condition c) {
+        conditions.add(c);                
     }
 
 }

@@ -35,7 +35,7 @@ import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
-import info.magnolia.module.delta.WebXmlTaskUtil;
+import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.setup.for3_1.LoginAuthTypePropertyMovedToFilter;
 import info.magnolia.setup.for3_1.LoginFormPropertyMovedToFilter;
 import info.magnolia.setup.for3_1.MoveMagnoliaUsersToRealmFolders;
@@ -118,7 +118,14 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     // but we need to behave differently if magnolia was installed previously
     protected List getBasicInstallTasks(InstallContext ctx) {
         final ArrayList tasks = new ArrayList(genericTasksFor31);
-        final WebXmlTaskUtil u = new WebXmlTaskUtil(tasks);
+        tasks.add(new WarnTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."));
+        return tasks;
+    }
+
+
+    protected List getInstallConditions() {
+        final ArrayList conditions = new ArrayList();
+        final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsNowWrapped("ActivationHandler");
         u.servletIsNowWrapped("AdminTreeServlet");
         u.servletIsNowWrapped("classpathspool");
@@ -127,10 +134,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.servletIsNowWrapped("log4j");
         u.servletIsNowWrapped("FCKEditorSimpleUploadServlet");
         u.servletIsDeprecated("uuidRequestDispatcher");
-
-        tasks.add(new WarnTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."));
-        return tasks;
-
+        return conditions;
     }
-
 }

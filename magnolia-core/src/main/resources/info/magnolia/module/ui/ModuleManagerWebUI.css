@@ -62,7 +62,7 @@ h3, p {
     font-size: 9pt;
 }
 
-.task {
+.task, .condition {
     list-style-type: square;
     list-style-position: outside;
     margin-left: 0;
@@ -70,7 +70,11 @@ h3, p {
     font-size: 9pt;
 }
 
-.taskDescription {
+.condition {
+    color: #990000;
+}
+
+.taskDescription, .conditionDescription {
     margin-left: 0.5em;
     color: #666;
 }

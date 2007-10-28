@@ -32,6 +32,7 @@ public class InstallContextImpl implements InstallContext {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstallContextImpl.class);
 
     private ModuleDefinition currentModule;
+    private boolean installDone;
     private boolean restartNeeded;
     private final Map messages = new MultiValueMap();
 
@@ -57,6 +58,14 @@ public class InstallContextImpl implements InstallContext {
     public void error(String message, Throwable th) {
         log.error("> " + message, th);
         messages.put(getModuleKey(), new Message(MessagePriority.error, message, th));
+    }
+
+    public void installDone() {
+        installDone = true;
+    }
+
+    public boolean isInstallDone() {
+        return installDone;
     }
 
     public void restartNeeded(String message) {

@@ -133,8 +133,8 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         basicInstallTasks.addAll(getBasicInstallTasks(installContext));
         basicInstallTasks.addAll(getExtraInstallTasks(installContext));
         basicInstallTasks.add(new ModuleVersionToLatestTask());
-
-        return BasicDelta.createInstallDelta("Installation", "", basicInstallTasks);
+        final List conditions = getInstallConditions();
+        return BasicDelta.createInstallDelta("Installation", "", basicInstallTasks, conditions);
     }
 
     protected abstract List getBasicInstallTasks(InstallContext installContext);
@@ -144,6 +144,10 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
      * Returns an empty list by default.
      */
     protected List getExtraInstallTasks(InstallContext installContext) {
+        return Collections.EMPTY_LIST;
+    }
+
+    protected List getInstallConditions() {
         return Collections.EMPTY_LIST;
     }
 

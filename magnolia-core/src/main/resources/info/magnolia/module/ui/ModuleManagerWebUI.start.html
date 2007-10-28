@@ -8,6 +8,11 @@
     <div class="delta">
     [#comment]delta.type will be used as a css class[/#comment]
     <h3>${delta.type?cap_first} : ${delta.title?cap_first?html} <span class="deltaDescription">${delta.description?cap_first?html}</span></h3>
+    <ul class="conditions">
+      [#list delta.conditions as condition]
+        <li class="condition">${condition.name?cap_first?html} <span class="conditionDescription">${condition.description?cap_first?html}</span></li>
+      [/#list]
+    </ul>
     <ul class="tasks">
       [#list delta.tasks as task]
         <li class="task">${task.name?cap_first?html} <span class="taskDescription">${task.description?cap_first?html}</span></li>

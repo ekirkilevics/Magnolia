@@ -12,34 +12,29 @@
  */
 package info.magnolia.module.delta;
 
-import java.util.List;
+import info.magnolia.module.InstallContext;
 
 /**
- * A Delta represents the differences from one version of a module to another.
- * It holds a set of Tasks and should provide a description of what it does.
+ * Conditions are checked prior to the installation or update of a module.
+ * They check for system configuration which can't be automatically updated,
+ * like configuration, dependencies, etc.
+ * Modules register their Conditions like their Tasks, for each successive
+ * version.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface Delta {
+public interface Condition {
     /**
-     * Returns the version number for which this is needed.
+     * Description of what has changed.
      */
-    // Version getVersion();
-
-    /**
-     * Returns the list of Conditions which have to be checked before this Delta's Tasks can be executed.
-     */
-    List getConditions();
+    String getName();
 
     /**
-     * Should not return a read-only List, as the version handler might add tasks as appropriate.
+     * Description what will be checked, and how the user can fix it if it's not
+     * set properly.
      */
-    List getTasks();
-
-    String getTitle();
-
     String getDescription();
 
-    DeltaType getType();
+    boolean check(InstallContext installContext);
 }

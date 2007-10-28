@@ -39,6 +39,10 @@ public class ModuleManagerNullUI implements ModuleManagerUI {
         if (moduleMgtState.needsUpdateOrInstall()) {
             log.info("magnolia.update.auto is set to true, will start bootstrapping/update automatically");
             moduleManager.performInstallOrUpdate();
+            if (!moduleManager.getInstallContext().isInstallDone()) {
+                log.info("Install could not be performed. Please check your logs and fix the appropriate issues before trying again.");
+                return;
+            }
             moduleManager.startModules();
             moduleMgtState.done();
         } else {

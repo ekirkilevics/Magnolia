@@ -10,41 +10,27 @@
  * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
  *
  */
-package info.magnolia.module.webapp;
-
-import info.magnolia.module.delta.Delta;
-import info.magnolia.module.delta.DeltaType;
-
-import java.util.Collections;
-import java.util.List;
+package info.magnolia.module.delta;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class WebappDelta implements Delta {
+public abstract class AbstractCondition implements Condition {
+    private final String name;
+    private final String description;
 
-    WebappDelta() {
+    public AbstractCondition(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
-    public String getTitle() {
-        return "webapp";
+    public String getName() {
+        return name;
     }
 
     public String getDescription() {
-        return "Bootstraps the webapp upon first deployment.";
-    }
-
-    public List getConditions() {
-        return Collections.EMPTY_LIST;
-    }
-
-    public List getTasks() {
-        return Collections.singletonList(new WebappBootstrap());
-    }
-
-    public DeltaType getType() {
-        return DeltaType.install;
+        return description;
     }
 }

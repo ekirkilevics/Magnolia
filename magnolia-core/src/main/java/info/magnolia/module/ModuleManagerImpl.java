@@ -23,6 +23,7 @@ import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -76,9 +77,17 @@ public class ModuleManagerImpl implements ModuleManager {
     private final InstallContextImpl installContext;
 
     private ModuleRegistry registry = ModuleRegistry.Factory.getInstance();
+    private final ModuleDefinitionReader moduleDefinitionReader;
 
     public ModuleManagerImpl() {
-        this.installContext = new InstallContextImpl();
+        // load all definitions from classpath
+        this(new InstallContextImpl(), new BetwixtModuleDefinitionReader());
+    }
+
+    // for tests only
+    protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader) {
+        this.installContext = installContext;
+        this.moduleDefinitionReader = moduleDefinitionReader;
     }
 
     public List loadDefinitions() throws ModuleManagementException {
@@ -86,8 +95,6 @@ public class ModuleManagerImpl implements ModuleManager {
             throw new IllegalStateException("ModuleManager was already initialized !");
         }
 
-        // load all definitions from classpath
-        final ModuleDefinitionReader moduleDefinitionReader = new BetwixtModuleDefinitionReader();
         final Map moduleDefinitions = moduleDefinitionReader.readAll();
         log.debug("loaded definitions: {}", moduleDefinitions);
 
@@ -178,7 +185,32 @@ public class ModuleManagerImpl implements ModuleManager {
             throw new IllegalStateException("ModuleManager has nothing to do !");
         }
 
-        // complete repository loading before install or update
+        // check all conditions
+        boolean conditionsChecked = true;
+        final Iterator it = state.getList().iterator();
+        while (it.hasNext()) {
+            // TODO extract "do for all deltas" logic ?
+            final ModuleAndDeltas moduleAndDeltas = (ModuleAndDeltas) it.next();
+            installContext.setCurrentModule(moduleAndDeltas.getModule());
+            final Iterator itD = moduleAndDeltas.getDeltas().iterator();
+            while (itD.hasNext()) {
+                final Delta d = (Delta) itD.next();
+                final List conditions = d.getConditions();
+                final Iterator itC = conditions.iterator();
+                while (itC.hasNext()) {
+                    final Condition cond = (Condition) itC.next();
+                    if (!cond.check(installContext)) {
+                        conditionsChecked = false;
+                        installContext.info(cond.getDescription());
+                    }
+                }
+            }
+        }
+        installContext.setCurrentModule(null);
+        if (!conditionsChecked) {
+            return;
+        }
+
         loadRepositories();
 
         MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
@@ -191,6 +223,7 @@ public class ModuleManagerImpl implements ModuleManager {
                 }
             }
         });
+        installContext.installDone();
     }
 
     public InstallContext getInstallContext() {

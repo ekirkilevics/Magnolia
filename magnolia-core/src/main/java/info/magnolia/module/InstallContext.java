@@ -36,6 +36,10 @@ public interface InstallContext { // implements Context ?
 
     void error(String message, Throwable th);
 
+    void installDone();
+
+    boolean isInstallDone();
+
     void restartNeeded(String message);
 
     boolean isRestartNeeded();
