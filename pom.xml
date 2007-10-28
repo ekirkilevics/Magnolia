@@ -341,6 +341,7 @@
         <directory>src/main/resources</directory>
         <includes>
           <include>META-INF/magnolia/*</include>
+          <include>**/license.xml</include>
         </includes>
       </resource>
     </resources>
@@ -395,7 +396,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <quiet>true</quiet>
-          <aggregate>true</aggregate>          
+          <aggregate>true</aggregate>
         </configuration>
       </plugin>
       <plugin>
