@@ -12,8 +12,11 @@ package info.magnolia.module;
 
 import info.magnolia.module.model.ModuleDefinition;
 
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashSet;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.commons.collections.MapUtils;
 import org.slf4j.Logger;
@@ -65,6 +68,10 @@ public class ModuleRegistryImpl implements ModuleRegistry {
 
     public ModuleVersionHandler getVersionHandler(String name) {
         return ((ModuleEntry) entries.get(name)).moduleVersionHandler;
+    }
+
+    public Set getModuleNames() {
+        return Collections.unmodifiableSet(entries.keySet());
     }
 
     private static final class ModuleEntry {

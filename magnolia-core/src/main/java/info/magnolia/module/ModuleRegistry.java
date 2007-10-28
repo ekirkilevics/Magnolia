@@ -12,6 +12,8 @@
  */
 package info.magnolia.module;
 
+import java.util.Set;
+
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.model.ModuleDefinition;
 
@@ -37,6 +39,12 @@ public interface ModuleRegistry {
     ModuleVersionHandler getVersionHandler(String name);
 
     ModuleDefinition getDefinition(String name);
+
+    /**
+     * Returns the names of configured modules (strings)
+     * @return unmodifiable set of module names
+     */
+    Set getModuleNames();
 
     /**
      * Use this to retrieve the configured singleton impl of ModuleRegistry.
