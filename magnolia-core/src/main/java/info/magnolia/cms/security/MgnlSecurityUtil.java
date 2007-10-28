@@ -68,10 +68,7 @@ class MgnlSecurityUtil {
                     path = nd.getHandle();
                 }
                 // todo: why we are using UUIDs here? shouldn't be better to use group names, since uuids can change???
-                log.warn("Can't find {} node by UUID {} referred by node {}", new Object[]{
-                    repositoryName,
-                    t.getMessage(),
-                    path});
+                log.warn("Can't find {} node by UUID {} referred by node {}", new Object[]{ repositoryName, t.getMessage(), path});
                 log.debug("Failed while reading node by UUID", t);
                 // we continue since it can happen that target node is removed
                 // - UUID's are kept as simple strings thus have no referential integrity
