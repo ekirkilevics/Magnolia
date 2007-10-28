@@ -8,7 +8,6 @@ import info.magnolia.cms.core.ie.filters.ImportXmlRootFilter;
 import info.magnolia.cms.core.ie.filters.MagnoliaV2Filter;
 import info.magnolia.cms.core.ie.filters.MetadataUuidFilter;
 import info.magnolia.cms.core.ie.filters.VersionFilter;
-import info.magnolia.cms.util.BootstrapUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
@@ -64,7 +63,7 @@ public class DataTransporter {
 
     private static Logger log = LoggerFactory.getLogger(DataTransporter.class.getName());
 
-    public final static int BOOTSTRAP_IMPORT_MODE = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
+    final static int BOOTSTRAP_IMPORT_MODE = ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING;
 
     public static final String ZIP = ".zip";
 
@@ -128,10 +127,25 @@ public class DataTransporter {
      * @param xmlFile
      * @param repositoryName
      * @throws IOException
-     * @deprecated use {@link BootstrapUtil#bootstrap(String, File)} instead
      */
     public static void executeBootstrapImport(File xmlFile, String repositoryName) throws IOException {
-        BootstrapUtil.bootstrap(repositoryName, xmlFile);
+        String filenameWithoutExt = StringUtils.substringBeforeLast(xmlFile.getName(), DOT);
+        if (filenameWithoutExt.endsWith(XML)) {
+            // if file ends in .xml.gz or .xml.zip
+            // need to keep the .xml to be able to view it after decompression
+            filenameWithoutExt = StringUtils.substringBeforeLast(xmlFile.getName(), DOT);
+        }
+        String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(filenameWithoutExt, DOT), DOT);
+        String basepath = SLASH + StringUtils.replace(pathName, DOT, SLASH);
+
+        if(xmlFile.getName().endsWith(PROPERTIES)){
+            Properties properties = new Properties();
+            properties.load(new FileInputStream(xmlFile));
+            importProperties(properties , repositoryName);
+        }
+        else{
+            DataTransporter.importFile(xmlFile, repositoryName, basepath, false, BOOTSTRAP_IMPORT_MODE, true, true);
+        }
     }
 
     /**
