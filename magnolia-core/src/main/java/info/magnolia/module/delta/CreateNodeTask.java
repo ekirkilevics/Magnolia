@@ -1,0 +1,43 @@
+/**
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ */
+package info.magnolia.module.delta;
+
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.module.InstallContext;
+
+import javax.jcr.RepositoryException;
+
+
+/**
+ *
+ * @author vsteller
+ * @version $Id$
+ */
+public class CreateNodeTask extends AbstractRepositoryTask {
+    private final String workspaceName;
+    private final String parentPath;
+    private final String nodeName;
+    private final String type;
+
+    public CreateNodeTask(String name, String description, String workspaceName, String parentPath, String nodeName, String type) {
+        super(name, description);
+        this.workspaceName = workspaceName;
+        this.parentPath = parentPath;
+        this.nodeName = nodeName;
+        this.type = type;
+    }
+
+    protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
+        final HierarchyManager hm = installContext.getHierarchyManager(this.workspaceName);
+
+        hm.createContent(parentPath, nodeName, type);
+    }
+}
