@@ -83,14 +83,14 @@ public final class Listener {
             log.error(re.getMessage(), re);
         }
 
-        Listener.cachedContent.clear();
-        Listener.cacheContent(children);
+        cachedContent.clear();
+        cacheContent(children);
         log.info("Config : Listener info loaded"); //$NON-NLS-1$
     }
 
     public static void reload() {
         log.info("Config : re-loading Listener info"); //$NON-NLS-1$
-        Listener.load();
+        load();
     }
 
     /**
@@ -133,7 +133,7 @@ public final class Listener {
             Content c = (Content) ipList.next();
             try {
                 Map types = new Hashtable();
-                Listener.cachedContent.put(c.getNodeData("IP").getString(), types); //$NON-NLS-1$
+                cachedContent.put(c.getNodeData("IP").getString(), types); //$NON-NLS-1$
                 Iterator it = c.getContent("Access").getChildren().iterator(); //$NON-NLS-1$
                 while (it.hasNext()) {
                     Content type = (Content) it.next();
@@ -153,6 +153,6 @@ public final class Listener {
      * @throws Exception
      */
     public static Map getInfo(String key) throws Exception {
-        return (Hashtable) Listener.cachedContent.get(key);
+        return (Hashtable) cachedContent.get(key);
     }
 }

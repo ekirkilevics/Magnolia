@@ -39,10 +39,7 @@ public final class Listener {
      * @return boolean
      */
     public static boolean isAllowed(HttpServletRequest req) {
-        if (Listener.isIPAllowed(req)) {
-            return true;
-        }
-        return false;
+        return isIPAllowed(req);
     }
 
     /**
