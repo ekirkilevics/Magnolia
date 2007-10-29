@@ -38,13 +38,13 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
+ *
  * @author vsteller
  * @version $Id$
- *
  */
 public class ServletDispatchingFilter extends AbstractMgnlFilter {
+    private static final Logger log = LoggerFactory.getLogger(ServletDispatchingFilter.class);
 
     private String servletName;
     private String servletClass;
@@ -54,12 +54,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     
     private HttpServlet servlet;
     private Collection mappingPatterns;
-    
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ServletDispatchingFilter.class);
-    
+
     public ServletDispatchingFilter() {
         mappings = new LinkedList();
     }
@@ -73,43 +68,10 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
         if (servletClass != null) {
             try {
                 servlet = (HttpServlet) ClassUtil.newInstance(servletClass);
-                servlet.init(new ServletConfig() {
-
-                    public String getInitParameter(String name) {
-                        return (String) parameters.get(name);
-                    }
-                            
-                    public Enumeration getInitParameterNames() {
-                        return new Enumeration() {
-                            
-                            private Iterator iter = parameters.keySet().iterator();
-                            
-                            public boolean hasMoreElements() {
-                                return iter.hasNext();
-                            }
-
-                            public Object nextElement() {
-                                return iter.next();
-                            }
-                        };
-                    }
-
-                    public ServletContext getServletContext() {
-                        return filterConfig.getServletContext();
-                    }
-
-                    public String getServletName() {
-                        return servletName;
-                    }
-                    
-                });
+                servlet.init(new WrappedServletConfig(servletName, filterConfig, parameters));
             }
             catch (Throwable e) {
-                log.error("Unable to load servlet "
-                    + servletClass
-                    + " due to a "
-                    + e.getClass().getName()
-                    + " exception", e);
+                log.error("Unable to load servlet " + servletClass + " : " + e.getMessage(), e);
             }
             
             servlet.init();
@@ -141,8 +103,6 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     
     /**
      * Determines the index of the first pathInfo character. If the uri does not match any mapping this method returns -1.
-     * @param uri
-     * @return
      */
     protected int determineMatchingEnd(String uri) {
         if (mappingPatterns != null) {
@@ -231,5 +191,44 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
             this.value = value;
         }
     }
-    
+
+    private final static class WrappedServletConfig implements ServletConfig {
+        private final String servletName;
+        private final FilterConfig filterConfig;
+        private final Map parameters;
+
+        public WrappedServletConfig(String servletName, FilterConfig filterConfig, Map parameters) {
+            this.servletName = servletName;
+            this.filterConfig = filterConfig;
+            this.parameters = parameters;
+        }
+
+        public String getInitParameter(String name) {
+            return (String) parameters.get(name);
+        }
+
+        public Enumeration getInitParameterNames() {
+            return new Enumeration() {
+
+                private Iterator iter = parameters.keySet().iterator();
+
+                public boolean hasMoreElements() {
+                    return iter.hasNext();
+                }
+
+                public Object nextElement() {
+                    return iter.next();
+                }
+            };
+        }
+
+        public ServletContext getServletContext() {
+            return filterConfig.getServletContext();
+        }
+
+        public String getServletName() {
+            return servletName;
+        }
+
+    }
 }
