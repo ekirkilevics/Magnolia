@@ -13,7 +13,6 @@
 package info.magnolia.module.delta;
 
 import info.magnolia.module.InstallContext;
-
 import org.apache.commons.lang.ArrayUtils;
 
 /**
@@ -24,14 +23,24 @@ import org.apache.commons.lang.ArrayUtils;
  */
 public class ArrayDelegateTask implements Task {
     private String name;
+    private String description;
     private Task[] tasks;
 
     public ArrayDelegateTask(String name) {
-        this(name, new Task[0]);
+        this(name, (String) null);
+    }
+
+    public ArrayDelegateTask(String name, String description) {
+        this(name, description, new Task[0]);
     }
 
     public ArrayDelegateTask(String name, Task[] tasks) {
+        this(name, null, tasks);
+    }
+
+    public ArrayDelegateTask(String name, String description, Task[] tasks) {
         this.name = name;
+        this.description = description;
         this.tasks = tasks;
     }
 
@@ -51,19 +60,23 @@ public class ArrayDelegateTask implements Task {
         return name;
     }
 
-    public void addTask(Task task){
+    public void addTask(Task task) {
         this.tasks = (Task[]) ArrayUtils.add(tasks, task);
     }
 
     public String getDescription() {
-        final StringBuffer buf = new StringBuffer();
-        for (int i = 0; i < tasks.length; i++) {
-            if (i > 0) {
-                buf.append(" "); // TODO : line break ?
+        if (description != null) {
+            return description;
+        } else {
+            final StringBuffer buf = new StringBuffer();
+            for (int i = 0; i < tasks.length; i++) {
+                if (i > 0) {
+                    buf.append(" "); // TODO : line break ?
+                }
+                buf.append(tasks[i].getDescription());
             }
-            buf.append(tasks[i].getDescription());
+            return buf.toString();
         }
-        return buf.toString();
     }
 
     public void execute(InstallContext ctx) throws TaskExecutionException {
@@ -72,7 +85,7 @@ public class ArrayDelegateTask implements Task {
         }
     }
 
-
+    // TODO replace this with Arrays.toString() when we switch to java5 ... or change tasks to a List instead ...
     public String toString() {
         final StringBuffer buf = new StringBuffer();
 

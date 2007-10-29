@@ -15,6 +15,7 @@ package info.magnolia.cms.mail.setup;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
+import info.magnolia.module.delta.RegisterModuleServletsTask;
 
 import java.util.ArrayList;
 
@@ -30,6 +31,8 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsNowWrapped("Mail");
 
-        register("3.1", BasicDelta.createBasicDelta("Mail Module 3.1", "", new ArrayList(), conditions));
+        final ArrayList tasks = new ArrayList();
+        tasks.add(new RegisterModuleServletsTask());
+        register("3.1", BasicDelta.createBasicDelta("Mail Module 3.1", "", tasks, conditions));
     }
 }
