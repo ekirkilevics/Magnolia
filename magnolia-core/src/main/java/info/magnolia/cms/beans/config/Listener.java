@@ -12,41 +12,19 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.DeprecationUtil;
 
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.Map;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.observation.Event;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  * @author Sameer Charles
  * @version 1.1
  *
- * @deprecated rename+merge with info.magnolia.cms.security.Listener
+ * @deprecated since 3.1 - now use {@link info.magnolia.cms.security.IPSecurityManager}
+ * @see info.magnolia.cms.security.IPSecurityManager
  */
 public final class Listener {
-    private static final String CONFIG_PATH = "/server/IPConfig";
-
-    private static final Logger log = LoggerFactory.getLogger(Listener.class);
-
-    private static Map cachedContent = new Hashtable();
-
     /**
      * Utility class, don't instantiate.
      */
@@ -58,15 +36,20 @@ public final class Listener {
      * Reads listener config from the config repository and caches its content in to the hash table.
      */
     public static void init() {
+        DeprecationUtil.isDeprecated("Please use info.magnolia.cms.security.IPSecurityManager");
+        DeprecationUtil.isDeprecated("Please use info.magnolia.cms.security.IPSecurityManager");
+        /* @deprecated
         load();
         registerEventListener();
+        */
     }
 
     /**
      * Reads listener config from the config repository and caches its content in to the hash table.
      */
     public static void load() {
-
+        DeprecationUtil.isDeprecated("Please use info.magnolia.cms.security.IPSecurityManager");
+        /* @deprecated
         log.info("Config : loading Listener info"); //$NON-NLS-1$
 
         Collection children = Collections.EMPTY_LIST;
@@ -86,64 +69,15 @@ public final class Listener {
         cachedContent.clear();
         cacheContent(children);
         log.info("Config : Listener info loaded"); //$NON-NLS-1$
+        */
     }
 
     public static void reload() {
+        DeprecationUtil.isDeprecated("Please use info.magnolia.cms.security.IPSecurityManager");
+        /* @deprecated
         log.info("Config : re-loading Listener info"); //$NON-NLS-1$
         load();
-    }
-
-    /**
-     * Register an event listener: reload cache configuration when something changes.
-     */
-    private static void registerEventListener() {
-
-        log.info("Registering event listener for Listeners"); //$NON-NLS-1$
-
-        try {
-            ObservationManager observationManager = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG)
-                .getWorkspace()
-                .getObservationManager();
-
-            observationManager.addEventListener(new EventListener() {
-
-                public void onEvent(EventIterator iterator) {
-                    // reload everything
-                    reload();
-                }
-            }, Event.NODE_ADDED
-                | Event.NODE_REMOVED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, CONFIG_PATH, true, null, null, false); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to add event listeners for Listeners", e); //$NON-NLS-1$
-        }
-    }
-
-    /**
-     * Cache listener content from the config repository.
-     */
-    private static void cacheContent(Collection listeners) {
-
-        Iterator ipList = listeners.iterator();
-        while (ipList.hasNext()) {
-            Content c = (Content) ipList.next();
-            try {
-                Map types = new Hashtable();
-                cachedContent.put(c.getNodeData("IP").getString(), types); //$NON-NLS-1$
-                Iterator it = c.getContent("Access").getChildren().iterator(); //$NON-NLS-1$
-                while (it.hasNext()) {
-                    Content type = (Content) it.next();
-                    types.put(type.getNodeData("Method").getString().toLowerCase(), StringUtils.EMPTY); //$NON-NLS-1$
-                }
-            }
-            catch (RepositoryException re) {
-                log.error("RepositoryException caught while loading listener configuration: " + re.getMessage(), re); //$NON-NLS-1$
-            }
-        }
+        */
     }
 
     /**
@@ -153,6 +87,8 @@ public final class Listener {
      * @throws Exception
      */
     public static Map getInfo(String key) throws Exception {
-        return (Hashtable) cachedContent.get(key);
+        DeprecationUtil.isDeprecated("Please use info.magnolia.cms.security.IPSecurityManager");
+        throw new IllegalStateException("Please use info.magnolia.cms.security.IPSecurityManager");
+        // return (Hashtable) cachedContent.get(key);
     }
 }

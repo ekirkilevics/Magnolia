@@ -122,7 +122,7 @@ public class ConfigLoader {
             log.info("Init i18n"); //$NON-NLS-1$
             MessagesManager.init(context); // TODO this was done before module init??
             Server.init();
-            Listener.init();
+
             MIMEMapping.init();
             VersionConfig.getInstance().init();
 

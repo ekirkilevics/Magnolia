@@ -16,9 +16,10 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.cms.security.Realm;
+import info.magnolia.cms.security.IPSecurityManagerImpl;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AddNodeTask;
+import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckOrCreatePropertyTask;
@@ -55,8 +56,8 @@ import java.util.List;
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     // tasks which have to be executed wether we're installing or upgrading from 3.0
     private final List genericTasksFor31 = Arrays.asList(new Task[]{
-            new AddNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
-            new AddNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
+            new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
+            new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
 
             new ModuleBootstrapTask(), // TODO we should prbly avoid this since we don't know if we're installing or updating
             new ModuleFilesExtraction(),
@@ -108,6 +109,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
             // new BootstrapSingleResource("new i18n", /*TODO*/"blah blah", "/mgnl-bootstrap/core/config.server.i18n.content.xml"),
             // new BootstrapSingleResource("superuser role", /*TODO*/"blah blah", "/mgnl-bootstrap/core/userroles.superuser.xml"),
+
+            new NewPropertyTask("IPSecurityManager class property", "IPSecurity is now a component which can be configured through the repository", "config", "/server/IPConfig", "class", IPSecurityManagerImpl.class.getName()),
+            // TODO : new IPConfigRulesUpdate()
     });
 
     public CoreModuleVersionHandler() {

@@ -12,8 +12,6 @@
  */
 package info.magnolia.cms.security;
 
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 
@@ -23,7 +21,8 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sameer Charles
  * @version 1.1
  *
- * @deprecated rename+merge with info.magnolia.cms.beans.config.Listener
+ * @deprecated since 3.1 - now use {@link IPSecurityManager}
+ * @see IPSecurityManager
  */
 public final class Listener {
 
@@ -39,27 +38,7 @@ public final class Listener {
      * @return boolean
      */
     public static boolean isAllowed(HttpServletRequest req) {
-        return isIPAllowed(req);
+        return IPSecurityManager.Factory.getInstance().isAllowed(req);
     }
 
-    /**
-     * weather IP is in the available listener list OR "*".
-     * @return boolean
-     */
-    private static boolean isIPAllowed(HttpServletRequest req) {
-        try {
-            Map access = info.magnolia.cms.beans.config.Listener.getInfo(req.getRemoteAddr());
-            return (access.get(req.getMethod().toLowerCase()) != null);
-        }
-        catch (Exception e) {
-        }
-        try {
-            /* probably there is a mapping for "*" */
-            Map access = info.magnolia.cms.beans.config.Listener.getInfo("*"); //$NON-NLS-1$
-            return (access.get(req.getMethod().toLowerCase()) != null);
-        }
-        catch (Exception e) {
-            return false;
-        }
-    }
 }

@@ -44,9 +44,9 @@ public class URISecurityFilter extends BaseSecurityFilter {
      * @throws IOException can be thrown when the servlet is unable to write to the response stream
      */
     public boolean isAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException {
-
-        if (!Listener.isAllowed(request)) {
-            // todo either deprecate this or move it to separate filter
+        // todo MAGNOLIA-1617 move this to separate filter
+        final IPSecurityManager ipSecurityManager = IPSecurityManager.Factory.getInstance();
+        if (!ipSecurityManager.isAllowed(request)) {
             response.sendError(HttpServletResponse.SC_FORBIDDEN);
             return false;
         }
