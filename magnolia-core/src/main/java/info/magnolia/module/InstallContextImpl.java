@@ -41,7 +41,7 @@ public class InstallContextImpl implements InstallContext {
     }
 
     public void debug(String message) {
-        log.debug("> ", message);
+        log.debug("> " + message);
         messages.put(getModuleKey(), new Message(MessagePriority.debug, message));
     }
 
