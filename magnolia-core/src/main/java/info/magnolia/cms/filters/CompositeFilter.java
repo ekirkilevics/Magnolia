@@ -28,15 +28,6 @@ public class CompositeFilter extends AbstractMgnlFilter {
 
         FilterChain fullchain = new MgnlFilterChain(chain, filters);
 
-        if (log.isDebugEnabled()) {
-            String pathInfo = request.getPathInfo();
-            String requestURI = request.getRequestURI();
-
-            if (pathInfo == null || !requestURI.startsWith("/.")) {
-                log.debug("handling: {}   path info: {}", requestURI, pathInfo);
-            }
-        }
-
         fullchain.doFilter(request, response);
     }
 

@@ -58,15 +58,7 @@ public class MgnlMainFilter implements Filter {
     };
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-        if (log.isDebugEnabled()) {
-            String pathInfo = request.getPathInfo();
-            String requestURI = request.getRequestURI();
-
-            if (pathInfo == null || !requestURI.startsWith("/.")) {
-                log.debug("handling: {}   path info: {}", requestURI, pathInfo);
-            }
-        }
+        log.debug("Handling URI: {} - Path info: {}", request.getRequestURI(), request.getPathInfo());
 
         if (!rootFilter.bypasses(request)) {
             rootFilter.doFilter(request, response, chain);
