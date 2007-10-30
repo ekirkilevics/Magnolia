@@ -27,11 +27,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * A single filter which in turn executes a chain of other filters not configured in web.xml. This filters delegates to
- * one single filter whih is either the filter chain configured in the config repository or the primitive system UI due
- * to a installation or update process
+ * one single filter whih is either the filter chain configured in the config repository or the primitive system UI when
+ * a system/module installation or update is needed.
+ *
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
@@ -48,15 +48,16 @@ public class MgnlMainFilter implements Filter {
     public static final String SERVER_FILTERS = "/server/filters";
 
     private final EventListener filtersEventListener = new EventListener() {
-
         public void onEvent(EventIterator arg0) {
-            MgnlContext.setInstance(MgnlContext.getSystemContext());
-            reset();
+            MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
+                public void exec() {
+                    reset();
+                }
+            });
         }
     };
 
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
 
         if (log.isDebugEnabled()) {
             String pathInfo = request.getPathInfo();
@@ -119,10 +120,18 @@ public class MgnlMainFilter implements Filter {
         }
     }
 
-    private InstallFilter createSystemUIFilter() {
-        return new InstallFilter(ModuleManager.Factory.getInstance());
+    /**
+     * Initializes the required filter(s) if we need to go through
+     * SystemUI initialization screens.
+     */
+    protected MgnlFilter createSystemUIFilter() {
+        return new InstallFilter(ModuleManager.Factory.getInstance(), this);
     }
 
+    /**
+     * Checks if Magnolia is ready to operate or if we need to go through
+     * SystemUI initialization screens.
+     */
     protected boolean isSystemUIMode() {
         ModuleManager moduleManager = ModuleManager.Factory.getInstance();
         return moduleManager.getStatus().needsUpdateOrInstall();
@@ -146,8 +155,7 @@ public class MgnlMainFilter implements Filter {
         rootFilter = null;
     }
 
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
-        ServletException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
 
@@ -161,7 +169,6 @@ public class MgnlMainFilter implements Filter {
         return instance;
     }
 
-    
     public MgnlFilter getRootFilter() {
         return this.rootFilter;
     }

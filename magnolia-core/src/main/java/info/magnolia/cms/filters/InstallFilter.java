@@ -36,11 +36,14 @@ import java.util.Map;
  */
 public class InstallFilter extends AbstractMgnlFilter {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstallFilter.class);
+
     private final ModuleManager moduleManager;
+    private final MgnlMainFilter mainFilter;
     private ServletContext servletContext;
 
-    public InstallFilter(ModuleManager moduleManager) {
+    public InstallFilter(ModuleManager moduleManager, MgnlMainFilter mainFilter) {
         this.moduleManager = moduleManager;
+        this.mainFilter = mainFilter;
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -68,7 +71,7 @@ public class InstallFilter extends AbstractMgnlFilter {
                 if (!shouldContinue) {
                     return;
                 } else {
-                    MgnlMainFilter.getInstance().reset();
+                    mainFilter.reset();
                     // redirect to root
                     response.sendRedirect(contextPath);
                 }
