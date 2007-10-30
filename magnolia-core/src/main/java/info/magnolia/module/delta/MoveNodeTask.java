@@ -15,26 +15,15 @@ import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author philipp
  * @version $Id$
- *
  */
 public class MoveNodeTask extends AbstractRepositoryTask {
-
-    private String workspaceName;
-    private String src;
-    private String dest;
-    private boolean overwrite;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MoveNodeTask.class);
+    private final String workspaceName;
+    private final String src;
+    private final String dest;
+    private final boolean overwrite;
 
     public MoveNodeTask(String name, String description, String workspaceName, String src, String dest, boolean overwrite) {
         super(name, description);
@@ -51,7 +40,7 @@ public class MoveNodeTask extends AbstractRepositoryTask {
                 hm.delete(dest);
             }
             else{
-                installContext.error("can't move " + src + " to " + dest + " because the node already exists", new Throwable());
+                installContext.error("Can't move " + src + " to " + dest + " because the target node already exists.", null);
                 return;
             }
         }
