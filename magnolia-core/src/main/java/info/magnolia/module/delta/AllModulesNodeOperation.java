@@ -17,30 +17,34 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
-import java.util.Iterator;
 
 /**
+ * An abstract that will perform an operation on all modules node found in the configuration repository.
+ * @see #operateOnChildNode(info.magnolia.cms.core.Content,info.magnolia.module.InstallContext)
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public abstract class AllModulesNodeOperation extends AbstractRepositoryTask {
+public abstract class AllModulesNodeOperation extends AllChildrenNodesOperation {
 
     public AllModulesNodeOperation(String name, String description) {
-        super(name, description);
+        super(name, description, null, null);
     }
 
-    protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
+    protected HierarchyManager getHierarchyManager(InstallContext ctx) throws RepositoryException, TaskExecutionException {
+        return ctx.getConfigHierarchyManager();
+    }
+
+    protected Content getParentNode(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         if (!ctx.hasModulesNode()) {
             throw new TaskExecutionException("Modules node does not exist, can not proceed.");
         }
+        return ctx.getModulesNode();
+    }
+
+    protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final HierarchyManager hm = ctx.getConfigHierarchyManager();
-        final Content modulesRoot = ctx.getModulesNode();
-        final Iterator it = modulesRoot.getChildren().iterator();
-        while (it.hasNext()) {
-            final Content moduleNode = (Content) it.next();
-            operateOnModuleNode(moduleNode, hm, ctx);
-        }
+        operateOnModuleNode(node, hm, ctx);
     }
 
     protected abstract void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx) throws RepositoryException, TaskExecutionException;

@@ -14,16 +14,16 @@ package info.magnolia.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.IPSecurityManagerImpl;
 import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.cms.security.Realm;
-import info.magnolia.cms.security.IPSecurityManagerImpl;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckOrCreatePropertyTask;
 import info.magnolia.module.delta.CopyOrReplaceNodePropertiesTask;
+import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.ModuleBootstrapTask;
 import info.magnolia.module.delta.ModuleFilesExtraction;
 import info.magnolia.module.delta.MoveAndRenamePropertyTask;
@@ -37,6 +37,7 @@ import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
+import info.magnolia.setup.for3_1.IPConfigRulesUpdate;
 import info.magnolia.setup.for3_1.LoginAuthTypePropertyMovedToFilter;
 import info.magnolia.setup.for3_1.LoginFormPropertyMovedToFilter;
 import info.magnolia.setup.for3_1.MoveMagnoliaUsersToRealmFolders;
@@ -111,7 +112,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             // new BootstrapSingleResource("superuser role", /*TODO*/"blah blah", "/mgnl-bootstrap/core/userroles.superuser.xml"),
 
             new NewPropertyTask("IPSecurityManager class property", "IPSecurity is now a component which can be configured through the repository", "config", "/server/IPConfig", "class", IPSecurityManagerImpl.class.getName()),
-            // TODO : new IPConfigRulesUpdate()
+            new IPConfigRulesUpdate(),
     });
 
     public CoreModuleVersionHandler() {
