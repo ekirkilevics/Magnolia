@@ -20,11 +20,11 @@ import info.magnolia.cms.security.Realm;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.ArrayDelegateTask;
+import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckOrCreatePropertyTask;
 import info.magnolia.module.delta.CopyOrReplaceNodePropertiesTask;
 import info.magnolia.module.delta.CreateNodeTask;
-import info.magnolia.module.delta.ModuleBootstrapTask;
 import info.magnolia.module.delta.ModuleFilesExtraction;
 import info.magnolia.module.delta.MoveAndRenamePropertyTask;
 import info.magnolia.module.delta.MoveNodeTask;
@@ -57,19 +57,26 @@ import java.util.List;
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     // tasks which have to be executed wether we're installing or upgrading from 3.0
     private final List genericTasksFor31 = Arrays.asList(new Task[]{
-            new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
-            new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
-
-            new ModuleBootstrapTask(), // TODO we should prbly avoid this since we don't know if we're installing or updating
-            new ModuleFilesExtraction(),
-
-            // TODO : this should be conditional ? how do we migrate existing filters...
+            // TODO : shouldn't this be conditional ? how do we migrate existing filters...
             new BootstrapSingleResource("New filters", "Will override the filter chain configuration with a completely new one.", "/mgnl-bootstrap/core/config.server.filters.xml"),
 
-            new RegisterModuleServletsTask(),
+            new BootstrapConditionally("IPConfig rules changed",
+                    "Updates the existing ip access rules to match the new configuration structure or bootstraps the new default configuration",
+                    "/mgnl-bootstrap/core/config.server.IPConfig.xml",
+                    new ArrayDelegateTask(null,
+                            new NewPropertyTask("IPSecurityManager class property", "IPSecurity is now a component which can be configured through the repository", "config", "/server/IPConfig", "class", IPSecurityManagerImpl.class.getName()),
+                            new IPConfigRulesUpdate()
+                    )),
 
-            new ReconfigureCommands(),
+            // TODO add conditions for all these bootstrap since with this version we don't know if we're installing or updating !
+            new BootstrapSingleResource("new i18n", /*TODO*/"blah blah", "/mgnl-bootstrap/core/config.server.i18n.content.xml"),
+            new BootstrapSingleResource("new i18n", /*TODO*/"blah blah", "/mgnl-bootstrap/core/config.server.i18n.system.xml"),
+            new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.MIMEMapping.xml"),
+            new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.security.xml"),
+            new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.URI2RepositoryMapping.xml"),
+            new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.modules.adminInterface.virtualURIMapping.default.xml"),
 
+            // -- /server configuration tasks
             new PropertyExistsDelegateTask("Cleanup", "Config property /server/defaultMailServer was unused", "config", "/server", "defaultMailServer",
                     new RemovePropertyTask("", "", "config", "/server", "defaultMailServer")),
 
@@ -94,25 +101,34 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new CopyOrReplaceNodePropertiesTask("clientCallback configuration for content security", "The clientCallback configuration needs to be configuration for each security filter. This is copying the one from the URI security filter to the content security filter.",
                     "config", "/server/filters/uriSecurity/clientCallback", "/server/filters/cms/contentSecurity/clientCallback"),
 
-            new RenamedRenderersToTemplateRenderers(),
+            // --- user/roles repositories related tasks
+            new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
+            new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
 
-            // TODO : do we keep this ?
-            new RemoveModuleDescriptorDetailsFromRepo(),
+            new BootstrapConditionally("Anonymous user", "Anonymous user must exist in the system realm: will move the existing one or bootstrap it.",
+                    ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/mgnl-bootstrap/core/userroles.anonymous.xml",
+                    new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.ANONYMOUS_USER, false)),
 
-            new NodeExistsDelegateTask("Moves anonymous user", "Anonymous user must exist in the system realm", ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER,
-                    new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.ANONYMOUS_USER, true)),
+            new BootstrapConditionally("Moves superuser user", "Superuser user must exist in the system realm: will move the existing one or bootstrap it.",
+                    ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/mgnl-bootstrap/core/userroles.superuser.xml",
+                    new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.SYSTEM_USER, false)),
 
-            new NodeExistsDelegateTask("Moves superuser user", "Superuser user must exist in the system realm", ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER,
-                    new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.SYSTEM_USER, true)),
+            new BootstrapConditionally("Superuser role", "Bootstraps the superuser role if needed.", "/mgnl-bootstrap/core/userroles.superuser.xml"),
+            // TODO : how about the anonymous role ? it's currently bootstrapped through the webapp module. Has it been modified since 3.0 ?
+            //new BootstrapConditionally("Anonymous role", "Bootstraps the anonymous role if needed.", )
 
             // other users are moved to the admin realm
             new MoveMagnoliaUsersToRealmFolders(),
 
-            // new BootstrapSingleResource("new i18n", /*TODO*/"blah blah", "/mgnl-bootstrap/core/config.server.i18n.content.xml"),
-            // new BootstrapSingleResource("superuser role", /*TODO*/"blah blah", "/mgnl-bootstrap/core/userroles.superuser.xml"),
+            // --- generic tasks
+            new ModuleFilesExtraction(),
+            new RegisterModuleServletsTask(),
 
-            new NewPropertyTask("IPSecurityManager class property", "IPSecurity is now a component which can be configured through the repository", "config", "/server/IPConfig", "class", IPSecurityManagerImpl.class.getName()),
-            new IPConfigRulesUpdate(),
+            // --- system-wide tasks (impact all modules)
+            new RenamedRenderersToTemplateRenderers(),
+            new ReconfigureCommands(),
+            // TODO : do we keep this ?
+            new RemoveModuleDescriptorDetailsFromRepo(),            
     });
 
     public CoreModuleVersionHandler() {
