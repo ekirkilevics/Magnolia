@@ -14,10 +14,12 @@ package info.magnolia.module.delta;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
 import java.util.Iterator;
+import java.util.Collection;
 
 /**
  *
@@ -35,8 +37,9 @@ public abstract class AllChildrenNodesOperation extends AbstractRepositoryTask {
     }
 
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
-        final Content modulesRoot = getParentNode(ctx);
-        final Iterator it = modulesRoot.getChildren().iterator();
+        final Content parentNode = getParentNode(ctx);
+        final Collection childNodes = ContentUtil.getAllChildren(parentNode);
+        final Iterator it = childNodes.iterator();
         while (it.hasNext()) {
             final Content node = (Content) it.next();
             operateOnChildNode(node, ctx);
