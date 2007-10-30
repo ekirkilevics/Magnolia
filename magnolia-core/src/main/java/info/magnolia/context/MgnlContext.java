@@ -56,6 +56,11 @@ public class MgnlContext {
      * The thread local variable holding the current context
      */
     private static ThreadLocal localContext = new ThreadLocal();
+    
+    /**
+     * The thread local variable holding the system context
+     */
+    private static ThreadLocal localSystemContext = new ThreadLocal();
 
     /**
      * Do not instantiate this class. The constructor must be public to use discovery
@@ -357,6 +362,12 @@ public class MgnlContext {
      * @return system context
      */
     public static Context getSystemContext() {
+//    	Object context = localSystemContext.get();
+//    	if (context == null) {
+//    		context = FactoryUtil.getSingleton(SystemContext.class);
+//    		localSystemContext.set(context);
+//    	}
+//    	return (Context) context;
         return (SystemContext) FactoryUtil.getSingleton(SystemContext.class);
     }
 

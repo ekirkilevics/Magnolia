@@ -53,7 +53,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Id$
  */
-public class WebContextImpl extends AbstractContext implements WebContext {
+public class WebContextImpl extends UserContextImpl implements WebContext {
 
     private static final Logger log = LoggerFactory.getLogger(WebContextImpl.class);
 
