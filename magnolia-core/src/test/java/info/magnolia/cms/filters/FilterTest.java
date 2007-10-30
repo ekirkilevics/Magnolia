@@ -74,7 +74,7 @@ public class FilterTest extends MgnlTestCase {
         return mf;
     }
 
-    public void testDecoratedFilter() throws UnsupportedRepositoryOperationException, IOException, RepositoryException, ServletException{
+    public void testDecoratedFilter() throws IOException, RepositoryException, ServletException {
         String conf =
             "/server/filters@type=mgnl:content\n" +
             "/server/filters/decorated.config.param1=value1\n" +
@@ -92,7 +92,6 @@ public class FilterTest extends MgnlTestCase {
         HttpServletRequest request = createMock(HttpServletRequest.class);
         HttpServletResponse response = createMock(HttpServletResponse.class);
         FilterChain chain = createMock(FilterChain.class);
-
         replay(filterConfig, request, response, chain);
 
         fd.init(filterConfig);
@@ -118,9 +117,12 @@ public class FilterTest extends MgnlTestCase {
         MgnlMainFilter mf = initMainFilter();
 
         HttpServletRequest request = createMock(HttpServletRequest.class);
+        // log statement
+        expect(request.getRequestURI()).andReturn("blah");
+        expect(request.getPathInfo()).andReturn("bleh");
+
         WebContext webCtx = createMock(WebContext.class);
         AggregationState aggState = createMock(AggregationState.class);
-        expect(aggState.getCharacterEncoding()).andReturn("UTF-8");
         expect(aggState.getCurrentURI()).andReturn(".magnolia/something.html");
         expect(webCtx.getAggregationState()).andStubReturn(aggState);
 
@@ -136,7 +138,7 @@ public class FilterTest extends MgnlTestCase {
 
         assertEquals(false, ((TestFilter)rootFilter.getFilters()[0]).executed);
         assertEquals(true, ((TestFilter)rootFilter.getFilters()[1]).executed);
-        verify(request, webCtx);
+        verify(request, webCtx, aggState);
     }
 
     public static class TestFilter extends AbstractMgnlFilter{
