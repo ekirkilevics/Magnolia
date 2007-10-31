@@ -364,7 +364,7 @@ public class MgnlContext {
     public static Context getSystemContext() {
 //    	Object context = localSystemContext.get();
 //    	if (context == null) {
-//    		context = FactoryUtil.getSingleton(SystemContext.class);
+//    		context = FactoryUtil.newInstance(SystemContext.class);
 //    		localSystemContext.set(context);
 //    	}
 //    	return (Context) context;

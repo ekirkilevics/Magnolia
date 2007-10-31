@@ -1,5 +1,6 @@
 package info.magnolia.context;
 
 public interface AttributeStrategy {
-	void setAttribute(Object value, Object scope);
+	void setAttribute(String name, Object value, int scope);
+	Object getAttribute(String name, int scope);
 }
