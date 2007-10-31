@@ -2,8 +2,8 @@ package info.magnolia.cms.core.ie;
 
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.ie.filters.ImportXmlRootFilter;
 import info.magnolia.cms.core.ie.filters.MagnoliaV2Filter;
 import info.magnolia.cms.core.ie.filters.MetadataUuidFilter;
@@ -11,7 +11,28 @@ import info.magnolia.cms.core.ie.filters.VersionFilter;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.xml.serialize.OutputFormat;
+import org.apache.xml.serialize.XMLSerializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLFilter;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
+import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.Workspace;
+import javax.xml.transform.Source;
+import javax.xml.transform.sax.SAXTransformerFactory;
+import javax.xml.transform.stream.StreamSource;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -27,29 +48,6 @@ import java.util.zip.GZIPInputStream;
 import java.util.zip.GZIPOutputStream;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
-
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.Workspace;
-import javax.xml.transform.Source;
-import javax.xml.transform.sax.SAXTransformerFactory;
-import javax.xml.transform.stream.StreamSource;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.xml.serialize.OutputFormat;
-import org.apache.xml.serialize.XMLSerializer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.xml.sax.ContentHandler;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.XMLFilter;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
@@ -138,12 +136,11 @@ public class DataTransporter {
         String pathName = StringUtils.substringAfter(StringUtils.substringBeforeLast(filenameWithoutExt, DOT), DOT);
         String basepath = SLASH + StringUtils.replace(pathName, DOT, SLASH);
 
-        if(xmlFile.getName().endsWith(PROPERTIES)){
+        if (xmlFile.getName().endsWith(PROPERTIES)) {
             Properties properties = new Properties();
             properties.load(new FileInputStream(xmlFile));
-            importProperties(properties , repositoryName);
-        }
-        else{
+            importProperties(properties, repositoryName);
+        } else {
             DataTransporter.importFile(xmlFile, repositoryName, basepath, false, BOOTSTRAP_IMPORT_MODE, true, true);
         }
     }
@@ -161,13 +158,13 @@ public class DataTransporter {
             String name = StringUtils.substringAfterLast(key, "."); //$NON-NLS-1$
             String path = StringUtils.substringBeforeLast(key, ".").replace('.', '/'); //$NON-NLS-1$
             Content node = ContentUtil.getContent(repositoryName, path);
-            if(node != null){
+            if (node != null) {
                 try {
                     NodeDataUtil.getOrCreate(node, name).setValue(value);
                     node.save();
                 }
                 catch (RepositoryException e) {
-                    log.error("can't set property " + key , e);
+                    log.error("can't set property " + key, e);
                 }
             }
         }
@@ -199,7 +196,7 @@ public class DataTransporter {
 
         // TODO hopefully this will be fixed with a more useful message with the BootstrapUtil refactoring
         if (xmlStream == null) {
-            throw new IOException("Can't import a null stream !");
+            throw new IOException("Can't import a null stream into repository: " + repositoryName + ", basepath: " + basepath + ", name:" + name);
         }
 
         HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
@@ -207,7 +204,7 @@ public class DataTransporter {
             // this happens when the samples module tries to insert content into the dms repository and dms is not
             // installed
             log.warn("NOT importing content from: [{}] since repository [{}] does not exist", //$NON-NLS-1$
-                new Object[]{name, repositoryName});
+                    new Object[]{name, repositoryName});
             return;
         }
         Workspace ws = hm.getWorkspace();
@@ -232,8 +229,7 @@ public class DataTransporter {
             if (keepVersionHistory) {
                 // do not manipulate
                 session.importXML(basepath, xmlStream, importMode);
-            }
-            else {
+            } else {
                 // create readers/filters and chain
                 XMLReader initialReader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
 
@@ -241,7 +237,7 @@ public class DataTransporter {
 
                 // if stream is from regular file, test for belonging XSL file to apply XSL transformation to XML
                 if (new File(name).isFile()) {
-                    InputStream xslStream  = getXslStreamForXmlFile(new File(name));
+                    InputStream xslStream = getXslStreamForXmlFile(new File(name));
                     if (xslStream != null) {
                         Source xslSource = new StreamSource(xslStream);
                         SAXTransformerFactory saxTransformerFactory = (SAXTransformerFactory) SAXTransformerFactory.newInstance();
@@ -340,11 +336,9 @@ public class DataTransporter {
         // looks like the zip one is buggy. It throws exception when trying to use it
         if (xmlFile.getName().endsWith(ZIP)) {
             xmlStream = new ZipInputStream((new FileInputStream(xmlFile)));
-        }
-        else if (xmlFile.getName().endsWith(GZ)) {
+        } else if (xmlFile.getName().endsWith(GZ)) {
             xmlStream = new GZIPInputStream((new FileInputStream(xmlFile)));
-        }
-        else { // if(fileName.endsWith(XML))
+        } else { // if(fileName.endsWith(XML))
             xmlStream = new FileInputStream(xmlFile);
         }
         return xmlStream;
@@ -356,8 +350,7 @@ public class DataTransporter {
         OutputStream outputStream = baseOutputStream;
         if (ext.endsWith(ZIP)) {
             outputStream = new ZipOutputStream(baseOutputStream);
-        }
-        else if (ext.endsWith(GZ)) {
+        } else if (ext.endsWith(GZ)) {
             outputStream = new GZIPOutputStream(baseOutputStream);
         }
 
@@ -367,12 +360,10 @@ public class DataTransporter {
                 // http://issues.apache.org/jira/browse/JCR-115
                 if (!format) {
                     session.exportSystemView(basepath, outputStream, false, false);
-                }
-                else {
+                } else {
                     parseAndFormat(outputStream, null, repository, basepath, session, false);
                 }
-            }
-            else {
+            } else {
                 // use XMLSerializer and a SAXFilter in order to rewrite the
                 // file
                 XMLReader reader = new VersionFilter(XMLReaderFactory
