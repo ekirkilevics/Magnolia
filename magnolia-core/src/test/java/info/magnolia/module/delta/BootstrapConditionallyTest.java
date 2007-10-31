@@ -70,7 +70,7 @@ public class BootstrapConditionallyTest extends TestCase {
             // TODO : ugly hack until BootstrapUtil is refactored / mockable / testable
         } catch (TaskExecutionException e) {
             if (shouldBootstrap) {
-                assertEquals("Could not bootstrap: Can't import a null stream into repository: somerepo, basepath: /bleh, name: somerepo.bleh.blih", e.getMessage());
+                assertEquals("Could not bootstrap: Can't find resource to bootstrap at /some-dir/test/foobar/somerepo.bleh.blih.xml", e.getMessage());
             } else {
                 fail("Failed! NullPointerException: " + e.getMessage() + " : " + ExceptionUtils.getFullStackTrace(e));
             }
