@@ -49,6 +49,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import org.apache.commons.codec.binary.Base64;
+
 /**
  *
  * @author gjoseph
@@ -106,11 +108,14 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
 
             new BootstrapConditionally("Anonymous user", "Anonymous user must exist in the system realm: will move the existing one or bootstrap it.",
-                    ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/mgnl-bootstrap/core/userroles.anonymous.xml",
+                    ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/mgnl-bootstrap/core/users.system.anonymous.xml",
                     new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.ANONYMOUS_USER, false)),
 
-            new BootstrapConditionally("Moves superuser user", "Superuser user must exist in the system realm: will move the existing one or bootstrap it.",
-                    ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/mgnl-bootstrap/core/userroles.superuser.xml",
+            new NewPropertyTask("Anonymous user", "Anonymous user must have a password.", 
+                    ContentRepository.USERS, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.ANONYMOUS_USER, "pswd", new String(Base64.encodeBase64("anonymous".getBytes()))),
+
+            new BootstrapConditionally("Superuser user", "Superuser user must exist in the system realm: will move the existing one or bootstrap it.",
+                    ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/mgnl-bootstrap/core/users.system.superuser.xml",
                     new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.SYSTEM_USER, false)),
 
             new BootstrapConditionally("Superuser role", "Bootstraps the superuser role if needed.", "/mgnl-bootstrap/core/userroles.superuser.xml"),
