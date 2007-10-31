@@ -22,8 +22,7 @@
     <sv:value>true</sv:value>
   </sv:property>
   <sv:property sv:name="pswd" sv:type="String">
-    <sv:value>c3VwZXJ1c2Vy
-</sv:value>
+    <sv:value>c3VwZXJ1c2Vy</sv:value>
   </sv:property>
   <sv:property sv:name="permissionConfig_SWITCH" sv:type="String">
     <sv:value>true</sv:value>
