@@ -40,7 +40,7 @@ import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.setup.for3_1.IPConfigRulesUpdate;
 import info.magnolia.setup.for3_1.LoginAuthTypePropertyMovedToFilter;
 import info.magnolia.setup.for3_1.LoginFormPropertyMovedToFilter;
-import info.magnolia.setup.for3_1.MoveMagnoliaUsersToRealmFolders;
+import info.magnolia.setup.for3_1.MoveMagnoliaUsersToRealmFolder;
 import info.magnolia.setup.for3_1.ReconfigureCommands;
 import info.magnolia.setup.for3_1.RemoveModuleDescriptorDetailsFromRepo;
 import info.magnolia.setup.for3_1.RenamedRenderersToTemplateRenderers;
@@ -123,7 +123,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             //new BootstrapConditionally("Anonymous role", "Bootstraps the anonymous role if needed.", )
 
             // other users are moved to the admin realm
-            new MoveMagnoliaUsersToRealmFolders(),
+            new MoveMagnoliaUsersToRealmFolder(),
 
             // --- generic tasks
             new ModuleFilesExtraction(),

@@ -18,16 +18,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-public class MoveMagnoliaUsersToRealmFolders extends AbstractRepositoryTask {
+public class MoveMagnoliaUsersToRealmFolder extends AbstractRepositoryTask {
+    private static final Logger log = LoggerFactory.getLogger(MoveMagnoliaUsersToRealmFolder.class);
 
-    public MoveMagnoliaUsersToRealmFolders() {
-        super("Update Magnolia users repository structure", "Moves magnolia admin users into /" + Realm.REALM_ADMIN + " folder and system users into /" + Realm.REALM_SYSTEM);
+    public MoveMagnoliaUsersToRealmFolder() {
+        super("Update Magnolia users repository structure", "Moves Magnolia admin users into /" + Realm.REALM_ADMIN + " folder.");
     }
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MoveMagnoliaUsersToRealmFolders.class);
 
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         // move existing users there
