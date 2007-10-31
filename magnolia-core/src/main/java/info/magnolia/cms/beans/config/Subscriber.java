@@ -34,7 +34,7 @@ import java.util.List;
  */
 public class Subscriber {
     private static void dep() {
-        DeprecationUtil.isDeprecated("Use the new info.magnolia.cms.exchange package");
+        DeprecationUtil.isDeprecated("Use the new info.magnolia.cms.exchange package.");
     }
 
     private static void dep(String extraMessage) {
@@ -65,7 +65,7 @@ public class Subscriber {
      * @return configured subscriber
      **/
     public static Subscriber getSubscriber() {
-        dep();
+        dep("returns the first subscriber, which is maybe not exactly what you need or expect.");
         final Collection subscribers = getActMan().getSubscribers();
         if (subscribers.size() >= 0) {
             final Iterator it = subscribers.iterator();
