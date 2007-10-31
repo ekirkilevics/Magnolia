@@ -13,7 +13,6 @@
 package info.magnolia.module.delta;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
@@ -23,33 +22,17 @@ import javax.jcr.RepositoryException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class PropertyExistsDelegateTask extends ConditionalDelegateTask {
-    private final String workspaceName;
-    private final String parentPath;
-    private final String propertyName;
+public class PropertyExistsDelegateTask extends NodeCheckDelegateTask {
 
     public PropertyExistsDelegateTask(String taskName, String taskDescription, String workspaceName, String parentPath, String propertyName, Task ifTrue) {
         this(taskName, taskDescription, workspaceName, parentPath, propertyName, ifTrue, null);
     }
 
     public PropertyExistsDelegateTask(String taskName, String taskDescription, String workspaceName, String parentPath, String propertyName, Task ifTrue, Task ifFalse) {
-        super(taskName, taskDescription, ifTrue, ifFalse);
-        this.workspaceName = workspaceName;
-        this.parentPath = parentPath;
-        this.propertyName = propertyName;
+        super(taskName, taskDescription, workspaceName, parentPath, propertyName, ifTrue, ifFalse);
     }
 
-    protected boolean condition(InstallContext ctx) throws TaskExecutionException {
-        final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
-        if (!hm.isExist(parentPath)) {
-            ctx.debug("Checking for property " + propertyName + " in " + parentPath + " but node does not exist.");
-            return false;
-        }
-        try {
-            final Content node = hm.getContent(parentPath);
-            return node.hasNodeData(propertyName);
-        } catch (RepositoryException e) {
-            throw new TaskExecutionException("Can't check for property " + propertyName + " in " + parentPath + ".", e);
-        }
+    protected boolean checkNode(Content node, InstallContext ctx) throws RepositoryException {
+        return node.hasNodeData(propertyName);
     }
 }

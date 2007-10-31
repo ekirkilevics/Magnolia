@@ -15,7 +15,6 @@ package info.magnolia.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.IPSecurityManagerImpl;
-import info.magnolia.cms.security.MgnlUserManager;
 import info.magnolia.cms.security.Realm;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
@@ -25,6 +24,7 @@ import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckOrCreatePropertyTask;
 import info.magnolia.module.delta.CopyOrReplaceNodePropertiesTask;
 import info.magnolia.module.delta.CreateNodeTask;
+import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
 import info.magnolia.module.delta.ModuleFilesExtraction;
 import info.magnolia.module.delta.MoveAndRenamePropertyTask;
 import info.magnolia.module.delta.MoveNodeTask;
@@ -37,6 +37,7 @@ import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
+import info.magnolia.setup.for3_1.AddURIPermissionsToAllRoles;
 import info.magnolia.setup.for3_1.IPConfigRulesUpdate;
 import info.magnolia.setup.for3_1.LoginAuthTypePropertyMovedToFilter;
 import info.magnolia.setup.for3_1.LoginFormPropertyMovedToFilter;
@@ -44,12 +45,11 @@ import info.magnolia.setup.for3_1.MoveMagnoliaUsersToRealmFolder;
 import info.magnolia.setup.for3_1.ReconfigureCommands;
 import info.magnolia.setup.for3_1.RemoveModuleDescriptorDetailsFromRepo;
 import info.magnolia.setup.for3_1.RenamedRenderersToTemplateRenderers;
+import org.apache.commons.codec.binary.Base64;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import org.apache.commons.codec.binary.Base64;
 
 /**
  *
@@ -107,22 +107,26 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
             new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
 
-            new BootstrapConditionally("Anonymous user", "Anonymous user must exist in the system realm: will move the existing one or bootstrap it.",
-                    ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/mgnl-bootstrap/core/users.system.anonymous.xml",
-                    new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.ANONYMOUS_USER, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.ANONYMOUS_USER, false)),
+            new IsAuthorInstanceDelegateTask("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.",
+                    new AddURIPermissionsToAllRoles(true),
+                    new AddURIPermissionsToAllRoles(false)),
 
-            new NewPropertyTask("Anonymous user", "Anonymous user must have a password.", 
-                    ContentRepository.USERS, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.ANONYMOUS_USER, "pswd", new String(Base64.encodeBase64("anonymous".getBytes()))),
+            new BootstrapConditionally("Anonymous user", "Anonymous user must exist in the system realm: will move the existing one or bootstrap it.",
+                    ContentRepository.USERS, "/anonymous", "/mgnl-bootstrap/core/users.system.anonymous.xml",
+                    new ArrayDelegateTask("",
+                            new MoveNodeTask("", "", ContentRepository.USERS, "/anonymous", "/system/anonymous", false),
+                            new NewPropertyTask("Anonymous user", "Anonymous user must have a password.", ContentRepository.USERS, "/system/anonymous", "pswd", new String(Base64.encodeBase64("anonymous".getBytes())))
+                    )),
 
             new BootstrapConditionally("Superuser user", "Superuser user must exist in the system realm: will move the existing one or bootstrap it.",
-                    ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/mgnl-bootstrap/core/users.system.superuser.xml",
-                    new MoveNodeTask("", "", ContentRepository.USERS, "/" + MgnlUserManager.SYSTEM_USER, "/" + Realm.REALM_SYSTEM + "/" + MgnlUserManager.SYSTEM_USER, false)),
+                    ContentRepository.USERS, "/superuser", "/mgnl-bootstrap/core/users.system.superuser.xml",
+                    new MoveNodeTask("", "", ContentRepository.USERS, "/superuser", "/system/superuser", false)),
 
             new BootstrapConditionally("Superuser role", "Bootstraps the superuser role if needed.", "/mgnl-bootstrap/core/userroles.superuser.xml"),
             // TODO : how about the anonymous role ? it's currently bootstrapped through the webapp module. Has it been modified since 3.0 ?
             //new BootstrapConditionally("Anonymous role", "Bootstraps the anonymous role if needed.", )
 
-            // other users are moved to the admin realm
+            // only relevant if updating, but does not hurt if installing since it checks for mgnl:user nodes
             new MoveMagnoliaUsersToRealmFolder(),
 
             // --- generic tasks
@@ -133,7 +137,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new RenamedRenderersToTemplateRenderers(),
             new ReconfigureCommands(),
             // TODO : do we keep this ?
-            new RemoveModuleDescriptorDetailsFromRepo(),            
+            new RemoveModuleDescriptorDetailsFromRepo(),
     });
 
     public CoreModuleVersionHandler() {
@@ -147,7 +151,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         tasks.add(new WarnTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."));
         return tasks;
     }
-
 
     protected List getInstallConditions() {
         final ArrayList conditions = new ArrayList();
