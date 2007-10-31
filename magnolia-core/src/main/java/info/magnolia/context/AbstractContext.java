@@ -53,7 +53,58 @@ public abstract class AbstractContext implements Context {
      * The locale for this context
      */
     private Locale locale;
+    
+    private AttributeStrategy attributeStrategy;
+    
+    private RepositoryAcquringStrategy repositoryStrategy;
 
+    public AttributeStrategy getAttributeStrategy() {
+    	return attributeStrategy;
+    }
+    
+    public void setAttributeStrategy(AttributeStrategy strategy) {
+    	this.attributeStrategy = strategy;
+    }
+    
+    public RepositoryAcquringStrategy getRepositoryStrategy() {
+    	return repositoryStrategy;
+    }
+    
+    public void setRepositoryStrategy(RepositoryAcquringStrategy strategy) {
+    	this.repositoryStrategy = strategy;
+    }
+        
+	public Object getAttribute(String name, int scope) {		
+		return getAttributeStrategy().getAttribute(name, scope);
+	}
+
+	public Map getAttributes(int scope) {		
+		return getAttributeStrategy().getAttributes(scope);
+	}
+	
+	public void removeAttribute(String name, int scope) {
+		getAttributeStrategy().removeAttribute(name, scope);
+
+	}
+
+	public void setAttribute(String name, Object value, int scope) {
+		getAttributeStrategy().setAttribute(name, value, scope);
+	}
+	
+	public AccessManager getAccessManager(String repositoryId,
+			String workspaceId) {		
+		return getRepositoryStrategy().getAccessManager(repositoryId, workspaceId);
+	}
+
+	public HierarchyManager getHierarchyManager(String repositoryId,
+			String workspaceId) {		
+		return getRepositoryStrategy().getHierarchyManager(repositoryId, workspaceId);
+	}
+
+	public QueryManager getQueryManager(String repositoryId, String workspaceId) {		
+		return getRepositoryStrategy().getQueryManager(repositoryId, workspaceId);
+	}	
+	
     /**
      * Get attribute value
      * @param name to which value is associated to

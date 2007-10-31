@@ -83,7 +83,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
     /**
      * Use init to initialize the object.
      */
-    public WebContextImpl() {
+    public WebContextImpl() {    	
     }
 
     /**
@@ -97,6 +97,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         this.request = request;
         this.response = response;
         this.servletContext = servletContext;
+        setAttributeStrategy(new RequestAttributeStrategy(request));        
     }
 
     /**
@@ -281,150 +282,150 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         return map;
     }
 
-    /**
-     * Set attribute value, scope of the attribute is defined.
-     * @param name is used as a key
-     * @param value
-     * @param scope , highest level of scope from which this attribute is visible
-     */
-    public void setAttribute(String name, Object value, int scope) {
-
-        if (value == null) {
-            removeAttribute(name, scope);
-            return;
-        }
-
-        switch (scope) {
-            case Context.LOCAL_SCOPE:
-                this.request.setAttribute(name, value);
-                break;
-            case Context.SESSION_SCOPE:
-                if (!(value instanceof Serializable)) {
-                    log.warn("Trying to store a non-serializable attribute in session: "
-                        + name
-                        + ". Object type is "
-                        + value.getClass().getName(), new Throwable(
-                        "This stacktrace has been added to provide debugging information"));
-                    return;
-                }
-
-                HttpSession httpsession = request.getSession(false);
-                if (httpsession == null) {
-                    log
-                        .warn(
-                            "Session initialized in order to setting attribute '{}' to '{}'. You should avoid using session when possible!",
-                            name,
-                            value);
-                    httpsession = request.getSession(true);
-                }
-
-                httpsession.setAttribute(name, value);
-                break;
-            case Context.APPLICATION_SCOPE:
-                MgnlContext.getSystemContext().setAttribute(name, value, Context.APPLICATION_SCOPE);
-                break;
-            default:
-                this.request.setAttribute(name, value);
-                log.debug("Undefined scope, setting attribute [{}] in request scope", name);
-        }
-    }
-
-    /**
-     * Get attribute value.
-     * @param name to which value is associated to
-     * @return attribute value
-     */
-    public Object getAttribute(String name, int scope) {
-        switch (scope) {
-            case Context.LOCAL_SCOPE:
-                Object obj = this.request.getAttribute(name);
-                if (obj == null) {
-                    obj = this.getParameter(name);
-                }
-                if (obj == null) {
-                    // we also expose some of the request properties as attributes
-                    if (ATTRIBUTE_REQUEST_CHARACTER_ENCODING.equals(name)) {
-                        obj = request.getCharacterEncoding();
-                    }
-                    else if (ATTRIBUTE_REQUEST_URI.equals(name)) {
-                        obj = request.getRequestURI();
-                    }
-                }
-                return obj;
-            case Context.SESSION_SCOPE:
-                HttpSession httpsession = request.getSession(false);
-                if (httpsession == null) {
-                    return null;
-                }
-                return httpsession.getAttribute(name);
-            case Context.APPLICATION_SCOPE:
-                return MgnlContext.getSystemContext().getAttribute(name, Context.APPLICATION_SCOPE);
-            default:
-                log.error("illegal scope passed");
-                return null;
-        }
-    }
-
-    /**
-     * Remove an attribute.
-     */
-    public void removeAttribute(String name, int scope) {
-        switch (scope) {
-            case Context.LOCAL_SCOPE:
-                this.request.removeAttribute(name);
-                break;
-            case Context.SESSION_SCOPE:
-                HttpSession httpsession = request.getSession(false);
-                if (httpsession != null) {
-                    httpsession.removeAttribute(name);
-                }
-                break;
-            case Context.APPLICATION_SCOPE:
-                MgnlContext.getSystemContext().removeAttribute(name, Context.APPLICATION_SCOPE);
-                break;
-            default:
-                log.error("no illegal scope passed");
-        }
-    }
-
-    /**
-     * Get a map represenation of the scope.
-     */
-    public final Map getAttributes(int scope) {
-        Map map = new HashMap();
-        Enumeration keysEnum;
-        switch (scope) {
-            case Context.LOCAL_SCOPE:
-                // add parameters
-                map.putAll(this.getParameters());
-                // attributes have higher priority
-                keysEnum = this.request.getAttributeNames();
-                while (keysEnum.hasMoreElements()) {
-                    String key = (String) keysEnum.nextElement();
-                    Object value = getAttribute(key, scope);
-                    map.put(key, value);
-                }
-                return map;
-            case Context.SESSION_SCOPE:
-                HttpSession httpsession = request.getSession(false);
-                if (httpsession == null) {
-                    return null;
-                }
-                keysEnum = httpsession.getAttributeNames();
-                while (keysEnum.hasMoreElements()) {
-                    String key = (String) keysEnum.nextElement();
-                    Object value = getAttribute(key, scope);
-                    map.put(key, value);
-                }
-                return map;
-            case Context.APPLICATION_SCOPE:
-                return MgnlContext.getSystemContext().getAttributes(Context.APPLICATION_SCOPE);
-            default:
-                log.error("no illegal scope passed");
-                return null;
-        }
-
-    }
+//    /**
+//     * Set attribute value, scope of the attribute is defined.
+//     * @param name is used as a key
+//     * @param value
+//     * @param scope , highest level of scope from which this attribute is visible
+//     */
+//    public void setAttribute(String name, Object value, int scope) {
+//
+//        if (value == null) {
+//            removeAttribute(name, scope);
+//            return;
+//        }
+//
+//        switch (scope) {
+//            case Context.LOCAL_SCOPE:
+//                this.request.setAttribute(name, value);
+//                break;
+//            case Context.SESSION_SCOPE:
+//                if (!(value instanceof Serializable)) {
+//                    log.warn("Trying to store a non-serializable attribute in session: "
+//                        + name
+//                        + ". Object type is "
+//                        + value.getClass().getName(), new Throwable(
+//                        "This stacktrace has been added to provide debugging information"));
+//                    return;
+//                }
+//
+//                HttpSession httpsession = request.getSession(false);
+//                if (httpsession == null) {
+//                    log
+//                        .warn(
+//                            "Session initialized in order to setting attribute '{}' to '{}'. You should avoid using session when possible!",
+//                            name,
+//                            value);
+//                    httpsession = request.getSession(true);
+//                }
+//
+//                httpsession.setAttribute(name, value);
+//                break;
+//            case Context.APPLICATION_SCOPE:
+//                MgnlContext.getSystemContext().setAttribute(name, value, Context.APPLICATION_SCOPE);
+//                break;
+//            default:
+//                this.request.setAttribute(name, value);
+//                log.debug("Undefined scope, setting attribute [{}] in request scope", name);
+//        }
+//    }
+//
+//    /**
+//     * Get attribute value.
+//     * @param name to which value is associated to
+//     * @return attribute value
+//     */
+//    public Object getAttribute(String name, int scope) {
+//        switch (scope) {
+//            case Context.LOCAL_SCOPE:
+//                Object obj = this.request.getAttribute(name);
+//                if (obj == null) {
+//                    obj = this.getParameter(name);
+//                }
+//                if (obj == null) {
+//                    // we also expose some of the request properties as attributes
+//                    if (ATTRIBUTE_REQUEST_CHARACTER_ENCODING.equals(name)) {
+//                        obj = request.getCharacterEncoding();
+//                    }
+//                    else if (ATTRIBUTE_REQUEST_URI.equals(name)) {
+//                        obj = request.getRequestURI();
+//                    }
+//                }
+//                return obj;
+//            case Context.SESSION_SCOPE:
+//                HttpSession httpsession = request.getSession(false);
+//                if (httpsession == null) {
+//                    return null;
+//                }
+//                return httpsession.getAttribute(name);
+//            case Context.APPLICATION_SCOPE:
+//                return MgnlContext.getSystemContext().getAttribute(name, Context.APPLICATION_SCOPE);
+//            default:
+//                log.error("illegal scope passed");
+//                return null;
+//        }
+//    }
+//
+//    /**
+//     * Remove an attribute.
+//     */
+//    public void removeAttribute(String name, int scope) {
+//        switch (scope) {
+//            case Context.LOCAL_SCOPE:
+//                this.request.removeAttribute(name);
+//                break;
+//            case Context.SESSION_SCOPE:
+//                HttpSession httpsession = request.getSession(false);
+//                if (httpsession != null) {
+//                    httpsession.removeAttribute(name);
+//                }
+//                break;
+//            case Context.APPLICATION_SCOPE:
+//                MgnlContext.getSystemContext().removeAttribute(name, Context.APPLICATION_SCOPE);
+//                break;
+//            default:
+//                log.error("no illegal scope passed");
+//        }
+//    }
+//
+//    /**
+//     * Get a map represenation of the scope.
+//     */
+//    public final Map getAttributes(int scope) {
+//        Map map = new HashMap();
+//        Enumeration keysEnum;
+//        switch (scope) {
+//            case Context.LOCAL_SCOPE:
+//                // add parameters
+//                map.putAll(this.getParameters());
+//                // attributes have higher priority
+//                keysEnum = this.request.getAttributeNames();
+//                while (keysEnum.hasMoreElements()) {
+//                    String key = (String) keysEnum.nextElement();
+//                    Object value = getAttribute(key, scope);
+//                    map.put(key, value);
+//                }
+//                return map;
+//            case Context.SESSION_SCOPE:
+//                HttpSession httpsession = request.getSession(false);
+//                if (httpsession == null) {
+//                    return null;
+//                }
+//                keysEnum = httpsession.getAttributeNames();
+//                while (keysEnum.hasMoreElements()) {
+//                    String key = (String) keysEnum.nextElement();
+//                    Object value = getAttribute(key, scope);
+//                    map.put(key, value);
+//                }
+//                return map;
+//            case Context.APPLICATION_SCOPE:
+//                return MgnlContext.getSystemContext().getAttributes(Context.APPLICATION_SCOPE);
+//            default:
+//                log.error("no illegal scope passed");
+//                return null;
+//        }
+//
+//    }
 
     /**
      * Avoid the call to this method where ever possible.

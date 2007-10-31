@@ -461,6 +461,7 @@ public class FreemarkerHelperTest extends TestCase {
         MockUtil.mockObservation(cfgHM);
 
         final SystemContext sysMockCtx = createStrictMock(SystemContext.class);
+         
         expect(sysMockCtx.getHierarchyManager(ContentRepository.CONFIG)).andReturn(cfgHM);
         if (webCtx == null) {
             expect(sysMockCtx.getLocale()).andReturn(Locale.KOREA);
@@ -468,6 +469,11 @@ public class FreemarkerHelperTest extends TestCase {
             expect(sysMockCtx.getHierarchyManager("website")).andReturn(hm);
         }
         FactoryUtil.setInstance(SystemContext.class, sysMockCtx);
+//        FactoryUtil.setInstanceFactory(SystemContext.class, new FactoryUtil.InstanceFactory(){
+//        	public Object newInstance() {
+//        	    return sysMockCtx;
+//        	}
+//        });
         replay(sysMockCtx);
 
         FactoryUtil.setInstance(URI2RepositoryManager.class, new FakeURI2RepoMan());
@@ -482,7 +488,7 @@ public class FreemarkerHelperTest extends TestCase {
         tplLoader.putTemplate("test", "== ${text} ==");
 
         replay(i18NSupportMock);
-        MgnlContext.setInstance(webCtx == null ? sysMockCtx : webCtx);
+        MgnlContext.setInstance(webCtx == null ? sysMockCtx : webCtx);        
         assertRendereredContentWithoutCheckingContext(expectedOutput, c, "test");
         verify(i18NSupportMock);
         verify(sysMockCtx);

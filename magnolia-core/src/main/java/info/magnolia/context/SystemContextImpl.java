@@ -29,7 +29,7 @@ import java.util.Locale;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class SystemContextImpl extends AbstractMapBasedContext implements SystemContext {
+public class SystemContextImpl extends AbstractContext implements SystemContext {
 
     /**
      * Logger
@@ -41,12 +41,13 @@ public class SystemContextImpl extends AbstractMapBasedContext implements System
      */
     private static final long serialVersionUID = 222L;
 
-    private Locale systemLocale;
+//    private Locale systemLocale;
 
     /**
      * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself. Init the scopes
      */
     public SystemContextImpl() {
+    	setAttributeStrategy(new MapAttributeStrategy());
     }
 
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
@@ -88,13 +89,13 @@ public class SystemContextImpl extends AbstractMapBasedContext implements System
         return this.user;
     }
 
-    public Locale getLocale() {
-        return systemLocale;
-    }
-
-
-    public void setLocale(Locale locale) {
-        this.systemLocale = locale;
-       // servletCtx.setAttribute(Config.FMT_LOCALE + ".application", locale); //$NON-NLS-1$
-    }
+//    public Locale getLocale() {
+//        return systemLocale;
+//    }
+//
+//
+//    public void setLocale(Locale locale) {
+//        this.systemLocale = locale;
+//       // servletCtx.setAttribute(Config.FMT_LOCALE + ".application", locale); //$NON-NLS-1$
+//    }
 }

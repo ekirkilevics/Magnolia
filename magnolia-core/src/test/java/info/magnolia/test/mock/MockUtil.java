@@ -96,10 +96,14 @@ public class MockUtil {
      * Mocks the current and system context
      */
     public static MockContext initMockContext() {
-        MockContext ctx = new MockContext();
+        final MockContext ctx = new MockContext();
         MgnlContext.setInstance(ctx);
         // and system context as well
-        FactoryUtil.setInstance(SystemContext.class, ctx);
+        FactoryUtil.setInstanceFactory(SystemContext.class, new FactoryUtil.InstanceFactory(){
+        	public Object newInstance() {
+        	    return ctx;
+        	}
+        }); 
         return ctx;
     }
 
