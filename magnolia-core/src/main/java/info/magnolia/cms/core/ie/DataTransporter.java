@@ -196,7 +196,7 @@ public class DataTransporter {
 
         // TODO hopefully this will be fixed with a more useful message with the BootstrapUtil refactoring
         if (xmlStream == null) {
-            throw new IOException("Can't import a null stream into repository: " + repositoryName + ", basepath: " + basepath + ", name:" + name);
+            throw new IOException("Can't import a null stream into repository: " + repositoryName + ", basepath: " + basepath + ", name: " + name);
         }
 
         HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);

@@ -45,12 +45,12 @@ public class BootstrapConditionallyTest extends TestCase {
     }
 
     public void testExecutesDelegateTaskIfNodeExists() throws Exception {
-        final String resourceToBootstrap = "/some-dir/test/bleh/somerepo.foo.bar.xml";
+        final String resourceToBootstrap = "/some-dir/test/foobar/somerepo.foo.bar.xml";
         doTest(resourceToBootstrap, false, true);
     }
 
     public void testBootstrapsIfNodeDoesNotExist() throws Exception {
-        final String resourceToBootstrap = "/some-dir/test/bleh/somerepo.bleh.blih.xml";
+        final String resourceToBootstrap = "/some-dir/test/foobar/somerepo.bleh.blih.xml";
         doTest(resourceToBootstrap, true, false);
     }
 
@@ -68,10 +68,9 @@ public class BootstrapConditionallyTest extends TestCase {
         try {
             task.execute(ctx);
             // TODO : ugly hack until BootstrapUtil is refactored / mockable / testable
-        } catch (NullPointerException e) {
+        } catch (TaskExecutionException e) {
             if (shouldBootstrap) {
-                assertTrue("Didnt fail as \"expected\" ! NullPointerException: " + e.getMessage() + " : " + ExceptionUtils.getFullStackTrace(e),
-                        ExceptionUtils.getStackFrames(e)[1].startsWith("\tat info.magnolia.cms.core.ie.DataTransporter.importXmlStream"));
+                assertEquals("Could not bootstrap: Can't import a null stream into repository: somerepo, basepath: /bleh, name: somerepo.bleh.blih", e.getMessage());
             } else {
                 fail("Failed! NullPointerException: " + e.getMessage() + " : " + ExceptionUtils.getFullStackTrace(e));
             }
