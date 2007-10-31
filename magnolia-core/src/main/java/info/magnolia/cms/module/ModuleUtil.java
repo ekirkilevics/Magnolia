@@ -183,6 +183,9 @@ public final class ModuleUtil {
             }
             log.debug("Will bootstrap {}", resourceName);
             InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
+            if (stream == null) {
+                throw new IOException("Can't find resource to bootstrap at " + resourceName);
+            }
             DataTransporter.importXmlStream(stream, repository, pathName, name, false,
             // TODO !! this ImportUUIDBehavior might import nodes in the wrong place !!!
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,
