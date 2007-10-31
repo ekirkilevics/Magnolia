@@ -136,7 +136,8 @@ public class ImgTag extends BaseContentTag {
         Map attributes = new HashMap(htmlAttributes);
         attributes.put("title", alt);
 
-        if (!attributes.containsKey("width") && !attributes.containsKey("height")) {
+        if (StringUtils.isBlank((String) attributes.get("width"))
+            || StringUtils.isBlank((String) attributes.get("height"))) {
             String width = props.getProperty(FileProperties.PROPERTY_WIDTH);
             if (StringUtils.isNotEmpty(width)) {
                 attributes.put("width", width);
@@ -163,6 +164,7 @@ public class ImgTag extends BaseContentTag {
                 out.write(request.getContextPath());
                 out.write(imgSrc);
                 out.write("\"/>");
+                out.write("<param name=\"wmode\" value=\"transparent\"/>");
                 out.write("</object>");
 
             }
