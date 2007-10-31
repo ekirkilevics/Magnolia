@@ -197,6 +197,11 @@ public class DataTransporter {
                                                     boolean saveAfterImport, boolean createBasepathIfNotExist)
             throws IOException {
 
+        // TODO hopefully this will be fixed with a more useful message with the BootstrapUtil refactoring
+        if (xmlStream == null) {
+            throw new IOException("Can't import a null stream !");
+        }
+
         HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
         if (hm == null) {
             // this happens when the samples module tries to insert content into the dms repository and dms is not
