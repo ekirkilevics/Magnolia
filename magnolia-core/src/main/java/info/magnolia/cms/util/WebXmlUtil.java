@@ -161,55 +161,10 @@ public class WebXmlUtil {
         return xpathMatches(xpathExpr);
     }
 
-    private Element createServletElement(String name, String className, Map initParams) {
-        Namespace ns = doc.getRootElement().getNamespace();
-        Element node = new Element("servlet", ns);
-        node.addContent(new Element("servlet-name", ns).addContent(name));
-        node.addContent(new Element("servlet-class", ns).addContent(className));
-
-        if (initParams != null && !(initParams.isEmpty())) {
-            Iterator params = initParams.keySet().iterator();
-            while (params.hasNext()) {
-                String paramName = (String) params.next();
-                String paramValue = (String) initParams.get(paramName);
-                Element initParam = new Element("init-param", ns);
-                initParam.addContent(new Element("param-name", ns).addContent(paramName));
-                initParam.addContent(new Element("param-value", ns).addContent(paramValue));
-                node.addContent(initParam);
-            }
-        }
-        return node;
-    }
-
-    private Element createMappingElement(Document doc, String name, String urlPattern) {
-        Namespace ns = doc.getRootElement().getNamespace();
-
-        Element node = new Element("servlet-mapping", ns);
-        node.addContent(new Element("servlet-name", ns).addContent(name));
-        node.addContent(new Element("url-pattern", ns).addContent(urlPattern));
-        return node;
-    }
-
-    private boolean xpathMatches(String xpathExpr) throws JDOMException {
-        // check if there already registered
-        XPath xpath = XPath.newInstance(xpathExpr);
-        // must add the namespace and use it: there is no default namespace elsewise
-        xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
-        return (xpath.selectSingleNode(doc) != null);
-    }
-
-    /**
-     * @deprecated
-     */
-    private void save() throws IOException {
-        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
-        outputter.output(doc, new FileWriter(source));
-    }
-
-    public boolean isFilterDispatcherConfigured(String filterName) {
+    public boolean isFilterDispatcherConfigured(String filterClass) {
         try {
             XPath xpath = XPath.newInstance("/webxml:web-app/webxml:filter[webxml:filter-class='"
-                    + filterName
+                    + filterClass
                     + "']/webxml:filter-name");
             xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
 
@@ -233,4 +188,56 @@ public class WebXmlUtil {
             throw new RuntimeException(e); // TODO
         }
     }
+
+    private boolean xpathMatches(String xpathExpr) throws JDOMException {
+        // check if there already registered
+        XPath xpath = XPath.newInstance(xpathExpr);
+        // must add the namespace and use it: there is no default namespace elsewise
+        xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
+        return (xpath.selectSingleNode(doc) != null);
+    }
+
+    /**
+     * @deprecated
+     */
+    private Element createServletElement(String name, String className, Map initParams) {
+        Namespace ns = doc.getRootElement().getNamespace();
+        Element node = new Element("servlet", ns);
+        node.addContent(new Element("servlet-name", ns).addContent(name));
+        node.addContent(new Element("servlet-class", ns).addContent(className));
+
+        if (initParams != null && !(initParams.isEmpty())) {
+            Iterator params = initParams.keySet().iterator();
+            while (params.hasNext()) {
+                String paramName = (String) params.next();
+                String paramValue = (String) initParams.get(paramName);
+                Element initParam = new Element("init-param", ns);
+                initParam.addContent(new Element("param-name", ns).addContent(paramName));
+                initParam.addContent(new Element("param-value", ns).addContent(paramValue));
+                node.addContent(initParam);
+            }
+        }
+        return node;
+    }
+
+    /**
+     * @deprecated
+     */
+    private Element createMappingElement(Document doc, String name, String urlPattern) {
+        Namespace ns = doc.getRootElement().getNamespace();
+
+        Element node = new Element("servlet-mapping", ns);
+        node.addContent(new Element("servlet-name", ns).addContent(name));
+        node.addContent(new Element("url-pattern", ns).addContent(urlPattern));
+        return node;
+    }
+
+    /**
+     * @deprecated
+     */
+    private void save() throws IOException {
+        XMLOutputter outputter = new XMLOutputter(Format.getPrettyFormat());
+        outputter.output(doc, new FileWriter(source));
+    }
+
 }
