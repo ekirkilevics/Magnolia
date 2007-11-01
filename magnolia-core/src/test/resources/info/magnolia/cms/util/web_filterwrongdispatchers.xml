@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd" version="2.4">
+
+  <filter>
+    <filter-name>testWithMissingForward</filter-name>
+    <filter-class>webxmltest.WithMissingForward</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>testWithMissingForward</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>ERROR</dispatcher>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>testErrorIsNotMandatory</filter-name>
+    <filter-class>webxmltest.ErrorIsNotMandatory</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>testErrorIsNotMandatory</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>testWithInclude</filter-name>
+    <filter-class>webxmltest.WithInclude</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>testWithInclude</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>ERROR</dispatcher>
+    <dispatcher>REQUEST</dispatcher>
+    <dispatcher>INCLUDE</dispatcher>
+    <dispatcher>FORWARD</dispatcher>
+  </filter-mapping>
+
+  <filter>
+    <filter-name>testOrderIsIrrelevant</filter-name>
+    <filter-class>webxmltest.OrderIsIrrelevant</filter-class>
+  </filter>
+  <filter-mapping>
+    <filter-name>testOrderIsIrrelevant</filter-name>
+    <url-pattern>/*</url-pattern>
+    <dispatcher>FORWARD</dispatcher>
+    <dispatcher>ERROR</dispatcher>
+    <dispatcher>REQUEST</dispatcher>
+  </filter-mapping>
+</web-app>

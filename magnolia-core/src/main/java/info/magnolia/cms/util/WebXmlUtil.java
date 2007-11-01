@@ -22,13 +22,17 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.LinkedList;
 
 
 /**
@@ -149,45 +153,73 @@ public class WebXmlUtil {
         return xpathMatches(xpathExpr);
     }
 
-    public boolean isFilterDispatcherConfigured(String filterClass) {
-        try {
-            XPath xpath = XPath.newInstance("/webxml:web-app/webxml:filter[webxml:filter-class='"
-                    + filterClass
-                    + "']/webxml:filter-name");
-            xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
-
-            Element filterEl = (Element) xpath.selectSingleNode(doc);
-
-            if (filterEl != null) {
-                String mappingName = filterEl.getTextNormalize();
-
-                String expr = "/webxml:web-app/webxml:filter-mapping[webxml:filter-name='"
-                        + mappingName
-                        + "']/webxml:dispatcher";
-
-                xpath = XPath.newInstance(expr);
-                xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
-
-                return xpath.selectSingleNode(doc) != null;
-
-            }
-            return true;
-        } catch (JDOMException e) {
-            throw new RuntimeException(e); // TODO
-        }
+    public boolean isFilterRegistered(String filterClass) {
+        return getFilterElement(filterClass) != null;
     }
 
-    private boolean xpathMatches(String xpathExpr) {
+    public boolean areFilterDispatchersConfiguredProperly(String filterClass, List mandatoryDispatchers, List optionalDispatchers) {
+        final Element filterEl = getFilterElement(filterClass);
+        if (filterEl != null) {
+            final String filterName = filterEl.getTextNormalize();
+            final String filterMappingXPathExpr = "/webxml:web-app/webxml:filter-mapping[webxml:filter-name='" + filterName + "']/webxml:dispatcher";
+            final List dispatchersEl = getElementsFromXPath(filterMappingXPathExpr);
+            final List dispatchers = new ArrayList();
+            final Iterator it = dispatchersEl.iterator();
+            while (it.hasNext()) {
+                final Element dispatcherEl = (Element) it.next();
+                dispatchers.add(dispatcherEl.getTextNormalize());
+            }
+//            dispatchers.remove("ERROR");
+//            return dispatchers.size() == 2 && dispatchers.contains("REQUEST") && dispatchers.contains("FORWARD");
+            dispatchers.removeAll(optionalDispatchers);
+            return CollectionUtils.isEqualCollection(dispatchers, mandatoryDispatchers);
+
+        }
+        return true;
+    }
+
+    public static void main(String[] args) {
+        final ArrayList list = new ArrayList();
+        list.add("foo");
+        list.add("bar");
+        list.add("baz");
+
+        final LinkedList l2 = new LinkedList();
+        l2.add("bar");
+        l2.add("foo");
+        l2.add("baz");
+        System.out.println("CollectionUtils.isEqualCollection(list,l2) = " + CollectionUtils.isEqualCollection(list, l2));
+
+
+        System.out.println("l2.equals(list) = " + l2.equals(list));
+    }
+
+    private Element getFilterElement(String filterClass) {
+        final String filterXPathExpr = "/webxml:web-app/webxml:filter[webxml:filter-class='" + filterClass + "']/webxml:filter-name";
+
+        return getElementFromXPath(filterXPathExpr);
+    }
+
+    private List getElementsFromXPath(String xpathExpr) {
         try {
             final XPath xpath = XPath.newInstance(xpathExpr);
             // must add the namespace and use it: there is no default namespace elsewise
             xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
-            Element el = (Element) xpath.selectSingleNode(doc);
-            return (el != null);
+            return xpath.selectNodes(doc);
         } catch (JDOMException e) {
             throw new RuntimeException(e); // TODO
         }
     }
+
+    private Element getElementFromXPath(String xpathExpr) {
+        final List list = getElementsFromXPath(xpathExpr);
+        return (Element) (list.size() > 0 ? list.get(0) : null);
+    }
+
+    private boolean xpathMatches(String xpathExpr) {
+        return getElementsFromXPath(xpathExpr).size() > 0;
+    }
+
 
     /**
      * @deprecated

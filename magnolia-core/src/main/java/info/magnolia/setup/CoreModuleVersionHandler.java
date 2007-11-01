@@ -147,9 +147,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     // TODO : review - currently core is always installed since 3.1 is its first version as a module,
     // but we need to behave differently if magnolia was installed previously
     protected List getBasicInstallTasks(InstallContext ctx) {
-        final ArrayList tasks = new ArrayList(genericTasksFor31);
-        tasks.add(new WarnTask("web.xml updates", "MagnoliaManagedFilter was renamed to MagnoliaMainFilter: please update the corresponding <filter-class> element in your web.xml file."));
-        return tasks;
+        return genericTasksFor31;
     }
 
     protected List getInstallConditions() {
@@ -163,7 +161,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.servletIsNowWrapped("log4j");
         u.servletIsNowWrapped("FCKEditorSimpleUploadServlet");
         u.servletIsDeprecated("uuidRequestDispatcher");
-        u.filterMappedWithDispatcher("info.magnolia.cms.filters.MgnlMainFilter");
+        u.filterIsDeprecated("info.magnolia.cms.filters.MagnoliaManagedFilter", "info.magnolia.cms.filters.MgnlMainFilter");
+        u.filterMustBeRegisteredWithCorrectDispatches("info.magnolia.cms.filters.MgnlMainFilter");
         return conditions;
     }
 }

@@ -15,6 +15,7 @@ package info.magnolia.module.delta;
 import info.magnolia.cms.util.WebXmlUtil;
 
 import java.util.List;
+import java.util.Arrays;
 
 /**
  * A utility class for web.xml related conditions, which will add
@@ -49,14 +50,20 @@ public class WebXmlConditionsUtil {
         }
     }
 
-    public void filterMappedWithDispatcher(final String filterName) {
-        if (!webXmlUtil.isFilterDispatcherConfigured(filterName)) {
-            conditions
-                .add(new FalseCondition(
-                    "web.xml updates",
-                    "Since Magnolia 3.1, The main magnolia filter must be mapped with dispatcher REQUEST, FORWARD and, optionally ERROR. Please add <dispatcher>REQUEST</dispatcher>"
+    public void filterMustBeRegisteredWithCorrectDispatches(final String filterClass) {
+        if (!webXmlUtil.isFilterRegistered(filterClass) || !webXmlUtil.areFilterDispatchersConfiguredProperly(filterClass, Arrays.asList("REQUEST", "FORWARD"), Arrays.asList("ERROR"))) {
+            conditions.add(new FalseCondition("web.xml updates",
+                    "Since Magnolia 3.1, the main Magnolia filter is " + filterClass + ", and it must be mapped with dispatchers REQUEST, FORWARD and, optionally, ERROR. "
+                        + " Please add <dispatcher>REQUEST</dispatcher>"
                         + " <dispatcher>FORWARD</dispatcher>"
-                        + " <dispatcher>ERROR</dispatcher> to the filter-mapping element in web.xml"));
+                        + " <dispatcher>ERROR</dispatcher> to the filter-mapping element in your web.xml file."));
         }
     }
+
+    public void filterIsDeprecated(final String deprecatedFilterClass, final String replacementFilterClass) {
+        if (webXmlUtil.isFilterRegistered(deprecatedFilterClass)) {
+            conditions.add(new FalseCondition("web.xml updates", "The " + deprecatedFilterClass + " filter class is now deprecated. Please replace it with " + replacementFilterClass + ": please update the corresponding <filter-class> element in your web.xml file."));
+        }
+    }
+
 }
