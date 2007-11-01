@@ -13,17 +13,14 @@ package info.magnolia.test.mock;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
-
-import java.util.GregorianCalendar;
+import junit.framework.TestCase;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-
-import junit.framework.TestCase;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.GregorianCalendar;
 
 
 /**
@@ -38,56 +35,73 @@ public class MockObjectTest extends TestCase {
      */
     private static Logger log = LoggerFactory.getLogger(MockObjectTest.class);
 
-    public void testRootNodeOfHierarchyManger(){
+    public void testRootNodeOfHierarchyManger() {
         MockHierarchyManager hm = new MockHierarchyManager();
         Content root = hm.getRoot();
         assertEquals(root.getName(), "jcr:root");
     }
 
-    public void testCreatingANode() throws AccessDeniedException, PathNotFoundException, RepositoryException{
+    public void testCreatingANode() throws AccessDeniedException, PathNotFoundException, RepositoryException {
         MockHierarchyManager hm = new MockHierarchyManager();
         hm.createContent("/", "test1", ItemType.CONTENTNODE.getSystemName());
         assertEquals(hm.getContent("/test1").getName(), "test1");
     }
 
-    public void testCreatingASubNode() throws AccessDeniedException, PathNotFoundException, RepositoryException{
+    public void testCreatingASubNode() throws AccessDeniedException, PathNotFoundException, RepositoryException {
         MockHierarchyManager hm = new MockHierarchyManager();
         hm.createContent("/test/sub", "test1", ItemType.CONTENTNODE.getSystemName());
         assertEquals(hm.getContent("/test/sub/test1").getName(), "test1");
     }
 
-    public void testGetANodeAddedToASubNode() throws AccessDeniedException, PathNotFoundException, RepositoryException{
+    public void testGetANodeAddedToASubNode() throws AccessDeniedException, PathNotFoundException, RepositoryException {
         MockHierarchyManager hm = new MockHierarchyManager();
         Content parent = hm.createContent("/test/sub", "test1", ItemType.CONTENTNODE.getSystemName());
         parent.createContent("other", new ItemType("mgnl:test"));
-        Content node= hm.getContent("/test/sub/test1/other");
+        Content node = hm.getContent("/test/sub/test1/other");
 
         assertEquals(node.getName(), "other");
         assertEquals(node.getItemType().getSystemName(), "mgnl:test");
         assertEquals(node.getHandle(), "/test/sub/test1/other");
-        assertEquals(((MockContent)node).getHierarchyManager(), hm);
+        assertEquals(((MockContent) node).getHierarchyManager(), hm);
     }
 
-    public void testSetABooleanValueOnANodeData(){
+    public void testSetABooleanValueOnANodeData() {
         MockNodeData nd = new MockNodeData("test", new Boolean(true));
         assertEquals(true, nd.getBoolean());
     }
 
-    public void testSetAnObjectAndResolvePropertyType(){
+    public void testSetAnObjectAndResolvePropertyType() {
         MockNodeData ndBoolean = new MockNodeData("test", new Boolean(true));
         MockNodeData ndLong = new MockNodeData("test", new Long(5));
-        MockNodeData ndDate = new MockNodeData("test", new GregorianCalendar(2007,2,14));
+        MockNodeData ndDate = new MockNodeData("test", new GregorianCalendar(2007, 2, 14));
 
         assertEquals(true, ndBoolean.getBoolean());
-        assertEquals(PropertyType.BOOLEAN,ndBoolean.getType());
+        assertEquals(PropertyType.BOOLEAN, ndBoolean.getType());
 
         assertEquals(5, ndLong.getLong());
-        assertEquals(PropertyType.LONG,ndLong.getType());
+        assertEquals(PropertyType.LONG, ndLong.getType());
 
-        assertEquals(new GregorianCalendar(2007,2,14), ndDate.getDate());
-        assertEquals(PropertyType.DATE,ndDate.getType());
-
+        assertEquals(new GregorianCalendar(2007, 2, 14), ndDate.getDate());
+        assertEquals(PropertyType.DATE, ndDate.getType());
     }
 
+    public void testDeletingReallyWorks() throws Exception {
+        MockHierarchyManager hm = new MockHierarchyManager();
+        Content node = hm.createContent("/test/sub", "test1", ItemType.CONTENTNODE.getSystemName());
+        assertEquals(node, hm.getContent("/test/sub/test1"));
+        node.delete();
+        try {
+            hm.getContent("/test/sub").getContent("test1");
+            fail("should have failed");
+        } catch (PathNotFoundException e) {
+            assertEquals("test1", e.getMessage());
+        }
+        try {
+            hm.getContent("/test/sub/test1");
+            fail("should have failed");
+        } catch (PathNotFoundException e) {
+            assertEquals("test1", e.getMessage());
+        }
+    }
 
 }

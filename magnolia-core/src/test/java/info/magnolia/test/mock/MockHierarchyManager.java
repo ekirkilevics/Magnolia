@@ -70,6 +70,10 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         ((MockContent)node).setHierarchyManager(this);
     }
 
+    void removedCachedNode(MockContent node) {
+        nodes.values().remove(node);
+    }
+
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Content parent = ContentUtil.createPath(getRoot(), StringUtils.removeStart(path, "/"), ItemType.CONTENTNODE);
         return parent.createContent(label, contentType);

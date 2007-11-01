@@ -43,7 +43,7 @@ public class MockContent extends DefaultContent {
 
     private Content parent;
 
-    private HierarchyManager hierarchyManager;
+    private MockHierarchyManager hierarchyManager;
 
     private String name;
 
@@ -231,8 +231,9 @@ public class MockContent extends DefaultContent {
 
     public void delete() throws RepositoryException {
         final MockContent parent = (MockContent) getParent();
-        final boolean removed = parent.children.values().remove(this);
-        if (!removed) {
+        final boolean removedFromParent = parent.children.values().remove(this);
+        hierarchyManager.removedCachedNode(this);
+        if (!removedFromParent) {
             throw new RepositoryException("MockContent could not delete itself");
         }
     }
@@ -255,7 +256,7 @@ public class MockContent extends DefaultContent {
     /**
      * @param hm the hm to set
      */
-    public void setHierarchyManager(HierarchyManager hm) {
+    public void setHierarchyManager(MockHierarchyManager hm) {
         this.hierarchyManager = hm;
     }
 
