@@ -10,7 +10,6 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.core.ItemType;
@@ -232,7 +231,7 @@ public class MockContent extends DefaultContent {
     public void delete() throws RepositoryException {
         final MockContent parent = (MockContent) getParent();
         final boolean removedFromParent = parent.children.values().remove(this);
-        hierarchyManager.removedCachedNode(this);
+        getHierarchyManager().removedCachedNode(this);
         if (!removedFromParent) {
             throw new RepositoryException("MockContent could not delete itself");
         }
@@ -246,7 +245,7 @@ public class MockContent extends DefaultContent {
         this.parent = parent;
     }
 
-    public HierarchyManager getHierarchyManager() {
+    public MockHierarchyManager getHierarchyManager() {
         if (this.hierarchyManager == null && getParent() != null) {
             return ((MockContent) getParent()).getHierarchyManager();
         }
