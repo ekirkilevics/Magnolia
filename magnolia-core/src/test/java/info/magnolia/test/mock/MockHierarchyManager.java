@@ -118,12 +118,12 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         }
         catch (RepositoryException e) {
             try {
-                this.getNodeData(path);
+                final NodeData nodeData = this.getNodeData(path);
+                return nodeData.isExist();
             }
             catch (RepositoryException e1) {
                 return false;
             }
-            return true;
         }
     }
 
