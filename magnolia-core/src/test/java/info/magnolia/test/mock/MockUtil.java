@@ -243,7 +243,7 @@ public class MockUtil {
 
     // TODO : does not take property type into account
     public static Properties toProperties(HierarchyManager hm) throws Exception {
-        final Properties out = new Properties();
+        final Properties out = new OrderedProperties();
         ContentUtil.visit(hm.getRoot(), new ContentUtil.Visitor(){
             public void visit(Content node) throws Exception {
                 appendNodeProperties(node, out);
