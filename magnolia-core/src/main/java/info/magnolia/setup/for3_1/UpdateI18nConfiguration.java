@@ -62,8 +62,9 @@ public class UpdateI18nConfiguration extends NodeExistsDelegateTask {
 
         protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
             final HierarchyManager configHM = ctx.getConfigHierarchyManager();
-            final Content i18nNode = configHM.getContent(I18N_NODEPATH);
+
             // get existing values and remove node
+            final Content i18nNode = configHM.getContent(I18N_NODEPATH);
             final String defaultLangIn30 = i18nNode.getNodeData("language").getString();
             final Content availLangsNode = i18nNode.getContent("availableLanguages");
             final Collection availLangsIn30;
@@ -74,12 +75,11 @@ public class UpdateI18nConfiguration extends NodeExistsDelegateTask {
             }
             i18nNode.delete();
 
-            // bootstrap
+            // bootstrap new defaults
             doBootstrap(ctx);
 
-            // adapt default values
+            // adapt with previously existing values
             final Content newI18nSystemNode = configHM.getContent(I18N_SYSTEM_NODEPATH);
-//              final Content newI18nSystemNode = configHM.getRoot().getContent("server").getContent("i18n").getContent("system");
             final NodeData sysFallbackLang = newI18nSystemNode.getNodeData("fallbackLanguage");
             sysFallbackLang.setValue(defaultLangIn30);
 
