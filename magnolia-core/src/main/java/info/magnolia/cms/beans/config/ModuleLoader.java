@@ -36,6 +36,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Initialise all configured modules.
+ * @deprecated since 3.1, use ModuleManager and/or ModuleRegistry
+ * @see info.magnolia.module.ModuleManager
+ * @see info.magnolia.module.ModuleRegistry
  */
 public class ModuleLoader {
 
