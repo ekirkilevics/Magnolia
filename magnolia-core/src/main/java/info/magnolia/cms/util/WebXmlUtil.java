@@ -114,7 +114,7 @@ public class WebXmlUtil {
      * @see info.magnolia.cms.filters.ServletDispatchingFilter
      */
     public boolean registerServletMapping(Document doc, String name, String urlPattern, String comment) throws JDOMException {
-        if (isMappingRegistered(name, urlPattern)) {
+        if (isServletMappingRegistered(name, urlPattern)) {
             log.info("register servlet mapping [{}] for servlet [{}]", urlPattern, name);
 
             // make a nice comment
@@ -132,30 +132,18 @@ public class WebXmlUtil {
     }
 
     public boolean isServletOrMappingRegistered(String servletName) {
-        try {
-            return isServletRegistered(servletName) || isMappingRegistered(servletName);
-        } catch (JDOMException e) {
-            throw new RuntimeException(e); // TODO
-        }
+        return isServletRegistered(servletName) || isServletMappingRegistered(servletName);
     }
 
     public boolean isServletRegistered(String servletName) {
-        try {
-            return xpathMatches("/webxml:web-app/webxml:servlet[webxml:servlet-name='" + servletName + "']");
-        } catch (JDOMException e) {
-            throw new RuntimeException(e); // TODO
-        }
+        return xpathMatches("/webxml:web-app/webxml:servlet[webxml:servlet-name='" + servletName + "']");
     }
 
-    public boolean isMappingRegistered(String servletName) throws JDOMException {
-        try {
-            return xpathMatches("/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='" + servletName + "']");
-        } catch (JDOMException e) {
-            throw new RuntimeException(e); // TODO
-        }
+    public boolean isServletMappingRegistered(String servletName) {
+        return xpathMatches("/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='" + servletName + "']");
     }
 
-    public boolean isMappingRegistered(String servletName, String urlPattern) throws JDOMException {
+    public boolean isServletMappingRegistered(String servletName, String urlPattern) {
         final String xpathExpr = "/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='"
                 + servletName + "' and webxml:url-pattern='" + urlPattern + "']";
         return xpathMatches(xpathExpr);
@@ -189,12 +177,16 @@ public class WebXmlUtil {
         }
     }
 
-    private boolean xpathMatches(String xpathExpr) throws JDOMException {
-        // check if there already registered
-        XPath xpath = XPath.newInstance(xpathExpr);
-        // must add the namespace and use it: there is no default namespace elsewise
-        xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
-        return (xpath.selectSingleNode(doc) != null);
+    private boolean xpathMatches(String xpathExpr) {
+        try {
+            final XPath xpath = XPath.newInstance(xpathExpr);
+            // must add the namespace and use it: there is no default namespace elsewise
+            xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
+            Element el = (Element) xpath.selectSingleNode(doc);
+            return (el != null);
+        } catch (JDOMException e) {
+            throw new RuntimeException(e); // TODO
+        }
     }
 
     /**

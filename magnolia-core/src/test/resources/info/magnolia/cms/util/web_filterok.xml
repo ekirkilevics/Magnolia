@@ -16,4 +16,12 @@
     <dispatcher>FORWARD</dispatcher>
     <dispatcher>ERROR</dispatcher>
   </filter-mapping>
+  <servlet>
+    <servlet-name>test</servlet-name>
+    <servlet-class>some.package.TestServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>test</servlet-name>
+    <url-pattern>/test/*</url-pattern>
+  </servlet-mapping>
 </web-app>
