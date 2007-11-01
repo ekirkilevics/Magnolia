@@ -97,7 +97,8 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         this.request = request;
         this.response = response;
         this.servletContext = servletContext;
-        setAttributeStrategy(new RequestAttributeStrategy(request));        
+        setAttributeStrategy(new RequestAttributeStrategy(request));  
+        setRepositoryStrategy(new AuthRepositoryStrategy(this));
     }
 
     /**
@@ -125,100 +126,100 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         setAttribute(SESSION_USER, user, Context.SESSION_SCOPE);
     }
 
-    /**
-     * Get repository session
-     */
-    protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException,
-        RepositoryException {
-        Session jcrSession = null;
-
-        final String repoSessAttrName = REQUEST_JCRSESSION_PREFIX + repositoryName + "_" + workspaceName;
-
-        // don't use httpsession, jcr session is not serializable at all
-        jcrSession = (Session) getAttribute(repoSessAttrName, LOCAL_SCOPE);
-
-        if (jcrSession == null) {
-            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-            jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
-            setAttribute(repoSessAttrName, jcrSession, LOCAL_SCOPE);
-        }
-        return jcrSession;
-    }
-
-    /**
-     * Get hierarchy manager initialized for this user.
-     */
-    public HierarchyManager getHierarchyManager(String repositoryName, String workspaceName) {
-
-        final String hmAttrName = REQUEST_HIERARCHYMANAGER_PREFIX + repositoryName + "_" + workspaceName;
-
-        HierarchyManager hm = (HierarchyManager) getAttribute(hmAttrName, Context.LOCAL_SCOPE);
-
-        if (hm == null) {
-            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-            try {
-                hm = util.createHierarchyManager(this.getUser().getName(), getRepositorySession(
-                    repositoryName,
-                    workspaceName), getAccessManager(repositoryName, workspaceName), getQueryManager(
-                    repositoryName,
-                    workspaceName));
-            }
-            catch (RepositoryException e) {
-                throw new UnhandledException(e);
-            }
-            setAttribute(hmAttrName, hm, Context.LOCAL_SCOPE);
-        }
-
-        return hm;
-    }
-
-    /**
-     * Get access manager for the specified repository on the specified workspace.
-     */
-    public AccessManager getAccessManager(String repositoryName, String workspaceName) {
-        HttpSession httpSession = request.getSession(false);
-        AccessManager accessManager = null;
-
-        final String amAttrName = SESSION_ACCESSMANAGER_PREFIX + repositoryName + "_" + workspaceName;
-        if (httpSession != null) {
-            accessManager = (AccessManager) httpSession.getAttribute(amAttrName);
-        }
-
-        if (accessManager == null) {
-            accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(
-                getSubject(),
-                repositoryName,
-                workspaceName);
-            if (httpSession != null) {
-                setAttribute(amAttrName, accessManager, SESSION_SCOPE);
-            }
-        }
-
-        return accessManager;
-    }
-
-    protected Subject getSubject() {
-        Subject subject = Authenticator.getSubject(request);
-        return subject;
-    }
-
-    /**
-     * Get QueryManager created for this user on the specified repository and workspace.
-     */
-    public QueryManager getQueryManager(String repositoryName, String workspaceName) {
-        QueryManager queryManager = null;
-
-        try {
-            queryManager = WorkspaceAccessUtil.getInstance().createQueryManager(
-                getRepositorySession(repositoryName, workspaceName),
-                getAccessManager(repositoryName, workspaceName));
-        }
-        catch (Exception t) {
-            log.error("Failed to create QueryManager", t);
-        }
-
-        return queryManager;
-    }
+//    /**
+//     * Get repository session
+//     */
+//    protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException,
+//        RepositoryException {
+//        Session jcrSession = null;
+//
+//        final String repoSessAttrName = REQUEST_JCRSESSION_PREFIX + repositoryName + "_" + workspaceName;
+//
+//        // don't use httpsession, jcr session is not serializable at all
+//        jcrSession = (Session) getAttribute(repoSessAttrName, LOCAL_SCOPE);
+//
+//        if (jcrSession == null) {
+//            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
+//            jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
+//            setAttribute(repoSessAttrName, jcrSession, LOCAL_SCOPE);
+//        }
+//        return jcrSession;
+//    }
+//
+//    /**
+//     * Get hierarchy manager initialized for this user.
+//     */
+//    public HierarchyManager getHierarchyManager(String repositoryName, String workspaceName) {
+//
+//        final String hmAttrName = REQUEST_HIERARCHYMANAGER_PREFIX + repositoryName + "_" + workspaceName;
+//
+//        HierarchyManager hm = (HierarchyManager) getAttribute(hmAttrName, Context.LOCAL_SCOPE);
+//
+//        if (hm == null) {
+//            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
+//            try {
+//                hm = util.createHierarchyManager(this.getUser().getName(), getRepositorySession(
+//                    repositoryName,
+//                    workspaceName), getAccessManager(repositoryName, workspaceName), getQueryManager(
+//                    repositoryName,
+//                    workspaceName));
+//            }
+//            catch (RepositoryException e) {
+//                throw new UnhandledException(e);
+//            }
+//            setAttribute(hmAttrName, hm, Context.LOCAL_SCOPE);
+//        }
+//
+//        return hm;
+//    }
+//
+//    /**
+//     * Get access manager for the specified repository on the specified workspace.
+//     */
+//    public AccessManager getAccessManager(String repositoryName, String workspaceName) {
+//        HttpSession httpSession = request.getSession(false);
+//        AccessManager accessManager = null;
+//
+//        final String amAttrName = SESSION_ACCESSMANAGER_PREFIX + repositoryName + "_" + workspaceName;
+//        if (httpSession != null) {
+//            accessManager = (AccessManager) httpSession.getAttribute(amAttrName);
+//        }
+//
+//        if (accessManager == null) {
+//            accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(
+//                getSubject(),
+//                repositoryName,
+//                workspaceName);
+//            if (httpSession != null) {
+//                setAttribute(amAttrName, accessManager, SESSION_SCOPE);
+//            }
+//        }
+//
+//        return accessManager;
+//    }
+//
+//    protected Subject getSubject() {
+//        Subject subject = Authenticator.getSubject(request);
+//        return subject;
+//    }
+//
+//    /**
+//     * Get QueryManager created for this user on the specified repository and workspace.
+//     */
+//    public QueryManager getQueryManager(String repositoryName, String workspaceName) {
+//        QueryManager queryManager = null;
+//
+//        try {
+//            queryManager = WorkspaceAccessUtil.getInstance().createQueryManager(
+//                getRepositorySession(repositoryName, workspaceName),
+//                getAccessManager(repositoryName, workspaceName));
+//        }
+//        catch (Exception t) {
+//            log.error("Failed to create QueryManager", t);
+//        }
+//
+//        return queryManager;
+//    }
 
     /**
      * Get currently active page
