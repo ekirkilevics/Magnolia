@@ -31,36 +31,16 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Handle redirects configured using VirtualURIMappings.
- *
  * @author Fabrizio Giustina
  * @version $Id$
  */
 public class VirtualUriFilter extends OncePerRequestAbstractMgnlFilter {
+
     private static final Logger log = LoggerFactory.getLogger(VirtualUriFilter.class);
 
-    private static final int REDIRECT = 1;
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
 
-    private static final int INCLUDE = 2;
-
-    private static final int NO_ACTION = 3;
-
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
-        int result = redirect(request, response);
-        if (result == REDIRECT) {
-            return;
-        } else if (result == INCLUDE) {
-            ((MgnlFilterChain)chain).reset();
-        }
-        chain.doFilter(request, response);
-    }
-
-    /**
-     * Redirect based on the mapping in config/server/.node.xml
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @return <code>true</code> if request has been redirected, <code>false</code> otherwise
-     */
-    private int redirect(HttpServletRequest request, HttpServletResponse response) {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         String targetUri = getURIMapping(aggregationState.getCurrentURI());
 
@@ -69,35 +49,46 @@ public class VirtualUriFilter extends OncePerRequestAbstractMgnlFilter {
 
                 if (targetUri.startsWith("redirect:")) {
                     try {
-                        response.sendRedirect(request.getContextPath() + StringUtils.substringAfter(targetUri, "redirect:"));
-                        return REDIRECT;
+                        response.sendRedirect(request.getContextPath()
+                            + StringUtils.substringAfter(targetUri, "redirect:"));
+                        return;
                     }
                     catch (IOException e) {
                         log.error("Failed to redirect to {}:{}", targetUri, e.getMessage());
                     }
 
-                } else if (targetUri.startsWith("forward:")) {
+                }
+                // else if (targetUri.startsWith("forward:"))
+                else {
                     targetUri = StringUtils.substringAfter(targetUri, "forward:");
                     try {
                         request.getRequestDispatcher(targetUri).forward(request, response);
-                        return REDIRECT;
-                    } catch (Exception e) {
-                        log.error("Failed to forward to {} - {}:{}", new Object[]{targetUri, ClassUtils.getShortClassName(e.getClass()), e.getMessage()});
+                        return;
+                    }
+                    catch (Exception e) {
+                        log.error("Failed to forward to {} - {}:{}", new Object[]{
+                            targetUri,
+                            ClassUtils.getShortClassName(e.getClass()),
+                            e.getMessage()});
                     }
 
-                } else {
-                    aggregationState.setCurrentURI(targetUri);
-                    return INCLUDE;
                 }
+                // else
+                // {
+                // aggregationState.setCurrentURI(targetUri);
+                // ((MgnlFilterChain) chain).reset();
+                // }
             }
             else {
-                log.warn("Response is already committed, cannot forward to {} (original URI was {})", targetUri, request.getRequestURI());
+                log.warn(
+                    "Response is already committed, cannot forward to {} (original URI was {})",
+                    targetUri,
+                    request.getRequestURI());
             }
 
-            //return true;
         }
 
-        return NO_ACTION;
+        chain.doFilter(request, response);
     }
 
     /**
@@ -106,6 +97,5 @@ public class VirtualUriFilter extends OncePerRequestAbstractMgnlFilter {
     protected String getURIMapping(String currentURI) {
         return VirtualURIManager.getInstance().getURIMapping(currentURI);
     }
-
 
 }

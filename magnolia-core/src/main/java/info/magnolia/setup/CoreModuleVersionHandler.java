@@ -163,6 +163,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.servletIsNowWrapped("log4j");
         u.servletIsNowWrapped("FCKEditorSimpleUploadServlet");
         u.servletIsDeprecated("uuidRequestDispatcher");
+        u.filterMappedWithDispatcher("info.magnolia.cms.filters.MgnlMainFilter");
         return conditions;
     }
 }

@@ -16,15 +16,17 @@ import info.magnolia.cms.util.WebXmlUtil;
 
 import java.util.List;
 
+
 /**
- * A utility class for web.xml related conditions, which will add
- * conditions to a given list of tasks based on some conditions.
- *
+ * A utility class for web.xml related conditions, which will add conditions to a given list of tasks based on some
+ * conditions.
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class WebXmlConditionsUtil {
+
     private final WebXmlUtil webXmlUtil = new WebXmlUtil();
+
     private final List conditions;
 
     public WebXmlConditionsUtil(List conditions) {
@@ -33,19 +35,45 @@ public class WebXmlConditionsUtil {
 
     public void servletIsNowWrapped(final String servletName) {
         if (webXmlUtil.isServletOrMappingRegistered(servletName)) {
-            conditions.add(new FalseCondition("web.xml updates", "Since Magnolia 3.1, servlets are wrapped in ServletDispatchingFilter; please remove the <servlet> and <servlet-mapping> elements for " + servletName + " from your web.xml file."));
+            conditions
+                .add(new FalseCondition(
+                    "web.xml updates",
+                    "Since Magnolia 3.1, servlets are wrapped in ServletDispatchingFilter; please remove the <servlet> and <servlet-mapping> elements for "
+                        + servletName
+                        + " from your web.xml file."));
         }
     }
 
     public void servletIsDeprecated(final String servletName) {
         if (webXmlUtil.isServletOrMappingRegistered(servletName)) {
-            conditions.add(new FalseCondition("web.xml updates", "The " + servletName + " servlet is deprecated and not in use; please remove the corresponding <servlet> and <servlet-mapping> elements from your web.xml file."));
+            conditions
+                .add(new FalseCondition(
+                    "web.xml updates",
+                    "The "
+                        + servletName
+                        + " servlet is deprecated and not in use; please remove the corresponding <servlet> and <servlet-mapping> elements from your web.xml file."));
         }
     }
 
     public void servletIsRemoved(final String servletName) {
         if (webXmlUtil.isServletOrMappingRegistered(servletName)) {
-            conditions.add(new FalseCondition("web.xml updates", "The " + servletName + " servlet does not exist anymore; please remove the corresponding <servlet> and <servlet-mapping> elements from your web.xml file."));
+            conditions
+                .add(new FalseCondition(
+                    "web.xml updates",
+                    "The "
+                        + servletName
+                        + " servlet does not exist anymore; please remove the corresponding <servlet> and <servlet-mapping> elements from your web.xml file."));
+        }
+    }
+
+    public void filterMappedWithDispatcher(final String filterName) {
+        if (!webXmlUtil.isFilterDispatcherConfigured(filterName)) {
+            conditions
+                .add(new FalseCondition(
+                    "web.xml updates",
+                    "Since Magnolia 3.1, The main magnolia filter must be mapped with dispatcher REQUEST, FORWARD and, optionally ERROR. Please add <dispatcher>REQUEST</dispatcher>"
+                        + " <dispatcher>FORWARD</dispatcher>"
+                        + " <dispatcher>ERROR</dispatcher> to the filter-mapping element in web.xml"));
         }
     }
 }

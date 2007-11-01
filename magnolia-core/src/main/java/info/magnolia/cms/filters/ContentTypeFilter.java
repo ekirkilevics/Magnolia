@@ -41,6 +41,9 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
 
         final String characterEncoding = setupContentTypeAndCharacterEncoding(ext, request, response);
 
+        // reset any leftover found in request
+        MgnlContext.resetAggregationState();
+
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         aggregationState.setCharacterEncoding(characterEncoding);
         aggregationState.setOriginalURI(originalUri);
