@@ -169,8 +169,6 @@ public class WebXmlUtil {
                 final Element dispatcherEl = (Element) it.next();
                 dispatchers.add(dispatcherEl.getTextNormalize());
             }
-//            dispatchers.remove("ERROR");
-//            return dispatchers.size() == 2 && dispatchers.contains("REQUEST") && dispatchers.contains("FORWARD");
             dispatchers.removeAll(optionalDispatchers);
             return CollectionUtils.isEqualCollection(dispatchers, mandatoryDispatchers);
 
