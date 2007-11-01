@@ -13,15 +13,6 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Path;
-
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.jdom.Comment;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -32,9 +23,18 @@ import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
+
 
 /**
- * Contains utility methods to register or check for the existence of elements in web.xml
+ * Contains utility methods to register or check for the existence of elements in web.xml.
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -43,50 +43,47 @@ public class WebXmlUtil {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebXmlUtil.class);
 
     /**
-     * @deprecated
-     */
-    private final File source;
-
-    /**
      * Register a servlet in the web.xml including init parameters. The code checks if the servlet already exists
      * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
      * @see info.magnolia.cms.filters.ServletDispatchingFilter
      */
-    public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment,
-        Hashtable initParams) throws JDOMException, IOException {
+    public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment, Hashtable initParams) throws JDOMException, IOException {
         return new WebXmlUtil().registerServlet(name, className, urlPatterns, comment, (Map) initParams);
     }
+
+    /**
+     * @deprecated
+     */
+    private File source;
 
     private final Document doc;
 
     public WebXmlUtil() {
-        source = new File(Path.getAppRootDir() + "/WEB-INF/web.xml");
+        final File source = new File(Path.getAppRootDir() + "/WEB-INF/web.xml");
         if (!source.exists()) {
             throw new IllegalStateException("Failed to locate web.xml : " + source.getAbsolutePath());
         }
         final SAXBuilder builder = new SAXBuilder();
         try {
             doc = builder.build(source);
-        }
-        catch (JDOMException e) {
+            this.source = source;
+        } catch (JDOMException e) {
             throw new RuntimeException(e); // TODO
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e); // TODO
         }
     }
 
-    public WebXmlUtil(InputStream inputStream) {
-        super();
-        source = null;
+    /**
+     * Test-friendly constructor.
+     */
+    WebXmlUtil(InputStream inputStream) {
         final SAXBuilder builder = new SAXBuilder();
         try {
             doc = builder.build(inputStream);
-        }
-        catch (JDOMException e) {
+        } catch (JDOMException e) {
             throw new RuntimeException(e); // TODO
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             throw new RuntimeException(e); // TODO
         }
     }
@@ -96,8 +93,7 @@ public class WebXmlUtil {
      * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
      * @see info.magnolia.cms.filters.ServletDispatchingFilter
      */
-    public boolean registerServlet(String name, String className, String[] urlPatterns, String comment, Map initParams)
-        throws JDOMException, IOException {
+    public boolean registerServlet(String name, String className, String[] urlPatterns, String comment, Map initParams) throws JDOMException, IOException {
         boolean changed = false;
         if (!isServletRegistered(name)) {
             log.info("register servlet " + name);
@@ -109,8 +105,7 @@ public class WebXmlUtil {
 
             doc.getRootElement().addContent(node);
             changed = true;
-        }
-        else {
+        } else {
             log.info("servlet {} already registered", name);
         }
         for (int i = 0; i < urlPatterns.length; i++) {
@@ -128,8 +123,7 @@ public class WebXmlUtil {
      * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
      * @see info.magnolia.cms.filters.ServletDispatchingFilter
      */
-    public boolean registerServletMapping(Document doc, String name, String urlPattern, String comment)
-        throws JDOMException {
+    public boolean registerServletMapping(Document doc, String name, String urlPattern, String comment) throws JDOMException {
         if (isMappingRegistered(name, urlPattern)) {
             log.info("register servlet mapping [{}] for servlet [{}]", urlPattern, name);
 
@@ -150,8 +144,7 @@ public class WebXmlUtil {
     public boolean isServletOrMappingRegistered(String servletName) {
         try {
             return isServletRegistered(servletName) || isMappingRegistered(servletName);
-        }
-        catch (JDOMException e) {
+        } catch (JDOMException e) {
             throw new RuntimeException(e); // TODO
         }
     }
@@ -159,8 +152,7 @@ public class WebXmlUtil {
     public boolean isServletRegistered(String servletName) {
         try {
             return xpathMatches("/webxml:web-app/webxml:servlet[webxml:servlet-name='" + servletName + "']");
-        }
-        catch (JDOMException e) {
+        } catch (JDOMException e) {
             throw new RuntimeException(e); // TODO
         }
     }
@@ -168,18 +160,14 @@ public class WebXmlUtil {
     public boolean isMappingRegistered(String servletName) throws JDOMException {
         try {
             return xpathMatches("/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='" + servletName + "']");
-        }
-        catch (JDOMException e) {
+        } catch (JDOMException e) {
             throw new RuntimeException(e); // TODO
         }
     }
 
     public boolean isMappingRegistered(String servletName, String urlPattern) throws JDOMException {
         final String xpathExpr = "/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='"
-            + servletName
-            + "' and webxml:url-pattern='"
-            + urlPattern
-            + "']";
+                + servletName + "' and webxml:url-pattern='" + urlPattern + "']";
         return xpathMatches(xpathExpr);
     }
 
@@ -231,8 +219,8 @@ public class WebXmlUtil {
     public boolean isFilterDispatcherConfigured(String filterName) {
         try {
             XPath xpath = XPath.newInstance("/webxml:web-app/webxml:filter[webxml:filter-class='"
-                + filterName
-                + "']/webxml:filter-name");
+                    + filterName
+                    + "']/webxml:filter-name");
             xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
 
             Element filterEl = (Element) xpath.selectSingleNode(doc);
@@ -241,8 +229,8 @@ public class WebXmlUtil {
                 String mappingName = filterEl.getTextNormalize();
 
                 String expr = "/webxml:web-app/webxml:filter-mapping[webxml:filter-name='"
-                    + mappingName
-                    + "']/webxml:dispatcher";
+                        + mappingName
+                        + "']/webxml:dispatcher";
 
                 xpath = XPath.newInstance(expr);
                 xpath.addNamespace("webxml", doc.getRootElement().getNamespace().getURI());
@@ -251,8 +239,7 @@ public class WebXmlUtil {
 
             }
             return true;
-        }
-        catch (JDOMException e) {
+        } catch (JDOMException e) {
             throw new RuntimeException(e); // TODO
         }
     }
