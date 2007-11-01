@@ -1,11 +1,11 @@
 package info.magnolia.context;
 
-import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.Map;
 
 public class MapAttributeStrategy implements AttributeStrategy {
 
-	private Map map = new HashMap();
+	private Map map = new Hashtable();
 	
 	public MapAttributeStrategy() {	
 	}
