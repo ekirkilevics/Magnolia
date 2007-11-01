@@ -45,6 +45,7 @@ import info.magnolia.setup.for3_1.MoveMagnoliaUsersToRealmFolder;
 import info.magnolia.setup.for3_1.ReconfigureCommands;
 import info.magnolia.setup.for3_1.RemoveModuleDescriptorDetailsFromRepo;
 import info.magnolia.setup.for3_1.RenamedRenderersToTemplateRenderers;
+import info.magnolia.setup.for3_1.UpdateI18nConfiguration;
 import org.apache.commons.codec.binary.Base64;
 
 import java.util.ArrayList;
@@ -70,9 +71,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                             new IPConfigRulesUpdate()
                     )),
 
+            new UpdateI18nConfiguration(),
+
             // TODO add conditions for all these bootstrap since with this version we don't know if we're installing or updating !
-            new BootstrapSingleResource("new i18n", /*TODO*/"blah blah", "/mgnl-bootstrap/core/config.server.i18n.content.xml"),
-            new BootstrapSingleResource("new i18n", /*TODO*/"blah blah", "/mgnl-bootstrap/core/config.server.i18n.system.xml"),
             new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.MIMEMapping.xml"),
             new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.security.xml"),
             new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.URI2RepositoryMapping.xml"),
