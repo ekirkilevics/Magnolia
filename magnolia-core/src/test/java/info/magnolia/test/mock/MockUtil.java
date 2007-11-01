@@ -83,12 +83,20 @@ public class MockUtil {
             return (String) get(key);
         }
 
+        public synchronized Object setProperty(String key, String value) {
+            return this.map.put(key, value);
+        }
+
         public Set entrySet() {
             return this.map.entrySet();
         }
 
         public Set keySet() {
             return this.map.keySet();
+        }
+
+        public int size() {
+            return this.map.size();
         }
     }
 
