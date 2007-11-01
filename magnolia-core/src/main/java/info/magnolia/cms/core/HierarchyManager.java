@@ -21,7 +21,7 @@ import javax.jcr.Workspace;
 
 /**
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public interface HierarchyManager {
 
@@ -46,12 +46,18 @@ public interface HierarchyManager {
 
     void updateMetaData(MetaData md) throws RepositoryException;
 
+    /**
+     * @deprecated use getContent(String path) instead
+     */
     Content getPage(String path) throws RepositoryException;
 
     Content getContent(String path) throws RepositoryException;
 
     Content getContent(String path, boolean create, ItemType type) throws RepositoryException;
 
+    /**
+     * @deprecated use getContent(String path) instead
+     */
     Content getContentNode(String path) throws RepositoryException;
 
     NodeData getNodeData(String path) throws RepositoryException;
