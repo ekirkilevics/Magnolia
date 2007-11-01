@@ -259,11 +259,12 @@ public final class ModuleUtil {
 
     /**
      * Register a servlet in the web.xml including init parameters. The code checks if the servlet already exists
-     * @deprecated Use WebXmlUtil
+     * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
+     * @see WebXmlUtil
      */
     public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment,
             Hashtable initParams) throws JDOMException, IOException {
-        return WebXmlUtil.registerServlet(name, className, urlPatterns, comment, initParams);
+        return new WebXmlUtil().registerServlet(name, className, urlPatterns, comment, initParams);
     }
 
     /**

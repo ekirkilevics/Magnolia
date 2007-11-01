@@ -27,7 +27,6 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Map;
 
@@ -41,15 +40,6 @@ import java.util.Map;
 public class WebXmlUtil {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WebXmlUtil.class);
-
-    /**
-     * Register a servlet in the web.xml including init parameters. The code checks if the servlet already exists
-     * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
-     * @see info.magnolia.cms.filters.ServletDispatchingFilter
-     */
-    public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment, Hashtable initParams) throws JDOMException, IOException {
-        return new WebXmlUtil().registerServlet(name, className, urlPatterns, comment, (Map) initParams);
-    }
 
     /**
      * @deprecated
