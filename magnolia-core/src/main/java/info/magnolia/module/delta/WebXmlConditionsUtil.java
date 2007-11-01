@@ -16,6 +16,7 @@ import info.magnolia.cms.util.WebXmlUtil;
 
 import java.util.List;
 import java.util.Arrays;
+import java.util.Collections;
 
 /**
  * A utility class for web.xml related conditions, which will add
@@ -50,8 +51,8 @@ public class WebXmlConditionsUtil {
         }
     }
 
-    public void filterMustBeRegisteredWithCorrectDispatches(final String filterClass) {
-        if (!webXmlUtil.isFilterRegistered(filterClass) || !webXmlUtil.areFilterDispatchersConfiguredProperly(filterClass, Arrays.asList("REQUEST", "FORWARD"), Arrays.asList("ERROR"))) {
+    public void filterMustBeRegisteredWithCorrectDispatchers(final String filterClass) {
+        if (!webXmlUtil.isFilterRegistered(filterClass) || !webXmlUtil.areFilterDispatchersConfiguredProperly(filterClass, Arrays.asList(new String[]{"REQUEST", "FORWARD"}), Collections.singletonList("ERROR"))) {
             conditions.add(new FalseCondition("web.xml updates",
                     "Since Magnolia 3.1, the main Magnolia filter is " + filterClass + ", and it must be mapped with dispatchers REQUEST, FORWARD and, optionally, ERROR. "
                         + " Please add <dispatcher>REQUEST</dispatcher>"

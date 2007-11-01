@@ -162,7 +162,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.servletIsNowWrapped("FCKEditorSimpleUploadServlet");
         u.servletIsDeprecated("uuidRequestDispatcher");
         u.filterIsDeprecated("info.magnolia.cms.filters.MagnoliaManagedFilter", "info.magnolia.cms.filters.MgnlMainFilter");
-        u.filterMustBeRegisteredWithCorrectDispatches("info.magnolia.cms.filters.MgnlMainFilter");
+        u.filterMustBeRegisteredWithCorrectDispatchers("info.magnolia.cms.filters.MgnlMainFilter");
         return conditions;
     }
 }
