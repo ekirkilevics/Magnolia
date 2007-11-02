@@ -32,7 +32,7 @@ public class Version {
     public static final Version UNDEFINED_TO = new UndefinedLaterVersion();
     public static final Version UNDEFINED_DEVELOPMENT_VERSION = new UndefinedDevelopmentVersion();
 
-    private static final Pattern classifierValidation = Pattern.compile("[A-Za-z0-9]+");
+    private static final Pattern classifierValidation = Pattern.compile("[A-Za-z0-9-_]+");
     private final short major;
     private final short minor;
     private final short patch;

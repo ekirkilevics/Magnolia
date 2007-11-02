@@ -41,7 +41,20 @@ public class VersionTest extends TestCase {
         assertVersion(3, 0, 0, "Y", Version.parseVersion("3.0.0-Y"));
         assertVersion(3, 0, 0, "5", Version.parseVersion("3.0.0-5"));
         assertVersion(3, 0, 0, "20060622gregYO", Version.parseVersion("3.0.0-20060622gregYO"));
+    }
 
+    public void testShouldSupportUnderscoresAndDashesInClassifiersToo() {
+        assertVersion(3, 4, 5, "20060622-greg-YO", Version.parseVersion("3.4.5-20060622-greg-YO"));
+        assertVersion(3, 4, 5, "20071102_fixed", Version.parseVersion("3.4.5-20071102_fixed"));
+    }
+
+    public void testShouldRejectInvalidCharsInClassifiers() {
+        try {
+            Version.parseVersion("3.0.0-/slash+plus");
+            fail("should have failed");
+        } catch (RuntimeException e) {
+            assertEquals("Invalid classifier: /slash+plus", e.getMessage());
+        }
     }
 
     public void testShouldSupportClassifierIndependentlyOfTheVersionNumberPrecision() {
@@ -152,8 +165,8 @@ public class VersionTest extends TestCase {
         doTestBefore(true, "3.0.0-foo", "3.1.0");
     }
 
-    public void testUndefinedDeveloperVersion(){
-        Version realVersion = new Version(3,1,1);
+    public void testUndefinedDeveloperVersion() {
+        Version realVersion = new Version(3, 1, 1);
         assertTrue(Version.parseVersion(Version.UndefinedDevelopmentVersion.KEY) instanceof UndefinedDevelopmentVersion);
         assertTrue(Version.UNDEFINED_DEVELOPMENT_VERSION.isEquivalent(realVersion));
         assertTrue(Version.UNDEFINED_DEVELOPMENT_VERSION.isBeforeOrEquivalent(realVersion));
