@@ -32,6 +32,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.fileupload.FileItem;
 import org.apache.commons.fileupload.FileUploadBase;
+import org.apache.commons.fileupload.FileUploadException;
 import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.apache.commons.fileupload.servlet.ServletRequestContext;
@@ -76,7 +77,6 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
     /**
      * @see javax.servlet.Filter#init(javax.servlet.FilterConfig)
      */
-
     public void init(FilterConfig config) throws ServletException {
         super.init(config);
         String maxFileSize = config.getInitParameter(PARAM_MAX_FILE_SIZE);
@@ -91,41 +91,33 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
      * Determine if the request has multipart content and if so parse it into a <code>MultipartForm</code> and store
      * it as a request attribute.
      */
-
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
 
         boolean isMultipartContent = FileUploadBase.isMultipartContent(new ServletRequestContext(request));
         if (isMultipartContent) {
-            try {
-                MultipartForm mpf = parseRequest(request);
+            MultipartForm mpf = parseRequest(request);
 
-                // wrap the request
-                MultipartRequestWrapper mrw = new MultipartRequestWrapper(request, mpf);
-                chain.doFilter(mrw, response);
-                return;
-
-            }
-            catch (IOException e) {
-                throw e;
-            }
-            catch (Exception e) {
-                throw new ServletException(e);
-            }
+            // wrap the request
+            request = new MultipartRequestWrapper(request, mpf);
         }
-
         chain.doFilter(request, response);
     }
 
     /**
      * Parse the request and store it as a request attribute.
      */
-    private MultipartForm parseRequest(HttpServletRequest request) throws Exception {
+    private MultipartForm parseRequest(HttpServletRequest request) throws IOException, ServletException {
         MultipartForm form = new MultipartForm();
 
         ServletFileUpload upload = newServletFileUpload();
 
-        List fileItems = upload.parseRequest(request);
+        final List fileItems;
+        try {
+            fileItems = upload.parseRequest(request);
+        } catch (FileUploadException e) {
+            throw new ServletException("Could not upload files:" + e.getMessage(), e);
+        }
 
         for (Iterator fileItemIterator = fileItems.iterator(); fileItemIterator.hasNext();) {
             FileItem item = (FileItem) fileItemIterator.next();
@@ -183,23 +175,24 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
     /**
      * Add the <code>FileItem</code> as a document into the <code>MultipartForm</code>.
      */
-    private void addFile(FileItem item, MultipartForm form) throws Exception {
+    private void addFile(FileItem item, MultipartForm form) throws IOException {
         String atomName = item.getFieldName();
         String fileName = item.getName();
         String type = item.getContentType();
         File file = File.createTempFile(atomName, null, this.tempDir);
-        item.write(file);
+        try {
+            item.write(file);
+        } catch (Exception e) {
+            log.error("Could not write uploaded file: " + e.getMessage(), e);
+            throw new IOException("Could not write uploaded file: " + e.getMessage());
+        }
 
         form.addDocument(atomName, fileName, type, file);
     }
 
     static class MultipartRequestWrapper extends HttpServletRequestWrapper {
+        private final MultipartForm form;
 
-        private MultipartForm form;
-
-        /**
-         * @param request
-         */
         public MultipartRequestWrapper(HttpServletRequest request, MultipartForm form) {
             super(request);
             this.form = form;
@@ -208,7 +201,6 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
         /**
          * {@inheritDoc}
          */
-
         public String getParameter(String name) {
             String value = form.getParameter(name);
             log.debug("getParameter: {}={}", name, value);
@@ -218,7 +210,6 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
         /**
          * {@inheritDoc}
          */
-
         public Map getParameterMap() {
             return form.getParameters();
         }
@@ -226,7 +217,6 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
         /**
          * {@inheritDoc}
          */
-
         public Enumeration getParameterNames() {
             return form.getParameterNames();
         }
@@ -234,7 +224,6 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
         /**
          * {@inheritDoc}
          */
-
         public String[] getParameterValues(String name) {
             String[] value = form.getParameterValues(name);
             log.debug("getParameterValues: {}={}", name, value);
