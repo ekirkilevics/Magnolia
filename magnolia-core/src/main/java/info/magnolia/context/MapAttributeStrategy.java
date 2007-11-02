@@ -5,6 +5,8 @@ import java.util.Map;
 
 public class MapAttributeStrategy implements AttributeStrategy {
 
+	private static final long serialVersionUID = 222L;
+
 	private Map map = new Hashtable();
 	
 	public MapAttributeStrategy() {	

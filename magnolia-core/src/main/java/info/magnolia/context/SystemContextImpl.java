@@ -12,17 +12,12 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.core.HierarchyManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Locale;
 
 /**
  * This is the system context using the not secured HierarchyManagers. The context uses only one scope.
@@ -41,25 +36,13 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
      */
     private static final long serialVersionUID = 222L;
 
-//    private Locale systemLocale;
 
     /**
      * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself. Init the scopes
      */
     public SystemContextImpl() {
     	setAttributeStrategy(new MapAttributeStrategy());
-    }
-
-    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-        return ContentRepository.getHierarchyManager(repositoryId, workspaceId);
-    }
-
-    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        return ContentRepository.getAccessManager();
-    }
-
-    public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
+    	setRepositoryStrategy(new SharedAccessManagerStrategy());
     }
 
     public void setAttribute(String name, Object value, int scope) {
@@ -89,13 +72,4 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
         return this.user;
     }
 
-//    public Locale getLocale() {
-//        return systemLocale;
-//    }
-//
-//
-//    public void setLocale(Locale locale) {
-//        this.systemLocale = locale;
-//       // servletCtx.setAttribute(Config.FMT_LOCALE + ".application", locale); //$NON-NLS-1$
-//    }
 }

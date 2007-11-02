@@ -20,6 +20,8 @@ import info.magnolia.cms.util.WorkspaceAccessUtil;
 public class AuthRepositoryStrategy implements RepositoryAcquringStrategy {
 	private static final Logger log = LoggerFactory.getLogger(AuthRepositoryStrategy.class);
 
+	private static final long serialVersionUID = 222L;
+	
 	private Map jcrSessions = new HashMap();
 	private Map hierarchyManagers = new HashMap();
 	private Map accessManagers = new HashMap();
@@ -53,22 +55,25 @@ public class AuthRepositoryStrategy implements RepositoryAcquringStrategy {
 
 	public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
 		final String hmAttrName = repositoryId + "_" + workspaceId;
-
-        HierarchyManager hm = (HierarchyManager) hierarchyManagers.get(hmAttrName);
-
-        if (hm == null) {
+		ThreadLocal localManager = (ThreadLocal) hierarchyManagers.get(hmAttrName);
+        
+        if (localManager == null) {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             try {
-                hm = util.createHierarchyManager(context.getUser().getName(), 
+            	HierarchyManager hm = util.createHierarchyManager(context.getUser().getName(), 
                 		getRepositorySession(repositoryId, workspaceId), 
                 		getAccessManager(repositoryId, workspaceId), 
                 		getQueryManager(repositoryId, workspaceId));
+            	localManager = new ThreadLocal();
+            	localManager.set(hm);
             }
             catch (RepositoryException e) {
                 throw new UnhandledException(e);
             }
-            hierarchyManagers.put(hmAttrName, hm);
+            hierarchyManagers.put(hmAttrName, localManager);
         }
+        
+        HierarchyManager hm = (HierarchyManager) localManager.get();
 
         return hm;
 	}
@@ -91,14 +96,18 @@ public class AuthRepositoryStrategy implements RepositoryAcquringStrategy {
 	    Session jcrSession = null;
 	
 	    final String repoSessAttrName = repositoryName + "_" + workspaceName;
-	
-	    jcrSession = (Session) jcrSessions.get(repoSessAttrName);
-	
-	    if (jcrSession == null) {
+	    
+	    ThreadLocal localSession = (ThreadLocal) jcrSessions.get(repoSessAttrName);
+		   	
+	    if (localSession == null) {
 	        WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
 	        jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
-	        jcrSessions.put(repoSessAttrName, jcrSession);
+	        localSession = new ThreadLocal();
+	        localSession.set(jcrSession);
+	        jcrSessions.put(repoSessAttrName, localSession);
 	    }
+	    
+	    jcrSession = (Session) localSession.get();
 	    return jcrSession;    
 	}
 	

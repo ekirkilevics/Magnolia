@@ -8,6 +8,7 @@ import info.magnolia.cms.security.User;
 import java.util.Map;
 
 public class UserContextImpl extends AbstractContext implements UserContext {
+	private static final long serialVersionUID = 222L;
 
 	public void login(User user) {
 		setUser(user);

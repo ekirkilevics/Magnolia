@@ -14,6 +14,8 @@ import org.slf4j.LoggerFactory;
 public class RequestAttributeStrategy implements AttributeStrategy {
 	private static final Logger log = LoggerFactory.getLogger(RequestAttributeStrategy.class);
 
+	private static final long serialVersionUID = 222L;
+	
 	private HttpServletRequest request;
 	
 	public RequestAttributeStrategy() {		
