@@ -99,6 +99,7 @@ public abstract class AbstractModule implements Module, ModuleLifecycle {
      * Calles onRegister if not yet installed after it loaded the bootstrapfiles of this module
      */
     public final void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
+        setDefinition(def);
         // will be reset by the ModuleManager before the init method is called
         setModuleNode(moduleNode);
 
