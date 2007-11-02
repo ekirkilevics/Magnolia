@@ -20,8 +20,9 @@
 
   <process-definition name="revision-round">
     <loop>
-      <while test="${field:action} == reject"/>
-
+      <while>
+         <equals field-value="action" other-value="reject" />
+      </while>
       <to-editor/>
 
       <if test="${field:action} != proceed">
@@ -30,7 +31,6 @@
 
       <to-publisher/>
     </loop>
-
   </process-definition>
 
   <process-definition name="to-publisher">
@@ -44,7 +44,9 @@
         <set field="mailTemplate" value="testMagnolia"/>
         <participant ref="command-sendMail"/>
       -->
-    <participant ref="group-publishers"/>
+      <!-- reset the assignTo field so the editor no longers see the workflow item --> 
+      <unset field="assignTo"/>
+      <participant ref="group-publishers"/>
     </sequence>
   </process-definition>
 
