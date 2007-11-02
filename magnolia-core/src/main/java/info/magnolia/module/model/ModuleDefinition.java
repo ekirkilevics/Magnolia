@@ -86,6 +86,6 @@ public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition 
     }
 
     public String toString() {
-        return getDisplayName() + " version " + getVersionDefinition();
+        return getDisplayName() + " (version " + versionDefinition + ")";
     }
 }

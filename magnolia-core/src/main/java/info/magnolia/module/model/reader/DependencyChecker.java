@@ -61,13 +61,13 @@ public class DependencyChecker {
     }
 
     protected void checkSpecificDependency(ModuleDefinition checkedModule, DependencyDefinition requiredDependency, Map moduleDefinitions) throws MissingDependencyException, ModuleDependencyException {
-        final ModuleDefinition installedModule = (ModuleDefinition) moduleDefinitions.get(requiredDependency.getName());
-        if (installedModule == null) {
+        final ModuleDefinition dependencyModuleDef = (ModuleDefinition) moduleDefinitions.get(requiredDependency.getName());
+        if (dependencyModuleDef == null) {
             throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + requiredDependency + ", which was not found.");
         }
 
         final VersionRange requiredRange = requiredDependency.getVersionRange();
-        final Version installedVersion = installedModule.getVersionDefinition();
+        final Version dependencyVersion = dependencyModuleDef.getVersionDefinition();
 
         // TODO ignore ${project.version} ? or be smarter ?
 //        if (instVersion.equals("${project.version}")) {
@@ -75,8 +75,8 @@ public class DependencyChecker {
 //            return;
 //        }
 
-        if (!requiredRange.contains(installedVersion)) {
-            throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + requiredDependency + ", but " + installedModule + " is currently installed.");
+        if (!requiredRange.contains(dependencyVersion)) {
+            throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + requiredDependency + ", but " + dependencyModuleDef + " is currently installed.");
         }
     }
 }
