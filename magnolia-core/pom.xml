@@ -126,7 +126,6 @@
     <dependency>
       <groupId>servlets.com</groupId>
       <artifactId>cos</artifactId>
-      <optional>true</optional>
     </dependency>
     <dependency>
       <groupId>commons-fileupload</groupId>

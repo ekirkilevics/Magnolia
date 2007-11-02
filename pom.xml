@@ -809,7 +809,6 @@
         <groupId>servlets.com</groupId>
         <artifactId>cos</artifactId>
         <version>05Nov2002</version>
-        <optional>true</optional>
       </dependency>
       <dependency>
         <groupId>commons-logging</groupId>

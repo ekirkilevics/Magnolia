@@ -533,7 +533,7 @@
       <sv:value>406ad67a-85c9-40da-8064-d3b40637b4e8</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.cms.filters.MultipartRequestFilter</sv:value>
+      <sv:value>info.magnolia.cms.filters.CosMultipartRequestFilter</sv:value>
     </sv:property>
     <sv:property sv:name="enabled" sv:type="Boolean">
       <sv:value>true</sv:value>
