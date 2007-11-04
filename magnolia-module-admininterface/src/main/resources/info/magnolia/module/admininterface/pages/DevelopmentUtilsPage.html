@@ -6,7 +6,7 @@
     <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
   </head>
   <body id="mgnl">
-    <form action="">
+    <form action="" method="post">
       <div class="pageframe">
         <div class="formelement">
           <label for="rootdir">Root dir, relative to webapp</label>
@@ -57,10 +57,14 @@
           <label for="pages">Pages</label>
           <input type="checkbox" name="pages" [#if this.pages] checked="checked" [/#if] />
         </div>
+        <div class="formelement">
+          <label for="pages">Virual URIs</label>
+          <input type="checkbox" name="virtualURIs" [#if this.virtualURIs] checked="checked" [/#if] />
+        </div>
         <input type="submit" value="backup" class="mgnlControlButton" />
       </div>
     </form>
-    <form action="">
+    <form action="" method="post">
       <div class="pageframe">
         <h3>Backup subnodes to separate files</h3>
         <form action="">
@@ -81,7 +85,7 @@
           </div>
           <div class="formelement">
             <label for="rootdir">Root dir, relative to webapp</label>
-            <input type="text" name="rootdir" value="WEB-INF/bootstrap/common" class="text" />
+            <input type="text" name="rootdir" value="${this.rootdir}" class="text" />
           </div>
           <input type="submit" value="backupChildren" class="mgnlControlButton" />
         </form>

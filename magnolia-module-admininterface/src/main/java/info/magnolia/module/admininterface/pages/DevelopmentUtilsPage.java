@@ -68,6 +68,8 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     private boolean roles;
 
+    private boolean virtualURIs;
+
     private String rootdir;
 
     private String parentpath;
@@ -289,6 +291,22 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
         this.repository = repository;
     }
 
+    /**
+     * Getter for <code>virtualURIs</code>.
+     * @return Returns the virtualURIs.
+     */
+    public boolean isVirtualURIs() {
+        return this.virtualURIs;
+    }
+
+    /**
+     * Setter for <code>virtualURIs</code>.
+     * @param virtualURIs The virtualURIs to set.
+     */
+    public void setVirtualURIs(boolean virtualURIs) {
+        this.virtualURIs = virtualURIs;
+    }
+
     public Iterator getRepositories() {
         return ContentRepository.getAllRepositoryNames();
     }
@@ -325,6 +343,15 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
                     moduleroot,
                     "dialogs",
                     new ItemType[]{ItemType.CONTENT},
+                    true);
+            }
+            if (virtualURIs) {
+                exportChildren(
+                    ContentRepository.CONFIG,
+                    session,
+                    moduleroot,
+                    "virtualURIMapping",
+                    new ItemType[]{ItemType.CONTENTNODE},
                     true);
             }
             AlertUtil.setMessage("Backup done to "
