@@ -27,8 +27,8 @@ public class DefaultCacheManager extends BaseCacheManager {
     private Cache cache = NOOP_CACHE;
 
     /**
-     * @see info.magnolia.cms.cache.CacheManager#getCacheKey(javax.servlet.http.HttpServletRequest)
-     * TODO : we should probably use the AggregationState instead of the HttpServletRequest
+     * @see info.magnolia.cms.cache.CacheManager#getCacheKey(javax.servlet.http.HttpServletRequest) TODO : we should
+     * probably use the AggregationState instead of the HttpServletRequest
      */
     public CacheKey getCacheKey(HttpServletRequest request) {
         return new CacheKey(request);
@@ -38,7 +38,7 @@ public class DefaultCacheManager extends BaseCacheManager {
      * In case we the voting is negative the request is not cached. Otherwise the defined deny or allow uri are checked.
      */
     public boolean isCacheable(HttpServletRequest request) {
-        if(Voting.Factory.getDefaultVoting().vote(voters, request) < 0){
+        if (Voting.Factory.getDefaultVoting().vote(voters, request) < 0) {
             return false;
         }
         return getConfig().isUriCacheable(request);

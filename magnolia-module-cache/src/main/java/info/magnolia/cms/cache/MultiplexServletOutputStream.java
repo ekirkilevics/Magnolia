@@ -4,16 +4,17 @@ import javax.servlet.ServletOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 
+
 /**
- * A simple ServletOutputStream implementation that duplicates any output to two different output stream.
- *
- * Very similar to TeeOutputStream from commons-io.
- *
+ * A simple ServletOutputStream implementation that duplicates any output to two different output stream. Very similar
+ * to TeeOutputStream from commons-io.
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public class MultiplexServletOutputStream extends ServletOutputStream {
+
     private final OutputStream stream1;
+
     private final OutputStream stream2;
 
     public MultiplexServletOutputStream(OutputStream stream1, OutputStream stream2) {
@@ -44,7 +45,8 @@ public class MultiplexServletOutputStream extends ServletOutputStream {
     public void close() throws IOException {
         try {
             stream1.close();
-        } finally {
+        }
+        finally {
             stream2.close();
         }
     }

@@ -8,9 +8,8 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * TODO : we should probably use the AggregationState instead of the HttpServletRequest
- * in the various methods of this interface.
- *
+ * TODO : we should probably use the AggregationState instead of the HttpServletRequest in the various methods of this
+ * interface.
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0

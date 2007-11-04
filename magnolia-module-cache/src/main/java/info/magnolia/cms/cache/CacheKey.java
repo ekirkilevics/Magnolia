@@ -35,16 +35,15 @@ public class CacheKey implements Serializable {
 
     /**
      * override actual key value
-     * */
+     */
     public void setValue(String key) {
         this.key = key;
     }
 
     /**
      * The constructor used by default
-     * @param request the request from which we get the path
-     *
-     * TODO : we should probably use the AggregationState instead of the HttpServletRequest
+     * @param request the request from which we get the path TODO : we should probably use the AggregationState instead
+     * of the HttpServletRequest
      */
     public CacheKey(HttpServletRequest request) {
         key = MgnlContext.getAggregationState().getOriginalURI();

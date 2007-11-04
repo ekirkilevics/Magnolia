@@ -28,7 +28,11 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsRemoved("CacheServlet");
         u.servletIsRemoved("CacheGeneratorServlet");
-        register("3.1.0", BasicDelta.createBasicDelta("Cache Module 3.1", "Cache Module 3.1", new ArrayList(), conditions));
+        register("3.1.0", BasicDelta.createBasicDelta(
+            "Cache Module 3.1",
+            "Cache Module 3.1",
+            new ArrayList(),
+            conditions));
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {

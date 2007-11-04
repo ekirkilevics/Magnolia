@@ -18,11 +18,9 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author Andreas Brenk
  * @author Fabrizio Giustina
- * @since 3.0
- * $Id$
+ * @since 3.0 $Id$
  */
 public class CacheFilter extends AbstractMgnlFilter {
-
 
     public static String ALREADY_FILTERED = CacheFilter.class.getName();
 
@@ -48,8 +46,8 @@ public class CacheFilter extends AbstractMgnlFilter {
     /**
      * @see javax.servlet.Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
      */
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException,
-        ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+        throws IOException, ServletException {
 
         if (cacheManager.isEnabled() && cacheManager.isRunning()) {
             boolean cacheable = cacheManager.isCacheable(request);
@@ -98,7 +96,6 @@ public class CacheFilter extends AbstractMgnlFilter {
 
     /**
      * Check if server cache is newer then the client cache
-     *
      * @param request The servlet request we are processing
      * @return boolean true if the server resource is newer
      */
@@ -113,7 +110,8 @@ public class CacheFilter extends AbstractMgnlFilter {
                     return false;
                 }
             }
-        } catch(IllegalArgumentException illegalArgument) {
+        }
+        catch (IllegalArgumentException illegalArgument) {
             return true;
         }
         return true;
@@ -121,7 +119,7 @@ public class CacheFilter extends AbstractMgnlFilter {
 
     /**
      * @return computed cache key
-     * */
+     */
     public CacheKey getCacheKey(HttpServletRequest request) {
         return getCacheManager().getCacheKey(request);
     }

@@ -6,7 +6,10 @@ import info.magnolia.cms.core.Path;
 
 import java.util.ArrayList;
 
-import javax.management.*;
+import javax.management.InstanceAlreadyExistsException;
+import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
+import javax.management.ObjectName;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -166,9 +169,11 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
             if (!mbeanServer.isRegistered(mbeanName)) {
                 mbeanServer.registerMBean(this, mbeanName);
             }
-        } catch (InstanceAlreadyExistsException e) {
+        }
+        catch (InstanceAlreadyExistsException e) {
             log.info("MBean '{}' exist", id);
-        } catch (Throwable t) {
+        }
+        catch (Throwable t) {
             log.error("Could not register JMX MBean '" + id + "'", t);
         }
     }
