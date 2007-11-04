@@ -2,14 +2,15 @@ package info.magnolia.cms.cache.ehcache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.cache.CacheConfig;
-import info.magnolia.cms.cache.CacheKey;
 import info.magnolia.cms.cache.CacheableEntry;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.Path;
 
 import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.zip.GZIPOutputStream;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletResponse;
@@ -44,8 +45,27 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
 
     private CacheManager ehcacheManager;
 
-    public void cacheRequest(CacheKey key, CacheableEntry out, boolean canCompress) {
-        this.ehcache.put(new Element(key, out));
+    public void cacheRequest(String key, CacheableEntry entry, boolean canCompress) {
+        this.ehcache.put(new Element(key, entry));
+
+        if (canCompress) {
+
+            try {
+                ByteArrayOutputStream baos = new ByteArrayOutputStream();
+                GZIPOutputStream out = new GZIPOutputStream(baos);
+                out.write(entry.getOut());
+                out.flush();
+
+                CacheableEntry compressedEntry = new CacheableEntry(baos.toByteArray());
+                compressedEntry.setContentType(entry.getContentType());
+                compressedEntry.setCharacterEncoding(entry.getCharacterEncoding());
+                this.ehcache.put(new Element(compressedKey(key), compressedEntry));
+            }
+            catch (IOException e) {
+                log.warn("Failed to cache " + key, e);
+            }
+        }
+
     }
 
     public void flush() {
@@ -55,11 +75,11 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
     /**
      * Remove the entry
      */
-    public void remove(CacheKey key) {
+    public void remove(String key) {
         this.ehcache.remove(key);
     }
 
-    public long getCreationTime(CacheKey key) {
+    public long getCreationTime(String key) {
         try {
             Element element = this.ehcache.get(key);
 
@@ -86,7 +106,7 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
         }
     }
 
-    public boolean isCached(CacheKey request) {
+    public boolean isCached(String request) {
         try {
             Element element = this.ehcache.getQuiet(request);
 
@@ -101,9 +121,11 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
         this.ehcacheManager.shutdown();
     }
 
-    public boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
+    public boolean streamFromCache(String key, HttpServletResponse response, boolean canCompress) {
+
+        String actualKey = canCompress ? compressedKey(key) : key;
         try {
-            Element element = this.ehcache.get(key);
+            Element element = this.ehcache.get(actualKey);
             if (element == null) {
                 return false;
             }
@@ -111,6 +133,9 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
             byte[] buffer = ((CacheableEntry) element.getValue()).getOut();
             ByteArrayInputStream in = new ByteArrayInputStream(buffer);
             response.setContentLength(buffer.length);
+            if (canCompress) {
+                response.setHeader("Content-Encoding", "gzip");
+            }
 
             try {
                 OutputStream out = response.getOutputStream();
@@ -119,7 +144,11 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
                 IOUtils.closeQuietly(out);
             }
             catch (IOException e) {
-                log.error("Error while reading cache for: '" + key + "'.", e);
+                // usually a ClientAbortException
+                log.debug("Error while reading cache for: {}: {} {}", new Object[]{
+                    key,
+                    e.getClass().getName(),
+                    e.getMessage()});
                 return false;
             }
             finally {
@@ -129,7 +158,8 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
             return true;
         }
         catch (CacheException e) {
-            throw new RuntimeException(e);
+            log.warn("Failed to stream from cache " + key, e);
+            return false;
         }
     }
 
@@ -179,6 +209,10 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
         catch (RepositoryException e) {
             throw new ConfigurationException(e);
         }
+    }
+
+    private String compressedKey(String key) {
+        return key + ".$.gzip";
     }
 
 }

@@ -59,7 +59,7 @@ public abstract class BaseCacheManager implements CacheManager {
         return this.config;
     }
 
-    public final long getCreationTime(CacheKey key) {
+    public final long getCreationTime(String key) {
         try {
             return doGetCreationTime(key);
         }
@@ -270,7 +270,7 @@ public abstract class BaseCacheManager implements CacheManager {
         log.info("CacheManager is now stopped.");
     }
 
-    public final boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
+    public final boolean streamFromCache(String key, HttpServletResponse response, boolean canCompress) {
         if (log.isDebugEnabled()) {
             log.debug("Streaming from cache {}, {}", key, canCompress ? "compressed" : "not compressed");
         }
@@ -295,14 +295,14 @@ public abstract class BaseCacheManager implements CacheManager {
      * method are logged as an error but are not propagated.
      * @see BaseCacheManager#handleNonFatalException(Exception)
      */
-    protected abstract long doGetCreationTime(CacheKey request);
+    protected abstract long doGetCreationTime(String key);
 
     /**
      * Template method to be implemented by subclasses. Should not throw any exceptions. All exceptions thrown by this
      * method are logged as an error but are not propagated.
      * @see BaseCacheManager#handleNonFatalException(Exception)
      */
-    protected abstract boolean doStreamFromCache(CacheKey request, HttpServletResponse response, boolean canCompress);
+    protected abstract boolean doStreamFromCache(String key, HttpServletResponse response, boolean canCompress);
 
     /**
      * Template method to be implemented by subclasses. Should not throw any exceptions. All exceptions thrown by this

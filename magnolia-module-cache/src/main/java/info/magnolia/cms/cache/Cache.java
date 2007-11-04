@@ -18,15 +18,15 @@ public interface Cache {
 
     void stop();
 
-    boolean isCached(CacheKey key);
+    boolean isCached(String key);
 
-    void cacheRequest(CacheKey key, CacheableEntry out, boolean canCompress);
+    void cacheRequest(String key, CacheableEntry out, boolean canCompress);
 
-    boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress);
+    boolean streamFromCache(String key, HttpServletResponse response, boolean canCompress);
 
-    long getCreationTime(CacheKey key);
+    long getCreationTime(String key);
 
-    void remove(CacheKey key);
+    void remove(String key);
 
     void flush();
 

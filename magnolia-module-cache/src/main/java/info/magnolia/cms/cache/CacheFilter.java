@@ -57,7 +57,7 @@ public class CacheFilter extends AbstractMgnlFilter {
             // cache
             // if this time there are parameters.
             if (cacheable) {
-                CacheKey key = this.getCacheKey(request);
+                String key = this.getCacheKey(request);
                 if (!this.ifModifiedSince(request, cacheManager.getCreationTime(key))) {
                     response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                     return;
@@ -120,7 +120,7 @@ public class CacheFilter extends AbstractMgnlFilter {
     /**
      * @return computed cache key
      */
-    public CacheKey getCacheKey(HttpServletRequest request) {
+    public String getCacheKey(HttpServletRequest request) {
         return getCacheManager().getCacheKey(request);
     }
 

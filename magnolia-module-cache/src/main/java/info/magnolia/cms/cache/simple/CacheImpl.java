@@ -3,7 +3,6 @@ package info.magnolia.cms.cache.simple;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.cache.Cache;
 import info.magnolia.cms.cache.CacheConfig;
-import info.magnolia.cms.cache.CacheKey;
 import info.magnolia.cms.cache.CacheManagerFactory;
 import info.magnolia.cms.cache.CacheableEntry;
 import info.magnolia.cms.core.Path;
@@ -64,7 +63,7 @@ public class CacheImpl implements Cache {
      * @param entry
      * @param canCompress
      */
-    public void cacheRequest(CacheKey key, CacheableEntry entry, boolean canCompress) {
+    public void cacheRequest(String key, CacheableEntry entry, boolean canCompress) {
         // This implementation flushes entire cache, its safe to simply check on one flag, for other
         // implementations we need to check and synchronize on CacheKey
         if (currentlyRemoving) {
@@ -98,7 +97,7 @@ public class CacheImpl implements Cache {
      * @param entry
      * @param file
      */
-    private long cacheSingleFile(CacheKey key, CacheableEntry entry, File file, boolean compress) {
+    private long cacheSingleFile(String key, CacheableEntry entry, File file, boolean compress) {
         // it should not cache again if the resource already existing
         // its a responsibility of a cache manager to call remove or flush if resource needs to be invalidated
         if (!file.exists()) {
@@ -109,7 +108,7 @@ public class CacheImpl implements Cache {
             try {
                 boolean parentDirectoryReady = mkdirs(file.getParentFile());
                 if (!parentDirectoryReady) {
-                    log.warn("Failed to cache {}, unable to create parent directory {}", key.toString(), file
+                    log.warn("Failed to cache {}, unable to create parent directory {}", key, file
                         .getParentFile()
                         .getAbsolutePath());
                     return 0;
@@ -124,7 +123,7 @@ public class CacheImpl implements Cache {
                 out.flush();
             }
             catch (IOException e) {
-                log.warn("Failed to cache " + key.toString() + " to " + file.getAbsolutePath(), e);
+                log.warn("Failed to cache " + key + " to " + file.getAbsolutePath(), e);
             }
             finally {
                 IOUtils.closeQuietly(out);
@@ -161,7 +160,7 @@ public class CacheImpl implements Cache {
         }
     }
 
-    public long getCreationTime(CacheKey key) {
+    public long getCreationTime(String key) {
         CachedItem item = (CachedItem) this.cachedURIList.get(key);
         if (item == null) {
             return -1;
@@ -172,8 +171,6 @@ public class CacheImpl implements Cache {
 
     public void start(CacheConfig config) {
         this.config = config;
-
-        registerObservation();
 
         File cacheDir = getCacheDirectory();
 
@@ -186,27 +183,6 @@ public class CacheImpl implements Cache {
         else {
             updateInMemoryCache(cacheDir);
         }
-    }
-
-    /**
-     * override this to register different workspaces
-     */
-    protected void registerObservation() {
-        // TODO this should be more flexible in cases you want to handle events on other repositories
-        // register to observe on any changes if configured
-        ObservationUtil.registerDefferedChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
-
-            public void onEvent(EventIterator events) {
-                handleChangeEvents(events);
-            }
-        }, 5000, 30000);
-    }
-
-    /**
-     * Called based on the observation. The default implementation flushes the whole cache.
-     */
-    protected void handleChangeEvents(EventIterator events) {
-        CacheManagerFactory.getCacheManager().flushAll();
     }
 
     /**
@@ -232,13 +208,13 @@ public class CacheImpl implements Cache {
                     if (compressedFile.exists()) {
                         compressedSize = (int) compressedFile.length();
                     }
-                    addToCachedURIList(new CacheKey(key), item.lastModified(), size, compressedSize);
+                    addToCachedURIList(key, item.lastModified(), size, compressedSize);
                 }
             }
         }
     }
 
-    public boolean isCached(CacheKey key) {
+    public boolean isCached(String key) {
         return this.cachedURIList.get(key) != null;
     }
 
@@ -255,7 +231,7 @@ public class CacheImpl implements Cache {
      * @param response HttpServletResponse
      * @return <code>true</code> is successful
      */
-    public boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
+    public boolean streamFromCache(String key, HttpServletResponse response, boolean canCompress) {
 
         FileInputStream fin = null;
         OutputStream out = null;
@@ -285,7 +261,11 @@ public class CacheImpl implements Cache {
             out.flush();
         }
         catch (IOException e) {
-            log.debug("Error while reading cache for: '" + key + "'.", e);
+            // usually a ClientAbortException
+            log.debug("Error while reading cache for: {}: {} {}", new Object[]{
+                key,
+                e.getClass().getName(),
+                e.getMessage()});
             return false;
         }
         finally {
@@ -302,7 +282,7 @@ public class CacheImpl implements Cache {
      * @param compressedSize compressed size
      * @param lastModified
      */
-    private void addToCachedURIList(CacheKey key, long lastModified, int size, int compressedSize) {
+    private void addToCachedURIList(String key, long lastModified, int size, int compressedSize) {
         CachedItem entry = new CachedItem(lastModified, size, compressedSize);
 
         if (log.isDebugEnabled()) {
@@ -320,7 +300,7 @@ public class CacheImpl implements Cache {
      * Empties the cache for the specified resource. Currenty it expects the entire path, including cache location. This
      * is never used for simple cache since there are no way to find out how to flush related items
      */
-    public void remove(CacheKey key) {
+    public void remove(String key) {
         File file = this.getFile(key, false);
         try {
             if (file.isDirectory()) {
@@ -344,7 +324,7 @@ public class CacheImpl implements Cache {
     /**
      * @return size as on disk
      */
-    private int getCompressedSize(CacheKey key) {
+    private int getCompressedSize(String key) {
         CachedItem item = (CachedItem) this.cachedURIList.get(key);
         if (item == null) {
             return -1;
@@ -353,8 +333,8 @@ public class CacheImpl implements Cache {
         return item.compressedSize;
     }
 
-    private File getFile(CacheKey key, boolean compressed) {
-        String fileName = key.toString();
+    private File getFile(String key, boolean compressed) {
+        String fileName = key;
         // we add .cache extension to directories to distinguish them from files cached without extensions
         fileName = StringUtils.removeStart(
             StringUtils.replace(fileName, "/", CACHE_DIRECTORY_EXTENTION + "/"),
@@ -372,7 +352,7 @@ public class CacheImpl implements Cache {
     /**
      * @return size as on disk
      */
-    private int getSize(CacheKey key) {
+    private int getSize(String key) {
         CachedItem item = (CachedItem) this.cachedURIList.get(key);
         if (item == null) {
             return -1;
@@ -384,7 +364,7 @@ public class CacheImpl implements Cache {
     /**
      * @param key
      */
-    private void removeFromCachedURIList(CacheKey key) {
+    private void removeFromCachedURIList(String key) {
         this.cachedURIList.remove(key);
     }
 

@@ -16,9 +16,9 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface CacheManager {
 
-    boolean cacheRequest(CacheKey key, CacheableEntry entry, boolean canCompress);
+    boolean cacheRequest(String key, CacheableEntry entry, boolean canCompress);
 
-    CacheKey getCacheKey(HttpServletRequest request);
+    String getCacheKey(HttpServletRequest request);
 
     boolean isCacheable(HttpServletRequest request);
 
@@ -26,7 +26,7 @@ public interface CacheManager {
 
     void flushAll();
 
-    long getCreationTime(CacheKey request);
+    long getCreationTime(String key);
 
     void init(Content content) throws ConfigurationException;
 
@@ -48,5 +48,5 @@ public interface CacheManager {
 
     void stop();
 
-    boolean streamFromCache(CacheKey request, HttpServletResponse response, boolean canCompress);
+    boolean streamFromCache(String key, HttpServletResponse response, boolean canCompress);
 }

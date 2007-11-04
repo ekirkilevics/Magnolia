@@ -40,7 +40,7 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
         this.cacheManager = cacheManager;
     }
 
-    public boolean cacheRequest(CacheKey key, CacheableEntry entry, boolean canCompress) {
+    public boolean cacheRequest(String key, CacheableEntry entry, boolean canCompress) {
         boolean didCache = this.cacheManager.cacheRequest(key, entry, canCompress);
 
         if (didCache) {
@@ -66,7 +66,7 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
         return this.cachePuts;
     }
 
-    public long getCreationTime(CacheKey request) {
+    public long getCreationTime(String request) {
         return this.cacheManager.getCreationTime(request);
     }
 
@@ -135,11 +135,11 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
         return this.cacheManager.canCompress(request);
     }
 
-    public CacheKey getCacheKey(HttpServletRequest request) {
+    public String getCacheKey(HttpServletRequest request) {
         return this.cacheManager.getCacheKey(request);
     }
 
-    public boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
+    public boolean streamFromCache(String key, HttpServletResponse response, boolean canCompress) {
         boolean didUseCache = this.cacheManager.streamFromCache(key, response, canCompress);
 
         if (didUseCache) {

@@ -1,10 +1,15 @@
 package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.cache.noop.NoOpCache;
 import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.voting.Voting;
 
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -30,8 +35,8 @@ public class DefaultCacheManager extends BaseCacheManager {
      * @see info.magnolia.cms.cache.CacheManager#getCacheKey(javax.servlet.http.HttpServletRequest) TODO : we should
      * probably use the AggregationState instead of the HttpServletRequest
      */
-    public CacheKey getCacheKey(HttpServletRequest request) {
-        return new CacheKey(request);
+    public String getCacheKey(HttpServletRequest request) {
+        return MgnlContext.getAggregationState().getOriginalURI();
     }
 
     /**
@@ -53,7 +58,7 @@ public class DefaultCacheManager extends BaseCacheManager {
         return getConfig().canCompress(extension);
     }
 
-    public boolean cacheRequest(CacheKey key, CacheableEntry entry, boolean canCompress) {
+    public boolean cacheRequest(String key, CacheableEntry entry, boolean canCompress) {
         cache.cacheRequest(key, entry, canCompress);
         return true;
     }
@@ -62,8 +67,8 @@ public class DefaultCacheManager extends BaseCacheManager {
         this.cache.flush();
     }
 
-    protected long doGetCreationTime(CacheKey request) {
-        return this.cache.getCreationTime(request);
+    protected long doGetCreationTime(String key) {
+        return this.cache.getCreationTime(key);
     }
 
     protected void doStart() {
@@ -74,6 +79,8 @@ public class DefaultCacheManager extends BaseCacheManager {
             cache.start(config);
 
             this.cache = cache;
+
+            registerObservation();
         }
         catch (ConfigurationException e) {
             // FIXME
@@ -85,7 +92,7 @@ public class DefaultCacheManager extends BaseCacheManager {
         this.cache = NOOP_CACHE;
     }
 
-    protected boolean doStreamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
+    protected boolean doStreamFromCache(String key, HttpServletResponse response, boolean canCompress) {
         if (!isRunning()) {
             return false;
         }
@@ -108,7 +115,7 @@ public class DefaultCacheManager extends BaseCacheManager {
         return this.cache;
     }
 
-    private boolean isCached(CacheKey request) {
+    private boolean isCached(String request) {
         return this.cache.isCached(request);
     }
 
@@ -128,6 +135,27 @@ public class DefaultCacheManager extends BaseCacheManager {
         catch (ClassCastException e) {
             throw new ConfigurationException("Class does not implement Cache!", e);
         }
+    }
+
+    /**
+     * override this to register different workspaces
+     */
+    protected void registerObservation() {
+        // TODO this should be more flexible in cases you want to handle events on other repositories
+        // register to observe on any changes if configured
+        ObservationUtil.registerDefferedChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
+
+            public void onEvent(EventIterator events) {
+                handleChangeEvents(events);
+            }
+        }, 5000, 30000);
+    }
+
+    /**
+     * Called based on the observation. The default implementation flushes the whole cache.
+     */
+    protected void handleChangeEvents(EventIterator events) {
+        flushAll();
     }
 
 }

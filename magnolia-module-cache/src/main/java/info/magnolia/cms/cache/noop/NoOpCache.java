@@ -2,7 +2,6 @@ package info.magnolia.cms.cache.noop;
 
 import info.magnolia.cms.cache.Cache;
 import info.magnolia.cms.cache.CacheConfig;
-import info.magnolia.cms.cache.CacheKey;
 import info.magnolia.cms.cache.CacheableEntry;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +46,7 @@ public class NoOpCache implements Cache {
      * Does nothing.
      * @return <code>false</code>
      */
-    public boolean isCached(CacheKey request) {
+    public boolean isCached(String request) {
         return false;
     }
 
@@ -69,14 +68,14 @@ public class NoOpCache implements Cache {
      * @see info.magnolia.cms.cache.Cache#cacheRequest(info.magnolia.cms.cache.CacheKey,
      * info.magnolia.cms.cache.CacheableEntry, boolean)
      */
-    public void cacheRequest(CacheKey key, CacheableEntry out, boolean canCompress) {
+    public void cacheRequest(String key, CacheableEntry out, boolean canCompress) {
 
     }
 
     /**
      * @see info.magnolia.cms.cache.Cache#getCreationTime(info.magnolia.cms.cache.CacheKey)
      */
-    public long getCreationTime(CacheKey request) {
+    public long getCreationTime(String request) {
         return 0;
     }
 
@@ -84,14 +83,14 @@ public class NoOpCache implements Cache {
      * @see info.magnolia.cms.cache.Cache#streamFromCache(info.magnolia.cms.cache.CacheKey,
      * javax.servlet.http.HttpServletResponse, boolean)
      */
-    public boolean streamFromCache(CacheKey key, HttpServletResponse response, boolean canCompress) {
+    public boolean streamFromCache(String key, HttpServletResponse response, boolean canCompress) {
         return false;
     }
 
     /**
      * @see info.magnolia.cms.cache.Cache#flushEntry(info.magnolia.cms.cache.CacheKey)
      */
-    public void remove(CacheKey key) {
+    public void remove(String key) {
 
     }
 
