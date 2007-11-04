@@ -109,7 +109,9 @@ public class CacheImpl implements Cache {
             try {
                 boolean parentDirectoryReady = mkdirs(file.getParentFile());
                 if (!parentDirectoryReady) {
-                    log.warn("Failed to cache {}, unable to create parent directory {}", key.toString(), file.getParentFile().getAbsolutePath());
+                    log.warn("Failed to cache {}, unable to create parent directory {}", key.toString(), file
+                        .getParentFile()
+                        .getAbsolutePath());
                     return 0;
                 }
                 file.createNewFile();
@@ -187,8 +189,8 @@ public class CacheImpl implements Cache {
     }
 
     /**
-     * override this to register different workspaces 
-     * */
+     * override this to register different workspaces
+     */
     protected void registerObservation() {
         // TODO this should be more flexible in cases you want to handle events on other repositories
         // register to observe on any changes if configured
@@ -414,7 +416,8 @@ public class CacheImpl implements Cache {
         }
         File parent = canonFile.getParentFile();
         if (null == parent) {
-            log.warn("Parent of {} (canonical file for path {}) is null!", canonFile.getAbsoluteFile(), file.getAbsolutePath());
+            log.warn("Parent of {} (canonical file for path {}) is null!", canonFile.getAbsoluteFile(), file
+                .getAbsolutePath());
             return false;
         }
 
