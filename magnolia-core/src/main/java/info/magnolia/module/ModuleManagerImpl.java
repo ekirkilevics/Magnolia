@@ -111,6 +111,7 @@ public class ModuleManagerImpl implements ModuleManager {
     public void checkForInstallOrUpdates() {
         // compare and determine if we need to do anything
         state = new ModuleManagementState();
+        int taskCount = 0;
         final Iterator it = orderedModuleDescriptors.iterator();
         while (it.hasNext()) {
             final ModuleDefinition module = (ModuleDefinition) it.next();
@@ -123,11 +124,17 @@ public class ModuleManagerImpl implements ModuleManager {
             final List deltas = versionHandler.getDeltas(installContext, currentVersion);
             if (deltas.size() > 0) {
                 state.addModule(module, currentVersion, deltas);
+                final Iterator itD = deltas.iterator();
+                while (itD.hasNext()) {
+                    final Delta d = (Delta) itD.next();
+                    taskCount += d.getTasks().size();
+                }
             }
         }
         // TODO handle modules found in repo but not found on classpath
 
         installContext.setCurrentModule(null);
+        installContext.setTotalTaskCount(taskCount);
 
         // if we don't have to perform any update load repositories now
         if (!state.needsUpdateOrInstall()) {
@@ -178,11 +185,17 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     public void performInstallOrUpdate() throws ModuleManagementException {
-        if (state == null) {
-            throw new IllegalStateException("ModuleManager was not initialized !");
-        }
-        if (!state.needsUpdateOrInstall()) {
-            throw new IllegalStateException("ModuleManager has nothing to do !");
+        synchronized (installContext) {
+            if (state == null) {
+                throw new IllegalStateException("ModuleManager was not initialized !");
+            }
+            if (!state.needsUpdateOrInstall()) {
+                throw new IllegalStateException("ModuleManager has nothing to do !");
+            }
+            if (installContext.getStatus() != null) {
+                throw new IllegalStateException("ModuleManager.performInstallOrUpdate() was already started !");
+            }
+            installContext.setStatus(InstallStatus.started);
         }
 
         // check all conditions
@@ -208,6 +221,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
         installContext.setCurrentModule(null);
         if (!conditionsChecked) {
+            installContext.setStatus(InstallStatus.stopped_conditionsNotMet);
             return;
         }
 
@@ -223,7 +237,10 @@ public class ModuleManagerImpl implements ModuleManager {
                 }
             }
         });
-        installContext.installDone();
+
+        // TODO : this isn't super clean.
+        final InstallStatus status = installContext.isRestartNeeded() ? InstallStatus.done_restartNeeded : InstallStatus.done_ok;
+        installContext.setStatus(status);
     }
 
     public InstallContext getInstallContext() {
@@ -392,6 +409,7 @@ public class ModuleManagerImpl implements ModuleManager {
                     final Task task = (Task) itT.next();
                     log.debug("Module {}, executing {}", moduleDef, task);
                     task.execute(ctx);
+                    ctx.incExecutedTaskCount();
                 }
             }
         } catch (TaskExecutionException e) {

@@ -1,4 +1,7 @@
 [#macro contextMessages]
+<h2>Status</h2>
+<h3>${context.executedTaskCount} tasks have been executed, for a total of ${context.totalTaskCount} tasks.</h3>
+
 <h2>Messages</h2>
 
 [#list context.messages?keys as module]

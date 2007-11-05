@@ -14,6 +14,7 @@ package info.magnolia.module.ui;
 
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
+import info.magnolia.module.InstallStatus;
 
 import java.io.Writer;
 
@@ -38,12 +39,12 @@ public class ModuleManagerNullUI implements ModuleManagerUI {
         if (moduleMgtState.needsUpdateOrInstall()) {
             log.info("magnolia.update.auto is set to true, will start bootstrapping/update automatically");
             moduleManager.performInstallOrUpdate();
-            if (!moduleManager.getInstallContext().isInstallDone()) {
+            final InstallStatus status = moduleManager.getInstallContext().getStatus();
+            if (!InstallStatus.done_ok.equals(status)) {
                 log.info("Install could not be performed. Please check your logs and fix the appropriate issues before trying again.");
                 return;
             }
             moduleManager.startModules();
-            moduleMgtState.done();
         } else {
             moduleManager.startModules();
         }

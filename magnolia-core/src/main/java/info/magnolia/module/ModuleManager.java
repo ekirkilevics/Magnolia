@@ -70,22 +70,16 @@ public interface ModuleManager {
      */
     public final static class ModuleManagementState {
         private final List list;
-        private boolean done = true;
 
         public ModuleManagementState() {
             this.list = new ArrayList();
         }
 
         public boolean needsUpdateOrInstall() {
-            return !(list.isEmpty() && done);
-        }
-
-        public void done() {
-            done = true;
+            return !(list.isEmpty());
         }
 
         void addModule(ModuleDefinition module, Version currentVersion, List deltas) {
-            done = false;
             list.add(new ModuleAndDeltas(module, currentVersion, deltas));
         }
 

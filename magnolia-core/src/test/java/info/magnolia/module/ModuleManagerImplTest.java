@@ -16,6 +16,8 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.SystemContext;
+import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.Task;
@@ -29,6 +31,7 @@ import static org.easymock.classextension.EasyMock.*;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -72,14 +75,17 @@ public class ModuleManagerImplTest extends TestCase {
         final Version fromVersion = Version.parseVersion("1.2.3");
 
         ctx.setCurrentModule(mod);
-        ctx.setCurrentModule(null);
-
         expect(d2.getTasks()).andReturn(Arrays.asList(t3, t4));
         expect(d1.getTasks()).andReturn(Arrays.asList(t1, t2));
         t1.execute(ctx);
+        ctx.incExecutedTaskCount();
         t2.execute(ctx);
+        ctx.incExecutedTaskCount();
         t3.execute(ctx);
+        ctx.incExecutedTaskCount();
         t4.execute(ctx);
+        ctx.incExecutedTaskCount();
+        ctx.setCurrentModule(null);
 
         replay(ctx, d1, d2, t1, t2, t3, t4, moduleNode, versionProp, allModulesNode);
 
@@ -121,6 +127,8 @@ public class ModuleManagerImplTest extends TestCase {
         final Condition c1 = createStrictMock(Condition.class);
         final Condition c2 = createStrictMock(Condition.class);
         final Condition c3 = createStrictMock(Condition.class);
+        final Task t1 = createStrictMock(Task.class);
+        final Task t2 = createStrictMock(Task.class);
         final ModuleDefinition mod1 = new ModuleDefinition("abc", "2.3.4", null, null);
         final ModuleDefinition mod2 = new ModuleDefinition("xyz", "2.3.4", null, null);
         final Map modMap = new HashMap();
@@ -138,14 +146,19 @@ public class ModuleManagerImplTest extends TestCase {
         ctx.setCurrentModule(mod1);
         expect(mvh1.getCurrentlyInstalled(ctx)).andReturn(v123);
         expect(mvh1.getDeltas(ctx, v123)).andReturn(Collections.singletonList(d1));
+        expect(d1.getTasks()).andReturn(Collections.singletonList(t1));
 
         ctx.setCurrentModule(mod2);
         expect(mvh2.getCurrentlyInstalled(ctx)).andReturn(v123);
         expect(mvh2.getDeltas(ctx, v123)).andReturn(Collections.singletonList(d2));
+        expect(d2.getTasks()).andReturn(Collections.singletonList(t2));
 
         ctx.setCurrentModule(null);
+        ctx.setTotalTaskCount(2);
 
         // during performInstallOrUpdate()
+        expect(ctx.getStatus()).andReturn(null);
+        ctx.setStatus(InstallStatus.started);
         ctx.setCurrentModule(mod1);
         expect(d1.getConditions()).andReturn(Arrays.asList(c1, c2));
         expect(c1.check(ctx)).andReturn(Boolean.FALSE);
@@ -158,15 +171,99 @@ public class ModuleManagerImplTest extends TestCase {
         expect(c3.getDescription()).andReturn("Hi, please fix condition #3 too");
         ctx.info("Hi, please fix condition #3 too");
         ctx.setCurrentModule(null);
+        ctx.setStatus(InstallStatus.stopped_conditionsNotMet);
 
-        replay(modDefReader, ctx, mvh1, mvh2, d1, d2, c1, c2, c3);
+        replay(modDefReader, ctx, mvh1, mvh2, d1, d2, c1, c2, c3, t1, t2);
 
         final ModuleManagerImpl moduleManager = new TestModuleManagerImpl(moduleVersionHandlers, ctx, modDefReader);
         moduleManager.loadDefinitions();
         moduleManager.checkForInstallOrUpdates();
         moduleManager.performInstallOrUpdate();
         assertEquals("Conditions failed, so we still need to update/install", true, moduleManager.getStatus().needsUpdateOrInstall());
-        verify(modDefReader, ctx, mvh1, mvh2, d1, d2, c1, c2, c3);
+        verify(modDefReader, ctx, mvh1, mvh2, d1, d2, c1, c2, c3, t1, t2);
+    }
+
+    public void testPerformCantBeCalledTwiceByDifferentThreads() throws Exception {
+        final ModuleDefinitionReader modDefReader = createStrictMock(ModuleDefinitionReader.class);
+        final InstallContextImpl ctx = new InstallContextImpl();
+        final ModuleVersionHandler mvh1 = createStrictMock(ModuleVersionHandler.class);
+        final ModuleVersionHandler mvh2 = createStrictMock(ModuleVersionHandler.class);
+        final Task t1 = new AbstractTask("sleep", "sleeeeep") {
+            public void execute(InstallContext installContext) throws TaskExecutionException {
+                installContext.info("t1 executing");
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    fail("can't test ... :(");
+                }
+                installContext.info("t1 executed");
+            }
+        };
+
+        final Task t2 = createStrictMock(Task.class);
+        final Delta d1 = BasicDelta.createBasicDelta("test1", "", t1);
+        final Delta d2 = BasicDelta.createBasicDelta("test2", "", t2);
+
+        final ModuleDefinition mod1 = new ModuleDefinition("abc", "2.3.4", null, null);
+        final ModuleDefinition mod2 = new ModuleDefinition("xyz", "2.3.4", null, null);
+        final Map modMap = new HashMap();
+        modMap.put("abc", mod1);
+        modMap.put("xyz", mod2);
+        final Map<String, ModuleVersionHandler> moduleVersionHandlers = new HashMap<String, ModuleVersionHandler>();
+        moduleVersionHandlers.put("abc", mvh1);
+        moduleVersionHandlers.put("xyz", mvh2);
+        final Version v123 = Version.parseVersion("1.2.3");
+
+        // loading defs
+        expect(modDefReader.readAll()).andReturn(modMap);
+
+        // during checkForInstallOrUpdates()
+        expect(mvh1.getCurrentlyInstalled(ctx)).andReturn(v123);
+        expect(mvh1.getDeltas(ctx, v123)).andReturn(Collections.singletonList(d1));
+        expect(mvh2.getCurrentlyInstalled(ctx)).andReturn(v123);
+        expect(mvh2.getDeltas(ctx, v123)).andReturn(Collections.singletonList(d2));
+
+        // during performInstallOrUpdate()
+        t2.execute(ctx);
+
+        replay(modDefReader, mvh1, mvh2, t2);
+
+        final ModuleManagerImpl moduleManager = new TestModuleManagerImpl(moduleVersionHandlers, ctx, modDefReader);
+        moduleManager.loadDefinitions();
+        moduleManager.checkForInstallOrUpdates();
+        performInstallOrUpdateInThread(moduleManager, false);
+        performInstallOrUpdateInThread(moduleManager, true);
+        Thread.sleep(800);
+        assertEquals(false, moduleManager.getStatus().needsUpdateOrInstall());
+        assertEquals(InstallStatus.done_ok, ctx.getStatus());
+        assertEquals(1, ctx.getMessages().size());
+        final List msgs = (List) ctx.getMessages().get(mod1.toString());
+        assertEquals(2, msgs.size());
+        assertEquals("t1 executing", ((InstallContext.Message) msgs.get(0)).getMessage());
+        assertEquals("t1 executed", ((InstallContext.Message) msgs.get(1)).getMessage());
+        verify(modDefReader, mvh1, mvh2, t2);
+    }
+
+    private void performInstallOrUpdateInThread(final ModuleManagerImpl moduleManager, final boolean shouldFail) {
+        final Runnable runnable = new Runnable() {
+            public void run() {
+                try {
+                    moduleManager.performInstallOrUpdate();
+                    if (shouldFail) {
+                        fail("should have failed");
+                    }
+                } catch (IllegalStateException e) {
+                    if (shouldFail) {
+                        assertEquals("ModuleManager.performInstallOrUpdate() was already started !", e.getMessage());
+                    } else {
+                        throw e;
+                    }
+                } catch (ModuleManagementException e) {
+                    throw new RuntimeException(e); // TODO
+                }
+            }
+        };
+        new Thread(runnable).start();
     }
 
     private static final class TestModuleManagerImpl extends ModuleManagerImpl {

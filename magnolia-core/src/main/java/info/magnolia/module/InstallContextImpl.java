@@ -32,9 +32,11 @@ public class InstallContextImpl implements InstallContext {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstallContextImpl.class);
 
     private ModuleDefinition currentModule;
-    private boolean installDone;
+    private InstallStatus status;
     private boolean restartNeeded;
     private final Map messages = new MultiValueMap();
+    private int executedTaskCount;
+    private int totalTaskCount;
 
     public void setCurrentModule(ModuleDefinition module) {
         this.currentModule = module;
@@ -60,22 +62,38 @@ public class InstallContextImpl implements InstallContext {
         messages.put(getModuleKey(), new Message(MessagePriority.error, message, th));
     }
 
-    public void installDone() {
-        installDone = true;
-    }
-
-    public boolean isInstallDone() {
-        return installDone;
-    }
-
     public void restartNeeded(String message) {
         this.restartNeeded = true;
         log.warn("> restartNeeded > " + message);
         messages.put(getModuleKey(), new Message(MessagePriority.restartNeeded, message));
     }
 
-    public boolean isRestartNeeded() {
+    boolean isRestartNeeded() {
         return restartNeeded;
+    }
+
+    void incExecutedTaskCount() {
+        executedTaskCount++;
+    }
+
+    public int getExecutedTaskCount() {
+        return executedTaskCount;
+    }
+
+    public int getTotalTaskCount() {
+        return totalTaskCount;
+    }
+
+    void setTotalTaskCount(int totalTaskCount) {
+        this.totalTaskCount = totalTaskCount;
+    }
+
+    public InstallStatus getStatus() {
+        return status;
+    }
+
+    void setStatus(InstallStatus status) {
+        this.status = status;
     }
 
     public Map getMessages() {
@@ -86,7 +104,7 @@ public class InstallContextImpl implements InstallContext {
         return currentModule;
     }
 
-    public boolean isModuleRegistered(String moduleName)  {
+    public boolean isModuleRegistered(String moduleName) {
         return ModuleRegistry.Factory.getInstance().getDefinition(moduleName) != null;
     }
 
@@ -126,5 +144,4 @@ public class InstallContextImpl implements InstallContext {
     protected String getModuleKey() {
         return currentModule.toString();
     }
-
 }

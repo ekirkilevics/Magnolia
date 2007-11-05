@@ -16,8 +16,10 @@ import freemarker.template.TemplateException;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.freemarker.FreemarkerUtil;
+import info.magnolia.module.InstallContext;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
+import info.magnolia.module.InstallStatus;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -56,33 +58,33 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
         }
     }
 
-    /**
-     *
-     */
     public boolean execute(Writer out, String command) throws ModuleManagementException {
         if (command == null) {
             render("listTasks", out);
             return false;
-        } else if ("start".equals(command)) {
-            //TODO : actually check for status before executing
-            moduleManager.performInstallOrUpdate();
-            // TODO : be more consistent : state.needsUpdateOrInstall() vs installContext().isRestartNeeded()
-            if (moduleManager.getInstallContext().isInstallDone()) {
-                render("installDone", out);
-            } else {
-                render("conditions-not-met", out);
-            }
-            return false;
-        } else if ("finish".equals(command)) {
-            final boolean restartNeeded = moduleManager.getInstallContext().isRestartNeeded();
-            if (restartNeeded) {
-                render("restartNeeded", out);
-            } else {
+        } else {
+            final InstallContext installCtx = moduleManager.getInstallContext();
+            final InstallStatus status = installCtx.getStatus();
+            if ("status".equals(command) || "start".equals(command)) {
+                if (status == null) {
+                    performInstallOrUpdate();
+                    render("status", out);
+                } else if (status.equals(InstallStatus.stopped_conditionsNotMet)) {
+                    render("conditionsNotMet", out);
+                } else if (status.equals(InstallStatus.done_ok)) {
+                    render("installDone", out);
+                } else if (status.equals(InstallStatus.done_restartNeeded)) {
+                    render("restartNeeded", out);
+                } else if (status.equals(InstallStatus.started)) {
+                    render("status", out);
+                }
+                return false;
+            } else if ("finish".equals(command) && status.equals(InstallStatus.done_ok)) {
                 MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
                     public void exec() {
                         //TODO : actually check for status before executing
                         moduleManager.startModules();
-                        moduleManager.getStatus().done();
+                        //moduleManager.getStatus().done();
                     }
                 });
                 return true;
@@ -93,6 +95,19 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
 
     public void renderTempPage(Writer out) throws ModuleManagementException {
         render("temp", out);
+    }
+
+    protected void performInstallOrUpdate() {
+        final Runnable runnable = new Runnable() {
+            public void run() {
+                try {
+                    moduleManager.performInstallOrUpdate();
+                } catch (ModuleManagementException e) {
+                    throw new RuntimeException(e); // TODO
+                }
+            }
+        };
+        new Thread(runnable).start();
     }
 
     protected void render(String templateName, Writer out) throws ModuleManagementException {
