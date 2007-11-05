@@ -57,7 +57,6 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
     }
 
     /**
-     * TODO : have a specific Context - will avoid having to add contextPath to the freemarker ctx, for instance ?
      *
      * @param params a Map<String, String[]>, as in HttpServletRequest.getParametersMap()
      */
