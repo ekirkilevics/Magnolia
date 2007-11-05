@@ -43,7 +43,7 @@ public class ContextFilter extends AbstractMgnlFilter {
         // if the filter chain was reset, this filter could be called several time. Using this flag so that only the
         // first call will unset the context (which should be the last post-filters operation)
         boolean contextSet = false;
-        if (!MgnlContext.hasInstance()) {
+        if (!MgnlContext.hasInstance() || MgnlContext.isSystemInstance()) {
             MgnlContext.initAsAnonymousContext(request, response, servletContext);
             contextSet = true;
         }

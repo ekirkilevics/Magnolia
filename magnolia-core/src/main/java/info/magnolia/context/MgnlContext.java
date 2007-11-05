@@ -356,6 +356,10 @@ public class MgnlContext {
     public static boolean hasInstance() {
         return localContext.get() != null;
     }
+    
+    public static boolean isSystemInstance() {
+    	return (localContext.get() instanceof SystemContext);
+    }
 
     /**
      * Get magnolia system context, Note : this context have full rights over all repositories/ workspaces
