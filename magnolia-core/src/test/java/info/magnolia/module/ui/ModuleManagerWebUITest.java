@@ -71,7 +71,7 @@ public class ModuleManagerWebUITest extends TestCase {
 
         replay(moduleManager);
 
-        new ModuleManagerWebUI(moduleManager).render("done", out);
+        new ModuleManagerWebUI(moduleManager).render("installDone", out);
         // just checking model and template work properly together...
 
         verify(moduleManager);

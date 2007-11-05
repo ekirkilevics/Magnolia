@@ -58,28 +58,25 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
 
     /**
      *
-     * @param params a Map<String, String[]>, as in HttpServletRequest.getParametersMap()
      */
-    public boolean execute(Writer out, Map params) throws ModuleManagementException {
-        final String ok = value(params, "ok");
-        final String done = value(params, "done");
-        if (ok == null && done == null) {
-            render("start", out);
+    public boolean execute(Writer out, String command) throws ModuleManagementException {
+        if (command == null) {
+            render("listTasks", out);
             return false;
-        } else if ("ok".equals(ok)) {
+        } else if ("start".equals(command)) {
             //TODO : actually check for status before executing
             moduleManager.performInstallOrUpdate();
             // TODO : be more consistent : state.needsUpdateOrInstall() vs installContext().isRestartNeeded()
             if (moduleManager.getInstallContext().isInstallDone()) {
-                render("done", out);
+                render("installDone", out);
             } else {
                 render("conditions-not-met", out);
             }
             return false;
-        } else if ("done".equals(done)) {
+        } else if ("finish".equals(command)) {
             final boolean restartNeeded = moduleManager.getInstallContext().isRestartNeeded();
             if (restartNeeded) {
-                render("restart", out);
+                render("restartNeeded", out);
             } else {
                 MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
                     public void exec() {
@@ -112,14 +109,6 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
         } catch (IOException e) {
             throw new ModuleManagementException("Couldn't render template: " + e.getMessage(), e);
         }
-    }
-
-    private String value(Map parametersMap, String name) {
-        final String[] arr = (String[]) parametersMap.get(name);
-        if (arr == null) {
-            return null;
-        }
-        return arr[0];
     }
 
 }

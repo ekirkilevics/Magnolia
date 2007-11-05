@@ -12,11 +12,10 @@
  */
 package info.magnolia.module.ui;
 
-import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleManagementException;
+import info.magnolia.module.ModuleManager;
 
 import java.io.Writer;
-import java.util.Map;
 
 /**
  * An implementation of ModuleManagerUI which does everything by itself,
@@ -50,7 +49,7 @@ public class ModuleManagerNullUI implements ModuleManagerUI {
         }
     }
 
-    public boolean execute(Writer out, Map params) throws ModuleManagementException {
+    public boolean execute(Writer out, String command) throws ModuleManagementException {
         throw new IllegalStateException("This implementation of ModuleManagerUI is only meant to be used at startup.");
     }
 

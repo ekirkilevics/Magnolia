@@ -17,6 +17,7 @@ import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ui.ModuleManagerUI;
 import info.magnolia.module.ui.ModuleManagerWebUI;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -26,7 +27,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Map;
 
 /**
  * Filter responsible for executing the update/install mechanism.
@@ -63,11 +63,12 @@ public class InstallFilter extends AbstractMgnlFilter {
             response.setContentType("text/html");
             final Writer out = response.getWriter();
             final String uri = request.getRequestURI();
-            final Map parameterMap = request.getParameterMap();
             final ModuleManagerUI ui = moduleManager.getUI();
 
-            if (uri.startsWith(contextPath + ModuleManagerWebUI.INSTALLER_PATH)) {
-                final boolean shouldContinue = ui.execute(out, parameterMap);
+            final String prefix = contextPath + ModuleManagerWebUI.INSTALLER_PATH;
+            if (uri.startsWith(prefix)) {
+                final String command = StringUtils.defaultIfEmpty(StringUtils.substringAfter(uri, prefix + "/"), null);
+                final boolean shouldContinue = ui.execute(out, command);
                 if (!shouldContinue) {
                     return;
                 } else {

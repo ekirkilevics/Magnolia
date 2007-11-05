@@ -31,7 +31,7 @@ public interface ModuleManagerUI {
     /**
      * @return a boolean indicating if the request should go through or pause until next user action.
      */
-    boolean execute(Writer out, Map params) throws ModuleManagementException;
+    boolean execute(Writer out, String command) throws ModuleManagementException;
 
     void renderTempPage(Writer out) throws ModuleManagementException;
 }
