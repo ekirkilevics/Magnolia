@@ -18,9 +18,11 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.model.ModuleDefinition;
-import org.apache.commons.collections.map.MultiValueMap;
 
 import javax.jcr.RepositoryException;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -31,12 +33,15 @@ import java.util.Map;
 public class InstallContextImpl implements InstallContext {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(InstallContextImpl.class);
 
+    private static final String DEFAULT_KEY = "General messages";
+
     private ModuleDefinition currentModule;
     private InstallStatus status;
     private boolean restartNeeded;
-    private final Map messages = new MultiValueMap();
     private int executedTaskCount;
     private int totalTaskCount;
+    // ensure we'll keep messages in the order they were added 
+    private final Map messages = new LinkedHashMap();
 
     public void setCurrentModule(ModuleDefinition module) {
         this.currentModule = module;
@@ -44,28 +49,29 @@ public class InstallContextImpl implements InstallContext {
 
     public void debug(String message) {
         log.debug("> " + message);
-        messages.put(getModuleKey(), new Message(MessagePriority.debug, message));
+        // TODO should we really keep debug messages ?
+        log(new Message(MessagePriority.debug, message));
     }
 
     public void info(String message) {
         log.info("> " + message);
-        messages.put(getModuleKey(), new Message(MessagePriority.info, message));
+        log(new Message(MessagePriority.info, message));
     }
 
     public void warn(String message) {
         log.warn("> " + message);
-        messages.put(getModuleKey(), new Message(MessagePriority.warning, message));
+        log(new Message(MessagePriority.warning, message));
     }
 
     public void error(String message, Throwable th) {
         log.error("> " + message, th);
-        messages.put(getModuleKey(), new Message(MessagePriority.error, message, th));
+        log(new Message(MessagePriority.error, message, th));
     }
 
     public void restartNeeded(String message) {
         this.restartNeeded = true;
         log.warn("> restartNeeded > " + message);
-        messages.put(getModuleKey(), new Message(MessagePriority.restartNeeded, message));
+        log(new Message(MessagePriority.restartNeeded, message));
     }
 
     boolean isRestartNeeded() {
@@ -137,11 +143,21 @@ public class InstallContextImpl implements InstallContext {
         return ContentUtil.getOrCreateContent(moduleNode, "config", ItemType.CONTENT);
     }
 
+    protected void log(final Message message) {
+        final String k = getModuleKey();
+        List messagesForKey = (List) messages.get(k);
+        if (messagesForKey == null) {
+            messagesForKey = new ArrayList();
+            messages.put(k, messagesForKey);
+        }
+        messagesForKey.add(message);
+    }
+
     /**
      * The key used in the map of messages. This is mostly because Maps keys in freemarker can only be Strings...
      * We just need to make sure this is consistent accross templates...
      */
     protected String getModuleKey() {
-        return currentModule.toString();
+        return currentModule != null ? currentModule.toString() : DEFAULT_KEY;
     }
 }
