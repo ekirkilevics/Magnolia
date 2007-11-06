@@ -87,16 +87,6 @@ public class ArrayDelegateTask implements Task {
 
     // TODO replace this with Arrays.toString() when we switch to java5 ... or change tasks to a List instead ...
     public String toString() {
-        final StringBuffer buf = new StringBuffer();
-
-        buf.append("{");
-        for (int i = 0; i < tasks.length; i++) {
-            if (i > 0) {
-                buf.append(", ");
-            }
-            buf.append(tasks[i].toString());
-        }
-        buf.append("}");
-        return buf.toString();
+        return ArrayUtils.toString(tasks);
     }
 }
