@@ -3,11 +3,11 @@
 <div id="content">
 [#list status.list as moduleStatus]
 <div class="module">
-<h2>${moduleStatus.module?cap_first}</h2>
+<h3>${moduleStatus.module?cap_first}</h3>
   [#list moduleStatus.deltas as delta]
     <div class="delta">
-    [#comment]delta.type will be used as a css class[/#comment]
-    <h3>${delta.type?cap_first} : ${delta.title?cap_first?html} <span class="deltaDescription">${delta.description?cap_first?html}</span></h3>
+    [#comment]TODO : delta.type will be used as a css class[/#comment]
+    <h4 class="${delta.type}">${delta.type?cap_first} : ${delta.title?cap_first?html} <span class="deltaDescription">${delta.description?cap_first?html}</span></h4>
     <ul class="conditions">
       [#list delta.conditions as condition]
         <li class="condition">${condition.name?cap_first?html} <span class="conditionDescription">${condition.description?cap_first?html}</span></li>

@@ -53,6 +53,16 @@ h3, p {
     padding-bottom: 2em;
 }
 
+/*
+.delta .install {
+    color: green;
+}
+
+.delta .update{
+    color: purple;
+}
+*/
+
 .deltaDescription {
     font-size: 70%;
 }
@@ -77,4 +87,14 @@ h3, p {
 .taskDescription, .conditionDescription {
     margin-left: 0.5em;
     color: #666;
+}
+
+.messages .debug {
+    display: none;
+}
+
+.messages .error {
+    background-color: #ffcccc;
+    color: #cc0000;
+    font-weight: bold;
 }

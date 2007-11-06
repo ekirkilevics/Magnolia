@@ -11,7 +11,7 @@ function setup() {
         linkA.onclick = createSwitchDetailsOnClickFunction(delta);
         linkA.appendChild(document.createTextNode('(show details)'));
         linkA.className = 'deltaDetailsLink';
-        deltas[i].getElementsByTagName('H3')[0].appendChild(linkA);
+        deltas[i].getElementsByTagName('H4')[0].appendChild(linkA);
     }
 }
 
