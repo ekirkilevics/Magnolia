@@ -20,14 +20,18 @@ package info.magnolia.module;
  * @version $Revision: $ ($Author: $)
  */
 public class InstallStatus {
-    public static final InstallStatus started = new InstallStatus("started");
-    public static final InstallStatus stopped_conditionsNotMet = new InstallStatus("stopped_conditionsNotMet");
-    public static final InstallStatus done_restartNeeded = new InstallStatus("done_restartNeeded");
-    public static final InstallStatus done_ok = new InstallStatus("done_ok");
+    public static final InstallStatus inProgress = new InstallStatus("inProgress");
+    public static final InstallStatus stoppedConditionsNotMet = new InstallStatus("stoppedConditionsNotMet");
+    public static final InstallStatus installDoneRestartNeeded = new InstallStatus("installDoneRestartNeeded");
+    public static final InstallStatus installDone = new InstallStatus("installDone");
     private final String name;
 
     private InstallStatus(String name) {
         this.name = name;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String toString() {

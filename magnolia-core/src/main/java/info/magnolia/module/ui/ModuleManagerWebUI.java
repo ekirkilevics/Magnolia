@@ -68,18 +68,13 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
             if ("status".equals(command) || "start".equals(command)) {
                 if (status == null) {
                     performInstallOrUpdate();
-                    render("status", out);
-                } else if (status.equals(InstallStatus.stopped_conditionsNotMet)) {
-                    render("conditionsNotMet", out);
-                } else if (status.equals(InstallStatus.done_ok)) {
-                    render("installDone", out);
-                } else if (status.equals(InstallStatus.done_restartNeeded)) {
-                    render("restartNeeded", out);
-                } else if (status.equals(InstallStatus.started)) {
-                    render("status", out);
+                    render("inProgress", out);
+                } else {
+                    // template names match statuses
+                    render(status.getName(), out);
                 }
                 return false;
-            } else if ("finish".equals(command) && status.equals(InstallStatus.done_ok)) {
+            } else if ("finish".equals(command) && status.equals(InstallStatus.installDone)) {
                 MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
                     public void exec() {
                         //TODO : actually check for status before executing

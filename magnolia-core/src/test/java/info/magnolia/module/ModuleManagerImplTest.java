@@ -158,7 +158,7 @@ public class ModuleManagerImplTest extends TestCase {
 
         // during performInstallOrUpdate()
         expect(ctx.getStatus()).andReturn(null);
-        ctx.setStatus(InstallStatus.started);
+        ctx.setStatus(InstallStatus.inProgress);
         ctx.setCurrentModule(mod1);
         expect(d1.getConditions()).andReturn(Arrays.asList(c1, c2));
         expect(c1.check(ctx)).andReturn(Boolean.FALSE);
@@ -171,7 +171,7 @@ public class ModuleManagerImplTest extends TestCase {
         expect(c3.getDescription()).andReturn("Hi, please fix condition #3 too");
         ctx.info("Hi, please fix condition #3 too");
         ctx.setCurrentModule(null);
-        ctx.setStatus(InstallStatus.stopped_conditionsNotMet);
+        ctx.setStatus(InstallStatus.stoppedConditionsNotMet);
 
         replay(modDefReader, ctx, mvh1, mvh2, d1, d2, c1, c2, c3, t1, t2);
 
@@ -235,7 +235,7 @@ public class ModuleManagerImplTest extends TestCase {
         performInstallOrUpdateInThread(moduleManager, true);
         Thread.sleep(800);
         assertEquals(false, moduleManager.getStatus().needsUpdateOrInstall());
-        assertEquals(InstallStatus.done_ok, ctx.getStatus());
+        assertEquals(InstallStatus.installDone, ctx.getStatus());
         assertEquals(1, ctx.getMessages().size());
         final List msgs = (List) ctx.getMessages().get(mod1.toString());
         assertEquals(2, msgs.size());

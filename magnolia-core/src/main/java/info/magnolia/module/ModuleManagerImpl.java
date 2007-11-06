@@ -195,7 +195,7 @@ public class ModuleManagerImpl implements ModuleManager {
             if (installContext.getStatus() != null) {
                 throw new IllegalStateException("ModuleManager.performInstallOrUpdate() was already started !");
             }
-            installContext.setStatus(InstallStatus.started);
+            installContext.setStatus(InstallStatus.inProgress);
         }
 
         // check all conditions
@@ -221,7 +221,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
         installContext.setCurrentModule(null);
         if (!conditionsChecked) {
-            installContext.setStatus(InstallStatus.stopped_conditionsNotMet);
+            installContext.setStatus(InstallStatus.stoppedConditionsNotMet);
             return;
         }
 
@@ -239,7 +239,7 @@ public class ModuleManagerImpl implements ModuleManager {
         });
 
         // TODO : this isn't super clean.
-        final InstallStatus status = installContext.isRestartNeeded() ? InstallStatus.done_restartNeeded : InstallStatus.done_ok;
+        final InstallStatus status = installContext.isRestartNeeded() ? InstallStatus.installDoneRestartNeeded : InstallStatus.installDone;
         installContext.setStatus(status);
     }
 
