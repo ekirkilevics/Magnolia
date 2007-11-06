@@ -17,11 +17,13 @@ import info.magnolia.context.WebContext;
 import info.magnolia.module.InstallContextImpl;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
+import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
 import java.io.StringWriter;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -30,28 +32,47 @@ import java.util.Locale;
  * @version $Revision: $ ($Author: $)
  */
 public class ModuleManagerWebUITest extends TestCase {
-    private WebContext context;
 
     protected void setUp() throws Exception {
         super.setUp();
-        context = createStrictMock(WebContext.class);
-        expect(context.getLocale()).andReturn(Locale.ENGLISH);
-        expect(context.getContextPath()).andReturn("/bibabu");
-        expect(context.getServletContext()).andReturn(null);
-        replay(context);
-        MgnlContext.setInstance(context);
-
         // shunt log4j
-        final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(InstallContextImpl.class);
+        final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger("info.magnolia");
         logger.setLevel(org.apache.log4j.Level.OFF);
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        verify(context);
+    }
+
+    public void testModuleManagementExceptionsArePropagatedEvenThoughTheUpdateIsRunningInASeparateThread() throws ModuleManagementException, InterruptedException {
+        final InstallContextImpl ctx = new InstallContextImpl();
+        final ModuleManager moduleManager = createStrictMock(ModuleManager.class);
+        moduleManager.performInstallOrUpdate();
+        expectLastCall().andThrow(new IllegalStateException("boo!"));
+        expect(moduleManager.getInstallContext()).andReturn(ctx);
+
+        replay(moduleManager);
+        final ModuleManagerWebUI ui = new ModuleManagerWebUI(moduleManager);
+        ui.performInstallOrUpdate();
+        Thread.sleep(1000);
+        verify(moduleManager);
+
+        assertEquals(1, ctx.getMessages().size());
+        // "General messages" is the key used when adding message without a current module being set in the context
+        final List messagesForNoModule = ((List) ctx.getMessages().get("General messages"));
+        assertEquals(1, messagesForNoModule.size());
+        final InstallContext.Message msg = (InstallContext.Message) messagesForNoModule.get(0);
+        assertEquals("Could not perform installation: boo!", msg.getMessage());
+        assertEquals(InstallContext.MessagePriority.error, msg.getPriority());
     }
 
     public void testDoneTemplate() throws ModuleManagementException {
+        final WebContext context = createStrictMock(WebContext.class);
+        expect(context.getLocale()).andReturn(Locale.ENGLISH);
+        expect(context.getContextPath()).andReturn("/bibabu");
+        expect(context.getServletContext()).andReturn(null);
+        replay(context);
+        MgnlContext.setInstance(context);
 
         final ModuleDefinition mod1 = new ModuleDefinition("foo", "1.0", null, null);
         final ModuleDefinition mod2 = new ModuleDefinition("bar", "2.0", null, null);
@@ -75,6 +96,7 @@ public class ModuleManagerWebUITest extends TestCase {
         // just checking model and template work properly together...
 
         verify(moduleManager);
+        verify(context);
     }
 
 }

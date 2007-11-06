@@ -258,8 +258,6 @@ public class ModuleManagerImplTest extends TestCase {
                     } else {
                         throw e;
                     }
-                } catch (ModuleManagementException e) {
-                    throw new RuntimeException(e); // TODO
                 }
             }
         };

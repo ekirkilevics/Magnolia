@@ -17,9 +17,9 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.freemarker.FreemarkerUtil;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.InstallStatus;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
-import info.magnolia.module.InstallStatus;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -97,8 +97,10 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
             public void run() {
                 try {
                     moduleManager.performInstallOrUpdate();
-                } catch (ModuleManagementException e) {
-                    throw new RuntimeException(e); // TODO
+                } catch (Throwable e) {
+                    log.error("Could not perform installation: " + e.getMessage(), e);
+                    moduleManager.getInstallContext().error("Could not perform installation: " + e.getMessage(), e);
+                    // TODO set status ? here the status page continues on reloading itself ...
                 }
             }
         };

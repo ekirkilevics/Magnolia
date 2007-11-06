@@ -48,7 +48,7 @@ public interface ModuleManager {
 
     ModuleManagerUI getUI();
 
-    void performInstallOrUpdate() throws ModuleManagementException;
+    void performInstallOrUpdate();
 
     InstallContext getInstallContext();
 

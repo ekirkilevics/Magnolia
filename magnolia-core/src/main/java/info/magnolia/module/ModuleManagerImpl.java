@@ -184,7 +184,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
     }
 
-    public void performInstallOrUpdate() throws ModuleManagementException {
+    public void performInstallOrUpdate() {
         synchronized (installContext) {
             if (state == null) {
                 throw new IllegalStateException("ModuleManager was not initialized !");
