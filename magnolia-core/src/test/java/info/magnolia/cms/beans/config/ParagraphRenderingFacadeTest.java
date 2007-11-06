@@ -59,12 +59,12 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
 
         PageContext pageContext = EasyMock.createMock(PageContext.class);
         WebContext webContext = new WebContextImpl();
-        //MgnlContext.setInstance(webContext);
-        //prf.render(null, tra, res, pageContext);
+        MgnlContext.setInstance(webContext);
+        prf.render(null, tra, res, pageContext);
 
-        //assertNotNull("jsp page context is not set", ((WebContext) MgnlContext.getInstance()).getPageContext());
+        assertNotNull("jsp page context is not set", ((WebContext) MgnlContext.getInstance()).getPageContext());
 
-        //assertEquals("tralala:para-one", res.toString());
+        assertEquals("tralala:para-one", res.toString());
 
     }
 
