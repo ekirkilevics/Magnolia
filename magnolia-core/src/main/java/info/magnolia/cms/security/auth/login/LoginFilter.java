@@ -15,6 +15,8 @@ package info.magnolia.cms.security.auth.login;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.UserContext;
+import info.magnolia.context.WebContext;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -63,7 +65,8 @@ public class LoginFilter extends AbstractMgnlFilter {
         }
         // if any of the handlers succeed we have a session and can use WebContext
         if (Authenticator.isAuthenticated(request)) {
-            MgnlContext.initAsWebContext(request, response, servletContext);
+            //MgnlContext.initAsWebContext(request, response, servletContext);
+        	((UserContext)MgnlContext.getInstance()).login();
             if (status == LoginHandler.STATUS_SUCCEDED) {
                 resetSessionAttributes(request.getSession());
             }

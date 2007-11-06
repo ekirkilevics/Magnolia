@@ -56,12 +56,7 @@ public class MgnlContext {
      * The thread local variable holding the current context
      */
     private static ThreadLocal localContext = new ThreadLocal();
-    
-    /**
-     * The thread local variable holding the system context
-     */
-    private static ThreadLocal localSystemContext = new ThreadLocal();
-
+        
     /**
      * Do not instantiate this class. The constructor must be public to use discovery
      */
@@ -392,8 +387,7 @@ public class MgnlContext {
      * Sets this context as an anonymous context.
      */
     public static void initAsAnonymousContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
-        AnonymousContext ctx = new AnonymousContext();
-        ctx.init(request, response, servletContext);
+        WebContext ctx = ContextFactory.createWebContext(request, response, servletContext);        
         setInstance(ctx);
     }
 

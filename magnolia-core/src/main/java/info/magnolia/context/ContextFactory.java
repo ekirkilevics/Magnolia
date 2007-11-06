@@ -8,13 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 public class ContextFactory {
-	public WebContext createWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+	public static WebContext createWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
 		WebContext ctx = (WebContext) FactoryUtil.newInstance(WebContext.class);
         ctx.init(request, response, servletContext);
         if (Authenticator.isAuthenticated(request)) {
         	//set logged in repository
         } else {
-        	//set anonym repository
+        	AnonymousContext actx = new AnonymousContext();
+            actx.init(request, response, servletContext);
+            return actx;
         }
         return ctx;
 	}

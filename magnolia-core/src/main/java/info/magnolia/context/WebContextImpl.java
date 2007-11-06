@@ -98,7 +98,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         this.response = response;
         this.servletContext = servletContext;
         setAttributeStrategy(new RequestAttributeStrategy(request));  
-        setRepositoryStrategy(new AuthRepositoryStrategy(this));
+        setRepositoryStrategy(new SharedAccessManagerStrategy());
     }
 
     /**
@@ -238,6 +238,10 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         return servletContext;
     }
 
+    public void login() {		
+		setRepositoryStrategy(new AuthRepositoryStrategy(this));
+	}
+	
     /**
      * Closes opened JCR sessions and invalidates the current HttpSession.
      * @see #release()
@@ -249,6 +253,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         if (session != null) {
             session.invalidate();
         }
+        setRepositoryStrategy(new SharedAccessManagerStrategy());
     }
 
     /**

@@ -49,7 +49,7 @@ public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
             if (ctx instanceof WebContext) {
                 ((WebContext) ctx).logout();
             }
-            MgnlContext.initAsAnonymousContext(request, response, servletContext);
+            //MgnlContext.initAsAnonymousContext(request, response, servletContext);
 
             if (chain instanceof MgnlFilterChain) {
                 ((MgnlFilterChain) chain).reset();
