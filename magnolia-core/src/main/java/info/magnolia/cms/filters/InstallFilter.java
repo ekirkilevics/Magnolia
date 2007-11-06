@@ -68,17 +68,14 @@ public class InstallFilter extends AbstractMgnlFilter {
             final String prefix = contextPath + ModuleManagerWebUI.INSTALLER_PATH;
             if (uri.startsWith(prefix)) {
                 final String command = StringUtils.defaultIfEmpty(StringUtils.substringAfter(uri, prefix + "/"), null);
-                final boolean shouldContinue = ui.execute(out, command);
-                if (!shouldContinue) {
-                    return;
-                } else {
+                final boolean installDone = ui.execute(out, command);
+                if (installDone) {
                     mainFilter.reset();
                     // redirect to root
                     response.sendRedirect(contextPath);
                 }
             } else {
                 ui.renderTempPage(out);
-                return;
             }
         } catch (ModuleManagementException e) {
             log.error(e.getMessage(), e);
