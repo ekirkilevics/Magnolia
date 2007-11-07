@@ -147,8 +147,8 @@ public class RequestAttributeStrategy implements AttributeStrategy {
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
                     log
-                        .warn(
-                            "Session initialized in order to setting attribute '{}' to '{}'. You should avoid using session when possible!",
+                        .debug(
+                            "Session initialized in order to set attribute '{}' to '{}'. You should avoid using session when possible!",
                             name,
                             value);
                     httpsession = request.getSession(true);
