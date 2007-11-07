@@ -11,66 +11,68 @@ import javax.servlet.http.HttpSession;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 public class RequestAttributeStrategy implements AttributeStrategy {
-	private static final Logger log = LoggerFactory.getLogger(RequestAttributeStrategy.class);
 
-	private static final long serialVersionUID = 222L;
-	
-	private HttpServletRequest request;
-	
-	public RequestAttributeStrategy() {		
-	}
-	
-	public RequestAttributeStrategy(HttpServletRequest request) {	
-		setRequest(request);
-	}
-	
-	public HttpServletRequest getRequest() {
-		return request;
-	}
-	
-	public void setRequest(HttpServletRequest request) {
-		this.request = request;
-	}
-	
-	public Object getAttribute(String name, int scope) {
-		switch (scope) {
-        case Context.LOCAL_SCOPE:
-            Object obj = this.request.getAttribute(name);
-            if (obj == null) {
-                obj = this.request.getParameter(name);
-            }
-            if (obj == null) {
-                // we also expose some of the request properties as attributes
-                if (WebContext.ATTRIBUTE_REQUEST_CHARACTER_ENCODING.equals(name)) {
-                    obj = request.getCharacterEncoding();
-                }
-                else if (WebContext.ATTRIBUTE_REQUEST_URI.equals(name)) {
-                    obj = request.getRequestURI();
-                }
-            }
-            return obj;
-        case Context.SESSION_SCOPE:
-            HttpSession httpsession = request.getSession(false);
-            if (httpsession == null) {
-                return null;
-            }
-            return httpsession.getAttribute(name);
-        case Context.APPLICATION_SCOPE:
-            return MgnlContext.getSystemContext().getAttribute(name, Context.APPLICATION_SCOPE);
-        default:
-            log.error("illegal scope passed");
-            return null;
+    private static final Logger log = LoggerFactory.getLogger(RequestAttributeStrategy.class);
+
+    private static final long serialVersionUID = 222L;
+
+    private HttpServletRequest request;
+
+    public RequestAttributeStrategy() {
     }
-	}
 
-	public Map getAttributes(int scope) {
-		Map map = new HashMap();
+    public RequestAttributeStrategy(HttpServletRequest request) {
+        setRequest(request);
+    }
+
+    public HttpServletRequest getRequest() {
+        return request;
+    }
+
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    public Object getAttribute(String name, int scope) {
+        switch (scope) {
+            case Context.LOCAL_SCOPE:
+                Object obj = this.request.getAttribute(name);
+                if (obj == null) {
+                    obj = this.request.getParameter(name);
+                }
+                if (obj == null) {
+                    // we also expose some of the request properties as attributes
+                    if (WebContext.ATTRIBUTE_REQUEST_CHARACTER_ENCODING.equals(name)) {
+                        obj = request.getCharacterEncoding();
+                    }
+                    else if (WebContext.ATTRIBUTE_REQUEST_URI.equals(name)) {
+                        obj = request.getRequestURI();
+                    }
+                }
+                return obj;
+            case Context.SESSION_SCOPE:
+                HttpSession httpsession = request.getSession(false);
+                if (httpsession == null) {
+                    return null;
+                }
+                return httpsession.getAttribute(name);
+            case Context.APPLICATION_SCOPE:
+                return MgnlContext.getSystemContext().getAttribute(name, Context.APPLICATION_SCOPE);
+            default:
+                log.error("illegal scope passed");
+                return null;
+        }
+    }
+
+    public Map getAttributes(int scope) {
+        Map map = new HashMap();
         Enumeration keysEnum;
         switch (scope) {
             case Context.LOCAL_SCOPE:
                 // add parameters
-            	Enumeration paramEnum = this.request.getParameterNames();
+                Enumeration paramEnum = this.request.getParameterNames();
                 while (paramEnum.hasMoreElements()) {
                     final String name = (String) paramEnum.nextElement();
                     map.put(name, this.request.getParameter(name));
@@ -101,29 +103,29 @@ public class RequestAttributeStrategy implements AttributeStrategy {
                 log.error("no illegal scope passed");
                 return null;
         }
-	}
+    }
 
-	public void removeAttribute(String name, int scope) {
-		switch (scope) {
-	        case Context.LOCAL_SCOPE:
-	            this.request.removeAttribute(name);
-	            break;
-	        case Context.SESSION_SCOPE:
-	            HttpSession httpsession = request.getSession(false);
-	            if (httpsession != null) {
-	                httpsession.removeAttribute(name);
-	            }
-	            break;
-	        case Context.APPLICATION_SCOPE:
-	            MgnlContext.getSystemContext().removeAttribute(name, Context.APPLICATION_SCOPE);
-	            break;
-	        default:
-	            log.error("no illegal scope passed");
-	    }
-	}
+    public void removeAttribute(String name, int scope) {
+        switch (scope) {
+            case Context.LOCAL_SCOPE:
+                this.request.removeAttribute(name);
+                break;
+            case Context.SESSION_SCOPE:
+                HttpSession httpsession = request.getSession(false);
+                if (httpsession != null) {
+                    httpsession.removeAttribute(name);
+                }
+                break;
+            case Context.APPLICATION_SCOPE:
+                MgnlContext.getSystemContext().removeAttribute(name, Context.APPLICATION_SCOPE);
+                break;
+            default:
+                log.error("no illegal scope passed");
+        }
+    }
 
-	public void setAttribute(String name, Object value, int scope) {
-		if (value == null) {
+    public void setAttribute(String name, Object value, int scope) {
+        if (value == null) {
             removeAttribute(name, scope);
             return;
         }
@@ -161,6 +163,6 @@ public class RequestAttributeStrategy implements AttributeStrategy {
                 this.request.setAttribute(name, value);
                 log.debug("Undefined scope, setting attribute [{}] in request scope", name);
         }
-	}
+    }
 
 }
