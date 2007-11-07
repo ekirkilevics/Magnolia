@@ -121,7 +121,6 @@ public class ConfigLoader {
             // TODO make these regular ObservedManagers
             log.info("Init i18n"); //$NON-NLS-1$
             MessagesManager.init(context); // TODO this was done before module init??
-            Server.init();
 
             MIMEMapping.init();
             VersionConfig.getInstance().init();
@@ -225,6 +224,7 @@ public class ConfigLoader {
 
     /**
      * Print the list of modules needing a restart of the container.
+     * TODO : delete or review ?
      */
     private void printSystemRestartInfo() {
         ModuleLoader loader = ModuleLoader.getInstance();
