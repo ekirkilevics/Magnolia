@@ -13,282 +13,168 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.DeprecationUtil;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.content2bean.TransformationState;
+import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
-import java.util.Hashtable;
-import java.util.Iterator;
+import java.util.Collections;
 import java.util.Map;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.observation.Event;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
-
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * @author Sameer Charles
  * $Id$
  */
-public final class Server {
-
-    public static final String CONFIG_PATH = "/server"; //$NON-NLS-1$
-
-    /**
-     * server properties
-     * */
+public class Server {
     private static final String PROPERTY_SERVER_ID = "magnolia.server.id";
-
-    /**
-     * Logger.
-     */
-    protected static Logger log = LoggerFactory.getLogger(Server.class);
-
-    private static Map cachedContent = new Hashtable();
-
-    private static Map cachedMailSettings = new Hashtable();
-
-    private static Map loginSettings = new Hashtable();
 
     private static long uptime = System.currentTimeMillis();
 
-    private static Server instance;
-
     private Server() {
-        // only used internally
-    }
-
-    public static Server getInstance() {
-        if (instance == null) {
-            instance = new Server();
-        }
-        return instance;
+        // static only
     }
 
     /**
-     * @throws ConfigurationException if basic config nodes are missing
+     * @deprecated kept for compatibility
+     */
+    public static Server getInstance() {
+        return new Server();
+    }
+
+    public static ServerConfiguration getConfig() {
+        return (ServerConfiguration) FactoryUtil.getSingleton(ServerConfiguration.class);
+    }
+
+    public static final class Observer extends FactoryUtil.ObservedObjectFactory {
+        public Observer() {
+            super(ContentRepository.CONFIG, "/server", ServerConfiguration.class);
+        }
+
+        protected Object transformNode(Content node) throws Content2BeanException {
+            return Content2BeanUtil.toBean(node, false, new Content2BeanTransformerImpl(){
+                public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
+                    return new ServerConfiguration();
+                }
+            });
+        }
+    }
+
+    /**
+     * @deprecated since 3.1 - not used anymore, this is now an ObservedManager
      */
     public static void init() throws ConfigurationException {
-        load();
-        registerEventListener();
     }
 
     /**
-     * Load the server configuration.
-     * @throws ConfigurationException
+     * @deprecated since 3.1 - not used anymore, this is now an ObservedManager
      */
     public static void load() throws ConfigurationException {
-        Server.cachedContent.clear();
-        Server.cachedMailSettings.clear();
-        Server.loginSettings.clear();
-        try {
-            log.info("Config : loading Server"); //$NON-NLS-1$
-            final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
-            // checks if node exists
-            if (!hm.isExist(CONFIG_PATH)) {
-                log.warn(CONFIG_PATH + " does not exist yet; skipping.");
-                return;
-            }
-            Content startPage = hm.getContent(CONFIG_PATH);
-            cacheServerConfiguration(startPage);
-            cacheMailSettings(startPage);
-            cacheLoginSettings(startPage);
-            log.info("Config : Server config loaded"); //$NON-NLS-1$
-        }
-        catch (RepositoryException re) {
-            log.error("Config : Failed to load Server config: " + re.getMessage(), re); //$NON-NLS-1$
-            throw new ConfigurationException("Config : Failed to load Server config: " + re.getMessage(), re); //$NON-NLS-1$
-        }
-    }
-
-    private static void cacheMailSettings(Content page) {
-        childrenToMap(page.getChildByName("mail"), cachedMailSettings);
-    }
-
-    private static void cacheLoginSettings(Content page) {
-        childrenToMap(page.getChildByName("login"), loginSettings);
     }
 
     /**
-     * Reload the server configuration: simply calls load().
-     * @throws ConfigurationException
+     * @deprecated since 3.1 - not used anymore, this is now an ObservedManager
      */
     public static void reload() throws ConfigurationException {
-        log.info("Config : re-loading Server config"); //$NON-NLS-1$
-        Server.load();
-    }
-
-    /**
-     * Cache server content from the config repository.
-     */
-    private static void cacheServerConfiguration(Content page) {
-
-        boolean isAdmin = page.getNodeData("admin").getBoolean(); //$NON-NLS-1$
-        Server.cachedContent.put("admin", BooleanUtils.toBooleanObject(isAdmin)); //$NON-NLS-1$
-
-        String ext = page.getNodeData("defaultExtension").getString(); //$NON-NLS-1$
-        Server.cachedContent.put("defaultExtension", ext); //$NON-NLS-1$
-
-        String basicRealm = page.getNodeData("basicRealm").getString(); //$NON-NLS-1$
-        Server.cachedContent.put("basicRealm", basicRealm); //$NON-NLS-1$
-
-        String defaultBaseUrl = page.getNodeData("defaultBaseUrl").getString();
-        Server.cachedContent.put("defaultBaseUrl", defaultBaseUrl); //$NON-NLS-1$
-    }
-
-    /**
-     * Register an event listener: reload server configuration when something changes. todo split reloading of base
-     * server configuration and secure URI list
-     */
-    private static void registerEventListener() {
-
-        log.info("Registering event listener for server"); //$NON-NLS-1$
-
-        // server properties, only on the root server node
-        try {
-            ObservationManager observationManager = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG)
-                .getWorkspace()
-                .getObservationManager();
-
-            observationManager.addEventListener(new EventListener() {
-
-                public void onEvent(EventIterator iterator) {
-                    // reload everything
-                    try {
-                        reload();
-                    }
-                    catch (ConfigurationException e) {
-                        log.error(e.getMessage(), e);
-                    }
-                }
-            }, Event.PROPERTY_ADDED | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED, CONFIG_PATH, //$NON-NLS-1$
-                false,
-                null,
-                null,
-                false);
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
-        }
-
-        // login
-        addEventListener(new EventListener() {
-
-            public void onEvent(EventIterator iterator) {
-                try {
-                    reload();
-                }
-                catch (ConfigurationException e) {
-                    log.error(e.getMessage(), e);
-                }
-            }
-        }, "/login");
-
-    }
-
-    /**
-     * @param eventListener
-     * @param path
-     */
-    private static void addEventListener(EventListener eventListener, String path) {
-        try {
-            ObservationManager observationManager = ContentRepository
-                .getHierarchyManager(ContentRepository.CONFIG)
-                .getWorkspace()
-                .getObservationManager();
-
-            observationManager.addEventListener(eventListener, Event.NODE_ADDED
-                | Event.NODE_REMOVED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED, CONFIG_PATH + path, true, null, null, false); //$NON-NLS-1$
-        }
-        catch (RepositoryException e) {
-            log.error("Unable to add event listeners for server", e); //$NON-NLS-1$
-        }
+        DeprecationUtil.isDeprecated();
     }
 
     /**
      * @return default URL extension as configured
+     * @deprecated since 3.1 - use ServerConfiguration
      */
     public static String getDefaultExtension() {
-        String defaultExtension = (String) Server.cachedContent.get("defaultExtension"); //$NON-NLS-1$
-        if (defaultExtension == null) {
-            return StringUtils.EMPTY;
-        }
-        return defaultExtension;
+        return getConfig().getDefaultExtension();
     }
 
     /**
      * @return default mail server
+     * @deprecated since 3.1 - not used / moved to mail module.
      */
     public static String getDefaultMailServer() {
-        String mailServer = (String) Server.cachedMailSettings.get("smtpServer");
-        return mailServer != null ? mailServer : StringUtils.EMPTY;
+        DeprecationUtil.isDeprecated("Moved to the mail module, will return empty string.");
+        return "";
     }
 
     /**
      * @return basic realm string
+     * @deprecated since 3.1 - this moved to filter configuration - returns default "Magnolia" value.
      */
     public static String getBasicRealm() {
-        return (String) Server.cachedContent.get("basicRealm"); //$NON-NLS-1$
+        DeprecationUtil.isDeprecated("This moved to filter configuration, will return default \"Magnolia\" value.");
+        return "Magnolia";
     }
 
     /**
      * @return default base url (empty by default)
+     * @deprecated since 3.1 - use ServerConfiguration
      */
     public static String getDefaultBaseUrl() {
-        return StringUtils.defaultIfEmpty((String) Server.cachedContent.get("defaultBaseUrl"), "");
+        return getConfig().getDefaultBaseUrl();
     }
 
     /**
      * @return true if the instance is configured as an admin server
+     * @deprecated since 3.1 - use ServerConfiguration
      */
     public static boolean isAdmin() {
-        return Boolean.TRUE.equals(Server.cachedContent.get("admin")); //$NON-NLS-1$
+        return getConfig().isAdmin();
     }
 
     /**
      * Time in ms since the server was started
+     * @deprecated since 3.1 - this is not accurate (and not used)
      */
     public static long getUptime() {
         return System.currentTimeMillis() - uptime;
     }
 
+    /**
+     * @deprecated since 3.1 - this was moved to filters configurations - will return an empty Map.
+     */
     public Map getLoginConfig() {
-        return loginSettings;
+        DeprecationUtil.isDeprecated("This moved to filter configuration, will return an empty map.");
+        return Collections.EMPTY_MAP;
     }
 
     /**
      * get server ID
      * @return server id as configured in magnolia.properties
+     * TODO : move this to a more appropriate place ?
      * */
     public static String getServerId() {
         return SystemProperty.getProperty(PROPERTY_SERVER_ID);
     }
 
-    /**
-     * @param content
-     * @param configMap
-     */
-    private static void childrenToMap(Content content, Map configMap) {
-        if (content == null) {
-            return;
+    public static class ServerConfiguration {
+        private String defaultExtension;
+        private String defaultBaseUrl;
+        private boolean admin;
+
+        public String getDefaultExtension() {
+            return defaultExtension;
         }
 
-        Iterator iter = content.getNodeDataCollection().iterator();
-        while (iter.hasNext()) {
-            NodeData data = (NodeData) iter.next();
-            configMap.put(data.getName(), data.getString());
+        public void setDefaultExtension(String defaultExtension) {
+            this.defaultExtension = defaultExtension;
+        }
+
+        public String getDefaultBaseUrl() {
+            return defaultBaseUrl;
+        }
+
+        public void setDefaultBaseUrl(String defaultBaseUrl) {
+            this.defaultBaseUrl = defaultBaseUrl;
+        }
+
+        public boolean isAdmin() {
+            return admin;
+        }
+
+        public void setAdmin(boolean admin) {
+            this.admin = admin;
         }
     }
-
 }

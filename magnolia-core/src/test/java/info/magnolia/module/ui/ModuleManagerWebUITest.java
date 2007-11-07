@@ -19,6 +19,8 @@ import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.util.FactoryUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -38,6 +40,10 @@ public class ModuleManagerWebUITest extends TestCase {
         // shunt log4j
         final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger("info.magnolia");
         logger.setLevel(org.apache.log4j.Level.OFF);
+
+        final Server.ServerConfiguration serverConfiguration = new Server.ServerConfiguration();
+        serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
+        FactoryUtil.setInstance(Server.ServerConfiguration.class, serverConfiguration);
     }
 
     protected void tearDown() throws Exception {

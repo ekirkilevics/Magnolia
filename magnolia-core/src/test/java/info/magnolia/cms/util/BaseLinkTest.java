@@ -12,6 +12,7 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.test.MgnlTestCase;
@@ -79,6 +80,10 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         FactoryUtil.setInstance(URI2RepositoryManager.class, uri2repo);
 
         FactoryUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+
+        final Server.ServerConfiguration serverConfiguration = new Server.ServerConfiguration();
+        serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
+        FactoryUtil.setInstance(Server.ServerConfiguration.class, serverConfiguration);
     }
 
     protected void tearDown() throws Exception {

@@ -18,6 +18,7 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -61,6 +62,10 @@ public class FreemarkerHelperTest extends TestCase {
         fmHelper = new FreemarkerHelper();
         fmHelper.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         fmHelper.getConfiguration().setTemplateLoader(tplLoader);
+
+        final Server.ServerConfiguration serverConfiguration = new Server.ServerConfiguration();
+        serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
+        FactoryUtil.setInstance(Server.ServerConfiguration.class, serverConfiguration);
 
         // seems useless when running tests from maven (?), so we'll shunt log4j as well
         freemarker.log.Logger.selectLoggerLibrary(freemarker.log.Logger.LIBRARY_NONE);
@@ -452,8 +457,7 @@ public class FreemarkerHelperTest extends TestCase {
     }
 
     public void testUuidLinksAreTransformedToFullUrlLinksInNonWebContext() throws IOException, TemplateException, RepositoryException {
-        final String defaultBaseUrl = ""; // TODO : MAGNOLIA-1671 : this should be configured in Server
-        doTestUuidLinksAreTransformed(null, "== Some text... blah blah... <a href=\"" + defaultBaseUrl + "/foo/bar/baz.html\">Bleh</a> ! ==");
+        doTestUuidLinksAreTransformed(null, "== Some text... blah blah... <a href=\"http://myTests:1234/yay/foo/bar/baz.html\">Bleh</a> ! ==");
     }
 
     private void doTestUuidLinksAreTransformed(Context webCtx, String expectedOutput) throws IOException, TemplateException, RepositoryException {
