@@ -97,7 +97,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
 
         if (typeDscr == null || typeDscr.isMap() || typeDscr.isCollection()) {
             if(typeDscr== null && log.isDebugEnabled()){
-                log.debug("was not able to resolve type for node [] will use a map", node );
+                log.debug("was not able to resolve type for node [{}] will use a map", node );
             }
             typeDscr = TypeMapping.MAP_TYPE;
         }
@@ -253,6 +253,11 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         if(propertyType == Collection.class && value instanceof Map){
             return ((Map)value).values();
         }
+
+        // this is mainly the case when we are flattening node hierarchies
+        if(propertyType == String.class && value instanceof Map && ((Map)value).size() == 1){
+            return ((Map)value).values().iterator().next();
+        }
         return value;
     }
 
@@ -260,7 +265,14 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
      * Use the factory util to instantiate. This is usefull to get default implementation of interfaces
      */
     public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException{
-        return FactoryUtil.newInstance(state.getCurrentType().getType());
+        // we try first to use conversion (Map --> primitive tyoe)
+        // this is the case when we flattening the hierarchy?
+        Object bean = convertPropertyValue(state.getCurrentType().getType(), properties);
+        // were the propertis transformed?
+        if(bean == properties){
+            bean = FactoryUtil.newInstance(state.getCurrentType().getType());
+        }
+        return bean;
     }
 
     /**

@@ -15,6 +15,8 @@ import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
+import info.magnolia.cms.link.LinkResolver;
+import info.magnolia.cms.link.LinkResolverImpl;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.BinaryMockNodeData;
 import info.magnolia.test.mock.MockContent;
@@ -34,12 +36,14 @@ import java.text.MessageFormat;
  */
 public abstract class BaseLinkTest extends MgnlTestCase {
 
+    protected static final String HANDLE_PARENT_SUB = "/parent/sub";
     protected static final String UUID_PATTNER_OLD_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',workspace:'{'default'}',path:'{'{2}'}}}'";
     protected static final String UUID_PATTNER_NEW_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',handle:'{'{2}'}',nodeData:'{'{3}'}',extension:'{'{4}'}}}'";
-    protected static final String UUID_PATTNER_SIMPLE = MessageFormat.format(UUID_PATTNER_NEW_FORMAT, new String[]{"2", ContentRepository.WEBSITE, "/parent/sub", "", "html"});
-    protected static final String UUID_PATTNER_SIMPLE_OLD_FORMAT = MessageFormat.format(UUID_PATTNER_OLD_FORMAT, new String[]{"2", ContentRepository.WEBSITE, "/parent/sub"});
+    protected static final String UUID_PATTNER_SIMPLE = MessageFormat.format(UUID_PATTNER_NEW_FORMAT, new String[]{"2", ContentRepository.WEBSITE, HANDLE_PARENT_SUB, "", "html"});
+    protected static final String UUID_PATTNER_SIMPLE_OLD_FORMAT = MessageFormat.format(UUID_PATTNER_OLD_FORMAT, new String[]{"2", ContentRepository.WEBSITE, HANDLE_PARENT_SUB});
 
-    protected static final String HREF_SIMPLE = "/parent/sub.html";
+    protected static final String HREF_ABSOLUTE_LINK = HANDLE_PARENT_SUB + ".html";
+
     private WebContext webContext;
 
     protected void setUp() throws Exception {
@@ -56,30 +60,19 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         expect(webContext.getContextPath()).andReturn("some-context").anyTimes();
 
         // add a binary
-        MockContent page = (MockContent) hm.getContent("/parent/sub");
+        MockContent page = (MockContent) hm.getContent(HANDLE_PARENT_SUB);
         page.addNodeData(new BinaryMockNodeData("file", null, "test.jpg", "image/jpeg", 5000));
 
         replay(webContext);
         MgnlContext.setInstance(webContext);
 
-        URI2RepositoryManager uri2repo = createMock(URI2RepositoryManager.class);
-        expect(uri2repo.getURI((String) anyObject(), (String) anyObject())).andStubAnswer(new IAnswer<String>() {
-            public String answer() throws Throwable {
-                return (String) getCurrentArguments()[1];
-            }
-        });
-        expect(uri2repo.getHandle((String) anyObject())).andStubAnswer(new IAnswer<String>() {
-            public String answer() throws Throwable {
-                return (String) getCurrentArguments()[0];
-            }
-        });
-
-        expect(uri2repo.getRepository((String) anyObject())).andStubReturn(ContentRepository.WEBSITE);
-
-        replay(uri2repo);
-        FactoryUtil.setInstance(URI2RepositoryManager.class, uri2repo);
+        // not configured in the repository
+        FactoryUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
 
         FactoryUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
+
+        FactoryUtil.setInstance(LinkResolver.class, new LinkResolverImpl());
+
 
         final Server.ServerConfiguration serverConfiguration = new Server.ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");

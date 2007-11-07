@@ -14,21 +14,26 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 
 public class RelativePathTransformer extends AbsolutePathTransformer{
-    Content page;
-    String pageLink;
+    
+    protected String absolutePath;
 
     public RelativePathTransformer(Content page, boolean useURI2RepositoryMapping, boolean useI18N) {
         super(false, useURI2RepositoryMapping, useI18N);
-        this.page = page;
         UUIDLink link = new UUIDLink();
         link.setNode(page);
         link.setRepository(ContentRepository.WEBSITE);
         link.setExtension("html");
-        pageLink = super.transform(link);
+        absolutePath = super.transform(link);
     }
+
+    public RelativePathTransformer(String absolutPath, boolean useURI2RepositoryMapping, boolean useI18N) {
+        super(false, useURI2RepositoryMapping, useI18N);
+        this.absolutePath = absolutPath;
+    }
+
 
     public String transform(UUIDLink uuidLink) {
         String link = super.transform(uuidLink);
-        return LinkHelper.makePathRelative(pageLink, link);
+        return LinkHelper.makePathRelative(absolutePath, link);
     }
 }

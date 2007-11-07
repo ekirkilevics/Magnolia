@@ -10,14 +10,19 @@
  */
 package info.magnolia.cms.link;
 
-import junit.framework.TestCase;
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.util.BaseLinkTest;
+
+import java.io.IOException;
+
+import javax.jcr.RepositoryException;
 
 /**
  * @author philipp
  * @version $Id$
  *
  */
-public class LinkHelperTest extends TestCase {
+public class LinkHelperTest extends BaseLinkTest {
 
     public void testMakingRelativeLinks() {
         assertEquals("d.html", LinkHelper.makePathRelative("/a/b/c.html", "/a/b/d.html"));
@@ -56,7 +61,7 @@ public class LinkHelperTest extends TestCase {
         assertFalse(LinkHelper.isInternalRelativeLink("javascript:void(window.open('/foo/bar','','resizable=no,location=no,menubar=no,scrollbars=no,status=no,toolbar=no,fullscreen=no,dependent=no,width=200,height=200'))"));
     }
 
-    public void testInternalLinksAreProperlyDetermined() {
+    public void testExternalLinksAreProperlyDetermined() {
         assertFalse(LinkHelper.isExternalLinkOrAnchor("foo"));
         assertFalse(LinkHelper.isExternalLinkOrAnchor("foo/bar"));
         assertFalse(LinkHelper.isExternalLinkOrAnchor("foo/bar.gif"));
@@ -82,5 +87,10 @@ public class LinkHelperTest extends TestCase {
 
         assertTrue(LinkHelper.isExternalLinkOrAnchor("javascript:void(window.open('http://www.google.com','','resizable=no,location=no,menubar=no,scrollbars=no,status=no,toolbar=no,fullscreen=no,dependent=no,width=200,height=200'))"));
         assertTrue(LinkHelper.isExternalLinkOrAnchor("javascript:void(window.open('/foo/bar','','resizable=no,location=no,menubar=no,scrollbars=no,status=no,toolbar=no,fullscreen=no,dependent=no,width=200,height=200'))"));
+    }
+
+    public void testMakeAbsolutePathFromUUID() throws IOException, RepositoryException {
+        String absolutePath = LinkHelper.convertUUIDtoAbsolutePath("2", ContentRepository.WEBSITE);
+        assertEquals("/parent/sub", absolutePath);
     }
 }

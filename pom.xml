@@ -915,7 +915,6 @@
     <module>magnolia-taglib-cms</module>
     <module>magnolia-taglib-utility</module>
     <module>magnolia-editor-fckeditor</module>
-    <module>magnolia-editor-kupu</module>
     <module>magnolia-module-samples</module>
   </modules>
 </project>

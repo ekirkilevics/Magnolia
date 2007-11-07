@@ -15,20 +15,11 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.link.AbsolutePathTransformer;
 import info.magnolia.cms.link.LinkHelper;
+import info.magnolia.cms.link.LinkResolver;
 import info.magnolia.cms.link.PathToLinkTransformer;
-import info.magnolia.cms.link.RelativePathTransformer;
-import info.magnolia.cms.link.UUIDLink;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.net.URLEncoder;
-import java.io.UnsupportedEncodingException;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Util to store links in a format so that one can make relative pathes on the public site. Later we will store the
@@ -43,28 +34,6 @@ public final class LinkUtil {
     public static final String DEFAULT_EXTENSION = "html";
 
     public static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
-
-    /**
-     * Pattern to find a link
-     */
-    public static final Pattern LINK_OR_IMAGE_PATTERN = Pattern.compile(
-        "(<(a|img) " + // start <a or <img
-        "[^>]*" +  // some attributes
-        "(href|src)[ ]*=[ ]*\")" + // start href or src
-        "([^\"]*)" + // the link
-        "(\"" + // ending "
-        "[^>]*" + // any attributes
-        ">)"); // end the tag
-
-    /**
-     * Pattern that matches external and mailto: links.
-     */
-    public static final Pattern EXTERNAL_LINK_PATTERN = Pattern.compile("^(\\w*://|mailto:|javascript:).*");
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(LinkUtil.class);
 
     /**
      * Util has no public constructor
@@ -86,18 +55,7 @@ public final class LinkUtil {
      * @return html with changed hrefs
      */
     public static String convertAbsoluteLinksToUUIDs(String str) {
-        // get all link tags
-        Matcher matcher = LINK_OR_IMAGE_PATTERN.matcher(str);
-        StringBuffer res = new StringBuffer();
-        while (matcher.find()) {
-            final String href = matcher.group(4);
-            if (!LinkHelper.isExternalLinkOrAnchor(href)) {
-                final UUIDLink link = new UUIDLink().parseLink(href);
-                matcher.appendReplacement(res, "$1" + StringUtils.replace(link.toPattern(), "$", "\\$") + "$5");
-            }
-        }
-        matcher.appendTail(res);
-        return res.toString();
+        return getLinkResolver().parseLinks(str);
     }
 
     /**
@@ -117,13 +75,14 @@ public final class LinkUtil {
      * Convert the mangolia format to absolute (repository friendly) pathes
      * @param str html
      * @return html with absolute links
+     * @deprecated
      */
     public static String convertUUIDsToAbsoluteLinks(String str) {
         return convertUUIDsToAbsoluteLinks(str, false);
     }
 
     public static String convertUUIDsToAbsoluteLinks(String str, boolean addContextPath) {
-        return convertUUIDsToLinks(str, new AbsolutePathTransformer(addContextPath, true, true));
+        return getLinkResolver().convertToAbsoluteLinks(str, addContextPath);
     }
 
     /**
@@ -133,27 +92,32 @@ public final class LinkUtil {
      * @return html with proper links
      */
     public static String convertUUIDsToRelativeLinks(String str, final Content page) {
-        return convertUUIDsToLinks(str, new RelativePathTransformer(page, true, true));
+        return getLinkResolver().convertToRelativeLinks(str, page.getHandle());
     }
 
     public static String convertUUIDsToLinks(String str, PathToLinkTransformer transformer) {
-        Matcher matcher = UUIDLink.UUID_PATTERN.matcher(str);
-        StringBuffer res = new StringBuffer();
-        while (matcher.find()) {
-            String pattern = matcher.group();
-            UUIDLink link = new UUIDLink().parseUUIDLink(pattern);
-            matcher.appendReplacement(res, transformer.transform(link));
-        }
-        matcher.appendTail(res);
-        return res.toString();
+        return LinkHelper.convertUsingLinkTransformer(str, transformer);
     }
 
+    public static String convertUUIDsToBrowserLinks(String str, Content content) {
+        // TODO this is wrong the links should be relative to the real url
+        return getLinkResolver().convertToBrowserLinks(str, content.getHandle());
+    }
+
+    public static String convertUUIDsToEditorLinks(String str) {
+        return getLinkResolver().convertToEditorLinks(str);
+    }
+
+
+    public static LinkResolver getLinkResolver(){
+        return LinkResolver.Factory.getInstance();
+    }
 
     /**
      * @deprecated pass the repository name
      */
     public static String makeAbsolutePathFromUUID(String uuid) {
-        return makeAbsolutePathFromUUID(uuid, DEFAULT_REPOSITORY);
+        return LinkHelper.convertUUIDtoAbsolutePath(uuid, DEFAULT_REPOSITORY);
     }
 
     /**
@@ -161,13 +125,13 @@ public final class LinkUtil {
      * The editor needs this kind of links
      * @param uuid uuid
      * @return path
+     * @deprecated Use {@link LinkHelper#convertUUIDtoAbsolutePath(String,String)} instead
      */
     public static String makeAbsolutePathFromUUID(String uuid, String repository) {
-        UUIDLink link = new UUIDLink();
-        link.setRepository(repository);
-        link.setUUID(uuid);
-        return link.getHandle();
+        return LinkHelper.convertUUIDtoAbsolutePath(uuid, repository);
     }
+
+
 
     /**
      * Make a absolute path relative. It adds ../ until the root is reached
@@ -192,12 +156,10 @@ public final class LinkUtil {
      * Convert a path to a uuid
      * @param path path to the page
      * @return the uuid if found
+     * @deprecated Use {@link LinkHelper#convertAbsolutePathToUUIDLink(String,String)} instead
      */
     public static String makeUUIDFromAbsolutePath(String path, String repository) {
-        UUIDLink link = new UUIDLink();
-        link.setRepository(repository);
-        link.setHandle(path);
-        return link.getUUID();
+        return ContentUtil.path2uuid(repository, path);
     }
 
     /**
@@ -206,16 +168,8 @@ public final class LinkUtil {
      * <strong>replace</strong> an existing parameter with the same name.
      */
     public static void addParameter(StringBuffer uri, String name, String value) {
-        if (uri.indexOf("?") < 0) {
-            uri.append('?');
-        } else {
-            uri.append('&');
-        }
-        uri.append(name).append('=');
-        try {
-            uri.append(URLEncoder.encode(value, "UTF-8"));
-        } catch (UnsupportedEncodingException e) {
-            throw new RuntimeException("It seems your system does not support UTF-8 !?", e);
-        }
+        LinkHelper.addParameter(uri, name, value);
     }
+
+
 }

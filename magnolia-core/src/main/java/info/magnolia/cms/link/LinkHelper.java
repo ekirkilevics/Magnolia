@@ -10,7 +10,10 @@
  */
 package info.magnolia.cms.link;
 
-import info.magnolia.cms.util.LinkUtil;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -64,7 +67,80 @@ public class LinkHelper {
     }
 
     public static boolean isExternalLinkOrAnchor(String href) {
-       return LinkUtil.EXTERNAL_LINK_PATTERN.matcher(href).matches() || href.startsWith("#");
+       return LinkHelper.EXTERNAL_LINK_PATTERN.matcher(href).matches() || href.startsWith("#");
+    }
+
+    /**
+     * Pattern that matches external and mailto: links.
+     */
+    public static final Pattern EXTERNAL_LINK_PATTERN = Pattern.compile("^(\\w*://|mailto:|javascript:).*");
+    /**
+     * Pattern to find a link
+     */
+    public static final Pattern LINK_OR_IMAGE_PATTERN = Pattern.compile(
+        "(<(a|img) " + // start <a or <img
+        "[^>]*" +  // some attributes
+        "(href|src)[ ]*=[ ]*\")" + // start href or src
+        "([^\"]*)" + // the link
+        "(\"" + // ending "
+        "[^>]*" + // any attributes
+        ">)"); // end the tag
+
+    /**
+     * Appends a parameter to the given url, using ?, or & if there are already
+     * parameters in the given url. <strong>Warning:</strong> It does not
+     * <strong>replace</strong> an existing parameter with the same name.
+     */
+    public static void addParameter(StringBuffer uri, String name, String value) {
+        if (uri.indexOf("?") < 0) {
+            uri.append('?');
+        } else {
+            uri.append('&');
+        }
+        uri.append(name).append('=');
+        try {
+            uri.append(URLEncoder.encode(value, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException("It seems your system does not support UTF-8 !?", e);
+        }
+    }
+
+    /**
+     * Transforms a uuid to a absolute path beginning with a /. This path is used to get the page from the repository.
+     * The editor needs this kind of links
+     * @param uuid uuid
+     * @return path
+     */
+    public static String convertUUIDtoAbsolutePath(String uuid, String repository) {
+        UUIDLink link = new UUIDLink();
+        link.setRepository(repository);
+        link.setUUID(uuid);
+        return link.getHandle();
+    }
+
+    public static UUIDLink convertAbsolutePathToUUIDLink(String path) throws UUIDLinkException {
+        return new UUIDLink().parseLink(path);
+    }
+    
+    /**
+     * Convert a path to a uuid
+     * @param path path to the page
+     * @return the uuid if found
+     * @throws UUIDLinkException 
+     */
+    public static String convertAbsolutePathToUUID(String path) throws UUIDLinkException {
+        return convertAbsolutePathToUUIDLink(path).getUUID();
+    }
+
+    public static String convertUsingLinkTransformer(String str, PathToLinkTransformer transformer) {
+        Matcher matcher = UUIDLink.UUID_PATTERN.matcher(str);
+        StringBuffer res = new StringBuffer();
+        while (matcher.find()) {
+            UUIDLink link = new UUIDLink().initByUUIDPatternMatcher(matcher);
+            matcher.appendReplacement(res, transformer.transform(link));
+        }
+        matcher.appendTail(res);
+        return res.toString();
     }
 
 }

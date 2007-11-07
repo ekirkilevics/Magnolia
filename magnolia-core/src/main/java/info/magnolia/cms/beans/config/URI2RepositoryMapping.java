@@ -12,6 +12,11 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Path;
+import info.magnolia.cms.link.UUIDLink;
+import info.magnolia.cms.link.UUIDLinkException;
+
 import org.apache.commons.lang.StringUtils;
 
 
@@ -25,7 +30,7 @@ public class URI2RepositoryMapping {
     /**
      * The prefix which triggers this mapping
      */
-    private String uriPrefix;
+    private String URIPrefix;
 
     /**
      * The repository used for this mapping
@@ -43,8 +48,7 @@ public class URI2RepositoryMapping {
      * @param handlePrefix
      */
     public URI2RepositoryMapping(String uriPrefix, String repository, String handlePrefix) {
-        super();
-        this.uriPrefix = uriPrefix;
+        this.URIPrefix = uriPrefix;
         this.repository = repository;
         this.handlePrefix = handlePrefix;
     }
@@ -58,7 +62,7 @@ public class URI2RepositoryMapping {
      * @return
      */
     public boolean matches(String uri) {
-        return uri.startsWith(uriPrefix);
+        return uri.startsWith(URIPrefix);
     }
 
     /**
@@ -68,11 +72,13 @@ public class URI2RepositoryMapping {
      */
     public String getHandle(String uri) {
         String handle;
-        handle = StringUtils.removeStart(uri, this.uriPrefix);
+        handle = StringUtils.removeStart(uri, this.URIPrefix);
         if (StringUtils.isNotEmpty(this.handlePrefix)) {
             StringUtils.removeStart(handle, "/");
             handle = this.handlePrefix + "/" + handle;
         }
+        //remove extension
+        handle = StringUtils.substringBeforeLast(handle, ".");
         return cleanHandle(handle);
     }
 
@@ -95,13 +101,32 @@ public class URI2RepositoryMapping {
      * @return
      */
     public String getURI(String handle) {
+        try {
+            return getURI(new UUIDLink().initWithHandle(this.getRepository(), handle));
+        }
+        catch (UUIDLinkException e) {
+            return handle;
+        }
+    }
+
+    public String getURI(UUIDLink uuidLink){
+        String uri = uuidLink.getHandle();
         if (StringUtils.isNotEmpty(this.handlePrefix)) {
-            handle = StringUtils.removeStart(handle, this.handlePrefix);
+            uri = StringUtils.removeStart(uri, this.handlePrefix);
         }
-        if (StringUtils.isNotEmpty(this.uriPrefix)) {
-            handle = this.uriPrefix + "/" + handle;
+        if (StringUtils.isNotEmpty(this.URIPrefix)) {
+            uri = this.URIPrefix + "/" + uri;
         }
-        return cleanHandle(handle);
+
+        String nodeDataName = uuidLink.getNodeDataName();
+        String fileName = uuidLink.getFileName();
+        String extension = uuidLink.getExtension();
+
+        uri += (StringUtils.isNotEmpty(nodeDataName)? "/" + nodeDataName : "") +
+                (StringUtils.isNotEmpty(fileName)? "/" + fileName : "") +
+                (StringUtils.isNotEmpty(extension)? "." + extension : "");
+
+        return cleanHandle(uri);
     }
 
     public String getHandlePrefix() {
@@ -120,15 +145,15 @@ public class URI2RepositoryMapping {
         this.repository = repository;
     }
 
-    public String getUriPrefix() {
-        return uriPrefix;
+    public String getURIPrefix() {
+        return URIPrefix;
     }
 
-    public void setUriPrefix(String uriPrefix) {
-        this.uriPrefix = uriPrefix;
+    public void setURIPrefix(String uriPrefix) {
+        this.URIPrefix = uriPrefix;
     }
 
     public String toString() {
-        return this.uriPrefix + " --> " + repository + ":" + this.handlePrefix;
+        return this.URIPrefix + " --> " + repository + ":" + this.handlePrefix;
     }
 }

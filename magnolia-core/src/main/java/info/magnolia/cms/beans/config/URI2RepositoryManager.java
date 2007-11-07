@@ -12,24 +12,18 @@
  */
 package info.magnolia.cms.beans.config;
 
-import java.util.ArrayList;
-import java.util.Collections;
+import info.magnolia.cms.link.UUIDLink;
+import info.magnolia.cms.link.UUIDLinkException;
+import info.magnolia.cms.util.FactoryUtil;
+
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
-import java.util.List;
-
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
+import java.util.TreeSet;
 
 import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.cms.util.ObservationUtil;
-import info.magnolia.context.MgnlContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -39,61 +33,24 @@ import info.magnolia.context.MgnlContext;
  */
 public class URI2RepositoryManager {
 
-    public static final String SERVER_REPOSITORY_URIMAPPING = "/server/URI2RepositoryMapping";
+    protected static final URI2RepositoryMapping DEFAULT_MAPPING = new URI2RepositoryMapping("", ContentRepository.WEBSITE,"");
+
+    private static Logger log = LoggerFactory.getLogger(URI2RepositoryManager.class);
 
     /**
      * The mappings
      */
-    private List mappings = new ArrayList();
+    private Collection mappings;
 
-    /**
-     * Mapping used if none configured
-     */
-    private URI2RepositoryMapping defaultMapping = new URI2RepositoryMapping("", ContentRepository.WEBSITE, "");
-
-    /**
-     * First initialization and starting observation of the config node.
-     */
     public URI2RepositoryManager() {
-        init();
-        ObservationUtil.registerChangeListener(
-            ContentRepository.CONFIG,
-            SERVER_REPOSITORY_URIMAPPING,
-            new EventListener() {
-
-                public void onEvent(EventIterator arg0) {
-                    MgnlContext.setInstance(MgnlContext.getSystemContext());
-                    init();
-                }
-            });
-    }
-
-    /**
-     * Add the mappings found in the config repository
-     */
-    public void init() {
-        this.mappings.clear();
-        Content node = ContentUtil.getContent(ContentRepository.CONFIG, SERVER_REPOSITORY_URIMAPPING);
-        if (node != null) {
-            for (Iterator iter = node.getChildren(ItemType.CONTENTNODE).iterator(); iter.hasNext();) {
-                Content mappingNode = (Content) iter.next();
-                URI2RepositoryMapping mapping = new URI2RepositoryMapping();
-                mapping.setRepository(NodeDataUtil.getString(mappingNode, "repository", ""));
-                mapping.setUriPrefix(NodeDataUtil.getString(mappingNode, "URIPrefix", ""));
-                mapping.setHandlePrefix(NodeDataUtil.getString(mappingNode, "handlePrefix", ""));
-                this.addMapping(mapping);
-            }
-        }
-
-        // check first the longer prefixes
-        Collections.sort(this.mappings, new Comparator() {
-
+        mappings = new TreeSet(new Comparator() {
             public int compare(Object arg0, Object arg1) {
                 URI2RepositoryMapping m0 = (URI2RepositoryMapping) arg0;
                 URI2RepositoryMapping m1 = (URI2RepositoryMapping) arg1;
-                return m1.getUriPrefix().length() - m0.getUriPrefix().length();
+                return m1.getURIPrefix().length() - m0.getURIPrefix().length();
             }
         });
+
     }
 
     /**
@@ -106,7 +63,11 @@ public class URI2RepositoryManager {
                 return mapping;
             }
         }
-        return this.defaultMapping;
+        return this.getDefaultMapping();
+    }
+
+    public URI2RepositoryMapping getDefaultMapping() {
+        return DEFAULT_MAPPING;
     }
 
     /**
@@ -129,18 +90,25 @@ public class URI2RepositoryManager {
 
     /**
      * Get the uri to use for this handle
-     * @param repository
-     * @param handle
-     * @return
      */
     public String getURI(String repository, String handle) {
-        for (Iterator iter = mappings.iterator(); iter.hasNext();) {
-            URI2RepositoryMapping mapping = (URI2RepositoryMapping) iter.next();
-            if (StringUtils.equals(mapping.getRepository(), repository) && handle.startsWith(mapping.getHandlePrefix())) {
-                return mapping.getURI(handle);
-            }
+        try {
+            return getURI(new UUIDLink().initWithHandle(repository, handle));
+        }
+        catch (UUIDLinkException e) {
+            log.error("can't map [" + handle + "] to a uri", e);
         }
         return handle;
+    }
+
+    public String getURI(UUIDLink uuidLink) {
+        for (Iterator iter = mappings.iterator(); iter.hasNext();) {
+            URI2RepositoryMapping mapping = (URI2RepositoryMapping) iter.next();
+            if (StringUtils.equals(mapping.getRepository(), uuidLink.getRepository()) && uuidLink.getHandle().startsWith(mapping.getHandlePrefix())) {
+                return mapping.getURI(uuidLink);
+            }
+        }
+        return this.getDefaultMapping().getURI(uuidLink);
     }
 
     public void addMapping(URI2RepositoryMapping mapping) {
@@ -149,6 +117,13 @@ public class URI2RepositoryManager {
 
     public static URI2RepositoryManager getInstance() {
         return (URI2RepositoryManager) FactoryUtil.getSingleton(URI2RepositoryManager.class);
+    }
+
+    /**
+     * @return the mappings
+     */
+    public Collection getMappings() {
+        return this.mappings;
     }
 
 }

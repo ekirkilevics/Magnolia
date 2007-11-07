@@ -23,6 +23,7 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.User;
+import info.magnolia.cms.util.BaseLinkTest;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -465,8 +466,7 @@ public class FreemarkerHelperTest extends TestCase {
         MockUtil.mockObservation(cfgHM);
 
         final SystemContext sysMockCtx = createStrictMock(SystemContext.class);
-         
-        expect(sysMockCtx.getHierarchyManager(ContentRepository.CONFIG)).andReturn(cfgHM);
+
         if (webCtx == null) {
             expect(sysMockCtx.getLocale()).andReturn(Locale.KOREA);
             final MockHierarchyManager hm = prepareHM(new MockContent("baz"));
@@ -480,7 +480,7 @@ public class FreemarkerHelperTest extends TestCase {
 //        });
         replay(sysMockCtx);
 
-        FactoryUtil.setInstance(URI2RepositoryManager.class, new FakeURI2RepoMan());
+        FactoryUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
         final I18nContentSupport i18NSupportMock = createStrictMock(I18nContentSupport.class);
         FactoryUtil.setInstance(I18nContentSupport.class, i18NSupportMock);
 
@@ -492,7 +492,7 @@ public class FreemarkerHelperTest extends TestCase {
         tplLoader.putTemplate("test", "== ${text} ==");
 
         replay(i18NSupportMock);
-        MgnlContext.setInstance(webCtx == null ? sysMockCtx : webCtx);        
+        MgnlContext.setInstance(webCtx == null ? sysMockCtx : webCtx);
         assertRendereredContentWithoutCheckingContext(expectedOutput, c, "test");
         verify(i18NSupportMock);
         verify(sysMockCtx);
@@ -590,12 +590,6 @@ public class FreemarkerHelperTest extends TestCase {
         final MockHierarchyManager hm = new MockHierarchyManager();
         hm.setRoot(root);
         return hm;
-    }
-
-    public final static class FakeURI2RepoMan extends URI2RepositoryManager {
-        // do nothing
-        public void init() {
-        }
     }
 
     private Map createSingleValueMap(Object key, Object value) {

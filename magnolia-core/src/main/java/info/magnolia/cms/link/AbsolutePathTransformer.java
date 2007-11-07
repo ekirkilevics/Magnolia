@@ -17,6 +17,7 @@ import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 
 public class AbsolutePathTransformer implements PathToLinkTransformer{
+
     boolean addContextPath = true;
 
     boolean useURI2RepositoryMapping = true;
@@ -30,36 +31,43 @@ public class AbsolutePathTransformer implements PathToLinkTransformer{
     }
 
     public String transform(UUIDLink uuidLink) {
-        String linkStr = uuidLink.getHandle();
+        String linkStr;
         if(useURI2RepositoryMapping){
-            linkStr = URI2RepositoryManager.getInstance().getURI(uuidLink.getRepository(), uuidLink.getHandle());
+            linkStr = getURI2RepositoryManager().getURI(uuidLink);
+        }
+        else{
+            linkStr = getURI2RepositoryManager().getDefaultMapping().getURI(uuidLink);
         }
         linkStr += getURISuffix(uuidLink);
         if(useI18N){
             linkStr = I18nContentSupportFactory.getI18nSupport().toI18NURI(linkStr);
         }
-        if(addContextPath){
-            linkStr = prefixLink(linkStr);
-        }
+        linkStr = prefixLink(linkStr);
         return linkStr;
     }
 
+    protected URI2RepositoryManager getURI2RepositoryManager() {
+        return URI2RepositoryManager.getInstance();
+    }
+
     protected String prefixLink(String linkStr) {
-        return MgnlContext.getContextPath() + linkStr;
+        if(addContextPath){
+            return MgnlContext.getContextPath() + linkStr;
+        }
+        return linkStr;
     }
 
     /**
      * URI after the path
      */
     public String getURISuffix(UUIDLink uuidLink) {
-        return (StringUtils.isNotEmpty(uuidLink.getNodeDataName())? "/" + uuidLink.getNodeDataName() : "") +
-        (StringUtils.isNotEmpty(uuidLink.getFileName())? "/" + uuidLink.getFileName() : "") +
-        (StringUtils.isNotEmpty(uuidLink.getExtension())? "." + uuidLink.getExtension() : "") +
-        (StringUtils.isNotEmpty(uuidLink.getAnchor())? "#" + uuidLink.getAnchor() : "") +
-        (StringUtils.isNotEmpty(uuidLink.getParameters())? "?" + uuidLink.getParameters() : "");
+        String anchor = uuidLink.getAnchor();
+        String parameters = uuidLink.getParameters();
+
+        return "" + (StringUtils.isNotEmpty(anchor)? "#" + anchor : "") +
+        (StringUtils.isNotEmpty(parameters)? "?" + parameters : "");
 
     }
-
 
     public boolean isAddContextPath() {
         return this.addContextPath;

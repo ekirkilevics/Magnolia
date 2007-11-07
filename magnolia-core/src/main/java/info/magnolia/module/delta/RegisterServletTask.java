@@ -12,6 +12,7 @@ package info.magnolia.module.delta;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.module.ServletDefinition;
 import info.magnolia.cms.module.ServletParameterDefinition;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -29,7 +30,7 @@ import javax.jcr.RepositoryException;
 public class RegisterServletTask extends AbstractTask {
     public static final String DEFAULT_SERVLET_FILTER_PATH = "/server/filters/servlets";
     private final ServletDefinition servletDefinition;
-    
+
     public RegisterServletTask(ServletDefinition servletDefinition) {
         super("Servlet " + servletDefinition.getName(), "Registers servlet" + servletDefinition.getName() + " (" + servletDefinition.getComment() + ")");
         this.servletDefinition = servletDefinition;
@@ -37,9 +38,9 @@ public class RegisterServletTask extends AbstractTask {
 
     public void execute(InstallContext installContext) throws TaskExecutionException {
         installContext.debug("Registering servlet " + servletDefinition.getName() + " in servlet filter.");
-        
+
         final String servletFilterPath = DEFAULT_SERVLET_FILTER_PATH;
-        
+
         try {
             final Content servletNode = installContext.getConfigHierarchyManager().createContent(servletFilterPath, servletDefinition.getName(), ItemType.CONTENTNODE.getSystemName());
             NodeDataUtil.getOrCreateAndSet(servletNode, "class", "info.magnolia.cms.filters.ServletDispatchingFilter");
@@ -50,16 +51,16 @@ public class RegisterServletTask extends AbstractTask {
 
             final Content mappingsNode = servletNode.createContent("mappings", ItemType.CONTENTNODE);
             for (Iterator iter = servletDefinition.getMappings().iterator(); iter.hasNext();) {
-                final String mapping = (String) iter.next();
-                
-                final Content mappingNode = mappingsNode.createContent("mapping", ItemType.CONTENTNODE);
-                NodeDataUtil.getOrCreateAndSet(mappingNode, "value", mapping);
-            }           
-            
+                final String pattern = (String) iter.next();
+                String mappingNodeName = Path.getUniqueLabel(mappingsNode, Path.getValidatedLabel(pattern));
+                final Content mappingNode = mappingsNode.createContent(mappingNodeName, ItemType.CONTENTNODE);
+                NodeDataUtil.getOrCreateAndSet(mappingNode, "pattern", pattern);
+            }
+
             final Content parametersNode = servletNode.createContent("parameters", ItemType.CONTENTNODE);
             for (Iterator iter = servletDefinition.getParams().iterator(); iter.hasNext();) {
                 final ServletParameterDefinition parameter = (ServletParameterDefinition) iter.next();
-                
+
                 NodeDataUtil.getOrCreateAndSet(parametersNode, parameter.getName(), parameter.getValue());
             }
         }

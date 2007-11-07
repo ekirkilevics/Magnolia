@@ -7,9 +7,6 @@
 ### global initialisations and event handlers
 ################################### */
 
-var kupuEditors=new Array();
-//will be extended at each richEdit control
-
 var mgnlFormMainName="mgnlFormMain";
 
 
@@ -17,13 +14,9 @@ var mgnlTabLeft=8;
 var mgnlTabTop=55;
 var mgnlTabBottom=44;
 
+function mgnlDialogInit(){
 
-
-function mgnlDialogInit()
-    {
-    var hasRichE=mgnlDialogRichEStart();
-    if (!hasRichE) mgnlDialogFocusFirstEdit();
-    }
+}
 
 function mgnlDialogFocusFirstEdit()
     {
@@ -53,28 +46,9 @@ function mgnlDialogFocusFirstEdit()
 ################################### */
 
 
-function mgnlDialogFormSubmit()
-    {
-    //richText: get data from iFrame
-    for (var elem in mgnlRichEditors)
-        {
-        var richFrameDoc=null;
-        var richFrameName=mgnlRichEditors[elem]+"-kupu-editor";
-
-        if (document.frames && document.frames[richFrameName]) richFrameDoc=document.frames[richFrameName].document;
-        else if (document.getElementById(richFrameName)) richFrameDoc=document.getElementById(richFrameName).contentDocument;
-
-        if (richFrameDoc)
-            {
-            var body=richFrameDoc.getElementsByTagName("body");
-            var value=body[0].innerHTML;
-            //alert("["+value+"]");
-            var hiddenTextarea=document.getElementById(mgnlRichEditors[elem]);
-            if (hiddenTextarea) hiddenTextarea.value=value;
-            }
-        }
+function mgnlDialogFormSubmit(){
     document.forms[mgnlFormMainName].submit();
-    }
+}
 
 
 /* ###################################
@@ -251,17 +225,20 @@ function mgnlDialogLinkBrowserResize()
 function mgnlDialogLinkBrowserWriteBack(){
     var iFrameDoc=mgnlGetIFrameDocument('mgnlDialogLinkBrowserIFrame');
     var addressBar=iFrameDoc.getElementById("mgnlTreeControlAddressBar");
+    var result = null;
 
     if(window.top.mgnlCallBackCommand){
         mgnlDebug("mgnlDialogLinkBrowserWriteBack: calling callback function", "dialog");
-        window.top.mgnlCallBackCommand.callback(addressBar.value);
+        result = window.top.mgnlCallBackCommand.callback(addressBar.value);
     }
     else if(opener && opener.mgnlCallBackCommand){
         mgnlDebug("mgnlDialogLinkBrowserWriteBack: calling callback function", "dialog");
-        opener.mgnlCallBackCommand.callback(addressBar.value);
+        result = opener.mgnlCallBackCommand.callback(addressBar.value);
     }
     
-    window.top.close();
+    if (result == null || result == true) {
+      window.top.close();
+    }
 }
 
 
@@ -335,75 +312,6 @@ function mgnlDialogDatePatternCheckDetail(value,i)
         }
     return value;
     }
-
-
-
-/* ###################################
-### rich text editor
-################################### */
-function mgnlDialogRichEStart()
-    {
-    var hasRichE=false;
-    for (var elem in mgnlRichEditors)
-        {
-        var nodeDataName=mgnlRichEditors[elem];
-        var richFrameName=nodeDataName+"-kupu-editor";
-        var richFrameDoc=mgnlGetIFrameDocument(richFrameName);
-
-        if (richFrameDoc)
-            {
-            var frame = document.getElementById(richFrameName);
-            kupu = initKupu(frame,nodeDataName);
-            kupuui = kupu.getTool('ui');
-            kupu.initialize();
-            hasRichE=true;
-            }
-        }
-    return hasRichE;
-    }
-
-
-function mgnlDialogRichEPasteClean()
-    {
-    if (!window.clipboardData) alert(mgnlMessages.get('dialog.richedit.nopaste.js'));
-    else kupuui.pasteButtonHandler(window.clipboardData.getData('Text'));
-    }
-function mgnlDialogRichEPasteCleanHelp()
-    {
-    var str="";
-    str+="Text copied in some applications (e.g. Word, Excel) contains additional information which might mess up your web content.\n\n";
-    str+="Pasting text by Ctrl-V would insert this additional information.";
-    alert(str);
-    }
-
-
-function mgnlDialogRichEPasteTextarea(nodeDataName,append)
-    {
-    var form=document.forms[mgnlFormMainName];
-    var valueArea=form.elements[nodeDataName+"-paste"];
-    var value=valueArea.value;
-
-    if (append)
-        {
-        //append value at end of text
-        var richFrameDoc=null;
-        var richFrameName=nodeDataName+"-kupu-editor";
-
-        if (document.frames && document.frames[richFrameName]) richFrameDoc=document.frames[richFrameName].document;
-        else if (document.getElementById(richFrameName)) richFrameDoc=document.getElementById(richFrameName).contentDocument;
-
-        form.elements[nodeDataName+"-paste"].value="";
-        richFrameDoc.insertText(value);
-        valueArea.value="";
-        }
-    else
-        {
-        //insert value at cursor position; not supported by default(changes in security props needed)
-        //http://www.mozilla.org/editor/midasdemo/securityprefs.html
-        if (kupuui.pasteButtonHandler(value)!="failed") valueArea.value="";
-        }
-    }
-
 
 
 /* ###################################

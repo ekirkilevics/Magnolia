@@ -32,39 +32,41 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.collections.CollectionUtils;
-import org.apache.commons.collections.Transformer;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
- *
  * @author vsteller
  * @version $Id$
  */
 public class ServletDispatchingFilter extends AbstractMgnlFilter {
+
     private static final Logger log = LoggerFactory.getLogger(ServletDispatchingFilter.class);
 
     private String servletName;
+
     private String servletClass;
+
     private Collection mappings;
+
     private Map parameters;
+
     private String comment;
-    
+
     private HttpServlet servlet;
-    private Collection mappingPatterns;
 
     public ServletDispatchingFilter() {
         mappings = new LinkedList();
     }
-    
+
     /**
      * Initializes the servlet and its mappings. ServletConfig is wrapped to take init parameters into account.
      */
     public void init(final FilterConfig filterConfig) throws ServletException {
         super.init(filterConfig);
-        
+
         if (servletClass != null) {
             try {
                 servlet = (HttpServlet) ClassUtil.newInstance(servletClass);
@@ -73,68 +75,56 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
             catch (Throwable e) {
                 log.error("Unable to load servlet " + servletClass + " : " + e.getMessage(), e);
             }
-            
+
             servlet.init();
         }
-
-        if (mappings != null) {
-            mappingPatterns = CollectionUtils.collect(mappings, new Transformer() {
-                    public Object transform(Object input) {
-                        if (input instanceof MappingDefinition) {
-                            final String mapping = StringUtils.removeEnd(((MappingDefinition) input).getValue(), "*");
-                            final String encodedString = SimpleUrlPattern.getEncodedString(mapping);
-                            
-                            return Pattern.compile(encodedString);
-                        }
-                        return null;
-                    }
-                });
-        }
     }
-    
+
     /**
-     * Bypasses if the current request does not match any of the mappings of the servlet.
-     * Explicit bypasses defined in the bypasses content node of this filter are taken into account as well.
+     * Bypasses if the current request does not match any of the mappings of the servlet. Explicit bypasses defined in
+     * the bypasses content node of this filter are taken into account as well.
      */
     public boolean bypasses(HttpServletRequest request) {
         final String uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
         return determineMatchingEnd(uri) < 0 || super.bypasses(request);
     }
-    
+
     /**
-     * Determines the index of the first pathInfo character. If the uri does not match any mapping this method returns -1.
+     * Determines the index of the first pathInfo character. If the uri does not match any mapping this method returns
+     * -1.
      */
     protected int determineMatchingEnd(String uri) {
-        if (mappingPatterns != null) {
-            for (Iterator iter = mappingPatterns.iterator(); iter.hasNext();) {
-                final Matcher matcher = ((Pattern) iter.next()).matcher(uri);
-                
-                if (matcher.find())
-                    return matcher.end();
+        for (Iterator iter = mappings.iterator(); iter.hasNext();) {
+            final Matcher matcher = ((Pattern) iter.next()).matcher(uri);
+
+            if (matcher.find()) {
+                return matcher.end();
             }
         }
-        
+
         return -1;
     }
 
     /**
-     * Dispatches the request to the servlet if not already bypassed. The request is wrapped for properly setting the pathInfo.
+     * Dispatches the request to the servlet if not already bypassed. The request is wrapped for properly setting the
+     * pathInfo.
      */
     public void doFilter(final HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-        
+
         log.debug("Dispatching to servlet " + getServletClass());
         servlet.service(new HttpServletRequestWrapper(request) {
-                public String getPathInfo() {
-                    final String uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
-                    final String pathInfo = StringUtils.substring(uri, determineMatchingEnd(uri));
-                    
-                    // according to the servlet spec the pathInfo should contain a leading slash
-                    return (pathInfo.startsWith("/") ? pathInfo : "/" + pathInfo);
-                }
-            }, response);
+
+            public String getPathInfo() {
+                final String uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
+                final String pathInfo = StringUtils.substring(uri, determineMatchingEnd(uri));
+
+                // according to the servlet spec the pathInfo should contain a leading slash
+                return (pathInfo.startsWith("/") ? pathInfo : "/" + pathInfo);
+            }
+        }, response);
     }
-    
+
     public String getServletName() {
         return servletName;
     }
@@ -146,27 +136,30 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     public String getServletClass() {
         return servletClass;
     }
-    
+
     public void setServletClass(String servletClass) {
         this.servletClass = servletClass;
     }
-    
+
     public Collection getMappings() {
         return mappings;
     }
-    
+
     public void setMappings(Collection mappings) {
         this.mappings = mappings;
     }
 
-    public void addMapping(MappingDefinition mapping) {
-        getMappings().add(mapping);
+    public void addMapping(String mapping) {
+        mapping = StringUtils.removeEnd(mapping, "*");
+        final String encodedString = SimpleUrlPattern.getEncodedString(mapping);
+
+        mappings.add(Pattern.compile(encodedString));
     }
-    
+
     public Map getParameters() {
         return parameters;
     }
-    
+
     public void setParameters(Map parameters) {
         this.parameters = parameters;
     }
@@ -174,27 +167,17 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     public String getComment() {
         return comment;
     }
-    
+
     public void setComment(String comment) {
         this.comment = comment;
     }
 
-    public static class MappingDefinition {
-    
-        private String value;
-        
-        public String getValue() {
-            return value;
-        }
-
-        public void setValue(String value) {
-            this.value = value;
-        }
-    }
-
     private final static class WrappedServletConfig implements ServletConfig {
+
         private final String servletName;
+
         private final FilterConfig filterConfig;
+
         private final Map parameters;
 
         public WrappedServletConfig(String servletName, FilterConfig filterConfig, Map parameters) {

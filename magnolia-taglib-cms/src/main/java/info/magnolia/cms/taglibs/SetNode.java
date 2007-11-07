@@ -235,7 +235,7 @@ public class SetNode extends BaseContentTag {
                 value = props.getProperty(FileProperties.PATH);
             }
             else {
-                value = LinkUtil.convertUUIDsToRelativeLinks(nodeData.getString(), this.actPage);
+                value = LinkUtil.convertUUIDsToBrowserLinks(nodeData.getString(), this.actPage);
             }
             return value;
         }

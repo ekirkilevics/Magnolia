@@ -10,13 +10,14 @@
  */
 package info.magnolia.cms.link;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
 
 import java.util.regex.Matcher;
@@ -80,70 +81,90 @@ public class UUIDLink{
     public UUIDLink() {
     }
 
-    public UUIDLink parseUUIDLink(String uuidLink){
+    public UUIDLink parseUUIDLink(String uuidLink) throws UUIDLinkException{
         Matcher matcher = UUID_PATTERN.matcher(uuidLink);
         if(matcher.matches()){
-            uuid = matcher.group(1);
-            repository = StringUtils.defaultIfEmpty(matcher.group(2), ContentRepository.WEBSITE);
-            fallbackHandle = matcher.group(5);
-            nodeDataName = matcher.group(7);
-            extension = matcher.group(8);
-            anchor = matcher.group(10);
-            parameters = matcher.group(12);
-
+            initByUUIDPatternMatcher(matcher);
         }
         else{
-            log.error("can't parse [{}]", uuidLink);
+            throw new UUIDLinkException("can't parse [ " + uuidLink + "]");
         }
         return this;
     }
 
-    public UUIDLink parseLink(String link){
+    UUIDLink initByUUIDPatternMatcher(Matcher matcher) {
+        uuid = matcher.group(1);
+        repository = StringUtils.defaultIfEmpty(matcher.group(2), ContentRepository.WEBSITE);
+        fallbackHandle = matcher.group(5);
+        nodeDataName = matcher.group(7);
+        extension = matcher.group(8);
+        anchor = matcher.group(10);
+        parameters = matcher.group(12);
+        return this;
+    }
+
+    public UUIDLink parseLink(String link) throws UUIDLinkException{
         // ignore context handle if existing
         link = StringUtils.removeStart(link, MgnlContext.getContextPath());
 
         Matcher matcher = LINK_PATTERN.matcher(link);
         if(matcher.matches()){
             String orgHandle = matcher.group(1);
-            handle = URI2RepositoryManager.getInstance().getHandle(orgHandle);
-            repository = URI2RepositoryManager.getInstance().getRepository(orgHandle);
-            extension = StringUtils.defaultIfEmpty(matcher.group(3), Server.getDefaultExtension());
-            anchor = matcher.group(5);
-            parameters = matcher.group(7);
-
-            try {
-                HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
-                if(hm.isExist(handle)){
-                    node = hm.getContent(handle);
-                }
-                if(node == null){
-                    // this is a binary containing the name at the end
-                    // this name is stored as an attribute but is not part of the handle
-                    if(hm.isNodeData(StringUtils.substringBeforeLast(handle, "/"))){
-                        fileName = StringUtils.substringAfterLast(handle, "/");
-                        handle = StringUtils.substringBeforeLast(handle, "/");
-                    }
-
-                    // link to the binary node data
-                    if(hm.isNodeData(handle)){
-                        nodeDataName = StringUtils.substringAfterLast(handle, "/");
-                        handle = StringUtils.substringBeforeLast(handle, "/");
-                        node = hm.getContent(handle);
-                        nodeData = node.getNodeData(nodeDataName);
-                    }
-                }
-                if(node != null){
-                    uuid = node.getUUID();
-                }
-            }
-            catch (RepositoryException e) {
-                log.error("can't parse link [" + link+ "]", e);
-            }
+            orgHandle = I18nContentSupportFactory.getI18nSupport().toRawURI(orgHandle);
+            String repository = URI2RepositoryManager.getInstance().getRepository(orgHandle);
+            String handle = URI2RepositoryManager.getInstance().getHandle(orgHandle);
+            init(repository, handle, matcher.group(3),matcher.group(5),matcher.group(7));
         }
         else{
-            log.error("can't parse [{}]", link);
+            throw new UUIDLinkException("can't parse [ " + link + "]");
         }
         return this;
+    }
+
+    public UUIDLink initWithHandle(String repository, String handle) throws UUIDLinkException{
+        init(repository, handle, null, null, null);
+        return this;
+    }
+
+    protected void init(String repository, String path, String extension, String anchor, String parameters) throws UUIDLinkException {
+        this.repository = repository;
+        this.extension = extension;
+        this.anchor = anchor;
+        this.parameters = parameters;
+
+        try {
+            HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+            if (hm.isExist(path) && !hm.isNodeData(path)) {
+                node = hm.getContent(path);
+            }
+            if (node == null) {
+                // this is a binary containing the name at the end
+                // this name is stored as an attribute but is not part of the handle
+                if (hm.isNodeData(StringUtils.substringBeforeLast(path, "/"))) {
+                    fileName = StringUtils.substringAfterLast(path, "/");
+                    path = StringUtils.substringBeforeLast(path, "/");
+                }
+
+                // link to the binary node data
+                if (hm.isNodeData(path)) {
+                    nodeDataName = StringUtils.substringAfterLast(path, "/");
+                    path = StringUtils.substringBeforeLast(path, "/");
+                    node = hm.getContent(path);
+                    nodeData = node.getNodeData(nodeDataName);
+                }
+            }
+            if (node != null) {
+                uuid = node.getUUID();
+            }
+            this.handle = path;
+        }
+        catch (RepositoryException e) {
+            throw new UUIDLinkException("can't find node " + path + " in repository " + repository, e);
+        }
+
+        if(node == null){
+            throw new UUIDLinkException("can't find node " + path + " in repository " + repository);
+        }
     }
 
     public String toPattern(){
@@ -166,7 +187,7 @@ public class UUIDLink{
                 extension = binary.getExtension();
             }
         }
-        return this.extension;
+        return StringUtils.defaultIfEmpty(this.extension, Server.getDefaultExtension());
     }
 
 
@@ -315,6 +336,5 @@ public class UUIDLink{
     public void setParameters(String parameters) {
         this.parameters = parameters;
     }
-
 }
 

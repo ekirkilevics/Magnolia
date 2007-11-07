@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>Repository browser page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+    
+    <script language="javascript" type="text/javascript">
+      // <!-- 
+        function setURI() {
+          opener.SetUrl("${this.absoluteURI}");
+          opener.document.getElementById('cmbLinkProtocol').value = '';
+          window.top.close();
+        }
+      // -->
+    </script>
+  </head>
+  <body onload="setURI();" class="mgnlBgDark" id="mgnl">
+    Setting URI...
+  </body>
+</html>

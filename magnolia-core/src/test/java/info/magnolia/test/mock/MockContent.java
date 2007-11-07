@@ -40,6 +40,8 @@ public class MockContent extends DefaultContent {
 
     private String uuid;
 
+    private int index = 1;
+
     private Content parent;
 
     private MockHierarchyManager hierarchyManager;
@@ -277,5 +279,13 @@ public class MockContent extends DefaultContent {
 
     public String toString() {
         return super.toString() + ": " + this.getHandle();
+    }
+
+    public int getIndex() {
+        return index;
+    }
+
+    public void setIndex(int index) {
+        this.index = index;
     }
 }

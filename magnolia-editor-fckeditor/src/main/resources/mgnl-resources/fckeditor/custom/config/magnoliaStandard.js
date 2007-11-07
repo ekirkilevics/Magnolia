@@ -106,7 +106,7 @@ FCKConfig.ImageDlgHideAdvanced = true;
 FCKConfig.FlashDlgHideAdvanced = false;
 
 FCKConfig.LinkBrowser = true;
-FCKConfig.LinkBrowserURL = MgnlFCKConfig.contextPath + "/.resources/fckeditor/custom/editor/filemanager/browser/default/browser.html?contextPath=" + MgnlFCKConfig.contextPath;
+FCKConfig.LinkBrowserURL = MgnlFCKConfig.contextPath + "/.magnolia/pages/repositoryBrowser.html?contextPath=" + MgnlFCKConfig.contextPath;
 
 FCKConfig.ImageBrowser = false;
 

@@ -122,8 +122,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         }
         catch (RepositoryException e) {
             try {
-                final NodeData nodeData = this.getNodeData(path);
-                return nodeData.isExist();
+                return this.isNodeData(path);
             }
             catch (RepositoryException e1) {
                 return false;
@@ -133,12 +132,12 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
 
     public boolean isNodeData(String path) throws AccessDeniedException {
         try {
-            getNodeData(path);
+            Content node = getContent(StringUtils.substringBeforeLast(path, "/"));
+            return node.hasNodeData(StringUtils.substringAfterLast(path, "/"));
         }
         catch (RepositoryException e) {
             return false;
         }
-        return true;
     }
 
     public NodeData getNodeData(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {

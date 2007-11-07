@@ -56,7 +56,7 @@ public class LinkBrowserDialogPage extends SimplePageMVCHandler {
         html.append("<div id=\"mgnlTreeDiv\" class=\"mgnlDialogLinkBrowserTreeDiv\">"); //$NON-NLS-1$
         html.append("<iframe id=\"mgnlDialogLinkBrowserIFrame\" name=\"mgnlDialogLinkBrowserIFrame\" src=\"" //$NON-NLS-1$
             + src
-            + "\" scrolling=\"no\" frameborder=\"0\" width=\"100%\" height=\"100\"></iframe>"); //$NON-NLS-1$
+            + "\" scrolling=\"no\" frameborder=\"0\" width=\"100%\" height=\"100%\"></iframe>"); //$NON-NLS-1$
         html.append("</div>"); //$NON-NLS-1$
 
         Button bOk = new Button();

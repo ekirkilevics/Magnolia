@@ -460,4 +460,19 @@ public class ContentUtil {
         return uuid;
     }
 
+    public static String path2uuid(String repository, String path) {
+        if(StringUtils.isNotEmpty(path)){
+            HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
+            try {
+                Content node = hm.getContent(path);
+                return node.getUUID();
+            }
+            catch (Exception e) {
+                // return the uuid
+            }
+
+        }
+        return path;
+    }
+
 }

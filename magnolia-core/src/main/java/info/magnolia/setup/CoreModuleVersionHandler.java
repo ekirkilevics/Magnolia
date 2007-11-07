@@ -77,6 +77,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.MIMEMapping.xml"),
             new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.security.xml"),
             new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.URI2RepositoryMapping.xml"),
+            new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.rendering.linkResolver.xml"),
             new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.modules.adminInterface.virtualURIMapping.default.xml"),
 
             // -- /server configuration tasks

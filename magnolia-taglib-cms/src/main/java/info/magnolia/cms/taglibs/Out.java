@@ -17,6 +17,7 @@ import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
+import info.magnolia.cms.link.LinkHelper;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.DateUtil;
 import info.magnolia.cms.util.LinkUtil;
@@ -296,16 +297,16 @@ public class Out extends BaseContentTag {
                 default:
                     value = StringUtils.isEmpty(this.lineBreak) ? nodeData.getString() : nodeData.getString(this.lineBreak);
                     // replace internal links using the special pattern
-                    value = LinkUtil.convertUUIDsToRelativeLinks(value, Resource.getActivePage()); // static actpage
+                    value = LinkUtil.convertUUIDsToBrowserLinks(value, Resource.getActivePage()); // static actpage
                     if(!StringUtils.equalsIgnoreCase(getUuidToLink(), LINK_RESOLVING_NONE)){
                         if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_HANDLE)){
                             value = ContentUtil.uuid2path(this.getUuidToLinkRepository(), value);
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_ABSOLUTE)){
-                            value = LinkUtil.makeAbsolutePathFromUUID(uuid, this.getUuidToLinkRepository());
+                            value = LinkHelper.convertUUIDtoAbsolutePath(uuid, this.getUuidToLinkRepository());
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_RELATIVE)){
-                            value = LinkUtil.makeRelativePath(LinkUtil.makeAbsolutePathFromUUID(uuid, this.getUuidToLinkRepository()), MgnlContext.getAggregationState().getMainContent());
+                            value = LinkUtil.makeRelativePath(LinkHelper.convertUUIDtoAbsolutePath(uuid, this.getUuidToLinkRepository()), MgnlContext.getAggregationState().getMainContent());
                         }
                         else{
                             throw new IllegalArgumentException("not supported value for uuidToLink");

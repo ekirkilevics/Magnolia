@@ -25,6 +25,8 @@ import java.util.Iterator;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+import javax.jcr.RepositoryException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,7 +144,16 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
                 Object childBean = toBean(childNode, true, transformer, state);
                 // can be null if forceCreation is true
                 if(childBean != null){
-                    map.put(childNode.getName(), childBean);
+                    String name = childNode.getName();
+                    try {
+                        if(childNode.getIndex() > 1){
+                            name += childNode.getIndex();
+                        }
+                    }
+                    catch (RepositoryException e) {
+                        log.error("can't read index of the node [" + childNode + "]", e);
+                    }
+                    map.put(name, childBean);
                 }
             }
         }

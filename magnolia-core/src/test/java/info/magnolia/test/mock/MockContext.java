@@ -19,6 +19,7 @@ import info.magnolia.context.SystemContext;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.commons.lang.UnhandledException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,9 @@ public class MockContext extends AbstractMapBasedContext implements SystemContex
     }
 
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
+        if(!hierarchyManagers.containsKey(repositoryId)){
+            throw new IllegalArgumentException("repository [" + repositoryId + "] not initialized");
+        }
         return (HierarchyManager) hierarchyManagers.get(repositoryId);
     }
 

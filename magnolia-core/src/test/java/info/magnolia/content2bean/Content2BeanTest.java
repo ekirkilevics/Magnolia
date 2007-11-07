@@ -15,6 +15,7 @@ import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
+import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
@@ -274,4 +275,19 @@ public class Content2BeanTest extends MgnlTestCase {
         assertEquals(5, bean.getInteger());
         assertEquals(true, bean.isBool());
     }
+
+    public void testFlatteningSubNodesToSimpleList() throws RepositoryException, Content2BeanException, IOException {
+        String data =
+            "/parent.class=" + BeanWithListOfString.class.getName() + "\n" +
+            "/parent/values/sub1.value=one\n" +
+            "/parent/values/sub2.value=two";
+
+        Content node = MockUtil.createHierarchyManager(data).getContent("/parent");
+        //System.out.println(Content2BeanUtil.toMap(node.getContent("values"), true));
+
+        BeanWithListOfString bean = (BeanWithListOfString) Content2BeanUtil.toBean(node, true);
+        assertEquals("one", bean.getValues().get(0));
+        assertEquals("two", bean.getValues().get(1));
+    }
+
 }

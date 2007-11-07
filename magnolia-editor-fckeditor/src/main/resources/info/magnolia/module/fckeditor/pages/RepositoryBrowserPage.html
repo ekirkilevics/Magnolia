@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>Repository browser page</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+    
+    <script language="javascript" type="text/javascript">
+      // <!-- 
+        function redirect() {
+          var absoluteURI = opener.document.getElementById("txtUrl").value;
+          window.location.href = window.location.href + "&command=select&absoluteURI=" + absoluteURI;
+        }
+      // -->
+    </script>
+  </head>
+  <body onload="redirect();" class="mgnlBgDark" id="mgnl">
+    Getting URI...
+  </body>
+</html>

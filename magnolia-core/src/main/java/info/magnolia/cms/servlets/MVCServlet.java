@@ -101,13 +101,6 @@ public abstract class MVCServlet extends ContextSensitiveServlet {
 
         response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
 
-        try {
-            handler.init();
-        }
-        catch (Exception e) {
-            log.error("can't initialize handler [" + handler.getName() + "]", e); //$NON-NLS-1$
-        }
-
         String command = handler.getCommand();
         String view = handler.execute(command);
         handler.renderHtml(view);
