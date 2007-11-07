@@ -19,6 +19,8 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.TransformationState;
+import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 import info.magnolia.context.MgnlContext;
 
 import java.util.HashMap;
@@ -185,7 +187,7 @@ public class FactoryUtil {
     }
 
     public static void setImplementation(Class interf, Class impl) {
-        setDefaultImplementation(interf, impl.getName());
+        setImplementation(interf, impl.getName());
     }
 
     /**
@@ -286,7 +288,15 @@ public class FactoryUtil {
         }
 
         protected Content2BeanTransformer getContent2BeanTransformer() {
-            return Content2BeanUtil.getContent2BeanTransformer();
+            // we can not discover again the same class we are building
+            return new Content2BeanTransformerImpl() {
+                public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
+                    if (state.getCurrentType().getType().equals(interf)) {
+                        return FactoryUtil.newInstanceWithoutDiscovery(interf.getName());
+                    }
+                    return super.newBeanInstance(state, properties);
+                }
+            };
         }
 
         /**
