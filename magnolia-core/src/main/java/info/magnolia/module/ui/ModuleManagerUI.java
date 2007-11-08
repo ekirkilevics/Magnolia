@@ -15,7 +15,6 @@ package info.magnolia.module.ui;
 import info.magnolia.module.ModuleManagementException;
 
 import java.io.Writer;
-import java.util.Map;
 
 /**
  * User Interface for the install/update mechanism.
