@@ -130,7 +130,7 @@
         </property>
       </activation>
       <modules>
-        <module>magnolia</module>
+        <module>magnolia-webapp</module>
       </modules>
     </profile>
     <profile>

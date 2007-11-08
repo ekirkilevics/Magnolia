@@ -7,9 +7,9 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>magnolia</artifactId>
+  <artifactId>magnolia-webapp</artifactId>
   <packaging>war</packaging>
-  <name>magnolia</name>
+  <name>magnolia-webapp</name>
   <version>3.1-SNAPSHOT</version>
   <profiles>
     <profile>
