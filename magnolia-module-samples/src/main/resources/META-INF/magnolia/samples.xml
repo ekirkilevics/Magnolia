@@ -4,6 +4,7 @@
   <name>samples</name>
   <displayName>Magnolia Samples Module</displayName>
   <class>info.magnolia.module.samples.SamplesConfig</class>
+  <versionHandler>info.magnolia.module.samples.setup.SamplesVersionHandler</versionHandler>
   <version>${project.version}</version>
   <properties>
     <property>
