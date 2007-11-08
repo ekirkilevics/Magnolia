@@ -15,6 +15,7 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanTransformer;
@@ -27,6 +28,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 
 import org.apache.commons.beanutils.ConstructorUtils;
 import org.apache.commons.lang.StringUtils;
@@ -230,7 +233,7 @@ public class FactoryUtil {
      * @version $Id$
      *
      */
-    public static class ObservedObjectFactory extends ObservedManager{
+    public static class ObservedObjectFactory{
 
         /**
          * Path to the node in the config repository
@@ -251,24 +254,63 @@ public class FactoryUtil {
          * The object delivered by this factory
          */
         protected Object observedObject;
-
+        
+        /**
+         * The object we use
+         */
+        protected Object defaultObject;
+        
         protected Class interf;
 
         public ObservedObjectFactory(String repository, String path, Class interf) {
+            this(repository, path, interf, null);
+        }
+
+        public ObservedObjectFactory(String repository, String path, Class interf, Object defaultObject) {
             this.path = path;
             this.repository = repository;
             this.interf = interf;
+            this.defaultObject = defaultObject;
+            load();
+            startObservation(path);
+        }
+        
+        protected void startObservation(String handle) {
+            ObservationUtil.registerDefferedChangeListener(ContentRepository.CONFIG, handle, new EventListener() {
 
-            Content node;
-            try {
-                node = MgnlContext.getSystemContext().getHierarchyManager(repository).getContent(path);
-                register(node);
-            }
-            catch (RepositoryException e) {
-                log.error("can't read configuration for object [" + repository + ":" + path + "]", e);
-            }
+                public void onEvent(EventIterator events) {
+                   reload();
+                }
+            }, 1000, 5000);
         }
 
+        protected void reload(){
+            load();
+        }
+        
+        protected void load() {
+            HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(repository);
+            if(hm.isExist(path)){
+                Content node;
+                try {
+                    node = hm.getContent(path);
+                    onRegister(node);
+                }
+                catch (RepositoryException e) {
+                    log.error("can't read configuration for object [" + repository + ":" + path + "]", e);
+                }
+            }
+            else{
+                if(defaultObject == null){
+                    log.error("can't read configuration for object [" + repository + ":" + path + "]");
+                }
+                else{
+                    this.observedObject = defaultObject;
+                    log.warn("can't read configuration for object [" + repository + ":" + path + "], will fallback to default object");
+                }
+            }
+        }
+        
         protected void onRegister(Content node) {
             try {
                 Object instance = transformNode(node);
@@ -297,13 +339,6 @@ public class FactoryUtil {
                     return super.newBeanInstance(state, properties);
                 }
             };
-        }
-
-        /**
-         * We do not unset the instance. This allows getObject() to be unsynchronized.
-         */
-        protected void onClear() {
-
         }
 
         /**

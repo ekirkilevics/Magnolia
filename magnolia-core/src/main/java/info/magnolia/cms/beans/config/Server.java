@@ -50,7 +50,7 @@ public class Server {
 
     public static final class Observer extends FactoryUtil.ObservedObjectFactory {
         public Observer() {
-            super(ContentRepository.CONFIG, "/server", ServerConfiguration.class);
+            super(ContentRepository.CONFIG, "/server", ServerConfiguration.class, new ServerConfiguration());
         }
 
         protected Object transformNode(Content node) throws Content2BeanException {

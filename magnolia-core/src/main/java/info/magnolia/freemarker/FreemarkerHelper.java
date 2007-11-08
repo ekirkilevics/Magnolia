@@ -105,11 +105,7 @@ public class FreemarkerHelper {
             data.put("ctx", MgnlContext.getInstance());
         }
         
-        // TODO: MAGNOLIA-1822
-        ServerConfiguration serverConfig = Server.getConfig();
-        if(serverConfig != null){
-            data.put("defaultBaseUrl", serverConfig.getDefaultBaseUrl());
-        }
+        data.put("defaultBaseUrl", Server.getConfig().getDefaultBaseUrl());
 
         // TODO : this is currently still in FreemarkerUtil. If we add it here,
         // the attribute "message" we put in the freemarker context should have a less generic name
