@@ -413,7 +413,7 @@ public class ModuleManagerImpl implements ModuleManager {
                 }
             }
         } catch (TaskExecutionException e) {
-            ctx.error("Could not install or update module. Please remove or update faulty jar. (" + e.getMessage() + ")", e);
+            ctx.error("Could not install or update module. (" + e.getMessage() + ")", e);
             success = false;
         } finally {
             // TODO : ctx.info("Successful installation/update."); after save ?
