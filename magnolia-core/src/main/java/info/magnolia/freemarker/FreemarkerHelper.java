@@ -107,6 +107,10 @@ public class FreemarkerHelper {
         
         data.put("defaultBaseUrl", Server.getConfig().getDefaultBaseUrl());
 
+        if (i18nBasename != null) {
+            data.put("i18n", new MessagesWrapper(i18nBasename, locale));
+        }
+
         // TODO : this is currently still in FreemarkerUtil. If we add it here,
         // the attribute "message" we put in the freemarker context should have a less generic name
         // (-> update all templates)
