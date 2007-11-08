@@ -1,20 +1,24 @@
 ﻿/*
- * FCKeditor - The text editor for internet
- * Copyright (C) 2003-2006 Frederico Caldeira Knabben
- * 
- * Licensed under the terms of the GNU Lesser General Public License:
- * 		http://www.opensource.org/licenses/lgpl-license.php
- * 
- * For further information visit:
- * 		http://www.fckeditor.net/
- * 
- * "Support Open Source software. What about a donation today?"
- * 
- * File Name: fi.js
- * 	Finnish language file.
- * 
- * File Authors:
- * 		Marko Korhonen (marko.korhonen@datafisher.com)
+ * FCKeditor - The text editor for Internet - http://www.fckeditor.net
+ * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ *
+ * == BEGIN LICENSE ==
+ *
+ * Licensed under the terms of any of the following licenses at your
+ * choice:
+ *
+ *  - GNU General Public License Version 2 or later (the "GPL")
+ *    http://www.gnu.org/licenses/gpl.html
+ *
+ *  - GNU Lesser General Public License Version 2.1 or later (the "LGPL")
+ *    http://www.gnu.org/licenses/lgpl.html
+ *
+ *  - Mozilla Public License Version 1.1 or later (the "MPL")
+ *    http://www.mozilla.org/MPL/MPL-1.1.html
+ *
+ * == END LICENSE ==
+ *
+ * Finnish language file.
  */
 
 var FCKLang =
@@ -130,7 +134,7 @@ SelectionFieldProp	: "Valintakentän ominaisuudet",
 TextareaProp		: "Tekstilaatikon ominaisuudet",
 FormProp			: "Lomakkeen ominaisuudet",
 
-FontFormats			: "Normaali;Muotoiltu;Osoite;Otsikko 1;Otsikko 2;Otsikko 3;Otsikko 4;Otsikko 5;Otsikko 6",
+FontFormats			: "Normaali;Muotoiltu;Osoite;Otsikko 1;Otsikko 2;Otsikko 3;Otsikko 4;Otsikko 5;Otsikko 6",		//REVIEW : Check _getfontformat.html
 
 // Alerts and Messages
 ProcessingXHTML		: "Prosessoidaan XHTML:ää. Odota hetki...",
@@ -225,7 +229,7 @@ DlgLnkURL			: "Osoite",
 DlgLnkAnchorSel		: "Valitse ankkuri",
 DlgLnkAnchorByName	: "Ankkurin nimen mukaan",
 DlgLnkAnchorById	: "Ankkurin ID:n mukaan",
-DlgLnkNoAnchors		: "<Ei ankkureita tässä dokumentissa>",
+DlgLnkNoAnchors		: "<Ei ankkureita tässä dokumentissa>",		//REVIEW : Change < and > with ( and )
 DlgLnkEMail			: "Sähköpostiosoite",
 DlgLnkEMailSubject	: "Aihe",
 DlgLnkEMailBody		: "Viesti",
@@ -258,7 +262,7 @@ DlgLnkPopTop		: "Ylhäältä (px)",
 DlnLnkMsgNoUrl		: "Linkille on kirjoitettava URL",
 DlnLnkMsgNoEMail	: "Kirjoita sähköpostiosoite",
 DlnLnkMsgNoAnchor	: "Valitse ankkuri",
-DlnLnkMsgInvPopName	: "The popup name must begin with an alphabetic character and must not contain spaces",	//MISSING
+DlnLnkMsgInvPopName	: "Popup-ikkunan nimi pitää alkaa aakkosella ja ei saa sisältää välejä",
 
 // Color Dialog
 DlgColorTitle		: "Valitse väri",
@@ -333,7 +337,6 @@ DlgReplaceReplAllBtn	: "Korvaa kaikki",
 DlgReplaceWordChk		: "Koko sana",
 
 // Paste Operations / Dialog
-PasteErrorPaste	: "Selaimesi turva-asetukset eivät salli editorin toteuttaa liittämistä. Käytä näppäimistöä liittämiseen (Ctrl+V).",
 PasteErrorCut	: "Selaimesi turva-asetukset eivät salli editorin toteuttaa leikkaamista. Käytä näppäimistöä leikkaamiseen (Ctrl+X).",
 PasteErrorCopy	: "Selaimesi turva-asetukset eivät salli editorin toteuttaa kopioimista. Käytä näppäimistöä kopioimiseen (Ctrl+C).",
 
@@ -341,6 +344,7 @@ PasteAsText		: "Liitä tekstinä",
 PasteFromWord	: "Liitä Wordista",
 
 DlgPasteMsg2	: "Liitä painamalla (<STRONG>Ctrl+V</STRONG>) ja painamalla <STRONG>OK</STRONG>.",
+DlgPasteSec		: "Selaimesi turva-asetukset eivät salli editorin käyttää leikepöytää suoraan. Sinun pitää suorittaa liittäminen tässä ikkunassa.",
 DlgPasteIgnoreFont		: "Jätä huomioimatta fonttimääritykset",
 DlgPasteRemoveStyles	: "Poista tyylimääritykset",
 DlgPasteCleanBox		: "Tyhjennä",
@@ -377,9 +381,9 @@ IeSpellDownload			: "Oikeinkirjoituksen tarkistusta ei ole asennettu. Haluatko l
 // Button Dialog
 DlgButtonText		: "Teksti (arvo)",
 DlgButtonType		: "Tyyppi",
-DlgButtonTypeBtn	: "Button",	//MISSING
-DlgButtonTypeSbm	: "Submit",	//MISSING
-DlgButtonTypeRst	: "Reset",	//MISSING
+DlgButtonTypeBtn	: "Painike",
+DlgButtonTypeSbm	: "Lähetä",
+DlgButtonTypeRst	: "Tyhjennä",
 
 // Checkbox and Radio Button Dialogs
 DlgCheckboxName		: "Nimi",
@@ -428,7 +432,7 @@ DlgHiddenValue	: "Arvo",
 // Bulleted List Dialog
 BulletedListProp	: "Luettelon ominaisuudet",
 NumberedListProp	: "Numeroinnin ominaisuudet",
-DlgLstStart			: "Start",	//MISSING
+DlgLstStart			: "Alku",
 DlgLstType			: "Tyyppi",
 DlgLstTypeCircle	: "Kehä",
 DlgLstTypeDisc		: "Ympyrä",
@@ -450,17 +454,17 @@ DlgDocLangDir		: "Kielen suunta",
 DlgDocLangDirLTR	: "Vasemmalta oikealle (LTR)",
 DlgDocLangDirRTL	: "Oikealta vasemmalle (RTL)",
 DlgDocLangCode		: "Kielikoodi",
-DlgDocCharSet		: "Merkistäkoodaus",
-DlgDocCharSetCE		: "Central European",	//MISSING
-DlgDocCharSetCT		: "Chinese Traditional (Big5)",	//MISSING
-DlgDocCharSetCR		: "Cyrillic",	//MISSING
-DlgDocCharSetGR		: "Greek",	//MISSING
-DlgDocCharSetJP		: "Japanese",	//MISSING
-DlgDocCharSetKR		: "Korean",	//MISSING
-DlgDocCharSetTR		: "Turkish",	//MISSING
-DlgDocCharSetUN		: "Unicode (UTF-8)",	//MISSING
-DlgDocCharSetWE		: "Western European",	//MISSING
-DlgDocCharSetOther	: "Muu merkistäkoodaus",
+DlgDocCharSet		: "Merkistökoodaus",
+DlgDocCharSetCE		: "Keskieurooppalainen",
+DlgDocCharSetCT		: "Kiina, perinteinen (Big5)",
+DlgDocCharSetCR		: "Kyrillinen",
+DlgDocCharSetGR		: "Kreikka",
+DlgDocCharSetJP		: "Japani",
+DlgDocCharSetKR		: "Korealainen",
+DlgDocCharSetTR		: "Turkkilainen",
+DlgDocCharSetUN		: "Unicode (UTF-8)",
+DlgDocCharSetWE		: "Länsieurooppalainen",
+DlgDocCharSetOther	: "Muu merkistökoodaus",
 
 DlgDocDocType		: "Dokumentin tyyppi",
 DlgDocDocTypeOther	: "Muu dokumentin tyyppi",
@@ -489,13 +493,12 @@ DlgTemplatesTitle	: "Sisältöpohjat",
 DlgTemplatesSelMsg	: "Valitse pohja editoriin<br>(aiempi sisältö menetetään):",
 DlgTemplatesLoading	: "Ladataan listaa pohjista. Hetkinen...",
 DlgTemplatesNoTpl	: "(Ei määriteltyjä pohjia)",
-DlgTemplatesReplace	: "Replace actual contents",	//MISSING
+DlgTemplatesReplace	: "Korvaa editorin koko sisältö",
 
 // About Dialog
 DlgAboutAboutTab	: "Editorista",
 DlgAboutBrowserInfoTab	: "Selaimen tiedot",
 DlgAboutLicenseTab	: "Lisenssi",
 DlgAboutVersion		: "versio",
-DlgAboutLicense		: "Lisenssi: GNU Lesser General Public License",
 DlgAboutInfo		: "Lisää tietoa osoitteesta"
-}
+};
