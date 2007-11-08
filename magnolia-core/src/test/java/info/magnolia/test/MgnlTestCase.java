@@ -51,7 +51,7 @@ public abstract class MgnlTestCase extends TestCase {
         org.apache.log4j.Logger.getLogger(ContentRepository.class).setLevel(Level.ERROR);
 
         FactoryUtil.clear();
-        initDefaultImplementions();
+        initDefaultImplementations();
         MockUtil.initMockContext();
     }
     
@@ -61,22 +61,22 @@ public abstract class MgnlTestCase extends TestCase {
         MgnlContext.setInstance(null);
     }
 
-    protected void initDefaultImplementions() throws IOException {
+    public static void initDefaultImplementations() throws IOException {
         InputStream mgnlbeansStream = ClasspathResourcesUtil.getStream(MGNL_BEANS_PROPERTIES);
+        if (mgnlbeansStream == null) {
+            fail("Could not load " + MGNL_BEANS_PROPERTIES);
+        }
+        Properties mgnlbeans = new Properties();
+        mgnlbeans.load(mgnlbeansStream);
+        IOUtils.closeQuietly(mgnlbeansStream);
 
-        if (mgnlbeansStream != null) {
-            Properties mgnlbeans = new Properties();
-            mgnlbeans.load(mgnlbeansStream);
-            IOUtils.closeQuietly(mgnlbeansStream);
-
-            for (Iterator iter = mgnlbeans.keySet().iterator(); iter.hasNext();) {
-                String key = (String) iter.next();
-                SystemProperty.setProperty(key, mgnlbeans.getProperty(key));
-            }
+        for (Iterator iter = mgnlbeans.keySet().iterator(); iter.hasNext();) {
+            String key = (String) iter.next();
+            SystemProperty.setProperty(key, mgnlbeans.getProperty(key));
         }
     }
 
-    protected MockHierarchyManager initConfigRepository(String conf) throws IOException, RepositoryException, UnsupportedRepositoryOperationException {
+    public static MockHierarchyManager initConfigRepository(String conf) throws IOException, RepositoryException, UnsupportedRepositoryOperationException {
 
         MockHierarchyManager hm = MockUtil.createAndSetHierarchyManager(ContentRepository.CONFIG, conf);
 
