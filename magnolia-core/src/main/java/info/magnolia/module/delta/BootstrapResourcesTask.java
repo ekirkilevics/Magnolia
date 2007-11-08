@@ -36,9 +36,9 @@ public abstract class BootstrapResourcesTask extends AbstractTask {
             final String[] resourcesToBootstrap = getResourcesToBootstrap(installContext);
             ModuleUtil.bootstrap(resourcesToBootstrap, false);
         } catch (IOException e) {
-            throw new TaskExecutionException("Could not bootstrap: " + e.getMessage());
+            throw new TaskExecutionException("Could not bootstrap: " + e.getMessage(), e);
         } catch (RegisterException e) {
-            throw new TaskExecutionException("Could not bootstrap: " + e.getMessage());
+            throw new TaskExecutionException("Could not bootstrap: " + e.getMessage(), e);
         }
     }
 
