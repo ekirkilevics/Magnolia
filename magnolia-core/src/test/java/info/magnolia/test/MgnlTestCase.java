@@ -14,6 +14,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
@@ -52,6 +53,12 @@ public abstract class MgnlTestCase extends TestCase {
         FactoryUtil.clear();
         initDefaultImplementions();
         MockUtil.initMockContext();
+    }
+    
+    protected void tearDown() throws Exception {
+        super.tearDown();
+        FactoryUtil.clear();
+        MgnlContext.setInstance(null);
     }
 
     protected void initDefaultImplementions() throws IOException {
