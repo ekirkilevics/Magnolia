@@ -3,7 +3,6 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.context.WebContextImpl;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 
@@ -13,7 +12,7 @@ import java.io.StringWriter;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.PageContext;
 
-import org.easymock.classextension.EasyMock;
+import static org.easymock.classextension.EasyMock.*;
 
 
 /**
@@ -47,7 +46,7 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
         assertEquals("trululu:para-two", res2.toString());
     }
 
-    public void testRenderSetJspPageContext() throws IOException, RepositoryException {
+    public void testSetsJspPageContext() throws IOException, RepositoryException {
         final ParagraphRendererManager prm = new ParagraphRendererManager();
         prm.onRegister(getNode(CONFIGNODE1_RENDERER, "/modules/test/paragraph-renderers"));
         final ParagraphRenderingFacade prf = new ParagraphRenderingFacade(prm, null);
@@ -57,15 +56,17 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
         tra.setType("foo");
         final StringWriter res = new StringWriter();
 
-        PageContext pageContext = EasyMock.createMock(PageContext.class);
-        WebContext webContext = new WebContextImpl();
+        PageContext pageContext = createMock(PageContext.class);
+        WebContext webContext = createStrictMock(WebContext.class);
+
+        webContext.setPageContext(pageContext);
+
+        replay(pageContext, webContext);
         MgnlContext.setInstance(webContext);
         prf.render(null, tra, res, pageContext);
-
-        assertNotNull("jsp page context is not set", ((WebContext) MgnlContext.getInstance()).getPageContext());
+        verify(pageContext, webContext);
 
         assertEquals("tralala:para-one", res.toString());
-
     }
 
     public void testUsesTheAppropriateParagraphWhenNotExplicitelyPassed() throws IOException, RepositoryException {
