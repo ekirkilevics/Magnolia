@@ -72,7 +72,7 @@ public class InstallFilter extends AbstractMgnlFilter {
                 if (installDone) {
                     mainFilter.reset();
                     // redirect to root
-                    response.sendRedirect(contextPath);
+                    response.sendRedirect(StringUtils.defaultIfEmpty(contextPath, "/"));
                 }
             } else {
                 ui.renderTempPage(out);
