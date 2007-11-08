@@ -14,8 +14,10 @@ package info.magnolia.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.IPSecurityManagerImpl;
 import info.magnolia.cms.security.Realm;
+import info.magnolia.cms.util.BooleanUtil;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.ArrayDelegateTask;
@@ -47,6 +49,7 @@ import info.magnolia.setup.for3_1.RemoveModuleDescriptorDetailsFromRepo;
 import info.magnolia.setup.for3_1.RenamedRenderersToTemplateRenderers;
 import info.magnolia.setup.for3_1.UpdateI18nConfiguration;
 import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -58,6 +61,9 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
+
+    public static final String BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY = "magnolia.bootstrap.authorInstance";
+
     // tasks which have to be executed wether we're installing or upgrading from 3.0
     private final List genericTasksFor31 = Arrays.asList(new Task[]{
             // TODO : shouldn't this be conditional ? how do we migrate existing filters...
@@ -86,7 +92,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
             // the two following tasks replace the config.server.xml bootstrap file
             new CheckOrCreatePropertyTask("defaultExtension property", "Checks that the defaultExtension property exists in config:/server", "config", "/server", "defaultExtension", "html"),
-            new CheckOrCreatePropertyTask("admin property", "Checks that the admin property exists in config:/server", "config", "/server", "admin", "true"),
+            
+            new CheckOrCreatePropertyTask("admin property", "Checks that the admin property exists in config:/server", "config", "/server", "admin", StringUtils.defaultIfEmpty(SystemProperty.getProperty(BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY), "true")),
             new MoveAndRenamePropertyTask("basicRealm property", "/server", "basicRealm", "magnolia 3.0", "/server/filters/uriSecurity/clientCallback", "realmName", "Magnolia"),
             new ArrayDelegateTask("defaultBaseUrl property",
                     new NewPropertyTask("defaultBaseUrl property", "Adds the new defaultBaseUrl property with a default value.", "config", "/server", "defaultBaseUrl", "http://localhost:8080/magnolia/"),
