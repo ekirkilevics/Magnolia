@@ -16,14 +16,12 @@ import freemarker.cache.StringTemplateLoader;
 import freemarker.core.InvalidReferenceException;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.util.BaseLinkTest;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -64,9 +62,9 @@ public class FreemarkerHelperTest extends TestCase {
         fmHelper.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         fmHelper.getConfiguration().setTemplateLoader(tplLoader);
 
-        final Server.ServerConfiguration serverConfiguration = new Server.ServerConfiguration();
+        final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
-        FactoryUtil.setInstance(Server.ServerConfiguration.class, serverConfiguration);
+        FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
 
         // seems useless when running tests from maven (?), so we'll shunt log4j as well
         freemarker.log.Logger.selectLoggerLibrary(freemarker.log.Logger.LIBRARY_NONE);

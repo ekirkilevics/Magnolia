@@ -21,7 +21,7 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import info.magnolia.cms.beans.config.Server;
-import info.magnolia.cms.beans.config.Server.ServerConfiguration;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -104,8 +104,8 @@ public class FreemarkerHelper {
         if (MgnlContext.hasInstance()) {
             data.put("ctx", MgnlContext.getInstance());
         }
-        
-        data.put("defaultBaseUrl", Server.getConfig().getDefaultBaseUrl());
+
+        data.put("defaultBaseUrl", ServerConfiguration.getInstance().getDefaultBaseUrl());
 
         if (i18nBasename != null) {
             data.put("i18n", new MessagesWrapper(i18nBasename, locale));

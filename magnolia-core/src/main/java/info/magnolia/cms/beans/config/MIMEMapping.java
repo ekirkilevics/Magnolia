@@ -185,7 +185,8 @@ public class MIMEMapping {
             log.info("Cannot find MIME type for extension \"{}\"", extension);
         }
 
-        return getMIMEType(Server.getDefaultExtension());
+        final String defaultExtension = ServerConfiguration.getInstance().getDefaultExtension();
+        return getMIMEType(defaultExtension);
     }
 
     /**

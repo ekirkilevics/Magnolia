@@ -14,6 +14,7 @@ package info.magnolia.module.ui;
 
 import freemarker.template.TemplateException;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.freemarker.FreemarkerUtil;
 import info.magnolia.module.InstallContext;
@@ -24,6 +25,7 @@ import info.magnolia.module.ModuleManager;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -108,7 +110,15 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
     }
 
     protected void render(String templateName, Writer out) throws ModuleManagementException {
-        final FreemarkerHelper freemarkerHelper = FreemarkerHelper.getInstance();
+        // a special instance of FreemarkerHelper which does not use Magnolia components
+        final FreemarkerHelper freemarkerHelper = new FreemarkerHelper() {
+            protected void addDefaultData(Map data, Locale locale, String i18nBasename) {
+                final WebContext webCtx = (WebContext) MgnlContext.getInstance();
+                // @deprecated (-> update all templates)
+                data.put("contextPath", webCtx.getContextPath());
+                data.put("ctx", MgnlContext.getInstance());
+            }
+        };
         final String tmpl = FreemarkerUtil.createTemplateName(getClass(), templateName + ".html");
         final Map ctx = new HashMap();
         ctx.put("installerPath", INSTALLER_PATH);

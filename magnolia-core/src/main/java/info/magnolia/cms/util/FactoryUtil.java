@@ -13,7 +13,6 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
@@ -254,23 +253,13 @@ public class FactoryUtil {
          * The object delivered by this factory
          */
         protected Object observedObject;
-        
-        /**
-         * The object we use
-         */
-        protected Object defaultObject;
-        
+
         protected Class interf;
 
         public ObservedObjectFactory(String repository, String path, Class interf) {
-            this(repository, path, interf, null);
-        }
-
-        public ObservedObjectFactory(String repository, String path, Class interf, Object defaultObject) {
             this.path = path;
             this.repository = repository;
             this.interf = interf;
-            this.defaultObject = defaultObject;
             load();
             startObservation(path);
         }
@@ -297,17 +286,11 @@ public class FactoryUtil {
                     onRegister(node);
                 }
                 catch (RepositoryException e) {
-                    log.error("can't read configuration for object [" + repository + ":" + path + "]", e);
+                    log.error("can't read configuration for object " + interf + " from [" + repository + ":" + path + "]", e);
                 }
             }
             else{
-                if(defaultObject == null){
-                    log.error("can't read configuration for object [" + repository + ":" + path + "]");
-                }
-                else{
-                    this.observedObject = defaultObject;
-                    log.warn("can't read configuration for object [" + repository + ":" + path + "], will fallback to default object");
-                }
+                log.warn("can't read configuration for object " + interf + " from [" + repository + ":" + path + "]");
             }
         }
         

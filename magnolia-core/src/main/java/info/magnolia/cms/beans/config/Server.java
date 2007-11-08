@@ -27,6 +27,8 @@ import java.util.Map;
 /**
  * @author Sameer Charles
  * $Id$
+ *
+ * @deprecated use {@link ServerConfiguration}
  */
 public class Server {
     private static final String PROPERTY_SERVER_ID = "magnolia.server.id";
@@ -41,16 +43,13 @@ public class Server {
      * @deprecated kept for compatibility
      */
     public static Server getInstance() {
+        DeprecationUtil.isDeprecated("This is not returning the proper configuration. Use ServerConfiguration.");
         return new Server();
-    }
-
-    public static ServerConfiguration getConfig() {
-        return (ServerConfiguration) FactoryUtil.getSingleton(ServerConfiguration.class);
     }
 
     public static final class Observer extends FactoryUtil.ObservedObjectFactory {
         public Observer() {
-            super(ContentRepository.CONFIG, "/server", ServerConfiguration.class, new ServerConfiguration());
+            super(ContentRepository.CONFIG, "/server", ServerConfiguration.class);
         }
 
         protected Object transformNode(Content node) throws Content2BeanException {
@@ -86,7 +85,7 @@ public class Server {
      * @deprecated since 3.1 - use ServerConfiguration
      */
     public static String getDefaultExtension() {
-        return getConfig().getDefaultExtension();
+        return ServerConfiguration.getInstance().getDefaultExtension();
     }
 
     /**
@@ -112,7 +111,7 @@ public class Server {
      * @deprecated since 3.1 - use ServerConfiguration
      */
     public static String getDefaultBaseUrl() {
-        return getConfig().getDefaultBaseUrl();
+        return ServerConfiguration.getInstance().getDefaultBaseUrl();
     }
 
     /**
@@ -120,7 +119,7 @@ public class Server {
      * @deprecated since 3.1 - use ServerConfiguration
      */
     public static boolean isAdmin() {
-        return getConfig().isAdmin();
+        return ServerConfiguration.getInstance().isAdmin();
     }
 
     /**
@@ -148,33 +147,4 @@ public class Server {
         return SystemProperty.getProperty(PROPERTY_SERVER_ID);
     }
 
-    public static class ServerConfiguration {
-        private String defaultExtension;
-        private String defaultBaseUrl;
-        private boolean admin;
-
-        public String getDefaultExtension() {
-            return defaultExtension;
-        }
-
-        public void setDefaultExtension(String defaultExtension) {
-            this.defaultExtension = defaultExtension;
-        }
-
-        public String getDefaultBaseUrl() {
-            return defaultBaseUrl;
-        }
-
-        public void setDefaultBaseUrl(String defaultBaseUrl) {
-            this.defaultBaseUrl = defaultBaseUrl;
-        }
-
-        public boolean isAdmin() {
-            return admin;
-        }
-
-        public void setAdmin(boolean admin) {
-            this.admin = admin;
-        }
-    }
 }

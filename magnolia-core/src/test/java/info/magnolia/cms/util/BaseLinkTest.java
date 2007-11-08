@@ -12,7 +12,7 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.link.LinkResolver;
@@ -24,7 +24,6 @@ import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.context.WebContext;
 import info.magnolia.context.MgnlContext;
-import org.easymock.IAnswer;
 import static org.easymock.classextension.EasyMock.*;
 
 import java.text.MessageFormat;
@@ -73,10 +72,9 @@ public abstract class BaseLinkTest extends MgnlTestCase {
 
         FactoryUtil.setInstance(LinkResolver.class, new LinkResolverImpl());
 
-
-        final Server.ServerConfiguration serverConfiguration = new Server.ServerConfiguration();
+        final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
-        FactoryUtil.setInstance(Server.ServerConfiguration.class, serverConfiguration);
+        FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
     }
 
     protected void tearDown() throws Exception {
