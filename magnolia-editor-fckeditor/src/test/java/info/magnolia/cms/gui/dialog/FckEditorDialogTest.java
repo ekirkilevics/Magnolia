@@ -12,8 +12,8 @@
  */
 package info.magnolia.cms.gui.dialog;
 
+import info.magnolia.cms.util.BaseLinkTest;
 import info.magnolia.module.fckeditor.dialogs.FckEditorDialog;
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author gjoseph
  * @version $Revision$ ($Author$)
  */
-public class FckEditorDialogTest extends TestCase {
+public class FckEditorDialogTest extends BaseLinkTest {
 
     public void testNullsAndBasicCharsAreNotTouchedForJS() {
         assertEquals("foo bar", new FckEditorDialog().escapeJsValue("foo bar"));
@@ -47,39 +47,15 @@ public class FckEditorDialogTest extends TestCase {
         assertEquals("Here is a \\\\backslash for Sean", new FckEditorDialog().escapeJsValue("Here is a \\backslash for Sean"));
     }
 
-    public void testConvertToViewMakesLinksAndImagesPathRelativeToTheContextAndDialogConfig() throws RepositoryException {
-        final HttpServletRequest mockReq = createMock(HttpServletRequest.class);
-        expect(mockReq.getContextPath()).andReturn("/myContextPath/").times(3);
-
+    public void testConvertToViewShouldNotConvertNonUUIDLinks() throws RepositoryException {
         final FckEditorDialog d = new FckEditorDialog();
-        d.init(mockReq, null, null, null);
+        d.init(null, null, null, null);
         d.setTopParent(d);
         d.setConfig("path", "here");
-        replay(mockReq);
 
-        assertEquals("<a href=\"/myContextPath/here/bar\">baz</a>", d.convertToView("<a href=\"foo/bar\">baz</a>"));
-        assertEquals("<img src=\"/myContextPath/here/bar.gif\"/>", d.convertToView("<img src=\"foo/bar.gif\"/>"));
-        assertEquals("<img src=\"/myContextPath/here/bar.gif\">", d.convertToView("<img src=\"foo/bar.gif\">"));
-
-        verify(mockReq);
-    }
-
-    public void testConvertToViewMakesLinksAndImagesPathRelativeToTheContext() throws RepositoryException {
-        final HttpServletRequest mockReq = createMock(HttpServletRequest.class);
-        expect(mockReq.getContextPath()).andReturn("/myContextPath").times(3);
-
-        final FckEditorDialog d = new FckEditorDialog();
-        d.init(mockReq, null, null, null);
-        d.setTopParent(d);
-        //d.setConfig("path", "here");
-        replay(mockReq);
-
-        assertEquals("<a href=\"/myContextPath/foo/bar\">baz</a>", d.convertToView("<a href=\"foo/bar\">baz</a>"));
-        assertEquals("<a href=\"/myContextPath/foo/bar/yabadabadoo\">baz</a>", d.convertToView("<a href=\"foo/bar/yabadabadoo\">baz</a>"));
-        assertEquals("<img src=\"/myContextPath/foo/bar.gif\"/>", d.convertToView("<img src=\"foo/bar.gif\"/>"));
-        assertEquals("<img src=\"/myContextPath/foo/bar.gif\">", d.convertToView("<img src=\"foo/bar.gif\">"));
-
-        verify(mockReq);
+        assertEquals("<a href=\"foo/bar\">baz</a>", d.convertToView("<a href=\"foo/bar\">baz</a>"));
+        assertEquals("<img src=\"/foo/bar.gif\"/>", d.convertToView("<img src=\"/foo/bar.gif\"/>"));
+        assertEquals("<img src=\"../here/bar.gif\">", d.convertToView("<img src=\"../here/bar.gif\">"));
     }
 
     public void testConvertToViewDoesNotImpactAbsoluteAndExternalLinksAndImages() throws RepositoryException {

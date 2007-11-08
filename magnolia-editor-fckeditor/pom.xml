@@ -25,13 +25,25 @@
       <version>3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>jsp-api</artifactId>
+      <scope>provide</scope>
+    </dependency>
+    <dependency>
       <groupId>org.easymock</groupId>
-      <artifactId>easymock</artifactId>
+      <artifactId>easymockclassextension</artifactId>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>test</scope>
+    </dependency>
+        <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-core</artifactId>
+      <type>test-jar</type>
+      <version>3.1-SNAPSHOT</version>
       <scope>test</scope>
     </dependency>
   </dependencies>

@@ -353,7 +353,8 @@ public class FckEditorDialog extends DialogBox {
 
             // we have to add the context path for images and files but not for pages!
             value = LinkUtil.convertUUIDsToEditorLinks(value);
-
+            return value;
+            /*
             Pattern imagePattern = Pattern.compile("(<(a|img)[^>]+(src|href)[ ]*=[ ]*\")([^\"]*)(\"[^>]*>)"); //$NON-NLS-1$
 
             Matcher matcher = imagePattern.matcher(value);
@@ -372,7 +373,10 @@ public class FckEditorDialog extends DialogBox {
                 }
             }
             matcher.appendTail(res);
+            
             return res.toString();
+
+            */
         }
 
         return StringUtils.EMPTY;
