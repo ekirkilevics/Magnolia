@@ -23,9 +23,9 @@ import javax.servlet.ServletContext;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class PropertyInitializerTest extends TestCase {
+public class MgnlServletContextListenerTest extends TestCase {
     private ServletContext servletContext;
-    private PropertyInitializer propInit;
+    private MgnlServletContextListener propInit;
 
     protected void setUp() throws Exception {
         super.setUp();

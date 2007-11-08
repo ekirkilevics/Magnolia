@@ -69,6 +69,7 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
 
     /**
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
+     * @deprecated (does nothing on initialization)
      */
     public void contextInitialized(ServletContextEvent sce) {
         // nothing to do
@@ -76,10 +77,17 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
 
     /**
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
+     * @deprecated use {@link #execute()} instead;
      */
     public void contextDestroyed(ServletContextEvent sce) {
+        execute();
+    }
 
-        log.info("Executing shutdown tasks");
+	/**
+	 * Executes the registers shutdown tasks
+	 */
+	public void execute() {
+		log.info("Executing shutdown tasks");
 
         for (Iterator iter = listShutdownTasks().iterator(); iter.hasNext();) {
             Command task = (Command) iter.next();
@@ -93,9 +101,8 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
                     e.getClass().getName(),
                     e.getMessage()}));
             }
-
         }
-    }
+	}
 
     protected void onRegister(Content node) {
         Catalog mrc = new MgnlRepositoryCatalog(node);
