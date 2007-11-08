@@ -88,7 +88,7 @@ public class RequestAttributeStrategy implements AttributeStrategy {
             case Context.SESSION_SCOPE:
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
-                    return null;
+                    return map;
                 }
                 keysEnum = httpsession.getAttributeNames();
                 while (keysEnum.hasMoreElements()) {
@@ -101,7 +101,7 @@ public class RequestAttributeStrategy implements AttributeStrategy {
                 return MgnlContext.getSystemContext().getAttributes(Context.APPLICATION_SCOPE);
             default:
                 log.error("no illegal scope passed");
-                return null;
+                return map;
         }
     }
 

@@ -12,6 +12,7 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
@@ -20,9 +21,14 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.UserManager;
+import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
+import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 import info.magnolia.cms.util.DumperUtil;
+import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 
 import java.io.IOException;
@@ -36,7 +42,10 @@ import java.util.Map;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 import javax.security.auth.Subject;
+import javax.security.auth.login.LoginContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -74,7 +83,51 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
     private HttpServletResponse response;
 
     private ServletContext servletContext;
+    
+    private static Subject anonymousSubject;
 
+    private static User anonymousUser;
+
+    static {
+        final String anonymousUserPath = "/" + Realm.REALM_SYSTEM + "/" + UserManager.ANONYMOUS_USER;
+        ObservationUtil.registerChangeListener(
+            ContentRepository.USERS,
+            anonymousUserPath,
+            true,
+            "mgnl:user",
+            new EventListener() {
+
+                public void onEvent(EventIterator events) {
+                    reset();
+                }
+            });
+
+        ObservationUtil.registerChangeListener(
+            ContentRepository.USER_GROUPS,
+            "/",
+            true,
+            "mgnl:group",
+            new EventListener() {
+
+                public void onEvent(EventIterator events) {
+                    reset();
+                }
+            });
+
+        ObservationUtil.registerDefferedChangeListener(
+            ContentRepository.USER_ROLES,
+            "/",
+            true,
+            "mgnl:role",
+            new EventListener() {
+
+                public void onEvent(EventIterator events) {
+                    reset();
+                }
+            },
+            1000,
+            5000);
+    }
     /**
      * the jsp page context.
      */
@@ -97,8 +150,10 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         this.request = request;
         this.response = response;
         this.servletContext = servletContext;
+        //reset();
+        //setUser(getAnonymousUser());
         setAttributeStrategy(new RequestAttributeStrategy(request));  
-        setRepositoryStrategy(new SharedAccessManagerStrategy());
+        setRepositoryStrategy(new AuthRepositoryStrategy(this));
     }
 
     /**
@@ -253,7 +308,8 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         if (session != null) {
             session.invalidate();
         }
-        setRepositoryStrategy(new SharedAccessManagerStrategy());
+        setUser(getAnonymousUser());
+        //setRepositoryStrategy(new SharedAccessManagerStrategy());        
     }
 
     /**
@@ -303,5 +359,43 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
                 request.removeAttribute(key);
             }
         }
+    }
+    
+    private static Subject getAnonymousSubject() {
+        if (null == anonymousSubject) {
+            setAnonymousSubject();
+        }
+        return anonymousSubject;
+    }
+
+    private static void setAnonymousSubject() {
+        CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(
+            getAnonymousUser().getName(),
+            getAnonymousUser().getPassword().toCharArray(),
+            Realm.REALM_SYSTEM);
+        try {
+            LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
+            loginContext.login();
+            anonymousSubject = loginContext.getSubject();        
+        } catch (javax.security.auth.login.LoginException le) {			
+        	log.error("Failed to login as anonymous user", le);
+		}
+    }
+
+    private static User getAnonymousUser() {
+        if (null == anonymousUser) {
+            setAnonymousUser();
+        }
+        return anonymousUser;
+    }
+
+    private static void setAnonymousUser() {
+        anonymousUser = Security.getUserManager().getAnonymousUser();
+    }
+
+    private synchronized static void reset() {
+        setAnonymousSubject();
+        setAnonymousUser();
+        log.info("Anonymous context reloaded");
     }
 }
