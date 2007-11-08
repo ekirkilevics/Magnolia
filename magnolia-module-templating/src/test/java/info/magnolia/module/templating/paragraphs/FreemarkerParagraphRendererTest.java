@@ -19,9 +19,11 @@ import freemarker.cache.StringTemplateLoader;
 import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.ActionBasedParagraph;
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.EmptyMessages;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.FreemarkerHelper;
@@ -48,7 +50,11 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         tplLoader = new StringTemplateLoader();
         final FreemarkerHelper freemarkerHelper = new TestFreemarkerHelper(tplLoader);
         renderer = new FreemarkerParagraphRenderer(freemarkerHelper);
-        
+
+        final Server.ServerConfiguration serverConfiguration = new Server.ServerConfiguration();
+        serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
+        FactoryUtil.setInstance(Server.ServerConfiguration.class, serverConfiguration);
+
         final WebContext context = createNiceMock(WebContext.class);
         AggregationState state = new AggregationState();
         state.setLocale(Locale.ENGLISH);
