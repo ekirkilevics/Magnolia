@@ -13,7 +13,6 @@
 package info.magnolia.module.workflow.jcr;
 
 import info.magnolia.cms.core.HierarchyManager;
-import org.apache.log4j.Logger;
 
 import javax.jcr.RepositoryException;
 
@@ -26,7 +25,7 @@ import javax.jcr.RepositoryException;
  * @version $Revision: $ ($Author: $)
  */
 public class HierarchyManagerDeferredSaver extends HierarchyManagerWrapperDelegator implements Runnable {
-    private static final Logger log = Logger.getLogger(HierarchyManagerDeferredSaver.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(HierarchyManagerDeferredSaver.class);
 
     /**
      * A factory method to instanciate a new HierarchyManagerDeferredSaver
