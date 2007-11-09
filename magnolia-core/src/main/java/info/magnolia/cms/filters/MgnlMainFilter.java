@@ -118,16 +118,16 @@ public class MgnlMainFilter implements Filter {
      * SystemUI initialization screens.
      */
     protected MgnlFilter createSystemUIFilter() {
-    	final CompositeFilter systemUIFilter = new CompositeFilter();
-    	final ServletDispatchingFilter classpathSpoolFilter = new ServletDispatchingFilter();
-    	
-    	classpathSpoolFilter.setServletName("ClasspathSpool Servlet");
-    	classpathSpoolFilter.setServletClass(info.magnolia.cms.servlets.ClasspathSpool.class.getName());
-    	classpathSpoolFilter.addMapping("/.resources/*");
-    	classpathSpoolFilter.setEnabled(true);
-    	
-		systemUIFilter.addFilter(classpathSpoolFilter);
-		systemUIFilter.addFilter(new InstallFilter(ModuleManager.Factory.getInstance(), this));
+        final CompositeFilter systemUIFilter = new CompositeFilter();
+        final ServletDispatchingFilter classpathSpoolFilter = new ServletDispatchingFilter();
+
+        classpathSpoolFilter.setServletName("ClasspathSpool Servlet");
+        classpathSpoolFilter.setServletClass(info.magnolia.cms.servlets.ClasspathSpool.class.getName());
+        classpathSpoolFilter.addMapping("/.resources/*");
+        classpathSpoolFilter.setEnabled(true);
+
+        systemUIFilter.addFilter(classpathSpoolFilter);
+        systemUIFilter.addFilter(new InstallFilter(ModuleManager.Factory.getInstance(), this));
         return systemUIFilter;
     }
 
