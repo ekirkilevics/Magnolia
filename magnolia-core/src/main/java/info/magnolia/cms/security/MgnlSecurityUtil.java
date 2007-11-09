@@ -40,7 +40,7 @@ class MgnlSecurityUtil {
             final Content node = rootNode.getContent(subnodeName);
             collectPropertyNames(node, repositoryName, set, isDeep);
         } catch (PathNotFoundException e) {
-            log.warn("{} does not have any {}", rootNode.getHandle(), repositoryName);
+            log.debug("{} does not have any {}", rootNode.getHandle(), repositoryName);
         } catch (Throwable t) {
             log.error("Failed to read " + repositoryName, t);
         }
