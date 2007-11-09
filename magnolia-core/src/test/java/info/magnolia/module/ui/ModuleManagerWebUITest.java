@@ -73,11 +73,17 @@ public class ModuleManagerWebUITest extends TestCase {
     }
 
     public void testDoneTemplate() throws ModuleManagementException {
+        doTestTemplate("installDone");
+    }
+    public void testRestartNeededTemplate() throws ModuleManagementException {
+        doTestTemplate("installDoneRestartNeeded");
+    }
+
+    private void doTestTemplate(String templateName) throws ModuleManagementException {
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.ENGLISH);
         expect(context.getContextPath()).andReturn("/bibabu");
         expect(context.getServletContext()).andReturn(null);
-        replay(context);
         MgnlContext.setInstance(context);
 
         final ModuleDefinition mod1 = new ModuleDefinition("foo", "1.0", null, null);
@@ -96,13 +102,12 @@ public class ModuleManagerWebUITest extends TestCase {
         expect(moduleManager.getInstallContext()).andReturn(ctx);
         final StringWriter out = new StringWriter();
 
-        replay(moduleManager);
+        replay(context, moduleManager);
 
-        new ModuleManagerWebUI(moduleManager).render("installDone", out);
+        new ModuleManagerWebUI(moduleManager).render(templateName, out);
         // just checking model and template work properly together...
 
-        verify(moduleManager);
-        verify(context);
+        verify(context, moduleManager);
     }
 
 }

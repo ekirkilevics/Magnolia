@@ -25,7 +25,7 @@ a {
     margin: 0;
     padding: 20px;
     height: 40px;
-    background: white url(${ctx.contextPath}/.resources/images/moduleManagerUI/backgroundBar.gif) repeat-x;
+    background: white url(${contextPath}/.resources/images/moduleManagerUI/backgroundBar.gif) repeat-x;
 }
 
 #footer {
@@ -61,7 +61,7 @@ a {
     text-decoration: none;
     font-size: 22px;
     padding: 14px 75px 32px 20px;
-    background: transparent url(${ctx.contextPath}/.resources/images/moduleManagerUI/buttonStartBackground.png) no-repeat;
+    background: transparent url(${contextPath}/.resources/images/moduleManagerUI/buttonStartBackground.png) no-repeat;
 }
 
 #buttonGo {
@@ -71,7 +71,7 @@ a {
     text-decoration: none;
     font-size: 22px;
     padding: 14px 100px 32px 20px;
-    background: transparent url(${ctx.contextPath}/.resources/images/moduleManagerUI/buttonGoBackground.png) no-repeat;
+    background: transparent url(${contextPath}/.resources/images/moduleManagerUI/buttonGoBackground.png) no-repeat;
 }
 
 h2, h3 {
@@ -159,7 +159,7 @@ p, p {
 .task, .condition, .message {
     list-style-type: none;
     list-style-position: outside;
-    list-style-image: url(${ctx.contextPath}/.resources/images/moduleManagerUI/listItem.gif);
+    list-style-image: url(${contextPath}/.resources/images/moduleManagerUI/listItem.gif);
     margin: 0 0 5px 0;
     padding-left: 0;
     font-size: 9pt;
