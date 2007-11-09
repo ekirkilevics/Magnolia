@@ -123,39 +123,6 @@
       </modules>
     </profile>
     <profile>
-      <id>webapp</id>
-      <activation>
-        <property>
-          <name>all</name>
-        </property>
-      </activation>
-      <modules>
-        <module>magnolia-webapp</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>bundle</id>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-assembly-plugin</artifactId>
-              <version>2.1.1-magnolia</version>
-              <configuration>
-                <finalName>magnolia-${project.version}</finalName>
-                <descriptors>
-                  <descriptor>src/release/src.xml</descriptor>
-                  <descriptor>src/release/bundle.xml</descriptor>
-                  <descriptor>src/release/wars.xml</descriptor>
-                </descriptors>
-              </configuration>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-      </build>
-    </profile>
-    <profile>
       <id>site</id>
       <build>
         <plugins>
@@ -185,11 +152,6 @@
   <build>
     <pluginManagement>
       <plugins>
-        <plugin>
-          <groupId>info.magnolia</groupId>
-          <artifactId>maven-bundle-plugin</artifactId>
-          <version>1.0.1-SNAPSHOT</version>
-        </plugin>
         <!-- precompile/validate JSPs : -->
         <plugin>
           <groupId>org.codehaus.mojo.jspc</groupId>
@@ -245,6 +207,26 @@
             <autoVersionSubmodules>true</autoVersionSubmodules>
           </configuration>
         </plugin>
+        <plugin>
+          <groupId>org.apache.maven.plugins</groupId>
+          <artifactId>maven-assembly-plugin</artifactId>
+          <version>2.2-beta-2-SNAPSHOT</version>
+          <!--<version>2.1.1-magnolia</version>-->
+          <configuration>
+            <descriptors>
+              <descriptor>info.magnolia:magnolia-module-assembly:1.0-SNAPSHOT</descriptor>
+            </descriptors>
+          </configuration>
+          <executions>
+            <execution>
+              <id>make-assembly</id>
+              <phase>package</phase>
+              <goals>
+                <goal>attached</goal>
+              </goals>
+            </execution>
+          </executions>
+        </plugin>
       </plugins>
     </pluginManagement>
     <plugins>
@@ -294,7 +276,7 @@
       <plugin>
         <groupId>info.magnolia</groupId>
         <artifactId>maven-setproperty-plugin</artifactId>
-        <version>1.0</version>
+        <version>1.0.1</version>
         <executions>
           <!-- set the current date -->
           <execution>
@@ -872,6 +854,16 @@
       <id>maven.openwfe.org.prereleases</id>
       <url>http://maven.openwfe.org/prereleases</url>
     </repository>
+    <repository>
+        <id>apache-snapshots</id>
+        <url>http://people.apache.org/repo/m2-snapshot-repository</url>
+        <snapshots>
+          <enabled>true</enabled>
+        </snapshots>
+        <releases>
+          <enabled>false</enabled>
+        </releases>
+    </repository>    
   </repositories>
   <pluginRepositories>
     <pluginRepository>
@@ -916,5 +908,6 @@
     <module>magnolia-taglib-utility</module>
     <module>magnolia-editor-fckeditor</module>
     <module>magnolia-module-samples</module>
+    <module>magnolia-webapp</module>
   </modules>
 </project>
