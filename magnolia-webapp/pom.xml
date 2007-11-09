@@ -13,81 +13,24 @@
   <version>3.1-SNAPSHOT</version>
   <profiles>
     <profile>
-      <id>author</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>info.magnolia</groupId>
-            <artifactId>maven-bundle-plugin</artifactId>
-            <configuration>
-              <configFile>WEB-INF/config/magnoliaAuthor/magnolia.properties,WEB-INF/config/default/magnolia.properties</configFile>
-              <postBootstrappers>
-                <postBootstrapper implementation="info.magnolia.maven.bootstrap.post.OrderNodes">
-                  <repository>website</repository>
-                  <nodes>
-                    <node>features</node>
-                    <node>magnolia-product-info</node>
-                    <node>mailform</node>
-                    <node>help</node>
-                    <node>mails</node>
-                  </nodes>
-                </postBootstrapper>
-                <postBootstrapper implementation="info.magnolia.maven.bootstrap.post.OrderNodes">
-                  <repository>dms</repository>
-                  <nodes>
-                    <node>magnolia</node>
-                    <node>openwfe</node>
-                    <node>demo-docs</node>
-                  </nodes>
-                </postBootstrapper>
-                <postBootstrapper implementation="info.magnolia.maven.bootstrap.post.SetActivationStatus">
-                  <repositories>
-                    <repository>website</repository>
-                    <repository>dms</repository>
-                    <repository>users</repository>
-                    <repository>userroles</repository>
-                    <repository>usergroups</repository>
-                  </repositories>
-                  <activated>true</activated>
-                </postBootstrapper>
-                <postBootstrapper implementation="info.magnolia.maven.bootstrap.post.SetActivationStatus">
-                  <repositories>
-                    <repository>config</repository>
-                  </repositories>
-                  <path>/modules</path>
-                  <activated>true</activated>
-                </postBootstrapper>
-              </postBootstrappers>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
-    <profile>
-      <id>public</id>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>info.magnolia</groupId>
-            <artifactId>maven-bundle-plugin</artifactId>
-            <configuration>
-              <configFile>WEB-INF/config/magnoliaPublic/magnolia.properties,WEB-INF/config/default/magnolia.properties</configFile>
-              <postBootstrappers>
-                <postBootstrapper implementation="info.magnolia.maven.bootstrap.post.OrderNodes">
-                  <repository>website</repository>
-                  <nodes>
-                    <node>features</node>
-                    <node>magnolia-product-info</node>
-                    <node>mailform</node>
-                    <node>help</node>
-                    <node>mails</node>
-                  </nodes>
-                </postBootstrapper>
-              </postBootstrappers>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
+      <id>with-optional-modules</id>
+      <dependencies>
+        <dependency>
+          <groupId>info.magnolia</groupId>
+          <artifactId>magnolia-module-workflow</artifactId>
+          <version>3.1-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>info.magnolia</groupId>
+          <artifactId>magnolia-module-dms</artifactId>
+          <version>1.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+          <groupId>info.magnolia</groupId>
+          <artifactId>magnolia-module-samples</artifactId>
+          <version>3.1-SNAPSHOT</version>
+        </dependency>
+      </dependencies>
     </profile>
   </profiles>
   <dependencies>
@@ -109,11 +52,6 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-utility</artifactId>
-      <version>3.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-workflow</artifactId>
       <version>3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -148,17 +86,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-dms</artifactId>
-      <version>1.2-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-mail</artifactId>
-      <version>3.1-SNAPSHOT</version>
-    </dependency>
-    <dependency>
-      <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-samples</artifactId>
       <version>3.1-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -197,8 +125,8 @@
               <filtering>true</filtering>
             </resource>
           </webResources>
-         </configuration>
-       </plugin>
+        </configuration>
+      </plugin>
     </plugins>
   </build>
   <reporting>

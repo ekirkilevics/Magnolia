@@ -1,6 +1,6 @@
 #!/bin/sh
 
-# the $JDKPath variable can be replaced by external tools such as an installer
+# the $JDKPath variable can be replaced in this script by external tools such as an installer
 if [ -d "$JDKPath" ] ; then
     export JAVA_HOME="$JDKPath"
 fi

@@ -103,8 +103,13 @@
     <name>Magnolia International</name>
     <url>http://www.magnolia.info</url>
   </organization>
-  <!-- temporary sollution for the bundeling: we will make a submodule for the bundle -->
   <profiles>
+    <profile>
+      <id>bundle</id>
+      <modules>
+        <module>magnolia-bundle</module>
+      </modules>
+    </profile>
     <profile>
       <id>enterprise</id>
       <modules>
