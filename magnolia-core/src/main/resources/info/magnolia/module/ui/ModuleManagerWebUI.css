@@ -195,6 +195,6 @@ p.status {
     margin-left: 20px;
 }
 
-.highlight {
+.executedTaskCount, totalTaskCount {
     font-weight: bold;
 }
