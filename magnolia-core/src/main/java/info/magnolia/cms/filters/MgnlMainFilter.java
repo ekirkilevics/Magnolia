@@ -10,6 +10,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManager;
 
 import java.io.IOException;
+import java.util.HashSet;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -117,7 +118,17 @@ public class MgnlMainFilter implements Filter {
      * SystemUI initialization screens.
      */
     protected MgnlFilter createSystemUIFilter() {
-        return new InstallFilter(ModuleManager.Factory.getInstance(), this);
+    	final CompositeFilter systemUIFilter = new CompositeFilter();
+    	final ServletDispatchingFilter classpathSpoolFilter = new ServletDispatchingFilter();
+    	
+    	classpathSpoolFilter.setServletName("ClasspathSpool Servlet");
+    	classpathSpoolFilter.setServletClass(info.magnolia.cms.servlets.ClasspathSpool.class.getName());
+    	classpathSpoolFilter.addMapping("/.resources/*");
+    	classpathSpoolFilter.setEnabled(true);
+    	
+		systemUIFilter.addFilter(classpathSpoolFilter);
+		systemUIFilter.addFilter(new InstallFilter(ModuleManager.Factory.getInstance(), this));
+        return systemUIFilter;
     }
 
     /**

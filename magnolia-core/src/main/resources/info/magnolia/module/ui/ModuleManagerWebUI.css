@@ -1,27 +1,77 @@
 html {
-    background: #ccc;
+    background: #FAFBF4;
 }
 
 body {
-    background: #fff;
+    background: #FAFBF4;
     color: #000;
     font-family: Georgia, "Times New Roman", Times, serif;
     margin: 0 10%;
-    padding: 0;
+    padding: 20px;
     font-size: 9pt;
 }
 
-#header, #footer {
+a {
+    color: #669900;
+}
+
+.page {
+    margin-top: 15px;
+    border: 1px solid #adbc61;
+    background: white;
+}
+
+#header {
+    margin: 0;
+    padding: 20px;
+    height: 40px;
+    background: white url(${ctx.contextPath}/.resources/images/moduleManagerUI/backgroundBar.gif) repeat-x;
+}
+
+#footer {
     margin: 0;
     padding: 0;
-    background-color: #669900;
+}
+
+#softwareIcon {
+    float: left;
+    margin-right: 20px;
 }
 
 #header h1 {
-    padding: 0.5em 2em;
-    font-size: 30pt;
+    margin: 3px 0 0 0;
+    padding: 0;
+    font-size: 26pt;
     font-weight: normal;
-    color: white;
+    color: #4d4d4d;
+}
+
+#footer, #footer a {
+    margin-top: 3px;
+    text-align: center;
+    font-size: 9px;
+    font-family: Verdana;
+    color: #aaa;
+}
+
+#buttonStart {
+    float: right;
+    margin: 30px 40px 0 0;
+    color: #4d4d4d;
+    text-decoration: none;
+    font-size: 22px;
+    padding: 14px 75px 32px 20px;
+    background: transparent url(${ctx.contextPath}/.resources/images/moduleManagerUI/buttonStartBackground.png) no-repeat;
+}
+
+#buttonGo {
+    float: right;
+    margin: 30px 40px 0 0;
+    color: #4d4d4d;
+    text-decoration: none;
+    font-size: 22px;
+    padding: 14px 100px 32px 20px;
+    background: transparent url(${ctx.contextPath}/.resources/images/moduleManagerUI/buttonGoBackground.png) no-repeat;
 }
 
 h2, h3 {
@@ -31,26 +81,52 @@ h2, h3 {
 }
 
 h2 {
+    color: #669900;
     font-size: 14pt;
+}
+
+h2.messages {
+    margin: 20px 0 10px 0;
 }
 
 h3 {
     font-size: 12pt;
-    padding-left: 2em;
 }
 
 h3, p {
     display: inline;
 }
 
-#content, #actions {
-    padding: 0.2em 2em 2em 2em;
+p, p {
+    display: block;
+    margin: 5px 0 5px 0;
+}
+
+#content {
+    padding: 30px 20px 20px 20px;
     margin: 0;
     font-weight: normal;
 }
 
 .module {
-    padding-bottom: 2em;
+    background-color: #F6F6F6;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.module h3 {
+    vertical-align: 5px;
+    margin-left: 5px;
+}
+
+.module a {
+    font-weight: normal;
+}
+
+.delta {
+    border-top: 1px solid #e0e0e0;
+    padding: 8px 0 0 0;
+    margin: 5px 0 0 0;
 }
 
 /*
@@ -58,13 +134,17 @@ h3, p {
     color: green;
 }
 
-.delta .update{
+.delta .update {
     color: purple;
 }
 */
 
+.deltaType {
+}
+
 .deltaDescription {
-    font-size: 70%;
+    margin-top: 10px;
+    color: #6c6c6c;
 }
 
 .deltaDetailsLink {
@@ -72,10 +152,15 @@ h3, p {
     font-size: 9pt;
 }
 
-.task, .condition {
-    list-style-type: square;
+.tasks, .conditions {
+    padding-left: 33px;
+}
+
+.task, .condition, .message {
+    list-style-type: none;
     list-style-position: outside;
-    margin-left: 0;
+    list-style-image: url(${ctx.contextPath}/.resources/images/moduleManagerUI/listItem.gif);
+    margin: 0 0 5px 0;
     padding-left: 0;
     font-size: 9pt;
 }
@@ -85,16 +170,31 @@ h3, p {
 }
 
 .taskDescription, .conditionDescription {
-    margin-left: 0.5em;
     color: #666;
 }
 
 .messages .debug {
-    display: none;
+    color: #9c9c9c;    
 }
 
 .messages .error {
     background-color: #ffcccc;
     color: #cc0000;
+    font-weight: bold;
+}
+
+p.status {
+    margin-bottom: 10px;
+}
+
+#progress {
+    margin-left: 20px;
+}
+
+#actions {
+    margin-left: 20px;
+}
+
+.highlight {
     font-weight: bold;
 }

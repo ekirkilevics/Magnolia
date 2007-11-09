@@ -1,14 +1,14 @@
 [#macro contextMessages]
-<p id="progress">${context.executedTaskCount} tasks have been executed, for a total of ${context.totalTaskCount} tasks.</p>
+<p id="progress"><span class="highlight">${context.executedTaskCount}</span> tasks have been executed, for a total of <span class="highlight">${context.totalTaskCount}</span> tasks.</p>
 
-<h2>Messages</h2>
+<h2 class="messages">Messages</h2>
 
 [#list context.messages?keys as module]
 <div class="module">
 <h3>${module}</h3>
 <ul class="messages">
 [#list context.messages[module] as msg]
-    <li class="${msg.priority}"><!--${msg.timestamp?time}-->${msg.message?html}</li>
+    <li class="message ${msg.priority}"><!--${msg.timestamp?time}-->${msg.message?html}</li>
 [/#list]
 </ul>
 </div>
@@ -25,6 +25,10 @@
     <title>Magnolia update ...</title>
 </head>
 <body>
+<img src="${ctx.contextPath}/.resources/images/moduleManagerUI/magnoliaLogo.gif"/>
+
+<div class="page">
 <div id="header">
+<img src="${ctx.contextPath}/.resources/images/moduleManagerUI/box_software.gif" id="softwareIcon"/>
 <h1>Magnolia update ...</h1>
 </div>
