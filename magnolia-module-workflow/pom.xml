@@ -56,6 +56,10 @@
           <artifactId>mail</artifactId>
         </exclusion>
         <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>jdom</groupId>
           <artifactId>jdom</artifactId>
         </exclusion>
@@ -97,6 +101,10 @@
         <exclusion>
           <groupId>javax.mail</groupId>
           <artifactId>mail</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
         </exclusion>
         <exclusion>
           <groupId>jdom</groupId>
@@ -142,6 +150,10 @@
           <artifactId>mail</artifactId>
         </exclusion>
         <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>jdom</groupId>
           <artifactId>jdom</artifactId>
         </exclusion>
@@ -185,6 +197,10 @@
           <artifactId>mail</artifactId>
         </exclusion>
         <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
+        </exclusion>
+        <exclusion>
           <groupId>jdom</groupId>
           <artifactId>jdom</artifactId>
         </exclusion>
@@ -226,6 +242,10 @@
         <exclusion>
           <groupId>javax.mail</groupId>
           <artifactId>mail</artifactId>
+        </exclusion>
+        <exclusion>
+          <groupId>javax.servlet</groupId>
+          <artifactId>servlet-api</artifactId>
         </exclusion>
         <exclusion>
           <groupId>jdom</groupId>
