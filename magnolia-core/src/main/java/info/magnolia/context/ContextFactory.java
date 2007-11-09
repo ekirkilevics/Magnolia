@@ -11,6 +11,7 @@ public class ContextFactory {
 	public static WebContext createWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
 		WebContext ctx = (WebContext) FactoryUtil.newInstance(WebContext.class);
         ctx.init(request, response, servletContext);
+        /*
         if (Authenticator.isAuthenticated(request)) {
         	//set logged in repository
         } else {
@@ -18,6 +19,7 @@ public class ContextFactory {
             actx.init(request, response, servletContext);
             return actx;
         }
+        */
         return ctx;
 	}
 	
