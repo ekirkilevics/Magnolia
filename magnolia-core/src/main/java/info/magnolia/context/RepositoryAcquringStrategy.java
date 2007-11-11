@@ -8,4 +8,5 @@ public interface RepositoryAcquringStrategy {
 	HierarchyManager getHierarchyManager(String repositoryId, String workspaceId);
 	AccessManager getAccessManager(String repositoryId, String workspaceId);
 	QueryManager getQueryManager(String repositoryId, String workspaceId);
+    void release();
 }

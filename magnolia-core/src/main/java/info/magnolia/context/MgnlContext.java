@@ -68,7 +68,7 @@ public class MgnlContext {
      * @return the current user
      */
     public static User getUser() {
-        return getInstance().getUser();
+        return ((UserContext)getInstance()).getUser();
     }
 
     /**
@@ -98,9 +98,14 @@ public class MgnlContext {
     /**
      * Set current user
      * @param user
+     * @deprecated use login insttead
      */
     public static void setUser(User user) {
-        getInstance().setUser(user);
+        login(user);
+    }
+
+    public static void login(User user) {
+        ((UserContext)getInstance()).login(user);
     }
 
     /**
@@ -361,7 +366,7 @@ public class MgnlContext {
      * @return system context
      */
     public static Context getSystemContext() {
-        return (SystemContext) FactoryUtil.getSingleton(SystemContext.class);
+        return ContextFactory.getInstance().getSystemContext();
     }
 
     /**
@@ -384,14 +389,6 @@ public class MgnlContext {
     }
 
     /**
-     * Sets this context as an anonymous context.
-     */
-    public static void initAsAnonymousContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
-        WebContext ctx = ContextFactory.createWebContext(request, response, servletContext);        
-        setInstance(ctx);
-    }
-
-    /**
      * Sets this context as a web context.
      * @param request
      * @deprecated Use {@link #initAsWebContext(HttpServletRequest,HttpServletResponse,ServletContext)} instead
@@ -407,8 +404,7 @@ public class MgnlContext {
      * @param servletContext ServletContext instance
      */
     public static void initAsWebContext(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
-        WebContext ctx = (WebContext) FactoryUtil.newInstance(WebContext.class);
-        ctx.init(request, response, servletContext);
+        WebContext ctx = ContextFactory.getInstance().createWebContext(request, response, servletContext);
         setInstance(ctx);
     }
 
@@ -425,5 +421,12 @@ public class MgnlContext {
             return getWebContextIfExisting(((ContextDecorator) ctx).getWrappedContext());
         }
         return null;
+    }
+
+    public static void release() {
+        if(hasInstance()){
+            getInstance().release();
+        }
+        getSystemContext().release();
     }
 }

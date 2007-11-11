@@ -51,7 +51,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
      * checks is the credentials exist in the repository
      * @throws LoginException or specific subclasses (which will be handled further for user feedback)
      */
-    public void validateUser() throws LoginException {
+    public User validateUser() throws LoginException {
         initUser();
 
         if(this.user == null){
@@ -63,6 +63,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
         if (!this.user.isEnabled()) {
             throw new AccountLockedException();
         }
+        return user;
     }
 
     protected void initUser() {

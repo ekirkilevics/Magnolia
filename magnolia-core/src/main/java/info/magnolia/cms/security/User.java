@@ -15,6 +15,8 @@ package info.magnolia.cms.security;
 import java.io.Serializable;
 import java.util.Collection;
 
+import javax.security.auth.Subject;
+
 /**
  * Represents a magnolia user.
  *
@@ -113,4 +115,15 @@ public interface User extends Serializable {
      * get all roles assigned to this user, collected recursively including groups/subgroups
      * */
     Collection getAllRoles();
+    
+    /**
+     * Returns the jaas subject if available.
+     */
+    Subject getSubject();
+    
+    /**
+     * The jass login handler will set the subject
+     *
+     */
+    void setSubject(Subject subject);
 }

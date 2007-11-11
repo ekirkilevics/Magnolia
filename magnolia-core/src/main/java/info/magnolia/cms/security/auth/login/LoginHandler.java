@@ -33,6 +33,6 @@ public interface LoginHandler {
     /**
      * Returns true if the handler login succeeds
      * */
-    public int handle(HttpServletRequest request, HttpServletResponse response);
+    public LoginResult handle(HttpServletRequest request, HttpServletResponse response);
 
 }

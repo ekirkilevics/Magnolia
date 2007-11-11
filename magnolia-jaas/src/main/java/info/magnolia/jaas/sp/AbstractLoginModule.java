@@ -2,10 +2,13 @@ package info.magnolia.jaas.sp;
 
 
 import info.magnolia.cms.security.Realm;
+import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.callback.RealmCallback;
+import info.magnolia.cms.security.auth.callback.UserCallback;
 import info.magnolia.cms.util.BooleanUtil;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -150,7 +153,11 @@ public abstract class AbstractLoginModule implements LoginModule {
             if(this.useRealmCallback){
                 this.realm = StringUtils.defaultIfEmpty(((RealmCallback)callbacks[2]).getRealm(), this.realm);
             }
-            this.validateUser();
+            User user = this.validateUser();
+            // FIXME validateUser should always return a user
+            if(user != null){
+                this.callbackHandler.handle(new Callback[]{new UserCallback(user)});
+            }
         } catch (IOException ioe) {
             if (log.isDebugEnabled()) {
                 log.debug("Exception caught", ioe);
@@ -253,7 +260,7 @@ public abstract class AbstractLoginModule implements LoginModule {
      * checks if the credentials exist in the repository
      * @throws LoginException or specific subclasses to report failures.
      */
-    public abstract void validateUser() throws LoginException;
+    public abstract User validateUser() throws LoginException;
 
     /**
      * set user details

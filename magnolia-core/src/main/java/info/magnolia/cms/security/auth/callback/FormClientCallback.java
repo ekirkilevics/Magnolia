@@ -24,6 +24,7 @@ import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.Authenticator;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.apache.commons.lang.ClassUtils;
@@ -68,7 +69,8 @@ public class FormClientCallback extends AbstractHttpClientCallback {
      * override this to pass more objects to the freemarker template.
      * @return an empty map
      */
-    public Map getMessages(HttpServletRequest request) {
+    protected Map getMessages(HttpServletRequest request) {
+        // FIXE revert that
         LoginException exception = (LoginException) request.getAttribute(Authenticator.ATTRIBUTE_LOGINERROR);
         Map messages = new HashMap();
         if (null != exception) {

@@ -44,7 +44,7 @@ public class ContextFilter extends AbstractMgnlFilter {
         // first call will unset the context (which should be the last post-filters operation)
         boolean contextSet = false;
         if (!MgnlContext.hasInstance() || MgnlContext.isSystemInstance()) {
-            MgnlContext.initAsAnonymousContext(request, response, servletContext);
+            MgnlContext.initAsWebContext(request, response, servletContext);
             contextSet = true;
         }
         try {
@@ -52,11 +52,7 @@ public class ContextFilter extends AbstractMgnlFilter {
         }
         finally {
             if (contextSet) {
-
-                if (MgnlContext.hasInstance()) {
-                    MgnlContext.getInstance().release();
-                }
-
+                MgnlContext.release();
                 MgnlContext.setInstance(null);
             }
         }

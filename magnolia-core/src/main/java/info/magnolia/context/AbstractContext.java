@@ -45,10 +45,13 @@ public abstract class AbstractContext implements Context {
     private static Logger log = LoggerFactory.getLogger(AbstractContext.class);
 
     /**
-     * user attached to this context
+     * @deprecated redefined by UserContext
      */
-    protected User user;
-
+    public User getUser() {
+        // FIXME
+        throw new UnsupportedOperationException("This is not a UserContext");
+    }
+    
     /**
      * The locale for this context
      */
@@ -133,41 +136,12 @@ public abstract class AbstractContext implements Context {
     }
 
     /**
-     * Set user instance for this context
-     * @param user
-     */
-    public void setUser(User user) {
-        this.user = user;
-        setLocale(new Locale(user.getLanguage()));
-    }
-
-    /**
-     * Get user as initialized
-     * @return User
-     * @see info.magnolia.cms.security.User
-     */
-    public User getUser() {
-        if (this.user == null) {
-            log.debug("JAAS Subject is null, returning Anonymous user");
-            this.user = Security.getUserManager().getAnonymousUser();
-        }
-        return this.user;
-    }
-
-    /**
      * If not yet set try to get the locale of the user. Else use the locale of the system context
      * @see Context#getLocale()
      */
     public Locale getLocale() {
         if (locale == null) {
-            // MAGNOLIA-1402 - Not valid anymore
-            User user = this.getUser();
-            if (user != null) {
-                locale = new Locale(user.getLanguage());
-            }
-            else {
-                locale = MgnlContext.getSystemContext().getLocale();
-            }
+            locale = MgnlContext.getSystemContext().getLocale();
         }
 
         return locale;
@@ -296,7 +270,6 @@ public abstract class AbstractContext implements Context {
      * {@inheritDoc}
      */
     public void release() {
-        // @todo cleanup resources
-        // jcr sessions are not thread safe, we should not keep a single session and reuse it across threads
+        getRepositoryStrategy().release();
     }
 }

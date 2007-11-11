@@ -65,18 +65,11 @@ public interface Context extends org.apache.commons.chain.Context {
     public static final String ATTRIBUTE_EXCEPTION = "exception";
 
     /**
-     * Set user instance for this context
-     * @param user
-     */
-    public void setUser(User user);
-
-    /**
-     * Get exiting logged in user instance
-     * @return User
-     * @see info.magnolia.cms.security.User
+     * Cast to UserContext
+     * @deprecated
      */
     public User getUser();
-
+    
     /**
      * @param locale
      */

@@ -34,7 +34,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision:2558 $ ($Author:scharles $)
  */
-public class ExternalUser implements User, Serializable {
+public class ExternalUser extends AbstractUser implements Serializable {
 
     public static Logger log = LoggerFactory.getLogger(ExternalUser.class);
 

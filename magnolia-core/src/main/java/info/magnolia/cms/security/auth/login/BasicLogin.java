@@ -32,21 +32,14 @@ public class BasicLogin implements LoginHandler {
 
     private static final Logger log = LoggerFactory.getLogger(BasicLogin.class);
 
-    public int handle(HttpServletRequest request, HttpServletResponse response) {
+    public LoginResult handle(HttpServletRequest request, HttpServletResponse response) {
         String credentials = request.getHeader("Authorization");
         if (StringUtils.isNotEmpty(credentials) && !credentials.startsWith("NTLM ")) {
             // its a basic authentication request
             CredentialsCallbackHandler callbackHandler = new Base64CallbackHandler(credentials);
-            try {
-                if (Authenticator.authenticate(request, callbackHandler, null)) {
-                    return LoginHandler.STATUS_SUCCEDED;
-                }
-            } catch (LoginException le) {
-                log.warn(le.getMessage(), le);
-            }
-            return LoginHandler.STATUS_FAILED;
+            return Authenticator.authenticate(callbackHandler, null);
         }
-        return LoginHandler.STATUS_NOT_HANDLED;
+        return LoginResult.NOT_HANDLED;
     }
 
 }

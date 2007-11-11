@@ -12,20 +12,14 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Authenticator;
-import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.security.UserManager;
-import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
-import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 import info.magnolia.cms.util.DumperUtil;
-import info.magnolia.cms.util.ObservationUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -35,10 +29,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import javax.jcr.Session;
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import javax.security.auth.Subject;
-import javax.security.auth.login.LoginContext;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -64,12 +54,6 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
 
     private static final String REQUEST_HIERARCHYMANAGER_PREFIX = WebContextImpl.class.getName() + ".mgnlHMgr_";
 
-    private static final String REQUEST_AGGREGATIONSTATE = AggregationState.class.getName();
-
-    private static final String SESSION_ACCESSMANAGER_PREFIX = WebContextImpl.class.getName() + ".mgnlAccessMgr_";
-
-    private static final String SESSION_USER = WebContextImpl.class.getName() + ".user";
-
     private HttpServletRequest request;
 
     private HttpServletResponse response;
@@ -80,6 +64,8 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * the jsp page context.
      */
     private PageContext pageContext;
+
+    protected AggregationState aggregationState;
 
     /**
      * Use init to initialize the object.
@@ -101,32 +87,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         //reset();
         //setUser(getAnonymousUser());
         setAttributeStrategy(new RequestAttributeStrategy(request));  
-        setRepositoryStrategy(new AuthRepositoryStrategy(this));
-    }
-
-    /**
-     * Create the subject on demand.
-     * @see info.magnolia.context.AbstractContext#getUser()
-     */
-
-    public User getUser() {
-        if (user == null) {
-            user = (User) getAttribute(SESSION_USER, Context.SESSION_SCOPE);
-            if (user == null) {
-                user = Security.getUserManager().getUser(Authenticator.getSubject(request));
-                setUser(user);
-            }
-        }
-        return this.user;
-    }
-
-    /**
-     * In addition to the field user we put the user object into the session as well.
-     * @param user magnolia User
-     */
-    public void setUser(User user) {
-        super.setUser(user);
-        setAttribute(SESSION_USER, user, Context.SESSION_SCOPE);
+        setRepositoryStrategy(new DefaultRepositoryStrategy(this));
     }
 
     /**
@@ -148,16 +109,14 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
     }
 
     public AggregationState getAggregationState() {
-        AggregationState aggregationState = (AggregationState) request.getAttribute(REQUEST_AGGREGATIONSTATE);
         if (aggregationState == null) {
             aggregationState = new AggregationState();
-            setAttribute(REQUEST_AGGREGATIONSTATE, aggregationState, LOCAL_SCOPE);
         }
         return aggregationState;
     }
 
     public void resetAggregationState() {
-        removeAttribute(REQUEST_AGGREGATIONSTATE, LOCAL_SCOPE);
+        aggregationState = null;
     }
 
     /**
@@ -242,7 +201,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
     }
 
     public void login() {		
-		setRepositoryStrategy(new AuthRepositoryStrategy(this));
+		setRepositoryStrategy(new DefaultRepositoryStrategy(this));
 	}
 	
     /**
@@ -256,56 +215,13 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         if (session != null) {
             session.invalidate();
         }
-        setUser(Authenticator.getAnonymousUser());
-        //setRepositoryStrategy(new SharedAccessManagerStrategy());        
+        login(Authenticator.getAnonymousUser());
     }
 
     /**
      * Closes opened JCR sessions.
      */
     public void release() {
-
-        Enumeration attributes = request.getAttributeNames();
-        while (attributes.hasMoreElements()) {
-            String key = (String) attributes.nextElement();
-
-            if (key.startsWith(REQUEST_JCRSESSION_PREFIX)) {
-                final Object objSession = request.getAttribute(key);
-
-                // don't leave dead jcr sessions around
-                request.removeAttribute(key);
-
-                if (objSession instanceof Session) {
-                    final Session jcrSession = (Session) objSession;
-                    try {
-                        if (jcrSession.isLive()) {
-
-                            if (jcrSession.hasPendingChanges()) {
-                                log
-                                    .error("the current jcr session has pending changes but shouldn't please set to debug level to see the dumped details");
-                                if (log.isDebugEnabled()) {
-                                    PrintWriter pw = new PrintWriter(System.out);
-                                    DumperUtil.dumpChanges(jcrSession, pw);
-                                    pw.flush();
-                                }
-
-                                log.warn("will refresh (cleanup) the session {}", key);
-                                jcrSession.refresh(false);
-                            }
-
-                            jcrSession.logout();
-                            log.debug("logging out from session {}", key);
-                        }
-                    }
-                    catch (Throwable t) {
-                        log.warn("Failed to close JCR session " + key, t);
-                    }
-                }
-            }
-            else if (key.startsWith(REQUEST_HIERARCHYMANAGER_PREFIX)) {
-                // session is already closed by the above check
-                request.removeAttribute(key);
-            }
-        }
+        getRepositoryStrategy().release();
     }
 }

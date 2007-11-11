@@ -12,19 +12,15 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.security.auth.callback.Base64CallbackHandler;
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
-import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
-import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.cms.security.auth.login.LoginHandler;
+import info.magnolia.cms.security.auth.login.LoginResult;
+import info.magnolia.context.MgnlContext;
 
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
 import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
@@ -44,16 +40,6 @@ public final class Authenticator {
     private static Logger log = LoggerFactory.getLogger(Authenticator.class);
 
     /**
-     * Session attribute holding the magnolia user id.
-     */
-    static final String ATTRIBUTE_USER_ID = "mgnlUserId";
-
-    /**
-     * session attribute holding authenticated JAAS subject
-     */
-    static final String ATTRIBUTE_JAAS_SUBJECT = "mgnlJAASSubject";
-
-    /**
      * request parameter user id
      */
     public static final String PARAMETER_USER_ID = "mgnlUserId";
@@ -68,140 +54,14 @@ public final class Authenticator {
      */
     public static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
 
-    /**
-     * kept as static for performance reasons on live instance. reinitialized on any modification event on anonymous
-     * role
-     */
-    private static Subject anonymousSubject;
-
-    private static User anonymousUser;
-
-    static {
-        EventListener anonymousListener = new EventListener() {
-
-            public void onEvent(EventIterator events) {
-                anonymousSubject = null;
-                anonymousUser = null;
-                log.info("Anonymous user reloaded");
-            }
-
-        };
-
-
-        final String anonymousUserPath = "/" + Realm.REALM_SYSTEM + "/" + UserManager.ANONYMOUS_USER;
-        ObservationUtil.registerChangeListener(
-            ContentRepository.USERS,
-            anonymousUserPath,
-            true,
-            "mgnl:user",
-            anonymousListener);
-
-        ObservationUtil.registerChangeListener(
-            ContentRepository.USER_GROUPS,
-            "/",
-            true,
-            "mgnl:group",
-            anonymousListener);
-
-        ObservationUtil.registerDefferedChangeListener(
-            ContentRepository.USER_ROLES,
-            "/",
-            true,
-            "mgnl:role",
-            anonymousListener,
-            1000,
-            5000);
-    }
-
+ 
     /**
      * Utility class, don't instantiate.
      */
     private Authenticator() {
         // unused
     }
-
-    /**
-     * Authenticate authorization request using JAAS login module as configured
-     * @param request as received by the servlet engine
-     * @return boolean
-     * @deprecated Since 3.1 use LoginFilter->LoginHandlers
-     */
-    public static boolean authenticate(HttpServletRequest request) throws LoginException {
-        log.warn("Deprecated: Since 3.1 use LoginFilter->LoginHandlers");
-        String credentials = request.getHeader("Authorization");
-        CredentialsCallbackHandler callbackHandler;
-
-        if (StringUtils.isEmpty(credentials) || credentials.length() <= 6) {
-            // check for form based login request
-            if (StringUtils.isNotEmpty(request.getParameter(PARAMETER_USER_ID))) {
-                String userid = request.getParameter(PARAMETER_USER_ID);
-                String pswd = StringUtils.defaultString(request.getParameter(PARAMETER_PSWD));
-                callbackHandler = new PlainTextCallbackHandler(userid, pswd.toCharArray());
-            }
-            else {
-                // select login module to use if user is authenticated against the container
-                if (request.getUserPrincipal() != null) {
-                    callbackHandler = new PlainTextCallbackHandler(request.getUserPrincipal().getName(), ""
-                        .toCharArray());
-                    return authenticate(request, callbackHandler, "magnolia_authorization");
-                }
-
-                // invalid auth request
-                return false;
-            }
-        }
-        else {
-            // its a basic authentication request
-            callbackHandler = new Base64CallbackHandler(credentials);
-        }
-
-        return authenticate(request, callbackHandler);
-    }
-
-    /**
-     * Authenticate using the given CredentialsCallbackHandler and the default login module.
-     * @param request HttpServletRequest
-     * @param callbackHandler CredentialsCallbackHandler instance
-     * @return <code>true</code> if the authentication request succeeds
-     * @throws LoginException if the authentication request is not valid
-     * @deprecated Since 3.1 use LoginFilter->LoginHandlers
-     */
-    public static boolean authenticate(HttpServletRequest request, CredentialsCallbackHandler callbackHandler)
-        throws LoginException {
-        return authenticate(request, callbackHandler, null);
-    }
-
-    /**
-     * Authenticate using the given CredentialsCallbackHandler and a custom login module.
-     * @param request HttpServletRequest
-     * @param callbackHandler CredentialsCallbackHandler instance
-     * @param customLoginModule login module to use, null for the default (magnolia) module
-     * @return <code>true</code> if the authentication request succeeds
-     * @throws LoginException if the authentication request is not valid
-     */
-    public static boolean authenticate(HttpServletRequest request, CredentialsCallbackHandler callbackHandler,
-        String customLoginModule) throws LoginException {
-        Subject subject;
-        try {
-            LoginContext loginContext = new LoginContext(
-                StringUtils.defaultString(customLoginModule, "magnolia"),
-                callbackHandler);
-            loginContext.login();
-            subject = loginContext.getSubject();
-            // ok, we NEED a session here since the user has been authenticated
-            HttpSession httpsession = request.getSession(true);
-            httpsession.setAttribute(ATTRIBUTE_JAAS_SUBJECT, subject);
-
-            request.removeAttribute(ATTRIBUTE_LOGINERROR);
-        }
-        catch (LoginException le) {
-            handleLoginException(le, request);
-            return false;
-        }
-
-        return true;
-    }
-
+    
     /**
      * Any subclass of LoginException will be stored as a request attribute,
      * but a plain LoginException will just be re-thrown.
@@ -226,34 +86,14 @@ public final class Authenticator {
     /**
      * @param request current HttpServletRequest
      * @return String , current logged in user
+     * @deprecated
      */
     public static String getUserId(HttpServletRequest request) {
-        String userId = null;
+        return getUserId();
+    }
 
-        HttpSession httpsession = request.getSession(false);
-        if (httpsession != null) {
-            userId = (String) httpsession.getAttribute(ATTRIBUTE_USER_ID);
-        }
-
-        if (userId == null) {
-            String credentials = request.getHeader("Authorization");
-            if (credentials != null) {
-                try {
-                    userId = getDecodedCredentials(credentials.substring(6).trim());
-                    if (httpsession != null) {
-                        httpsession.setAttribute(ATTRIBUTE_USER_ID, userId);
-                    }
-                }
-                catch (Exception e) {
-                    log.debug(e.getMessage(), e);
-                }
-            }
-            else {
-                return UserManager.ANONYMOUS_USER;
-            }
-        }
-
-        return userId;
+    public static String getUserId() {
+        return MgnlContext.getUser().getName();
     }
 
     /**
@@ -268,51 +108,40 @@ public final class Authenticator {
      * checks user session for attribute "user node"
      * @param request current HttpServletRequest
      * @return <code>true</code> if the user is authenticated, <code>false</code> otherwise
+     * @deprecated
      */
     public static boolean isAuthenticated(HttpServletRequest request) {
-        HttpSession httpsession = request.getSession(false);
-        if (httpsession != null) {
-            Object user = httpsession.getAttribute(ATTRIBUTE_JAAS_SUBJECT);
-            return user != null;
-        }
-        return false;
-    }
+        return isAuthenticated();
+    }    
 
-    /**
-     * Get JAAS authenticated subject
-     * @param request
-     * @return Authenticated JAAS subject
-     */
-    public static Subject getSubject(HttpServletRequest request) {
-        Subject subject = null;
-        HttpSession httpsession = request.getSession(false);
-        if(httpsession != null) {
-            subject = (Subject) httpsession.getAttribute(ATTRIBUTE_JAAS_SUBJECT);
-        }
-        return subject != null ? subject :getAnonymousSubject();
-    }
-    
-    public static Subject getAnonymousSubject() {
-        if (null == anonymousSubject) {
-            CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(
-                getAnonymousUser().getName(),
-                getAnonymousUser().getPassword().toCharArray(),
-                Realm.REALM_SYSTEM);
-            try {
-                LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
-                loginContext.login();
-                anonymousSubject = loginContext.getSubject();
-            }
-            catch (LoginException le) {
-                log.error("Failed to login as anonymous user", le);
-            }
-        }
-        return anonymousSubject;
+    public static boolean isAuthenticated() {
+        return !MgnlContext.getUser().getName().equals(UserManager.ANONYMOUS_USER);
     }
 
     public static User getAnonymousUser() {
         return Security.getUserManager().getAnonymousUser();
     }
+
+    public static LoginResult authenticate(CredentialsCallbackHandler callbackHandler, String customLoginModule) {
+        Subject subject;
+        try {
+            LoginContext loginContext = new LoginContext(
+                StringUtils.defaultString(customLoginModule, "magnolia"),
+                callbackHandler);
+            loginContext.login();
+            subject = loginContext.getSubject();
+            User user = callbackHandler.getUser();
+            // not all jaas modules will support magnolia users
+            if(user == null){
+                user = SecuritySupport.Factory.getInstance().getUserManager().getUser(subject);
+            }
+            user.setSubject(subject);
+            return new LoginResult(LoginHandler.STATUS_SUCCEDED, user);
+        }
+        catch (LoginException e) {
+            return new LoginResult(LoginHandler.STATUS_FAILED, e);
+        }
+   }
 
 
 }

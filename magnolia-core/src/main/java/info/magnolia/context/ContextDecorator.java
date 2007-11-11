@@ -81,13 +81,6 @@ public class ContextDecorator extends AbstractContext {
     /**
      * Delegate
      */
-    public void setUser(User user) {
-        this.ctx.setUser(user);
-    }
-
-    /**
-     * Delegate
-     */
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return this.ctx.getQueryManager(repositoryId, workspaceId);
     }

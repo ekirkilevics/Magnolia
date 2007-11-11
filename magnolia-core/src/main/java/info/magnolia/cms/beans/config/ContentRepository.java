@@ -26,6 +26,7 @@ import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
 import info.magnolia.repository.RepositoryNameMap;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -134,11 +135,6 @@ public final class ContentRepository {
     private static Map repositoryProviders = new Hashtable();
 
     /**
-     * All server hierarchy managers with full access to specific repositories.
-     */
-    private static Map hierarchyManagers = new Hashtable();
-
-    /**
      * Repositories configuration as defined in repositories mapping file via attribute
      * <code>magnolia.repositories.config</code>.
      */
@@ -179,7 +175,6 @@ public final class ContentRepository {
     public static void init() {
         log.info("System : loading JCR"); //$NON-NLS-1$
         repositories.clear();
-        hierarchyManagers.clear();
         try {
             loadRepositories();
             log.info("System : JCR loaded"); //$NON-NLS-1$
@@ -372,32 +367,31 @@ public final class ContentRepository {
      */
     private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map,
         Provider provider) {
-    	HierarchyManagerLoader loader = new HierarchyManagerLoader(repository, wspID, map, provider); 
-        ContentRepository.hierarchyManagers.put(map.getName()
-            + "_"
-            + getInternalWorkspaceName(wspID), loader); 
-    }        
+        try {
+            SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
+            Session session = repository.login(sc, wspID);
+            provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
+            provider.registerNodeTypes();
+            /*
+            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
+            AccessManager accessManager = util.createAccessManager(getSystemPermissions());
+            QueryManager queryManager = util.createQueryManager(session, accessManager);
+            HierarchyManager hierarchyManager = util.createHierarchyManager(REPOSITORY_USER, session, accessManager, queryManager);
+             */
+        }
+        catch (RepositoryException re) {
+            log.error("System : Failed to initialize hierarchy manager for JCR {}", map.getName()); //$NON-NLS-1$
+            log.error(re.getMessage(), re);
+        }
+    }
 
     /**
      * Configures and returns a AccessManager with system permissions
      * @return The system AccessManager
+     * @deprecated uses MglnContext.getSystemContext()
      */
     public static AccessManager getAccessManager() {
-        return WorkspaceAccessUtil.getInstance().createAccessManager(getSystemPermissions());
-    }
-
-    /**
-     * Get maximum permission available
-     * @return List of permissions
-     */
-    static List getSystemPermissions() {
-        List acl = new ArrayList();
-        UrlPattern p = UrlPattern.MATCH_ALL;
-        Permission permission = new PermissionImpl();
-        permission.setPattern(p);
-        permission.setPermissions(Permission.ALL);
-        acl.add(permission);
-        return acl;
+        return MgnlContext.getSystemContext().getAccessManager(CONFIG);
     }
 
     /**
@@ -498,6 +492,7 @@ public final class ContentRepository {
     /**
      * Hierarchy manager as created on startup. Note: this hierarchyManager is created with system rights and has full
      * access on the specified repository.
+     * @deprecated uses MglnContext.getSystemContext.getHierarchyManager()
      */
     public static HierarchyManager getHierarchyManager(String repositoryID) {
         return getHierarchyManager(repositoryID, getDefaultWorkspace(repositoryID));
@@ -506,14 +501,10 @@ public final class ContentRepository {
     /**
      * Hierarchy manager as created on startup. Note: this hierarchyManager is created with system rights and has full
      * access on the specified repository.
+     * @deprecated uses MglnContext.getSystemContext.getHierarchyManager()
      */
     public static HierarchyManager getHierarchyManager(String repositoryID, String workspaceID) {
-        String mappedRepositoryName = getMappedRepositoryName(repositoryID);
-        if (mappedRepositoryName == null) {
-            return null;
-        }
-        HierarchyManagerLoader loader = (HierarchyManagerLoader) ContentRepository.hierarchyManagers.get(mappedRepositoryName + '_' + workspaceID);
-        return loader.getHierarchyManager();
+        return MgnlContext.getSystemContext().getHierarchyManager(repositoryID, workspaceID);
     }
 
     /**
@@ -590,44 +581,4 @@ public final class ContentRepository {
         return workspaceName;
     }
 
-}
-
-class HierarchyManagerLoader {
-	private static Logger log = LoggerFactory.getLogger(HierarchyManagerLoader.class);
-	
-	private Repository repository;
-	private String workspaceId;
-	private RepositoryMapping map;
-	private Provider provider;
-			
-	private ThreadLocal localManager = new ThreadLocal();
-
-	public HierarchyManagerLoader(Repository repository, String wspID, RepositoryMapping map, Provider provider) {
-		this.repository = repository;
-		this.workspaceId = wspID;
-		this.map = map;
-		this.provider = provider;
-	}
-	
-	public HierarchyManager getHierarchyManager() {
-		HierarchyManager hierarchyManager = (HierarchyManager) localManager.get();
-		if (hierarchyManager == null) {
-			try {
-	            SimpleCredentials sc = new SimpleCredentials(ContentRepository.REPOSITORY_USER, ContentRepository.REPOSITORY_PSWD.toCharArray());
-	            Session session = repository.login(sc, workspaceId);
-	            provider.registerNamespace(ContentRepository.NAMESPACE_PREFIX, ContentRepository.NAMESPACE_URI, session.getWorkspace());
-	            provider.registerNodeTypes();
-	            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-	            AccessManager accessManager = util.createAccessManager(ContentRepository.getSystemPermissions());
-	            QueryManager queryManager = util.createQueryManager(session, accessManager);
-	            hierarchyManager = util.createHierarchyManager(ContentRepository.REPOSITORY_USER, session, accessManager, queryManager);
-	            localManager.set(hierarchyManager);
-	        }
-	        catch (RepositoryException re) {
-	            log.error("System : Failed to initialize hierarchy manager for JCR {}", map.getName()); //$NON-NLS-1$
-	            log.error(re.getMessage(), re);
-	        }
-		}
-		return hierarchyManager;
-	}
 }

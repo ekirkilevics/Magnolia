@@ -16,6 +16,7 @@ import info.magnolia.cms.filters.MgnlFilterChain;
 import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.UserContext;
 import info.magnolia.context.WebContext;
 
 import javax.servlet.FilterChain;
@@ -46,8 +47,8 @@ public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (null != request.getParameter(PARAMETER_LOGOUT)) {
             Context ctx = MgnlContext.getInstance();
-            if (ctx instanceof WebContext) {
-                ((WebContext) ctx).logout();
+            if (ctx instanceof UserContext) {
+                ((UserContext) ctx).logout();
             }
             //MgnlContext.initAsAnonymousContext(request, response, servletContext);
 

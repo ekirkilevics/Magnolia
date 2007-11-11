@@ -18,6 +18,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.GroupList;
 import info.magnolia.cms.security.auth.PrincipalCollection;
@@ -54,7 +55,8 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      */
     private static final Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
 
-    public void validateUser() throws LoginException {
+    public User validateUser() throws LoginException {
+        return null;
     }
 
     /**

@@ -14,7 +14,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Revision:9391 $ ($Author:scharles $)
  */
-public class DummyUser implements User {
+public class DummyUser extends AbstractUser {
 
     /**
      * Logger

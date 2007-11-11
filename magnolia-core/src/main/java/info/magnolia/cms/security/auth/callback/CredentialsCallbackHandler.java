@@ -12,6 +12,8 @@
  */
 package info.magnolia.cms.security.auth.callback;
 
+import info.magnolia.cms.security.User;
+
 import java.io.IOException;
 
 import javax.security.auth.callback.Callback;
@@ -52,6 +54,8 @@ public class CredentialsCallbackHandler implements CallbackHandler {
      */
     protected String realm;
 
+    protected User user;
+
     /**
      * default constructor required by java security framework
      */
@@ -83,7 +87,9 @@ public class CredentialsCallbackHandler implements CallbackHandler {
             else if (callbacks[i] instanceof RealmCallback) {
                 ((RealmCallback) callbacks[i]).setRealm(this.realm);
             }
-
+            else if (callbacks[i] instanceof UserCallback) {
+                user = ((UserCallback) callbacks[i]).getUser();
+            }
             else if (callbacks[i] instanceof TextOutputCallback) {
                 TextOutputCallback outputCallback = (TextOutputCallback) callbacks[i];
                 switch (outputCallback.getMessageType()) {
@@ -105,5 +111,10 @@ public class CredentialsCallbackHandler implements CallbackHandler {
                 }
             }
         }
+    }
+
+    
+    public User getUser() {
+        return this.user;
     }
 }

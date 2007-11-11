@@ -43,7 +43,7 @@ public class NTLMLogin implements LoginHandler {
 
     private String userId;
 
-    public int handle(HttpServletRequest request, HttpServletResponse response) {
+    public LoginResult handle(HttpServletRequest request, HttpServletResponse response) {
         this.response = response;
         // starting from NT Challenge/response Step#3
         credentials = request.getHeader("Authorization");
@@ -52,7 +52,7 @@ public class NTLMLogin implements LoginHandler {
                 talk();
             } catch (IOException ioe) {
                 log.warn(ioe.getMessage(), ioe);
-                return LoginHandler.STATUS_FAILED;
+                return new LoginResult(LoginHandler.STATUS_FAILED);
             }
 
             // if connection is established after Step-4
@@ -60,20 +60,13 @@ public class NTLMLogin implements LoginHandler {
                 // todo - what if the request comes from browsers other thn IE
                 CredentialsCallbackHandler callbackHandler =
                         new PlainTextCallbackHandler(getUserId(), "".toCharArray());
-                try {
-                    if (Authenticator.authenticate(request, callbackHandler, null)) {
-                        return LoginHandler.STATUS_SUCCEDED;
-                    }
-                } catch (LoginException le) {
-                    log.warn(le.getMessage(), le);
-                }
+                    return Authenticator.authenticate(callbackHandler, null);
             } else {
                 // not yet passed through Step-4
-                return LoginHandler.STATUS_IN_PROCESS;
+                return new LoginResult(LoginHandler.STATUS_IN_PROCESS);
             }
-            return LoginHandler.STATUS_FAILED;
         }
-        return LoginHandler.STATUS_NOT_HANDLED;
+        return LoginResult.NOT_HANDLED;
     }
 
     private void talk() throws IOException {

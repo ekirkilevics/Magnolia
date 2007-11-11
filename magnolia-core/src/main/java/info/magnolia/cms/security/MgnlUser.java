@@ -42,7 +42,7 @@ import java.util.TreeSet;
  * @author philipp
  * @version $Revision$ ($Author$)
  */
-public class MgnlUser implements User, Serializable {
+public class MgnlUser extends AbstractUser implements Serializable {
 
     private static final long serialVersionUID = 222L;
 

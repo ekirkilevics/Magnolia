@@ -3,23 +3,20 @@ package info.magnolia.context;
 import java.util.ArrayList;
 import java.util.List;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.security.SystemUserManager;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 
-public class SharedAccessManagerStrategy implements RepositoryAcquringStrategy {
+public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
 
 	private static final long serialVersionUID = 222L;
 	
 	private AccessManager accessManager;
 	
-	public SharedAccessManagerStrategy() {
-	
+	public SystemRepositoryStrategy(SystemContext context) {
 	}
 	
 	public AccessManager getAccessManager(String repositoryId,
@@ -30,7 +27,7 @@ public class SharedAccessManagerStrategy implements RepositoryAcquringStrategy {
 		return accessManager;
 	}
 		    
-    private static List getSystemPermissions() {
+    protected List getSystemPermissions() {
         List acl = new ArrayList();
         UrlPattern p = UrlPattern.MATCH_ALL;
         Permission permission = new PermissionImpl();
@@ -40,12 +37,8 @@ public class SharedAccessManagerStrategy implements RepositoryAcquringStrategy {
         return acl;
     }
 
-	public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {		
-		return ContentRepository.getHierarchyManager(repositoryId, workspaceId);
-	}
-
-	public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-		return getHierarchyManager(repositoryId, workspaceId).getQueryManager();
-	}
+    protected String getUserId() {
+        return SystemUserManager.SYSTEM_USER;
+    }
 
 }

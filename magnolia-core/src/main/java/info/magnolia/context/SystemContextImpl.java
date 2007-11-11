@@ -12,7 +12,6 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 
 import org.slf4j.Logger;
@@ -35,14 +34,14 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
-
+    
+    private static ThreadLocal repoStrThreadLocal = new ThreadLocal();
 
     /**
      * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself. Init the scopes
      */
     public SystemContextImpl() {
     	setAttributeStrategy(new MapAttributeStrategy());
-    	setRepositoryStrategy(new SharedAccessManagerStrategy());
     }
 
     public void setAttribute(String name, Object value, int scope) {
@@ -58,18 +57,15 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
         }
         super.removeAttribute(name, scope);
     }
-
-    /**
-     * Get System user
-     * @return User
-     * @see info.magnolia.cms.security.User
-     */
-    public User getUser() {
-        if (this.user == null) {
-            log.debug("JAAS Subject is null, returning Anonymous user");
-            this.user = Security.getUserManager().getSystemUser();
+    
+    public RepositoryAcquringStrategy getRepositoryStrategy() {
+        if(repoStrThreadLocal.get() == null){
+            repoStrThreadLocal.set(new SystemRepositoryStrategy(this));
         }
-        return this.user;
+        return (RepositoryAcquringStrategy) repoStrThreadLocal.get();
     }
 
+    public void release() {
+        repoStrThreadLocal.remove();
+    }
 }
