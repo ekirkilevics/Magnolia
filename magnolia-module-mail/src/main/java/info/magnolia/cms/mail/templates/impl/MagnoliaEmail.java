@@ -250,7 +250,7 @@ public class MagnoliaEmail extends FreemarkerEmail {
     private HttpClient getHttpClient(String baseURL) throws Exception {
         if (this.client == null) {
             URL location = new URL(baseURL);
-            User user = MgnlContext.getInstance().getUser();
+            User user = MgnlContext.getUser();
             this.client = getHttpClientForUser(location, user);
         }
         return this.client;
