@@ -57,6 +57,8 @@ public class EditButton extends TagSupport {
 
     private boolean small = true;
 
+    private boolean adminOnly;
+
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
@@ -69,7 +71,7 @@ public class EditButton extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        if (Server.isAdmin() && Resource.getActivePage().isGranted(Permission.SET)) {
+        if ((!adminOnly || Server.isAdmin()) && Resource.getActivePage().isGranted(Permission.SET)) {
 
             try {
                 if (this.getNodeCollectionName() != null && this.getNodeName() == null) {
@@ -173,6 +175,15 @@ public class EditButton extends TagSupport {
         this.displayHandler = path;
     }
 
+
+    /**
+     * Setter for <code>adminOnly</code>.
+     * @param adminOnly The adminOnly to set.
+     */
+    public void setAdminOnly(boolean adminOnly) {
+        this.adminOnly = adminOnly;
+    }
+
     /**
      * @return template path
      */
@@ -239,6 +250,7 @@ public class EditButton extends TagSupport {
         this.label = null;
         this.displayHandler = null;
         this.small = true;
+        this.adminOnly=false;
         super.release();
     }
 }

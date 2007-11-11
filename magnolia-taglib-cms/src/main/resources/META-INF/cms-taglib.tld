@@ -208,6 +208,13 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <type>boolean</type>
       <description></description>
     </attribute>
+    <attribute>
+      <name>adminOnly</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Show only in admin instance, default to false.</description>
+    </attribute>
   </tag>
   <tag>
     <name>out</name>
@@ -288,7 +295,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        The uuid to use for finding the content. 
+        The uuid to use for finding the content.
         You must define the repository attribute if the content is not stored in the website repositoty
       </description>
     </attribute>
@@ -297,7 +304,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        The absolute path to the content. 
+        The absolute path to the content.
         You must define the repository attribute if the content is not stored in the website repositoty
       </description>
     </attribute>
@@ -514,14 +521,14 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <description>
         The content object to use.
       </description>
-    </attribute>    
+    </attribute>
 
     <attribute>
       <name>uuid</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        The uuid to use for finding the content. 
+        The uuid to use for finding the content.
         You must define the repository attribute if the content is not stored in the website repositoty
       </description>
     </attribute>
@@ -531,7 +538,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        The absolute path to the content. 
+        The absolute path to the content.
         You must define the repository attribute if the content is not stored in the website repositoty
       </description>
     </attribute>
@@ -607,7 +614,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        The uuid to use for finding the content. 
+        The uuid to use for finding the content.
         You must define the repository attribute if the content is not stored in the website repositoty
       </description>
     </attribute>
@@ -616,7 +623,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        The absolute path to the content. 
+        The absolute path to the content.
         You must define the repository attribute if the content is not stored in the website repositoty
       </description>
     </attribute>
@@ -945,13 +952,13 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <description>
         The content object to use.
       </description>
-    </attribute>    
+    </attribute>
     <attribute>
       <name>uuid</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        The uuid to use for finding the content. 
+        The uuid to use for finding the content.
         You must define the repository attribute if the content is not stored in the website repositoty
       </description>
     </attribute>
@@ -960,7 +967,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        The absolute path to the content. 
+        The absolute path to the content.
         You must define the repository attribute if the content is not stored in the website repositoty
       </description>
     </attribute>
