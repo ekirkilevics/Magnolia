@@ -13,6 +13,7 @@
 package info.magnolia.cms.mail.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
+import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -31,7 +32,9 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsNowWrapped("Mail");
 
-        final DeltaBuilder for31 = DeltaBuilder.update("3.1", "").addTask(new RegisterModuleServletsTask()).addConditions(conditions);
+        final Delta for31 = DeltaBuilder.update("3.1", "")
+                .addTask(new RegisterModuleServletsTask())
+                .addConditions(conditions);
         register(for31);
     }
 }

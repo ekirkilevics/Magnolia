@@ -16,7 +16,10 @@ import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
-import info.magnolia.module.delta.*;
+import info.magnolia.module.delta.BootstrapResourcesTask;
+import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.Task;
 import info.magnolia.module.workflow.setup.for3_1.AddNewDefaultConfig;
 import info.magnolia.module.workflow.setup.for3_1.AddUserToGroupTask;
 import info.magnolia.module.workflow.setup.for3_1.InstallDefaultWorkflowDefinition;
@@ -48,7 +51,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
     };
 
     public WorkflowModuleVersionHandler() {
-        final DeltaBuilder delta31 = DeltaBuilder.update("3.1", "")
+        final Delta delta31 = DeltaBuilder.update("3.1", "")
                 .addTask(mainMenu)
                 .addTask(subMenu)
                 .addTask(new AddNewDefaultConfig())

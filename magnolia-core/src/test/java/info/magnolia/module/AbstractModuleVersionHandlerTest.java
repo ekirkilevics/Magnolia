@@ -15,7 +15,6 @@ package info.magnolia.module;
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.Version;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
@@ -63,8 +62,8 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
     }
 
     public void testCantRegisterMultipleDeltasForSameVersion() {
-        final Delta d1 = DeltaBuilder.createBasicDelta(Version.parseVersion("1.0.0"), "", new NullTask("", ""));
-        final Delta d2 = DeltaBuilder.createBasicDelta(Version.parseVersion("1.0.0"), "", new NullTask("", ""));
+        final Delta d1 = DeltaBuilder.update(Version.parseVersion("1.0.0"), "", new NullTask("", ""));
+        final Delta d2 = DeltaBuilder.update(Version.parseVersion("1.0.0"), "", new NullTask("", ""));
         final AbstractModuleVersionHandler versionHandler = new DefaultModuleVersionHandler() {};
         versionHandler.register(d1);
         try {
@@ -125,37 +124,54 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertEquals(d5, deltas.get(4));
     }
 
-    public void testVersionUpdateTaskIsAddedWhenUsingBasicDeltaListConstructor() {
+    public void testVersionUpdateTaskIsAddedWhenUsingSingleTaskMethod() {
         final NullTask nullTask = new NullTask("test", "test");
+        final Delta delta = DeltaBuilder.update(Version.parseVersion("2.0"), "", nullTask);
+        doTestVersionUpdateTaskIsAdded(delta, 2);
+    }
+
+    public void testVersionUpdateTaskIsAddedWhenAddingListOfTasks() {
+        final NullTask nullTask = new NullTask("test", "test");
+        final NullTask nullTask2 = new NullTask("test2", "test2");
         final ArrayList tasks = new ArrayList();
         tasks.add(nullTask);
-        final Delta delta = DeltaBuilder.createBasicDelta(Version.parseVersion("2.0"), "", tasks);
-        doTestVersionUpdateTaskIsAddedWhenUsingBasicDeltaConstructor(delta);
+        tasks.add(nullTask2);
+        final Delta delta = DeltaBuilder.update(Version.parseVersion("2.0"), "").addTasks(tasks);
+        doTestVersionUpdateTaskIsAdded(delta, 3);
     }
 
-    public void testVersionUpdateTaskIsAddedWhenUsingBasicDeltaArrayConstructor() {
-        final NullTask nullTask = new NullTask("test", "test");
-        final Task[] tasks = new Task[]{nullTask};
-        final Delta delta = DeltaBuilder.createBasicDelta(Version.parseVersion("2.0"), "", tasks);
-        doTestVersionUpdateTaskIsAddedWhenUsingBasicDeltaConstructor(delta);
+    public void testVersionUpdateTaskIsAddedWhenAddingSingleTasks() {
+        final NullTask t1 = new NullTask("test", "test");
+        final NullTask t2 = new NullTask("test2", "test2");
+        final Delta delta = DeltaBuilder.update(Version.parseVersion("2.0"), "").addTask(t1).addTask(t2);
+        doTestVersionUpdateTaskIsAdded(delta, 3);
     }
 
-    public void testVersionUpdateTaskIsAddedWhenUsingBasicDeltaSingleTaskConstructor() {
-        final NullTask nullTask = new NullTask("test", "test");
-        final Delta delta = DeltaBuilder.createBasicDelta(Version.parseVersion("2.0"), "", nullTask);
-        doTestVersionUpdateTaskIsAddedWhenUsingBasicDeltaConstructor(delta);
+    public void testVersionUpdateTaskIsAddedWhenUsingSingleTaskMethodAndAddingMore() {
+        final NullTask t1 = new NullTask("test", "test");
+        final NullTask t2 = new NullTask("test2", "test2");
+        final Delta delta = DeltaBuilder.update(Version.parseVersion("2.0"), "", t1).addTask(t2);
+        doTestVersionUpdateTaskIsAdded(delta, 3);
     }
 
-    private void doTestVersionUpdateTaskIsAddedWhenUsingBasicDeltaConstructor(Delta delta) {
-        final AbstractModuleVersionHandler versionHandler = new DefaultModuleVersionHandler() {};
+    public void testVersionUpdateTaskIsAddedEvenIfNoTask() {
+        final Delta delta = DeltaBuilder.update(Version.parseVersion("2.0"), "");
+        doTestVersionUpdateTaskIsAdded(delta, 1);
+    }
+
+    private void doTestVersionUpdateTaskIsAdded(Delta delta, int expectedTotal) {
+        final AbstractModuleVersionHandler versionHandler = new DefaultModuleVersionHandler() {
+        };
         versionHandler.register(delta);
         final List list = versionHandler.getDeltas(new InstallContextImpl(), Version.parseVersion("1.0"));
         assertEquals(1, list.size());
         final Delta retrievedDelta = (Delta) list.get(0);
         final List tasks = retrievedDelta.getTasks();
-        assertEquals(2, tasks.size());
-        assertTrue(tasks.get(0) instanceof NullTask);
-        assertTrue(tasks.get(1) instanceof AbstractModuleVersionHandler.ModuleVersionUpdateTask);
+        assertEquals(expectedTotal, tasks.size());
+        for (int i = 0; i < expectedTotal - 1; i++) {
+            assertTrue(tasks.get(i) instanceof NullTask);
+        }
+        assertTrue(tasks.get(expectedTotal - 1) instanceof AbstractModuleVersionHandler.ModuleVersionUpdateTask);
     }
 
     private final static class NullTask extends AbstractTask {

@@ -201,8 +201,8 @@ public class ModuleManagerImplTest extends TestCase {
         };
 
         final Task t2 = createStrictMock(Task.class);
-        final Delta d1 = DeltaBuilder.createBasicDelta(Version.parseVersion("1.0"), "", t1);
-        final Delta d2 = DeltaBuilder.createBasicDelta(Version.parseVersion("2.0"), "", t2);
+        final Delta d1 = DeltaBuilder.update(Version.parseVersion("1.0"), "", t1);
+        final Delta d2 = DeltaBuilder.update(Version.parseVersion("2.0"), "", t2);
 
         final ModuleDefinition mod1 = new ModuleDefinition("abc", "2.3.4", null, null);
         final ModuleDefinition mod2 = new ModuleDefinition("xyz", "2.3.4", null, null);

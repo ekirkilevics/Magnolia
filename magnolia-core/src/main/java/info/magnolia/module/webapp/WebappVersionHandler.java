@@ -60,6 +60,6 @@ public class WebappVersionHandler implements ModuleVersionHandler {
     }
 
     public Delta getStartupDelta(InstallContext ctx) {
-        return DeltaBuilder.createStartupDelta(ctx.getCurrentModuleDefinition(), Collections.EMPTY_LIST);
+        return DeltaBuilder.startup(ctx.getCurrentModuleDefinition(), Collections.EMPTY_LIST);
     }
 }

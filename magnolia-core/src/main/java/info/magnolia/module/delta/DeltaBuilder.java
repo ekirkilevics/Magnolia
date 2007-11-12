@@ -16,7 +16,6 @@ import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -26,60 +25,10 @@ import java.util.List;
 public class DeltaBuilder implements Delta {
 
     /**
-     * Convenience factory method which creates an Update Delta and wraps the given array of
-     * tasks into a writable List.
-     *
-     * @deprecated
-     */
-    public static Delta createBasicDelta(Version v, String description, Task[] tasks) {
-        // not using Arrays.asList directly because we know the version handler could add a task.
-        return createBasicDelta(v, description, new ArrayList(Arrays.asList(tasks)));
-    }
-
-    /**
      * Convenience factory method for an Update Delta with a single task.
      */
-    public static Delta createBasicDelta(Version v, String description, Task task) {
+    public static DeltaBuilder update(Version v, String description, Task task) {
         return update(v, description).addTask(task);
-    }
-
-    /**
-     * Creates an Update Delta.
-     *
-     * @param tasks should not be a read-only List, as the ModuleVersionHandler might add tasks to it.
-     * @deprecated
-     */
-    public static Delta createBasicDelta(Version v, String description, List tasks) {
-        return update(v, description).addTasks(tasks);
-    }
-
-    /**
-     * Creates an Update Delta.
-     *
-     * @param tasks should not be a read-only List, as the ModuleVersionHandler might add tasks to it.
-     * @deprecated use update()
-     */
-    public static Delta createBasicDelta(Version v, String description, List tasks, List conditions) {
-        return update(v, description).addTasks(tasks).addConditions(conditions);
-    }
-
-    /**
-     * Creates an Install Delta.
-     *
-     * @param tasks should not be a read-only List, as the ModuleVersionHandler might add tasks to it.
-     * @deprecated use install()
-     */
-    public static Delta createInstallDelta(Version v, String description, List tasks, List conditions) {
-        return install(v, description).addTasks(tasks).addConditions(conditions);
-    }
-
-    /**
-     * Creates a Startup Delta.
-     * @deprecated use startup()
-     */
-    public static Delta createStartupDelta(ModuleDefinition moduleDef, List tasks) {
-        final String description = "Tasks executed before starting up module " + moduleDef.getDescription();
-        return startup(moduleDef.getVersionDefinition(), description).addTasks(tasks);
     }
 
     public static DeltaBuilder update(String versionStr, String description) {
@@ -94,6 +43,14 @@ public class DeltaBuilder implements Delta {
         return new DeltaBuilder(version, description, DeltaType.install);
     }
 
+    public static DeltaBuilder startup(ModuleDefinition moduleDef, List tasks) {
+        final String description = "Tasks executed before starting up module " + moduleDef.getDescription();
+        return startup(moduleDef.getVersionDefinition(), description).addTasks(tasks);
+    }
+
+    /**
+     * TODO : it seems irrelevant to have a Version in startup tasks. These should probably be moved to ModuleLifecycle.
+     */
     public static DeltaBuilder startup(Version version, String description) {
         return new DeltaBuilder(version, description, DeltaType.startup);
     }

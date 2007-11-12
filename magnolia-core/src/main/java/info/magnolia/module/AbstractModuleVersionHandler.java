@@ -146,7 +146,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
     public Delta getStartupDelta(InstallContext installContext) {
         final ModuleDefinition moduleDef = installContext.getCurrentModuleDefinition();
         final List tasks = getStartupTasks(installContext);
-        return DeltaBuilder.createStartupDelta(moduleDef, tasks);
+        return DeltaBuilder.startup(moduleDef, tasks);
     }
 
     /**
