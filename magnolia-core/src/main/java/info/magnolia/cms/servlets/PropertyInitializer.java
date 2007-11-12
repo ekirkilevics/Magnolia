@@ -14,7 +14,15 @@ package info.magnolia.cms.servlets;
 
 
 
+import info.magnolia.cms.filters.MagnoliaManagedFilter;
+
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
+import javax.servlet.ServletException;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 
@@ -24,4 +32,20 @@ import javax.servlet.ServletContextListener;
  * @deprecated use {@link MgnlServletContextListener} instead
  */
 public class PropertyInitializer extends MgnlServletContextListener implements ServletContextListener {
+
+	/**
+     * Logger.
+     */
+    private static Logger log = LoggerFactory.getLogger(MagnoliaManagedFilter.class);
+
+    /**
+     * {@inheritDoc}
+     */
+    public void contextInitialized(ServletContextEvent sce) {
+        log.warn("\n***********\nPropertyInitializer is deprecated in Magnolia 3.1, please update your web.xml: "
+            + "remove the listener and add a single listener with class name " 
+            + "info.magnolia.cms.servlets.MgnlServletContextListener\n***********");
+
+        super.contextInitialized(sce);
+    }
 }

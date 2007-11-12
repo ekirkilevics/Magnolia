@@ -67,4 +67,15 @@ public class WebXmlConditionsUtil {
         }
     }
 
+    public void listenerIsDeprecated(final String deprecatedListenerClass, final String replacementListenerClass) {
+    	if (webXmlUtil.isListenerRegistered(deprecatedListenerClass)) {
+    		conditions.add(new FalseCondition("web.xml updates", "The " + deprecatedListenerClass + " listener class is now deprecated. Please replace it with " + replacementListenerClass + ": please update the corresponding <listener> element in your web.xml file."));
+    	}
+    }
+
+	public void listenerMustBeRegistered(String listenerClass) {
+		if (!webXmlUtil.isListenerRegistered(listenerClass)) {
+    		conditions.add(new FalseCondition("web.xml updates", "The " + listenerClass + " listener is not installed. Please configure a <listener> with class " + listenerClass + " in your web.xml file."));
+    	}	
+	}
 }

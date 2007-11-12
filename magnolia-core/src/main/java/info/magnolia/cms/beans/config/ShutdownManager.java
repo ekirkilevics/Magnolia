@@ -70,8 +70,13 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
     /**
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      * @deprecated (does nothing on initialization)
+     *
      */
     public void contextInitialized(ServletContextEvent sce) {
+        log.warn("\n***********\nThe use of ShutdownManager as ServletContextListener is deprecated in Magnolia 3.1, "
+        	+ "please update your web.xml and remove the listener but add a single listener with class name " 
+            + "info.magnolia.cms.servlets.MgnlServletContextListener\n***********");
+
         // nothing to do
     }
 

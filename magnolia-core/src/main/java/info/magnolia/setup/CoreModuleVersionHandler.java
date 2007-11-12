@@ -36,6 +36,7 @@ import info.magnolia.module.delta.PropertyExistsDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
+import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -48,6 +49,8 @@ import info.magnolia.setup.for3_1.ReconfigureCommands;
 import info.magnolia.setup.for3_1.RemoveModuleDescriptorDetailsFromRepo;
 import info.magnolia.setup.for3_1.RenamedRenderersToTemplateRenderers;
 import info.magnolia.setup.for3_1.UpdateI18nConfiguration;
+import info.magnolia.setup.for3_1.UpdateURIMappings;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 
@@ -145,6 +148,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             // --- system-wide tasks (impact all modules)
             new RenamedRenderersToTemplateRenderers(),
             new ReconfigureCommands(),
+            new UpdateURIMappings(),
             // TODO : do we keep this ?
             new RemoveModuleDescriptorDetailsFromRepo(),
     });
@@ -172,6 +176,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.servletIsDeprecated("uuidRequestDispatcher");
         u.filterIsDeprecated("info.magnolia.cms.filters.MagnoliaManagedFilter", "info.magnolia.cms.filters.MgnlMainFilter");
         u.filterMustBeRegisteredWithCorrectDispatchers("info.magnolia.cms.filters.MgnlMainFilter");
+        u.listenerMustBeRegistered("info.magnolia.cms.servlets.MgnlServletContextListener");
+        u.listenerIsDeprecated("info.magnolia.cms.servlets.PropertyInitializer", "info.magnolia.cms.servlets.MgnlServletContextListener");
+        u.listenerIsDeprecated("info.magnolia.cms.beans.config.ShutdownManager", "info.magnolia.cms.servlets.MgnlServletContextListener");
         return conditions;
     }
 }

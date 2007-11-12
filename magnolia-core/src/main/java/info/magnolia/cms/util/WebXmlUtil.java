@@ -176,7 +176,13 @@ public class WebXmlUtil {
         return true;
     }
 
-    public static void main(String[] args) {
+    public boolean isListenerRegistered(String deprecatedListenerClass) {
+	    final String xpathExpr = "/webxml:web-app/webxml:listener[webxml:listener-class='"
+	        + deprecatedListenerClass + "']";
+	    return xpathMatches(xpathExpr);
+	}
+
+	public static void main(String[] args) {
         final ArrayList list = new ArrayList();
         list.add("foo");
         list.add("bar");
