@@ -1,28 +1,27 @@
 [#include "ModuleManagerWebUI.header.html" /]
 
 <div id="actions">
-  <a href="${contextPath}${installerPath}/start" id="buttonStart">Start install/update...</a>
+  <a href="${contextPath}${installerPath}/start" id="buttonStart" class="button">Start install/update...</a>
 </div>
 
 <div id="content">
 <p class="status">The following modules will be updated/installed:</p>
 [#list status.list as moduleStatus]
 <div class="module">
-<img class="icon" src="${contextPath}/.resources/images/moduleManagerUI/component_preferences.gif"/>
 <h3>${moduleStatus.module?cap_first}</h3>
   [#list moduleStatus.deltas as delta]
     <div class="delta">
     [#comment]TODO : delta.type will be used as a css class[/#comment]
-    <span>Type:</span> <h4 style="display: inline;" class="deltaType ${delta.type}">${delta.type?cap_first}</h4>
+    <h4 class="deltaType ${delta.type}"><span>Type:</span> ${delta.type?cap_first}</h4>
     <p class="deltaDescription">${delta.description?cap_first?html}</p>
     <ul class="conditions">
       [#list delta.conditions as condition]
-        <li class="condition">${condition.name?cap_first?html} <br/><span class="conditionDescription">${condition.description?cap_first?html}</span></li>
+        <li class="condition">${condition.name?cap_first?html} <span class="conditionDescription">${condition.description?cap_first?html}</span></li>
       [/#list]
     </ul>
     <ul class="tasks">
       [#list delta.tasks as task]
-        <li class="task">${task.name?cap_first?html}<br/><span class="taskDescription">${task.description?cap_first?html}</span></li>
+        <li class="task">${task.name?cap_first?html} <span class="taskDescription">${task.description?cap_first?html}</span></li>
       [/#list]
     </ul>
     </div>
