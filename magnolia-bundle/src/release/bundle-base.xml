@@ -1,16 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<assembly>
-  <id>bundle</id>
-  <formats>
-    <format>zip</format>
-    <format>tar.gz</format>
-  </formats>
-  <includeBaseDirectory>true</includeBaseDirectory>
+<component>
   <fileSets>
     <!-- unpacked tomcat -->
     <fileSet>
       <directory>target/extracted-tomcat/apache-tomcat-5.5.25</directory>
-      <outputDirectory>apache-tomcat-5.5.25/</outputDirectory>
+      <outputDirectory>apache-tomcat-5.5.25</outputDirectory>
       <excludes>
         <!-- if we want to only exclude specific default webapps, the trailing slash is needed :
         <exclude>webapps/balancer/</exclude>
@@ -95,4 +89,4 @@
       <unpack>true</unpack>
     </dependencySet>
   </dependencySets>
-</assembly>
+</component>

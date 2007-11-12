@@ -21,29 +21,31 @@
         <artifactId>maven-bundle-plugin</artifactId>
         <version>1.0.2-SNAPSHOT</version>
         <executions>
-          <!--<execution>-->
-            <!--<phase>process-resources</phase>-->
-            <!--<goals>-->
-              <!--<goal>bundle</goal>-->
-            <!--</goals>-->
-            <!--<configuration>-->
-              <!--<magnoliaWarProjectDirectory>../magnolia-enterprise-webapp</magnoliaWarProjectDirectory>-->
-              <!--<magnoliaWarExplodedDirectory>../magnolia-enterprise-webapp/target/magnolia-enterprise-webapp-${project.version}</magnoliaWarExplodedDirectory>-->
-            <!--</configuration>-->
-          <!--</execution>-->
           <execution>
             <phase>process-resources</phase>
+            <id>get-tomcat</id>
             <goals>
-              <goal>tomcat</goal>
+              <goal>download</goal>
             </goals>
+            <configuration>
+              <url>http://www.apache.org/dist/tomcat/tomcat-5/v5.5.25/bin/apache-tomcat-5.5.25.tar.gz</url>
+              <destDir>target/extracted-tomcat</destDir>
+            </configuration>
+          </execution>
+          <execution>
+            <phase>process-resources</phase>
+            <id>get-tomcat-compat-package</id>
+            <goals>
+              <goal>download</goal>
+            </goals>
+            <configuration>
+              <url>http://www.apache.org/dist/tomcat/tomcat-5/v5.5.25/bin/apache-tomcat-5.5.25-compat.tar.gz</url>
+              <destDir>target/extracted-tomcat-compat</destDir>
+            </configuration>
           </execution>
         </executions>
         <configuration>
-          <tomcatdir>tmp</tomcatdir>
-          <tomcatDownloadUrl>http://www.apache.org/dist/tomcat/tomcat-5/v5.5.25/bin/apache-tomcat-5.5.25.tar.gz</tomcatDownloadUrl>
-          <releaseDest>target/extracted-tomcat</releaseDest>
-          <finalDirectoryName>apache-tomcat-5.5.25</finalDirectoryName>
-          <customize>false</customize>
+          <downloadDir>tmp</downloadDir>
         </configuration>
       </plugin>
       <plugin>
@@ -63,7 +65,8 @@
             <configuration>
               <finalName>magnolia-${project.version}</finalName>
               <descriptors>
-                <descriptor>src/release/bundle.xml</descriptor>
+                <descriptor>src/release/bundle-jdk15.xml</descriptor>
+                <descriptor>src/release/bundle-jdk14.xml</descriptor>
                 <!--<descriptor>src/release/src.xml</descriptor>-->
                 <!--<descriptor>src/release/wars.xml</descriptor>-->
               </descriptors>
@@ -79,8 +82,6 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-webapp</artifactId>
       <version>3.1-SNAPSHOT</version>
-      <!--<classifier>bundle</classifier>-->
-      <!--<type>tar.gz</type>-->
       <type>war</type>
     </dependency>
     <dependency>
