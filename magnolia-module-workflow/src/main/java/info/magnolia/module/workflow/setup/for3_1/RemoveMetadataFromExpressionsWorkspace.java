@@ -28,6 +28,7 @@ import javax.jcr.RepositoryException;
  * @version $Revision: $ ($Author: $)
  */
 public class RemoveMetadataFromExpressionsWorkspace extends AbstractRepositoryTask {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RemoveMetadataFromExpressionsWorkspace.class);
 
     public RemoveMetadataFromExpressionsWorkspace() {
         super("Nodetypes changed", "Removes the metadata nodes from the Expressions workspace");
@@ -55,7 +56,7 @@ public class RemoveMetadataFromExpressionsWorkspace extends AbstractRepositoryTa
         public void visit(Content node) throws Exception {
             final Content metadata = node.getChildByName("MetaData");
             if (metadata != null) {
-                ctx.debug("Will remove MetaData at " + metadata.getHandle());
+                log.debug("Will remove MetaData at " + metadata.getHandle());
                 metadata.delete();
             }
         }

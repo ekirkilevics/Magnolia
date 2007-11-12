@@ -38,9 +38,9 @@ public abstract class NodeCheckDelegateTask extends ConditionalDelegateTask {
     protected boolean condition(InstallContext ctx) throws TaskExecutionException {
         final HierarchyManager hm = ctx.getHierarchyManager(workspaceName);
         if (!hm.isExist(nodePath)) {
-            ctx.debug("Checking for property " + propertyName + " in " + nodePath + " but node does not exist.");
             return false;
         }
+
         try {
             final Content node = hm.getContent(nodePath);
             return checkNode(node, ctx);

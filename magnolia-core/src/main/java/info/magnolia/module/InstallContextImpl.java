@@ -47,12 +47,6 @@ public class InstallContextImpl implements InstallContext {
         this.currentModule = module;
     }
 
-    public void debug(String message) {
-        log.debug("> " + message);
-        // TODO should we really keep debug messages ?
-        log(new Message(MessagePriority.debug, message));
-    }
-
     public void info(String message) {
         log.info("> " + message);
         log(new Message(MessagePriority.info, message));

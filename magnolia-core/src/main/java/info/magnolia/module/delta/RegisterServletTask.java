@@ -28,7 +28,9 @@ import javax.jcr.RepositoryException;
  * @version $Id$
  */
 public class RegisterServletTask extends AbstractTask {
-    public static final String DEFAULT_SERVLET_FILTER_PATH = "/server/filters/servlets";
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RegisterServletTask.class);
+
+    private static final String DEFAULT_SERVLET_FILTER_PATH = "/server/filters/servlets";
     private final ServletDefinition servletDefinition;
 
     public RegisterServletTask(ServletDefinition servletDefinition) {
@@ -37,7 +39,7 @@ public class RegisterServletTask extends AbstractTask {
     }
 
     public void execute(InstallContext installContext) throws TaskExecutionException {
-        installContext.debug("Registering servlet " + servletDefinition.getName() + " in servlet filter.");
+        log.debug("Registering servlet " + servletDefinition.getName() + " in servlet filter.");
 
         final String servletFilterPath = DEFAULT_SERVLET_FILTER_PATH;
 

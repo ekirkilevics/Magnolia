@@ -26,9 +26,7 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface InstallContext { // implements Context ?
-
-    void debug(String message);
+public interface InstallContext {
 
     void info(String message);
 
@@ -110,7 +108,6 @@ public interface InstallContext { // implements Context ?
     }
 
     public class MessagePriority {
-        public static final MessagePriority debug = new MessagePriority("debug");
         public static final MessagePriority info = new MessagePriority("info");
         public static final MessagePriority warning = new MessagePriority("warning");
         public static final MessagePriority error = new MessagePriority("error");

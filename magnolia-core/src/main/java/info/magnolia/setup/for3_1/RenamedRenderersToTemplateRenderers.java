@@ -26,6 +26,8 @@ import javax.jcr.RepositoryException;
  * @version $Revision: $ ($Author: $)
  */
 public class RenamedRenderersToTemplateRenderers extends AllModulesNodeOperation {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RenamedRenderersToTemplateRenderers.class);
+
     private static final String OLDNAME = "renderers";
     private static final String NEWNAME = "template-renderers";
 
@@ -38,7 +40,7 @@ public class RenamedRenderersToTemplateRenderers extends AllModulesNodeOperation
         final String oldPath = moduleNodePath + "/" + OLDNAME;
         final String newPath = moduleNodePath + "/" + NEWNAME;
         if (hm.isExist(oldPath)) {
-            ctx.debug("Will move " + oldPath + " to " + newPath);
+            log.debug("Will move " + oldPath + " to " + newPath);
             try {
                 hm.moveTo(oldPath, newPath);
             } catch (RepositoryException e) {
