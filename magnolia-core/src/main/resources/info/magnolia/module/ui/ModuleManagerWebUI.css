@@ -191,10 +191,6 @@ p > p {
     margin-left: 0.5em;
 }
 
-.messages .debug {
-    color: #9c9c9c;    
-}
-
 .messages .error {
     background-color: #ffcccc;
     color: #cc0000;
