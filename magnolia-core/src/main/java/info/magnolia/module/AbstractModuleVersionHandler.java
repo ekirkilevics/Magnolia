@@ -129,12 +129,12 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
      * @see #getExtraInstallTasks(InstallContext) override this method if you need extra tasks for install.
      */
     protected Delta getInstall(InstallContext installContext) {
-        final List basicInstallTasks = new ArrayList();
-        basicInstallTasks.addAll(getBasicInstallTasks(installContext));
-        basicInstallTasks.addAll(getExtraInstallTasks(installContext));
-        basicInstallTasks.add(new ModuleVersionToLatestTask());
+        final List installTasks = new ArrayList();
+        installTasks.addAll(getBasicInstallTasks(installContext));
+        installTasks.addAll(getExtraInstallTasks(installContext));
+        installTasks.add(new ModuleVersionToLatestTask());
         final List conditions = getInstallConditions();
-        return BasicDelta.createInstallDelta("Installation", "", basicInstallTasks, conditions);
+        return BasicDelta.createInstallDelta("Installation", "", installTasks, conditions);
     }
 
     protected abstract List getBasicInstallTasks(InstallContext installContext);
