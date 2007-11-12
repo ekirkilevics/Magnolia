@@ -2,9 +2,9 @@ package info.magnolia.cms.cache.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
+import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.voting.voters.AuthenticatedVoter;
 import info.magnolia.voting.voters.ExtensionVoter;
 import info.magnolia.voting.voters.OnAdminVoter;
@@ -28,11 +28,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsRemoved("CacheServlet");
         u.servletIsRemoved("CacheGeneratorServlet");
-        register("3.1.0", BasicDelta.createBasicDelta(
-            "Cache Module 3.1",
-            "Cache Module 3.1",
-            new ArrayList(),
-            conditions));
+        register(DeltaBuilder.update("3.1.0", "").addConditions(conditions));
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {

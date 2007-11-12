@@ -12,6 +12,8 @@
  */
 package info.magnolia.module.delta;
 
+import info.magnolia.module.model.Version;
+
 import java.util.List;
 
 /**
@@ -23,9 +25,9 @@ import java.util.List;
  */
 public interface Delta {
     /**
-     * Returns the version number for which this is needed.
+     * Returns the version number for which this Delta is needed.
      */
-    // Version getVersion();
+    Version getVersion();
 
     /**
      * Returns the list of Conditions which have to be checked before this Delta's Tasks can be executed.
@@ -36,8 +38,6 @@ public interface Delta {
      * Should not return a read-only List, as the version handler might add tasks as appropriate.
      */
     List getTasks();
-
-    String getTitle();
 
     String getDescription();
 

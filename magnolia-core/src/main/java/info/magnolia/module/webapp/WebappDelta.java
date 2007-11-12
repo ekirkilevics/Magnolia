@@ -14,26 +14,28 @@ package info.magnolia.module.webapp;
 
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaType;
+import info.magnolia.module.model.Version;
 
 import java.util.Collections;
 import java.util.List;
 
 /**
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class WebappDelta implements Delta {
+    private final Version version;
 
-    WebappDelta() {
-    }
-
-    public String getTitle() {
-        return "webapp";
+    WebappDelta(Version version) {
+        this.version = version;
     }
 
     public String getDescription() {
         return "Bootstraps the webapp upon first deployment.";
+    }
+
+    public Version getVersion() {
+        return version;
     }
 
     public List getConditions() {

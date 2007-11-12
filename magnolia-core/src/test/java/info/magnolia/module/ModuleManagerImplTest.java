@@ -17,9 +17,9 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.SystemContext;
 import info.magnolia.module.delta.AbstractTask;
-import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.Condition;
 import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.model.ModuleDefinition;
@@ -201,8 +201,8 @@ public class ModuleManagerImplTest extends TestCase {
         };
 
         final Task t2 = createStrictMock(Task.class);
-        final Delta d1 = BasicDelta.createBasicDelta("test1", "", t1);
-        final Delta d2 = BasicDelta.createBasicDelta("test2", "", t2);
+        final Delta d1 = DeltaBuilder.createBasicDelta(Version.parseVersion("1.0"), "", t1);
+        final Delta d2 = DeltaBuilder.createBasicDelta(Version.parseVersion("2.0"), "", t2);
 
         final ModuleDefinition mod1 = new ModuleDefinition("abc", "2.3.4", null, null);
         final ModuleDefinition mod2 = new ModuleDefinition("xyz", "2.3.4", null, null);

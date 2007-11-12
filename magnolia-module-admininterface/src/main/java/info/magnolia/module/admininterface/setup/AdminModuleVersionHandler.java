@@ -14,19 +14,20 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.ArrayDelegateTask;
-import info.magnolia.module.delta.BasicDelta;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
+import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.module.model.Version;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * 
+ *
  * @author philipp
  * @version $Id$
  */
@@ -35,7 +36,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif");
 
     public AdminModuleVersionHandler() {
-        register("3.1", BasicDelta.createBasicDelta("Update to 3.1", "", new Task[]{
+        register(DeltaBuilder.createBasicDelta(Version.parseVersion("3.1"), "", new Task[]{
                 new BootstrapSingleResource("New ACL configuration", "Bootstraps the new configuration for the ACL dialogs", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.config.securityConfiguration.xml"),
                 new RemoveNodeTask("New ACL Dialog", "Deletes the old ACL page", ContentRepository.CONFIG, "/modules/adminInterface/pages/rolesACL"),
                 new RemovePropertyTask("New ACL Dialog", "Removes the include property", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/roleedit", "file"),

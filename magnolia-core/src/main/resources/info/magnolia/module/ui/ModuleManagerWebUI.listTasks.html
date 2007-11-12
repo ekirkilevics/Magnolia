@@ -12,8 +12,8 @@
   [#list moduleStatus.deltas as delta]
     <div class="delta">
     [#comment]TODO : delta.type will be used as a css class[/#comment]
-    <h4 class="deltaType ${delta.type}"><span>Type:</span> ${delta.type?cap_first}</h4>
-    <p class="deltaDescription">${delta.description?cap_first?html}</p>
+    <h4 class="deltaTitle ${delta.type}"><span>${delta.type?cap_first}</span> for module ${moduleStatus.module.name?cap_first} version ${delta.version}</h4>
+    [#if delta.description?has_content]<p class="deltaDescription">${delta.description?cap_first?html}</p>[/#if]
     <ul class="conditions">
       [#list delta.conditions as condition]
         <li class="condition">${condition.name?cap_first?html} <span class="conditionDescription">${condition.description?cap_first?html}</span></li>

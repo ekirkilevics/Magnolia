@@ -16,10 +16,7 @@ import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
-import info.magnolia.module.delta.BasicDelta;
-import info.magnolia.module.delta.BootstrapResourcesTask;
-import info.magnolia.module.delta.Delta;
-import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.*;
 import info.magnolia.module.workflow.setup.for3_1.AddNewDefaultConfig;
 import info.magnolia.module.workflow.setup.for3_1.AddUserToGroupTask;
 import info.magnolia.module.workflow.setup.for3_1.InstallDefaultWorkflowDefinition;
@@ -50,19 +47,16 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         }
     };
 
-    private final Delta delta31 = BasicDelta.createBasicDelta("Updating to 3.1", "",
-            new Task[]{
-                    mainMenu, subMenu,
-                    new AddNewDefaultConfig(),
-                    new InstallDefaultWorkflowDefinition(),
-                    new RemoveMetadataFromExpressionsWorkspace(),
-                    new SetDefaultWorkflowForActivationFlowCommands(),
-                    bootstrapSecurityConfig
-            });
-
     public WorkflowModuleVersionHandler() {
-        super();
-        register("3.1.0", delta31);
+        final DeltaBuilder delta31 = DeltaBuilder.update("3.1", "")
+                .addTask(mainMenu)
+                .addTask(subMenu)
+                .addTask(new AddNewDefaultConfig())
+                .addTask(new InstallDefaultWorkflowDefinition())
+                .addTask(new RemoveMetadataFromExpressionsWorkspace())
+                .addTask(new SetDefaultWorkflowForActivationFlowCommands())
+                .addTask(bootstrapSecurityConfig);
+        register(delta31);
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {

@@ -15,7 +15,7 @@ a {
     color: #669900;
 }
 
-h2, h3 {
+h2, h3, h4 {
     padding: 0;
     margin: 0;
     font-weight: normal;
@@ -28,19 +28,6 @@ h2 {
 
 h3 {
     font-size: 12pt;
-}
-
-h3, p {
-    display: inline;
-}
-
-h4 {
-    display: inline;
-}
-
-p > p {
-    display: block;
-    margin: 5px 0 5px 0;
 }
 
 #page {
@@ -128,7 +115,7 @@ p > p {
 
 .module h3 {
     background: url(${contextPath}/.resources/images/moduleManagerUI/component_preferences.gif) no-repeat;
-    padding: 5px 0 10px 30px;
+    padding: 5px 0 0 30px;
 }
 
 .module a {
@@ -150,10 +137,6 @@ p > p {
     color: purple;
 }
 */
-
-.deltaType span {
-    font-weight: normal;
-}
 
 .deltaDescription {
     margin-top: 10px;

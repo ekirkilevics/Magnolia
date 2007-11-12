@@ -72,9 +72,14 @@ public class ModuleManagerWebUITest extends TestCase {
         assertEquals(InstallContext.MessagePriority.error, msg.getPriority());
     }
 
+    public void testListTasksTemplate() throws ModuleManagementException {
+        doTestTemplate("listTasks");
+    }
+
     public void testDoneTemplate() throws ModuleManagementException {
         doTestTemplate("installDone");
     }
+
     public void testRestartNeededTemplate() throws ModuleManagementException {
         doTestTemplate("installDoneRestartNeeded");
     }

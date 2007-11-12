@@ -17,10 +17,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.module.delta.AbstractRepositoryTask;
-import info.magnolia.module.delta.BasicDelta;
-import info.magnolia.module.delta.Delta;
-import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.module.delta.*;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionComparator;
 import info.magnolia.module.model.ModuleDefinition;
@@ -61,20 +58,13 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
      * Registers the delta needed to update to version v from the previous one.
      * Adds a Task to update the module version in the repository.
      */
-    protected void register(Version v, Delta delta) {
+    protected void register(Delta delta) {
+        final Version v = delta.getVersion();
         if (allDeltas.containsKey(v)) {
             throw new IllegalStateException("Version " + v + " was already registered in this ModuleVersionHandler.");
         }
         delta.getTasks().add(new ModuleVersionUpdateTask(v));
         allDeltas.put(v, delta);
-    }
-
-    /**
-     * A convenience method to register version deltas by version String.
-     * @see #register(info.magnolia.module.model.Version,info.magnolia.module.delta.Delta)
-     */
-    protected void register(String versionStr, Delta delta) {
-        register(Version.parseVersion(versionStr), delta);
     }
 
     public Version getCurrentlyInstalled(InstallContext ctx) {
@@ -125,6 +115,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
      * module definition, bootstrap the module's mgnl-bootstrap files and
      * extract the module's mgnl-files files.
      * This method should generally not be overridden.
+     *
      * @see #getBasicInstallTasks(InstallContext) override this method if you need a different set of default install tasks.
      * @see #getExtraInstallTasks(InstallContext) override this method if you need extra tasks for install.
      */
@@ -134,7 +125,8 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         installTasks.addAll(getExtraInstallTasks(installContext));
         installTasks.add(new ModuleVersionToLatestTask());
         final List conditions = getInstallConditions();
-        return BasicDelta.createInstallDelta("Installation", "", installTasks, conditions);
+        final Version version = installContext.getCurrentModuleDefinition().getVersionDefinition();
+        return DeltaBuilder.install(version, "").addTasks(installTasks).addConditions(conditions);
     }
 
     protected abstract List getBasicInstallTasks(InstallContext installContext);
@@ -154,7 +146,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
     public Delta getStartupDelta(InstallContext installContext) {
         final ModuleDefinition moduleDef = installContext.getCurrentModuleDefinition();
         final List tasks = getStartupTasks(installContext);
-        return BasicDelta.createStartupDelta(moduleDef, tasks);
+        return DeltaBuilder.createStartupDelta(moduleDef, tasks);
     }
 
     /**
