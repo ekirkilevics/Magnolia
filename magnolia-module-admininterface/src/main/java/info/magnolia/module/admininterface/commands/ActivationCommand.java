@@ -158,7 +158,7 @@ public class ActivationCommand extends BaseActivationCommand {
      * subscribers
      * @param node
      * */
-    private List getOrderingInfo(Content node) {
+    protected List getOrderingInfo(Content node) {
         //do not use magnolia Content class since these objects are only meant for a single use to read UUID
         List siblings = new ArrayList();
         Node thisNode = node.getJCRNode();
