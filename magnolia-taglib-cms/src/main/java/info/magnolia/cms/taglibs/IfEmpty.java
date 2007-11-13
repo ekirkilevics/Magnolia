@@ -101,7 +101,7 @@ public class IfEmpty extends BaseConditionalContentTag {
         }
 
         if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
-        	return !node.hasChildren();
+            return !node.hasChildren();
         }
         
         // checking for node existence
