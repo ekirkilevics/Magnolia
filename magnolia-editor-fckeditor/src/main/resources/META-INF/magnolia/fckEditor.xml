@@ -4,7 +4,15 @@
   <name>fckEditor</name>
   <displayName>Magnolia FCKEditor Module</displayName>
   <class>info.magnolia.module.fckeditor.FCKEditorModule</class>
+  <versionHandler>info.magnolia.module.fckeditor.FCKEditorModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
+
+  <dependencies>
+    <dependency>
+      <name>adminInterface</name>
+      <version>3.1</version>
+    </dependency>
+  </dependencies>
 
   <servlets>
     <servlet>
