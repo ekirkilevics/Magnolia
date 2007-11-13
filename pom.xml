@@ -319,7 +319,15 @@
       </plugin>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.2-SNAPSHOT</version>
+        <!-- 2.2 will be needed to check test sources as well -->
+        <version>2.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>check</goal>
+            </goals>
+          </execution>
+        </executions>
         <dependencies>
           <dependency>
             <groupId>info.magnolia</groupId>
@@ -327,6 +335,13 @@
             <version>3.1-SNAPSHOT</version>
           </dependency>
         </dependencies>
+        <configuration>
+          <configLocation>magnolia-build-tools/checkstyle.xml</configLocation>
+          <headerLocation>magnolia-build-tools/license-header-regex.txt</headerLocation>
+          <enableRulesSummary>true</enableRulesSummary>
+          <!-- this is unfortunately not supported in the 2.1 version of the checkstyle plugin -->
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+        </configuration>
       </plugin>
     </plugins>
     <resources>
@@ -396,14 +411,6 @@
       </plugin>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <version>2.2-SNAPSHOT</version>
-        <configuration>
-          <configLocation>magnolia-build-tools/checkstyle.xml</configLocation>
-          <headerLocation>magnolia-build-tools/license-header-regex.txt</headerLocation>
-          <enableRulesSummary>true</enableRulesSummary>
-          <!-- this is apparently not in the 2.1 version of the checkstyle plugin -->
-          <includeTestSourceDirectory>true</includeTestSourceDirectory>
-        </configuration>
       </plugin>
       <plugin>
         <artifactId>maven-javadoc-plugin</artifactId>
