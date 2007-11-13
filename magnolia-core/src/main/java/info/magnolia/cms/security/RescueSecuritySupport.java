@@ -21,7 +21,7 @@ package info.magnolia.cms.security;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class RescueSecuritySupport implements SecuritySupport {
+public class RescueSecuritySupport extends SecuritySupportBase {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(RescueSecuritySupport.class);
 
     public RescueSecuritySupport() {

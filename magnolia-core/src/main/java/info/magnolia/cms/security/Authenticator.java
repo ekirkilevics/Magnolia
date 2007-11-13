@@ -12,18 +12,10 @@
  */
 package info.magnolia.cms.security;
 
-import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
-import info.magnolia.cms.security.auth.login.LoginHandler;
-import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.context.MgnlContext;
 
-import javax.security.auth.Subject;
-import javax.security.auth.login.LoginContext;
-import javax.security.auth.login.LoginException;
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +23,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Sameer Charles
  * @version $Id$
+ * @deprecated please
  */
 public final class Authenticator {
 
@@ -40,47 +33,10 @@ public final class Authenticator {
     private static Logger log = LoggerFactory.getLogger(Authenticator.class);
 
     /**
-     * request parameter user id
-     */
-    public static final String PARAMETER_USER_ID = "mgnlUserId";
-
-    /**
-     * request parameter password
-     */
-    public static final String PARAMETER_PSWD = "mgnlUserPSWD";
-
-    /**
-     * request attribute holding the login exception
-     */
-    public static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
-
- 
-    /**
      * Utility class, don't instantiate.
      */
     private Authenticator() {
         // unused
-    }
-    
-    /**
-     * Any subclass of LoginException will be stored as a request attribute,
-     * but a plain LoginException will just be re-thrown.
-     */
-    protected static void handleLoginException(LoginException e, HttpServletRequest request) throws LoginException {
-        if (LoginException.class.equals(e.getClass())) {
-            throw e;
-        } else {
-            request.setAttribute(ATTRIBUTE_LOGINERROR, e);
-            log.debug("Wrong credentials or locked account... or else.", e);
-        }
-    }
-
-    /**
-     * @param credentials to be decoded
-     * @return String decoded credentials <b>name:password </b>
-     */
-    private static String getDecodedCredentials(String credentials) {
-        return (new String(Base64.decodeBase64(credentials.getBytes())));
     }
 
     /**
@@ -112,36 +68,18 @@ public final class Authenticator {
      */
     public static boolean isAuthenticated(HttpServletRequest request) {
         return isAuthenticated();
-    }    
+    }
 
     public static boolean isAuthenticated() {
-        return !MgnlContext.getUser().getName().equals(UserManager.ANONYMOUS_USER);
+        return !getUserId().equals(UserManager.ANONYMOUS_USER);
     }
 
     public static User getAnonymousUser() {
-        return Security.getUserManager().getAnonymousUser();
+        return getSecuritySupport().getUserManager().getAnonymousUser();
     }
 
-    public static LoginResult authenticate(CredentialsCallbackHandler callbackHandler, String customLoginModule) {
-        Subject subject;
-        try {
-            LoginContext loginContext = new LoginContext(
-                StringUtils.defaultString(customLoginModule, "magnolia"),
-                callbackHandler);
-            loginContext.login();
-            subject = loginContext.getSubject();
-            User user = callbackHandler.getUser();
-            // not all jaas modules will support magnolia users
-            if(user == null){
-                user = SecuritySupport.Factory.getInstance().getUserManager().getUser(subject);
-            }
-            user.setSubject(subject);
-            return new LoginResult(LoginHandler.STATUS_SUCCEDED, user);
-        }
-        catch (LoginException e) {
-            return new LoginResult(LoginHandler.STATUS_FAILED, e);
-        }
-   }
-
+    private static SecuritySupport getSecuritySupport() {
+        return SecuritySupport.Factory.getInstance();
+    }
 
 }

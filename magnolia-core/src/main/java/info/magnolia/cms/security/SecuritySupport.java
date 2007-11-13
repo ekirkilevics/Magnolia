@@ -12,6 +12,13 @@
  */
 package info.magnolia.cms.security;
 
+import javax.security.auth.Subject;
+import javax.security.auth.login.LoginContext;
+import javax.security.auth.login.LoginException;
+
+import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
+import info.magnolia.cms.security.auth.login.LoginHandler;
+import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.cms.util.FactoryUtil;
 
 /**
@@ -34,6 +41,8 @@ public interface SecuritySupport {
     GroupManager getGroupManager();
 
     RoleManager getRoleManager();
+    
+    LoginResult authenticate(CredentialsCallbackHandler callbackHandler, String jaasModuleName);
 
     public final static class Factory {
         public static SecuritySupport getInstance() {

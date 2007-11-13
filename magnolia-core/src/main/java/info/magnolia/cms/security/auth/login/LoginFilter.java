@@ -13,7 +13,6 @@
 package info.magnolia.cms.security.auth.login;
 
 import info.magnolia.cms.filters.AbstractMgnlFilter;
-import info.magnolia.cms.security.Authenticator;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -33,6 +32,10 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginFilter extends AbstractMgnlFilter {
 
     private Collection loginHandlers = new ArrayList();
+    /**
+     * request attribute holding the login exception
+     */
+    public static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
 
     /**
      * todo - temporary fix
@@ -52,7 +55,7 @@ public class LoginFilter extends AbstractMgnlFilter {
             }
             // we have to pass the error message to the
             else if (loginResult.getStatus() == LoginHandler.STATUS_FAILED){
-                request.setAttribute(Authenticator.ATTRIBUTE_LOGINERROR, loginResult.getLoginException());
+                request.setAttribute(LoginFilter.ATTRIBUTE_LOGINERROR, loginResult.getLoginException());
             }
         }
         // continue even if all login handlers failed

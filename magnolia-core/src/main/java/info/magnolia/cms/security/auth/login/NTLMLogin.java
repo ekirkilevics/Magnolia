@@ -12,26 +12,24 @@
  */
 package info.magnolia.cms.security.auth.login;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
+import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
+import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
+
+import java.io.IOException;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.security.auth.login.LoginException;
 
-import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
-import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
-import info.magnolia.cms.security.Authenticator;
-
-import java.io.IOException;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
  * $Id$
  */
-public class NTLMLogin implements LoginHandler {
+public class NTLMLogin extends LoginHandlerBase {
 
     private static final Logger log = LoggerFactory.getLogger(NTLMLogin.class);
 
@@ -60,7 +58,7 @@ public class NTLMLogin implements LoginHandler {
                 // todo - what if the request comes from browsers other thn IE
                 CredentialsCallbackHandler callbackHandler =
                         new PlainTextCallbackHandler(getUserId(), "".toCharArray());
-                    return Authenticator.authenticate(callbackHandler, null);
+                    return authenticate(callbackHandler, null);
             } else {
                 // not yet passed through Step-4
                 return new LoginResult(LoginHandler.STATUS_IN_PROCESS);

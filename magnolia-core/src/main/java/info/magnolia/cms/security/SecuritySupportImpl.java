@@ -20,7 +20,7 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class SecuritySupportImpl implements SecuritySupport {
+public class SecuritySupportImpl extends SecuritySupportBase {
     private final Map userManagers = new LinkedHashMap();
     private GroupManager groupManager;
     private RoleManager roleManager;
@@ -63,4 +63,5 @@ public class SecuritySupportImpl implements SecuritySupport {
     public void setRoleManager(RoleManager roleManager) {
         this.roleManager = roleManager;
     }
+
 }

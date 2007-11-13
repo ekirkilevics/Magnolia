@@ -28,7 +28,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * $Id$
  */
-public class BasicLogin implements LoginHandler {
+public class BasicLogin extends LoginHandlerBase {
 
     private static final Logger log = LoggerFactory.getLogger(BasicLogin.class);
 
@@ -37,7 +37,7 @@ public class BasicLogin implements LoginHandler {
         if (StringUtils.isNotEmpty(credentials) && !credentials.startsWith("NTLM ")) {
             // its a basic authentication request
             CredentialsCallbackHandler callbackHandler = new Base64CallbackHandler(credentials);
-            return Authenticator.authenticate(callbackHandler, null);
+            return authenticate(callbackHandler, null);
         }
         return LoginResult.NOT_HANDLED;
     }
