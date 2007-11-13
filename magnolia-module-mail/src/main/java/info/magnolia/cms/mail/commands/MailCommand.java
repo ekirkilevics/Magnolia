@@ -97,12 +97,12 @@ public class MailCommand implements Command {
                 Object attachment = ctx.get(MailConstants.ATTRIBUTE_ATTACHMENT);
 
                 if (attachment != null) {
-                	if(attachment instanceof MailAttachment) {
-                		email.addAttachment((MailAttachment)attachment);
-                	}
-                	else if(attachment instanceof List) {
-                		email.setAttachments((List) attachment);
-                	}
+                    if(attachment instanceof MailAttachment) {
+                        email.addAttachment((MailAttachment)attachment);
+                    }
+                    else if(attachment instanceof List) {
+                        email.setAttachments((List) attachment);
+                    }
                 }
 
                 email.setCcList(factory.convertEmailList(cc));

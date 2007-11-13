@@ -330,10 +330,10 @@ public class TreeColumn extends ControlImpl {
     }
     
     public static TreeColumn createNodeDataColumn(Tree tree, String title, String nodeDataName, TreeColumnHtmlRenderer renderer) {
-    	TreeColumn treeColumn = createColumn(tree, title);
-    	treeColumn.setName(nodeDataName);
-    	treeColumn.setHtmlRenderer(renderer);
-    	return treeColumn;
+        TreeColumn treeColumn = createColumn(tree, title);
+        treeColumn.setName(nodeDataName);
+        treeColumn.setHtmlRenderer(renderer);
+        return treeColumn;
     }
 
     public static TreeColumn createMetaDataColumn(Tree tree, String title, String name, String dateFormat) {

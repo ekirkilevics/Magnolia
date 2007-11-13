@@ -112,15 +112,15 @@ public class DialogMultiSelect extends DialogBox {
      */
     public String getChooseButton() {
         
-    	String chooseOnclick = this.getConfigValue(CONFIG_CHOOSE_ONCLICK);
-    	if(StringUtils.isEmpty(chooseOnclick)){
-        	String tree = this.getConfigValue(CONFIG_TREE);
-        	if(StringUtils.isNotEmpty(tree)){
-        		chooseOnclick = "mgnlOpenTreeBrowserWithControl($('${prefix}'), '" + tree + "');";
+        String chooseOnclick = this.getConfigValue(CONFIG_CHOOSE_ONCLICK);
+        if(StringUtils.isEmpty(chooseOnclick)){
+            String tree = this.getConfigValue(CONFIG_TREE);
+            if(StringUtils.isNotEmpty(tree)){
+                chooseOnclick = "mgnlOpenTreeBrowserWithControl($('${prefix}'), '" + tree + "');";
 
-        	}
-    	}
-    	
+            }
+        }
+
         if (StringUtils.isNotEmpty(chooseOnclick)) {
             Button choose = new Button();
             choose.setLabel(this.getMessage("buttons.choose")); //$NON-NLS-1$

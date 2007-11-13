@@ -40,8 +40,8 @@ import info.magnolia.cms.mail.templates.MgnlEmail;
  * @author philipp
  */
 public interface MgnlMailTypeFactory {
-	
-	/**
+
+    /**
      * Create a new mail instance for this type
      */
     public MgnlEmail createEmail() throws Exception;

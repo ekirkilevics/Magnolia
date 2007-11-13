@@ -132,16 +132,15 @@ public abstract class MgnlEmail extends MimeMessage {
      */
     public void setFrom(String _from) {
         try {
-        	InternetAddress address;
-        	Matcher matcher = MgnlEmail.EMAIL_WITH_PERSONAL_PATTERN.matcher(_from);
-        	if(matcher.matches()){
-           		String email = matcher.group(2);
-        		String personal = matcher.group(1);
-        		address = new InternetAddress(email, personal, "UTF8");
-        	}
-        	else{
-        		address = new InternetAddress(_from);
-        	}
+            InternetAddress address;
+            Matcher matcher = MgnlEmail.EMAIL_WITH_PERSONAL_PATTERN.matcher(_from);
+            if (matcher.matches()) {
+                String email = matcher.group(2);
+                String personal = matcher.group(1);
+                address = new InternetAddress(email, personal, "UTF8");
+            } else {
+                address = new InternetAddress(_from);
+            }
             this.setFrom(address);
         }
         catch (Exception e) {

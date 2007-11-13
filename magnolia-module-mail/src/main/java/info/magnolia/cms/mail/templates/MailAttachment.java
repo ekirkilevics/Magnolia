@@ -89,9 +89,9 @@ public class MailAttachment {
     }
 
     public java.lang.String getDisposition() {
-    	if(StringUtils.isEmpty(disposition)){
-    		return DISPOSITION_INLINE;
-    	}
+        if(StringUtils.isEmpty(disposition)){
+            return DISPOSITION_INLINE;
+        }
         return this.disposition;
     }
 
@@ -148,7 +148,7 @@ public class MailAttachment {
     }
 
     public String getContentType() {
-    	return MIMEMapping.getMIMEType(StringUtils.substringAfterLast(this.getPath(), "."));
+        return MIMEMapping.getMIMEType(StringUtils.substringAfterLast(this.getPath(), "."));
     }
 
     public String getFileName() {

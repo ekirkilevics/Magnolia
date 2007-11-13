@@ -75,13 +75,13 @@ public class HtmlEmail extends MgnlMultipartEmail {
 
         // process the attachments
         if (parameters != null && parameters.containsKey(MAIL_ATTACHMENT)) {
-        	Object attachment = parameters.get(MAIL_ATTACHMENT);
-        	if(attachment instanceof MailAttachment) {
-        		addAttachment((MailAttachment)attachment);
-        	}
-        	else if(attachment instanceof List) {
-        		setAttachments((List) attachment);
-        	};
+            Object attachment = parameters.get(MAIL_ATTACHMENT);
+            if(attachment instanceof MailAttachment) {
+                addAttachment((MailAttachment)attachment);
+            }
+            else if(attachment instanceof List) {
+                setAttachments((List) attachment);
+            }
         }
     }
 
