@@ -13,26 +13,23 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.*;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ConfigUtil;
-import info.magnolia.cms.util.UrlPattern;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
-import info.magnolia.repository.RepositoryNotInitializedException;
 import info.magnolia.repository.RepositoryNameMap;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.context.MgnlContext;
+import info.magnolia.repository.RepositoryNotInitializedException;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
