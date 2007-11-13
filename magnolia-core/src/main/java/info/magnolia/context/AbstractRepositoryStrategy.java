@@ -56,38 +56,38 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class AbstractRepositoryStrategy implements RepositoryAcquringStrategy{
-    
+
     private static Logger log = LoggerFactory.getLogger(AbstractRepositoryStrategy.class);
-    
+
     private Map jcrSessions = new HashMap();
-    
+
     private Map hierarchyManagers = new HashMap();
 
     public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
-    	final String hmAttrName = repositoryId + "_" + workspaceId;
+        final String hmAttrName = repositoryId + "_" + workspaceId;
         HierarchyManager hm = (HierarchyManager) hierarchyManagers.get(hmAttrName);
-        
+
         if (hm == null) {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             try {
-            	hm = util.createHierarchyManager(getUserId(), 
-                		getRepositorySession(repositoryId, workspaceId), 
-                		getAccessManager(repositoryId, workspaceId), 
-                		getQueryManager(repositoryId, workspaceId));
+                hm = util.createHierarchyManager(getUserId(),
+                        getRepositorySession(repositoryId, workspaceId),
+                        getAccessManager(repositoryId, workspaceId),
+                        getQueryManager(repositoryId, workspaceId));
                 hierarchyManagers.put(hmAttrName, hm);
             }
             catch (RepositoryException e) {
                 throw new UnhandledException(e);
             }
         }
-    
+
         return hm;
     }
 
     abstract protected String getUserId();
-    
+
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-    	QueryManager queryManager = null;
+        QueryManager queryManager = null;
         try {
             queryManager = WorkspaceAccessUtil.getInstance().createQueryManager(
                 getRepositorySession(repositoryId, workspaceId),
@@ -96,22 +96,22 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquringSt
         catch (Exception t) {
             log.error("Failed to create QueryManager", t);
         }
-    
+
         return queryManager;
     }
 
     protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {
         final String repoSessAttrName = repositoryName + "_" + workspaceName;
-        
+
         Session jcrSession = (Session) jcrSessions.get(repoSessAttrName);
-    	   	
+
         if (jcrSession == null) {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
             jcrSessions.put(repoSessAttrName, jcrSession);
         }
-        
-        return jcrSession;    
+
+        return jcrSession;
     }
 
     public void release() {

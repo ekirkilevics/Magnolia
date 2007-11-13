@@ -48,10 +48,10 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
      * The map containing the values
      */
     private Map map = new HashMap();
-    
+
 
     public AbstractMapBasedContext() {
-    }    
+    }
 
     public AbstractMapBasedContext(Map map) {
         super();
@@ -93,12 +93,12 @@ public abstract class AbstractMapBasedContext extends AbstractContext {
         return this.map;
     }
 
-    
+
     public Map getMap() {
         return map;
     }
 
-    
+
     public void setMap(Map map) {
         this.map = map;
     }

@@ -80,7 +80,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
     private HttpServletResponse response;
 
     private ServletContext servletContext;
- 
+
     /**
      * the jsp page context.
      */
@@ -91,7 +91,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
     /**
      * Use init to initialize the object.
      */
-    public WebContextImpl() {    	
+    public WebContextImpl() {
     }
 
     /**
@@ -107,7 +107,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         this.servletContext = servletContext;
         //reset();
         //setUser(getAnonymousUser());
-        setAttributeStrategy(new RequestAttributeStrategy(request));  
+        setAttributeStrategy(new RequestAttributeStrategy(request));
         setRepositoryStrategy(new DefaultRepositoryStrategy(this));
     }
 
@@ -221,10 +221,10 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         return servletContext;
     }
 
-    public void login() {		
-		setRepositoryStrategy(new DefaultRepositoryStrategy(this));
-	}
-	
+    public void login() {
+        setRepositoryStrategy(new DefaultRepositoryStrategy(this));
+    }
+
     /**
      * Closes opened JCR sessions and invalidates the current HttpSession.
      * @see #release()

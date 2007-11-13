@@ -53,14 +53,14 @@ public class SimpleContext extends AbstractMapBasedContext {
      * The context used to get hierarchy managers or similar.
      */
     private Context ctx;
-    
+
     /**
      * Using the threads locale context for getting hierarchy managers or similar
      */
     public SimpleContext() {
         this(MgnlContext.getInstance());
     }
-    
+
     /**
      * Decorate a map
      */
@@ -68,7 +68,7 @@ public class SimpleContext extends AbstractMapBasedContext {
         super(map);
         this.ctx = MgnlContext.getInstance();
     }
-    
+
 
     /**
      * Use the passed context to get hierarchy managers or similar form

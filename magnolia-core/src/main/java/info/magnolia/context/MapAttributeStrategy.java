@@ -38,14 +38,14 @@ import java.util.Map;
 
 public class MapAttributeStrategy implements AttributeStrategy {
 
-	private static final long serialVersionUID = 222L;
+    private static final long serialVersionUID = 222L;
 
-	private Map map = new Hashtable();
-	
-	public MapAttributeStrategy() {	
-	}
-	
-	/**
+    private Map map = new Hashtable();
+
+    public MapAttributeStrategy() {
+    }
+
+    /**
      * Use the Map.put()
      */
     public void setAttribute(String name, Object value, int scope) {
@@ -80,12 +80,12 @@ public class MapAttributeStrategy implements AttributeStrategy {
         return this.map;
     }
 
-    
+
     public Map getMap() {
         return map;
     }
 
-    
+
     public void setMap(Map map) {
         this.map = map;
     }

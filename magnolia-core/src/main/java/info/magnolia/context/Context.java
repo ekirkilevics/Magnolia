@@ -90,7 +90,7 @@ public interface Context extends org.apache.commons.chain.Context {
      * @deprecated
      */
     public User getUser();
-    
+
     /**
      * @param locale
      */

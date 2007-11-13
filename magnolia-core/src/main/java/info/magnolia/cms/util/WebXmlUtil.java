@@ -34,6 +34,7 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Path;
+import org.apache.commons.collections.CollectionUtils;
 import org.jdom.Comment;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -43,7 +44,6 @@ import org.jdom.input.SAXBuilder;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.jdom.xpath.XPath;
-import org.apache.commons.collections.CollectionUtils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -53,7 +53,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.LinkedList;
 
 
 /**
@@ -198,25 +197,8 @@ public class WebXmlUtil {
     }
 
     public boolean isListenerRegistered(String deprecatedListenerClass) {
-	    final String xpathExpr = "/webxml:web-app/webxml:listener[webxml:listener-class='"
-	        + deprecatedListenerClass + "']";
-	    return xpathMatches(xpathExpr);
-	}
-
-	public static void main(String[] args) {
-        final ArrayList list = new ArrayList();
-        list.add("foo");
-        list.add("bar");
-        list.add("baz");
-
-        final LinkedList l2 = new LinkedList();
-        l2.add("bar");
-        l2.add("foo");
-        l2.add("baz");
-        System.out.println("CollectionUtils.isEqualCollection(list,l2) = " + CollectionUtils.isEqualCollection(list, l2));
-
-
-        System.out.println("l2.equals(list) = " + l2.equals(list));
+        final String xpathExpr = "/webxml:web-app/webxml:listener[webxml:listener-class='" + deprecatedListenerClass + "']";
+        return xpathMatches(xpathExpr);
     }
 
     private Element getFilterElement(String filterClass) {

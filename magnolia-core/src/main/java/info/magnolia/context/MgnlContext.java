@@ -377,9 +377,9 @@ public class MgnlContext {
     public static boolean hasInstance() {
         return localContext.get() != null;
     }
-    
+
     public static boolean isSystemInstance() {
-    	return (localContext.get() instanceof SystemContext);
+        return (localContext.get() instanceof SystemContext);
     }
 
     /**
