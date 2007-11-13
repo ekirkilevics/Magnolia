@@ -6,7 +6,6 @@
     <module name="RegexpHeader">
       <property name="headerFile" value="${checkstyle.header.file}"/>
     </module>
-    <module name="TabCharacter"/>    
 
     <!--
     <module name="ArrayTypeStyle"></module>
