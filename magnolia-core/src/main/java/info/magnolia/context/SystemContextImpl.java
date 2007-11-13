@@ -35,7 +35,7 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
      */
     private static final long serialVersionUID = 222L;
     
-    private static ThreadLocal repoStrThreadLocal = new ThreadLocal();
+    private static ThreadLocal reposiotryStrategyThreadLocal = new ThreadLocal();
 
     /**
      * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself. Init the scopes
@@ -59,13 +59,13 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
     }
     
     public RepositoryAcquringStrategy getRepositoryStrategy() {
-        if(repoStrThreadLocal.get() == null){
-            repoStrThreadLocal.set(new SystemRepositoryStrategy(this));
+        if(reposiotryStrategyThreadLocal.get() == null){
+            reposiotryStrategyThreadLocal.set(new SystemRepositoryStrategy(this));
         }
-        return (RepositoryAcquringStrategy) repoStrThreadLocal.get();
+        return (RepositoryAcquringStrategy) reposiotryStrategyThreadLocal.get();
     }
 
     public void release() {
-        repoStrThreadLocal.remove();
+        reposiotryStrategyThreadLocal.remove();
     }
 }
