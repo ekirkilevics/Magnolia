@@ -1,5 +1,14 @@
 /**
- * 
+ *
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
  */
 package info.magnolia.setup.for3_1;
 
@@ -15,41 +24,42 @@ import info.magnolia.module.delta.TaskExecutionException;
 
 import javax.jcr.RepositoryException;
 
+
 /**
  * @author vsteller
- *
  */
 public class UpdateURIMappings extends AllModulesNodeOperation {
 
-	public UpdateURIMappings() {
-		super("Update virtualURIMapping nodes", "Adds the class property to each virtualURIMapping node as these are dynamic now.");
-	}
+    public UpdateURIMappings() {
+        super("Update virtualURIMapping nodes", "Adds the class property to each virtualURIMapping node as these are dynamic now.");
+    }
 
-	/* (non-Javadoc)
-	 * @see info.magnolia.module.delta.AllModulesNodeOperation#operateOnModuleNode(info.magnolia.cms.core.Content, info.magnolia.cms.core.HierarchyManager, info.magnolia.module.InstallContext)
-	 */
-	protected void operateOnModuleNode(Content node, HierarchyManager hm,
-			InstallContext ctx) throws RepositoryException,
-			TaskExecutionException {
+    /*
+     * (non-Javadoc)
+     * @see info.magnolia.module.delta.AllModulesNodeOperation#operateOnModuleNode(info.magnolia.cms.core.Content,
+     * info.magnolia.cms.core.HierarchyManager, info.magnolia.module.InstallContext)
+     */
+    protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx)
+        throws RepositoryException, TaskExecutionException {
 
         try {
-            if(node.hasContent("virtualURIMapping")){
-                ContentUtil.visit(node.getContent("virtualURIMapping"), new ContentUtil.Visitor(){
-                   public void visit(Content node) throws Exception {
-                       if(node.hasNodeData("fromURI") && node.hasNodeData("toURI")){
-                           NodeData classNodeData = NodeDataUtil.getOrCreate(node, "class");
-                           classNodeData.setValue(DefaultVirtualURIMapping.class.getName());
-                       }
-                   }
+            if (node.hasContent("virtualURIMapping")) {
+                ContentUtil.visit(node.getContent("virtualURIMapping"), new ContentUtil.Visitor() {
+                    public void visit(Content node) throws Exception {
+                        if (node.hasNodeData("fromURI") && node.hasNodeData("toURI")) {
+                            NodeData classNodeData = NodeDataUtil.getOrCreate(node, "class");
+                            classNodeData.setValue(DefaultVirtualURIMapping.class.getName());
+                        }
+                    }
                 });
             }
         }
-        catch(RepositoryException e){
+        catch (RepositoryException e) {
             throw e;
         }
         catch (Exception e) {
             throw new TaskExecutionException("can't reconfigure virtualURIMapping", e);
         }
-	}
+    }
 
 }

@@ -117,14 +117,9 @@ import org.slf4j.LoggerFactory;
 public class MgnlServletContextListener implements ServletContextListener {
 
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(PropertyInitializer.class);
+    private static Logger log = LoggerFactory.getLogger(MgnlServletContextListener.class);
 
     /**
      * Context parameter name.

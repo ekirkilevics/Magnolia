@@ -33,10 +33,10 @@ import org.slf4j.LoggerFactory;
  */
 public class PropertyInitializer extends MgnlServletContextListener implements ServletContextListener {
 
-	/**
+    /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(MagnoliaManagedFilter.class);
+    private static Logger log = LoggerFactory.getLogger(PropertyInitializer.class);
 
     /**
      * {@inheritDoc}

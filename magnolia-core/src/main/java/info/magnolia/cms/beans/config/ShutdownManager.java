@@ -1,3 +1,15 @@
+/**
+ *
+ * Magnolia and its source-code is licensed under the LGPL.
+ * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
+ * When copying, adapting, or redistributing this document in keeping with the guidelines above,
+ * you are required to provide proper attribution to obinary.
+ * If you reproduce or distribute the document without making any substantive modifications to its content,
+ * please use the following attribution line:
+ *
+ * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ *
+ */
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
@@ -74,7 +86,7 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
      */
     public void contextInitialized(ServletContextEvent sce) {
         log.warn("\n***********\nThe use of ShutdownManager as ServletContextListener is deprecated in Magnolia 3.1, "
-        	+ "please update your web.xml and remove the listener but add a single listener with class name " 
+            + "please update your web.xml and remove the listener but add a single listener with class name " 
             + "info.magnolia.cms.servlets.MgnlServletContextListener\n***********");
 
         // nothing to do
@@ -88,11 +100,11 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
         execute();
     }
 
-	/**
-	 * Executes the registers shutdown tasks
-	 */
-	public void execute() {
-		log.info("Executing shutdown tasks");
+    /**
+     * Executes the registers shutdown tasks
+     */
+    public void execute() {
+        log.info("Executing shutdown tasks");
 
         for (Iterator iter = listShutdownTasks().iterator(); iter.hasNext();) {
             Command task = (Command) iter.next();
@@ -107,7 +119,7 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
                     e.getMessage()}));
             }
         }
-	}
+    }
 
     protected void onRegister(Content node) {
         Catalog mrc = new MgnlRepositoryCatalog(node);

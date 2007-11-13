@@ -17,7 +17,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.IPSecurityManagerImpl;
 import info.magnolia.cms.security.Realm;
-import info.magnolia.cms.util.BooleanUtil;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.ArrayDelegateTask;
@@ -36,7 +35,6 @@ import info.magnolia.module.delta.PropertyExistsDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
-import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -51,12 +49,12 @@ import info.magnolia.setup.for3_1.RenamedRenderersToTemplateRenderers;
 import info.magnolia.setup.for3_1.UpdateI18nConfiguration;
 import info.magnolia.setup.for3_1.UpdateURIMappings;
 
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
