@@ -86,22 +86,35 @@ public final class LinkUtil {
     }
 
     /**
-     * Transforms stored magnolia style links to relative links. This is used to display them in the browser
-     * @param str html
-     * @param page the links are relative to this page
-     * @return html with proper links
+     * @deprecated use convertUUIDsToRelativeLinks(String str, String url)
      */
     public static String convertUUIDsToRelativeLinks(String str, final Content page) {
-        return getLinkResolver().convertToRelativeLinks(str, page.getHandle());
+        return convertUUIDsToRelativeLinks(str, page.getHandle());
+    }
+
+    /**
+     * Transforms stored magnolia style links to relative links. This is used to display them in the browser
+     * @param str html
+     * @param url the links are relative to this url
+     * @return html with proper links
+     */
+    public static String convertUUIDsToRelativeLinks(String str, String url) {
+        return getLinkResolver().convertToRelativeLinks(str, url);
     }
 
     public static String convertUUIDsToLinks(String str, PathToLinkTransformer transformer) {
         return LinkHelper.convertUsingLinkTransformer(str, transformer);
     }
 
+    /**
+     * @deprecated use convertUUIDsToBrowserLinks(String str, String url)
+     */
     public static String convertUUIDsToBrowserLinks(String str, Content content) {
-        // TODO this is wrong the links should be relative to the real url
-        return getLinkResolver().convertToBrowserLinks(str, content.getHandle());
+        return convertUUIDsToBrowserLinks(str, content.getHandle());
+    }
+
+    public static String convertUUIDsToBrowserLinks(String str, String url) {
+        return getLinkResolver().convertToBrowserLinks(str, url);
     }
 
     public static String convertUUIDsToEditorLinks(String str) {
@@ -131,7 +144,12 @@ public final class LinkUtil {
         return LinkHelper.convertUUIDtoAbsolutePath(uuid, repository);
     }
 
-
+    /**
+     * @deprecated use makeRelativePath(String absolutePath, String url)
+     */
+    public static String makeRelativePath(String absolutePath, Content page) {
+       return  makeRelativePath(page.getHandle(), absolutePath);
+    }
 
     /**
      * Make a absolute path relative. It adds ../ until the root is reached
@@ -139,8 +157,8 @@ public final class LinkUtil {
      * @param page page to be relative to
      * @return relative path
      */
-    public static String makeRelativePath(String absolutePath, Content page) {
-       return  LinkHelper.makePathRelative(page.getHandle(), absolutePath);
+    public static String makeRelativePath(String absolutePath, String url) {
+       return  LinkHelper.makePathRelative(url, absolutePath);
     }
 
     /**
