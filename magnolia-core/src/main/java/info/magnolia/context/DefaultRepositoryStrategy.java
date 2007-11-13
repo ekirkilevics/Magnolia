@@ -42,7 +42,9 @@ import javax.security.auth.Subject;
 import java.util.HashMap;
 import java.util.Map;
 
-
+/**
+ * 
+ */
 public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
     static final Logger log = LoggerFactory.getLogger(DefaultRepositoryStrategy.class);
 
