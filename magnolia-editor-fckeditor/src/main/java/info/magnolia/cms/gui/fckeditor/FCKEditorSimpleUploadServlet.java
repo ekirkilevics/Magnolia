@@ -1,33 +1,34 @@
 /**
- * FCKeditor - The text editor for internet
- * Copyright (C) 2003-2005 Frederico Caldeira Knabben
+ * This file Copyright (c) 2003-2007 Magnolia International
+ * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
- * Licensed under the terms of the GNU Lesser General Public License:
- * 		http://www.opensource.org/licenses/lgpl-license.php
  *
- * For further information visit:
- * 		http://www.fckeditor.net/
+ * This file is dual-licensed under both the Magnolia
+ * Network Agreement and the GNU General Public License.
+ * You may elect to use one or the other of these licenses.
  *
- * File Name: SimpleUploaderServlet.java
- * 	Java File Uploader class.
+ * This file is distributed in the hope that it will be
+ * useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
+ * Redistribution, except as permitted by whichever of the GPL
+ * or MNA you select, is prohibited.
  *
- * Version:  2.3
- * Modified: 2005-08-11 16:29:00
+ * 1. For the GPL license (GPL), you can redistribute and/or
+ * modify this file under the terms of the GNU General
+ * Public License, Version 3, as published by the Free Software
+ * Foundation.  You should have received a copy of the GNU
+ * General Public License, Version 3 along with this program;
+ * if not, write to the Free Software Foundation, Inc., 51
+ * Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
  *
- * File Authors:
- * 		Simone Chiaretta (simo@users.sourceforge.net)
- */
-
-/**
+ * 2. For the Magnolia Network Agreement (MNA), this file
+ * and the accompanying materials are made available under the
+ * terms of the MNA which accompanies this distribution, and
+ * is available at http://www.magnolia.info/mna.html
  *
- * Magnolia and its source-code is licensed under the LGPL.
- * You may copy, adapt, and redistribute this file for commercial or non-commercial use.
- * When copying, adapting, or redistributing this document in keeping with the guidelines above,
- * you are required to provide proper attribution to obinary.
- * If you reproduce or distribute the document without making any substantive modifications to its content,
- * please use the following attribution line:
- *
- * Copyright 1993-2006 obinary Ltd. (http://www.obinary.com) All rights reserved.
+ * Any modifications to this file must keep this entire header
+ * intact.
  *
  */
 package info.magnolia.cms.gui.fckeditor;

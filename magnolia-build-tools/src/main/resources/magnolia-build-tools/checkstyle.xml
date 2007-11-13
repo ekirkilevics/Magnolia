@@ -1,8 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.2//EN" "http://www.puppycrawl.com/dtds/configuration_1_2.dtd">
 <module name="Checker">
-  <property name="severity" value="warning" />
   <module name="TreeWalker">
+    <!--<property name="severity" value="warning" />-->
+    <module name="RegexpHeader">
+      <property name="headerFile" value="${checkstyle.header.file}"/>
+    </module>
+
+    <!--
     <module name="ArrayTypeStyle"></module>
     <module name="FinalParameters">
       <property name="severity" value="ignore" />
@@ -225,10 +230,10 @@
       <property name="tokens" value="METHOD_DEF, CTOR_DEF" />
     </module>
     <module name="ParameterNumber"></module>
-    <!--<module name="OneMethodPrivateField">-->
-      <!--<property name="severity" value="ignore" />-->
-      <!--<property name="ignoreFormat" value="^log$" />-->
-    <!--</module>-->
+    <! - -<module name="OneMethodPrivateField">- ->
+      < ! - -<property name="severity" value="ignore" /> - - >
+      < ! - -<property name="ignoreFormat" value="^log$" />- - >
+    <! - -</module>- - >
     <module name="EmptyForIteratorPad"></module>
     <module name="NoWhitespaceAfter">
       <property name="tokens" value="BNOT, DEC, DOT, INC, LNOT, UNARY_MINUS, UNARY_PLUS" />
@@ -250,5 +255,6 @@
       <property name="format" value="(\(&quot;&quot;\))|(\ &quot;&quot;;)" />
       <property name="message" value="avoid using &quot;&quot;, use StringUtils.EMPTY" />
     </module>
+  -->
   </module>
 </module>

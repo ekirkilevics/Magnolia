@@ -317,6 +317,17 @@
           <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.2-SNAPSHOT</version>
+        <dependencies>
+          <dependency>
+            <groupId>info.magnolia</groupId>
+            <artifactId>magnolia-build-tools</artifactId>
+            <version>3.1-SNAPSHOT</version>
+          </dependency>
+        </dependencies>
+      </plugin>
     </plugins>
     <resources>
       <resource>
@@ -385,9 +396,13 @@
       </plugin>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
+        <version>2.2-SNAPSHOT</version>
         <configuration>
-          <configLocation>http://svn.magnolia.info/svn/magnolia/trunk/checkstyle.xml</configLocation>
+          <configLocation>magnolia-build-tools/checkstyle.xml</configLocation>
+          <headerLocation>magnolia-build-tools/license-header-regex.txt</headerLocation>
           <enableRulesSummary>true</enableRulesSummary>
+          <!-- this is apparently not in the 2.1 version of the checkstyle plugin -->
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
         </configuration>
       </plugin>
       <plugin>
@@ -900,6 +915,7 @@
     </pluginRepository>
   </pluginRepositories>
   <modules>
+    <module>magnolia-build-tools</module>
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
     <module>magnolia-gui</module>
