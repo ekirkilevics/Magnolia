@@ -64,7 +64,7 @@ public final class VirtualURIManager extends ObservedManager {
         while (e.hasNext()) {
             VirtualURIMapping vm = (VirtualURIMapping) e.next();
             VirtualURIMapping.MappingResult result = vm.mapURI(uri);
-            if (lastMatchedLevel < result.getLevel()) {
+            if (result != null && lastMatchedLevel < result.getLevel()) {
                 lastMatchedLevel = result.getLevel();
                 mappedURI = result.getToURI();
             }
