@@ -71,11 +71,12 @@ public class RotatingVirtualURIMapping extends RegexpVirtualURIMapping {
         // delegate the initial processing to RegexpVirtualURIMapping
         MappingResult mr = super.mapURI(uri);
 
-        int randomNumber = RandomUtils.nextInt(end - start) + 1;
-        String randomAsString = StringUtils.leftPad(Integer.toString(randomNumber), padding, '0');
+        if (mr != null) {
+            int randomNumber = RandomUtils.nextInt(end - start) + 1;
+            String randomAsString = StringUtils.leftPad(Integer.toString(randomNumber), padding, '0');
 
-        mr.setToURI(StringUtils.replace(mr.getToURI(), RANDOM_PLACEHOLDER, randomAsString));
-
+            mr.setToURI(StringUtils.replace(mr.getToURI(), RANDOM_PLACEHOLDER, randomAsString));
+        }
         return mr;
     }
 }

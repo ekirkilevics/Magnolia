@@ -38,22 +38,25 @@ public class RegexpVirtualURIMapping implements VirtualURIMapping {
     private Pattern regexp;
 
     public MappingResult mapURI(String uri) {
-        MappingResult r = new MappingResult();
 
-        Matcher matcher = regexp.matcher(uri);
-        if (matcher.find()) {
-            String replaced = toURI;
-            int matcherCount = matcher.groupCount();
-            for (int j = 0; j <= matcherCount; j++) {
-                // @todo of course we should improve this using a stringbuffer
-                replaced = StringUtils.replace(replaced, "$" + j, matcher.group(j));
+        if (regexp != null) {
+            Matcher matcher = regexp.matcher(uri);
+            if (matcher.find()) {
+                MappingResult r = new MappingResult();
+                String replaced = toURI;
+                int matcherCount = matcher.groupCount();
+                for (int j = 0; j <= matcherCount; j++) {
+                    // @todo of course we should improve this using a stringbuffer
+                    replaced = StringUtils.replace(replaced, "$" + j, matcher.group(j));
+                }
+
+                r.setLevel(matcherCount + 1);
+                r.setToURI(replaced);
+                return r;
             }
-
-            r.setLevel(matcherCount + 1);
-            r.setToURI(replaced);
         }
 
-        return r;
+        return null;
     }
 
     public String getFromURI() {

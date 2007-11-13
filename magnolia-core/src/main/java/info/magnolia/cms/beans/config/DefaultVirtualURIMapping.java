@@ -27,13 +27,14 @@ public class DefaultVirtualURIMapping implements VirtualURIMapping {
     private String toURI;
 
     public MappingResult mapURI(String uri) {
-        MappingResult r = new MappingResult();
 
-        if (pattern.match(uri)) {
+        if (pattern != null && pattern.match(uri)) {
+            MappingResult r = new MappingResult();
             r.setLevel(pattern.getLength());
             r.setToURI(toURI);
+            return r;
         }
-        return r;
+        return null;
     }
 
     public String getFromURI() {
