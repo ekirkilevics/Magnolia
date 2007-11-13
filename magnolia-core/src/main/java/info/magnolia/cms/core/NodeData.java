@@ -47,7 +47,7 @@ public interface NodeData extends Cloneable {
     /**
      * Returns the <code>String</code> representation of the value: decodes like breaks with the specified regular
      * expression.
-     * @param lineBreak , regular expession
+     * @param lineBreak , regular expression
      * @return String
      */
     String getString(String lineBreak);
@@ -90,8 +90,8 @@ public interface NodeData extends Cloneable {
 
     /**
      * Returns the Content that this NodeData references (if its type is PropertyType.REFERENCE). If it is of type PATH
-     * or STRING it tries to resolve the node by using the path. The path can be relative or absolut. If the property
-     * type is STRING, it trys finally to get the node by using the vlue as an uuid.
+     * or STRING it tries to resolve the node by using the path. The path can be relative or absolute. If the property
+     * type is STRING, it tries finally to get the node by using the value as an uuid.
      * @throws javax.jcr.RepositoryException
      */
     Content getReferencedContent() throws RepositoryException, PathNotFoundException, RepositoryException;
@@ -215,7 +215,7 @@ public interface NodeData extends Cloneable {
 
     /**
      * get all attribute names
-     * @return collection of attrubute names
+     * @return collection of attribute names
      * @throws javax.jcr.RepositoryException
      */
     Collection getAttributeNames() throws RepositoryException;
@@ -233,7 +233,7 @@ public interface NodeData extends Cloneable {
     String getHandle();
 
     /**
-     * Persists all changes to the repository if valiation succeds
+     * Persists all changes to the repository if validation succeeds
      * @throws javax.jcr.RepositoryException
      */
     void save() throws RepositoryException;
