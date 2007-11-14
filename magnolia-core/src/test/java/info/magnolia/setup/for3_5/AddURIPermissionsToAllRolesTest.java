@@ -31,10 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_1;
+package info.magnolia.setup.for3_5;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.InstallContext;
+import info.magnolia.setup.for3_5.AddURIPermissionsToAllRoles;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;

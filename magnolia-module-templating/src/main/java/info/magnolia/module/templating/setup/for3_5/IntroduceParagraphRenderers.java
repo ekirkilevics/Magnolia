@@ -31,30 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.setup;
+package info.magnolia.module.templating.setup.for3_5;
 
-import info.magnolia.module.DefaultModuleVersionHandler;
-import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
-import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
-
+import info.magnolia.module.delta.BootstrapResourcesTask;
+import info.magnolia.module.InstallContext;
 
 /**
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
+public class IntroduceParagraphRenderers extends BootstrapResourcesTask {
 
-    public TemplatingModuleVersionHandler() {
-        DeltaBuilder delta31 = DeltaBuilder.update("3.5", "");
-        delta31.addTask(new IntroduceParagraphRenderers());
-        delta31.addTask(new BootstrapSingleResourceAndOrderBefore(
-                "Compatibility Filter",
-                "${actpage} is deprecated. Adds a compatibility filter still supporting it but writing warn messages to the log",
-                "/mgnl-bootstrap/templating/config.server.filters.cms.backwardCompatibility.xml",
-                "rendering"));
-
-        register(delta31);
+    public IntroduceParagraphRenderers() {
+        super("Paragraph renderers", "Paragraph renderers were introduced in Magnolia 3.5");
     }
 
+    protected boolean acceptResource(InstallContext installContext, String name) {
+        return name.startsWith("/mgnl-bootstrap/templating/config.modules.templating.paragraph-renderers.")
+                && name.endsWith(".xml");
+    }
 }

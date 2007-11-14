@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_1;
+package info.magnolia.setup.for3_5;
 
 import info.magnolia.module.delta.MoveAndRenamePropertyTask;
 
@@ -40,16 +40,21 @@ import info.magnolia.module.delta.MoveAndRenamePropertyTask;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class LoginAuthTypePropertyMovedToFilter extends MoveAndRenamePropertyTask {
-    public LoginAuthTypePropertyMovedToFilter() {
-        super("Login authentication type", "/server/login", "AuthType", "/server/filters/uriSecurity/clientCallback", "class");
+public class LoginFormPropertyMovedToFilter extends MoveAndRenamePropertyTask {
+    public LoginFormPropertyMovedToFilter() {
+        super("Login form", "/server/login", "LoginForm", "/server/filters/uriSecurity/clientCallback", "loginForm");
     }
 
     protected String modifyCurrentValue(String currentValue) {
-        if ("Basic".equals(currentValue)) {
-            return "info.magnolia.cms.security.auth.callback.BasicClientCallback";
+        // pre-3.0.2
+        if ("/.resources/loginForm/login.html".equals(currentValue)) {
+            return "/mgnl-resources/loginForm/login.html";
+            // 3.0.2
+        } else if ("/mgnl-resources/loginForm/login.html".equals(currentValue)) {
+            return "/mgnl-resources/loginForm/login.html";
+            // customized
         } else {
-            return "info.magnolia.cms.security.auth.callback.FormClientCallback";
+            return currentValue;
         }
     }
 }

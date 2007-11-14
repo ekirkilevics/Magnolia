@@ -31,43 +31,54 @@
  * intact.
  *
  */
-package info.magnolia.module.workflow.setup.for3_1;
+package info.magnolia.module.workflow.setup.for3_5;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ClasspathResourcesUtil;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.module.workflow.WorkflowConstants;
+import org.apache.commons.io.IOUtils;
 
 import javax.jcr.RepositoryException;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class AddNewDefaultConfig extends AbstractTask {
-    //TODO why not extend PropertyValuesTask ??
+public class InstallDefaultWorkflowDefinition extends AbstractTask {
 
-    public AddNewDefaultConfig() {
-        super("New config items", "Adding some new configuration items with their default values.");
+    public InstallDefaultWorkflowDefinition() {
+        super("Setup default activation workflow definition", "Adds the default activation workflow definition under the /modules/workflow/config/flows/activation config node.");
     }
 
     public void execute(InstallContext ctx) throws TaskExecutionException {
+        InputStream stream = null;
         try {
-            final Content configNode = ctx.getOrCreateCurrentModuleConfigNode();
+            stream = ClasspathResourcesUtil.getStream("info/magnolia/module/workflow/default-activation-workflow.xml");
+            final String wfDef = IOUtils.toString(stream);
+            final Content cfg = ctx.getOrCreateCurrentModuleConfigNode();
 
-            final Content flowDefinitionManagerCfg = configNode.createContent("flowDefinitionManager");
-            flowDefinitionManagerCfg.createNodeData("class").setValue("info.magnolia.module.workflow.flows.DefaultFlowDefinitionManager");
-
-            // these two should not be necessary, associated code should be removed
-            flowDefinitionManagerCfg.createNodeData("flowDefinitionURLPattern").setValue("auto");
-            flowDefinitionManagerCfg.createNodeData("saveWorkflowDefinitionInWorkItem").setValue("true");
-
-            // TODO the following two properties should not be made public - untested code
-            configNode.createNodeData("backupWorkItems").setValue(false);
-            configNode.createNodeData("deferredExpressionStorage").setValue(false);
+            final Content flows = ContentUtil.getOrCreateContent(cfg, "flows", ItemType.CONTENT);
+            final Content flowNode = ContentUtil.getOrCreateContent(flows, "activation", ItemType.CONTENTNODE);
+            flowNode.createNodeData(WorkflowConstants.FLOW_VALUE, wfDef);
+        } catch (IOException e) {
+            ctx.error("Could not read default activation workflow definition", e);
         } catch (RepositoryException e) {
-            throw new TaskExecutionException("Could not add new default workflow configuration.", e);
+            ctx.error("Could not store default activation workflow definition", e);
+        } finally {
+            if (stream != null) {
+                try {
+                    stream.close();
+                } catch (IOException e) {
+                }
+            }
         }
     }
 }

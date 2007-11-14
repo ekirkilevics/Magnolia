@@ -31,30 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_1;
+package info.magnolia.module.workflow.setup.for3_5;
 
-import info.magnolia.module.delta.MoveAndRenamePropertyTask;
+import info.magnolia.cms.security.SecuritySupport;
+import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.UserManager;
+import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.TaskExecutionException;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class LoginFormPropertyMovedToFilter extends MoveAndRenamePropertyTask {
-    public LoginFormPropertyMovedToFilter() {
-        super("Login form", "/server/login", "LoginForm", "/server/filters/uriSecurity/clientCallback", "loginForm");
+public class AddUserToGroupTask extends AbstractTask {
+    private static final String REALM = "admin";
+    private final String username;
+    private final String groupname;
+
+    public AddUserToGroupTask(String taskName, String username, String groupname) {
+        super(taskName, "Adding user \"" + username + "\" to group \"" + groupname + "\"");
+        this.username = username;
+        this.groupname = groupname;
     }
 
-    protected String modifyCurrentValue(String currentValue) {
-        // pre-3.0.2
-        if ("/.resources/loginForm/login.html".equals(currentValue)) {
-            return "/mgnl-resources/loginForm/login.html";
-            // 3.0.2
-        } else if ("/mgnl-resources/loginForm/login.html".equals(currentValue)) {
-            return "/mgnl-resources/loginForm/login.html";
-            // customized
+    public void execute(InstallContext ctx) throws TaskExecutionException {
+        final UserManager userManager = SecuritySupport.Factory.getInstance().getUserManager(REALM);
+        final User user = userManager.getUser(username);
+        if (user == null) {
+            ctx.warn("User \"" + username + "\" not found, can't add him/her to the \"" + groupname + "\" group.");
         } else {
-            return currentValue;
+            // TODO this saves at node level, thus breaking the "save once per module install/update" rule :( 
+            user.addGroup(groupname);
         }
     }
 }

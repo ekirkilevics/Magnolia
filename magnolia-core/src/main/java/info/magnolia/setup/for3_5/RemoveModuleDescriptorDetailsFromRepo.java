@@ -31,24 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.setup.for3_1;
+package info.magnolia.setup.for3_5;
 
-import info.magnolia.module.delta.BootstrapResourcesTask;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AllModulesNodeOperation;
+
+import javax.jcr.RepositoryException;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class IntroduceParagraphRenderers extends BootstrapResourcesTask {
+public class RemoveModuleDescriptorDetailsFromRepo extends AllModulesNodeOperation {
 
-    public IntroduceParagraphRenderers() {
-        super("Paragraph renderers", "Paragraph renderers were introduced in Magnolia 3.5");
+    public RemoveModuleDescriptorDetailsFromRepo() {
+        super("Cleanup modules node", "Removes the name, displayName and class properties from the modules nodes, as these are not used anymore.");
     }
 
-    protected boolean acceptResource(InstallContext installContext, String name) {
-        return name.startsWith("/mgnl-bootstrap/templating/config.modules.templating.paragraph-renderers.")
-                && name.endsWith(".xml");
+    protected void operateOnModuleNode(Content node, HierarchyManager hm, InstallContext ctx) {
+        deleteNodeDataIfExists(node, "name", ctx);
+        deleteNodeDataIfExists(node, "displayName", ctx);
+        deleteNodeDataIfExists(node, "class", ctx);
+    }
+
+    private void deleteNodeDataIfExists(Content node, String name, InstallContext ctx) {
+        try {
+            if (node.hasNodeData(name)) {
+                node.deleteNodeData(name);
+            }
+        } catch (RepositoryException e) {
+            ctx.warn("Could not delete property " + name + " from node " + node.getHandle() + ".");
+        }
     }
 }

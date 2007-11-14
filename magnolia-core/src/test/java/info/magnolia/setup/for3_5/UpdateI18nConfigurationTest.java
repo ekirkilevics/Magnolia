@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_1;
+package info.magnolia.setup.for3_5;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
@@ -47,6 +47,7 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.setup.for3_5.UpdateI18nConfiguration;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;

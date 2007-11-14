@@ -31,54 +31,39 @@
  * intact.
  *
  */
-package info.magnolia.module.workflow.setup.for3_1;
+package info.magnolia.module.workflow.setup.for3_5;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.ClasspathResourcesUtil;
-import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.PropertyValuesTask;
 import info.magnolia.module.delta.TaskExecutionException;
-import info.magnolia.module.workflow.WorkflowConstants;
-import org.apache.commons.io.IOUtils;
 
 import javax.jcr.RepositoryException;
-import java.io.IOException;
-import java.io.InputStream;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class InstallDefaultWorkflowDefinition extends AbstractTask {
+public class I18nMenuPoint extends PropertyValuesTask {
+    private static final String MENU_PATH = "/modules/adminInterface/config/menu/inbox";
 
-    public InstallDefaultWorkflowDefinition() {
-        super("Setup default activation workflow definition", "Adds the default activation workflow definition under the /modules/workflow/config/flows/activation config node.");
+    public I18nMenuPoint() {
+        super("i18n", "Internationalization of the Inbox menu entry.");
     }
 
     public void execute(InstallContext ctx) throws TaskExecutionException {
-        InputStream stream = null;
+        final HierarchyManager hm = ctx.getHierarchyManager("config");
+        if (!hm.isExist(MENU_PATH)) {
+            ctx.warn("Inbox menu does not exist at " + MENU_PATH);
+        }
         try {
-            stream = ClasspathResourcesUtil.getStream("info/magnolia/module/workflow/default-activation-workflow.xml");
-            final String wfDef = IOUtils.toString(stream);
-            final Content cfg = ctx.getOrCreateCurrentModuleConfigNode();
-
-            final Content flows = ContentUtil.getOrCreateContent(cfg, "flows", ItemType.CONTENT);
-            final Content flowNode = ContentUtil.getOrCreateContent(flows, "activation", ItemType.CONTENTNODE);
-            flowNode.createNodeData(WorkflowConstants.FLOW_VALUE, wfDef);
-        } catch (IOException e) {
-            ctx.error("Could not read default activation workflow definition", e);
+            final Content menu = hm.getContentNode(MENU_PATH);
+            checkAndModifyPropertyValue(ctx, menu, "label", "Inbox", "menu.inbox");
+            newProperty(ctx, menu, "i18nBasename", "info.magnolia.module.workflow.messages");
         } catch (RepositoryException e) {
-            ctx.error("Could not store default activation workflow definition", e);
-        } finally {
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (IOException e) {
-                }
-            }
+            throw new TaskExecutionException("Could not execute task: " + e.getMessage(), e);
         }
     }
 }

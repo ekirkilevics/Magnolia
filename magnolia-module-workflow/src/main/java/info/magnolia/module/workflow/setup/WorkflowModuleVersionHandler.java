@@ -41,11 +41,11 @@ import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.workflow.setup.for3_1.AddNewDefaultConfig;
-import info.magnolia.module.workflow.setup.for3_1.AddUserToGroupTask;
-import info.magnolia.module.workflow.setup.for3_1.InstallDefaultWorkflowDefinition;
-import info.magnolia.module.workflow.setup.for3_1.RemoveMetadataFromExpressionsWorkspace;
-import info.magnolia.module.workflow.setup.for3_1.SetDefaultWorkflowForActivationFlowCommands;
+import info.magnolia.module.workflow.setup.for3_5.AddNewDefaultConfig;
+import info.magnolia.module.workflow.setup.for3_5.AddUserToGroupTask;
+import info.magnolia.module.workflow.setup.for3_5.InstallDefaultWorkflowDefinition;
+import info.magnolia.module.workflow.setup.for3_5.RemoveMetadataFromExpressionsWorkspace;
+import info.magnolia.module.workflow.setup.for3_5.SetDefaultWorkflowForActivationFlowCommands;
 
 import java.util.ArrayList;
 import java.util.List;

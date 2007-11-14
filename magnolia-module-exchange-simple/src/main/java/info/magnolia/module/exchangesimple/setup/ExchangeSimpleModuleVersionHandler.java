@@ -40,7 +40,7 @@ import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.ConditionalDelegateTask;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.Task;
-import info.magnolia.module.exchangesimple.setup.for3_1.UpdateActivationConfigTask;
+import info.magnolia.module.exchangesimple.setup.for3_5.UpdateActivationConfigTask;
 
 import java.util.ArrayList;
 import java.util.List;

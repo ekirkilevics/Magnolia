@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.setup.for3_1;
+package info.magnolia.setup.for3_5;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
