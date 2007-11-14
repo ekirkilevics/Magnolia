@@ -34,19 +34,26 @@
 package info.magnolia.module.templating.setup;
 
 import info.magnolia.module.DefaultModuleVersionHandler;
-import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.templating.setup.for3_1.IntroduceParagraphRenderers;
 
+
 /**
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
 
     public TemplatingModuleVersionHandler() {
-        final Delta delta31 = DeltaBuilder.update("3.1", "").addTask(new IntroduceParagraphRenderers());
+        DeltaBuilder delta31 = DeltaBuilder.update("3.1", "");
+        delta31.addTask(new IntroduceParagraphRenderers());
+        delta31.addTask(new BootstrapSingleResourceAndOrderBefore(
+                "Compatibility Filter",
+                "${actpage} is deprecated. Adds a compatibility filter still supporting it but writing warn messages to the log",
+                "/mgnl-bootstrap/templating/config.server.filters.cms.backwardCompatibility.xml",
+                "rendering"));
+
         register(delta31);
     }
 
