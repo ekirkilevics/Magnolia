@@ -42,7 +42,7 @@ import java.util.List;
  *
  * @author philipp
  * @version $Id$
- * @deprecated This was used in the 3.0 community edition to restrict to a single flow definition. Since 3.1,
+ * @deprecated This was used in the 3.0 community edition to restrict to a single flow definition. Since 3.5,
  *             DefaultFlowDefinitionManager is part of CE.
  */
 public class SimpleFlowDefinitionManager extends DefaultFlowDefinitionManager {

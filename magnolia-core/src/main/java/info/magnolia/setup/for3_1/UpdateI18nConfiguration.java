@@ -59,7 +59,7 @@ public class UpdateI18nConfiguration extends NodeExistsDelegateTask {
     private static final String I18N_SYSTEM_NODEPATH = I18N_NODEPATH + "/system";
 
     public UpdateI18nConfiguration() {
-        super("I18N configuration", "The I18N configuration has changed considerably in Magnolia 3.1. Will update the existing configuration or bootstrap a new one.",
+        super("I18N configuration", "The I18N configuration has changed considerably in Magnolia 3.5. Will update the existing configuration or bootstrap a new one.",
                 "config", I18N_NODEPATH, new UpdateFrom30(), new BootstrapI18nConfig());
     }
 

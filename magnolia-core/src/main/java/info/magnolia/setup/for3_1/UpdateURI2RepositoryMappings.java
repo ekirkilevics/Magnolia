@@ -57,7 +57,7 @@ public class UpdateURI2RepositoryMappings extends info.magnolia.module.delta.All
     private final ArrayDelegateTask subTasks;
     
     public UpdateURI2RepositoryMappings() {
-        super("Update URI2Repository mappings", "The structure of the URI2Repository mappings have changed in 3.1", ContentRepository.CONFIG, SERVER_URI2REPOSITORY_MAPPING);
+        super("Update URI2Repository mappings", "The structure of the URI2Repository mappings have changed in 3.5", ContentRepository.CONFIG, SERVER_URI2REPOSITORY_MAPPING);
         subTasks = new ArrayDelegateTask("Move URI2Repository mapping nodes");
     }
 

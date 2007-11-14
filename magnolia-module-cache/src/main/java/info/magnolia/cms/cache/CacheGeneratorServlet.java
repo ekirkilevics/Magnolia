@@ -62,7 +62,7 @@ public class CacheGeneratorServlet extends HttpServlet {
      * {@inheritDoc}
      */
     public void init(ServletConfig config) throws ServletException {
-        log.warn("\n***********\nCacheGeneratorServlet has been removed in Magnolia 3.1, please update your web.xml "
+        log.warn("\n***********\nCacheGeneratorServlet has been removed in Magnolia 3.5, please update your web.xml "
             + "and remove the servlet definition and mapping\n***********");
 
         super.init(config);

@@ -83,19 +83,19 @@ public class Server {
     }
 
     /**
-     * @deprecated since 3.1 - not used anymore, this is now an ObservedManager
+     * @deprecated since 3.5 - not used anymore, this is now an ObservedManager
      */
     public static void init() throws ConfigurationException {
     }
 
     /**
-     * @deprecated since 3.1 - not used anymore, this is now an ObservedManager
+     * @deprecated since 3.5 - not used anymore, this is now an ObservedManager
      */
     public static void load() throws ConfigurationException {
     }
 
     /**
-     * @deprecated since 3.1 - not used anymore, this is now an ObservedManager
+     * @deprecated since 3.5 - not used anymore, this is now an ObservedManager
      */
     public static void reload() throws ConfigurationException {
         DeprecationUtil.isDeprecated();
@@ -103,7 +103,7 @@ public class Server {
 
     /**
      * @return default URL extension as configured
-     * @deprecated since 3.1 - use ServerConfiguration
+     * @deprecated since 3.5 - use ServerConfiguration
      */
     public static String getDefaultExtension() {
         return ServerConfiguration.getInstance().getDefaultExtension();
@@ -111,7 +111,7 @@ public class Server {
 
     /**
      * @return default mail server
-     * @deprecated since 3.1 - not used / moved to mail module.
+     * @deprecated since 3.5 - not used / moved to mail module.
      */
     public static String getDefaultMailServer() {
         DeprecationUtil.isDeprecated("Moved to the mail module, will return empty string.");
@@ -120,7 +120,7 @@ public class Server {
 
     /**
      * @return basic realm string
-     * @deprecated since 3.1 - this moved to filter configuration - returns default "Magnolia" value.
+     * @deprecated since 3.5 - this moved to filter configuration - returns default "Magnolia" value.
      */
     public static String getBasicRealm() {
         DeprecationUtil.isDeprecated("This moved to filter configuration, will return default \"Magnolia\" value.");
@@ -129,7 +129,7 @@ public class Server {
 
     /**
      * @return default base url (empty by default)
-     * @deprecated since 3.1 - use ServerConfiguration
+     * @deprecated since 3.5 - use ServerConfiguration
      */
     public static String getDefaultBaseUrl() {
         return ServerConfiguration.getInstance().getDefaultBaseUrl();
@@ -137,7 +137,7 @@ public class Server {
 
     /**
      * @return true if the instance is configured as an admin server
-     * @deprecated since 3.1 - use ServerConfiguration
+     * @deprecated since 3.5 - use ServerConfiguration
      */
     public static boolean isAdmin() {
         return ServerConfiguration.getInstance().isAdmin();
@@ -145,14 +145,14 @@ public class Server {
 
     /**
      * Time in ms since the server was started
-     * @deprecated since 3.1 - this is not accurate (and not used)
+     * @deprecated since 3.5 - this is not accurate (and not used)
      */
     public static long getUptime() {
         return System.currentTimeMillis() - uptime;
     }
 
     /**
-     * @deprecated since 3.1 - this was moved to filters configurations - will return an empty Map.
+     * @deprecated since 3.5 - this was moved to filters configurations - will return an empty Map.
      */
     public Map getLoginConfig() {
         DeprecationUtil.isDeprecated("This moved to filter configuration, will return an empty map.");

@@ -3938,7 +3938,7 @@
           <sv:value>2006-05-11T14:48:51.446+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="text" sv:type="String">
-          <sv:value>Magnolia 3.1 will use Spring for even easier customization and integration. Magnolia 3.0 is already prepared for that step and many functionalities are pluggable, i.e. can be replaced by your own custom implementation without recompiling Magnolia itself.</sv:value>
+          <sv:value>Magnolia 3.5 will use Spring for even easier customization and integration. Magnolia 3.0 is already prepared for that step and many functionalities are pluggable, i.e. can be replaced by your own custom implementation without recompiling Magnolia itself.</sv:value>
         </sv:property>
         <sv:property sv:name="spacer" sv:type="Long">
           <sv:value>1</sv:value>

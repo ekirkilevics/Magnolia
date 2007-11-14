@@ -1,4 +1,4 @@
-# steps for 3.0.x -> 3.1
+# steps for 3.0.x -> 3.5
   # info.magnolia.module.workflow.setup.for3_1.RemoveMetadataFromExpressionsWorkspace
     # remove metadata
 

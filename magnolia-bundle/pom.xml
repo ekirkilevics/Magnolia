@@ -5,14 +5,14 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.1-SNAPSHOT</version>
+    <version>3.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
 
   <artifactId>magnolia-bundle</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-bundle</name>
-  <version>3.1-SNAPSHOT</version>
+  <version>3.5-SNAPSHOT</version>
 
   <build>
     <plugins>
@@ -81,7 +81,7 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-webapp</artifactId>
-      <version>3.1-SNAPSHOT</version>
+      <version>3.5-SNAPSHOT</version>
       <type>war</type>
     </dependency>
     <dependency>
@@ -94,14 +94,14 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-workflow</artifactId>
-      <version>3.1-SNAPSHOT</version>
+      <version>3.5-SNAPSHOT</version>
       <classifier>module-bundle</classifier>
       <type>tar.gz</type>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-samples</artifactId>
-      <version>3.1-SNAPSHOT</version>
+      <version>3.5-SNAPSHOT</version>
       <classifier>module-bundle</classifier>
       <type>tar.gz</type>
     </dependency>

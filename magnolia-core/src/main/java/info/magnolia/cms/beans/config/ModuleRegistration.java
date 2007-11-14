@@ -86,7 +86,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  *
  *
- * @deprecated since 3.1, use ModuleManager and/or ModuleRegistry
+ * @deprecated since 3.5, use ModuleManager and/or ModuleRegistry
  * @see info.magnolia.module.ModuleManager
  * @see info.magnolia.module.ModuleRegistry
  */

@@ -61,7 +61,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif");
 
     public AdminModuleVersionHandler() {
-        final Delta for31 = DeltaBuilder.update("3.1", "")
+        final Delta for31 = DeltaBuilder.update("3.5", "")
                 .addTask(new BootstrapConditionally("Install VirtualURI mappings", "Install new configuration of virtualURI mappings", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.virtualURIMapping.default.xml"))
                 .addTask(new BootstrapSingleResource("New ACL configuration", "Bootstraps the new configuration for the ACL dialogs", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.config.securityConfiguration.xml"))
                 .addTask(new RemoveNodeTask("New ACL Dialog", "Deletes the old ACL page", ContentRepository.CONFIG, "/modules/adminInterface/pages/rolesACL"))

@@ -5,7 +5,7 @@
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>3.1-SNAPSHOT</version>
+  <version>3.5-SNAPSHOT</version>
   <description>
     Magnolia is a free enterprise class content management system developed by Magnolia International based on the
     standard API for java content repositories (JCR).
@@ -332,7 +332,7 @@
           <dependency>
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-build-tools</artifactId>
-            <version>3.1-SNAPSHOT</version>
+            <version>3.5-SNAPSHOT</version>
           </dependency>
         </dependencies>
         <configuration>

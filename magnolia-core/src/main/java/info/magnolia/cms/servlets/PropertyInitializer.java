@@ -55,7 +55,7 @@ public class PropertyInitializer extends MgnlServletContextListener implements S
      * {@inheritDoc}
      */
     public void contextInitialized(ServletContextEvent sce) {
-        log.warn("\n***********\nPropertyInitializer is deprecated in Magnolia 3.1, please update your web.xml: "
+        log.warn("\n***********\nPropertyInitializer is deprecated in Magnolia 3.5, please update your web.xml: "
             + "remove the listener and add a single listener with class name "
             + "info.magnolia.cms.servlets.MgnlServletContextListener\n***********");
 

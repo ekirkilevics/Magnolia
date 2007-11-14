@@ -53,7 +53,7 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsNowWrapped("Mail");
 
-        final Delta for31 = DeltaBuilder.update("3.1", "")
+        final Delta for31 = DeltaBuilder.update("3.5", "")
                 .addTask(new RegisterModuleServletsTask())
                 .addConditions(conditions);
         register(for31);

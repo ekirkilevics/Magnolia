@@ -61,7 +61,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsRemoved("CacheServlet");
         u.servletIsRemoved("CacheGeneratorServlet");
-        register(DeltaBuilder.update("3.1.0", "").addConditions(conditions));
+        register(DeltaBuilder.update("3.5.0", "").addConditions(conditions));
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {

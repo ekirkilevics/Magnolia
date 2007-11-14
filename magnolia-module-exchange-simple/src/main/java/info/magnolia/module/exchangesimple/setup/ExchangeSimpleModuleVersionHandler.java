@@ -64,10 +64,10 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
 
     public ExchangeSimpleModuleVersionHandler() {
         super();
-        // 3.1.0 is the first version of this module. install tasks take care of updating existing config
+        // 3.5.0 is the first version of this module. install tasks take care of updating existing config
     }
 
-    // TODO : review / validate - since 3.1 is the first version, we can't just bootstrap all on install
+    // TODO : review / validate - since 3.5 is the first version, we can't just bootstrap all on install
     protected List getBasicInstallTasks(InstallContext installContext) {
         final List installTasks = new ArrayList();
         installTasks.add(updateConfigFrom30OrBootstrap);

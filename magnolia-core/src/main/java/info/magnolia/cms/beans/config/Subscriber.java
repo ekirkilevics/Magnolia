@@ -48,9 +48,9 @@ import java.util.List;
 /**
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  *
- * @deprecated since 3.1, use the new info.magnolia.cms.exchange package
+ * @deprecated since 3.5, use the new info.magnolia.cms.exchange package
  * @see ActivationManagerFactory#getActivationManager()
  */
 public class Subscriber {

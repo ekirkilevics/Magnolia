@@ -176,7 +176,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         super();
     }
 
-    // TODO : review - currently core is always installed since 3.1 is its first version as a module,
+    // TODO : review - currently core is always installed since 3.5 is its first version as a module,
     // but we need to behave differently if magnolia was installed previously
     protected List getBasicInstallTasks(InstallContext ctx) {
         return genericTasksFor31;

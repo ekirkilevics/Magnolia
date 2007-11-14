@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author fgiust
  * @version $Revision$ ($Author$)
- * @deprecated since 3.1, use {@link MgnlMainFilter} instead
+ * @deprecated since 3.5, use {@link MgnlMainFilter} instead
  */
 public class MagnoliaManagedFilter extends MgnlMainFilter {
 
@@ -56,7 +56,7 @@ public class MagnoliaManagedFilter extends MgnlMainFilter {
      * {@inheritDoc}
      */
     public void init(FilterConfig filterConfig) throws ServletException {
-        log.warn("\n***********\nMagnoliaManagedFilter is deprecated in Magnolia 3.1, please update your web.xml "
+        log.warn("\n***********\nMagnoliaManagedFilter is deprecated in Magnolia 3.5, please update your web.xml "
             + "and change the class name to info.magnolia.cms.filters.MagnoliaMainFilter\n***********");
 
         super.init(filterConfig);

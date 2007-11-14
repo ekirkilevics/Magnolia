@@ -44,7 +44,7 @@ import info.magnolia.module.InstallContext;
 public class IntroduceParagraphRenderers extends BootstrapResourcesTask {
 
     public IntroduceParagraphRenderers() {
-        super("Paragraph renderers", "Paragraph renderers were introduced in Magnolia 3.1");
+        super("Paragraph renderers", "Paragraph renderers were introduced in Magnolia 3.5");
     }
 
     protected boolean acceptResource(InstallContext installContext, String name) {

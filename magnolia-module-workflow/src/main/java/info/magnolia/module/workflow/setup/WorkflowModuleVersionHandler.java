@@ -72,7 +72,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
     };
 
     public WorkflowModuleVersionHandler() {
-        final Delta delta31 = DeltaBuilder.update("3.1", "")
+        final Delta delta31 = DeltaBuilder.update("3.5", "")
                 .addTask(mainMenu)
                 .addTask(subMenu)
                 .addTask(new AddNewDefaultConfig())

@@ -200,7 +200,7 @@ public final class MessagesManager {
 
             MessagesManager.setDefaultLocale(NodeDataUtil.getString(configNode, FALLBACK_NODEDATA, FALLBACK_LOCALE));
 
-            // get the available languages - creates it if it does not exist - necessary to update to 3.1
+            // get the available languages - creates it if it does not exist - necessary to update to 3.5
             final Content languagesNode;
             if (configNode.hasContent(LANGUAGES_NODE_NAME)) {
                 languagesNode = configNode.getContent(LANGUAGES_NODE_NAME);
@@ -357,7 +357,7 @@ public final class MessagesManager {
      * Set the user language in the session
      * @param language lagnguage to ste
      * @param session current session
-     * @deprecated since 3.1, use MgnlContext instead (this is not used - can be safely removed)
+     * @deprecated since 3.5, use MgnlContext instead (this is not used - can be safely removed)
      */
     public static void setUserLanguage(String language, HttpSession session) {
         MgnlContext.setAttribute(Config.FMT_LOCALE + ".session", language, Context.SESSION_SCOPE); //$NON-NLS-1$

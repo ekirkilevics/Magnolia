@@ -256,7 +256,7 @@ public final class ModuleUtil {
 
     /**
      * Register a servlet based on the definition of the modules xml descriptor
-     * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
+     * @deprecated since 3.5, servlets are wrapped and executed through ServletDispatchingFilter
      * @see info.magnolia.cms.filters.ServletDispatchingFilter
      */
     public static boolean registerServlet(ServletDefinition servlet) throws JDOMException, IOException {
@@ -280,7 +280,7 @@ public final class ModuleUtil {
 
     /**
      * Register a servlet in the web.xml including init parameters. The code checks if the servlet already exists
-     * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
+     * @deprecated since 3.5, servlets are wrapped and executed through ServletDispatchingFilter
      * @see WebXmlUtil
      */
     public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment,

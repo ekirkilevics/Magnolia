@@ -42,7 +42,7 @@ import javax.servlet.http.HttpServletRequest;
  * @author Sameer Charles
  * @version 1.1
  *
- * @deprecated since 3.1 - now use {@link IPSecurityManager}
+ * @deprecated since 3.5 - now use {@link IPSecurityManager}
  * @see IPSecurityManager
  */
 public final class Listener {

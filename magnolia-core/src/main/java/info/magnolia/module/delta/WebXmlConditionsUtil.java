@@ -56,7 +56,7 @@ public class WebXmlConditionsUtil {
 
     public void servletIsNowWrapped(final String servletName) {
         if (webXmlUtil.isServletOrMappingRegistered(servletName)) {
-            conditions.add(new FalseCondition("web.xml updates", "Since Magnolia 3.1, servlets are wrapped in ServletDispatchingFilter; please remove the <servlet> and <servlet-mapping> elements for " + servletName + " from your web.xml file."));
+            conditions.add(new FalseCondition("web.xml updates", "Since Magnolia 3.5, servlets are wrapped in ServletDispatchingFilter; please remove the <servlet> and <servlet-mapping> elements for " + servletName + " from your web.xml file."));
         }
     }
 
@@ -75,7 +75,7 @@ public class WebXmlConditionsUtil {
     public void filterMustBeRegisteredWithCorrectDispatchers(final String filterClass) {
         if (!webXmlUtil.isFilterRegistered(filterClass) || !webXmlUtil.areFilterDispatchersConfiguredProperly(filterClass, Arrays.asList(new String[]{"REQUEST", "FORWARD"}), Collections.singletonList("ERROR"))) {
             conditions.add(new FalseCondition("web.xml updates",
-                    "Since Magnolia 3.1, the main Magnolia filter is " + filterClass + ", and it must be mapped with dispatchers REQUEST, FORWARD and, optionally, ERROR. "
+                    "Since Magnolia 3.5, the main Magnolia filter is " + filterClass + ", and it must be mapped with dispatchers REQUEST, FORWARD and, optionally, ERROR. "
                             + " Please add <dispatcher>REQUEST</dispatcher>"
                             + " <dispatcher>FORWARD</dispatcher>"
                             + " <dispatcher>ERROR</dispatcher> to the filter-mapping element in your web.xml file."));

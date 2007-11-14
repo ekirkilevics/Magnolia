@@ -104,7 +104,7 @@ public class WebXmlUtil {
 
     /**
      * Register a servlet in the web.xml including init parameters. The code checks if the servlet already exists
-     * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
+     * @deprecated since 3.5, servlets are wrapped and executed through ServletDispatchingFilter
      * @see info.magnolia.cms.filters.ServletDispatchingFilter
      */
     public boolean registerServlet(String name, String className, String[] urlPatterns, String comment, Map initParams) throws JDOMException, IOException {
@@ -134,7 +134,7 @@ public class WebXmlUtil {
     }
 
     /**
-     * @deprecated since 3.1, servlets are wrapped and executed through ServletDispatchingFilter
+     * @deprecated since 3.5, servlets are wrapped and executed through ServletDispatchingFilter
      * @see info.magnolia.cms.filters.ServletDispatchingFilter
      */
     public boolean registerServletMapping(Document doc, String name, String urlPattern, String comment) throws JDOMException {

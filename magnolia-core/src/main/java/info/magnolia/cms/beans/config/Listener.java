@@ -42,7 +42,7 @@ import java.util.Map;
  * @author Sameer Charles
  * @version 1.1
  *
- * @deprecated since 3.1 - now use {@link info.magnolia.cms.security.IPSecurityManager}
+ * @deprecated since 3.5 - now use {@link info.magnolia.cms.security.IPSecurityManager}
  * @see info.magnolia.cms.security.IPSecurityManager
  */
 public final class Listener {

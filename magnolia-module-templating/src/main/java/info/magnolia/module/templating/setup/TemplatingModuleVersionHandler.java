@@ -46,7 +46,7 @@ import info.magnolia.module.templating.setup.for3_1.IntroduceParagraphRenderers;
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
 
     public TemplatingModuleVersionHandler() {
-        DeltaBuilder delta31 = DeltaBuilder.update("3.1", "");
+        DeltaBuilder delta31 = DeltaBuilder.update("3.5", "");
         delta31.addTask(new IntroduceParagraphRenderers());
         delta31.addTask(new BootstrapSingleResourceAndOrderBefore(
                 "Compatibility Filter",
