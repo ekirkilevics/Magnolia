@@ -53,17 +53,7 @@ public class Aggregator {
 
     private static final String CURRENT_CONTENT = "current_content"; //$NON-NLS-1$
 
-    private static final String EXTENSION = "extension";
-
-    private static final String HANDLE = "handle"; //$NON-NLS-1$
-
     private static final String MAIN_CONTENT = "main_content"; //$NON-NLS-1$
-
-    private static final String REPOSITORY = "repository";
-
-    private static final String SELECTOR = "selector"; //$NON-NLS-1$
-
-    private static final String TEMPLATE = "mgnl_Template"; //$NON-NLS-1$
 
     /**
      * @deprecated use MgnlContext.getAggrigationStatus()
