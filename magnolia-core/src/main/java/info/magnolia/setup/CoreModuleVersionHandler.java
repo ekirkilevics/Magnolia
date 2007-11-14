@@ -105,7 +105,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
             new BootstrapSingleResource("New security configuration", "Install new configuration for security managers", "/mgnl-bootstrap/core/config.server.security.xml"),
             new BootstrapSingleResource("New rendering strategy for links", "Install new configuration for link resolving", "/mgnl-bootstrap/core/config.server.rendering.linkResolver.xml"),
-            
+
             new BootstrapConditionally("Install MIME mappings if not already existent", "Add MIMEMappings to server config", "/mgnl-bootstrap/core/config.server.MIMEMapping.xml"),
             new BootstrapConditionally("Install URI2Repository mappings", "Install new configuration of URI2Repository mappings", "/mgnl-bootstrap/core/config.server.URI2RepositoryMapping.xml", new UpdateURI2RepositoryMappings()),
 
@@ -115,7 +115,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
             // the two following tasks replace the config.server.xml bootstrap file
             new CheckOrCreatePropertyTask("defaultExtension property", "Checks that the defaultExtension property exists in config:/server", "config", "/server", "defaultExtension", "html"),
-            
+
             new CheckOrCreatePropertyTask("admin property", "Checks that the admin property exists in config:/server", "config", "/server", "admin", StringUtils.defaultIfEmpty(SystemProperty.getProperty(BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY), "true")),
             new MoveAndRenamePropertyTask("basicRealm property", "/server", "basicRealm", "magnolia 3.0", "/server/filters/uriSecurity/clientCallback", "realmName", "Magnolia"),
             new ArrayDelegateTask("defaultBaseUrl property",
@@ -166,6 +166,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new RegisterModuleServletsTask(),
 
             // --- system-wide tasks (impact all modules)
+            new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed", ContentRepository.CONFIG, "/modules", null,
+                    new CreateNodeTask(null, null, ContentRepository.CONFIG, "/", "modules", ItemType.CONTENT.getSystemName())),
             new RenamedRenderersToTemplateRenderers(),
             new ReconfigureCommands(),
             new UpdateURIMappings(),

@@ -43,6 +43,9 @@ import javax.jcr.RepositoryException;
  * An abstract that will perform an operation on all modules node found in the configuration repository.
  * @see #operateOnChildNode(info.magnolia.cms.core.Content,info.magnolia.module.InstallContext)
  *
+ * Warning: tasks will fail if the modules node does not exist yet. (As an incentive to force the explicit creation
+ * of this node) 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -58,7 +61,7 @@ public abstract class AllModulesNodeOperation extends AllChildrenNodesOperation 
 
     protected Content getParentNode(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         if (!ctx.hasModulesNode()) {
-            throw new TaskExecutionException("Modules node does not exist, can not proceed.");
+            throw new TaskExecutionException("The main /modules node does not exist in the config repository, can not proceed.");
         }
         return ctx.getModulesNode();
     }
