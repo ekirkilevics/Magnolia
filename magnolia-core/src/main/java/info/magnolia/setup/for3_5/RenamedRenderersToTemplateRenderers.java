@@ -53,7 +53,7 @@ public class RenamedRenderersToTemplateRenderers extends AllModulesNodeOperation
     private static final String NEWNAME = "template-renderers";
 
     public RenamedRenderersToTemplateRenderers() {
-        super("Template renderers", "Modules' renderers nodes were renamed to template-renderers");
+        super("Template renderers", "Modules' renderers nodes were renamed to template-renderers.");
     }
 
     protected void operateOnModuleNode(Content parent, HierarchyManager hm, InstallContext ctx) throws TaskExecutionException {

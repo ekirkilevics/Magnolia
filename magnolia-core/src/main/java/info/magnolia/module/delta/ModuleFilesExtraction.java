@@ -49,7 +49,7 @@ import java.io.IOException;
 public class ModuleFilesExtraction extends AbstractTask {
 
     public ModuleFilesExtraction() {
-        super("Files extraction", "Extracts module files");
+        super("Files extraction", "Extracts module files.");
     }
 
     public void execute(InstallContext ctx) throws TaskExecutionException {

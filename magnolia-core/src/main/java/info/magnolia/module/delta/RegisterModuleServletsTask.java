@@ -48,7 +48,7 @@ import java.util.Iterator;
 public class RegisterModuleServletsTask extends ArrayDelegateTask {
 
     public RegisterModuleServletsTask() {
-        super("Register module servlets");
+        super("Register module servlets", "Registers servlets for this module.");
     }
     
     public void execute(InstallContext installContext) throws TaskExecutionException {

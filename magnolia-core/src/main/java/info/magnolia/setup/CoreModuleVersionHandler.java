@@ -94,23 +94,23 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new BootstrapSingleResource("New filters", "Will override the filter chain configuration with a completely new one.", "/mgnl-bootstrap/core/config.server.filters.xml"),
 
             new BootstrapConditionally("IPConfig rules changed",
-                    "Updates the existing ip access rules to match the new configuration structure or bootstraps the new default configuration",
+                    "Updates the existing ip access rules to match the new configuration structure or bootstraps the new default configuration.",
                     "/mgnl-bootstrap/core/config.server.IPConfig.xml",
                     new ArrayDelegateTask(null,
-                            new NewPropertyTask("IPSecurityManager class property", "IPSecurity is now a component which can be configured through the repository", "config", "/server/IPConfig", "class", IPSecurityManagerImpl.class.getName()),
+                            new NewPropertyTask("IPSecurityManager class property", "IPSecurity is now a component which can be configured through the repository.", "config", "/server/IPConfig", "class", IPSecurityManagerImpl.class.getName()),
                             new IPConfigRulesUpdate()
                     )),
 
             new UpdateI18nConfiguration(),
 
-            new BootstrapSingleResource("New security configuration", "Install new configuration for security managers", "/mgnl-bootstrap/core/config.server.security.xml"),
-            new BootstrapSingleResource("New rendering strategy for links", "Install new configuration for link resolving", "/mgnl-bootstrap/core/config.server.rendering.linkResolver.xml"),
+            new BootstrapSingleResource("New security configuration", "Install new configuration for security managers.", "/mgnl-bootstrap/core/config.server.security.xml"),
+            new BootstrapSingleResource("New rendering strategy for links", "Install new configuration for link resolving.", "/mgnl-bootstrap/core/config.server.rendering.linkResolver.xml"),
 
-            new BootstrapConditionally("Install MIME mappings if not already existent", "Add MIMEMappings to server config", "/mgnl-bootstrap/core/config.server.MIMEMapping.xml"),
-            new BootstrapConditionally("Install URI2Repository mappings", "Install new configuration of URI2Repository mappings", "/mgnl-bootstrap/core/config.server.URI2RepositoryMapping.xml", new UpdateURI2RepositoryMappings()),
+            new BootstrapConditionally("MIME mappings", "Adds MIMEMappings to server config, if not already present.", "/mgnl-bootstrap/core/config.server.MIMEMapping.xml"),
+            new BootstrapConditionally("URI2Repository mappings", "Installs new configuration of URI2Repository mappings.", "/mgnl-bootstrap/core/config.server.URI2RepositoryMapping.xml", new UpdateURI2RepositoryMappings()),
 
             // -- /server configuration tasks
-            new PropertyExistsDelegateTask("Cleanup", "Config property /server/defaultMailServer was unused", "config", "/server", "defaultMailServer",
+            new PropertyExistsDelegateTask("Cleanup", "Config property /server/defaultMailServer was unused.", "config", "/server", "defaultMailServer",
                     new RemovePropertyTask("", "", "config", "/server", "defaultMailServer")),
 
             // the two following tasks replace the config.server.xml bootstrap file
@@ -128,16 +128,16 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                     new ArrayDelegateTask("",
                             new LoginAuthTypePropertyMovedToFilter(),
                             new LoginFormPropertyMovedToFilter(),
-                            new MoveAndRenamePropertyTask("unsecuredPath is now handled by the bypass mechanism", "/server/login", "UnsecuredPath", "/server/filters/uriSecurity/bypasses/login", "pattern"),
-                            new RemoveNodeTask("Login configuration changed", "Removes /server/login as it is not used anymore", "config", "/server/login")
+                            new MoveAndRenamePropertyTask("unsecuredPath is now handled by the bypass mechanism.", "/server/login", "UnsecuredPath", "/server/filters/uriSecurity/bypasses/login", "pattern"),
+                            new RemoveNodeTask("Login configuration changed", "Removes /server/login as it is not used anymore.", "config", "/server/login")
                     )),
 
             new CopyOrReplaceNodePropertiesTask("clientCallback configuration for content security", "The clientCallback configuration needs to be configuration for each security filter. This is copying the one from the URI security filter to the content security filter.",
                     "config", "/server/filters/uriSecurity/clientCallback", "/server/filters/cms/contentSecurity/clientCallback"),
 
             // --- user/roles repositories related tasks
-            new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
-            new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
+            new CreateNodeTask("Adds system folder node to users workspace", "Add system realm folder /system to users workspace.", ContentRepository.USERS, "/", Realm.REALM_SYSTEM, ItemType.NT_FOLDER),
+            new CreateNodeTask("Adds admin folder node to users workspace", "Add magnolia realm folder /admin to users workspace.", ContentRepository.USERS, "/", Realm.REALM_ADMIN, ItemType.NT_FOLDER),
 
             new IsAuthorInstanceDelegateTask("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.",
                     new AddURIPermissionsToAllRoles(true),
@@ -166,7 +166,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new RegisterModuleServletsTask(),
 
             // --- system-wide tasks (impact all modules)
-            new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed", ContentRepository.CONFIG, "/modules", null,
+            new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed.", ContentRepository.CONFIG, "/modules", null,
                     new CreateNodeTask(null, null, ContentRepository.CONFIG, "/", "modules", ItemType.CONTENT.getSystemName())),
             new RenamedRenderersToTemplateRenderers(),
             new ReconfigureCommands(),
