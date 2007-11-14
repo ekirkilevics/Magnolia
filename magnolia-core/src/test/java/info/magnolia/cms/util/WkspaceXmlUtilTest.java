@@ -45,8 +45,8 @@ import java.util.List;
 public class WkspaceXmlUtilTest extends TestCase {
 
     public void testWorkspaceOldIndexer() {
-    	SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "src/test/resources/info/magnolia/cms/util");
-    	List names = WkspaceXmlUtil.getWorkspaceNamesWithIndexer();
+    SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "src/test/resources/info/magnolia/cms/util");
+    List names = WkspaceXmlUtil.getWorkspaceNamesWithIndexer();
         assertEquals("Found incorrect amount of indexers", 1, names.size());
     }
 }

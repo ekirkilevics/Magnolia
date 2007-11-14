@@ -63,8 +63,8 @@ public class WkspaceXmlUtil {
         final SAXBuilder builder = new SAXBuilder();
         File[] files =  sourceDir.listFiles();
         if (files == null) {
-        	// new repo
-        	return names;
+        // new repo
+        return names;
         }
         for (int i = 0; i < files.length; i++) {
             File f = files[i];
