@@ -328,13 +328,13 @@
             </goals>
           </execution>
         </executions>
-        <dependencies>
+        <!--dependencies>
           <dependency>
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-build-tools</artifactId>
             <version>3.1-SNAPSHOT</version>
           </dependency>
-        </dependencies>
+        </dependencies-->
         <configuration>
           <configLocation>magnolia-build-tools/checkstyle.xml</configLocation>
           <headerLocation>magnolia-build-tools/license-header-regex.txt</headerLocation>
@@ -922,7 +922,7 @@
     </pluginRepository>
   </pluginRepositories>
   <modules>
-    <module>magnolia-build-tools</module>
+    <!--module>magnolia-build-tools</module-->
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
     <module>magnolia-gui</module>
