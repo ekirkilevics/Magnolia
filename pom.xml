@@ -337,7 +337,7 @@
         </dependencies-->
         <configuration>
           <configLocation>magnolia-build-tools/checkstyle.xml</configLocation>
-          <headerLocation>magnolia-build-tools/license-header-regex.txt</headerLocation>
+          <headerLocation>magnolia-build-tools/license-header-dual.regex</headerLocation>
           <enableRulesSummary>true</enableRulesSummary>
           <!-- this is unfortunately not supported in the 2.1 version of the checkstyle plugin -->
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
@@ -922,7 +922,6 @@
     </pluginRepository>
   </pluginRepositories>
   <modules>
-    <!--module>magnolia-build-tools</module-->
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
     <module>magnolia-gui</module>
