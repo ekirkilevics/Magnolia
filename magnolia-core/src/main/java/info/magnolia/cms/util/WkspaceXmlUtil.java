@@ -48,7 +48,7 @@ import java.util.List;
 
 
 /**
- * Contains utility methods to register or check for the existence of elements in web.xml.
+ * Contains utility methods to check workspace.xml.
  *
  * @author had
  * @version $Revision: $ ($Author: $)
@@ -58,26 +58,30 @@ public class WkspaceXmlUtil {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WkspaceXmlUtil.class);
 
     public static List getWorkspaceNamesWithIndexer() {
-    	List names = new ArrayList();
+        List names = new ArrayList();
         final File sourceDir = new File(Path.getAppRootDir() + "/repositories/magnolia/workspaces/");
         final SAXBuilder builder = new SAXBuilder();
         File[] files =  sourceDir.listFiles();
+        if (files == null) {
+        	// new repo
+        	return names;
+        }
         for (int i = 0; i < files.length; i++) {
-        	File f = files[i];
-        	if (!f.isDirectory()) {
-        		continue;
-        	}
-        	File wks = new File(f, "workspace.xml");
-        	if (!wks.exists() || !wks.canRead()) {
-        		continue;
-        	}
-        	log.info("Checking {} for old indexer.", f.getName());
+            File f = files[i];
+            if (!f.isDirectory()) {
+                continue;
+            }
+            File wks = new File(f, "workspace.xml");
+            if (!wks.exists() || !wks.canRead()) {
+                continue;
+            }
+            log.info("Checking {} for old indexer.", f.getName());
             try {
-            	// check for the indexer def in wks
-            	List list = getElementsFromXPath(builder.build(wks), "/Workspace/SearchIndex/param[@name='textFilterClasses']/@value");
-            	System.out.println("val:" + ((Attribute)list.get(0)).getValue());
+                // check for the indexer def in wks
+                List list = getElementsFromXPath(builder.build(wks), "/Workspace/SearchIndex/param[@name='textFilterClasses']/@value");
+                System.out.println("val:" + ((Attribute)list.get(0)).getValue());
                 if (list.size() > 0 && ((Attribute)list.get(0)).getValue().matches(".*\\.core\\.query\\..*")) {
-                	names.add(wks.getAbsolutePath());
+                    names.add(wks.getAbsolutePath());
                 }
             } catch (JDOMException e) {
                 throw new RuntimeException(e); // TODO
