@@ -28,13 +28,6 @@ var yMousePos = 0;
 
 function initMouseEvents()
     {
-    // ns 4, check if needed for ns 6+
-    if (navigator.appName=="Netscape")
-        {
-        document.captureEvents(Event.MOUSEMOVE);
-        document.captureEvents(Event.MOUSEDOWN);
-        document.captureEvents(Event.MOUSEUP);
-        }
     document.onmousemove=getMousePos;
     document.onmousedown=mgnlResetDown;
     document.onmouseup=mgnlResetUp;
