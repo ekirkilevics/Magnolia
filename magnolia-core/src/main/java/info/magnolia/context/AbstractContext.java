@@ -39,7 +39,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 
 import java.util.Collection;
@@ -80,7 +79,7 @@ public abstract class AbstractContext implements Context {
 
     private AttributeStrategy attributeStrategy;
 
-    private RepositoryAcquringStrategy repositoryStrategy;
+    private RepositoryAcquiringStrategy repositoryStrategy;
 
     public AttributeStrategy getAttributeStrategy() {
         return attributeStrategy;
@@ -90,11 +89,11 @@ public abstract class AbstractContext implements Context {
         this.attributeStrategy = strategy;
     }
 
-    public RepositoryAcquringStrategy getRepositoryStrategy() {
+    public RepositoryAcquiringStrategy getRepositoryStrategy() {
         return repositoryStrategy;
     }
 
-    public void setRepositoryStrategy(RepositoryAcquringStrategy strategy) {
+    public void setRepositoryStrategy(RepositoryAcquiringStrategy strategy) {
         this.repositoryStrategy = strategy;
     }
 
@@ -159,9 +158,9 @@ public abstract class AbstractContext implements Context {
      */
     public Locale getLocale() {
         if (locale == null) {
+            // TODO : this could cause an infinite loop since this is not overwritten in SysCtx !?!?
             locale = MgnlContext.getSystemContext().getLocale();
         }
-
         return locale;
     }
 

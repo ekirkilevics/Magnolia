@@ -55,7 +55,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
-public abstract class AbstractRepositoryStrategy implements RepositoryAcquringStrategy{
+public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringStrategy {
 
     private static Logger log = LoggerFactory.getLogger(AbstractRepositoryStrategy.class);
 

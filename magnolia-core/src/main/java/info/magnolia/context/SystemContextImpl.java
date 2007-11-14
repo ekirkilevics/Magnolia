@@ -33,8 +33,6 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.security.User;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -79,11 +77,11 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
         super.removeAttribute(name, scope);
     }
 
-    public RepositoryAcquringStrategy getRepositoryStrategy() {
+    public RepositoryAcquiringStrategy getRepositoryStrategy() {
         if(reposiotryStrategyThreadLocal.get() == null){
             reposiotryStrategyThreadLocal.set(new SystemRepositoryStrategy(this));
         }
-        return (RepositoryAcquringStrategy) reposiotryStrategyThreadLocal.get();
+        return (RepositoryAcquiringStrategy) reposiotryStrategyThreadLocal.get();
     }
 
     public void release() {
