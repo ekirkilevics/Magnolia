@@ -68,6 +68,7 @@ import info.magnolia.setup.for3_1.ReconfigureCommands;
 import info.magnolia.setup.for3_1.RemoveModuleDescriptorDetailsFromRepo;
 import info.magnolia.setup.for3_1.RenamedRenderersToTemplateRenderers;
 import info.magnolia.setup.for3_1.UpdateI18nConfiguration;
+import info.magnolia.setup.for3_1.UpdateURI2RepositoryMappings;
 import info.magnolia.setup.for3_1.UpdateURIMappings;
 
 import java.util.ArrayList;
@@ -101,12 +102,11 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
             new UpdateI18nConfiguration(),
 
-            // TODO add conditions for all these bootstrap since with this version we don't know if we're installing or updating !
-            new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.MIMEMapping.xml"),
-            new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.security.xml"),
-            new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.URI2RepositoryMapping.xml"),
-            new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.server.rendering.linkResolver.xml"),
-            new BootstrapSingleResource(/*TODO*/"", /*TODO*/"", "/mgnl-bootstrap/core/config.modules.adminInterface.virtualURIMapping.default.xml"),
+            new BootstrapSingleResource("New security configuration", "Install new configuration for security managers", "/mgnl-bootstrap/core/config.server.security.xml"),
+            new BootstrapSingleResource("New rendering strategy for links", "Install new configuration for link resolving", "/mgnl-bootstrap/core/config.server.rendering.linkResolver.xml"),
+            
+            new BootstrapConditionally("Install MIME mappings if not already existent", "Add MIMEMappings to server config", "/mgnl-bootstrap/core/config.server.MIMEMapping.xml"),
+            new BootstrapConditionally("Install URI2Repository mappings", "Install new configuration of URI2Repository mappings", "/mgnl-bootstrap/core/config.server.URI2RepositoryMapping.xml", new UpdateURI2RepositoryMappings()),
 
             // -- /server configuration tasks
             new PropertyExistsDelegateTask("Cleanup", "Config property /server/defaultMailServer was unused", "config", "/server", "defaultMailServer",
