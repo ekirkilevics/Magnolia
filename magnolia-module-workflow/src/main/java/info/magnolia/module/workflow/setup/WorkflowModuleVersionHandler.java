@@ -56,10 +56,10 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
-    private final Task mainMenu = new AddMainMenuItemTask("inbox", "menu.inbox", "info.magnolia.module.workflow.messages",
+    private final Task inboxMenu = new AddMainMenuItemTask("inbox", "menu.inbox", "info.magnolia.module.workflow.messages",
             "MgnlAdminCentral.showContent('/.magnolia/pages/inbox.html', false, false)", "/.resources/icons/24/mail.gif",
             "security");
-    private final Task subMenu = new AddSubMenuItemTask("config", "workflows", "menu.config.workflows",
+    private final Task flowsPageMenu = new AddSubMenuItemTask("config", "workflows", "menu.config.workflows",
             "MgnlAdminCentral.showContent('/.magnolia/pages/flows.html');", "/.resources/icons/16/dot.gif");
 
     private final Task bootstrapSecurityConfig = new BootstrapResourcesTask("", "") {
@@ -73,8 +73,8 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
 
     public WorkflowModuleVersionHandler() {
         final Delta delta31 = DeltaBuilder.update("3.5", "")
-                .addTask(mainMenu)
-                .addTask(subMenu)
+                .addTask(inboxMenu)
+                .addTask(flowsPageMenu)
                 .addTask(new AddNewDefaultConfig())
                 .addTask(new InstallDefaultWorkflowDefinition())
                 .addTask(new RemoveMetadataFromExpressionsWorkspace())
@@ -86,8 +86,8 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
     protected List getExtraInstallTasks(InstallContext ctx) {
         final List tasks = new ArrayList();
 
-        tasks.add(mainMenu);
-        tasks.add(subMenu);
+        tasks.add(inboxMenu);
+        tasks.add(flowsPageMenu);
         tasks.add(new InstallDefaultWorkflowDefinition());
 
         if (ctx.isModuleRegistered("samples")) {
