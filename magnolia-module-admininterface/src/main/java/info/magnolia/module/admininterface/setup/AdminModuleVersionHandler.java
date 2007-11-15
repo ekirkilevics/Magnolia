@@ -43,6 +43,7 @@ import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
+import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
@@ -61,6 +62,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif");
 
     public AdminModuleVersionHandler() {
+        final String pathToRestartPage = "/modules/adminInterface/pages/restart";
+
         final Delta for35 = DeltaBuilder.update("3.5", "")
                 .addTask(new BootstrapConditionally("Install VirtualURI mappings", "Install new configuration of virtualURI mappings", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.virtualURIMapping.default.xml"))
                 .addTask(new BootstrapSingleResource("New ACL configuration", "Bootstraps the new configuration for the ACL dialogs", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.config.securityConfiguration.xml"))
@@ -71,8 +74,10 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                         new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/security/users"),
                         sysUsersSubMenu,
                         adminUsersSubMenu}))
-                .addTask(new NodeExistsDelegateTask("Remove Kupu richEdit control", "Checks for previous Kupu editor installation and removes richEdit control if existent.", ContentRepository.CONFIG, "/modules/adminInterface/controls/richEdit", 
+                .addTask(new NodeExistsDelegateTask("Remove Kupu richEdit control", "Checks for previous Kupu editor installation and removes richEdit control if existent.", ContentRepository.CONFIG, "/modules/adminInterface/controls/richEdit",
                         new RemoveNodeTask("Remove Kupu richEdit control", "Removes the richEdit control from Admin Interface since the Kupu Module is not delivered anymore.", ContentRepository.CONFIG, "/modules/adminInterface/controls/richEdit")))
+                .addTask(new PropertyValueDelegateTask("Unused page", "Removes the now unused \"restart\" page", ContentRepository.CONFIG, pathToRestartPage, "class", "info.magnolia.module.admininterface.pages.RestartPage", false,
+                        new RemoveNodeTask(null, null, ContentRepository.CONFIG, pathToRestartPage), null))
                 .addTask(new RegisterModuleServletsTask());
 
         register(for35);

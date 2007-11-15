@@ -50,6 +50,8 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated not used nor useful anymore. The install/update mechanism introduced in 3.5 takes care of warning the user for needed restarts, before such a page could even be displayed.
  */
 public class RestartPage extends TemplatedMVCHandler {
 
@@ -68,6 +70,7 @@ public class RestartPage extends TemplatedMVCHandler {
         List restartNeedingModules = new ArrayList();
 
         // collect the modules needing a restart
+        // TODO : review this !
         for (Iterator iter = ModuleLoader.getInstance().getModuleInstances().keySet().iterator(); iter.hasNext();) {
             String moduleName = (String) iter.next();
             Module module = ModuleLoader.getInstance().getModuleInstance(moduleName);
