@@ -3,7 +3,7 @@
         PUBLIC "-//Sun Microsystems, Inc.//DTD JSP Tag Library 1.2//EN"
     "http://java.sun.com/dtd/web-jsptaglibrary_1_2.dtd">
 <taglib>
-  <tlib-version>2.1</tlib-version>
+  <tlib-version>3.5</tlib-version>
   <jsp-version>1.2</jsp-version>
   <short-name>cmsu</short-name>
   <uri>cms-util-taglib</uri>

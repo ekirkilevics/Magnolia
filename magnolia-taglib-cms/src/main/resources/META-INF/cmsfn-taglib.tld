@@ -3,7 +3,7 @@
   version="2.0">
   <description>Core functions for CMS</description>
   <display-name>cms functions</display-name>
-  <tlib-version>3.1</tlib-version>
+  <tlib-version>3.5</tlib-version>
   <short-name>cmsfn</short-name>
   <uri>http://www.magnolia.info/tlds/cmsfn-taglib.tld</uri>
   <function>
