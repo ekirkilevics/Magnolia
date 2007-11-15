@@ -36,9 +36,9 @@ package info.magnolia.module.workflow.flows;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContextImpl;
 import info.magnolia.module.workflow.WorkflowConstants;
@@ -57,8 +57,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import javax.jcr.RepositoryException;
-import javax.jcr.Value;
-import javax.jcr.ValueFactory;
 import javax.servlet.http.HttpServletRequest;
 
 import openwfe.org.engine.workitem.LaunchItem;
@@ -153,26 +151,11 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
             // check if the node already exist, and if it does update the value of the the NodeData FLOW_VALUE with the
             // new flow. This is to allow duplication of flow node.
 
-            final boolean exist = hm.isExist(root.getHandle() + "/" + workflowName);
-            Content c;
-            if (exist) {
-                c = hm.getContent(root.getHandle() + "/" + workflowName);
-            }
-            else {
-                c = root.createContent(workflowName, ItemType.CONTENTNODE);
-            }
+            final Content wfNode = ContentUtil.getOrCreateContent(root, workflowName, ItemType.CONTENTNODE);
+            NodeDataUtil.getOrCreateAndSet(wfNode, WorkflowConstants.FLOW_VALUE, definition);
 
-            ValueFactory vf = c.getJCRNode().getSession().getValueFactory();
-            Value value = vf.createValue(definition);
-            if (!exist) {
-                c.createNodeData(WorkflowConstants.FLOW_VALUE, value);
-            }
-            else {
-                ((NodeData) c.getNodeDataCollection(WorkflowConstants.FLOW_VALUE).iterator().next()).setValue(value);
-            }
-
-            hm.save();
-            log.info("new flow added");
+            root.save();
+            log.info("New flow added: " + workflowName);
         }
         catch (Exception e) {
             throw new FlowDefinitionException("can't add flow", e);
@@ -181,13 +164,11 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
 
     protected String extractWorkflowName(String definition) throws FlowDefinitionException {
         try {
-            String name;
             // jdom
             final org.jdom.input.SAXBuilder builder = new org.jdom.input.SAXBuilder();
             Document doc = builder.build(new StringReader(definition));
             Element process_definition = doc.getRootElement();
-            name = process_definition.getAttribute("name").getValue();
-            return name;
+            return process_definition.getAttribute("name").getValue();
         }
         catch(Exception e){
             throw new FlowDefinitionException("can't extract name out of the definition", e);
