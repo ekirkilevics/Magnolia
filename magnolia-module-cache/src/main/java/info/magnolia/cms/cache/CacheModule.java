@@ -76,7 +76,7 @@ public class CacheModule implements ModuleLifecycle {
         Content configNode;
         try {
             configNode = hm.getContent("/modules/cache/config");
-            Content voters = ContentUtil.getOrCreateContent(configNode, "voters", ItemType.CONTENT);
+            Content voters = ContentUtil.getOrCreateContent(configNode, "voters", ItemType.CONTENT, true);
             this.cacheManager.init(configNode);
 
             // check for standard voters

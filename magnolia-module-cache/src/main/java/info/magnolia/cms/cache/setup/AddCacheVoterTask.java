@@ -94,6 +94,7 @@ public class AddCacheVoterTask extends AbstractRepositoryTask {
                     m.createNodeData((String) entry.getKey(), entry.getValue());
                 }
             }
+            voters.save();
         }
     }
 
