@@ -106,6 +106,8 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         Session jcrSession = (Session) jcrSessions.get(repoSessAttrName);
 
         if (jcrSession == null) {
+            log.debug("creating jcr session {}", repositoryName);
+
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
             jcrSessions.put(repoSessAttrName, jcrSession);
@@ -115,6 +117,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
     }
 
     public void release() {
+        log.debug("releasing jcr sessions");
         for (Iterator iter = jcrSessions.values().iterator(); iter.hasNext();) {
             Session session = (Session) iter.next();
             if(session != null && session.isLive()){
