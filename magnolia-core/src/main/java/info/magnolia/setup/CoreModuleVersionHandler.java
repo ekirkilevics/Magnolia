@@ -143,6 +143,10 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                     new AddURIPermissionsToAllRoles(true),
                     new AddURIPermissionsToAllRoles(false)),
 
+            new IsAuthorInstanceDelegateTask("Anonymous role", "Anonymous role must exist",
+                new BootstrapConditionally("", "Author permissions", "/mgnl-bootstrap/core/userroles.anonymous.xml"), 
+                new BootstrapConditionally("", "Public permissions", "/mgnl-bootstrap/core/public/userroles.anonymous.xml")), 
+
             new BootstrapConditionally("Anonymous user", "Anonymous user must exist in the system realm: will move the existing one or bootstrap it.",
                     ContentRepository.USERS, "/anonymous", "/mgnl-bootstrap/core/users.system.anonymous.xml",
                     new ArrayDelegateTask("",
