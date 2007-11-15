@@ -194,9 +194,7 @@ public final class ModuleUtil {
                 // hm can be null if module is not properly registered and the repository has not been created
                 if (hm != null && hm.isExist(fullPath)) {
                     hm.delete(fullPath);
-                    if (log.isDebugEnabled()) {
-                        log.debug("already existing node [{}] deleted", fullPath);
-                    }
+                    log.warn("already existing node [{}] deleted", fullPath);
                 }
             }
             catch (Exception e) {
@@ -209,7 +207,7 @@ public final class ModuleUtil {
             }
             DataTransporter.importXmlStream(stream, repository, pathName, name, false,
             // TODO !! this ImportUUIDBehavior might import nodes in the wrong place !!!
-                ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING,
+                ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW,
                 saveAfterImport,
                 true);
         }
