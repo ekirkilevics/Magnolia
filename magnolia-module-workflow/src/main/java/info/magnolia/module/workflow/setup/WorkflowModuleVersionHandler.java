@@ -62,7 +62,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
     private final Task flowsPageMenu = new AddSubMenuItemTask("config", "workflows", "menu.config.workflows",
             "MgnlAdminCentral.showContent('/.magnolia/pages/flows.html');", "/.resources/icons/16/dot.gif");
 
-    private final Task bootstrapSecurityConfig = new BootstrapResourcesTask("", "") {
+    private final Task bootstrapSecurityConfig = new BootstrapResourcesTask("New ACL configuration", "Bootstraps the new configuration for the ACL dialogs") {
         protected String[] getResourcesToBootstrap(final InstallContext installContext) {
             return new String[]{
                     "/mgnl-bootstrap/workflow/config.modules.adminInterface.config.securityConfiguration.repositories.Expressions.xml",
