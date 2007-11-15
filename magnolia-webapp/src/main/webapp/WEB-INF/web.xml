@@ -8,9 +8,6 @@
     <display-name>Magnolia global filters</display-name>
     <filter-name>magnoliaFilterChain</filter-name>
     <filter-class>info.magnolia.cms.filters.MgnlMainFilter</filter-class>
-    <!--
-      login configuration is now in config jcr, path: /server/config/login
-    -->
   </filter>
   <filter-mapping>
     <filter-name>magnoliaFilterChain</filter-name>
