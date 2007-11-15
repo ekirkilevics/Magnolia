@@ -33,9 +33,12 @@
  */
 package info.magnolia.cms.cache.setup;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.FilterOrderingTask;
+import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
+import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.DeltaBuilder;
 
@@ -60,6 +63,8 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
     protected List getExtraInstallTasks(InstallContext installContext) {
         final List tasks = super.getBasicInstallTasks(installContext);
         tasks.add(new FilterOrderingTask("cache", new String[]{"i18n"}));
+        // activate cache on public instances
+        tasks.add(new IsAuthorInstanceDelegateTask("Cache Activating", "Sets cache to active on public instances", null, new SetPropertyTask(ContentRepository.CONFIG,"/modules/cache/config","active", "true")));
         return tasks;
     }
 
