@@ -79,20 +79,20 @@ public class UpdateActivationConfigTask extends AbstractRepositoryTask {
                 subscribers.add(subscriber);
             }
 
-            to31Layout(hm, subscribers);
+            to35Layout(hm, subscribers);
 
             subscribersParent.delete();
         } else if (hm.isExist(CE30_ROOT_PATH)) {
             final Content subscriberNode = hm.getContent(CE30_ROOT_PATH);
             final Subscriber subscriber = from30ConfigLayout(subscriberNode, DEFAULT_SUBSCRIBER_NAME);
-            to31Layout(hm, Collections.singleton(subscriber));
+            to35Layout(hm, Collections.singleton(subscriber));
             subscriberNode.delete();
         } else {
             throw new TaskExecutionException("Couldn't find " + CE30_ROOT_PATH + " nor " + EE30_ROOT_PATH + " node, can't update activation subscribers configuration.");
         }
     }
 
-    protected void to31Layout(HierarchyManager hm, Collection subscribers) throws RepositoryException {
+    protected void to35Layout(HierarchyManager hm, Collection subscribers) throws RepositoryException {
         final Content activationNode = hm.getContent("/server").createContent("activation");
         activationNode.createNodeData("class", DefaultActivationManager.class.getName());
         final Content subscribersNode = activationNode.createContent("subscribers");

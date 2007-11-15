@@ -47,7 +47,6 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.TaskExecutionException;
-import info.magnolia.setup.for3_5.UpdateI18nConfiguration;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
@@ -72,7 +71,7 @@ public class UpdateI18nConfigurationTest extends TestCase {
             "server.i18n.availableLanguages.es=es\n" +
             "server.i18n.availableLanguages.fr_BE=fr_BE\n";
 
-    private static final String BOOTSTRAPPED_CONTENT_FOR_31 = "" +
+    private static final String BOOTSTRAPPED_CONTENT_FOR_35 = "" +
             "server.i18n@type=mgnl:content\n" +
             "server.i18n.system@type=mgnl:contentNode\n" +
             "server.i18n.system.fallbackLanguage=en\n" +
@@ -128,7 +127,7 @@ public class UpdateI18nConfigurationTest extends TestCase {
         MgnlContext.setInstance(mgnlCtx);
         final UpdateI18nConfiguration.UpdateFrom30 task = new UpdateI18nConfiguration.UpdateFrom30() {
             protected void doBootstrap(InstallContext ctx) throws TaskExecutionException {
-                final ByteArrayInputStream propertiesStream = new ByteArrayInputStream(BOOTSTRAPPED_CONTENT_FOR_31.getBytes());
+                final ByteArrayInputStream propertiesStream = new ByteArrayInputStream(BOOTSTRAPPED_CONTENT_FOR_35.getBytes());
                 try {
                     MockUtil.createContent(hm.getRoot(), propertiesStream);
                 } catch (IOException e) {
