@@ -38,9 +38,6 @@ import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * @author philipp
@@ -64,7 +61,7 @@ public class OrderNodeBeforeTask extends AbstractRepositoryTask {
 
     protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
         Content node = installContext.getHierarchyManager(repository).getContent(path);
-        node.orderBefore(node.getParent().getHandle(), orderBeforeNodeName);
+        node.getParent().orderBefore(node.getName(), orderBeforeNodeName);
     }
 
 }
