@@ -57,6 +57,8 @@ public final class SystemProperty {
 
     public static final String MAGNOLIA_BOOTSTRAP_ROOTDIR = "magnolia.bootstrap.dir"; //$NON-NLS-1$
 
+    public static final String MAGNOLIA_BOOTSTRAP_SAMPLES = "magnolia.bootstrap.samples"; //$NON-NLS-1$
+
     public static final String MAGNOLIA_WEBAPP = "magnolia.webapp";
 
     public static final String MAGNOLIA_SERVERNAME = "magnolia.servername";
