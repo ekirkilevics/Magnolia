@@ -187,6 +187,8 @@ public abstract class AbstractLoginModule implements LoginModule {
                 this.realm = StringUtils.defaultIfEmpty(((RealmCallback)callbacks[2]).getRealm(), this.realm);
             }
             
+            this.validateUser();
+            
             // FIXME we do that only to be compatible to the old way jaas modules were written
             if(this instanceof UserAwareLoginModule){
                 User user = ((UserAwareLoginModule)this).getUser();
