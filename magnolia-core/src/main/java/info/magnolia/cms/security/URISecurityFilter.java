@@ -98,7 +98,7 @@ public class URISecurityFilter extends BaseSecurityFilter {
             Access.isGranted(accessManager, handle, permission);
             return true;
         } catch (AccessDeniedException ade) {
-            log.debug(ade.getMessage(), ade);
+            log.debug(ade.getMessage());
         }
         return false;
     }
