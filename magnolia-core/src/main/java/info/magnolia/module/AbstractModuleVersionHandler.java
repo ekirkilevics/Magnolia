@@ -164,20 +164,6 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         return Collections.EMPTY_LIST;
     }
 
-    public Delta getStartupDelta(InstallContext installContext) {
-        final ModuleDefinition moduleDef = installContext.getCurrentModuleDefinition();
-        final List tasks = getStartupTasks(installContext);
-        return DeltaBuilder.startup(moduleDef, tasks);
-    }
-
-    /**
-     * Override this method to add specific startup tasks to your module.
-     * Returns an empty list by default.
-     */
-    protected List getStartupTasks(InstallContext installContext) {
-        return Collections.EMPTY_LIST;
-    }
-
     // TODO : make this mandatory and "hidden" ?
     public class ModuleVersionToLatestTask extends AbstractRepositoryTask {
         protected ModuleVersionToLatestTask() {
