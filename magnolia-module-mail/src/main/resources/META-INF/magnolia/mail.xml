@@ -8,6 +8,10 @@
   <version>${project.version}</version>
   <dependencies>
     <dependency>
+      <name>adminInterface</name>
+      <version>3.5/*</version>
+    </dependency>
+    <dependency>
       <name>templating</name>
       <version>3.5/*</version>
     </dependency>
