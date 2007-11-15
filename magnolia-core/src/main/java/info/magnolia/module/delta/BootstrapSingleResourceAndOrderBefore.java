@@ -44,6 +44,7 @@ public class BootstrapSingleResourceAndOrderBefore extends ArrayDelegateTask {
 
     public BootstrapSingleResourceAndOrderBefore(String name, String description, String resource, String orderBeforeName) {
         super(name, description);
+        // TODO : these values should be provided by the BootstrapUtil/Helper once MAGNOLIA-1806 is done.
         String filename = StringUtils.substringAfterLast(resource, "/");
         String repository = StringUtils.substringBefore(filename, ".");
         String path = StringUtils.substringAfter(StringUtils.substringAfterLast(filename, "."),".");
