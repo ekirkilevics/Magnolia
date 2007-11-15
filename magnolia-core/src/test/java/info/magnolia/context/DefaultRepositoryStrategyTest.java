@@ -35,6 +35,7 @@ package info.magnolia.context;
 
 import static org.easymock.classextension.EasyMock.*;
 
+import java.util.ArrayList;
 import java.util.Set;
 
 import javax.security.auth.Subject;
@@ -58,21 +59,23 @@ public class DefaultRepositoryStrategyTest extends TestCase {
 		UserContext context = createMock(UserContext.class);
 		User user = createMock(User.class);
 		Subject subject = new Subject();
-//		Set principalSet = subject.getPrincipals(PrincipalCollection.class);
-//		PrincipalCollection principals = new PrincipalCollectionImpl();
-//		ACL acl = new ACLImpl();
+		Set principalSet = subject.getPrincipals(PrincipalCollection.class);
+		PrincipalCollection principals = createMock(PrincipalCollection.class);
+		ACL acl = createMock(ACL.class);
 //		acl.setName("repo1_space1");
 //		acl.setRepository("repo1");
 //		acl.setWorkspace("space1");
-//		principals.add(acl);
-//		principalSet.add(principals);
-//		expect(context.getUser()).andReturn(user);
-//		expect(user.getSubject()).andReturn(subject);
-//		DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
-//		replay(context, user);
-//		AccessManager accessManager = strategy.getAccessManager("repo1", "space1");
-//		assertNotNull(accessManager);
-//		assertSame(accessManager, strategy.getAccessManager("repo1", "space1"));
-//		verify(context, user);
+//		principals.add(acl)
+		principalSet.add(principals);
+		expect(context.getUser()).andReturn(user);
+		expect(user.getSubject()).andReturn(subject);
+		expect(principals.get("repo1_space1")).andReturn(acl);
+		expect(acl.getList()).andReturn(new ArrayList());
+		replay(context, user, acl, principals);
+		DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
+		AccessManager accessManager = strategy.getAccessManager("repo1", "space1");
+		assertNotNull(accessManager);
+		assertSame(accessManager, strategy.getAccessManager("repo1", "space1"));
+		verify(context, user, acl, principals);
 	}
 }

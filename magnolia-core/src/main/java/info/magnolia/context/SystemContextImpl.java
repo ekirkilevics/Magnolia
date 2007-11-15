@@ -33,6 +33,8 @@
  */
 package info.magnolia.context;
 
+import java.util.Locale;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -86,5 +88,12 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
 
     public void release() {
         reposiotryStrategyThreadLocal.remove();
+    }
+        
+    public Locale getLocale() { 
+    	if (locale != null) 
+    		return locale;
+    	else
+    		return Locale.ENGLISH;
     }
 }

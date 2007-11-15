@@ -72,7 +72,7 @@ public abstract class AbstractContext implements Context {
     /**
      * The locale for this context
      */
-    private Locale locale;
+    protected Locale locale;
 
     private AttributeStrategy attributeStrategy;
 
