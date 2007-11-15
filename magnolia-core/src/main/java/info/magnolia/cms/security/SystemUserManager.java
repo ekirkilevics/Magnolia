@@ -107,8 +107,8 @@ public class SystemUserManager extends MgnlUserManager {
 
     public User getAnonymousUser() {
         if(anonymousUser == null){
-            anonymousUser = getOrCreateUser(UserManager.ANONYMOUS_USER, "");
-            Subject subject = getSubject(UserManager.ANONYMOUS_USER, "");
+            anonymousUser = getOrCreateUser(UserManager.ANONYMOUS_USER, UserManager.ANONYMOUS_USER);
+            Subject subject = getSubject(UserManager.ANONYMOUS_USER, UserManager.ANONYMOUS_USER);
             anonymousUser.setSubject(subject);
         }
         return anonymousUser;
@@ -123,10 +123,6 @@ public class SystemUserManager extends MgnlUserManager {
         return user;
     }
     
-    protected Subject getAnonymousSubject() {
-    	return getSubject(getAnonymousUser().getName(), getAnonymousUser().getPassword());        
-    }
-
     private Subject getSubject(String userName, String password) {
     	CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(
             userName, password.toCharArray(), Realm.REALM_SYSTEM);
