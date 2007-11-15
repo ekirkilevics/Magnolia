@@ -66,11 +66,13 @@ public final class SystemProperty {
     /**
      * If this repository/workspace is empty bootstrap this repository. This will be the config repository in the most
      * cases.
+     * @deprecated Since 3.5
      */
     public static final String BOOTSTRAP_IF_EMPTY = "magnolia.bootstrap.ifEmpty";
 
     /**
      * Force bootstrapping of the listed workspaces
+     * @deprecated Since 3.5
      */
     public static final String BOOTSTRAP_FORCE = "magnolia.bootstrap.force";
 
