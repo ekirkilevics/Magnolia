@@ -384,6 +384,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws AccessDeniedException
      */
     public void delete(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        Access.isGranted(this.accessManager, path, Permission.REMOVE);
         if (this.isNodeData(path)) {
             this.getNodeData(makeRelative(path)).delete();
         }
