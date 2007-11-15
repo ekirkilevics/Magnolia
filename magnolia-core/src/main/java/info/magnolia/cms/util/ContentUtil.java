@@ -165,15 +165,16 @@ public class ContentUtil {
     }
 
     /**
-     * If the node doesn't exist just create it.
-     * @param node
-     * @param name
-     * @param contentType
-     * @return
-     * @throws AccessDeniedException
-     * @throws RepositoryException
+     * If the node doesn't exist just create it. Attention the method does not save the newly created node.
      */
-    public static Content getOrCreateContent(Content node, String name, ItemType contentType)
+    public static Content getOrCreateContent(Content node, String name, ItemType contentType) throws AccessDeniedException, RepositoryException{
+        return getOrCreateContent(node, name, contentType, false);
+    }
+
+    /**
+     * If the node doesn't exist just create it. If the parameter save is true the parent node is saved.
+     */
+    public static Content getOrCreateContent(Content node, String name, ItemType contentType, boolean save)
         throws AccessDeniedException, RepositoryException {
         Content res = null;
         try {
@@ -181,6 +182,9 @@ public class ContentUtil {
         }
         catch (PathNotFoundException e) {
             res = node.createContent(name, contentType);
+            if(save){
+                res.getParent().save();
+            }
         }
         return res;
     }
