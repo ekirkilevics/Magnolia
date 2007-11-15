@@ -39,6 +39,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 
 import java.util.Collection;
@@ -64,12 +65,8 @@ public abstract class AbstractContext implements Context {
      */
     private static Logger log = LoggerFactory.getLogger(AbstractContext.class);
 
-    /**
-     * @deprecated redefined by UserContext
-     */
     public User getUser() {
-        // FIXME
-        throw new UnsupportedOperationException("This is not a UserContext");
+        return Security.getSystemUser();
     }
 
     /**

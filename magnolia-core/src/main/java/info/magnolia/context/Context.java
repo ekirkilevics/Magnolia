@@ -86,8 +86,7 @@ public interface Context extends org.apache.commons.chain.Context {
     public static final String ATTRIBUTE_EXCEPTION = "exception";
 
     /**
-     * Cast to UserContext
-     * @deprecated
+     * If this is not a UserContext this method will very likely return the system user
      */
     public User getUser();
 

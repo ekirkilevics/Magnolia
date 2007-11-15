@@ -33,7 +33,7 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.security.Authenticator;
+import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 
 import java.util.Locale;
@@ -63,7 +63,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
         if (user == null) {
             user = (User) getAttribute(SESSION_USER, Context.SESSION_SCOPE);
             if (user == null) {
-                user = Authenticator.getAnonymousUser();
+                user = Security.getAnonymousUser();
             }
         }
         return this.user;
@@ -78,6 +78,6 @@ public class UserContextImpl extends AbstractContext implements UserContext {
     public void logout() {
         removeAttribute(SESSION_USER, Context.SESSION_SCOPE);
         user = null;
-        login(Authenticator.getAnonymousUser());
+        login(Security.getAnonymousUser());
     }
 }

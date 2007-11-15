@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.DumperUtil;
@@ -236,7 +235,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         if (session != null) {
             session.invalidate();
         }
-        login(Authenticator.getAnonymousUser());
+        login(Security.getAnonymousUser());
     }
 
     /**
