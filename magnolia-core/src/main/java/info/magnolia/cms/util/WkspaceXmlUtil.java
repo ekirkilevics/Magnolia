@@ -75,6 +75,7 @@ public class WkspaceXmlUtil {
             if (!wks.exists() || !wks.canRead()) {
                 continue;
             }
+            log.debug("Checking {} for old indexer.", f.getName());
             try {
                 // check for the indexer def in wks
                 List list = getElementsFromXPath(builder.build(wks), "/Workspace/SearchIndex/param[@name='textFilterClasses']/@value");
