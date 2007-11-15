@@ -18,7 +18,7 @@
             </p>
             <source>
                 <![CDATA[
-Default configuration directory used with info.magnolia.cms.servlets.PropertyInitializer.
+Default configuration directory used with info.magnolia.cms.servlets.MgnlServletContextListener.
 
 Using the Magnolia PropertyInitializer you can easily bundle in the same webapp different set of configurations
 which are automatically applied dependending on the server name or the webapp name.
@@ -79,7 +79,7 @@ magnolia.initialization.file context parameter in WEB.xml);
     <listener>
       <description>Magnolia Property Initializer</description>
       <display-name>propertyInitializer</display-name>
-      <listener-class>info.magnolia.cms.servlets.PropertyInitializer</listener-class>
+      <listener-class>info.magnolia.cms.servlets.MgnlServletContextListener</listener-class>
     </listener>
 
     <context-param>

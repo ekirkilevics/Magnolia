@@ -51,7 +51,7 @@ public class MgnlServletContextListenerTest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         servletContext = createStrictMock(ServletContext.class);
-        propInit = new PropertyInitializer();
+        propInit = new MgnlServletContextListener();
     }
 
     protected void tearDown() throws Exception {

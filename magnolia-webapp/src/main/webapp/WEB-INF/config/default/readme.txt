@@ -1,4 +1,4 @@
-Default configuration directory used with info.magnolia.cms.servlets.PropertyInitializer.
+Default configuration directory used with info.magnolia.cms.servlets.MgnlServletContextListener.
 
 Using the Magnolia PropertyInitializer you can easily bundle in the same webapp different set of configurations
 which are automatically applied dependending on the server name or the webapp name.

@@ -18,7 +18,7 @@
     <category name="com">
         <priority value="WARN" />
     </category>
-    <category name="info.magnolia.cms.servlets.PropertyInitializer">
+    <category name="info.magnolia.cms.servlets.MgnlServletContextListener">
         <priority value="DEBUG" />
     </category>
     <root>
