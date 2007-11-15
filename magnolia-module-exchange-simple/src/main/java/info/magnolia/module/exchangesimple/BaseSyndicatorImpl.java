@@ -135,6 +135,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
      public static final String DEACTIVATE = "deactivate"; //$NON-NLS-1$
 
+    /**
+     * @deprecated since 3.5, use DEACTIVATE
+     */
+     public static final String DE_ACTIVATE = DEACTIVATE;
+
      public static final String AUTHORIZATION = "Authorization";
 
      public static final String CONTENT_FILTER_RULE = "mgnlExchangeFilterRule";
@@ -618,5 +623,34 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          }
      }
 
+
+    // -- deprecated deactivation methods, spelled with capital A
+    /**
+     * @deprecated Use deactivate(Content node)
+     */
+    public void deActivate(String path) throws ExchangeException, RepositoryException{
+        deactivate(path);
+    }
+
+    /**
+     * @deprecated Use deactivate(Subscriber subscriber, Content node)
+     */
+    public void deActivate(Subscriber subscriber, String path) throws ExchangeException, RepositoryException {
+        deactivate(subscriber, path);
+    }
+
+    /**
+     * @deprecated Use deactivate(Content node)
+     */
+    public void deActivate(Content node) throws ExchangeException, RepositoryException {
+        deactivate(node);
+    }
+
+    /**
+     * @deprecated Use deactivate(Subscriber subscriber, Content node)
+     */
+    public void deActivate(Subscriber subscriber, Content node) throws ExchangeException, RepositoryException {
+        deactivate(subscriber, node);
+    }
 
 }

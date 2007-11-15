@@ -158,4 +158,26 @@ public interface Syndicator {
     public void deactivate(Subscriber subscriber, Content node)
             throws ExchangeException, RepositoryException;
 
+    // -- deprecated deactivation methods, spelled with capital A
+    /**
+     * @deprecated since 3.5, use deactivate(Content node)
+     */
+    public void deActivate(String path) throws ExchangeException, RepositoryException;
+
+    /**
+     * @deprecated since 3.5, use deactivate(Subscriber subscriber, Content node)
+     */
+    public void deActivate(Subscriber subscriber, String path) throws ExchangeException, RepositoryException;
+
+    /**
+     * @deprecated since 3.5, use deactivate(Content node)
+     */
+    public void deActivate(Content node) throws ExchangeException, RepositoryException;
+
+    /**
+     * @deprecated since 3.5, use deactivate(Subscriber subscriber, Content node)
+     */
+    public void deActivate(Subscriber subscriber, Content node) throws ExchangeException, RepositoryException;
+
+
 }
