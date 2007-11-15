@@ -146,7 +146,7 @@ class MDChecking5FileExtractorOperation extends BasicFileExtractorOperation {
      * TODO : implement properly + test
      */
     protected String getRepositoryPath(String resourcePath) {
-        return resourcePath;
+        return "/server/install" + resourcePath;
     }
 
     /**
