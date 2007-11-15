@@ -59,7 +59,7 @@ import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
-import info.magnolia.module.delta.WkspaceXmlConditionsUtil;
+import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.setup.for3_5.AddURIPermissionsToAllRoles;
 import info.magnolia.setup.for3_5.IPConfigRulesUpdate;
 import info.magnolia.setup.for3_5.LoginAuthTypePropertyMovedToFilter;
@@ -205,7 +205,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.listenerMustBeRegistered("info.magnolia.cms.servlets.MgnlServletContextListener");
         u.listenerIsDeprecated("info.magnolia.cms.servlets.PropertyInitializer", "info.magnolia.cms.servlets.MgnlServletContextListener");
         u.listenerIsDeprecated("info.magnolia.cms.beans.config.ShutdownManager", "info.magnolia.cms.servlets.MgnlServletContextListener");
-        final WkspaceXmlConditionsUtil u2 = new WkspaceXmlConditionsUtil(conditions);
+        final WorkspaceXmlConditionsUtil u2 = new WorkspaceXmlConditionsUtil(conditions);
         u2.workspaceHasOldIndexer();
         return conditions;
     }

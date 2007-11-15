@@ -34,7 +34,6 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Path;
-
 import org.jdom.Attribute;
 import org.jdom.Document;
 import org.jdom.JDOMException;
@@ -53,18 +52,18 @@ import java.util.List;
  * @author had
  * @version $Revision: $ ($Author: $)
  */
-public class WkspaceXmlUtil {
+public class WorkspaceXmlUtil {
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WkspaceXmlUtil.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(WorkspaceXmlUtil.class);
 
     public static List getWorkspaceNamesWithIndexer() {
         List names = new ArrayList();
         final File sourceDir = new File(Path.getAppRootDir() + "/repositories/magnolia/workspaces/");
         final SAXBuilder builder = new SAXBuilder();
-        File[] files =  sourceDir.listFiles();
+        File[] files = sourceDir.listFiles();
         if (files == null) {
-        // new repo
-        return names;
+            // new repo
+            return names;
         }
         for (int i = 0; i < files.length; i++) {
             File f = files[i];
@@ -79,7 +78,7 @@ public class WkspaceXmlUtil {
             try {
                 // check for the indexer def in wks
                 List list = getElementsFromXPath(builder.build(wks), "/Workspace/SearchIndex/param[@name='textFilterClasses']/@value");
-                if (list.size() > 0 && ((Attribute)list.get(0)).getValue().matches(".*\\.core\\.query\\..*")) {
+                if (list.size() > 0 && ((Attribute) list.get(0)).getValue().matches(".*\\.core\\.query\\..*")) {
                     names.add(wks.getAbsolutePath());
                 }
             } catch (JDOMException e) {
@@ -87,7 +86,7 @@ public class WkspaceXmlUtil {
             } catch (IOException e) {
                 throw new RuntimeException(e); // TODO
             }
-            
+
         }
         return names;
     }

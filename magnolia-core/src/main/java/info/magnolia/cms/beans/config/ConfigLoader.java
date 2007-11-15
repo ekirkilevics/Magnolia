@@ -40,9 +40,8 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.WkspaceXmlUtil;
+import info.magnolia.cms.util.WorkspaceXmlUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleManagementException;
 
@@ -59,7 +58,6 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.slf4j.MarkerFactory;
 
 
 /**
@@ -134,7 +132,7 @@ public class ConfigLoader {
         long millis = System.currentTimeMillis();
         log.info("Initializing content repositories"); //$NON-NLS-1$
         //TODO: mute the log here
-        boolean oldIndexersFound = WkspaceXmlUtil.getWorkspaceNamesWithIndexer().size() > 0;
+        boolean oldIndexersFound = WorkspaceXmlUtil.getWorkspaceNamesWithIndexer().size() > 0;
         
     org.apache.log4j.Logger jrLog = org.apache.log4j.Logger.getLogger("org.apache.jackrabbit.core.query.lucene.JackrabbitTextExtractor");
         Level jrLevel = jrLog.getLevel();

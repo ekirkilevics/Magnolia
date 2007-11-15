@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2007 Magnolia International
+ * This file Copyright (c) 2003-2007 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,35 +31,22 @@
  * intact.
  *
  */
-package info.magnolia.module.delta;
+package info.magnolia.cms.util;
 
-import info.magnolia.cms.util.WkspaceXmlUtil;
+import info.magnolia.cms.core.SystemProperty;
+import junit.framework.TestCase;
 
 import java.util.List;
 
 /**
- * A utility class for workspace.xml related conditions, which will add
- * conditions to a given list of tasks based on some conditions.
- *
  * @author had
  * @version $Revision: $ ($Author: $)
  */
-public class WkspaceXmlConditionsUtil {
-    private final List conditions;
+public class WorkspaceXmlUtilTest extends TestCase {
 
-    public WkspaceXmlConditionsUtil(List conditions) {
-        this.conditions = conditions;
-    }
-
-    public void workspaceHasOldIndexer() {
-    List names = WkspaceXmlUtil.getWorkspaceNamesWithIndexer();
-        if (names.size() > 0) {
-        for (int i = 0; i < names.size(); i++) {
-        conditions.add(new FalseCondition("workspace.xml updates", 
-        "Workspace definition in workspace " + names.get(i) + 
-        " references indexer which has changed; please update value of parameter named " +
-        "textFilterClasses in your workspace.xml file."));
-        }
-        }
+    public void testWorkspaceOldIndexer() {
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, "src/test/resources/info/magnolia/cms/util");
+        List names = WorkspaceXmlUtil.getWorkspaceNamesWithIndexer();
+        assertEquals("Found incorrect amount of indexers", 1, names.size());
     }
 }
