@@ -708,7 +708,7 @@
       <dependency>
         <groupId>org.openwfe</groupId>
         <artifactId>openwfe-applic</artifactId>
-        <version>1.7.2.1-SNAPSHOT</version>
+        <version>1.7.2.1</version>
         <exclusions>
           <!-- exclusions here are not transitive -->
           <exclusion>
@@ -728,7 +728,7 @@
       <dependency>
         <groupId>org.openwfe</groupId>
         <artifactId>openwfe-jcr</artifactId>
-        <version>1.7.2.1-SNAPSHOT</version>
+        <version>1.7.2.1</version>
         <exclusions>
           <!-- exclusions here are not transitive -->
           <exclusion>
