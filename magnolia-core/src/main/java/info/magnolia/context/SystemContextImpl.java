@@ -94,6 +94,6 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
     	if (locale != null) 
     		return locale;
     	else
-    		return Locale.ENGLISH;
+    		return Locale.getDefault();
     }
 }
