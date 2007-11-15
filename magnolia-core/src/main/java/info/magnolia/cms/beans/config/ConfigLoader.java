@@ -139,11 +139,11 @@ public class ConfigLoader {
     org.apache.log4j.Logger jrLog = org.apache.log4j.Logger.getLogger("org.apache.jackrabbit.core.query.lucene.JackrabbitTextExtractor");
         Level jrLevel = jrLog.getLevel();
         if (oldIndexersFound) {
-        jrLog.setLevel(Level.ERROR);
+            jrLog.setLevel(Level.ERROR);
         }
         ContentRepository.init();
         if (oldIndexersFound) {
-        jrLog.setLevel(jrLevel);
+            jrLog.setLevel(jrLevel);
         }
 
         log.info("Setting system context"); //$NON-NLS-1$
