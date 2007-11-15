@@ -111,7 +111,7 @@ public class SystemUserManager extends MgnlUserManager {
         }
         return name;
     }
-    
+
     public User getSystemUser() {
         return getOrCreateUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
     }
@@ -135,7 +135,7 @@ public class SystemUserManager extends MgnlUserManager {
     }
     
     private Subject getSubject(String userName, String password) {
-    	CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(
+        CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(
             userName, password.toCharArray(), Realm.REALM_SYSTEM);
         try {
             LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
