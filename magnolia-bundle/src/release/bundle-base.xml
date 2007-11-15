@@ -61,6 +61,7 @@
   </fileSets>
 
   <dependencySets>
+    <!-- two copies of the webapp -->
     <dependencySet>
       <outputDirectory>apache-tomcat-5.5.25/webapps/magnoliaAuthor</outputDirectory>
       <includes>
@@ -77,6 +78,38 @@
       <useStrictFiltering>true</useStrictFiltering>
       <unpack>true</unpack>
     </dependencySet>
+    <!-- adding samples and dms to the webapps -->
+    <dependencySet>
+      <outputDirectory>apache-tomcat-5.5.25/webapps/magnoliaAuthor/WEB-INF/lib</outputDirectory>
+      <includes>
+        <include>info.magnolia:magnolia-module-samples:jar</include>
+        <include>info.magnolia:magnolia-module-dms:jar</include>
+        <!-- ugly hack to get the dms dependencies ... should be more transparent ... -->
+        <include>ant:ant:jar</include>
+        <include>com.metaparadigm:json-rpc:jar</include>
+        <!--<include>info.magnolia:magnolia-module-workflow:jar</include>-->
+      </includes>
+      <useStrictFiltering>true</useStrictFiltering>
+      <!-- this does not help the above hack ... -->
+      <useTransitiveFiltering>true</useTransitiveFiltering>
+      <unpack>false</unpack>
+    </dependencySet>
+    <dependencySet>
+      <outputDirectory>apache-tomcat-5.5.25/webapps/magnoliaPublic/WEB-INF/lib</outputDirectory>
+      <includes>
+        <include>info.magnolia:magnolia-module-samples:jar</include>
+        <include>info.magnolia:magnolia-module-dms:jar</include>
+        <!-- ugly hack to get the dms dependencies ... should be more transparent ... -->
+        <include>ant:ant:jar</include>
+        <include>com.metaparadigm:json-rpc:jar</include>
+        <!--<include>info.magnolia:magnolia-module-workflow:jar</include>-->
+      </includes>
+      <useStrictFiltering>true</useStrictFiltering>
+      <!-- this does not help the above hack ... -->
+      <useTransitiveFiltering>true</useTransitiveFiltering>
+      <unpack>false</unpack>
+    </dependencySet>
+    <!-- add-on packages -->
     <dependencySet>
       <outputDirectory>add-ons</outputDirectory>
       <includes>
@@ -84,6 +117,9 @@
       </includes>
       <excludes>
         <exclude>info.magnolia:magnolia-webapp</exclude>
+        <!-- ugly hack because we apparently can't exclude *:jar -->
+        <exclude>info.magnolia:magnolia-module-samples:jar</exclude>
+        <exclude>info.magnolia:magnolia-module-dms:jar</exclude>
       </excludes>
       <useStrictFiltering>true</useStrictFiltering>
       <unpack>true</unpack>

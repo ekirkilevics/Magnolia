@@ -93,7 +93,26 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-dms</artifactId>
+      <version>1.2-SNAPSHOT</version>
+      <type>jar</type>
+    </dependency>
+    <dependency>
+      <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-workflow</artifactId>
+      <version>3.5-SNAPSHOT</version>
+      <classifier>module-bundle</classifier>
+      <type>tar.gz</type>
+    </dependency>
+    <!--<dependency>-->
+      <!--<groupId>info.magnolia</groupId>-->
+      <!--<artifactId>magnolia-module-workflow</artifactId>-->
+      <!--<version>3.5-SNAPSHOT</version>-->
+      <!--<type>jar</type>-->
+    <!--</dependency>-->
+    <dependency>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-module-samples</artifactId>
       <version>3.5-SNAPSHOT</version>
       <classifier>module-bundle</classifier>
       <type>tar.gz</type>
@@ -102,8 +121,7 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-samples</artifactId>
       <version>3.5-SNAPSHOT</version>
-      <classifier>module-bundle</classifier>
-      <type>tar.gz</type>
+      <type>jar</type>
     </dependency>
   </dependencies>
 
