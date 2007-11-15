@@ -80,6 +80,11 @@ public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
     protected String getUserId() {
         return this.context.getUser().getName();
     }
+    
+    public void release() {
+        super.release();
+        accessManagers.clear();
+    }
 
 }
 

@@ -75,5 +75,10 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     protected String getUserId() {
         return SystemUserManager.SYSTEM_USER;
     }
+    
+    public void release() {
+        super.release();
+        this.accessManager = null;
+    }
 
 }
