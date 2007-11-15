@@ -33,17 +33,19 @@
  */
 package info.magnolia.module.samples.setup;
 
-import java.util.Collections;
-import java.util.List;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
+import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
+import info.magnolia.module.delta.NodeExistsDelegateTask;
+import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.SetPropertyTask;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -52,21 +54,47 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class SamplesVersionHandler extends DefaultModuleVersionHandler {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(SamplesVersionHandler.class);
+    private final List installOrUpdateTasks = new ArrayList();
     
-    protected List getExtraInstallTasks(InstallContext installContext) {
+    public SamplesVersionHandler() {
+        // - replace Templates menu item
+        final AddSubMenuItemTask addTemplateMenuItem = new AddSubMenuItemTask("config", "sample-templates", "config.menu.config.templates.samples", "info.magnolia.module.samples.messages", "MgnlAdminCentral.showTree('config','/modules/samples/templates')", "/.resources/icons/16/dot.gif", null);
+        final String templatesMenuItemPath = "/modules/adminInterface/config/menu/config/templates";
+        final NodeExistsDelegateTask removeOldTemplatesMenuItem = new NodeExistsDelegateTask("Menu", "Remove the Templates menu item if existent", ContentRepository.CONFIG, templatesMenuItemPath, 
+            new RemoveNodeTask("Menu", "Removes the Template menu item as it will be replaced with a new configuration", ContentRepository.CONFIG, templatesMenuItemPath));
+        installOrUpdateTasks.add(removeOldTemplatesMenuItem);
+        installOrUpdateTasks.add(addTemplateMenuItem);
+
+        // - replace Paragraphs menu item
+        final AddSubMenuItemTask addParagraphsMenuItem = new AddSubMenuItemTask("config", "sample-paragraphs", "config.menu.config.paragraphs.samples", "info.magnolia.module.samples.messages", "MgnlAdminCentral.showTree('config','/modules/samples/paragraphs')", "/.resources/icons/16/dot.gif", null);
+        final String paragraphsMenuItemPath = "/modules/adminInterface/config/menu/config/paragraphs";
+        final NodeExistsDelegateTask removeOldParagraphsMenuItem = new NodeExistsDelegateTask("Menu", "Remove the Paragraphs menu item if existent", ContentRepository.CONFIG, paragraphsMenuItemPath, 
+            new RemoveNodeTask("Menu", "Removes the Paragraph menu item as it will be replaced with a new configuration", ContentRepository.CONFIG, paragraphsMenuItemPath));
+        installOrUpdateTasks.add(removeOldParagraphsMenuItem);
+        installOrUpdateTasks.add(addParagraphsMenuItem);
         
+        // - replace Dialogs menu item
+        final AddSubMenuItemTask addDialogsMenuItem = new AddSubMenuItemTask("config", "sample-dialogs", "config.menu.config.dialogs.samples", "info.magnolia.module.samples.messages", "MgnlAdminCentral.showTree('config','/modules/samples/dialogs')", "/.resources/icons/16/dot.gif", null);
+        final String dialogsMenuItemPath = "/modules/adminInterface/config/menu/config/dialogs";
+        final NodeExistsDelegateTask removeOldDialogsMenuItem = new NodeExistsDelegateTask("Menu", "Remove the Dialogs menu item if existent", ContentRepository.CONFIG, dialogsMenuItemPath, 
+            new RemoveNodeTask("Menu", "Removes the Paragraph menu item as it will be replaced with a new configuration", ContentRepository.CONFIG, dialogsMenuItemPath));
+        installOrUpdateTasks.add(removeOldDialogsMenuItem);
+        installOrUpdateTasks.add(addDialogsMenuItem);
+        
+        final Delta for35 = DeltaBuilder.update("3.5", "").addTasks(installOrUpdateTasks);
+
+        register(for35);
+    }
+
+    protected List getExtraInstallTasks(InstallContext installContext) {
         SetPropertyTask setDefaultURI = new SetPropertyTask(
             ContentRepository.CONFIG, 
             "/modules/adminInterface/virtualURIMapping/default", 
             "toURI", 
             "redirect:/features.html");
+        installOrUpdateTasks.add(new IsAuthorInstanceDelegateTask("Default URI", "Sets the value to the default page redirect:/features.html", null, setDefaultURI));
         
-        return Collections.singletonList(new IsAuthorInstanceDelegateTask("Default URI", "Sets the value to the default page redirect:/features.html", null, setDefaultURI));
+        return installOrUpdateTasks;
     }
 
 }
