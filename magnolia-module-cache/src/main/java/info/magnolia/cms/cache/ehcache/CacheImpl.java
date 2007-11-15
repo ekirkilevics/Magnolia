@@ -87,7 +87,7 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
                 ByteArrayOutputStream baos = new ByteArrayOutputStream();
                 GZIPOutputStream out = new GZIPOutputStream(baos);
                 out.write(entry.getOut());
-                out.flush();
+                out.finish();
 
                 CacheableEntry compressedEntry = new CacheableEntry(baos.toByteArray());
                 compressedEntry.setContentType(entry.getContentType());
