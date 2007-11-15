@@ -186,10 +186,13 @@ public abstract class AbstractLoginModule implements LoginModule {
             if(this.useRealmCallback){
                 this.realm = StringUtils.defaultIfEmpty(((RealmCallback)callbacks[2]).getRealm(), this.realm);
             }
-            User user = this.validateUser();
-            // FIXME validateUser should always return a user
-            if(user != null){
-                this.callbackHandler.handle(new Callback[]{new UserCallback(user)});
+            
+            // FIXME we do that only to be compatible to the old way jaas modules were written
+            if(this instanceof UserAwareLoginModule){
+                User user = ((UserAwareLoginModule)this).getUser();
+                if(user != null){
+                    this.callbackHandler.handle(new Callback[]{new UserCallback(user)});
+                }
             }
         } catch (IOException ioe) {
             if (log.isDebugEnabled()) {
@@ -293,7 +296,7 @@ public abstract class AbstractLoginModule implements LoginModule {
      * checks if the credentials exist in the repository
      * @throws LoginException or specific subclasses to report failures.
      */
-    public abstract User validateUser() throws LoginException;
+    public abstract void validateUser() throws LoginException;
 
     /**
      * set user details

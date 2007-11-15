@@ -39,9 +39,13 @@ import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.security.auth.Entity;
 import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
+import info.magnolia.jaas.sp.UserAwareLoginModule;
 
 import java.util.Iterator;
+import java.util.Map;
 
+import javax.security.auth.Subject;
+import javax.security.auth.callback.CallbackHandler;
 import javax.security.auth.login.AccountLockedException;
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
@@ -55,7 +59,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Sameer Charles $Id$
  */
-public class JCRAuthenticationModule extends AbstractLoginModule {
+public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule{
 
     private static final Logger log = LoggerFactory.getLogger(JCRAuthenticationModule.class);
 
@@ -72,7 +76,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
      * checks is the credentials exist in the repository
      * @throws LoginException or specific subclasses (which will be handled further for user feedback)
      */
-    public User validateUser() throws LoginException {
+    public void validateUser() throws LoginException {
         initUser();
 
         if(this.user == null){
@@ -84,7 +88,6 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
         if (!this.user.isEnabled()) {
             throw new AccountLockedException();
         }
-        return user;
     }
 
     protected void initUser() {
@@ -148,6 +151,10 @@ public class JCRAuthenticationModule extends AbstractLoginModule {
         for (Iterator iter = this.user.getAllGroups().iterator(); iter.hasNext();) {
             addGroupName((String) iter.next());
         }
+    }
+
+    public User getUser() {
+        return user;
     }
 
 }

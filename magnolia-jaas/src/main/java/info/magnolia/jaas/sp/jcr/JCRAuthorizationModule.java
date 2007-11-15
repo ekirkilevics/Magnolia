@@ -39,7 +39,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.GroupList;
 import info.magnolia.cms.security.auth.PrincipalCollection;
@@ -56,7 +55,6 @@ import java.util.Iterator;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -75,10 +73,6 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
-
-    public User validateUser() throws LoginException {
-        return null;
-    }
 
     /**
      * set access control list from the user, roles and groups
