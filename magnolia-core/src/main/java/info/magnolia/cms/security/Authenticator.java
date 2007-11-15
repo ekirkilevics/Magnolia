@@ -95,12 +95,11 @@ public final class Authenticator {
         return !getUserId().equals(UserManager.ANONYMOUS_USER);
     }
 
+    /**
+     * @deprecated Use {@link Security#getAnonymousUser()} instead
+     */
     public static User getAnonymousUser() {
-        return getSecuritySupport().getUserManager().getAnonymousUser();
-    }
-
-    private static SecuritySupport getSecuritySupport() {
-        return SecuritySupport.Factory.getInstance();
+        return Security.getAnonymousUser();
     }
 
 }

@@ -37,8 +37,6 @@ package info.magnolia.cms.security;
  * Get the current role or user manager.
  * @author philipp
  * @version $Revision$ ($Author$)
- *
- * @deprecated use SecuritySupport.Factory.getInstance()
  */
 public class Security {
 
@@ -46,24 +44,34 @@ public class Security {
      * Returns the configured RoleManager.
      */
     public static RoleManager getRoleManager() {
-        return getSecurityManager().getRoleManager();
+        return getSecuritySupport().getRoleManager();
     }
 
     /**
      * Returns the configured UserManager.
      */
     public static UserManager getUserManager() {
-        return getSecurityManager().getUserManager();
+        return getSecuritySupport().getUserManager();
     }
 
     /**
      * Returns the configured GroupManager.
      */
     public static GroupManager getGroupManager() {
-        return getSecurityManager().getGroupManager();
+        return getSecuritySupport().getGroupManager();
     }
 
-    private static SecuritySupport getSecurityManager() {
+    public static SecuritySupport getSecuritySupport() {
         return SecuritySupport.Factory.getInstance();
     }
+
+    public static User getAnonymousUser() {
+        return getSecuritySupport().getUserManager(Realm.REALM_SYSTEM).getAnonymousUser();
+    }
+
+    public static User getSystemUser() {
+        return getSecuritySupport().getUserManager(Realm.REALM_SYSTEM).getSystemUser();
+    }
+
+    
 }
