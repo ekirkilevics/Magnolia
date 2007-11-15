@@ -44,6 +44,7 @@ import javax.security.auth.Subject;
 import javax.security.auth.login.LoginContext;
 import javax.security.auth.login.LoginException;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -101,6 +102,16 @@ public class SystemUserManager extends MgnlUserManager {
             5000);
     }
 
+    public String getRealmName() {
+        String name = super.getRealmName();
+        // attempt to fix: MAGNOLIA-1839
+        if(StringUtils.isEmpty(name)){
+            log.error("realm of system user manager is not set!");
+            return Realm.REALM_SYSTEM;
+        }
+        return name;
+    }
+    
     public User getSystemUser() {
         return getOrCreateUser(UserManager.SYSTEM_USER, UserManager.SYSTEM_PSWD);
     }
