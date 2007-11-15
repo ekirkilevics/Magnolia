@@ -89,7 +89,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     public static final String BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY = "magnolia.bootstrap.authorInstance";
 
     // tasks which have to be executed wether we're installing or upgrading from 3.0
-    private final List genericTasksFor31 = Arrays.asList(new Task[]{
+    private final List genericTasksFor35 = Arrays.asList(new Task[]{
             // TODO : shouldn't this be conditional ? how do we migrate existing filters...
             new BootstrapSingleResource("New filters", "Will override the filter chain configuration with a completely new one.", "/mgnl-bootstrap/core/config.server.filters.xml"),
 
@@ -182,7 +182,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     // TODO : review - currently core is always installed since 3.5 is its first version as a module,
     // but we need to behave differently if magnolia was installed previously
     protected List getBasicInstallTasks(InstallContext ctx) {
-        return genericTasksFor31;
+        return genericTasksFor35;
     }
 
     protected List getInstallConditions() {

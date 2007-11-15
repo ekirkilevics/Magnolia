@@ -46,15 +46,15 @@ import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
 
     public TemplatingModuleVersionHandler() {
-        DeltaBuilder delta31 = DeltaBuilder.update("3.5", "");
-        delta31.addTask(new IntroduceParagraphRenderers());
-        delta31.addTask(new BootstrapSingleResourceAndOrderBefore(
+        DeltaBuilder delta35 = DeltaBuilder.update("3.5", "");
+        delta35.addTask(new IntroduceParagraphRenderers());
+        delta35.addTask(new BootstrapSingleResourceAndOrderBefore(
                 "Compatibility Filter",
                 "${actpage} is deprecated. Adds a compatibility filter still supporting it but writing warn messages to the log",
                 "/mgnl-bootstrap/templating/config.server.filters.cms.backwardCompatibility.xml",
                 "rendering"));
 
-        register(delta31);
+        register(delta35);
     }
 
 }

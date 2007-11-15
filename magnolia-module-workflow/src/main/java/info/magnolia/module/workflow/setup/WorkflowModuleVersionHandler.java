@@ -72,7 +72,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
     };
 
     public WorkflowModuleVersionHandler() {
-        final Delta delta31 = DeltaBuilder.update("3.5", "")
+        final Delta delta35 = DeltaBuilder.update("3.5", "")
                 .addTask(inboxMenu)
                 .addTask(flowsPageMenu)
                 .addTask(new AddNewDefaultConfig())
@@ -80,7 +80,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new RemoveMetadataFromExpressionsWorkspace())
                 .addTask(new SetDefaultWorkflowForActivationFlowCommands())
                 .addTask(bootstrapSecurityConfig);
-        register(delta31);
+        register(delta35);
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {
