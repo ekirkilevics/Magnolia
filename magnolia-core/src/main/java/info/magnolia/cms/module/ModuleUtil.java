@@ -187,6 +187,12 @@ public final class ModuleUtil {
                 fullPath = pathName + "/" + nodeName;
             }
 
+            log.debug("Will bootstrap {}", resourceName);
+            final InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
+            if (stream == null) {
+                throw new IOException("Can't find resource to bootstrap at " + resourceName);
+            }
+
             // if the path already exists --> delete it
             try {
                 final HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
@@ -200,13 +206,8 @@ public final class ModuleUtil {
             catch (Exception e) {
                 throw new RegisterException("can't register bootstrap file: [" + name + "]", e);
             }
-            log.debug("Will bootstrap {}", resourceName);
-            InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
-            if (stream == null) {
-                throw new IOException("Can't find resource to bootstrap at " + resourceName);
-            }
+
             DataTransporter.importXmlStream(stream, repository, pathName, name, false,
-            // TODO !! this ImportUUIDBehavior might import nodes in the wrong place !!!
                 ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW,
                 saveAfterImport,
                 true);
