@@ -175,23 +175,6 @@
               <artifactId>jspc-compiler-tomcat5</artifactId>
               <version>2.0-alpha-1</version>
             </dependency>
-            <!-- for this to work, we'd need to write a specific jspc-compiler- impl for tomcat 5.0
-              <dependency>
-              <groupId>tomcat</groupId>
-              <artifactId>jasper-compiler</artifactId>
-              <version>5.0.28</version>
-              </dependency>
-              <dependency>
-              <groupId>tomcat</groupId>
-              <artifactId>jasper-runtime</artifactId>
-              <version>5.0.28</version>
-              </dependency>
-              <dependency>
-              <groupId>commons-logging</groupId>
-              <artifactId>commons-logging</artifactId>
-              <version>1.0.4</version>
-              </dependency>
-            -->
           </dependencies>
           <configuration>
             <sources>

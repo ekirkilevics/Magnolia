@@ -35,7 +35,7 @@ Magnolia Package
 ===============================================
 The Package contains:
  
- Apache Tomcat 5.0.28
+ Apache Tomcat 5.5.25
  Magnolia ${magnolia.niceVersion}
  Samples
 
@@ -74,7 +74,7 @@ magnolia instances in one step
   start magnolia from within the bin/ directory
  
     > sh
-    > cd INSTALL_DIRECTORY/tomcat/bin
+    > cd INSTALL_DIRECTORY/apache-tomcat-5.5.25/bin
     > export JAVA_HOME=YOUR_JAVA1.4_HOME
     > ./magnolia_control.sh start
 
@@ -88,7 +88,7 @@ magnolia instances in one step
   # start admin instance
   #
   export JAVA_HOME=/Library/Java/Home
-  cd INSTALL_DIRECTORY/tomcat/bin
+  cd INSTALL_DIRECTORY/apache-tomcat-5.5.25/bin
   ./magnolia_control.sh start
   --------- 8< ---------
 
@@ -97,7 +97,7 @@ magnolia instances in one step
 
   open command prompt 
     > C:\set JAVA_HOME=YOUR_JAVA1.4_HOME
-    > C:\INSTALL_DIRECTORY\tomcat\bin\magnolia_control.bat start
+    > C:\INSTALL_DIRECTORY\apache-tomcat-5.5.25\bin\magnolia_control.bat start
 
 
 =============================================== 
@@ -165,7 +165,7 @@ Thanks for using magnolia
 Magnolia International Ltd.
 info@magnolia.info
 
-Copyright 2003-2006 Magnolia International Ltd.
+Copyright 2003-2007 Magnolia International Ltd.
 Magnolia is a trademark of Magnolia International Ltd.
 
 http://www.magnolia.info 

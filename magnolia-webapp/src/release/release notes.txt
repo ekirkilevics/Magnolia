@@ -135,7 +135,7 @@ Thanks for using magnolia
 Magnolia International Ltd.
 info@magnolia.info
 
-Copyright 2003-2006 Magnolia International Ltd.
+Copyright 2003-2007 Magnolia International Ltd.
 Magnolia is a trademark of Magnolia International Ltd.
 
 http://www.magnolia.info 

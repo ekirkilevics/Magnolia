@@ -5,24 +5,35 @@ Simple Enterprise Content Management
 License Agreement
 ===============================================
 
-This package contains the Apache Tomcat 5.0.28
+This package contains the Apache Tomcat 5.5.25
 software distribution with libraries from oreilly.com 
 and from w3c.org. Please make sure you understand 
 these licenses.
 http://www.opensource.org/licenses/apachepl.php
 
-Magnolia source code is distributed under GNU LGPL
-http://www.opensource.org/licenses/lgpl-license.php 
-You may copy, adapt, and redistribute magnolia ${magnolia.niceVersion} 
-for commercial or non-commercial use.
+Magnolia source code is dual-licensed under both the Magnolia
+Network Agreement and the GNU General Public License.
+You may elect to use one or the other of these licenses.
 
-When copying, adapting, or redistributing this document
-in keeping with the guidelines above, you are required
-to provide proper attribution to obinary or the corresponding.
-If you reproduce or distribute the document without making 
-any substantive modifications to its content, 
-please use the following attribution line:
+This file is distributed in the hope that it will be
+useful, but AS-IS and WITHOUT ANY WARRANTY; without even the
+implied warranty of MERCHANTABILITY or FITNESS FOR A
+PARTICULAR PURPOSE, TITLE, or NONINFRINGEMENT.
+Redistribution, except as permitted by whichever of the GPL
+or MNA you select, is prohibited.
 
-Copyright 1993-2006 Magnolia International Ltd.
-http://www.magnolia.info All rights reserved.
-Magnolia is a trademark of Magnolia International Ltd.
+1. For the GPL license (GPL), you can redistribute and/or
+modify this file under the terms of the GNU General
+Public License, Version 3, as published by the Free Software
+Foundation.  You should have received a copy of the GNU
+General Public License, Version 3 along with this program;
+if not, write to the Free Software Foundation, Inc., 51
+Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+2. For the Magnolia Network Agreement (MNA), this file
+and the accompanying materials are made available under the
+terms of the MNA which accompanies this distribution, and
+is available at http://www.magnolia.info/mna.html
+
+Any modifications to this file must keep this entire header
+intact.
