@@ -198,11 +198,10 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2-beta-2-SNAPSHOT</version>
-          <!--<version>2.1.1-magnolia</version>-->
+          <version>2.2-beta-2-magnolia-20071115</version>
           <configuration>
             <descriptors>
-              <descriptor>info.magnolia:magnolia-module-assembly:1.0-SNAPSHOT</descriptor>
+              <descriptor>info.magnolia:magnolia-module-assembly:1.0</descriptor>
             </descriptors>
           </configuration>
           <executions>
@@ -315,7 +314,7 @@
           <dependency>
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-build-tools</artifactId>
-            <version>3.5-SNAPSHOT</version>
+            <version>3.5</version>
           </dependency>
         </dependencies>
         <configuration>
