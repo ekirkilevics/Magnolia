@@ -234,11 +234,7 @@ public class DataTransporter {
 
         HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryName);
         if (hm == null) {
-            // this happens when the samples module tries to insert content into the dms repository and dms is not
-            // installed
-            log.warn("NOT importing content from: [{}] since repository [{}] does not exist", //$NON-NLS-1$
-                    new Object[]{name, repositoryName});
-            return;
+            throw new IllegalStateException("Can't import " + name + " since repository " + repositoryName + " does not exist.");
         }
         Workspace ws = hm.getWorkspace();
 
