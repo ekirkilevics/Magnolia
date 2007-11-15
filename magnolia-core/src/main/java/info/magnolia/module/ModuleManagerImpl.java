@@ -66,6 +66,7 @@ import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -268,6 +269,9 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     public void startModules() {
+        // process startup tasks before actually starting modules
+        executeStartupTasks();
+
         try {
             // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle methods.
             final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
@@ -342,6 +346,25 @@ public class ModuleManagerImpl implements ModuleManager {
         catch (InstantiationException e) {
             throw new RuntimeException(e); // TODO
         }
+    }
+
+    /**
+     * Process startup tasks. Tasks retured by <code>ModuleDefinition.getStartupTasks()</code> are always executed and
+     * do not require manual intervention.
+     */
+    protected void executeStartupTasks() {
+        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
+            public void exec() {
+                final Iterator it = orderedModuleDescriptors.iterator();
+                while (it.hasNext()) {
+                    final ModuleDefinition module = (ModuleDefinition) it.next();
+                    final ModuleVersionHandler versionHandler = registry.getVersionHandler(module.getName());
+                    installContext.setCurrentModule(module);
+                    final Delta startup = versionHandler.getStartupDelta(installContext);
+                    applyDeltas(module, Collections.singletonList(startup), installContext);
+                }
+            }
+        });
     }
 
     protected void startModule(Object moduleInstance, final ModuleDefinition moduleDefinition, final ModuleLifecycleContextImpl lifecycleContext) {

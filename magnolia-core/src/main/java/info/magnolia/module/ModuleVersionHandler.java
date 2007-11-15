@@ -68,4 +68,13 @@ public interface ModuleVersionHandler {
      */
     List getDeltas(InstallContext installContext, Version from);
 
+    /**
+     * Returns a list of {@link Task} that needs to be executed always before this module is started. These tasks will
+     * be silently applied at startup.
+     * @param installContext InstallContext
+     * @return List of {@link Task}
+     * @deprecated It seems irrelevant to have startup tasks in a VersionHandler. These should probably be moved to ModuleLifecycle.
+     */
+     Delta getStartupDelta(InstallContext installContext);
+
 }
