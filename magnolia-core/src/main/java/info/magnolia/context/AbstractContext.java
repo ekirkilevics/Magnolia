@@ -154,8 +154,7 @@ public abstract class AbstractContext implements Context {
      * @see Context#getLocale()
      */
     public Locale getLocale() {
-        if (locale == null) {
-            // TODO : this could cause an infinite loop since this is not overwritten in SysCtx !?!?
+        if (locale == null) {            
             locale = MgnlContext.getSystemContext().getLocale();
         }
         return locale;
@@ -197,7 +196,7 @@ public abstract class AbstractContext implements Context {
      */
     public Object put(Object key, Object value) {
         this.setAttribute(key.toString(), value, Context.LOCAL_SCOPE);
-        return value;
+        return value;       
     }
 
     /**
