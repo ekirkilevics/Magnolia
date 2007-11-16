@@ -33,23 +33,23 @@
  */
 package info.magnolia.context;
 
+import static org.easymock.EasyMock.createMock;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
 
 /**
-*
-* @author ashapochka
-* @version $Revision: $ ($Author: $)
-*/
+ *
+ * @author ashapochka
+ * @version $Revision: $ ($Author: $)
+ */
 public class SystemRepositoryStrategyTest extends TestCase {
-	public void testAccessManager() {
-		SystemContext mockCtxt = createMock(SystemContext.class);
-		SystemRepositoryStrategy strategy = new SystemRepositoryStrategy(mockCtxt);
-		AccessManager manager = strategy.getAccessManager("", "");
-		assertNotNull(manager);
-		assertTrue(manager.isGranted("/", Permission.ALL));
-		assertTrue(manager.isGranted("/foo/bar", Permission.ALL));
-	}
+    public void testAccessManager() {
+        SystemContext mockCtxt = createMock(SystemContext.class);
+        SystemRepositoryStrategy strategy = new SystemRepositoryStrategy(mockCtxt);
+        AccessManager manager = strategy.getAccessManager("", "");
+        assertNotNull(manager);
+        assertTrue(manager.isGranted("/", Permission.ALL));
+        assertTrue(manager.isGranted("/foo/bar", Permission.ALL));
+    }
 }

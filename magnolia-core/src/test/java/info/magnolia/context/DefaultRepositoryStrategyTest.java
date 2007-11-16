@@ -33,19 +33,20 @@
  */
 package info.magnolia.context;
 
-import static org.easymock.classextension.EasyMock.*;
-
-import java.util.ArrayList;
-import java.util.Set;
-
-import javax.security.auth.Subject;
-
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.createMock;
+import static org.easymock.classextension.EasyMock.replay;
+import static org.easymock.classextension.EasyMock.verify;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.PrincipalCollection;
-//import info.magnolia.jaas.principal.PrincipalCollectionImpl;
-//import info.magnolia.cms.util.ACLImpl;
+
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.security.auth.Subject;
 
 import junit.framework.TestCase;
 
@@ -55,27 +56,23 @@ import junit.framework.TestCase;
  * @version $Revision: $ ($Author: $)
  */
 public class DefaultRepositoryStrategyTest extends TestCase {
-	public void testAccessManagers() {
-//		UserContext context = createMock(UserContext.class);
-//		User user = createMock(User.class);
-//		Subject subject = new Subject();
-//		Set principalSet = subject.getPrincipals(PrincipalCollection.class);
-//		PrincipalCollection principals = createMock(PrincipalCollection.class);
-//		ACL acl = createMock(ACL.class);
-////		acl.setName("repo1_space1");
-////		acl.setRepository("repo1");
-////		acl.setWorkspace("space1");
-////		principals.add(acl)
-//		principalSet.add(principals);
-//		expect(context.getUser()).andReturn(user);
-//		expect(user.getSubject()).andReturn(subject);
-//		expect(principals.get("repo1_space1")).andReturn(acl);
-//		expect(acl.getList()).andReturn(new ArrayList());
-//		replay(context, user, acl, principals);
-//		DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
-//		AccessManager accessManager = strategy.getAccessManager("repo1", "space1");
-//		assertNotNull(accessManager);
-//		//assertSame(accessManager, strategy.getAccessManager("repo1", "space1"));
-//		verify(context, user, acl, principals);
-	}
+    public void testAccessManagers() {
+        UserContext context = createMock(UserContext.class);
+        User user = createMock(User.class);        
+        Set principalSet = new HashSet();
+        PrincipalCollection principals = createMock(PrincipalCollection.class);
+        principalSet.add(principals);
+        ACL acl = createMock(ACL.class);        
+        Subject subject = new Subject(false, principalSet, new HashSet(), new HashSet());                                
+        expect(context.getUser()).andReturn(user);
+        expect(user.getSubject()).andReturn(subject);        
+        expect(principals.get("repo1_space1")).andReturn(acl);
+        expect(acl.getList()).andReturn(new ArrayList());
+        replay(context, user, principals, acl);
+        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);		
+        AccessManager accessManager = strategy.getAccessManager("repo1", "space1");
+        assertNotNull(accessManager);
+        assertSame(accessManager, strategy.getAccessManager("repo1", "space1"));
+        verify(context, user, principals, acl);
+    }
 }
