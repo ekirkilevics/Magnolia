@@ -73,6 +73,7 @@ public abstract class SecuritySupportBase implements SecuritySupport {
             return new LoginResult(LoginHandler.STATUS_SUCCEDED, user);
         }
         catch (LoginException e) {
+            log.debug("can't login due to", e);
             return new LoginResult(LoginHandler.STATUS_FAILED, e);
         }
    }
