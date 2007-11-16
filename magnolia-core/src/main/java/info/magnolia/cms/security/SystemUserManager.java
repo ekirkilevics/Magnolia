@@ -128,7 +128,7 @@ public class SystemUserManager extends MgnlUserManager {
     protected User getOrCreateUser(String userName, String password) {
         User user = getUser(userName);
         if (user == null) {
-            log.error("Failed to get system or anonymous user [{}], will try to create new system user with default password", userName);
+            log.error("Failed to get system user [{}], will try to create new system user with default password", userName);
             user = this.createUser(userName, password);
         }
         return user;
