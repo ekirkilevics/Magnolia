@@ -394,17 +394,16 @@ public class MgnlUser extends AbstractUser implements Serializable {
      * Update the "last access" timestamp.
      */
     public void setLastAccess() {
-
         NodeData lastaccess;
         try {
             lastaccess = NodeDataUtil.getOrCreate(this.getUserNode(), "lastaccess", PropertyType.DATE);
             synchronized (lastaccess) {
                 lastaccess.setValue(new GregorianCalendar());
-                lastaccess.save();
+                getUserNode().save();
             }
         }
         catch (RepositoryException e) {
-            log.debug("Unable to set the last access date due to a " + e.getClass().getName() + " - " + e.getMessage(), e);
+            log.warn("Unable to set the last access date due to a " + e.getClass().getName() + " - " + e.getMessage(), e);
         }
 
     }
