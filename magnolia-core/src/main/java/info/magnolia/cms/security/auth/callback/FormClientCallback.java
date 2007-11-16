@@ -45,6 +45,7 @@ import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.auth.login.LoginFilter;
+import info.magnolia.cms.security.auth.login.LoginResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +71,7 @@ public class FormClientCallback extends AbstractHttpClientCallback {
                     response.setCharacterEncoding(MIMEMapping.getContentEncodingOrDefault("text/html"));
                 }
             }
-            FreemarkerUtil.process(getLoginForm(), getMessages(request), response.getWriter());
+            FreemarkerUtil.process(getLoginForm(), getMessages(), response.getWriter());
         }
         catch (Throwable t) {
             log.error("exception while writing login template", t);
@@ -90,9 +91,9 @@ public class FormClientCallback extends AbstractHttpClientCallback {
      * override this to pass more objects to the freemarker template.
      * @return an empty map
      */
-    protected Map getMessages(HttpServletRequest request) {
-        // FIXE revert that
-        LoginException exception = (LoginException) request.getAttribute(LoginFilter.ATTRIBUTE_LOGINERROR);
+    protected Map getMessages() {
+        LoginResult loginResult = LoginFilter.getCurrentLoginResult();
+        LoginException exception = loginResult.getLoginException();
         Map messages = new HashMap();
         if (null != exception) {
             final String exName = ClassUtils.getShortClassName(exception, null);

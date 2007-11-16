@@ -44,8 +44,13 @@ import javax.security.auth.login.LoginException;
  */
 public class LoginResult {
     
+    public static final int STATUS_NO_LOGIN = 0;
+
     public static LoginResult NOT_HANDLED = new LoginResult(LoginHandler.STATUS_NOT_HANDLED);
 
+    public static LoginResult NO_LOGIN = new LoginResult(STATUS_NO_LOGIN);
+
+    
     private int status;
 
     private User user;

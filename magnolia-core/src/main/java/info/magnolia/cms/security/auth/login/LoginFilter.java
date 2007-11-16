@@ -53,10 +53,11 @@ import javax.servlet.http.HttpServletResponse;
 public class LoginFilter extends AbstractMgnlFilter {
 
     private Collection loginHandlers = new ArrayList();
+    
     /**
      * request attribute holding the login exception
      */
-    public static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
+    private static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
 
     /**
      * todo - temporary fix
@@ -76,7 +77,7 @@ public class LoginFilter extends AbstractMgnlFilter {
             }
             // we have to pass the error message to the
             else if (loginResult.getStatus() == LoginHandler.STATUS_FAILED){
-                request.setAttribute(LoginFilter.ATTRIBUTE_LOGINERROR, loginResult.getLoginException());
+                MgnlContext.setAttribute(LoginFilter.ATTRIBUTE_LOGINERROR, loginResult);
             }
         }
         // continue even if all login handlers failed
@@ -93,6 +94,14 @@ public class LoginFilter extends AbstractMgnlFilter {
 
     public void addLoginHandlers(LoginHandler handler) {
         this.loginHandlers.add(handler);
+    }
+
+    public static LoginResult getCurrentLoginResult() {
+        LoginResult loginResult =  (LoginResult) MgnlContext.getAttribute(LoginFilter.ATTRIBUTE_LOGINERROR);
+        if(loginResult == null){
+            loginResult = LoginResult.NO_LOGIN;
+        }
+        return loginResult;
     }
 
 }
