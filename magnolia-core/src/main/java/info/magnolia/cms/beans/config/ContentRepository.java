@@ -41,6 +41,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ConfigUtil;
+import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
@@ -352,7 +353,7 @@ public final class ContentRepository {
             Iterator workspaces = map.getWorkspaces().iterator();
             while (workspaces.hasNext()) {
                 String wspID = (String) workspaces.next();
-                loadHierarchyManager(repository, wspID, map, handlerClass);
+                registerNameSpacesAndNodeTypes(repository, wspID, map, handlerClass);
             }
         }
     }
@@ -373,29 +374,19 @@ public final class ContentRepository {
         }
         Provider provider = getRepositoryProvider(repositoryId);
         provider.registerWorkspace(workspaceId);
-        loadHierarchyManager(getRepository(repositoryId),  workspaceId, map, provider);
+        registerNameSpacesAndNodeTypes(getRepository(repositoryId),  workspaceId, map, provider);
     }
 
     /**
      * Load hierarchy manager for the specified repository and workspace
-     * @param repository
-     * @param wspID
-     * @param map
-     * @param provider
      */
-    private static void loadHierarchyManager(Repository repository, String wspID, RepositoryMapping map,
+    private static void registerNameSpacesAndNodeTypes(Repository repository, String wspID, RepositoryMapping map,
         Provider provider) {
         try {
             SimpleCredentials sc = new SimpleCredentials(REPOSITORY_USER, REPOSITORY_PSWD.toCharArray());
-            Session session = repository.login(sc, wspID);
+            Session session = WorkspaceAccessUtil.getInstance().createRepositorySession(sc, wspID);
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             provider.registerNodeTypes();
-            /*
-            WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
-            AccessManager accessManager = util.createAccessManager(getSystemPermissions());
-            QueryManager queryManager = util.createQueryManager(session, accessManager);
-            HierarchyManager hierarchyManager = util.createHierarchyManager(REPOSITORY_USER, session, accessManager, queryManager);
-             */
         }
         catch (RepositoryException re) {
             log.error("System : Failed to initialize hierarchy manager for JCR {}", map.getName()); //$NON-NLS-1$
