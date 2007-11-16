@@ -13,19 +13,19 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
-      <version>3.5-rc1</version>
+      <version>3.5-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-cms</artifactId>
-      <version>3.5-rc1</version>
+      <version>3.5-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-utility</artifactId>
-      <version>3.5-rc1</version>
+      <version>3.5-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>
