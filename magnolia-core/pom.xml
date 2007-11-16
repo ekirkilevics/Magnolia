@@ -32,10 +32,6 @@
     </dependency>
     <dependency>
       <groupId>org.openwfe</groupId>
-      <artifactId>openwfe-applic</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.openwfe</groupId>
       <artifactId>openwfe-jcr</artifactId>
       <exclusions>
         <exclusion>
@@ -216,7 +212,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>      
+      </plugin>
     </plugins>
   </build>
 </project>
