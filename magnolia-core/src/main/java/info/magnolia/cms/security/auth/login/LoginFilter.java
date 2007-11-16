@@ -55,11 +55,6 @@ public class LoginFilter extends AbstractMgnlFilter {
     private Collection loginHandlers = new ArrayList();
     
     /**
-     * request attribute holding the login exception
-     */
-    private static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
-
-    /**
      * todo - temporary fix
      * */
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
@@ -68,16 +63,13 @@ public class LoginFilter extends AbstractMgnlFilter {
         while (handlers.hasNext()) {
             LoginHandler handler = (LoginHandler) handlers.next();
             LoginResult loginResult = handler.handle(request, response);
+            LoginResult.setCurrentLoginResult(loginResult);
             if (loginResult.getStatus() == LoginHandler.STATUS_IN_PROCESS) {
                 // special handling to support multi step login mechanisms like ntlm
                 // do not continue with the filter chain
                 return;
             } else if (loginResult.getStatus() == LoginHandler.STATUS_SUCCEDED) {
                 MgnlContext.login(loginResult.getUser());
-            }
-            // we have to pass the error message to the
-            else if (loginResult.getStatus() == LoginHandler.STATUS_FAILED){
-                MgnlContext.setAttribute(LoginFilter.ATTRIBUTE_LOGINERROR, loginResult);
             }
         }
         // continue even if all login handlers failed
@@ -94,14 +86,6 @@ public class LoginFilter extends AbstractMgnlFilter {
 
     public void addLoginHandlers(LoginHandler handler) {
         this.loginHandlers.add(handler);
-    }
-
-    public static LoginResult getCurrentLoginResult() {
-        LoginResult loginResult =  (LoginResult) MgnlContext.getAttribute(LoginFilter.ATTRIBUTE_LOGINERROR);
-        if(loginResult == null){
-            loginResult = LoginResult.NO_LOGIN;
-        }
-        return loginResult;
     }
 
 }

@@ -34,6 +34,7 @@
 package info.magnolia.cms.security.auth.login;
 
 import info.magnolia.cms.security.User;
+import info.magnolia.context.MgnlContext;
 
 import javax.security.auth.login.LoginException;
 
@@ -50,6 +51,11 @@ public class LoginResult {
 
     public static LoginResult NO_LOGIN = new LoginResult(STATUS_NO_LOGIN);
 
+    /**
+     * request attribute holding the login exception
+     */
+    private static final String ATTRIBUTE_LOGINERROR = "mgnlLoginError";
+
     
     private int status;
 
@@ -57,9 +63,6 @@ public class LoginResult {
 
     private LoginException loginException;
 
-    /**
-     * @param status
-     */
     public LoginResult(int status) {
         this.status = status;
     }
@@ -84,5 +87,20 @@ public class LoginResult {
 
     public LoginException getLoginException() {
         return this.loginException;
+    }
+
+    /**
+     * Used by the login filter to depose the login result
+     */
+    public static void setCurrentLoginResult(LoginResult loginResult) {
+        MgnlContext.setAttribute(ATTRIBUTE_LOGINERROR, loginResult);
+    }
+
+    public static LoginResult getCurrentLoginResult() {
+        LoginResult loginResult =  (LoginResult) MgnlContext.getAttribute(LoginResult.ATTRIBUTE_LOGINERROR);
+        if(loginResult == null){
+            loginResult = NO_LOGIN;
+        }
+        return loginResult;
     }
 }

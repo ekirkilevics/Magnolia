@@ -44,7 +44,6 @@ import info.magnolia.freemarker.FreemarkerUtil;
 import info.magnolia.cms.beans.config.MIMEMapping;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.security.auth.login.LoginFilter;
 import info.magnolia.cms.security.auth.login.LoginResult;
 
 import org.slf4j.Logger;
@@ -92,7 +91,7 @@ public class FormClientCallback extends AbstractHttpClientCallback {
      * @return an empty map
      */
     protected Map getMessages() {
-        LoginResult loginResult = LoginFilter.getCurrentLoginResult();
+        LoginResult loginResult = LoginResult.getCurrentLoginResult();
         LoginException exception = loginResult.getLoginException();
         Map messages = new HashMap();
         if (null != exception) {
