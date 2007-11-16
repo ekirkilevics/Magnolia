@@ -181,7 +181,7 @@ public class ConfigLoader {
 
     /**
      * Bootstrap the system
-     * @deprecated See WebappDelta !
+     * @deprecated since 3.5 - See WebappDelta !
      */
     protected boolean bootstrap() {
         // check for initialized repositories
