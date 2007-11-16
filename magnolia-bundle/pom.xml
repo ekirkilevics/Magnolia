@@ -12,7 +12,7 @@
   <artifactId>magnolia-bundle</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-bundle</name>
-  <version>3.5-rc1</version>
+  <version>3.5-SNAPSHOT</version>
 
   <build>
     <plugins>
@@ -124,12 +124,4 @@
       <type>jar</type>
     </dependency>
   </dependencies>
-
-
-
-  <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-bundle-3.5-rc1</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-bundle-3.5-rc1</developerConnection>
-    <url>http://svn.magnolia.info/view/magnolia/tags/magnolia-bundle-3.5-rc1</url>
-  </scm>
 </project>
