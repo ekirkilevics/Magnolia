@@ -37,7 +37,11 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
+import info.magnolia.cms.security.Realm;
+import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
+import info.magnolia.cms.security.UserManager;
+import info.magnolia.cms.util.FactoryUtil;
 
 import java.util.Locale;
 
@@ -61,24 +65,29 @@ public class WebContextTest extends TestCase {
         HttpSession session = createMock(HttpSession.class);
         HttpServletResponse response = createMock(HttpServletResponse.class);
         ServletContext servletContext = createMock(ServletContext.class);
-        User user = createMock(User.class);
-        //User anonymousUser = Authenticator.getAnonymousUser();
-        //assertNotNull("anonymous user must not be null", anonymousUser);
+        User user = createMock(User.class); 
+        SecuritySupport securitySupport = createMock(SecuritySupport.class);
+        FactoryUtil.setInstance(SecuritySupport.class, securitySupport);
+        UserManager userManager = createMock(UserManager.class);
+        User anonymousUser = createMock(User.class);        
         expect(user.getLanguage()).andReturn("en");
         expect(request.getSession(false)).andReturn(session).anyTimes();
         session.setAttribute(SESSION_USER, user);
         expect(session.getAttribute(SESSION_USER)).andReturn(user);		
-        //session.invalidate();
-        //session.setAttribute(SESSION_USER, anonymousUser);
-        //expect(session.getAttribute(SESSION_USER)).andReturn(anonymousUser);
-        replay(request, response, servletContext, user, session);
+        session.invalidate();
+        expect(securitySupport.getUserManager(Realm.REALM_SYSTEM)).andReturn(userManager);
+        expect(userManager.getAnonymousUser()).andReturn(anonymousUser);
+        expect(anonymousUser.getLanguage()).andReturn("en");
+        session.setAttribute(SESSION_USER, anonymousUser);
+        expect(session.getAttribute(SESSION_USER)).andReturn(anonymousUser);
+        replay(request, response, servletContext, user, session, securitySupport, userManager, anonymousUser);
         WebContextImpl context = new WebContextImpl();
-        context.init(request, response, servletContext);
+        context.init(request, response, servletContext);        
         context.login(user);
         assertEquals(Locale.ENGLISH, context.getLocale());
-        assertEquals(user, context.getUser());
-        //context.logout();
-        //assertEquals("logout must set user to anonymous", anonymousUser, context.getUser());
-        verify(request, response, servletContext, user, session);
+        assertSame(user, context.getUser());
+        context.logout();
+        assertSame(anonymousUser, context.getUser());
+        verify(request, response, servletContext, user, session, securitySupport, userManager, anonymousUser);
     }
 }
