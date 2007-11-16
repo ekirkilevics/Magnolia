@@ -121,7 +121,11 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
         EntityImpl entity = new EntityImpl();
         entity.addProperty(Entity.LANGUAGE, this.user.getLanguage());
         entity.addProperty(Entity.NAME, this.user.getName());
-        entity.addProperty(Entity.FULL_NAME, this.user.getProperty("title"));
+        
+        String fullName = this.user.getProperty("title");
+        if(fullName != null){
+            entity.addProperty(Entity.FULL_NAME, fullName);
+        }
         entity.addProperty(Entity.PASSWORD, new String(this.pswd));
         this.subject.getPrincipals().add(entity);
 

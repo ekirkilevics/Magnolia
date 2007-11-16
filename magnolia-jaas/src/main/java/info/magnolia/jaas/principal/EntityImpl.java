@@ -38,6 +38,7 @@ import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
 
@@ -57,7 +58,7 @@ public class EntityImpl implements Entity {
     private Map properties;
 
     public EntityImpl() {
-        this.properties = new Hashtable();
+        this.properties = new HashMap();
     }
 
     /**
