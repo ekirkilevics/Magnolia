@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version 2.0
  *
- * @deprecated not used and not useful :)
+ * @deprecated since 3.5 and maybe even since 3.0, not used and not useful :)
  */
 public class Store {
 
