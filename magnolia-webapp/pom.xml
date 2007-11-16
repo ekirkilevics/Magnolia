@@ -3,14 +3,14 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.5-rc1</version>
+    <version>3.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-webapp</artifactId>
   <packaging>war</packaging>
   <name>magnolia-webapp</name>
-  <version>3.5-rc1</version>
+  <version>3.5-SNAPSHOT</version>
   <profiles>
     <profile>
       <id>with-optional-modules</id>
