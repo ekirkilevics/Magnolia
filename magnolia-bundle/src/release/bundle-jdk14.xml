@@ -2,7 +2,7 @@
   <id>bundle-jdk14</id>
   <formats>
     <format>zip</format>
-    <format>tar.gz</format>
+    <!--<format>tar.gz</format>-->
   </formats>
   <includeBaseDirectory>true</includeBaseDirectory>
   <componentDescriptors>
