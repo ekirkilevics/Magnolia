@@ -397,7 +397,7 @@
         <artifactId>maven-javadoc-plugin</artifactId>
         <configuration>
           <quiet>true</quiet>
-          <aggregate>true</aggregate>
+          <aggregate>false</aggregate>
         </configuration>
       </plugin>
       <plugin>
