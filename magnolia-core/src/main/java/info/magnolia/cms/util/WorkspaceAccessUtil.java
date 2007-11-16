@@ -65,12 +65,10 @@ import java.util.ArrayList;
  */
 public class WorkspaceAccessUtil {
 
-    private static final WorkspaceAccessUtil thisInstance = new WorkspaceAccessUtil();
-
-    private WorkspaceAccessUtil() {}
+    public WorkspaceAccessUtil() {}
 
     public static WorkspaceAccessUtil getInstance() {
-        return thisInstance;
+        return (WorkspaceAccessUtil) FactoryUtil.getSingleton(WorkspaceAccessUtil.class);
     }
 
     /**
