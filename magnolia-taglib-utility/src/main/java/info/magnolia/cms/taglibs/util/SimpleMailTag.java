@@ -55,6 +55,8 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
+import javax.servlet.jsp.tagext.Tag;
 import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
@@ -306,15 +308,39 @@ public class SimpleMailTag extends TagSupport {
 
         if (StringUtils.isNotEmpty(redirect)) {
             HttpServletResponse response = (HttpServletResponse) pageContext.getResponse();
-            try {
-                response.sendRedirect(request.getContextPath() + redirect);
+
+            if (!response.isCommitted()) {
+                try {
+                    response.reset();
+                    response.sendRedirect(request.getContextPath() + redirect);
+                }
+                catch (IOException e) {
+                    // should never happen
+                    log.error(e.getMessage(), e);
+                }
             }
-            catch (IOException e) {
-                // should never happen
-                log.error(e.getMessage(), e);
+            else {
+                // response committed, cannot do a server side redirect
+                JspWriter out = pageContext.getOut();
+
+                try {
+                    out.write("<script type='text/javascript'>//<!--\n");
+                    out.write("window.location = \"");
+                    out.write(request.getContextPath());
+                    out.write(redirect);
+                    out.write("\"\n//-->\n");
+                    out.write("</script>");
+                }
+                catch (IOException e) {
+                    // should never happen
+                    log.error(e.getMessage(), e);
+                }
+
             }
+
+            return Tag.SKIP_PAGE;
         }
-        release();
+        // release(); release must never be called directly, only managed by the container!
         return super.doEndTag();
     }
 
