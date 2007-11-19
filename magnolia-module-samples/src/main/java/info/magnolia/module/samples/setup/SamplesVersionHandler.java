@@ -58,7 +58,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
     
     public SamplesVersionHandler() {
         // - replace Templates menu item
-        final AddSubMenuItemTask addTemplateMenuItem = new AddSubMenuItemTask("config", "sample-templates", "config.menu.config.templates.samples", "info.magnolia.module.samples.messages", "MgnlAdminCentral.showTree('config','/modules/samples/templates')", "/.resources/icons/16/dot.gif", null);
+        final AddSubMenuItemTask addTemplateMenuItem = new AddSubMenuItemTask("config", "sample-templates", "config.menu.config.templates.samples", "info.magnolia.module.samples.messages", "MgnlAdminCentral.showTree('config','/modules/samples/templates')", "/.resources/icons/16/dot.gif", "subscribers");
         final String templatesMenuItemPath = "/modules/adminInterface/config/menu/config/templates";
         final NodeExistsDelegateTask removeOldTemplatesMenuItem = new NodeExistsDelegateTask("Menu", "Remove the Templates menu item if existent", ContentRepository.CONFIG, templatesMenuItemPath, 
             new RemoveNodeTask("Menu", "Removes the Template menu item as it will be replaced with a new configuration", ContentRepository.CONFIG, templatesMenuItemPath));
@@ -66,7 +66,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
         installOrUpdateTasks.add(addTemplateMenuItem);
 
         // - replace Paragraphs menu item
-        final AddSubMenuItemTask addParagraphsMenuItem = new AddSubMenuItemTask("config", "sample-paragraphs", "config.menu.config.paragraphs.samples", "info.magnolia.module.samples.messages", "MgnlAdminCentral.showTree('config','/modules/samples/paragraphs')", "/.resources/icons/16/dot.gif", null);
+        final AddSubMenuItemTask addParagraphsMenuItem = new AddSubMenuItemTask("config", "sample-paragraphs", "config.menu.config.paragraphs.samples", "info.magnolia.module.samples.messages", "MgnlAdminCentral.showTree('config','/modules/samples/paragraphs')", "/.resources/icons/16/dot.gif", "subscribers");
         final String paragraphsMenuItemPath = "/modules/adminInterface/config/menu/config/paragraphs";
         final NodeExistsDelegateTask removeOldParagraphsMenuItem = new NodeExistsDelegateTask("Menu", "Remove the Paragraphs menu item if existent", ContentRepository.CONFIG, paragraphsMenuItemPath, 
             new RemoveNodeTask("Menu", "Removes the Paragraph menu item as it will be replaced with a new configuration", ContentRepository.CONFIG, paragraphsMenuItemPath));
@@ -74,7 +74,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
         installOrUpdateTasks.add(addParagraphsMenuItem);
         
         // - replace Dialogs menu item
-        final AddSubMenuItemTask addDialogsMenuItem = new AddSubMenuItemTask("config", "sample-dialogs", "config.menu.config.dialogs.samples", "info.magnolia.module.samples.messages", "MgnlAdminCentral.showTree('config','/modules/samples/dialogs')", "/.resources/icons/16/dot.gif", null);
+        final AddSubMenuItemTask addDialogsMenuItem = new AddSubMenuItemTask("config", "sample-dialogs", "config.menu.config.dialogs.samples", "info.magnolia.module.samples.messages", "MgnlAdminCentral.showTree('config','/modules/samples/dialogs')", "/.resources/icons/16/dot.gif", "subscribers");
         final String dialogsMenuItemPath = "/modules/adminInterface/config/menu/config/dialogs";
         final NodeExistsDelegateTask removeOldDialogsMenuItem = new NodeExistsDelegateTask("Menu", "Remove the Dialogs menu item if existent", ContentRepository.CONFIG, dialogsMenuItemPath, 
             new RemoveNodeTask("Menu", "Removes the Paragraph menu item as it will be replaced with a new configuration", ContentRepository.CONFIG, dialogsMenuItemPath));
