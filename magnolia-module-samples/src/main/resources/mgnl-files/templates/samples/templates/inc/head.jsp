@@ -18,11 +18,11 @@
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}${cssFile}"/>
   </c:forEach>
 
-  <c:forEach items="${module.jsFiles}" var="jsFile">
-    <script type="text/javascript" src="${pageContext.request.contextPath}${jsFile}">
-            <jsp:text><!--  --></jsp:text>
-          </script>
-  </c:forEach>
+	<c:forEach items="${module.jsFiles}" var="jsFile">
+	  <script type="text/javascript" src="${pageContext.request.contextPath}${jsFile}">
+        <jsp:text><![CDATA[<!--  -->]]></jsp:text>
+      </script>
+	</c:forEach>
 
   <meta name="description" content="${pageProperties.metaDescription}" />
   <meta name="keywords" content="${pageProperties.metaKeywords}" />
