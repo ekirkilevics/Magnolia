@@ -55,6 +55,7 @@ import java.util.Iterator;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
@@ -73,6 +74,9 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
+
+    public void validateUser() throws LoginException {
+    }
 
     /**
      * set access control list from the user, roles and groups
