@@ -63,6 +63,6 @@ public abstract class OncePerRequestAbstractMgnlFilter extends AbstractMgnlFilte
     }
     
     public boolean bypasses(HttpServletRequest request) {
-        return MgnlContext.getAttribute(requestKeyName, Context.LOCAL_SCOPE) != null;
+        return MgnlContext.getAttribute(requestKeyName, Context.LOCAL_SCOPE) != null || super.bypasses(request);
     }
 }
