@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>info.magnolia</groupId>
-    <artifactId>magnolia-püarent-pom</artifactId>
+    <artifactId>magnolia-parent-pom</artifactId>
     <version>1</version>
   </parent>
   <groupId>info.magnolia</groupId>
