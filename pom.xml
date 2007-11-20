@@ -1,5 +1,10 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
   <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>info.magnolia</groupId>
+    <artifactId>magnolia-püarent-pom</artifactId>
+    <version>1</version>
+  </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
@@ -825,14 +830,6 @@
     </dependencies>
   </dependencyManagement>
   <distributionManagement>
-    <repository>
-      <id>magnolia</id>
-      <url>scp://svn.magnolia.info/usr/local/apache/htdocs/maven/m2</url>
-    </repository>
-    <snapshotRepository>
-      <id>magnolia</id>
-      <url>scp://svn.magnolia.info/usr/local/apache/htdocs/maven/snapshots</url>
-    </snapshotRepository>
     <site>
       <id>magnolia.sf</id>
       <name>magnolia</name>
@@ -841,6 +838,7 @@
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
   </distributionManagement>
   <repositories>
+    <!-- just a little trick for folks who don't have our parent pom in their local repo yet -->
     <repository>
       <id>magnolia</id>
       <url>http://svn.magnolia.info/maven/m2</url>
@@ -848,60 +846,7 @@
         <enabled>false</enabled>
       </snapshots>
     </repository>
-    <repository>
-      <id>magnolia.snapshots</id>
-      <url>http://svn.magnolia.info/maven/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </repository>
-    <repository>
-      <id>maven.openwfe.org.prereleases</id>
-      <url>http://maven.openwfe.org/prereleases</url>
-    </repository>
-    <repository>
-        <id>apache-snapshots</id>
-        <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-        <snapshots>
-          <enabled>true</enabled>
-        </snapshots>
-        <releases>
-          <enabled>false</enabled>
-        </releases>
-    </repository>    
   </repositories>
-  <pluginRepositories>
-    <pluginRepository>
-      <id>magnolia</id>
-      <url>http://svn.magnolia.info/maven/m2</url>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </pluginRepository>
-    <pluginRepository>
-      <id>magnolia.snapshots</id>
-      <url>http://svn.magnolia.info/maven/snapshots</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </pluginRepository>
-    <pluginRepository>
-      <id>apache-snapshots</id>
-      <url>http://people.apache.org/repo/m2-snapshot-repository</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-      <releases>
-        <enabled>false</enabled>
-      </releases>
-    </pluginRepository>
-  </pluginRepositories>
   <modules>
     <module>magnolia-core</module>
     <module>magnolia-jaas</module>
