@@ -7,10 +7,10 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>magnolia-webapp</artifactId>
+  <artifactId>magnolia-empty-webapp</artifactId>
   <packaging>war</packaging>
-  <name>magnolia-webapp</name>
-  <version>3.5-SNAPSHOT</version>
+  <name>magnolia-empty-webapp</name>
+  <description>The basic Magnolia webapp on which projects can depend.</description>
   <profiles>
     <profile>
       <id>with-optional-modules</id>
@@ -129,22 +129,4 @@
       </plugin>
     </plugins>
   </build>
-  <reporting>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>changes-maven-plugin</artifactId>
-        <configuration>
-          <inherited>false</inherited>
-          <link_template>%URL%/%ISSUE%</link_template>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-project-info-reports-plugin</artifactId>
-        <configuration>
-          <dependencyLocationsEnabled>true</dependencyLocationsEnabled>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
 </project>

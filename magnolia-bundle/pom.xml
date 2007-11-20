@@ -80,7 +80,7 @@
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-webapp</artifactId>
+      <artifactId>magnolia-empty-webapp</artifactId>
       <version>3.5-SNAPSHOT</version>
       <type>war</type>
     </dependency>

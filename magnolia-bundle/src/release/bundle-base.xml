@@ -65,7 +65,7 @@
     <dependencySet>
       <outputDirectory>apache-tomcat-5.5.25/webapps/magnoliaAuthor</outputDirectory>
       <includes>
-        <include>info.magnolia:magnolia-webapp</include>
+        <include>info.magnolia:magnolia-empty-webapp</include>
       </includes>
       <useStrictFiltering>true</useStrictFiltering>
       <unpack>true</unpack>
@@ -73,7 +73,7 @@
     <dependencySet>
       <outputDirectory>apache-tomcat-5.5.25/webapps/magnoliaPublic</outputDirectory>
       <includes>
-        <include>info.magnolia:magnolia-webapp</include>
+        <include>info.magnolia:magnolia-empty-webapp</include>
       </includes>
       <useStrictFiltering>true</useStrictFiltering>
       <unpack>true</unpack>
@@ -116,7 +116,7 @@
         <include>info.magnolia:*</include>
       </includes>
       <excludes>
-        <exclude>info.magnolia:magnolia-webapp</exclude>
+        <exclude>info.magnolia:magnolia-empty-webapp</exclude>
         <!-- ugly hack because we apparently can't exclude *:jar -->
         <exclude>info.magnolia:magnolia-module-samples:jar</exclude>
         <exclude>info.magnolia:magnolia-module-dms:jar</exclude>

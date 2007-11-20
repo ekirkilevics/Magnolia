@@ -916,6 +916,6 @@
     <module>magnolia-taglib-utility</module>
     <module>magnolia-editor-fckeditor</module>
     <module>magnolia-module-samples</module>
-    <module>magnolia-webapp</module>
+    <module>magnolia-empty-webapp</module>
   </modules>
 </project>
