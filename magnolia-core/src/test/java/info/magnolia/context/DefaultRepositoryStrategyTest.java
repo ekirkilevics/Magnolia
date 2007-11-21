@@ -37,6 +37,8 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.classextension.EasyMock.createMock;
 import static org.easymock.classextension.EasyMock.replay;
 import static org.easymock.classextension.EasyMock.verify;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
@@ -76,11 +78,50 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
         verify(context, user, principals, acl);
     }
     
-    public void testHierarchyManagers() throws Exception {
+    public void testRepositorySessions() throws Exception {
         UserContext context = createMock(UserContext.class);
         DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
         Session session = strategy.getRepositorySession("magnolia", "website");
         assertNotNull(session);
         strategy.release();
+    }
+    
+    public void testQueryManagers() {
+        UserContext context = createMock(UserContext.class);
+        User user = createMock(User.class);        
+        Set principalSet = new HashSet();
+        PrincipalCollection principals = createMock(PrincipalCollection.class);
+        principalSet.add(principals);
+        ACL acl = createMock(ACL.class);        
+        Subject subject = new Subject(false, principalSet, new HashSet(), new HashSet());                                
+        expect(context.getUser()).andReturn(user);        
+        expect(user.getSubject()).andReturn(subject);        
+        expect(principals.get("magnolia_website")).andReturn(acl);
+        expect(acl.getList()).andReturn(new ArrayList());
+        replay(context, user, principals, acl);
+        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);		
+        QueryManager queryManager = strategy.getQueryManager("magnolia", "website");
+        assertNotNull(queryManager);        
+        verify(context, user, principals, acl);
+    }
+    
+    public void testHierarchyManagers() {
+        UserContext context = createMock(UserContext.class);
+        User user = createMock(User.class);        
+        Set principalSet = new HashSet();
+        PrincipalCollection principals = createMock(PrincipalCollection.class);
+        principalSet.add(principals);
+        ACL acl = createMock(ACL.class);        
+        Subject subject = new Subject(false, principalSet, new HashSet(), new HashSet());                                
+        expect(context.getUser()).andReturn(user).anyTimes();
+        expect(user.getName()).andReturn("admin").anyTimes();
+        expect(user.getSubject()).andReturn(subject).anyTimes();        
+        expect(principals.get("magnolia_website")).andReturn(acl).anyTimes();
+        expect(acl.getList()).andReturn(new ArrayList()).anyTimes();
+        replay(context, user, principals, acl);
+        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);		
+        HierarchyManager hierarchyManager = strategy.getHierarchyManager("magnolia", "website");
+        assertNotNull(hierarchyManager);        
+        verify(context, user, principals, acl);
     }
 }
