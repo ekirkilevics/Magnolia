@@ -36,6 +36,7 @@ package info.magnolia.module.samples;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -55,20 +56,19 @@ public class SamplesConfig {
     
     private Collection cssFiles = new ArrayList();
     
-    private Map columns = new HashMap();
+    private Map paragraphCollections = new HashMap();
     
-    public Map getColumns() {
-        return this.columns;
+    public Map getParagraphCollections() {
+        return this.paragraphCollections;
     }
     
-    public void setColumns(Map columns) {
-        this.columns = columns;
+    public void setParagraphCollections(Map paragraphCollections) {
+        this.paragraphCollections = paragraphCollections;
     }
     
-    public void addColumn(String name, Collection paragraphs) {
-        this.columns.put(name, paragraphs);
+    public void addParagraphCollection(String name, ParagraphCollection paragraphCollection) {
+        this.paragraphCollections.put(name, paragraphCollection);
     }
-
    
     public Collection getCssFiles() {
         return this.cssFiles;
@@ -89,4 +89,36 @@ public class SamplesConfig {
         this.jsFiles = jsFiles;
     }
     
+    public static class ParagraphCollection {
+        private Collection paragraphs;
+        
+        
+        public ParagraphCollection() {
+            this.paragraphs = new HashSet();
+        }
+        
+        public Collection getParagraphs() {
+            return paragraphs;
+        }
+        
+        public void setParagraphs(Collection paragraphs) {
+            this.paragraphs = paragraphs;
+        }
+        
+        public void addParagraph(ParagraphReference paragraph) {
+            this.paragraphs.add(paragraph);
+        }
+    }
+    
+    public static class ParagraphReference {
+        private String name;
+        
+        public String getName() {
+            return name;
+        }
+        
+        public void setName(String name) {
+            this.name = name;
+        }
+    }
 }

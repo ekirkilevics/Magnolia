@@ -10,10 +10,6 @@
     <cms:out nodeDataName="contentTitle" var="title" />
   </c:if>
   <h1>${title}</h1>
-  <jsp:scriptlet>
-      SamplesConfig module = (SamplesConfig) request.getAttribute("module");
-      pageContext.setAttribute("paragraphs", StringUtils.join(((Collection) module.getColumns().get("mainColumnParagraphs")), ","));
-  </jsp:scriptlet>
   
   <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
     <cms:out nodeDataName="lineAbove" var="lineAbove" />
@@ -29,7 +25,7 @@
   </cms:contentNodeIterator>
   <cms:adminOnly>
     <div style="clear:both;">
-      <cms:newBar contentNodeCollectionName="mainColumnParagraphs" paragraph="${paragraphs}" />
+      <cms:newBar contentNodeCollectionName="mainColumnParagraphs" paragraph="${module.paragraphs['mainColumn']}" /> 
     </div>
   </cms:adminOnly>
 </jsp:root>

@@ -10,9 +10,7 @@
 
   <!--  add magnolia css and js links -->
   <cms:links />
-  <jsp:scriptlet>
-    request.setAttribute("module", ModuleRegistry.Factory.getInstance().getModuleInstance("samples"));
-  </jsp:scriptlet>
+  <jsp:useBean id="module" class="info.magnolia.module.samples.jsp.SamplesModuleConfigHelper" scope="request"/>
 
   <c:forEach items="${module.cssFiles}" var="cssFile">
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}${cssFile}"/>
