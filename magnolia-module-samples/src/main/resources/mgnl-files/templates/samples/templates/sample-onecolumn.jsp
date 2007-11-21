@@ -11,13 +11,13 @@
       <c:import url="/templates/samples/templates/inc/head.jsp" />
     </head>
     <body>
-      <cms:mainBar paragraph="samplesPageProperties" />
+      <cms:mainBar paragraph="${module.paragraphs.page}" />
       <div id="contentDivMainColumnTotalWidth">
         <c:import url="/templates/samples/templates/inc/columnMain.jsp" />
         <div id="footer">
           <cms:adminOnly>
             <fmt:message key="buttons.editfooter" var="label" />
-            <cms:editButton label="${label}" paragraph="samplesPageFooter" contentNodeName="footerPar" />
+            <cms:editButton label="${label}" paragraph="${module.paragraphs.footer}" contentNodeName="footerPar" />
           </cms:adminOnly>
           <cms:ifNotEmpty nodeDataName="footerText" contentNodeName="footerPar">
             <p>

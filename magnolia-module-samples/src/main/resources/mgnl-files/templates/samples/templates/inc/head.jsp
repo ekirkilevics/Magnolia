@@ -10,12 +10,16 @@
 
   <!--  add magnolia css and js links -->
   <cms:links />
+  
+  <!-- populate the Samples module configuration to JSP/JSTL -->
   <jsp:useBean id="module" class="info.magnolia.module.samples.jsp.SamplesModuleConfigHelper" scope="request"/>
 
+  <!-- include css files that are configured in AdminCentral under config:/modules/samples/config/cssFiles -->
   <c:forEach items="${module.cssFiles}" var="cssFile">
       <link rel="stylesheet" type="text/css" href="${pageContext.request.contextPath}${cssFile}"/>
   </c:forEach>
 
+  <!-- include js files that are configured in AdminCentral under config:/modules/samples/config/jsFiles -->
 	<c:forEach items="${module.jsFiles}" var="jsFile">
 	  <script type="text/javascript" src="${pageContext.request.contextPath}${jsFile}">
         <jsp:text><![CDATA[<!--  -->]]></jsp:text>

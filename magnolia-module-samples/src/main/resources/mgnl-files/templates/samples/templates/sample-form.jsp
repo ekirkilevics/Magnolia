@@ -8,7 +8,7 @@
   <jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
   <cms:setNode var="pageProperties" />
   <c:if test="${!empty(param.sendmail)}">
-    <cmsu:simpleMail  to="${pageProperties.to}" from="${pageProperties.from}" cc="${pageProperties.cc}"
+    <cmsu:simpleMail to="${pageProperties.to}" from="${pageProperties.from}" cc="${pageProperties.cc}"
       bcc="${pageProperties.cc}" replyTo="${pageProperties.replyTo}" logging="${pageProperties.trackMail}" redirect="${pageProperties.redirect}" subject="${pageProperties.subject}"
       nodeCollectionName="mainColumnParagraphs" />
   </c:if>
@@ -20,11 +20,11 @@
     <head>
       <c:import url="/templates/samples/templates/inc/head.jsp" />
       <script type="text/javascript" src="${pageContext.request.contextPath}/docroot/samples/js/form.js">
-        <!--  -->
+        <![CDATA[<!--  -->]]>
       </script>
     </head>
     <body>
-      <cms:mainBar paragraph="samplesPageProperties" label="Page Properties">
+      <cms:mainBar paragraph="${module.paragraphs.page}" label="Page Properties">
         <cms:button label="Form properties" dialogName="samplesFormProperties" position="right" />
       </cms:mainBar>
       <div id="contentDivMainColumn">
@@ -59,13 +59,13 @@
           <cms:adminOnly>
             <div style="clear:both;">
               <cms:newBar contentNodeCollectionName="mainColumnParagraphs"
-                paragraph="samplesTextImage,samplesFormEdit,samplesFormSelection,samplesFormSubmit" />
+                paragraph="${module.paragraphs.mainColumn},${module.paragraphs.form}" />
             </div>
           </cms:adminOnly>
           <div id="footer">
             <cms:adminOnly>
               <fmt:message key="buttons.editfooter" var="label" />
-              <cms:editButton label="${label}" paragraph="samplesPageFooter" contentNodeName="footerPar" />
+              <cms:editButton label="${label}" paragraph="${module.paragraphs.footer}" contentNodeName="footerPar" />
             </cms:adminOnly>
             <cms:ifNotEmpty nodeDataName="footerText" contentNodeName="footerPar">
               <p>
@@ -88,7 +88,7 @@
         </cms:contentNodeIterator>
         <cms:adminOnly>
           <div style="clear:both;">
-            <cms:newBar contentNodeCollectionName="rightColumnParagraphs" paragraph="samplesRightColumn" />
+            <cms:newBar contentNodeCollectionName="rightColumnParagraphs" paragraph="${module.paragraphs.rightColumn}" />
           </div>
         </cms:adminOnly>
       </div>

@@ -12,7 +12,7 @@
     </head>
     <body>
       <c:if test="${empty(param.mail)}">
-        <cms:mainBar paragraph="samplesPageProperties" label="Page Properties" />
+        <cms:mainBar paragraph="${module.paragraphs.page}" label="Page Properties" />
       </c:if>
       <br />
       <br />
@@ -34,7 +34,7 @@
       </cms:contentNodeIterator>
       <cms:adminOnly>
         <div style="clear:both;">
-          <cms:newBar contentNodeCollectionName="mainColumnParagraphs" paragraph="samplesTextImage" />
+          <cms:newBar contentNodeCollectionName="mainColumnParagraphs" paragraph="${module.paragraphs.mainColumn}" />
         </div>
       </cms:adminOnly>
     </body>

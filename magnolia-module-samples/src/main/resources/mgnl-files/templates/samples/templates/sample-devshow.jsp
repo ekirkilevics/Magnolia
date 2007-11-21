@@ -11,7 +11,7 @@
       <c:import url="/templates/samples/templates/inc/head.jsp" />
     </head>
     <body>
-      <cms:mainBar paragraph="samplesPageProperties" />
+      <cms:mainBar paragraph="${module.paragraphs.page}" />
       <div id="contentDivMainColumnTotalWidth">
         <!-- content title -->
         <h1>
@@ -33,13 +33,13 @@
         <cms:adminOnly>
           <div style="clear:both;">
             <cms:newBar contentNodeCollectionName="mainColumnParagraphsDev"
-              paragraph="samplesDevShowRichEdit,samplesDevShowDate,samplesDevShowFile,samplesDevShowAllControls,samplesDevShowInclude" />
+              paragraph="${module.paragraphs.devShow}" />
           </div>
         </cms:adminOnly>
         <div id="footer">
           <cms:adminOnly>
             <fmt:message key="buttons.editfooter" var="label" />
-            <cms:editButton label="${label}" paragraph="samplesPageFooter" contentNodeName="footerPar" />
+            <cms:editButton label="${label}" paragraph="${module.paragraphs.footer}" contentNodeName="footerPar" />
           </cms:adminOnly>
           <cms:ifNotEmpty nodeDataName="footerText" contentNodeName="footerPar">
             <p>

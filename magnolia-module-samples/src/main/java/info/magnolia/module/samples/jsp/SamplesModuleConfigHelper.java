@@ -47,6 +47,9 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * {@link SamplesModuleConfigHelper} is a convenience class that wraps the {@link SamplesConfig} module configuration object.
+ * 
+ * 
  * @author vsteller
  * @version $Id$
  *
@@ -71,6 +74,19 @@ public class SamplesModuleConfigHelper {
         return samplesConfig.getParagraphCollections();
     }
     
+    /**
+     * Joins all configured paragraph names for the given paragraphCollectionName into a comma-separated list, 
+     * which can be used e.g. for the paragraph attribute in a <cms:newBar/> tag.
+     *
+     * Example:
+     * <pre>
+     *  &lt;jsp:useBean id="module" class="info.magnolia.module.samples.jsp.SamplesModuleConfigHelper" scope="request"/&gt;
+     *  &lt;cms:newBar contentNodeCollectionName="mainColumnParagraphs" paragraph="${module.paragraphs.mainColumn}" /&gt;
+     * </pre>
+     * 
+     * @param paragraphCollectionName
+     * @return
+     */
     public String listParagraphs(String paragraphCollectionName) {
         final StringBuffer paragraphList = new StringBuffer();
         final Map paragraphCollections = samplesConfig.getParagraphCollections();

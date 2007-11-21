@@ -25,7 +25,7 @@
   </cms:contentNodeIterator>
   <cms:adminOnly>
     <div style="clear:both;">
-      <cms:newBar contentNodeCollectionName="mainColumnParagraphs" paragraph="${module.paragraphs['mainColumn']}" /> 
+      <cms:newBar contentNodeCollectionName="mainColumnParagraphs" paragraph="${module.paragraphs.mainColumn}" />
     </div>
   </cms:adminOnly>
 </jsp:root>
