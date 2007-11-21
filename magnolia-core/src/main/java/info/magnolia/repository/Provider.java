@@ -105,4 +105,6 @@ public interface Provider {
      * @throws RepositoryException if any exception occours during registration
      */
     boolean registerWorkspace(String workspaceName) throws RepositoryException;
+    
+    void shutdownRepository();
 }

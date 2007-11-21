@@ -106,6 +106,8 @@ public class ProviderImpl implements Provider {
     private RepositoryMapping repositoryMapping;
 
     private Repository repository;
+    
+    private ShutdownTask shutdownTask;
 
     private static final String REPO_HOME_PREFIX = "${repository.home}";
 
@@ -213,7 +215,8 @@ public class ProviderImpl implements Provider {
         }
 
         if (addShutdownTask) {
-            ShutdownManager.addShutdownTask(new ShutdownTask() {
+            //System.out.println("****** repository registered: " + bindName);
+            ShutdownManager.addShutdownTask(shutdownTask = new ShutdownTask() {
 
                 public boolean execute(info.magnolia.context.Context context) {
                     log.info("Shutting down repository bound to '{}'", bindName);
@@ -238,6 +241,14 @@ public class ProviderImpl implements Provider {
                 }
             });
         }
+    }
+    
+    public void shutdownRepository() {
+        try {
+            shutdownTask.execute(null);
+        } catch (Exception e) {
+            log.error("Failed to shutdown repository", e);            
+        }        
     }
 
     /**
@@ -432,11 +443,12 @@ public class ProviderImpl implements Provider {
      * @see info.magnolia.repository.Provider#registerWorkspace(java.lang.String)
      */
     public boolean registerWorkspace(String workspaceName) throws RepositoryException {
-        // check if workspace already exists
+        // check if workspace already exists        
         SimpleCredentials credentials = new SimpleCredentials(
             ContentRepository.REPOSITORY_USER,
             ContentRepository.REPOSITORY_PSWD.toCharArray());
         Session jcrSession = this.repository.login(credentials);
+        
         try {
             WorkspaceImpl defaultWorkspace = (WorkspaceImpl) jcrSession.getWorkspace();
             String[] workspaceNames = defaultWorkspace.getAccessibleWorkspaceNames();

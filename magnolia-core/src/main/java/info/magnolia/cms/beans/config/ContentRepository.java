@@ -136,12 +136,12 @@ public final class ContentRepository {
     /**
      * repository user.
      */
-    public static final String REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
+    public static String REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
 
     /**
      * repository default password
      */
-    public static final String REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
+    public static String REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
 
     /**
      * All available repositories store.

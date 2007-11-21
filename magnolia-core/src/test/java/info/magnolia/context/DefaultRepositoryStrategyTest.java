@@ -41,21 +41,21 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.PrincipalCollection;
+import info.magnolia.test.RepositoryTestCase;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+import javax.jcr.Session;
 import javax.security.auth.Subject;
-
-import junit.framework.TestCase;
 
 /**
  *
  * @author ashapochka
  * @version $Revision: $ ($Author: $)
  */
-public class DefaultRepositoryStrategyTest extends TestCase {
+public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
     public void testAccessManagers() {
         UserContext context = createMock(UserContext.class);
         User user = createMock(User.class);        
@@ -74,5 +74,13 @@ public class DefaultRepositoryStrategyTest extends TestCase {
         assertNotNull(accessManager);
         assertSame(accessManager, strategy.getAccessManager("repo1", "space1"));
         verify(context, user, principals, acl);
+    }
+    
+    public void testHierarchyManagers() throws Exception {
+        UserContext context = createMock(UserContext.class);
+        DefaultRepositoryStrategy strategy = new DefaultRepositoryStrategy(context);
+        Session session = strategy.getRepositorySession("magnolia", "website");
+        assertNotNull(session);
+        strategy.release();
     }
 }
