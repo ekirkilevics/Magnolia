@@ -129,7 +129,7 @@
       <sv:property sv:name="tables" sv:type="String">
         <sv:value>true</sv:value>
       </sv:property>
-      <sv:property sv:name="jsConfgFile" sv:type="String">
+      <sv:property sv:name="jsConfigFile" sv:type="String">
         <sv:value>/.resources/fckeditor/custom/config/magnoliaStandard.js</sv:value>
       </sv:property>
       <sv:property sv:name="label" sv:type="String">
