@@ -96,16 +96,7 @@ public class MainBar extends TagSupport implements BarTag {
     }
 
     /**
-     * Set current content type, could be any developer defined name.
-     * @deprecated
-     * @param type paragraph type
-     */
-    public void setParFile(String type) {
-        this.setParagraph(type);
-    }
-
-    /**
-     * Set paragarph type.
+     * Set paragraph type.
      * @param s paragraph type
      */
     public void setParagraph(String s) {
