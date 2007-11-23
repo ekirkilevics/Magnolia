@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarMain;
@@ -141,7 +141,7 @@ public class MainBar extends TagSupport implements BarTag {
      */
     public int doStartTag() {
 
-        if (Server.isAdmin()) {
+        if (ServerConfiguration.getInstance().isAdmin()) {
             return EVAL_BODY_INCLUDE;
         }
         return SKIP_BODY;
@@ -154,7 +154,7 @@ public class MainBar extends TagSupport implements BarTag {
 
         HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
         Content activePage = Resource.getActivePage();
-        if (Server.isAdmin() && activePage != null && activePage.isGranted(Permission.SET)) {
+        if (ServerConfiguration.getInstance().isAdmin() && activePage != null && activePage.isGranted(Permission.SET)) {
             try {
                 BarMain bar = new BarMain(request);
                 bar.setPath(this.getPath());
