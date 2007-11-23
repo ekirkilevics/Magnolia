@@ -601,7 +601,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         items.
       </description>
     </attribute>
-        <attribute>
+    <attribute>
       <name>contentNode</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
