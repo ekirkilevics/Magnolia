@@ -108,7 +108,14 @@ public class CacheFilter extends AbstractMgnlFilter {
 
                     // if response has status 200 go cache it
                     if (responseWrapper.getStatus() == HttpServletResponse.SC_OK) {
-                        responseWrapper.flushBuffer(); // be sure to flush before read
+                        try {
+                            responseWrapper.flushBuffer(); // be sure to flush before read
+                        }
+                        catch (IOException e) {
+                            // ignore and don't cache, should be a ClientAbortException
+                            return;
+                        }
+
                         CacheableEntry cacheableEntry = responseWrapper.getCacheableEntry();
                         if (cacheableEntry != null && cacheableEntry.getOut().length > 0) {
                             this.cacheManager.cacheRequest(key, cacheableEntry, canCompress);
