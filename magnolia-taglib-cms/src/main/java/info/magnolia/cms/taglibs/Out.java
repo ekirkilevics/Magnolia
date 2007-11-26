@@ -65,32 +65,32 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 public class Out extends BaseContentTag {
 
     /**
-     * Facke nodeDataName returning the node's name
+     * Facke nodeDataName returning the node's name.
      */
     public static final String NODE_NAME_NODEDATANAME = "name";
 
     /**
-     * Facke nodeDataName returning the node's handle
+     * Facke nodeDataName returning the node's handle.
      */
     private static final String PATH_NODEDATANAME = "path";
 
     /**
-     * Facke nodeDataName returning the node's handle
+     * Facke nodeDataName returning the node's handle.
      */
     private static final String HANDLE_NODEDATANAME = "handle";
 
     /**
-     * Facke nodeDataName returning the node's uuid
+     * Facke nodeDataName returning the node's uuid.
      */
     private static final String UUID_NODEDATANAME = "uuid";
 
     /**
-     * No uuid to link resolving
+     * No uuid to link resolving.
      */
     public static final String LINK_RESOLVING_NONE = "none";
 
     /**
-     * Resolve to a absolute link but do not use the repository to uri mapping
+     * Resolve to a absolute link but do not use the repository to uri mapping.
      */
     private static final String LINK_RESOLVING_HANDLE = "handle";
 
@@ -100,7 +100,7 @@ public class Out extends BaseContentTag {
     public static final String LINK_RESOLVING_RELATIVE = "relative";
 
     /**
-     * Resolve to a absolute link using the repository to uri mapping 
+     * Resolve to a absolute link using the repository to uri mapping.
      */
     public static final String LINK_RESOLVING_ABSOLUTE = "absolute";
 
@@ -318,7 +318,7 @@ public class Out extends BaseContentTag {
                 default:
                     value = StringUtils.isEmpty(this.lineBreak) ? nodeData.getString() : nodeData.getString(this.lineBreak);
                     // replace internal links using the special pattern
-                    value = LinkUtil.convertUUIDsToBrowserLinks(value, Resource.getActivePage()); // static actpage
+                    value = LinkUtil.convertUUIDsToBrowserLinks(value, Resource.getActivePage().getHandle()); // static actpage
                     if(!StringUtils.equalsIgnoreCase(getUuidToLink(), LINK_RESOLVING_NONE)){
                         if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_HANDLE)){
                             value = ContentUtil.uuid2path(this.getUuidToLinkRepository(), value);
@@ -327,7 +327,7 @@ public class Out extends BaseContentTag {
                             value = LinkHelper.convertUUIDtoAbsolutePath(uuid, this.getUuidToLinkRepository());
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_RELATIVE)){
-                            value = LinkUtil.makeRelativePath(LinkHelper.convertUUIDtoAbsolutePath(uuid, this.getUuidToLinkRepository()), MgnlContext.getAggregationState().getMainContent());
+                            value = LinkUtil.makeRelativePath(LinkHelper.convertUUIDtoAbsolutePath(uuid, this.getUuidToLinkRepository()), MgnlContext.getAggregationState().getMainContent().getHandle());
                         }
                         else{
                             throw new IllegalArgumentException("not supported value for uuidToLink");

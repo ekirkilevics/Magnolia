@@ -60,22 +60,22 @@ public class Include extends BodyTagSupport {
     private static final long serialVersionUID = 222L;
 
     /**
-     * file to be included (e.g. /templates/jsp/x.jsp).
+     * File to be included (e.g. /templates/jsp/x.jsp).
      */
     private String path;
 
     /**
-     * Attributes to be passed to the included template (set by nested Attribute tags)
+     * Attributes to be passed to the included template (set by nested Attribute tags).
      */
     private transient List attributes;
 
     /**
-     * the instance contentNode (i.e. paragraph) you wish to show.
+     * The instance contentNode (i.e. paragraph) you wish to show.
      */
     private transient Content contentNode;
 
     /**
-     * the name of the contentNode (i.e. paragraph) you wish to show.
+     * The name of the contentNode (i.e. paragraph) you wish to show.
      */
     private String contentNodeName;
 

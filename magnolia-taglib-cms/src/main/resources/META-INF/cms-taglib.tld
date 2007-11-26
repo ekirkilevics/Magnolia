@@ -7,7 +7,7 @@
   <jsp-version>1.2</jsp-version>
   <short-name>cms</short-name>
   <uri>cms-taglib</uri>
-  <display-name>cms taglib</display-name>
+  <display-name>CMS tag library</display-name>
   <description>Core tag library for CMS</description>
   <tag>
     <name>mainBar</name>
@@ -16,8 +16,8 @@
     <display-name>mainBar</display-name>
     <description>
       Displays the mainBar, i.e. the bar that allows you to change the page properties and switch to preview mode. This
-      tag also add the css and js links if not previously defined, but it's recommended to add the cms:links tag to the
-      header of the page (also if some browser support it, css links are not valid inside the html body tag.
+      tag also add the CSS and JS links if not previously defined, but it's recommended to add the cms:links tag to the
+      header of the page. CSS links are not valid inside the HTML body tag.
     </description>
     <attribute>
       <name>paragraph</name>
@@ -64,53 +64,53 @@
     <body-content>EMPTY</body-content>
     <display-name>editBar</display-name>
     <description>
-      This will display a Magnolia editBar, which allows you to edit a paragraph. This tag is often used within
+      Displays Magnolia editBar which allows you to edit a paragraph. This tag is often used within
       contentNodeIterator, which in turn will set all relevant parameters automatically.
     </description>
     <attribute>
       <name>contentNodeName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>the contentNode (i.e. paragraph) you wish to edit</description>
+      <description>The contentNode (i.e. paragraph) you wish to edit.</description>
     </attribute>
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>the contentNode collection</description>
+      <description>The contentNode collection.</description>
     </attribute>
     <attribute>
       <name>paragraph</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        name of paragraph (as defined in config). Does not have to be set inside "contentNodeIterator"
+        Name of paragraph (as defined in config). Does not have to be set inside "contentNodeIterator".
       </description>
     </attribute>
     <attribute>
       <name>editLabel</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>text of the edit button, defaults to "Edit"</description>
+      <description>The text of the edit button, defaults to "Edit".</description>
     </attribute>
     <attribute>
       <name>deleteLabel</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>text of the delete button, defaults to "Delete"; use "" to get no delete button</description>
+      <description>The text of the delete button, defaults to "Delete"; use "" to get no delete button.</description>
     </attribute>
     <attribute>
       <name>moveLabel</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>text of the move button, defaults to "Move"; use "" to get no move button</description>
+      <description>The text of the move button, defaults to "Move"; use "" to get no move button.</description>
     </attribute>
     <attribute>
       <name>adminOnly</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>Show only in admin instance, default to false.</description>
+      <description>Show only in admin instance, default to true.</description>
     </attribute>
   </tag>
   <!-- new bar tag -->
@@ -144,7 +144,7 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>Show only in admin instance, default to false.</description>
+      <description>Show only in admin instance, default to true.</description>
     </attribute>
     <example>
       <![CDATA[
@@ -213,7 +213,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>Show only in admin instance, default to false.</description>
+      <description>Show only in admin instance, defaults to true.</description>
     </attribute>
   </tag>
   <tag>
@@ -279,7 +279,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        defaults to BR-tag. Set to "" to have no line break at all, or any other value to be used as the line break
+        defaults to BR-tag. Set to "" to have no line break at all, or any other value to be used as the line break.
       </description>
     </attribute>
     <attribute>
@@ -296,7 +296,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <rtexprvalue>true</rtexprvalue>
       <description>
         The uuid to use for finding the content.
-        You must define the repository attribute if the content is not stored in the website repositoty
+        You must define the repository attribute if the content is not stored in the website repository.
       </description>
     </attribute>
     <attribute>
@@ -305,7 +305,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <rtexprvalue>true</rtexprvalue>
       <description>
         The absolute path to the content.
-        You must define the repository attribute if the content is not stored in the website repositoty
+        You must define the repository attribute if the content is not stored in the website repository.
       </description>
     </attribute>
     <attribute>
@@ -313,7 +313,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Used if the uuid or path attribute is set. Defaults to website
+        Used if the uuid or path attribute is set. Defaults to website.
       </description>
     </attribute>
     <attribute>
@@ -366,7 +366,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current page instead of the cuu</description>
+      <description>If true we work on the current active page instead of any other node.</description>
     </attribute>
     <example>
       <![CDATA[
@@ -836,14 +836,14 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current page instead of the current paragraph</description>
+      <description>If true we work on the current page instead of the current paragraph.</description>
     </attribute>
   </tag>
   <tag>
     <name>ifExisting</name>
     <tag-class>info.magnolia.cms.taglibs.IfExisting</tag-class>
     <body-content>JSP</body-content>
-    <description>this is exactly the opposite of the ifNotExisting Tag</description>
+    <description>This is exactly the opposite of the ifNotExisting Tag.</description>
     <attribute>
       <name>nodeDataName</name>
       <required>false</required>

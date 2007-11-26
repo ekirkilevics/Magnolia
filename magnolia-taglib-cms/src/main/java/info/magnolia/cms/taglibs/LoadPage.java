@@ -48,8 +48,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Loads another page into actpage. One usage would be within a site-menu structure. loadPage does not nest pages, so
- * the corresponding unloadPage-tag will not revert to the previously loaded page, but restore actpage to the currently
+ * Loads another page into actPage. One usage would be within a site-menu structure. loadPage does not nest pages, so
+ * the corresponding unloadPage-tag will not revert to the previously loaded page, but restore actPage to the currently
  * displayed page, i.e. the value it held before loadPage was called for the first time.
  * @author Marcel Salathe
  * @version $Revision$ ($Author$)

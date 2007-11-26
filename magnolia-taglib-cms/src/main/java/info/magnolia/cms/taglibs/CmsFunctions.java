@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.Permission;
@@ -91,7 +91,7 @@ public class CmsFunctions {
      * @return url formed using context path + handle + default extension
      */
     public static String link(String handle) {
-        return MgnlContext.getContextPath() + handle + '.' + Server.getDefaultExtension();
+        return MgnlContext.getContextPath() + handle + '.' + ServerConfiguration.getInstance().getDefaultExtension();
     }
 
     /**
@@ -134,7 +134,7 @@ public class CmsFunctions {
      */
     public static boolean isEditMode() {
         Content activePage = Resource.getActivePage();
-        return Server.isAdmin()
+        return ServerConfiguration.getInstance().isAdmin()
             && !Resource.showPreview()
             && activePage != null
             && activePage.isGranted(Permission.SET);

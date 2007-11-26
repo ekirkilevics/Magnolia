@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.gui.misc.Sources;
 
 import java.io.IOException;
@@ -47,7 +47,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 
 /**
- * Draw css and js links for admin controls. Separated from mainbar since css links must be inside html head.
+ * Draws css and js links for admin controls. Separated from mainbar tag since css links must be inside html head.
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  * @since 2.1
@@ -68,7 +68,7 @@ public class LinksTag extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
     public int doStartTag() throws JspException {
-        if (!adminOnly || Server.isAdmin()) {
+        if (!adminOnly || ServerConfiguration.getInstance().isAdmin()) {
 
             HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
 

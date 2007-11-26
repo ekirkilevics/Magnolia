@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.util.Resource;
 
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
@@ -68,7 +68,7 @@ public class PublicOnly extends ConditionalTagSupport {
      * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
      */
     protected boolean condition() {
-        if (!Server.isAdmin() || (showInPreview && Resource.showPreview())) {
+        if (!ServerConfiguration.getInstance().isAdmin() || (showInPreview && Resource.showPreview())) {
             return true;
         }
         return false;

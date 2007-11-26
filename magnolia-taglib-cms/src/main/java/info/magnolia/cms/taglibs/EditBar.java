@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarEdit;
 import info.magnolia.cms.security.Permission;
@@ -75,48 +75,52 @@ public class EditBar extends TagSupport {
     /**
      * Show links only in admin instance.
      */
-    private boolean adminOnly;
+    private boolean adminOnly = true;
 
     /**
-     * set working contentNode
-     * @param name , comtainer name which will be used to access/write content
+     * Set working contentNode.
+     * @param name container name which will be used to access/write content.
      */
     public void setContentNodeName(String name) {
         this.nodeName = name;
     }
 
     /**
-     * set working contentNode
-     * @param name , comtainer name which will be used to access/write content
+     * Set working contentNode.
+     * @param name container name which will be used to access/write content.
      */
     public void setContentNodeCollectionName(String name) {
         this.nodeCollectionName = name;
     }
 
     /**
-     * set current content type, could be any developer defined name
-     * @param type , content type
+     * Set current content type, could be any developer defined name.
+     * @param type content type.
      */
     public void setParagraph(String type) {
         this.paragraph = type;
     }
 
     /**
-     * set the edit label (else "Edit")
-     * @param label , under which content must be stored
+     * Set the edit label (defaults to "Edit").
+     * @param label of the Edit button.
      */
     public void setEditLabel(String label) {
         this.editLabel = label;
     }
 
     /**
-     * set the delete label (else "Delete")
-     * @param label , under which content must be stored
+     * Set the delete label (defaults to "Delete").
+     * @param label of the Delete button.
      */
     public void setDeleteLabel(String label) {
         this.deleteLabel = label;
     }
 
+    /**
+     * Set the move label (defaults to "Move").
+     * @param label of the move.
+     */
     public void setMoveLabel(String label) {
         this.moveLabel = label;
     }
@@ -141,86 +145,83 @@ public class EditBar extends TagSupport {
      */
     public int doEndTag() {
 
-        if (!adminOnly || Server.isAdmin()) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && Resource.getActivePage().isGranted(Permission.SET)) {
+            try {
+                BarEdit bar = new BarEdit((HttpServletRequest) this.pageContext.getRequest());
 
-            if (Server.isAdmin() && Resource.getActivePage().isGranted(Permission.SET)) {
+                Content localContentNode = Resource.getLocalContentNode();
+
+                if (this.paragraph == null) {
+                    Content contentParagraph = localContentNode;
+                    if (contentParagraph != null) {
+                        this.paragraph = contentParagraph.getMetaData().getTemplate();
+                    }
+                }
+                bar.setParagraph(this.paragraph);
+
+                if (this.nodeCollectionName == null) {
+                    this.nodeCollectionName = StringUtils.defaultString(Resource
+                        .getLocalContentNodeCollectionName());
+                }
+                bar.setNodeCollectionName(this.nodeCollectionName);
+
+                if (this.nodeName == null) {
+                    if (localContentNode != null) {
+                        this.nodeName = localContentNode.getName();
+                    }
+                }
+                bar.setNodeName(this.nodeName);
+
                 try {
-                    BarEdit bar = new BarEdit((HttpServletRequest) this.pageContext.getRequest());
-
-                    Content localContentNode = Resource.getLocalContentNode();
-
-                    if (this.paragraph == null) {
-                        Content contentParagraph = localContentNode;
-                        if (contentParagraph != null) {
-                            this.paragraph = contentParagraph.getMetaData().getTemplate();
+                    String path;
+                    if (localContentNode != null) {
+                        path = localContentNode.getHandle();
+                        if (path.endsWith(this.nodeCollectionName + "/" + this.nodeName)) {
+                            path = StringUtils.removeEnd(path, "/" + this.nodeCollectionName + "/" + this.nodeName);
                         }
                     }
-                    bar.setParagraph(this.paragraph);
-
-                    if (this.nodeCollectionName == null) {
-                        this.nodeCollectionName = StringUtils.defaultString(Resource
-                            .getLocalContentNodeCollectionName());
+                    else {
+                        path = Resource.getCurrentActivePage().getHandle();
                     }
-                    bar.setNodeCollectionName(this.nodeCollectionName);
-
-                    if (this.nodeName == null) {
-                        if (localContentNode != null) {
-                            this.nodeName = localContentNode.getName();
-                        }
-                    }
-                    bar.setNodeName(this.nodeName);
-
-                    try {
-                        String path;
-                        if (localContentNode != null) {
-                            path = localContentNode.getHandle();
-                            if (path.endsWith(this.nodeCollectionName + "/" + this.nodeName)) {
-                                path = StringUtils.removeEnd(path, "/" + this.nodeCollectionName + "/" + this.nodeName);
-                            }
-                        }
-                        else {
-                            path = Resource.getCurrentActivePage().getHandle();
-                        }
-                        bar.setPath(path);
-                    }
-                    catch (Exception re) {
-                        bar.setPath(StringUtils.EMPTY);
-                    }
-
-                    bar.setDefaultButtons();
-
-                    if (this.editLabel != null) {
-                        if (StringUtils.isEmpty(this.editLabel)) {
-                            bar.setButtonEdit(null);
-                        }
-                        else {
-                            bar.getButtonEdit().setLabel(this.editLabel);
-                        }
-                    }
-
-                    if (this.moveLabel != null) {
-                        if (StringUtils.isEmpty(this.moveLabel)) {
-                            bar.setButtonMove(null);
-                        }
-                        else {
-                            bar.getButtonMove().setLabel(this.moveLabel);
-                        }
-                    }
-
-                    if (this.deleteLabel != null) {
-                        if (StringUtils.isEmpty(this.deleteLabel)) {
-                            bar.setButtonDelete(null);
-                        }
-                        else {
-                            bar.getButtonDelete().setLabel(this.deleteLabel);
-                        }
-                    }
-                    bar.placeDefaultButtons();
-                    bar.drawHtml(pageContext.getOut());
+                    bar.setPath(path);
                 }
-                catch (IOException e) {
-                    throw new NestableRuntimeException(e);
+                catch (Exception re) {
+                    bar.setPath(StringUtils.EMPTY);
                 }
+
+                bar.setDefaultButtons();
+
+                if (this.editLabel != null) {
+                    if (StringUtils.isEmpty(this.editLabel)) {
+                        bar.setButtonEdit(null);
+                    }
+                    else {
+                        bar.getButtonEdit().setLabel(this.editLabel);
+                    }
+                }
+
+                if (this.moveLabel != null) {
+                    if (StringUtils.isEmpty(this.moveLabel)) {
+                        bar.setButtonMove(null);
+                    }
+                    else {
+                        bar.getButtonMove().setLabel(this.moveLabel);
+                    }
+                }
+
+                if (this.deleteLabel != null) {
+                    if (StringUtils.isEmpty(this.deleteLabel)) {
+                        bar.setButtonDelete(null);
+                    }
+                    else {
+                        bar.getButtonDelete().setLabel(this.deleteLabel);
+                    }
+                }
+                bar.placeDefaultButtons();
+                bar.drawHtml(pageContext.getOut());
+            }
+            catch (IOException e) {
+                throw new NestableRuntimeException(e);
             }
         }
         reset();
@@ -235,7 +236,7 @@ public class EditBar extends TagSupport {
         this.editLabel = null;
         this.deleteLabel = null;
         this.moveLabel = null;
-        this.adminOnly = false;
+        this.adminOnly = true;
     }
 
 }

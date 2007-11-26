@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarNew;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -78,7 +78,7 @@ public class NewBar extends TagSupport implements BarTag {
     /**
      * Show only in admin instance.
      */
-    private boolean adminOnly;
+    private boolean adminOnly = true;
 
     /**
      * Addition buttons (left).
@@ -108,23 +108,15 @@ public class NewBar extends TagSupport implements BarTag {
 
     /**
      * Set working container list.
-     * @param name comtainer list name
+     * @param name container list name
      */
     public void setContentNodeCollectionName(String name) {
         this.contentNodeCollectionName = name;
     }
 
     /**
-     * @param list , comma seperated list of all allowed paragraphs
-     * @deprecated Set the tapes which defines all paragraps available in this contentNode collection
-     */
-    public void setParFiles(String list) {
-        this.paragraph = list;
-    }
-
-    /**
-     * Comma separeted list of paragraphs.
-     * @param list , comma seperated list of all allowed paragraphs
+     * Comma separated list of paragraphs.
+     * @param list , comma separated list of all allowed paragraphs
      */
     public void setParagraph(String list) {
         this.paragraph = list;
@@ -189,40 +181,37 @@ public class NewBar extends TagSupport implements BarTag {
      */
     public int doEndTag() {
 
-        if (!adminOnly || Server.isAdmin()) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && Resource.getActivePage().isGranted(Permission.SET)) {
             HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-
-            if (Server.isAdmin() && Resource.getActivePage().isGranted(Permission.SET)) {
-                try {
-                    BarNew bar = new BarNew(request);
-                    bar.setPath(this.getPath());
-                    bar.setParagraph(StringUtils.deleteWhitespace(this.paragraph));
-                    bar.setNodeCollectionName(this.contentNodeCollectionName);
-                    bar.setNodeName("mgnlNew"); //$NON-NLS-1$
-                    bar.setDefaultButtons();
-                    if (this.getNewLabel() != null) {
-                        if (StringUtils.isEmpty(this.getNewLabel())) {
-                            bar.setButtonNew(null);
-                        }
-                        else {
-                            bar.getButtonNew().setLabel(this.getNewLabel());
-                        }
+            try {
+                BarNew bar = new BarNew(request);
+                bar.setPath(this.getPath());
+                bar.setParagraph(StringUtils.deleteWhitespace(this.paragraph));
+                bar.setNodeCollectionName(this.contentNodeCollectionName);
+                bar.setNodeName("mgnlNew"); //$NON-NLS-1$
+                bar.setDefaultButtons();
+                if (this.getNewLabel() != null) {
+                    if (StringUtils.isEmpty(this.getNewLabel())) {
+                        bar.setButtonNew(null);
                     }
-
-                    if (buttonRight != null) {
-                        bar.getButtonsRight().addAll(buttonRight);
+                    else {
+                        bar.getButtonNew().setLabel(this.getNewLabel());
                     }
-                    if (buttonLeft != null) {
-                        bar.getButtonsLeft().addAll(buttonLeft);
-                    }
-
-                    bar.placeDefaultButtons();
-                    bar.drawHtml(pageContext.getOut());
                 }
-                catch (Exception e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-                    }
+
+                if (buttonRight != null) {
+                    bar.getButtonsRight().addAll(buttonRight);
+                }
+                if (buttonLeft != null) {
+                    bar.getButtonsLeft().addAll(buttonLeft);
+                }
+
+                bar.placeDefaultButtons();
+                bar.drawHtml(pageContext.getOut());
+            }
+            catch (Exception e) {
+                if (log.isDebugEnabled()) {
+                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
                 }
             }
         }
@@ -239,5 +228,6 @@ public class NewBar extends TagSupport implements BarTag {
         this.newLabel = null;
         this.buttonLeft = null;
         this.buttonRight = null;
+        this.adminOnly = true;
     }
 }

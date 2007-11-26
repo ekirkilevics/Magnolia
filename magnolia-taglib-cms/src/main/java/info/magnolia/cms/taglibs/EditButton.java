@@ -34,7 +34,7 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ParagraphManager;
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.ButtonEdit;
 import info.magnolia.cms.security.Permission;
@@ -78,7 +78,7 @@ public class EditButton extends TagSupport {
 
     private boolean small = true;
 
-    private boolean adminOnly;
+    private boolean adminOnly = true;
 
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
@@ -92,7 +92,7 @@ public class EditButton extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        if ((!adminOnly || Server.isAdmin()) && Resource.getActivePage().isGranted(Permission.SET)) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && Resource.getActivePage().isGranted(Permission.SET)) {
 
             try {
                 if (this.getNodeCollectionName() != null && this.getNodeName() == null) {
@@ -122,8 +122,8 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * set working contentNode
-     * @param name , comtainer name which will be used to access/write content
+     * Set working contentNode.
+     * @param name Container name which will be used to access/write content.
      */
     public void setContentNodeName(String name) {
         this.nodeName = name;
@@ -143,8 +143,8 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * set working contentNode
-     * @param name , comtainer name which will be used to access/write content
+     * Set working contentNode.
+     * @param name , container name which will be used to access/write content.
      */
     public void setContentNodeCollectionName(String name) {
         this.nodeCollectionName = name;
@@ -189,8 +189,8 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * set display handler (JSP / Servlet), needs to know the relative path from WEB-INF
-     * @param path , relative to WEB-INF
+     * Set display handler (JSP / Servlet), needs to know the relative path from WEB-INF.
+     * @param path relative to WEB-INF.
      */
     public void setTemplate(String path) {
         this.displayHandler = path;
@@ -271,7 +271,7 @@ public class EditButton extends TagSupport {
         this.label = null;
         this.displayHandler = null;
         this.small = true;
-        this.adminOnly=false;
+        this.adminOnly=true;
         super.release();
     }
 }
