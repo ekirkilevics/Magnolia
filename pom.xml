@@ -202,10 +202,14 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-assembly-plugin</artifactId>
-          <version>2.2-beta-2-magnolia-20071115</version>
+          <!-- Needs at least version 2.2-beta-2 of the maven-assembly-plugin, for it resolves the following issues:
+               http://jira.codehaus.org/browse/MASSEMBLY-73
+               http://jira.codehaus.org/browse/MASSEMBLY-221
+               http://jira.codehaus.org/browse/MASSEMBLY-250 -->
+          <version>2.2-beta-2-magnolia-20071126</version>
           <configuration>
             <descriptors>
-              <descriptor>info.magnolia:magnolia-module-assembly:1.0</descriptor>
+              <descriptor>info.magnolia:magnolia-module-assembly:1.0.1-SNAPSHOT</descriptor>
             </descriptors>
           </configuration>
           <executions>
