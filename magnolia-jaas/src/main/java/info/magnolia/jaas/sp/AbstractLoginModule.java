@@ -41,7 +41,6 @@ import info.magnolia.cms.security.auth.callback.UserCallback;
 import info.magnolia.cms.util.BooleanUtil;
 
 import java.io.IOException;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -79,7 +78,12 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     public static final String STATUS = "statusValue";
 
-    public static final int STATUS_SUCCEDED = 1;
+    public static final int STATUS_SUCCEEDED = 1;
+
+    /**
+     * @deprecated use STATUS_SUCCEEDED
+     */
+    public static final int STATUS_SUCCEDED = STATUS_SUCCEEDED;
 
     public static final int STATUS_FAILED = 2;
 
@@ -210,7 +214,7 @@ public abstract class AbstractLoginModule implements LoginModule {
 
         this.success = true;
 
-        this.setSharedStatus(STATUS_SUCCEDED);
+        this.setSharedStatus(STATUS_SUCCEEDED);
         return this.success;
     }
 
@@ -262,7 +266,7 @@ public abstract class AbstractLoginModule implements LoginModule {
      * and preceding LoginModule was successful
      * */
     private boolean getSkip() {
-        return skipOnPreviousSuccess && this.getSharedStatus() == STATUS_SUCCEDED;
+        return skipOnPreviousSuccess && this.getSharedStatus() == STATUS_SUCCEEDED;
     }
 
     public void setGroupNames(Set names) {
