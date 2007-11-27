@@ -69,7 +69,7 @@ public abstract class SecuritySupportBase implements SecuritySupport {
                 user = SecuritySupport.Factory.getInstance().getUserManager().getUser(subject);
             }
             user.setSubject(subject);
-            return new LoginResult(LoginResult.STATUS_SUCCEDED, user);
+            return new LoginResult(LoginResult.STATUS_SUCCEEDED, user);
         }
         catch (LoginException e) {
             log.debug("can't login due to", e);
