@@ -48,7 +48,6 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.LoopTagStatus;
-import javax.servlet.jsp.tagext.TagSupport;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -61,7 +60,7 @@ import org.slf4j.LoggerFactory;
  * @author David Smith
  * @version $Revision: $ ($Author: $)
  */
-public class ContentNodeIterator extends TagSupport {
+public class ContentNodeIterator extends BaseContentTag {
 
     /**
      * @deprecated
@@ -89,11 +88,6 @@ public class ContentNodeIterator extends TagSupport {
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(ContentNodeIterator.class);
-
-    /**
-     * Tag attribute.
-     */
-    private String contentNodeCollectionName;
 
     /**
      * Tag attribute.
@@ -149,13 +143,6 @@ public class ContentNodeIterator extends TagSupport {
     private boolean restorePreviousState = false;
 
     /**
-     * @param name content node name on which this tag will iterate
-     */
-    public void setContentNodeCollectionName(String name) {
-        this.contentNodeCollectionName = name;
-    }
-
-    /**
      * @param index index to begin with
      */
     public void setBegin(int index) {
@@ -207,13 +194,7 @@ public class ContentNodeIterator extends TagSupport {
         }
         else if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
             // If this is a nested iterator, the collection should be from the local content node.
-            Content page = null;
-            if (Resource.getLocalContentNode() != null)
-                page = Resource.getLocalContentNode();
-            else
-                page = Resource.getCurrentActivePage();
-
-            return page.getContent(this.contentNodeCollectionName).getChildren(ItemType.CONTENTNODE);
+            return super.resolveNode(Resource.getCurrentActivePage()).getChildren(ItemType.CONTENTNODE);
         }
 
         return Collections.EMPTY_LIST;
