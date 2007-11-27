@@ -69,7 +69,7 @@ public class LoginResult {
 
     public static final int STATUS_FAILED = 2;
 
-    public static final int STATUS_SUCCEDED = 1;
+    public static final int STATUS_SUCCEEDED = 1;
 
     public LoginResult(int status) {
         this.status = status;
