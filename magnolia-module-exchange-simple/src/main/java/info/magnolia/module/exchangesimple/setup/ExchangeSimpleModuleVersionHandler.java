@@ -33,12 +33,18 @@
  */
 package info.magnolia.module.exchangesimple.setup;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.ConditionalDelegateTask;
+import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.FilterOrderingTask;
+import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
+import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.exchangesimple.setup.for3_5.UpdateActivationConfigTask;
 
@@ -51,10 +57,16 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHandler {
+    private final Task createEmptyActivationConfig = new ArrayDelegateTask("Activation configuration", "Creates an empty activation configuration", new Task[] {
+            new CreateNodeTask("Activation configuration", "Creates empty activation configuration", ContentRepository.CONFIG, "/server", "activation", ItemType.CONTENT.getSystemName()),
+            new SetPropertyTask(ContentRepository.CONFIG, "/server/activation", "class", info.magnolia.module.exchangesimple.DefaultActivationManager.class.getName()),
+            new CreateNodeTask("Activation configuration", "Creates empty subscribers node", ContentRepository.CONFIG, "/server/activation", "subscribers", ItemType.CONTENT.getSystemName())
+        });
+    
     private final Task updateConfigFrom30OrBootstrap = new ConditionalDelegateTask("Activation configuration", "The activation configuration changed. This either updates your existing configuration or bootstraps a new one",
             new UpdateActivationConfigTask(),
-            new BootstrapSingleResource("Bootstrap new activation configuration", "Bootstrap new activation configuration",
-                    "/mgnl-bootstrap/exchange-simple/config.server.activation.xml")) {
+            new IsAuthorInstanceDelegateTask("", "", new BootstrapSingleResource("Bootstrap new activation configuration", "Bootstrap new activation configuration",
+                    "/mgnl-bootstrap/exchange-simple/config.server.activation.xml"), createEmptyActivationConfig)) {
 
         protected boolean condition(InstallContext ctx) {
             final HierarchyManager hm = ctx.getConfigHierarchyManager();
