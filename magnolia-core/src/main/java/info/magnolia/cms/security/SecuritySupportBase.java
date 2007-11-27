@@ -34,7 +34,6 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
-import info.magnolia.cms.security.auth.login.LoginHandler;
 import info.magnolia.cms.security.auth.login.LoginResult;
 
 import javax.security.auth.Subject;
@@ -70,11 +69,11 @@ public abstract class SecuritySupportBase implements SecuritySupport {
                 user = SecuritySupport.Factory.getInstance().getUserManager().getUser(subject);
             }
             user.setSubject(subject);
-            return new LoginResult(LoginHandler.STATUS_SUCCEDED, user);
+            return new LoginResult(LoginResult.STATUS_SUCCEDED, user);
         }
         catch (LoginException e) {
             log.debug("can't login due to", e);
-            return new LoginResult(LoginHandler.STATUS_FAILED, e);
+            return new LoginResult(LoginResult.STATUS_FAILED, e);
         }
    }
 

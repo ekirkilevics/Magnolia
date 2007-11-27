@@ -64,11 +64,11 @@ public class LoginFilter extends AbstractMgnlFilter {
             LoginHandler handler = (LoginHandler) handlers.next();
             LoginResult loginResult = handler.handle(request, response);
             LoginResult.setCurrentLoginResult(loginResult);
-            if (loginResult.getStatus() == LoginHandler.STATUS_IN_PROCESS) {
+            if (loginResult.getStatus() == LoginResult.STATUS_IN_PROCESS) {
                 // special handling to support multi step login mechanisms like ntlm
                 // do not continue with the filter chain
                 return;
-            } else if (loginResult.getStatus() == LoginHandler.STATUS_SUCCEDED) {
+            } else if (loginResult.getStatus() == LoginResult.STATUS_SUCCEDED) {
                 MgnlContext.login(loginResult.getUser());
             }
         }

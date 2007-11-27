@@ -47,7 +47,7 @@ public class LoginResult {
     
     public static final int STATUS_NO_LOGIN = 0;
 
-    public static LoginResult NOT_HANDLED = new LoginResult(LoginHandler.STATUS_NOT_HANDLED);
+    public static LoginResult NOT_HANDLED = new LoginResult(LoginResult.STATUS_NOT_HANDLED);
 
     public static LoginResult NO_LOGIN = new LoginResult(STATUS_NO_LOGIN);
 
@@ -62,6 +62,14 @@ public class LoginResult {
     private User user;
 
     private LoginException loginException;
+
+    public static final int STATUS_IN_PROCESS = 4;
+
+    public static final int STATUS_NOT_HANDLED = 3;
+
+    public static final int STATUS_FAILED = 2;
+
+    public static final int STATUS_SUCCEDED = 1;
 
     public LoginResult(int status) {
         this.status = status;

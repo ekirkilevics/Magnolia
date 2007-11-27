@@ -43,13 +43,25 @@ import javax.servlet.http.HttpServletResponse;
  */
 public interface LoginHandler {
 
-    public static final int STATUS_SUCCEDED = 1;
+    /**
+     * @deprecated Since 3.5. Use {@link LoginResult#STATUS_SUCCEDED} instead
+     */
+    public static final int STATUS_SUCCEDED = LoginResult.STATUS_SUCCEDED;
 
-    public static final int STATUS_FAILED = 2;
+    /**
+     * @deprecated Since 3.5. Use {@link LoginResult#STATUS_FAILED} instead
+     */
+    public static final int STATUS_FAILED = LoginResult.STATUS_FAILED;
 
-    public static final int STATUS_NOT_HANDLED = 3;
+    /**
+     * @deprecated Since 3.5. Use {@link LoginResult#STATUS_NOT_HANDLED} instead
+     */
+    public static final int STATUS_NOT_HANDLED = LoginResult.STATUS_NOT_HANDLED;
 
-    public static final int STATUS_IN_PROCESS = 4;
+    /**
+     * @deprecated Since 3.5. Use {@link LoginResult#STATUS_IN_PROCESS} instead
+     */
+    public static final int STATUS_IN_PROCESS = LoginResult.STATUS_IN_PROCESS;
 
     /**
      * Returns true if the handler login succeeds
