@@ -39,7 +39,7 @@
       <artifactId>junit</artifactId>
       <scope>test</scope>
     </dependency>
-        <dependency>
+    <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <type>test-jar</type>
