@@ -48,6 +48,7 @@ import info.magnolia.cms.util.NodeDataUtil;
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
+ * @deprecated Since 3.5 please use the SimpleContentVersionHandler instead
  */
 public class SimpleContentModule extends AbstractAdminModule {
     private static final String SERVER_ADMIN_NODEPATH = "/server/admin";
