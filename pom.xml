@@ -209,7 +209,7 @@
           <version>2.2-beta-2-magnolia-20071126</version>
           <configuration>
             <descriptors>
-              <descriptor>info.magnolia:magnolia-module-assembly:1.0.1-SNAPSHOT</descriptor>
+              <descriptor>info.magnolia:magnolia-module-assembly:1.1-SNAPSHOT</descriptor>
             </descriptors>
           </configuration>
           <executions>
@@ -308,6 +308,21 @@
         </configuration>
       </plugin>
       <plugin>
+        <artifactId>maven-remote-resources-plugin</artifactId>
+        <executions>
+          <execution>
+            <goals>
+              <goal>process</goal>
+            </goals>
+          </execution>
+        </executions>
+        <configuration>
+          <resourceBundles>
+            <resourceBundle>info.magnolia:magnolia-build-tools-dual-licensed:1.2-SNAPSHOT</resourceBundle>
+          </resourceBundles>
+        </configuration>
+      </plugin>
+      <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
         <!-- 2.2 will be needed to check test sources as well -->
         <version>2.1</version>
@@ -321,8 +336,8 @@
         <dependencies>
           <dependency>
             <groupId>info.magnolia</groupId>
-            <artifactId>magnolia-build-tools</artifactId>
-            <version>1.1.0</version>
+            <artifactId>magnolia-build-tools-dual-licensed</artifactId>
+            <version>1.2-SNAPSHOT</version>
           </dependency>
         </dependencies>
         <configuration>
