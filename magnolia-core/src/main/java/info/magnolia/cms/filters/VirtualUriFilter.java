@@ -70,8 +70,13 @@ public class VirtualUriFilter extends OncePerRequestAbstractMgnlFilter {
 
                 if (targetUri.startsWith("redirect:")) {
                     try {
-                        response.sendRedirect(request.getContextPath()
-                            + StringUtils.substringAfter(targetUri, "redirect:"));
+                        String redirectUrl = StringUtils.substringAfter(targetUri, "redirect:");
+
+                        if (!redirectUrl.startsWith("http://") && !redirectUrl.startsWith("https://")) {
+                            redirectUrl = request.getContextPath() + redirectUrl;
+                        }
+
+                        response.sendRedirect(redirectUrl);
                         return;
                     }
                     catch (IOException e) {
