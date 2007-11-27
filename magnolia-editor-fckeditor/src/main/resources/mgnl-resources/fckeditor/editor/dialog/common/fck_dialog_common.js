@@ -149,6 +149,8 @@ function OpenFileBrowser( url, width, height )
         else
             alert( oEditor.FCKLang.BrowseServerBlocked ) ;
     }
-    else
-        window.open( url, 'FCKBrowseWindow', sOptions ) ;
+    else{
+        var oWindow = window.open( url, 'FCKBrowseWindow', sOptions ) ;
+        oWindow.focus();
+    }
 }
