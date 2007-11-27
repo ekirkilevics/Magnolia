@@ -116,6 +116,7 @@ public class ContentNodeIterator extends BaseContentTag {
 
     protected int size;
 
+    protected int count;
     protected int index;
 
     protected Object current;
@@ -209,29 +210,24 @@ public class ContentNodeIterator extends BaseContentTag {
              */
             private static final long serialVersionUID = 222L;
 
-            private int indexFromZero() {
-                // the variable index starts from 1, the index property in LoopStatus starts from 0
-                return index - 1;
-            }
-
             public Object getCurrent() {
                 return current;
             }
 
             public int getIndex() {
-                return indexFromZero();
+                return count + begin - 1;
             }
 
             public int getCount() {
-                return index;
+                return count;
             }
 
             public boolean isFirst() {
-                return (indexFromZero() == 0); // index starts with 1
+                return (count == 1); // count starts with 1
             }
 
             public boolean isLast() {
-                return (indexFromZero() == size - 1);
+                return count + begin == end.intValue();
             }
 
             public Integer getBegin() {
@@ -259,6 +255,7 @@ public class ContentNodeIterator extends BaseContentTag {
      */
     public int doStartTag() {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
+        index += begin;
 
         Collection children;
         try {
@@ -283,7 +280,7 @@ public class ContentNodeIterator extends BaseContentTag {
 
         pageContext.setAttribute(ContentNodeIterator.SIZE, new Integer(size), PageContext.REQUEST_SCOPE);
 
-        pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, new Integer(this.index), PageContext.REQUEST_SCOPE);
+        pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, new Integer(this.count), PageContext.REQUEST_SCOPE);
 
         pageContext.setAttribute(
             ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
@@ -293,6 +290,11 @@ public class ContentNodeIterator extends BaseContentTag {
         Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
 
         this.contentNodeIterator = children.iterator();
+        for (int i = 0; i < begin; i++) {
+            if (this.contentNodeIterator.hasNext()) {
+                this.contentNodeIterator.next();
+            }
+        }
 
         return doIteration() ? EVAL_BODY_INCLUDE : SKIP_BODY;
     }
@@ -310,13 +312,13 @@ public class ContentNodeIterator extends BaseContentTag {
     private boolean doIteration() {
         if (this.contentNodeIterator.hasNext()) {
 
-            if (this.end != null && this.index > this.end.intValue()) {
+            if (this.end != null && this.count > this.end.intValue()) {
                 return false;
             }
 
             pageContext.setAttribute(
                 ContentNodeIterator.CURRENT_INDEX,
-                new Integer(this.index),
+                new Integer(this.count),
                 PageContext.REQUEST_SCOPE);
 
             if (StringUtils.isNotEmpty(varStatus)) {
@@ -328,7 +330,7 @@ public class ContentNodeIterator extends BaseContentTag {
                 Resource.setLocalContentNode((Content) current);
             }
 
-            this.index++;
+            this.count++;
 
             return true;
         }
@@ -343,7 +345,7 @@ public class ContentNodeIterator extends BaseContentTag {
         this.restorePrevState();
         this.restorePreviousState = false;
         this.size = 0;
-        this.index = 0;
+        this.count = 0;
         this.current = null;
 
         if (varStatus != null) {
@@ -365,7 +367,7 @@ public class ContentNodeIterator extends BaseContentTag {
         this.end = null;
         this.step = 1;
         this.size = 0;
-        this.index = 0;
+        this.count = 0;
         this.varStatus = null;
         this.status = null;
         this.items = null;

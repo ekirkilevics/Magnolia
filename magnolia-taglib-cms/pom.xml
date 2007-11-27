@@ -15,6 +15,13 @@
       <version>3.5-SNAPSHOT</version>
     </dependency>
     <dependency>
+       <groupId>info.magnolia</groupId>
+       <artifactId>magnolia-core</artifactId>
+       <type>test-jar</type>
+       <version>3.5-SNAPSHOT</version>
+       <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
       <version>3.5-SNAPSHOT</version>
@@ -30,8 +37,14 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <groupId>com.mockrunner</groupId>
+      <artifactId>mockrunner</artifactId>
+      <version>0.3.1</version>
+    </dependency>
+    <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <reporting>
