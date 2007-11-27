@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <sv:node sv:name="samplesFreemarker" xmlns:jcr="http://www.jcp.org/jcr/1.0"
-  xmlns:mgnl="http://www.magnolia.info/jcr/mgnl" xmlns:rep="internal" xmlns:mix="http://www.jcp.org/jcr/mix/1.0"
+  xmlns:mgnl="http://www.magnolia.info/jcr/mgnl" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
   xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:fn="http://www.w3.org/2005/xpath-functions"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions"
   xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
@@ -13,6 +13,15 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>db293ee8-db6d-484f-8142-be3b1442e065</sv:value>
   </sv:property>
+  <sv:property sv:name="class" sv:type="String">
+    <sv:value>info.magnolia.cms.beans.config.ActionBasedParagraph</sv:value>
+  </sv:property>
+  <sv:property sv:name="type" sv:type="String">
+    <sv:value>freemarker</sv:value>
+  </sv:property>
+  <sv:property sv:name="i18nBasename" sv:type="String">
+    <sv:value>info.magnolia.module.samples.messages</sv:value>
+  </sv:property>
   <sv:property sv:name="dialog" sv:type="String">
     <sv:value>samples-textimage</sv:value>
   </sv:property>
@@ -22,17 +31,11 @@
   <sv:property sv:name="actionClass" sv:type="String">
     <sv:value>info.magnolia.module.samples.freemarker.SampleAction</sv:value>
   </sv:property>
-  <sv:property sv:name="title" sv:type="String">
-    <sv:value>paragraph. samplesFreemarker.title</sv:value>
-  </sv:property>
-  <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.cms.beans.config.ActionBasedParagraph</sv:value>
-  </sv:property>
-  <sv:property sv:name="type" sv:type="String">
-    <sv:value>freemarker</sv:value>
-  </sv:property>
   <sv:property sv:name="templatePath" sv:type="String">
     <sv:value>/info/magnolia/module/samples/freemarker/sample.html</sv:value>
+  </sv:property>
+  <sv:property sv:name="title" sv:type="String">
+    <sv:value>paragraph.samplesFreemarker.title</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -44,20 +47,20 @@
     <sv:property sv:name="mgnl:creationdate" sv:type="String">
       <sv:value>2004-11-02T15:34:49.049+01:00</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-      <sv:value>2006-05-01T21:42:58.849+02:00</sv:value>
-    </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2007-04-18T15:49:47.122+02:00</sv:value>
+      <sv:value>2007-11-27T10:42:05.885+01:00</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:activatorid" sv:type="String">
-      <sv:value>superuser</sv:value>
+    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+      <sv:value>false</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:Data" sv:type="String">
       <sv:value>MetaData</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-      <sv:value>false</sv:value>
+    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+      <sv:value>2006-05-01T21:42:58.849+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:activatorid" sv:type="String">
+      <sv:value>superuser</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>

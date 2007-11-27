@@ -50,7 +50,7 @@
       <sv:value>2004-11-12T16:00:08.036+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2007-11-22T18:01:09.582+01:00</sv:value>
+      <sv:value>2007-11-27T09:00:48.465+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:activated" sv:type="Boolean">
       <sv:value>false</sv:value>
@@ -302,6 +302,7 @@ Magnolia Green&#xd;
         <sv:value>Magnolia 1.1&#xd;
 Magnolia 2.1&#xd;
 Magnolia 3.0&#xd;
+Magnolia 3.5&#xd;
 All of the above</sv:value>
       </sv:property>
       <sv:property sv:name="spacer" sv:type="Long">
@@ -321,7 +322,7 @@ All of the above</sv:value>
           <sv:value>2004-11-12T16:08:53.940+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2006-06-09T15:50:00.014+02:00</sv:value>
+          <sv:value>2007-11-27T09:00:48.459+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:activated" sv:type="Boolean">
           <sv:value>false</sv:value>
@@ -618,11 +619,11 @@ All of the above</sv:value>
     <sv:property sv:name="jcr:mimeType" sv:type="String">
       <sv:value>image/jpeg</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:lastModified" sv:type="Date">
-      <sv:value>2007-11-22T18:01:09.583+01:00</sv:value>
-    </sv:property>
     <sv:property sv:name="height" sv:type="String">
       <sv:value>78</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:lastModified" sv:type="Date">
+      <sv:value>2007-11-22T18:01:09.583+01:00</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="footerPar">
