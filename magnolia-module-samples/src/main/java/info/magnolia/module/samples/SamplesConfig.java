@@ -36,7 +36,7 @@ package info.magnolia.module.samples;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -94,7 +94,7 @@ public class SamplesConfig {
         
         
         public ParagraphCollection() {
-            this.paragraphs = new HashSet();
+            this.paragraphs = new LinkedHashSet();
         }
         
         public Collection getParagraphs() {
