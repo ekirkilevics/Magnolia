@@ -128,12 +128,6 @@
         <configuration>
           <webResources>
             <resource>
-              <!-- this is relative to the pom.xml directory -->
-              <!-- without basedir it fails during a multimodule execution   -->
-              <directory>${basedir}/src/release</directory>
-              <filtering>true</filtering>
-            </resource>
-            <resource>
               <!-- these are the resources copied by the remote-resources-plugin -->
               <directory>${project.build.directory}/maven-shared-archive-resources</directory>
             </resource>

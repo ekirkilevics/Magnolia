@@ -283,16 +283,16 @@
             <configuration>
               <properties>
                 <property implementation="info.magnolia.maven.setproperty.CurrentDateValueProvider">
-                  <name>magnolia.currentDate</name>
+                  <name>magnoliaCurrentDate</name>
                   <format>d. MMMM yyyy</format>
                 </property>
                 <!-- don't use magnolia.version. By some plugins it would get treated as project.version -->
                 <property implementation="info.magnolia.maven.setproperty.VersionNameValueProvider">
-                  <name>magnolia.niceVersion</name>
+                  <name>magnoliaNiceVersion</name>
                 </property>
                 <!-- set the release date (default current) -->
                 <property implementation="info.magnolia.maven.setproperty.CurrentDateValueProvider">
-                  <name>magnolia.releaseDate</name>
+                  <name>magnoliaReleaseDate</name>
                   <format>d. MMMM yyyy</format>
                 </property>
               </properties>
@@ -391,7 +391,7 @@
     </testResources>
   </build>
   <properties>
-    <magnolia.edition>Community Edition</magnolia.edition>
+    <magnoliaEdition>Community Edition</magnoliaEdition>
   </properties>
   <reporting>
     <plugins>

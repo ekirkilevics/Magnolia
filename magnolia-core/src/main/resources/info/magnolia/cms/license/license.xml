@@ -18,9 +18,9 @@
 ]>
 <License>
     <Meta>
-        <VersionNumber>${magnolia.niceVersion}</VersionNumber>
-        <Edition>${magnolia.edition}</Edition>
-        <BuildNumber>${magnolia.releaseDate}</BuildNumber>
+        <VersionNumber>${magnoliaNiceVersion}</VersionNumber>
+        <Edition>${magnoliaEdition}</Edition>
+        <BuildNumber>${magnoliaReleaseDate}</BuildNumber>
         <Provider>${pom.organization.name}</Provider>
         <ProviderAddress>
             <![CDATA[
