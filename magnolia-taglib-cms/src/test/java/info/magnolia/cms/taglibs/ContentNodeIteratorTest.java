@@ -38,9 +38,15 @@ import java.util.ArrayList;
 import javax.servlet.jsp.jstl.core.LoopTagStatus;
 import javax.servlet.jsp.tagext.IterationTag;
 
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockContext;
+import info.magnolia.test.mock.MockWebContext;
 
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
@@ -55,6 +61,17 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        // reinit mock context - this test needs instance of WebContext
+        final MockWebContext ctx = new MockWebContext();
+        MgnlContext.setInstance(ctx);
+        // and system context as well
+        FactoryUtil.setInstanceFactory(SystemContext.class, new FactoryUtil.InstanceFactory(){
+            public Object newInstance() {
+                return ctx;
+            }
+        }); 
+
+        // init tested tag
         cni = new ContentNodeIterator();
         MockHttpServletRequest req = new MockHttpServletRequest();
         pc = new MockPageContext(new MockServletConfig(),
@@ -125,6 +142,40 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         }
         // after the last. skip!
         assertEquals(IterationTag.SKIP_BODY, cni.doAfterBody());
+    }
+
+    /**
+     * #MAGNOLIA-1896 - NPE on contentNodeCollectionName not found
+     */
+    public void testContentNodeCollectionNameNPE() {
+        assertNull(pc.getAttribute("testStatus"));
+        // NPE thrown when specified collection doesn't exist
+        cni.setContentNodeCollectionName("collNameXXX");
+        cni.setItems(null);
+        MockContent actPage = new MockContent("curActPage");
+        MockContent coll = new MockContent("collName");
+        for (int i = 0; i < 10; i++) {
+            coll.addContent(new MockContent("c" + i));
+        }
+        actPage.addContent(coll);
+        Resource.setCurrentActivePage(actPage);
+        assertEquals(IterationTag.SKIP_BODY, cni.doStartTag());
+    }
+    
+    public void testContentNodeCollectionName() {
+        assertNull(pc.getAttribute("testStatus"));
+        cni.setContentNodeCollectionName("collName");
+        cni.setItems(null);
+        MockContent actPage = new MockContent("curActPage");
+        MockContent coll = new MockContent("collName");
+        for (int i = 0; i < 10; i++) {
+            coll.addContent(new MockContent("c" + i));
+        }
+        actPage.addContent(coll);
+        Resource.setCurrentActivePage(actPage);
+        assertEquals(IterationTag.EVAL_BODY_INCLUDE, cni.doStartTag());
+        assertNotNull(Resource.getLocalContentNode());
+        assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
     }
 
 }

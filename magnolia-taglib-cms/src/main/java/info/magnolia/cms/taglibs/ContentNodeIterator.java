@@ -189,16 +189,12 @@ public class ContentNodeIterator extends BaseContentTag {
      */
     private Collection getCollection(HttpServletRequest request) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-
         if (this.items != null) {
             return this.items;
         }
-        else if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
-            // If this is a nested iterator, the collection should be from the local content node.
-            return super.resolveNode(Resource.getCurrentActivePage()).getChildren(ItemType.CONTENTNODE);
-        }
-
-        return Collections.EMPTY_LIST;
+        // If this is a nested iterator, the collection should be from the local content node.
+        Content page = super.resolveNode(Resource.getCurrentActivePage());
+        return page == null ? Collections.EMPTY_LIST : page.getChildren(ItemType.CONTENTNODE);
     }
 
     protected LoopTagStatus getLoopStatus() {
