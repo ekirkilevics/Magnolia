@@ -72,6 +72,7 @@ import info.magnolia.setup.for3_5.RenamedRenderersToTemplateRenderers;
 import info.magnolia.setup.for3_5.UpdateI18nConfiguration;
 import info.magnolia.setup.for3_5.UpdateURI2RepositoryMappings;
 import info.magnolia.setup.for3_5.UpdateURIMappings;
+import info.magnolia.setup.for3_5.WarnIgnoredModuleFilters;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -92,7 +93,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     // tasks which have to be executed wether we're installing or upgrading from 3.0
     private final List genericTasksFor35 = Arrays.asList(new Task[]{
             // TODO : shouldn't this be conditional ? how do we migrate existing filters...
-            new MigrateFilterConfiguration("/mgnl-bootstrap/core/config.server.filters.xml"), 
+            new MigrateFilterConfiguration("/mgnl-bootstrap/core/config.server.filters.xml"),
+            new WarnIgnoredModuleFilters(),
 
             new BootstrapConditionally("IPConfig rules changed",
                     "Updates the existing ip access rules to match the new configuration structure or bootstraps the new default configuration.",

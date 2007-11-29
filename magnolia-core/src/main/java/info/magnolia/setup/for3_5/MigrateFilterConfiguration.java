@@ -190,7 +190,7 @@ public class MigrateFilterConfiguration extends BootstrapConditionally {
         }
 
         /**
-         * Compares the this filters parameters to the given map of parameters.
+         * Compares this filters parameters to the given map of parameters.
          * @param existingFilterParams map of filter parameters
          * @return true if they are equal, otherwise false
          */
