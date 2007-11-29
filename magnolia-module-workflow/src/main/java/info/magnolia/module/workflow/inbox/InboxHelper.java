@@ -63,7 +63,7 @@ public class InboxHelper {
             if("folder".equals(type)){
                 return ".resources/icons/16/folder.gif";
             }
-            else{
+            else if(StringUtils.isNotEmpty(type)){
                 return StringUtils.removeStart(MIMEMapping.getMIMETypeIcon(type), "/");
             }
         }
