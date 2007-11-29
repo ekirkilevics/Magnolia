@@ -100,6 +100,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 }
                 response.setStatus(HttpServletResponse.SC_OK);
                 renderer.renderTemplate(template, request, response);
+                response.flushBuffer();
             }
             catch (IOException e) {
                 log.error(e.getMessage(), e);
