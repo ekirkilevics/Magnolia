@@ -64,7 +64,7 @@ public class SimpleContentVersionHandler extends DefaultModuleVersionHandler {
                         defaultURI);
         final IsAuthorInstanceDelegateTask task = new IsAuthorInstanceDelegateTask(
                     "Default URI",
-                    "Sets the value to the default page redirect:/features.html",
+                    "Sets the value to the default page (set in the module descriptor)",
                     null,
                     setPropertyTask);
         return task;
