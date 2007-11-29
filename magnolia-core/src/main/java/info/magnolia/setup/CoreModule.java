@@ -61,10 +61,6 @@ public class CoreModule implements ModuleLifecycle {
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-        throw new IllegalStateException("not implemented yet !");
-    }
-
-    public void restart(ModuleLifecycleContext moduleLifecycleContext) {
-        throw new IllegalStateException("not implemented yet !");
     }
 }
+

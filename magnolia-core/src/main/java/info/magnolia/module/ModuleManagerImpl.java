@@ -59,6 +59,7 @@ import info.magnolia.module.ui.ModuleManagerWebUI;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import org.apache.commons.beanutils.BeanUtils;
+import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
@@ -402,8 +403,18 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     public void stopModules() {
-        // TODO
-        throw new IllegalStateException("not implemented yet");
+        final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
+        lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN);
+        final ArrayList shutdownOrder = new ArrayList(orderedModuleDescriptors);
+        Collections.reverse(shutdownOrder);
+        for (Iterator iter = shutdownOrder.iterator(); iter.hasNext();) {
+            ModuleDefinition md = (ModuleDefinition) iter.next();
+            Object module = registry.getModuleInstance(md.getName());
+            if (module instanceof ModuleLifecycle) {
+                stopModule(module, md, lifecycleContext);
+            }
+
+        }
     }
 
     protected void installOrUpdateModule(ModuleAndDeltas moduleAndDeltas, InstallContextImpl ctx) {

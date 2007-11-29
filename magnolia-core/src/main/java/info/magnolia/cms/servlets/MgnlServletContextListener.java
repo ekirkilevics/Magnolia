@@ -79,7 +79,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * If no <code>magnolia.initialization.file</code> context parameter is set, the following default is assumed:
  * </p>
- * 
+ *
  * <pre>
  * &lt;context-param>
  *   &lt;param-name>magnolia.initialization.file&lt;/param-name>
@@ -92,7 +92,7 @@ import org.slf4j.LoggerFactory;
  *   &lt;/param-value>
  * &lt;/context-param>
  * </pre>
- * 
+ *
  * The following parameters are needed in the properties file:
  * <dl>
  * <dt>magnolia.cache.startdir</dt>
@@ -166,9 +166,12 @@ public class MgnlServletContextListener implements ServletContextListener {
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     public void contextDestroyed(ServletContextEvent sce) {
-        Log4jConfigurer.shutdownLogging(SystemProperty.getProperties());
-        
+        ModuleManager.Factory.getInstance().stopModules();
+
+        // TODO currently only used for shutting down the repository
         ShutdownManager.getInstance().execute();
+
+        Log4jConfigurer.shutdownLogging(SystemProperty.getProperties());
     }
 
     /**

@@ -113,7 +113,7 @@ public abstract class AbstractModule implements Module, ModuleLifecycle {
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-
+        destroy();
     }
 
     /**
