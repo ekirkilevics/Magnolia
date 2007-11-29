@@ -64,6 +64,7 @@ import info.magnolia.setup.for3_5.AddURIPermissionsToAllRoles;
 import info.magnolia.setup.for3_5.IPConfigRulesUpdate;
 import info.magnolia.setup.for3_5.LoginAuthTypePropertyMovedToFilter;
 import info.magnolia.setup.for3_5.LoginFormPropertyMovedToFilter;
+import info.magnolia.setup.for3_5.MigrateFilterConfiguration;
 import info.magnolia.setup.for3_5.MoveMagnoliaUsersToRealmFolder;
 import info.magnolia.setup.for3_5.ReconfigureCommands;
 import info.magnolia.setup.for3_5.RemoveModuleDescriptorDetailsFromRepo;
@@ -91,7 +92,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     // tasks which have to be executed wether we're installing or upgrading from 3.0
     private final List genericTasksFor35 = Arrays.asList(new Task[]{
             // TODO : shouldn't this be conditional ? how do we migrate existing filters...
-            new BootstrapSingleResource("New filters", "Will override the filter chain configuration with a completely new one.", "/mgnl-bootstrap/core/config.server.filters.xml"),
+            new MigrateFilterConfiguration("/mgnl-bootstrap/core/config.server.filters.xml"), 
 
             new BootstrapConditionally("IPConfig rules changed",
                     "Updates the existing ip access rules to match the new configuration structure or bootstraps the new default configuration.",
