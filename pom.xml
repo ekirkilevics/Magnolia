@@ -215,7 +215,7 @@ for Java Content Repositories (JCR).
           <version>2.2-beta-2-magnolia-20071126</version>
           <configuration>
             <descriptors>
-              <descriptor>info.magnolia:magnolia-bundle-assembly:1.1-SNAPSHOT</descriptor>
+              <descriptor>info.magnolia:magnolia-bundle-assembly:1.1</descriptor>
             </descriptors>
           </configuration>
           <executions>
@@ -324,7 +324,7 @@ for Java Content Repositories (JCR).
         </executions>
         <configuration>
           <resourceBundles>
-            <resourceBundle>info.magnolia:magnolia-build-tools-dual-licensed:1.2-SNAPSHOT</resourceBundle>
+            <resourceBundle>info.magnolia:magnolia-build-tools-dual-licensed:1.2</resourceBundle>
           </resourceBundles>
         </configuration>
       </plugin>
@@ -343,7 +343,7 @@ for Java Content Repositories (JCR).
           <dependency>
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-build-tools-dual-licensed</artifactId>
-            <version>1.2-SNAPSHOT</version>
+            <version>1.2</version>
           </dependency>
         </dependencies>
         <configuration>
