@@ -156,6 +156,10 @@ public final class ModuleUtil {
     }
 
     public static void bootstrap(String[] resourceNames, boolean saveAfterImport) throws IOException, RegisterException {
+        bootstrap(resourceNames, saveAfterImport, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
+    }
+
+    public static void bootstrap(String[] resourceNames, boolean saveAfterImport, int importUUIDBehavior) throws IOException, RegisterException {
         // sort by length --> import parent node first
         List list = new ArrayList(Arrays.asList(resourceNames));
 
@@ -208,7 +212,7 @@ public final class ModuleUtil {
             }
 
             DataTransporter.importXmlStream(stream, repository, pathName, name, false,
-                ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW,
+                importUUIDBehavior,
                 saveAfterImport,
                 true);
         }

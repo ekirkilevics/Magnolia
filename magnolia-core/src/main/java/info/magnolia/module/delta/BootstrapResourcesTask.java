@@ -40,22 +40,31 @@ import info.magnolia.module.InstallContext;
 
 import java.io.IOException;
 
+import javax.jcr.ImportUUIDBehavior;
+
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public abstract class BootstrapResourcesTask extends AbstractTask {
+    
+    private int importUUIDBehavior = ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW;
 
     public BootstrapResourcesTask(String name, String description) {
         super(name, description);
+    }
+    
+    public BootstrapResourcesTask(String name, String description, int importUUIDBehavior) {
+        super(name, description);
+        this.importUUIDBehavior = importUUIDBehavior;
     }
 
     // TODO : check if nodes were already there
     public void execute(final InstallContext installContext) throws TaskExecutionException {
         try {
             final String[] resourcesToBootstrap = getResourcesToBootstrap(installContext);
-            ModuleUtil.bootstrap(resourcesToBootstrap, false);
+            ModuleUtil.bootstrap(resourcesToBootstrap, false, importUUIDBehavior);
         } catch (IOException e) {
             throw new TaskExecutionException("Could not bootstrap: " + e.getMessage(), e);
         } catch (RegisterException e) {
