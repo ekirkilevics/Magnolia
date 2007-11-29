@@ -9,7 +9,7 @@
   <properties>
     <property>
       <name>defaultPublicURI</name>
-      <value>redirect:/features.html</value>
+      <value>redirect:/help.html</value>
     </property>
   </properties>
   <dependencies>
