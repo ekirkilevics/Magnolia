@@ -83,6 +83,10 @@ import org.slf4j.LoggerFactory;
  * <td>The height of the editor.</td>
  * </tr>
  * <tr>
+ * <td>width</td>
+ * <td>The width of the editor.</td>
+ * </tr>
+ * <tr>
  * <td>tables</td>
  * <td>The table editing features are available if true</td>
  * </tr>
@@ -137,7 +141,6 @@ import org.slf4j.LoggerFactory;
  */
 public class FckEditorDialog extends DialogBox {
 
-
     /**
      * Logger.
      */
@@ -166,6 +169,8 @@ public class FckEditorDialog extends DialogBox {
     public static final String PARAM_CSS = "css"; //$NON-NLS-1$
 
     public static final String PARAM_HEIGHT = "height"; //$NON-NLS-1$
+
+    public static final String PARAM_WIDTH = "width"; //$NON-NLS-1$
 
     public static final String PARAM_TABLES = "tables"; //$NON-NLS-1$
 
@@ -197,6 +202,8 @@ public class FckEditorDialog extends DialogBox {
     public static final String PARAM_CSS_DEFAULT = "/.resources/fckeditor/custom/css/magnoliaStandard.css"; //$NON-NLS-1$
 
     public static final String PARAM_HEIGHT_DEFAULT = ""; //$NON-NLS-1$
+
+    public static final String PARAM_WIDTH_DEFAULT = ""; //$NON-NLS-1$
 
     public static final String PARAM_TABLES_DEFAULT = "false"; //$NON-NLS-1$
 
@@ -253,6 +260,7 @@ public class FckEditorDialog extends DialogBox {
             "customConfigurationPath",
             PARAM_CUSTOM_CONFIGURATION_PATH_DEFAULT));
         String height = this.getConfigValue(PARAM_HEIGHT, PARAM_HEIGHT_DEFAULT);
+        String width = this.getConfigValue(PARAM_WIDTH, PARAM_WIDTH_DEFAULT);
 
         this.drawHtmlPre(out);
 
@@ -284,6 +292,10 @@ public class FckEditorDialog extends DialogBox {
 
         if (StringUtils.isNotEmpty(height)) {
             out.write("fckInstance.Height = '" + this.getConfigValue("height") + "';"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+        }
+
+        if (StringUtils.isNotEmpty(width)) {
+            out.write("fckInstance.Width = '" + this.getConfigValue("width") + "';"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
         }
 
         // now set the custom configuration path
@@ -406,7 +418,7 @@ public class FckEditorDialog extends DialogBox {
                 }
             }
             matcher.appendTail(res);
-            
+
             return res.toString();
 
             */
