@@ -86,7 +86,19 @@ public class ClasspathSpool extends HttpServlet {
             URL url = ClasspathResourcesUtil.getResource(MGNL_RESOURCES_ROOT + filePath);
             if(url != null){
                 URLConnection connection = url.openConnection();
-                return connection.getLastModified();
+
+                connection.setDoInput(false);
+                connection.setDoOutput(false);
+
+                long lastModified = connection.getLastModified();
+                InputStream is = null;
+                try{
+                    is = connection.getInputStream();
+                }
+                finally{
+                    IOUtils.closeQuietly(is);
+                }
+                return lastModified;
             }
         }
         catch (IOException e) {
@@ -95,7 +107,7 @@ public class ClasspathSpool extends HttpServlet {
 
         return -1;
     }
-    
+
     /**
      * All static resource requests are handled here.
      * @param request HttpServletRequest
@@ -105,7 +117,7 @@ public class ClasspathSpool extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException {
 
         String filePath = getFilePath(request);
-        
+
         if (StringUtils.contains(filePath, "*")) {
             streamMultipleFile(response, filePath);
         }
