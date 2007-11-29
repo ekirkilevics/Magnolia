@@ -75,23 +75,23 @@ public class TypeMappingImpl implements TypeMapping {
     /**
      * Get a adder method. Transforms name to singular
      */
-    public Method getAddMethod(Class type, String name) {
+    public Method getAddMethod(Class type, String name, int numberOfParameters) {
         name = StringUtils.capitalize(name);
-        Method method = getExactMethod(type, "add" + name);
+        Method method = getExactMethod(type, "add" + name, numberOfParameters);
         if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "s"));
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "s"), numberOfParameters);
         }
 
         if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "es"));
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "es"), numberOfParameters);
         }
 
         if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ren"));
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ren"), numberOfParameters);
         }
 
         if (method == null) {
-            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ies") + "y");
+            method = getExactMethod(type, "add" + StringUtils.removeEnd(name, "ies") + "y", numberOfParameters);
         }
         return method;
     }
@@ -131,7 +131,8 @@ public class TypeMappingImpl implements TypeMapping {
 
         if(dscr.getType() != null){
             if(dscr.isMap() || dscr.isCollection()){
-                Method method = getAddMethod(beanClass, propName);
+                int numberOfParameters = dscr.isMap() ? 2 : 1;
+                Method method = getAddMethod(beanClass, propName, numberOfParameters);
                 if(method != null){
                     dscr.setAddMethod(method);
                     if(dscr.isMap()){
@@ -175,13 +176,16 @@ public class TypeMappingImpl implements TypeMapping {
 
     /**
      * Find a method
+     * @param numberOfParameters
      */
-    protected Method getExactMethod(Class type, String name) {
+    protected Method getExactMethod(Class type, String name, int numberOfParameters) {
         Method[] methods = type.getMethods();
         for (int i = 0; i < methods.length; i++) {
             Method method = methods[i];
             if (method.getName().equals(name)) {
-                return method;
+                if(method.getParameterTypes().length == numberOfParameters){
+                    return method;
+                }
             }
         }
         return null;
