@@ -8,6 +8,8 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-workflow</artifactId>
   <name>magnolia-module-workflow</name>
+  <description></description>
+  <url>http://documentation.magnolia.info/modules/workflow.html</url>
   <properties>
     <openwfe.version>1.7.2.1</openwfe.version>
   </properties>

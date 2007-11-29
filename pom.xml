@@ -11,18 +11,24 @@
   <name>magnolia-project</name>
   <version>3.5-SNAPSHOT</version>
   <description>
-    Magnolia is a free enterprise class content management system developed by Magnolia International based on the
-    standard API for java content repositories (JCR).
+Magnolia is an open-source enterprise class
+Content Management System developed by
+Magnolia International, based on the standard API
+for Java Content Repositories (JCR).
   </description>
-  <url>http://magnolia.sourceforge.net</url>
+  <url>http://www.magnolia.info</url>
   <issueManagement>
     <system>Jira</system>
     <url>http://jira.magnolia.info/browse/MAGNOLIA</url>
   </issueManagement>
   <licenses>
     <license>
-      <name>LGPL</name>
-      <url>http://svn.magnolia.info/svn/magnolia/trunk/LICENSE.txt</url>
+      <name>GPLv3</name>
+      <url>http://www.gnu.org/licenses/gpl-3.0.txt</url>
+    </license>
+    <license>
+      <name>Magnolia Network Agreement</name>
+      <url>http://www.magnolia.info/mna.html</url>
     </license>
   </licenses>
   <ciManagement>
