@@ -95,6 +95,8 @@ mgnlContextMenu.prototype.show = function(event){
         }
     this.showing = true;
     event.returnValue=false;
+    event.cancelBubble = true;
+    if (event.stopPropagation) event.stopPropagation();
 }
 
 mgnlContextMenu.prototype.keepShowing = function(){
