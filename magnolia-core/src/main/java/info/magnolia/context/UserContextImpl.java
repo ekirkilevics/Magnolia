@@ -54,11 +54,17 @@ public class UserContextImpl extends AbstractContext implements UserContext {
 
     }
 
+    public Locale getLocale() {
+        if(this.locale == null){
+            this.locale = new Locale(getUser().getLanguage());
+        }
+        return locale;
+    }
+
     /**
      * Create the subject on demand.
      * @see info.magnolia.context.AbstractContext#getUser()
      */
-
     public User getUser() {
         if (user == null) {
             user = (User) getAttribute(SESSION_USER, Context.SESSION_SCOPE);
@@ -78,6 +84,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
     public void logout() {
         removeAttribute(SESSION_USER, Context.SESSION_SCOPE);
         user = null;
+        locale = null;
         login(Security.getAnonymousUser());
     }
 }
