@@ -90,17 +90,11 @@ function MgnlAdminCentral(){
 
         var name = scrolled? "mgnlAdminCentralScrolledContentIFrame": "mgnlAdminCentralContentIFrame";
         
-        var doc = MgnlDHTMLUtil.getIFrameDocument(name);
-            
         MgnlDHTMLUtil.hide(this.divContent);
         MgnlDHTMLUtil.hide(this.divScrolledContent);
     
-        // clean only if this is an internal page (else one get's an security exception
-        try{
-            doc.open("plain/text");
-        }
-        catch(e){
-        }
+        // if loading of the new page takes a while the user should not see the old page in the meantime
+        $(name).src = "about:blank";
     
         url = MgnlURLUtil.addCacheKiller(url);
         if(!MgnlURLUtil.isExternal(url)){
