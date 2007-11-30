@@ -92,9 +92,12 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
     // tasks which have to be executed wether we're installing or upgrading from 3.0
     private final List genericTasksFor35 = Arrays.asList(new Task[]{
+            // - install or update modules node
+            new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed.", ContentRepository.CONFIG, "/modules", null,
+                    new CreateNodeTask(null, null, ContentRepository.CONFIG, "/", "modules", ItemType.CONTENT.getSystemName())),
+                    
             // TODO : shouldn't this be conditional ? how do we migrate existing filters...
             new MigrateFilterConfiguration("/mgnl-bootstrap/core/config.server.filters.xml"),
-            new WarnIgnoredModuleFilters(),
 
             new BootstrapConditionally("IPConfig rules changed",
                     "Updates the existing ip access rules to match the new configuration structure or bootstraps the new default configuration.",
@@ -173,8 +176,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new RegisterModuleServletsTask(),
 
             // --- system-wide tasks (impact all modules)
-            new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed.", ContentRepository.CONFIG, "/modules", null,
-                    new CreateNodeTask(null, null, ContentRepository.CONFIG, "/", "modules", ItemType.CONTENT.getSystemName())),
+            new WarnIgnoredModuleFilters(),
             new RenamedRenderersToTemplateRenderers(),
             new ReconfigureCommands(),
             new UpdateURIMappings(),
