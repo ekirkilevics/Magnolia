@@ -387,7 +387,7 @@ public class SaveHandlerImpl implements SaveHandler {
         // process the images and uploaded files
         HierarchyManager hm = MgnlContext.getHierarchyManager(this.getRepository());
 
-        Pattern imageOrDowloadPattern = Pattern.compile("(<(a|img)[^>]+(href|src)[ ]*=[ ]*\")([^\"]*)(\"[^>]*>)");
+        Pattern imageOrDowloadPattern = Pattern.compile("(<(a|img|embed)[^>]+(href|src)[ ]*=[ ]*\")([^\"]*)(\"[^>]*>)");
         Pattern tmpFilePattern = Pattern.compile("/tmp/fckeditor/([^/]*)/[^\"]*");
 
         Content filesNode = ContentUtil.getOrCreateContent(node, name + "_files", ItemType.CONTENTNODE);
