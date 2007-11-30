@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.cms.security.DummyUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContextImpl;
@@ -50,6 +51,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Locale;
 
 /**
  * Filter responsible for executing the update/install mechanism.
@@ -111,6 +113,10 @@ public class InstallFilter extends AbstractMgnlFilter {
     private final static class InstallWebContext extends WebContextImpl {
         public User getUser() {
             return null;
+        }
+
+        public Locale getLocale() {
+            return MgnlContext.getSystemContext().getLocale();
         }
     }
 }
