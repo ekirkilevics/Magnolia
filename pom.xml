@@ -103,6 +103,13 @@ for Java Content Repositories (JCR).
       <organization>Magnolia Intl</organization>
       <timezone>+1</timezone>
     </developer>
+    <developer>
+      <id>had</id>
+      <name>Jan Haderka</name>
+      <email>jan.haderka(at)magnolia.info</email>
+      <organization>Magnolia Intl</organization>
+      <timezone>+1</timezone>
+    </developer>
   </developers>
   <scm>
     <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
@@ -200,7 +207,7 @@ for Java Content Repositories (JCR).
         </plugin>
         <plugin>
           <artifactId>maven-release-plugin</artifactId>
-          <version>2.0-beta-4</version>
+          <version>2.0-beta-7</version>
           <configuration>
             <autoVersionSubmodules>true</autoVersionSubmodules>
           </configuration>
