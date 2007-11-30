@@ -399,29 +399,6 @@ public class FckEditorDialog extends DialogBox {
             // we have to add the context path for images and files but not for pages!
             value = LinkUtil.convertUUIDsToEditorLinks(value);
             return value;
-            /*
-            Pattern imagePattern = Pattern.compile("(<(a|img)[^>]+(src|href)[ ]*=[ ]*\")([^\"]*)(\"[^>]*>)"); //$NON-NLS-1$
-
-            Matcher matcher = imagePattern.matcher(value);
-            StringBuffer res = new StringBuffer();
-            while (matcher.find()) {
-                String src = matcher.group(4);
-
-                // process only internal and relative links
-                if (LinkHelper.isInternalRelativeLink(src)) {
-                    String link = this.getRequest().getContextPath()
-                        + this.getTopParent().getConfigValue("path")
-                        + "/"
-                        + StringUtils.substringAfter(src, "/");
-
-                    matcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
-                }
-            }
-            matcher.appendTail(res);
-
-            return res.toString();
-
-            */
         }
 
         return StringUtils.EMPTY;
