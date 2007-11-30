@@ -101,7 +101,7 @@ public class LinkHelper {
      * Pattern to find a link
      */
     public static final Pattern LINK_OR_IMAGE_PATTERN = Pattern.compile(
-        "(<(a|img) " + // start <a or <img
+        "(<(a|img|embed) " + // start <a or <img
         "[^>]*" +  // some attributes
         "(href|src)[ ]*=[ ]*\")" + // start href or src
         "([^\"]*)" + // the link
@@ -144,12 +144,12 @@ public class LinkHelper {
     public static UUIDLink convertAbsolutePathToUUIDLink(String path) throws UUIDLinkException {
         return new UUIDLink().parseLink(path);
     }
-    
+
     /**
      * Convert a path to a uuid
      * @param path path to the page
      * @return the uuid if found
-     * @throws UUIDLinkException 
+     * @throws UUIDLinkException
      */
     public static String convertAbsolutePathToUUID(String path) throws UUIDLinkException {
         return convertAbsolutePathToUUIDLink(path).getUUID();
