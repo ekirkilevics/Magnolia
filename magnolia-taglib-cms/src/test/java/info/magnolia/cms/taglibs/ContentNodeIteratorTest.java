@@ -37,6 +37,7 @@ import java.util.ArrayList;
 
 import javax.servlet.jsp.jstl.core.LoopTagStatus;
 import javax.servlet.jsp.tagext.IterationTag;
+import javax.servlet.jsp.tagext.Tag;
 
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.Resource;
@@ -69,7 +70,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             public Object newInstance() {
                 return ctx;
             }
-        }); 
+        });
 
         // init tested tag
         cni = new ContentNodeIterator();
@@ -161,7 +162,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         Resource.setCurrentActivePage(actPage);
         assertEquals(IterationTag.SKIP_BODY, cni.doStartTag());
     }
-    
+
     public void testContentNodeCollectionName() {
         assertNull(pc.getAttribute("testStatus"));
         cni.setContentNodeCollectionName("collName");
@@ -178,4 +179,26 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
     }
 
+    public void testGetLastNoEnd() {
+        assertNull(pc.getAttribute("testStatus"));
+        int begin = 5;
+        cni.setBegin(begin);
+        cni.doStartTag();
+        LoopTagStatus lts = (LoopTagStatus) pc.getAttribute("testStatus");
+        assertNotNull(lts);
+        assertEquals("Count has to be 1 after call to doStartTag", 1, lts.getCount());
+        assertFalse(lts.isLast());
+
+        int count = begin + 1;
+        while (count < items.size()) {
+            assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
+            assertEquals(items.get(count), Resource.getLocalContentNode());
+            assertEquals(count, lts.getIndex());
+
+            assertEquals(count == items.size() - 1, lts.isLast());
+            count++;
+        }
+        // after the last. skip!
+        assertEquals(Tag.SKIP_BODY, cni.doAfterBody());
+    }
 }

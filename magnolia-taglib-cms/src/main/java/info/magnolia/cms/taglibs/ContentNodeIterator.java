@@ -58,7 +58,7 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @author David Smith
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class ContentNodeIterator extends BaseContentTag {
 
@@ -223,7 +223,8 @@ public class ContentNodeIterator extends BaseContentTag {
             }
 
             public boolean isLast() {
-                return count + begin == end.intValue();
+                int lastItem = end != null ? end.intValue() : size;
+                return count + begin == lastItem;
             }
 
             public Integer getBegin() {
