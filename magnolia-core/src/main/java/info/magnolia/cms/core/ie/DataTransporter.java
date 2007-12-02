@@ -316,7 +316,7 @@ public class DataTransporter {
             }
         }
         catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Error importing " + name + ": " + e.getMessage(), e);
         }
         finally {
             IOUtils.closeQuietly(xmlStream);
