@@ -168,6 +168,7 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
             response.setContentLength(buffer.length);
             if (canCompress) {
                 response.setHeader("Content-Encoding", "gzip");
+                response.setHeader("Vary", "Accept-Encoding"); // needed for proxies
             }
 
             try {

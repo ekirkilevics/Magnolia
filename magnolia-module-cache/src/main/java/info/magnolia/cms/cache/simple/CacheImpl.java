@@ -286,6 +286,7 @@ public class CacheImpl implements Cache {
             if (canCompress) {
                 response.setContentLength(getCompressedSize(key));
                 response.setHeader("Content-Encoding", "gzip");
+                response.setHeader("Vary", "Accept-Encoding"); // needed for proxies
             }
             else {
                 response.setContentLength(getSize(key));
