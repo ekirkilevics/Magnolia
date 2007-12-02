@@ -61,7 +61,7 @@ public class AddCacheVoterTask extends AbstractRepositoryTask {
     private Map properties;
 
     public AddCacheVoterTask(String name, Class voterClass, Map properties) {
-        super("New cache voter", "Adds the " + name + " cache voter");
+        super("New cache voter: " + name, "Adds the " + name + " cache voter");
         this.name = name;
         this.voterClass = voterClass;
         this.properties = properties;
@@ -76,13 +76,6 @@ public class AddCacheVoterTask extends AbstractRepositoryTask {
 
         Content voters = ContentUtil.getOrCreateContent(configNode, "voters", ItemType.CONTENT);
 
-        addVoter(voters, name, voterClass, properties);
-    }
-
-    /**
-     * TODO : move this to some decent place. 
-     */
-    public static void addVoter(Content voters, String name, Class voterClass, Map properties) throws RepositoryException {
         if (!voters.hasContent(name)) {
             Content m = voters.createContent(name, ItemType.CONTENTNODE);
             m.createNodeData("class").setValue(voterClass.getName());
@@ -94,7 +87,6 @@ public class AddCacheVoterTask extends AbstractRepositoryTask {
                     m.createNodeData((String) entry.getKey(), entry.getValue());
                 }
             }
-            voters.save();
         }
     }
 
