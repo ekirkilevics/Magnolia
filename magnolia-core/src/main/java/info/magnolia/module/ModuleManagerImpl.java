@@ -405,15 +405,18 @@ public class ModuleManagerImpl implements ModuleManager {
     public void stopModules() {
         final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
         lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN);
-        final ArrayList shutdownOrder = new ArrayList(orderedModuleDescriptors);
-        Collections.reverse(shutdownOrder);
-        for (Iterator iter = shutdownOrder.iterator(); iter.hasNext();) {
-            ModuleDefinition md = (ModuleDefinition) iter.next();
-            Object module = registry.getModuleInstance(md.getName());
-            if (module instanceof ModuleLifecycle) {
-                stopModule(module, md, lifecycleContext);
-            }
+        if (orderedModuleDescriptors != null) {
+            // if module descriptors were read, let's shut down modules in reverse order
+            final ArrayList shutdownOrder = new ArrayList(orderedModuleDescriptors);
+            Collections.reverse(shutdownOrder);
+            for (Iterator iter = shutdownOrder.iterator(); iter.hasNext();) {
+                ModuleDefinition md = (ModuleDefinition) iter.next();
+                Object module = registry.getModuleInstance(md.getName());
+                if (module instanceof ModuleLifecycle) {
+                    stopModule(module, md, lifecycleContext);
+                }
 
+            }
         }
     }
 
