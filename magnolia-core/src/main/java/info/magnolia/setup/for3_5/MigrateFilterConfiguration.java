@@ -42,7 +42,6 @@ import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.Task;
 
-
 import javax.jcr.ImportUUIDBehavior;
 
 
@@ -53,12 +52,13 @@ import javax.jcr.ImportUUIDBehavior;
  */
 public class MigrateFilterConfiguration extends BootstrapConditionally {
 
-    private static final String FILTER_BACKUP_PATH = "/backup/filters";
+    private static final String FILTER_BACKUP_PATH = "/server/install/backup/filters";
 
     public MigrateFilterConfiguration(String newFilterConfigurationBootstrapFile) {
-        super("Filters", "Installs or updates the new filter configuration.", newFilterConfigurationBootstrapFile, 
+        super("Filters", "Installs or updates the new filter (and secure/unsecure URIs) configuration.", newFilterConfigurationBootstrapFile, 
             new ArrayDelegateTask("Backup and transform existing filters", new Task[] {
-                new CreateNodeTask("Backup", "Create backup node", ContentRepository.CONFIG, "/", "backup", ItemType.CONTENT.getSystemName()),
+                new CreateNodeTask("Backup", "Create install node", ContentRepository.CONFIG, "/server", "install", ItemType.CONTENT.getSystemName()),
+                new CreateNodeTask("Backup", "Create backup node", ContentRepository.CONFIG, "/server/install", "backup", ItemType.CONTENT.getSystemName()),
                 new MoveNodeTask("Filters", "Moves existing filter configuration to a backup location", ContentRepository.CONFIG, "/server/filters", FILTER_BACKUP_PATH, true),
                 new BootstrapSingleResource("Bootstrap", "Bootstraps the new filter configuration", newFilterConfigurationBootstrapFile, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW), 
                 new CheckAndUpdateExistingFilters(FILTER_BACKUP_PATH)
