@@ -63,17 +63,17 @@ public class BaseContentTag extends TagSupport {
     protected String nodeDataName;
 
     protected Content contentNode;
-    
+
     protected String contentNodeName;
 
     protected String contentNodeCollectionName;
-    
+
     protected String uuid;
 
     protected String path;
 
     protected String repository = ContentRepository.WEBSITE;
-    
+
     protected boolean inherit;
 
     /**
@@ -128,31 +128,31 @@ public class BaseContentTag extends TagSupport {
      */
     protected Content getFirstMatchingNode() {
         Content currentPage = Resource.getCurrentActivePage();
-        if(actpage){
+        if (actpage) {
             return currentPage;
         }
-        
+
         Content contentNode = null;
-        if(this.getContentNode()!=null){
+        if (this.getContentNode() != null) {
             contentNode = this.getContentNode();
         }
-        if(StringUtils.isNotEmpty(this.getUuid())){
+        if (StringUtils.isNotEmpty(this.getUuid())) {
             contentNode = ContentUtil.getContentByUUID(this.getRepository(), this.getUuid());
         }
 
-        if(StringUtils.isNotEmpty(this.getPath())){
+        if (StringUtils.isNotEmpty(this.getPath())) {
             contentNode = ContentUtil.getContent(this.getRepository(), this.getPath());
         }
 
         if (contentNode == null) {
             contentNode = resolveNode(currentPage);
         }
-        
+
         if (contentNode == null) {
             return null;
         }
 
-        if(StringUtils.isNotEmpty(this.nodeDataName)){
+        if (StringUtils.isNotEmpty(this.nodeDataName)) {
             NodeData nodeData = contentNode.getNodeData(this.nodeDataName);
 
             try {
@@ -193,7 +193,8 @@ public class BaseContentTag extends TagSupport {
                         // e.g. <cms:out nodeDataName="title" contentNodeName=""/>
                         // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
                         return currentPage;
-                    } else {
+                    }
+                    else {
                         // ERROR: no content node assignable because contentNodeName is empty
                         // e.g. <cms:out nodeDataName="title" contentNodeCollectionName="mainPars"/>
 
@@ -238,52 +239,42 @@ public class BaseContentTag extends TagSupport {
         this.inherit = false;
     }
 
-
     public boolean isActpage() {
         return this.actpage;
     }
-
 
     public void setActpage(boolean actpage) {
         this.actpage = actpage;
     }
 
-    
     public String getRepository() {
         return this.repository;
     }
 
-    
     public void setRepository(String repository) {
         this.repository = repository;
     }
 
-    
     public String getUuid() {
         return this.uuid;
     }
 
-    
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
 
-    
     public String getPath() {
         return this.path;
     }
 
-    
     public void setPath(String path) {
         this.path = path;
     }
 
-    
     public Content getContentNode() {
         return this.contentNode;
     }
 
-    
     public void setContentNode(Content content) {
         this.contentNode = content;
     }
