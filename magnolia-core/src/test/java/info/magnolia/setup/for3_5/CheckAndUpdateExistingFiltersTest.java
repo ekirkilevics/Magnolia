@@ -38,6 +38,9 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.voting.voters.URIStartsWithVoter;
+
+import java.util.Properties;
 
 
 /**
@@ -112,21 +115,30 @@ public class CheckAndUpdateExistingFiltersTest extends MgnlTestCase {
         verify(ctx);
     }
 
-    public void testWarnIfFilterBypassHasBeenModified() throws Exception {
+    public void testProperTransformationIfFilterBypassHasBeenModified() throws Exception {
         final String testContent = "" +
             "/server/filters/cms.class=info.magnolia.cms.filters.MgnlCmsFilter\n" +
-            "/server/filters/cms.priority=long:800\n" + 
-            "/server/filters/cms/config.bypass=string:/.,/docroot/,/admindocroot/,/tmp/fckeditor/,/ActivationHandler,/myCustomization";
+            "/server/install/backup/filters/cms.class=info.magnolia.cms.filters.MgnlCmsFilter\n" +
+            "/server/install/backup/filters/cms.priority=long:800\n" + 
+            "/server/install/backup/filters/cms/config.bypass=string:/.,/myCustomization";
 
         final MockHierarchyManager hm = MockUtil.createHierarchyManager(testContent);
         final InstallContext ctx = createStrictMock(InstallContext.class);
         expect(ctx.getHierarchyManager("config")).andReturn(hm);
-        ctx.warn(contains("different bypass"));
-        
+        ctx.info(contains("different bypass"));
+        expect(ctx.getConfigHierarchyManager()).andReturn(hm).times(2);
+
         replay(ctx);
-        final CheckAndUpdateExistingFilters task = new CheckAndUpdateExistingFilters("/server/filters");
+        final CheckAndUpdateExistingFilters task = new CheckAndUpdateExistingFilters("/server/install/backup/filters");
         task.execute(ctx);
         verify(ctx);
+        
+        final Properties hmProps = MockUtil.toProperties(hm);
+        assertEquals(hmProps.get("/server/filters/cms/bypasses/dot.class"), URIStartsWithVoter.class.getName());
+        assertEquals(hmProps.get("/server/filters/cms/bypasses/dot.pattern"), "/.");
+        assertEquals(hmProps.get("/server/filters/cms/bypasses/myCustomization.class"), URIStartsWithVoter.class.getName());
+        assertEquals(hmProps.get("/server/filters/cms/bypasses/myCustomization.pattern"), "/myCustomization");
+        
     }
     
     public void testDoNotWarnIfFilterHasDefault30Configuration() throws Exception {
@@ -143,4 +155,5 @@ public class CheckAndUpdateExistingFiltersTest extends MgnlTestCase {
         task.execute(ctx);
         verify(ctx);
     }
+    
 }

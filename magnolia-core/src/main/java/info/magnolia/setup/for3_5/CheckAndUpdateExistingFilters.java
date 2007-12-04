@@ -39,7 +39,10 @@ import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
+import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.setup.AddFilterBypassTask;
+import info.magnolia.voting.voters.URIStartsWithVoter;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -48,51 +51,76 @@ import java.util.Map;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+
 /**
- * Currently only checks for modifications between current filter configuration and the 3.0 default configuration.
+ * Checks for modifications between current filter configuration and the 3.0 default configuration.
  * If there are some, a warning is displayed.
  * 
- * TODO: transform bypass configuration to new format if that's the only change.
+ * Bypass configurations are transformed to the new format if that's the only change.
+ * 
+ * TODO deletion of filters is not detected.
  * 
  * @author vsteller
  * @version $Id$
  *
  */
 public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperation {
+    private static final String FILTER_INTERCEPT = "intercept";
+    private static final String FILTER_SECURITY = "security";
+    private static final String FILTER_CMS = "cms";
+    private static final String FILTER_CONTEXT = "context";
+    private static final String FILTER_MULTIPART_REQUEST = "multipartRequest";
+    private static final String FILTER_VIRTUAL_URI = "virtualURI";
+    private static final String FILTER_CONTENT_TYPE = "contentType";
+    
     private final LinkedHashMap filterChain30 = new LinkedHashMap();
     private final String existingFiltersPath;
+    private final String[] migratedFilters = new String[] { FILTER_CONTENT_TYPE, FILTER_VIRTUAL_URI, FILTER_MULTIPART_REQUEST, FILTER_CONTEXT, FILTER_CMS };
+    
+    private final ArrayDelegateTask subtasks;
     
     public CheckAndUpdateExistingFilters(String existingFiltersPath) {
         super("Filters", "Installs or updates the new filter configuration.", ContentRepository.CONFIG, existingFiltersPath);
+        this.subtasks = new ArrayDelegateTask("Filter updates");
         this.existingFiltersPath = existingFiltersPath;
 
         // filter chain that is bootstrapped with latest Magnolia 3.0.x
-        filterChain30.put("contentType",    
+        filterChain30.put(FILTER_CONTENT_TYPE,
             new Filter30("info.magnolia.cms.filters.ContentTypeFilter",     
                 Long.valueOf(100)));
-        filterChain30.put("security",       
+        filterChain30.put(FILTER_SECURITY,       
             new Filter30("info.magnolia.cms.security.SecurityFilter",       
                 Long.valueOf(200)));
-        filterChain30.put("virtualURI",     
+        filterChain30.put(FILTER_VIRTUAL_URI,     
             new Filter30("info.magnolia.cms.filters.MgnlVirtualUriFilter",  
                 Long.valueOf(300)));
-        filterChain30.put("multipartRequest", 
+        filterChain30.put(FILTER_MULTIPART_REQUEST, 
             new Filter30("info.magnolia.cms.filters.MultipartRequestFilter", 
                 Long.valueOf(400)));
-        filterChain30.put("context", 
+        filterChain30.put(FILTER_CONTEXT, 
             new Filter30("info.magnolia.cms.filters.MgnlContextFilter", 
                 Long.valueOf(500)));
         final HashMap interceptFilterParams = new HashMap();
         interceptFilterParams.put("test", "true");
-        filterChain30.put("intercept", 
+        filterChain30.put(FILTER_INTERCEPT, 
             new Filter30("info.magnolia.cms.filters.MgnlInterceptFilter", 
                 Long.valueOf(600),
                 null,
                 interceptFilterParams));
-        filterChain30.put("cms", 
+        filterChain30.put(FILTER_CMS, 
             new Filter30("info.magnolia.cms.filters.MgnlCmsFilter", 
                 Long.valueOf(800),
                 "/.,/docroot/,/admindocroot/,/tmp/fckeditor/,/ActivationHandler"));
+    }
+    
+    /**
+     * Executes the AllChildrenNodesOperation and possibly added subtasks to update the configuration.
+     */
+    public void execute(InstallContext installContext) throws TaskExecutionException {
+        super.execute(installContext);
+        subtasks.execute(installContext);
     }
 
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException,
@@ -111,11 +139,34 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
             } 
             
             if (originalFilter != null && hasBypassChanged(originalFilter, existingFilter)) {
-                // TODO: transform the old bypasses to the new ones
-                ctx.warn("Existing configuration of filter '" + currentFilter + "' has different bypass definitions. Magnolia put a backup in " + existingFiltersPath + "/" + currentFilter + ". Please review the changes manually.");
+                if (ArrayUtils.contains(migratedFilters, currentFilter)) {
+                    ctx.info("Existing configuration of filter '" + currentFilter + "' has different bypass definitions. Magnolia put a backup in " + existingFiltersPath + "/" + currentFilter + ". Will update the bypasses to the new configuration automatically.");
+                    migrateBypasses(existingFilter, currentFilter);
+                } else {
+                    ctx.warn("Existing configuration of filter '" + currentFilter + "' has different bypass definitions. Magnolia put a backup in " + existingFiltersPath + "/" + currentFilter + ". Please review the changes manually.");
+                }
             }
         } catch (Content2BeanException e) {
             ctx.error("Cannot convert filter node to map", e);
+        }
+    }
+
+    private void migrateBypasses(final Map existingFilter, final String newFilterName) {
+        final String filterPath = "/server/filters/" + newFilterName ;
+        final String existingBypassesList = getBypasses(existingFilter);
+        final String[] existingBypasses = StringUtils.split(existingBypassesList, ",");
+        for (int i = 0; i < existingBypasses.length; i++) {
+            final String bypassPattern = StringUtils.trim(existingBypasses[i]);
+            String bypassName = StringUtils.replaceChars(bypassPattern, "/* ", "");
+            if (bypassName.equals(".")) {
+                bypassName = "dot";
+            }
+            if (StringUtils.isEmpty(bypassName)) {
+                bypassName = "default";
+            }
+            final Class bypassClass = URIStartsWithVoter.class;
+            
+            subtasks.addTask(new AddFilterBypassTask(filterPath, bypassName , bypassClass , bypassPattern));
         }
     }
 
