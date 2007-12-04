@@ -35,12 +35,14 @@ package info.magnolia.module.delta;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
 
-import javax.jcr.RepositoryException;
-import java.util.Iterator;
 import java.util.Collection;
+import java.util.Iterator;
+
+import javax.jcr.RepositoryException;
 
 /**
  *
@@ -50,16 +52,22 @@ import java.util.Collection;
 public abstract class AllChildrenNodesOperation extends AbstractRepositoryTask {
     private final String repositoryName;
     private final String parentNodePath;
+    private final ContentFilter filter;
 
     public AllChildrenNodesOperation(String name, String description, String repositoryName, String parentNodePath) {
+        this(name, description, repositoryName, parentNodePath, ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER);
+    }
+
+    public AllChildrenNodesOperation(String name, String description, String repositoryName, String parentNodePath, ContentFilter filter) {
         super(name, description);
         this.repositoryName = repositoryName;
         this.parentNodePath = parentNodePath;
+        this.filter = filter;
     }
 
     protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
         final Content parentNode = getParentNode(ctx);
-        final Collection childNodes = ContentUtil.getAllChildren(parentNode);
+        final Collection childNodes = parentNode.getChildren(filter);
         final Iterator it = childNodes.iterator();
         while (it.hasNext()) {
             final Content node = (Content) it.next();
