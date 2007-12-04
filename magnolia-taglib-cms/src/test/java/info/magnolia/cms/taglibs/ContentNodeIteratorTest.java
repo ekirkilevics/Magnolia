@@ -103,7 +103,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             count++;
         }
         // after the last. skip!
-        assertEquals(IterationTag.SKIP_BODY, cni.doAfterBody());
+        assertEquals(Tag.SKIP_BODY, cni.doAfterBody());
     }
 
     public void testDoStartTag2() {
@@ -123,7 +123,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             count++;
         }
         // after the last. skip!
-        assertEquals(IterationTag.SKIP_BODY, cni.doAfterBody());
+        assertEquals(Tag.SKIP_BODY, cni.doAfterBody());
     }
 
     public void testDoStartTag3() {
@@ -143,7 +143,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             count++;
         }
         // after the last. skip!
-        assertEquals(IterationTag.SKIP_BODY, cni.doAfterBody());
+        assertEquals(Tag.SKIP_BODY, cni.doAfterBody());
     }
 
     /**
@@ -161,7 +161,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         }
         actPage.addContent(coll);
         Resource.setCurrentActivePage(actPage);
-        assertEquals(IterationTag.SKIP_BODY, cni.doStartTag());
+        assertEquals(Tag.SKIP_BODY, cni.doStartTag());
     }
 
     public void testContentNodeCollectionName() {
@@ -175,7 +175,7 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         }
         actPage.addContent(coll);
         Resource.setCurrentActivePage(actPage);
-        assertEquals(IterationTag.EVAL_BODY_INCLUDE, cni.doStartTag());
+        assertEquals(Tag.EVAL_BODY_INCLUDE, cni.doStartTag());
         assertNotNull(Resource.getLocalContentNode());
         assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
     }
@@ -201,5 +201,24 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
         }
         // after the last. skip!
         assertEquals(Tag.SKIP_BODY, cni.doAfterBody());
+    }
+
+    public void testNestedCollections() {
+        assertNull(pc.getAttribute("testStatus"));
+        cni.setContentNodeCollectionName("collName");
+        cni.setItems(null);
+        MockContent actPage = new MockContent("curActPage");
+        MockContent actParagraph = new MockContent("curActPage");
+        actPage.addContent(actParagraph);
+        MockContent coll = new MockContent("collName");
+        for (int i = 0; i < 10; i++) {
+            coll.addContent(new MockContent("c" + i));
+        }
+        actParagraph.addContent(coll);
+        Resource.setCurrentActivePage(actPage);
+        Resource.setLocalContentNode(actParagraph);
+        assertEquals(Tag.EVAL_BODY_INCLUDE, cni.doStartTag());
+        assertNotNull(Resource.getLocalContentNode());
+        assertEquals(IterationTag.EVAL_BODY_AGAIN, cni.doAfterBody());
     }
 }

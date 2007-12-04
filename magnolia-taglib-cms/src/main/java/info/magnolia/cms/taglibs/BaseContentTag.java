@@ -216,6 +216,9 @@ public class BaseContentTag extends TagSupport {
                         // e.g. <cms:out nodeDataName="title" contentNodeCollectionName=""/>
                         return currentPage;
                     }
+                    else if (contentNodeCollectionName != null && !StringUtils.isEmpty(contentNodeCollectionName)) {
+                        return currentParagraph.getContent(contentNodeCollectionName);
+                    }
                 }
             }
         }
