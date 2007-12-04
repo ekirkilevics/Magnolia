@@ -100,7 +100,18 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 }
                 response.setStatus(HttpServletResponse.SC_OK);
                 renderer.renderTemplate(template, request, response);
-                response.flushBuffer();
+
+                try {
+                    response.flushBuffer();
+                }
+                catch (IOException e) {
+                    // don't log at error level since tomcat tipically throws a
+                    // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
+                    if (log.isDebugEnabled()) {
+                        log.debug("Exception flushing response " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                    }
+                }
+
             }
             catch (IOException e) {
                 log.error(e.getMessage(), e);
