@@ -42,6 +42,9 @@ import info.magnolia.module.delta.TaskExecutionException;
 
 import javax.jcr.RepositoryException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author gjoseph
@@ -53,8 +56,23 @@ public class AddURIPermissionsToAllRoles extends AllChildrenNodesOperation {
 
     private final boolean isAuthorInstance;
 
+    private static Logger log = LoggerFactory.getLogger(AllChildrenNodesOperation.class);
+
     public AddURIPermissionsToAllRoles(boolean isAuthorInstance) {
-        super("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.", ContentRepository.USER_ROLES, "/");
+        super("URI permissions", "Introduction of URI-based security. All existing roles will have GET/POST permissions on /*.", ContentRepository.USER_ROLES, "/", new Content.ContentFilter() {
+            public boolean accept(Content content) {
+                try {
+                    final String itemType = content.getItemType().getSystemName();
+                    // TODO reconsider after 3.5 final: is ItemType.ROLE enough here?
+                    return itemType.startsWith("mgnl:") && !itemType.equals(ItemType.NT_METADATA);
+                }
+                catch (RepositoryException e) {
+                    log.error("Unable to read itemtype for node {}", content.getHandle());
+                    return false;
+                }
+            }
+            
+        });
         this.isAuthorInstance = isAuthorInstance;
     }
 
