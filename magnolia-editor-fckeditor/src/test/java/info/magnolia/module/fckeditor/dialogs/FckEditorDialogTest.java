@@ -31,10 +31,10 @@
  * intact.
  *
  */
-package info.magnolia.cms.gui.dialog;
+package info.magnolia.module.fckeditor.dialogs;
 
 import info.magnolia.cms.util.BaseLinkTest;
-import info.magnolia.module.fckeditor.dialogs.FckEditorDialog;
+import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
@@ -69,7 +69,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
     }
 
     public void testConvertToViewShouldNotConvertNonUUIDLinks() throws RepositoryException {
-        final FckEditorDialog d = new FckEditorDialog();
+        final FckEditorDialogForTest d = new FckEditorDialogForTest();
         d.init(null, null, null, null);
         d.setTopParent(d);
         d.setConfig("path", "here");
@@ -82,7 +82,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
     public void testConvertToViewDoesNotImpactAbsoluteAndExternalLinksAndImages() throws RepositoryException {
         final HttpServletRequest mockReq = createMock(HttpServletRequest.class);
 
-        final FckEditorDialog d = new FckEditorDialog();
+        final FckEditorDialogForTest d = new FckEditorDialogForTest();
         d.init(mockReq, null, null, null);
         d.setTopParent(d);
         replay(mockReq);
@@ -100,7 +100,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
     public void testConvertToViewDoesNotConvertMailtoLinks() throws RepositoryException {
         final HttpServletRequest mockReq = createMock(HttpServletRequest.class);
 
-        final FckEditorDialog d = new FckEditorDialog();
+        final FckEditorDialogForTest d = new FckEditorDialogForTest();
         d.init(mockReq, null, null, null);
         d.setTopParent(d);
         replay(mockReq);
@@ -108,5 +108,12 @@ public class FckEditorDialogTest extends BaseLinkTest {
         assertEquals("<a href=\"mailto:lieutenant@columbo.net\">mail me !</a>", d.convertToView("<a href=\"mailto:lieutenant@columbo.net\">mail me !</a>"));
 
         verify(mockReq);
+    }
+
+    // just makes setTopParent available for tests ...
+    private final class FckEditorDialogForTest extends FckEditorDialog {
+        public void setTopParent(DialogControlImpl top) {
+            super.setTopParent(top);
+        }
     }
 }
