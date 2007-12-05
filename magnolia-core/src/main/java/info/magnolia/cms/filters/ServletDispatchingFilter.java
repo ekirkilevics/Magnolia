@@ -47,10 +47,10 @@ import java.util.regex.Pattern;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
+import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
@@ -78,7 +78,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
 
     private String comment;
 
-    private HttpServlet servlet;
+    private Servlet servlet;
 
     public ServletDispatchingFilter() {
         mappings = new LinkedList();
@@ -92,14 +92,12 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
 
         if (servletClass != null) {
             try {
-                servlet = (HttpServlet) ClassUtil.newInstance(servletClass);
+                servlet = (Servlet) ClassUtil.newInstance(servletClass);
                 servlet.init(new WrappedServletConfig(servletName, filterConfig, parameters));
             }
             catch (Throwable e) {
                 log.error("Unable to load servlet " + servletClass + " : " + e.getMessage(), e);
             }
-
-            servlet.init();
         }
     }
 
