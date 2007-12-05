@@ -1,8 +1,5 @@
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="cms-taglib"
   xmlns:cmsu="cms-util-taglib" xmlns:c="http://java.sun.com/jsp/jstl/core">
-<jsp:directive.page import="java.util.Collection"/>
-<jsp:directive.page import="org.apache.commons.lang.StringUtils"/>
-<jsp:directive.page import="info.magnolia.module.samples.SamplesConfig"/>
 <jsp:directive.page contentType="text/html; charset=UTF-8" session="false" />
   <!-- content title -->
   <cms:out nodeDataName="title" var="title" />
