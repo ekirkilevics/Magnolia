@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
 import info.magnolia.module.admininterface.setup.SimpleContentVersionHandler;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
@@ -79,7 +80,11 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
         installOrUpdateTasks.add(removeOldDialogsMenuItem);
         installOrUpdateTasks.add(addDialogsMenuItem);
 
-        final Delta for35 = DeltaBuilder.update("3.5", "").addTasks(installOrUpdateTasks);
+        final Delta for35 = DeltaBuilder.update("3.5", "")
+            .addTasks(installOrUpdateTasks)
+            .addTask(new BootstrapSingleResource("Bootstrap", "Installs the CSS configuration", "/mgnl-bootstrap/samples/config/config.modules.samples.config.cssFiles.xml"))
+            .addTask(new BootstrapSingleResource("Bootstrap", "Installs the JS configuration", "/mgnl-bootstrap/samples/config/config.modules.samples.config.jsFiles.xml"))
+            .addTask(new BootstrapSingleResource("Bootstrap", "Installs the paragraph configuration", "/mgnl-bootstrap/samples/config/config.modules.samples.config.paragraphCollections.xml"));
 
         register(for35);
     }
