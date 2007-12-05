@@ -62,7 +62,7 @@ import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.setup.for3_5.AddURIPermissionsToAllRoles;
 import info.magnolia.setup.for3_5.CheckAndUpdateUnsecureURIs;
-import info.magnolia.setup.for3_5.CheckAndWarnSecureURIs;
+import info.magnolia.setup.for3_5.CheckAndUpdateSecureURIs;
 import info.magnolia.setup.for3_5.IPConfigRulesUpdate;
 import info.magnolia.setup.for3_5.LoginAuthTypePropertyMovedToFilter;
 import info.magnolia.setup.for3_5.LoginFormPropertyMovedToFilter;
@@ -190,7 +190,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             })),
             new NodeExistsDelegateTask("Security configuration", "The secureURIList configuration was removed from /servers and will be handled by the URI-based security mechanism in 3.5.", ContentRepository.CONFIG, "/server/secureURIList", new ArrayDelegateTask("SecureURIList update", new Task[] {
                 new MoveNodeTask("Secure URIs", "Moves the current configuration of secure URIs to a backup location", ContentRepository.CONFIG, "/server/secureURIList", SECURE_URIS_BACKUP_PATH, true),
-                new CheckAndWarnSecureURIs(SECURE_URIS_BACKUP_PATH)
+                new CheckAndUpdateSecureURIs(SECURE_URIS_BACKUP_PATH)
             })),
 
             // --- system-wide tasks (impact all modules)

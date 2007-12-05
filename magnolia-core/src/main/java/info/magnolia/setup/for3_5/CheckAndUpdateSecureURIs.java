@@ -35,9 +35,12 @@ package info.magnolia.setup.for3_5;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AddURIPermissionTask;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
+import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
 
@@ -47,24 +50,31 @@ import javax.jcr.RepositoryException;
 
 
 /**
- * Checks for modifications between current secureURI configuration and the 3.0 default configuration. If something has
- * changed a Warning is enqueued.
+ * Checks for modifications between current secureURI configuration and the 3.0 default configuration. Modified secureURIs are added as 
+ * URI permissions to the anonymous user URI ACLs. 
  * TODO deletion of secureURIs is not detected.
  * 
  * @author vsteller
  * @version $Id$
  */
-public class CheckAndWarnSecureURIs extends AllChildrenNodesOperation implements Task {
+public class CheckAndUpdateSecureURIs extends AllChildrenNodesOperation implements Task {
 
     private static final String PROPERTY_URI = "URI";
     private final LinkedHashMap secureURIs30 = new LinkedHashMap();
+    private final ArrayDelegateTask subtasks;
     
-    public CheckAndWarnSecureURIs(String existingSecureURIs) {
+    public CheckAndUpdateSecureURIs(String existingSecureURIs) {
         super("Secure URIs", "Backs up and removes secure ", ContentRepository.CONFIG, existingSecureURIs);
+        subtasks = new ArrayDelegateTask("Secure URI transformations");
         
         // setup secureURIs from latest Magnolia 3.0.x installation
         secureURIs30.put("root", "/*");
         secureURIs30.put("admininterface", "/.magnolia*");
+    }
+    
+    public void execute(InstallContext installContext) throws TaskExecutionException {
+        super.execute(installContext);
+        subtasks.execute(installContext);
     }
 
     protected void operateOnChildNode(Content node, InstallContext ctx) throws RepositoryException,
@@ -73,8 +83,8 @@ public class CheckAndWarnSecureURIs extends AllChildrenNodesOperation implements
         final String secureURI = NodeDataUtil.getString(node, PROPERTY_URI);
         
         if (!secureURIs30.containsKey(secureURIName) || !((String) secureURIs30.get(secureURIName)).equals(secureURI)) {
-            ctx.warn("Existing configuration of secureURIList was modified. Magnolia put a backup in " + node.getHandle() + " but is not able to transform those modifications automatically. Please review the changes manually by adding URI restrictions for the URI '" + secureURI + "' to appropriate roles (e.g. Anonymous role).");
-            // TODO should we by default add those changed URIs to the Anonymous role/user?
+            subtasks.addTask(new AddURIPermissionTask("Permissions", "Transform secure URI " + secureURI + " to permission of anonymous role", UserManager.ANONYMOUS_USER, secureURI, AddURIPermissionTask.DENY));
+            ctx.info("Existing configuration of secureURIList was modified. Magnolia put a backup in " + node.getHandle() + " and will add an URI restriction for the URI '" + secureURI + "' to the anonymous role.");
         }
     }
 }
