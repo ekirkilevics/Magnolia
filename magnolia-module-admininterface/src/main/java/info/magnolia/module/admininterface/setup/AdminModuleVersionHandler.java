@@ -70,7 +70,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapSingleResource("New ACL configuration", "Bootstraps the new configuration for the ACL dialogs", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.config.securityConfiguration.xml"))
                 .addTask(new RemoveNodeTask("New ACL Dialog", "Deletes the old ACL page", ContentRepository.CONFIG, "/modules/adminInterface/pages/rolesACL"))
                 .addTask(new RemovePropertyTask("New ACL Dialog", "Removes the include property", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/roleedit", "file"))
-                .addTask(new CheckAndModifyPropertyValueTask("New ACL Dialog", "Change the control type for the ACL ", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/roleedit", "controlType", "include", "info.magnolia.module.admininterface.dialogs.ACLSDialogControl"))
+                .addTask(new CheckAndModifyPropertyValueTask("New ACL Dialog", "Change the control type for the ACL ", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/roleedit/tabACL/aCL", "controlType", "include", "info.magnolia.module.admininterface.dialogs.ACLSDialogControl"))
                 .addTask(new ArrayDelegateTask("Users menu", "System and admin users are now differentiated, creating two sub menus", new Task[]{
                         new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/security/users"),
                         sysUsersSubMenu,
