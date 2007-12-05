@@ -51,6 +51,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+
 /**
  * @author fgiust
  * @version $Revision: $ ($Author: $)
@@ -71,10 +72,14 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(new FilterOrderingTask("cache", new String[]{"i18n"}));
         // activate cache on public instances
         tasks.add(new IsAuthorInstanceDelegateTask("Cache Activating", "Sets cache to active on public instances", null, new SetPropertyTask(ContentRepository.CONFIG,"/modules/cache/config","active", "true")));
+        return tasks;
+    }
 
-        // check for standard voters
-        // standard voters that should be always available. They can be disabled by setting the enable flag
-        // to false, but their presence will always be checked
+    public List getStartupTasks(InstallContext installContext) {
+        List tasks = new ArrayList();
+
+        // standard voters that should be always available. They can be disabled by setting the enable flag to false,
+        // but their presence will always be checked
 
         Map config = new HashMap();
         config.put("enabled", Boolean.TRUE);
