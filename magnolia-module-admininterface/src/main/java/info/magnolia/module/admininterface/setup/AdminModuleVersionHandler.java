@@ -58,8 +58,8 @@ import java.util.List;
  * @version $Id$
  */
 public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
-    private final AddSubMenuItemTask sysUsersSubMenu = new AddSubMenuItemTask("security", "usersSystem", "menu.security.usersSystem", "MgnlAdminCentral.showTree('users', '/system', true)", "/.resources/icons/16/pawn_glass_red.gif");
-    private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif");
+    private final AddSubMenuItemTask sysUsersSubMenu = new AddSubMenuItemTask("security", "usersSystem", "menu.security.usersSystem", null, "MgnlAdminCentral.showTree('users', '/system', true)", "/.resources/icons/16/pawn_glass_red.gif", "groups");
+    private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", null, "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif", "groups");
     private final AddSubMenuItemTask subscribersMenu = new AddSubMenuItemTask("config", "subscribers", "menu.config.subscribers", "info.magnolia.module.admininterface.messages", "MgnlAdminCentral.showTree('config','/server/activation/subscribers')", "/.resources/icons/16/dot.gif", "cache");
 
     public AdminModuleVersionHandler() {
@@ -73,8 +73,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new CheckAndModifyPropertyValueTask("New ACL Dialog", "Change the control type for the ACL ", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/roleedit/tabACL/aCL", "controlType", "include", "info.magnolia.module.admininterface.dialogs.ACLSDialogControl"))
                 .addTask(new ArrayDelegateTask("Users menu", "System and admin users are now differentiated, creating two sub menus", new Task[]{
                         new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/security/users"),
-                        sysUsersSubMenu,
-                        adminUsersSubMenu}))
+                        adminUsersSubMenu,
+                        sysUsersSubMenu}))
                 .addTask(new ArrayDelegateTask("Menu", "Update subscriber menu item in config menu", new Task[]{ 
                         new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/subscriber"),
                         subscribersMenu}))
@@ -90,10 +90,10 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     protected List getExtraInstallTasks(InstallContext installContext) {
         final List tasks = new ArrayList();
         tasks.add(new AddMainMenuItemTask("security", "menu.security", "info.magnolia.modules.admininterface.messages", "", "/.resources/icons/24/key1.gif", "config"));
-        tasks.add(sysUsersSubMenu);
-        tasks.add(adminUsersSubMenu);
         tasks.add(new AddSubMenuItemTask("security", "groups", "menu.groups", "MgnlAdminCentral.showTree('groups')", "/.resources/icons/16/group.gif"));
         tasks.add(new AddSubMenuItemTask("security", "roles", "menu.roles", "MgnlAdminCentral.showTree('userroles')", "/.resources/icons/16/hat_white.gif"));
+        tasks.add(adminUsersSubMenu);
+        tasks.add(sysUsersSubMenu);
         tasks.add(subscribersMenu);
 
         return tasks;
