@@ -33,14 +33,20 @@
  */
 package info.magnolia.module.workflow.setup;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
+import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
+import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.Task;
+import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.workflow.setup.for3_5.AddNewDefaultConfig;
 import info.magnolia.module.workflow.setup.for3_5.AddUserToGroupTask;
 import info.magnolia.module.workflow.setup.for3_5.InstallDefaultWorkflowDefinition;
@@ -50,12 +56,15 @@ import info.magnolia.module.workflow.setup.for3_5.SetDefaultWorkflowForActivatio
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.jcr.ImportUUIDBehavior;
+
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
+    private static final String BACKUP_PATH = "/server/install/backup";
     private final Task inboxMenu = new AddMainMenuItemTask("inbox", "menu.inbox", "info.magnolia.module.workflow.messages",
             "MgnlAdminCentral.showContent('/.magnolia/pages/inbox.html', false, false)", "/.resources/icons/24/mail.gif",
             "security");
@@ -75,12 +84,32 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         final Delta delta35 = DeltaBuilder.update("3.5", "")
                 .addTask(inboxMenu)
                 .addTask(flowsPageMenu)
+                .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the Workflow Utils page", "/mgnl-bootstrap/workflow/config.modules.workflow.pages.flows.xml"))
+                .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the Inbox Subpages", "/mgnl-bootstrap/workflow/config.modules.workflow.pages.inboxSubPages.xml"))
+                // TODO refactor the following ArrayDelegateTask into a single one: BackupAndBootstrap("resource.xml", "/backup/location", "Message", MessageType.WARNING)
+                .addTask(new ArrayDelegateTask("Backup and Bootstrap", "Makes a backup of the current 'EditWorkItem' dialog and re-installs it.", new Task[] {
+                        // TODO move this to the original sub-node under /server/install/backup; requires a CreateNodePathTask("/path/to/node")
+                        new MoveNodeTask("Backup", "Moves the existing 'EditWorkItem' dialog to the install backup location.", ContentRepository.CONFIG, "/modules/workflow/dialogs/editWorkItem", BACKUP_PATH + "/editWorkItem", true),
+                        new BootstrapSingleResource("Bootstrap", "Bootstraps the Inbox Subpages", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.editWorkItem.xml", ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW), 
+                        new WarnTask("Note: ", "Note that the 'EditWorkItem' dialog was re-installed. Magnolia put a backup of original dialog into '" + BACKUP_PATH + "/editWorkItem'. Please review the changes manually.")
+                    }))
+                .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the 'EditActivationWorkItem' dialog", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.editActivationWorkItem.xml"))
                 .addTask(new AddNewDefaultConfig())
                 .addTask(new InstallDefaultWorkflowDefinition())
                 .addTask(new RemoveMetadataFromExpressionsWorkspace())
                 .addTask(new SetDefaultWorkflowForActivationFlowCommands())
-                .addTask(bootstrapSecurityConfig);
+                .addTask(bootstrapSecurityConfig)
+                // TODO we might want to backup the following configurations before overwriting them, as well.
+                .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the 'editors' group.", "/mgnl-bootstrap/workflow/usergroups.editors.xml", ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING))
+                .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the 'publishers' group.", "/mgnl-bootstrap/workflow/usergroups.publishers.xml", ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING))
+                .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the 'workflow-base' role.", "/mgnl-bootstrap/workflow/userroles.workflow-base.xml"));
         register(delta35);
+    }
+
+    protected List getBasicInstallTasks(InstallContext installContext) {
+        final List basicInstallTasks = super.getBasicInstallTasks(installContext);
+        basicInstallTasks.add(new ModuleDependencyBootstrapTask("dms"));
+        return basicInstallTasks;
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {

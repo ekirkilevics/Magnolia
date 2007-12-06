@@ -34,6 +34,7 @@
 package info.magnolia.module.workflow.setup.for3_5;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.TaskExecutionException;
@@ -41,7 +42,6 @@ import info.magnolia.module.delta.TaskExecutionException;
 import javax.jcr.RepositoryException;
 
 /**
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -56,7 +56,7 @@ public class AddNewDefaultConfig extends AbstractTask {
         try {
             final Content configNode = ctx.getOrCreateCurrentModuleConfigNode();
 
-            final Content flowDefinitionManagerCfg = configNode.createContent("flowDefinitionManager");
+            final Content flowDefinitionManagerCfg = configNode.createContent("flowDefinitionManager", ItemType.CONTENTNODE);
             flowDefinitionManagerCfg.createNodeData("class").setValue("info.magnolia.module.workflow.flows.DefaultFlowDefinitionManager");
 
             // these two should not be necessary, associated code should be removed
