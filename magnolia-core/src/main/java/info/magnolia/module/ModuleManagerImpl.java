@@ -315,22 +315,24 @@ public class ModuleManagerImpl implements ModuleManager {
                     startModule(moduleInstance, moduleDefinition, lifecycleContext);
 
                     // start observation
-                    ObservationUtil.registerChangeListener(ContentRepository.CONFIG, "/modules/" + moduleName + "/config", new EventListener() {
+                    ObservationUtil.registerDefferedChangeListener(ContentRepository.CONFIG, "/modules/" + moduleName + "/config", new EventListener() {
 
                         public void onEvent(EventIterator events) {
-                            Object moduleInstance = registry.getModuleInstance(moduleName);
-                            ModuleDefinition moduleDefinition = registry.getDefinition(moduleName);
+                            final Object moduleInstance = registry.getModuleInstance(moduleName);
+                            final ModuleDefinition moduleDefinition = registry.getDefinition(moduleName);
 
                             // TODO we should keep only one instance of the lifecycle context
-                            ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
+                            final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
                             lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_MODULE_RESTART);
-                            stopModule(moduleInstance, moduleDefinition, lifecycleContext);
-
-                            populateModuleInstance(moduleInstance, moduleProperties);
-
-                            startModule(moduleInstance, moduleDefinition, lifecycleContext);
+                            MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation(){
+                                public void exec() {
+                                    stopModule(moduleInstance, moduleDefinition, lifecycleContext);
+                                    populateModuleInstance(moduleInstance, moduleProperties);
+                                    startModule(moduleInstance, moduleDefinition, lifecycleContext);
+                                }
+                            });
                         }
-                    });
+                    },5000, 30000);
                 }
             }
             lifecycleContext.start(moduleNodes);
