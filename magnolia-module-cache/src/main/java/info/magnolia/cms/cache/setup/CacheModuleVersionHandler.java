@@ -36,6 +36,7 @@ package info.magnolia.cms.cache.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
@@ -64,7 +65,10 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsRemoved("CacheServlet");
         u.servletIsRemoved("CacheGeneratorServlet");
-        register(DeltaBuilder.update("3.5.0", "").addConditions(conditions));
+        DeltaBuilder delatTo35 = DeltaBuilder.update("3.5.0", "");
+        delatTo35.addTask(new BootstrapSingleResource("Configured Observation","Adds the repositories to be observed", "/mgnl-bootstrap/cache/config.modules.cache.config.repositories.xml"));
+        delatTo35.addConditions(conditions);
+        register(delatTo35);
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {

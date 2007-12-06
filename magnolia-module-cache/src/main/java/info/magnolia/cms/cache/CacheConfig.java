@@ -34,23 +34,26 @@
 package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.context.MgnlContext;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
-import javax.jcr.observation.Event;
 import javax.jcr.observation.EventListener;
-import javax.jcr.observation.ObservationManager;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.BooleanUtils;
@@ -81,6 +84,16 @@ public class CacheConfig {
     private final Content content;
 
     private Map uriMapping;
+
+    /**
+     * The list of repositories we observe
+     */
+    private List repositories;
+
+
+    public List getRepositories() {
+        return this.repositories;
+    }
 
     /**
      * Create a new CacheConfig and loads the config from the repository.
@@ -167,6 +180,13 @@ public class CacheConfig {
             this.uriMapping = Collections.unmodifiableMap(mappings);
             Content compressionListNode = this.content.getContent("compression");
             this.compressionList = Collections.unmodifiableMap(updateCompressionList(compressionListNode));
+
+            repositories = new ArrayList();
+            Content repositoriesNode = this.getContent("repositories");
+            for (Iterator iter = repositoriesNode.getChildren().iterator(); iter.hasNext();) {
+                Content repositoryNode = (Content) iter.next();
+                repositories.add(NodeDataUtil.getString(repositoriesNode, "name", repositoryNode.getName()));
+            }
         }
         catch (RepositoryException e) {
             throw new ConfigurationException("Could not load cache configuration: " + e.getMessage(), e);
@@ -188,14 +208,8 @@ public class CacheConfig {
     private void registerEventListener() throws ConfigurationException {
         try {
             Node node = this.content.getJCRNode();
-            ObservationManager observationManager = node.getSession().getWorkspace().getObservationManager();
             EventListener listener = new CacheConfigListener(this.cacheManager, this);
-            int events = Event.NODE_ADDED
-                | Event.NODE_REMOVED
-                | Event.PROPERTY_ADDED
-                | Event.PROPERTY_CHANGED
-                | Event.PROPERTY_REMOVED;
-            observationManager.addEventListener(listener, events, node.getPath(), true, null, null, false);
+            ObservationUtil.registerDefferedChangeListener(ContentRepository.CONFIG, node.getPath(), listener, 5000, 30000);
         }
         catch (Exception e) {
             throw new ConfigurationException("Could not register JCR EventLister.");

@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.cache;
 
+import java.util.Iterator;
+
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.cache.noop.NoOpCache;
@@ -113,7 +115,7 @@ public class DefaultCacheManager extends BaseCacheManager {
 
             this.cache = cache;
 
-            registerObservation();
+            registerObservation(config);
         }
         catch (ConfigurationException e) {
             // FIXME
@@ -173,15 +175,15 @@ public class DefaultCacheManager extends BaseCacheManager {
     /**
      * override this to register different workspaces
      */
-    protected void registerObservation() {
-        // TODO this should be more flexible in cases you want to handle events on other repositories
-        // register to observe on any changes if configured
-        ObservationUtil.registerDefferedChangeListener(ContentRepository.WEBSITE, "/", new EventListener() {
-
-            public void onEvent(EventIterator events) {
-                handleChangeEvents(events);
-            }
-        }, 5000, 30000);
+    protected void registerObservation(CacheConfig config) {
+        for (Iterator iter = config.getRepositories().iterator(); iter.hasNext();) {
+            String repository = (String) iter.next();
+            ObservationUtil.registerDefferedChangeListener(repository, "/", new EventListener() {
+                public void onEvent(EventIterator events) {
+                    handleChangeEvents(events);
+                }
+            }, 5000, 30000);
+        }
     }
 
     /**
