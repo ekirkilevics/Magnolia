@@ -33,29 +33,28 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import info.magnolia.cms.exchange.*;
-import info.magnolia.module.exchangesimple.ActivationContent;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.io.*;
-import java.util.Iterator;
-
+import info.magnolia.cms.exchange.ActivationManagerFactory;
+import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.cms.exchange.Subscription;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
+import java.util.Iterator;
 
 /**
+ *
  * @author Sameer Charles $Id$
  */
 public class SimpleSyndicator extends BaseSyndicatorImpl {
-
     private static final Logger log = LoggerFactory.getLogger(SimpleSyndicator.class);
 
     public SimpleSyndicator() {
-
     }
 
     public synchronized void activate(ActivationContent activationContent) throws ExchangeException {
@@ -165,8 +164,8 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
 
     /**
      * path should be without trailing slash
-     * */
-    private String getMappedPath(String path, Subscription subscription) {
+     */
+    protected String getMappedPath(String path, Subscription subscription) {
         if (null != subscription.getToURI()) {
             String fromURI = subscription.getFromURI();
             String toURI = subscription.getToURI();
