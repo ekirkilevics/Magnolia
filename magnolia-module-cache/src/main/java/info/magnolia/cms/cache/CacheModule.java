@@ -60,16 +60,17 @@ public class CacheModule implements ModuleLifecycle {
      * {@inheritDoc}
      */
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
-
-        // @todo should be refactored, it's a step in removing the old module configuration
-        HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
-        Content configNode;
-        try {
-            configNode = hm.getContent("/modules/cache/config");
-            this.cacheManager.init(configNode);
-        }
-        catch (RepositoryException e) {
-            log.error(e.getMessage(), e);
+        if(moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_STARTUP){
+            // @todo should be refactored, it's a step in removing the old module configuration
+            HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.CONFIG);
+            Content configNode;
+            try {
+                configNode = hm.getContent("/modules/cache/config");
+                this.cacheManager.init(configNode);
+            }
+            catch (RepositoryException e) {
+                log.error(e.getMessage(), e);
+            }
         }
     }
 
@@ -77,8 +78,10 @@ public class CacheModule implements ModuleLifecycle {
      * {@inheritDoc}
      */
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-        if (this.cacheManager.isRunning()) {
-            this.cacheManager.stop();
+        if(moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN){
+            if (this.cacheManager.isRunning()) {
+                this.cacheManager.stop();
+            }
         }
     }
 
