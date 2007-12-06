@@ -8,6 +8,24 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-mail</artifactId>
   <name>magnolia-module-mail</name>
+  <build>
+    <plugins>
+         <plugin><!-- what to compile -->
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <configuration>
+               <source>1.5</source>
+               <target>1.5</target>
+              
+               <testExcludes>
+                  <testExclude>**/*Mail*Test.java</testExclude>
+               </testExcludes>
+              
+            </configuration>
+         </plugin>
+
+    </plugins>
+  </build>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
