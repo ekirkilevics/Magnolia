@@ -331,7 +331,7 @@ for Java Content Repositories (JCR).
         </executions>
         <configuration>
           <resourceBundles>
-            <resourceBundle>info.magnolia:magnolia-build-tools-dual-licensed:1.2</resourceBundle>
+            <resourceBundle>info.magnolia:magnolia-build-tools-dual-licensed:1.2.1</resourceBundle>
           </resourceBundles>
         </configuration>
       </plugin>
@@ -350,7 +350,7 @@ for Java Content Repositories (JCR).
           <dependency>
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-build-tools-dual-licensed</artifactId>
-            <version>1.2</version>
+            <version>1.2.1</version>
           </dependency>
         </dependencies>
         <configuration>
