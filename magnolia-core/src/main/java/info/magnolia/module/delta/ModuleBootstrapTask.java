@@ -51,9 +51,10 @@ public class ModuleBootstrapTask extends BootstrapResourcesTask {
     /**
      * Accepts any resource directly under "/mgnl-bootstrap/moduleName" but not recursive into sub-directories.
      */
-    protected boolean acceptResource(InstallContext ctx, String name) {
+    protected boolean acceptResource(InstallContext ctx, String resourceName) {
         final String moduleName = ctx.getCurrentModuleDefinition().getName();
-        final String resourceFilename = StringUtils.substringAfter(name, "/mgnl-bootstrap/" + moduleName + "/");
+        final String resourceFilename = StringUtils.substringAfter(resourceName, "/mgnl-bootstrap/" + moduleName + "/");
+        // resourceFilename will be empty if resourceName does not start with "/mgnl-bootstrap/" + moduleName + "/"
         return !resourceFilename.contains("/") && resourceFilename.endsWith(".xml");
     }
 }
