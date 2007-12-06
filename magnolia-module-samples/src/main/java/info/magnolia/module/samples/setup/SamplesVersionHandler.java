@@ -82,9 +82,9 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
 
         final Delta for35 = DeltaBuilder.update("3.5", "")
             .addTasks(installOrUpdateTasks)
-            .addTask(new BootstrapSingleResource("Bootstrap", "Installs the CSS configuration", "/mgnl-bootstrap/samples/config/config.modules.samples.config.cssFiles.xml"))
-            .addTask(new BootstrapSingleResource("Bootstrap", "Installs the JS configuration", "/mgnl-bootstrap/samples/config/config.modules.samples.config.jsFiles.xml"))
-            .addTask(new BootstrapSingleResource("Bootstrap", "Installs the paragraph configuration", "/mgnl-bootstrap/samples/config/config.modules.samples.config.paragraphCollections.xml"));
+            .addTask(new BootstrapSingleResource("Bootstrap", "Installs the CSS configuration", "/mgnl-bootstrap/samples/config.modules.samples.config.cssFiles.xml"))
+            .addTask(new BootstrapSingleResource("Bootstrap", "Installs the JS configuration", "/mgnl-bootstrap/samples/config.modules.samples.config.jsFiles.xml"))
+            .addTask(new BootstrapSingleResource("Bootstrap", "Installs the paragraph configuration", "/mgnl-bootstrap/samples/config.modules.samples.config.paragraphCollections.xml"));
 
         register(for35);
     }
