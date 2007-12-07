@@ -115,7 +115,7 @@
     <resources>
       <resource>
         <!-- these are the resources copied by the remote-resources-plugin -->
-        <directory>${project.build.directory}/maven-shared-archive-resources</directory>
+        <directory>${basedir}/target/maven-shared-archive-resources</directory>
         <excludes>
           <exclude>**/*</exclude>
         </excludes>
@@ -129,7 +129,7 @@
           <webResources>
             <resource>
               <!-- these are the resources copied by the remote-resources-plugin -->
-              <directory>${project.build.directory}/maven-shared-archive-resources</directory>
+              <directory>${basedir}/target/maven-shared-archive-resources</directory>
             </resource>
           </webResources>
         </configuration>
