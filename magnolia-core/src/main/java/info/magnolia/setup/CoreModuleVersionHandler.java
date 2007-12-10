@@ -84,6 +84,11 @@ import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * 3.5 being the first version of core as a module, it is always "installed",
+ * but we need it to behave differently if magnolia was installed previously
+ * (ie. updating from 3.0), which is why there are so many "conditional
+ * tasks". Once 3.5 is out the door, this will need to be revised
+ * completely.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -104,7 +109,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed.", ContentRepository.CONFIG, "/modules", null,
                     new CreateNodeTask(null, null, ContentRepository.CONFIG, "/", "modules", ItemType.CONTENT.getSystemName())),
                     
-            // TODO : shouldn't this be conditional ? how do we migrate existing filters...
             new MigrateFilterConfiguration("/mgnl-bootstrap/core/config.server.filters.xml"),
 
             new BootstrapConditionally("IPConfig rules changed",
@@ -161,6 +165,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 new BootstrapConditionally("", "Author permissions", "/mgnl-bootstrap/core/userroles.anonymous.xml"), 
                 new BootstrapConditionally("", "Public permissions", "/mgnl-bootstrap/core/public/userroles.anonymous.xml")), 
 
+            new BootstrapConditionally("Superuser role", "Bootstraps the superuser role if needed.", "/mgnl-bootstrap/core/userroles.superuser.xml"),
+
             new BootstrapConditionally("Anonymous user", "Anonymous user must exist in the system realm: will move the existing one or bootstrap it.",
                     ContentRepository.USERS, "/anonymous", "/mgnl-bootstrap/core/users.system.anonymous.xml",
                     new ArrayDelegateTask("",
@@ -171,10 +177,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new BootstrapConditionally("Superuser user", "Superuser user must exist in the system realm: will move the existing one or bootstrap it.",
                     ContentRepository.USERS, "/superuser", "/mgnl-bootstrap/core/users.system.superuser.xml",
                     new MoveNodeTask("", "", ContentRepository.USERS, "/superuser", "/system/superuser", false)),
-
-            new BootstrapConditionally("Superuser role", "Bootstraps the superuser role if needed.", "/mgnl-bootstrap/core/userroles.superuser.xml"),
-            // TODO : how about the anonymous role ? it's currently bootstrapped through the webapp module. Has it been modified since 3.0 ?
-            //new BootstrapConditionally("Anonymous role", "Bootstraps the anonymous role if needed.", )
 
             // only relevant if updating, but does not hurt if installing since it checks for mgnl:user nodes
             new MoveMagnoliaUsersToRealmFolder(),
@@ -198,7 +200,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             new RenamedRenderersToTemplateRenderers(),
             new ReconfigureCommands(),
             new UpdateURIMappings(),
-            // TODO : do we keep this ?
             new RemoveModuleDescriptorDetailsFromRepo(),
     });
 
@@ -206,8 +207,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         super();
     }
 
-    // TODO : review - currently core is always installed since 3.5 is its first version as a module,
-    // but we need to behave differently if magnolia was installed previously
     protected List getBasicInstallTasks(InstallContext ctx) {
         return genericTasksFor35;
     }

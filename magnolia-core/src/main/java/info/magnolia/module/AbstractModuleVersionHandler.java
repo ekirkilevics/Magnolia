@@ -129,7 +129,6 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         return deltas;
     }
 
-    // TODO : review / validate
     /**
      * Returns a delta that will execute a common module installation:
      * register repositories, nodetypes and workspaces as stated in the

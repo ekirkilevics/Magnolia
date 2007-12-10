@@ -52,6 +52,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 3.5 being the first version of exchange-simple as a module, it is always "installed",
+ * but we need it to behave differently if magnolia was installed previously
+ * (ie. updating from 3.0), which is why there are so many "conditional
+ * tasks". Once 3.5 is out the door, this will need to be revised
+ * completely.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -79,7 +84,6 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
         // 3.5.0 is the first version of this module. install tasks take care of updating existing config
     }
 
-    // TODO : review / validate - since 3.5 is the first version, we can't just bootstrap all on install
     protected List getBasicInstallTasks(InstallContext installContext) {
         final List installTasks = new ArrayList();
         installTasks.add(updateConfigFrom30OrBootstrap);
