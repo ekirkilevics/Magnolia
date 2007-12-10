@@ -72,7 +72,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
-        final List tasks = super.getBasicInstallTasks(installContext);
+        final List tasks = new ArrayList();
         tasks.add(new FilterOrderingTask("cache", new String[]{"i18n"}));
         // activate cache on public instances
         tasks.add(new IsAuthorInstanceDelegateTask("Cache Activating", "Sets cache to active on public instances", null, new SetPropertyTask(ContentRepository.CONFIG,"/modules/cache/config","active", "true")));
