@@ -46,6 +46,7 @@ import info.magnolia.cms.mail.templates.impl.HtmlEmail;
 import info.magnolia.cms.mail.templates.impl.MagnoliaEmail;
 import info.magnolia.cms.mail.templates.impl.SimpleEmail;
 import info.magnolia.cms.mail.templates.impl.VelocityEmail;
+import info.magnolia.cms.security.Realm;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
@@ -62,6 +63,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.jcr.RepositoryException;
 import javax.mail.Authenticator;
 import javax.mail.PasswordAuthentication;
 import javax.mail.Session;
@@ -375,8 +377,7 @@ public class MgnlMailFactory extends ObservedManager {
             else if (userName.startsWith(MailConstants.PREFIX_GROUP)) {
                 userName = StringUtils.removeStart(userName, MailConstants.PREFIX_GROUP);
                 try {
-                    HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-                    Collection users = hm.getRoot().getChildren(ItemType.USER);
+                    Collection users = getAllUserNodes();
                     Iterator iter = users.iterator();
                     while(iter.hasNext()){
                         Content userNode = ((Content) iter.next());
@@ -394,8 +395,7 @@ public class MgnlMailFactory extends ObservedManager {
             else if (userName.startsWith(MailConstants.PREFIX_ROLE)) {
                 userName = StringUtils.removeStart(userName, MailConstants.PREFIX_ROLE);
                 try {
-                    HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
-                    Collection users = hm.getRoot().getChildren(ItemType.USER);
+                    Collection users = getAllUserNodes();
                     Iterator iter = users.iterator();
                     while(iter.hasNext()){
                         Content userNode = ((Content) iter.next());
@@ -416,6 +416,18 @@ public class MgnlMailFactory extends ObservedManager {
             }
         }
         return ret.toString();
+    }
+
+    /**
+     * TODO use UserManager. Will be fixed with MAGNOLIA-1947 / MAGNOLIA-1948
+     * @return
+     * @throws RepositoryException
+     */
+    protected Collection getAllUserNodes() throws RepositoryException {
+        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+        Collection users = hm.getContent(Realm.REALM_ADMIN).getChildren(ItemType.USER);
+        users.addAll(hm.getContent(Realm.REALM_SYSTEM).getChildren(ItemType.USER));
+        return users;
     }
 
     protected String getUserMail(User user) {
