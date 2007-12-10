@@ -162,6 +162,13 @@ public class DialogHandlerManager extends ObservedManager {
 
         Object[] handlerConfig = (Object[]) dialogHandlers.get(name);
 
+        // fix for MAGNOLIA-1394 : try to see if the given name is a paragraph name, then use that paragraph's dialog instead.
+        if (handlerConfig == null) {
+            final Paragraph para = ParagraphManager.getInstance().getInfo(name);
+            final String dialogName = para.getDialog();
+            handlerConfig = (Object[]) dialogHandlers.get(dialogName);
+        }
+
         if (handlerConfig == null) {
             throw new InvalidDialogHandlerException(name);
         }
