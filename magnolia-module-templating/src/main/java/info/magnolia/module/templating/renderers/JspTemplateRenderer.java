@@ -35,6 +35,7 @@ package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
+import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -71,7 +72,10 @@ public class JspTemplateRenderer implements TemplateRenderer {
         }
 
         RequestDispatcher rd = request.getRequestDispatcher(requestReceiver);
-        rd.include(request, response);
+        // set this attribute to avoid a second dispatching of the filters
+        request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
+        // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
+        rd.forward(request, response);
     }
 
 }
