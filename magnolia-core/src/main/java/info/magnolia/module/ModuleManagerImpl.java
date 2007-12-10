@@ -426,7 +426,9 @@ public class ModuleManagerImpl implements ModuleManager {
         final ModuleDefinition moduleDef = moduleAndDeltas.getModule();
         final List deltas = moduleAndDeltas.getDeltas();
         ctx.setCurrentModule(moduleDef);
+        log.debug("install/update for {} is starting", moduleDef);
         applyDeltas(moduleDef, deltas, ctx);
+        log.debug("install/update for {} has finished", moduleDef);
     }
 
     /**
