@@ -8,6 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-mail</artifactId>
   <name>magnolia-module-mail</name>
+  <url>http://www.magnolia.info</url>
   <build>
     <plugins>
       <!-- MAGNOLIA-1934 Exclude mail tests execution during release until they are fixed properly -->

@@ -8,6 +8,7 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-editor-fckeditor</artifactId>
   <name>magnolia-editor-fckeditor</name>
+  <url>http://www.magnolia.info</url>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
