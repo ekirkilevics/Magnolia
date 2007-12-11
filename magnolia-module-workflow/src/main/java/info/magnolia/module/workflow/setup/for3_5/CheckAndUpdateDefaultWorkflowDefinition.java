@@ -70,7 +70,7 @@ public class CheckAndUpdateDefaultWorkflowDefinition extends AbstractTask {
         try {
             stream = ClasspathResourcesUtil.getStream("info/magnolia/module/workflow/default-activation-workflow.xml");
             final String wfDef = IOUtils.toString(stream);
-            stream30 = ClasspathResourcesUtil.getStream("info/magnolia/module/workflow/for30/default-activation-workflow.xml");
+            stream30 = ClasspathResourcesUtil.getStream("info/magnolia/module/workflow/for30/activation-workflow-from-3.0-ee-bootstrap-file.xml");
             final String wfDef30 = IOUtils.toString(stream30);
             final Content cfg = ctx.getOrCreateCurrentModuleConfigNode();
 
@@ -87,6 +87,7 @@ public class CheckAndUpdateDefaultWorkflowDefinition extends AbstractTask {
                     flowNode35.setNodeData(WorkflowConstants.FLOW_VALUE, new StringValue(wfDef));
                 }
             } else {
+                // this case happens if we e.g. update from 3.0.x CE
                 flowNode.createNodeData(WorkflowConstants.FLOW_VALUE, wfDef);
             }
         } catch (IOException e) {
