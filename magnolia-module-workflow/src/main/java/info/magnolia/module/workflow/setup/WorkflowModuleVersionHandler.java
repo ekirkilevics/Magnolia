@@ -49,6 +49,7 @@ import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.workflow.setup.for3_5.AddNewDefaultConfig;
 import info.magnolia.module.workflow.setup.for3_5.AddUserToGroupTask;
+import info.magnolia.module.workflow.setup.for3_5.CheckAndUpdateDefaultWorkflowDefinition;
 import info.magnolia.module.workflow.setup.for3_5.InstallDefaultWorkflowDefinition;
 import info.magnolia.module.workflow.setup.for3_5.RemoveMetadataFromExpressionsWorkspace;
 import info.magnolia.module.workflow.setup.for3_5.SetDefaultWorkflowForActivationFlowCommands;
@@ -86,7 +87,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(flowsPageMenu)
                 .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the Workflow Utils page", "/mgnl-bootstrap/workflow/config.modules.workflow.pages.flows.xml"))
                 .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the Inbox Subpages", "/mgnl-bootstrap/workflow/config.modules.workflow.pages.inboxSubPages.xml"))
-                // TODO refactor the following ArrayDelegateTask into a single one: BackupAndBootstrap("resource.xml", "/backup/location", "Message", MessageType.WARNING)
+                // TODO refactor the following ArrayDelegateTask into a single one: BackupAndBootstrap("resource.xml", "/backup/location", "Message", MessageType.WARNING), will be fixed with MAGNOLIA-1945
                 .addTask(new ArrayDelegateTask("Backup and Bootstrap", "Makes a backup of the current 'EditWorkItem' dialog and re-installs it.", new Task[] {
                         new BackupTask(ContentRepository.CONFIG, "/modules/workflow/dialogs/editWorkItem", true),
                         new BootstrapSingleResource("Bootstrap", "Bootstraps the Inbox Subpages", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.editWorkItem.xml", ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW), 
@@ -94,7 +95,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                     }))
                 .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the 'EditActivationWorkItem' dialog", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.editActivationWorkItem.xml"))
                 .addTask(new AddNewDefaultConfig())
-                .addTask(new InstallDefaultWorkflowDefinition())
+                .addTask(new CheckAndUpdateDefaultWorkflowDefinition())
                 .addTask(new RemoveMetadataFromExpressionsWorkspace())
                 .addTask(new SetDefaultWorkflowForActivationFlowCommands())
                 .addTask(bootstrapSecurityConfig)
