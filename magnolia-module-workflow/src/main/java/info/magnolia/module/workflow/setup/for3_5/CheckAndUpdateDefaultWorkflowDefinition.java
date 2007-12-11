@@ -70,7 +70,7 @@ public class CheckAndUpdateDefaultWorkflowDefinition extends AbstractTask {
         try {
             stream = ClasspathResourcesUtil.getStream("info/magnolia/module/workflow/default-activation-workflow.xml");
             final String wfDef = IOUtils.toString(stream);
-            stream30 = ClasspathResourcesUtil.getStream("info/magnolia/module/workflow/for30/activation-workflow-from-3.0-ee-bootstrap-file.xml");
+            stream30 = ClasspathResourcesUtil.getStream("info/magnolia/module/workflow/from30/activation-workflow-from-3.0-ee-bootstrap-file.xml");
             final String wfDef30 = IOUtils.toString(stream30);
             final Content cfg = ctx.getOrCreateCurrentModuleConfigNode();
 

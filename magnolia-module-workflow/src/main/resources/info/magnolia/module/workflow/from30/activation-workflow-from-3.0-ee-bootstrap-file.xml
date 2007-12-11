@@ -1,0 +1,100 @@
+<process-definition name="activation" revision="j0.0.2">
+  <sequence>
+    <set field="activator" field-value="userName"/>
+
+    <!--  go to publisher first -->
+    <participant ref="group-publisher"/>
+
+    <!-- will loop if rejected -->
+    <if test="${field:action} == reject">
+      <revision-round/>
+    </if>
+
+    <log message="activate: ${field:action}"/>
+
+    <!-- if the last action was proceed: activate-->
+    <if test="${field:action} == proceed">
+      <activate/>
+    </if>
+  </sequence>
+
+  <process-definition name="revision-round">
+    <loop>
+      <while test="${field:action} == reject"/>
+
+      <to-editor/>
+
+      <if test="${field:action} != proceed">
+        <break/>
+      </if>
+
+      <to-publisher/>
+    </loop>
+
+  </process-definition>
+
+  <process-definition name="to-publisher">
+    <sequence>
+      <!--
+       uncomment if you like to use an email notification 
+      -->
+
+      <!--
+        <set field="mailTo" value="group-publisher"/>
+        <set field="mailTemplate" value="testMagnolia"/>
+        <participant ref="command-sendMail"/>
+      -->
+    <participant ref="group-publisher"/>
+    </sequence>
+  </process-definition>
+
+  <process-definition name="to-editor">
+    <sequence>
+      <!-- assign back to the user who launched the activation -->
+      <set field="assignTo" field-value="activator"/>
+
+      <!--
+       uncomment if you like to use an email notification 
+      -->
+
+      <!--
+        <set field="mailTo" value="user-${f:assignTo}"/>
+        <set field="mailTemplate" value="testMagnolia"/>
+        <participant ref="command-sendMail"/>
+      -->
+      <participant ref="group-editor"/>
+    </sequence>
+  </process-definition>
+
+  <process-definition name="activate">
+    <sequence>
+      <!--  wait if scheduled -->
+      <if>
+        <defined field-value="startDate"/>
+
+        <sleep until="${f:startDate}"/>
+      </if>
+
+      <!-- activate -->
+      <participant ref="command-activate"/>
+
+      <if>
+        <defined field-value="exception"/>
+        <!--  restart again -->
+        <activation/>
+        <break/>
+      </if>
+
+      <!-- deactivate (if scheduled)-->
+      <if>
+        <defined field-value="endDate"/>
+        <sequence>
+          <sleep until="${f:endDate}"/>
+          <participant ref="command-deactivate"/>
+        </sequence>
+      </if>
+
+    </sequence>
+  </process-definition>
+
+</process-definition>
