@@ -1,0 +1,36 @@
+<!DOCTYPE html SYSTEM "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head></head>
+  <body>
+    <h1>Magnolia Workflow Notification</h1>
+    
+    <p>
+    This mail has been sent by the Magnolia activation Workflow.
+    </p>
+    
+    <p>
+    The mail was build with a Freemarker template in which you can use variables (attributes) using the <i>${r"${curlyBraces}"}</i> syntax.<br/>
+    In general you can use every attribute that is set on the MgnlContext (see info.magnolia.context.Context) or - in case it was sent from a workflow - attributes set on the WorkItem (see info.magnolia.module.workflow.WorkItemContext).<br/>
+    <br/>
+    Further, when using a workflow to send the mail you can set attributes in the WorkItemContext using the <tt>&lt;set field="role" value="publisher"/&gt;</tt> tag.<br/>
+    <br/>
+    In most cases you might want to use the following attributes:
+    </p> 
+    <dl>
+        <dt>userName</dt>
+        <dd>${userName}</dd>
+        <dt>pathSelected</dt>
+        <dd>${pathSelected}</dd>
+        <dt>mailTemplate</dt>
+        <dd>${mailTemplate}</dd>
+        <dt>mailTo</dt>
+        <dd>${mailTo}</dd>
+        <dt>path</dt>
+        <dd>${path}</dd>
+        <dt>repository</dt>
+        <dd>${repository}</dd>
+        <dt>activator</dt>
+        <dd>${activator}</dd>
+    </dl>
+  </body>
+</html>
