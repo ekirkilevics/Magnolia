@@ -293,7 +293,7 @@ public class ModuleManagerImplTest extends TestCase {
             this.moduleVersionHandlers = moduleVersionHandlers;
         }
 
-        protected ModuleVersionHandler getVersionHandler(ModuleDefinition module) {
+        protected ModuleVersionHandler newVersionHandler(ModuleDefinition module) {
             return moduleVersionHandlers.get(module.getName());
         }
     }

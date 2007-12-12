@@ -59,7 +59,6 @@ import info.magnolia.module.ui.ModuleManagerWebUI;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import org.apache.commons.beanutils.BeanUtils;
-import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
@@ -138,7 +137,7 @@ public class ModuleManagerImpl implements ModuleManager {
         while (it.hasNext()) {
             final ModuleDefinition module = (ModuleDefinition) it.next();
             log.debug("checking for installation or update [{}]", module);
-            final ModuleVersionHandler versionHandler = getVersionHandler(module);
+            final ModuleVersionHandler versionHandler = newVersionHandler(module);
             registry.registerModuleVersionHandler(module.getName(), versionHandler);
             installContext.setCurrentModule(module);
 
@@ -182,7 +181,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
     }
 
-    protected ModuleVersionHandler getVersionHandler(ModuleDefinition module) {
+    protected ModuleVersionHandler newVersionHandler(ModuleDefinition module) {
         try {
             final Class versionHandlerClass = module.getVersionHandler();
             if (versionHandlerClass != null) {
