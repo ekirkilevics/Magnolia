@@ -102,7 +102,12 @@ public class WorkItemContext extends ContextDecorator {
         if (scope == Context.LOCAL_SCOPE) {
             Attribute attr = AttributeUtils.java2owfe(value);
             try {
-                this.workItem.addAttribute(name, attr);
+                if (this.workItem.containsAttribute(name)) {
+                    log.debug("Attribute {} already set in WorkItem, will overwrite it with value {}", name, attr.toString());
+                    this.workItem.setAttribute(name, attr);
+                } else {
+                    this.workItem.addAttribute(name, attr);
+                }
             }
             catch (AttributeException e) {
                 log.error("can't set value {}", name, e);

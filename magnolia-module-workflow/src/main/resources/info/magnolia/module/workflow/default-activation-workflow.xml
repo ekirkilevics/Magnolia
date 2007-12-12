@@ -3,7 +3,7 @@
     <set field="activator" field-value="userName"/>
 
     <!--  go to publisher first -->
-    <participant ref="group-publishers"/>
+    <to-publisher/>
 
     <!-- will loop if rejected -->
     <if test="${field:action} == reject">
@@ -40,9 +40,9 @@
       -->
 
       <!--
-        <set field="mailTo" value="group-publishers"/>
-        <set field="mailTemplate" value="testMagnolia"/>
-        <participant ref="command-sendMail"/>
+      <set field="mailTo" value="group-publishers"/>
+      <set field="mailTemplate" value="workflowNotification"/>
+      <participant ref="command-sendMail"/>
       -->
       <!-- reset the assignTo field so the editor no longers see the workflow item --> 
       <unset field="assignTo"/>
@@ -58,11 +58,10 @@
       <!--
        uncomment if you like to use an email notification
       -->
-
       <!--
-        <set field="mailTo" value="user-${f:assignTo}"/>
-        <set field="mailTemplate" value="testMagnolia"/>
-        <participant ref="command-sendMail"/>
+      <set field="mailTo" value="user-${f:assignTo}"/>
+      <set field="mailTemplate" value="workflowNotification"/>
+      <participant ref="command-sendMail"/>
       -->
       <participant ref="group-editors"/>
     </sequence>
