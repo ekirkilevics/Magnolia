@@ -413,7 +413,7 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
-        Access.isGranted(this.accessManager, path, Permission.REMOVE);
+        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
         if (this.node.hasNode(name)) {
             this.node.getNode(name).remove();
         }
