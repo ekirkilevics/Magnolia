@@ -35,7 +35,7 @@ package info.magnolia.module;
 
 import info.magnolia.module.delta.ModuleBootstrapTask;
 import info.magnolia.module.delta.ModuleFilesExtraction;
-import info.magnolia.module.delta.BootstrapEmptyRepositoriesTask;
+import info.magnolia.module.delta.SetupModuleRepositoriesTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.SamplesBootstrapTask;
 
@@ -54,7 +54,7 @@ public class DefaultModuleVersionHandler extends AbstractModuleVersionHandler {
      */
     protected List getBasicInstallTasks(InstallContext installContext) {
         final List basicInstallTasks = new ArrayList();
-        basicInstallTasks.add(new BootstrapEmptyRepositoriesTask());
+        basicInstallTasks.add(new SetupModuleRepositoriesTask());
         basicInstallTasks.add(new ModuleBootstrapTask());
         basicInstallTasks.add(new SamplesBootstrapTask());
         basicInstallTasks.add(new ModuleFilesExtraction());

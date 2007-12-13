@@ -35,6 +35,7 @@ package info.magnolia.module.delta;
 
 import info.magnolia.cms.beans.config.Bootstrapper;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.module.RepositoryDefinition;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.Role;
@@ -48,12 +49,12 @@ import java.util.Iterator;
 /**
  * Bootstrap empty repositories for the current module (loading is already performed before install tasks)
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
-public class BootstrapEmptyRepositoriesTask extends AbstractTask {
+public class SetupModuleRepositoriesTask extends AbstractTask {
 
-    public BootstrapEmptyRepositoriesTask() {
-        super("Bootstrap module repositories", "Bootstrap empty repositories for the current module.");
+    public SetupModuleRepositoriesTask() {
+        super("Setup module repositories", "Bootstrap empty repositories, grant them to superuser and subscribe them so that activation can be used.");
     }
 
     // TODO finer exception handling ?
@@ -77,9 +78,9 @@ public class BootstrapEmptyRepositoriesTask extends AbstractTask {
                         });
                     }
 
-                    // grant workspace to superuser
-                    Role superuser = Security.getRoleManager().getRole("superuser");
-                    superuser.addPermission(workspace, "/*", Permission.ALL);
+                    // TODO move the code to a better place
+                    ModuleUtil.grantRepositoryToSuperuser(workspace);
+                    ModuleUtil.subscribeRepository(workspace);
                 }
             }
         }
