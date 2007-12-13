@@ -37,31 +37,28 @@ import info.magnolia.cms.security.SecuritySupport;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.security.auth.Entity;
+import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 import info.magnolia.jaas.sp.UserAwareLoginModule;
-
-import java.util.Iterator;
-import java.util.Map;
-
-import javax.security.auth.Subject;
-import javax.security.auth.callback.CallbackHandler;
-import javax.security.auth.login.AccountLockedException;
-import javax.security.auth.login.FailedLoginException;
-import javax.security.auth.login.LoginException;
-import javax.security.auth.login.AccountNotFoundException;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.security.auth.login.FailedLoginException;
+import javax.security.auth.login.LoginException;
+import java.util.Iterator;
 
 
 /**
  * @author Sameer Charles $Id$
  */
-public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule{
+public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule {
 
     private static final Logger log = LoggerFactory.getLogger(JCRAuthenticationModule.class);
+
+    private static final String ACCOUNT_LOCKED_EXCEPTION = "javax.security.auth.login.AccountLockedException";
+    private static final String ACCOUNT_NOTFOUND_EXCEPTION = "javax.security.auth.login.AccountNotFoundException";
 
     protected User user;
 
@@ -79,14 +76,32 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
     public void validateUser() throws LoginException {
         initUser();
 
-        if(this.user == null){
-            throw new AccountNotFoundException("user " + this.name + " not found");
+        if (this.user == null) {
+            throw specificExceptionIfPossible(ACCOUNT_NOTFOUND_EXCEPTION, "User account " + this.name + " not found.");
         }
 
         matchPassword();
 
         if (!this.user.isEnabled()) {
-            throw new AccountLockedException();
+            throw specificExceptionIfPossible(ACCOUNT_LOCKED_EXCEPTION, "User account " + this.name + " is locked.");
+        }
+    }
+
+    /**
+     * Hack to fix MAGNOLIA-1957 : specific LoginException subclasses were introduced in Java5,
+     * so we have to do this do be able to throw them (their type is used to determine the error
+     * message to show to the user) or throw the generic FailedLoginException if they don't exist.
+     */
+    private LoginException specificExceptionIfPossible(String exClass, String msg) throws LoginException {
+        try {
+            final Class cl = ClassUtil.classForName(exClass);
+            return (LoginException) cl.getConstructor(new Class[]{String.class}).newInstance(new Object[]{msg});
+        } catch (NoClassDefFoundError e) {
+            // booh, we're using jdk1.4, the specific login exceptions are not there.
+            return new FailedLoginException(msg);
+        } catch (Exception e) {
+            // generic exception when attempting to instanciate the specific exception
+            throw new LoginException(e.getClass().getName() + " : " + e.getMessage());
         }
     }
 
@@ -121,7 +136,7 @@ public class JCRAuthenticationModule extends AbstractLoginModule implements User
         EntityImpl entity = new EntityImpl();
         entity.addProperty(Entity.LANGUAGE, this.user.getLanguage());
         entity.addProperty(Entity.NAME, this.user.getName());
-        
+
         String fullName = this.user.getProperty("title");
         if(fullName != null){
             entity.addProperty(Entity.FULL_NAME, fullName);

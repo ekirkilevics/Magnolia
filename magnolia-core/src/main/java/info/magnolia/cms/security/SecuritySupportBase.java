@@ -52,11 +52,7 @@ import org.slf4j.LoggerFactory;
  *
  */
 public abstract class SecuritySupportBase implements SecuritySupport {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(SecuritySupportBase.class);
+    private static final Logger log = LoggerFactory.getLogger(SecuritySupportBase.class);
     
     public LoginResult authenticate(CredentialsCallbackHandler callbackHandler, String customLoginModule) {
         Subject subject;
@@ -72,15 +68,26 @@ public abstract class SecuritySupportBase implements SecuritySupport {
             user.setSubject(subject);
             return new LoginResult(LoginResult.STATUS_SUCCEEDED, user);
         }
-        catch (FailedLoginException fle) {
-            log.debug("can't login due to", fle);
-            return new LoginResult(LoginResult.STATUS_FAILED, fle);
-        }
         catch (LoginException e) {
-            log.error("can't login due to", e);
+            logLoginException(e);
             return new LoginResult(LoginResult.STATUS_FAILED, e);
         }
-   }
+    }
+
+    /**
+     * Logs plain LoginException in error level, but subclasses in debug, since they
+     * are specifically thrown when a known error occurs (wrong password, block account,
+     * etc.) This also makes this code Java1.4 compliant, even if the JAAS module
+     * threw a specific LoginException which was introcued in Java5.
+     */
+    private void logLoginException(LoginException e) {
+        if (e.getClass().equals(LoginException.class)) {
+            log.error("Can't login due to:", e);
+        } else {
+            // specific subclasses were added in Java5 to identify what the login failure was
+            log.debug("Can't login due to:", e);
+        }
+    }
 
     protected static LoginContext createLoginContext(CredentialsCallbackHandler callbackHandler, String customLoginModule) throws LoginException {
         LoginContext loginContext = new LoginContext(
