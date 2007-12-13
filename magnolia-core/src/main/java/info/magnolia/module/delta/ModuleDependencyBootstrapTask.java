@@ -54,7 +54,7 @@ public class ModuleDependencyBootstrapTask extends IsModuleInstalledDelegateTask
             protected boolean acceptResource(InstallContext ctx, String name) {
                 final String moduleName = ctx.getCurrentModuleDefinition().getName();
                 final String resourceFilename = StringUtils.substringAfter(name, "/mgnl-bootstrap/" + moduleName + "/" + dependencyName + "/");
-                return !resourceFilename.contains("/") && resourceFilename.endsWith(".xml");
+                return !StringUtils.contains(resourceFilename, "/") && resourceFilename.endsWith(".xml");
             }
         });
     }

@@ -87,7 +87,7 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
     }
 
     public void release() {
-        repositoryStrategyThreadLocal.remove();
+        repositoryStrategyThreadLocal.set(null);
     }
 
     public Locale getLocale() {

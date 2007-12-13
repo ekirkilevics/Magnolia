@@ -55,6 +55,6 @@ public class ModuleBootstrapTask extends BootstrapResourcesTask {
         final String moduleName = ctx.getCurrentModuleDefinition().getName();
         final String resourceFilename = StringUtils.substringAfter(resourceName, "/mgnl-bootstrap/" + moduleName + "/");
         // resourceFilename will be empty if resourceName does not start with "/mgnl-bootstrap/" + moduleName + "/"
-        return !resourceFilename.contains("/") && resourceFilename.endsWith(".xml");
+        return !StringUtils.contains(resourceFilename, "/") && resourceFilename.endsWith(".xml");
     }
 }
