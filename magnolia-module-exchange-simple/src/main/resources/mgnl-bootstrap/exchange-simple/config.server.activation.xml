@@ -425,53 +425,6 @@
             </sv:property>
           </sv:node>
         </sv:node>
-        <sv:node sv:name="dmsSubscription">
-          <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:contentNode</sv:value>
-          </sv:property>
-          <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-            <sv:value>mix:versionable</sv:value>
-            <sv:value>mix:lockable</sv:value>
-          </sv:property>
-          <sv:property sv:name="jcr:uuid" sv:type="String">
-            <sv:value>e9a0a537-78a2-4ad9-b0f9-a9bb1c696983</sv:value>
-          </sv:property>
-          <sv:property sv:name="toURI" sv:type="String">
-            <sv:value>/</sv:value>
-          </sv:property>
-          <sv:property sv:name="repository" sv:type="String">
-            <sv:value>dms</sv:value>
-          </sv:property>
-          <sv:property sv:name="fromURI" sv:type="String">
-            <sv:value>/</sv:value>
-          </sv:property>
-          <sv:node sv:name="MetaData">
-            <sv:property sv:name="jcr:primaryType" sv:type="Name">
-              <sv:value>mgnl:metaData</sv:value>
-            </sv:property>
-            <sv:property sv:name="jcr:uuid" sv:type="String">
-              <sv:value>81548d0a-2cd2-4be8-926f-e43baf9c412e</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:authorid" sv:type="String">
-              <sv:value>superuser</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-              <sv:value>2007-05-24T18:55:22.876+02:00</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-              <sv:value>2007-05-25T11:08:06.220+02:00</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-              <sv:value>false</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-              <sv:value>2007-05-25T11:08:02.240+02:00</sv:value>
-            </sv:property>
-            <sv:property sv:name="mgnl:activatorid" sv:type="String">
-              <sv:value>superuser</sv:value>
-            </sv:property>
-          </sv:node>
-        </sv:node>
       </sv:node>
     </sv:node>
   </sv:node>
