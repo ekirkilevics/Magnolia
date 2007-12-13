@@ -2,111 +2,55 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
   <head>
     <title>Magnolia Login Form</title>
-    <style type="text/css">
+    <link rel="stylesheet" href="${contextPath}/.resources/loginForm/login.css" type="text/css"/>
 
-     /*   <![CDATA[ */
-html, body {
-  margin: 0;
-  padding: 0;
-  font-family: verdana, arial, "sans serif";
-  font-size: 12px;
-}
-#frame {
-  margin-left: auto;
-  margin-right: auto;
-  width: 450px;
-  margin-top: 20px;
-  padding-top: 10px;
-}
-#form {
-  border: 1px #669900 solid;
-  padding: 10px 0 10px 0;
-  height: 90px;
-}
-form {
-  width: 280px;
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-label,input {
-  display: block;
-  width: 150px;
-  float: left;
-  margin-bottom: 10px;
-}
-label {
-  text-align: right;
-  width: 75px;
-  padding-right: 20px;
-  clear: left;
-}
-.button {
-  width: auto;
-}
-#copyright {
-  margin: 10px;
-  font-size: 10px;
-  color: #999;
-  clear: both;
-  text-align: center;
-}
-#copyright a {
-  font-size: 10px;
-  color: #999;
-}
-h1 {
-  margin: 0;
-  padding: 0;
-  color: #690;
-}
-#error {
-  text-align: center;
-  font-size: 10px;
-  color: #993333;
-}
-
-
-      /*  ]]> */
-      </style>
-      <script type="text/javascript">
-          window.onload = function() {
-              document.getElementById('username').focus();
-          }
-      </script>
+    <script type="text/javascript">
+        window.onload = function() {
+            document.getElementById('username').focus();
+        }
+    </script>
   </head>
   <body>
-    <div id="frame">
-      <div id="logo">
-          <img src="${contextPath}/.resources/loginForm/logo.gif" width="237" height="52"
-            title="Magnolia Enterprise Content Management" alt="Magnolia Enterprise Content Management" />
+    <div id="logo">
+      <img src="${contextPath}/.resources/loginForm/magnoliaLogo.gif" alt="Magnolia Enterprise Content Management"/>
+    </div>
+    <div class="page">
+      <div id="header" style="background: white url(${contextPath}/.resources/loginForm/backgroundBar.gif) repeat-x scroll 0%;">
+        <img src="${contextPath}/.resources/loginForm/lock2.gif" id="lock"/>
+
+        <h1>Magnolia Login</h1>
       </div>
-      <div id="form">
-        <form name="loginForm" action="" method="post">
-          <label for="username">Username</label>
-          <input id="username" name="mgnlUserId" />
-          <label for="mgnlUserPSWD">Password</label>
-          <input id="mgnlUserPSWD" name="mgnlUserPSWD" type="password" />
-          <label for="submitButton"><!--  --></label>
-          <input id="submitButton" type="submit" value="login" class="button" />
-        </form>
+      <div id="content">
+        <div id="error">
+        [#if errorString?exists]
+          ${errorString}
+        [#else]
+            &nbsp;
+        [/#if]
+        </div>
+        <div id="form">
+          <form name="loginForm" action="" method="post">
+            <label for="username">Username</label>
+            <input id="username" name="mgnlUserId" />
+            <label for="mgnlUserPSWD">Password</label>
+            <input id="mgnlUserPSWD" name="mgnlUserPSWD" type="password" />
+            <label for="submitButton"><!--  --></label>
+            <input id="submitButton" type="submit" value="login" class="button" />
+          </form>
+        </div>
       </div>
-      <div id="copyright" style="text-align: center">
-        &copy; Copyright 2003-2006
-        <a href="http://www.magnolia.info" target="_blank">Magnolia International Ltd.</a>
-        <br />
-        Maiengasse 30, 4056 Basel, Switzerland
-        <br />
-        Tel +41 61 228 9000 (9AM-5PM GMT+1)
-        <a href="mailto:info@magnolia.info">info@magnolia.info</a>
-        <br />
-        Magnolia is a registered trademark of Magnolia International Ltd.
-      </div>
-      [#if errorString?exists]
-      <div id="error">
-        ${errorString}
-      </div>
-      [/#if]
+    </div>
+    <div id="footer">
+      &copy; Copyright 2003-2007
+      <a href="http://www.magnolia.info" target="_blank">Magnolia International Ltd.</a>
+       - 
+      Maiengasse 30, 4056 Basel, Switzerland
+       <br/> 
+      Tel +41 61 228 9000 (9AM-5PM GMT+1)
+       - 
+      <a href="mailto:info@magnolia.info">info@magnolia.info</a>
+      <br/>
+      Magnolia is a registered trademark of Magnolia International Ltd.
     </div>
   </body>
 </html>

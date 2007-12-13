@@ -1,58 +1,115 @@
-html, body {
-	width: 100%;
-	margin: 0;
-	padding: 0;
-	font-family: verdana, arial, "sans serif";
-	font-size: 12px;
+html {
+    background: #FAFBF4;
 }
 
-#frame {
-	margin-left: auto;
-	margin-right: auto;
-	width: 450px;
+body {
+    background: #FAFBF4;
+    color: #000;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    margin: 0 10%;
+    padding: 20px;
+    font-size: 9pt;
 }
-#logo {
-	margin-top: 50px;
-	width: 450px;
-	text-align: right;
+
+a {
+    color: #669900;
 }
-#form {
-	margin-top: 20px;
-	padding-top: 10px;
-	border: 1px #669900 solid;
+
+h2 {
+    padding: 0;
+    margin: 0;
+    font-weight: normal;
+    color: #669900;
+    font-size: 14pt;
 }
-.form {
-	width: 280px;
-	text-align: center;
-	margin-left: auto;
-	margin-right: auto;
-}
+
 label,input {
-	display: block;
-	width: 150px;
-	float: left;
-	margin-bottom: 10px;
+    display: block;
+    width: 150px;
+    float: left;
+    margin-bottom: 10px;
 }
 
 label {
-	text-align: right;
-	width: 75px;
-	padding-right: 20px;
+    text-align: right;
+    width: 75px;
+    padding-right: 15px;
+    padding-top: 4px;
+    clear: both;
 }
 
-br {
-	clear: left;
+.page {
+    width: 580px;
+    margin-top: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    border: 1px solid #adbc61;
+    background: white;
 }
 
-.button {
-	width: auto;
+#logo {
+    width: 580px;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-#copyright, #copyright a {
-    margin-top: 5px;
-	font-size: 10px;
-	color: #999;
-	clear: left;
+#header {
+    margin: 0;
+    padding: 20px;
+    height: 40px;
+}
+
+#footer {
+    width: 580px;
+    margin: 0;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0;
+    line-height: 1.3em;
+}
+
+#lock {
+    float: left;
+    margin-right: 20px;
+}
+
+#header h1 {
+    margin: 3px 0 0 0;
+    padding: 0;
+    font-size: 26pt;
+    font-weight: normal;
+    color: #4d4d4d;
+}
+
+#footer, #footer a {
+    margin-top: 3px;
     text-align: center;
+    font-size: 9px;
+    font-family: Verdana;
+    color: #aaa;
 }
 
+#content {
+    padding: 20px 20px 20px 20px;
+    margin: 0;
+    font-weight: normal;
+    height: 100px;
+}
+
+#error {
+    text-align: center;
+    clear: both;
+    color: #993333;
+    margin-top: -10px;
+    margin-bottom: 10px;
+}
+
+#form {
+    margin-left: auto;
+    margin-right: auto;
+    width: 280px;
+}
+
+#submitButton {
+    width: 75px;
+}
