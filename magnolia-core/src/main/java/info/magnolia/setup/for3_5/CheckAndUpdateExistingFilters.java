@@ -88,30 +88,30 @@ public final class CheckAndUpdateExistingFilters extends AllChildrenNodesOperati
 
         // filter chain that is bootstrapped with latest Magnolia 3.0.x
         filterChain30.put(FILTER_CONTENT_TYPE,
-            new Filter30("info.magnolia.cms.filters.ContentTypeFilter",     
-                Long.valueOf(100)));
-        filterChain30.put(FILTER_SECURITY,       
-            new Filter30("info.magnolia.cms.security.SecurityFilter",       
-                Long.valueOf(200)));
-        filterChain30.put(FILTER_VIRTUAL_URI,     
-            new Filter30("info.magnolia.cms.filters.MgnlVirtualUriFilter",  
-                Long.valueOf(300)));
-        filterChain30.put(FILTER_MULTIPART_REQUEST, 
-            new Filter30("info.magnolia.cms.filters.MultipartRequestFilter", 
-                Long.valueOf(400)));
-        filterChain30.put(FILTER_CONTEXT, 
-            new Filter30("info.magnolia.cms.filters.MgnlContextFilter", 
-                Long.valueOf(500)));
+            new Filter30("info.magnolia.cms.filters.ContentTypeFilter",
+                new Long(100)));
+        filterChain30.put(FILTER_SECURITY,
+            new Filter30("info.magnolia.cms.security.SecurityFilter",
+                new Long(200)));
+        filterChain30.put(FILTER_VIRTUAL_URI,
+            new Filter30("info.magnolia.cms.filters.MgnlVirtualUriFilter",
+                new Long(300)));
+        filterChain30.put(FILTER_MULTIPART_REQUEST,
+            new Filter30("info.magnolia.cms.filters.MultipartRequestFilter",
+                new Long(400)));
+        filterChain30.put(FILTER_CONTEXT,
+            new Filter30("info.magnolia.cms.filters.MgnlContextFilter",
+                new Long(500)));
         final HashMap interceptFilterParams = new HashMap();
         interceptFilterParams.put("test", "true");
-        filterChain30.put(FILTER_INTERCEPT, 
-            new Filter30("info.magnolia.cms.filters.MgnlInterceptFilter", 
-                Long.valueOf(600),
+        filterChain30.put(FILTER_INTERCEPT,
+            new Filter30("info.magnolia.cms.filters.MgnlInterceptFilter",
+                new Long(600),
                 null,
                 interceptFilterParams));
-        filterChain30.put(FILTER_CMS, 
-            new Filter30("info.magnolia.cms.filters.MgnlCmsFilter", 
-                Long.valueOf(800),
+        filterChain30.put(FILTER_CMS,
+            new Filter30("info.magnolia.cms.filters.MgnlCmsFilter",
+                new Long(800),
                 "/.,/docroot/,/admindocroot/,/tmp/fckeditor/,/ActivationHandler"));
     }
     
