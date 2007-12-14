@@ -35,6 +35,7 @@ package info.magnolia.module.exchangesimple.setup.for3_5;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
 import info.magnolia.module.InstallContext;
@@ -70,7 +71,7 @@ public class UpdateActivationConfigTask extends AbstractRepositoryTask {
         if (hm.isExist(EE30_ROOT_PATH)) {
             final Collection subscribers = new ArrayList();
             final Content subscribersParent = hm.getContent(EE30_ROOT_PATH);
-            final Collection subscriberNodes = subscribersParent.getChildren();
+            final Collection subscriberNodes = subscribersParent.getChildren(ItemType.CONTENTNODE);
             final Iterator it = subscriberNodes.iterator();
             while (it.hasNext()) {
                 final Content subscriberNode = (Content) it.next();
@@ -99,16 +100,16 @@ public class UpdateActivationConfigTask extends AbstractRepositoryTask {
         final Iterator it = subscribers.iterator();
         while (it.hasNext()) {
             final Subscriber subscriber = (Subscriber) it.next();
-            final Content subscriberNode = subscribersNode.createContent(subscriber.getName());
+            final Content subscriberNode = subscribersNode.createContent(subscriber.getName(), ItemType.CONTENTNODE);
             subscriberNode.createNodeData("URL", subscriber.getURL());
             subscriberNode.createNodeData("active", Boolean.toString(subscriber.isActive()));
             subscriberNode.createNodeData("class", DefaultSubscriber.class.getName());
-            final Content subscriptionsNode = subscriberNode.createContent("subscriptions");
+            final Content subscriptionsNode = subscriberNode.createContent("subscriptions", ItemType.CONTENTNODE);
             final Collection subscriptions = subscriber.getSubscriptions();
             final Iterator subscriptionsIt = subscriptions.iterator();
             while (subscriptionsIt.hasNext()) {
                 final Subscription subscription = (Subscription) subscriptionsIt.next();
-                final Content subscriptionNode = subscriptionsNode.createContent(subscription.getName());
+                final Content subscriptionNode = subscriptionsNode.createContent(subscription.getName(), ItemType.CONTENTNODE);
                 subscriptionNode.createNodeData("repository", subscription.getRepository());
                 subscriptionNode.createNodeData("fromURI", subscription.getFromURI());
                 subscriptionNode.createNodeData("toURI", subscription.getToURI());
@@ -159,14 +160,6 @@ public class UpdateActivationConfigTask extends AbstractRepositoryTask {
     private String getString(Content node, String propertyName) throws RepositoryException {
         if (node.hasNodeData(propertyName)) {
             return node.getNodeData(propertyName).getString();
-        }
-        throw new IllegalStateException("No property of name " + propertyName + " was found.");
-    }
-
-    // TODO exception handling ? (UnexpectedRepoStateException?)
-    private boolean getBoolean(Content node, String propertyName) throws RepositoryException {
-        if (node.hasNodeData(propertyName)) {
-            return node.getNodeData(propertyName).getBoolean();
         }
         throw new IllegalStateException("No property of name " + propertyName + " was found.");
     }
