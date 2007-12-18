@@ -77,7 +77,7 @@ public class MgnlUserManager implements UserManager {
 
     // TODO : rename to getRealmName and setRealmName (and make sure Content2Bean still sets realmName using the parent's node name)
     public String getName() {
-        return realmName;
+        return getRealmName();
     }
 
     public void setName(String name) {

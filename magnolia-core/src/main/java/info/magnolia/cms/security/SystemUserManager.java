@@ -136,14 +136,14 @@ public class SystemUserManager extends MgnlUserManager {
     
     private Subject getSubject(String userName, String password) {
         CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(
-            userName, password.toCharArray(), Realm.REALM_SYSTEM);
+            userName, password.toCharArray(), getRealmName());
         try {
             LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
             loginContext.login();
             return loginContext.getSubject();
         }
         catch (LoginException le) {
-            log.error("Failed to login as anonymous user", le);
+            log.error("Failed to login as " + userName + " user", le);
         }
         return null;
     }
