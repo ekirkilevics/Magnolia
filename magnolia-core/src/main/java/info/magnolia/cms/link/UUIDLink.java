@@ -34,8 +34,8 @@
 package info.magnolia.cms.link;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
@@ -210,7 +210,7 @@ public class UUIDLink{
                 extension = binary.getExtension();
             }
         }
-        return StringUtils.defaultIfEmpty(this.extension, Server.getDefaultExtension());
+        return StringUtils.defaultIfEmpty(this.extension, ServerConfiguration.getInstance().getDefaultExtension());
     }
 
 
