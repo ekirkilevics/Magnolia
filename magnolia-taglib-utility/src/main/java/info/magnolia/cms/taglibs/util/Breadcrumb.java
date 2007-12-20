@@ -34,6 +34,7 @@
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 
@@ -199,7 +200,7 @@ public class Breadcrumb extends TagSupport {
                     out.print(request.getContextPath());
                     out.print(page.getHandle());
                     out.print("."); //$NON-NLS-1$
-                    out.print(Server.getDefaultExtension());
+                    out.print(ServerConfiguration.getInstance().getDefaultExtension());
                     if (actpage.getHandle().equals(page.getHandle())) {
                         out.print("\" class=\""); //$NON-NLS-1$
                         out.print(activeCss);
