@@ -165,8 +165,11 @@ public class DialogHandlerManager extends ObservedManager {
         // fix for MAGNOLIA-1394 : try to see if the given name is a paragraph name, then use that paragraph's dialog instead.
         if (handlerConfig == null) {
             final Paragraph para = ParagraphManager.getInstance().getInfo(name);
-            final String dialogName = para.getDialog();
-            handlerConfig = (Object[]) dialogHandlers.get(dialogName);
+            // it's not mandatory that a paragraph references this dialog :
+            if (para != null) {
+                final String dialogName = para.getDialog();
+                handlerConfig = (Object[]) dialogHandlers.get(dialogName);
+            }
         }
 
         if (handlerConfig == null) {
