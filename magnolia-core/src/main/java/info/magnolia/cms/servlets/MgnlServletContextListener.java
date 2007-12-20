@@ -294,13 +294,22 @@ public class MgnlServletContextListener implements ServletContextListener {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_WEBAPP, webapp);
         return webapp;
     }
+    
+    /**
+     * Traverses sub directory structure of given file until it finds directory with WEB-INF sub directory. If not found returns null.
+     * @param context Servlet context.
+     * @return Real path.
+     */
 
     protected String initRootPath(final ServletContext context) {
-        String rootPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
-        rootPath = StringUtils.removeEnd(rootPath, "/");
-        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, rootPath);
-
-        return rootPath;
+        String realPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
+        realPath = StringUtils.removeEnd(realPath, "/");
+        if (realPath == null) {
+            // not great but better then npe that would come out otherwise
+            throw new RuntimeException("Failed to initialize magnolia configuration. Error details: [ctx real path:" + context.getRealPath(StringUtils.EMPTY) + ", real dir:" + new java.io.File("x").getParentFile().getAbsolutePath() + " ]");
+        }
+        SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, realPath);
+        return realPath;
     }
 
     protected String initServername() {
