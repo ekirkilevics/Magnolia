@@ -193,7 +193,7 @@ public class Breadcrumb extends TagSupport {
                 }
 
                 if (j != this.startLevel) {
-                    out.print(StringUtils.defaultString(this.delimiter, " > ")); //$NON-NLS-1$
+                    out.print(StringUtils.defaultString(this.delimiter, " &gt; ")); //$NON-NLS-1$
                 }
                 if (this.link) {
                     out.print("<a href=\""); //$NON-NLS-1$
