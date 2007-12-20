@@ -296,7 +296,7 @@ public class MgnlServletContextListener implements ServletContextListener {
     }
     
     /**
-     * Traverses sub directory structure of given file until it finds directory with WEB-INF sub directory. If not found returns null.
+     * Initializes the application real root path.
      * @param context Servlet context.
      * @return Real path.
      */
