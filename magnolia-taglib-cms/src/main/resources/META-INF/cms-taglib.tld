@@ -322,10 +322,10 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <rtexprvalue>true</rtexprvalue>
       <description>
         Transform a uuid value to a link. The following values are supported
-        none: no transformation (default value)
-        absolut: path resolved by using the repository mapping feature
-        path: the path of the content
-        relative: relative path to the current page
+        none: no uuid to link resolving. (default value)
+        absolute: Resolve to a absolute link using the repository to uri mapping feature.
+        handle: resolve to a absolute link but do not use the repository to uri mapping.
+        relative: resolve to relative path. Path is relative to current page.
       </description>
     </attribute>
     <attribute>
