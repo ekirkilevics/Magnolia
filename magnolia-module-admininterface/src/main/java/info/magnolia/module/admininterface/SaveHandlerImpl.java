@@ -803,13 +803,6 @@ public class SaveHandlerImpl implements SaveHandler {
             }
         }
 
-        // FIX for MAGNOLIA-1814
-        if(this.getRepository().equals(ContentRepository.WEBSITE)){
-            while(page.getItemType().equals(ItemType.CONTENTNODE)){
-                page = page.getParent();
-            }
-        }
-
         return page;
     }
 
