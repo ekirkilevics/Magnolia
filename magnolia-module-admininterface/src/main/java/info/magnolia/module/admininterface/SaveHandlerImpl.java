@@ -203,10 +203,6 @@ public class SaveHandlerImpl implements SaveHandler {
                     node.getMetaData().setTemplate(this.getParagraph());
                 }
 
-                // update meta data (e.g. last modified) of this paragraph and the page
-                node.updateMetaData();
-                page.updateMetaData();
-
                 // loop all saveInfo controls; saveInfo format: name, type, valueType(single|multiple, )
                 for (int i = 0; i < saveInfos.length; i++) {
                     String saveInfo = saveInfos[i];
@@ -228,6 +224,18 @@ public class SaveHandlerImpl implements SaveHandler {
 
                 if (log.isDebugEnabled()) {
                     log.debug("Saving {}", path); //$NON-NLS-1$
+                }
+
+                // update meta data (e.g. last modified) of this paragraph and the page
+                node.updateMetaData();
+
+                // FIX for MAGNOLIA-1814
+                // mark page as changed also for nested paragraph changes
+                if(this.getRepository().equals(ContentRepository.WEBSITE)){
+                    while(node.getItemType().equals(ItemType.CONTENTNODE)){
+                        node = node.getParent();
+                        node.updateMetaData();
+                    }
                 }
 
                 hm.save();
