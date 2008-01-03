@@ -118,8 +118,9 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
         for (Iterator iter = mappings.iterator(); iter.hasNext();) {
             final Matcher matcher = ((Pattern) iter.next()).matcher(uri);
 
-            if (matcher.find()) {
-                return matcher.end();
+            if (matcher.matches()) {
+                // this is assuming that there was only one group in the pattern, i.e only one * in the mapping
+                return matcher.end(1);
             }
         }
 
@@ -171,9 +172,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     }
 
     public void addMapping(String mapping) {
-        mapping = StringUtils.removeEnd(mapping, "*");
         final String encodedString = SimpleUrlPattern.getEncodedString(mapping);
-
         mappings.add(Pattern.compile(encodedString));
     }
 

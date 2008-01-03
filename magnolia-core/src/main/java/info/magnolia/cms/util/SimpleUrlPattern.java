@@ -102,12 +102,16 @@ public final class SimpleUrlPattern implements UrlPattern {
         while (i < chars.length) {
             char c = chars[i];
             if (c == '*') {
+                stringBuffer.append('(');
                 stringBuffer.append(chars, last, i - last);
+                stringBuffer.append(')');
                 stringBuffer.append(MULTIPLE_CHAR_PATTERN);
                 last = i + 1;
             }
             else if (c == '?') {
+                stringBuffer.append('(');
                 stringBuffer.append(chars, last, i - last);
+                stringBuffer.append(')');
                 stringBuffer.append(SINGLE_CHAR_PATTERN);
                 last = i + 1;
             }
