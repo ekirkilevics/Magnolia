@@ -65,7 +65,7 @@ public class ServletDispatchingFilterTest extends TestCase {
         doTestBypassAndPathInfo(true, null, "/modules/dms/managingdocs.html", "/dms/*");
     }
 
-    /* this is totally failing :
+    /* TODO : MAGNOLIA-1984 : this is totally failing :
     public void testPathInfoShouldStateWhateverIsAfterTheMapping() throws Exception {
         doTestBypassAndPathInfo(false, "/test", "/some-doc.pdf/test", "*.pdf");
     }
