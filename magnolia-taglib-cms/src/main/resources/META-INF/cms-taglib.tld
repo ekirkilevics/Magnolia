@@ -12,7 +12,7 @@
   <tag>
     <name>mainBar</name>
     <tag-class>info.magnolia.cms.taglibs.MainBar</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>JSP</body-content>
     <display-name>mainBar</display-name>
     <description>
       Displays the mainBar, i.e. the bar that allows you to change the page properties and switch to preview mode. This
@@ -61,7 +61,7 @@
   <tag>
     <name>editBar</name>
     <tag-class>info.magnolia.cms.taglibs.EditBar</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>JSP</body-content>
     <display-name>editBar</display-name>
     <description>
       Displays Magnolia editBar which allows you to edit a paragraph. This tag is often used within
@@ -117,7 +117,7 @@
   <tag>
     <name>newBar</name>
     <tag-class>info.magnolia.cms.taglibs.NewBar</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>JSP</body-content>
     <description>Displays a newBar that allows you to create new paragraphs.</description>
     <attribute>
       <name>contentNodeCollectionName</name>
