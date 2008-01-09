@@ -78,6 +78,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         if (null == subscriber) {
             throw new ExchangeException("Null Subscriber");
         }
+        
         Subscription subscription = subscriber.getMatchedSubscription(this.path, this.repositoryName);
         if (null != subscription) {
             // its subscribed since we found the matching subscription
@@ -93,7 +94,18 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             log.debug("Exchange : sending activation request to {}", subscriber.getName()); //$NON-NLS-1$
             log.debug("Exchange : user [{}]", this.user.getName()); //$NON-NLS-1$
         }
+        
         String handle = getActivationURL(subscriber);
+
+        if (subscriber.getAuthenticationMethod() == null || "basic".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
+            activationContent.addProperty(AUTHORIZATION, this.basicCredentials);
+        } else if ("form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
+            handle += (handle.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
+            handle += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
+        } else {
+            log.info("Unknown authentication method for activation: " + subscriber.getAuthenticationMethod());
+        }
+
         try {
             URL url = new URL(handle);
             URLConnection urlConnection = url.openConnection();
@@ -145,8 +157,20 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         if (null != subscription) {
             String handle = getDeactivationURL(subscriber);
             try {
+                // authentication headers
+                if (subscriber.getAuthenticationMethod() != null && "form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
+                    handle += (handle.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
+                    handle += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
+                } 
                 URL url = new URL(handle);
                 URLConnection urlConnection = url.openConnection();
+                // authentication headers
+                if (subscriber.getAuthenticationMethod() == null || "basic".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
+                    urlConnection.setRequestProperty(AUTHORIZATION, this.basicCredentials);
+                } else if (!"form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
+                    log.info("Unknown Authentication method for deactivation: " + subscriber.getAuthenticationMethod());
+                }
+
                 this.addDeactivationHeaders(urlConnection);
                 urlConnection.getContent();
             }

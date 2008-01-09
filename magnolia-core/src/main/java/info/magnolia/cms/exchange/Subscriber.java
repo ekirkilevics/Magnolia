@@ -62,5 +62,9 @@ public interface Subscriber {
     public Subscription getMatchedSubscription(String path, String repositoryId);
 
     public boolean isSubscribed(String path, String repositoryId);
+    
+    public void setAuthenticationMethod(String method);
+    
+    public String getAuthenticationMethod();
 
 }

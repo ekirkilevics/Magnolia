@@ -141,6 +141,10 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      public static final String DE_ACTIVATE = DEACTIVATE;
 
      public static final String AUTHORIZATION = "Authorization";
+     
+     public static final String AUTH_CREDENTIALS= "mgnlUserPSWD";
+     
+     public static final String AUTH_USER = "mgnlUserId";
 
      public static final String CONTENT_FILTER_RULE = "mgnlExchangeFilterRule";
 
@@ -390,7 +394,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @param connection
       */
      protected void addDeactivationHeaders(URLConnection connection) {
-         connection.setRequestProperty(AUTHORIZATION, this.basicCredentials);
          connection.addRequestProperty(REPOSITORY_NAME, this.repositoryName);
          connection.addRequestProperty(WORKSPACE_NAME, this.workspaceName);
          connection.addRequestProperty(NODE_UUID, this.nodeUUID);
@@ -495,8 +498,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          activationContent.addProperty(RESOURCE_MAPPING_FILE, "resources.xml");
          activationContent.addProperty(ACTION, ACTIVATE);
          activationContent.addProperty(CONTENT_FILTER_RULE, this.contentFilterRule.toString());
-         activationContent.addProperty(AUTHORIZATION, this.basicCredentials);
 
+         
          Document document = new Document();
          Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
          document.setRootElement(root);

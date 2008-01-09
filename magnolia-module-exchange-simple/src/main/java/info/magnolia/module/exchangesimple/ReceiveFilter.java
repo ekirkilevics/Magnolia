@@ -132,7 +132,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              throw new UnsupportedOperationException("Method not supported : " + action);
          }
          // Everything went well
-         log.info("Activation succeeded");
+         log.info("(de)activation succeeded");
      }
 
      /**

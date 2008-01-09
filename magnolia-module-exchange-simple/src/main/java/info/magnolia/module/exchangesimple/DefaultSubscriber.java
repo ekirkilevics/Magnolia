@@ -54,6 +54,8 @@ public class DefaultSubscriber implements Subscriber {
 
     Collection subscriptions = new ArrayList();
 
+    private String authMethod = "Basic";
+
     public String getName() {
         return this.name;
     }
@@ -132,6 +134,14 @@ public class DefaultSubscriber implements Subscriber {
             subscribedPath = subscription.getFromURI();
         }
         return subscribedPath;
+    }
+
+    public String getAuthenticationMethod() {
+        return this.authMethod;
+    }
+
+    public void setAuthenticationMethod(String method) {
+        this.authMethod  = method;
     }
 
 }
