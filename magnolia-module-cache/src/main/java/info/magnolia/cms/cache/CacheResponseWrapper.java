@@ -75,7 +75,8 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
      * @see javax.servlet.ServletResponseWrapper#getOutputStream()
      */
     public ServletOutputStream getOutputStream() throws IOException {
-        cachingStream = new ByteArrayOutputStream();
+        // MAGNOLIA-1996: can be called multiple times, e.g. by chunk writers, but always from a single thread.
+        cachingStream = cachingStream == null ? new ByteArrayOutputStream() : cachingStream;
         return new MultiplexServletOutputStream(super.getOutputStream(), cachingStream);
     }
 
