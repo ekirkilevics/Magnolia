@@ -54,6 +54,9 @@ public class JspParagraphRendererTest extends TestCase {
 
     protected void setUp() throws Exception {
         MgnlContext.setInstance(null);
+        // shunt log4j
+        final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger("info.magnolia");
+        logger.setLevel(org.apache.log4j.Level.OFF);
     }
 
     public void testCantRenderWithoutParagraphPathCorrectlySet() throws IOException {
