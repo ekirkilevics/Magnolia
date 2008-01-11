@@ -37,16 +37,11 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.dialog.DialogBox;
 import info.magnolia.cms.gui.dialog.DialogFckEdit;
-import info.magnolia.cms.link.AbsolutePathTransformer;
-import info.magnolia.cms.link.LinkHelper;
-import info.magnolia.cms.link.UUIDLink;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -393,9 +388,6 @@ public class FckEditorDialog extends DialogBox {
      */
     public String convertToView(String value) {
         if (value != null) {
-            value = value.replaceAll("\r\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
-            value = value.replaceAll("\n", "<br />"); //$NON-NLS-1$ //$NON-NLS-2$
-
             // we have to add the context path for images and files but not for pages!
             value = LinkUtil.convertUUIDsToEditorLinks(value);
             return value;
