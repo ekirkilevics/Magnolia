@@ -55,7 +55,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -180,7 +179,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
             mapping = "^" + StringUtils.removeEnd(mapping, "*");
         } else if (isExtensionMapping(mapping)) {
             // TODO
-            throw new NotImplementedException("Extension mappings are currently not supported");
+            throw new UnsupportedOperationException("Extension mappings are currently not supported");
         } else if (isDefaultMapping(mapping)) {
             mapping = "^" + mapping + "*";
         } else {
