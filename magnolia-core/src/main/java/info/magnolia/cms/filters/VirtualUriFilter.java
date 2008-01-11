@@ -82,10 +82,7 @@ public class VirtualUriFilter extends OncePerRequestAbstractMgnlFilter {
                     catch (IOException e) {
                         log.error("Failed to redirect to {}:{}", targetUri, e.getMessage());
                     }
-
-                }
-                // else if (targetUri.startsWith("forward:"))
-                else {
+                } else if (targetUri.startsWith("forward:")) {
                     targetUri = StringUtils.substringAfter(targetUri, "forward:");
                     try {
                         request.getRequestDispatcher(targetUri).forward(request, response);
@@ -97,13 +94,9 @@ public class VirtualUriFilter extends OncePerRequestAbstractMgnlFilter {
                             ClassUtils.getShortClassName(e.getClass()),
                             e.getMessage()});
                     }
-
+                } else {
+                    aggregationState.setCurrentURI(targetUri);
                 }
-                // else
-                // {
-                // aggregationState.setCurrentURI(targetUri);
-                // ((MgnlFilterChain) chain).reset();
-                // }
             }
             else {
                 log.warn(
