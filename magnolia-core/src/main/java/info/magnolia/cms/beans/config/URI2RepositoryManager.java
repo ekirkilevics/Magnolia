@@ -68,7 +68,7 @@ public class URI2RepositoryManager {
             public int compare(Object arg0, Object arg1) {
                 URI2RepositoryMapping m0 = (URI2RepositoryMapping) arg0;
                 URI2RepositoryMapping m1 = (URI2RepositoryMapping) arg1;
-                return m1.getURIPrefix().length() - m0.getURIPrefix().length();
+                return m1.getURIPrefix().compareTo(m0.getURIPrefix());
             }
         });
 
