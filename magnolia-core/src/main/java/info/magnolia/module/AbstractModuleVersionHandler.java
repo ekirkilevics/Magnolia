@@ -38,11 +38,18 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.module.delta.*;
+import info.magnolia.module.delta.AbstractRepositoryTask;
+import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.ModuleFilesExtraction;
+import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionComparator;
-import info.magnolia.module.model.ModuleDefinition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -51,17 +58,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 
-import javax.jcr.RepositoryException;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
- * Implement this and register your deltas in the constructor using the register method.
+ * Extend this and register your deltas in the constructor using the register method.
+ * Add your own install tasks by overriding the getExtraInstallTasks() method.
+ * In most cases, modules won't need to override any other method.
  *
- * TODO : how do we handle tasks which have to be executed for every update ?
- * (like ModuleFilesExtraction(), since it takes care of not overwriting existing files)
- *
+ * @see info.magnolia.module.DefaultModuleVersionHandler
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -84,7 +86,8 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         if (allDeltas.containsKey(v)) {
             throw new IllegalStateException("Version " + v + " was already registered in this ModuleVersionHandler.");
         }
-        delta.getTasks().add(new ModuleVersionUpdateTask(v));
+        delta.getTasks().addAll(getDefaultUpdateTasks(v));
+        delta.getConditions().addAll(getDefaultUpdateConditions(v));
         allDeltas.put(v, delta);
     }
 
@@ -113,10 +116,10 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
             return Collections.singletonList(getInstall(installContext));
         }
 
-        return getUpdateDeltas(from);
+        return getUpdateDeltas(installContext, from);
     }
 
-    protected List getUpdateDeltas(Version from) {
+    protected List getUpdateDeltas(InstallContext installContext, Version from) {
         final List deltas = new LinkedList();
         final Iterator it = allDeltas.keySet().iterator();
         while (it.hasNext()) {
@@ -126,15 +129,34 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
                 deltas.add(allDeltas.get(v));
             }
         }
+
+        // if there was no delta for the version being installed, we still need to add the default update tasks
+        final Version toVersion = installContext.getCurrentModuleDefinition().getVersionDefinition();
+        if (toVersion.isStrictlyAfter(from) && !allDeltas.containsKey(toVersion)) {
+            deltas.add(getUpdate(installContext));
+        }
         return deltas;
     }
 
+    protected List getDefaultUpdateTasks(Version forVersion) {
+        final List defaultUpdates = new ArrayList(2);
+        defaultUpdates.add(new ModuleFilesExtraction());
+        defaultUpdates.add(new ModuleVersionUpdateTask(forVersion));
+        return defaultUpdates;
+    }
+
+    protected List getDefaultUpdateConditions(Version forVersion) {
+        return Collections.EMPTY_LIST;
+    }
+
+    protected Delta getUpdate(InstallContext installContext) {
+        final Version toVersion = installContext.getCurrentModuleDefinition().getVersionDefinition();
+        final List defaultUpdateTasks = getDefaultUpdateTasks(toVersion);
+        final List defaultUpdateConditions = getDefaultUpdateConditions(toVersion);
+        return DeltaBuilder.update(toVersion, "").addTasks(defaultUpdateTasks).addConditions(defaultUpdateConditions);
+    }
+
     /**
-     * Returns a delta that will execute a common module installation:
-     * register repositories, nodetypes and workspaces as stated in the
-     * module definition, bootstrap the module's mgnl-bootstrap files and
-     * extract the module's mgnl-files files.
-     * This method should generally not be overridden.
      *
      * @see #getBasicInstallTasks(InstallContext) override this method if you need a different set of default install tasks.
      * @see #getExtraInstallTasks(InstallContext) override this method if you need extra tasks for install.

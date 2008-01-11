@@ -50,7 +50,12 @@ import java.util.List;
 public class DefaultModuleVersionHandler extends AbstractModuleVersionHandler {
 
     /**
-     * Returns the most common installation tasks.
+     * Returns the most common installation tasks:
+     * register repositories, nodetypes and workspaces as stated in the
+     * module definition, bootstrap the module's mgnl-bootstrap files,
+     * extract the module's mgnl-files files, register the module's servlets.
+     *
+     * This method should generally not be overridden.
      */
     protected List getBasicInstallTasks(InstallContext installContext) {
         final List basicInstallTasks = new ArrayList();
