@@ -38,12 +38,16 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
+
+import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.PageContext;
+
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -98,7 +102,7 @@ public class SetNode extends BaseContentTag {
     public void setVar(String var) {
         this.var = var;
     }
-    
+
     /**
      * @deprecated use setContentNode(node)
      */
@@ -164,16 +168,6 @@ public class SetNode extends BaseContentTag {
     public class NodeMapWrapper implements Map {
 
         /**
-         * The special "uuid" property, which is exposed by NodeMapWrapper just like any other property
-         */
-        private static final String UUID_PROPERTY = "uuid";
-
-        /**
-         * The special "handle" property, which is exposed by NodeMapWrapper just like any other property.
-         */
-        private static final String HANDLE_PROPERTY = "handle";
-
-        /**
          * The wrapped Content.
          */
         private Content wrappedNode;
@@ -210,7 +204,7 @@ public class SetNode extends BaseContentTag {
          * @see java.util.Map#containsKey(java.lang.Object)
          */
         public boolean containsKey(Object key) {
-            return this.wrappedNode.getNodeData((String) key).isExist() || HANDLE_PROPERTY.equals(key) || UUID_PROPERTY.equals(key);
+            return this.wrappedNode.getNodeData((String) key).isExist() || hasProperty((String) key);
         }
 
         /**
@@ -228,14 +222,17 @@ public class SetNode extends BaseContentTag {
         public Object get(Object key) {
             try {
                 if(!this.wrappedNode.hasNodeData((String)key)){
-                    // the special "handle" property
-                    if (HANDLE_PROPERTY.equals(key)) {
-                        return wrappedNode.getHandle();
+                    // support the old lower case value
+                    if("uuid".equalsIgnoreCase((String)key)){
+                        key = "UUID";
                     }
-                    
-                    // the uuid
-                    if (UUID_PROPERTY.equals(key)) {
-                        return wrappedNode.getUUID();
+                    if(hasProperty((String)key)){
+                        try {
+                            return PropertyUtils.getProperty(wrappedNode, (String)key);
+                        }
+                        catch (Exception e) {
+                            log.error("can't read property " + key + " from the node " + this.wrappedNode, e);
+                        }
                     }
                 }
             }
@@ -259,6 +256,15 @@ public class SetNode extends BaseContentTag {
                 value = LinkUtil.convertUUIDsToBrowserLinks(nodeData.getString(), this.actPage);
             }
             return value;
+        }
+
+        protected boolean hasProperty(Object key){
+            try {
+                return PropertyUtils.getPropertyDescriptor(wrappedNode, (String)key) != null;
+            }
+            catch (Exception e) {
+                return false;
+            }
         }
 
         /**

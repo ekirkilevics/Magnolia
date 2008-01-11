@@ -228,7 +228,8 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
       <description>the name of the nodeData you wish to write out (required). There are following special values supported
-        name, uuid, path, handle
+        name, uuid, path, handle. If you specify one of special values, the behavior changes to output the name, uuid,
+        path, or handle of the node instead of the value it stores.
       </description>
     </attribute>
     <attribute>
@@ -321,7 +322,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Transform a uuid value to a link. The following values are supported
+        Transform a uuid value to a link. The following values are supported:
         none: no uuid to link resolving. (default value)
         absolute: Resolve to a absolute link using the repository to uri mapping feature.
         handle: resolve to a absolute link but do not use the repository to uri mapping.
@@ -370,11 +371,34 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     </attribute>
     <example>
       <![CDATA[
+<!-- EXAMPLE - outputting a nodes value into the page -->
+<!-- output the value stored in the node namd "title" -->
+
 <cms:out nodeDataName="title"/>
+
+<!-- EXAMPLE - outputting a node into an EL variable -->
+<!-- output the value stored in the node namd "myprop" to a variable named "check" -->
+<!-- thus exposing it to EL functionality -->
+
 <cms:out nodeDataName="myprop" var="check"/>
 <c:if test="${check == 'ok'}">
   done
 </if>
+
+<!-- EXAMPLE - outputing a link from a uuid stored in a node -->
+<!-- output a relative link to the page whose UUID is stored in the node named "link" to a variable "relative_link" -->
+
+<cms:out nodeDataName="link" var="relative_link uuidToLink="relative" />
+<a href="${relative_link}">go to page</a>
+
+<!-- EXAMPLE - writing a binary file's URL out as a variable -->
+<!-- this example shows how to display an image stored in the content repository using cms:out -->
+
+<cms:ifNotEmpty nodeDataName="image">
+   <cms:out nodeDataName="image" var="imageurl" />
+   <img class="navIcon" src="${pageContext.request.contextPath}${imageurl}" />
+</cms:ifNotEmpty>
+
 ]]>
     </example>
   </tag>

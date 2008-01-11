@@ -189,4 +189,11 @@ public class MockWebContext extends MockContext implements WebContext {
         this.pageContext = pageContext;
     }
 
+    /**
+     * Set the AggregationState (required by some tests)
+     * @param agState An AggregationState to use
+     */
+    public void setAggregationState(AggregationState agState) {
+        this.aggregationState = agState;
+    }
 }

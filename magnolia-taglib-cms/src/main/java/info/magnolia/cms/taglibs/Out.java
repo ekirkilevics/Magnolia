@@ -122,12 +122,12 @@ public class Out extends BaseContentTag {
     private String dateLanguage;
 
     private String lineBreak = DEFAULT_LINEBREAK;
-    
+
     private String uuidToLink = LINK_RESOLVING_NONE;
-    
+
     private String uuidToLinkRepository = ContentRepository.WEBSITE;
-    
-    
+
+
     /**
      * If set, the result of the evaluation will be set to a variable named from this attribute (and in the scope
      * defined using the "scope" attribute, defaulting to PAGE) instead of being written directly to the page.
@@ -274,7 +274,10 @@ public class Out extends BaseContentTag {
 
         String value = null;
 
+
         if (!nodeData.isExist()) {
+            // either a special case was passed in as the nodeDataName, or a bad value was passed in for the name
+            // - handle either case here
             if(UUID_NODEDATANAME.equals(this.nodeDataName)){
                 value = contentNode.getUUID();
             }
@@ -292,12 +295,13 @@ public class Out extends BaseContentTag {
             }
         }
         else{
-
+            // the nodeData for the nodeDataName specified exists - determine how to output it according
+            // to its type, or any other variables that are set
             int type = nodeData.getType();
-    
+
             switch (type) {
                 case PropertyType.DATE:
-    
+
                     Date date = nodeData.getDate().getTime();
                     if (date != null) {
                         Locale locale;
@@ -310,24 +314,31 @@ public class Out extends BaseContentTag {
                         value = DateUtil.format(date, this.datePattern, locale);
                     }
                     break;
-    
+
                 case PropertyType.BINARY:
                     value = this.getFilePropertyValue(contentNode);
                     break;
-    
+
                 default:
                     value = StringUtils.isEmpty(this.lineBreak) ? nodeData.getString() : nodeData.getString(this.lineBreak);
-                    // replace internal links using the special pattern
+
+                    // replace internal links that use the special magnolia link format (looks like ${link: {uuid: ... etc) -
+                    // ( - see info.magnolia.cms.link.UUIDLink for an example of the special format that this next line
+                    //    handles )
                     value = LinkUtil.convertUUIDsToBrowserLinks(value, Resource.getActivePage().getHandle()); // static actpage
+
                     if(!StringUtils.equalsIgnoreCase(getUuidToLink(), LINK_RESOLVING_NONE)){
+                        // if the uuidToLink type has been explicitly set, reset the output value
+                        // the link to the uuid value stored in the node - using whatever method
+                        // was specified in the uuidLinkType variable
                         if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_HANDLE)){
                             value = ContentUtil.uuid2path(this.getUuidToLinkRepository(), value);
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_ABSOLUTE)){
-                            value = LinkHelper.convertUUIDtoAbsolutePath(uuid, this.getUuidToLinkRepository());
+                            value = LinkHelper.convertUUIDtoAbsolutePath(value, this.getUuidToLinkRepository());
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_RELATIVE)){
-                            value = LinkUtil.makeRelativePath(LinkHelper.convertUUIDtoAbsolutePath(uuid, this.getUuidToLinkRepository()), MgnlContext.getAggregationState().getMainContent().getHandle());
+                            value = LinkUtil.makeRelativePath(LinkHelper.convertUUIDtoAbsolutePath(value, this.getUuidToLinkRepository()), MgnlContext.getAggregationState().getMainContent().getHandle());
                         }
                         else{
                             throw new IllegalArgumentException("not supported value for uuidToLink");
@@ -336,7 +347,7 @@ public class Out extends BaseContentTag {
                     break;
             }
         }
-        
+
         value = StringUtils.defaultIfEmpty(value, this.getDefaultValue());
 
         if (var != null) {
@@ -382,15 +393,15 @@ public class Out extends BaseContentTag {
     public String getUuidToLinkRepository() {
         return this.uuidToLinkRepository;
     }
-    
+
     public void setUuidToLinkRepository(String uuidToLinkRepository) {
         this.uuidToLinkRepository = uuidToLinkRepository;
     }
-    
+
     public String getDefaultValue() {
         return this.defaultValue;
     }
-    
+
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }
