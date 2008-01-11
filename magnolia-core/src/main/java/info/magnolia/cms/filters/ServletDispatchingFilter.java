@@ -55,6 +55,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.NotImplementedException;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -118,9 +119,12 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
         for (Iterator iter = mappings.iterator(); iter.hasNext();) {
             final Matcher matcher = ((Pattern) iter.next()).matcher(uri);
 
-            if (matcher.matches()) {
-                // this is assuming that there was only one group in the pattern, i.e only one * in the mapping
-                return matcher.end(1);
+            if (matcher.find()) {
+                if (matcher.groupCount() > 0) {
+                    return matcher.end(1);
+                } else {
+                    return matcher.end();
+                }
             }
         }
 
@@ -172,8 +176,31 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     }
 
     public void addMapping(String mapping) {
+        if (isPathMapping(mapping)) {
+            mapping = "^" + StringUtils.removeEnd(mapping, "*");
+        } else if (isExtensionMapping(mapping)) {
+            // TODO
+            throw new NotImplementedException("Extension mappings are currently not supported");
+        } else if (isDefaultMapping(mapping)) {
+            mapping = "^" + mapping + "*";
+        } else {
+            mapping = "^" + mapping + "$";
+        }
         final String encodedString = SimpleUrlPattern.getEncodedString(mapping);
+
         mappings.add(Pattern.compile(encodedString));
+    }
+
+    private boolean isPathMapping(String mapping) {
+        return mapping.startsWith("/") && mapping.endsWith("/*");
+    }
+
+    private boolean isExtensionMapping(String mapping) {
+        return mapping.startsWith("*.");
+    }
+    
+    private boolean isDefaultMapping(String mapping) {
+        return mapping.equals("/");
     }
 
     public Map getParameters() {

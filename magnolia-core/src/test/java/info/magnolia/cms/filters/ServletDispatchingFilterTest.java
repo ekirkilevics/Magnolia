@@ -53,20 +53,31 @@ import java.lang.reflect.Field;
  * @version $Revision: $ ($Author: $)
  */
 public class ServletDispatchingFilterTest extends TestCase {
-    public void testShouldNotBypassWhenMappingMatches() throws Exception {
+    public void testShouldNotBypassWhenDefaultMappingMatches() throws Exception {
+        doTestBypassAndPathInfo(false, null, "/dms/some-doc.pdf", "/");
+    }
+    
+    public void testShouldNotBypassWhenPathMappingMatches() throws Exception {
         doTestBypassAndPathInfo(false, "/some-doc.pdf", "/dms/some-doc.pdf", "/dms/*");
+        doTestBypassAndPathInfo(false, "/.html", "/nonSpecConformantMapping.html", "/nonSpecConformantMapping*");
     }
 
+    public void testShouldNotBypassWhenExactMappingMatches() throws Exception {
+        doTestBypassAndPathInfo(false, null, "/exactMatch", "/exactMatch");
+    }
+    
     public void testShouldBypassWhenMappingDoesNotMatch() throws Exception {
         doTestBypassAndPathInfo(true, null, "/bleh/foo.bar", "/dms/*");
+        doTestBypassAndPathInfo(true, null, "/exactMatch/rightPathInfo", "/exactMatch");
     }
 
     public void testShouldBypassWhenMappingDoesNotMatchMAGNOLIA1984() throws Exception {
         doTestBypassAndPathInfo(true, null, "/modules/dms/managingdocs.html", "/dms/*");
     }
 
-    /* TODO : MAGNOLIA-1984 : this is totally failing :
+    /*
     public void testPathInfoShouldStateWhateverIsAfterTheMapping() throws Exception {
+        // extension mappings not supported
         doTestBypassAndPathInfo(false, "/test", "/some-doc.pdf/test", "*.pdf");
     }
     */
