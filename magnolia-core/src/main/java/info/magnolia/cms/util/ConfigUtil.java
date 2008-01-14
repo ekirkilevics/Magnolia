@@ -68,6 +68,7 @@ import org.xml.sax.SAXException;
  *
  */
 public class ConfigUtil {
+    private static final Logger log = LoggerFactory.getLogger(ConfigUtil.class);
 
     /**
      * EntityResolver using a Map to resources
@@ -105,22 +106,17 @@ public class ConfigUtil {
     }
 
     /**
-     * Log
-     */
-    public static Logger log = LoggerFactory.getLogger(ConfigUtil.class);
-
-    /**
      * Try to get the file. Get it first in the file system, then from the resources
      * @param fileName
      * @return the input stream
      */
     public static InputStream getConfigFile(String fileName) {
-        File log4jFile = new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR), fileName);
+        File file = new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR), fileName);
         InputStream stream;
-        if (log4jFile.exists()) {
+        if (file.exists()) {
             URL url;
             try {
-                url = new URL("file:" + log4jFile.getAbsolutePath()); //$NON-NLS-1$
+                url = new URL("file:" + file.getAbsolutePath()); //$NON-NLS-1$
             }
             catch (MalformedURLException e) {
                 log.error("Unable to read config file from [" //$NON-NLS-1$
