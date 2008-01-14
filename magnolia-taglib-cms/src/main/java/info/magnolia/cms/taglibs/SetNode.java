@@ -36,6 +36,7 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
 
@@ -47,7 +48,6 @@ import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.PageContext;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
@@ -165,12 +165,7 @@ public class SetNode extends BaseContentTag {
      * @author fgiust
      * @version $Revision$ ($Author$)
      */
-    public class NodeMapWrapper implements Map {
-
-        /**
-         * The wrapped Content.
-         */
-        private Content wrappedNode;
+    public class NodeMapWrapper extends ContentWrapper implements Map {
 
         /**
          * Static active page, needed for links.
@@ -182,7 +177,7 @@ public class SetNode extends BaseContentTag {
          * @param node Content node
          */
         public NodeMapWrapper(Content node, Content actPage) {
-            this.wrappedNode = node;
+            super(node);
             this.actPage = actPage;
         }
 
@@ -190,21 +185,21 @@ public class SetNode extends BaseContentTag {
          * @see java.util.Map#size()
          */
         public int size() {
-            return this.wrappedNode.getNodeDataCollection().size();
+            return getWrappedContent().getNodeDataCollection().size();
         }
 
         /**
          * @see java.util.Map#isEmpty()
          */
         public boolean isEmpty() {
-            return this.wrappedNode.getNodeDataCollection().isEmpty();
+            return getWrappedContent().getNodeDataCollection().isEmpty();
         }
 
         /**
          * @see java.util.Map#containsKey(java.lang.Object)
          */
         public boolean containsKey(Object key) {
-            return this.wrappedNode.getNodeData((String) key).isExist() || hasProperty((String) key);
+            return this.getWrappedContent().getNodeData((String) key).isExist() || hasProperty((String) key);
         }
 
         /**
@@ -221,17 +216,17 @@ public class SetNode extends BaseContentTag {
          */
         public Object get(Object key) {
             try {
-                if(!this.wrappedNode.hasNodeData((String)key)){
+                if(!getWrappedContent().hasNodeData((String)key)){
                     // support the old lower case value
                     if("uuid".equalsIgnoreCase((String)key)){
                         key = "UUID";
                     }
                     if(hasProperty((String)key)){
                         try {
-                            return PropertyUtils.getProperty(wrappedNode, (String)key);
+                            return PropertyUtils.getProperty(this.getWrappedContent(), (String)key);
                         }
                         catch (Exception e) {
-                            log.error("can't read property " + key + " from the node " + this.wrappedNode, e);
+                            log.error("can't read property " + key + " from the node " + this.getWrappedContent(), e);
                         }
                     }
                 }
@@ -241,7 +236,7 @@ public class SetNode extends BaseContentTag {
                 log.error("can't check for node data {" + key + "}", e);
             }
 
-            NodeData nodeData = this.wrappedNode.getNodeData((String) key);
+            NodeData nodeData = getWrappedContent().getNodeData((String) key);
             Object value;
             int type = nodeData.getType();
             if (type == PropertyType.DATE) {
@@ -249,7 +244,7 @@ public class SetNode extends BaseContentTag {
             }
             else if (type == PropertyType.BINARY) {
                 // only file path is supported
-                FileProperties props = new FileProperties(this.wrappedNode, (String) key);
+                FileProperties props = new FileProperties(getWrappedContent(), (String) key);
                 value = props.getProperty(FileProperties.PATH);
             }
             else {
@@ -260,7 +255,7 @@ public class SetNode extends BaseContentTag {
 
         protected boolean hasProperty(Object key){
             try {
-                return PropertyUtils.getPropertyDescriptor(wrappedNode, (String)key) != null;
+                return PropertyUtils.getPropertyDescriptor(this.getWrappedContent(), (String)key) != null;
             }
             catch (Exception e) {
                 return false;
@@ -301,7 +296,7 @@ public class SetNode extends BaseContentTag {
          * @see java.util.Map#keySet()
          */
         public Set keySet() {
-            Collection nodeDataCollection = this.wrappedNode.getNodeDataCollection();
+            Collection nodeDataCollection = getWrappedContent().getNodeDataCollection();
             Set keys = new HashSet();
             for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
                 keys.add(((NodeData) iter.next()).getName());
@@ -314,7 +309,7 @@ public class SetNode extends BaseContentTag {
          * @see java.util.Map#values()
          */
         public Collection values() {
-            Collection nodeDataCollection = this.wrappedNode.getNodeDataCollection();
+            Collection nodeDataCollection = getWrappedContent().getNodeDataCollection();
             Collection values = new ArrayList();
             for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
                 values.add(((NodeData) iter.next()).getString());
@@ -327,7 +322,7 @@ public class SetNode extends BaseContentTag {
          * @see java.util.Map#entrySet()
          */
         public Set entrySet() {
-            Collection nodeDataCollection = this.wrappedNode.getNodeDataCollection();
+            Collection nodeDataCollection = getWrappedContent().getNodeDataCollection();
             Set keys = new HashSet();
             for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
                 NodeData nd = (NodeData) iter.next();
