@@ -40,6 +40,7 @@ import info.magnolia.module.admininterface.setup.SimpleContentVersionHandler;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.IsInstallSamplesTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 
@@ -92,7 +93,7 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
     protected List getExtraInstallTasks(InstallContext installContext) {
         final List installTasks = new ArrayList(installOrUpdateTasks);
         // add the default uri task
-        installTasks.add(getSetDefaultPublicURITask(installContext));
+        installTasks.add(new IsInstallSamplesTask("Default URI", "Sets a new default URI if samples are to be installed.", getSetDefaultPublicURITask(installContext)));
         return installTasks;
     }
 
