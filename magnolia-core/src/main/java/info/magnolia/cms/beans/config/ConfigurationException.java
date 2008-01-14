@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2007 Magnolia International
+ * This file Copyright (c) 2003-2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -35,7 +35,7 @@ package info.magnolia.cms.beans.config;
 
 /**
  * @author
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class ConfigurationException extends RuntimeException {
 
