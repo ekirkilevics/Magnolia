@@ -41,7 +41,7 @@ import info.magnolia.module.InstallContext;
  * @version $Id$
  *
  */
-public abstract class IsInstallSamplesTask extends ConditionalDelegateTask {
+public class IsInstallSamplesTask extends ConditionalDelegateTask {
 
     public IsInstallSamplesTask(String taskName, String taskDescription, Task ifTrue, Task ifFalse) {
         super(taskName, taskDescription, ifTrue, ifFalse);
