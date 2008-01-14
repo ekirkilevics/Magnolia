@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2007 Magnolia International
+ * This file Copyright (c) 2003-2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  * 
  * 
@@ -56,30 +56,30 @@ public abstract class RepositoryTestCase extends TestCase {
     
     protected void setUp() throws Exception {
         super.setUp();
-        File initFile = getPropertiesFile();        
+        File initFile = getPropertiesFile();
         InputStream fileStream = null;
         try {
             fileStream = new FileInputStream(initFile);
-            SystemProperty.getProperties().load(fileStream);       
+            SystemProperty.getProperties().load(fileStream);
         } catch (Exception e) {
             //System.err.println(new File(".").getAbsolutePath());
             e.printStackTrace();
         } finally {
             IOUtils.closeQuietly(fileStream);
-        }  
+        }
         try {
             ContentRepository.REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
             ContentRepository.REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
             ContentRepository.init();
         } catch (Exception e) {
             e.printStackTrace();
-        }        
+        }
     }
     
     protected File getPropertiesFile() {
         return new File("target/test-classes/test-magnolia.properties");
-    }        
-        
+    }
+
     protected void tearDown() throws Exception {           
         super.tearDown();
         SystemProperty.getProperties().clear();        
