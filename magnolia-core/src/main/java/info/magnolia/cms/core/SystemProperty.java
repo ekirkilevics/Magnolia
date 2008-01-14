@@ -80,6 +80,10 @@ public final class SystemProperty {
 
     /**
      * Web app root key parameter at the servlet context level (i.e. a context-param in web.xml): "webAppRootKey".
+     * This property's value is the <strong>name</strong> of the property set at System level, with its value
+     * being the root directory of the webapp.
+     * @deprecated since 3.5 : this was used in log4j configuration, but we know replace tokens with the Magnolia
+     *             properties, effectively making this propertly useless.
      */
     public static final String MAGNOLIA_ROOT_SYSPROPERTY = "magnolia.root.sysproperty"; //$NON-NLS-1$
 

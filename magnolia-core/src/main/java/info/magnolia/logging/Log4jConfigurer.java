@@ -92,17 +92,21 @@ public abstract class Log4jConfigurer {
     }
 
     /**
-     * Initialize Log4J, including setting the web app root system property.
-     * @param servletContext ServletContext
-     * @param parameters parameter map, containing the <code>MAGNOLIA_ROOT_SYSPROPERTY</code> and
-     * <code>LOG4J_CONFIG</code> properties
+     * @deprecated since 3.5 : use initLogging() instead.
      */
     public static void initLogging(ServletContext servletContext) {
+        initLogging();
+    }
+
+    /**
+     * Initialize Log4J, including setting the web app root system property.
+     */
+    public static void initLogging() {
 
         // can't use log4j yet
         log("Initializing Log4J"); //$NON-NLS-1$
 
-        String log4jFileName = (String) SystemProperty.getProperty(LOG4J_CONFIG);
+        String log4jFileName = SystemProperty.getProperty(LOG4J_CONFIG);
         if (StringUtils.isNotEmpty(log4jFileName)) {
             boolean isXml = log4jFileName.toLowerCase().endsWith(".xml"); //$NON-NLS-1$
 
@@ -158,28 +162,25 @@ public abstract class Log4jConfigurer {
     }
 
     /**
-     * Shut down Log4J, properly releasing all file locks and resetting the web app root system property.
-     * @param parameters parameter map, containing the <code>LOG4J_CONFIG</code> property
+     * @deprecated since 3.5 : use shutdownLogging() instead.
      */
     public static void shutdownLogging(Map parameters) {
+        shutdownLogging();
+    }
+
+    /**
+     * Shuts down Log4J.
+     */
+    public static void shutdownLogging() {
         log("Shutting down Log4J"); //$NON-NLS-1$
-        try {
-            LogManager.shutdown();
-        }
-        finally {
-            // Remove the web app root system property.
-            String param = (String) parameters.get(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
-            if (StringUtils.isNotEmpty(param)) {
-                System.getProperties().remove(param);
-            }
-        }
+        LogManager.shutdown();
     }
 
     /**
      * Handy System.out method to use when logging isn't configured yet.
      * @param message log message
      */
-    public static void log(String message) {
+    private static void log(String message) {
         System.out.println(message);
     }
 

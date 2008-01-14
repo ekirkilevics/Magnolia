@@ -171,7 +171,13 @@ public class MgnlServletContextListener implements ServletContextListener {
         // TODO currently only used for shutting down the repository
         ShutdownManager.getInstance().execute();
 
-        Log4jConfigurer.shutdownLogging(SystemProperty.getProperties());
+        Log4jConfigurer.shutdownLogging();
+
+        // Remove the web app root system property.
+        String param = SystemProperty.getProperty(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
+        if (StringUtils.isNotEmpty(param)) {
+            System.getProperties().remove(param);
+        }
     }
 
     /**
@@ -213,7 +219,7 @@ public class MgnlServletContextListener implements ServletContextListener {
         // complete or override with JVM system properties
         overloadWithSystemProperties();
 
-        Log4jConfigurer.initLogging(context);
+        Log4jConfigurer.initLogging();
 
         new ConfigLoader(context);
 
