@@ -75,6 +75,11 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         expect(d3.getTasks()).andReturn(new ArrayList());
         expect(d4.getTasks()).andReturn(new ArrayList());
         expect(d5.getTasks()).andReturn(new ArrayList());
+        expect(d1.getConditions()).andReturn(new ArrayList());
+        expect(d2.getConditions()).andReturn(new ArrayList());
+        expect(d3.getConditions()).andReturn(new ArrayList());
+        expect(d4.getConditions()).andReturn(new ArrayList());
+        expect(d5.getConditions()).andReturn(new ArrayList());
         replay(d1, d2, d3, d4, d5);
         versionHandler = newTestModuleVersionHandler();
         versionHandler.register(d1);
