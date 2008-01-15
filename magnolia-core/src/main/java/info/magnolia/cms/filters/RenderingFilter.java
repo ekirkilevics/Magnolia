@@ -98,7 +98,8 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 if (renderer == null) {
                     throw new RuntimeException("No renderer found for type " + type);
                 }
-                response.setStatus(HttpServletResponse.SC_OK);
+                // don't reset any existing status code, see MAGNOLIA-2005
+                // response.setStatus(HttpServletResponse.SC_OK);
                 renderer.renderTemplate(template, request, response);
 
                 try {
@@ -160,7 +161,8 @@ public class RenderingFilter extends AbstractMgnlFilter {
             try {
                 is = getNodedataAstream(resourceHandle, hm, response);
                 if (null != is) {
-                    response.setStatus(HttpServletResponse.SC_OK);
+                    // don't reset any existing status code, see MAGNOLIA-2005
+                    // response.setStatus(HttpServletResponse.SC_OK);
                     sendUnCompressed(is, response);
                     IOUtils.closeQuietly(is);
                     return;
