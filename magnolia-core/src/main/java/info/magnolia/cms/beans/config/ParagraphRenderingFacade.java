@@ -104,17 +104,19 @@ public class ParagraphRenderingFacade {
      * mandated by this Paragraph). Use with care.
      */
     public void render(Content content, Paragraph paragraph, Writer out, PageContext pageContext) throws IOException {
-        setupPageContext(pageContext);
+        setPageContext(pageContext);
         final String paragraphType = paragraph.getType();
-        final ParagraphRenderer renderer = rendererManager.getRenderer(paragraphType);
 
-        renderer.render(content, paragraph, out);
+        try {
+            final ParagraphRenderer renderer = rendererManager.getRenderer(paragraphType);
+            renderer.render(content, paragraph, out);
+        } finally {
+            setPageContext(null);
+        }
+
     }
 
-    /**
-     * @param pageContext
-     */
-    private void setupPageContext(PageContext pageContext) {
+    private void setPageContext(PageContext pageContext) {
         if (pageContext != null && MgnlContext.getInstance() instanceof WebContext) {
             ((WebContext) MgnlContext.getInstance()).setPageContext(pageContext);
         }

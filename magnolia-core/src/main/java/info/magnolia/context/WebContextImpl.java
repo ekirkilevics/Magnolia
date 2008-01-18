@@ -38,19 +38,16 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Security;
-import info.magnolia.cms.security.User;
-import info.magnolia.cms.util.DumperUtil;
 
 import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.jcr.Session;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -186,10 +183,15 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         return this.request.getContextPath();
     }
 
+    /**
+     * Does an include using the request that was set when setting up this context, or using the
+     * request wrapped by the pageContext if existing.
+     */
     public void include(final String path, final Writer out) throws ServletException, IOException {
         try {
             final WriterResponseWrapper wrappedResponse = new WriterResponseWrapper(response, out);
-            request.getRequestDispatcher(path).include(request, wrappedResponse);
+            final ServletRequest requestToUse = pageContext != null ? pageContext.getRequest() : this.getRequest();
+            requestToUse.getRequestDispatcher(path).include(requestToUse, wrappedResponse);
         }
         catch (ServletException e) {
             throw new RuntimeException(e);

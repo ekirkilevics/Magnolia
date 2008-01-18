@@ -152,7 +152,9 @@ public interface WebContext extends Context {
     void include(final String path, final Writer out) throws ServletException, IOException;
 
     /**
-     * Sets the current jsp page context.
+     * Sets the current jsp page context. Callers should take care of appropriately unset it
+     * once done with it. Typically a jsp renderer will setPageContext(null) after having rendered
+     * a jsp.
      * @param pageContext jsp page context
      */
     void setPageContext(PageContext pageContext);
