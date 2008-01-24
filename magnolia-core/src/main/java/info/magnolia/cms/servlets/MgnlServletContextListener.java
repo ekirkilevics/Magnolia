@@ -263,6 +263,7 @@ public class MgnlServletContextListener implements ServletContextListener {
         }
 
         boolean found = false;
+        // attempt to load each properties file at the given locations in reverse order: first files in the list override the later ones 
         for (int j = propertiesLocation.length - 1; j >= 0; j--) {
             String location = StringUtils.trim(propertiesLocation[j]);
 
@@ -407,5 +408,14 @@ public class MgnlServletContextListener implements ServletContextListener {
                 SystemProperty.setProperty(key, value);
             }
         }
+    }
+
+    public static void main(String[] args) throws UnknownHostException {
+        InetAddress address = InetAddress.getLocalHost();
+        System.out.println("address = " + address);
+        System.out.println("address.getHostName() = " + address.getHostName());
+        System.out.println("address.getCanonicalHostName() = " + address.getCanonicalHostName());
+        System.out.println("address.getHostAddress() = " + address.getHostAddress());
+        System.out.println("address.getAddress() = " + address.getAddress());
     }
 }
