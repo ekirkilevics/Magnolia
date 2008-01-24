@@ -42,6 +42,7 @@ import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.ConditionalDelegateTask;
 import info.magnolia.module.delta.CreateNodeTask;
+import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
 import info.magnolia.module.delta.SetPropertyTask;
@@ -67,7 +68,7 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
             new SetPropertyTask(ContentRepository.CONFIG, "/server/activation", "class", info.magnolia.module.exchangesimple.DefaultActivationManager.class.getName()),
             new CreateNodeTask("Activation configuration", "Creates empty subscribers node", ContentRepository.CONFIG, "/server/activation", "subscribers", ItemType.CONTENT.getSystemName())
         });
-    
+
     private final Task updateConfigFrom30OrBootstrap = new ConditionalDelegateTask("Activation configuration", "The activation configuration changed. This either updates your existing configuration or bootstraps a new one",
             new UpdateActivationConfigTask(),
             new IsAuthorInstanceDelegateTask("", "", new BootstrapSingleResource("Bootstrap new activation configuration", "Bootstrap new activation configuration",
@@ -79,17 +80,29 @@ public class ExchangeSimpleModuleVersionHandler extends DefaultModuleVersionHand
         }
     };
 
+    private BootstrapSingleResource bootstrapVirtualURIMapping = new BootstrapSingleResource("Bootstrap new virtual uri mapping", "Bootstrap new virtual uri mapping",
+            "/mgnl-bootstrap/exchange-simple/config.modules.exchange-simple.virtualURIMapping.3_0_to_3_5.xml");
+
     public ExchangeSimpleModuleVersionHandler() {
         super();
-        // 3.5.0 is the first version of this module. install tasks take care of updating existing config
+
+        DeltaBuilder deltaTo354 =  DeltaBuilder.update("3.5.4", "URL of activation filter has changed");
+        deltaTo354.addTask(bootstrapVirtualURIMapping);
+        deltaTo354.addTask(new SetPropertyTask(ContentRepository.CONFIG, "/server/filters/activation/bypasses/allButActivationHandler","pattern", "/.magnolia/activation"));
+        this.register(deltaTo354);
     }
 
     protected List getBasicInstallTasks(InstallContext installContext) {
+        // 3.5.0 is the first version of this module. install tasks take care of updating existing config
+
         final List installTasks = new ArrayList();
         installTasks.add(updateConfigFrom30OrBootstrap);
         installTasks.add(new BootstrapSingleResource("Bootstrap new filter", "Bootstrap new filter",
                 "/mgnl-bootstrap/exchange-simple/config.server.filters.activation.xml"));
+        installTasks.add(bootstrapVirtualURIMapping);
         installTasks.add(new FilterOrderingTask("activation", new String[]{"context", "login", "uriSecurity", "multipartRequest"}));
         return installTasks;
     }
+
+
 }

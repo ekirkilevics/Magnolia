@@ -84,9 +84,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      private static final Logger log = LoggerFactory.getLogger(SimpleSyndicator.class);
 
     /**
-      * activation handler servlet name as mapped in web descriptor
+      * URI used for activation
       */
-     public static final String DEFAULT_HANDLER = "ActivationHandler"; //$NON-NLS-1$
+     public static final String DEFAULT_HANDLER = ".magnolia/activation"; //$NON-NLS-1$
 
      public static final String PARENT_PATH = "mgnlExchangeParentPath";
 

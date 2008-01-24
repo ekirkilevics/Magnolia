@@ -75,7 +75,7 @@
         <sv:value>info.magnolia.voting.voters.URIStartsWithVoter</sv:value>
       </sv:property>
       <sv:property sv:name="pattern" sv:type="String">
-        <sv:value>/ActivationHandler</sv:value>
+        <sv:value>/.magnolia/activation</sv:value>
       </sv:property>
       <sv:property sv:name="not" sv:type="Boolean">
         <sv:value>true</sv:value>
