@@ -117,6 +117,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
      public static final String SIBLINGS_ELEMENT = "sibling";
 
+     /**
+      * @deprecated since 3.5. In 3.0 the sibling list was using the attribute name UUID where 3.5 uses siblingUUID
+      */
+     public static final String DEPRECATED_SIBLING_UUID = "UUID";
+
      public static final String SIBLING_UUID = "siblingUUID";
 
      public static final String RESOURCE_MAPPING_FILE_ELEMENT = "File";
@@ -141,9 +146,9 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      public static final String DE_ACTIVATE = DEACTIVATE;
 
      public static final String AUTHORIZATION = "Authorization";
-     
+
      public static final String AUTH_CREDENTIALS= "mgnlUserPSWD";
-     
+
      public static final String AUTH_USER = "mgnlUserId";
 
      public static final String CONTENT_FILTER_RULE = "mgnlExchangeFilterRule";
@@ -499,7 +504,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          activationContent.addProperty(ACTION, ACTIVATE);
          activationContent.addProperty(CONTENT_FILTER_RULE, this.contentFilterRule.toString());
 
-         
+
          Document document = new Document();
          Element root = new Element(RESOURCE_MAPPING_ROOT_ELEMENT);
          document.setRootElement(root);

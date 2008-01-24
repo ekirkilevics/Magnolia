@@ -178,7 +178,10 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                  Element sibling = (Element) siblingsIterator.next();
                  // check for existence and order
                  try {
-                     Content beforeContent = hm.getContentByUUID(sibling.getAttributeValue(SimpleSyndicator.SIBLING_UUID));
+                     String siblingUUID = sibling.getAttributeValue(SimpleSyndicator.SIBLING_UUID);
+                     // be compatible with 3.0 (MAGNOLIA-2016)
+                     siblingUUID = StringUtils.defaultIfEmpty(siblingUUID, sibling.getAttributeValue(SimpleSyndicator.DEPRECATED_SIBLING_UUID));
+                     Content beforeContent = hm.getContentByUUID(siblingUUID);
                      parent.orderBefore(name, beforeContent.getName());
                      parent.save();
                      break;
