@@ -78,7 +78,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         if (null == subscriber) {
             throw new ExchangeException("Null Subscriber");
         }
-        
+
         Subscription subscription = subscriber.getMatchedSubscription(this.path, this.repositoryName);
         if (null != subscription) {
             // its subscribed since we found the matching subscription
@@ -94,7 +94,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             log.debug("Exchange : sending activation request to {}", subscriber.getName()); //$NON-NLS-1$
             log.debug("Exchange : user [{}]", this.user.getName()); //$NON-NLS-1$
         }
-        
+
         String handle = getActivationURL(subscriber);
 
         if (subscriber.getAuthenticationMethod() == null || "basic".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
@@ -161,7 +161,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 if (subscriber.getAuthenticationMethod() != null && "form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
                     handle += (handle.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
                     handle += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
-                } 
+                }
                 URL url = new URL(handle);
                 URLConnection urlConnection = url.openConnection();
                 // authentication headers
@@ -172,7 +172,16 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 }
 
                 this.addDeactivationHeaders(urlConnection);
+                String status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
+
+                // check if the activation failed
+                if (StringUtils.equals(status, ACTIVATION_FAILED)) {
+                    String message = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_MESSAGE);
+                    throw new ExchangeException("Message received from subscriber: " + message);
+                }
+
                 urlConnection.getContent();
+
             }
             catch (MalformedURLException e) {
                 throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");

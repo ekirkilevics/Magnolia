@@ -33,43 +33,50 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import info.magnolia.cms.filters.AbstractMgnlFilter;
-import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.exchange.ExchangeException;
+import info.magnolia.cms.filters.AbstractMgnlFilter;
+import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.*;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.context.MgnlContext;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
+
+import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.Property;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.lock.LockException;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.jcr.*;
-import javax.jcr.lock.LockException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.List;
-import java.util.Iterator;
-import java.util.zip.GZIPInputStream;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.jdom.input.SAXBuilder;
-import org.jdom.Element;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.jdom.Element;
+import org.jdom.input.SAXBuilder;
 import org.safehaus.uuid.UUIDGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles
@@ -363,10 +370,10 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @throws Exception if fails to update
       */
      private synchronized void remove(HttpServletRequest request) throws Exception {
-         String uuid = request.getHeader(SimpleSyndicator.NODE_UUID);
          HierarchyManager hm = getHierarchyManager(request);
          try {
-             hm.delete(hm.getContentByUUID(uuid).getHandle());
+             Content node = this.getNode(request);
+             hm.delete(node.getHandle());
              hm.save();
          }
          catch (ItemNotFoundException e) {
@@ -402,14 +409,37 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param request
       */
      private void cleanUp(HttpServletRequest request) {
-         MultipartForm data = Resource.getPostedForm();
-         if (null != data) {
-             Iterator keys = data.getDocuments().keySet().iterator();
-             while (keys.hasNext()) {
-                 String key = (String) keys.next();
-                 data.getDocument(key).delete();
+         if (SimpleSyndicator.ACTIVATE.equalsIgnoreCase(request.getHeader(SimpleSyndicator.ACTION))) {
+             MultipartForm data = Resource.getPostedForm();
+             if (null != data) {
+                 Iterator keys = data.getDocuments().keySet().iterator();
+                 while (keys.hasNext()) {
+                     String key = (String) keys.next();
+                     data.getDocument(key).delete();
+                 }
+             }
+             try {
+                 Content content = this.getNode(request);
+                 if (content.isLocked()) {
+                     content.unlock();
+                 }
+             }
+             catch (LockException le) {
+                 // either repository does not support locking OR this node never locked
+                 if (log.isDebugEnabled()) {
+                     log.debug(le.getMessage());
+                 }
+             }
+             catch (RepositoryException re) {
+                 // should never come here
+                 log.warn("Exception caught", re);
+             }
+             catch (ExchangeException e) {
+                 // should never come here
+                 log.warn("Exception caught", e);
              }
          }
+
          try {
              getHierarchyManager(request).getWorkspace().getSession().logout();
              HttpSession httpSession = request.getSession(false);
@@ -417,26 +447,6 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          } catch (Throwable t) {
              // its only a test so just dump
              log.error("failed to invalidate session", t);
-         }
-         try {
-             Content content = this.getNode(request);
-             if (content.isLocked()) {
-                 content.unlock();
-             }
-         }
-         catch (LockException le) {
-             // either repository does not support locking OR this node never locked
-             if (log.isDebugEnabled()) {
-                 log.debug(le.getMessage());
-             }
-         }
-         catch (RepositoryException re) {
-             // should never come here
-             log.debug("Exception caught", re);
-         }
-         catch (ExchangeException e) {
-             // should never come here
-             log.debug("Exception caught", e);
          }
      }
 
@@ -461,9 +471,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          }
          catch (RepositoryException re) {
              // should never come here
-             if (log.isDebugEnabled()) {
-                 log.debug("Exception caught", re);
-             }
+             log.warn("Exception caught", re);
          }
      }
 
@@ -475,7 +483,13 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              return this.getHierarchyManager(request).getContent(this.getParentPath(request));
          }
          else if (SimpleSyndicator.DEACTIVATE.equalsIgnoreCase(action)) {
-             return this.getHierarchyManager(request).getContent(request.getHeader(SimpleSyndicator.NODE_UUID));
+             if(request.getHeader(SimpleSyndicator.NODE_UUID) != null){
+                 return this.getHierarchyManager(request).getContentByUUID(request.getHeader(SimpleSyndicator.NODE_UUID));
+             }
+             // 3.0 protocol
+             else {
+                 return this.getHierarchyManager(request).getContent(request.getHeader(SimpleSyndicator.PATH));
+             }
          }
          throw new ExchangeException("Node not found");
      }
