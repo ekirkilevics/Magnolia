@@ -87,7 +87,7 @@ public class CompositeFilter extends AbstractMgnlFilter {
                 log.info("Initializing filter [{}]", filter.getName());
                 filter.init(filterConfig);
             }
-            catch (ServletException e) {
+            catch (Exception e) {
                 log.error("Error initializing filter [" + filter.getName() + "]", e);
             }
         }
