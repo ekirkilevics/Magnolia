@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.core.Access;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -340,6 +341,9 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       */
      private synchronized void importResource(MultipartForm data, Element resourceElement, HierarchyManager hm,
          String parentPath) throws Exception {
+
+         // throws an excpetion in case you don't have the permission
+         Access.isGranted(hm.getAccessManager(), parentPath, Permission.WRITE);
 
          String name = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
          String fileName = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
