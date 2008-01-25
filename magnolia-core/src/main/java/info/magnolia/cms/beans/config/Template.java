@@ -36,6 +36,9 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -44,6 +47,7 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.collections.IteratorUtils;
+import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -123,6 +127,20 @@ public class Template implements Serializable {
      */
     public String getTitle() {
         return getParameter("title");
+    }
+
+    public String getI18NTitle() {
+        Messages msgs;
+        final String i18nBasename = getParameter("i18nBasename");
+
+        if(StringUtils.isNotEmpty(i18nBasename)){
+            msgs = MessagesManager.getMessages(i18nBasename);
+        }
+        else{
+            msgs = TemplateMessagesUtil.getMessages();
+        }
+
+        return msgs.getWithDefault(getTitle(), getTitle());
     }
 
     /**
@@ -218,7 +236,7 @@ public class Template implements Serializable {
             template.visible = visible;
 
             synchronized (alternativeTemplates) {
-                this.alternativeTemplates.put(c.getNodeData("extension").getString(), template); //$NON-NLS-1$ 
+                this.alternativeTemplates.put(c.getNodeData("extension").getString(), template); //$NON-NLS-1$
             }
         }
 
