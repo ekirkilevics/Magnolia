@@ -38,11 +38,6 @@ import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
-import info.magnolia.cms.i18n.TemplateMessagesUtil;
-
-import java.util.Iterator;
-
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -55,19 +50,8 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
      */
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String templateName = content.getMetaData().getTemplate();
-        String strKey = this.findTemplateKey(templateName);
-        // TODO enable an individual message bundle for the templates
-        return TemplateMessagesUtil.getMessages().getWithDefault(strKey, strKey);
-    }
-
-    private String findTemplateKey(String templateName) {
-        for (Iterator iter = TemplateManager.getInstance().getAvailableTemplates(); iter.hasNext();) {
-            Template template = (Template) iter.next();
-            if (StringUtils.equals(templateName, template.getName())) {
-                return template.getTitle();
-            }
-        }
-        return templateName;
+        Template template = TemplateManager.getInstance().getInfo(templateName);
+        return template.getI18NTitle();
     }
 
 }

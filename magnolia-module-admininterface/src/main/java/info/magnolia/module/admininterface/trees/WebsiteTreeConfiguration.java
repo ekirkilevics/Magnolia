@@ -45,6 +45,7 @@ import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.exchange.ActivationManagerFactory;
@@ -54,6 +55,8 @@ import info.magnolia.module.admininterface.AbstractTreeConfiguration;
 import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Philipp Bracher
@@ -104,12 +107,10 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
 
         Iterator templates = TemplateManager.getInstance().getAvailableTemplates(
             MgnlContext.getAccessManager(ContentRepository.CONFIG));
-        Messages templateMsgs = TemplateMessagesUtil.getMessages();
+
         while (templates.hasNext()) {
             Template template = (Template) templates.next();
-            String title = template.getTitle();
-            title = templateMsgs.getWithDefault(title, title);
-            title = MessagesUtil.javaScriptString(title);
+            String title = MessagesUtil.javaScriptString(template.getI18NTitle());
             templateSelect.setOptions(title, template.getName());
         }
         column2.setHtmlEdit(templateSelect.getHtml());
