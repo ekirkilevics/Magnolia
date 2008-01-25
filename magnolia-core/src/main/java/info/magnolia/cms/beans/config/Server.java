@@ -52,6 +52,7 @@ import java.util.Map;
  * @deprecated use {@link ServerConfiguration}
  */
 public class Server {
+    /** @deprecated unused */
     private static final String PROPERTY_SERVER_ID = "magnolia.server.id";
 
     private static long uptime = System.currentTimeMillis();
@@ -163,7 +164,8 @@ public class Server {
      * get server ID
      * @return server id as configured in magnolia.properties
      * TODO : move this to a more appropriate place ?
-     * */
+     * @deprecated since 3.5.4 seems unused except ConfigurationPage ?
+     */
     public static String getServerId() {
         return SystemProperty.getProperty(PROPERTY_SERVER_ID);
     }
