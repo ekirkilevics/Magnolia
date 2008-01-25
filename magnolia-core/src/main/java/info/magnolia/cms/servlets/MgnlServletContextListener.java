@@ -409,13 +409,4 @@ public class MgnlServletContextListener implements ServletContextListener {
             }
         }
     }
-
-    public static void main(String[] args) throws UnknownHostException {
-        InetAddress address = InetAddress.getLocalHost();
-        System.out.println("address = " + address);
-        System.out.println("address.getHostName() = " + address.getHostName());
-        System.out.println("address.getCanonicalHostName() = " + address.getCanonicalHostName());
-        System.out.println("address.getHostAddress() = " + address.getHostAddress());
-        System.out.println("address.getAddress() = " + address.getAddress());
-    }
 }
