@@ -34,10 +34,12 @@
 package info.magnolia.cms.security;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.security.auth.callback.PlainTextCallbackHandler;
 import info.magnolia.cms.util.ObservationUtil;
 
+import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.security.auth.Subject;
@@ -119,11 +121,41 @@ public class SystemUserManager extends MgnlUserManager {
 
     public User getAnonymousUser() {
         if (anonymousUser == null) {
-            anonymousUser = getOrCreateUser(UserManager.ANONYMOUS_USER, UserManager.ANONYMOUS_USER);
-            Subject subject = getSubject(UserManager.ANONYMOUS_USER, UserManager.ANONYMOUS_USER);
-            anonymousUser.setSubject(subject);
+            // see MAGNOLIA-2029
+            anonymousUser = getRequiredSystemUser(UserManager.ANONYMOUS_USER, UserManager.ANONYMOUS_USER);
         }
         return anonymousUser;
+    }
+
+    /**
+     * Load a system user from the repository, but don't try to create it if missing
+     * @param username username
+     * @param password password
+     */
+    private User getRequiredSystemUser(String username, String password) {
+        MgnlUser user = null;
+        Content node;
+        try {
+            node = getHierarchyManager().getContent("/" + Realm.REALM_SYSTEM + "/" + username);
+        }
+        catch (RepositoryException e) {
+            log.error("Error caught while loading the system user "
+                + username
+                + ": "
+                + e.getClass().getName()
+                + ": "
+                + e.getMessage(), e);
+            return null;
+        }
+        if (node == null) {
+            log.error("User not found: {}.", username);
+            return null;
+        }
+
+        user = new MgnlUser(node);
+        Subject subject = getSubject(username, password);
+        user.setSubject(subject);
+        return user;
     }
 
     protected User getOrCreateUser(String userName, String password) {
