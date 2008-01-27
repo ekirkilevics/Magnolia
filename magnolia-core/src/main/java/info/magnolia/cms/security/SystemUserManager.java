@@ -48,6 +48,7 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
 /**
  * Responsible to handle system users like anonymous and superuser.
  * @author philipp
@@ -105,7 +106,7 @@ public class SystemUserManager extends MgnlUserManager {
     public String getRealmName() {
         String name = super.getRealmName();
         // attempt to fix: MAGNOLIA-1839
-        if(StringUtils.isEmpty(name)){
+        if (StringUtils.isEmpty(name)) {
             log.error("realm of system user manager is not set!");
             return Realm.REALM_SYSTEM;
         }
@@ -117,7 +118,7 @@ public class SystemUserManager extends MgnlUserManager {
     }
 
     public User getAnonymousUser() {
-        if(anonymousUser == null){
+        if (anonymousUser == null) {
             anonymousUser = getOrCreateUser(UserManager.ANONYMOUS_USER, UserManager.ANONYMOUS_USER);
             Subject subject = getSubject(UserManager.ANONYMOUS_USER, UserManager.ANONYMOUS_USER);
             anonymousUser.setSubject(subject);
@@ -128,15 +129,19 @@ public class SystemUserManager extends MgnlUserManager {
     protected User getOrCreateUser(String userName, String password) {
         User user = getUser(userName);
         if (user == null) {
-            log.error("Failed to get system user [{}], will try to create new system user with default password", userName);
+            log.error(
+                "Failed to get system user [{}], will try to create new system user with default password",
+                userName);
             user = this.createUser(userName, password);
         }
         return user;
     }
-    
+
     private Subject getSubject(String userName, String password) {
         CredentialsCallbackHandler callbackHandler = new PlainTextCallbackHandler(
-            userName, password.toCharArray(), getRealmName());
+            userName,
+            password.toCharArray(),
+            getRealmName());
         try {
             LoginContext loginContext = new LoginContext("magnolia", callbackHandler);
             loginContext.login();
