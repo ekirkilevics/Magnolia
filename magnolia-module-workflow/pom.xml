@@ -9,8 +9,8 @@
   <artifactId>magnolia-module-workflow</artifactId>
   <name>magnolia-module-workflow</name>
   <description />
-  <url>http://documentation.magnolia.info/modules/workflow.html</url>
   <properties>
+    <documentationURL>http://documentation.magnolia.info/modules/workflow.html</documentationURL>
     <openwfe.version>1.7.2.1</openwfe.version>
   </properties>
   <dependencies>

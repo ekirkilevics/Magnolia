@@ -3,13 +3,12 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <relativePath>../pom.xml</relativePath>
     <version>3.5.4-SNAPSHOT</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>magnolia-module-samples</artifactId>
   <name>magnolia-module-samples</name>
   <packaging>jar</packaging>
-  <url>http://www.magnolia.info</url>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>

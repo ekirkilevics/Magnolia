@@ -11,7 +11,6 @@
   <packaging>war</packaging>
   <name>magnolia-empty-webapp</name>
   <description>The basic Magnolia webapp on which projects can depend.</description>
-  <url>http://www.magnolia.info</url>
   <profiles>
     <profile>
       <id>with-optional-modules</id>

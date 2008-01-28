@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Magnolia">
+<project>
   <skin>
     <groupId>org.apache.maven.skins</groupId>
     <artifactId>maven-stylus-skin</artifactId>
@@ -7,15 +7,11 @@
   </skin>
 
   <body>
-    <!--<links>-->
-      <!--<item name="Apache" href="http://www.apache.org/" />-->
-      <!--<item name="Maven 1.0" href="http://maven.apache.org/maven-1.x/"/>-->
-      <!--<item name="Maven 2" href="http://maven.apache.org/"/>-->
-    <!--</links>-->
-
-    <menu ref="parent" collapse="expanded" />
-    <menu ref="reports" collapse="expanded" />
-    <menu ref="modules" collapse="expanded" />
-
+    <menu ref="modules" collapse="false" inherit="top"/>
+    <menu ref="parent" collapse="false" inherit="top"/>
+    <menu ref="reports" collapse="false" inherit="top"/>
   </body>
+
+  <publishDate position="navigation-bottom" format="MM-dd-yy"/>
+  <poweredBy><logo name="" img=""/></poweredBy>
 </project>
