@@ -300,6 +300,14 @@
         subpages are always shown also if the page is not selected. Defaults to "openMenu"
       </description>
     </attribute>
+    <attribute>
+        <name>wrapperElement</name>
+        <required>false</required>
+        <rtexprvalue>true</rtexprvalue>
+        <description>
+            When specified, all links will have the anchortext wrapped in the supplied element (such as "span")
+        </description>
+    </attribute>
     <example>
       <![CDATA[
             <cmsu:simpleNavigation startLevel="3" style="mystyle"/>

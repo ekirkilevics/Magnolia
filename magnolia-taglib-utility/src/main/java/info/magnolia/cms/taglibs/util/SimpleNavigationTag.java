@@ -63,6 +63,7 @@ import org.slf4j.LoggerFactory;
  * <ul>
  * <li><code>navTitle</code>: a title to use for the navigation menu, if different from the real page title</li>
  * <li><code>accessKey</code>: an optional access key which will be added to the link</li>
+ * <li><code>wrappingElement</code>: an optional html element (div, span, p, etc) to go within the <a> tag wrapping the anchor text
  * </ul>
  *
  * <pre>
@@ -137,6 +138,11 @@ public class SimpleNavigationTag extends TagSupport {
     public static final String DEFAULT_HIDEINNAV_NODEDATA = "hideInNav"; //$NON-NLS-1$
 
     /**
+     * Default name for "wrapperElement" nodeData.
+     */
+    public static final String DEFAULT_WRAPPERELEMENT_NODEDATA = ""; //$NON-NLS-1$
+
+    /**
      * Expand all expand all the nodes
      */
     public static final String EXPAND_ALL = "all";
@@ -154,7 +160,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Stable serialVersionUID.
      */
-    private static final long serialVersionUID = 222L;
+    private static final long serialVersionUID = 223L;
 
     /**
      * Logger.
@@ -185,6 +191,12 @@ public class SimpleNavigationTag extends TagSupport {
      * Style to apply to the menu
      */
     private String style;
+
+
+    /**
+     * html element to wrap the anchortext. (i.e. <a><wrapper>...</wrapper></a>
+     */
+    public String wrapperElement;
 
     /**
      * Expand all the nodes (sitemap mode)
@@ -255,6 +267,14 @@ public class SimpleNavigationTag extends TagSupport {
      */
     public void setClassProperty(String classProperty) {
         this.classProperty = classProperty;
+    }
+
+    /**
+     * Setter for <code>wrapperElement</code> tag attribute.
+     * @param wrapperElement name of an html element that will be included in the anchor, wrapping the anchortext
+     */
+    public void setWrapperElement(String wrapperElement) {
+        this.wrapperElement = wrapperElement;
     }
 
     /**
@@ -412,6 +432,7 @@ public class SimpleNavigationTag extends TagSupport {
             out.print(I18nContentSupportFactory.getI18nSupport().toI18NURI(child.getHandle()));
             out.print(".html\""); //$NON-NLS-1$
 
+
             if (StringUtils.isNotEmpty(accesskey)) {
                 out.print(" accesskey=\""); //$NON-NLS-1$
                 out.print(accesskey);
@@ -420,7 +441,16 @@ public class SimpleNavigationTag extends TagSupport {
 
             out.print(">"); //$NON-NLS-1$
 
+            if (StringUtils.isNotEmpty(this.wrapperElement)) {
+                out.print("<" + this.wrapperElement + ">"); //$NON-NLS-1$
+            }
+
             out.print(StringEscapeUtils.escapeHtml(title));
+
+            if (StringUtils.isNotEmpty(this.wrapperElement)) {
+                out.print("</" + this.wrapperElement + ">"); //$NON-NLS-1$
+            }
+            
             out.print(" </a>"); //$NON-NLS-1$
 
             if (self) {
