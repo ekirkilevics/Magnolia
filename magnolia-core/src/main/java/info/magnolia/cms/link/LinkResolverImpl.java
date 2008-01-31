@@ -84,10 +84,6 @@ public class LinkResolverImpl implements LinkResolver {
         return LinkHelper.convertUsingLinkTransformer(str, new EditorLinkTransformer());
     }
 
-    public String UUIDPatternsToExternalLinks(String str) {
-        return LinkHelper.convertUsingLinkTransformer(str, new CompleteUrlPathTransformer(true, true));
-    }
-
     public String convertToBrowserLinks(String str, String currentPath) {
         if(isMakeBrowserLinksRelative()){
             return convertToRelativeLinks(str, currentPath);
