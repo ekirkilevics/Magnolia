@@ -204,11 +204,10 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         else{
             TypeDescriptor beanTypeDescriptor = transformer.getTypeMapping().getTypeDescriptor(bean.getClass());
             Collection dscrs = beanTypeDescriptor.getPropertyDescriptors().values();
-            synchronized (dscrs) {
-                for (Iterator iter = dscrs.iterator(); iter.hasNext();) {
-                    PropertyTypeDescriptor descriptor = (PropertyTypeDescriptor) iter.next();
-                    transformer.setProperty(state, descriptor, values);
-                }
+
+            for (Iterator iter = dscrs.iterator(); iter.hasNext();) {
+                PropertyTypeDescriptor descriptor = (PropertyTypeDescriptor) iter.next();
+                transformer.setProperty(state, descriptor, values);
             }
         }
     }

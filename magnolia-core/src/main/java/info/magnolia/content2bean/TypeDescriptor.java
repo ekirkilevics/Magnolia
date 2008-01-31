@@ -36,6 +36,7 @@ package info.magnolia.content2bean;
 import info.magnolia.cms.core.ItemType;
 
 import java.beans.PropertyDescriptor;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -100,22 +101,25 @@ public class TypeDescriptor {
     }
 
     /**
-     *
+     * This method is not synchronized to avoid thread blockings but the method guaranties that the returned map is not mutated afterward.
      */
     public Map getPropertyDescriptors() {
-        if(descriptors == null){
+        if(this.descriptors == null){
             // TODO this breaks the usage of a custom mapping
             TypeMapping mapping = TypeMapping.Factory.getDefaultMapping();
 
-            descriptors = new HashMap();
+            // for not miking this methos synchronized we crteate a local variable first
+            // this guaranties that the map you get is not changed after retu
+            final Map tmpDescriptors = new HashMap();
             PropertyDescriptor[] dscrs = PropertyUtils.getPropertyDescriptors(this.getType());
             for (int i = 0; i < dscrs.length; i++) {
                 PropertyDescriptor descriptor = dscrs[i];
-                descriptors.put(descriptor.getName(), mapping.getPropertyTypeDescriptor(this.getType(), descriptor.getName()));
-
+                tmpDescriptors.put(descriptor.getName(), mapping.getPropertyTypeDescriptor(this.getType(), descriptor.getName()));
             }
+
+            this.descriptors = Collections.unmodifiableMap(tmpDescriptors);
         }
-        return descriptors;
+        return this.descriptors;
     }
 
 }
