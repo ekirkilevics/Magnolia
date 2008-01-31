@@ -183,7 +183,7 @@ public class FactoryUtil {
         return newInstanceWithoutDiscovery(className, new Object[]{});
     }
 
-    public static Object getSingleton(Class interf) {
+    public static synchronized Object getSingleton(Class interf) {
         Object instance = instances.get(interf);
         if (instance == null) {
             instance = newInstance(interf);
