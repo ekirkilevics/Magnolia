@@ -87,7 +87,12 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
             .addTask(new BootstrapSingleResource("Bootstrap", "Installs the JS configuration", "/mgnl-bootstrap/samples/config.modules.samples.config.jsFiles.xml"))
             .addTask(new BootstrapSingleResource("Bootstrap", "Installs the paragraph configuration", "/mgnl-bootstrap/samples/config.modules.samples.config.paragraphCollections.xml"));
 
+        final Delta for354 = DeltaBuilder.update("3.5.4", "")
+        .addTask(new RemoveNodeTask("Remove Kupu editor", "Since 3.5 the Kupu editor is not supported anymore", ContentRepository.CONFIG, "/modules/samples/dialogs/samples-devshow-allcontrols/tabRichEdit"));
+
         register(for35);
+        register(for354);
+
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
