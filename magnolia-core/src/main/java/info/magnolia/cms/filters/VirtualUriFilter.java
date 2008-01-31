@@ -36,6 +36,7 @@ package info.magnolia.cms.filters;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 
 import java.io.IOException;
 
@@ -85,6 +86,10 @@ public class VirtualUriFilter extends OncePerRequestAbstractMgnlFilter {
                 } else if (targetUri.startsWith("forward:")) {
                     targetUri = StringUtils.substringAfter(targetUri, "forward:");
                     try {
+                        // TODO: solves MAGNOLIA-2015 but should be solved by implementing MAGNOLIA-2027
+                        if(targetUri.endsWith(".jsp")){
+                            request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
+                        }
                         request.getRequestDispatcher(targetUri).forward(request, response);
                         return;
                     }
