@@ -102,6 +102,7 @@ public final class LinkUtil {
         return convertUUIDsToAbsoluteLinks(str, false);
     }
 
+    
     public static String convertUUIDsToAbsoluteLinks(String str, boolean addContextPath) {
         return getLinkResolver().convertToAbsoluteLinks(str, addContextPath);
     }
@@ -151,7 +152,7 @@ public final class LinkUtil {
      * @deprecated pass the repository name
      */
     public static String makeAbsolutePathFromUUID(String uuid) {
-        return LinkHelper.convertUUIDtoAbsolutePath(uuid, DEFAULT_REPOSITORY);
+        return LinkHelper.convertUUIDtoHandle(uuid, DEFAULT_REPOSITORY);
     }
 
     /**
@@ -159,10 +160,10 @@ public final class LinkUtil {
      * The editor needs this kind of links
      * @param uuid uuid
      * @return path
-     * @deprecated Use {@link LinkHelper#convertUUIDtoAbsolutePath(String,String)} instead
+     * @deprecated Use {@link LinkHelper#convertUUIDtoHandle(String,String)} instead
      */
     public static String makeAbsolutePathFromUUID(String uuid, String repository) {
-        return LinkHelper.convertUUIDtoAbsolutePath(uuid, repository);
+        return LinkHelper.convertUUIDtoHandle(uuid, repository);
     }
 
     /**

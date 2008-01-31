@@ -113,7 +113,7 @@ public class LinkHelperTest extends BaseLinkTest {
     }
 
     public void testMakeAbsolutePathFromUUID() throws IOException, RepositoryException {
-        String absolutePath = LinkHelper.convertUUIDtoAbsolutePath("2", ContentRepository.WEBSITE);
+        String absolutePath = LinkHelper.convertUUIDtoHandle("2", ContentRepository.WEBSITE);
         assertEquals("/parent/sub", absolutePath);
     }
 }

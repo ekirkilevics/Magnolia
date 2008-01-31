@@ -133,16 +133,46 @@ public class LinkHelper {
      * The editor needs this kind of links
      * @param uuid uuid
      * @return path
+     * @deprecated Since 3.5.4. Use {@link #convertUUIDtoHandle(String,String)} instead
      */
     public static String convertUUIDtoAbsolutePath(String uuid, String repository) {
+        return convertUUIDtoHandle(uuid, repository);
+    }
+
+    /**
+     * Transforms a uuid to a handle beginning with a /. This path is used to get the page from the repository.
+     * The editor needs this kind of links
+     * @param uuid uuid
+     * @return path
+     */
+    public static String convertUUIDtoHandle(String uuid, String repository) {
         UUIDLink link = new UUIDLink();
         link.setRepository(repository);
         link.setUUID(uuid);
         return link.getHandle();
     }
 
+    /**
+     * Transforms a uuid to an uri. It does not add the context path.
+     */
+    public static String convertUUIDtoURI(String uuid, String repository) {
+        UUIDLink link = new UUIDLink();
+        link.setRepository(repository);
+        link.setUUID(uuid);
+        // TODO: the transformer should be resolved from somehting like
+        // LinkTransfomerProvider
+        return new AbsolutePathTransformer(false, true, true).transform(link);
+    }
+
+    /**
+     * @deprecated Since 3.5.4. Use {@link #convertURIToUUIDLink(String)} instead
+     */
     public static UUIDLink convertAbsolutePathToUUIDLink(String path) throws UUIDLinkException {
-        return new UUIDLink().parseLink(path);
+        return convertURIToUUIDLink(path);
+    }
+
+    public static UUIDLink convertURIToUUIDLink(String uri) throws UUIDLinkException {
+        return new UUIDLink().parseLink(uri);
     }
 
     /**
@@ -152,7 +182,7 @@ public class LinkHelper {
      * @throws UUIDLinkException
      */
     public static String convertAbsolutePathToUUID(String path) throws UUIDLinkException {
-        return convertAbsolutePathToUUIDLink(path).getUUID();
+        return convertURIToUUIDLink(path).getUUID();
     }
 
     public static String convertUsingLinkTransformer(String str, PathToLinkTransformer transformer) {
