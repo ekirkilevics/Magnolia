@@ -335,10 +335,10 @@ public class Out extends BaseContentTag {
                             value = ContentUtil.uuid2path(this.getUuidToLinkRepository(), value);
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_ABSOLUTE)){
-                            value = LinkHelper.convertUUIDtoAbsolutePath(value, this.getUuidToLinkRepository());
+                            value = LinkHelper.convertUUIDtoURI(value, this.getUuidToLinkRepository());
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_RELATIVE)){
-                            value = LinkUtil.makeRelativePath(LinkHelper.convertUUIDtoAbsolutePath(value, this.getUuidToLinkRepository()), MgnlContext.getAggregationState().getMainContent().getHandle());
+                            value = LinkUtil.makeRelativePath(LinkHelper.convertUUIDtoHandle(value, this.getUuidToLinkRepository()), MgnlContext.getAggregationState().getMainContent().getHandle());
                         }
                         else{
                             throw new IllegalArgumentException("not supported value for uuidToLink");
