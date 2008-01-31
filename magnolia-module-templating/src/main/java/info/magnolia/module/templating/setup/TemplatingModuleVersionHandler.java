@@ -33,9 +33,15 @@
  */
 package info.magnolia.module.templating.setup;
 
+import java.util.Collections;
+import java.util.List;
+
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
+import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
 
 
@@ -44,6 +50,8 @@ import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
  * @version $Revision: $ ($Author: $)
  */
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
+
+    private OrderNodeBeforeTask orderBackwardCompatibilityFilter = new OrderNodeBeforeTask("Move backward compatiblity filter","",ContentRepository.CONFIG, "/server/filters/cms/backwardCompatibility", "rendering");
 
     public TemplatingModuleVersionHandler() {
         DeltaBuilder delta35 = DeltaBuilder.update("3.5", "");
@@ -54,7 +62,17 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 "/mgnl-bootstrap/templating/config.server.filters.cms.backwardCompatibility.xml",
                 "rendering"));
 
+        // move the filter in case it is in the wrong place
+        // this happened in case of a fresh install of former version
+        DeltaBuilder delta354 = DeltaBuilder.update("3.5.4", "");
+        delta354.addTask(orderBackwardCompatibilityFilter);
+
         register(delta35);
+        register(delta354);
+    }
+
+    protected List getExtraInstallTasks(InstallContext installContext) {
+        return Collections.singletonList(orderBackwardCompatibilityFilter);
     }
 
 }
