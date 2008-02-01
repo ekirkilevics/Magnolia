@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.util;
 
+import java.util.Collections;
 import java.util.Map;
 
 import org.apache.commons.collections.map.LRUMap;
@@ -53,7 +54,7 @@ public final class ClassUtil {
      */
     private static Logger log = LoggerFactory.getLogger(ClassUtil.class);
 
-    private static Map subClassCache = new LRUMap(200);
+    private static Map subClassCache = Collections.synchronizedMap(new LRUMap(200));
 
     /**
      * Don't instantiate.
