@@ -116,7 +116,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
 
         tasks.add(inboxMenu);
         tasks.add(flowsPageMenu);
-        tasks.add(new InstallWorkflowDefinition("Setup default activation workflow definition", "Adds the default activation workflow definition under the /modules/workflow/config/flows/activation config node.", 
+        tasks.add(new InstallWorkflowDefinitionTask("Setup default activation workflow definition", "Adds the default activation workflow definition under the /modules/workflow/config/flows/activation config node.",
                 "activation", "info/magnolia/module/workflow/default-activation-workflow.xml"));
 
         if (ctx.isModuleRegistered("samples")) {

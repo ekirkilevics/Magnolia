@@ -52,11 +52,11 @@ import java.io.InputStream;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class InstallWorkflowDefinition extends AbstractTask {
+public class InstallWorkflowDefinitionTask extends AbstractTask {
     private final String flowName;
     private final String resourcePath;
 
-    public InstallWorkflowDefinition(String taskName, String taskDescription, String flowName, String resourcePath) {
+    public InstallWorkflowDefinitionTask(String taskName, String taskDescription, String flowName, String resourcePath) {
         super(taskName, taskDescription);
         this.flowName = flowName;
         this.resourcePath = resourcePath;
