@@ -37,7 +37,9 @@ package info.magnolia.cms.taglibs;
  */
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.MgnlTagTestCase;
 
@@ -55,6 +57,9 @@ public class OutTest extends MgnlTagTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         webContext.setAggregationState(initAgState());
+        final ServerConfiguration serverConfiguration = new ServerConfiguration();
+        serverConfiguration.setDefaultExtension("html");
+        FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
     }
 
 
