@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2007-2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.workflow.setup.for3_5;
+package info.magnolia.module.workflow.setup;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -52,21 +52,25 @@ import java.io.InputStream;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class InstallDefaultWorkflowDefinition extends AbstractTask {
+public class InstallWorkflowDefinition extends AbstractTask {
+    private final String flowName;
+    private final String resourcePath;
 
-    public InstallDefaultWorkflowDefinition() {
-        super("Setup default activation workflow definition", "Adds the default activation workflow definition under the /modules/workflow/config/flows/activation config node.");
+    public InstallWorkflowDefinition(String taskName, String taskDescription, String flowName, String resourcePath) {
+        super(taskName, taskDescription);
+        this.flowName = flowName;
+        this.resourcePath = resourcePath;
     }
 
     public void execute(InstallContext ctx) throws TaskExecutionException {
         InputStream stream = null;
         try {
-            stream = ClasspathResourcesUtil.getStream("info/magnolia/module/workflow/default-activation-workflow.xml");
+            stream = ClasspathResourcesUtil.getStream(resourcePath);
             final String wfDef = IOUtils.toString(stream);
             final Content cfg = ctx.getOrCreateCurrentModuleConfigNode();
 
             final Content flows = ContentUtil.getOrCreateContent(cfg, "flows", ItemType.CONTENT);
-            final Content flowNode = ContentUtil.getOrCreateContent(flows, "activation", ItemType.CONTENTNODE);
+            final Content flowNode = ContentUtil.getOrCreateContent(flows, flowName, ItemType.CONTENTNODE);
             flowNode.createNodeData(WorkflowConstants.FLOW_VALUE, wfDef);
         } catch (IOException e) {
             ctx.error("Could not read default activation workflow definition", e);

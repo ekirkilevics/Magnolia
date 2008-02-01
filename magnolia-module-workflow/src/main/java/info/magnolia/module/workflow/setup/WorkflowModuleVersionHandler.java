@@ -50,7 +50,6 @@ import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.workflow.setup.for3_5.AddNewDefaultConfig;
 import info.magnolia.module.workflow.setup.for3_5.AddUserToGroupTask;
 import info.magnolia.module.workflow.setup.for3_5.CheckAndUpdateDefaultWorkflowDefinition;
-import info.magnolia.module.workflow.setup.for3_5.InstallDefaultWorkflowDefinition;
 import info.magnolia.module.workflow.setup.for3_5.RemoveMetadataFromExpressionsWorkspace;
 import info.magnolia.module.workflow.setup.for3_5.SetDefaultWorkflowForActivationFlowCommands;
 
@@ -117,7 +116,8 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
 
         tasks.add(inboxMenu);
         tasks.add(flowsPageMenu);
-        tasks.add(new InstallDefaultWorkflowDefinition());
+        tasks.add(new InstallWorkflowDefinition("Setup default activation workflow definition", "Adds the default activation workflow definition under the /modules/workflow/config/flows/activation config node.", 
+                "activation", "info/magnolia/module/workflow/default-activation-workflow.xml"));
 
         if (ctx.isModuleRegistered("samples")) {
             tasks.add(new AddUserToGroupTask("Sample user", "joe", "editors"));
