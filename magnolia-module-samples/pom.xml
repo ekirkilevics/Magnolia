@@ -3,7 +3,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.5.4</version>
+    <version>3.5.5-SNAPSHOT</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>magnolia-module-samples</artifactId>
@@ -13,19 +13,19 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
-      <version>3.5.4</version>
+      <version>3.5.5-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-cms</artifactId>
-      <version>3.5.4</version>
+      <version>3.5.5-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-taglib-utility</artifactId>
-      <version>3.5.4</version>
+      <version>3.5.5-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
