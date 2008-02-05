@@ -48,6 +48,8 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
+ * Sets up a workflow definition. Does not use the FlowDefinitionManager because tasks are not
+ * supposed to save their changes to the repositories.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -67,7 +69,10 @@ public class InstallWorkflowDefinitionTask extends AbstractTask {
         try {
             stream = ClasspathResourcesUtil.getStream(resourcePath);
             final String wfDef = IOUtils.toString(stream);
-            final Content cfg = ctx.getOrCreateCurrentModuleConfigNode();
+
+            // need to explicitely use the wf module node, or wf would need to be observer/register for all modules.
+            final Content wfModuleNode = ctx.getModulesNode().getChildByName("workflow");
+            final Content cfg = ContentUtil.getOrCreateContent(wfModuleNode, "config", ItemType.CONTENT);
 
             final Content flows = ContentUtil.getOrCreateContent(cfg, "flows", ItemType.CONTENT);
             final Content flowNode = ContentUtil.getOrCreateContent(flows, flowName, ItemType.CONTENTNODE);
