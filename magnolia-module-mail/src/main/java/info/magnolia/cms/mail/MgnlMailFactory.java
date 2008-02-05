@@ -362,27 +362,25 @@ public class MgnlMailFactory extends ObservedManager {
             return "";
         }
         for (int i = 0; i < list.length; i++) { // for each item
-            String userName = list[i];
+            final String token = list[i];
             if (i != 0) {
                 ret.append("\n");
             }
-            if (userName.startsWith(MailConstants.PREFIX_USER)) {
-                userName = StringUtils.removeStart(userName, MailConstants.PREFIX_USER);
-                if (log.isDebugEnabled()) {
-                    log.debug("username =" + userName);
-                }
+            if (token.startsWith(MailConstants.PREFIX_USER)) {
+                final String userName = StringUtils.removeStart(token, MailConstants.PREFIX_USER);
+                log.debug("username = {}", userName);
                 User user = manager.getUser(userName);
                 ret.append(getUserMail(user));
             }
-            else if (userName.startsWith(MailConstants.PREFIX_GROUP)) {
-                userName = StringUtils.removeStart(userName, MailConstants.PREFIX_GROUP);
+            else if (token.startsWith(MailConstants.PREFIX_GROUP)) {
+                final String groupName = StringUtils.removeStart(token, MailConstants.PREFIX_GROUP);
                 try {
                     Collection users = getAllUserNodes();
                     Iterator iter = users.iterator();
                     while(iter.hasNext()){
                         Content userNode = ((Content) iter.next());
                         User user = manager.getUser(userNode.getName());
-                        if (user.getGroups().contains(userName)){
+                        if (user.getGroups().contains(groupName)){
                             ret.append(getUserMail(user));
                             ret.append("\n");
                         }
@@ -392,15 +390,15 @@ public class MgnlMailFactory extends ObservedManager {
                     log.error("can not get user email info.");
                 }
             }
-            else if (userName.startsWith(MailConstants.PREFIX_ROLE)) {
-                userName = StringUtils.removeStart(userName, MailConstants.PREFIX_ROLE);
+            else if (token.startsWith(MailConstants.PREFIX_ROLE)) {
+                final String roleName = StringUtils.removeStart(token, MailConstants.PREFIX_ROLE);
                 try {
                     Collection users = getAllUserNodes();
                     Iterator iter = users.iterator();
                     while(iter.hasNext()){
                         Content userNode = ((Content) iter.next());
                         User user = manager.getUser(userNode.getName());
-                        if (user.getRoles().contains(userName)){
+                        if (user.getRoles().contains(roleName)){
                             ret.append(getUserMail(user));
                             ret.append("\n");
                         }
@@ -412,7 +410,7 @@ public class MgnlMailFactory extends ObservedManager {
             }
             else {
                 // none of the above, just add the mail to the list
-                ret.append(userName);
+                ret.append(token);
             }
         }
         return ret.toString();
