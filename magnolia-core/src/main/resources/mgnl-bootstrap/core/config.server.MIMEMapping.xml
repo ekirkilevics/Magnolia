@@ -7399,4 +7399,531 @@
       </sv:property>
     </sv:node>
   </sv:node>
+  <sv:node sv:name="docm">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>6ea629ac-93db-4efc-975f-c8ddb5f514e0</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>docm</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/docm.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.ms-word.document.macroEnabled.12</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>bc6811ad-a03e-46b5-835e-3c8a930c0322</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="docx">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>3b16c9d0-9687-473d-a279-d58e5bb01ddd</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>docx</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/docx.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.openxmlformats-officedocument.wordprocessingml.document</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>8a5bb1fb-e0da-4bbb-a9aa-1df81f881525</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="dotm">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>ee45205f-b3c7-4b83-afd3-e94b0ddf852c</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>dotm</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/dotm.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.ms-word.template.macroEnabled.12</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>caa07c6a-234d-4aa3-a785-8fe1f31a1ea8</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="dotx">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>c4e419d7-eaf9-43b9-8820-aab3691aeccf</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>dotx</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/dotx.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.openxmlformats-officedocument.wordprocessingml.template</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>de2eb0ff-07f3-4d31-a337-854f4665b2fe</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="potm">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>6259a684-f17f-4288-8615-c95b2a43ea0d</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>potm</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/potm.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.ms-powerpoint.template.macroEnabled.12</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>b398ab56-1945-479c-b686-57001c76e3b2</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="potx">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>083cc4fe-368e-4d5a-8255-5e125dcfa8c1</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>potx</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/potx.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.openxmlformats-officedocument.presentationml.template</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>e4a35456-c50e-42f5-a59a-df618555d340</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="ppam">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>006559a8-5473-461a-8f93-bc8475711657</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>ppam</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/ppam.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.ms-powerpoint.addin.macroEnabled.12</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>d9159bf0-5a51-4464-9f3e-ead871d31eb0</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="ppsm">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>6d3e7003-29d1-4cfa-95a5-dd4f8f582333</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>ppsm</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/ppsm.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.ms-powerpoint.slideshow.macroEnabled.12</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>201cee37-facd-4ace-8435-a12f1befb226</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="ppsx">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>c6cb36ae-53d2-425f-a558-6418510a9bc0</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>ppsx</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/ppsx.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.openxmlformats-officedocument.presentationml.slideshow</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>6b20035d-e4d2-42d7-8056-450ddad30082</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="pptm">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>8e0ecfc5-665d-4e53-a087-912fecc98b30</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>pptm</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/pptm.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.ms-powerpoint.presentation.macroEnabled.12</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>0ee5d2b8-c256-49b5-8d72-d18b01ea818c</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="pptx">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>4ad3d5ab-5e2e-43da-8cc3-af44dc5051b4</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>pptx</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/pptx.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.openxmlformats-officedocument.presentationml.presentation</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>777637ea-8e9c-4def-a8fa-66a5c030fb5f</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="xlam">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>f4310e79-2e2c-4afc-ade8-f7a6cb214a67</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>xlam</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/xlam.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.ms-excel.addin.macroEnabled.12</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>dc33ca0b-c3d7-4f93-a3b3-a7d3f5e834a3</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="xlsb">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>526ffb4f-1849-4bfe-beb1-c678bff1f177</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>xlsb</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/xlsb.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.ms-excel.sheet.binary.macroEnabled.12</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>08dbaf13-e493-4eaa-b687-d9cbe6e9ebc4</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="xlsm">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>1dd638bc-f7eb-4d4f-a24b-152b6762d1d4</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>xlsm</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/xlsm.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.ms-excel.sheet.macroEnabled.12</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>882e6ba4-6d0d-4ee3-a469-2c520aa34097</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="xlsx">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>547455de-30c9-46c9-a25d-a8a8397df71b</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>xlsx</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/xlsx.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>3eddfe6c-18df-4a17-b250-c09427b0f90b</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="xltm">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>f78b5f6e-e04d-4624-835c-a4cf676a93cc</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>xltm</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/xltm.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.ms-excel.template.macroEnabled.12</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>d373cd1e-05b8-4e85-80f9-297baee28113</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="xltx">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:versionable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>bf293483-d651-40c8-b7cb-13c7db2990a7</sv:value>
+    </sv:property>
+    <sv:property sv:name="extension" sv:type="String">
+      <sv:value>xltx</sv:value>
+    </sv:property>
+    <sv:property sv:name="icon" sv:type="String">
+      <sv:value>/.resources/file-icons/xltx.png</sv:value>
+    </sv:property>
+    <sv:property sv:name="mime-type" sv:type="String">
+      <sv:value>application/vnd.openxmlformats-officedocument.spreadsheetml.template</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      	<sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+      	<sv:value>e42d18f7-a920-439f-b230-8cd0d4e241ab</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      	<sv:value>2007-10-24T21:38:06.000+00:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
 </sv:node>
