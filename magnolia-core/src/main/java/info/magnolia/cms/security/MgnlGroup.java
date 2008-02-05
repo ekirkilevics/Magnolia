@@ -249,13 +249,14 @@ public class MgnlGroup implements Group {
     private void add(String name, String nodeName) {
         try {
             final Content groupNode = getGroupNode();
-            HierarchyManager hm;
+            final String repoId;
             if (StringUtils.equalsIgnoreCase(nodeName, NODE_ROLES)) {
-                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_ROLES);
+                repoId = ContentRepository.USER_ROLES;
+            } else {
+                repoId = ContentRepository.USER_GROUPS;
             }
-            else {
-                hm = MgnlSecurityUtil.getContextHierarchyManager(ContentRepository.USER_GROUPS);
-            }
+
+            final HierarchyManager hm = MgnlSecurityUtil.getContextHierarchyManager(repoId);
 
             if (!this.hasAny(name, nodeName)) {
                if (!groupNode.hasContent(nodeName)) {
@@ -266,15 +267,13 @@ public class MgnlGroup implements Group {
                 try {
                     String value = hm.getContent("/" + name).getUUID(); // assuming that there is a flat hierarchy
                     // used only to get the unique label
-                    HierarchyManager usersHM = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USERS);
-                    String newName = Path.getUniqueLabel(usersHM, node.getHandle(), "0");
+                    final HierarchyManager sysHM = MgnlSecurityUtil.getSystemHierarchyManager(repoId);
+                    final String newName = Path.getUniqueLabel(sysHM, node.getHandle(), "0");
                     node.createNodeData(newName).setValue(value);
                     groupNode.save();
                 }
                 catch (PathNotFoundException e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug("Role [ " + name + " ] does not exist in the ROLES repository");
-                    }
+                    log.debug("[{}] does not exist in the {} repository", name, repoId);
                 }
             }
         }
