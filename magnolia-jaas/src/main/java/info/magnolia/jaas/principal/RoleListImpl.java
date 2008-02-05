@@ -38,7 +38,7 @@ import info.magnolia.cms.security.auth.RoleList;
 /**
  * @author Sameer Charles $Id$
  */
-public class RoleListImpl extends GroupListImpl implements RoleList {
+public class RoleListImpl extends AbstractPrincipalList implements RoleList {
 
     /**
      * Stable serialVersionUID.

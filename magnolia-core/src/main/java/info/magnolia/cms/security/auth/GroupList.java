@@ -33,44 +33,11 @@
  */
 package info.magnolia.cms.security.auth;
 
-import java.io.Serializable;
-import java.security.Principal;
-import java.util.Collection;
-
-
 /**
+ * Marker interface.
+ *
  * @author Sameer Charles $Id$
  */
-public interface GroupList extends Principal, Serializable {
-
-    /**
-     * Get name given to this principal
-     * @return name
-     */
-    public String getName();
-
-    /**
-     * Set principal name
-     * @param name
-     */
-    public void setName(String name);
-
-    /**
-     * Add a name to the list
-     * @param name
-     */
-    public void add(String name);
-
-    /**
-     * Gets list of groups as string
-     * @return groups
-     */
-    public Collection getList();
-
-    /**
-     * Checks if the name exist in this list
-     * @param name
-     */
-    public boolean has(String name);
+public interface GroupList extends PrincipalList {
 
 }

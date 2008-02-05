@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2007-2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,11 +33,43 @@
  */
 package info.magnolia.cms.security.auth;
 
-/**
- * Marker interface.
- *
- * @author Sameer Charles $Id$
- */
-public interface RoleList extends PrincipalList {
+import java.security.Principal;
+import java.io.Serializable;
+import java.util.Collection;
 
+/**
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
+ */
+public interface PrincipalList extends Principal, Serializable {
+
+    /**
+     * Get name given to this principal
+     * @return name
+     */
+    String getName();
+
+    /**
+     * Set principal name
+     * @param name
+     */
+    void setName(String name);
+
+    /**
+     * Add a name to the list
+     * @param name
+     */
+    void add(String name);
+
+    /**
+     * Gets list of groups/roles as strings.
+     */
+    Collection getList();
+
+    /**
+     * Checks if the name exist in this list
+     * @param name
+     */
+    boolean has(String name);
 }

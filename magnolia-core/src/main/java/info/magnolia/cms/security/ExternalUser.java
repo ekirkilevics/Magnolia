@@ -78,14 +78,16 @@ public class ExternalUser extends AbstractUser implements Serializable {
      * @param subject as created by login module
      */
     protected ExternalUser(Subject subject) {
-        Set principalSet = subject.getPrincipals(Entity.class);
-        Iterator entityIterator = principalSet.iterator();
+        final Set principalDetails = subject.getPrincipals(Entity.class);
+        final Iterator entityIterator = principalDetails.iterator();
         this.userDetails = (Entity) entityIterator.next();
-        principalSet = subject.getPrincipals(RoleList.class);
-        Iterator roleListIterator = principalSet.iterator();
+
+        final Set principalRoles = subject.getPrincipals(RoleList.class);
+        final Iterator roleListIterator = principalRoles.iterator();
         this.roleList = (RoleList) roleListIterator.next();
-        principalSet = subject.getPrincipals(GroupList.class);
-        Iterator groupListIterator = principalSet.iterator();
+
+        final Set principalGroups = subject.getPrincipals(GroupList.class);
+        final Iterator groupListIterator = principalGroups.iterator();
         this.groupList = (GroupList) groupListIterator.next();
     }
 

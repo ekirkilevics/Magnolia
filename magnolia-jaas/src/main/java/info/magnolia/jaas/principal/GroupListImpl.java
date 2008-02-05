@@ -35,20 +35,10 @@ package info.magnolia.jaas.principal;
 
 import info.magnolia.cms.security.auth.GroupList;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
-
-
 /**
  * @author Sameer Charles $Id$
  */
-public class GroupListImpl implements GroupList {
-
+public class GroupListImpl extends AbstractPrincipalList implements GroupList {
     /**
      * Stable serialVersionUID.
      */
@@ -59,75 +49,7 @@ public class GroupListImpl implements GroupList {
      */
     private static final String DEFAULT_NAME = "groups";
 
-    private String name;
-
-    /**
-     * list of names
-     */
-    protected Collection list;
-
-    public GroupListImpl() {
-        this.list = new ArrayList();
-    }
-
-    /**
-     * Get name given to this principal
-     * @return name
-     */
-    public String getName() {
-        if (StringUtils.isEmpty(this.name)) {
-            return getDefaultName();
-        }
-        return this.name;
-    }
-
     protected String getDefaultName() {
         return DEFAULT_NAME;
-    }
-
-    /**
-     * Set principal name
-     * @param name
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
-     * Add a name to the list
-     * @param name
-     */
-    public void add(String name) {
-        this.list.add(name);
-    }
-
-    /**
-     * Gets list of roles as string
-     * @return roles
-     */
-    public Collection getList() {
-        return this.list;
-    }
-
-    /**
-     * Checks if the name exist in this list
-     * @param name
-     */
-    public boolean has(String name) {
-        Iterator listIterator = this.list.iterator();
-        while (listIterator.hasNext()) {
-            String roleName = (String) listIterator.next();
-            if (StringUtils.equalsIgnoreCase(name, roleName)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    /**
-     * @see java.lang.Object#toString()
-     */
-    public String toString() {
-        return new ToStringBuilder(this, ToStringStyle.SHORT_PREFIX_STYLE).append("name", getName()).append("list", this.list).toString();
     }
 }
