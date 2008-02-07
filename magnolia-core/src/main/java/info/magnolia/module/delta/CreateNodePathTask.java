@@ -41,9 +41,10 @@ import javax.jcr.RepositoryException;
 
 
 /**
+ * A Task to create a full path, i.e the parent doesn't need to exist.
+ *
  * @author vsteller
  * @version $Id$
- *
  */
 public class CreateNodePathTask extends AbstractRepositoryTask {
 
