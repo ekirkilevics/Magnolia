@@ -112,6 +112,7 @@ public class MailCommand implements Command {
             log.info("send mail successfully to:" + to);
         }
         catch (Exception e) {
+            log.debug("Could not send email:" + e.getMessage(), e);
             log.error("Could not send email:" + e.getMessage());
         }
 
