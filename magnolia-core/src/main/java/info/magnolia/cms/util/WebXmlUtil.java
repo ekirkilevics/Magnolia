@@ -35,6 +35,7 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Path;
 import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Transformer;
 import org.jdom.Comment;
 import org.jdom.Document;
 import org.jdom.Element;
@@ -50,6 +51,7 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -171,6 +173,18 @@ public class WebXmlUtil {
         final String xpathExpr = "/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='"
                 + servletName + "' and webxml:url-pattern='" + urlPattern + "']";
         return xpathMatches(xpathExpr);
+    }
+
+    public Collection getServletMappings(String servletName) {
+        final String servletMappingXPathExpr = "/webxml:web-app/webxml:servlet-mapping[webxml:servlet-name='" + servletName + "']/webxml:url-pattern";
+        final List servletMappings = getElementsFromXPath(servletMappingXPathExpr);
+        
+        return CollectionUtils.collect(servletMappings, new Transformer() {
+            public Object transform(Object input) {
+                final Element servletMapping = (Element) input;
+                return servletMapping.getText();
+            }
+        });
     }
 
     public boolean isFilterRegistered(String filterClass) {
