@@ -71,6 +71,12 @@ public class WebXmlConditionsUtil {
             conditions.add(new FalseCondition("web.xml updates", "The " + servletName + " servlet does not exist anymore; please remove the corresponding <servlet> and <servlet-mapping> elements from your web.xml file."));
         }
     }
+    
+    public void servletIsPresent(String servletName) {
+        if (!webXmlUtil.isServletRegistered(servletName)) {
+            conditions.add(new FalseCondition("web.xml updates", "The " + servletName + " servlet is not installed. Please configure a <servlet> and an appropriate mapping with name " + servletName + " in your web.xml file."));
+        }
+    }
 
     public void filterMustBeRegisteredWithCorrectDispatchers(final String filterClass) {
         if (!webXmlUtil.isFilterRegistered(filterClass) || !webXmlUtil.areFilterDispatchersConfiguredProperly(filterClass, Arrays.asList(new String[]{"REQUEST", "FORWARD"}), Collections.singletonList("ERROR"))) {
