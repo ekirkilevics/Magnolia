@@ -247,7 +247,6 @@ public abstract class DialogControlImpl implements DialogControl {
     /**
      * Set the name of this control. This is not the same value as the id setted by the parent. In common this value is
      * setted in the dialog configuration.
-     * @param the name
      */
     public void setName(String s) {
         this.setConfig("name", s); //$NON-NLS-1$
