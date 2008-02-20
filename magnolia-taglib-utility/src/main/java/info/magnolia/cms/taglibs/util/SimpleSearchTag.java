@@ -123,9 +123,15 @@ public class SimpleSearchTag extends TagSupport {
     private String itemType = ItemType.CONTENT.getSystemName();
 
     /**
-     * Seach for substring. Means contains(. '*str*'). This will decrease performance.
+     * Search for substring. Means contains(. '*str*'). This will decrease performance.
+     * @deprecated not used when useSimpleJcrQuery is set to true.
      */
     private boolean supportSubstringSearch = false;
+
+    /**
+     * As from 3.5.5, this is true by default, and generates simpler and better queries
+     */
+    private boolean useSimpleJcrQuery = true;
 
     /**
      * The path we search in.
@@ -187,7 +193,7 @@ public class SimpleSearchTag extends TagSupport {
      */
     public int doStartTag() throws JspException {
 
-        String queryString = generateXPathQuery();
+        final String queryString = useSimpleJcrQuery ? generateSimpleQuery(query) : generateComplexXPathQuery();
 
         if (queryString == null) {
             if (log.isDebugEnabled()) {
@@ -218,9 +224,31 @@ public class SimpleSearchTag extends TagSupport {
     }
 
     /**
+     * This generates a simple jcr:contains query.
+     *
+     * @see "6.6.5.2 jcr:contains Function" from the JCR Spec (pages 110-111) for details.
+     */
+    protected String generateSimpleQuery(String input) {
+        // jcr and xpath escaping :
+        final String escapedQuery = input.replace("'", "\\''");
+        return "//*[@jcr:primaryType='mgnl:content']//*[jcr:contains(., '"+ escapedQuery +"')]";
+    }
+
+    /**
+     * @deprecated as from 3.5.5, this query is deemed to complex and not properly working, since it
+     * forces a search on non-indexed word. The better generateSimpleQuery() method is recommened.
+     */
+    protected String generateComplexXPathQuery() {
+        return generateXPathQuery();
+    }
+
+    /**
      * Split search terms and build an xpath query in the form:
      * <code>//*[@jcr:primaryType='mgnl:content']/\*\/\*[jcr:contains(., 'first') or jcr:contains(., 'second')]</code>
      * @return valid xpath expression or null if the given query doesn't contain at least one valid search term
+     *
+     * @deprecated as from 3.5.5, this query is deemed to complex and not properly working, since it
+     * forces a search on non-indexed word. The better generateSimpleQuery() method is recommened.
      */
     protected String generateXPathQuery() {
 

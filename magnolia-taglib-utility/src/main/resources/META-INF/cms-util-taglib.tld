@@ -365,6 +365,17 @@
       <description>The repository we search in. Default is website repository</description>
     </attribute>
     <attribute>
+      <name>useSimpleJcrQuery</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>
+        Set to false to generate the search query as it was generated until Magnolia 3.5.4 (which will force a search on
+        non-indexed word, which usually leads in less good results). Default value is true.
+        See "6.6.5.2 jcr:contains Function" from the JCR Spec (pages 110-111) for details.
+      </description>
+    </attribute>
+    <attribute>
       <name>supportSubstringSearch</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
