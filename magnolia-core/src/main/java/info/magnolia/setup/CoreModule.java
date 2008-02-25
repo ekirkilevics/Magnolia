@@ -33,9 +33,11 @@
  */
 package info.magnolia.setup;
 
+import info.magnolia.cms.beans.config.JavascriptManager;
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.beans.config.ParagraphRendererManager;
 import info.magnolia.cms.beans.config.ShutdownManager;
+import info.magnolia.cms.beans.config.StylesheetManager;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
@@ -57,6 +59,8 @@ public class CoreModule implements ModuleLifecycle {
         ctx.registerModuleObservingComponent("paragraphs", ParagraphManager.getInstance());
         ctx.registerModuleObservingComponent("paragraph-renderers", ParagraphRendererManager.getInstance());
         ctx.registerModuleObservingComponent("commands", CommandsManager.getInstance());
+        ctx.registerModuleObservingComponent("javascripts", JavascriptManager.getInstance());
+        ctx.registerModuleObservingComponent("stylesheets", StylesheetManager.getInstance());
         ctx.registerModuleObservingComponent("shutdown", ShutdownManager.getInstance());
     }
 
