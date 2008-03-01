@@ -1125,22 +1125,4 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       </description>
     </attribute>
   </tag>
-  <tag>
-    <name>javascripts</name>
-    <tag-class>info.magnolia.cms.taglibs.JavascriptsTag</tag-class>
-    <body-content>EMPTY</body-content>
-    <display-name>javascripts</display-name>
-    <description>
-      Adds required javascripts for modules, use in HTML head.
-    </description>
-  </tag>
-  <tag>
-    <name>stylesheets</name>
-    <tag-class>info.magnolia.cms.taglibs.StylesheetsTag</tag-class>
-    <body-content>EMPTY</body-content>
-    <display-name>stylesheets</display-name>
-    <description>
-      Adds required stylesheets for modules, use in HTML head.
-    </description>
-  </tag>
 </taglib>
