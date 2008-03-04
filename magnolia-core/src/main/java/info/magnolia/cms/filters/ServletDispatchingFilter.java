@@ -61,6 +61,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * A filter that dispatches requests to wrapped servlets.
+ * 
  * @author vsteller
  * @version $Id$
  */
