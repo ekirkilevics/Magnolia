@@ -445,6 +445,7 @@ for Java Content Repositories (JCR).
           <configLocation>magnolia-build-tools/checkstyle.xml</configLocation>
           <headerLocation>magnolia-build-tools/license-header-dual.regex</headerLocation>
           <enableRulesSummary>true</enableRulesSummary>
+          <consoleOutput>true</consoleOutput>
           <!-- this is unfortunately not supported in the 2.1 version of the checkstyle plugin -->
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
         </configuration>
