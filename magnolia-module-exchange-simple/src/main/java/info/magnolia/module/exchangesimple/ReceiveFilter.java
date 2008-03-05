@@ -85,7 +85,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ReceiveFilter extends AbstractMgnlFilter {
 
-    private static Logger log = LoggerFactory.getLogger(ReceiveFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(ReceiveFilter.class);
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -128,7 +128,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param request
       * @throws Exception if fails to update
       */
-     private synchronized void receive(HttpServletRequest request) throws Exception {
+     protected synchronized void receive(HttpServletRequest request) throws Exception {
          String action = request.getHeader(SimpleSyndicator.ACTION);
          if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
              update(request);
@@ -148,7 +148,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param request
       * @throws Exception if fails to update
       */
-     private synchronized void update(HttpServletRequest request) throws Exception {
+     protected synchronized void update(HttpServletRequest request) throws Exception {
          MultipartForm data = Resource.getPostedForm();
          if (null != data) {
              String parentPath = this.getParentPath(request);
@@ -208,7 +208,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param source the content node to be copied
       * @param destination the destination node
       */
-     private synchronized void copyProperties(Content source, Content destination) throws RepositoryException {
+     protected synchronized void copyProperties(Content source, Content destination) throws RepositoryException {
          // first remove all existing properties at the destination
          // will be different with incremental activation
          Iterator nodeDataIterator = destination.getNodeDataCollection().iterator();
@@ -247,7 +247,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param content whose children to be deleted
       * @param filter content filter
       */
-     private synchronized void removeChildren(Content content, Content.ContentFilter filter) {
+     protected synchronized void removeChildren(Content content, Content.ContentFilter filter) {
          Iterator children = content.getChildren(filter).iterator();
          // remove sub nodes using the same filter used by the sender to collect
          // this will make sure there is no existing nodes of the same type
@@ -271,7 +271,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @throws ExchangeException
       * @throws RepositoryException
       */
-     private synchronized void importFresh(Element topContentElement, MultipartForm data,
+     protected synchronized void importFresh(Element topContentElement, MultipartForm data,
          HierarchyManager hierarchyManager, String parentPath) throws ExchangeException, RepositoryException {
          try {
              importResource(data, topContentElement, hierarchyManager, parentPath);
@@ -293,7 +293,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @throws ExchangeException
       * @throws RepositoryException
       */
-     private synchronized void importOnExisting(Element topContentElement, MultipartForm data,
+     protected synchronized void importOnExisting(Element topContentElement, MultipartForm data,
          HierarchyManager hierarchyManager, Content existingContent) throws ExchangeException, RepositoryException {
          Iterator fileListIterator = topContentElement
              .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)
@@ -339,7 +339,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param parentPath
       * @throws Exception
       */
-     private synchronized void importResource(MultipartForm data, Element resourceElement, HierarchyManager hm,
+     protected synchronized void importResource(MultipartForm data, Element resourceElement, HierarchyManager hm,
          String parentPath) throws Exception {
 
          // throws an excpetion in case you don't have the permission
@@ -373,7 +373,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param request
       * @throws Exception if fails to update
       */
-     private synchronized void remove(HttpServletRequest request) throws Exception {
+     protected synchronized void remove(HttpServletRequest request) throws Exception {
          HierarchyManager hm = getHierarchyManager(request);
          try {
              Content node = this.getNode(request);
@@ -392,7 +392,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param request
       * @throws ExchangeException
       */
-     private HierarchyManager getHierarchyManager(HttpServletRequest request) throws ExchangeException {
+     protected HierarchyManager getHierarchyManager(HttpServletRequest request) throws ExchangeException {
          String repositoryName = request.getHeader(SimpleSyndicator.REPOSITORY_NAME);
          String workspaceName = request.getHeader(SimpleSyndicator.WORKSPACE_NAME);
 
@@ -412,7 +412,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * cleans temporary store and removes any locks set
       * @param request
       */
-     private void cleanUp(HttpServletRequest request) {
+     protected void cleanUp(HttpServletRequest request) {
          if (SimpleSyndicator.ACTIVATE.equalsIgnoreCase(request.getHeader(SimpleSyndicator.ACTION))) {
              MultipartForm data = Resource.getPostedForm();
              if (null != data) {
@@ -458,7 +458,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * apply lock
       * @param request
       */
-     private void applyLock(HttpServletRequest request) throws ExchangeException {
+     protected void applyLock(HttpServletRequest request) throws ExchangeException {
          try {
              Content content = this.getNode(request);
              if (content.isLocked()) {
@@ -479,7 +479,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          }
      }
 
-     private Content getNode(HttpServletRequest request)
+     protected Content getNode(HttpServletRequest request)
              throws ExchangeException, RepositoryException {
 
          String action = request.getHeader(SimpleSyndicator.ACTION);
@@ -498,7 +498,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          throw new ExchangeException("Node not found");
      }
 
-     private String getParentPath(HttpServletRequest request) {
+     protected String getParentPath(HttpServletRequest request) {
          String parentPath = request.getHeader(SimpleSyndicator.PARENT_PATH);
          if (StringUtils.isNotEmpty(parentPath)) {
              return parentPath;
