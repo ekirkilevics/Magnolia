@@ -98,8 +98,10 @@ public class URI2RepositoryMapping {
             StringUtils.removeStart(handle, "/");
             handle = this.handlePrefix + "/" + handle;
         }
-        //remove extension
-        handle = StringUtils.substringBeforeLast(handle, ".");
+        //remove extension (ignore . anywere else in the uri)
+        String fileName = StringUtils.substringAfterLast(handle, "/");
+        String extension = StringUtils.substringAfterLast(fileName, ".");
+        handle = StringUtils.removeEnd(handle, extension);
         return cleanHandle(handle);
     }
 
