@@ -457,8 +457,8 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>path</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>file to be included (e.g. /templates/jsp/x.jsp)
-      This is deprecated: just use basic jsp tags if you need to include a jsp in your templates.
+      <description>@deprecated. file to be included (e.g. /templates/jsp/x.jsp) 
+      This is deprecated: just use basic jsp tags (i.e. &lt;jsp:include/&gt;) if you need to include a jsp in your templates.
       </description>
     </attribute>
     <attribute>

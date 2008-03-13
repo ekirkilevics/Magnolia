@@ -61,6 +61,7 @@ public class Include extends BodyTagSupport {
 
     /**
      * File to be included (e.g. /templates/jsp/x.jsp).
+     * @deprecated
      */
     private String path;
 
