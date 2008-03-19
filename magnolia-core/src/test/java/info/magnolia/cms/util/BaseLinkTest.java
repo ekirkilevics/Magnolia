@@ -79,7 +79,7 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         MockHierarchyManager hm = MockUtil.createHierarchyManager(website);
         webContext = createMock(WebContext.class);
         expect(webContext.getHierarchyManager(ContentRepository.WEBSITE)).andReturn(hm).anyTimes();
-        expect(webContext.getContextPath()).andReturn("some-context").anyTimes();
+        expect(webContext.getContextPath()).andReturn("/some-context").anyTimes();
 
         // add a binary
         MockContent page = (MockContent) hm.getContent(HANDLE_PARENT_SUB);

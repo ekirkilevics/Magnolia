@@ -347,11 +347,11 @@ public class FreemarkerHelperTest extends TestCase {
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.US);
 
-        expect(context.getContextPath()).andReturn("tralala");
+        expect(context.getContextPath()).andReturn("/tralala");
         expect(context.getServletContext()).andReturn(null);
         replay(context);
         MgnlContext.setInstance(context);
-        assertRendereredContentWithoutCheckingContext(":tralala:", new HashMap(), "pouet");
+        assertRendereredContentWithoutCheckingContext(":/tralala:", new HashMap(), "pouet");
         verify(context);
     }
 
@@ -379,12 +379,12 @@ public class FreemarkerHelperTest extends TestCase {
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.US);
 
-        expect(context.getContextPath()).andReturn("tralala"); // called when preparing the freemarker data model
+        expect(context.getContextPath()).andReturn("/tralala"); // called when preparing the freemarker data model
         expect(context.getServletContext()).andReturn(null);
-        expect(context.getContextPath()).andReturn("tralala"); // actual call from the template
+        expect(context.getContextPath()).andReturn("/tralala"); // actual call from the template
         replay(context);
         MgnlContext.setInstance(context);
-        assertRendereredContentWithoutCheckingContext(":tralala:", new HashMap(), "pouet");
+        assertRendereredContentWithoutCheckingContext(":/tralala:", new HashMap(), "pouet");
         verify(context);
     }
 
