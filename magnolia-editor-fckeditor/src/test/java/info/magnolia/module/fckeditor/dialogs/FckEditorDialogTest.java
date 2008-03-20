@@ -72,7 +72,7 @@ public class FckEditorDialogTest extends BaseLinkTest {
         final FckEditorDialogForTest d = new FckEditorDialogForTest();
         d.init(null, null, null, null);
         d.setTopParent(d);
-        d.setConfig("path", "here");
+        d.setConfig("path", "/some/path/to/here");
 
         assertEquals("<a href=\"foo/bar\">baz</a>", d.convertToView("<a href=\"foo/bar\">baz</a>"));
         assertEquals("<img src=\"/foo/bar.gif\"/>", d.convertToView("<img src=\"/foo/bar.gif\"/>"));

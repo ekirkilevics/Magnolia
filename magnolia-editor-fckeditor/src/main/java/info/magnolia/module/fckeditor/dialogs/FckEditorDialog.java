@@ -38,10 +38,12 @@ import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.dialog.DialogBox;
 import info.magnolia.cms.gui.dialog.DialogFckEdit;
 import info.magnolia.cms.util.LinkUtil;
+import info.magnolia.cms.link.LinkHelper;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.regex.Matcher;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -390,7 +392,25 @@ public class FckEditorDialog extends DialogBox {
         if (value != null) {
             // we have to add the context path for images and files but not for pages!
             value = LinkUtil.convertUUIDsToEditorLinks(value);
-            return value;
+
+            // this section is for backward compatibility - see MAGNOLIA-2088
+            final Matcher matcher = LinkHelper.LINK_OR_IMAGE_PATTERN.matcher(value);
+            final StringBuffer res = new StringBuffer();
+            while (matcher.find()) {
+                final String src = matcher.group(4);
+
+                // process only internal and relative links
+                if (LinkUtil.isInternalRelativeLink(src)) {
+                    final String link = MgnlContext.getContextPath()
+                        + this.getTopParent().getConfigValue("path")
+                        + "/"
+                        + StringUtils.substringAfter(src, "/");
+
+                    matcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
+                }
+            }
+            matcher.appendTail(res);
+            return res.toString();
         }
 
         return StringUtils.EMPTY;
