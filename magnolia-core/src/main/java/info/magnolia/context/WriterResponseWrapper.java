@@ -84,13 +84,6 @@ class WriterResponseWrapper extends HttpServletResponseWrapper {
         return true;
     }
 
-    public void setContentType(String x) {
-        // ignore
-    }
-
-    public void setLocale(Locale x) {
-        // ignore
-    }
 
     public void setStatus(int status) {
         this.status = status;

@@ -189,9 +189,10 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      */
     public void include(final String path, final Writer out) throws ServletException, IOException {
         try {
-            final WriterResponseWrapper wrappedResponse = new WriterResponseWrapper(response, out);
             final ServletRequest requestToUse = pageContext != null ? pageContext.getRequest() : this.getRequest();
-            requestToUse.getRequestDispatcher(path).include(requestToUse, wrappedResponse);
+            final HttpServletResponse responseToUse = (pageContext != null && pageContext.getResponse() instanceof HttpServletResponse) ? (HttpServletResponse) pageContext.getResponse() : response;
+            final WriterResponseWrapper wrappedResponse = new WriterResponseWrapper(responseToUse, out);
+            requestToUse.getRequestDispatcher(path).include(requestToUse, responseToUse);
         }
         catch (ServletException e) {
             throw new RuntimeException(e);
