@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page"
           xmlns:cms="cms-taglib"
           xmlns:cmsu="cms-util-taglib" 
@@ -18,7 +19,7 @@
   </jsp:text>
   <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
-      <c:import url="/templates/samples/templates/inc/head.jsp" />
+      <c:import url="/templates/samples/templates/inc/head.jsp" charEncoding="UTF-8"/>
       <script type="text/javascript" src="${pageContext.request.contextPath}/docroot/samples/js/form.js">
         <![CDATA[<!--  -->]]>
       </script>

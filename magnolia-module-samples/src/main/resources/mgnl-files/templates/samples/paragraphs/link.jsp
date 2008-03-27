@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <jsp:root version="1.2" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="cms-taglib"
   xmlns:cmsu="cms-util-taglib" xmlns:c="http://java.sun.com/jsp/jstl/core">
   <jsp:directive.page import="org.apache.commons.lang.StringUtils"/>

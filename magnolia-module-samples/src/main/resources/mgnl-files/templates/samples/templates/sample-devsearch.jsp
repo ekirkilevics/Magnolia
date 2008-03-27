@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8" ?>
 <jsp:root version="2.0" xmlns:jsp="http://java.sun.com/JSP/Page" xmlns:cms="cms-taglib"
   xmlns:cmsu="cms-util-taglib" xmlns:c="http://java.sun.com/jsp/jstl/core"
   xmlns:fmt="http://java.sun.com/jsp/jstl/fmt">
@@ -12,7 +13,7 @@
   </jsp:text>
   <html xmlns="http://www.w3.org/1999/xhtml" lang="en">
     <head>
-      <c:import url="/templates/samples/templates/inc/head.jsp" />
+      <c:import url="/templates/samples/templates/inc/head.jsp" charEncoding="UTF-8"/>
     </head>
     <body>
       <cms:mainBar paragraph="${module.paragraphs.page}" />
