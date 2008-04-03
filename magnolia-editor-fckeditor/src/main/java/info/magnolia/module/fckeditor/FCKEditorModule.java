@@ -35,7 +35,7 @@ package info.magnolia.module.fckeditor;
 
 import info.magnolia.module.admininterface.config.BaseConfiguration;
 
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 /**
@@ -44,24 +44,24 @@ import java.util.Set;
  *
  */
 public class FCKEditorModule {
-    
+
     public static final String MODULE_FCKEDITOR = "fckEditor";
-    
+
     private Set browsableRepositories;
-    
+
     public FCKEditorModule() {
-        browsableRepositories = new HashSet();
+        browsableRepositories = new LinkedHashSet();
     }
-    
+
     public Set getBrowsableRepositories() {
         return browsableRepositories;
     }
-    
+
     public void addBrowsableRepository(BrowsableRepository repository) {
         browsableRepositories.add(repository);
     }
-    
+
     public static class BrowsableRepository extends BaseConfiguration {
-        
+
     }
 }
