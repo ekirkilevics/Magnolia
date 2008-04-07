@@ -83,6 +83,9 @@ public class URI2RepositoryMapping {
      * @return
      */
     public boolean matches(String uri) {
+        if (uri == null) {
+            return false;
+        }
         return uri.startsWith(URIPrefix);
     }
 
