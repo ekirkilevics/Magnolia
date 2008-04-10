@@ -168,7 +168,6 @@ public class DefaultContent extends ContentHandler implements Content {
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, contentType);
         this.setAccessManager(manager);
-        this.addMixin(ItemType.MIX_VERSIONABLE);
         // add mix:lockable as default for all nodes created using this manager
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518

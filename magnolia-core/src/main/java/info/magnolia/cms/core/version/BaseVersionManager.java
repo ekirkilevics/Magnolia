@@ -37,6 +37,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.security.Lock;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
 import info.magnolia.cms.util.ExclusiveWrite;
@@ -54,6 +55,7 @@ import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.locks.ReentrantReadWriteLock.WriteLock;
 
 import javax.jcr.ItemNotFoundException;
 import javax.jcr.Node;
@@ -157,6 +159,7 @@ public abstract class BaseVersionManager {
          List permissions = this.getAccessManagerPermissions();
          this.impersonateAccessManager(null);
          try {
+             checkAndAddMixin(node);
              return this.createVersion(node, rule);
          }
          catch (RepositoryException re) {
@@ -188,6 +191,7 @@ public abstract class BaseVersionManager {
          }
          CopyUtil.getInstance().copyToversion(node, new RuleBasedContentFilter(rule));
          Content versionedNode = this.getVersionedNode(node);
+         checkAndAddMixin(versionedNode);
          Content systemInfo = this.getSystemNode(versionedNode);
          // add serialized rule which was used to create this version
          ByteArrayOutputStream out = new ByteArrayOutputStream();
@@ -432,6 +436,19 @@ public abstract class BaseVersionManager {
              this.revertAccessManager(permissions);
          }
          getHierarchyManager().save();
+     }
+
+     /**
+      * Veryfies the existence of the mix:versionable and adds it if not.
+      */
+     protected void checkAndAddMixin(Content node) throws RepositoryException {
+         if(!node.getJCRNode().isNodeType("mix:versionable")){
+             synchronized(ExclusiveWrite.getInstance()){
+                 log.info("Add mixin");
+                 node.addMixin("mix:versionable");
+                 node.save();
+             }
+          }
      }
 
      /**
