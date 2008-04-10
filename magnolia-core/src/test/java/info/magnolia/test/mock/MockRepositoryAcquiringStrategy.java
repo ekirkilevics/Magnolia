@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,38 +33,52 @@
  */
 package info.magnolia.test.mock;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.context.AbstractMapBasedContext;
-import info.magnolia.context.SystemContext;
-
-import java.util.HashMap;
-import java.util.Map;
+import info.magnolia.context.RepositoryAcquiringStrategy;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * A mock context where you can set a mocked hierarchy manger on it.
  * @author philipp
  * @version $Id$
  *
  */
-public class MockContext extends AbstractMapBasedContext implements SystemContext{
+public class MockRepositoryAcquiringStrategy implements RepositoryAcquiringStrategy {
 
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(MockContext.class);
+    private static Logger log = LoggerFactory.getLogger(MockRepositoryAcquiringStrategy.class);
 
-    public MockContext() {
-        this.setRepositoryStrategy(new MockRepositoryAcquiringStrategy());
+    private Map hierarchyManagers = new HashMap();
+
+    public HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
+        if(!hierarchyManagers.containsKey(repositoryId)){
+            throw new IllegalArgumentException("repository [" + repositoryId + "] not initialized");
+        }
+        return (HierarchyManager) hierarchyManagers.get(repositoryId);
     }
 
     public void addHierarchyManager(String repositoryId, HierarchyManager hm){
-        ((MockRepositoryAcquiringStrategy) this.getRepositoryStrategy()).addHierarchyManager(repositoryId, hm);
+        hierarchyManagers.put(repositoryId, hm);
     }
 
+    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
+        return null;
+    }
+
+
+    public QueryManager getQueryManager(String repositoryId, String workspaceId) {
+        return null;
+    }
+
+    public void release() {
+    }
 }
