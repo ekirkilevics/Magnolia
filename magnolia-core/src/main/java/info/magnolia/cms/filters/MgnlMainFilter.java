@@ -187,8 +187,10 @@ public class MgnlMainFilter implements Filter {
     }
 
     public void destroy() {
-        rootFilter.destroy();
-        rootFilter = null;
+        if(rootFilter != null){
+            rootFilter.destroy();
+            rootFilter = null;
+        }
     }
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
