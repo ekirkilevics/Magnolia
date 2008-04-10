@@ -1,63 +1,54 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="smtp" xmlns:jcr="http://www.jcp.org/jcr/1.0"
-         xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
-         xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
-         xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-         xmlns:xs="http://www.w3.org/2001/XMLSchema"
-         xmlns:fn="http://www.w3.org/2004/10/xpath-functions"
-         xmlns:sv="http://www.jcp.org/jcr/sv/1.0"
-         xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="">
+<sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn="http://www.w3.org/2004/10/xpath-functions" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" xmlns="" sv:name="smtp">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>mgnl:contentNode</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:uuid" sv:type="String">
+    <sv:value>8926d803-6cc5-44ca-a7d9-1f6eb261a502</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
+    <sv:value>true</sv:value>
+  </sv:property>
+  <sv:property sv:name="smtpUser" sv:type="String">
+    <sv:value />
+  </sv:property>
+  <sv:property sv:name="smtpPort" sv:type="String">
+    <sv:value>25</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:created" sv:type="Date">
+    <sv:value>2006-03-31T13:46:25.974+09:00</sv:value>
+  </sv:property>
+  <sv:property sv:name="smtpServer" sv:type="String">
+    <sv:value>localhost</sv:value>
+  </sv:property>
+  <sv:property sv:name="smtpPassword" sv:type="String">
+    <sv:value />
+  </sv:property>
+  <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
-        <sv:value>mgnl:contentNode</sv:value>
+      <sv:value>mgnl:metaData</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>8926d803-6cc5-44ca-a7d9-1f6eb261a502</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:isCheckedOut" sv:type="Boolean">
-        <sv:value>true</sv:value>
-    </sv:property>
-    <sv:property sv:name="smtpUser" sv:type="String">
-        <sv:value/>
-    </sv:property>
-    <sv:property sv:name="smtpPort" sv:type="String">
-        <sv:value>25</sv:value>
+    <sv:property sv:name="mgnl:authorid" sv:type="String">
+      <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:created" sv:type="Date">
-        <sv:value>2006-03-31T13:46:25.974+09:00</sv:value>
+      <sv:value>2006-03-31T13:46:25.975+09:00</sv:value>
     </sv:property>
-    <sv:property sv:name="smtpServer" sv:type="String">
-        <sv:value>localhost</sv:value>
+    <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+      <sv:value>2006-03-31T17:15:09.562+09:00</sv:value>
     </sv:property>
-    <sv:property sv:name="smtpPassword" sv:type="String">
-        <sv:value/>
+    <sv:property sv:name="mgnl:activatorid" sv:type="String">
+      <sv:value>superuser</sv:value>
     </sv:property>
-    <sv:node sv:name="MetaData">
-        <sv:property sv:name="jcr:primaryType" sv:type="Name">
-            <sv:value>mgnl:metaData</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:authorid" sv:type="String">
-            <sv:value>superuser</sv:value>
-        </sv:property>
-        <sv:property sv:name="jcr:created" sv:type="Date">
-            <sv:value>2006-03-31T13:46:25.975+09:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-            <sv:value>2006-03-31T17:15:09.562+09:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:activatorid" sv:type="String">
-            <sv:value>superuser</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-            <sv:value>2006-03-24T16:39:28.036+09:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-            <sv:value>2006-03-31T17:15:26.217+09:00</sv:value>
-        </sv:property>
-        <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-            <sv:value>false</sv:value>
-        </sv:property>
-    </sv:node>
+    <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      <sv:value>2006-03-24T16:39:28.036+09:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+      <sv:value>2006-03-31T17:15:26.217+09:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+      <sv:value>false</sv:value>
+    </sv:property>
+  </sv:node>
 </sv:node>
+

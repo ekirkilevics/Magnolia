@@ -1,13 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="mailform" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
-  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-  xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
+<sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" sv:name="mailform">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:content</sv:value>
-  </sv:property>
-  <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-    <sv:value>mix:versionable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>3931c029-6199-4627-8c8f-52a5e6b18b3c</sv:value>
@@ -44,7 +38,7 @@
       <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:title" sv:type="String">
-      <sv:value/>
+      <sv:value />
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="String">
       <sv:value>2004-11-12T16:00:08.036+01:00</sv:value>
@@ -71,9 +65,6 @@
   <sv:node sv:name="mainColumnParagraphs">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
-    </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>df882c45-77ab-4c73-a4dc-dfd797832381</sv:value>
@@ -102,9 +93,6 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>78a57f8e-19ad-42fe-b347-69c0b16fe6fa</sv:value>
       </sv:property>
@@ -118,8 +106,7 @@
         <sv:value>samplesTextImage</sv:value>
       </sv:property>
       <sv:property sv:name="text" sv:type="String">
-        <sv:value>This page shows how you can build your own custom form easily with Magnolia. To see this form in action, you need to edit the form properties and set your mail server and mail account. You find the form properties button on the main bar of this page, right next to page properties.
- </sv:value>
+        <sv:value>This page shows how you can build your own custom form easily with Magnolia. To see this form in action, you need to edit the form properties and set your mail server and mail account. You find the form properties button on the main bar of this page, right next to page properties.</sv:value>
       </sv:property>
       <sv:property sv:name="spacer" sv:type="Long">
         <sv:value>1</sv:value>
@@ -157,9 +144,6 @@
     <sv:node sv:name="02">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>19f1b5f8-3cb7-40b1-982c-37e100467cd3</sv:value>
@@ -216,9 +200,6 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>eca6bc5f-5ae0-4f15-a46f-022771f9ab35</sv:value>
       </sv:property>
@@ -235,10 +216,9 @@
         <sv:value>samplesFormSelection</sv:value>
       </sv:property>
       <sv:property sv:name="values" sv:type="String">
-        <sv:value>Dark Green&#xd;
-Light Green&#xd;
-Magnolia Green&#xd;
-</sv:value>
+        <sv:value>Dark Green&#xD;
+Light Green&#xD;
+Magnolia Green</sv:value>
       </sv:property>
       <sv:property sv:name="spacer" sv:type="Long">
         <sv:value>1</sv:value>
@@ -280,9 +260,6 @@ Magnolia Green&#xd;
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>ad614bdc-f0e8-42df-a0f0-c03c97604738</sv:value>
       </sv:property>
@@ -299,10 +276,10 @@ Magnolia Green&#xd;
         <sv:value>samplesFormSelection</sv:value>
       </sv:property>
       <sv:property sv:name="values" sv:type="String">
-        <sv:value>Magnolia 1.1&#xd;
-Magnolia 2.1&#xd;
-Magnolia 3.0&#xd;
-Magnolia 3.5&#xd;
+        <sv:value>Magnolia 1.1&#xD;
+Magnolia 2.1&#xD;
+Magnolia 3.0&#xD;
+Magnolia 3.5&#xD;
 All of the above</sv:value>
       </sv:property>
       <sv:property sv:name="spacer" sv:type="Long">
@@ -344,9 +321,6 @@ All of the above</sv:value>
     <sv:node sv:name="04">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>30faf0ca-fef7-4797-85ce-9d6027869ee5</sv:value>
@@ -403,9 +377,6 @@ All of the above</sv:value>
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
-      </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>d9b56d5b-8a67-458b-8177-c7257c89dcf2</sv:value>
       </sv:property>
@@ -456,9 +427,6 @@ All of the above</sv:value>
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:content</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>1a67364c-0de6-42b6-b1f2-803cb8a72d1f</sv:value>
     </sv:property>
@@ -476,7 +444,7 @@ All of the above</sv:value>
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:title" sv:type="String">
-        <sv:value/>
+        <sv:value />
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2004-11-12T16:14:45.925+01:00</sv:value>
@@ -503,9 +471,6 @@ All of the above</sv:value>
     <sv:node sv:name="mainColumnParagraphs">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
-      </sv:property>
-      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-        <sv:value>mix:versionable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
         <sv:value>5cbec23a-26a1-40d5-aeaa-1d1c4f7011f9</sv:value>
@@ -534,9 +499,6 @@ All of the above</sv:value>
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
-        <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-          <sv:value>mix:versionable</sv:value>
-        </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
           <sv:value>d48644e1-1d63-4f21-a9c1-653f54087cb3</sv:value>
         </sv:property>
@@ -553,8 +515,7 @@ All of the above</sv:value>
           <sv:value>Thanks for your valuable feedback. We appreciate the time you have taken to fill out the great "tell-us-about-yourself" survey. We promise not to sell your data to anyone except if we can't resist.
  
  Thanks again for your business,
- ACME Widgets Inc.
- </sv:value>
+ ACME Widgets Inc.</sv:value>
         </sv:property>
         <sv:property sv:name="spacer" sv:type="String">
           <sv:value>2</sv:value>
@@ -602,7 +563,7 @@ All of the above</sv:value>
       <sv:value>header3-5_1</sv:value>
     </sv:property>
     <sv:property sv:name="nodeDataTemplate" sv:type="String">
-      <sv:value/>
+      <sv:value />
     </sv:property>
     <sv:property sv:name="size" sv:type="String">
       <sv:value>10710</sv:value>
@@ -630,15 +591,12 @@ All of the above</sv:value>
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
-    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
-      <sv:value>mix:versionable</sv:value>
-    </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>56369446-32c5-4c25-b35c-99da25a466a8</sv:value>
     </sv:property>
     <sv:property sv:name="footerText" sv:type="String">
-      <sv:value>&lt;center&gt;&lt;a href="http://www.magnolia.info" target="_blank"&gt;Magnolia International Ltd.&lt;/a&gt;  Maiengasse 30, 4056 Basel, Switzerland&#xd;
-Tel +41 61 228 9000 (9AM-5PM GMT+1) &lt;a href="mailto:info@magnolia.info"&gt;info@magnolia.info&lt;/a&gt;&lt;/center&gt;&#xd;
+      <sv:value>&lt;center&gt;&lt;a href="http://www.magnolia.info" target="_blank"&gt;Magnolia International Ltd.&lt;/a&gt;  Maiengasse 30, 4056 Basel, Switzerland&#xD;
+Tel +41 61 228 9000 (9AM-5PM GMT+1) &lt;a href="mailto:info@magnolia.info"&gt;info@magnolia.info&lt;/a&gt;&lt;/center&gt;&#xD;
 &lt;br /&gt;</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
@@ -669,3 +627,4 @@ Tel +41 61 228 9000 (9AM-5PM GMT+1) &lt;a href="mailto:info@magnolia.info"&gt;in
     </sv:node>
   </sv:node>
 </sv:node>
+
