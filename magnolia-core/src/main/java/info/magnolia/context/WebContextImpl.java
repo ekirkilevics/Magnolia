@@ -67,10 +67,6 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
 
     private static final long serialVersionUID = 222L;
 
-    private static final String REQUEST_JCRSESSION_PREFIX = WebContextImpl.class.getName() + ".mgnlRepositorySession_";
-
-    private static final String REQUEST_HIERARCHYMANAGER_PREFIX = WebContextImpl.class.getName() + ".mgnlHMgr_";
-
     private HttpServletRequest request;
 
     private HttpServletResponse response;
@@ -192,7 +188,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
             final ServletRequest requestToUse = pageContext != null ? pageContext.getRequest() : this.getRequest();
             final HttpServletResponse responseToUse = (pageContext != null && pageContext.getResponse() instanceof HttpServletResponse) ? (HttpServletResponse) pageContext.getResponse() : response;
             final WriterResponseWrapper wrappedResponse = new WriterResponseWrapper(responseToUse, out);
-            requestToUse.getRequestDispatcher(path).include(requestToUse, responseToUse);
+            requestToUse.getRequestDispatcher(path).include(requestToUse, wrappedResponse);
         }
         catch (ServletException e) {
             throw new RuntimeException(e);
