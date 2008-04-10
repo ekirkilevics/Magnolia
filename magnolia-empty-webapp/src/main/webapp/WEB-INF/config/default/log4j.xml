@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE log4j:configuration SYSTEM "log4j.dtd">
-<log4j:configuration xmlns:log4j="http://jakarta.apache.org/log4j/">
+<!DOCTYPE configuration SYSTEM "log4j.dtd">
+<configuration>
   <!-- set <log4j:configuration debug="true"> for log4j initialization messages -->
   <!--  debug appender, write to stdout -->
   <appender name="console" class="org.apache.log4j.ConsoleAppender">
@@ -122,4 +122,4 @@
       <appender-ref ref="mail" />
     -->
   </root>
-</log4j:configuration>
+</configuration>
