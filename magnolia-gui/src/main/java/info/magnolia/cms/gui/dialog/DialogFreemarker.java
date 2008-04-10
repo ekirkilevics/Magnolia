@@ -48,6 +48,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -177,7 +178,7 @@ public class DialogFreemarker extends DialogBox {
      */
     protected Map getSubNodes(Content node) throws RepositoryException, AccessDeniedException {
 
-        Map values = new HashMap();
+        Map values = new LinkedHashMap();
 
         // cycles on properties and stores them in map
         Collection properties = node.getNodeDataCollection();
