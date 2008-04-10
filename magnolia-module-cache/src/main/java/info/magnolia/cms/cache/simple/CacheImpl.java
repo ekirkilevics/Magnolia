@@ -284,6 +284,7 @@ public class CacheImpl implements Cache {
             response.setStatus(HttpServletResponse.SC_OK);
             response.setDateHeader("Last-Modified", this.getCreationTime(key));
             if (canCompress) {
+                log.debug("setting compression headers");
                 response.setContentLength(getCompressedSize(key));
                 response.setHeader("Content-Encoding", "gzip");
                 response.setHeader("Vary", "Accept-Encoding"); // needed for proxies

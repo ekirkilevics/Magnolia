@@ -166,11 +166,13 @@ public class CacheImpl implements info.magnolia.cms.cache.Cache {
             byte[] buffer = ((CacheableEntry) element.getValue()).getOut();
             ByteArrayInputStream in = new ByteArrayInputStream(buffer);
             response.setContentLength(buffer.length);
+            response.setStatus(HttpServletResponse.SC_OK);
+            response.setDateHeader("Last-Modified", this.getCreationTime(key));
+
             if (canCompress) {
                 response.setHeader("Content-Encoding", "gzip");
                 response.setHeader("Vary", "Accept-Encoding"); // needed for proxies
             }
-
             try {
                 OutputStream out = response.getOutputStream();
                 IOUtils.copy(in, out);

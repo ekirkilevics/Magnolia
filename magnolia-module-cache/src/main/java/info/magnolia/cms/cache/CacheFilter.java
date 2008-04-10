@@ -46,6 +46,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -56,6 +58,8 @@ import org.apache.commons.lang.StringUtils;
 public class CacheFilter extends AbstractMgnlFilter {
 
     public static String ALREADY_FILTERED = CacheFilter.class.getName();
+
+    private static Logger log = LoggerFactory.getLogger(CacheFilter.class);
 
     /**
      * the cache manager.
@@ -96,9 +100,14 @@ public class CacheFilter extends AbstractMgnlFilter {
                     return;
                 }
                 boolean canCompress = cacheManager.canCompress(request);
+                log.debug("{} supports compressing: {}", key, Boolean.valueOf(canCompress));
+
                 boolean usedCache = cacheManager.streamFromCache(key, response, canCompress
                     && clientAcceptsGzip(request));
+                log.debug("{} streamed from cache: {}", key, Boolean.valueOf(usedCache));
                 if (!usedCache && !isAlreadyFiltered(request) && cacheManager.isCacheable(request)) {
+                    log.debug("{} start caching", key);
+
                     // mark the request as already filtered, avoid recursion
                     request.setAttribute(ALREADY_FILTERED, Boolean.TRUE);
 
@@ -121,6 +130,8 @@ public class CacheFilter extends AbstractMgnlFilter {
                             this.cacheManager.cacheRequest(key, cacheableEntry, canCompress);
                         }
                     }
+                    log.debug("{} end caching", key);
+
                     return;
                 }
                 else if (usedCache) {
