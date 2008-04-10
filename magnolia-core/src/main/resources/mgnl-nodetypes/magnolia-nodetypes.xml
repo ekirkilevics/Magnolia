@@ -71,13 +71,14 @@
     <nodeType name="mgnl:metaData" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
-            <supertype>mix:versionable</supertype>
+            <supertype>mix:referenceable</supertype>
         </supertypes>
         <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
     </nodeType>
     <nodeType name="mgnl:content" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
+            <supertype>mix:referenceable</supertype>
         </supertypes>
         <childNodeDefinition name="MetaData" defaultPrimaryType="mgnl:metaData" autoCreated="true" mandatory="true" onParentVersion="COPY" protected="false" sameNameSiblings="false">
             <requiredPrimaryTypes>
@@ -94,6 +95,7 @@
     <nodeType name="mgnl:contentNode" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
         <supertypes>
             <supertype>nt:hierarchyNode</supertype>
+            <supertype>mix:referenceable</supertype>
         </supertypes>
         <childNodeDefinition name="MetaData" defaultPrimaryType="mgnl:metaData" autoCreated="true" mandatory="true" onParentVersion="COPY" protected="false" sameNameSiblings="false">
             <requiredPrimaryTypes>
