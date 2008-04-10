@@ -117,7 +117,7 @@ public class CleanBootstrapFiles{
             }
         }
         final Format format = Format.getPrettyFormat();
-        format.setLineSeparator("\n");
+        format.setLineSeparator(System.getProperty("line.separator"));
         new XMLOutputter(format).output(doc, out);
         return true;
    }
