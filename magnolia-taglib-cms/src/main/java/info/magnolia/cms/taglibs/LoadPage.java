@@ -111,7 +111,11 @@ public class LoadPage extends BodyTagSupport {
     public int doEndTag() {
         Content newActpage = Resource.getCurrentActivePage();
 
-        String actPageHandle = newActpage.getHandle();
+        String actPageHandle = "[unset]";
+        if (newActpage != null)
+        {
+            actPageHandle = newActpage.getHandle();
+        }
 
         if (StringUtils.isNotEmpty(this.templateName)) {
             Content startPage;
