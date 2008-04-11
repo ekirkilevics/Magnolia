@@ -159,7 +159,6 @@ public abstract class BaseVersionManager {
          List permissions = this.getAccessManagerPermissions();
          this.impersonateAccessManager(null);
          try {
-             checkAndAddMixin(node);
              return this.createVersion(node, rule);
          }
          catch (RepositoryException re) {
@@ -446,7 +445,6 @@ public abstract class BaseVersionManager {
              synchronized(ExclusiveWrite.getInstance()){
                  log.info("Add mixin");
                  node.addMixin("mix:versionable");
-                 node.save();
              }
           }
      }
