@@ -36,7 +36,6 @@ package info.magnolia.test;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.context.DefaultRepositoryStrategy;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemRepositoryStrategy;
 import info.magnolia.repository.Provider;
@@ -50,7 +49,9 @@ import java.util.Iterator;
 
 import junit.framework.TestCase;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.log4j.Level;
 
 /**
  *
@@ -61,6 +62,9 @@ public abstract class RepositoryTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+
+        Level logLevel = org.apache.log4j.Logger.getLogger("info.magnolia").getLevel();
+        org.apache.log4j.Logger.getLogger("info.magnolia").setLevel(Level.WARN);
 
         FactoryUtil.clear();
         // TODO move that to an util
@@ -77,7 +81,6 @@ public abstract class RepositoryTestCase extends TestCase {
             fileStream = new FileInputStream(initFile);
             SystemProperty.getProperties().load(fileStream);
         } catch (Exception e) {
-            //System.err.println(new File(".").getAbsolutePath());
             e.printStackTrace();
         } finally {
             IOUtils.closeQuietly(fileStream);
@@ -89,6 +92,8 @@ public abstract class RepositoryTestCase extends TestCase {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
+        org.apache.log4j.Logger.getLogger("info.magnolia").setLevel(logLevel);
     }
 
     protected File getPropertiesFile() {
@@ -97,7 +102,10 @@ public abstract class RepositoryTestCase extends TestCase {
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        SystemProperty.getProperties().clear();
+
+        Level logLevel = org.apache.log4j.Logger.getLogger("info.magnolia").getLevel();
+        org.apache.log4j.Logger.getLogger("info.magnolia").setLevel(Level.WARN);
+
         try {
             Iterator i = ContentRepository.getAllRepositoryNames();
             HashSet ids = new HashSet();
@@ -109,9 +117,12 @@ public abstract class RepositoryTestCase extends TestCase {
                 Provider provider = ContentRepository.getRepositoryProvider(repositoryId);
                 provider.shutdownRepository();
             }
+            FileUtils.deleteDirectory(new File(SystemProperty.getProperty("magnolia.repositories.home")));
         } catch (Exception e) {
             e.printStackTrace();
         }
+        SystemProperty.getProperties().clear();
+        org.apache.log4j.Logger.getLogger("info.magnolia").setLevel(logLevel);
     }
 
 
