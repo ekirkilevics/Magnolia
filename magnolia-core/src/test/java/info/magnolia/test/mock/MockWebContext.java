@@ -48,6 +48,8 @@ import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.security.User;
+import info.magnolia.context.UserContext;
 import info.magnolia.context.WebContext;
 
 /**
@@ -55,11 +57,12 @@ import info.magnolia.context.WebContext;
  * @author had
  *
  */
-public class MockWebContext extends MockContext implements WebContext {
+public class MockWebContext extends MockContext implements WebContext, UserContext {
 
     private PageContext pageContext;
     private AggregationState aggregationState = new AggregationState();
-    
+    private User user;
+
 
     /* (non-Javadoc)
      * @see info.magnolia.context.WebContext#getActivePage()
@@ -72,7 +75,7 @@ public class MockWebContext extends MockContext implements WebContext {
      * @see info.magnolia.context.WebContext#getAggregationState()
      */
     public AggregationState getAggregationState() {
-        
+
         return aggregationState ;
     }
 
@@ -195,5 +198,17 @@ public class MockWebContext extends MockContext implements WebContext {
      */
     public void setAggregationState(AggregationState agState) {
         this.aggregationState = agState;
+    }
+
+    public User getUser() {
+        return this.user;
+    }
+
+    public void login(User user) {
+        this.user = user;
+    }
+
+    public void logout() {
+        this.user = null;
     }
 }
