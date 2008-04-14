@@ -404,6 +404,7 @@ public class FckEditorDialog extends DialogBox {
                     final String link = MgnlContext.getContextPath()
                         + this.getTopParent().getConfigValue("path")
                         + "/"
+                        // remove the page name
                         + StringUtils.substringAfter(src, "/");
 
                     matcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
