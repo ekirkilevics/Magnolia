@@ -44,6 +44,10 @@ import javax.servlet.http.HttpSessionAttributeListener;
 import javax.servlet.http.HttpSessionBindingEvent;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.util.Enumeration;
 
@@ -54,7 +58,7 @@ import java.util.Enumeration;
  * @version $Revision: $ ($Author: $)
  */
 public class SessionDebugger extends AbstractMgnlFilter implements HttpSessionListener, HttpSessionAttributeListener {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SessionDebugger.class);
+    private static final Logger log = LoggerFactory.getLogger("info.magnolia.debug");
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         final HttpSession session = request.getSession(false);
