@@ -442,11 +442,9 @@ public abstract class BaseVersionManager {
       */
      protected void checkAndAddMixin(Content node) throws RepositoryException {
          if(!node.getJCRNode().isNodeType("mix:versionable")){
-             synchronized(ExclusiveWrite.getInstance()){
-                 log.debug("Add mixin");
-                 node.addMixin("mix:versionable");
-             }
-          }
+             log.debug("Add mixin");
+             node.addMixin("mix:versionable");
+         }
      }
 
      /**
