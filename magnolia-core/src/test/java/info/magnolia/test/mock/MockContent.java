@@ -53,6 +53,8 @@ import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -60,6 +62,8 @@ import org.apache.commons.lang.StringUtils;
  * @version $Id$
  */
 public class MockContent extends DefaultContent {
+
+    private static Logger log = LoggerFactory.getLogger(MockContent.class);
 
     private String uuid;
 
@@ -96,6 +100,16 @@ public class MockContent extends DefaultContent {
             MockNodeData nd = (MockNodeData) iter.next();
             addNodeData(nd);
         }
+    }
+
+    public boolean isNodeType(String type) {
+        try {
+            return this.getNodeTypeName().equalsIgnoreCase(type);
+        }
+        catch (RepositoryException e) {
+            log.error("can't read node type name", e);
+        }
+        return false;
     }
 
     public void addNodeData(MockNodeData nd) {
