@@ -58,6 +58,7 @@ import java.text.MessageFormat;
  */
 public abstract class BaseLinkTest extends MgnlTestCase {
 
+    protected static final String SOME_CONTEXT = "/some-context";
     protected static final String HANDLE_PARENT_SUB = "/parent/sub";
     protected static final String UUID_PATTNER_OLD_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',workspace:'{'default'}',path:'{'{2}'}}}'";
     protected static final String UUID_PATTNER_NEW_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',handle:'{'{2}'}',nodeData:'{'{3}'}',extension:'{'{4}'}}}'";
@@ -79,7 +80,7 @@ public abstract class BaseLinkTest extends MgnlTestCase {
         MockHierarchyManager hm = MockUtil.createHierarchyManager(website);
         webContext = createMock(WebContext.class);
         expect(webContext.getHierarchyManager(ContentRepository.WEBSITE)).andReturn(hm).anyTimes();
-        expect(webContext.getContextPath()).andReturn("/some-context").anyTimes();
+        expect(webContext.getContextPath()).andReturn(SOME_CONTEXT).anyTimes();
 
         // add a binary
         MockContent page = (MockContent) hm.getContent(HANDLE_PARENT_SUB);
