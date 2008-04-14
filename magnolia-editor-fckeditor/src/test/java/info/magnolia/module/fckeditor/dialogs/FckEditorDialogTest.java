@@ -46,6 +46,11 @@ import javax.servlet.http.HttpServletRequest;
  */
 public class FckEditorDialogTest extends BaseLinkTest {
 
+    /**
+     *
+     */
+    protected static final String SOME_PATH = "/some/path/to/here";
+
     public void testNullsAndBasicCharsAreNotTouchedForJS() {
         assertEquals("foo bar", new FckEditorDialog().escapeJsValue("foo bar"));
         assertNull(new FckEditorDialog().escapeJsValue(null));
@@ -68,15 +73,22 @@ public class FckEditorDialogTest extends BaseLinkTest {
         assertEquals("Here is a \\\\backslash for Sean", new FckEditorDialog().escapeJsValue("Here is a \\backslash for Sean"));
     }
 
+    public void testConvertToViewShouldConvertFormerImageLinks() throws RepositoryException {
+        final FckEditorDialogForTest d = new FckEditorDialogForTest();
+        d.init(null, null, null, null);
+        d.setTopParent(d);
+        d.setConfig("path", SOME_PATH);
+
+        assertEquals("<a href=\"" + SOME_CONTEXT  + SOME_PATH  + "/field/image.jpg\">baz</a>", d.convertToView("<a href=\"page/field/image.jpg\">baz</a>"));
+    }
+
     public void testConvertToViewShouldNotConvertNonUUIDLinks() throws RepositoryException {
         final FckEditorDialogForTest d = new FckEditorDialogForTest();
         d.init(null, null, null, null);
         d.setTopParent(d);
-        d.setConfig("path", "/some/path/to/here");
+        d.setConfig("path", SOME_PATH);
 
-        assertEquals("<a href=\"foo/bar\">baz</a>", d.convertToView("<a href=\"foo/bar\">baz</a>"));
         assertEquals("<img src=\"/foo/bar.gif\"/>", d.convertToView("<img src=\"/foo/bar.gif\"/>"));
-        assertEquals("<img src=\"../here/bar.gif\">", d.convertToView("<img src=\"../here/bar.gif\">"));
     }
 
     public void testConvertToViewDoesNotImpactAbsoluteAndExternalLinksAndImages() throws RepositoryException {
