@@ -713,7 +713,7 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public boolean isNodeType(String type) {
         try {
-            return this.getNodeTypeName().equalsIgnoreCase(type);
+            return this.node.isNodeType(type);
         }
         catch (RepositoryException re) {
             log.error(re.getMessage());
