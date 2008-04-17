@@ -884,7 +884,7 @@ for Java Content Repositories (JCR).
     <!-- just a little trick for folks who don't have our parent pom in their local repo yet -->
     <repository>
       <id>magnolia</id>
-      <url>http://svn.magnolia.info/maven/m2</url>
+      <url>http://repo.magnolia.info/m2</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>
