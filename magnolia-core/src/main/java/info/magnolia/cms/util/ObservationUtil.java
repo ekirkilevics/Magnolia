@@ -107,41 +107,34 @@ public class ObservationUtil {
         }
     }
 
-    /**
-     * @return the wrapped EventListener so that one can unregister it.
-     */
-    public static EventListener registerDefferedChangeListener(String repository, String observationPath, EventListener listener, long delay, long maxDelay) {
-        return registerDefferedChangeListener(repository, observationPath, true, (String[]) null, listener, delay, maxDelay);
+    public static void registerDefferedChangeListener(String repository, String observationPath, EventListener listener, long delay, long maxDelay) {
+        registerDefferedChangeListener(repository, observationPath, true, (String[]) null, listener, delay, maxDelay);
     }
 
-    /**
-     * @return the wrapped EventListener so that one can unregister it.
-     */
-    public static EventListener registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, EventListener listener, long delay, long maxDelay) {
-        return registerDefferedChangeListener(repository, observationPath, includeSubnodes, (String[]) null, listener, delay, maxDelay);
+    public static void registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, EventListener listener, long delay, long maxDelay) {
+        registerDefferedChangeListener(repository, observationPath, includeSubnodes, (String[]) null, listener, delay, maxDelay);
     }
 
-    /**
-     * @return the wrapped EventListener so that one can unregister it.
-     */
-    public static EventListener registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener, long delay, long maxDelay) {
-        return registerDefferedChangeListener(repository, observationPath, includeSubnodes, new String[]{nodeType}, listener, delay, maxDelay);
+    public static void registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener, long delay, long maxDelay) {
+        registerDefferedChangeListener(repository, observationPath, includeSubnodes, new String[]{nodeType}, listener, delay, maxDelay);
     }
 
     /**
      * The event firing is deffered in case there is a serie of fired events
      * @return the wrapped EventListener so that one can unregister it.
      */
-    public static EventListener registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener, long delay, long maxDelay) {
-        final ObservationBasedDelayedExecutor executor = new ObservationBasedDelayedExecutor(listener, delay, maxDelay);
-
-        final EventListener deferedListener = new EventListener() {
-            public void onEvent(EventIterator events) {
-                executor.consume(events);
-            }
-        };
+    public static void registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener, long delay, long maxDelay) {
+        final EventListener deferedListener = instanciateDeferredEventListener(listener, delay, maxDelay);
         registerChangeListener(repository, observationPath, includeSubnodes, nodeTypes, deferedListener);
-        return deferedListener;
+    }
+
+    /**
+     * Use this and register the returned EventListener with the registerChangeListener() methods, if
+     * you need to be able to later unregister your EventListener.
+     */
+    public static EventListener instanciateDeferredEventListener(EventListener listener, long delay, long maxDelay) {
+        final ObservationBasedDelayedExecutor executor = new ObservationBasedDelayedExecutor(listener, delay, maxDelay);
+        return new DeferringEventListener(executor);
     }
 
     public static void unregisterChangeListener(String repository, EventListener listener) {
@@ -157,6 +150,18 @@ public class ObservationUtil {
                 .getHierarchyManager(repository)
                 .getWorkspace()
                 .getObservationManager();
+    }
+
+    public static class DeferringEventListener implements EventListener {
+        private final ObservationBasedDelayedExecutor executor;
+
+        public DeferingEventListener(ObservationBasedDelayedExecutor executor) {
+            this.executor = executor;
+        }
+
+        public void onEvent(EventIterator events) {
+            executor.consume(events);
+        }
     }
 
     /**
