@@ -107,23 +107,51 @@ public class ObservationUtil {
         }
     }
 
+    /**
+     * @deprecated since 3.6 - typo - use registerDeferredChangeListener
+     */
     public static void registerDefferedChangeListener(String repository, String observationPath, EventListener listener, long delay, long maxDelay) {
-        registerDefferedChangeListener(repository, observationPath, true, (String[]) null, listener, delay, maxDelay);
+        registerDeferredChangeListener(repository,  observationPath, listener, delay, maxDelay);
     }
 
+    public static void registerDeferredChangeListener(String repository, String observationPath, EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath, true, (String[]) null, listener, delay, maxDelay);
+    }
+
+    /**
+     * @deprecated since 3.6 - typo - use registerDeferredChangeListener
+     */
     public static void registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, EventListener listener, long delay, long maxDelay) {
-        registerDefferedChangeListener(repository, observationPath, includeSubnodes, (String[]) null, listener, delay, maxDelay);
+        registerDeferredChangeListener(repository, observationPath, includeSubnodes, listener, delay, maxDelay);
     }
 
+    public static void registerDeferredChangeListener(String repository, String observationPath, boolean includeSubnodes, EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath, includeSubnodes, (String[]) null, listener, delay, maxDelay);
+    }
+
+    /**
+     * @deprecated since 3.6 - typo - use registerDeferredChangeListener
+     */
     public static void registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener, long delay, long maxDelay) {
-        registerDefferedChangeListener(repository, observationPath, includeSubnodes, new String[]{nodeType}, listener, delay, maxDelay);
+        registerDeferredChangeListener(repository, observationPath, includeSubnodes, nodeType, listener, delay, maxDelay);
+    }
+
+    public static void registerDeferredChangeListener(String repository, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath, includeSubnodes, new String[]{nodeType}, listener, delay, maxDelay);
+    }
+
+    /**
+     * @deprecated since 3.6 - typo - use registerDeferredChangeListener
+     */
+    public static void registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath, includeSubnodes, nodeTypes, listener, delay, maxDelay);
     }
 
     /**
      * The event firing is deffered in case there is a serie of fired events
      * @return the wrapped EventListener so that one can unregister it.
      */
-    public static void registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener, long delay, long maxDelay) {
+    public static void registerDeferredChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener, long delay, long maxDelay) {
         final EventListener deferedListener = instanciateDeferredEventListener(listener, delay, maxDelay);
         registerChangeListener(repository, observationPath, includeSubnodes, nodeTypes, deferedListener);
     }
@@ -155,7 +183,7 @@ public class ObservationUtil {
     public static class DeferringEventListener implements EventListener {
         private final ObservationBasedDelayedExecutor executor;
 
-        public DeferingEventListener(ObservationBasedDelayedExecutor executor) {
+        public DeferringEventListener(ObservationBasedDelayedExecutor executor) {
             this.executor = executor;
         }
 
