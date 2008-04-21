@@ -94,10 +94,7 @@ public class ObservationUtil {
         log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$
 
         try {
-            ObservationManager observationManager = MgnlContext.getSystemContext()
-                    .getHierarchyManager(repository)
-                    .getWorkspace()
-                    .getObservationManager();
+            ObservationManager observationManager = getObservationManager(repository);
 
             observationManager.addEventListener(listener, Event.NODE_ADDED
                     | Event.NODE_REMOVED
@@ -110,29 +107,56 @@ public class ObservationUtil {
         }
     }
 
-    public static void registerDefferedChangeListener(String repository, String observationPath, EventListener listener, long delay, long maxDelay) {
-        registerDefferedChangeListener(repository, observationPath, true, (String[]) null, listener, delay, maxDelay);
+    /**
+     * @return the wrapped EventListener so that one can unregister it.
+     */
+    public static EventListener registerDefferedChangeListener(String repository, String observationPath, EventListener listener, long delay, long maxDelay) {
+        return registerDefferedChangeListener(repository, observationPath, true, (String[]) null, listener, delay, maxDelay);
     }
 
-    public static void registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, EventListener listener, long delay, long maxDelay) {
-        registerDefferedChangeListener(repository, observationPath, includeSubnodes, (String[]) null, listener, delay, maxDelay);
+    /**
+     * @return the wrapped EventListener so that one can unregister it.
+     */
+    public static EventListener registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, EventListener listener, long delay, long maxDelay) {
+        return registerDefferedChangeListener(repository, observationPath, includeSubnodes, (String[]) null, listener, delay, maxDelay);
     }
 
-    public static void registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener, long delay, long maxDelay) {
-        registerDefferedChangeListener(repository, observationPath, includeSubnodes, new String[]{nodeType}, listener, delay, maxDelay);
+    /**
+     * @return the wrapped EventListener so that one can unregister it.
+     */
+    public static EventListener registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String nodeType, EventListener listener, long delay, long maxDelay) {
+        return registerDefferedChangeListener(repository, observationPath, includeSubnodes, new String[]{nodeType}, listener, delay, maxDelay);
     }
 
     /**
      * The event firing is deffered in case there is a serie of fired events
+     * @return the wrapped EventListener so that one can unregister it.
      */
-    public static void registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener, long delay, long maxDelay) {
+    public static EventListener registerDefferedChangeListener(String repository, String observationPath, boolean includeSubnodes, String[] nodeTypes, EventListener listener, long delay, long maxDelay) {
         final ObservationBasedDelayedExecutor executor = new ObservationBasedDelayedExecutor(listener, delay, maxDelay);
 
-        registerChangeListener(repository, observationPath, includeSubnodes, nodeTypes, new EventListener(){
+        final EventListener deferedListener = new EventListener() {
             public void onEvent(EventIterator events) {
                 executor.consume(events);
             }
-        });
+        };
+        registerChangeListener(repository, observationPath, includeSubnodes, nodeTypes, deferedListener);
+        return deferedListener;
+    }
+
+    public static void unregisterChangeListener(String repository, EventListener listener) {
+        try {
+            getObservationManager(repository).removeEventListener(listener);
+        } catch (RepositoryException e) {
+            log.error("Unable to remove event listener [" + listener + "] from repository " + repository, e);
+        }
+    }
+
+    private static ObservationManager getObservationManager(String repository) throws RepositoryException {
+        return MgnlContext.getSystemContext()
+                .getHierarchyManager(repository)
+                .getWorkspace()
+                .getObservationManager();
     }
 
     /**
