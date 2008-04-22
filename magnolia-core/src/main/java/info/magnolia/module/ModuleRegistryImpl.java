@@ -34,35 +34,25 @@
 package info.magnolia.module;
 
 import info.magnolia.module.model.ModuleDefinition;
+import org.apache.commons.collections.MapUtils;
 
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.commons.collections.MapUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
- * Keeps references to module descriptors and instances
+ * Keeps references to module descriptors and instances.
+ *
  * @author philipp
  * @version $Id$
  */
 public class ModuleRegistryImpl implements ModuleRegistry {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ModuleRegistryImpl.class);
-
-    private Map entries;
+    private final Map entries;
 
     public ModuleRegistryImpl() {
-
-        entries = MapUtils.lazyMap(new HashMap(), new org.apache.commons.collections.Factory(){
+        entries = MapUtils.lazyMap(new HashMap(), new org.apache.commons.collections.Factory() {
             public Object create() {
                 return new ModuleEntry();
             }
