@@ -33,12 +33,21 @@
  */
 package info.magnolia.cms.taglibs.util;
 
+import javax.jcr.NamespaceException;
+import javax.jcr.query.InvalidQueryException;
+
 import junit.framework.TestCase;
+
 import org.apache.commons.lang.RandomStringUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.math.RandomUtils;
-import org.apache.jackrabbit.core.query.xpath.TokenMgrError;
+import org.apache.jackrabbit.core.query.DefaultQueryNodeFactory;
+import org.apache.jackrabbit.core.query.lucene.SearchIndex;
 import org.apache.jackrabbit.core.query.xpath.XPathQueryBuilder;
-import org.apache.jackrabbit.name.NamespaceResolver;
+import org.apache.jackrabbit.spi.Name;
+import org.apache.jackrabbit.spi.commons.conversion.IllegalNameException;
+import org.apache.jackrabbit.spi.commons.conversion.NameResolver;
+import org.apache.jackrabbit.spi.commons.name.NameFactoryImpl;
 
 /**
  * @author Fabrizio Giustina
@@ -47,9 +56,26 @@ import org.apache.jackrabbit.name.NamespaceResolver;
 public class SimpleSearchTagTest extends TestCase {
 
     /**
-     * Test for GenerateXPathQuery(). Uses Jackrabbit internal XPathQueryBuilder in order to validate the query.
+     *
      */
-    public void testGenerateXPathQuery() {
+    private static final NameResolver DUMMY_NAME_RESOLVER = new NameResolver(){
+                public String getJCRName(Name name) throws NamespaceException {
+                    return "jcr:" + name.getLocalName();
+                }
+                public Name getQName(final String name) throws IllegalNameException, NamespaceException {
+                    return NameFactoryImpl.getInstance().create(Name.NS_JCR_URI, StringUtils.substringAfter(name, ":"));
+                }
+            };
+    /**
+     *
+     */
+    private static final DefaultQueryNodeFactory DUMMY_QUERY_NODE_FACTORY = new DefaultQueryNodeFactory(SearchIndex.VALID_SYSTEM_INDEX_NODE_TYPE_NAMES);
+
+    /**
+     * Test for GenerateXPathQuery(). Uses Jackrabbit internal XPathQueryBuilder in order to validate the query.
+     * @throws InvalidQueryException
+     */
+    public void testGenerateXPathQuery(){
 
         SimpleSearchTag tag = new SimpleSearchTag();
         tag.setQuery("AND test query AND path OR and OR join AND AND test AND OR");
@@ -57,12 +83,10 @@ public class SimpleSearchTagTest extends TestCase {
         String xpath = tag.generateXPathQuery();
 
         try {
-            NamespaceResolver resolver = null; // session.getNamespaceResolver()
-            XPathQueryBuilder.createQuery(xpath, resolver);
-        } catch (TokenMgrError e) {
+            XPathQueryBuilder.createQuery(xpath, DUMMY_NAME_RESOLVER, DUMMY_QUERY_NODE_FACTORY);
+        }
+        catch (InvalidQueryException e) {
             fail("Invalid query: [" + xpath + "] " + e.getMessage());
-        } catch (Throwable e) {
-            // ok, we are setting a namespace resolver since we are running "off line", so it's normal to see exceptions
         }
     }
 
@@ -86,13 +110,9 @@ public class SimpleSearchTagTest extends TestCase {
             String xpath = tag.generateXPathQuery();
 
             try {
-                NamespaceResolver resolver = null; // session.getNamespaceResolver()
-                XPathQueryBuilder.createQuery(xpath, resolver);
-            } catch (TokenMgrError e) {
+                XPathQueryBuilder.createQuery(xpath, DUMMY_NAME_RESOLVER, DUMMY_QUERY_NODE_FACTORY);
+            } catch (InvalidQueryException e) {
                 fail("Invalid query: [" + xpath + "] " + e.getMessage() + ". Input query was: [" + inputstring.toString() + "]");
-            } catch (Throwable e) {
-                // ok, we are setting a namespace resolver since we are running "off line", so it's normal to see
-                // exceptions
             }
         }
     }
