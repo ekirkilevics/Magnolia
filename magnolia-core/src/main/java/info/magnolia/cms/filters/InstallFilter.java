@@ -106,6 +106,7 @@ public class InstallFilter extends AbstractMgnlFilter {
             log.error(e.getMessage(), e);
             throw new RuntimeException(e); // TODO
         } finally {
+            MgnlContext.release();
             MgnlContext.setInstance(null);
         }
     }

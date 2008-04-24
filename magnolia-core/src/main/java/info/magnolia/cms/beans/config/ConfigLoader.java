@@ -133,7 +133,7 @@ public class ConfigLoader {
         log.info("Initializing content repositories"); //$NON-NLS-1$
         //TODO: mute the log here
         boolean oldIndexersFound = WorkspaceXmlUtil.getWorkspaceNamesWithIndexer().size() > 0;
-        
+
     org.apache.log4j.Logger jrLog = org.apache.log4j.Logger.getLogger("org.apache.jackrabbit.core.query.lucene.JackrabbitTextExtractor");
         Level jrLevel = jrLog.getLevel();
         if (oldIndexersFound) {
@@ -143,9 +143,6 @@ public class ConfigLoader {
         if (oldIndexersFound) {
             jrLog.setLevel(jrLevel);
         }
-
-        log.info("Setting system context"); //$NON-NLS-1$
-        MgnlContext.setInstance(MgnlContext.getSystemContext());
 
         try {
             final ModuleManager moduleManager = ModuleManager.Factory.getInstance();

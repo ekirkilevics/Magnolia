@@ -35,14 +35,9 @@ package info.magnolia.cms.cache;
 
 import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.Path;
+import info.magnolia.cms.util.MBeanUtil;
 
-import java.util.ArrayList;
 
-import javax.management.InstanceAlreadyExistsException;
-import javax.management.MBeanServer;
-import javax.management.MBeanServerFactory;
-import javax.management.ObjectName;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,7 +54,7 @@ import org.slf4j.LoggerFactory;
  */
 public class ManageableCacheManager implements CacheManager, ManageableCacheManagerMBean {
 
-    private static final Logger log = LoggerFactory.getLogger(ManageableCacheManager.class);
+    public static final Logger log = LoggerFactory.getLogger(ManageableCacheManager.class);
 
     private int cacheHits;
 
@@ -186,28 +181,8 @@ public class ManageableCacheManager implements CacheManager, ManageableCacheMana
     }
 
     private void registerMBean() {
-        String appName = Path.getAppRootDir().getName();
-        // not totally failsafe, but it will work unless you run two instances in directories with the same name
-        final String id = "Magnolia:type=CacheManager,domain=" + appName;
-        try {
-            final ObjectName mbeanName = new ObjectName(id);
-            ArrayList list = MBeanServerFactory.findMBeanServer(null);
-            final MBeanServer mbeanServer;
-            if (list != null && list.size() > 0) {
-                mbeanServer = (MBeanServer) list.get(0);
-            }
-            else {
-                mbeanServer = MBeanServerFactory.createMBeanServer();
-            }
-            if (!mbeanServer.isRegistered(mbeanName)) {
-                mbeanServer.registerMBean(this, mbeanName);
-            }
-        }
-        catch (InstanceAlreadyExistsException e) {
-            log.info("MBean '{}' exist", id);
-        }
-        catch (Throwable t) {
-            log.error("Could not register JMX MBean '" + id + "'", t);
-        }
+        String name = "CacheManager";
+
+        MBeanUtil.registerMBean(name, this);
     }
 }

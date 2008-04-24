@@ -87,6 +87,8 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
     }
 
     public void release() {
+        // release jcr sessions
+        super.release();
         repositoryStrategyThreadLocal.set(null);
     }
 

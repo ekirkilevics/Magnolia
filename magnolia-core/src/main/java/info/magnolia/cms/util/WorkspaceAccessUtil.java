@@ -48,6 +48,9 @@ import javax.jcr.SimpleCredentials;
 import javax.jcr.RepositoryException;
 import javax.jcr.Repository;
 import javax.security.auth.Subject;
+
+import org.apache.log4j.jmx.AbstractDynamicMBean;
+
 import java.util.List;
 import java.util.Set;
 import java.util.Iterator;
@@ -65,7 +68,8 @@ import java.util.ArrayList;
  */
 public class WorkspaceAccessUtil {
 
-    public WorkspaceAccessUtil() {}
+    public WorkspaceAccessUtil() {
+    }
 
     public static WorkspaceAccessUtil getInstance() {
         return (WorkspaceAccessUtil) FactoryUtil.getSingleton(WorkspaceAccessUtil.class);

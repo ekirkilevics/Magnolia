@@ -36,6 +36,7 @@ package info.magnolia.context;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
+import info.magnolia.stats.JCRStats;
 
 import java.util.HashMap;
 import java.util.Iterator;
@@ -111,6 +112,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
             jcrSessions.put(repoSessAttrName, jcrSession);
+            JCRStats.getInstance().incSessionCount();
         }
 
         return jcrSession;
@@ -122,6 +124,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
             Session session = (Session) iter.next();
             if(session != null && session.isLive()){
                 session.logout();
+                JCRStats.getInstance().decSessionCount();
             }
         }
         hierarchyManagers.clear();

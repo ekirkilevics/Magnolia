@@ -143,6 +143,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                 log.error("consume command failed", e);
             }
             finally {
+                MgnlContext.release();
                 MgnlContext.setInstance(originalContext);
             }
         }

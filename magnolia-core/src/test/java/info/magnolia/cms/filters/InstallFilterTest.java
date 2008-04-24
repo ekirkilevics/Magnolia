@@ -35,6 +35,7 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ui.ModuleManagerUI;
+import info.magnolia.test.MgnlTestCase;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -49,7 +50,7 @@ import java.io.StringWriter;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class InstallFilterTest extends TestCase {
+public class InstallFilterTest extends MgnlTestCase {
     private ModuleManager moduleManager;
     private ModuleManagerUI ui;
     private HttpServletRequest req;

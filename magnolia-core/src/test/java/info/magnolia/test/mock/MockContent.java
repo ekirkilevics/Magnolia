@@ -45,14 +45,17 @@ import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.Predicate;
 import org.apache.commons.collections.map.ListOrderedMap;
 import org.apache.commons.lang.StringUtils;
+import org.easymock.classextension.EasyMock;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -80,6 +83,9 @@ public class MockContent extends DefaultContent {
     private OrderedMap children = new ListOrderedMap();
 
     private String nodeTypeName = ItemType.CONTENTNODE.getSystemName();
+
+    private Node jcrNode;
+
 
     public MockContent(String name) {
         this.name = name;
@@ -249,6 +255,32 @@ public class MockContent extends DefaultContent {
 
     public void save() throws RepositoryException {
         // nothing to do
+    }
+
+    public Node getJCRNode() {
+        if(jcrNode==null){
+            jcrNode = new MockJCRNode(this);
+            /*
+            jcrNode = EasyMock.createNiceMock(Node.class);
+            // we should get that from the hierarchy manager
+            Session session = EasyMock.createNiceMock(Session.class);
+            //session.isLive();
+            try {
+                EasyMock.expect(jcrNode.getSession()).andStubReturn(session);
+                EasyMock.replay(jcrNode);
+                EasyMock.replay(session);
+            }
+            catch (RepositoryException e) {
+                log.error("WONT HAPPEN", e);
+            }
+            */
+        }
+        return this.jcrNode;
+    }
+
+
+    public void setJCRNode(Node jcrNode) {
+        this.jcrNode = jcrNode;
     }
 
     public String getName() {

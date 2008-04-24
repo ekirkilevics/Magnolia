@@ -228,7 +228,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * @see #release()
      */
     public void logout() {
-        release();
+        releaseJCRSessions();
 
         HttpSession session = this.request.getSession(false);
         if (session != null) {
@@ -241,6 +241,12 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * Closes opened JCR sessions.
      */
     public void release() {
+        releaseJCRSessions();
+        this.request = null;
+        this.response = null;
+    }
+
+    protected void releaseJCRSessions() {
         getRepositoryStrategy().release();
     }
 }

@@ -104,7 +104,7 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
                         moduleManager.startModules();
                         //moduleManager.getStatus().done();
                     }
-                });
+                }, false);
                 return true;
             }
         }

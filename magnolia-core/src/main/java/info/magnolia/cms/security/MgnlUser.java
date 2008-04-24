@@ -409,8 +409,13 @@ public class MgnlUser extends AbstractUser implements Serializable {
     }
 
     public Content getUserNode() {
-        if (null == userNode) {
-            reInitialize();
+        try {
+            if (null == userNode || !userNode.getJCRNode().getSession().isLive()) {
+                reInitialize();
+            }
+        }
+        catch (RepositoryException e) {
+            log.error("can't reinitialize the user's content node ",e);
         }
         return userNode;
     }

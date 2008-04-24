@@ -31,53 +31,61 @@
  * intact.
  *
  */
-package info.magnolia.context;
+package info.magnolia.cms.util;
 
-import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.PermissionImpl;
-import info.magnolia.cms.security.SystemUserManager;
-import info.magnolia.cms.util.UrlPattern;
-import info.magnolia.cms.util.WorkspaceAccessUtil;
+import javax.jcr.RepositoryException;
 
-import java.util.ArrayList;
-import java.util.List;
+import info.magnolia.cms.core.Content;
+import info.magnolia.context.MgnlContext;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
+ * @author philipp
+ * @version $Id$
  *
  */
-public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
-    private static final long serialVersionUID = 222L;
+public class LazyContentWrapper extends ContentWrapper {
 
-    private AccessManager accessManager;
+    private String repository;
 
-    public SystemRepositoryStrategy(SystemContext context) {
+    private String uuid;
+
+    private Content node;
+
+    /**
+     * Logger.
+     */
+    private static Logger log = LoggerFactory.getLogger(LazyContentWrapper.class);
+
+    public LazyContentWrapper(String repository, String uuid) {
+        this.repository = repository;
+        this.uuid = uuid;
     }
 
-    public AccessManager getAccessManager(String repositoryId, String workspaceId) {
-        if (accessManager == null) {
-            accessManager = WorkspaceAccessUtil.getInstance().createAccessManager(getSystemPermissions());
+    public LazyContentWrapper(Content node){
+        try {
+            this.repository = node.getWorkspace().getName();
         }
-
-        return accessManager;
+        catch (RepositoryException e) {
+            log.error("can't read repository name from wrapping node", e);
+        }
+        this.uuid = node.getUUID();
+        this.node = node;
     }
 
-    protected List getSystemPermissions() {
-        List acl = new ArrayList();
-        UrlPattern p = UrlPattern.MATCH_ALL;
-        Permission permission = new PermissionImpl();
-        permission.setPattern(p);
-        permission.setPermissions(Permission.ALL);
-        acl.add(permission);
-        return acl;
-    }
-
-    protected String getUserId() {
-        return SystemUserManager.SYSTEM_USER;
-    }
-
-    public void release() {
-        super.release();
+    public synchronized Content getWrappedContent() {
+        try {
+            if(node == null || !node.getJCRNode().getSession().isLive()){
+                node = MgnlContext.getSystemContext().getHierarchyManager(repository).getContentByUUID(uuid);
+            }
+        }
+        catch (RepositoryException e) {
+            log.error("can't reinitialize node " + uuid, e);
+        }
+        return node;
     }
 
 }

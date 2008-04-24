@@ -87,7 +87,7 @@ public class MgnlMainFilter implements Filter {
                 public void exec() {
                     reset();
                 }
-            });
+            }, true);
         }
     };
 
@@ -106,11 +106,15 @@ public class MgnlMainFilter implements Filter {
         instance = this;
         // remember this config
         this.filterConfig = filterConfig;
-        if (!isSystemUIMode()) {
-            startObservation();
-        }
-        createRootFilter();
-        initRootFilter();
+        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation(){
+            public void exec() {
+                if (!isSystemUIMode()) {
+                    startObservation();
+                }
+                createRootFilter();
+                initRootFilter();
+            }
+        }, true);
     }
 
     protected void startObservation() {

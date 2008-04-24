@@ -38,6 +38,7 @@ import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.module.PropertyDefinition;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
@@ -221,8 +222,11 @@ public class MgnlServletContextListener implements ServletContextListener {
 
         Log4jConfigurer.initLogging();
 
-        new ConfigLoader(context);
-
+        MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation(){
+            public void exec() {
+                new ConfigLoader(context);
+            }
+        }, true);
     }
 
     /**
@@ -263,7 +267,7 @@ public class MgnlServletContextListener implements ServletContextListener {
         }
 
         boolean found = false;
-        // attempt to load each properties file at the given locations in reverse order: first files in the list override the later ones 
+        // attempt to load each properties file at the given locations in reverse order: first files in the list override the later ones
         for (int j = propertiesLocation.length - 1; j >= 0; j--) {
             String location = StringUtils.trim(propertiesLocation[j]);
 
@@ -301,7 +305,7 @@ public class MgnlServletContextListener implements ServletContextListener {
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_WEBAPP, webapp);
         return webapp;
     }
-    
+
     /**
      * Initializes the application real root path.
      * @param context Servlet context.
