@@ -45,6 +45,7 @@ import java.util.Map;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
+import javax.jcr.UnsupportedRepositoryOperationException;
 
 import org.apache.commons.lang.UnhandledException;
 import org.slf4j.Logger;
@@ -123,8 +124,18 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         for (Iterator iter = jcrSessions.values().iterator(); iter.hasNext();) {
             Session session = (Session) iter.next();
             if(session != null && session.isLive()){
-                session.logout();
-                JCRStats.getInstance().decSessionCount();
+                try {
+                    if(!session.getWorkspace().getObservationManager().getRegisteredEventListeners().hasNext()){
+                        session.logout();
+                        JCRStats.getInstance().decSessionCount();
+                    }
+                    else{
+                        log.warn("can't close session because of registered observation listener {}", session );
+                    }
+                }
+                catch (RepositoryException e) {
+                    log.error("can't check if event listeners are registered", e);
+                }
             }
         }
         hierarchyManagers.clear();
