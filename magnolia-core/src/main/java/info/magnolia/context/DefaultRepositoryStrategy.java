@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * 
+ * Uses a user based access manager.
  */
 public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
     static final Logger log = LoggerFactory.getLogger(DefaultRepositoryStrategy.class);
@@ -80,9 +80,9 @@ public class DefaultRepositoryStrategy extends AbstractRepositoryStrategy {
     protected String getUserId() {
         return this.context.getUser().getName();
     }
-    
+
     public void release() {
-        super.release();
+        release(false);
         accessManagers.clear();
     }
 

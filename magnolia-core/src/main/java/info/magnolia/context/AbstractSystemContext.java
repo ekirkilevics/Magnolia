@@ -44,24 +44,24 @@ import org.slf4j.LoggerFactory;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class SystemContextImpl extends AbstractContext implements SystemContext {
+public abstract class AbstractSystemContext extends AbstractContext implements SystemContext {
 
     /**
      * Logger
      */
-    private static Logger log = LoggerFactory.getLogger(SystemContextImpl.class);
+    private static Logger log = LoggerFactory.getLogger(AbstractSystemContext.class);
 
     /**
      * Stable serialVersionUID.
      */
     private static final long serialVersionUID = 222L;
 
-    private static ThreadLocal repositoryStrategyThreadLocal = new ThreadLocal();
+    protected static ThreadLocal repositoryStrategyThreadLocal = new ThreadLocal();
 
     /**
      * DON'T CREATE AN OBJECT. The SystemContext is set by magnolia system itself. Init the scopes
      */
-    public SystemContextImpl() {
+    public AbstractSystemContext() {
         setAttributeStrategy(new MapAttributeStrategy());
     }
 
@@ -77,19 +77,6 @@ public class SystemContextImpl extends AbstractContext implements SystemContext 
             log.warn("you should not manipulate an attribute in the system context in request or session scope. You are setting {}={}", name, value);
         }
         super.removeAttribute(name, scope);
-    }
-
-    public RepositoryAcquiringStrategy getRepositoryStrategy() {
-        if(repositoryStrategyThreadLocal.get() == null){
-            repositoryStrategyThreadLocal.set(new SystemRepositoryStrategy(this));
-        }
-        return (RepositoryAcquiringStrategy) repositoryStrategyThreadLocal.get();
-    }
-
-    public void release() {
-        // release jcr sessions
-        super.release();
-        repositoryStrategyThreadLocal.set(null);
     }
 
     public Locale getLocale() {

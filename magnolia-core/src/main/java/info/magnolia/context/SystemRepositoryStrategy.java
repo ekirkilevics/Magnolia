@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
+ * Uses a single full access AccessManager. Jcr sessions are only released if no event listener were registered.
  */
 public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     private static final long serialVersionUID = 222L;
@@ -77,7 +77,7 @@ public class SystemRepositoryStrategy extends AbstractRepositoryStrategy {
     }
 
     public void release() {
-        super.release();
+        super.release(true);
     }
 
 }

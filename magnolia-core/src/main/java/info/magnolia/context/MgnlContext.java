@@ -386,7 +386,7 @@ public class MgnlContext {
      * Get magnolia system context, Note : this context have full rights over all repositories/ workspaces
      * @return system context
      */
-    public static Context getSystemContext() {
+    public static SystemContext getSystemContext() {
         return ContextFactory.getInstance().getSystemContext();
     }
 
@@ -457,10 +457,14 @@ public class MgnlContext {
         return null;
     }
 
+    /**
+     * Releases the current thread (if not a system context) and calls the releaseThread() method of the system context
+     *
+     */
     public static void release() {
-        if(hasInstance()){
+        if(hasInstance() && !(getInstance() instanceof SystemContext)){
             getInstance().release();
         }
-        getSystemContext().release();
+        getSystemContext().releaseThread();
     }
 }

@@ -34,13 +34,8 @@
 package info.magnolia.test.mock;
 
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.search.QueryManager;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.context.AbstractMapBasedContext;
 import info.magnolia.context.SystemContext;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,6 +60,9 @@ public class MockContext extends AbstractMapBasedContext implements SystemContex
 
     public void addHierarchyManager(String repositoryId, HierarchyManager hm){
         ((MockRepositoryAcquiringStrategy) this.getRepositoryStrategy()).addHierarchyManager(repositoryId, hm);
+    }
+
+    public void releaseThread() {
     }
 
 }

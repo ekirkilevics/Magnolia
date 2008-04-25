@@ -119,18 +119,18 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         return jcrSession;
     }
 
-    public void release() {
+    protected void release(boolean checkObservation) {
         log.debug("releasing jcr sessions");
         for (Iterator iter = jcrSessions.values().iterator(); iter.hasNext();) {
             Session session = (Session) iter.next();
             if(session != null && session.isLive()){
                 try {
-                    if(!session.getWorkspace().getObservationManager().getRegisteredEventListeners().hasNext()){
+                    if(checkObservation || !session.getWorkspace().getObservationManager().getRegisteredEventListeners().hasNext()){
                         session.logout();
                         JCRStats.getInstance().decSessionCount();
                     }
                     else{
-                        log.warn("can't close session because of registered observation listener {}", session );
+                        log.warn("won't close session because of registered observation listener {}", session );
                     }
                 }
                 catch (RepositoryException e) {

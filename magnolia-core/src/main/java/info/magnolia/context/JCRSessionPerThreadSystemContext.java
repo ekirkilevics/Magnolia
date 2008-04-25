@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,17 +33,32 @@
  */
 package info.magnolia.context;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
- * This context is a systemwide context with full access. Since no new method is added this is simple an interface to
- * mark the system context.
- * @author Philipp Bracher
- * @version $Revision$ ($Author$)
+ * A system context which creates jcrs sessions per thread (request). The sessions are released but not if any event
+ * listener has been registerd on a session.
+ * @author philipp
+ * @version $Id$
  */
-public interface SystemContext extends Context {
+public class JCRSessionPerThreadSystemContext extends AbstractSystemContext {
 
     /**
-     * Release all thread related stuff of the system context.
+     * Logger.
      */
-    public void releaseThread();
+    private static Logger log = LoggerFactory.getLogger(JCRSessionPerThreadSystemContext.class);
 
+    public RepositoryAcquiringStrategy getRepositoryStrategy() {
+        if (repositoryStrategyThreadLocal.get() == null) {
+            repositoryStrategyThreadLocal.set(new SystemRepositoryStrategy(this));
+        }
+        return (RepositoryAcquiringStrategy) repositoryStrategyThreadLocal.get();
+    }
+
+    public void releaseThread() {
+        getRepositoryStrategy().release();
+        repositoryStrategyThreadLocal.set(null);
+    }
 }
