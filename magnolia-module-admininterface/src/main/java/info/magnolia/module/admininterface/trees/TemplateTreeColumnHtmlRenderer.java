@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.admininterface.trees;
 
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.core.Content;
@@ -51,7 +53,7 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String templateName = content.getMetaData().getTemplate();
         Template template = TemplateManager.getInstance().getInfo(templateName);
-        return template.getI18NTitle();
+        return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
     }
 
 }
