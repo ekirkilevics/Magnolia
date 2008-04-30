@@ -55,6 +55,8 @@ import javax.servlet.http.HttpSession;
  * Fake request created from a real request used to generate cache content.
  * @author niko
  * @author Fabrizio Giustina
+ *
+ * @deprecated unused (deprecated since 3.6)
  */
 public class MockCacheRequest implements HttpServletRequest {
 

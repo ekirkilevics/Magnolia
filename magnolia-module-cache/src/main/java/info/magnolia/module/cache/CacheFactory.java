@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,41 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.cms.cache;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+package info.magnolia.module.cache;
 
 /**
- * @author fgiust
- * @version $Revision$ ($Author$)
- * @deprecated since 3.5
+ * Most caching libraries allow the creation of different caches ("zones") in a single application/vm.
+ * This interface wraps this functionality and hides the configuration mechanisms of the library in use.
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class CacheGeneratorServlet extends HttpServlet {
+public interface CacheFactory {
+    Cache newCache(String name);
+
+    Cache getCache(String name);
 
     /**
-     * Stable serialVersionUID.
+     * The underlying cache library is implicitely started in the constructor or at first call,
+     * but we need a hook to shut it down properly.
      */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(CacheGeneratorServlet.class);
-
-    /**
-     * {@inheritDoc}
-     */
-    public void init(ServletConfig config) throws ServletException {
-        log.warn("\n***********\nCacheGeneratorServlet has been removed in Magnolia 3.5, please update your web.xml "
-            + "and remove the servlet definition and mapping\n***********");
-
-        super.init(config);
-    }
-
+    void stop();
 }

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,41 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.cms.cache;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+package info.magnolia.module.cache;
 
 /**
- * @author fgiust
- * @version $Revision$ ($Author$)
- * @deprecated since 3.5
+ * An interface who implementations wrap 3rd party or custom cache libraries.
+ * It is completely up to client components to decide what they use as keys and values.
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class CacheGeneratorServlet extends HttpServlet {
+public interface Cache {
+    boolean hasElement(Object key);
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
+    void put(Object key, Object value);
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(CacheGeneratorServlet.class);
+    Object get(Object key);
 
-    /**
-     * {@inheritDoc}
-     */
-    public void init(ServletConfig config) throws ServletException {
-        log.warn("\n***********\nCacheGeneratorServlet has been removed in Magnolia 3.5, please update your web.xml "
-            + "and remove the servlet definition and mapping\n***********");
+    void remove(Object key);
 
-        super.init(config);
-    }
-
+    void clear();
 }

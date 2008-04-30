@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,41 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.cms.cache;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+package info.magnolia.module.cache;
 
 /**
- * @author fgiust
- * @version $Revision$ ($Author$)
- * @deprecated since 3.5
+ * Implementations determine when and how to flush their cache.
+ * They should take care of registering their own observation if needed.
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class CacheGeneratorServlet extends HttpServlet {
+public interface FlushPolicy {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
+    void start(Cache cache);
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(CacheGeneratorServlet.class);
-
-    /**
-     * {@inheritDoc}
-     */
-    public void init(ServletConfig config) throws ServletException {
-        log.warn("\n***********\nCacheGeneratorServlet has been removed in Magnolia 3.5, please update your web.xml "
-            + "and remove the servlet definition and mapping\n***********");
-
-        super.init(config);
-    }
+    void stop(Cache cache);
 
 }

@@ -39,6 +39,8 @@ import java.io.Serializable;
 /**
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated since 3.6, use info.magnolia.module.cache.filter.CachedPage
  */
 public class CacheableEntry implements Serializable {
 

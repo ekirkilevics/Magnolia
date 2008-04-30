@@ -43,6 +43,8 @@ import java.io.OutputStream;
  * to TeeOutputStream from commons-io.
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated since 3.6 - use TeeOutputStream from commons-io along with SimpleServletOutputStream
  */
 public class MultiplexServletOutputStream extends ServletOutputStream {
 

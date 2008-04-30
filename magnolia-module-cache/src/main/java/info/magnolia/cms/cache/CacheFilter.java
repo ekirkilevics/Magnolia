@@ -54,6 +54,8 @@ import org.slf4j.LoggerFactory;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0 $Id$
+ *
+ * @deprecated as from 3.6, use info.magnolia.module.cache.filter.CacheFilter
  */
 public class CacheFilter extends AbstractMgnlFilter {
 

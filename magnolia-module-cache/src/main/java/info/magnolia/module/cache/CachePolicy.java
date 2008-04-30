@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,41 +31,31 @@
  * intact.
  *
  */
-package info.magnolia.cms.cache;
+package info.magnolia.module.cache;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import info.magnolia.cms.core.AggregationState;
 
 /**
- * @author fgiust
- * @version $Revision$ ($Author$)
- * @deprecated since 3.5
+ * The CachePolicy determines is a requested page should be cached,
+ * retrieved from the cache or not cached at all.
+ * It is called for every request and should thus also take care of
+ * any expiration policy - i.e if the page should be recached.
+ *
+ * The CacheFilter (or any other client component) can determine its
+ * behaviour based on the return CachePolicyResult, which holds both
+ * the behaviour to take and the cache key to use when appropriate.
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class CacheGeneratorServlet extends HttpServlet {
+public interface CachePolicy {
 
     /**
-     * Stable serialVersionUID.
+     * Implementations can chose wether to cache or not - but note that the
+     * aggregationState might not be completely populated. Every request should be
+     * cacheable, not only those processed through Magnolia's RenderingFilter.
+     *
+     * TODO : check how to handle request parameters
      */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(CacheGeneratorServlet.class);
-
-    /**
-     * {@inheritDoc}
-     */
-    public void init(ServletConfig config) throws ServletException {
-        log.warn("\n***********\nCacheGeneratorServlet has been removed in Magnolia 3.5, please update your web.xml "
-            + "and remove the servlet definition and mapping\n***********");
-
-        super.init(config);
-    }
-
+    CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState);
 }

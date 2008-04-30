@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,41 +31,21 @@
  * intact.
  *
  */
-package info.magnolia.cms.cache;
+package info.magnolia.module.cache;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import javax.jcr.observation.Event;
 
 /**
- * @author fgiust
- * @version $Revision$ ($Author$)
- * @deprecated since 3.5
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class CacheGeneratorServlet extends HttpServlet {
+public class FlushAllListeningPolicy extends AbstractListeningFlushPolicy {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(CacheGeneratorServlet.class);
-
-    /**
-     * {@inheritDoc}
-     */
-    public void init(ServletConfig config) throws ServletException {
-        log.warn("\n***********\nCacheGeneratorServlet has been removed in Magnolia 3.5, please update your web.xml "
-            + "and remove the servlet definition and mapping\n***********");
-
-        super.init(config);
+    protected void handleBufferedEvents(Cache cache, String repository) {
+        cache.clear();
     }
 
+    protected void handleSingleEvent(Cache cache, String repository, Event event) {
+    }
 }

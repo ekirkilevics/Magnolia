@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,41 +31,53 @@
  * intact.
  *
  */
-package info.magnolia.cms.cache;
-
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+package info.magnolia.module.cache;
 
 /**
- * @author fgiust
- * @version $Revision$ ($Author$)
- * @deprecated since 3.5
+ * Each CacheConfiguration holds a CachePolicy and a FlushPolicy.
+ * @see CachePolicy
+ * @see FlushPolicy
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class CacheGeneratorServlet extends HttpServlet {
+public class CacheConfiguration {
+    private String name;
+    private CachePolicy cachePolicy;
+    private FlushPolicy flushPolicy;
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
+    public CacheConfiguration() {
+    }
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(CacheGeneratorServlet.class);
+    /** for tests */
+    CacheConfiguration(String name, CachePolicy cachePolicy, FlushPolicy flushPolicy) {
+        this.name = name;
+        this.cachePolicy = cachePolicy;
+        this.flushPolicy = flushPolicy;
+    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void init(ServletConfig config) throws ServletException {
-        log.warn("\n***********\nCacheGeneratorServlet has been removed in Magnolia 3.5, please update your web.xml "
-            + "and remove the servlet definition and mapping\n***********");
+    public String getName() {
+        return name;
+    }
 
-        super.init(config);
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public CachePolicy getCachePolicy() {
+        return cachePolicy;
+    }
+
+    public void setCachePolicy(CachePolicy cachePolicy) {
+        this.cachePolicy = cachePolicy;
+    }
+
+    public FlushPolicy getFlushPolicy() {
+        return flushPolicy;
+    }
+
+    public void setFlushPolicy(FlushPolicy flushPolicy) {
+        this.flushPolicy = flushPolicy;
     }
 
 }

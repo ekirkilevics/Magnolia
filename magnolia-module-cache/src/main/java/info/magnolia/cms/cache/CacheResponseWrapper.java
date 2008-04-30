@@ -46,6 +46,8 @@ import javax.servlet.http.HttpServletResponseWrapper;
 /**
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated as from 3.6, use info.magnolia.module.cache.filter.CacheResponseWrapper
  */
 public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
@@ -144,7 +146,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     }
 
     public void resetBuffer() {
-        super.reset();
+        super.resetBuffer();
         if (cachingStream != null) {
             cachingStream.reset();
         }

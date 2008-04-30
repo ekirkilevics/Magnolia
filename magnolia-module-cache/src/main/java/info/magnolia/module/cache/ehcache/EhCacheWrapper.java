@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,41 +31,52 @@
  * intact.
  *
  */
-package info.magnolia.cms.cache;
+package info.magnolia.module.cache.ehcache;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import info.magnolia.module.cache.Cache;
+import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.Element;
 
 /**
- * @author fgiust
- * @version $Revision$ ($Author$)
- * @deprecated since 3.5
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class CacheGeneratorServlet extends HttpServlet {
+public class EhCacheWrapper implements Cache {
+    private final Ehcache ehcache;
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 1L;
+    public EhCacheWrapper(Ehcache ehcache) {
+        this.ehcache = ehcache;
+    }
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(CacheGeneratorServlet.class);
+    public Object get(Object key) {
+        final Element element = ehcache.get(key);
+        return element != null ? element.getObjectValue() : null;
+    }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void init(ServletConfig config) throws ServletException {
-        log.warn("\n***********\nCacheGeneratorServlet has been removed in Magnolia 3.5, please update your web.xml "
-            + "and remove the servlet definition and mapping\n***********");
+    public boolean hasElement(Object key) {
+        // we can't use isKeyInCache(), as it does not check for the element's expiration
+        // which may lead to unexpected results, since get() and getQuiet() do check
+        // for expiration and return null if the element was expired.
+        // return ehcache.isKeyInCache(key);
+        return ehcache.getQuiet(key) != null;
+    }
 
-        super.init(config);
+    public void put(Object key, Object value) {
+        final Element element = new Element(key, value);
+        ehcache.put(element);
+    }
+
+    public void remove(Object key) {
+        ehcache.remove(key);
+    }
+
+    public void clear() {
+        ehcache.removeAll();
+    }
+
+    public Ehcache getWrappedEhcache() {
+        return ehcache;
     }
 
 }
