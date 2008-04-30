@@ -247,7 +247,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         }
         catch (Exception e) {
             // do it better
-            log.error("can't set property [" + propertyName + "] in bean [" + bean.getClass().getName() + "]");
+            log.error("can't set property [" + propertyName + "] to value [" + value + "] in bean [" + bean.getClass().getName() + "]");
             if(log.isDebugEnabled()){
                 log.debug("stacktrace", e);
             }
