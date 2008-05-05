@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2007-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,26 +31,55 @@
  * intact.
  *
  */
-package info.magnolia.cms.filters;
+package info.magnolia.module.cache.filter;
 
-import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
+import info.magnolia.cms.filters.AbstractMgnlFilter;
+import org.apache.commons.lang.time.FastDateFormat;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.time.FastDateFormat;
-
+import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
+import java.util.TimeZone;
 
 /**
+ * <p>
+ * Filter that sets cache headers, allowing or dening cache at client-side. By default the filter adds the
+ * "Cache-Control: public" and expire directives to resources so that everything can be cached by the browser. Setting
+ * the <code>nocache</code> property to <code>true</code> has the opposite effect, forcing browsers to avoid
+ * caching.
+ * </p>
+ * <p>
+ * The following example shows how to configure the filter so that static resources (images, css, js) gets cached by the
+ * browser, and deny cache for html pages.
+ * </p>
+ *
+ * <pre>
+ * + server
+ *    + filters
+ *      + ...
+ *      + headers-cache
+ *        - class                  info.magnolia.cms.filters.CacheHeadersFilter
+ *        - expirationMinutes      1440 <em>(default)</em>
+ *        + bypasses
+ *          + extensions
+ *            - class              info.magnolia.voting.voters.ExtensionVoter
+ *            - allow              gif,jpg,png,swf,css,js
+ *            - not                true
+ *      + headers-nocache
+ *        - class                  info.magnolia.cms.filters.CacheHeadersFilter
+ *        + bypasses
+ *          + extensions
+ *            - class              info.magnolia.voting.voters.ExtensionVoter
+ *            - allow              html
+ *            - not                true
+ * </pre>
+ *
  * @author Fabrizio Giustina
  * @version $Id: $
- *
- * @deprecated since 3.6, use info.magnolia.module.cache.filter.CacheHeadersFilter
  */
 public class CacheHeadersFilter extends AbstractMgnlFilter {
 
@@ -64,8 +93,7 @@ public class CacheHeadersFilter extends AbstractMgnlFilter {
      */
     private boolean nocache;
 
-    private FastDateFormat formatter = FastDateFormat.getInstance("EEE, d MMM yyyy HH:mm:ss zzz", TimeZone
-        .getTimeZone("GMT"), Locale.ENGLISH);
+    private FastDateFormat formatter = FastDateFormat.getInstance("EEE, d MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.ENGLISH);
 
     /**
      * Sets the expirationMinutes.
@@ -83,23 +111,18 @@ public class CacheHeadersFilter extends AbstractMgnlFilter {
         this.nocache = nocache;
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-        throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (nocache) {
+            response.setHeader("Pragma", "No-cache");
             response.setHeader("Cache-Control", "no-cache");
             response.setDateHeader("Expires", 0);
-            response.setHeader("Pragma", "No-cache");
             response.setHeader("Expires", "Fri, 30 Oct 1998 14:19:41 GMT");
-        }
-        else {
+        } else {
             response.setHeader("Pragma", "");
             response.setHeader("Cache-Control", "max-age=" + expirationMinutes * 60 + ", public");
-            response.setHeader("Expires", formatter.format(new Date(System.currentTimeMillis()
-                + expirationMinutes
-                * 60000)));
+            final long expiration = System.currentTimeMillis() + expirationMinutes * 60000;
+            // TODO : use setDateHeader ?
+            response.setHeader("Expires", formatter.format(new Date(expiration)));
         }
 
         chain.doFilter(request, response);
