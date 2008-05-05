@@ -65,6 +65,8 @@ import org.apache.commons.lang.StringUtils;
  * @author Fabrizio Giustina
  * @since 3.0
  * @version $Id:CacheConfig.java 6314 2006-09-11 08:24:51Z scharles $
+ *
+ * @deprecated since 3.6, cache config is using the standard module mechanism, see info.magnolia.module.cache.CacheModule
  */
 public class CacheConfig {
 

@@ -41,6 +41,8 @@ import javax.jcr.observation.EventListener;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0 $Id$
+ *
+ * @deprecated since 3.6, cache config is using the standard module mechanism, see info.magnolia.module.cache.CacheModule
  */
 class CacheConfigListener implements EventListener {
 

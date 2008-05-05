@@ -67,6 +67,8 @@ import org.slf4j.LoggerFactory;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
+ *
+ * @deprecated since 3.6, replaced by info.magnolia.module.cache.ehcache.EhCacheWrapper
  */
 public class CacheImpl implements info.magnolia.cms.cache.Cache {
 

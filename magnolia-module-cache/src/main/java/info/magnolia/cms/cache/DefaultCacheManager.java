@@ -57,6 +57,8 @@ import org.slf4j.LoggerFactory;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
+ *
+ * @deprecated since 3.6, see the info.magnolia.module.cache package.
  */
 public class DefaultCacheManager extends BaseCacheManager {
 

@@ -42,6 +42,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
+ *
+ * @deprecated since 3.6, replaced by info.magnolia.module.cache.Cache
  */
 public interface Cache {
 

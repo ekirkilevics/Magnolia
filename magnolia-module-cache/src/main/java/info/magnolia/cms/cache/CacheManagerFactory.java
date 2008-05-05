@@ -41,6 +41,8 @@ package info.magnolia.cms.cache;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
+ *
+ * @deprecated since 3.6
  */
 public class CacheManagerFactory {
 

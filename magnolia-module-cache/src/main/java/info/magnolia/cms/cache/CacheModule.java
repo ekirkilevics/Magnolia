@@ -49,6 +49,8 @@ import org.slf4j.LoggerFactory;
 /**
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated since 3.6, replaced by  info.magnolia.module.cache.CacheModule
  */
 public class CacheModule implements ModuleLifecycle {
 
