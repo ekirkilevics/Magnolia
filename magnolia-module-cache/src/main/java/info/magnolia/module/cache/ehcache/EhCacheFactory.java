@@ -33,12 +33,15 @@
  */
 package info.magnolia.module.cache.ehcache;
 
+import info.magnolia.cms.util.MBeanUtil;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheFactory;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.constructs.blocking.BlockingCache;
+import net.sf.ehcache.management.ManagementService;
 
+import javax.management.MBeanServer;
 import java.util.Arrays;
 import java.util.List;
 
@@ -54,6 +57,8 @@ public class EhCacheFactory implements CacheFactory {
     public EhCacheFactory() {
         // TODO : pass a net.sf.ehcache.config.Configuration instance as populated by content2bean
         cacheManager = new CacheManager();
+        final MBeanServer mBeanServer = MBeanUtil.getMBeanServer();
+        ManagementService.registerMBeans(cacheManager, mBeanServer, true, true, true, true);
     }
 
     public Cache newCache(String name) {
