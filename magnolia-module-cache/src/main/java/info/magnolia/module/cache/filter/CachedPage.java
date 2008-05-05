@@ -33,32 +33,59 @@
  */
 package info.magnolia.module.cache.filter;
 
+import info.magnolia.module.cache.util.GZipUtil;
 import org.apache.commons.collections.MultiMap;
 
+import java.io.IOException;
+
 /**
+ * Wraps a page reponse. It is assumed that the given content is gzipped
+ * if appropriate (i.e if the gzip filter is in the chain) and this class
+ * thus ungzips it to be able to serve both contents.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CachedPage {
+public final class CachedPage implements CachedEntry {
     // TODO : headers and cookies ?
-    // TODO : store both gzip'd and ungzip'd content ?
-    private final byte[] out;
+    private final byte[] defaultContent;
+    private final byte[] ungzippedContent;
     private final String contentType;
     private final String characterEncoding;
     private final int statusCode;
     private final MultiMap headers;
+    private final long lastModificationTime;
 
-    CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers) {
-        this.out = out;
+    CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers) throws IOException {
+        // content which is actually of a compressed type must stay that way
+        if (!GZipUtil.isGZipMimeType(contentType) && GZipUtil.isGZipped(out)) {
+            this.defaultContent = out;
+            this.ungzippedContent = GZipUtil.ungzip(out);
+        } else {
+            this.defaultContent = out;
+            this.ungzippedContent = null;
+        }
         this.contentType = contentType;
         this.characterEncoding = characterEncoding;
         this.statusCode = statusCode;
         this.headers = headers;
+        // TODO : should this be System.currentTimeMillis(), or the actual document's last modif date? - also, what about timezones ...
+        this.lastModificationTime = System.currentTimeMillis();
     }
 
-    public byte[] getOut() {
-        return out;
+    // TODO : replacing getOut() with streamTo(OutputStream out) could help subclasses stream content
+    // TODO : from a File buffer for example, instead of holding byte[]s.
+    // TODO : but this would require pushing a dependency on servlet api in here - because we need
+    // TODO : to know if we can push gzipped content... or this would need to be passed as an explicit
+    // TODO : parameter, which isn't too exciting either...
+
+
+    public byte[] getUngzippedContent() {
+        return ungzippedContent;
+    }
+
+    public byte[] getDefaultContent() {
+        return defaultContent;
     }
 
     public String getContentType() {
@@ -77,13 +104,19 @@ public class CachedPage {
         return headers;
     }
 
+    public long getLastModificationTime() {
+        return lastModificationTime;
+    }
+
     public String toString() {
         return "CachedPage{" +
-                "out=" + out.length + " bytes" +
+                "defaultContent=" + defaultContent.length + " bytes" +
+                ", ungzippedContent=" + (ungzippedContent != null ? ungzippedContent.length + " bytes" : null) +
                 ", contentType='" + contentType + '\'' +
                 ", characterEncoding='" + characterEncoding + '\'' +
                 ", statusCode=" + statusCode +
                 ", headers=" + headers +
+                ", lastModificationTime=" + lastModificationTime +
                 '}';
     }
 }

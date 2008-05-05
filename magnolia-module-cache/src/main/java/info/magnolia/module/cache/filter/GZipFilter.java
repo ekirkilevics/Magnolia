@@ -44,42 +44,42 @@ import java.io.IOException;
 import java.util.zip.GZIPOutputStream;
 
 /**
+ * This GZipFilter does not take care of the Accept-Encoding request header. The CacheFilter will
+ * take care of serving the unzipped content if appropriate.
+ *
+ * @see info.magnolia.module.cache.filter.StandaloneGZipFilter if the cache filter is not in use.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class GZipFilter extends AbstractMgnlFilter {
 
+//    Content-Type: application/x-javascript;charset=UTF-8
 
     // TODO : this is completely temporary while testing and being lazy
-    public boolean bypasses(HttpServletRequest request) {
-        if (request.getRequestURI().indexOf("/.") >= 0) {
-            return true;
-        }
-        if (request.getRequestURI().indexOf(".html") < 0) {
-            return true;
-        }
+//    public boolean bypasses(HttpServletRequest request) {
+//        if (request.getRequestURI().indexOf("/.") >= 0) {
+//            return true;
+//        }
+//        if (request.getRequestURI().indexOf(".html") < 0) {
+//            return true;
+//        }
         //
 
         //TODO : voters for mimetypes
         // TODO : extends OncePerRequest filter ?
 
-        final String uri = (String) request.getAttribute("javax.servlet.include.request_uri");
-        final boolean includeRequest = !(uri == null);
-        if (includeRequest) {
-            return true;
-        }
-
-        return false;
-
-    }
+//        final String uri = (String) request.getAttribute("javax.servlet.include.request_uri");
+//        final boolean includeRequest = !(uri == null);
+//        if (includeRequest) {
+//            return true;
+//        }
+//
+//        return false;
+//
+//    }
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-
-        // TODO : check if we can gzip this (voters ?)
-
-        // TODO : or always gzip (provided bypasses allowed it, obviously) - let CacheFilter dezip if needed
-
         // we can't tee the outputstream, because we need to setContentLength before writing content ...
         // (otherwise Tomcat adds a Transfer-Encoding: chunked header, which seems to cause trouble
         // to browsers ...
@@ -90,6 +90,7 @@ public class GZipFilter extends AbstractMgnlFilter {
         // Handle the request
         final CacheResponseWrapper wrapper = new CacheResponseWrapper(response, wrappedOut);
         addAndVerifyHeader(response, "Content-Encoding", "gzip");
+        addAndVerifyHeader(response, "Vary", "Accept-Encoding"); // needed for proxies
         chain.doFilter(request, wrapper);
 
         gzout.flush();
@@ -101,11 +102,4 @@ public class GZipFilter extends AbstractMgnlFilter {
 
     }
 
-    protected void addAndVerifyHeader(HttpServletResponse response, String name, String value) {
-        response.setHeader(name, value);
-        boolean containsEncoding = response.containsHeader(name);
-        if (!containsEncoding) {
-            throw new IllegalStateException("Failure when attempting to set " + name + ": " + value);
-        }
-    }
 }

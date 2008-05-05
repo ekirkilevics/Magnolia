@@ -81,6 +81,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
      * @throws ServletException
      */
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
+        // TODO : this is completely useless ! cleanuppppp !!!
         if (ConfigLoader.isBootstrapping()) {
             // @todo a nice page, with the log content...
             response.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs"); //$NON-NLS-1$
@@ -102,6 +103,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 // response.setStatus(HttpServletResponse.SC_OK);
                 renderer.renderTemplate(template, request, response);
 
+                /* TODO : why was this needed ?
                 try {
                     response.flushBuffer();
                 }
@@ -112,6 +114,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
                         log.debug("Exception flushing response " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
                     }
                 }
+                */
 
             }
             catch (IOException e) {

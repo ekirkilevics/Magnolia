@@ -52,6 +52,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     private PrintWriter wrappedWriter = null;
     private final MultiMap headers = new MultiValueMap();
     private int status = SC_OK;
+    private String redirectionLocation;
 
     public CacheResponseWrapper(final HttpServletResponse response, final ServletOutputStream wrappedStream) {
         super(response);
@@ -107,13 +108,16 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
         wrappedWriter = null;
     }
 
-
     public int getStatus() {
         return status;
     }
 
     public MultiMap getHeaders() {
         return headers;
+    }
+
+    public String getRedirectionLocation() {
+        return redirectionLocation;
     }
 
     public void setDateHeader(String name, long date) {
@@ -167,6 +171,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
     public void sendRedirect(String location) throws IOException {
         this.status = SC_MOVED_TEMPORARILY;
+        this.redirectionLocation = location;
         super.sendRedirect(location);
     }
 

@@ -94,7 +94,7 @@ public class CacheFilter extends AbstractMgnlFilter {
     public void init(FilterConfig filterConfig) throws ServletException {
         final CacheModule cacheModule = getModule();
         this.cacheConfig = cacheModule.getConfiguration(cacheConfigurationName);
-        this.cache = cacheModule.getCacheFactory().getCache(cacheConfigurationName);
+        this.cache = cacheModule.getCacheFactory().newCache("cachefilter-" + cacheConfigurationName);
     }
 
     // TODO : maybe this method could be generalized ...
@@ -108,20 +108,12 @@ public class CacheFilter extends AbstractMgnlFilter {
 
         final Object cacheKey = cachePolicy.getCacheKey();
         final CachePolicyResult.CachePolicyBehaviour behaviour = cachePolicy.getBehaviour();
-        if (behaviour.equals(CachePolicyResult.useCache)) {
-//TODO
-//            if (!this.ifModifiedSince(request, cacheManager.getCreationTime(cacheKey))) {
-//                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+        if (behaviour.equals(CachePolicyResult.store)) {
 
-//            } else {
+            // TODO : set Last-Modified header - should be set by rendering filter etc
+            //response.setDateHeader("Last-Modified", this.getCreationTime(key));
+            
 
-            final CachedPage cached = (CachedPage) cachePolicy.getCachedEntry();
-            writeResponse(request, response, cached);
-            response.flushBuffer();
-//            }
-
-
-        } else if (behaviour.equals(CachePolicyResult.store)) {
             // will write to both the response stream and an internal byte array for caching
             final ByteArrayOutputStream cachingStream = new ByteArrayOutputStream();
             final TeeOutputStream teeOutputStream = new TeeOutputStream(response.getOutputStream(), cachingStream);
@@ -137,11 +129,13 @@ public class CacheFilter extends AbstractMgnlFilter {
                 return;
             }
 
-            final CachedPage cachedEntry = makeCachedEntry(responseWrapper, cachingStream);
-            if (cachedEntry != null && cachedEntry.getOut().length > 0) {
+            final CachedEntry cachedEntry = makeCachedEntry(responseWrapper, cachingStream);
+            if (cachedEntry != null) {
                 cache.put(cacheKey, cachedEntry);
             }
-
+        } else if (behaviour.equals(CachePolicyResult.useCache)) {
+            final CachedEntry cached = (CachedEntry) cachePolicy.getCachedEntry();
+            processCachedEntry(cached, request, response);
         } else if (behaviour.equals(CachePolicyResult.bypass)) {
             chain.doFilter(request, response);
         } else {
@@ -149,7 +143,11 @@ public class CacheFilter extends AbstractMgnlFilter {
         }
     }
 
-    public CachedPage makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream) {
+    protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream) throws IOException {
+        // TODO : handle more of the 30x codes - although CacheResponseWrapper currently only sets the 302.
+        if (cacheResponse.getStatus() == HttpServletResponse.SC_MOVED_TEMPORARILY) {
+            return new CachedRedirect(cacheResponse.getStatus(), cacheResponse.getRedirectionLocation());
+        }
         if (cachingStream == null) {
             return null;
         }
@@ -161,12 +159,33 @@ public class CacheFilter extends AbstractMgnlFilter {
                 cacheResponse.getHeaders());
     }
 
+    protected void processCachedEntry(CachedEntry cached, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        if (cached instanceof CachedPage) {
+            final CachedPage page = (CachedPage) cached;
+            if (!ifModifiedSince(request, page.getLastModificationTime())) {
+                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                return;
+            }
+
+            writePage(request, response, page);
+            response.flushBuffer();
+        } else if (cached instanceof CachedRedirect) {
+            final CachedRedirect redir = (CachedRedirect) cached;
+            // we'll ignore the redirection code for now - especially since the servlet api doesn't really let us choose anyway
+            // except if someone sets the header manually ?
+            response.sendRedirect(redir.getLocation());
+        } else {
+            throw new IllegalStateException("Unexpected CachedEntry type: " + cached);
+        }
+    }
+
     /**
      * Check if server cache is newer then the client cache
      * @param request The servlet request we are processing
      * @return boolean true if the server resource is newer
      */
     protected boolean ifModifiedSince(HttpServletRequest request, long lastModified) {
+        // TODO : what is this magic 1sec gap all about ?
         try {
             long headerValue = request.getDateHeader("If-Modified-Since");
             if (headerValue != -1) {
@@ -177,30 +196,21 @@ public class CacheFilter extends AbstractMgnlFilter {
                     return false;
                 }
             }
-        }
-        catch (IllegalArgumentException illegalArgument) {
+        } catch (IllegalArgumentException e) {
+            // can happen per spec if the header value can't be converted to a date ...
             return true;
         }
         return true;
     }
 
-    public boolean clientAcceptsGzip(HttpServletRequest request) {
-        return StringUtils.contains(request.getHeader("Accept-Encoding"), "gzip");
-    }
-
-    protected void writeResponse(final HttpServletRequest request, final HttpServletResponse response, final CachedPage cachedEntry) throws IOException {
-//        boolean requestAcceptsGzipEncoding = acceptsGzipEncoding(request);
-
+    protected void writePage(final HttpServletRequest request, final HttpServletResponse response, final CachedPage cachedEntry) throws IOException {
         response.setStatus(cachedEntry.getStatusCode());
-        //requestAcceptsGzipEncoding,
         addHeaders(cachedEntry, response);
         // TODO : cookies ?
         response.setContentType(cachedEntry.getContentType());
-        // response.setCharacterEncoding();
+        // TODO response.setCharacterEncoding();
         writeContent(request, response, cachedEntry);
     }
-
-
 
     /**
      * Set the headers in the response object TODO, excluding the Gzip header ?
@@ -230,7 +240,21 @@ public class CacheFilter extends AbstractMgnlFilter {
     }
 
     protected void writeContent(final HttpServletRequest request, final HttpServletResponse response, final CachedPage cachedEntry) throws IOException {
-       final byte[] body = cachedEntry.getOut();
+        final byte[] body;
+        if (!acceptsGzipEncoding(request) && cachedEntry.getUngzippedContent() != null) {
+            // TODO : remove headers
+            body = cachedEntry.getUngzippedContent();
+        } else {
+            // TODO : or add them here
+            body = cachedEntry.getDefaultContent();
+        }
+
+        // TODO : check for empty responses
+        // (HttpServletResponse.SC_NO_CONTENT, HttpServletResponse.SC_NOT_MODIFIED, or 20bytes which is an empty gzip
+//        if (shouldBodyBeEmpty) {
+//            body = new byte[0];
+//        }
+
         response.setContentLength(body.length);
         response.getOutputStream().write(body);
     }
