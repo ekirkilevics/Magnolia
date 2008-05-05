@@ -33,11 +33,11 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.context.MgnlContext;
 import info.magnolia.voting.Voter;
 import info.magnolia.voting.Voting;
 
 import java.io.IOException;
+import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -110,4 +110,31 @@ public abstract class AbstractMgnlFilter implements MgnlFilter {
         this.enabled = enabled;
     }
 
+    //---- utility methods -----
+    protected boolean acceptsGzipEncoding(HttpServletRequest request) {
+        return acceptsEncoding(request, "gzip");
+    }
+
+    protected boolean acceptsEncoding(final HttpServletRequest request, final String name) {
+        return headerContains(request, "Accept-Encoding", name);
+    }
+
+    protected boolean headerContains(final HttpServletRequest request, final String header, final String value) {
+        final Enumeration accepted = request.getHeaders(header);
+        while (accepted.hasMoreElements()) {
+            final String headerValue = (String) accepted.nextElement();
+            if (headerValue.indexOf(value) != -1) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    protected void addAndVerifyHeader(HttpServletResponse response, String name, String value) {
+        response.addHeader(name, value);
+        final boolean containsHeader = response.containsHeader(name);
+        if (!containsHeader) {
+            throw new IllegalStateException("Failure when attempting to set response header " + name + ": " + value);
+        }
+    }
 }

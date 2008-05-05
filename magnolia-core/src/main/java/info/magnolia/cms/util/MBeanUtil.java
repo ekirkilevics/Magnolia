@@ -63,23 +63,27 @@ public class MBeanUtil {
         final String id = "Magnolia:type=" + name + ",domain=" + appName;
         try {
             final ObjectName mbeanName = new ObjectName(id);
-            ArrayList list = MBeanServerFactory.findMBeanServer(null);
-            final MBeanServer mbeanServer;
-            if (list != null && list.size() > 0) {
-                mbeanServer = (MBeanServer) list.get(0);
-            }
-            else {
-                mbeanServer = MBeanServerFactory.createMBeanServer();
-            }
+            final MBeanServer mbeanServer = getMBeanServer();
             if (!mbeanServer.isRegistered(mbeanName)) {
                 mbeanServer.registerMBean(mbean, mbeanName);
             }
         }
         catch (InstanceAlreadyExistsException e) {
-            log.info("MBean '{}' exist", id);
+            log.info("MBean '{}' already exists", id);
         }
         catch (Throwable t) {
             log.error("Could not register JMX MBean '" + id + "'", t);
         }
+    }
+
+    public static MBeanServer getMBeanServer() {
+        final ArrayList list = MBeanServerFactory.findMBeanServer(null);
+        final MBeanServer mbeanServer;
+        if (list != null && list.size() > 0) {
+            mbeanServer = (MBeanServer) list.get(0);
+        } else {
+            mbeanServer = MBeanServerFactory.createMBeanServer();
+        }
+        return mbeanServer;
     }
 }
