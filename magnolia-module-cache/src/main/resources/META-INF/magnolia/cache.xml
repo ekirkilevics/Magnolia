@@ -5,7 +5,7 @@
   <displayName>Magnolia Cache Module</displayName>
   <description>Provides a pluggable cache.</description>
   <class>info.magnolia.module.cache.CacheModule</class>
-  <versionHandler>info.magnolia.cms.cache.setup.CacheModuleVersionHandler</versionHandler>
+  <versionHandler>info.magnolia.module.cache.setup.CacheModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
 
   <dependencies>
