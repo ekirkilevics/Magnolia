@@ -69,20 +69,6 @@ public class CacheFilter extends AbstractMgnlFilter {
     private CacheConfiguration cacheConfig;
     private Cache cache;
 
-    /**
-     *
-     * cachePolicy:shouldCache ?
-     *   store:
-     *     doFilter
-     *     store in cache
-     *   useCache:
-     *     get from cache
-     *   bypass:
-     *     doFilter
-     *
-     */
-
-
     public String getCacheConfiguration() {
         return cacheConfigurationName;
     }
