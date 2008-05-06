@@ -52,6 +52,7 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     private PrintWriter wrappedWriter = null;
     private final MultiMap headers = new MultiValueMap();
     private int status = SC_OK;
+    private boolean isError;
     private String redirectionLocation;
 
     public CacheResponseWrapper(final HttpServletResponse response, final ServletOutputStream wrappedStream) {
@@ -110,6 +111,10 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
     public int getStatus() {
         return status;
+    }
+
+    public boolean isError() {
+        return isError;
     }
 
     public MultiMap getHeaders() {
@@ -178,10 +183,12 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
     public void sendError(int status, String string) throws IOException {
         super.sendError(status, string);
         this.status = status;
+        this.isError = true;
     }
 
     public void sendError(int status) throws IOException {
         super.sendError(status);
         this.status = status;
+        this.isError = true;
     }
 }

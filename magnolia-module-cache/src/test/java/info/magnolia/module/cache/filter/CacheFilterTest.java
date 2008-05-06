@@ -163,7 +163,7 @@ public class CacheFilterTest extends TestCase {
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(123);
         response.setContentType("text/plain");
-//        response.setCharacterEncoding("ASCII");
+        response.setCharacterEncoding("ASCII");
         response.setContentLength(dummyContent.length());
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
@@ -184,7 +184,7 @@ public class CacheFilterTest extends TestCase {
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(123);
         response.setContentType("text/plain");
-//        response.setCharacterEncoding("ASCII");
+        response.setCharacterEncoding("ASCII");
         response.setContentLength(dummyContent.length());
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
@@ -204,7 +204,7 @@ public class CacheFilterTest extends TestCase {
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(123);
         response.setContentType("text/plain");
-//        response.setCharacterEncoding("ASCII");
+        response.setCharacterEncoding("ASCII");
         response.setContentLength(gzipped.length);
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
@@ -244,7 +244,7 @@ public class CacheFilterTest extends TestCase {
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(200);
         response.setContentType("text/plain");
-//        response.setCharacterEncoding("ASCII");
+        response.setCharacterEncoding("ASCII");
         response.setContentLength(dummyContent.length());
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
@@ -293,6 +293,44 @@ public class CacheFilterTest extends TestCase {
         expect(cachePolicy.shouldCache(cache, aggregationState)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/some-redirect", cachedRedirect));
 
         response.sendRedirect(redirectLocation);
+        executeFilterAndVerify();
+    }
+
+    public void testErrorsAreCached() throws Exception {
+        expect(cachePolicy.shouldCache(cache, aggregationState)).andReturn(new CachePolicyResult(CachePolicyResult.store, "/non-existing", null));
+
+        filterChain.doFilter(same(request), isA(CacheResponseWrapper.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                final Object[] args = getCurrentArguments();
+                ((CacheResponseWrapper) args[1]).sendError(404);
+                return null;
+            }
+        });
+        final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
+        expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
+        response.sendError(404);
+        response.flushBuffer();
+
+        cache.put(eq("/non-existing"), isA(CachedError.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                final Object[] args = getCurrentArguments();
+                final CachedError cachedEntry = ((CachedError) args[1]);
+                assertEquals(404, cachedEntry.getStatusCode());
+                return null;
+            }
+        });
+
+        executeFilterAndVerify();
+        assertEquals("nothing should have been written to the output", 0, fakedOut.size());
+    }
+
+    public void testCachedErrorsAreServed() throws Exception {
+        final CachedError cachedError = new CachedError(404);
+        expect(cachePolicy.shouldCache(cache, aggregationState)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/non-existing", cachedError));
+
+        response.sendError(404);
         executeFilterAndVerify();
     }
 

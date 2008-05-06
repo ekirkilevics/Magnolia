@@ -148,6 +148,9 @@ public class CacheFilter extends AbstractMgnlFilter {
         if (cacheResponse.getStatus() == HttpServletResponse.SC_MOVED_TEMPORARILY) {
             return new CachedRedirect(cacheResponse.getStatus(), cacheResponse.getRedirectionLocation());
         }
+        if (cacheResponse.isError()) {
+            return new CachedError(cacheResponse.getStatus());
+        }
         if (cachingStream == null) {
             return null;
         }
@@ -169,6 +172,9 @@ public class CacheFilter extends AbstractMgnlFilter {
 
             writePage(request, response, page);
             response.flushBuffer();
+        } else if (cached instanceof CachedError) {
+            final CachedError error = (CachedError) cached;
+            response.sendError(error.getStatusCode());
         } else if (cached instanceof CachedRedirect) {
             final CachedRedirect redir = (CachedRedirect) cached;
             // we'll ignore the redirection code for now - especially since the servlet api doesn't really let us choose anyway
@@ -208,7 +214,7 @@ public class CacheFilter extends AbstractMgnlFilter {
         addHeaders(cachedEntry, response);
         // TODO : cookies ?
         response.setContentType(cachedEntry.getContentType());
-        // TODO response.setCharacterEncoding();
+        response.setCharacterEncoding(cachedEntry.getCharacterEncoding());
         writeContent(request, response, cachedEntry);
     }
 
