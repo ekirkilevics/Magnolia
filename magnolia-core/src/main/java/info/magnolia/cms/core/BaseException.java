@@ -41,8 +41,11 @@ import java.io.PrintWriter;
 
 /**
  * Base Exception class which will provide exception nesting functionalities.
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
+ *
+ * @deprecated this is standard since Java 1.4
  */
 public abstract class BaseException extends MgnlException {
 

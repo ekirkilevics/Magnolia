@@ -34,9 +34,9 @@
 package info.magnolia.api;
 
 /**
+ *
  * @author philipp
  * @version $Id$
- *
  */
 public class MgnlException extends Exception {
 
@@ -44,16 +44,16 @@ public class MgnlException extends Exception {
         super();
     }
 
-    public MgnlException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
+    public MgnlException(String message, Throwable cause) {
+        super(message, cause);
     }
 
-    public MgnlException(String arg0) {
-        super(arg0);
+    public MgnlException(String message) {
+        super(message);
     }
 
-    public MgnlException(Throwable arg0) {
-        super(arg0);
+    public MgnlException(Throwable cause) {
+        super(cause);
     }
 
 }
