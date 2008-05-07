@@ -62,27 +62,24 @@ public class BackupTask extends ArrayDelegateTask {
      * @param info indicates if an info message should be displayed.
      */
     public BackupTask(String workspace, String path, boolean info) {
-        super("Backup", "Does a backup of the node path '" + path + "' in workspace '" + workspace);
+        super("Backup", "Does a backup of the node path '" + path + "' in the " + workspace + " workspace.");
         this.workspace = workspace;
         this.path = path;
         this.info = info;
 
         final String parentPath = StringUtils.substringBeforeLast(path, "/");
         final String backupParentPath = getBackupPath() + parentPath;
-        backupPath = backupParentPath + "/" + StringUtils.substringAfterLast(path, "/");
-        final CreateNodePathTask backupParent = new CreateNodePathTask("Create node", "Creates the backup location '"
-            + path + "'", workspace, backupParentPath);
+        this.backupPath = backupParentPath + "/" + StringUtils.substringAfterLast(path, "/");
+        final CreateNodePathTask backupParent = new CreateNodePathTask("Create node", "Creates the " + path + " backup location.", workspace, backupParentPath);
+        final MoveNodeTask moveNodeToBackupPath = new MoveNodeTask("Move node", "Moves " + path + " to the " + backupPath + " backup location.", workspace, path, backupPath, true);
         addTask(backupParent);
-
-        final MoveNodeTask moveNodeToBackupPath = new MoveNodeTask("Move node", "Moves the node '"
-            + path + "' to the backup location '" + backupPath + "'", workspace, path, backupPath, true);
         addTask(moveNodeToBackupPath);
     }
 
     public void execute(InstallContext ctx) throws TaskExecutionException {
         super.execute(ctx);
         if (info) {
-            ctx.info("Stored a backup of node " + workspace + ":" + path + " in " + backupPath);
+            ctx.info("Stored a backup of node " + workspace + ":" + path + " in " + backupPath + ".");
         }
     }
 
