@@ -58,7 +58,8 @@ import junit.framework.TestCase;
  * @version $Revision: $ ($Author: $)
  */
 public class WebContextTest extends TestCase {
-    private static final String SESSION_USER = WebContextImpl.class.getName() + ".user";
+    // setting the user attribute on the session is done in UserContextImpl, which is why the following constant uses this class' name.
+    private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
 
     public void testLoginLogout() {
         HttpServletRequest request = createMock(HttpServletRequest.class);
