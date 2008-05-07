@@ -33,31 +33,19 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
-import info.magnolia.cms.module.Module;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.WorkspaceXmlUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ModuleManagementException;
-
-import java.util.Arrays;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
-
-import javax.jcr.RepositoryException;
-import javax.servlet.ServletContext;
-
-import org.apache.commons.lang.ArrayUtils;
+import info.magnolia.module.ModuleManager;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletContext;
 
 
 /**
@@ -123,7 +111,7 @@ public class ConfigLoader {
      * Load magnolia configuration from repositories.
      * @param context ServletContext
      */
-    private void load(ServletContext context) {
+    protected void load(ServletContext context) {
         // first check for the license information, will fail if this class does not exist
         LicenseFileExtractor license = LicenseFileExtractor.getInstance();
         license.init();
@@ -134,7 +122,7 @@ public class ConfigLoader {
         //TODO: mute the log here
         boolean oldIndexersFound = WorkspaceXmlUtil.getWorkspaceNamesWithIndexer().size() > 0;
 
-    org.apache.log4j.Logger jrLog = org.apache.log4j.Logger.getLogger("org.apache.jackrabbit.core.query.lucene.JackrabbitTextExtractor");
+        org.apache.log4j.Logger jrLog = org.apache.log4j.Logger.getLogger("org.apache.jackrabbit.core.query.lucene.JackrabbitTextExtractor");
         Level jrLevel = jrLog.getLevel();
         if (oldIndexersFound) {
             jrLog.setLevel(Level.ERROR);
@@ -160,12 +148,6 @@ public class ConfigLoader {
             setConfigured(true);
             log.info("Configuration loaded (took " + ((System.currentTimeMillis() - millis) / 1000) + " seconds)"); //$NON-NLS-1$
 
-            // TODO >> this is now in MagnoliaMainFilter
-            //if (ModuleRegistration.getInstance().isRestartNeeded()) {
-//            if (moduleManager.isRestartNeeded()) {
-//                printSystemRestartInfo();
-//            }
-
         } catch (ModuleManagementException e) {
             log.error("An error occurred during initialization", e); //$NON-NLS-1$
             enterListeningMode();
@@ -177,106 +159,11 @@ public class ConfigLoader {
     }
 
     /**
-     * Bootstrap the system
-     * @deprecated since 3.5 - See WebappDelta !
-     */
-    protected boolean bootstrap() {
-        // check for initialized repositories
-        boolean initialized;
-
-        try {
-            initialized = ContentRepository.checkIfInitialized();
-        }
-        catch (RepositoryException re) {
-            log.error("Unable to initialize repositories. Magnolia can't start.", re); //$NON-NLS-1$
-            return false;
-        }
-
-        String[] bootDirs = Bootstrapper.getBootstrapDirs();
-
-        if (initialized) {
-            // define the system property to (re)bootstrap a singel repository
-            String bootstrapIfEmpty = StringUtils.defaultString(SystemProperty.getProperty(SystemProperty.BOOTSTRAP_IF_EMPTY));
-            String bootstrapForce = StringUtils.defaultString(SystemProperty.getProperty(SystemProperty.BOOTSTRAP_FORCE));
-
-            if (StringUtils.isNotEmpty(bootstrapIfEmpty) || StringUtils.isNotEmpty(bootstrapForce)) {
-                Set repositories = new HashSet();
-                String[] ifEmptyRepositories = StringUtils.split(bootstrapIfEmpty,", ");
-                String[] forceRepositories = StringUtils.split(bootstrapForce,", ");
-
-                repositories.addAll(Arrays.asList(ifEmptyRepositories));
-                repositories.addAll(Arrays.asList(forceRepositories));
-
-                for (Iterator iter = repositories.iterator(); iter.hasNext();) {
-                    String repository = (String) iter.next();
-
-                    try {
-                        if (ArrayUtils.contains(forceRepositories, repository)) {
-                            log.info("will clean and bootstrap the repository {} because the property {} is set",
-                                    repository, SystemProperty.BOOTSTRAP_FORCE);
-                            Content root = MgnlContext.getHierarchyManager(repository).getRoot();
-                            for (Iterator iterator = ContentUtil.getAllChildren(root).iterator(); iterator.hasNext();) {
-                                Content node = (Content) iterator.next();
-                                node.delete();
-                            }
-                            root.save();
-
-                            Bootstrapper.bootstrapRepository(repository, new BootstrapFileFilter(), bootDirs);
-                        }
-
-                        else if (ArrayUtils.contains(ifEmptyRepositories, repository) && !ContentRepository.checkIfInitialized(repository)) {
-                            log.info("will bootstrap the repository {} because the property {} is set",
-                                    repository, SystemProperty.BOOTSTRAP_IF_EMPTY);
-                            Bootstrapper.bootstrapRepository(repository, new BootstrapFileFilter(), bootDirs);
-                        }
-                    }
-                    catch (Exception e) {
-                        // should never be the case since initialized was true
-                        log.error("can't bootstrap repository " + repository, e);
-                    }
-                }
-            }
-        }
-        else {
-            log.warn("Repositories are not initialized (no content found)."); //$NON-NLS-1$
-
-            if (bootDirs.length == 0) {
-                enterListeningMode();
-                return false;
-            }
-
-            bootstrapping = true;
-
-            // a bootstrap directory is configured, trying to initialize repositories
-            Bootstrapper.bootstrapRepositories(bootDirs, new BootstrapFileFilter());
-        }
-        return true;
-    }
-
-    /**
-     * Print the list of modules needing a restart of the container.
-     * TODO : delete or review ?
-     */
-    private void printSystemRestartInfo() {
-        ModuleLoader loader = ModuleLoader.getInstance();
-        System.out.println("-----------------------------------------------------"); //$NON-NLS-1$
-        System.out.println("One or more modules need a restart of the webapp:"); //$NON-NLS-1$
-        for (Iterator iter = loader.getModuleInstances().keySet().iterator(); iter.hasNext();) {
-            String moduleName = (String) iter.next();
-            Module module = loader.getModuleInstance(moduleName);
-            if (module.isRestartNeeded()) {
-                System.out.println(" - " + module.getName() + " (" + module.getModuleDefinition().getVersion() + ")");
-            }
-        }
-        System.out.println("-----------------------------------------------------"); //$NON-NLS-1$
-    }
-
-    /**
      * Returns true is magnolia is running with all basic configuration.
      * @return <code>true</code> if Magnolia is configured
      */
     public static boolean isConfigured() {
-        return ConfigLoader.configured;
+        return configured;
     }
 
     /**
@@ -290,13 +177,13 @@ public class ConfigLoader {
 
     /**
      * Set the current state of Magnolia.
-     * @param configured <code>true</code> if Magnolia is configured
+     * @param cfg <code>true</code> if Magnolia is configured
      */
-    protected static void setConfigured(boolean configured) {
-        ConfigLoader.configured = configured;
+    private static void setConfigured(boolean cfg) {
+        configured = cfg;
 
         // if we are here, bootstrapping has completed or never started
-        ConfigLoader.bootstrapping = false;
+        bootstrapping = false;
     }
 
     /**
