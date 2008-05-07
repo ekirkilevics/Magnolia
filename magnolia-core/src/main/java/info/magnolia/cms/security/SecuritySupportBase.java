@@ -78,7 +78,7 @@ public abstract class SecuritySupportBase implements SecuritySupport {
      * Logs plain LoginException in error level, but subclasses in debug, since they
      * are specifically thrown when a known error occurs (wrong password, block account,
      * etc.) This also makes this code Java1.4 compliant, even if the JAAS module
-     * threw a specific LoginException which was introcued in Java5.
+     * threw a specific LoginException which was introduced in Java5.
      */
     private void logLoginException(LoginException e) {
         if (e.getClass().equals(LoginException.class)) {
