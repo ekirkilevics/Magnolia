@@ -59,7 +59,9 @@ public class EhCacheWrapper implements Cache {
         // which may lead to unexpected results, since get() and getQuiet() do check
         // for expiration and return null if the element was expired.
         // return ehcache.isKeyInCache(key);
-        return ehcache.getQuiet(key) != null;
+
+        // we can't use getQuiet, as it's non-blocking
+        return ehcache.get(key) != null;
     }
 
     public void put(Object key, Object value) {

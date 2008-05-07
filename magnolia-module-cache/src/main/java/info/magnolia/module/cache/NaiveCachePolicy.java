@@ -68,6 +68,10 @@ public class NaiveCachePolicy implements CachePolicy {
         if (shouldBypass(key)) {
             return new CachePolicyResult(CachePolicyResult.bypass, key, null);
         }
+
+        // we need to synchronize on the cache instance, as multiple threads might be accessing this
+        // concurrently, and we don't want to block the system if we're using a blocking cache.
+        // (since hasElement() might place a mutex on the cache key)
         synchronized (cache) {
             if (cache.hasElement(key)) {
                 final Object cachedEntry = cache.get(key);
