@@ -46,7 +46,7 @@ public class UserContextImpl extends AbstractContext implements UserContext {
 
     private static final long serialVersionUID = 222L;
 
-    private static final String SESSION_USER = WebContextImpl.class.getName() + ".user";
+    private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
 
     private User user;
 
