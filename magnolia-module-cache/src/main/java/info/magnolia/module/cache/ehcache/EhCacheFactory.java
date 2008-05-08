@@ -38,6 +38,9 @@ import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheFactory;
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
+import net.sf.ehcache.config.CacheConfiguration;
+import net.sf.ehcache.config.Configuration;
+import net.sf.ehcache.config.ConfigurationFactory;
 import net.sf.ehcache.constructs.blocking.BlockingCache;
 import net.sf.ehcache.management.ManagementService;
 
@@ -52,26 +55,44 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class EhCacheFactory implements CacheFactory {
-    private final CacheManager cacheManager;
+    private CacheManager cacheManager;
+    private CacheConfiguration defaultCacheConfiguration;
+    private String diskStorePath;
 
     public EhCacheFactory() {
-        // TODO : pass a net.sf.ehcache.config.Configuration instance as populated by content2bean
-        cacheManager = new CacheManager();
-        final MBeanServer mBeanServer = MBeanUtil.getMBeanServer();
-        ManagementService.registerMBeans(cacheManager, mBeanServer, true, true, true, true);
     }
 
-    public Cache newCache(String name) {
-        synchronized (this.getClass()) {
-            cacheManager.addCache(name);
+    public CacheConfiguration getDefaultCacheConfiguration() {
+        return defaultCacheConfiguration;
+    }
 
-            final Ehcache cache = cacheManager.getEhcache(name);
-            if (!(cache instanceof BlockingCache)) {
-                final BlockingCache newBlockingCache = new BlockingCache(cache);
-                cacheManager.replaceCacheWithDecoratedCache(cache, newBlockingCache);
-            }
+    public void setDefaultCacheConfiguration(CacheConfiguration defaultCacheConfiguration) {
+        this.defaultCacheConfiguration = defaultCacheConfiguration;
+    }
+
+    public String getDiskStorePath() {
+        return diskStorePath;
+    }
+
+    public void setDiskStorePath(String diskStorePath) {
+        this.diskStorePath = diskStorePath;
+    }
+
+    public void start() {
+        final Configuration cfg = ConfigurationFactory.parseConfiguration();
+        cfg.setSource("ehcache defaults");
+        if (defaultCacheConfiguration != null) {
+            cfg.setDefaultCacheConfiguration(defaultCacheConfiguration);
+            cfg.setSource(cfg.getConfigurationSource() + " + Magnolia-based defaultCacheConfiguration");
         }
-        return getCache(name);
+        if (diskStorePath != null) {
+            cfg.getDiskStoreConfiguration().setPath(diskStorePath);
+            cfg.setSource(cfg.getConfigurationSource() + " + Magnolia-based diskStorePath");
+        }
+        cacheManager = new CacheManager(cfg);
+
+        final MBeanServer mBeanServer = MBeanUtil.getMBeanServer();
+        ManagementService.registerMBeans(cacheManager, mBeanServer, true, true, true, true);
     }
 
     public List getCacheNames() {
@@ -81,9 +102,22 @@ public class EhCacheFactory implements CacheFactory {
     public Cache getCache(String name) {
         final Ehcache ehcache = cacheManager.getEhcache(name);
         if (ehcache == null) {
-            throw new IllegalArgumentException("No cache with name " + name);
+            createCache(name);
+            return getCache(name);
         }
         return new EhCacheWrapper(ehcache);
+    }
+
+    protected void createCache(String name) {
+        synchronized (this.getClass()) {
+            cacheManager.addCache(name);
+
+            final Ehcache cache = cacheManager.getEhcache(name);
+            if (!(cache instanceof BlockingCache)) {
+                final BlockingCache newBlockingCache = new BlockingCache(cache);
+                cacheManager.replaceCacheWithDecoratedCache(cache, newBlockingCache);
+            }
+        }
     }
 
     public void stop() {

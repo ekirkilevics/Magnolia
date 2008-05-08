@@ -37,8 +37,10 @@ import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * The CacheModule holds several named CacheConfiguration instances and a CacheFactory.
@@ -49,6 +51,7 @@ import java.util.Map;
  * @version $Revision: $ ($Author: $)
  */
 public class CacheModule implements ModuleLifecycle {
+    private final Set listeners = new HashSet();
     private CacheFactory cacheFactory;
     private Map configurations = new HashMap();
 
@@ -76,14 +79,29 @@ public class CacheModule implements ModuleLifecycle {
         return (CacheConfiguration) configurations.get(name);
     }
 
+    public void register(CacheLifecycleListener listener) {
+        listeners.add(listener);
+    }
+
     // TODO : i still feel like we should separate module config bean and lifecycle
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
+        // TODO : this is implementation dependant - some factories might need or want to be notified also on restart..
+//        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_STARTUP) {
+        cacheFactory.start();
+//        }
+
         final Iterator it = configurations.values().iterator();
         while (it.hasNext()) {
             final CacheConfiguration cfg = (CacheConfiguration) it.next();
             final String name = cfg.getName();
-            final Cache cache = cacheFactory.newCache(name);
+            final Cache cache = cacheFactory.getCache(name);
             cfg.getFlushPolicy().start(cache);
+        }
+
+        final Iterator itL = listeners.iterator();
+        while (itL.hasNext()) {
+            final CacheLifecycleListener listener = (CacheLifecycleListener) itL.next();
+            listener.onCacheModuleStart();
         }
     }
 
@@ -94,12 +112,13 @@ public class CacheModule implements ModuleLifecycle {
             final String name = cfg.getName();
             final Cache cache = cacheFactory.getCache(name);
             cfg.getFlushPolicy().stop(cache);
-
-            // TODO : this is implementation dependant - some factories might need or want to be notified also on restart..
-            if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN) {
-                cacheFactory.stop();
-            }
         }
+
+        // TODO : this is implementation dependant - some factories might need or want to be notified also on restart..
+        // TODO : there was a reason for this checking  of the phase, but i can't remember ...
+//        if (moduleLifecycleContext.getPhase() == ModuleLifecycleContext.PHASE_SYSTEM_SHUTDOWN) {
+        cacheFactory.stop();
+//        }
     }
 
 }

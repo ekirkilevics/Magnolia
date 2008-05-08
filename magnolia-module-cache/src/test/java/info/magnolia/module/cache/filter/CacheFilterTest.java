@@ -60,6 +60,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Set;
+import java.lang.reflect.Field;
 
 /**
  *
@@ -90,7 +92,7 @@ public class CacheFilterTest extends TestCase {
         cacheModule.addConfiguration("the-config-name", c2);
 
         final CacheFactory cacheFactory = createStrictMock(CacheFactory.class);
-        expect(cacheFactory.newCache("cachefilter-the-config-name")).andReturn(createStrictMock(Cache.class));
+        expect(cacheFactory.getCache("cachefilter-the-config-name")).andReturn(createStrictMock(Cache.class));
         cacheModule.setCacheFactory(cacheFactory);
 
         final CacheFilter filter = new CacheFilter();
@@ -102,6 +104,7 @@ public class CacheFilterTest extends TestCase {
 
         replay(filterConfig, cacheFactory);
         filter.init(filterConfig);
+        filter.onCacheModuleStart();
         verify(filterConfig, cacheFactory);
 
         // just to shunt the normal setup/teardown:
@@ -334,7 +337,17 @@ public class CacheFilterTest extends TestCase {
         executeFilterAndVerify();
     }
 
-    private void executeFilterAndVerify() throws IOException, ServletException {
+    private void executeFilterAndVerify() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {
+        // let's first assert the Filter did not forget to register itself
+        final ModuleRegistry mr = (ModuleRegistry) FactoryUtil.getSingleton(ModuleRegistry.class);
+        final CacheModule module = (CacheModule) mr.getModuleInstance("cache");
+        final Field field = module.getClass().getDeclaredField("listeners");
+        field.setAccessible(true);
+        final Set listeners = (Set) field.get(module);
+        assertEquals(1, listeners.size());
+        assertEquals(filter, listeners.iterator().next());
+
+        // and now get down to the real business
         replay(cache, cachePolicy, request, response, filterChain);
         filter.doFilter(request, response, filterChain);
 
@@ -367,13 +380,14 @@ public class CacheFilterTest extends TestCase {
         cacheModule.addConfiguration("my-config", cfg);
         cacheModule.setCacheFactory(cacheFactory);
 
-        expect(cacheFactory.newCache("cachefilter-my-config")).andReturn(cache);
+        expect(cacheFactory.getCache("cachefilter-my-config")).andReturn(cache);
         replay(cacheFactory);
 
         filter = new CacheFilter();
         filter.setName("cache-filter");
         filter.setCacheConfiguration("my-config");
         filter.init(null);
+        filter.onCacheModuleStart();
 
         webContext = createStrictMock(WebContext.class);
         expect(webContext.getAggregationState()).andReturn(aggregationState);

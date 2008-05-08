@@ -39,11 +39,11 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheConfiguration;
+import info.magnolia.module.cache.CacheLifecycleListener;
 import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicyResult;
 import org.apache.commons.collections.MultiMap;
 import org.apache.commons.io.output.TeeOutputStream;
-import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -60,7 +60,7 @@ import java.util.Iterator;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CacheFilter extends AbstractMgnlFilter {
+public class CacheFilter extends AbstractMgnlFilter implements CacheLifecycleListener {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CacheFilter.class);
 
     private static final String MODULE_NAME = "cache";
@@ -78,9 +78,16 @@ public class CacheFilter extends AbstractMgnlFilter {
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
+        super.init(filterConfig);
+        getModule().register(this);
+        // modules are started *after* filters - so we have to force a call onCacheModuleStart() here
+        onCacheModuleStart();
+    }
+
+    public void onCacheModuleStart() {
         final CacheModule cacheModule = getModule();
         this.cacheConfig = cacheModule.getConfiguration(cacheConfigurationName);
-        this.cache = cacheModule.getCacheFactory().newCache("cachefilter-" + cacheConfigurationName);
+        this.cache = cacheModule.getCacheFactory().getCache("cachefilter-" + cacheConfigurationName);
     }
 
     // TODO : maybe this method could be generalized ...
@@ -89,6 +96,10 @@ public class CacheFilter extends AbstractMgnlFilter {
     }
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        if (cacheConfig == null || cache == null) {
+            throw new IllegalStateException("CacheFilter is not properly configured, either cacheConfig(" + cacheConfig + ") or cache(" + cache + ") is null.");
+        }
+
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final CachePolicyResult cachePolicy = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState);
 
@@ -98,7 +109,6 @@ public class CacheFilter extends AbstractMgnlFilter {
 
             // TODO : set Last-Modified header - should be set by rendering filter etc
             //response.setDateHeader("Last-Modified", this.getCreationTime(key));
-            
 
             // will write to both the response stream and an internal byte array for caching
             final ByteArrayOutputStream cachingStream = new ByteArrayOutputStream();

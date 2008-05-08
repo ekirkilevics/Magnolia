@@ -34,20 +34,14 @@
 package info.magnolia.module.cache;
 
 /**
- * Most caching libraries allow the creation of different caches ("zones") in a single application/vm.
- * This interface wraps this functionality and hides the configuration mechanisms of the library in use.
+ * Implementations should register themselves in the appropriate CacheModule instances
+ * to get callbacks when the module is restarted. (i.e configuration change)
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public interface CacheFactory {
-    /**
-     * Retrieves a named cache. Implementations should take care of initializing the cache properly
-     * on first call or whenever necessary.
-     */
-    Cache getCache(String name);
+public interface CacheLifecycleListener {
 
-    void start();
-
-    void stop();
+    void onCacheModuleStart();
+    
 }
