@@ -104,7 +104,7 @@ public class CacheFilterTest extends TestCase {
 
         replay(filterConfig, cacheFactory);
         filter.init(filterConfig);
-        filter.onCacheModuleStart();
+        // called by init: filter.onCacheModuleStart();
         verify(filterConfig, cacheFactory);
 
         // just to shunt the normal setup/teardown:
@@ -387,7 +387,7 @@ public class CacheFilterTest extends TestCase {
         filter.setName("cache-filter");
         filter.setCacheConfiguration("my-config");
         filter.init(null);
-        filter.onCacheModuleStart();
+        // called by init() : filter.onCacheModuleStart();
 
         webContext = createStrictMock(WebContext.class);
         expect(webContext.getAggregationState()).andReturn(aggregationState);
