@@ -48,9 +48,9 @@ import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.util.GZipUtil;
 import static info.magnolia.test.TestUtil.enumeration;
 import junit.framework.TestCase;
+import org.apache.commons.collections.map.MultiValueMap;
 import static org.easymock.EasyMock.*;
 import org.easymock.IAnswer;
-import org.apache.commons.collections.map.MultiValueMap;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -59,9 +59,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Set;
-import java.lang.reflect.Field;
 
 /**
  *
