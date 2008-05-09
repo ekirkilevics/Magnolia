@@ -88,18 +88,18 @@ public class GZipFilter extends AbstractMgnlFilter {
         final SimpleServletOutputStream wrappedOut = new SimpleServletOutputStream(gzout);
 
         // Handle the request
-        final CacheResponseWrapper wrapper = new CacheResponseWrapper(response, wrappedOut);
+        final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, wrappedOut);
         addAndVerifyHeader(response, "Content-Encoding", "gzip");
         addAndVerifyHeader(response, "Vary", "Accept-Encoding"); // needed for proxies
-        chain.doFilter(request, wrapper);
+        chain.doFilter(request, responseWrapper);
 
+        responseWrapper.flushBuffer();
         gzout.flush();
         gzout.close();
 
         final byte[] compressedBytes = compressed.toByteArray();
-        wrapper.setContentLength(compressedBytes.length);
+        responseWrapper.setContentLength(compressedBytes.length);
         response.getOutputStream().write(compressedBytes);
-
     }
 
 }
