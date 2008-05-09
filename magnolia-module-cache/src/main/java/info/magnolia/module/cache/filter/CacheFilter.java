@@ -102,6 +102,7 @@ public class CacheFilter extends AbstractMgnlFilter implements CacheLifecycleLis
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final CachePolicyResult cachePolicy = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState);
+        log.debug("Cache policy result: {}", cachePolicy);
 
         final Object cacheKey = cachePolicy.getCacheKey();
         final CachePolicyResult.CachePolicyBehaviour behaviour = cachePolicy.getBehaviour();
