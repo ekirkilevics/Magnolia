@@ -35,10 +35,14 @@ package info.magnolia.module.cache;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.voting.Voter;
+import info.magnolia.voting.Voting;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+
+import org.apache.commons.lang.ArrayUtils;
 
 /**
  * A simplistic CachePolicy which will simply direct the usage
@@ -49,23 +53,28 @@ import java.util.List;
  */
 public class DefaultCachePolicy implements CachePolicy {
     private List bypasses = new LinkedList();
+    private Voter[] voters = new Voter[0];
 
     public List getBypasses() {
         return bypasses;
-    }
-
-    public void setBypasses(List bypasses) {
-        this.bypasses = bypasses;
     }
 
     public void addBypass(String bypass) {
         bypasses.add(bypass);
     }
 
+    public Voter[] getVoters() {
+        return voters;
+    }
+
+    public void addVoter(Voter voter) {
+        voters = (Voter[]) ArrayUtils.add(this.voters, voter);
+    }
+
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState) {
         final Object key = getCacheKey(aggregationState);
 
-        if (shouldBypass(key)) {
+        if (shouldBypass(aggregationState, key)) {
             return new CachePolicyResult(CachePolicyResult.bypass, key, null);
         }
 
@@ -82,7 +91,7 @@ public class DefaultCachePolicy implements CachePolicy {
         }
     }
 
-    protected boolean shouldBypass(Object key) {
+    protected boolean shouldBypass(AggregationState aggregationState, Object key) {
         final String uri = (String) key;
         final Iterator it = bypasses.iterator();
         while (it.hasNext()) {
@@ -91,7 +100,10 @@ public class DefaultCachePolicy implements CachePolicy {
                 return true;
             }
         }
-        return false;
+
+        // true if voters vote positively (and mostly they are "not" voters
+        // - which means their positive votes will favor bypassing the cache
+        return Voting.Factory.getDefaultVoting().vote(voters, null) > 0;
     }
 
     protected Object getCacheKey(final AggregationState aggregationState) {
