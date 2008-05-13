@@ -161,6 +161,25 @@ public class ResponseContentTypeVoterTest extends TestCase {
         doTest(false);
     }
 
+    public void testIgnoresCharsetInContentType() {
+        voter.addAllowed("text/html");
+        voter.addAllowed("application/x-javascript");
+        voter.addAllowed("text/plain");
+        voter.addRejected("image/gif");
+        voter.addRejected("image/jpeg");
+        voter.addRejected("application/octet-stream");
+        expect(response.getContentType()).andReturn("text/html;charset=UTF-8");
+        doTest(true);
+    }
+
+    public void testIgnoresCharsetInContentType2() {
+        voter.addAllowed("text/html");
+        voter.addAllowed("application/x-javascript");
+        voter.addAllowed("text/plain");
+        expect(response.getContentType()).andReturn("image/jpeg;charset=UTF-8");
+        doTest(false);
+    }
+
     private void doTest(boolean expectedBoolResult) {
         replay(response, ctx);
         assertEquals(expectedBoolResult, voter.boolVote(null));

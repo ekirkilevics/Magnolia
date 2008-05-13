@@ -36,6 +36,7 @@ package info.magnolia.voting.voters;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
 import java.util.ArrayList;
@@ -82,7 +83,9 @@ public class ResponseContentTypeVoter extends AbstractBoolVoter {
                 return false;
             }
         }
-        final String contentType = response.getContentType();
+
+        // strip the encoding off of the content type:
+        final String contentType = StringUtils.substringBefore(response.getContentType(), ";");
         if (contentType == null) {
             log.warn("No content type set on the response, can't vote.");
             return false;
