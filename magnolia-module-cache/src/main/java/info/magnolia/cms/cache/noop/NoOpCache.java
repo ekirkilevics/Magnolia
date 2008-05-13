@@ -46,6 +46,8 @@ import javax.servlet.http.HttpServletResponse;
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @since 3.0
+ *
+ * @deprecated since 3.6 - if this is needed at all, NeverCachePolicy can probably be used as a replacement.
  */
 public class NoOpCache implements Cache {
 
