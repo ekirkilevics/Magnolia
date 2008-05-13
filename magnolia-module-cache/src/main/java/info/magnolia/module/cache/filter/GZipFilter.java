@@ -47,37 +47,15 @@ import java.util.zip.GZIPOutputStream;
  * This GZipFilter does not take care of the Accept-Encoding request header. The CacheFilter will
  * take care of serving the unzipped content if appropriate.
  *
+ * By the default, the Magnolia main filter is not dispatched to in case of include requests - if
+ * this is the case this filter has to be bypassed for such requests !
+ *
  * @see info.magnolia.module.cache.filter.StandaloneGZipFilter if the cache filter is not in use.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class GZipFilter extends AbstractMgnlFilter {
-
-//    Content-Type: application/x-javascript;charset=UTF-8
-
-    // TODO : this is completely temporary while testing and being lazy
-//    public boolean bypasses(HttpServletRequest request) {
-//        if (request.getRequestURI().indexOf("/.") >= 0) {
-//            return true;
-//        }
-//        if (request.getRequestURI().indexOf(".html") < 0) {
-//            return true;
-//        }
-        //
-
-        //TODO : voters for mimetypes
-        // TODO : extends OncePerRequest filter ?
-
-//        final String uri = (String) request.getAttribute("javax.servlet.include.request_uri");
-//        final boolean includeRequest = !(uri == null);
-//        if (includeRequest) {
-//            return true;
-//        }
-//
-//        return false;
-//
-//    }
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // we can't tee the outputstream, because we need to setContentLength before writing content ...
@@ -100,6 +78,26 @@ public class GZipFilter extends AbstractMgnlFilter {
         final byte[] compressedBytes = compressed.toByteArray();
         responseWrapper.setContentLength(compressedBytes.length);
         response.getOutputStream().write(compressedBytes);
+
+        // TODO :
+         //return on error or redirect code, because response is already committed
+//            int statusCode = wrapper.getStatusCode();
+//            if (statusCode != HttpServletResponse.SC_OK) {
+//                return;
+//            }
+
+         //Sanity checks
+//            byte[] compressedBytes = compressed.toByteArray();
+//            boolean shouldGzippedBodyBeZero = ResponseUtil.shouldGzippedBodyBeZero(compressedBytes, request);
+//            boolean shouldBodyBeZero = ResponseUtil.shouldBodyBeZero(request, wrapper.getStatusCode());
+//            if (shouldGzippedBodyBeZero || shouldBodyBeZero) {
+//                compressedBytes = new byte[0];
+//            }
+
+         // Write the zipped body
+//            ResponseUtil.addGzipHeader(response);
+//            response.setContentLength(compressedBytes.length);
+//            response.getOutputStream().write(compressedBytes);
     }
 
 }
