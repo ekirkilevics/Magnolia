@@ -47,7 +47,7 @@ import java.util.List;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class NaiveCachePolicy implements CachePolicy {
+public class DefaultCachePolicy implements CachePolicy {
     private List bypasses = new LinkedList();
 
     public List getBypasses() {
