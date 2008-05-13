@@ -68,6 +68,14 @@ public class CachePolicyResult {
         return cachedEntry;
     }
 
+    public String toString() {
+        return "CachePolicyResult{" +
+                "behaviour=" + behaviour +
+                ", cacheKey=" + cacheKey +
+                ", cachedEntry=" + cachedEntry +
+                '}';
+    }
+
     public final static class CachePolicyBehaviour {
         private final String name;
 
