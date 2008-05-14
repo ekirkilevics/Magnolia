@@ -33,15 +33,12 @@
  */
 package info.magnolia.module.cache.setup;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
-import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
-import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 
 import java.util.ArrayList;
@@ -69,13 +66,13 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("3.6", "New cache API and configuration.")
                 .addTask(new BackupTask("config", "/modules/cache/config", true))
                 .addTask(new BootstrapResourcesTask("New configuration", "Bootstraps new default cache configuration.") {
-                    protected String[] getResourcesToBootstrap(final InstallContext installContext) {
-                        return new String[]{
-                                "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml",
-                                "/mgnl-bootstrap/cache/config.modules.cache.config.cacheFactory.xml"
-                        };
-                    }
-                })
+            protected String[] getResourcesToBootstrap(final InstallContext installContext) {
+                return new String[]{
+                        "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml",
+                        "/mgnl-bootstrap/cache/config.modules.cache.config.cacheFactory.xml"
+                };
+            }
+        })
         );
 
 
