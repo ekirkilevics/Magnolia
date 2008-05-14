@@ -34,26 +34,18 @@
 package info.magnolia.module.cache.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.cache.setup.AddCacheVoterTask;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
-import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
-import info.magnolia.voting.voters.AuthenticatedVoter;
-import info.magnolia.voting.voters.ExtensionVoter;
-import info.magnolia.voting.voters.OnAdminVoter;
-import info.magnolia.voting.voters.RequestHasParametersVoter;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -69,7 +61,8 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         u.servletIsRemoved("CacheServlet");
         u.servletIsRemoved("CacheGeneratorServlet");
         final DeltaBuilder deltaTo35 = DeltaBuilder.update("3.5.0", "");
-        deltaTo35.addTask(new BootstrapSingleResource("Configured Observation", "Adds the repositories to be observed.", "/mgnl-bootstrap/cache/config.modules.cache.config.repositories.xml"));
+        // bootstrap file removed - and not needed even if we're upgrading from 3.0
+        // deltaTo35.addTask(new BootstrapSingleResource("Configured Observation", "Adds the repositories to be observed.", "/mgnl-bootstrap/cache/config.modules.cache.config.repositories.xml"));
         deltaTo35.addConditions(conditions);
         register(deltaTo35);
 
@@ -78,7 +71,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapResourcesTask("New configuration", "Bootstraps new default cache configuration.") {
                     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                         return new String[]{
-                                "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.xml",
+                                "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml",
                                 "/mgnl-bootstrap/cache/config.modules.cache.config.cacheFactory.xml"
                         };
                     }
@@ -97,6 +90,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         return tasks;
     }
 
+    /* TODO : if we keep this, they should move to cacheStrategy now
     public List getStartupTasks(InstallContext installContext) {
         List tasks = new ArrayList();
 
@@ -105,9 +99,10 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
         Map config = new HashMap();
         config.put("enabled", Boolean.TRUE);
-        config.put("trueValue", new Long(-1));
+        config.put("not", Boolean.TRUE);
         tasks.add(new AddCacheVoterTask("notWithParametersVoter", RequestHasParametersVoter.class, config));
 
+        // this was replaced by a simple bypass
         config = new HashMap();
         config.put("enabled", Boolean.TRUE);
         config.put("falseValue", new Long(-1));
@@ -117,15 +112,16 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
         config = new HashMap();
         config.put("enabled", Boolean.TRUE);
-        config.put("trueValue", new Long(-1));
+        config.put("not", Boolean.TRUE);
         tasks.add(new AddCacheVoterTask("notOnAdminVoter", OnAdminVoter.class, config));
 
         config = new HashMap();
         config.put("enabled", Boolean.FALSE);
-        config.put("trueValue", new Long(-1));
+        config.put("not", Boolean.TRUE);
         tasks.add(new AddCacheVoterTask("notAuthenticatedVoter", AuthenticatedVoter.class, config));
 
         return tasks;
     }
+    */
 
 }
