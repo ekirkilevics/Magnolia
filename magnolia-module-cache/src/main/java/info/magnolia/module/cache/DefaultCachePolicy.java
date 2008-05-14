@@ -45,8 +45,9 @@ import java.util.List;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
- * A simplistic CachePolicy which will simply direct the usage
- * of the cache is the element has already been cached or not.
+ * A basic CachePolicy which will drive the usage of the cache
+ * based on the fact that the element has already been cached
+ * or not. It also supports a simple bypass list and voters.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
