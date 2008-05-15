@@ -42,10 +42,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
+import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.Iterator;
+import java.util.Vector;
+import java.util.concurrent.ThreadPoolExecutor;
 
 /**
  *
@@ -57,14 +60,68 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     public SimpleSyndicator() {
     }
 
-    public synchronized void activate(ActivationContent activationContent) throws ExchangeException {
+    public void activate(final ActivationContent activationContent) throws ExchangeException {
         Iterator subscribers = ActivationManagerFactory.getActivationManager().getSubscribers().iterator();
+        final Vector batch = new Vector();
+        final Vector errors = new Vector();
         while (subscribers.hasNext()) {
-            Subscriber subscriber = (Subscriber) subscribers.next();
+            final Subscriber subscriber = (Subscriber) subscribers.next();
             if (subscriber.isActive()) {
-                activate(subscriber, activationContent);
-            }
+                // Create runnable task for each subscriber.
+                Runnable r = new Runnable() {
+                    public void run() {
+                        try {
+                            activate(subscriber, activationContent);
+                        } catch (ExchangeException e) {
+                            log.error("Failed to activate content.", e);
+                            errors.add(e);
+                        } finally {
+                            batch.remove(this);
+                        }
+                    }
+                };
+                batch.add(r);
+                // execute task.
+                ThreadPool.getInstance().run(r);
+                
+                // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
+                while (!batch.isEmpty()) {
+                    log.debug("Waiting for {} tasks to finish.", batch.size());
+                    try {
+                        Thread.sleep(500);
+                    } catch (InterruptedException e) {
+                        // waked up externally - ignore
+                    }
+                }
+                
+                // collect all the errors and send them back.
+                if (!errors.isEmpty()) {
+                    StringBuffer msg = new StringBuffer(errors.size() + " error").append(
+                    errors.size() > 1 ? "s" : "").append(" detected: ");
+                    for (int i = 0; i < errors.size(); i++) {
+                        Exception e = (Exception)errors.get(i);
+                        msg.append("\n").append(e.getMessage());
+                        log.error(e.getMessage(), e);
+                    }
+                    
+                    throw new ExchangeException(msg.toString(), (Exception) errors.get(0));
+                }
+             }
         }
+        
+        ThreadPool.getInstance().run(new Runnable() {
+            public void run() {
+                while (!batch.isEmpty()) {
+                    try {
+                        Thread.sleep(10000);
+                    } catch (InterruptedException e) {
+                        // waked up from outside ... ignore
+                    }
+                }
+                cleanTemporaryStore(activationContent);
+            }
+            
+        });
     }
 
     /**
@@ -73,7 +130,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param activationContent
      * @throws ExchangeException
      */
-    public synchronized void activate(Subscriber subscriber, ActivationContent activationContent)
+    public void activate(Subscriber subscriber, ActivationContent activationContent)
             throws ExchangeException {
         if (null == subscriber) {
             throw new ExchangeException("Null Subscriber");
@@ -111,7 +168,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             URLConnection urlConnection = url.openConnection();
             this.addActivationHeaders(urlConnection, activationContent);
 
-            Transporter.transport(urlConnection, activationContent);
+            Transporter.transport((HttpURLConnection) urlConnection, activationContent);
 
             String status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
 
