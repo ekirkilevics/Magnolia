@@ -37,9 +37,12 @@ import info.magnolia.cms.exchange.ExchangeException;
 
 import java.io.BufferedInputStream;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URLConnection;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.net.HttpURLConnection;
 import java.util.Iterator;
 
 import org.apache.commons.io.IOUtils;
@@ -65,55 +68,80 @@ public class Transporter {
     private static final String BOUNDARY = "mgnlExchange-cfc93688d385";
 
     /**
+     * Aggregates all transfer data including boundaries into single temporary file.
+     * @param ac Activatied content.
+     * @return File with all transport data.
+     * @throws IOException when some activation content can't be read or writing into temp file fails.
+     */
+    private static File prepareTempFile (ActivationContent ac) 
+        throws IOException {
+
+        File f = File.createTempFile(""+System.currentTimeMillis(), ".mgnl_activation");
+
+        log.debug("prepareTempFile() " + f.getPath());
+
+        f.deleteOnExit(); // just to be sure
+
+        DataOutputStream dos = new DataOutputStream(new FileOutputStream(f));
+
+        dos.writeBytes("--" + BOUNDARY + "\r\n");
+
+        Iterator it = ac.getFiles().keySet().iterator();
+        while (it.hasNext()) {
+            String fileName = (String) it.next();
+
+            dos.writeBytes("content-disposition: form-data; name=\"" + fileName + "\"; filename=\"" + fileName + "\"\r\n");
+            dos.writeBytes("content-type: application/octet-stream\r\n\r\n");
+
+            BufferedInputStream bis = new BufferedInputStream(new FileInputStream(ac.getFile(fileName)));
+
+            IOUtils.copy(bis, dos);
+            IOUtils.closeQuietly(bis);
+
+            dos.writeBytes("\r\n" + "--" + BOUNDARY + "\r\n");
+        }
+        return f;
+    }
+
+    /**
      * http form multipart form post
      * @param connection
      * @param activationContent
      * @throws ExchangeException
      */
-    public static void transport(URLConnection connection, ActivationContent activationContent)
-        throws ExchangeException {
-        InputStream is = null;
-        DataOutputStream outStream = null;
+    public static void transport(HttpURLConnection connection, ActivationContent activationContent) throws ExchangeException {
+        File tempFile = null;
+        FileInputStream is = null;
+        OutputStream os = null;
+
         try {
+            tempFile = prepareTempFile(activationContent);
+            
+            connection.setFixedLengthStreamingMode((int) tempFile.length());
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setUseCaches(false);
             connection.setRequestProperty("Content-type", "multipart/form-data; boundary=" + BOUNDARY);
             connection.setRequestProperty("Cache-Control", "no-cache");
 
-            outStream = new DataOutputStream(connection.getOutputStream());
+            is = new FileInputStream(tempFile);
+            os = connection.getOutputStream();
 
-            // set all resources from activationContent
-            Iterator fileNameIterator = activationContent.getFiles().keySet().iterator();
-            while (fileNameIterator.hasNext()) {
-                outStream.writeBytes("\r\n--" + BOUNDARY + "\r\n");
-                String fileName = (String) fileNameIterator.next();
-                is = new BufferedInputStream(new FileInputStream(activationContent.getFile(fileName)));
-                outStream.writeBytes("content-disposition: form-data; name=\""
-                    + fileName
-                    + "\"; filename=\""
-                    + fileName
-                    + "\"\r\n");
-                outStream.writeBytes("content-type: application/octet-stream" + "\r\n\r\n");
-
-                IOUtils.copy(is, outStream);
-                IOUtils.closeQuietly(is);
-            }
-
-            outStream.writeBytes("\r\n--" + BOUNDARY + "--\r\n");
-            outStream.flush();
-
-            log.debug("Activation content sent as multipart/form-data");
+            IOUtils.copy(is, os);
         }
         catch (Exception e) {
-            throw new ExchangeException("Simple exchange transport failed: "
-                + ClassUtils.getShortClassName(e.getClass()), e);
+            String msg = "Simple exchange transport failed: " + e.getMessage();
+            log.error(msg, e);
+            throw new ExchangeException(msg, e);
         }
         finally {
+
             IOUtils.closeQuietly(is);
-            IOUtils.closeQuietly(outStream);
+            IOUtils.closeQuietly(os);
+
+            if (tempFile != null) {
+                tempFile.delete();
+            }
         }
-
     }
-
 }
