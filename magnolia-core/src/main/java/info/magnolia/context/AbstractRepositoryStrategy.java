@@ -45,7 +45,9 @@ import java.util.Map;
 import javax.jcr.LoginException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.UnsupportedRepositoryOperationException;
+import javax.jcr.observation.EventListener;
+import javax.jcr.observation.EventListenerIterator;
+import javax.jcr.observation.ObservationManager;
 
 import org.apache.commons.lang.UnhandledException;
 import org.slf4j.Logger;
@@ -125,17 +127,28 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
             Session session = (Session) iter.next();
             if(session != null && session.isLive()){
                 try {
-                    if(checkObservation || !session.getWorkspace().getObservationManager().getRegisteredEventListeners().hasNext()){
+                    final ObservationManager observationManager = session.getWorkspace().getObservationManager();
+                    final EventListenerIterator listeners = observationManager.getRegisteredEventListeners();
+                    if(!checkObservation || !listeners.hasNext()){
                         session.logout();
                         JCRStats.getInstance().decSessionCount();
                     }
                     else{
-                        log.warn("won't close session because of registered observation listener {}", session );
+                        log.warn("won't close session because of registered observation listener {}", session.getWorkspace().getName());
+                        if(log.isDebugEnabled()){
+                            while(listeners.hasNext()) {
+                                EventListener listener = listeners.nextEventListener();
+                                log.debug("registered listener {}", listener);
+                            }
+                        }
                     }
                 }
                 catch (RepositoryException e) {
                     log.error("can't check if event listeners are registered", e);
                 }
+            }
+            else{
+                log.warn("session has been already closed {}", session.getWorkspace().getName());
             }
         }
         hierarchyManagers.clear();

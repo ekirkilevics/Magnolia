@@ -253,7 +253,7 @@ public class FactoryUtil {
      * @version $Id$
      *
      */
-    public static class ObservedObjectFactory{
+    public static class ObservedObjectFactory implements EventListener{
 
         /**
          * Path to the node in the config repository
@@ -284,20 +284,19 @@ public class FactoryUtil {
             load();
             startObservation(path);
         }
-        
-        protected void startObservation(String handle) {
-            ObservationUtil.registerDefferedChangeListener(ContentRepository.CONFIG, handle, new EventListener() {
 
-                public void onEvent(EventIterator events) {
-                   reload();
-                }
-            }, 1000, 5000);
+        protected void startObservation(String handle) {
+            ObservationUtil.registerDefferedChangeListener(ContentRepository.CONFIG, handle, this, 1000, 5000);
         }
+
+        public void onEvent(EventIterator events) {
+            reload();
+         }
 
         protected void reload(){
             load();
         }
-        
+
         protected void load() {
             HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(repository);
             if(hm.isExist(path)){
@@ -314,7 +313,7 @@ public class FactoryUtil {
                 log.warn("can't read configuration for object " + interf + " from [" + repository + ":" + path + "]");
             }
         }
-        
+
         protected void onRegister(Content node) {
             try {
                 Object instance = transformNode(node);
@@ -350,6 +349,10 @@ public class FactoryUtil {
          */
         public Object getObservedObject() {
             return this.observedObject;
+        }
+
+        public String toString() {
+            return super.toString() + ":" + interf +  "(" + repository + ":" +  path + ")";
         }
     }
 

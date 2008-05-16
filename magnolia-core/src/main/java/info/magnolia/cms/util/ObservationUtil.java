@@ -161,8 +161,7 @@ public class ObservationUtil {
      * you need to be able to later unregister your EventListener.
      */
     public static EventListener instanciateDeferredEventListener(EventListener listener, long delay, long maxDelay) {
-        final ObservationBasedDelayedExecutor executor = new ObservationBasedDelayedExecutor(listener, delay, maxDelay);
-        return new DeferringEventListener(executor);
+        return new DeferringEventListener(listener, delay, maxDelay);
     }
 
     public static void unregisterChangeListener(String repository, EventListener listener) {
@@ -181,14 +180,22 @@ public class ObservationUtil {
     }
 
     public static class DeferringEventListener implements EventListener {
-        private final ObservationBasedDelayedExecutor executor;
 
-        public DeferringEventListener(ObservationBasedDelayedExecutor executor) {
-            this.executor = executor;
+        private ObservationBasedDelayedExecutor executor;
+
+        private EventListener listener;
+
+        public DeferringEventListener(EventListener listener, long delay, long maxDelay) {
+            this.listener = listener;
+            executor = new ObservationBasedDelayedExecutor(listener, delay, maxDelay);
         }
 
         public void onEvent(EventIterator events) {
-            executor.consume(events);
+            this.executor.consume(events);
+        }
+
+        public String toString() {
+            return super.toString() + ":" + this.listener;
         }
     }
 
