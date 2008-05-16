@@ -33,6 +33,8 @@
  */
 package info.magnolia.debug;
 
+import info.magnolia.cms.filters.AbstractMgnlFilter;
+
 import java.io.IOException;
 import java.util.Enumeration;
 import java.util.Iterator;
@@ -42,8 +44,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import info.magnolia.cms.filters.AbstractMgnlFilter;
-
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,6 +54,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class DumpHeadersFilter extends AbstractMgnlFilter {
+    private long count = 0;
 
     /**
      * Logger.
@@ -61,14 +63,27 @@ public class DumpHeadersFilter extends AbstractMgnlFilter {
 
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        long nr = count++;
         LoggingResponse wrappedResponse = new LoggingResponse(response);
-        chain.doFilter(request, wrappedResponse);
+        log.info("{} uri: {}", Long.valueOf(nr), request.getRequestURI());
+        log.info("{} session: {}", Long.valueOf(nr), Boolean.valueOf(request.getSession(false)!=null));
+
+        StringBuffer params = new StringBuffer();
+        for(Enumeration paramEnum =request.getParameterNames(); paramEnum.hasMoreElements();){
+            String name = (String) paramEnum.nextElement();
+            params.append(name).append(" = ").append(StringUtils.join(request.getParameterValues(name), ","));
+            if(paramEnum.hasMoreElements()){
+                params.append("; ");
+            }
+        }
+        log.info("{} parameters: {}", Long.valueOf(nr),  params);
         for (Enumeration en = request.getHeaderNames(); en.hasMoreElements();) {
             String name = (String) en.nextElement();
-            log.info(request.getRequestURI() + " request: " + name + " = " + request.getHeader(name));
+            log.info("{} header: {}={}", new String[]{String.valueOf(nr), name, request.getHeader(name)});
         }
-        log.info(request.getRequestURI() + " response status: " + wrappedResponse.getStatus());
-        log.info(request.getRequestURI() + " response length: " + wrappedResponse.getLength());
+        chain.doFilter(request, wrappedResponse);
+        log.info("{} response status: {}", Long.valueOf(nr),Integer.valueOf(wrappedResponse.getStatus()));
+        log.info("{} response length: {}", Long.valueOf(nr),Long.valueOf(wrappedResponse.getLength()));
         for (Iterator iter = wrappedResponse.getHeaders().keySet().iterator(); iter.hasNext();) {
             String name = (String) iter.next();
             log.info(request.getRequestURI()
