@@ -396,8 +396,8 @@ public class MgnlUser extends AbstractUser implements Serializable {
     public void setLastAccess() {
         NodeData lastaccess;
         try {
-            lastaccess = NodeDataUtil.getOrCreate(this.getUserNode(), "lastaccess", PropertyType.DATE);
-            synchronized (lastaccess) {
+            synchronized (this.getUserNode().getJCRNode()) {
+                lastaccess = NodeDataUtil.getOrCreate(this.getUserNode(), "lastaccess", PropertyType.DATE);
                 lastaccess.setValue(new GregorianCalendar());
                 getUserNode().save();
             }
