@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.exchangesimple;
 
+import org.apache.commons.codec.binary.Base64;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
@@ -42,6 +43,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.security.AccessDeniedException;
@@ -78,6 +80,8 @@ import org.jdom.input.SAXBuilder;
 import org.safehaus.uuid.UUIDGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import com.oreilly.servlet.Base64Decoder;
 
 /**
  * @author Sameer Charles
@@ -130,17 +134,31 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       */
      protected synchronized void receive(HttpServletRequest request) throws Exception {
          String action = request.getHeader(SimpleSyndicator.ACTION);
+
+         // get the user who authorized this request.
+         String authorization = request.getHeader(SimpleSyndicator.AUTHORIZATION);
+         if (StringUtils.isEmpty(authorization)) {
+             authorization = request.getParameter(SimpleSyndicator.AUTH_USER);
+         } else {
+             log.error("AUTH:" +authorization);
+            authorization = new String(Base64.decodeBase64(authorization.substring(6).getBytes())); //Basic uname:pwd
+            authorization = authorization.substring(0, authorization.indexOf(":"));
+         }
+
+         String webapp = SystemProperty.getProperty(SystemProperty.MAGNOLIA_WEBAPP);
          if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
-             update(request);
+             String name = update(request);
+             // Everything went well
+             log.info("User {} successfuly activated {} on {}.", new Object[]{authorization, name, webapp});
          }
          else if (action.equalsIgnoreCase(SimpleSyndicator.DEACTIVATE)) {
-             remove(request);
+             String name = remove(request);
+             // Everything went well
+             log.info("User {} succeessfuly deactivated {} on {}.", new Object[] {authorization, name, webapp});
          }
          else {
              throw new UnsupportedOperationException("Method not supported : " + action);
          }
-         // Everything went well
-         log.info("(de)activation succeeded");
      }
 
      /**
@@ -148,8 +166,9 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param request
       * @throws Exception if fails to update
       */
-     protected synchronized void update(HttpServletRequest request) throws Exception {
+     protected synchronized String update(HttpServletRequest request) throws Exception {
          MultipartForm data = Resource.getPostedForm();
+         String name = null;
          if (null != data) {
              String parentPath = this.getParentPath(request);
              String resourceFileName = request.getHeader(SimpleSyndicator.RESOURCE_MAPPING_FILE);
@@ -177,7 +196,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              }
 
              // order imported node
-             String name = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
+             name = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
              Content parent = hm.getContent(parentPath);
              List siblings = rootElement.getChild(SimpleSyndicator.SIBLINGS_ROOT_ELEMENT)
                      .getChildren(SimpleSyndicator.SIBLINGS_ELEMENT);
@@ -201,6 +220,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                  }
              }
          }
+         return name;
      }
 
      /**
@@ -373,11 +393,13 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param request
       * @throws Exception if fails to update
       */
-     protected synchronized void remove(HttpServletRequest request) throws Exception {
+     protected synchronized String remove(HttpServletRequest request) throws Exception {
          HierarchyManager hm = getHierarchyManager(request);
+         String handle = null;
          try {
              Content node = this.getNode(request);
-             hm.delete(node.getHandle());
+             handle = node.getHandle();
+             hm.delete(handle);
              hm.save();
          }
          catch (ItemNotFoundException e) {
@@ -385,6 +407,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                  log.debug("Unable to delete node", e);
              }
          }
+         return handle;
      }
 
      /**
@@ -466,14 +489,12 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              }
              // get a new deep lock
              content.lock(true, true);
-         }
-         catch (LockException le) {
+         } catch (LockException le) {
              // either repository does not support locking OR this node never locked
              if (log.isDebugEnabled()) {
                  log.debug(le.getMessage());
              }
-         }
-         catch (RepositoryException re) {
+         } catch (RepositoryException re) {
              // should never come here
              log.warn("Exception caught", re);
          }
