@@ -51,7 +51,7 @@ class LoggingResponse extends HttpServletResponseWrapper {
 
     private int length;
 
-    private int status;
+    private int status = HttpServletResponse.SC_OK;
 
     LoggingResponse(HttpServletResponse response) {
         super(response);
