@@ -468,7 +468,6 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          }
 
          try {
-             getHierarchyManager(request).getWorkspace().getSession().logout();
              HttpSession httpSession = request.getSession(false);
              if (httpSession != null) httpSession.invalidate();
          } catch (Throwable t) {
