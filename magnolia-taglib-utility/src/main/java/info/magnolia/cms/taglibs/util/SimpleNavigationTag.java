@@ -209,6 +209,12 @@ public class SimpleNavigationTag extends TagSupport {
     private String classProperty;
 
     /**
+     * Name for the "nofollow" hodeData (for link that must be ignored by search engines).
+     */
+    private String nofollow;
+
+
+    /**
      * Setter for the <code>startLevel</code> tag attribute.
      * @param startLevel the start level for navigation, defaults to <code>0</code>.
      */
@@ -246,6 +252,14 @@ public class SimpleNavigationTag extends TagSupport {
      */
     public void setOpenMenu(String openMenu) {
         this.openMenu = openMenu;
+    }
+
+    /**
+     * Setter for <code>nofollow</code>.
+     * @param nofollow The nofollow to set.
+     */
+    public void setNofollow(String nofollow) {
+        this.nofollow = nofollow;
     }
 
     /**
@@ -316,6 +330,7 @@ public class SimpleNavigationTag extends TagSupport {
         this.style = null;
         this.classProperty = null;
         this.expandAll = EXPAND_NONE;
+        this.nofollow = null;
         super.release();
     }
 
@@ -439,6 +454,11 @@ public class SimpleNavigationTag extends TagSupport {
                 out.print("\""); //$NON-NLS-1$
             }
 
+            if (nofollow != null && child.getNodeData(this.nofollow).getBoolean())
+            {
+                out.print(" rel=\"nofollow\""); //$NON-NLS-1$
+            }
+
             out.print(">"); //$NON-NLS-1$
 
             if (StringUtils.isNotEmpty(this.wrapperElement)) {
@@ -450,7 +470,7 @@ public class SimpleNavigationTag extends TagSupport {
             if (StringUtils.isNotEmpty(this.wrapperElement)) {
                 out.print("</" + this.wrapperElement + ">"); //$NON-NLS-1$
             }
-            
+
             out.print(" </a>"); //$NON-NLS-1$
 
             if (self) {

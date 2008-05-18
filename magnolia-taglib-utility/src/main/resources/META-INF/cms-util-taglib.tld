@@ -308,6 +308,14 @@
             When specified, all links will have the anchortext wrapped in the supplied element (such as "span")
         </description>
     </attribute>
+    <attribute>
+      <name>nofollow</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Name for the "nofollow" nodeData. If a page contains a boolean property with this name and it is
+        set to true, rel="nofollow" will be added to the generated link (for links the should be ignored by search
+        engines).</description>
+    </attribute>
     <example>
       <![CDATA[
             <cmsu:simpleNavigation startLevel="3" style="mystyle"/>
