@@ -83,17 +83,17 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 batch.add(r);
                 // execute task.
                 ThreadPool.getInstance().run(r);
-                
+
                 // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
                 while (!batch.isEmpty()) {
-                    log.debug("Waiting for {} tasks to finish.", batch.size());
+                    log.debug("Waiting for {} tasks to finish.", new Integer(batch.size()));
                     try {
                         Thread.sleep(500);
                     } catch (InterruptedException e) {
                         // waked up externally - ignore
                     }
                 }
-                
+
                 // collect all the errors and send them back.
                 if (!errors.isEmpty()) {
                     StringBuffer msg = new StringBuffer(errors.size() + " error").append(
@@ -103,12 +103,12 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                         msg.append("\n").append(e.getMessage());
                         log.error(e.getMessage(), e);
                     }
-                    
+
                     throw new ExchangeException(msg.toString(), (Exception) errors.get(0));
                 }
              }
         }
-        
+
         ThreadPool.getInstance().run(new Runnable() {
             public void run() {
                 while (!batch.isEmpty()) {
@@ -120,7 +120,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 }
                 cleanTemporaryStore(activationContent);
             }
-            
+
         });
     }
 
