@@ -750,6 +750,14 @@ This page has no content and it will redirect to
       <rtexprvalue>true</rtexprvalue>
       <description>html pass through attribute</description>
     </attribute>
+    <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>
+        The content object to use.
+      </description>
+    </attribute>
   </tag>
   <tag>
     <name>table</name>

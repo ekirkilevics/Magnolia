@@ -55,6 +55,7 @@ public class ImgTagBeanInfo extends SimpleBeanInfo {
      */
     private String[] properties = new String[]{
         "nodeDataName",
+        "contentNode",
         "contentNodeName",
         "contentNodeCollectionName",
         "inherit",
