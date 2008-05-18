@@ -69,6 +69,9 @@ import org.jdom.Element;
 import org.jdom.filter.Filter;
 import org.jdom.input.SAXBuilder;
 import org.jdom.output.XMLOutputter;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 
 /**
@@ -136,7 +139,7 @@ public class MagnoliaEmail extends FreemarkerEmail {
 
         // filter the images
         String urlBasePath = url.getProtocol() + "://" + url.getHost() + ":" + url.getPort();
-        reader = FilterImages(urlBasePath, reader);
+        reader = filterImages(urlBasePath, reader);
 
         // create the template from the previously filtered stream
         Template template = new Template(MAGNOLIA, reader, freemarkerCfg, UTF_8);
@@ -161,9 +164,16 @@ public class MagnoliaEmail extends FreemarkerEmail {
      * @return a new <code>StringReader</code> with the filtered content
      * @throws Exception
      */
-    private StringReader FilterImages(String urlBasePath, StringReader reader) throws Exception {
+    private StringReader filterImages(String urlBasePath, StringReader reader) throws Exception {
         log.info("Filtering images");
         SAXBuilder parser = new SAXBuilder();
+        parser.setEntityResolver(new EntityResolver() {
+
+            public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
+                return new InputSource(new java.io.ByteArrayInputStream(new byte[0]));
+            }
+
+        });
         Document doc = parser.build(reader);
         ArrayList toremove = new ArrayList();
         ArrayList toadd = new ArrayList();
@@ -338,7 +348,7 @@ public class MagnoliaEmail extends FreemarkerEmail {
     static class ContentFilter implements Filter {
 
         /**
-         * 
+         *
          */
         private static final long serialVersionUID = 1L;
 
