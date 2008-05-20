@@ -81,7 +81,7 @@ import java.io.FileInputStream;
  */
 public abstract class BaseSyndicatorImpl implements Syndicator {
 
-     private static final Logger log = LoggerFactory.getLogger(SimpleSyndicator.class);
+     private static final Logger log = LoggerFactory.getLogger(BaseSyndicatorImpl.class);
 
     /**
       * URI used for activation
@@ -102,6 +102,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      public static final String REPOSITORY_NAME = "mgnlExchangeRepositoryName";
 
      public static final String WORKSPACE_NAME = "mgnlExchangeWorkspaceName";
+
+     public static final String VERSION_NAME = "mgnlExchangeVersionName";
 
      /**
       * resource reading sequence
@@ -140,7 +142,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
      public static final String DEACTIVATE = "deactivate"; //$NON-NLS-1$
 
-    /**
+     public static final String COMMIT = "commit";
+
+     public static final String ROLLBACK = "rollback";
+
+     /**
      * @deprecated since 3.5, use DEACTIVATE
      */
      public static final String DE_ACTIVATE = DEACTIVATE;
@@ -160,6 +166,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      public static final String ACTIVATION_ATTRIBUTE_STATUS = "sa_attribute_status"; //$NON-NLS-1$
 
      public static final String ACTIVATION_ATTRIBUTE_MESSAGE = "sa_attribute_message"; //$NON-NLS-1$
+
+     public static final String ACTIVATION_ATTRIBUTE_VERSION = "sa_attribute_version"; //$NON-NLS-1$
 
      protected String repositoryName;
 
@@ -307,7 +315,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @param activationContent
       * @throws ExchangeException
       */
-     public abstract void activate(Subscriber subscriber, ActivationContent activationContent)
+     public abstract String activate(Subscriber subscriber, ActivationContent activationContent)
          throws ExchangeException;
 
      /**
@@ -437,7 +445,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       */
      protected void updateActivationDetails() throws RepositoryException {
          Content page = getHierarchyManager().getContent(this.path);
-         updateMetaData(page, SimpleSyndicator.ACTIVATE);
+         updateMetaData(page, ACTIVATE);
          page.save();
      }
 
@@ -447,7 +455,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       */
      protected void updateDeactivationDetails() throws RepositoryException {
          Content page = getHierarchyManager().getContentByUUID(this.nodeUUID);
-         updateMetaData(page, SimpleSyndicator.DEACTIVATE);
+         updateMetaData(page, DEACTIVATE);
          page.save();
      }
 
@@ -463,7 +471,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      protected void updateMetaData(Content node, String type) throws AccessDeniedException {
          // update the passed node
          MetaData md = node.getMetaData();
-         if (type.equals(SimpleSyndicator.ACTIVATE)) {
+         if (type.equals(ACTIVATE)) {
              md.setActivated();
          }
          else {
@@ -473,12 +481,12 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          md.setLastActivationActionDate();
 
          Iterator children;
-         if (type.equals(SimpleSyndicator.ACTIVATE)) {
-             // use syndicator rulebased filter
+         if (type.equals(ACTIVATE)) {
+             // use syndicator rule based filter
              children = node.getChildren(this.contentFilter).iterator();
          }
          else {
-             // all childs
+             // all children
              children = node.getChildren(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER).iterator();
          }
 
@@ -503,6 +511,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          activationContent.addProperty(RESOURCE_MAPPING_FILE, "resources.xml");
          activationContent.addProperty(ACTION, ACTIVATE);
          activationContent.addProperty(CONTENT_FILTER_RULE, this.contentFilterRule.toString());
+         activationContent.addProperty(NODE_UUID, node.getUUID());
 
 
          Document document = new Document();

@@ -46,9 +46,10 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.Vector;
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.Map.Entry;
 
 /**
  *
@@ -63,7 +64,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     public void activate(final ActivationContent activationContent) throws ExchangeException {
         Iterator subscribers = ActivationManagerFactory.getActivationManager().getSubscribers().iterator();
         final Vector batch = new Vector();
-        final Vector errors = new Vector();
+        final Hashtable errors = new Hashtable();
         while (subscribers.hasNext()) {
             final Subscriber subscriber = (Subscriber) subscribers.next();
             if (subscriber.isActive()) {
@@ -74,7 +75,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                             activate(subscriber, activationContent);
                         } catch (ExchangeException e) {
                             log.error("Failed to activate content.", e);
-                            errors.add(e);
+                            errors.put(subscriber,e);
                         } finally {
                             batch.remove(this);
                         }
@@ -83,30 +84,35 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 batch.add(r);
                 // execute task.
                 ThreadPool.getInstance().run(r);
+            }
+        } //end of subscriber loop
 
-                // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
-                while (!batch.isEmpty()) {
-                    log.debug("Waiting for {} tasks to finish.", new Integer(batch.size()));
-                    try {
-                        Thread.sleep(500);
-                    } catch (InterruptedException e) {
-                        // waked up externally - ignore
-                    }
-                }
+        // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
+        while (!batch.isEmpty()) {
+            log.debug("Waiting for {} tasks to finish.", new Integer(batch.size()));
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                // waked up externally - ignore
+            }
+        }
 
-                // collect all the errors and send them back.
-                if (!errors.isEmpty()) {
-                    StringBuffer msg = new StringBuffer(errors.size() + " error").append(
-                    errors.size() > 1 ? "s" : "").append(" detected: ");
-                    for (int i = 0; i < errors.size(); i++) {
-                        Exception e = (Exception)errors.get(i);
-                        msg.append("\n").append(e.getMessage());
-                        log.error(e.getMessage(), e);
-                    }
+        String uuid = activationContent.getproperty(NODE_UUID); 
+        // collect all the errors and send them back.
+        if (!errors.isEmpty()) {
+        Exception e = null;
+            StringBuffer msg = new StringBuffer(errors.size() + " error").append(
+            errors.size() > 1 ? "s" : "").append(" detected: ");
+        Iterator iter = errors.entrySet().iterator();
+        while (iter.hasNext()) {
+            Entry entry = (Entry) iter.next(); 
+            e = (Exception) entry.getValue();
+            Subscriber subscriber = (Subscriber) entry.getKey();
+            msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
+            log.error(e.getMessage(), e);
+        }
 
-                    throw new ExchangeException(msg.toString(), (Exception) errors.get(0));
-                }
-             }
+            throw new ExchangeException(msg.toString(), (Exception) errors.get(0));
         }
 
         ThreadPool.getInstance().run(new Runnable() {
@@ -130,8 +136,9 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param activationContent
      * @throws ExchangeException
      */
-    public void activate(Subscriber subscriber, ActivationContent activationContent)
+    public String activate(Subscriber subscriber, ActivationContent activationContent)
             throws ExchangeException {
+        log.debug("activate");
         if (null == subscriber) {
             throw new ExchangeException("Null Subscriber");
         }
@@ -145,27 +152,17 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             if (log.isDebugEnabled()) {
                 log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), this.path);
             }
-            return;
+            return null;
         }
         if (log.isDebugEnabled()) {
             log.debug("Exchange : sending activation request to {}", subscriber.getName()); //$NON-NLS-1$
             log.debug("Exchange : user [{}]", this.user.getName()); //$NON-NLS-1$
         }
 
-        String handle = getActivationURL(subscriber);
-
-        if (subscriber.getAuthenticationMethod() == null || "basic".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-            activationContent.addProperty(AUTHORIZATION, this.basicCredentials);
-        } else if ("form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-            handle += (handle.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
-            handle += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
-        } else {
-            log.info("Unknown authentication method for activation: " + subscriber.getAuthenticationMethod());
-        }
-
+        URLConnection urlConnection = null;
+        String versionName = null;
         try {
-            URL url = new URL(handle);
-            URLConnection urlConnection = url.openConnection();
+            urlConnection = prepareConnection(subscriber);
             this.addActivationHeaders(urlConnection, activationContent);
 
             Transporter.transport((HttpURLConnection) urlConnection, activationContent);
@@ -183,13 +180,41 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         catch (ExchangeException e) {
             throw e;
         }
-        catch (MalformedURLException e) {
-            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
-        }
         catch (IOException e) {
-            throw new ExchangeException("Not able to send the activation request [" + handle + "]: " + e.getMessage());
+            throw new ExchangeException("Not able to send the activation request [" + (urlConnection == null ? null : urlConnection.getURL()) + "]: " + e.getMessage());
         }
         catch (Exception e) {
+            throw new ExchangeException(e);
+        }
+        return null;
+    }
+    
+    protected URLConnection prepareConnection(Subscriber subscriber) throws ExchangeException {
+
+        String handle = getActivationURL(subscriber);
+
+        String versionName = null;
+        try {
+            // authentication headers
+            if (subscriber.getAuthenticationMethod() != null && "form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
+                handle += (handle.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
+                handle += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
+            }
+            URL url = new URL(handle);
+            URLConnection urlConnection = url.openConnection();
+            // authentication headers
+            if (subscriber.getAuthenticationMethod() == null || "basic".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
+                urlConnection.setRequestProperty(AUTHORIZATION, this.basicCredentials);
+            } else if (!"form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
+                log.info("Unknown Authentication method for deactivation: " + subscriber.getAuthenticationMethod());
+            }
+    
+            return urlConnection;
+        } catch (MalformedURLException e) {
+            throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
+        } catch (IOException e) {
+            throw new ExchangeException("Not able to send the activation request [" + handle + "]: " + e.getMessage());
+        } catch (Exception e) {
             throw new ExchangeException(e);
         }
     }
@@ -214,19 +239,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         if (null != subscription) {
             String handle = getDeactivationURL(subscriber);
             try {
-                // authentication headers
-                if (subscriber.getAuthenticationMethod() != null && "form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-                    handle += (handle.indexOf('?') > 0 ? "&" : "?") + AUTH_USER + "=" + this.user.getName();
-                    handle += "&" + AUTH_CREDENTIALS + "=" + this.user.getPassword();
-                }
-                URL url = new URL(handle);
-                URLConnection urlConnection = url.openConnection();
-                // authentication headers
-                if (subscriber.getAuthenticationMethod() == null || "basic".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-                    urlConnection.setRequestProperty(AUTHORIZATION, this.basicCredentials);
-                } else if (!"form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
-                    log.info("Unknown Authentication method for deactivation: " + subscriber.getAuthenticationMethod());
-                }
+                URLConnection urlConnection = prepareConnection(subscriber);
 
                 this.addDeactivationHeaders(urlConnection);
                 String status = urlConnection.getHeaderField(ACTIVATION_ATTRIBUTE_STATUS);
