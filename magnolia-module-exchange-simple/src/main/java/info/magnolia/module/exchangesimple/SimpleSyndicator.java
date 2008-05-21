@@ -219,13 +219,58 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
     }
 
-    public synchronized void doDeactivate() throws ExchangeException {
+    public void doDeactivate() throws ExchangeException {
         Iterator subscribers = ActivationManagerFactory.getActivationManager().getSubscribers().iterator();
+        final Vector batch = new Vector();
+        final Hashtable errors = new Hashtable();
         while (subscribers.hasNext()) {
-            Subscriber subscriber = (Subscriber) subscribers.next();
+            final Subscriber subscriber = (Subscriber) subscribers.next();
             if (subscriber.isActive()) {
-                doDeactivate(subscriber);
+                // Create runnable task for each subscriber.
+                Runnable r = new Runnable() {
+                    public void run() {
+                        try {
+                            doDeactivate(subscriber);
+                        } catch (ExchangeException e) {
+                            log.error("Failed to activate content.", e);
+                            errors.put(subscriber,e);
+                        } finally {
+                            batch.remove(this);
+                        }
+                    }
+                };
+                batch.add(r);
+                // execute task.
+                ThreadPool.getInstance().run(r);
             }
+        } //end of subscriber loop
+
+        // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
+        while (!batch.isEmpty()) {
+            log.debug("Waiting for {} tasks to finish.", new Integer(batch.size()));
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                // waked up externally - ignore
+            }
+        }
+
+        String uuid = this.nodeUUID; 
+        // collect all the errors and send them back.
+        if (!errors.isEmpty()) {
+            Exception e = null;
+            StringBuffer msg = new StringBuffer(errors.size() + " error").append(
+            errors.size() > 1 ? "s" : "").append(" detected: ");
+            Iterator iter = errors.entrySet().iterator();
+            while (iter.hasNext()) {
+                Entry entry = (Entry) iter.next(); 
+                e = (Exception) entry.getValue();
+                Subscriber subscriber = (Subscriber) entry.getKey();
+                msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
+                log.error(e.getMessage(), e);
+            }
+
+            throw new ExchangeException(msg.toString(), (Exception) errors.get(0));
         }
     }
 
@@ -234,7 +279,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param subscriber
      * @throws ExchangeException
      */
-    public synchronized void doDeactivate(Subscriber subscriber) throws ExchangeException {
+    public void doDeactivate(Subscriber subscriber) throws ExchangeException {
         Subscription subscription = subscriber.getMatchedSubscription(this.path, this.repositoryName);
         if (null != subscription) {
             String handle = getDeactivationURL(subscriber);
