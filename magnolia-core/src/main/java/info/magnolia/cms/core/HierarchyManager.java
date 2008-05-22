@@ -61,10 +61,19 @@ public interface HierarchyManager {
 
     Content createContent(String path, String label, String contentType) throws RepositoryException;
 
+    /**
+     * @deprecated since 3.6 - not used
+     */
     void setMetaData(MetaData md, String template) throws RepositoryException;
 
+    /**
+     * @deprecated since 3.6 - only used in implementation, should not be exposed in interface
+     */
     void setMetaData(MetaData md) throws RepositoryException;
 
+    /**
+     * @deprecated since 3.6 - not used
+     */
     void updateMetaData(MetaData md) throws RepositoryException;
 
     /**
