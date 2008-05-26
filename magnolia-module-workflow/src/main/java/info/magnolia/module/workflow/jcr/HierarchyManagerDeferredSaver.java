@@ -33,13 +33,11 @@
  */
 package info.magnolia.module.workflow.jcr;
 
-import info.magnolia.cms.core.HierarchyManager;
-
 import javax.jcr.RepositoryException;
 
 /**
  * A HierarchyManagerWrapper which defers save() calls to try and increase performance.
- * 
+ *
  * TODO : exposing this as a HierarchyManager and delegate all non-save calls would probably be possible if HM was an interface.
  *
  * @author gjoseph
@@ -52,8 +50,8 @@ public class HierarchyManagerDeferredSaver extends HierarchyManagerWrapperDelega
      * A factory method to instanciate a new HierarchyManagerDeferredSaver
      * and start it in a new daemon thread.
      */
-    static HierarchyManagerDeferredSaver startInThread(HierarchyManager hierarchyManager, long sleepDelayMs, long nopingDelayMs, long maxSaveDelayMs) {
-        final HierarchyManagerDeferredSaver hmSaver = new HierarchyManagerDeferredSaver(hierarchyManager, sleepDelayMs, nopingDelayMs, maxSaveDelayMs);
+    static HierarchyManagerDeferredSaver startInThread(String workspaceName, long sleepDelayMs, long nopingDelayMs, long maxSaveDelayMs) {
+        final HierarchyManagerDeferredSaver hmSaver = new HierarchyManagerDeferredSaver(workspaceName, sleepDelayMs, nopingDelayMs, maxSaveDelayMs);
         final Thread saverThread = new Thread(hmSaver);
         saverThread.setDaemon(true);
         saverThread.start();
@@ -67,8 +65,8 @@ public class HierarchyManagerDeferredSaver extends HierarchyManagerWrapperDelega
     private long lastSaveTimestamp;
     private long lastPingTimestamp;
 
-    HierarchyManagerDeferredSaver(HierarchyManager hierarchyManager, long sleepDelayMs, long nopingDelayMs, long maxSaveDelayMs) {
-        super(hierarchyManager);
+    HierarchyManagerDeferredSaver(String workspaceName, long sleepDelayMs, long nopingDelayMs, long maxSaveDelayMs) {
+        super(workspaceName);
         this.sleepDelayMs = sleepDelayMs;
         this.nopingDelayMs = nopingDelayMs;
         this.maxSaveDelayMs = maxSaveDelayMs;

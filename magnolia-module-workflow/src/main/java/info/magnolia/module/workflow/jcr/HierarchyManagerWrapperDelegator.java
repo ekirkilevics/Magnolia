@@ -33,46 +33,68 @@
  */
 package info.magnolia.module.workflow.jcr;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.RepositoryAcquiringStrategy;
+import info.magnolia.context.SystemContext;
+import info.magnolia.context.SystemRepositoryStrategy;
 
 import javax.jcr.RepositoryException;
 
 /**
- * A basic HierarchyManagerWrapper that just delegates all calls to the given HierarchyManager.
+ * A basic HierarchyManagerWrapper that just delegates all calls to the HierarchyManager
+ * retrieved by getHierarchyManager().
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class HierarchyManagerWrapperDelegator implements HierarchyManagerWrapper {
-    private final HierarchyManager hierarchyManager;
     private final String workspaceName;
 
-    public HierarchyManagerWrapperDelegator(HierarchyManager hierarchyManager) {
-        this.hierarchyManager = hierarchyManager;
-        this.workspaceName = getHierarchyManager().getWorkspace().getName();
+    private RepositoryAcquiringStrategy repositoryAcquiringStrategy;
+
+    public HierarchyManagerWrapperDelegator(String workspaceName) {
+        this.workspaceName = workspaceName;
+        // we will create or close session as we want
+        this.repositoryAcquiringStrategy = new SystemRepositoryStrategy((SystemContext)MgnlContext.getSystemContext());
     }
 
     public void save() throws RepositoryException {
-        hierarchyManager.save();
+        getHierarchyManager().save();
     }
 
     public boolean isExist(String path) {
-        return hierarchyManager.isExist(path);
+        return getHierarchyManager().isExist(path);
     }
 
     public Content getContent(String path) throws RepositoryException {
-        return hierarchyManager.getContent(path);
+        return getHierarchyManager().getContent(path);
     }
 
-    public Content createPath(String path, ItemType itemType) throws RepositoryException, AccessDeniedException {
-        return ContentUtil.createPath(hierarchyManager, path, ItemType.EXPRESSION);
+    public Content createPath(String path, ItemType itemType) throws RepositoryException {
+        return ContentUtil.createPath(getHierarchyManager(), path, itemType);
+    }
+
+    public void delete(String path) throws RepositoryException {
+        getHierarchyManager().delete(path);
+    }
+
+    public void moveTo(String path, String to) throws RepositoryException {
+        getHierarchyManager().moveTo(path, to);
+
     }
 
     protected HierarchyManager getHierarchyManager() {
+        final HierarchyManager hierarchyManager = repositoryAcquiringStrategy.getHierarchyManager(workspaceName, ContentRepository.getDefaultWorkspace(workspaceName));
+
+        if (hierarchyManager == null) {
+            throw new IllegalStateException("Can't access HierarchyManager for " + workspaceName);
+        }
+
         return hierarchyManager;
     }
 

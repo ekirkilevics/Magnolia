@@ -51,4 +51,8 @@ public interface HierarchyManagerWrapper {
     Content getContent(String path) throws RepositoryException;
 
     Content createPath(String path, ItemType itemType) throws RepositoryException;
+
+    void delete(String path) throws RepositoryException;
+
+    void moveTo(String path, String to) throws RepositoryException;
 }

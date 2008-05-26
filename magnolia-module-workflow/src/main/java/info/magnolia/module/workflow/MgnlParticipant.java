@@ -36,10 +36,13 @@ package info.magnolia.module.workflow;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
+import info.magnolia.context.SystemRepositoryStrategy;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.CancelItem;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.WorkItem;
+import openwfe.org.worklist.store.StoreException;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.lang.StringUtils;
@@ -148,11 +151,45 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             }
         }
         else {
-            WorkflowUtil.getWorkItemStore().storeWorkItem(StringUtils.EMPTY, (InFlowWorkItem) wi);
+            StoreWorkItemSystemContextOperation storeWokItemOperation = new StoreWorkItemSystemContextOperation(wi);
+            MgnlContext.doInSystemContext(storeWokItemOperation, true);
+            if(storeWokItemOperation.hasException()){
+                throw storeWokItemOperation.getException();
+            }
         }
 
         log.debug("leave consume()..");
 
     }
+
+    private final class StoreWorkItemSystemContextOperation implements MgnlContext.SystemContextOperation {
+
+        private final WorkItem wi;
+
+        private StoreException exception;
+
+        private StoreWorkItemSystemContextOperation(WorkItem wi) {
+            this.wi = wi;
+        }
+
+        public void exec() {
+            try {
+                WorkflowUtil.getWorkItemStore().storeWorkItem(StringUtils.EMPTY, (InFlowWorkItem) this.wi);
+            }
+            catch (StoreException e) {
+                this.exception = e;
+            }
+        }
+
+        public StoreException getException() {
+            return this.exception;
+        }
+
+        public boolean hasException(){
+            return this.getException() != null;
+        }
+
+    }
+
 
 }

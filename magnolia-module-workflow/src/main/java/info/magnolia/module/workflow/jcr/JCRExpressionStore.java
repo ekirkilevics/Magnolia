@@ -40,7 +40,6 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
-import info.magnolia.cms.core.HierarchyManager;
 import openwfe.org.ApplicationContext;
 import openwfe.org.ServiceException;
 import openwfe.org.engine.expool.PoolException;
@@ -82,16 +81,10 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     private final HierarchyManagerWrapper hmWrapper;
 
     public JCRExpressionStore(boolean isStorageDeferred) throws ServiceException {
-        final HierarchyManager hierarchyManager = MgnlContext.getSystemContext().getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
-
-        if (hierarchyManager == null) {
-            throw new ServiceException("Can't access HierarchyManager for workitems");
-        }
-
         if (isStorageDeferred) {
-            this.hmWrapper = HierarchyManagerDeferredSaver.startInThread(hierarchyManager, SLEEP_DELAY_MS, NOPING_DELAY_MS, MAX_SAVE_DELAY_MS);
+            this.hmWrapper = HierarchyManagerDeferredSaver.startInThread(WorkflowConstants.WORKSPACE_EXPRESSION, SLEEP_DELAY_MS, NOPING_DELAY_MS, MAX_SAVE_DELAY_MS);
         } else {
-            this.hmWrapper = new HierarchyManagerWrapperDelegator(hierarchyManager);
+            this.hmWrapper = new HierarchyManagerWrapperDelegator(WorkflowConstants.WORKSPACE_EXPRESSION);
         }
 
     }

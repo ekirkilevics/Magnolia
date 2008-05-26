@@ -40,12 +40,10 @@ import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
 import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.beancoder.OwfeJcrBeanCoder;
-import info.magnolia.cms.core.HierarchyManager;
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.StringAttribute;
@@ -76,22 +74,17 @@ public class JCRWorkItemStore {
     private static final String BACKUP_REL = "backup";
     private static final String BACKUP = "/" + BACKUP_REL;
 
-    private final HierarchyManager hm;
+    private final HierarchyManagerWrapper hm;
     private final boolean shouldBackupWorkItems;
 
     public JCRWorkItemStore() throws Exception {
-        this.hm = MgnlContext.getSystemContext().getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
-        if (this.hm == null) {
-            Exception e = new Exception("Can't get HierarchyManager Object for workitems repository");
-            log.error(e.getMessage(), e);
-            throw e;
-        }
+        this.hm = new HierarchyManagerWrapperDelegator(WorkflowConstants.WORKSPACE_STORE);
 
         shouldBackupWorkItems = WorkflowModule.backupWorkitems();
         if (shouldBackupWorkItems) {
             // ensure the backup directory is there.
             if (!hm.isExist(BACKUP)) {
-                hm.createContent("/", BACKUP_REL, ItemType.CONTENT.getSystemName());
+                hm.createPath(BACKUP, ItemType.CONTENT);
                 hm.save();
                 log.info("Created " + BACKUP + " in workflow store.");
             }
@@ -114,7 +107,7 @@ public class JCRWorkItemStore {
                         ct.setNodeData("isBackup", vf.createValue(true));
                         final Content parent = ct.getParent();
                         final String pathInBackup = BACKUP + parent.getHandle();
-                        ContentUtil.createPath(hm, pathInBackup, ItemType.WORKITEM);
+                        hm.createPath(pathInBackup, ItemType.WORKITEM);
                         hm.save();
                         hm.moveTo(ct.getHandle(), BACKUP + ct.getHandle());
                         // TODO : MAGNOLIA-1225 : we should only save here, once move uses session instead of workspace
@@ -281,7 +274,7 @@ public class JCRWorkItemStore {
                     log.debug("storing workitem with path = " + path);
                 }
 
-                Content newc = ContentUtil.createPath(this.hm, path, ItemType.WORKITEM);
+                Content newc = hm.createPath(path, ItemType.WORKITEM);
 
                 ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
                 String sId = wi.getLastExpressionId().toParseableString();
