@@ -121,4 +121,8 @@ public class ContextDecorator extends AbstractContext {
         return this.ctx;
     }
 
+    public void release() {
+        this.ctx.release();
+    }
+
 }

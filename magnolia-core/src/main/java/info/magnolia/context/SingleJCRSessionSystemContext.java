@@ -54,7 +54,4 @@ public class SingleJCRSessionSystemContext extends AbstractSystemContext {
         this.setRepositoryStrategy(new SystemRepositoryStrategy(this));
     }
 
-    public void releaseThread() {
-        // this is a per thread release
-    }
 }

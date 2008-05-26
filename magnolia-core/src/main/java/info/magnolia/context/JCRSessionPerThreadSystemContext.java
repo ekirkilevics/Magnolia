@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  */
-public class JCRSessionPerThreadSystemContext extends AbstractSystemContext {
+public class JCRSessionPerThreadSystemContext extends AbstractSystemContext implements ThreadReleasingSystemContext {
 
     /**
      * Logger.

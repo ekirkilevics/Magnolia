@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,12 +33,18 @@
  */
 package info.magnolia.context;
 
+
 /**
- * This context is a systemwide context with full access. Since no new method is added this is simple an interface to
- * mark the system context.
- * @author Philipp Bracher
- * @version $Revision$ ($Author$)
+ * Some implementations of the system context release resources when a thread is not used anymore.
+ * @author philipp
+ * @version $Id$
+ *
  */
-public interface SystemContext extends Context {
+public interface ThreadReleasingSystemContext extends SystemContext {
+
+    /**
+     * Release all thread related stuff of the system context.
+     */
+    public void releaseThread();
 
 }
