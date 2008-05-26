@@ -267,14 +267,14 @@ public class ContentUtil {
     }
 
     /**
-     * Returns all children (not recursively) indpendent of there type
+     * Returns all children (not recursively) independent of there type
      */
     public static Collection getAllChildren(Content node){
         return node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER);
     }
 
     /**
-     * Returns all children (not recursively) indpendent of there type
+     * Returns all children (not recursively) independent of there type
      */
     public static Collection getAllChildren(Content node, Comparator comp){
         return node.getChildren(EXCLUDE_META_DATA_CONTENT_FILTER, comp);
