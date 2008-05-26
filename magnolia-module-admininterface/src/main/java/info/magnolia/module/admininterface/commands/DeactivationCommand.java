@@ -56,6 +56,7 @@ public class DeactivationCommand extends BaseRepositoryCommand {
             syndicator.deactivate(node);
         }
         catch(Exception e){
+            log.error("Exception caught during deactivation.", e);
             AlertUtil.setException(MessagesManager.get("tree.error.deactivate"), e, ctx);
             return false;
         }
