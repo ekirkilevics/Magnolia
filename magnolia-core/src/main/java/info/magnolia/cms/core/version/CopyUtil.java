@@ -86,7 +86,7 @@ public final class CopyUtil {
     /**
      * get instance
      */
-    static CopyUtil getInstance() {
+    public static CopyUtil getInstance() {
         return thisInstance;
     }
 
@@ -204,7 +204,7 @@ public final class CopyUtil {
      * @param filter
      * @param removeExisting
      */
-    private void clone(Content node, Content parent, Content.ContentFilter filter, boolean removeExisting)
+    public void clone(Content node, Content parent, Content.ContentFilter filter, boolean removeExisting)
         throws RepositoryException {
         try {
             // it seems to be a bug in jackrabbit - cloning does not work if the node with the same uuid
@@ -244,10 +244,11 @@ public final class CopyUtil {
             this.updateProperties(node, destination);
         }
         else {
+            String parH = parent.getHandle();
             parent.getWorkspace().clone(
                 node.getWorkspace().getName(),
                 node.getHandle(),
-                parent.getHandle() + "/" + node.getName(),
+                 parH + (parH != null && parH.endsWith("/") ? "" :"/") + node.getName(),
                 true);
         }
     }
