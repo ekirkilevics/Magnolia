@@ -97,7 +97,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             }
         }
 
-        String uuid = activationContent.getproperty(NODE_UUID); 
+        String uuid = activationContent.getproperty(NODE_UUID);
         // collect all the errors and send them back.
         if (!errors.isEmpty()) {
         Exception e = null;
@@ -105,14 +105,14 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             errors.size() > 1 ? "s" : "").append(" detected: ");
         Iterator iter = errors.entrySet().iterator();
         while (iter.hasNext()) {
-            Entry entry = (Entry) iter.next(); 
+            Entry entry = (Entry) iter.next();
             e = (Exception) entry.getValue();
             Subscriber subscriber = (Subscriber) entry.getKey();
             msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
             log.error(e.getMessage(), e);
         }
 
-            throw new ExchangeException(msg.toString(), (Exception) errors.get(0));
+            throw new ExchangeException(msg.toString(), (Exception) errors.get(Integer.valueOf(0)));
         }
 
         ThreadPool.getInstance().run(new Runnable() {
@@ -188,7 +188,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
         return null;
     }
-    
+
     protected URLConnection prepareConnection(Subscriber subscriber) throws ExchangeException {
 
         String handle = getActivationURL(subscriber);
@@ -208,7 +208,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             } else if (!"form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
                 log.info("Unknown Authentication method for deactivation: " + subscriber.getAuthenticationMethod());
             }
-    
+
             return urlConnection;
         } catch (MalformedURLException e) {
             throw new ExchangeException("Incorrect URL for subscriber " + subscriber + "[" + handle + "]");
@@ -255,7 +255,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             }
         }
 
-        String uuid = this.nodeUUID; 
+        String uuid = this.nodeUUID;
         // collect all the errors and send them back.
         if (!errors.isEmpty()) {
             Exception e = null;
@@ -263,14 +263,14 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             errors.size() > 1 ? "s" : "").append(" detected: ");
             Iterator iter = errors.entrySet().iterator();
             while (iter.hasNext()) {
-                Entry entry = (Entry) iter.next(); 
+                Entry entry = (Entry) iter.next();
                 e = (Exception) entry.getValue();
                 Subscriber subscriber = (Subscriber) entry.getKey();
                 msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
                 log.error(e.getMessage(), e);
             }
 
-            throw new ExchangeException(msg.toString(), (Exception) errors.get(0));
+            throw new ExchangeException(msg.toString(), (Exception) errors.get(Integer.valueOf(0)));
         }
     }
 
