@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,77 +33,56 @@
  */
 package info.magnolia.cms.util;
 
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.ThreadReleasingSystemContext;
+
+import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
+ * Refetches
  * @author philipp
  * @version $Id$
  *
  */
-public class LazyContentWrapper extends ContentWrapper {
-
-    private String repository;
-
-    private String uuid;
-
-    protected Content node;
+public class SystemContentWrapper extends LazyContentWrapper {
 
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(LazyContentWrapper.class);
+    private static Logger log = LoggerFactory.getLogger(SystemContentWrapper.class);
 
-    public LazyContentWrapper(String repository, String uuid) {
-        this.setRepository(repository);
-        this.setUuid(uuid);
+    public SystemContentWrapper(String repository, String uuid) {
+        super(repository, uuid);
     }
 
-    public LazyContentWrapper(Content node){
-        try {
-            this.setRepository(node.getWorkspace().getName());
-        }
-        catch (RepositoryException e) {
-            log.error("can't read repository name from wrapping node", e);
-        }
-        this.setUuid(node.getUUID());
-        this.node = node;
+    public SystemContentWrapper(Content node) {
+        super(node);
     }
 
     public synchronized Content getWrappedContent() {
         try {
-            if(node == null || !node.getJCRNode().getSession().isLive()){
-                node = MgnlContext.getSystemContext().getHierarchyManager(getRepository()).getContentByUUID(getUuid());
+            Context ctx = MgnlContext.getSystemContext();
+            if(ctx instanceof ThreadReleasingSystemContext){
+                HierarchyManager hm = ctx.getHierarchyManager(getRepository());
+                if(node != null && hm.getWorkspace().getSession().equals(node.getWorkspace().getSession())){
+                    node = hm.getContentByUUID(getUuid());
+                }
+            }
+            else{
+                node = super.getWrappedContent();
             }
         }
         catch (RepositoryException e) {
             log.error("can't reinitialize node " + getUuid(), e);
         }
         return node;
-    }
-
-    protected void setUuid(String uuid) {
-        this.uuid = uuid;
-    }
-
-    protected String getUuid() {
-        return uuid;
-    }
-
-    protected void setRepository(String repository) {
-        this.repository = repository;
-    }
-
-    protected String getRepository() {
-        return repository;
     }
 
 }

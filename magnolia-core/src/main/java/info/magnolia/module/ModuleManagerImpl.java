@@ -40,7 +40,7 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.module.Module;
 import info.magnolia.cms.module.RepositoryDefinition;
 import info.magnolia.cms.util.ClassUtil;
-import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
@@ -293,11 +293,11 @@ public class ModuleManagerImpl implements ModuleManager {
                 moduleProperties.put("name", moduleName);
 
                 if (modulesParentNode.hasContent(moduleName)) {
-                    final Content moduleNode = new LazyContentWrapper(modulesParentNode.getChildByName(moduleName));
+                    final Content moduleNode = new SystemContentWrapper(modulesParentNode.getChildByName(moduleName));
                     moduleNodes.add(moduleNode);
                     moduleProperties.put("moduleNode", moduleNode);
                     if (moduleNode.hasContent("config")) {
-                        final Content configNode = new LazyContentWrapper(moduleNode.getContent("config"));
+                        final Content configNode = new SystemContentWrapper(moduleNode.getContent("config"));
                         moduleProperties.put("configNode", configNode);
                     }
                 }

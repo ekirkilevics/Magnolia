@@ -37,7 +37,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
@@ -159,7 +159,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         Object bean = state.getCurrentBean();
 
         if (propertyName.equals("content") && value == null) {
-            value = new LazyContentWrapper(state.getCurrentContent());
+            value = new SystemContentWrapper(state.getCurrentContent());
         }
 
         else if (propertyName.equals("name") && value == null) {

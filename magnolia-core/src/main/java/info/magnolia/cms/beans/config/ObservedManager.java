@@ -34,7 +34,7 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
@@ -88,7 +88,7 @@ public abstract class ObservedManager {
 
         try {
             registeredUUIDs.add(node.getUUID());
-            onRegister(new LazyContentWrapper(node));
+            onRegister(new SystemContentWrapper(node));
         }
         catch (Exception e) {
             log.warn("Was not able to register [" + node.getHandle() + "]", e);

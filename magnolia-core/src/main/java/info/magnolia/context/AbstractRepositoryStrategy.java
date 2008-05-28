@@ -110,7 +110,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
         Session jcrSession = (Session) jcrSessions.get(repoSessAttrName);
 
         if (jcrSession == null) {
-            log.debug("creating jcr session {}", repositoryName);
+            log.debug("creating jcr session {} by thread {}", repositoryName, Thread.currentThread().getName());
 
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             jcrSession = util.createRepositorySession(util.getDefaultCredentials(), repositoryName, workspaceName);
@@ -131,6 +131,8 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
                     final EventListenerIterator listeners = observationManager.getRegisteredEventListeners();
                     if(!checkObservation || !listeners.hasNext()){
                         session.logout();
+                        log.debug("logged out jcr session: {} by thread {}", session, Thread.currentThread().getName());
+
                         JCRStats.getInstance().decSessionCount();
                     }
                     else{
