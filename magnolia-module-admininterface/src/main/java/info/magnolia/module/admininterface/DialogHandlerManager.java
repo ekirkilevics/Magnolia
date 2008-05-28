@@ -41,7 +41,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.admininterface.dialogs.ParagraphEditDialog;
 
@@ -90,7 +90,7 @@ public class DialogHandlerManager extends ObservedManager {
     protected void onRegister(Content node) {
         List dialogs = ContentUtil.collectAllChildren(node, ItemType.CONTENT);
         for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
-            Content dialog = new LazyContentWrapper((Content) iter.next());
+            Content dialog = new SystemContentWrapper((Content) iter.next());
             // if this paragraph is used from a dialog register it under the name of the paragraph too
             registerAsParagraphDialog(node.getHandle(), dialog);
 

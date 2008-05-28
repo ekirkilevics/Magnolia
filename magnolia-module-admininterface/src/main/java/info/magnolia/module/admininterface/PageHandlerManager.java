@@ -37,7 +37,7 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.LazyContentWrapper;
+import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
@@ -102,7 +102,7 @@ public class PageHandlerManager extends ObservedManager {
         for (Iterator iter = ContentUtil.getAllChildren(defNode).iterator(); iter.hasNext();) {
             Content pageNode = (Content) iter.next();
 
-            PageDefinition pd = new RepositoryPageDefinition(new LazyContentWrapper(pageNode));
+            PageDefinition pd = new RepositoryPageDefinition(new SystemContentWrapper(pageNode));
             registerPageDefinition(pd);
         }
 
