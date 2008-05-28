@@ -71,7 +71,7 @@ public class SystemContentWrapper extends LazyContentWrapper {
             Context ctx = MgnlContext.getSystemContext();
             if(ctx instanceof ThreadReleasingSystemContext){
                 HierarchyManager hm = ctx.getHierarchyManager(getRepository());
-                if(node != null && hm.getWorkspace().getSession().equals(node.getWorkspace().getSession())){
+                if(node == null || !hm.getWorkspace().getSession().equals(node.getWorkspace().getSession())){
                     node = hm.getContentByUUID(getUuid());
                 }
             }
