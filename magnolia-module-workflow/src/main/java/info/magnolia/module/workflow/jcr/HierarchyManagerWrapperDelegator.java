@@ -33,15 +33,11 @@
  */
 package info.magnolia.module.workflow.jcr;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.RepositoryAcquiringStrategy;
-import info.magnolia.context.SystemContext;
-import info.magnolia.context.SystemRepositoryStrategy;
+import info.magnolia.context.LifeTimeJCRSessionUtil;
 
 import javax.jcr.RepositoryException;
 
@@ -55,12 +51,8 @@ import javax.jcr.RepositoryException;
 public class HierarchyManagerWrapperDelegator implements HierarchyManagerWrapper {
     private final String workspaceName;
 
-    private RepositoryAcquiringStrategy repositoryAcquiringStrategy;
-
     public HierarchyManagerWrapperDelegator(String workspaceName) {
         this.workspaceName = workspaceName;
-        // we will create or close session as we want
-        this.repositoryAcquiringStrategy = new SystemRepositoryStrategy((SystemContext)MgnlContext.getSystemContext());
     }
 
     public void save() throws RepositoryException {
@@ -89,13 +81,7 @@ public class HierarchyManagerWrapperDelegator implements HierarchyManagerWrapper
     }
 
     protected HierarchyManager getHierarchyManager() {
-        final HierarchyManager hierarchyManager = repositoryAcquiringStrategy.getHierarchyManager(workspaceName, ContentRepository.getDefaultWorkspace(workspaceName));
-
-        if (hierarchyManager == null) {
-            throw new IllegalStateException("Can't access HierarchyManager for " + workspaceName);
-        }
-
-        return hierarchyManager;
+        return LifeTimeJCRSessionUtil.getHierarchyManager(workspaceName);
     }
 
     protected String getWorkspaceName() {

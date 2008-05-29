@@ -37,12 +37,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
-import info.magnolia.context.SystemRepositoryStrategy;
-import info.magnolia.context.ThreadReleasingSystemContext;
+import info.magnolia.context.LifeTimeJCRSessionUtil;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.observation.Event;
@@ -59,15 +55,6 @@ import org.slf4j.LoggerFactory;
  */
 public class ObservationUtil {
     private final static Logger log = LoggerFactory.getLogger(ObservationUtil.class);
-
-    private static SystemRepositoryStrategy repositoryStrategy;
-
-    static {
-        SystemContext ctx = (SystemContext)MgnlContext.getSystemContext();
-        if(ctx instanceof ThreadReleasingSystemContext){
-            repositoryStrategy = new SystemRepositoryStrategy(ctx);
-        }
-    }
 
     /**
      * Registers an EventListener for any node type.
@@ -193,13 +180,7 @@ public class ObservationUtil {
     }
 
     private static HierarchyManager getHierarchyManager(String repository) {
-        if(repositoryStrategy != null){
-            // we have our own sessinos
-            return repositoryStrategy.getHierarchyManager(repository, ContentRepository.getDefaultWorkspace(repository));
-        }
-        else{
-            return MgnlContext.getSystemContext().getHierarchyManager(repository);
-        }
+        return LifeTimeJCRSessionUtil.getHierarchyManager(repository);
     }
 
     public static class DeferringEventListener implements EventListener {

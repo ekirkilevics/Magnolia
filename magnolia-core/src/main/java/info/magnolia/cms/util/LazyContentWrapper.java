@@ -36,9 +36,8 @@ package info.magnolia.cms.util;
 import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.context.Context;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.ThreadReleasingSystemContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -81,13 +80,17 @@ public class LazyContentWrapper extends ContentWrapper {
     public synchronized Content getWrappedContent() {
         try {
             if(node == null || !node.getJCRNode().getSession().isLive()){
-                node = MgnlContext.getSystemContext().getHierarchyManager(getRepository()).getContentByUUID(getUuid());
+                node = getHierarchyManager().getContentByUUID(getUuid());
             }
         }
         catch (RepositoryException e) {
             log.error("can't reinitialize node " + getUuid(), e);
         }
         return node;
+    }
+
+    protected HierarchyManager getHierarchyManager() {
+        return MgnlContext.getSystemContext().getHierarchyManager(getRepository());
     }
 
     protected void setUuid(String uuid) {

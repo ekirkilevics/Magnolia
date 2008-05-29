@@ -41,7 +41,6 @@ import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.core.HierarchyManager;
 
 import java.util.Locale;
@@ -466,8 +465,8 @@ public class MgnlContext {
             getInstance().release();
         }
         SystemContext systemContext = (SystemContext) getSystemContext();
-        if(systemContext instanceof ThreadReleasingSystemContext){
-            ((ThreadReleasingSystemContext)systemContext).releaseThread();
+        if(systemContext instanceof ThreadDependentSystemContext){
+            ((ThreadDependentSystemContext)systemContext).releaseThread();
         }
     }
 }

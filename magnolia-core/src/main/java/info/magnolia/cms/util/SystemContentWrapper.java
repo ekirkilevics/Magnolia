@@ -35,11 +35,7 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.ThreadReleasingSystemContext;
-
-import javax.jcr.RepositoryException;
+import info.magnolia.context.LifeTimeJCRSessionUtil;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,23 +62,8 @@ public class SystemContentWrapper extends LazyContentWrapper {
         super(node);
     }
 
-    public synchronized Content getWrappedContent() {
-        try {
-            Context ctx = MgnlContext.getSystemContext();
-            if(ctx instanceof ThreadReleasingSystemContext){
-                HierarchyManager hm = ctx.getHierarchyManager(getRepository());
-                if(node == null || !hm.getWorkspace().getSession().equals(node.getWorkspace().getSession())){
-                    node = hm.getContentByUUID(getUuid());
-                }
-            }
-            else{
-                node = super.getWrappedContent();
-            }
-        }
-        catch (RepositoryException e) {
-            log.error("can't reinitialize node " + getUuid(), e);
-        }
-        return node;
+    protected HierarchyManager getHierarchyManager() {
+        return LifeTimeJCRSessionUtil.getHierarchyManager(getRepository());
     }
 
 }

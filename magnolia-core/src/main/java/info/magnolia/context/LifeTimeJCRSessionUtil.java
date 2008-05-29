@@ -33,18 +33,47 @@
  */
 package info.magnolia.context;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.HierarchyManager;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
- * Some implementations of the system context release resources when a thread is not used anymore.
+ * Returns HierarchyManagers which use a life time session. If the SystemContext uses single session the same session
+ * will be used. Otherwise an own instance of SystemRepositoryStrategy is used.
  * @author philipp
  * @version $Id$
- *
  */
-public interface ThreadReleasingSystemContext extends SystemContext {
+public class LifeTimeJCRSessionUtil {
 
     /**
-     * Release all thread related stuff of the system context.
+     * Logger.
      */
-    public void releaseThread();
+    private static Logger log = LoggerFactory.getLogger(LifeTimeJCRSessionUtil.class);
+
+    private static SystemRepositoryStrategy repositoryStrategy;
+
+    private static boolean useSystemContext;
+
+    static {
+        SystemContext ctx = (SystemContext) MgnlContext.getSystemContext();
+        useSystemContext = !(ctx instanceof ThreadDependentSystemContext);
+        if (!useSystemContext) {
+            log.info("Will handle lifetime sessions because the system context is of type {}", ThreadDependentSystemContext.class);
+            repositoryStrategy = new SystemRepositoryStrategy(ctx);
+        }
+    }
+
+    public static HierarchyManager getHierarchyManager(String repository) {
+        if (useSystemContext) {
+            return MgnlContext.getSystemContext().getHierarchyManager(repository);
+        }
+        else {
+            // we handle the session
+            return repositoryStrategy.getHierarchyManager(repository, ContentRepository.getDefaultWorkspace(repository));
+        }
+    }
 
 }
