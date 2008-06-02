@@ -392,7 +392,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @param subscriber
       * @throws ExchangeException
       */
-     public abstract void doDeactivate(Subscriber subscriber) throws ExchangeException;
+     public abstract String doDeactivate(Subscriber subscriber) throws ExchangeException;
 
      /**
       * get deactivation URL
@@ -531,7 +531,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      /**
-      * add ardering info to the resource file mapping
+      * add ordering info to the resource file mapping
       * @param root element of the resource file under which ordering info must be added
       * @param orderBefore
       * */

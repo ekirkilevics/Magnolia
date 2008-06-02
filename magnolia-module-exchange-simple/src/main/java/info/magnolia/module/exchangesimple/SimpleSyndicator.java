@@ -112,7 +112,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             log.error(e.getMessage(), e);
         }
 
-            throw new ExchangeException(msg.toString(), (Exception) errors.get(Integer.valueOf(0)));
+            throw new ExchangeException(msg.toString(), e);
         }
 
         ThreadPool.getInstance().run(new Runnable() {
@@ -232,7 +232,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                         try {
                             doDeactivate(subscriber);
                         } catch (ExchangeException e) {
-                            log.error("Failed to activate content.", e);
+                            log.error("Failed to deactivate content.", e);
                             errors.put(subscriber,e);
                         } finally {
                             batch.remove(this);
@@ -255,7 +255,6 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             }
         }
 
-        String uuid = this.nodeUUID;
         // collect all the errors and send them back.
         if (!errors.isEmpty()) {
             Exception e = null;
@@ -270,7 +269,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 log.error(e.getMessage(), e);
             }
 
-            throw new ExchangeException(msg.toString(), (Exception) errors.get(Integer.valueOf(0)));
+            throw new ExchangeException(msg.toString(), e);
         }
     }
 
@@ -279,7 +278,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
      * @param subscriber
      * @throws ExchangeException
      */
-    public void doDeactivate(Subscriber subscriber) throws ExchangeException {
+    public String doDeactivate(Subscriber subscriber) throws ExchangeException {
         Subscription subscription = subscriber.getMatchedSubscription(this.path, this.repositoryName);
         if (null != subscription) {
             String handle = getDeactivationURL(subscriber);
@@ -308,6 +307,7 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
                 throw new ExchangeException(e);
             }
         }
+        return null;
     }
 
     /**
