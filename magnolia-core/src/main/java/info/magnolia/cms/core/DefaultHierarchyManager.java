@@ -210,14 +210,14 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         return content;
     }
 
-    private String getNodePath(String path, String label) {
-        if (StringUtils.isEmpty(path) || (path.equals("/"))) { //$NON-NLS-1$
+    private String getNodePath(String parent, String label) {
+        if (StringUtils.isEmpty(parent) || (parent.equals("/"))) { //$NON-NLS-1$
             return label;
         }
-        if (!path.endsWith("/")) {
-            path = path + "/";
+        if (!parent.endsWith("/")) {
+            parent = parent + "/";
         }
-        return getNodePath(path + label); //$NON-NLS-1$
+        return getNodePath(parent + label); //$NON-NLS-1$
     }
 
     private String getNodePath(String path) {
