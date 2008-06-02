@@ -214,7 +214,10 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         if (StringUtils.isEmpty(path) || (path.equals("/"))) { //$NON-NLS-1$
             return label;
         }
-        return getNodePath(path + "/" + label); //$NON-NLS-1$
+        if (!path.endsWith("/")) {
+            path = path + "/";
+        }
+        return getNodePath(path + label); //$NON-NLS-1$
     }
 
     private String getNodePath(String path) {
