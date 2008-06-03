@@ -34,15 +34,20 @@
 package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
-
-import java.util.Collection;
+import org.apache.commons.collections.CollectionUtils;
+import org.apache.commons.collections.Predicate;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
+import java.util.List;
 
 
 /**
@@ -61,8 +66,18 @@ public class UsersPage extends TemplatedMVCHandler {
         super(name, request, response);
     }
 
+    // TODO - this is not dependent on the structure of the users workspace but will only work when using MgnlUserManagers.
     public Collection getUserNodes() throws RepositoryException {
-        return MgnlContext.getHierarchyManager(ContentRepository.USERS).getRoot().getChildren(ItemType.USER);
+        final HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.USERS);
+        final Content root = hm.getRoot();
+        // needed so collectAllChildren goes through folders
+        final List allIncludingFolders = ContentUtil.collectAllChildren(root, new ItemType[]{ItemType.FOLDER, ItemType.USER});
+        // now we need to remove the folders - TODO : the page itself (UsersPage.html) could instead do this sorting and display folders differently...
+        return CollectionUtils.select(allIncludingFolders, new Predicate() {
+            public boolean evaluate(Object object) {
+                return ((Content) object).isNodeType(ItemType.USER.getSystemName());
+            }
+        });
     }
 
 }
