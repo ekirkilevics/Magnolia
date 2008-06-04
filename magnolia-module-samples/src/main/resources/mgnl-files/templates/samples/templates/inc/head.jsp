@@ -6,7 +6,7 @@
   <!-- exposes the current node for use with jstl -->
   <cms:setNode var="pageProperties" />
 
-  <title>Magnolia 3.5 Samples | ${pageProperties.title}</title>
+  <title>Magnolia 3.6 Samples | ${pageProperties.title}</title>
 
   <!--  add magnolia css and js links -->
   <cms:links />
