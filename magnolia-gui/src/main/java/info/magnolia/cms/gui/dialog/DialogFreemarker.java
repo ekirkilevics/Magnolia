@@ -58,13 +58,15 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * A Magnolia dialog that renders by a freemarker template. There are two main properties for the dialog:<br/> <table>
+ * A Magnolia dialog that renders by a freemarker template. There are two main properties for the dialog:<br/>
+ * <table>
  * <tr>
  * <td>path (required)</td>
  * <td>Path to freemarker template: will be loaded from classpath or from filesystem</td>
@@ -73,7 +75,9 @@ import org.slf4j.LoggerFactory;
  * <td>multiple</td>
  * <td>true / false. This property gives support to multiple field values storage.</td>
  * </tr>
- * </table> The dialog passes some parameters to freemarker template: <table>
+ * </table>
+ * The dialog passes some parameters to freemarker template:
+ * <table>
  * <tr>
  * <td>name</td>
  * <td>Dialog / field name</td>
@@ -93,7 +97,7 @@ import org.slf4j.LoggerFactory;
  * <tr>
  * <td>configuration</td>
  * <td>Map of dialog configuration. This allows to pass to template complex dialog configuration.<br/> Eg.
- * 
+ *
  * <pre>
  * -+ Dialog node
  *  |-- property 1 = value 1
@@ -118,7 +122,6 @@ import org.slf4j.LoggerFactory;
  *    "property2" = "value2"
  * }
  * </pre>
- * 
  * </td>
  * </tr>
  * </table>
@@ -135,11 +138,30 @@ public class DialogFreemarker extends DialogBox {
 
     private Map configuration;
 
-    /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogFreemarker() {
+    private String path;
 
+    /**
+     * Sets the path.
+     * @param path the path to set
+     */
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    /**
+     * Returns the configuration.
+     * @return the configuration
+     */
+    public Map getConfiguration() {
+        return configuration;
+    }
+
+    /**
+     * Returns the path.
+     * @return the path
+     */
+    public String getPath() {
+        return path;
     }
 
     /**
@@ -222,14 +244,23 @@ public class DialogFreemarker extends DialogBox {
      * {@inheritDoc}
      */
     public void drawHtml(Writer out) throws IOException {
+        String ftlPath = StringUtils.defaultIfEmpty(this.getConfigValue("path"), path);
+        drawHtml(out, ftlPath);
+    }
 
+    /**
+     * @param out Writer
+     * @param freemarkerTemplate path for the freemarker template
+     * @throws IOException
+     */
+    protected void drawHtml(Writer out, String freemarkerTemplate) throws IOException {
         Map parameters = new HashMap();
         parameters.put("name", this.getName());
         parameters.put("value", this.getValue());
         parameters.put("values", this.getValues());
         parameters.put("request", this.getRequest());
         parameters.put("configuration", this.configuration);
-        String path = this.getConfigValue("path");
+
         this.drawHtmlPre(out);
 
         try {
@@ -238,7 +269,7 @@ public class DialogFreemarker extends DialogBox {
                 : ControlImpl.VALUETYPE_SINGLE);
             control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING));
             control.setName(this.getName());
-            control.drawHtml(out, path, parameters);
+            control.drawHtml(out, freemarkerTemplate, parameters);
         }
 
         catch (TemplateException ex) {
