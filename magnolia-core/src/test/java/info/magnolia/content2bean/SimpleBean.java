@@ -40,7 +40,6 @@ import org.slf4j.LoggerFactory;
 /**
  * @author philipp
  * @version $Id$
- *
  */
 public class SimpleBean {
 
@@ -50,6 +49,7 @@ public class SimpleBean {
     private static Logger log = LoggerFactory.getLogger(SimpleBean.class);
 
     private String prop1;
+
     private String prop2;
 
     /**
@@ -78,6 +78,10 @@ public class SimpleBean {
      */
     public void setProp2(String prop2) {
         this.prop2 = prop2;
+    }
+
+    public String getIndexed(int index) {
+        return "indexed";
     }
 
 }

@@ -123,8 +123,11 @@ public class TypeMappingImpl implements TypeMapping {
         PropertyDescriptor[] descriptors = PropertyUtils.getPropertyDescriptors(beanClass);
         for (int i = 0; i < descriptors.length; i++) {
             PropertyDescriptor descriptor = descriptors[i];
-            if(descriptor.getName().equals(propName)){
-                dscr.setType(getTypeDescriptor(descriptor.getPropertyType()));
+            if (descriptor.getName().equals(propName)) {
+                Class propertytype = descriptor.getPropertyType(); // may be null for indexed properties
+                if (propertytype != null) {
+                    dscr.setType(getTypeDescriptor(propertytype));
+                }
                 break;
             }
         }
