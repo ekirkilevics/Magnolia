@@ -278,6 +278,7 @@ public class FckEditorDialog extends DialogBox {
         String var = getVarName();
         String value = convertToView(getValue());
         out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
+        out.write("// <![CDATA[\n"); //$NON-NLS-1$
 
         // make the configuration accessible to the config javascript
         writeMgnlFCKConfig(out, id);
@@ -308,17 +309,20 @@ public class FckEditorDialog extends DialogBox {
 
         // start the initfile
         if (jsInitFile.length() > 0) {
+            out.write("// ]]>\n"); //$NON-NLS-1$
             out.write("</script>"); //$NON-NLS-1$
             out.write("<script type=\"text/javascript\" src=\"" //$NON-NLS-1$
                 + this.getRequest().getContextPath()
                 + jsInitFile
                 + "\"></script>\n"); //$NON-NLS-1$
             out.write("<script type=\"text/javascript\">"); //$NON-NLS-1$
+            out.write("// <![CDATA[\n"); //$NON-NLS-1$
         }
 
         // finaly create the editor
         out.write("fckInstance.Create();"); //$NON-NLS-1$
         out.write(var + " = fckInstance;"); //$NON-NLS-1$
+        out.write("// ]]>\n"); //$NON-NLS-1$
         out.write("</script>"); //$NON-NLS-1$
 
         // write the saveInfo for the writing back to the repository
