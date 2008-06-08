@@ -5,7 +5,7 @@
   repositories are in memory only and any change is lost upon restart
 -->
 <Repository>
-  <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
+  <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem">
     <param name="path" value="${rep.home}/repository" />
   </FileSystem>
   <Security appName="Jackrabbit">
@@ -16,7 +16,7 @@
   </Security>
   <Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="default" />
   <Workspace name="default">
-    <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
+    <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem">
       <param name="path" value="${wsp.home}/default" />
     </FileSystem>
     <PersistenceManager class="org.apache.jackrabbit.core.state.mem.InMemPersistenceManager">
@@ -46,7 +46,7 @@
     </SearchIndex>
   </Workspace>
   <Versioning rootPath="${rep.home}/version">
-    <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
+    <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem">
       <param name="path" value="${rep.home}/workspaces/version" />
     </FileSystem>
     <PersistenceManager class="org.apache.jackrabbit.core.state.mem.InMemPersistenceManager">
