@@ -187,7 +187,7 @@ public class Button extends ControlImpl {
             html.append(" onclick=\"" + this.getOnclick() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (this.getState() == BUTTONSTATE_PUSHED) {
-            html.append(" checked"); //$NON-NLS-1$
+            html.append(" checked=\"checked\""); //$NON-NLS-1$
         }
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());

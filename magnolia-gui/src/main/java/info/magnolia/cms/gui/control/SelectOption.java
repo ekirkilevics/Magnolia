@@ -85,7 +85,7 @@ public class SelectOption extends ControlImpl {
         html.append(this.getHtmlCssClass());
         html.append(this.getHtmlCssStyles());
         if (this.getSelected()) {
-            html.append(" selected"); //$NON-NLS-1$
+            html.append(" selected=\"selected\""); //$NON-NLS-1$
         }
         html.append(this.getHtmlId()); // id e.g. needed in rich editor
         html.append(">"); //$NON-NLS-1$
