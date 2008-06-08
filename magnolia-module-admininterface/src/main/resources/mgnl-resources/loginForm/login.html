@@ -16,7 +16,7 @@
     </div>
     <div class="page">
       <div id="header" style="background: white url(${contextPath}/.resources/loginForm/backgroundBar.gif) repeat-x scroll 0%;">
-        <img src="${contextPath}/.resources/loginForm/lock2.gif" id="lock"/>
+        <img src="${contextPath}/.resources/loginForm/lock2.gif" id="lock" alt=""/>
 
         <h1>Magnolia Login</h1>
       </div>
@@ -29,13 +29,15 @@
         [/#if]
         </div>
         <div id="form">
-          <form name="loginForm" action="" method="post">
-            <label for="username">Username</label>
-            <input id="username" name="mgnlUserId" />
-            <label for="mgnlUserPSWD">Password</label>
-            <input id="mgnlUserPSWD" name="mgnlUserPSWD" type="password" />
-            <label for="submitButton"><!--  --></label>
-            <input id="submitButton" type="submit" value="login" class="button" />
+          <form id="loginForm" action="" method="post">
+            <div>
+              <label for="username">Username</label>
+              <input id="username" name="mgnlUserId" />
+              <label for="mgnlUserPSWD">Password</label>
+              <input id="mgnlUserPSWD" name="mgnlUserPSWD" type="password" />
+              <label for="submitButton"><!--  --></label>
+              <input id="submitButton" type="submit" value="login" class="button" />
+            </div>
           </form>
         </div>
       </div>
@@ -43,11 +45,11 @@
     <div id="footer">
       &copy; Copyright 2003-2008
       <a href="http://www.magnolia.info" target="_blank">Magnolia International Ltd.</a>
-       - 
+       -
       Maiengasse 30, 4056 Basel, Switzerland
-       <br/> 
+       <br/>
       Tel +41 61 228 9000 (9AM-5PM GMT+1)
-       - 
+       -
       <a href="mailto:info@magnolia.info">info@magnolia.info</a>
       <br/>
       Magnolia is a registered trademark of Magnolia International Ltd.
