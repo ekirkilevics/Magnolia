@@ -20,34 +20,16 @@ function mgnlDialogInit(){
 
 function mgnlDialogFocusFirstEdit()
     {
-    var form=document.forms[mgnlFormMainName];
-    if (form)
-        {
-        /*
-        for (var elem in form)
-            {
-            if (form[elem] && form[elem].type)
-                {
-                var type=form[elem].type;
-                if (type=="text" || type=="textarea")
-                    {
-                    form[elem].focus();
-                    break;
-                    }
-                }
-            }
-        */
-        }
-    }
-
+    // unused
+}
 
 /* ###################################
 ### submit
 ################################### */
 
 
-function mgnlDialogFormSubmit(){
-    document.forms[mgnlFormMainName].submit();
+function mgnlDialogFormSubmit() {
+    document.getElementById(mgnlFormMainName).submit();
 }
 
 
@@ -56,10 +38,9 @@ function mgnlDialogFormSubmit(){
 ################################### */
 
 
-function mgnlDialogReloadOpener()
-    {
+function mgnlDialogReloadOpener() {
     mgnlDialogReload(opener.document);
-    }
+}
 
 function mgnlDialogReload(doc)
     {
@@ -85,14 +66,19 @@ function mgnlDialogShiftTab(setId,tabId,tabIndex)
     var items=mgnlControlSets[setId].items;
     for (var elem in items)
         {
-        var left="";
-        var top="";
-        if ((tabId && items[elem]==tabId) || (!tabId && elem==tabIndex))
-            {
-            left=mgnlTabLeft;
+            var left="";
+            var tab=document.getElementById(items[elem]+"_div");
+            if (tab) {
+                if ((tabId && items[elem]==tabId) || (!tabId && elem==tabIndex))
+                {
+                    tab.style.left=mgnlTabLeft + "px";
+                }
+                else
+                {
+                    tab.style.left="";
+                }
             }
-        var tab=document.getElementById(items[elem]+"_div");
-        if (tab) tab.style.left=left;
+
         }
     }
 
@@ -109,8 +95,8 @@ function mgnlDialogResizeTabs()
                 var tab=document.getElementById(mgnlControlSets[setElem].items[tabElem]+"_div");
                 if (tab)
                     {
-                    tab.style.width=sizeObj.w-2*mgnlTabLeft-2; // -2: border
-                    tab.style.height=hTab;
+                    tab.style.width=(sizeObj.w-2*mgnlTabLeft-2) + 'px'; // -2: border
+                    tab.style.height=hTab + 'px';
                     }
                 }
             }
@@ -186,9 +172,9 @@ function mgnlDialogLinkOpenBrowser(controlName,repository,extension,addcontext){
     var pathOpen=""; //without selection: open path of editing page
     var pathElem=document.getElementById("mgnlPath");
     if (pathElem) pathOpen=pathElem.value;
-    
+
     mgnlDebug("link: selectedPath: " + pathSelected, "dialog");
-    mgnlDebug("link: pathOpen: " + pathOpen, "dialog"); 
+    mgnlDebug("link: pathOpen: " + pathOpen, "dialog");
 
     var callBackCommand = new MgnlDialogLinkBrowserCallBackCommand(control, extension);
     mgnlOpenTreeBrowser(pathSelected,pathOpen,repository,null,null,callBackCommand)
@@ -235,7 +221,7 @@ function mgnlDialogLinkBrowserWriteBack(){
         mgnlDebug("mgnlDialogLinkBrowserWriteBack: calling callback function", "dialog");
         result = opener.mgnlCallBackCommand.callback(addressBar.value);
     }
-    
+
     if (result == null || result == true) {
       window.top.close();
     }
