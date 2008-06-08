@@ -21,10 +21,10 @@ importClass("mgnl.util.Debug");
 classDef("mgnl.admininterface.AdminCentral", MgnlAdminCentral);
 
 function MgnlAdminCentral(){
-    
+
     // only one instance is allowed
     window.mgnlAdminCentral = this;
-    
+
     this.divContent = $("mgnlAdminCentralContentDiv");
     this.divScrolledContent = $("mgnlAdminCentralScrolledContentDiv");
     this.divMenu = $("mgnlAdminCentralMenuDiv");
@@ -32,26 +32,26 @@ function MgnlAdminCentral(){
     this.divFooter =$('mgnlAdminCentralFooterDiv');
     this.iframeContent = $("mgnlAdminCentralContentIFrame");
     this.iframeScrolledContent = $("mgnlAdminCentralScrolledContentIFrame");
-    
+
     /**
      * Used if this instance is called from an other window
      */
     this.window = window;
-    
+
     /**
      * Set message displayed below the menu
      */
     this.setMessage = function(msg, className){
-    	this.divMessageBox.innerHTML = msg;
-    	this.divMessageBox.className = className;
-    	MgnlDHTMLUtil.show(this.divMessageBox);
+        this.divMessageBox.innerHTML = msg;
+        this.divMessageBox.className = className;
+        MgnlDHTMLUtil.show(this.divMessageBox);
     }
 
     this.resetMessage = function(){
-    	this.divMessageBox.innerHTML = "";
-    	MgnlDHTMLUtil.hide(this.divMessageBox);
+        this.divMessageBox.innerHTML = "";
+        MgnlDHTMLUtil.hide(this.divMessageBox);
     }
-    
+
     /**
      * Resize
      */
@@ -61,20 +61,20 @@ function MgnlAdminCentral(){
 
             var h=sizeObj.h-60-25;
             var w=sizeObj.w-195-20;
-    
-            this.divMenu.style.height=h;
-    
-            this.divContent.style.width=w;
-            this.divContent.style.height=h;
-            this.divScrolledContent.style.width=w;
-            this.divScrolledContent.style.height=h;
-            
-            this.iframeContent.style.height=h+2;
-            this.iframeScrolledContent.style.height=h+2;
+
+            this.divMenu.style.height=h + "px";
+
+            this.divContent.style.width=w + "px";
+            this.divContent.style.height=h + "px";
+            this.divScrolledContent.style.width=w + "px";
+            this.divScrolledContent.style.height=h + "px";
+
+            this.iframeContent.style.height=(h+2) + "px";
+            this.iframeScrolledContent.style.height=(h+2) + "px";
 
             // set the position of the footer
-            this.divFooter.style.top = sizeObj.h - 17;
-            this.divFooter.style.width = w;
+            this.divFooter.style.top = (sizeObj.h - 17) + "px";
+            this.divFooter.style.width = w + "px";
         }
     };
 
@@ -89,49 +89,49 @@ function MgnlAdminCentral(){
             border = border!=null?border: true;
 
         var name = scrolled? "mgnlAdminCentralScrolledContentIFrame": "mgnlAdminCentralContentIFrame";
-        
+
         MgnlDHTMLUtil.hide(this.divContent);
         MgnlDHTMLUtil.hide(this.divScrolledContent);
-    
+
         // if loading of the new page takes a while the user should not see the old page in the meantime
         $(name).src = "about:blank";
-    
+
         url = MgnlURLUtil.addCacheKiller(url);
         if(!MgnlURLUtil.isExternal(url)){
             url = contextPath + url;
         }
-        
+
         $(name).src = url;
-        
+
         var div = scrolled? this.divScrolledContent : this.divContent;
         // border?
         if(border){
             div.style.border= 'solid 1px';
             div.style.borderTopColor = "#999";
             div.style.borderLeftColor = "#999";
-            div.style.borderRightColor = "#ccc"; 
+            div.style.borderRightColor = "#ccc";
             div.style.borderBottomColor = "#ccc";
         }
         else{
             div.style.border= 'none';
         }
-        
+
         MgnlDHTMLUtil.show(div);
     };
-    
+
     /**
      * Show the tree
      */
     this.showTree = function(name, path, usePathAsRoot){
-    	usePathAsRoot = usePathAsRoot!=null?true:false;
-    	
-        var url = "/.magnolia/trees/" + name + ".html"; 
+        usePathAsRoot = usePathAsRoot!=null?true:false;
+
+        var url = "/.magnolia/trees/" + name + ".html";
         if(path && path.length >0) {
-        	if (!usePathAsRoot) {
-            	url += "?pathSelected="+path +"&pathOpen="+path;
+            if (!usePathAsRoot) {
+                url += "?pathSelected="+path +"&pathOpen="+path;
             } else {
-            	url += "?pathSelected="+path +"&pathOpen="+path+"&path="+path;
-            }	
+                url += "?pathSelected="+path +"&pathOpen="+path+"&path="+path;
+            }
         }
         this.showContent(url, false, false);
     }
@@ -149,10 +149,10 @@ MgnlAdminCentral.onOpenedInNewWindow = null;
 MgnlAdminCentral.openInNewWindow = function(onOpenedInNewWindow){
     src = contextPath + "/.magnolia/adminCentral.html";
     src = MgnlURLUtil.addCacheKiller(src);
-    
+
     w = window.open(src,"mgnlAdminCentral","");
     MgnlAdminCentral.onOpenedInNewWindow = onOpenedInNewWindow;
-    
+
     if (w) {
         w.focus();
     }

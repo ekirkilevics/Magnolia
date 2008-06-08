@@ -1,6 +1,4 @@
-<!--
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
--->
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -66,17 +64,21 @@
   </head>
   <body id="mgnl" class="mgnlBgDark mgnlAdminMain">
     <!-- logo -->
+    <div>
     <a href="http://www.magnolia.info" target="_blank">
       <img style="position:absolute; top:17px; left:20px" alt="Magnolia - Simple is beautiful"
         src="${this.request.contextPath}/.resources/admin-images/magnoliaLogo.gif" />
     </a>
+    </div>
     <!--  user info -->
     [#if this.user?exists]
     <div style="position:absolute;top:34px;right:20px;text-align:right;" class="mgnlText">
       <form action="" method="post" style="padding: 0; margin: 0;">
+        <div>
         <input type="hidden" name="mgnlLogout" value="true"/>
         ${this.messages.get("central.user")}: ${this.user.name} |
         <input type="submit" name="logout" value="${this.messages.get('central.logout')}" style="font-size: 11px; border: 0; background: transparent; outline: invert none 0; cursor: pointer; padding: 0; margin: 0:" onmouseover="this.style.textDecoration = 'underline';" onmouseout="this.style.textDecoration = 'none';"/>
+        </div>
       </form>
     </div>
     [/#if]
