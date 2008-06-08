@@ -239,7 +239,7 @@ public class ACLSDialogControl extends DialogBox {
         // create the dynamicTable
         out.println(dynamicTableName + " = new MgnlDynamicTable('" //$NON-NLS-1$
             + tableName
-            + "',document.mgnlFormMain." //$NON-NLS-1$
+            + "',document.getElementById('mgnlFormMain')." //$NON-NLS-1$
             + hiddenFieldName
             + ", aclGetNewPermissionObject, aclGetPermissionObject, acl" //$NON-NLS-1$
             + repoConf.getName()

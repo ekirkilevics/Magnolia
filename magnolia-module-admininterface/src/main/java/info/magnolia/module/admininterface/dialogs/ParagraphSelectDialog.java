@@ -141,7 +141,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
                 }
                 label.append("<br /><br />"); //$NON-NLS-1$
                 button.setLabel(label.toString());
-                button.setOnclick("document.mgnlFormMain.submit();"); //$NON-NLS-1$
+                button.setOnclick("document.getElementById('mgnlFormMain').submit();"); //$NON-NLS-1$
                 c1.addOption(button);
             }
             catch (Exception e) {

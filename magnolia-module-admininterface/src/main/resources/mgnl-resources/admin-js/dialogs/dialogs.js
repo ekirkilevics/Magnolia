@@ -361,7 +361,7 @@ function mgnlDialogPasswordVerify(id)
     var c2=document.getElementById(id+"_verification");
     if (c1.value!=c2.value)
         {
-        var form=document.forms[mgnlFormMainName];
+        var form=document.getElementById(mgnlFormMainName);
         mgnlAlert(mgnlMessages.get('dialog.password.failed.js'));
         form[id+"_verification"].value="";
         //seems not to work...
