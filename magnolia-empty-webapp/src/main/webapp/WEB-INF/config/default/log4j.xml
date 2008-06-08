@@ -80,6 +80,9 @@
   <category name="com">
     <priority value="WARN" />
   </category>
+  <category name="net">
+    <priority value="WARN" />
+  </category>
   <!-- magnolia -->
   <category name="info.magnolia">
     <priority value="INFO" />
