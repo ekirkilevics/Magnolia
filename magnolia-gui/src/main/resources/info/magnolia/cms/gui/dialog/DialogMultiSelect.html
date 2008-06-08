@@ -1,4 +1,4 @@
-<script src="${contextPath}/.resources/js-libs/trimpath/template-1.0.38.js">
+<script src="${contextPath}/.resources/js-libs/trimpath/template-1.0.38.js" type="text/javascript">
 </script>
 
 ${this.saveInfo}
@@ -14,13 +14,13 @@ ${this.saveInfo}
 </div>
 
 <!--  used as a template for rendering the inner rows of the table-->
-<textarea id="${this.name}InnerHtml" style="display: none;">
+<textarea id="${this.name}InnerHtml" style="display: none;" rows="0" cols="0">
     ${this.innerHtml}
 </textarea>
 
 <script type="text/javascript">
     var ${this.name}Template = TrimPath.parseDOMTemplate("${this.name}InnerHtml");
-    
+
     function ${this.name}RenderObject(cell, prefix, index, obj){
         cell.innerHTML = ${this.name}Template.process({
             index: index,
@@ -31,13 +31,13 @@ ${this.saveInfo}
     // init the table
     ${this.name}DynamicTable = new MgnlDynamicTable(
         '${this.name}Table',
-        $('${this.hiddenFieldName}'), 
-        ${this.newObjectFunction}, 
-        ${this.getObjectFunction}, 
+        $('${this.hiddenFieldName}'),
+        ${this.newObjectFunction},
+        ${this.getObjectFunction},
         ${this.name}RenderObject,
         null, // no validation
         ${this.getJSON()}
     );
-    
+
     ${this.name}DynamicTable.render();
 </script>
