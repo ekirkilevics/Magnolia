@@ -36,21 +36,27 @@
             mgnlNavigation.create('mgnlAdminCentralMenuInnerDiv');
 
             // call the onload method
-            if (opener &&  opener.MgnlAdminCentral && opener.MgnlAdminCentral.onOpenedInNewWindow) {
-                opener.MgnlAdminCentral.onOpenedInNewWindow(mgnlAdminCentral);
-            }
-            else {
-                // call the frist menupoint with a link
+            try {
+                if (opener &&  opener.MgnlAdminCentral && opener.MgnlAdminCentral.onOpenedInNewWindow) {
+                    opener.MgnlAdminCentral.onOpenedInNewWindow(mgnlAdminCentral);
+                }
+                else {
+                    // call the frist menupoint with a link
+                    mgnlNavigation.activate('${this.navigation.firstId}', true);
+                }
+            } catch(e) {
+                // Permission denied to get property Window.MgnlAdminCentral
                 mgnlNavigation.activate('${this.navigation.firstId}', true);
             }
 
+
             // resize
             mgnlAdminCentral.resize();
-            
+
             [#if this.message?exists]
-            	mgnlAdminCentral.setMessage("${this.message?js_string}","${this.messageCSSClass}");
-			[/#if]
-            
+                mgnlAdminCentral.setMessage("${this.message?js_string}","${this.messageCSSClass}");
+            [/#if]
+
             // on resize
             onresize = function() {
                 mgnlAdminCentral.resize()
@@ -68,8 +74,8 @@
     [#if this.user?exists]
     <div style="position:absolute;top:34px;right:20px;text-align:right;" class="mgnlText">
       <form action="" method="post" style="padding: 0; margin: 0;">
-        <input type="hidden" name="mgnlLogout" value="true"/> 
-        ${this.messages.get("central.user")}: ${this.user.name} | 
+        <input type="hidden" name="mgnlLogout" value="true"/>
+        ${this.messages.get("central.user")}: ${this.user.name} |
         <input type="submit" name="logout" value="${this.messages.get('central.logout')}" style="font-size: 11px; border: 0; background: transparent; outline: invert none 0; cursor: pointer; padding: 0; margin: 0:" onmouseover="this.style.textDecoration = 'underline';" onmouseout="this.style.textDecoration = 'none';"/>
       </form>
     </div>
