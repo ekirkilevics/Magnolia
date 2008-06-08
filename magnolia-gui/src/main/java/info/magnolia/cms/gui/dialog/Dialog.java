@@ -75,12 +75,6 @@ public class Dialog extends DialogControlImpl {
 
     private String action;
 
-    /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected Dialog() {
-    }
-
     public void setCallbackJavascript(String s) {
         this.callbackJavascript = s;
     }
@@ -148,20 +142,19 @@ public class Dialog extends DialogControlImpl {
 
     public void drawHtmlPreSubs(Writer out) throws IOException {
 
-        // @todo fix html and add a good doctype. At the moment dialogs don't work in standard compliant mode
-        // out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
-        // out.write(" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
+        out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
+        out.write(" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">");
 
         out.write("<html>"); //$NON-NLS-1$
         out.write("<head>"); //$NON-NLS-1$
         this.drawHtmlPreSubsHead(out);
         // alert if a message was set
         if (AlertUtil.isMessageSet()) {
-            out.write("<script>mgnl.util.DHTMLUtil.addOnLoad(function(){alert('"
+            out.write("<script type=\"text/javascript\">mgnl.util.DHTMLUtil.addOnLoad(function(){alert('"
                 + StringEscapeUtils.escapeJavaScript(AlertUtil.getMessage())
                 + "');})</script>");
         }
-        out.write("<script>mgnl.util.DHTMLUtil.addOnLoad(mgnlDialogInit);</script>");
+        out.write("<script type=\"text/javascript\">mgnl.util.DHTMLUtil.addOnLoad(mgnlDialogInit);</script>");
 
         out.write("</head>\n"); //$NON-NLS-1$
         out.write("<body class=\"mgnlDialogBody\">\n"); //$NON-NLS-1$
@@ -194,7 +187,7 @@ public class Dialog extends DialogControlImpl {
     protected void drawHtmlPreSubsForm(Writer out) throws IOException {
         out.write("<form action=\"" //$NON-NLS-1$
             + this.getAction()
-            + "\" name=\"mgnlFormMain\" method=\"post\" enctype=\"multipart/form-data\">\n"); //$NON-NLS-1$
+            + "\" id=\"mgnlFormMain\" method=\"post\" enctype=\"multipart/form-data\"><div>\n"); //$NON-NLS-1$
         out.write(new Hidden("mgnlDialog", this.getConfigValue("dialog"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(new Hidden("mgnlRepository", this.getConfigValue("repository"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(new Hidden("mgnlPath", this.getConfigValue("path"), false).getHtml()); //$NON-NLS-1$ //$NON-NLS-2$
@@ -221,7 +214,7 @@ public class Dialog extends DialogControlImpl {
         this.drawHtmlPostSubsTabSet(out);
         this.drawHtmlPostSubsButtons(out);
 
-        out.write("</form></body></html>"); //$NON-NLS-1$
+        out.write("</div></form></body></html>"); //$NON-NLS-1$
     }
 
     protected void drawHtmlPostSubsTabSet(Writer out) throws IOException {

@@ -53,12 +53,6 @@ public class DialogBox extends DialogControlImpl {
 
     private int boxType = BOXTYPE_2COLS;
 
-    /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogBox() {
-    }
-
     public void setBoxType(int i) {
         this.boxType = i;
     }
@@ -81,7 +75,7 @@ public class DialogBox extends DialogControlImpl {
         }
         out.write("<tr>"); //$NON-NLS-1$
         if (this.getBoxType() == BOXTYPE_2COLS) {
-            out.write("<td width=\"1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+            out.write("<td style=\"width:1%\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             // write the label
             out.write(this.getMessage(this.getLabel()));
             if (this.isRequired()) {
@@ -98,10 +92,10 @@ public class DialogBox extends DialogControlImpl {
                 || this.getClass().getName().indexOf("DialogButton") != -1) { //$NON-NLS-1$
                 cssClass = CssConstants.CSSCLASS_BOXLABEL;
             }
-            out.write("<td width=\"100%\" class=\"" + cssClass + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+            out.write("<td style=\"width:100%\" class=\"" + cssClass + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         else {
-            out.write("<td width=\"100%\" colspan=\"2\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+            out.write("<td style=\"width:100%\" colspan=\"2\" class=\"" + CssConstants.CSSCLASS_BOXLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
             if (StringUtils.isNotEmpty(this.getLabel())) {
                 out.write("<div class=\"" //$NON-NLS-1$
                     + CssConstants.CSSCLASS_BOXLABEL

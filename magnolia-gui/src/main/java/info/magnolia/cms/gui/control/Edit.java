@@ -84,6 +84,7 @@ public class Edit extends ControlImpl {
             html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             html.append(" id=\"" + id + "\""); //$NON-NLS-1$ //$NON-NLS-2$
             html.append(" rows=\"" + this.getRows() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append(" cols=\"100\""); //$NON-NLS-2$
             html.append(this.getHtmlCssClass());
             html.append(this.getHtmlCssStyles());
             html.append(getHtmlEvents());
