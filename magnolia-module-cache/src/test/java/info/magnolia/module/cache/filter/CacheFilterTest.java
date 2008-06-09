@@ -176,16 +176,21 @@ public class CacheFilterTest extends TestCase {
         assertEquals(dummyContent, fakedOut.toString());
     }
 
-    public void testServesUnzippedContentIfClientDoesNotAcceptGZipEncoding() throws Exception {
+    public void testServesUnzippedContentAndRemovesGzipHeadersIfClientDoesNotAcceptGZipEncoding() throws Exception {
         final String dummyContent = "hello i'm a page that was cached";
         final byte[] gzipped = GZipUtil.gzip(dummyContent.getBytes());
-        final CachedPage cachedPage = new CachedPage(gzipped, "text/plain", "ASCII", 123, new MultiValueMap());
+        final MultiValueMap headers = new MultiValueMap();
+        headers.put("Content-Encoding", "gzip");
+        headers.put("Vary", "Accept-Encoding");
+        headers.put("Dummy", "Some Value");
+        final CachedPage cachedPage = new CachedPage(gzipped, "text/plain", "ASCII", 123, headers);
         expect(cachePolicy.shouldCache(cache, aggregationState)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
 
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration());
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(123);
+        response.addHeader("Dummy", "Some Value");
         response.setContentType("text/plain");
         response.setCharacterEncoding("ASCII");
         response.setContentLength(dummyContent.length());

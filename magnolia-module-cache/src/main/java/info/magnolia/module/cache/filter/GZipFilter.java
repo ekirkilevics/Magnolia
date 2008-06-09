@@ -66,9 +66,15 @@ public class GZipFilter extends AbstractMgnlFilter {
         final SimpleServletOutputStream wrappedOut = new SimpleServletOutputStream(gzout);
 
         // Handle the request
-        final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, wrappedOut);
-        addAndVerifyHeader(response, "Content-Encoding", "gzip");
-        addAndVerifyHeader(response, "Vary", "Accept-Encoding"); // needed for proxies
+        final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, wrappedOut) {
+            public void setContentLength(int len) {
+                // don't let the container set a (wrong) content-length too early,
+                // we're going to set it later to the appropriate
+                // value - once it's gzipped !
+            }
+        };
+        addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
+        addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
         chain.doFilter(request, responseWrapper);
 
         responseWrapper.flushBuffer();
@@ -76,7 +82,7 @@ public class GZipFilter extends AbstractMgnlFilter {
         gzout.close();
 
         final byte[] compressedBytes = compressed.toByteArray();
-        responseWrapper.setContentLength(compressedBytes.length);
+        response.setContentLength(compressedBytes.length);
         response.getOutputStream().write(compressedBytes);
 
         // TODO :
@@ -93,11 +99,6 @@ public class GZipFilter extends AbstractMgnlFilter {
 //            if (shouldGzippedBodyBeZero || shouldBodyBeZero) {
 //                compressedBytes = new byte[0];
 //            }
-
-         // Write the zipped body
-//            ResponseUtil.addGzipHeader(response);
-//            response.setContentLength(compressedBytes.length);
-//            response.getOutputStream().write(compressedBytes);
     }
 
 }

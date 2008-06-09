@@ -207,23 +207,31 @@ public class CacheFilter extends AbstractMgnlFilter implements CacheLifecycleLis
     }
 
     protected void writePage(final HttpServletRequest request, final HttpServletResponse response, final CachedPage cachedEntry) throws IOException {
+        final boolean acceptsGzipEncoding = acceptsGzipEncoding(request);
+
         response.setStatus(cachedEntry.getStatusCode());
-        addHeaders(cachedEntry, response);
+        addHeaders(cachedEntry, acceptsGzipEncoding, response);
         // TODO : cookies ?
         response.setContentType(cachedEntry.getContentType());
         response.setCharacterEncoding(cachedEntry.getCharacterEncoding());
-        writeContent(request, response, cachedEntry);
+        writeContent(response, cachedEntry, acceptsGzipEncoding);
     }
 
     /**
-     * Set the headers in the response object TODO, excluding the Gzip header ?
+     * Set the headers in the response object
      */
-    protected void addHeaders(final CachedPage cachedEntry, final HttpServletResponse response) {
+    protected void addHeaders(final CachedPage cachedEntry, final boolean acceptsGzipEncoding, final HttpServletResponse response) {
         final MultiMap headers = cachedEntry.getHeaders();
 
         final Iterator it = headers.keySet().iterator();
         while (it.hasNext()) {
             final String header = (String) it.next();
+            if (!acceptsGzipEncoding) {
+                if ("Content-Encoding".equals(header) || "Vary".equals(header)) {
+                    continue;
+                }
+            }
+
             final Collection values = (Collection) headers.get(header);
             final Iterator valIt = values.iterator();
             while (valIt.hasNext()) {
@@ -242,13 +250,11 @@ public class CacheFilter extends AbstractMgnlFilter implements CacheLifecycleLis
         }
     }
 
-    protected void writeContent(final HttpServletRequest request, final HttpServletResponse response, final CachedPage cachedEntry) throws IOException {
+    protected void writeContent(final HttpServletResponse response, final CachedPage cachedEntry, boolean acceptsGzipEncoding) throws IOException {
         final byte[] body;
-        if (!acceptsGzipEncoding(request) && cachedEntry.getUngzippedContent() != null) {
-            // TODO : remove headers
+        if (!acceptsGzipEncoding && cachedEntry.getUngzippedContent() != null) {
             body = cachedEntry.getUngzippedContent();
         } else {
-            // TODO : or add them here
             body = cachedEntry.getDefaultContent();
         }
 
