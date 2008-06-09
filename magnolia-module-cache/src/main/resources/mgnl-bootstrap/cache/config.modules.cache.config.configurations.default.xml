@@ -105,7 +105,7 @@
           <sv:value>2008-05-09T18:33:16.353+02:00</sv:value>
         </sv:property>
       </sv:node>
-      <sv:node sv:name="notWithParametersVoter">
+      <sv:node sv:name="bypassRequestsWithParameters">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -120,6 +120,9 @@
         </sv:property>
         <sv:property sv:name="enabled" sv:type="Boolean">
           <sv:value>true</sv:value>
+        </sv:property>
+        <sv:property sv:name="not" sv:type="String">
+          <sv:value>false</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -139,7 +142,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="notOnAdminVoter">
+      <sv:node sv:name="bypassOnAdmin">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -156,7 +159,7 @@
           <sv:value>true</sv:value>
         </sv:property>
         <sv:property sv:name="not" sv:type="String">
-          <sv:value>true</sv:value>
+          <sv:value>false</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -176,7 +179,7 @@
           </sv:property>
         </sv:node>
       </sv:node>
-      <sv:node sv:name="notAuthenticatedVoter">
+      <sv:node sv:name="bypassWhenAuthenticated">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
@@ -193,7 +196,7 @@
           <sv:value>false</sv:value>
         </sv:property>
         <sv:property sv:name="not" sv:type="String">
-          <sv:value>true</sv:value>
+          <sv:value>false</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
