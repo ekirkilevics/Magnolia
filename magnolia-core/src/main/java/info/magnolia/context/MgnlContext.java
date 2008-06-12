@@ -188,7 +188,7 @@ public class MgnlContext {
     /**
      * Get currently active page
      * @return content object
-     * @deprecated use WebContext.getAggregationState()
+     * @deprecated use getAggregationState()
      */
     public static Content getActivePage() {
 
@@ -202,7 +202,7 @@ public class MgnlContext {
     /**
      * Get aggregated file, its used from image templates to manipulate
      * @return file object
-     * @deprecated use WebContext.getAggregationState()
+     * @deprecated use getAggregationState()
      */
     public static File getFile() {
         WebContext ctx = getWebContextIfExisting(getInstance());
@@ -215,7 +215,7 @@ public class MgnlContext {
     /**
      * Get form object assembled by <code>MultipartRequestFilter</code>
      * @return multipart form object
-     * @deprecated use WebContext.getAggregationState() TODO ?
+     * @deprecated use getAggregationState() TODO ?
      */
     public static MultipartForm getPostedForm() {
         WebContext ctx = getWebContextIfExisting(getInstance());
