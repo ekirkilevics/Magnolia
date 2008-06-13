@@ -36,6 +36,7 @@ package info.magnolia.cms.cache;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
@@ -68,7 +69,7 @@ public class CacheModule implements ModuleLifecycle {
             Content configNode;
             try {
                 configNode = hm.getContent("/modules/cache/config");
-                this.cacheManager.init(configNode);
+                this.cacheManager.init(new SystemContentWrapper(configNode));
             }
             catch (RepositoryException e) {
                 log.error(e.getMessage(), e);
