@@ -68,7 +68,7 @@ public class MainBar extends TagSupport implements BarTag {
      */
     private static Logger log = LoggerFactory.getLogger(MainBar.class);
 
-    private String paragraph;
+    private String dialog;
 
     private boolean adminButtonVisible = true;
 
@@ -96,11 +96,16 @@ public class MainBar extends TagSupport implements BarTag {
     }
 
     /**
-     * Set paragraph type.
-     * @param s paragraph type
+     * Set dialogName type.
+     * @param s dialogName type
+     * @deprecated use setDialog(String s)
      */
     public void setParagraph(String s) {
-        this.paragraph = s;
+        this.dialog = s;
+    }
+
+    public void setDialog(String dialog) {
+        this.dialog = dialog;
     }
 
     public void setAdminButtonVisible(boolean adminButtonVisible) {
@@ -149,7 +154,7 @@ public class MainBar extends TagSupport implements BarTag {
             try {
                 BarMain bar = new BarMain(request);
                 bar.setPath(this.getPath());
-                bar.setParagraph(this.paragraph);
+                bar.setParagraph(this.dialog);
                 bar.setAdminButtonVisible(this.adminButtonVisible);
                 bar.setDefaultButtons();
 
@@ -196,7 +201,7 @@ public class MainBar extends TagSupport implements BarTag {
      */
     public void release() {
         super.release();
-        this.paragraph = null;
+        this.dialog = null;
         this.adminButtonVisible = true;
         this.label = null;
     }
