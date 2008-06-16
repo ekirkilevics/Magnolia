@@ -37,37 +37,27 @@ import org.xml.sax.XMLReader;
 
 
 /**
- * A filter that can be used to remove optional "name" attributes in template, dialogs or paragraph nodes. The name
- * attribute was required in magnolia 2, magnolia 3 makes use of the name of the containing node. This filter can be
- * used to cleanup old configurations that survived to copy and paste. Not enabled by default, you need to modify
- * DataTransporter in order to use it (see the comments in DataTransporter.importXmlStream())
+ * A filter that removed "mix:versionable" from jcr:mixinTypes while importing xml files. Can be used to automatically
+ * adapt version 3.5 xml files to magnolia 3.6 during bootstrap or activation. Not enabled by default, you need to
+ * modify DataTransporter in order to use it (see the comments in DataTransporter.importXmlStream())
  * @author fgiust
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
-public class UselessNameFilter extends SkipNodePropertyFilter {
+public class RemoveMixversionableFilter extends SkipNodePropertyFilter {
 
     /**
-     * Instantiates a new filter.
+     * Instantiates a new MetadataUuidFilter filter.
      * @param parent wrapped XMLReader
      */
-    public UselessNameFilter(XMLReader parent) {
+    public RemoveMixversionableFilter(XMLReader parent) {
         super(parent);
     }
 
     protected String getFilteredPropertyName() {
-        return "name";
+        return "jcr:mixinTypes";
     }
 
     protected boolean filter(String propertyValue, String parentNodeName) {
-        boolean filter = parentNodeName.equals(propertyValue);
-        if (filter) {
-            log.info("Dropped useless name property with value \"{}\"", propertyValue);
-        }
-        else {
-            log.info("Not removing name property. Property values is \"{}\", parent node is \"{}\"", new Object[]{
-                propertyValue,
-                lastNodeName});
-        }
-        return filter;
+        return "mix:versionable".equals(propertyValue);
     }
 }
