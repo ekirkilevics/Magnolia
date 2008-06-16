@@ -87,7 +87,7 @@ public class CacheFilter extends AbstractMgnlFilter implements CacheLifecycleLis
     public void onCacheModuleStart() {
         final CacheModule cacheModule = getModule();
         this.cacheConfig = cacheModule.getConfiguration(cacheConfigurationName);
-        this.cache = cacheModule.getCacheFactory().getCache("cachefilter-" + cacheConfigurationName);
+        this.cache = cacheModule.getCacheFactory().getCache(cacheConfigurationName);
     }
 
     // TODO : maybe this method could be generalized ...
@@ -101,7 +101,7 @@ public class CacheFilter extends AbstractMgnlFilter implements CacheLifecycleLis
         }
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final CachePolicyResult cachePolicy = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState);
+        final CachePolicyResult cachePolicy = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState, cacheConfig.getFlushPolicy());
         log.debug("Cache policy result: {}", cachePolicy);
 
         final Object cacheKey = cachePolicy.getCacheKey();
