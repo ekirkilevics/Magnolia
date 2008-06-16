@@ -42,6 +42,9 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * The CacheModule holds several named CacheConfiguration instances and a CacheFactory.
  * @see CacheConfiguration
@@ -51,6 +54,8 @@ import java.util.Set;
  * @version $Revision: $ ($Author: $)
  */
 public class CacheModule implements ModuleLifecycle {
+    Logger log = LoggerFactory.getLogger(CacheModule.class);
+
     private final Set listeners = new HashSet();
     private CacheFactory cacheFactory;
     private Map configurations = new HashMap();
@@ -95,7 +100,11 @@ public class CacheModule implements ModuleLifecycle {
             final CacheConfiguration cfg = (CacheConfiguration) it.next();
             final String name = cfg.getName();
             final Cache cache = cacheFactory.getCache(name);
-            cfg.getFlushPolicy().start(cache);
+            if (cfg.getFlushPolicy() != null) {
+                cfg.getFlushPolicy().start(cache);
+            } else {
+                log.warn("Flush Policy is not configured properly for {} cache configuration.", name);
+            }
         }
 
         final Iterator itL = listeners.iterator();
@@ -111,7 +120,11 @@ public class CacheModule implements ModuleLifecycle {
             final CacheConfiguration cfg = (CacheConfiguration) it.next();
             final String name = cfg.getName();
             final Cache cache = cacheFactory.getCache(name);
-            cfg.getFlushPolicy().stop(cache);
+            if (cfg.getFlushPolicy() != null) {
+                cfg.getFlushPolicy().stop(cache);
+            } else {
+                log.warn("Flush Policy is not configured properly for {} cache configuration.", name);
+            }
         }
 
         // TODO : this is implementation dependant - some factories might need or want to be notified also on restart..
