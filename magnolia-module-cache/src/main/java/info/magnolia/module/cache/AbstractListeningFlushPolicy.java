@@ -90,13 +90,21 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
 
     /**
      * Implement this method to react on buffered events on a given cache and repository.
+     * @return true if single events should be processed as well, false otherwise.
      */
-    protected abstract void handleBufferedEvents(Cache cache, String repository);
+    protected abstract boolean preHandleEvents(Cache cache, String repository);
+
+    /**
+     * Implement this method to wrap up flushing process after all single events have been processed.
+     * This method will be invoked only if {@link #preHandleEvents(Cache, String)} returns true;
+     */
+    protected abstract void postHandleEvents(Cache cache, String repository);
 
 
     /**
      * Implement this method to react on each and every event on a given cache and repository,
      * even if multiple where buffered.
+     * This method will be invoked only if {@link #preHandleEvents(Cache, String)} returns true;
      */
     protected abstract void handleSingleEvent(Cache cache, String repository, Event event);
 
@@ -110,10 +118,13 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
         }
 
         public void onEvent(EventIterator events) {
-            handleBufferedEvents(cache, repository);
-            while (events.hasNext()) {
-                final Event event = events.nextEvent();
-                handleSingleEvent(cache, repository, event);
+            boolean shouldContinue = preHandleEvents(cache, repository);
+            if (shouldContinue) {
+                while (events.hasNext()) {
+                    final Event event = events.nextEvent();
+                    handleSingleEvent(cache, repository, event);
+                }
+                postHandleEvents(cache, repository);
             }
         }
     }

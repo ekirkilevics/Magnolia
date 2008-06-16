@@ -35,6 +35,9 @@ package info.magnolia.module.cache;
 
 import javax.jcr.observation.Event;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author gjoseph
@@ -42,10 +45,16 @@ import javax.jcr.observation.Event;
  */
 public class FlushAllListeningPolicy extends AbstractListeningFlushPolicy {
 
-    protected void handleBufferedEvents(Cache cache, String repository) {
+    Logger log = LoggerFactory.getLogger(FlushAllListeningPolicy.class);
+
+    protected boolean preHandleEvents(Cache cache, String repository) {
         cache.clear();
+        return false;
     }
 
     protected void handleSingleEvent(Cache cache, String repository, Event event) {
+    }
+
+    protected void postHandleEvents(Cache cache, String repository) {
     }
 }

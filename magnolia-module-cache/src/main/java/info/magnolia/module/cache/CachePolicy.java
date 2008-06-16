@@ -57,5 +57,5 @@ public interface CachePolicy {
      *
      * TODO : check how to handle request parameters
      */
-    CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState);
+    CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy);
 }

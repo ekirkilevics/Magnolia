@@ -35,6 +35,7 @@ package info.magnolia.module.cache;
 
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.util.SimpleUrlPattern;
+import info.magnolia.module.cache.filter.CacheFilter;
 import info.magnolia.voting.Voter;
 import info.magnolia.voting.Voting;
 
@@ -53,6 +54,7 @@ import org.apache.commons.lang.ArrayUtils;
  * @version $Revision: $ ($Author: $)
  */
 public class DefaultCachePolicy implements CachePolicy {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DefaultCachePolicy.class);
     private List bypasses = new LinkedList();
     private Voter[] voters = new Voter[0];
 
@@ -72,7 +74,7 @@ public class DefaultCachePolicy implements CachePolicy {
         voters = (Voter[]) ArrayUtils.add(this.voters, voter);
     }
 
-    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState) {
+    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
         final Object key = getCacheKey(aggregationState);
 
         if (shouldBypass(aggregationState, key)) {

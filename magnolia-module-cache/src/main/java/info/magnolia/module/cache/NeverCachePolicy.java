@@ -43,7 +43,7 @@ import info.magnolia.cms.core.AggregationState;
 public class NeverCachePolicy implements CachePolicy {
     private static final CachePolicyResult NEVER = new CachePolicyResult(CachePolicyResult.bypass, null, null);
 
-    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState) {
+    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
         return NEVER;
     }
 }
