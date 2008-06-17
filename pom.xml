@@ -502,7 +502,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-core</artifactId>
-        <version>1.4.4</version>
+        <version>1.4.5</version>
         <exclusions>
           <exclusion>
             <groupId>org.apache.geronimo.specs</groupId>
