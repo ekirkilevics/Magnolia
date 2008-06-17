@@ -280,13 +280,6 @@ public class DataTransporter {
                 }
 
                 XMLFilter versionFilter = new VersionFilter(magnoliaV2Filter);
-
-                // enable this to strip useless "name" properties from dialogs
-                // versionFilter = new UselessNameFilter(versionFilter);
-
-                // enable this to strip mix:versionable from pre 3.6 xml files
-                // versionFilter = new RemoveMixversionableFilter(versionFilter);
-
                 XMLReader finalReader = new ImportXmlRootFilter(versionFilter);
 
                 ContentHandler handler = session.getImportContentHandler(basepath, importMode);
