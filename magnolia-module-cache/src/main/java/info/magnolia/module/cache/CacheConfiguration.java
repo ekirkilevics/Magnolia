@@ -34,6 +34,12 @@
 package info.magnolia.module.cache;
 
 import info.magnolia.module.cache.filter.CachePolicyExecutor;
+import info.magnolia.module.cache.filter.behaviours.UseCache;
+import info.magnolia.module.cache.filter.behaviours.Bypass;
+import info.magnolia.module.cache.filter.behaviours.Store;
+
+import java.util.Map;
+import java.util.HashMap;
 
 /**
  * Each CacheConfiguration holds a CachePolicy and a FlushPolicy.
@@ -44,7 +50,13 @@ import info.magnolia.module.cache.filter.CachePolicyExecutor;
  * @version $Revision: $ ($Author: $)
  */
 public class CacheConfiguration {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CacheConfiguration.class);
+    // TODO : make these configurable.
+    private final Map executors = new HashMap() {{
+        put(CachePolicyResult.bypass, new Bypass());
+        put(CachePolicyResult.store, new Store());
+        put(CachePolicyResult.useCache, new UseCache());
+    }};
+
     private String name;
     private CachePolicy cachePolicy;
     private FlushPolicy flushPolicy;
@@ -84,21 +96,9 @@ public class CacheConfiguration {
     }
 
     // TODO : review - class loading & exception handling
-    public CachePolicyExecutor getExecutor(String name) {
-        try {
-            Class c = CacheConfiguration.class.forName(name);
-            CachePolicyExecutor cpe = (CachePolicyExecutor) c.newInstance();
-            return cpe;
-        } catch (ClassNotFoundException e) {
-            log.error("Cache policy executor {} doesn't exist in classpath.", name);
-        } catch (InstantiationException e) {
-            log.error("Cache policy executor " + name + " Can't be instanciated due to " + e.getMessage(), e);
-        } catch (IllegalAccessException e) {
-            log.error("Cache policy executor {} can't be accessed.", name);
-        } catch (ClassCastException e) {
-            log.error("Cache policy executor {} doesn't implement mandatory interface CachePolicyExecutor.", name);
-        }
-        return null;
+    public CachePolicyExecutor getExecutor(CachePolicyResult.CachePolicyBehaviour behaviour) {
+
+        return (CachePolicyExecutor) executors.get(behaviour);
     }
 
 }

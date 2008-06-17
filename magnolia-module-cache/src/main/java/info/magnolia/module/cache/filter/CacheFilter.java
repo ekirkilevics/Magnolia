@@ -100,7 +100,7 @@ public class CacheFilter extends AbstractMgnlFilter implements CacheLifecycleLis
         log.debug("Cache policy result: {}", cachePolicy);
 
         final CachePolicyResult.CachePolicyBehaviour behaviour = cachePolicy.getBehaviour();
-        final CachePolicyExecutor executor = cacheConfig.getExecutor(behaviour.getExecutorName());
+        final CachePolicyExecutor executor = cacheConfig.getExecutor(behaviour);
         if (executor == null) {
             throw new IllegalStateException("Unexpected cache policy result: " + cachePolicy);
         }
