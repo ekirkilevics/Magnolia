@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.cache;
 
+import info.magnolia.module.cache.filter.CachePolicyExecutor;
 
 /**
  * Each CacheConfiguration holds a CachePolicy and a FlushPolicy.
@@ -82,6 +83,7 @@ public class CacheConfiguration {
         this.flushPolicy = flushPolicy;
     }
 
+    // TODO : review - class loading & exception handling
     public CachePolicyExecutor getExecutor(String name) {
         try {
             Class c = CacheConfiguration.class.forName(name);

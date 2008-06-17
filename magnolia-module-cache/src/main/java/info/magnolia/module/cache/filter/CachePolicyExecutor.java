@@ -31,7 +31,10 @@
  * intact.
  *
  */
-package info.magnolia.module.cache;
+package info.magnolia.module.cache.filter;
+
+import info.magnolia.module.cache.Cache;
+import info.magnolia.module.cache.CachePolicyResult;
 
 import java.io.IOException;
 

@@ -31,11 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.module.cache.behaviours;
+package info.magnolia.module.cache.filter.behaviours;
 
 import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.module.cache.Cache;
-import info.magnolia.module.cache.CachePolicyExecutor;
+import info.magnolia.module.cache.filter.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CachedEntry;
 import info.magnolia.module.cache.filter.CachedError;

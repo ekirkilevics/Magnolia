@@ -41,7 +41,6 @@ import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CacheLifecycleListener;
 import info.magnolia.module.cache.CacheModule;
-import info.magnolia.module.cache.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
 
 import javax.servlet.FilterChain;
@@ -101,7 +100,7 @@ public class CacheFilter extends AbstractMgnlFilter implements CacheLifecycleLis
         log.debug("Cache policy result: {}", cachePolicy);
 
         final CachePolicyResult.CachePolicyBehaviour behaviour = cachePolicy.getBehaviour();
-        CachePolicyExecutor executor = cacheConfig.getExecutor(behaviour.getExecutorName());
+        final CachePolicyExecutor executor = cacheConfig.getExecutor(behaviour.getExecutorName());
         if (executor == null) {
             throw new IllegalStateException("Unexpected cache policy result: " + cachePolicy);
         }
