@@ -42,7 +42,7 @@ public class CachedRedirect implements CachedEntry {
     private final int statusCode;
     private final String location;
 
-    CachedRedirect(int statusCode, String location) {
+    public CachedRedirect(int statusCode, String location) {
         this.statusCode = statusCode;
         this.location = location;
     }

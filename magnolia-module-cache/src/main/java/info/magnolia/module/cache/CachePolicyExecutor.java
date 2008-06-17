@@ -31,21 +31,20 @@
  * intact.
  *
  */
-package info.magnolia.module.cache.filter;
+package info.magnolia.module.cache;
 
-/**
- *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
- */
-public class CachedError implements CachedEntry {
-    private final int statusCode;
+import java.io.IOException;
 
-    public CachedError(int statusCode) {
-        this.statusCode = statusCode;
-    }
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
-    public int getStatusCode() {
-        return statusCode;
-    }
+public interface CachePolicyExecutor {
+
+    void processCacheRequest(HttpServletRequest request,
+            HttpServletResponse response, FilterChain chain, Cache cache,
+            CachePolicyResult cachePolicy) throws IOException, ServletException;
+
+
 }

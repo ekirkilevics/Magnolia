@@ -56,7 +56,7 @@ public final class CachedPage implements CachedEntry {
     private final MultiMap headers;
     private final long lastModificationTime;
 
-    CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers) throws IOException {
+    public CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers) throws IOException {
         // content which is actually of a compressed type must stay that way
         if (!GZipUtil.isGZipMimeType(contentType) && GZipUtil.isGZipped(out)) {
             this.defaultContent = out;

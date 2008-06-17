@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.cache;
 
+
 /**
  * Each CacheConfiguration holds a CachePolicy and a FlushPolicy.
  * @see CachePolicy
@@ -42,6 +43,7 @@ package info.magnolia.module.cache;
  * @version $Revision: $ ($Author: $)
  */
 public class CacheConfiguration {
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CacheConfiguration.class);
     private String name;
     private CachePolicy cachePolicy;
     private FlushPolicy flushPolicy;
@@ -78,6 +80,23 @@ public class CacheConfiguration {
 
     public void setFlushPolicy(FlushPolicy flushPolicy) {
         this.flushPolicy = flushPolicy;
+    }
+
+    public CachePolicyExecutor getExecutor(String name) {
+        try {
+            Class c = CacheConfiguration.class.forName(name);
+            CachePolicyExecutor cpe = (CachePolicyExecutor) c.newInstance();
+            return cpe;
+        } catch (ClassNotFoundException e) {
+            log.error("Cache policy executor {} doesn't exist in classpath.", name);
+        } catch (InstantiationException e) {
+            log.error("Cache policy executor " + name + " Can't be instanciated due to " + e.getMessage(), e);
+        } catch (IllegalAccessException e) {
+            log.error("Cache policy executor {} can't be accessed.", name);
+        } catch (ClassCastException e) {
+            log.error("Cache policy executor {} doesn't implement mandatory interface CachePolicyExecutor.", name);
+        }
+        return null;
     }
 
 }

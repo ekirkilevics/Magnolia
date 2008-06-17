@@ -86,6 +86,10 @@ public class CachePolicyResult {
         public String toString() {
             return name;
         }
+
+        public String getExecutorName() {
+            return CachePolicyResult.class.getPackage().getName() + ".behaviours." + Character.toUpperCase(name.charAt(0)) + name.substring(1);
+        }
     }
 
 }
