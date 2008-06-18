@@ -34,7 +34,6 @@
 package info.magnolia.cms.core.ie.filters;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.slf4j.Logger;
@@ -102,7 +101,10 @@ public abstract class SkipNodePropertyFilter extends XMLFilterImpl {
         else {
             if (invalue) {
                 invalue = false;
-                String textContent = new String(Arrays.copyOfRange(ch, start, start + length));
+                // Arrays.copyOfRange(ch, start, start + length)
+                char[] range = new char[length];
+                System.arraycopy(ch, start, range, 0, length);
+                String textContent = new String(range);
 
                 // skip only if filter() say so
                 boolean skip = filter(textContent, lastNodeName);
