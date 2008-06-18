@@ -52,7 +52,7 @@ class LegacyModuleVersionHandler extends DefaultModuleVersionHandler {
     public Delta getInstall(InstallContext installContext) {
         Delta delta = super.getInstall(installContext);
         final ModuleDefinition moduleDefinition = installContext.getCurrentModuleDefinition();
-        delta.getTasks().add(new AbstractTask("Call register() method", "") {
+        delta.getTasks().add(new AbstractTask("Legacy module compatibility", "This calls the register() method of modules written against the Magnolia 3.0 API.") {
 
             public void execute(InstallContext installContext) throws TaskExecutionException {
                 try {
