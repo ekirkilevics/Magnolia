@@ -120,8 +120,6 @@ public abstract class MVCServlet extends ContextSensitiveServlet {
         // why do i have to change it if request was setted? But i have to!
         response.setCharacterEncoding("UTF-8"); //$NON-NLS-1$
 
-        response.setContentType("text/html; charset=UTF-8"); //$NON-NLS-1$
-
         String command = handler.getCommand();
         String view = handler.execute(command);
         handler.renderHtml(view);
