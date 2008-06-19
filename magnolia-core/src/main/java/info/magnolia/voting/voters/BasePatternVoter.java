@@ -40,8 +40,14 @@ import javax.servlet.http.HttpServletRequest;
 import org.apache.commons.lang.StringUtils;
 
 
-
 /**
+ * Voters which uses the urls to match against the pattern. The returned vote is
+ * the length of the pattern. This allows overstearing less precise votes (lie
+ * allo /something/* but deny /somthin/otherthing/*). You can use the inverse
+ * property which will then return the negative value on a match. This is not
+ * the same thing as using the not property which will then vote if the pattern
+ * does not match at all.
+ *
  * @author philipp
  * @version $Id$
  *
@@ -80,8 +86,8 @@ public abstract class BasePatternVoter extends AbstractBoolVoter {
         return this.inverse;
     }
 
-    public void setInverse(boolean positive) {
-        this.inverse = positive;
+    public void setInverse(boolean inverse) {
+        this.inverse = inverse;
     }
 
     protected String resolveURIFromValue(Object value) {
@@ -101,6 +107,10 @@ public abstract class BasePatternVoter extends AbstractBoolVoter {
             }
         }
         return uri;
+    }
+
+    public String toString() {
+        return super.toString() + " pattern: " + this.getPattern();
     }
 
 }

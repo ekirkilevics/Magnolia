@@ -36,10 +36,13 @@ package info.magnolia.voting.voters;
 import info.magnolia.voting.Voter;
 
 /**
+ * Abstract voter. Supports the name and can be disabled.
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
 public abstract class BaseVoterImpl implements Voter {
+
+    private String name = "";
 
     /**
      * Enable/disable this cache voter.
@@ -53,18 +56,23 @@ public abstract class BaseVoterImpl implements Voter {
         enabled = true;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public boolean isEnabled() {
         return enabled;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
 
+    public String getName(){
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String toString() {
+        return this.getName();
+    }
 }

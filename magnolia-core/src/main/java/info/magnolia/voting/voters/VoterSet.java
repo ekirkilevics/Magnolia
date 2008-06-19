@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,75 +33,84 @@
  */
 package info.magnolia.voting.voters;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.voting.Voter;
+import info.magnolia.voting.Voting;
 
+import org.apache.commons.lang.ArrayUtils;
 
 /**
- * Used to create boolean voters which can't return integer values. You can
- * stear the returned values by setting the trueValue and falseValue. To inverse
- * the result of the boolVote method use the not property.
+ * Can take a set of voters. The voting can be set as well as the returned
+ * level. If the level is not set (0) the votings result is returned.
  *
- * @author philipp
- * @version $Id$
+ * @author pbracher
+ *
  */
-public abstract class AbstractBoolVoter extends BaseVoterImpl {
+public class VoterSet extends BaseVoterImpl {
+    /**
+     * If 0 the outcome of the voting is use
+     */
+    int level;
 
     /**
-     * Logger.
+     * Outcome will be inverse if true
      */
-    private static Logger log = LoggerFactory.getLogger(AbstractBoolVoter.class);
+    boolean not = false;
 
-    private int trueValue = 1;
+    private Voter[] voters = new Voter[0];
 
-    private int falseValue = 0;
+    private Voting voting = Voting.Factory.getDefaultVoting();
 
-    private boolean not;
+    public Voter[] getVoters() {
+        return voters;
+    }
+
+    public void addVoter(Voter voter){
+        if(voter.isEnabled()){
+            voters = (Voter[]) ArrayUtils.add(voters, voter);
+        }
+    }
 
     public int vote(Object value) {
-        boolean vote = boolVote(value);
-        if(not){
-            vote = !vote;
+        int outcome = getVoting().vote(voters, value);
+        if(level != 0){
+            if(outcome < 0){
+                outcome = -level;
+            }
+            if(outcome > 0){
+                outcome = level;
+            }
         }
-        return vote ? trueValue : falseValue;
+        if(not){
+            outcome = -outcome;
+        }
+        return outcome;
     }
 
-    public int getFalseValue() {
-        return this.falseValue;
+    public Voting getVoting() {
+        return voting;
     }
 
-    public void setFalseValue(int negativeVoteValue) {
-        this.falseValue = negativeVoteValue;
+    public void setVoting(Voting voting) {
+        this.voting = voting;
     }
-
-    public int getTrueValue() {
-        return this.trueValue;
-    }
-
-    public void setTrueValue(int positiveVoteValue) {
-        this.trueValue = positiveVoteValue;
-    }
-
-    abstract protected boolean boolVote(Object value);
-
 
     public boolean isNot() {
-        return this.not;
+        return not;
     }
 
     public void setNot(boolean not) {
         this.not = not;
     }
 
-    public String toString() {
-        return super.toString() + ": " + (not?"not" : "");
-    }
-
     public int getLevel() {
-        return getTrueValue();
+        return level;
     }
 
     public void setLevel(int level) {
-        setTrueValue(level);
+        this.level = level;
+    }
+
+    public String toString() {
+        return super.toString() + " set: " + (not ? "not " : "") + ArrayUtils.toString(voters);
     }
 }

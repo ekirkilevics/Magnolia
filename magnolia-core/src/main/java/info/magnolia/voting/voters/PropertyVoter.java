@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,43 +31,46 @@
  * intact.
  *
  */
-package info.magnolia.voting;
+package info.magnolia.voting.voters;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 
+import info.magnolia.cms.core.SystemProperty;
 
 /**
- * The highest returned vote is taken (8 or -10, ..) and returned. The voting
- * can return 0 if no voter has anything to say.
- *
- * @author philipp
- * @version $Id$
+ * Check a manglia system property
+ * @author pbracher
  *
  */
-public class DefaultVoting implements Voting {
+public class PropertyVoter extends AbstractBoolVoter {
 
-    Logger log = LoggerFactory.getLogger(DefaultVoting.class);
-    public int vote(Voter[] voters, Object value) {
-        int highestVote = 0;
-        for (int i = 0; i < voters.length; i++) {
-            Voter voter = voters[i];
-            if(voter.isEnabled()){
-                int vote  = voter.vote(value);
-                if(log.isDebugEnabled()){
-                    log.debug("voter [{}] fired {}", voter, Integer.valueOf(vote));
-                }
-                if(Math.abs(vote) > Math.abs(highestVote)){
-                    highestVote = vote;
-                    log.debug("highest vote is now {}", Integer.valueOf(highestVote));
-                }
-                // same value but not same sign
-                else if (vote == -highestVote){
-                    highestVote = Math.abs(vote);
-                    log.debug("highest vote is now {}", Integer.valueOf(highestVote));
-                }
-            }
-        }
-        return highestVote;
+    private String property;
+
+    private String value;
+
+    protected boolean boolVote(Object value) {
+        String propertyValue = StringUtils.defaultString(SystemProperty.getProperty(property));
+        return propertyValue.equals(this.value);
     }
+
+    public String getProperty() {
+        return property;
+    }
+
+    public void setProperty(String property) {
+        this.property = property;
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
+    }
+
+    public String toString() {
+        return super.toString() + " " + property + "=" + value;
+    }
+
 }

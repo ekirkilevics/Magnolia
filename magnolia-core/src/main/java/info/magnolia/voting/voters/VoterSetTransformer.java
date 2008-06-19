@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,43 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.voting;
+package info.magnolia.voting.voters;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+import info.magnolia.content2bean.impl.CollectionPropertyHidingTransformer;
 
 /**
- * The highest returned vote is taken (8 or -10, ..) and returned. The voting
- * can return 0 if no voter has anything to say.
- *
- * @author philipp
- * @version $Id$
+ * Omit the voters child node. You can just add the voters under the voterset's node
+ * @author pbracher
  *
  */
-public class DefaultVoting implements Voting {
+public class VoterSetTransformer extends CollectionPropertyHidingTransformer {
 
-    Logger log = LoggerFactory.getLogger(DefaultVoting.class);
-    public int vote(Voter[] voters, Object value) {
-        int highestVote = 0;
-        for (int i = 0; i < voters.length; i++) {
-            Voter voter = voters[i];
-            if(voter.isEnabled()){
-                int vote  = voter.vote(value);
-                if(log.isDebugEnabled()){
-                    log.debug("voter [{}] fired {}", voter, Integer.valueOf(vote));
-                }
-                if(Math.abs(vote) > Math.abs(highestVote)){
-                    highestVote = vote;
-                    log.debug("highest vote is now {}", Integer.valueOf(highestVote));
-                }
-                // same value but not same sign
-                else if (vote == -highestVote){
-                    highestVote = Math.abs(vote);
-                    log.debug("highest vote is now {}", Integer.valueOf(highestVote));
-                }
-            }
-        }
-        return highestVote;
+    public VoterSetTransformer() {
+        super(VoterSet.class, "voters");
     }
+
 }

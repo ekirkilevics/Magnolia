@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -36,72 +36,67 @@ package info.magnolia.voting.voters;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import info.magnolia.voting.Voter;
 
 /**
- * Used to create boolean voters which can't return integer values. You can
- * stear the returned values by setting the trueValue and falseValue. To inverse
- * the result of the boolVote method use the not property.
+ * Conditional voter. Use the condition, then and otherwise voter.
+ * @author pbracher
  *
- * @author philipp
- * @version $Id$
  */
-public abstract class AbstractBoolVoter extends BaseVoterImpl {
+public class IfVoter extends BaseVoterImpl {
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(AbstractBoolVoter.class);
+    private static Logger log = LoggerFactory.getLogger(IfVoter.class);
 
-    private int trueValue = 1;
+    private Voter condition;
 
-    private int falseValue = 0;
+    private Voter then;
 
-    private boolean not;
+    private Voter otherwise;
 
     public int vote(Object value) {
-        boolean vote = boolVote(value);
-        if(not){
-            vote = !vote;
+        boolean isTrue = condition.vote(value)>0;
+        log.debug("test of {} was {}", this.condition, Boolean.valueOf(isTrue));
+        int outcome;
+        if(isTrue){
+            outcome = then.vote(value);
         }
-        return vote ? trueValue : falseValue;
+        else{
+            if(otherwise != null){
+                outcome = otherwise.vote(value);
+            }
+            outcome = 0 ;
+        }
+        log.debug("result is {}", Integer.valueOf(outcome));
+        return outcome;
+
     }
 
-    public int getFalseValue() {
-        return this.falseValue;
+    public Voter getCondition() {
+        return condition;
     }
 
-    public void setFalseValue(int negativeVoteValue) {
-        this.falseValue = negativeVoteValue;
+    public void setCondition(Voter condition) {
+        this.condition = condition;
     }
 
-    public int getTrueValue() {
-        return this.trueValue;
+    public Voter getThen() {
+        return then;
     }
 
-    public void setTrueValue(int positiveVoteValue) {
-        this.trueValue = positiveVoteValue;
+    public void setThen(Voter then) {
+        this.then = then;
     }
 
-    abstract protected boolean boolVote(Object value);
-
-
-    public boolean isNot() {
-        return this.not;
+    public Voter getOtherwise() {
+        return otherwise;
     }
 
-    public void setNot(boolean not) {
-        this.not = not;
+    public void setOtherwise(Voter otherwise) {
+        this.otherwise = otherwise;
     }
 
     public String toString() {
-        return super.toString() + ": " + (not?"not" : "");
+        return super.toString() + "if [" + condition + "] then: [" + then + "] otherwise: [" + otherwise + "]";
     }
 
-    public int getLevel() {
-        return getTrueValue();
-    }
-
-    public void setLevel(int level) {
-        setTrueValue(level);
-    }
 }
