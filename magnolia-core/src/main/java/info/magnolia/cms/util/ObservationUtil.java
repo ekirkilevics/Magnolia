@@ -55,344 +55,344 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class ObservationUtil {
-	private final static Logger log = LoggerFactory
-			.getLogger(ObservationUtil.class);
+    private final static Logger log = LoggerFactory
+            .getLogger(ObservationUtil.class);
 
-	/**
-	 * Registers an EventListener for any node type.
-	 *
-	 * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
-	 */
-	public static void registerChangeListener(String repository,
-			String observationPath, EventListener listener) {
-		registerChangeListener(repository, observationPath, true, listener);
-	}
+    /**
+     * Registers an EventListener for any node type.
+     *
+     * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
+     */
+    public static void registerChangeListener(String repository,
+            String observationPath, EventListener listener) {
+        registerChangeListener(repository, observationPath, true, listener);
+    }
 
-	/**
-	 * Registers an EventListener for any node type.
-	 *
-	 * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
-	 */
-	public static void registerChangeListener(String repository,
-			String observationPath, boolean includeSubnodes,
-			EventListener listener) {
-		registerChangeListener(repository, observationPath, includeSubnodes,
-				(String[]) null, listener);
-	}
+    /**
+     * Registers an EventListener for any node type.
+     *
+     * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
+     */
+    public static void registerChangeListener(String repository,
+            String observationPath, boolean includeSubnodes,
+            EventListener listener) {
+        registerChangeListener(repository, observationPath, includeSubnodes,
+                (String[]) null, listener);
+    }
 
-	/**
-	 * Registers an EventListener for a specific node type.
-	 *
-	 * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
-	 */
-	public static void registerChangeListener(String repository,
-			String observationPath, boolean includeSubnodes, String nodeType,
-			EventListener listener) {
-		registerChangeListener(repository, observationPath, includeSubnodes,
-				new String[] { nodeType }, listener);
-	}
+    /**
+     * Registers an EventListener for a specific node type.
+     *
+     * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
+     */
+    public static void registerChangeListener(String repository,
+            String observationPath, boolean includeSubnodes, String nodeType,
+            EventListener listener) {
+        registerChangeListener(repository, observationPath, includeSubnodes,
+                new String[] { nodeType }, listener);
+    }
 
-	/**
-	 * Register a single event listener, bound to the given path. Be careful
-	 * that if you observe "/", events are going to be generated for jcr:system,
-	 * which is "shared" accross all workspaces.
-	 *
-	 * @param repository
-	 * @param observationPath
-	 *            repository path
-	 * @param includeSubnodes
-	 *            the isDeep parameter of ObservationManager.addEventListener()
-	 * @param nodeTypes
-	 *            the node types to filter events for
-	 * @param listener
-	 *            event listener
-	 * @see ObservationManager#addEventListener
-	 */
-	public static void registerChangeListener(String repository,
-			String observationPath, boolean includeSubnodes,
-			String[] nodeTypes, EventListener listener) {
-		log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$
+    /**
+     * Register a single event listener, bound to the given path. Be careful
+     * that if you observe "/", events are going to be generated for jcr:system,
+     * which is "shared" accross all workspaces.
+     *
+     * @param repository
+     * @param observationPath
+     *            repository path
+     * @param includeSubnodes
+     *            the isDeep parameter of ObservationManager.addEventListener()
+     * @param nodeTypes
+     *            the node types to filter events for
+     * @param listener
+     *            event listener
+     * @see ObservationManager#addEventListener
+     */
+    public static void registerChangeListener(String repository,
+            String observationPath, boolean includeSubnodes,
+            String[] nodeTypes, EventListener listener) {
+        log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$
 
-		try {
-			ObservationManager observationManager = getObservationManager(repository);
+        try {
+            ObservationManager observationManager = getObservationManager(repository);
 
-			observationManager.addEventListener(listener, Event.NODE_ADDED
-					| Event.NODE_REMOVED | Event.PROPERTY_ADDED
-					| Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED,
-					observationPath, includeSubnodes, null, nodeTypes, false);
-		} catch (RepositoryException e) {
-			log
-					.error(
-							"Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$
-		}
-	}
+            observationManager.addEventListener(listener, Event.NODE_ADDED
+                    | Event.NODE_REMOVED | Event.PROPERTY_ADDED
+                    | Event.PROPERTY_CHANGED | Event.PROPERTY_REMOVED,
+                    observationPath, includeSubnodes, null, nodeTypes, false);
+        } catch (RepositoryException e) {
+            log
+                    .error(
+                            "Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$
+        }
+    }
 
-	/**
-	 * @deprecated since 3.6 - typo - use registerDeferredChangeListener
-	 */
-	public static void registerDefferedChangeListener(String repository,
-			String observationPath, EventListener listener, long delay,
-			long maxDelay) {
-		registerDeferredChangeListener(repository, observationPath, listener,
-				delay, maxDelay);
-	}
+    /**
+     * @deprecated since 3.6 - typo - use registerDeferredChangeListener
+     */
+    public static void registerDefferedChangeListener(String repository,
+            String observationPath, EventListener listener, long delay,
+            long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath, listener,
+                delay, maxDelay);
+    }
 
-	public static void registerDeferredChangeListener(String repository,
-			String observationPath, EventListener listener, long delay,
-			long maxDelay) {
-		registerDeferredChangeListener(repository, observationPath, true,
-				(String[]) null, listener, delay, maxDelay);
-	}
+    public static void registerDeferredChangeListener(String repository,
+            String observationPath, EventListener listener, long delay,
+            long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath, true,
+                (String[]) null, listener, delay, maxDelay);
+    }
 
-	/**
-	 * @deprecated since 3.6 - typo - use registerDeferredChangeListener
-	 */
-	public static void registerDefferedChangeListener(String repository,
-			String observationPath, boolean includeSubnodes,
-			EventListener listener, long delay, long maxDelay) {
-		registerDeferredChangeListener(repository, observationPath,
-				includeSubnodes, listener, delay, maxDelay);
-	}
+    /**
+     * @deprecated since 3.6 - typo - use registerDeferredChangeListener
+     */
+    public static void registerDefferedChangeListener(String repository,
+            String observationPath, boolean includeSubnodes,
+            EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath,
+                includeSubnodes, listener, delay, maxDelay);
+    }
 
-	public static void registerDeferredChangeListener(String repository,
-			String observationPath, boolean includeSubnodes,
-			EventListener listener, long delay, long maxDelay) {
-		registerDeferredChangeListener(repository, observationPath,
-				includeSubnodes, (String[]) null, listener, delay, maxDelay);
-	}
+    public static void registerDeferredChangeListener(String repository,
+            String observationPath, boolean includeSubnodes,
+            EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath,
+                includeSubnodes, (String[]) null, listener, delay, maxDelay);
+    }
 
-	/**
-	 * @deprecated since 3.6 - typo - use registerDeferredChangeListener
-	 */
-	public static void registerDefferedChangeListener(String repository,
-			String observationPath, boolean includeSubnodes, String nodeType,
-			EventListener listener, long delay, long maxDelay) {
-		registerDeferredChangeListener(repository, observationPath,
-				includeSubnodes, nodeType, listener, delay, maxDelay);
-	}
+    /**
+     * @deprecated since 3.6 - typo - use registerDeferredChangeListener
+     */
+    public static void registerDefferedChangeListener(String repository,
+            String observationPath, boolean includeSubnodes, String nodeType,
+            EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath,
+                includeSubnodes, nodeType, listener, delay, maxDelay);
+    }
 
-	public static void registerDeferredChangeListener(String repository,
-			String observationPath, boolean includeSubnodes, String nodeType,
-			EventListener listener, long delay, long maxDelay) {
-		registerDeferredChangeListener(repository, observationPath,
-				includeSubnodes, new String[] { nodeType }, listener, delay,
-				maxDelay);
-	}
+    public static void registerDeferredChangeListener(String repository,
+            String observationPath, boolean includeSubnodes, String nodeType,
+            EventListener listener, long delay, long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath,
+                includeSubnodes, new String[] { nodeType }, listener, delay,
+                maxDelay);
+    }
 
-	/**
-	 * @deprecated since 3.6 - typo - use registerDeferredChangeListener
-	 */
-	public static void registerDefferedChangeListener(String repository,
-			String observationPath, boolean includeSubnodes,
-			String[] nodeTypes, EventListener listener, long delay,
-			long maxDelay) {
-		registerDeferredChangeListener(repository, observationPath,
-				includeSubnodes, nodeTypes, listener, delay, maxDelay);
-	}
+    /**
+     * @deprecated since 3.6 - typo - use registerDeferredChangeListener
+     */
+    public static void registerDefferedChangeListener(String repository,
+            String observationPath, boolean includeSubnodes,
+            String[] nodeTypes, EventListener listener, long delay,
+            long maxDelay) {
+        registerDeferredChangeListener(repository, observationPath,
+                includeSubnodes, nodeTypes, listener, delay, maxDelay);
+    }
 
-	/**
-	 * The event firing is deffered in case there is a serie of fired events
-	 *
-	 * @return the wrapped EventListener so that one can unregister it.
-	 */
-	public static void registerDeferredChangeListener(String repository,
-			String observationPath, boolean includeSubnodes,
-			String[] nodeTypes, EventListener listener, long delay,
-			long maxDelay) {
-		final EventListener deferedListener = instanciateDeferredEventListener(
-				listener, delay, maxDelay);
-		registerChangeListener(repository, observationPath, includeSubnodes,
-				nodeTypes, deferedListener);
-	}
+    /**
+     * The event firing is deffered in case there is a serie of fired events
+     *
+     * @return the wrapped EventListener so that one can unregister it.
+     */
+    public static void registerDeferredChangeListener(String repository,
+            String observationPath, boolean includeSubnodes,
+            String[] nodeTypes, EventListener listener, long delay,
+            long maxDelay) {
+        final EventListener deferedListener = instanciateDeferredEventListener(
+                listener, delay, maxDelay);
+        registerChangeListener(repository, observationPath, includeSubnodes,
+                nodeTypes, deferedListener);
+    }
 
-	// //////////////////////////////////////////////
-	// Begin: added a bunch of methods to set the events the user needs
-	// //////////////////////////////////////////////////
+    // //////////////////////////////////////////////
+    // Begin: added a bunch of methods to set the events the user needs
+    // //////////////////////////////////////////////////
 
-	/**
-	 * Registers an EventListener for a specific node type.
-	 *
-	 * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
-	 */
-	public static void registerChangeListener(String repository,
-			String observationPath, boolean includeSubnodes, String nodeType,
-			int eventTypes, EventListener listener) {
-		if (nodeType == null) {
-			registerChangeListener(repository, observationPath,
-					includeSubnodes, (String[]) null, eventTypes, listener);
-		} else {
-			registerChangeListener(repository, observationPath,
-					includeSubnodes, new String[] { nodeType }, eventTypes,
-					listener);
-		}
-	}
+    /**
+     * Registers an EventListener for a specific node type.
+     *
+     * @see #registerChangeListener(String,String,boolean,String[],javax.jcr.observation.EventListener)
+     */
+    public static void registerChangeListener(String repository,
+            String observationPath, boolean includeSubnodes, String nodeType,
+            int eventTypes, EventListener listener) {
+        if (nodeType == null) {
+            registerChangeListener(repository, observationPath,
+                    includeSubnodes, (String[]) null, eventTypes, listener);
+        } else {
+            registerChangeListener(repository, observationPath,
+                    includeSubnodes, new String[] { nodeType }, eventTypes,
+                    listener);
+        }
+    }
 
-	/**
-	 * Register a single event listener, bound to the given path. Be careful
-	 * that if you observe "/", events are going to be generated for jcr:system,
-	 * which is "shared" accross all workspaces.
-	 *
-	 * @param repository
-	 * @param observationPath
-	 *            repository path
-	 * @param includeSubnodes
-	 *            the isDeep parameter of ObservationManager.addEventListener()
-	 * @param nodeTypes
-	 *            the node types to filter events for
-	 * @param listener
-	 *            event listener
-	 * @see ObservationManager#addEventListener
-	 */
-	public static void registerChangeListener(String repository,
-			String observationPath, boolean includeSubnodes,
-			String[] nodeTypes, int eventTypes, EventListener listener) {
-		log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$
+    /**
+     * Register a single event listener, bound to the given path. Be careful
+     * that if you observe "/", events are going to be generated for jcr:system,
+     * which is "shared" accross all workspaces.
+     *
+     * @param repository
+     * @param observationPath
+     *            repository path
+     * @param includeSubnodes
+     *            the isDeep parameter of ObservationManager.addEventListener()
+     * @param nodeTypes
+     *            the node types to filter events for
+     * @param listener
+     *            event listener
+     * @see ObservationManager#addEventListener
+     */
+    public static void registerChangeListener(String repository,
+            String observationPath, boolean includeSubnodes,
+            String[] nodeTypes, int eventTypes, EventListener listener) {
+        log.debug("Registering event listener for path [{}]", observationPath); //$NON-NLS-1$
 
-		try {
-			ObservationManager observationManager = getObservationManager(repository);
+        try {
+            ObservationManager observationManager = getObservationManager(repository);
 
-			observationManager.addEventListener(listener, eventTypes,
-					observationPath, includeSubnodes, null, nodeTypes, false);
-		} catch (RepositoryException e) {
-			log
-					.error(
-							"Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$
-		}
-	}
+            observationManager.addEventListener(listener, eventTypes,
+                    observationPath, includeSubnodes, null, nodeTypes, false);
+        } catch (RepositoryException e) {
+            log
+                    .error(
+                            "Unable to add event listeners for " + observationPath, e); //$NON-NLS-1$
+        }
+    }
 
-	// /////////////////////////////////////////////
-	// End: added methods to support event types definition
-	// ////////////////////////////////////////////
+    // /////////////////////////////////////////////
+    // End: added methods to support event types definition
+    // ////////////////////////////////////////////
 
-	/**
-	 * Use this and register the returned EventListener with the
-	 * registerChangeListener() methods, if you need to be able to later
-	 * unregister your EventListener.
-	 */
-	public static EventListener instanciateDeferredEventListener(
-			EventListener listener, long delay, long maxDelay) {
-		return new DeferringEventListener(listener, delay, maxDelay);
-	}
+    /**
+     * Use this and register the returned EventListener with the
+     * registerChangeListener() methods, if you need to be able to later
+     * unregister your EventListener.
+     */
+    public static EventListener instanciateDeferredEventListener(
+            EventListener listener, long delay, long maxDelay) {
+        return new DeferringEventListener(listener, delay, maxDelay);
+    }
 
-	public static void unregisterChangeListener(String repository,
-			EventListener listener) {
-		try {
+    public static void unregisterChangeListener(String repository,
+            EventListener listener) {
+        try {
 
-			getObservationManager(repository).removeEventListener(listener);
+            getObservationManager(repository).removeEventListener(listener);
 
-		} catch (RepositoryException e) {
-			log.error("Unable to remove event listener [" + listener
-					+ "] from repository " + repository, e);
-		}
-	}
+        } catch (RepositoryException e) {
+            log.error("Unable to remove event listener [" + listener
+                    + "] from repository " + repository, e);
+        }
+    }
 
-	private static ObservationManager getObservationManager(String repository)
-			throws RepositoryException {
-		return getHierarchyManager(repository).getWorkspace()
-				.getObservationManager();
-	}
+    private static ObservationManager getObservationManager(String repository)
+            throws RepositoryException {
+        return getHierarchyManager(repository).getWorkspace()
+                .getObservationManager();
+    }
 
-	private static HierarchyManager getHierarchyManager(String repository) {
-		return LifeTimeJCRSessionUtil.getHierarchyManager(repository);
-	}
+    private static HierarchyManager getHierarchyManager(String repository) {
+        return LifeTimeJCRSessionUtil.getHierarchyManager(repository);
+    }
 
-	public static class DeferringEventListener implements EventListener {
+    public static class DeferringEventListener implements EventListener {
 
-		private ObservationBasedDelayedExecutor executor;
+        private ObservationBasedDelayedExecutor executor;
 
-		private EventListener listener;
+        private EventListener listener;
 
-		public DeferringEventListener(EventListener listener, long delay,
-				long maxDelay) {
-			this.listener = listener;
-			executor = new ObservationBasedDelayedExecutor(listener, delay,
-					maxDelay);
-		}
+        public DeferringEventListener(EventListener listener, long delay,
+                long maxDelay) {
+            this.listener = listener;
+            executor = new ObservationBasedDelayedExecutor(listener, delay,
+                    maxDelay);
+        }
 
-		public void onEvent(EventIterator events) {
-			this.executor.consume(events);
-		}
+        public void onEvent(EventIterator events) {
+            this.executor.consume(events);
+        }
 
-		public String toString() {
-			return super.toString() + ":" + this.listener;
-		}
-	}
+        public String toString() {
+            return super.toString() + ":" + this.listener;
+        }
+    }
 
-	/**
-	 * Deferred event handling. Uses the DelayedExecutor class
-	 */
-	public static class ObservationBasedDelayedExecutor {
-		private final DelayedExecutor delayedExecutor;
-		private final List eventsBuffer = new ArrayList();
+    /**
+     * Deferred event handling. Uses the DelayedExecutor class
+     */
+    public static class ObservationBasedDelayedExecutor {
+        private final DelayedExecutor delayedExecutor;
+        private final List eventsBuffer = new ArrayList();
 
-		public ObservationBasedDelayedExecutor(final EventListener listener,
-				long delay, long maxDelay) {
-			delayedExecutor = new DelayedExecutor(new Runnable() {
-				public void run() {
-					// during execution consume is blocked
-					synchronized (eventsBuffer) {
-						listener.onEvent(new ListBasedEventIterator(
-								eventsBuffer));
-						eventsBuffer.clear();
-					}
-				}
-			}, delay, maxDelay);
-		}
+        public ObservationBasedDelayedExecutor(final EventListener listener,
+                long delay, long maxDelay) {
+            delayedExecutor = new DelayedExecutor(new Runnable() {
+                public void run() {
+                    // during execution consume is blocked
+                    synchronized (eventsBuffer) {
+                        listener.onEvent(new ListBasedEventIterator(
+                                eventsBuffer));
+                        eventsBuffer.clear();
+                    }
+                }
+            }, delay, maxDelay);
+        }
 
-		protected void consume(EventIterator events) {
-			synchronized (this.eventsBuffer) {
-				while (events.hasNext()) {
-					this.eventsBuffer.add(events.next());
-				}
-				delayedExecutor.trigger();
-			}
-		}
-	}
+        protected void consume(EventIterator events) {
+            synchronized (this.eventsBuffer) {
+                while (events.hasNext()) {
+                    this.eventsBuffer.add(events.next());
+                }
+                delayedExecutor.trigger();
+            }
+        }
+    }
 
-	/**
-	 * List based event iterator. Used to collect events in a list which are
-	 * later on passed to the listener.
-	 */
-	public static class ListBasedEventIterator implements EventIterator {
-		private Iterator iterator;
-		private List events;
-		private int pos = 0;
+    /**
+     * List based event iterator. Used to collect events in a list which are
+     * later on passed to the listener.
+     */
+    public static class ListBasedEventIterator implements EventIterator {
+        private Iterator iterator;
+        private List events;
+        private int pos = 0;
 
-		public ListBasedEventIterator(List events) {
-			this.events = events;
-			this.iterator = events.iterator();
-		}
+        public ListBasedEventIterator(List events) {
+            this.events = events;
+            this.iterator = events.iterator();
+        }
 
-		public boolean hasNext() {
-			return this.iterator.hasNext();
-		}
+        public boolean hasNext() {
+            return this.iterator.hasNext();
+        }
 
-		public Object next() {
-			pos++;
-			return this.iterator.next();
-		}
+        public Object next() {
+            pos++;
+            return this.iterator.next();
+        }
 
-		public void remove() {
-			this.iterator.remove();
-		}
+        public void remove() {
+            this.iterator.remove();
+        }
 
-		public Event nextEvent() {
-			return (Event) next();
-		}
+        public Event nextEvent() {
+            return (Event) next();
+        }
 
-		public long getPosition() {
-			return pos;
-		}
+        public long getPosition() {
+            return pos;
+        }
 
-		public long getSize() {
-			return events.size();
-		}
+        public long getSize() {
+            return events.size();
+        }
 
-		public void skip(long skipNum) {
-			for (int i = 0; i < skipNum; i++) {
-				next();
-			}
-		}
-	}
+        public void skip(long skipNum) {
+            for (int i = 0; i < skipNum; i++) {
+                next();
+            }
+        }
+    }
 
 }
