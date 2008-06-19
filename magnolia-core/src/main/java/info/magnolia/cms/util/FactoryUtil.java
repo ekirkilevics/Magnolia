@@ -104,7 +104,7 @@ public class FactoryUtil {
             }
 
             String className = StringUtils.defaultIfEmpty(SystemProperty.getProperty(interf.getName()), interf.getName());
-            if (className.startsWith("/") || className.indexOf(':') >= 0) {
+            if (isInRepositoryDefinition(className)) {
                 String repository = ContentRepository.CONFIG;
                 String path = className;
                 if (className.indexOf(':') >= 0) {
@@ -131,9 +131,18 @@ public class FactoryUtil {
         return null;
     }
 
+    private static boolean isInRepositoryDefinition(String className) {
+        return className.startsWith("/") || className.indexOf(':') >= 0;
+    }
+
     public static Class getImplementation(Class interf) throws ClassNotFoundException {
         String className = StringUtils.defaultIfEmpty(SystemProperty.getProperty(interf.getName()), interf.getName());
-        return ClassUtil.classForName(className);
+        if(!isInRepositoryDefinition(className)){
+            return ClassUtil.classForName(className);
+        }
+        else{
+            return interf;
+        }
     }
 
     /**
