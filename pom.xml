@@ -462,6 +462,7 @@ for Java Content Repositories (JCR).
         <version>2.0</version>
         <configuration>
           <downloadSources>true</downloadSources>
+          <downloadJavadocs>true</downloadJavadocs>
           <jdkLevel>1.4</jdkLevel>
         </configuration>
       </plugin>
@@ -469,6 +470,7 @@ for Java Content Repositories (JCR).
         <artifactId>maven-eclipse-plugin</artifactId>
         <configuration>
           <downloadSources>true</downloadSources>
+          <downloadJavadocs>true</downloadJavadocs>
         </configuration>
       </plugin>
     </plugins>
