@@ -52,6 +52,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -410,13 +411,9 @@ public final class ContentRepository {
      * @throws JDOMException
      */
     private static Document buildDocument() throws JDOMException, IOException {
-        File source = Path.getRepositoriesConfigFile();
-        if (!source.exists()) {
-            throw new FileNotFoundException("Failed to locate magnolia repositories config file at " //$NON-NLS-1$
-                + source.getAbsolutePath());
-        }
-
-        return ConfigUtil.string2JDOM(ConfigUtil.replaceTokens(new FileInputStream(source)));
+        String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_REPOSITORIES_CONFIG);
+        InputStream stream = ConfigUtil.getConfigFile(path);
+        return ConfigUtil.string2JDOM(ConfigUtil.replaceTokens(stream));
     }
 
     /**
