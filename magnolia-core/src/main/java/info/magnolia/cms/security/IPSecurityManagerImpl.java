@@ -119,11 +119,12 @@ public class IPSecurityManagerImpl implements IPSecurityManager {
             super.setProperty(state, descriptor, values);
         }
 
-        protected TypeDescriptor onResolveClass(TransformationState state) {
-            if (state.getLevel() == 2) {
+        protected TypeDescriptor onResolveType(TransformationState state,
+                TypeDescriptor resolvedType) {
+            if (state.getLevel() == 2 && resolvedType == null) {
                 return this.getTypeMapping().getTypeDescriptor(Rule.class);
             }
-            return super.onResolveClass(state);
+            return super.onResolveType(state, resolvedType);
         }
 
     }

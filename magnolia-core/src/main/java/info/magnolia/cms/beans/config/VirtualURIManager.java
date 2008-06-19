@@ -97,11 +97,11 @@ public final class VirtualURIManager extends ObservedManager {
         try {
             log.info("Config : Loading VirtualMap - " + node.getHandle()); //$NON-NLS-1$
             Content2BeanUtil.setProperties(this.cachedURImapping, node, true, new Content2BeanTransformerImpl(){
-                protected TypeDescriptor onResolveClass(TransformationState state) {
-                    if(state.getLevel()==2){
+                protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
+                    if(state.getLevel()==2 && resolvedType == null){
                         return this.getTypeMapping().getTypeDescriptor(DefaultVirtualURIMapping.class);
                     }
-                    return null;
+                    return resolvedType;
                 }
             });
             log.info("Config : VirtualMap loaded - " + node.getHandle()); //$NON-NLS-1$

@@ -156,7 +156,10 @@ public class CommandsManager extends ObservedManager {
 
         private static final String DEPRECATED_IMPL_NODE_DATA = "impl";
 
-        protected TypeDescriptor onResolveClass(TransformationState state) {
+        protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
+            if(resolvedType != null){
+                return resolvedType;
+            }
             Class klass = null;
             // default class to use
             if(state.getLevel() == 1){
@@ -196,7 +199,7 @@ public class CommandsManager extends ObservedManager {
             if(klass != null){
                 return this.getTypeMapping().getTypeDescriptor(klass);
             }
-            return null;
+            return resolvedType;
         }
 
         public void initBean(TransformationState state, Map values) throws Content2BeanException {
