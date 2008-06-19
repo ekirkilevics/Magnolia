@@ -31,10 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.module.cache.filter.behaviours;
+package info.magnolia.module.cache.executor;
 
 import info.magnolia.module.cache.Cache;
-import info.magnolia.module.cache.filter.CachePolicyExecutor;
+import info.magnolia.module.cache.CacheConfiguration;
+import info.magnolia.module.cache.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
 
 import java.io.IOException;
@@ -44,11 +45,43 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-public class Bypass implements CachePolicyExecutor {
+import org.apache.commons.lang.ArrayUtils;
+
+/**
+ * A list of executors (for combining and ordering them)
+ * @author pbracher
+ *
+ */
+public class CompositeExecutor implements CachePolicyExecutor {
+
+    private CachePolicyExecutor[] executors = new CachePolicyExecutor[0];
 
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
             CachePolicyResult cachePolicy) throws IOException, ServletException {
-        chain.doFilter(request, response);
+        for (int i = 0; i < executors.length; i++) {
+            CachePolicyExecutor executor = executors[i];
+            executor.processCacheRequest(request, response, chain, cache, cachePolicy);
+        }
     }
+
+    public CachePolicyExecutor[] getExecutors() {
+        return executors;
+    }
+
+    public void setExecutors(CachePolicyExecutor[] executor) {
+        this.executors = executor;
+    }
+
+    public void addExecutor(CachePolicyExecutor executor){
+        this.executors = (CachePolicyExecutor[]) ArrayUtils.add(this.executors, executor);
+    }
+
+    public void setCacheConfiguration(CacheConfiguration cacheConfiguration) {
+        for (int i = 0; i < executors.length; i++) {
+            CachePolicyExecutor executor = executors[i];
+            executor.setCacheConfiguration(cacheConfiguration);
+        }
+    }
+
 }

@@ -34,6 +34,7 @@
 package info.magnolia.module.cache.filter;
 
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.DefaultVoting;
 import info.magnolia.voting.Voting;
 import info.magnolia.voting.voters.TrueVoter;
@@ -51,7 +52,7 @@ import javax.servlet.http.HttpServletRequest;
 public class StandaloneGZipFilterTest extends TestCase {
     private HttpServletRequest request;
 
-    public void testBypassesAsDictatedByVoters() {
+     public void testBypassesAsDictatedByVoters() {
         doTest(true, true);
     }
 
@@ -80,6 +81,7 @@ public class StandaloneGZipFilterTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+        MockUtil.initMockContext();
         request = createStrictMock(HttpServletRequest.class);
     }
 

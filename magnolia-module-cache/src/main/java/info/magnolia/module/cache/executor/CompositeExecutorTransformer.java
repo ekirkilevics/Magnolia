@@ -31,23 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.module.cache.filter;
+package info.magnolia.module.cache.executor;
 
-import info.magnolia.module.cache.Cache;
-import info.magnolia.module.cache.CachePolicyResult;
+import info.magnolia.content2bean.impl.CollectionPropertyHidingTransformer;
 
-import java.io.IOException;
-
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-public interface CachePolicyExecutor {
-
-    void processCacheRequest(HttpServletRequest request,
-            HttpServletResponse response, FilterChain chain, Cache cache,
-            CachePolicyResult cachePolicy) throws IOException, ServletException;
-
-
+/**
+ * Omit the executors subnode
+ * @author pbracher
+ *
+ */
+public class CompositeExecutorTransformer extends CollectionPropertyHidingTransformer {
+    public CompositeExecutorTransformer() {
+        super(CompositeExecutor.class, "executors");
+    }
 }

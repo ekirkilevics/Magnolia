@@ -33,16 +33,14 @@
  */
 package info.magnolia.module.cache;
 
-import info.magnolia.module.cache.filter.CachePolicyExecutor;
-import info.magnolia.module.cache.filter.behaviours.UseCache;
-import info.magnolia.module.cache.filter.behaviours.Bypass;
-import info.magnolia.module.cache.filter.behaviours.Store;
-
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 
 /**
- * Each CacheConfiguration holds a CachePolicy and a FlushPolicy.
+ * Each CacheConfiguration holds a CachePolicy, a FlushPolicy and a
+ * BrowserCachePolicy. Based on the outcome of the cachePolicy the defined
+ * executors will be called
+ *
  * @see CachePolicy
  * @see FlushPolicy
  *
@@ -50,16 +48,13 @@ import java.util.HashMap;
  * @version $Revision: $ ($Author: $)
  */
 public class CacheConfiguration {
-    // TODO : make these configurable.
-    private final Map executors = new HashMap() {{
-        put(CachePolicyResult.bypass, new Bypass());
-        put(CachePolicyResult.store, new Store());
-        put(CachePolicyResult.useCache, new UseCache());
-    }};
 
     private String name;
     private CachePolicy cachePolicy;
     private FlushPolicy flushPolicy;
+    private BrowserCachePolicy browserCachePolicy;
+
+    private Map executors = new HashMap();
 
     public CacheConfiguration() {
     }
@@ -95,10 +90,29 @@ public class CacheConfiguration {
         this.flushPolicy = flushPolicy;
     }
 
-    // TODO : review - class loading & exception handling
     public CachePolicyExecutor getExecutor(CachePolicyResult.CachePolicyBehaviour behaviour) {
+        return (CachePolicyExecutor) executors.get(behaviour.getName());
+    }
 
-        return (CachePolicyExecutor) executors.get(behaviour);
+    public BrowserCachePolicy getBrowserCachePolicy() {
+        return browserCachePolicy;
+    }
+
+    public void setBrowserCachePolicy(BrowserCachePolicy browserCachePolicy) {
+        this.browserCachePolicy = browserCachePolicy;
+    }
+
+    public Map getExecutors() {
+        return executors;
+    }
+
+    public void setExecutors(Map executors) {
+        this.executors = executors;
+    }
+
+    public void addExecutor(String name, CachePolicyExecutor executor){
+        executor.setCacheConfiguration(this);
+        this.executors.put(name, executor);
     }
 
 }

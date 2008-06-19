@@ -33,9 +33,16 @@
  */
 package info.magnolia.module.cache.ehcache;
 
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.MBeanUtil;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheFactory;
+
+import java.util.Arrays;
+import java.util.List;
+
+import javax.management.MBeanServer;
+
 import net.sf.ehcache.CacheManager;
 import net.sf.ehcache.Ehcache;
 import net.sf.ehcache.config.CacheConfiguration;
@@ -43,10 +50,6 @@ import net.sf.ehcache.config.Configuration;
 import net.sf.ehcache.config.ConfigurationFactory;
 import net.sf.ehcache.constructs.blocking.BlockingCache;
 import net.sf.ehcache.management.ManagementService;
-
-import javax.management.MBeanServer;
-import java.util.Arrays;
-import java.util.List;
 
 /**
  * A CacheFactory based on ehcache, which wraps BlockingCache instances.
@@ -60,6 +63,7 @@ public class EhCacheFactory implements CacheFactory {
     private String diskStorePath;
 
     public EhCacheFactory() {
+        diskStorePath = Path.getCacheDirectoryPath();
     }
 
     public CacheConfiguration getDefaultCacheConfiguration() {

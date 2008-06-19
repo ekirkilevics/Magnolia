@@ -34,28 +34,32 @@
 package info.magnolia.module.cache.filter;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.filters.AbstractMgnlFilter;
+import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CacheLifecycleListener;
 import info.magnolia.module.cache.CacheModule;
+import info.magnolia.module.cache.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
+
+import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 /**
+ * Uses the CachePolicy to determine the cache behavior. Uses then the
+ * CacheConfiguration to get the executors to be executed.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CacheFilter extends AbstractMgnlFilter implements CacheLifecycleListener {
+public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements CacheLifecycleListener {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CacheFilter.class);
 
     private static final String MODULE_NAME = "cache";
@@ -96,15 +100,30 @@ public class CacheFilter extends AbstractMgnlFilter implements CacheLifecycleLis
         }
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final CachePolicyResult cachePolicy = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState, cacheConfig.getFlushPolicy());
-        log.debug("Cache policy result: {}", cachePolicy);
+        CachePolicyResult cachePolicyResult = null;
+        cachePolicyResult = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState, cacheConfig.getFlushPolicy());
 
-        final CachePolicyResult.CachePolicyBehaviour behaviour = cachePolicy.getBehaviour();
+        log.debug("Cache policy result: {}", cachePolicyResult);
+
+        final CachePolicyResult.CachePolicyBehaviour behaviour = cachePolicyResult.getBehaviour();
         final CachePolicyExecutor executor = cacheConfig.getExecutor(behaviour);
         if (executor == null) {
-            throw new IllegalStateException("Unexpected cache policy result: " + cachePolicy);
+            throw new IllegalStateException("Unexpected cache policy result: " + cachePolicyResult);
         }
-        executor.processCacheRequest(request, response, chain, cache, cachePolicy);
+        executor.processCacheRequest(request, response, chain, cache, cachePolicyResult);
+
+        // TODO if the cache blocks we will have to add this again.
+        /*
+        finally{
+            Object key = cachePolicyResult.getCacheKey();
+            if (!cachePolicyResult.getBehaviour().equals(CachePolicyResult.bypass) && (
+            ((EhCacheWrapper)cache).getWrappedEhcache().getQuiet(key) == null)) {
+                log.warn("Cache nearly blocked for key: {}, removed entry", key);
+                cache.put(key, null);
+                cache.remove(key);
+            }
+        }
+        */
     }
 
 }

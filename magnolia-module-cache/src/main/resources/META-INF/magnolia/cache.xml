@@ -7,6 +7,12 @@
   <class>info.magnolia.module.cache.CacheModule</class>
   <versionHandler>info.magnolia.module.cache.setup.CacheModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
+  <properties>
+    <property>
+    	<name>info.magnolia.module.cache.CachePolicyExecutor</name>
+    	<value>info.magnolia.module.cache.executor.CompositeExecutor</value>
+    </property>
+  </properties>
 
   <dependencies>
     <dependency>

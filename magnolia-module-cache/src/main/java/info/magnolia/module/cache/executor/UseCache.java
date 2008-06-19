@@ -31,11 +31,10 @@
  * intact.
  *
  */
-package info.magnolia.module.cache.filter.behaviours;
+package info.magnolia.module.cache.executor;
 
 import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.module.cache.Cache;
-import info.magnolia.module.cache.filter.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CachedEntry;
 import info.magnolia.module.cache.filter.CachedError;
@@ -53,7 +52,12 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.collections.MultiMap;
 
-public class UseCache implements CachePolicyExecutor {
+/**
+ * Serve the content from the cache.
+ * @author pbracher
+ *
+ */
+public class UseCache extends AbstractExecutor {
 
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
@@ -97,8 +101,9 @@ public class UseCache implements CachePolicyExecutor {
             if (headerValue != -1) {
                 // If an If-None-Match header has been specified, if modified since
                 // is ignored.
+                // the header defines only seconds so we ignore the milliseconds
                 if ((request.getHeader("If-None-Match") == null)
-                        && (lastModified > 0 && lastModified <= headerValue + 1000)) {
+                        && (lastModified > 0 && (lastModified - (lastModified % 1000) >= headerValue ))) {
                     return false;
                 }
             }
@@ -114,6 +119,11 @@ public class UseCache implements CachePolicyExecutor {
 
         response.setStatus(cachedEntry.getStatusCode());
         addHeaders(cachedEntry, acceptsGzipEncoding, response);
+
+        if(cachedEntry.getLastModificationTime()>0){
+            response.setDateHeader("Last-Modified", cachedEntry.getLastModificationTime());
+        }
+
         // TODO : cookies ?
         response.setContentType(cachedEntry.getContentType());
         response.setCharacterEncoding(cachedEntry.getCharacterEncoding());

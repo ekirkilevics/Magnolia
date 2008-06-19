@@ -86,6 +86,10 @@ public class CachePolicyResult {
         public String toString() {
             return name;
         }
+
+        public String getName() {
+            return name;
+        }
     }
 
 }

@@ -43,13 +43,13 @@
       <sv:value>120</sv:value>
     </sv:property>
     <sv:property sv:name="diskPersistent" sv:type="String">
-      <sv:value>false</sv:value>
+      <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="diskSpoolBufferSizeMB" sv:type="String">
       <sv:value>30</sv:value>
     </sv:property>
     <sv:property sv:name="eternal" sv:type="String">
-      <sv:value>false</sv:value>
+      <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="maxElementsInMemory" sv:type="String">
       <sv:value>10000</sv:value>
@@ -64,10 +64,10 @@
       <sv:value>true</sv:value>
     </sv:property>
     <sv:property sv:name="timeToIdleSeconds" sv:type="String">
-      <sv:value>120</sv:value>
+      <sv:value>0</sv:value>
     </sv:property>
     <sv:property sv:name="timeToLiveSeconds" sv:type="String">
-      <sv:value>120</sv:value>
+      <sv:value>0</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">

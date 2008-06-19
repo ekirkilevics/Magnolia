@@ -31,37 +31,23 @@
  * intact.
  *
  */
-package info.magnolia.module.cache.filter;
+package info.magnolia.module.cache.cachepolicy;
 
-import info.magnolia.module.cache.util.GZipUtil;
-import junit.framework.TestCase;
-
-import java.io.IOException;
+import info.magnolia.cms.core.AggregationState;
+import info.magnolia.module.cache.Cache;
+import info.magnolia.module.cache.CachePolicy;
+import info.magnolia.module.cache.CachePolicyResult;
+import info.magnolia.module.cache.FlushPolicy;
 
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CachedPageTest extends TestCase {
-    public void testUnzipsContentIfPassedContentIsGZippedAndNotOfGzipMimeType() throws IOException {
-        final String s = "hello";
-        final byte[] gzipped = GZipUtil.gzip(s.getBytes());
-        final CachedPage p = new CachedPage(gzipped, "text/plain", "cha", 1, null, System.currentTimeMillis());
-        assertEquals(gzipped, p.getDefaultContent());
-        assertEquals("hello", new String(p.getUngzippedContent()));
-    }
+public class Never implements CachePolicy {
+    private static final CachePolicyResult NEVER = new CachePolicyResult(CachePolicyResult.bypass, null, null);
 
-    public void testDoesNotAttemptToUnzipIfMimeTypeSaysTheContentIsGZipEvenIfContentActuallyIsGZipped() throws IOException {
-        final byte[] gzipped = GZipUtil.gzip("hello".getBytes());
-        final CachedPage p = new CachedPage(gzipped, "application/x-gzip", "cha", 1, null, System.currentTimeMillis());
-        assertEquals(gzipped, p.getDefaultContent());
-        assertEquals(null, p.getUngzippedContent());
-    }
-
-    public void testDoesNotAttemptToUnzipIfContentIsNotGZipped() throws IOException {
-        final CachedPage p = new CachedPage("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis());
-        assertEquals("hello", new String(p.getDefaultContent()));
-        assertEquals(null, p.getUngzippedContent());
+    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
+        return NEVER;
     }
 }

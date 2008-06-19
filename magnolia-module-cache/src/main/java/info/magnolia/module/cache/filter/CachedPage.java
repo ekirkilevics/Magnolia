@@ -34,9 +34,10 @@
 package info.magnolia.module.cache.filter;
 
 import info.magnolia.module.cache.util.GZipUtil;
-import org.apache.commons.collections.MultiMap;
 
 import java.io.IOException;
+
+import org.apache.commons.collections.MultiMap;
 
 /**
  * Wraps a page reponse. It is assumed that the given content is gzipped
@@ -56,7 +57,7 @@ public final class CachedPage implements CachedEntry {
     private final MultiMap headers;
     private final long lastModificationTime;
 
-    public CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers) throws IOException {
+    public CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
         // content which is actually of a compressed type must stay that way
         if (!GZipUtil.isGZipMimeType(contentType) && GZipUtil.isGZipped(out)) {
             this.defaultContent = out;
@@ -69,8 +70,7 @@ public final class CachedPage implements CachedEntry {
         this.characterEncoding = characterEncoding;
         this.statusCode = statusCode;
         this.headers = headers;
-        // TODO : should this be System.currentTimeMillis(), or the actual document's last modif date? - also, what about timezones ...
-        this.lastModificationTime = System.currentTimeMillis();
+        this.lastModificationTime = modificationDate;
     }
 
     // TODO : replacing getOut() with streamTo(OutputStream out) could help subclasses stream content

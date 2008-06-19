@@ -31,19 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.module.cache;
+package info.magnolia.module.cache.cachepolicy;
 
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.util.SimpleUrlPattern;
-import info.magnolia.module.cache.filter.CacheFilter;
-import info.magnolia.voting.Voter;
-import info.magnolia.voting.Voting;
-
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-
-import org.apache.commons.lang.ArrayUtils;
+import info.magnolia.module.cache.Cache;
+import info.magnolia.module.cache.CachePolicy;
+import info.magnolia.module.cache.CachePolicyResult;
+import info.magnolia.module.cache.FlushPolicy;
+import info.magnolia.voting.voters.VoterSet;
 
 /**
  * A basic CachePolicy which will drive the usage of the cache
@@ -53,26 +48,9 @@ import org.apache.commons.lang.ArrayUtils;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DefaultCachePolicy implements CachePolicy {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(DefaultCachePolicy.class);
-    private List bypasses = new LinkedList();
-    private Voter[] voters = new Voter[0];
+public class Default implements CachePolicy {
 
-    public List getBypasses() {
-        return bypasses;
-    }
-
-    public void addBypass(String bypass) {
-        bypasses.add(bypass);
-    }
-
-    public Voter[] getVoters() {
-        return voters;
-    }
-
-    public void addVoter(Voter voter) {
-        voters = (Voter[]) ArrayUtils.add(this.voters, voter);
-    }
+    private VoterSet voters;
 
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
         final Object key = getCacheKey(aggregationState);
@@ -96,20 +74,19 @@ public class DefaultCachePolicy implements CachePolicy {
 
     protected boolean shouldBypass(AggregationState aggregationState, Object key) {
         final String uri = (String) key;
-        final Iterator it = bypasses.iterator();
-        while (it.hasNext()) {
-            final String pattern = (String) it.next();
-            if (new SimpleUrlPattern(pattern).match(uri)) {
-                return true;
-            }
-        }
-
-        // true if voters vote positively (and mostly they are "not" voters
-        // - which means their positive votes will favor bypassing the cache
-        return Voting.Factory.getDefaultVoting().vote(voters, null) > 0;
+        // true if voters vote positively
+        return voters.vote(uri) <= 0;
     }
 
     protected Object getCacheKey(final AggregationState aggregationState) {
         return aggregationState.getOriginalURI();
+    }
+
+    public VoterSet getVoters() {
+        return voters;
+    }
+
+    public void setVoters(VoterSet voters) {
+        this.voters = voters;
     }
 }

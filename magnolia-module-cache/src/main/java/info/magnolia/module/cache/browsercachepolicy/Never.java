@@ -31,19 +31,22 @@
  * intact.
  *
  */
-package info.magnolia.module.cache;
+package info.magnolia.module.cache.browsercachepolicy;
 
-import info.magnolia.cms.core.AggregationState;
+import info.magnolia.module.cache.BrowserCachePolicy;
+import info.magnolia.module.cache.BrowserCachePolicyResult;
+import info.magnolia.module.cache.CachePolicyResult;
 
 /**
+ * The pages are sent by using no cache headers
+ * @author pbracher
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
  */
-public class NeverCachePolicy implements CachePolicy {
-    private static final CachePolicyResult NEVER = new CachePolicyResult(CachePolicyResult.bypass, null, null);
+public class Never implements BrowserCachePolicy {
 
-    public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
-        return NEVER;
+    public BrowserCachePolicyResult canCacheOnClient(
+            CachePolicyResult cachePolicyResult) {
+        return BrowserCachePolicyResult.NO_CACHE;
     }
+
 }
