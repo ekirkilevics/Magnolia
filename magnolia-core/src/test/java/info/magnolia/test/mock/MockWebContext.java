@@ -59,135 +59,53 @@ import info.magnolia.context.WebContext;
  */
 public class MockWebContext extends MockContext implements WebContext, UserContext {
 
-    private PageContext pageContext;
-    private AggregationState aggregationState = new AggregationState();
+    private AggregationState aggregationState = new MockAggregationState();
     private User user;
+    private HttpServletRequest request;
+    private HttpServletResponse response;
+    private String contextPath;
+    private Map parameters;
+    private ServletContext servletContext;
+    private PageContext pageContext;
+    private MultipartForm postedForm;
+    private File file;
+
+    public MockWebContext() {
+    }
+
+    public MockWebContext(String contextPath, String uri, Map parameters) {
+        this.contextPath = contextPath;
+        this.parameters = parameters;
+        this.getAggregationState().setCurrentURI(uri);
+    }
 
 
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getActivePage()
-     */
     public Content getActivePage() {
         return (Content) (pageContext == null ? null : pageContext.getAttribute("actPage"));
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getAggregationState()
-     */
     public AggregationState getAggregationState() {
-
         return aggregationState ;
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getContextPath()
-     */
-    public String getContextPath() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getFile()
-     */
-    public File getFile() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getPageContext()
-     */
-    public PageContext getPageContext() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getParameter(java.lang.String)
-     */
     public String getParameter(String name) {
-        // TODO Auto-generated method stub
-        return null;
+        return (String)getParameters().get(name);
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getParameters()
-     */
-    public Map getParameters() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getPostedForm()
-     */
-    public MultipartForm getPostedForm() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getRequest()
-     */
-    public HttpServletRequest getRequest() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getResponse()
-     */
-    public HttpServletResponse getResponse() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#getServletContext()
-     */
-    public ServletContext getServletContext() {
-        // TODO Auto-generated method stub
-        return null;
-    }
-
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#include(java.lang.String, java.io.Writer)
-     */
     public void include(String path, Writer out) throws ServletException,
             IOException {
-        // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#init(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
-     */
     public void init(HttpServletRequest request, HttpServletResponse response) {
-        // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#init(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse, javax.servlet.ServletContext)
-     */
     public void init(HttpServletRequest request, HttpServletResponse response,
             ServletContext servletContext) {
-        // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#resetAggregationState()
-     */
     public void resetAggregationState() {
-        // TODO Auto-generated method stub
-
     }
 
-    /* (non-Javadoc)
-     * @see info.magnolia.context.WebContext#setPageContext(javax.servlet.jsp.PageContext)
-     */
     public void setPageContext(PageContext pageContext) {
         this.pageContext = pageContext;
     }
@@ -210,5 +128,73 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
 
     public void logout() {
         this.user = null;
+    }
+
+    public HttpServletRequest getRequest() {
+        return request;
+    }
+
+    public void setRequest(HttpServletRequest request) {
+        this.request = request;
+    }
+
+    public HttpServletResponse getResponse() {
+        return response;
+    }
+
+    public void setResponse(HttpServletResponse response) {
+        this.response = response;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    public Map getParameters() {
+        return parameters;
+    }
+
+    public void setParameters(Map parameters) {
+        this.parameters = parameters;
+    }
+
+    public ServletContext getServletContext() {
+        return servletContext;
+    }
+
+    public void setServletContext(ServletContext servletContext) {
+        this.servletContext = servletContext;
+    }
+
+    public MultipartForm getPostedForm() {
+        return postedForm;
+    }
+
+    public void setPostedForm(MultipartForm postedForm) {
+        this.postedForm = postedForm;
+    }
+
+    public PageContext getPageContext() {
+        return pageContext;
+    }
+
+    public File getFile() {
+        return file;
+    }
+
+    public void setFile(File file) {
+        this.file = file;
+    }
+
+    public void setCurrentURI(String uri) {
+        getAggregationState().setCurrentURI(uri);
     }
 }
