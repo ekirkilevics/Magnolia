@@ -321,7 +321,7 @@ public class ObservationUtil {
     /**
      * Deferred event handling. Uses the DelayedExecutor class
      */
-    public static class ObservationBasedDelayedExecutor  {
+    public static class ObservationBasedDelayedExecutor {
         private final DelayedExecutor delayedExecutor;
         private final List eventsBuffer = new ArrayList();
 
