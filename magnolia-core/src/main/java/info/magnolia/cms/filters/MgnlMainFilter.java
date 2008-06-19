@@ -43,7 +43,6 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleManager;
 
 import java.io.IOException;
-import java.util.HashSet;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -136,7 +135,7 @@ public class MgnlMainFilter implements Filter {
                     .getSystemContext()
                     .getHierarchyManager(ContentRepository.CONFIG);
                 final Content node = hm.getContent(SERVER_FILTERS);
-                rootFilter = (MgnlFilter) Content2BeanUtil.toBean(node, true, new FilterContent2BeanTransformer());
+                rootFilter = (MgnlFilter) Content2BeanUtil.toBean(node, true, MgnlFilter.class);
             }
             catch (PathNotFoundException e) {
                 log.warn("Config : no filters configured at " + SERVER_FILTERS); //$NON-NLS-1$
