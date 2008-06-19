@@ -1,0 +1,16 @@
+Index: /Users/philipp/checkout/magnolia/magnolia-module-fckeditor/src/main/resources/mgnl-resources/fckeditor/editor/dialog/common/fck_dialog_common.js
+===================================================================
+--- /Users/philipp/checkout/magnolia/magnolia-module-fckeditor/src/main/resources/mgnl-resources/fckeditor/editor/dialog/common/fck_dialog_common.js	(revision 13145)
++++ /Users/philipp/checkout/magnolia/magnolia-module-fckeditor/src/main/resources/mgnl-resources/fckeditor/editor/dialog/common/fck_dialog_common.js	(working copy)
+@@ -149,6 +149,8 @@
+         else
+             alert( oEditor.FCKLang.BrowseServerBlocked ) ;
+     }
+-    else
+-        window.open( url, 'FCKBrowseWindow', sOptions ) ;
++    else{
++        var oWindow = window.open( url, 'FCKBrowseWindow', sOptions ) ;
++        oWindow.focus();
++    }
+ }
+\ No newline at end of file

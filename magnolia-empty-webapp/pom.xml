@@ -81,7 +81,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-editor-fckeditor</artifactId>
+      <artifactId>magnolia-module-fckeditor</artifactId>
       <version>3.6-SNAPSHOT</version>
     </dependency>
     <dependency>

@@ -6,8 +6,8 @@
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
-  <artifactId>magnolia-editor-fckeditor</artifactId>
-  <name>magnolia-editor-fckeditor</name>
+  <artifactId>magnolia-module-fckeditor</artifactId>
+  <name>magnolia-module-fckeditor</name>
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
