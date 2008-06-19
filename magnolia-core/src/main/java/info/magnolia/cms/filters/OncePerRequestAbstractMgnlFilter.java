@@ -53,7 +53,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public abstract class OncePerRequestAbstractMgnlFilter extends AbstractMgnlFilter {
 
-    private String requestKeyName = "__" + getClass() + "_FILTERED";
+    private String requestKeyName = "__" + getClass() + "@" + this.hashCode() + "_FILTERED";
 
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException,
         ServletException {
@@ -61,7 +61,7 @@ public abstract class OncePerRequestAbstractMgnlFilter extends AbstractMgnlFilte
         request.setAttribute(requestKeyName, Boolean.TRUE);
         doFilter((HttpServletRequest) request, (HttpServletResponse) response, chain);
     }
-    
+
     public boolean bypasses(HttpServletRequest request) {
         return MgnlContext.getAttribute(requestKeyName, Context.LOCAL_SCOPE) != null || super.bypasses(request);
     }
