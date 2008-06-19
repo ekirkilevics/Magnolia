@@ -113,6 +113,7 @@ public class ConfigUtil {
     public static InputStream getConfigFile(String fileName) {
         File file = new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR), fileName);
         InputStream stream;
+        // relative to webapp root
         if (file.exists()) {
             URL url;
             try {
@@ -135,10 +136,14 @@ public class ConfigUtil {
                     ,e);
                 return null;
             }
+            return stream;
         }
-        else {
+
+        // try it directly
+        file = new File(fileName);
+        if(file.exists()) {
             try {
-                stream = new FileInputStream(fileName);
+                stream = new FileInputStream(file);
             }
             catch (FileNotFoundException e) {
                 log.error("Unable to read config file from [" //$NON-NLS-1$
@@ -147,8 +152,19 @@ public class ConfigUtil {
                     , e);
                 return null;
             }
+            return stream;
         }
-        return stream;
+        // try resources
+        try {
+            return ClasspathResourcesUtil.getStream(fileName);
+        } catch (IOException e) {
+            log.error("Unable to read config file from the resources [" //$NON-NLS-1$
+                    + fileName
+                    + "]" //$NON-NLS-1$
+                    , e);
+        }
+
+        return null;
     }
 
     /**
