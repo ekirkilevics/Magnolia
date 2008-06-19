@@ -455,6 +455,22 @@ for Java Content Repositories (JCR).
           <includeTestSourceDirectory>true</includeTestSourceDirectory>
         </configuration>
       </plugin>
+
+      <!-- TODO : the following 2 plugin configurations will be in magnolia-parent-pom:4 -->
+      <plugin>
+        <artifactId>maven-idea-plugin</artifactId>
+        <version>2.0</version>
+        <configuration>
+          <downloadSources>true</downloadSources>
+          <jdkLevel>1.4</jdkLevel>
+        </configuration>
+      </plugin>
+      <plugin>
+        <artifactId>maven-eclipse-plugin</artifactId>
+        <configuration>
+          <downloadSources>true</downloadSources>
+        </configuration>
+      </plugin>
     </plugins>
     <resources>
       <resource>
