@@ -34,10 +34,12 @@
 package info.magnolia.test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
@@ -77,7 +79,7 @@ public abstract class MgnlTestCase extends TestCase {
         initDefaultImplementations();
         MockUtil.initMockContext();
     }
-    
+
     protected void tearDown() throws Exception {
         super.tearDown();
         FactoryUtil.clear();
@@ -85,18 +87,8 @@ public abstract class MgnlTestCase extends TestCase {
     }
 
     public static void initDefaultImplementations() throws IOException {
-        InputStream mgnlbeansStream = ClasspathResourcesUtil.getStream(MGNL_BEANS_PROPERTIES);
-        if (mgnlbeansStream == null) {
-            fail("Could not load " + MGNL_BEANS_PROPERTIES);
-        }
-        Properties mgnlbeans = new Properties();
-        mgnlbeans.load(mgnlbeansStream);
-        IOUtils.closeQuietly(mgnlbeansStream);
-
-        for (Iterator iter = mgnlbeans.keySet().iterator(); iter.hasNext();) {
-            String key = (String) iter.next();
-            SystemProperty.setProperty(key, mgnlbeans.getProperty(key));
-        }
+        PropertiesInitializer.getInstance().loadBeanProperties();
+        PropertiesInitializer.getInstance().loadAllModuleProperties();
     }
 
     public static MockHierarchyManager initConfigRepository(String conf) throws IOException, RepositoryException, UnsupportedRepositoryOperationException {
