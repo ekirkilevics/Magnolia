@@ -64,9 +64,6 @@ import org.apache.commons.lang.StringUtils;
  */
 public class JavascriptIncludePage extends PageMVCHandler {
 
-    private static boolean nocache = BooleanUtils.toBoolean(SystemProperty.getProperty("magnolia.develop"));
-
-    private static String[] files;
 
     private static String[] includes = {
         "debug.js",
@@ -126,14 +123,11 @@ public class JavascriptIncludePage extends PageMVCHandler {
 
 
         // finding files in classpath is too expensive, just cache the list of paths!
-        if (files == null || nocache) {
-            files = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
-
-                public boolean accept(String name) {
-                    return name.startsWith("/mgnl-resources/js-classes") && name.endsWith(".js");
-                }
-            });
-        }
+        String[] files = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter() {
+            public boolean accept(String name) {
+                return name.startsWith("/mgnl-resources/js-classes") && name.endsWith(".js");
+            }
+        });
 
         // request.getRequestDispatcher("/.resources/js-libs/*.js").include(request, response);
 
@@ -171,10 +165,14 @@ public class JavascriptIncludePage extends PageMVCHandler {
 
     }
 
+    /**
+     * Render the default messages using the fallback local. This is useful because the messages_[lang].js include is new
+     */
     private void prepareI18n(PrintWriter out) throws IOException {
         InputStream in = ClasspathResourcesUtil.getStream("/mgnl-resources/admin-js/i18n.js");
         IOUtils.copy(in, out);
-        out.println(MessagesUtil.generateJavaScript(MessagesManager.getMessages()));
+        // put the default messages into the main file if one misses the messages.js file
+        out.println(MessagesUtil.generateJavaScript(MessagesManager.getMessages(MessagesManager.getDefaultLocale())));
         in.close();
     }
 

@@ -120,6 +120,10 @@ public abstract class AbstractList extends TemplatedMVCHandler {
         list.setGroupByOrder(this.getGroupByOrder());
     }
 
+    public String getLanguage(){
+        return MgnlContext.getUser().getLanguage();
+    }
+
     /**
      * Returns the model used by this list
      */
