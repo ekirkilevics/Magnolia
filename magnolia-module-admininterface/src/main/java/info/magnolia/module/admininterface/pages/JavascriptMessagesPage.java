@@ -35,17 +35,25 @@ package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
+import info.magnolia.cms.i18n.Messages;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.LocaleUtils;
 
+
+/**
+ *
+ * @author pbracher
+ * @version $Revision: $ ($Author: $)
+ */
 public class JavascriptMessagesPage extends JavascriptIncludePage {
 
-    private String locale = MessagesManager.getDefaultLocale().toString();
+    private String localeStr = MessagesManager.getDefaultLocale().toString();
 
     public JavascriptMessagesPage(String name, HttpServletRequest request,
             HttpServletResponse response) {
@@ -53,15 +61,18 @@ public class JavascriptMessagesPage extends JavascriptIncludePage {
     }
 
     public void renderHtml(String view) throws IOException {
-        response.getWriter().println(MessagesUtil.generateJavaScript(MessagesManager.getMessages(LocaleUtils.toLocale(locale))));
+        final Locale locale = LocaleUtils.toLocale(localeStr);
+        final Messages messages = MessagesManager.getMessages(locale);
+        final String messagesStr = MessagesUtil.generateJavaScript(messages);
+        response.getWriter().println(messagesStr);
     }
 
     public String getLocale() {
-        return locale;
+        return localeStr;
     }
 
     public void setLocale(String language) {
-        this.locale = language;
+        this.localeStr = language;
     }
 
 }
