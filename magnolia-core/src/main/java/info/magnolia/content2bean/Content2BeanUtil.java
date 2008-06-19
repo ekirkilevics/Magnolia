@@ -83,8 +83,8 @@ public class Content2BeanUtil {
             this.defaultType = getTypeMapping().getTypeDescriptor(defaultClass);
         }
 
-        protected TypeDescriptor onResolveClass(TransformationState state) {
-            return this.defaultType;
+        protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
+            return resolvedType==null? defaultType : resolvedType;
         }
     }
 

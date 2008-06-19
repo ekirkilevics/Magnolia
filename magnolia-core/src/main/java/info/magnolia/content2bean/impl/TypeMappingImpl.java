@@ -34,6 +34,7 @@
 package info.magnolia.content2bean.impl;
 
 import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.TypeMapping;
@@ -172,8 +173,24 @@ public class TypeMappingImpl implements TypeMapping {
         dscr.setType(beanClass);
         dscr.setMap(ClassUtil.isSubClass(beanClass, Map.class));
         dscr.setCollection(beanClass.isArray() || ClassUtil.isSubClass(beanClass, Collection.class));
-
         types.put(beanClass, dscr);
+        try {
+            Class transformerClass = ClassUtil.classForName(beanClass.getName() + "Transformer");
+
+            if(ClassUtil.isSubClass(transformerClass, Content2BeanTransformer.class)){
+                try {
+                    Content2BeanTransformer transformer = (Content2BeanTransformer) transformerClass.newInstance();
+                    dscr.setTransformer(transformer);
+                    log.debug("Found a custom transformer [{" + transformerClass + "}] for [{" + beanClass + "}]");
+                } catch (Exception e) {
+                    log.error("Can't instantiate custom transformer [{" + transformerClass + "}] for [{" + beanClass + "}]", e);
+                }
+            }
+        } catch (Exception e) {
+            // this is fine because having a transformer class is optional
+            log.debug("No custom transformer class {}Transformer class found", beanClass.getName());
+        }
+
         return dscr;
     }
 

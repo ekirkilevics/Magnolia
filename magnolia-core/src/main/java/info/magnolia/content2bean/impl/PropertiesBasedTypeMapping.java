@@ -33,11 +33,15 @@
  */
 package info.magnolia.content2bean.impl;
 
+import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
+import info.magnolia.content2bean.Content2BeanTransformer;
+import info.magnolia.content2bean.TypeDescriptor;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.Properties;
 
@@ -57,36 +61,19 @@ public class PropertiesBasedTypeMapping extends TypeMappingImpl {
     private static Logger log = LoggerFactory.getLogger(PropertiesBasedTypeMapping.class);
 
     public PropertiesBasedTypeMapping() {
-        String[] fileNames = ClasspathResourcesUtil.findResources(new ClasspathResourcesUtil.Filter(){
-            public boolean accept(String name) {
-                return name.endsWith(".content2bean");
-            }
-        });
-
-        for (int i = 0; i < fileNames.length; i++) {
-            String fileName = fileNames[i];
-            Properties props = new Properties();
-            InputStream stream = null;
-            try {
-                stream = ClasspathResourcesUtil.getStream(fileName);
-                props.load(stream);
-
-            }
-            catch (IOException e) {
-                log.error("can't read collection to bean information " + fileName,  e);
-            }
-            IOUtils.closeQuietly(stream);
-
-            for (Iterator iter = props.keySet().iterator(); iter.hasNext();) {
-                String key = (String) iter.next();
+        Properties properties = SystemProperty.getProperties();
+        for (Iterator iterator = properties.keySet().iterator(); iterator.hasNext();) {
+            String key = (String) iterator.next();
+            if(key.endsWith(".transformer")){
+                String className = StringUtils.removeEnd(key, ".transformer");
+                String transformerClassName = properties.getProperty(key);
                 try {
-                    Class type = ClassUtil.classForName(StringUtils.substringBeforeLast(key, "."));
-                    Class mappedType = ClassUtil.classForName(props.getProperty(key));
-                    String propName = StringUtils.substringAfterLast(key, ".");
-                    getPropertyTypeDescriptor(type, propName).setCollectionEntryType(getTypeDescriptor(mappedType));
-                }
-                catch (ClassNotFoundException e) {
-                    log.error("can't read collection to bean information file: " + fileName + " key: " + key,  e);
+                    Class beanClass = ClassUtil.classForName(className);
+                    Content2BeanTransformer transformer = (Content2BeanTransformer) ClassUtil.newInstance(transformerClassName);
+                    getTypeDescriptor(beanClass).setTransformer(transformer);
+                    log.debug("Registered custom transformer [{}] for [{}]", className, transformerClassName);
+                } catch (Exception e) {
+                    log.error("Can't register custom transformer for [" + className + "]", e);
                 }
             }
         }

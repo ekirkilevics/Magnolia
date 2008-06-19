@@ -75,7 +75,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
        return toBean(node, recursive, transformer, transformer.newState());
     }
 
-    protected Object toBean(Content node, boolean recursive, final Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException{
+    protected Object toBean(Content node, boolean recursive, Content2BeanTransformer transformer, TransformationState state) throws Content2BeanException{
 
         state.pushContent(node);
 
@@ -95,6 +95,8 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         Object bean = null;
         if(type != null){
             state.pushType(type);
+
+            transformer = resolveTransformer(type, transformer);
 
             Map values = toMap(node, recursive, transformer, state);
 
@@ -129,7 +131,11 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         state.pushBean(bean);
         state.pushContent(node);
 
-        state.pushType(transformer.getTypeMapping().getTypeDescriptor(bean.getClass()));
+        TypeDescriptor type = transformer.getTypeMapping().getTypeDescriptor(bean.getClass());
+
+        state.pushType(type);
+
+        transformer = resolveTransformer(type, transformer);
 
         Map values = toMap(node, recursive, transformer, state);
 
@@ -158,7 +164,7 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         }
 
         if(recursive){
-            Collection children = node.getChildren(transformer);
+            Collection children = transformer.getChildren(node);
             for (Iterator iter = children.iterator(); iter.hasNext();) {
                 final Content childNode = (Content) iter.next();
                 // in case the the class can not get resolved we can use now
@@ -212,6 +218,14 @@ public class Content2BeanProcessorImpl implements Content2BeanProcessor {
         }
     }
 
+    protected Content2BeanTransformer resolveTransformer(TypeDescriptor type,
+            Content2BeanTransformer transformer) {
+        Content2BeanTransformer customTransformer = type.getTransformer();
+        if(customTransformer != null){
+            transformer = customTransformer;
+        }
+        return transformer;
+    }
 
     public boolean isForceCreation() {
         return this.forceCreation;

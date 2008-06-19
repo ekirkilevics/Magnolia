@@ -54,6 +54,8 @@ public class TypeDescriptor {
 
     private ItemType itemType;
 
+    private Content2BeanTransformer transformer;
+
     private boolean isMap;
 
     private boolean isCollection;
@@ -96,8 +98,8 @@ public class TypeDescriptor {
         this.isMap = isMap;
     }
 
-    public PropertyTypeDescriptor getPropertyTypeDescriptor(String mapProperyName) {
-        return (PropertyTypeDescriptor) getPropertyDescriptors().get(mapProperyName);
+    public PropertyTypeDescriptor getPropertyTypeDescriptor(String properyName) {
+        return (PropertyTypeDescriptor) getPropertyDescriptors().get(properyName);
     }
 
     /**
@@ -120,6 +122,17 @@ public class TypeDescriptor {
             this.descriptors = Collections.unmodifiableMap(tmpDescriptors);
         }
         return this.descriptors;
+    }
+
+    /**
+     * Can return a custom transformer. Otherwise null.
+     */
+    public Content2BeanTransformer getTransformer() {
+        return transformer;
+    }
+
+    public void setTransformer(Content2BeanTransformer transformer) {
+        this.transformer = transformer;
     }
 
 }

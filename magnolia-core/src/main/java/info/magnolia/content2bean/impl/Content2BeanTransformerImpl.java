@@ -56,6 +56,8 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
+import org.apache.commons.lang.ClassUtils;
+import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -65,8 +67,17 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  * @version $Id$
  */
-public class Content2BeanTransformerImpl implements Content2BeanTransformer {
+public class Content2BeanTransformerImpl implements Content2BeanTransformer, Content.ContentFilter  {
     private static final Logger log = LoggerFactory.getLogger(Content2BeanTransformerImpl.class);
+
+    public Content2BeanTransformerImpl() {
+        try {
+            Method onResolveClass = this.getClass().getDeclaredMethod("onResolveClass", new Class[]{TransformationState.class});
+            log.error("onResolceClass(state) is not supported anymore please override onResolveType(state, resolvedType) instead: " + onResolveClass);
+        } catch (NoSuchMethodException e) {
+            // As the class should not define this method everything is fine
+        }
+    }
 
     /**
      * Resolves in this order
@@ -87,9 +98,6 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
                 String className = node.getNodeData("class").getString();
                 Class clazz = ClassUtil.classForName(className);
                 typeDscr = getTypeMapping().getTypeDescriptor(clazz);
-            }
-            else {
-                typeDscr = onResolveClass(state);
             }
         }
         catch (RepositoryException e) {
@@ -119,6 +127,25 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             }
         }
 
+        typeDscr = onResolveType(state, typeDscr);
+
+        if(typeDscr != null){
+            // might be that the factory util defines a default implementation for interfaces
+            typeDscr = getTypeMapping().getTypeDescriptor(FactoryUtil.getImplementation(typeDscr.getType()));
+
+            // now that we know the property type we should delegate to the custom transformer if any defined
+            Content2BeanTransformer customTransformer = typeDscr.getTransformer();
+            if(customTransformer != null && customTransformer != this){
+                TypeDescriptor typeFoundByCustomTransformer = customTransformer.resolveType(state);
+                // if no specific type has been provided by the
+                if(typeFoundByCustomTransformer != TypeMapping.MAP_TYPE){
+                    // might be that the factory util defines a default implementation for interfaces
+                    Class implementation = FactoryUtil.getImplementation(typeFoundByCustomTransformer.getType());
+                    typeDscr = getTypeMapping().getTypeDescriptor(implementation);
+                }
+            }
+        }
+
         if (typeDscr == null || typeDscr.isMap() || typeDscr.isCollection()) {
             if(typeDscr== null && log.isDebugEnabled()){
                 log.debug("was not able to resolve type for node [{}] will use a map", node );
@@ -131,11 +158,18 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
         return typeDscr;
     }
 
+
     /**
-     * Override for custom resolving. In case this method is called no class property was set on the node
+     * Called once the type should have been resolved. The resolvedType might be
+     * null if no type has been resolved. After the call the FactoryUtil and
+     * custom transformers are used to get the final type.
      */
-    protected TypeDescriptor onResolveClass(TransformationState state) {
-        return null;
+    protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
+        return resolvedType;
+    }
+
+    public Collection getChildren(Content node) {
+        return node.getChildren(this);
     }
 
     /**
@@ -236,7 +270,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             }
             catch (Exception e) {
                 // do it better
-                log.error("can't set property", e);
+                log.error("can't set property [" + propertyName + "] to value [" + value + "] in bean [" + bean.getClass().getName() + "]");
             }
         }
 
@@ -264,13 +298,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer {
             if(value instanceof String){
                 String localeStr = (String) value;
                 if(StringUtils.isNotEmpty(localeStr)){
-                    String[] localeArr = StringUtils.split(localeStr, "_");
-                    if(localeArr.length ==1){
-                        return new Locale(localeArr[0]);
-                    }
-                    else if(localeArr.length == 2){
-                        return new Locale(localeArr[0],localeArr[1]);
-                    }
+                    return LocaleUtils.toLocale(localeStr);
                 }
             }
         }

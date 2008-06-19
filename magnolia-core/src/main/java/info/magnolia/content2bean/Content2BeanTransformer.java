@@ -36,6 +36,7 @@ package info.magnolia.content2bean;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
 
+import java.util.Collection;
 import java.util.Map;
 
 
@@ -44,7 +45,7 @@ import java.util.Map;
  * @author philipp
  * @version $Id$
  */
-public interface Content2BeanTransformer extends Content.ContentFilter {
+public interface Content2BeanTransformer {
     /**
      * Create a state object to share the state between the processor and transformer
      */
@@ -54,6 +55,11 @@ public interface Content2BeanTransformer extends Content.ContentFilter {
      * Resolves the class to use for the current node
      */
     public TypeDescriptor resolveType(TransformationState state) throws ClassNotFoundException;
+
+    /**
+     * Returns the children of the node to be transformed. This are normaly the direct children but might differ
+     */
+    public Collection getChildren(Content node);
 
     /**
      * Instantiates the bean
@@ -89,5 +95,6 @@ public interface Content2BeanTransformer extends Content.ContentFilter {
             return (Content2BeanTransformer) FactoryUtil.getSingleton(Content2BeanTransformer.class);
         }
     }
+
 
 }
