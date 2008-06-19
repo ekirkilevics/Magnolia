@@ -85,7 +85,6 @@ public final class SystemProperty {
      * @deprecated since 3.5 : this was used in log4j configuration, but we know replace tokens with the Magnolia
      *             properties, effectively making this propertly useless.
      */
-    public static final String MAGNOLIA_ROOT_SYSPROPERTY = "magnolia.root.sysproperty"; //$NON-NLS-1$
 
     /**
      * Utility class, don't instantiate.

@@ -34,34 +34,20 @@
 package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.ConfigurationException;
+import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.module.PropertyDefinition;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.Log4jConfigurer;
-import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
-import info.magnolia.module.model.ModuleDefinition;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.text.MessageFormat;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Properties;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -159,11 +145,6 @@ public class MgnlServletContextListener implements ServletContextListener {
         + "WEB-INF/config/magnolia.properties"; //$NON-NLS-1$
 
     /**
-     * The properties file containing the bean default implementations
-     */
-    private static final String MGNL_BEANS_PROPERTIES = "/mgnl-beans.properties";
-
-    /**
      * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
      */
     public void contextDestroyed(ServletContextEvent sce) {
@@ -174,11 +155,6 @@ public class MgnlServletContextListener implements ServletContextListener {
 
         Log4jConfigurer.shutdownLogging();
 
-        // Remove the web app root system property.
-        String param = SystemProperty.getProperty(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
-        if (StringUtils.isNotEmpty(param)) {
-            System.getProperties().remove(param);
-        }
     }
 
     /**
@@ -195,33 +171,16 @@ public class MgnlServletContextListener implements ServletContextListener {
 
         log.debug("rootPath is {}, webapp is {}", rootPath, webapp); //$NON-NLS-1$
 
-        // load mgnl-beans.properties first
-        loadBeanProperties();
+        String propertiesFilesString = getPropertiesFilesString(context, servername, webapp);
 
-        // complete or override with modules' properties
-        final ModuleManager moduleManager = ModuleManager.Factory.getInstance();
-        try {
-            final List moduleDefinitions = moduleManager.loadDefinitions();
-            loadModuleProperties(moduleDefinitions);
-        } catch (ModuleManagementException e) {
-            throw new RuntimeException(e); // TODO
-        }
-
-        // complete or override with WEB-INF properties files
-        loadPropertiesFiles(context, servername, rootPath, webapp);
-
-        // system property initialization
-        String magnoliaRootSysproperty = SystemProperty.getProperty(SystemProperty.MAGNOLIA_ROOT_SYSPROPERTY);
-        if (StringUtils.isNotEmpty(magnoliaRootSysproperty)) {
-            System.setProperty(magnoliaRootSysproperty, rootPath);
-            log.info("Setting the magnolia root system property: {} to {}", magnoliaRootSysproperty, rootPath); //$NON-NLS-1$
-        }
-
-        // complete or override with JVM system properties
-        overloadWithSystemProperties();
+        PropertiesInitializer.getInstance().loadAllProperties(propertiesFilesString, rootPath);
 
         Log4jConfigurer.initLogging();
 
+        startServer(context);
+    }
+
+    protected void startServer(final ServletContext context) {
         MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation(){
             public void exec() {
                 new ConfigLoader(context);
@@ -229,76 +188,55 @@ public class MgnlServletContextListener implements ServletContextListener {
         }, true);
     }
 
-    /**
-     * Load the properties defined in the module descriptors. They can get overridden later in the properties files in
-     * WEB-INF
-     */
-    protected void loadModuleProperties(List moduleDefinitions) {
-        final Iterator it = moduleDefinitions.iterator();
-        while (it.hasNext()) {
-            final ModuleDefinition module = (ModuleDefinition) it.next();
-            final Iterator propsIt = module.getProperties().iterator();
-            while (propsIt.hasNext()) {
-                final PropertyDefinition property = (PropertyDefinition) propsIt.next();
-                SystemProperty.setProperty(property.getName(), property.getValue());
-            }
-        }
-    }
 
-    protected void loadPropertiesFiles(ServletContext context, String servername, String rootPath, String webapp) {
-        String propertiesLocationString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
 
-        if (StringUtils.isEmpty(propertiesLocationString)) {
+    protected String getPropertiesFilesString(ServletContext context, String servername, String webapp) {
+        String propertiesFilesString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
+
+        if (StringUtils.isEmpty(propertiesFilesString)) {
             log.debug("{} value in web.xml is undefined, falling back to default: {}", MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);
-            propertiesLocationString = DEFAULT_INITIALIZATION_PARAMETER;
+            propertiesFilesString = DEFAULT_INITIALIZATION_PARAMETER;
         }
         else {
-            log.debug("{} value in web.xml is :'{}'", MAGNOLIA_INITIALIZATION_FILE, propertiesLocationString); //$NON-NLS-1$
+            log.debug("{} value in web.xml is :'{}'", MAGNOLIA_INITIALIZATION_FILE, propertiesFilesString); //$NON-NLS-1$
         }
+        propertiesFilesString = StringUtils.replace(propertiesFilesString, "${servername}", servername); //$NON-NLS-1$
+        propertiesFilesString = StringUtils.replace(propertiesFilesString, "${webapp}", webapp); //$NON-NLS-1$
 
-        String[] propertiesLocation = StringUtils.split(propertiesLocationString, ',');
 
-        // we should use the server name without the domain, sometimes it's hard to foresee if
-        // getLocalHost().getHostName() will return a qualified or unqualified server name
-        String fqServerName = null;
-        if (StringUtils.contains(servername, '.')) {
-            fqServerName = servername;
-            servername = StringUtils.substringBefore(servername, ".");
-        }
 
-        boolean found = false;
-        // attempt to load each properties file at the given locations in reverse order: first files in the list override the later ones
-        for (int j = propertiesLocation.length - 1; j >= 0; j--) {
-            String location = StringUtils.trim(propertiesLocation[j]);
 
-            location = StringUtils.replace(location, "${servername}", servername); //$NON-NLS-1$
-            location = StringUtils.replace(location, "${webapp}", webapp); //$NON-NLS-1$
 
-            if (loadPropertiesFile(rootPath, location)) {
-                found = true;
-            }
 
-            // compatibility with old version, in case a fully qualified server name was used
-            if (fqServerName != null) {
-                location = StringUtils.trim(propertiesLocation[j]);
-                if (StringUtils.contains(location, "${servername}")) {
-                    location = StringUtils.replace(location, "${servername}", fqServerName); //$NON-NLS-1$
-                    location = StringUtils.replace(location, "${webapp}", webapp); //$NON-NLS-1$
 
-                    if (loadPropertiesFile(rootPath, location)) {
-                        found = true;
-                        log.warn("Deprecated: found a configuration file using server name {}, you should use {} instead.", fqServerName, servername);
-                    }
-                }
-            }
-        }
 
-        if (!found) {
-            String msg = MessageFormat.format("No configuration found using location list {0}. [servername] is [{1}], [webapp] is [{2}] and base path is [{3}]", new Object[]{ArrayUtils.toString(propertiesLocation), servername, webapp, rootPath}); //$NON-NLS-1$
-            log.error(msg);
-            throw new ConfigurationException(msg);
-        }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        return propertiesFilesString;
     }
+
 
     protected String initWebappName(String rootPath) {
         String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
@@ -336,81 +274,4 @@ public class MgnlServletContextListener implements ServletContextListener {
         return servername;
     }
 
-    protected void loadBeanProperties() {
-        InputStream mgnlbeansStream = getClass().getResourceAsStream(MGNL_BEANS_PROPERTIES);
-
-        if (mgnlbeansStream != null) {
-            Properties mgnlbeans = new Properties();
-            try {
-                mgnlbeans.load(mgnlbeansStream);
-            }
-            catch (IOException e) {
-                log.error("Unable to load {} due to an IOException: {}", MGNL_BEANS_PROPERTIES, e.getMessage());
-            }
-            finally {
-                IOUtils.closeQuietly(mgnlbeansStream);
-            }
-
-            for (Iterator iter = mgnlbeans.keySet().iterator(); iter.hasNext();) {
-                String key = (String) iter.next();
-                SystemProperty.setProperty(key, mgnlbeans.getProperty(key));
-            }
-
-        }
-        else {
-            log.warn("{} not found in the classpath. Check that all the needed implementation classes are defined in your custom magnolia.properties file.", MGNL_BEANS_PROPERTIES);
-        }
-    }
-
-    /**
-     * Try to load a magnolia.properties file
-     * @param rootPath
-     * @param location
-     * @return
-     */
-    protected boolean loadPropertiesFile(String rootPath, String location) {
-        File initFile = new File(rootPath, location);
-
-        if (!initFile.exists() || initFile.isDirectory()) {
-            log.debug("Configuration file not found with path [{}]", initFile.getAbsolutePath()); //$NON-NLS-1$
-            return false;
-        }
-
-        InputStream fileStream = null;
-        try {
-            fileStream = new FileInputStream(initFile);
-        }
-        catch (FileNotFoundException e1) {
-            log.debug("Configuration file not found with path [{}]", initFile.getAbsolutePath());
-            return false;
-        }
-
-        try {
-            SystemProperty.getProperties().load(fileStream);
-            log.info("Loading configuration at {}", initFile.getAbsolutePath());//$NON-NLS-1$
-        }
-        catch (Exception e) {
-            log.error(e.getMessage(), e);
-            return false;
-        }
-        finally {
-            IOUtils.closeQuietly(fileStream);
-        }
-        return true;
-    }
-
-    /**
-     * Overload the properties with set system properties
-     */
-    protected void overloadWithSystemProperties() {
-        Iterator it = SystemProperty.getProperties().keySet().iterator();
-        while (it.hasNext()) {
-            String key = (String) it.next();
-            if (System.getProperties().containsKey(key)) {
-                log.info("system property found: {}", key);
-                String value = System.getProperty(key);
-                SystemProperty.setProperty(key, value);
-            }
-        }
-    }
 }
