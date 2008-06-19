@@ -34,7 +34,10 @@
 package info.magnolia.test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.module.ModuleUtil;
+import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemRepositoryStrategy;
@@ -42,10 +45,12 @@ import info.magnolia.repository.Provider;
 import info.magnolia.test.mock.MockWebContext;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.InputStream;
+import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
+
+import javax.jcr.ImportUUIDBehavior;
 
 import junit.framework.TestCase;
 
@@ -60,6 +65,9 @@ import org.apache.log4j.Logger;
  * @version $Revision: $ ($Author: $)
  */
 public abstract class RepositoryTestCase extends TestCase {
+
+    private static final String JACKRABBIT_REPO_CONF_PROPERTY = "magnolia.repositories.jackrabbit.config";
+    private static final String EXTRACTED_REPO_CONF_FILE = "target/repo-conf/extracted.xml";
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -77,10 +85,9 @@ public abstract class RepositoryTestCase extends TestCase {
         ctx.setRepositoryStrategy(new SystemRepositoryStrategy(ctx));
         MgnlContext.setInstance(ctx);
 
-        File initFile = getPropertiesFile();
         InputStream fileStream = null;
         try {
-            fileStream = new FileInputStream(initFile);
+            fileStream = getPropertiesStream();
             SystemProperty.getProperties().load(fileStream);
         } finally {
             IOUtils.closeQuietly(fileStream);
@@ -88,13 +95,22 @@ public abstract class RepositoryTestCase extends TestCase {
 
         ContentRepository.REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
         ContentRepository.REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
+        // extract resource to the filesystem (jackrabbit can't use a stream)
+        String configFile = SystemProperty.getProperty(JACKRABBIT_REPO_CONF_PROPERTY);
+        String targetFilename = Path.getAbsoluteFileSystemPath(EXTRACTED_REPO_CONF_FILE);
+        File targetFile = new File(targetFilename);
+        if(!targetFile.exists()){
+            URL configFileURL = ClasspathResourcesUtil.getResource(configFile);
+            FileUtils.copyURLToFile(configFileURL, targetFile);
+        }
+        SystemProperty.setProperty(JACKRABBIT_REPO_CONF_PROPERTY, EXTRACTED_REPO_CONF_FILE);
         ContentRepository.init();
 
         logger.setLevel(originalLogLevel);
     }
 
-    protected File getPropertiesFile() {
-        return new File("target/test-classes/test-magnolia.properties");
+    protected InputStream getPropertiesStream() {
+        return this.getClass().getResourceAsStream("/test-magnolia.properties");
     }
 
     protected void tearDown() throws Exception {
@@ -120,5 +136,12 @@ public abstract class RepositoryTestCase extends TestCase {
         logger.setLevel(originalLogLevel);
     }
 
+    protected void bootstrapSingleResource(String resource) throws Exception{
+        ModuleUtil.bootstrap(new String[]{resource}, false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
+    }
 
+    protected void bootstrap(ClasspathResourcesUtil.Filter filter) throws Exception{
+        String[] resourcesToBootstrap = ClasspathResourcesUtil.findResources(filter);
+        ModuleUtil.bootstrap(resourcesToBootstrap, false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
+    }
 }
