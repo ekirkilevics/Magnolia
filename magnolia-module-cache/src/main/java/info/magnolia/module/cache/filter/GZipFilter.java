@@ -33,15 +33,16 @@
  */
 package info.magnolia.module.cache.filter;
 
-import info.magnolia.cms.filters.AbstractMgnlFilter;
+import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.util.zip.GZIPOutputStream;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.zip.GZIPOutputStream;
 
 /**
  * This GZipFilter does not take care of the Accept-Encoding request header. The CacheFilter will
@@ -55,7 +56,7 @@ import java.util.zip.GZIPOutputStream;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class GZipFilter extends AbstractMgnlFilter {
+public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // we can't tee the outputstream, because we need to setContentLength before writing content ...
