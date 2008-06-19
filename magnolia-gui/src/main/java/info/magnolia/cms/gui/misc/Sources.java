@@ -68,6 +68,10 @@ public class Sources {
 
         html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
         html.append(contextPath);
+        html.append("/.magnolia/pages/messages." + MgnlContext.getUser().getLanguage() + ".js\"></script>"); //$NON-NLS-1$
+
+        html.append("<script type=\"text/javascript\" src=\""); //$NON-NLS-1$
+        html.append(contextPath);
         html.append("/.resources/admin-js/dialogs/dialogs.js\"></script>"); //$NON-NLS-1$
 
         html.append("<link rel=\"stylesheet\" type=\"text/css\" media=\"all\" href=\"");
