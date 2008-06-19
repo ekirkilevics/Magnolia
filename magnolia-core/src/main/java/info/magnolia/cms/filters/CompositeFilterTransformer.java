@@ -33,14 +33,7 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.TypeDescriptor;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
-
-import java.util.Iterator;
-import java.util.Map;
+import info.magnolia.content2bean.impl.CollectionPropertyHidingTransformer;
 
 /**
  * A special content2bean transformer for filters. For the CompositeFilter we omit the extra filters node.
@@ -48,33 +41,9 @@ import java.util.Map;
  * @author Philipp Bracher
  * @version $Revision: $ ($Author: $)
  */
-class FilterContent2BeanTransformer extends Content2BeanTransformerImpl {
+public class CompositeFilterTransformer extends CollectionPropertyHidingTransformer {
 
-    FilterContent2BeanTransformer() {
-    }
-
-    public void initBean(TransformationState state, Map values) throws Content2BeanException {
-        super.initBean(state, values);
-
-        Object bean = state.getCurrentBean();
-        // we do not have a filters subnode again
-        if (bean instanceof CompositeFilter) {
-            for (Iterator iter = values.values().iterator(); iter.hasNext();) {
-                Object value = iter.next();
-                if (value instanceof MgnlFilter) {
-                    ((CompositeFilter) bean).addFilter((MgnlFilter) value);
-                }
-            }
-        }
-    }
-
-    /**
-     * The default class to use is MagnoliaMainFilter
-     */
-    protected TypeDescriptor onResolveClass(TransformationState state) {
-        if (state.getCurrentContent().isNodeType(ItemType.CONTENT.getSystemName())) {
-            return this.getTypeMapping().getTypeDescriptor(CompositeFilter.class);
-        }
-        return super.onResolveClass(state);
+    public CompositeFilterTransformer() {
+        super(CompositeFilter.class, "filters");
     }
 }
