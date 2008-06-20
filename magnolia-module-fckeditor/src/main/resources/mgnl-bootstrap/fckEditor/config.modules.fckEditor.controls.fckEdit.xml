@@ -9,9 +9,6 @@
   <sv:property sv:name="class" sv:type="String">
     <sv:value>info.magnolia.cms.gui.dialog.DialogFckEdit</sv:value>
   </sv:property>
-  <sv:property sv:name="name" sv:type="String">
-    <sv:value>fckEdit</sv:value>
-  </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
