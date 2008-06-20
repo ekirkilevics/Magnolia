@@ -35,6 +35,7 @@ package info.magnolia.context;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.search.QueryManager;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -73,6 +74,16 @@ public class LifeTimeJCRSessionUtil {
         else {
             // we handle the session
             return repositoryStrategy.getHierarchyManager(repository, ContentRepository.getDefaultWorkspace(repository));
+        }
+    }
+
+    public static QueryManager getQueryManager(String repository) {
+        if (useSystemContext) {
+            return MgnlContext.getSystemContext().getQueryManager(repository);
+        }
+        else {
+            // we handle the session
+            return repositoryStrategy.getQueryManager(repository, ContentRepository.getDefaultWorkspace(repository));
         }
     }
 
