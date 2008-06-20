@@ -258,7 +258,7 @@ public class MgnlNode implements Node {
      */
     public Property setProperty(String propertyName, String valueStr, int type) throws JcrException {
         if (type == PropertyType.NAME) {
-            log.warn("setProperty(" + propertyName + ", " + valueStr + " with type PropertyType.NAME, will switch to PropertyType.STRING ...");
+            log.debug("setProperty(" + propertyName + ", " + valueStr + " with type PropertyType.NAME, will switch to PropertyType.STRING ...");
             type = PropertyType.STRING;
         }
 
