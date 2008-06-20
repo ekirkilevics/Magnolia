@@ -349,6 +349,12 @@ for Java Content Repositories (JCR).
         </executions>
       </plugin>
       <plugin>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <useManifestOnlyJar>false</useManifestOnlyJar>
+        </configuration>
+      </plugin>
+      <plugin>
         <groupId>info.magnolia</groupId>
         <artifactId>maven-setproperty-plugin</artifactId>
         <version>1.0.1</version>
