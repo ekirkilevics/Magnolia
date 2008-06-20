@@ -48,8 +48,8 @@ import javax.servlet.http.HttpServletResponse;
  * This GZipFilter does not take care of the Accept-Encoding request header. The CacheFilter will
  * take care of serving the unzipped content if appropriate.
  *
- * By the default, the Magnolia main filter is not dispatched to in case of include requests - if
- * this is the case this filter has to be bypassed for such requests !
+ * <strong>By default, the Magnolia main filter is not dispatched to in case of include requests - if
+ * this is the case this filter has to be bypassed for such requests !</strong>
  *
  * @see info.magnolia.module.cache.filter.StandaloneGZipFilter if the cache filter is not in use.
  *
