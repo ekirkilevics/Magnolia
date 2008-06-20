@@ -44,9 +44,10 @@ import info.magnolia.module.delta.WebXmlConditionsUtil;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
+ *
  * @author fgiust
+ * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {

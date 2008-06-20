@@ -34,9 +34,10 @@
 package info.magnolia.module.cache;
 
 /**
- * Used to determine if the expiration headers must be set
- * @author pbracher
+ * Used to determine if the expiration headers must be set.
  *
+ * @author pbracher
+ * @version $Revision: $ ($Author: $)
  */
 public interface BrowserCachePolicy {
 

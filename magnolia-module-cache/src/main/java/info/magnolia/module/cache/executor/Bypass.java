@@ -44,9 +44,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Bypass all caching functionality
+ * Bypasses all caching functionality.
+ * 
  * @author pbracher
- *
+ * @version $Revision: $ ($Author: $)
  */
 public class Bypass extends AbstractExecutor {
 

@@ -39,7 +39,7 @@ import java.util.Map;
 /**
  * Each CacheConfiguration holds a CachePolicy, a FlushPolicy and a
  * BrowserCachePolicy. Based on the outcome of the cachePolicy the defined
- * executors will be called
+ * executors will be called.
  *
  * @see CachePolicy
  * @see FlushPolicy

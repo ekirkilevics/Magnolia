@@ -53,9 +53,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.collections.MultiMap;
 
 /**
- * Serve the content from the cache.
- * @author pbracher
+ * Serves the content from the cache.
  *
+ * @author pbracher
+ * @version $Revision: $ ($Author: $)
  */
 public class UseCache extends AbstractExecutor {
 

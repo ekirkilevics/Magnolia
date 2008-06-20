@@ -36,9 +36,10 @@ package info.magnolia.module.cache.executor;
 import info.magnolia.content2bean.impl.CollectionPropertyHidingTransformer;
 
 /**
- * Omit the executors subnode
- * @author pbracher
+ * Omit the executors subnode.
  *
+ * @author pbracher
+ * @version $Revision: $ ($Author: $)
  */
 public class CompositeExecutorTransformer extends CollectionPropertyHidingTransformer {
     public CompositeExecutorTransformer() {

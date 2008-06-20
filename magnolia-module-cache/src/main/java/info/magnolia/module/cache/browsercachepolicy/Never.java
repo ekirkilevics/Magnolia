@@ -38,14 +38,14 @@ import info.magnolia.module.cache.BrowserCachePolicyResult;
 import info.magnolia.module.cache.CachePolicyResult;
 
 /**
- * The pages are sent by using no cache headers
- * @author pbracher
+ * The pages are sent by using no cache headers.
  *
+ * @author pbracher
+ * @version $Revision: $ ($Author: $)
  */
 public class Never implements BrowserCachePolicy {
 
-    public BrowserCachePolicyResult canCacheOnClient(
-            CachePolicyResult cachePolicyResult) {
+    public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
         return BrowserCachePolicyResult.NO_CACHE;
     }
 

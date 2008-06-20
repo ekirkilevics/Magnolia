@@ -35,8 +35,9 @@ package info.magnolia.module.cache;
 
 /**
  * Transports the expiration date.
+ * 
  * @author pbracher
- *
+ * @version $Revision: $ ($Author: $)
  */
 public class BrowserCachePolicyResult {
     public static BrowserCachePolicyResult NO_CACHE = new BrowserCachePolicyResult(-1);

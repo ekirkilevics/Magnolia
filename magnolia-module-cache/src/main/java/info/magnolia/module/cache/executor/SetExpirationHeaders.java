@@ -54,6 +54,7 @@ import org.apache.commons.lang.time.FastDateFormat;
  * TODO : avoid duplication with CacheHeadersFilter ???
  * 
  * @author pbracher
+ * @version $Revision: $ ($Author: $)
  */
 public class SetExpirationHeaders extends AbstractExecutor {
     private final FastDateFormat formatter = FastDateFormat.getInstance("EEE, d MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.ENGLISH);

@@ -53,9 +53,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.output.TeeOutputStream;
 
 /**
- * Wrap the response and store the content in a cache Entry
- * @author pbracher
+ * Wraps the response and stores the content in a cache Entry.
  *
+ * @author pbracher
+ * @version $Revision: $ ($Author: $)
  */
 public class Store extends AbstractExecutor {
 

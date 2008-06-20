@@ -42,9 +42,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Executes something based on the outcome of the CachePolicy (store, bypass, server, set expiration headers)
- * @author pbracher
+ * Executes something based on the outcome of the CachePolicy (store, bypass, server, set expiration headers).
  *
+ * @author pbracher
+ * @version $Revision: $ ($Author: $)
  */
 public interface CachePolicyExecutor {
 

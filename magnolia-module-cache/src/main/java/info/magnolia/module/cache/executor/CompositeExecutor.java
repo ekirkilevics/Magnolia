@@ -48,9 +48,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.ArrayUtils;
 
 /**
- * A list of executors (for combining and ordering them)
- * @author pbracher
+ * A list of executors (for combining and ordering them).
  *
+ * @author pbracher
+ * @version $Revision: $ ($Author: $)
  */
 public class CompositeExecutor implements CachePolicyExecutor {
 

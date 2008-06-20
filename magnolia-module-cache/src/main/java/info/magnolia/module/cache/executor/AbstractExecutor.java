@@ -38,8 +38,9 @@ import info.magnolia.module.cache.CachePolicyExecutor;
 
 /**
  * The cache configuration is passed to the executor.
- * @author pbracher
  *
+ * @author pbracher
+ * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractExecutor implements CachePolicyExecutor {
 
