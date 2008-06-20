@@ -51,8 +51,9 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.time.FastDateFormat;
 
 /**
+ * TODO : avoid duplication with CacheHeadersFilter ???
+ * 
  * @author pbracher
- *
  */
 public class SetExpirationHeaders extends AbstractExecutor {
 
@@ -99,6 +100,7 @@ public class SetExpirationHeaders extends AbstractExecutor {
         } else {
             response.setHeader("Pragma", "");
             response.setHeader("Cache-Control", "max-age=" + clientCacheResult.getExpirationDate() / 1000 + ", public");
+            // TODO : use setDateHeader ?
             response.setHeader("Expires", formatter.format(new Date(clientCacheResult.getExpirationDate())));
         }
     }
