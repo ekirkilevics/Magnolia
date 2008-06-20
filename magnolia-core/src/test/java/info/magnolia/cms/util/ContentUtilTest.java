@@ -34,12 +34,16 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
+
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -90,6 +94,40 @@ public class ContentUtilTest extends TestCase {
         verify(visitor);
     }
 
+    public void testDeleteAndRemoveParentsIfAnOtherChild() throws IOException, RepositoryException{
+        String content = "/node1/child1\n" +
+            "/node1/child2\n";
+
+        HierarchyManager hm = MockUtil.createHierarchyManager(content);
+
+        Content child1 = hm.getContent("/node1/child1");
+        ContentUtil.deleteAndRemoveEmptyParents(child1);
+        assertTrue("node1 should not be deleted because it has children", hm.isExist("/node1"));
+
+    }
+
+    public void testDeleteAndRemoveParentsIfNoOtherChild() throws IOException, RepositoryException{
+        String content = "/node1/child1";
+        HierarchyManager hm = MockUtil.createHierarchyManager(content);
+
+        Content child1 = hm.getContent("/node1/child1");
+        ContentUtil.deleteAndRemoveEmptyParents(child1);
+        assertTrue("node1 must be deleted because it has no children", !hm.isExist("/node1"));
+    }
+
+    public void testDeleteAndRemoveParentsWithLevel() throws IOException, RepositoryException{
+        String content = "/node1/child1/subchild1";
+
+        HierarchyManager hm = MockUtil.createHierarchyManager(content);
+
+        Content subchild1 = hm.getContent("/node1/child1/subchild1");
+        ContentUtil.deleteAndRemoveEmptyParents(subchild1,1);
+
+        assertTrue("child1 must be deleted because it has no children", !hm.isExist("/node1/child1"));
+        assertTrue("node1 must existe because the level was defined", hm.isExist("/node1"));
+
+    }
+
     private final static class ContentTypeRejector implements Content.ContentFilter {
         private final List<String> rejectedTypes;
 
@@ -105,5 +143,7 @@ public class ContentUtilTest extends TestCase {
             }
         }
     }
+
+
 
 }
