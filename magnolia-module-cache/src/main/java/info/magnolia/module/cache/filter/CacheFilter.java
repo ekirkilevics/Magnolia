@@ -100,8 +100,7 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
         }
 
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        CachePolicyResult cachePolicyResult = null;
-        cachePolicyResult = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState, cacheConfig.getFlushPolicy());
+        final CachePolicyResult cachePolicyResult = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState, cacheConfig.getFlushPolicy());
 
         log.debug("Cache policy result: {}", cachePolicyResult);
 
