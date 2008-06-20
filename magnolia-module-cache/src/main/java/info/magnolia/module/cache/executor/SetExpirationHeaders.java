@@ -56,34 +56,7 @@ import org.apache.commons.lang.time.FastDateFormat;
  * @author pbracher
  */
 public class SetExpirationHeaders extends AbstractExecutor {
-
-    /**
-     * Number of minutes this item must be kept in cache.
-     */
-    private long expirationMinutes = 1440;
-
-    /**
-     * Cache should be avoided for filtered items.
-     */
-    private boolean nocache;
-
-    private FastDateFormat formatter = FastDateFormat.getInstance("EEE, d MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.ENGLISH);
-
-    /**
-     * Sets the expirationMinutes.
-     * @param expirationMinutes the expirationMinutes to set
-     */
-    public void setExpirationMinutes(long expirationMinutes) {
-        this.expirationMinutes = expirationMinutes;
-    }
-
-    /**
-     * Sets the nocache.
-     * @param nocache the nocache to set
-     */
-    public void setNocache(boolean nocache) {
-        this.nocache = nocache;
-    }
+    private final FastDateFormat formatter = FastDateFormat.getInstance("EEE, d MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.ENGLISH);
 
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
