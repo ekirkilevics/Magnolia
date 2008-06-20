@@ -73,9 +73,14 @@ public class WorkflowModule extends AbstractAdminModule {
     private boolean backupWorkItems = false;
 
     /**
-     * Is the saving deferred? This increases the response time.
+     * Use life time jcr sessions or a session per operation
      */
-    private boolean deferredExpressionStorage = false;
+    private boolean useLifeTimeJCRSession = true;
+
+    /**
+     * Cleanup empty parent nodes (for expressions, workitems)
+     */
+    private boolean cleanup = false;
 
     protected void onInit() {
         try {
@@ -92,7 +97,7 @@ public class WorkflowModule extends AbstractAdminModule {
     protected void startEngine() {
         try {
             log.info("Starting openwfe engine");
-            wfEngine = new JCRPersistedEngine(deferredExpressionStorage);
+            wfEngine = new JCRPersistedEngine();
             wfEngine.registerParticipant(new MgnlParticipant(WorkflowConstants.PARTICIPANT_PREFIX_USER+".*"));
             wfEngine.registerParticipant(new MgnlParticipant(WorkflowConstants.PARTICIPANT_PREFIX_GROUP+".*"));
             wfEngine.registerParticipant(new MgnlParticipant(WorkflowConstants.PARTICIPANT_PREFIX_ROLE+".*"));
@@ -105,7 +110,7 @@ public class WorkflowModule extends AbstractAdminModule {
 
     protected void initializeWorkItemStore() {
         try {
-            workItemStore = new JCRWorkItemStore();
+            workItemStore = new JCRWorkItemStore(this.isUseLifeTimeJCRSession(), this.isCleanup(), this.isBackupWorkItems());
         }
         catch (Exception e) {
             log.error("can't initialize the workflow util", e);
@@ -143,11 +148,6 @@ public class WorkflowModule extends AbstractAdminModule {
         return instance.workItemStore;
     }
 
-    // an easy and ugly way to access this config param
-    public static boolean backupWorkitems() {
-        return instance.backupWorkItems;
-    }
-
     public static FlowDefinitionManager getFlowDefinitionManager() {
         return (FlowDefinitionManager) FactoryUtil.getSingleton(FlowDefinitionManager.class);
     }
@@ -162,14 +162,24 @@ public class WorkflowModule extends AbstractAdminModule {
         this.backupWorkItems = backupWorkItems;
     }
 
-
-    public boolean isDeferredExpressionStorage() {
-        return this.deferredExpressionStorage;
+    public boolean isUseLifeTimeJCRSession() {
+        return useLifeTimeJCRSession;
     }
 
+    public void setUseLifeTimeJCRSession(boolean useLifeTimeJCRSession) {
+        this.useLifeTimeJCRSession = useLifeTimeJCRSession;
+    }
 
-    public void setDeferredExpressionStorage(boolean deferredExpressionStorage) {
-        this.deferredExpressionStorage = deferredExpressionStorage;
+    public boolean isCleanup() {
+        return cleanup;
+    }
+
+    public void setCleanup(boolean cleanup) {
+        this.cleanup = cleanup;
+    }
+
+    public static WorkflowModule getInstance() {
+        return instance;
     }
 
 }

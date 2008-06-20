@@ -35,29 +35,34 @@ package info.magnolia.module.workflow.jcr;
 
 import info.magnolia.beancoder.MgnlNode;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
-import info.magnolia.module.workflow.WorkflowModule;
 import info.magnolia.module.workflow.beancoder.OwfeJcrBeanCoder;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.ValueFactory;
+
 import openwfe.org.engine.expressions.FlowExpressionId;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.StringAttribute;
 import openwfe.org.util.beancoder.BeanCoderException;
 import openwfe.org.worklist.store.StoreException;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.RepositoryException;
-import javax.jcr.ValueFactory;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
 
 
 /**
@@ -74,17 +79,26 @@ public class JCRWorkItemStore {
     private static final String BACKUP_REL = "backup";
     private static final String BACKUP = "/" + BACKUP_REL;
 
-    private final HierarchyManagerWrapper hm;
-    private final boolean shouldBackupWorkItems;
+    private boolean shouldBackupWorkItems = false;
+
+    private boolean useLifeTimeJCRSession = true;
+
+    private boolean cleanUp = false;
+
+    public JCRWorkItemStore(boolean useLifeTimeJCRSession, boolean cleanUp,
+            boolean shouldBackupWorkItems) {
+        this.useLifeTimeJCRSession = useLifeTimeJCRSession;
+        this.cleanUp = cleanUp;
+        this.shouldBackupWorkItems = shouldBackupWorkItems;
+    }
 
     public JCRWorkItemStore() throws Exception {
-        this.hm = new HierarchyManagerWrapperDelegator(WorkflowConstants.WORKSPACE_STORE);
+        HierarchyManager hm = getHierarchyManager();
 
-        shouldBackupWorkItems = WorkflowModule.backupWorkitems();
         if (shouldBackupWorkItems) {
             // ensure the backup directory is there.
             if (!hm.isExist(BACKUP)) {
-                hm.createPath(BACKUP, ItemType.CONTENT);
+                ContentUtil.createPath(hm, BACKUP, ItemType.CONTENT);
                 hm.save();
                 log.info("Created " + BACKUP + " in workflow store.");
             }
@@ -92,33 +106,45 @@ public class JCRWorkItemStore {
     }
 
     /**
+     * @return
+     */
+    protected HierarchyManager getHierarchyManager() {
+        if(useLifeTimeJCRSession){
+            return LifeTimeJCRSessionUtil.getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
+        }
+        else{
+            return MgnlContext.getSystemContext().getHierarchyManager(WorkflowConstants.WORKSPACE_STORE);
+        }
+    }
+
+    /**
      * Deletes or moves a workItem to the backup folder.
      */
-    public void removeWorkItem(FlowExpressionId fei) throws StoreException {
-        synchronized (this.hm) {
-            try {
-                Content ct = getWorkItemById(fei);
-                if (ct != null) {
-                    // TODO : this behaviour could be hidden/wrapped in a special HierarchyManager
-                    if (!shouldBackupWorkItems) {
-                        ct.delete();
-                    } else {
-                        final ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
-                        ct.setNodeData("isBackup", vf.createValue(true));
-                        final Content parent = ct.getParent();
-                        final String pathInBackup = BACKUP + parent.getHandle();
-                        hm.createPath(pathInBackup, ItemType.WORKITEM);
-                        hm.save();
-                        hm.moveTo(ct.getHandle(), BACKUP + ct.getHandle());
-                        // TODO : MAGNOLIA-1225 : we should only save here, once move uses session instead of workspace
-                    }
+    public synchronized void removeWorkItem(FlowExpressionId fei) throws StoreException {
+        try {
+            HierarchyManager hm = getHierarchyManager();
+            Content ct = getWorkItemById(fei);
+            if (ct != null) {
+                // TODO : this behaviour could be hidden/wrapped in a special HierarchyManager
+                if (!shouldBackupWorkItems) {
+                    ContentUtil.deleteAndRemoveEmptyParents(ct,1);
+                } else {
+                    final ValueFactory vf = ct.getJCRNode().getSession().getValueFactory();
+                    ct.setNodeData("isBackup", vf.createValue(true));
+                    final Content parent = ct.getParent();
+                    final String pathInBackup = BACKUP + parent.getHandle();
+                    ContentUtil.createPath(hm, pathInBackup, ItemType.WORKITEM);
                     hm.save();
-                    log.debug("work item removed or moved to /backup");
+                    hm.moveTo(ct.getHandle(), BACKUP + ct.getHandle());
+                    // TODO : MAGNOLIA-1225 : we should only save here, once move uses session instead of workspace
                 }
 
-            } catch (Exception e) {
-                log.error("exception when unstoring workitem:" + e, e);
+                hm.save();
+                log.debug("work item removed or moved to /backup");
             }
+
+        } catch (Exception e) {
+            log.error("exception when unstoring workitem:" + e, e);
         }
     }
 
@@ -184,7 +210,7 @@ public class JCRWorkItemStore {
     public Content getWorkItemById(FlowExpressionId fei) {
         String path = createPathFromId(fei);
         try {
-            return this.hm.getContent(path);
+            return getHierarchyManager().getContent(path);
         }
         catch (Exception e) {
             log.error("get work item by id failed, path = " + path, e);
@@ -202,7 +228,7 @@ public class JCRWorkItemStore {
         if (StringUtils.isNotEmpty(path) && StringUtils.indexOf(path, "/") != 0) {
             path = "/" + path;
         }
-        return this.hm.isExist(path);
+        return getHierarchyManager().isExist(path);
     }
 
     /**
@@ -258,50 +284,48 @@ public class JCRWorkItemStore {
      * @param arg0 TODO : this parameter is not used ...
      * @param wi   the work item to be stored
      */
-    public void storeWorkItem(String arg0, InFlowWorkItem wi) throws StoreException {
-        synchronized (this.hm) {
-            try {
+    public synchronized void storeWorkItem(String arg0, InFlowWorkItem wi) throws StoreException {
+        try {
+            HierarchyManager hm = getHierarchyManager();
+            // delete it if already exist
+            if (hasWorkItem(wi.getId())) {
+                // do not use removeWorkItem() since it persist changes immedietely
+                hm.delete(createPathFromId(wi.getId()));
+            }
 
-                // delete it if already exist
-                if (hasWorkItem(wi.getId())) {
-                    // do not use removeWorkItem() since it persist changes immedietely
-                    this.hm.delete(createPathFromId(wi.getId()));
-                }
+            // create path from work item id
+            String path = createPathFromId(wi.getId());
+            if (log.isDebugEnabled()) {
+                log.debug("storing workitem with path = " + path);
+            }
 
-                // create path from work item id
-                String path = createPathFromId(wi.getId());
-                if (log.isDebugEnabled()) {
-                    log.debug("storing workitem with path = " + path);
-                }
+            Content newc = ContentUtil.createPath(hm,path, ItemType.WORKITEM);
 
-                Content newc = hm.createPath(path, ItemType.WORKITEM);
+            ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
+            String sId = wi.getLastExpressionId().toParseableString();
 
-                ValueFactory vf = newc.getJCRNode().getSession().getValueFactory();
-                String sId = wi.getLastExpressionId().toParseableString();
+            newc.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(sId));
+            newc.createNodeData(WorkflowConstants.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
 
-                newc.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(sId));
-                newc.createNodeData(WorkflowConstants.NODEDATA_PARTICIPANT, vf.createValue(wi.getParticipantName()));
-
-                StringAttribute assignTo = (StringAttribute) wi.getAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO);
-                if (assignTo != null) {
-                    String s = assignTo.toString();
-                    if (s.length() > 0) {
-                        newc.createNodeData(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, vf.createValue(s));
-                    }
-                }
-
-                // convert to xml string
-                encodeWorkItemToNode(wi, newc);
-                hm.save();
-
-                if (log.isDebugEnabled()) {
-                    log.debug("store work item ok. ");
+            StringAttribute assignTo = (StringAttribute) wi.getAttribute(WorkflowConstants.ATTRIBUTE_ASSIGN_TO);
+            if (assignTo != null) {
+                String s = assignTo.toString();
+                if (s.length() > 0) {
+                    newc.createNodeData(WorkflowConstants.ATTRIBUTE_ASSIGN_TO, vf.createValue(s));
                 }
             }
-            catch (Exception e) {
-                log.error("store work item failed", e);
-                throw new StoreException(e.toString());
+
+            // convert to xml string
+            encodeWorkItemToNode(wi, newc);
+            hm.save();
+
+            if (log.isDebugEnabled()) {
+                log.debug("store work item ok. ");
             }
+        }
+        catch (Exception e) {
+            log.error("store work item failed", e);
+            throw new StoreException(e.toString());
         }
     }
 
@@ -339,7 +363,7 @@ public class JCRWorkItemStore {
 
                 // check for stale data.
                 try {
-                    if (!hm.isExist(ct.getHandle())) {
+                    if (!getHierarchyManager().isExist(ct.getHandle())) {
                         if (log.isDebugEnabled()) {
                             log.debug(ct.getHandle() + " does not exist anymore.");
                         }

@@ -34,16 +34,19 @@
 package info.magnolia.module.workflow.jcr;
 
 import info.magnolia.module.workflow.WorkflowConstants;
+import info.magnolia.module.workflow.WorkflowModule;
+
+import java.util.Collections;
+
 import openwfe.org.ServiceException;
 import openwfe.org.embed.impl.engine.PersistedEngine;
 import openwfe.org.engine.Definitions;
 import openwfe.org.engine.expool.ExpressionPool;
 import openwfe.org.engine.participants.Participant;
 import openwfe.org.engine.participants.ParticipantMap;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collections;
 
 
 /**
@@ -56,19 +59,20 @@ public class JCRPersistedEngine extends PersistedEngine {
 
     private final JCRExpressionStore eStore;
 
-    public JCRPersistedEngine(final boolean storageDeferred) throws ServiceException {
-        this(WorkflowConstants.ENGINE_NAME, true, storageDeferred);
+    public JCRPersistedEngine() throws ServiceException {
+        this(WorkflowConstants.ENGINE_NAME, true);
     }
 
     /**
      * Instantiates a JCR persisted engine with the given name
      */
-    public JCRPersistedEngine(final String engineName, final boolean cached, final boolean storageDeferred) throws ServiceException {
+    public JCRPersistedEngine(final String engineName, final boolean cached) throws ServiceException {
         super(engineName, cached);
         super.setDaemon(true);
 
         // create expression store and add it to context
-        this.eStore = new JCRExpressionStore(storageDeferred);
+        WorkflowModule module = WorkflowModule.getInstance();
+        this.eStore = new JCRExpressionStore(module.isUseLifeTimeJCRSession(), module.isCleanup());
 
         this.eStore.init(Definitions.S_EXPRESSION_STORE, getContext(), Collections.EMPTY_MAP);
 

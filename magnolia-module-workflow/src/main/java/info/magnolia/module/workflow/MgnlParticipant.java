@@ -33,16 +33,15 @@
  */
 package info.magnolia.module.workflow;
 
+import info.magnolia.cms.util.ExceptionHandlingOperation;
+import info.magnolia.cms.util.SystemContextOperationUtil;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.SystemContext;
-import info.magnolia.context.SystemRepositoryStrategy;
 import openwfe.org.embed.impl.engine.AbstractEmbeddedParticipant;
 import openwfe.org.engine.workitem.CancelItem;
 import openwfe.org.engine.workitem.InFlowWorkItem;
 import openwfe.org.engine.workitem.WorkItem;
-import openwfe.org.worklist.store.StoreException;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.lang.StringUtils;
@@ -85,9 +84,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             // remove workitem from inbox
             WorkflowUtil.getWorkItemStore().removeWorkItem(cancelItem.getId());
         }
-        // else {
-        // // ignore
-        // }
+        MgnlContext.release();
     }
 
     /**
@@ -106,90 +103,57 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
 
         log.debug("participant name = {}", parName);
 
-        if (parName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND)) // handle commands
-        {
-            log.info("consume command {}...", parName);
+        Context originalContext = null;
+        if (MgnlContext.hasInstance()) {
+            originalContext = MgnlContext.getInstance();
+        }
+        try{
 
-            Context originalContext = null;
-            if (MgnlContext.hasInstance()) {
-                originalContext = MgnlContext.getInstance();
-            }
+            if (parName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND)){
+                log.info("consume command {}...", parName);
 
-            try {
-                String name = StringUtils.removeStart(parName, WorkflowConstants.PARTICIPANT_PREFIX_COMMAND);
-                Command c = CommandsManager.getInstance().getCommand(name);
-                if (c != null) {
-                    log.info("Command has been found through the magnolia catalog: {}", c.getClass().getName());
+                try {
+                    String name = StringUtils.removeStart(parName, WorkflowConstants.PARTICIPANT_PREFIX_COMMAND);
+                    Command c = CommandsManager.getInstance().getCommand(name);
+                    if (c != null) {
+                        log.info("Command has been found through the magnolia catalog: {}", c.getClass().getName());
 
-                    // set parameters in the context
-                    // precise what we're talking about here: this is forced to be a System Context :
-                    // since we are processing within the workflow enviroment
-                    Context context = new WorkItemContext(MgnlContext.getSystemContext(), wi);
+                        // set parameters in the context
+                        // precise what we're talking about here: this is forced to be a System Context :
+                        // since we are processing within the workflow enviroment
+                        Context context = new WorkItemContext(MgnlContext.getSystemContext(), wi);
 
-                    // remember to reset it after execution
-                    MgnlContext.setInstance(context);
+                        // remember to reset it after execution
+                        MgnlContext.setInstance(context);
 
-                    // execute
-                    c.execute(context);
+                        // execute
+                        c.execute(context);
 
-                    WorkflowModule.getEngine().reply((InFlowWorkItem) wi);
+                        WorkflowModule.getEngine().reply((InFlowWorkItem) wi);
 
+                    }
+                    else {
+                        // not found, do in the old ways
+                        log.error("No command has been found through the magnolia catalog for name: {}", parName);
+                    }
+
+                    log.info("consume command {} end", parName);
                 }
-                else {
-                    // not found, do in the old ways
-                    log.error("No command has been found through the magnolia catalog for name: {}", parName);
+                catch (Exception e) {
+                    log.error("consume command failed", e);
                 }
-
-                log.info("consume command {} end", parName);
             }
-            catch (Exception e) {
-                log.error("consume command failed", e);
-            }
-            finally {
-                MgnlContext.release();
-                MgnlContext.setInstance(originalContext);
+            else {
+                MgnlContext.setInstance(MgnlContext.getSystemContext());
+                WorkflowUtil.getWorkItemStore().storeWorkItem(StringUtils.EMPTY, (InFlowWorkItem) wi);
             }
         }
-        else {
-            StoreWorkItemSystemContextOperation storeWokItemOperation = new StoreWorkItemSystemContextOperation(wi);
-            MgnlContext.doInSystemContext(storeWokItemOperation, true);
-            if(storeWokItemOperation.hasException()){
-                throw storeWokItemOperation.getException();
-            }
+        finally {
+            MgnlContext.release();
+            MgnlContext.setInstance(originalContext);
         }
 
         log.debug("leave consume()..");
 
     }
-
-    private final class StoreWorkItemSystemContextOperation implements MgnlContext.SystemContextOperation {
-
-        private final WorkItem wi;
-
-        private StoreException exception;
-
-        private StoreWorkItemSystemContextOperation(WorkItem wi) {
-            this.wi = wi;
-        }
-
-        public void exec() {
-            try {
-                WorkflowUtil.getWorkItemStore().storeWorkItem(StringUtils.EMPTY, (InFlowWorkItem) this.wi);
-            }
-            catch (StoreException e) {
-                this.exception = e;
-            }
-        }
-
-        public StoreException getException() {
-            return this.exception;
-        }
-
-        public boolean hasException(){
-            return this.getException() != null;
-        }
-
-    }
-
-
 }

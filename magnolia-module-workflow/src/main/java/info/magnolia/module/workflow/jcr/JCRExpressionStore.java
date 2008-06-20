@@ -34,12 +34,24 @@
 package info.magnolia.module.workflow.jcr;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
+
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.NoSuchElementException;
+
+import javax.jcr.ValueFactory;
+
 import openwfe.org.ApplicationContext;
 import openwfe.org.ServiceException;
 import openwfe.org.engine.expool.PoolException;
@@ -49,17 +61,11 @@ import openwfe.org.engine.expressions.raw.RawExpression;
 import openwfe.org.engine.impl.expool.AbstractExpressionStore;
 import openwfe.org.util.beancoder.XmlBeanCoder;
 import openwfe.org.xml.XmlUtils;
+
 import org.jdom.Document;
 import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.ValueFactory;
-import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.NoSuchElementException;
 
 
 /**
@@ -72,21 +78,17 @@ import java.util.NoSuchElementException;
  */
 public class JCRExpressionStore extends AbstractExpressionStore {
     private static final Logger log = LoggerFactory.getLogger(JCRExpressionStore.class);
-    private static final long SLEEP_DELAY_MS = 3 * 1000;
-    private static final long NOPING_DELAY_MS = 6 * 1000;
-    private static final long MAX_SAVE_DELAY_MS = 30 * 1000;
 
     private static final String ENGINE_ID = "ee";
 
-    private final HierarchyManagerWrapper hmWrapper;
+    private boolean useLifeTimeJCRSession = true;
 
-    public JCRExpressionStore(boolean isStorageDeferred) throws ServiceException {
-        if (isStorageDeferred) {
-            this.hmWrapper = HierarchyManagerDeferredSaver.startInThread(WorkflowConstants.WORKSPACE_EXPRESSION, SLEEP_DELAY_MS, NOPING_DELAY_MS, MAX_SAVE_DELAY_MS);
-        } else {
-            this.hmWrapper = new HierarchyManagerWrapperDelegator(WorkflowConstants.WORKSPACE_EXPRESSION);
-        }
+    private boolean cleanUp = false;
 
+    public JCRExpressionStore(boolean useLifeTimeJCRSession, boolean cleanUp) {
+        super();
+        this.useLifeTimeJCRSession = useLifeTimeJCRSession;
+        this.cleanUp = cleanUp;
     }
 
     public void init(final String serviceName, final ApplicationContext context, final Map serviceParams) throws ServiceException {
@@ -96,49 +98,64 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * Stores one expresion
      */
-    public void storeExpression(final FlowExpression fe) throws PoolException {
+    public synchronized void storeExpression(final FlowExpression fe) throws PoolException {
+        boolean release = !useLifeTimeJCRSession && !MgnlContext.hasInstance();
         try {
-            synchronized (hmWrapper) {
-                final Content cExpression = findExpression(fe);
+            HierarchyManager hm = getHierarchyManager();
+            final Content cExpression = findExpression(fe);
 
-                log.debug("storeExpression() handle is " + cExpression.getHandle());
+            log.debug("storeExpression() handle is " + cExpression.getHandle());
 
-                // set expressionId as attribte id
-                ValueFactory vf = cExpression.getJCRNode().getSession().getValueFactory();
-                String value = fe.getId().toParseableString();
+            // set expressionId as attribte id
+            ValueFactory vf = cExpression.getJCRNode().getSession().getValueFactory();
+            String value = fe.getId().toParseableString();
 
-                cExpression.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(value));
+            cExpression.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(value));
 
-                //serializeExpressionWithBeanCoder(ct, fe);
-                serializeExpressionAsXml(cExpression, fe);
+            //serializeExpressionWithBeanCoder(ct, fe);
+            serializeExpressionAsXml(cExpression, fe);
 
-                hmWrapper.save();
-            }
-        } catch (final Exception e) {
+            hm.save();
+        }
+        catch (Exception e) {
             log.error("storeExpression() store exception failed", e);
             throw new PoolException("storeExpression() store exception failed", e);
+        }
+        finally{
+            if(release){
+                MgnlContext.release();
+            }
         }
     }
 
     /**
      * Removes the expression from the JCR storage.
      */
-    public void unstoreExpression(final FlowExpression fe) throws PoolException {
+    public synchronized void unstoreExpression(final FlowExpression fe) throws PoolException {
+        boolean release = !useLifeTimeJCRSession && !MgnlContext.hasInstance();
         try {
-            synchronized (hmWrapper) {
-                final Content cExpression = findExpression(fe);
+            final Content cExpression = findExpression(fe);
 
-                if (cExpression != null) {
-                    // TODO : we could delete this node's parent's parent here. find a good/safe way to do this, for a cleaner repository.
-                    cExpression.delete();
-                    hmWrapper.save();
-                } else {
-                    log.info("unstoreExpression() " + "didn't find content node for fe " + fe.getId().toParseableString());
+            if (cExpression != null) {
+                if(cleanUp){
+                    ContentUtil.deleteAndRemoveEmptyParents(cExpression,1);
                 }
+                else{
+                    cExpression.delete();
+                }
+                getHierarchyManager().save();
+            } else {
+                log.info("unstoreExpression() " + "didn't find content node for fe " + fe.getId().toParseableString());
             }
-        } catch (final Exception e) {
+        }
+        catch (Exception e) {
             log.error("unstoreExpression() unstore exception failed", e);
             throw new PoolException("unstoreExpression() unstore exception failed", e);
+        }
+        finally{
+            if(release){
+                MgnlContext.release();
+            }
         }
     }
 
@@ -203,14 +220,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         c.createNodeData(WorkflowConstants.NODEDATA_VALUE, vf.createValue(s));
     }
 
-    /*
-    private void serializeExpressionWithBeanCoder(Content c,FlowExpression fr) throws Exception {
-
-        OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null,new MgnlNode(c),WorkflowConstants.NODEDATA_VALUE);
-        coder.encode(fr);
-    }
-    */
-
     public final String toXPathFriendlyString(final FlowExpressionId fei) {
         final StringBuffer buffer = new StringBuffer();
         final String engineId = fei.getEngineId();
@@ -248,10 +257,11 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
         final String path = toXPathFriendlyString(fei);
 
-        if (hmWrapper.isExist(path)) {
-            return hmWrapper.getContent(path);
+        final HierarchyManager hm = getHierarchyManager();
+        if (hm.isExist(path)) {
+            return hm.getContent(path);
         } else {
-            return hmWrapper.createPath(path, ItemType.EXPRESSION);
+            return ContentUtil.createPath(hm, path, ItemType.EXPRESSION);
         }
     }
 
@@ -267,12 +277,14 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         return (FlowExpression) XmlBeanCoder.xmlDecode(doc);
     }
 
-    /*
-    protected FlowExpression deserializeExpressionWithBeanCoder(Content ret) throws Exception {
-        OwfeJcrBeanCoder coder = new OwfeJcrBeanCoder(null, new MgnlNode(ret.getContent(WorkflowConstants.NODEDATA_VALUE)));
-        return (FlowExpression)coder.decode();
+    protected HierarchyManager getHierarchyManager() {
+        if(useLifeTimeJCRSession){
+            return LifeTimeJCRSessionUtil.getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
+        }
+        else{
+            return MgnlContext.getSystemContext().getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
+        }
     }
-    */
 
     /**
      * 'lightweight' storeIterator. The previous version were stuffing all
@@ -292,7 +304,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
             this.assignClass = assignClass;
 
-            final QueryManager qm = MgnlContext.getSystemContext().getQueryManager(WorkflowConstants.WORKSPACE_EXPRESSION);
+            final QueryManager qm = LifeTimeJCRSessionUtil.getQueryManager(WorkflowConstants.WORKSPACE_EXPRESSION);
 
             final Query query = qm.createQuery(WorkflowConstants.STORE_ITERATOR_QUERY, Query.SQL);
 
