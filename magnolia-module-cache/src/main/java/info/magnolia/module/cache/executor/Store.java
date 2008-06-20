@@ -66,6 +66,7 @@ public class Store extends AbstractExecutor {
         CachedEntry cachedEntry = null;
         try {
 
+            // setting Last-Modified to when this resource was stored in the cache
             long modificationDate = System.currentTimeMillis();
             response.setDateHeader("Last-Modified", modificationDate);
 
