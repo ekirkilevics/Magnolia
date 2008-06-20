@@ -197,7 +197,13 @@ public class MockUtil {
             String orgKey = (String) o;
             String valueStr = properties.getProperty(orgKey);
 
-            String key = StringUtils.replace(orgKey, "/", ".");
+            //if this is a node definition (no property)
+            String key = orgKey;
+            if(StringUtils.isEmpty(valueStr) && !key.contains(".") && !key.contains("@")){
+                key += "@type";
+                valueStr = "nt:base";
+            }
+            key = StringUtils.replace(key, "/", ".");
             key = StringUtils.removeStart(key, ".");
             // guarantee a dot in front of @ to make it a property
             key = StringUtils.replace(StringUtils.replace(key, "@", ".@"), "..@", ".@");

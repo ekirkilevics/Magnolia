@@ -161,7 +161,7 @@ public class MockUtilTest extends TestCase {
         HierarchyManager hm = MockUtil.createHierarchyManager(content);
         assertEquals("one", hm.getContent("/node1/sub1").getNodeData("prop1").getString());
         assertEquals(0, hm.getContent("/node2/sub2").getNodeDataCollection().size());
- //       assertEquals(0, hm.getContent("/node3/sub3").getNodeDataCollection().size());
+        assertEquals(0, hm.getContent("/node3/sub3").getNodeDataCollection().size());
         assertEquals(0, hm.getContent("/node4").getNodeDataCollection().size());
     }
 
