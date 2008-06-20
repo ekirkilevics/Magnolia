@@ -23,3 +23,15 @@ classDef("mgnl.admininterface.WebsiteTree", {
     }
             
 });
+
+classDef("mgnl.admininterface.Tree", {
+
+    showVersions: function(repo, tree){
+        mgnl.admininterface.VersionsList.show(repo, tree.selectedNode.path);
+    },
+    
+    search: function(value){
+        document.location = contextPath +"/.magnolia/pages/websiteSearchList?searchStr=" + value;
+    }
+            
+});

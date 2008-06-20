@@ -171,6 +171,16 @@ function mgnlTreeMenuItemConditionSelectedNotRoot(tree){
     }
 }
 
+function mgnlTreeMenuItemConditionSelectedRootOrItemType(tree, itemType){
+    this.tree = tree;
+    this.itemType = itemType;
+
+    this.test = function(){
+        return ((this.tree.selectedNode.itemType==this.itemType)
+         || (this.tree.selectedNode.id==this.tree.path));
+    }
+}
+
 function mgnlTreeMenuItemConditionSelectedNotItemType(tree, itemType){
     this.tree = tree;
     this.itemType = itemType;
