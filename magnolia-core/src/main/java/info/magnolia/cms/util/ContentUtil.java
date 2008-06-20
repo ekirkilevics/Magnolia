@@ -500,4 +500,21 @@ public class ContentUtil {
         return path;
     }
 
+    public static void deleteAndRemoveEmptyParents(Content node) throws PathNotFoundException, RepositoryException,
+    AccessDeniedException {
+        deleteAndRemoveEmptyParents(node, 0);
+    }
+
+    public static void deleteAndRemoveEmptyParents(Content node, int level) throws PathNotFoundException, RepositoryException,
+        AccessDeniedException {
+        Content parent = null;
+        if(node.getLevel() != 0){
+             parent = node.getParent();
+        }
+        node.delete();
+        if(parent != null && parent.getLevel()>level && parent.getChildren(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER).size()==0){
+            deleteAndRemoveEmptyParents(parent, level);
+        }
+    }
+
 }
