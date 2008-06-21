@@ -58,6 +58,11 @@ public class RemoveMixversionableFilter extends SkipNodePropertyFilter {
     }
 
     protected boolean filter(String propertyValue, String parentNodeName) {
-        return "mix:versionable".equals(propertyValue);
+        boolean result = "mix:versionable".equals(propertyValue);
+        if (result) {
+            log.info("Removing mix:versionable from {}", this.lastNodeName);
+        }
+
+        return result;
     }
 }
