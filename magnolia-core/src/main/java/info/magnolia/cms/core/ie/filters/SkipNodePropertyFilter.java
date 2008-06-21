@@ -131,7 +131,7 @@ public abstract class SkipNodePropertyFilter extends XMLFilterImpl {
         if ("sv:node".equals(qName)) {
             lastNodeName = svname;
         }
-        else if ("sv:property".equals(qName) && ("name".equals(svname))) {
+        else if ("sv:property".equals(qName) && (getFilteredPropertyName().equals(svname))) {
             elementBuffer.add(new BufferedElement(uri, localName, qName, new AttributesImpl(atts)));
 
             skipProperty = true;
