@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.workflow;
 
-import info.magnolia.cms.util.ExceptionHandlingOperation;
-import info.magnolia.cms.util.SystemContextOperationUtil;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
