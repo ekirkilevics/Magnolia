@@ -83,14 +83,14 @@ public class DialogMVCServlet extends MVCServlet {
         }
 
         DialogMVCHandler handler = null;
-        
+
         if (StringUtils.isNotBlank(dialogName)) {
             // try to get a registered handler
             try {
                 handler = DialogHandlerManager.getInstance().getDialogHandler(dialogName, request, response);
             }
             catch (InvalidDialogHandlerException e) {
-                log.error("no dialog registered for name: " + dialogName);
+                log.error("no dialog registered for name: " + dialogName, e);
                 throw new ConfigurationException("no dialog registered for name: " + dialogName); //$NON-NLS-1$
             }
         }
@@ -98,7 +98,7 @@ public class DialogMVCServlet extends MVCServlet {
         if (handler == null) {
             throw new ConfigurationException("no dialog registered for name: " + dialogName); //$NON-NLS-1$
         }
-        
+
         return handler;
     }
 
