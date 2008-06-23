@@ -105,4 +105,8 @@ public class SimpleContext extends AbstractMapBasedContext {
         return this.ctx.getQueryManager(repositoryId, workspaceId);
     }
 
+    public void release() {
+        this.ctx.release();
+    }
+
 }
