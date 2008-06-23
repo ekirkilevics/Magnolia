@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,23 +33,33 @@
  */
 package info.magnolia.module.workflow.trees;
 
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.gui.control.Tree;
-import info.magnolia.module.admininterface.trees.ConfigTreeConfiguration;
-
 import javax.servlet.http.HttpServletRequest;
 
+import info.magnolia.cms.gui.control.ContextMenuItem;
+import info.magnolia.cms.gui.control.Tree;
+import info.magnolia.module.admininterface.trees.WebsiteTreeConfiguration;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
- * Tree to view workitems and expressions
- * @deprecated use JcrBrowserTreeConfiguration
+ * @author pbracher
+ * @version $Id$
+ *
  */
-public class WorkflowTreeConfiguration extends ConfigTreeConfiguration {
+public class WorkflowWebsiteTreeConfiguration extends WebsiteTreeConfiguration {
 
-    public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
-        super.prepareTree(tree,browseMode,request);
-        tree.addItemType(ItemType.WORKITEM);
-        tree.addItemType(ItemType.NT_UNSTRUCTRUED);
-        tree.addItemType(ItemType.EXPRESSION);
+    private static Logger log = LoggerFactory.getLogger(WorkflowWebsiteTreeConfiguration.class);
+
+    public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
+        super.prepareContextMenu(tree, browseMode, request);
+
+        ContextMenuItem activate = tree.getMenu().getMenuItemByName("activate");
+        activate.setOnclick("mgnl.workflow.WorkflowWebsiteTree.enterComment(" + tree.getJavascriptTree() + ", " + Tree.ACTION_ACTIVATE + ", false);");
+
+        ContextMenuItem activateInclSubs = tree.getMenu().getMenuItemByName("activateInclSubs");
+        activateInclSubs.setOnclick("mgnl.workflow.WorkflowWebsiteTree.enterComment(" + tree.getJavascriptTree() + ", " + Tree.ACTION_ACTIVATE + ", true);");
+
     }
-
 }

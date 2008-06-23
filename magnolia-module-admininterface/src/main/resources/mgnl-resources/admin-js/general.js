@@ -176,10 +176,10 @@ function mgnlOpenWindow(url,width,height)
     if (!height) height=100;
 
     if(url.charAt(0)!= "/"){
-    	url = "/" + url;
+        url = "/" + url;
     }
-   	url = contextPath + url;
-    
+    url = contextPath + url;
+
     if(url.indexOf('?')>=0){
         url+="&";
     }
@@ -230,24 +230,29 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
 
     var url=contextPath;
     url+="/"+ dialogPage;
-    url+="?mgnlPath="+path;
+    if(path){
+        url = mgnl.util.URLUtil.addParameter(url,"mgnlPath", path);
+    }
     if (nodeCollection) {
-        url += "&mgnlNodeCollection=" + nodeCollection;
+        url = mgnl.util.URLUtil.addParameter(url,"mgnlNodeCollection", path);
     }
     if (node) {
-        url += "&mgnlNode=" + node;
+        url = mgnl.util.URLUtil.addParameter(url,"mgnlNode", path);
     }
     if (paragraph) {
-        url += "&mgnlParagraph=" + paragraph;
+        url = mgnl.util.URLUtil.addParameter(url,"mgnlParagraph", path);
     }
-    url+="&mgnlRichE="+richE;
-    url+="&mgnlRichEPaste="+richEPaste;
-    url+="&mgnlRepository="+repository;
-    url+="&mgnlCK="+mgnlGetCacheKiller();
-    
+    if(repository){
+        url = mgnl.util.URLUtil.addParameter(url,"mgnlRepository", repository);
+    }
+    url = mgnl.util.URLUtil.addParameter(url,"mgnlRichE", richE);
+    url = mgnl.util.URLUtil.addParameter(url,"mgnlRichEPaste", richEPaste);
+
+    url = mgnl.util.URLUtil.addParameter(url,"mgnlCK", mgnlGetCacheKiller());
+
     var w=window.open(url,"mgnlDialog"+mgnlGetCacheKiller(),"width="+width+",height="+height+"scrollbars=no,status=yes,resizable=yes");
     if (w) w.focus();
-    }
+}
 
 
 /* ###################################

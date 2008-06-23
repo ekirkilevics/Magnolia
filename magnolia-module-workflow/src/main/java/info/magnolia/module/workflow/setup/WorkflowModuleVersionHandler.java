@@ -44,7 +44,9 @@ import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.IsModuleInstalledDelegateTask;
 import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
+import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.workflow.setup.for3_5.AddNewDefaultConfig;
@@ -52,6 +54,7 @@ import info.magnolia.module.workflow.setup.for3_5.AddUserToGroupTask;
 import info.magnolia.module.workflow.setup.for3_5.CheckAndUpdateDefaultWorkflowDefinition;
 import info.magnolia.module.workflow.setup.for3_5.RemoveMetadataFromExpressionsWorkspace;
 import info.magnolia.module.workflow.setup.for3_5.SetDefaultWorkflowForActivationFlowCommands;
+import info.magnolia.module.workflow.trees.WorkflowWebsiteTreeConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -80,6 +83,25 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         }
     };
 
+    private Task changeWebsiteTreeConfigurationTask = new SetPropertyTask(
+        ContentRepository.CONFIG,
+        "/modules/adminInterface/trees/website",
+        "configurationClass",
+        WorkflowWebsiteTreeConfiguration.class.getName());
+
+    private Task changeDMSTreeConfigurationTask = new IsModuleInstalledDelegateTask(
+        "DMS Tree Configuration",
+        "Enter comment dialog on activation",
+        "dms",
+        new SetPropertyTask(
+            ContentRepository.CONFIG,
+            "/modules/dms/trees/dms",
+            "configurationClass",
+            // can't add a dependency to the dms so must use the class' name
+            "info.magnolia.module.dms.WorkflowDMSAdminTreeConfig"
+    ));
+
+
     public WorkflowModuleVersionHandler() {
         final Delta delta35 = DeltaBuilder.update("3.5", "")
                 .addTask(inboxMenu)
@@ -89,7 +111,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 // TODO refactor the following ArrayDelegateTask into a single one: BackupAndBootstrap("resource.xml", "/backup/location", "Message", MessageType.WARNING), will be fixed with MAGNOLIA-1945
                 .addTask(new ArrayDelegateTask("Backup and Bootstrap", "Makes a backup of the current 'EditWorkItem' dialog and re-installs it.", new Task[] {
                         new BackupTask(ContentRepository.CONFIG, "/modules/workflow/dialogs/editWorkItem", true),
-                        new BootstrapSingleResource("Bootstrap", "Bootstraps the Inbox Subpages", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.editWorkItem.xml", ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW), 
+                        new BootstrapSingleResource("Bootstrap", "Bootstraps the Inbox Subpages", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.editWorkItem.xml", ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW),
                         new WarnTask("Note: ", "Note that the 'EditWorkItem' dialog was re-installed. Magnolia put a backup of original dialog into '" + BACKUP_PATH + "/editWorkItem'. Please review the changes manually.")
                     }))
                 .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the 'EditActivationWorkItem' dialog", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.editActivationWorkItem.xml"))
@@ -103,21 +125,24 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the 'publishers' group.", "/mgnl-bootstrap/workflow/usergroups.publishers.xml", ImportUUIDBehavior.IMPORT_UUID_COLLISION_REPLACE_EXISTING))
                 .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the 'workflow-base' role.", "/mgnl-bootstrap/workflow/userroles.workflow-base.xml"));
         register(delta35);
-    }
 
-    protected List getBasicInstallTasks(InstallContext installContext) {
-        final List basicInstallTasks = super.getBasicInstallTasks(installContext);
-        basicInstallTasks.add(new ModuleDependencyBootstrapTask("dms"));
-        return basicInstallTasks;
+        final Delta delta36 = DeltaBuilder.update("3.6", "")
+            .addTask(changeWebsiteTreeConfigurationTask)
+            .addTask(changeDMSTreeConfigurationTask);
+        register(delta36);
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {
         final List tasks = new ArrayList();
-
+        tasks.add(new ModuleDependencyBootstrapTask("dms"));
         tasks.add(inboxMenu);
         tasks.add(flowsPageMenu);
         tasks.add(new InstallWorkflowDefinitionTask("Setup default activation workflow definition", "Adds the default activation workflow definition under the /modules/workflow/config/flows/activation config node.",
                 "activation", "info/magnolia/module/workflow/default-activation-workflow.xml"));
+        tasks.add(changeWebsiteTreeConfigurationTask);
+
+        tasks.add(changeWebsiteTreeConfigurationTask);
+        tasks.add(changeDMSTreeConfigurationTask);
 
         if (ctx.isModuleRegistered("samples")) {
             tasks.add(new AddUserToGroupTask("Sample user", "joe", "editors"));

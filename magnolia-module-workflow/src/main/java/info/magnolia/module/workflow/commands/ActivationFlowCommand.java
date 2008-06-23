@@ -74,11 +74,6 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
             Content node = ContentRepository.getHierarchyManager(getRepository()).getContent(getPath());
             updateDateAttribute(node, launchItem, WorkflowConstants.ATTRIBUTE_START_DATE);
             updateDateAttribute(node, launchItem, WorkflowConstants.ATTRIBUTE_END_DATE);
-
-            if(isRecursive()){
-                Messages msgs = MessagesManager.getMessages(WorkflowModule.class.getPackage().getName() + ".messages");
-                launchItem.getAttributes().puts(Context.ATTRIBUTE_COMMENT, msgs.get("workItem.comment.recursive"));
-            }
         }
         catch (RepositoryException e) {
             log.error("can't find node for path [" + getPath() + "]", e);
