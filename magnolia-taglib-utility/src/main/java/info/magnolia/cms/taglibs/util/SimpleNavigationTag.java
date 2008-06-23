@@ -35,6 +35,7 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.Resource;
 
@@ -372,7 +373,8 @@ public class SimpleNavigationTag extends TagSupport {
 
             List cssClasses = new ArrayList(3);
 
-            String title = child.getNodeData(NODEDATA_NAVIGATIONTITLE).getString(StringUtils.EMPTY);
+            NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(child, NODEDATA_NAVIGATIONTITLE);
+            String title = nodeData.getString(StringUtils.EMPTY);
 
             // if nav title is not set, the main title is taken
             if (StringUtils.isEmpty(title)) {
