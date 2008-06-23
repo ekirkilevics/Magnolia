@@ -44,6 +44,7 @@ import info.magnolia.cms.gui.dialog.DialogFactory;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
 import info.magnolia.cms.util.*;
 import info.magnolia.context.MgnlContext;
@@ -354,8 +355,12 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
                     }
                 }
             }
+            catch(AccessDeniedException ade){
+                log.error("can't read content to edit", ade);
+            }
             catch (RepositoryException re) {
                 // content does not exist yet
+                log.debug("can't read content or it does not exist yet", re);
             }
         }
         return storageNode;
