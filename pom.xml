@@ -263,6 +263,25 @@ for Java Content Repositories (JCR).
         </plugins>
       </reporting>
     </profile>
+    <profile>
+      <id>eclipse</id>
+      <build>
+        <pluginManagement>
+          <plugins>
+            <plugin>
+              <groupId>org.apache.maven.plugins</groupId>
+              <artifactId>maven-enforcer-plugin</artifactId>
+              <configuration>
+                <skip>true</skip>
+              </configuration>
+            </plugin>
+          </plugins>
+        </pluginManagement>
+      </build>
+      <modules>
+        <module>magnolia-bundle</module>
+      </modules>
+    </profile>
   </profiles>
   <build>
     <pluginManagement>
