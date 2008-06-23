@@ -136,6 +136,10 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      */
     protected AdminTreeConfiguration configuration;
 
+    protected String newNodeName = "untitled";
+
+    protected String createItemType = Tree.ITEM_TYPE_NODEDATA;
+
     protected String path;
 
     protected String pathOpen;
@@ -301,14 +305,10 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
      * @return newly created content node
      */
     public String createNode() {
-        String createItemType = Tree.ITEM_TYPE_NODEDATA;
-        if (this.getRequest().getParameter("createItemType") != null) { //$NON-NLS-1$
-            createItemType = this.getRequest().getParameter("createItemType"); //$NON-NLS-1$
-        }
-
         getTree().setPath(path);
         synchronized (ExclusiveWrite.getInstance()) {
-            getTree().createNode(createItemType);
+            String name = getTree().createNode(this.getNewNodeName(), createItemType);
+            setNewNodeName(name);
         }
         return VIEW_TREE;
     }
@@ -832,12 +832,32 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         return tree;
     }
 
+
+    public String getNewNodeName() {
+        return this.newNodeName;
+    }
+
+
+    public void setNewNodeName(String newNodeName) {
+        this.newNodeName = newNodeName;
+    }
+
     protected String getPath() {
         return path;
     }
 
     protected String getPathSelected() {
         return pathSelected;
+    }
+
+
+    public String getCreateItemType() {
+        return this.createItemType;
+    }
+
+
+    public void setCreateItemType(String createItemType) {
+        this.createItemType = createItemType;
     }
 
     /**

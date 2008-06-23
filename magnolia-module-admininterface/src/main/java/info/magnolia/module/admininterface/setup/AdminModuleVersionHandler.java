@@ -36,6 +36,8 @@ package info.magnolia.module.admininterface.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.admininterface.AdminTreeMVCHandler;
+import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
@@ -47,6 +49,7 @@ import info.magnolia.module.delta.PropertyValueDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
 import info.magnolia.module.delta.RemovePropertyTask;
+import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 
 import java.util.ArrayList;
@@ -62,6 +65,13 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", null, "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif", "groups");
     private final AddSubMenuItemTask subscribersMenu = new AddSubMenuItemTask("config", "subscribers", "menu.config.subscribers", "info.magnolia.module.admininterface.messages", "MgnlAdminCentral.showTree('config','/server/activation/subscribers')", "/.resources/icons/16/dot.gif", "cache");
 
+    private Task changeWebsiteTreeConfigurationTask = new SetPropertyTask(
+        ContentRepository.CONFIG,
+        "/modules/adminInterface/trees/website",
+        "class",
+        WebsiteTreeHandler.class.getName());
+
+
     public AdminModuleVersionHandler() {
         final String pathToRestartPage = "/modules/adminInterface/pages/restart";
 
@@ -75,7 +85,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                         new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/security/users"),
                         adminUsersSubMenu,
                         sysUsersSubMenu}))
-                .addTask(new ArrayDelegateTask("Menu", "Update subscriber menu item in config menu", new Task[]{ 
+                .addTask(new ArrayDelegateTask("Menu", "Update subscriber menu item in config menu", new Task[]{
                         new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/subscriber"),
                         subscribersMenu}))
                 .addTask(new NodeExistsDelegateTask("Remove Kupu richEdit control", "Checks for previous Kupu editor installation and removes richEdit control if existent.", ContentRepository.CONFIG, "/modules/adminInterface/controls/richEdit",
@@ -85,6 +95,11 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new RegisterModuleServletsTask());
 
         register(for35);
+
+        final Delta for36 = DeltaBuilder.update("3.6", "")
+            .addTask(changeWebsiteTreeConfigurationTask);
+        register(for36);
+
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {

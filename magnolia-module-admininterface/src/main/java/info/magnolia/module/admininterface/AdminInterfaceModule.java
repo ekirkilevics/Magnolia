@@ -76,7 +76,6 @@ public class AdminInterfaceModule implements ModuleLifecycle {
         this.securityConfiguration = securityConfiguration;
     }
 
-
     public static AdminInterfaceModule getInstance() {
         return instance;
     }

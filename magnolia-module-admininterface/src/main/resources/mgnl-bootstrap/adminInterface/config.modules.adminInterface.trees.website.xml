@@ -7,7 +7,7 @@
     <sv:value>ed61f4e9-8e9e-4cf5-b43b-e39f4c76f253</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.admininterface.AdminTreeMVCHandler</sv:value>
+    <sv:value>info.magnolia.module.admininterface.trees.WebsiteTreeHandler</sv:value>
   </sv:property>
   <sv:property sv:name="repository" sv:type="String">
     <sv:value>website</sv:value>

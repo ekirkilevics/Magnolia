@@ -474,26 +474,6 @@ public class Tree extends ControlImpl {
                 newNode.getMetaData().setAuthorId(Authenticator.getUserId(this.getRequest()));
                 newNode.getMetaData().setCreationDate();
                 newNode.getMetaData().setModificationDate();
-                // todo: default template
-                if (this.getRepository().equals(ContentRepository.WEBSITE) && itemType.equals(ItemType.CONTENT.getSystemName())) {
-                    // default to the template used by the parent node if the user can access it
-                    final TemplateManager templateManager = TemplateManager.getInstance();
-                    final AccessManager accessManager = MgnlContext.getAccessManager(ContentRepository.CONFIG);
-                    final String newTemplateName = parentNode.getTemplate();
-                    Template newTemplate = templateManager.getInfo(newTemplateName);
-                    if (newTemplate == null || !accessManager.isGranted(newTemplate.getLocation(), Permission.READ)) {
-                        // if that fails then first template of list is taken...
-                        Iterator templates = templateManager.getAvailableTemplates(accessManager);
-                        if (templates.hasNext()) {
-                            newTemplate = (Template) templates.next();
-                        } else {
-                            newTemplate = null;
-                        }
-                    }
-                    if (newTemplate != null) {
-                        newNode.getMetaData().setTemplate(newTemplate.getName());
-                    }
-                }
             }
             parentNode.save();
             return name;
