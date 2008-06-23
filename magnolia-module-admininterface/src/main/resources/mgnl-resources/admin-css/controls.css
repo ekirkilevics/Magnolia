@@ -1,6 +1,6 @@
 .mgnlMainbar,.mgnlMainbarPreview {
-	position: absolute;
-	z-index: 900;
+    position: absolute;
+    z-index: 900;
 }
 
 .mgnlBtnsLeft {
@@ -14,175 +14,177 @@
 }
 
 .mgnlControlButton,.mgnlControlButton_PUSHED {
-	font-size: 11px;
-	height: 15px;
-	padding: 1px 8px 1px 10px;
+    font-size: 11px;
+    height: 15px;
+    padding: 1px 8px 1px 10px;
 }
 
 .mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED {
-	font-size: 9px;
-	height: 5px;
-	padding: 0 3px 0 3px;
+    font-size: 9px;
+    height: 5px;
+    padding: 0 3px 0 3px;
 }
 
 .mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED
-	{
-	font-family: Verdana, sans-serif;
-	color: #F0F2E6;
-	cursor: default;
-	white-space: nowrap;
+    {
+    font-family: Verdana, sans-serif;
+    color: #F0F2E6;
+    cursor: default;
+    white-space: nowrap;
 }
 
 .mgnlControlButton_PUSHED,.mgnlControlButtonSmall_PUSHED {
-	background-color: #9DB517;
-	border-top: 1px solid #B9C950;
-	border-left: 1px solid #B9C950;
-	border-bottom: 1px solid #8a2;
-	border-right: 1px solid #8a2;
+    background-color: #9DB517;
+    border-top: 1px solid #B9C950;
+    border-left: 1px solid #B9C950;
+    border-bottom: 1px solid #8a2;
+    border-right: 1px solid #8a2;
 }
 
 .mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
-	background: transparent;
-	white-space: nowrap;
+    background: transparent;
+    white-space: nowrap;
 }
 
 .mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall
-	{
-	background-color: #5E9201;
-	border-top: 1px solid #ADC97B;
-	border-left: 1px solid #ADC97B;
-	border-bottom: 1px solid #396101;
-	border-right: 1px solid #396101;
+    {
+    background-color: #5E9201;
+    border-top: 1px solid #ADC97B;
+    border-left: 1px solid #ADC97B;
+    border-bottom: 1px solid #396101;
+    border-right: 1px solid #396101;
 }
 
 .mgnlControlBarSmall,.mgnlControlBarSmall_PUSHED,.mgnlControlBarSmall_MOUSEOVER
-	{
-	width: 100%;
+    {
+    width: 100%;
 }
 
 .mgnlControlBar,.mgnlControlBarSmall {
-	background-color: #5E9201;
-	border-top: 1px solid #ADC97B;
-	border-left: 1px solid #ADC97B;
-	border-bottom: 1px solid #396101;
-	border-right: 1px solid #396101;
+    background-image: url("../admin-images/mgnl-bar.png");
+    background-color: transparent;
+    background-repeat: repeat;
+    border-top: 1px solid #ADC97B;
+    border-left: 1px solid #ADC97B;
+    border-bottom: 1px solid #396101;
+    border-right: 1px solid #396101;
 }
 
 .mgnlControlBar_PUSHED,.mgnlControlBarSmall_PUSHED {
-	background-color: #9DB517;
-	border-top: 1px solid #B9C950;
-	border-left: 1px solid #B9C950;
-	border-bottom: 1px solid #8a2;
-	border-right: 1px solid #8a2;
+    background-color: #9DB517;
+    border-top: 1px solid #B9C950;
+    border-left: 1px solid #B9C950;
+    border-bottom: 1px solid #8a2;
+    border-right: 1px solid #8a2;
 }
 
 .mgnlControlBar_MOUSEOVER,.mgnlControlBarSmall_MOUSEOVER {
-	background-color: #8a3;
-	border-left: 1px solid #ac6;
-	border-top: 1px solid #ac6;
-	border-right: 1px solid #680;
-	border-bottom: 1px solid #680;
+    background-color: #8a3;
+    border-left: 1px solid #ac6;
+    border-top: 1px solid #ac6;
+    border-right: 1px solid #680;
+    border-bottom: 1px solid #680;
 }
 
 .mgnlControlBar,.mgnlControlBar_PUSHED,.mgnlControlBar_MOUSEOVER {
-	width: 100%;
+    width: 100%;
 }
 
 .mgnlControlBar td,.mgnlControlBar_PUSHED td,.mgnlControlBar_MOUSEOVER td
-	{
-	padding: 4px 2px 4px 2px;
+    {
+    padding: 4px 2px 4px 2px;
 }
 
 #mgnlMoveDivShadow,#mgnlMoveDivDenied,#mgnlMoveDivAllowed {
-	position: absolute;
-	top: -50px;
-	left: -50px;
-	z-index: 901;
-	visibility: hidden;
-	font-family: Verdana;
-	font-size: 10px;
-	background-repeat: no-repeat;
-	width: 286px;
-	height: 20px;
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    z-index: 901;
+    visibility: hidden;
+    font-family: Verdana;
+    font-size: 10px;
+    background-repeat: no-repeat;
+    width: 286px;
+    height: 20px;
 }
 
 #mgnlMoveDivShadow {
-	background-image:
-		url("../../.resources/admin-images/mgnlMoveShadow.gif");
+    background-image:
+        url("../../.resources/admin-images/mgnlMoveShadow.gif");
 }
 
 #mgnlMoveDivDenied {
-	background-image:
-		url("../../.resources/admin-images/mgnlMoveDenied.gif");
+    background-image:
+        url("../../.resources/admin-images/mgnlMoveDenied.gif");
 }
 
 .smothTextField {
-	height: 18px;
-	border: 0px #dddddd solid;
-	font-family: Arial, Helvetica, sans-serif;
-	font-size: 11px;
-	padding-top: 2px;
+    height: 18px;
+    border: 0px #dddddd solid;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 11px;
+    padding-top: 2px;
 }
 
 .smothTextFieldTD {
-	height: 20px;
+    height: 20px;
 }
 
 .smothDropdownHeader {
-	padding-left: 3px;
-	padding-right: 3px;
-	padding-top: 2px;
-	cursor: pointer;
-	font: 11px verdana, arial, helvetica, sans-serif;
-	background-color: #ffffff;
+    padding-left: 3px;
+    padding-right: 3px;
+    padding-top: 2px;
+    cursor: pointer;
+    font: 11px verdana, arial, helvetica, sans-serif;
+    background-color: #ffffff;
 }
 
 .smothDropdownHeaderField {
-	padding-top: 2px;
-	cursor: pointer;
-	font: 11px verdana, arial, helvetica, sans-serif;
-	background-color: #ffffff;
-	border-top: 1px #999999 solid;
-	border-bottom: 1px #CCCCCC solid;
+    padding-top: 2px;
+    cursor: pointer;
+    font: 11px verdana, arial, helvetica, sans-serif;
+    background-color: #ffffff;
+    border-top: 1px #999999 solid;
+    border-bottom: 1px #CCCCCC solid;
 }
 
 .smothDropdownBox {
-	margin: 0px;
-	padding: 0px;
-	cursor: pointer;
-	background-color: #ffffff;
-	visibility: hidden;
-	position: absolute;
-	z-index: 2;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+    background-color: #ffffff;
+    visibility: hidden;
+    position: absolute;
+    z-index: 2;
 }
 
 .smothDropdownEntry {
-	margin: 0px;
-	padding: 0px;
-	cursor: pointer;
-	width: auto;
-	border-left: 1px #999999 solid;
-	border-right: 1px #CCCCCC solid;
-	padding-left: 6px;
-	padding-right: 10px;
-	padding-top: 2px;
-	padding-bottom: 2px;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+    width: auto;
+    border-left: 1px #999999 solid;
+    border-right: 1px #CCCCCC solid;
+    padding-left: 6px;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 .smothDropdownEntryHover {
-	margin: 0px;
-	padding: 0px;
-	cursor: pointer;
-	background-color: #D9F1B3;
-	width: auto;
-	border-left: 1px #999999 solid;
-	border-right: 1px #CCCCCC solid;
-	padding-left: 6px;
-	padding-right: 10px;
-	padding-top: 2px;
-	padding-bottom: 2px;
+    margin: 0px;
+    padding: 0px;
+    cursor: pointer;
+    background-color: #D9F1B3;
+    width: auto;
+    border-left: 1px #999999 solid;
+    border-right: 1px #CCCCCC solid;
+    padding-left: 6px;
+    padding-right: 10px;
+    padding-top: 2px;
+    padding-bottom: 2px;
 }
 
 .smothDropdownEntryText {
-	font: 11px verdana, arial, helvetica, sans-serif;
+    font: 11px verdana, arial, helvetica, sans-serif;
 }
