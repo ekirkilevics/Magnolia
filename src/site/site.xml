@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project>
   <skin>
-    <groupId>org.apache.maven.skins</groupId>
-    <artifactId>maven-stylus-skin</artifactId>
-    <version>1.0.1</version>
+    <groupId>info.magnolia</groupId>
+    <artifactId>maven-site-skin</artifactId>
+    <version>1.0-SNAPSHOT</version>
   </skin>
 
   <body>
@@ -13,5 +13,4 @@
   </body>
 
   <publishDate position="navigation-bottom" format="MM-dd-yy"/>
-  <poweredBy><logo name="" img=""/></poweredBy>
 </project>
