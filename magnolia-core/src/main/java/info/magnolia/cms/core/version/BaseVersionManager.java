@@ -85,7 +85,7 @@ public abstract class BaseVersionManager {
      /**
       * version workspace system path
       */
-     protected static final String TMP_REFERENCED_NODES = "mgnl:tmpReferencedNodes";
+     public static final String TMP_REFERENCED_NODES = "mgnl:tmpReferencedNodes";
 
      /**
       * version system node, holds this node version specific data
@@ -95,7 +95,7 @@ public abstract class BaseVersionManager {
      /**
       * property name for collection rule
       */
-     protected static final String PROPERTY_RULE = "Rule";
+     public static final String PROPERTY_RULE = "Rule";
 
      /**
       * jcr root version
