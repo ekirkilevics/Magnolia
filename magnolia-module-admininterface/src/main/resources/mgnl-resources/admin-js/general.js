@@ -234,13 +234,13 @@ function mgnlOpenDialog(path,nodeCollection,node,paragraph,repository,dialogPage
         url = mgnl.util.URLUtil.addParameter(url,"mgnlPath", path);
     }
     if (nodeCollection) {
-        url = mgnl.util.URLUtil.addParameter(url,"mgnlNodeCollection", path);
+        url = mgnl.util.URLUtil.addParameter(url,"mgnlNodeCollection", nodeCollection);
     }
     if (node) {
-        url = mgnl.util.URLUtil.addParameter(url,"mgnlNode", path);
+        url = mgnl.util.URLUtil.addParameter(url,"mgnlNode", node);
     }
     if (paragraph) {
-        url = mgnl.util.URLUtil.addParameter(url,"mgnlParagraph", path);
+        url = mgnl.util.URLUtil.addParameter(url,"mgnlParagraph", paragraph);
     }
     if(repository){
         url = mgnl.util.URLUtil.addParameter(url,"mgnlRepository", repository);
