@@ -48,7 +48,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  *
- * @deprecated use info.magnolia.module.model.ModuleDefinition
+ * @deprecated since 3.5 use info.magnolia.module.model.ModuleDefinition
  */
 public class ModuleDefinition {
 
