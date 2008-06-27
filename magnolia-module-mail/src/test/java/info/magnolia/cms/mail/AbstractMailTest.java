@@ -41,22 +41,15 @@ import java.util.regex.Pattern;
 
 import junit.framework.TestCase;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.subethamail.wiser.Wiser;
 
 
 /**
+ *
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
 public abstract class AbstractMailTest extends TestCase {
-
-    /**
-     * Logger
-     */
-    protected Logger log = LoggerFactory.getLogger(getClass());
-
     public final static String TEST_RECIPIENT = "recipient@example.com";
 
     public final static String TEST_SENDER = "sender@example.com";
@@ -81,9 +74,6 @@ public abstract class AbstractMailTest extends TestCase {
         return getResourceFile(filename).getAbsolutePath();
     }
 
-    /**
-     * @see junit.framework.TestCase#setUp()
-     */
     public void setUp() throws Exception {
         super.setUp();
 
