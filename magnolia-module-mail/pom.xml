@@ -8,17 +8,17 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-mail</artifactId>
   <name>magnolia-module-mail</name>
-  <build>
-    <plugins>
+  <!--<build>-->
+    <!--<plugins>-->
       <!-- MAGNOLIA-1934 Exclude mail tests execution during release until they are fixed properly -->
-      <plugin>
-        <artifactId>maven-surefire-plugin</artifactId>
-        <configuration>
-          <skip>true</skip>
-        </configuration>
-      </plugin>
-    </plugins>
-  </build>
+      <!--<plugin>-->
+        <!--<artifactId>maven-surefire-plugin</artifactId>-->
+        <!--<configuration>-->
+          <!--<skip>true</skip>-->
+        <!--</configuration>-->
+      <!--</plugin>-->
+    <!--</plugins>-->
+  <!--</build>-->
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
@@ -46,7 +46,7 @@
     <dependency>
       <groupId>org.subethamail</groupId>
       <artifactId>subethasmtp-wiser</artifactId>
-      <version>1.0.3</version>
+      <version>1.2</version>
       <classifier>java14</classifier>
       <scope>test</scope>
       <exclusions>
