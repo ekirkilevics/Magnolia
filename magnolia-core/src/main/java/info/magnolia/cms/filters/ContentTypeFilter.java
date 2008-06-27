@@ -59,6 +59,12 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         final String originalUri = request.getRequestURI();
         final String ext = getUriExtension(originalUri);
+        StringBuffer url = request.getRequestURL();
+        String query = request.getQueryString();
+        if (!StringUtils.isEmpty(query)) {
+            url.append("?").append(query);
+        }
+
 
         final String characterEncoding = setupContentTypeAndCharacterEncoding(ext, request, response);
 
@@ -68,6 +74,7 @@ public class ContentTypeFilter extends AbstractMgnlFilter {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         aggregationState.setCharacterEncoding(characterEncoding);
         aggregationState.setOriginalURI(originalUri);
+        aggregationState.setOriginalURL(url.toString());
         aggregationState.setExtension(ext);
 
         chain.doFilter(request, response);

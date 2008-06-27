@@ -46,6 +46,7 @@ import info.magnolia.context.MgnlContext;
 public class AggregationState {
     private String characterEncoding;
     private String originalURI;
+    private String originalURL;
     private String currentURI;
     private Content currentContent;
     private String extension;
@@ -166,23 +167,31 @@ public class AggregationState {
     public void setTemplate(Template template) {
         this.template = template;
     }
-    
+
     /**
-     * If the aggregation state local is not set explicitly the contexts locale is returned. 
+     * If the aggregation state local is not set explicitly the contexts locale is returned.
      * @return The aggregation state level locale, i.e. the locale that should be used for contents
      */
     public Locale getLocale() {
         if (locale == null) {
             return MgnlContext.getLocale();
         }
-        
+
         return locale;
     }
-    
+
     /**
      * @param locale The aggregation state level locale, i.e. the locale that should be used for contents
      */
     public void setLocale(Locale locale) {
         this.locale = locale;
+    }
+
+    public String getOriginalURL() {
+        return originalURL;
+    }
+
+    public void setOriginalURL(String originalURL) {
+        this.originalURL = originalURL;
     }
 }
