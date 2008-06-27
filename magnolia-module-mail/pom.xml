@@ -8,17 +8,6 @@
   <modelVersion>4.0.0</modelVersion>
   <artifactId>magnolia-module-mail</artifactId>
   <name>magnolia-module-mail</name>
-  <!--<build>-->
-    <!--<plugins>-->
-      <!-- MAGNOLIA-1934 Exclude mail tests execution during release until they are fixed properly -->
-      <!--<plugin>-->
-        <!--<artifactId>maven-surefire-plugin</artifactId>-->
-        <!--<configuration>-->
-          <!--<skip>true</skip>-->
-        <!--</configuration>-->
-      <!--</plugin>-->
-    <!--</plugins>-->
-  <!--</build>-->
   <dependencies>
     <dependency>
       <groupId>info.magnolia</groupId>
