@@ -38,8 +38,6 @@ import info.magnolia.module.cache.util.GZipUtil;
 import java.io.IOException;
 
 import org.apache.commons.collections.MultiMap;
-import org.apache.commons.lang.builder.ToStringBuilder;
-import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
  * Wraps a page reponse. It is assumed that the given content is gzipped
@@ -58,9 +56,8 @@ public final class CachedPage implements CachedEntry {
     private final int statusCode;
     private final MultiMap headers;
     private final long lastModificationTime;
-    private String originalURL;
 
-    public CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, String url, long modificationDate) throws IOException {
+    public CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
         // content which is actually of a compressed type must stay that way
         if (!GZipUtil.isGZipMimeType(contentType) && GZipUtil.isGZipped(out)) {
             this.defaultContent = out;
@@ -74,7 +71,6 @@ public final class CachedPage implements CachedEntry {
         this.statusCode = statusCode;
         this.headers = headers;
         this.lastModificationTime = modificationDate;
-        this.originalURL = url;
     }
 
     // TODO : replacing getOut() with streamTo(OutputStream out) could help subclasses stream content
@@ -112,16 +108,15 @@ public final class CachedPage implements CachedEntry {
         return lastModificationTime;
     }
 
-    public String getOriginalURL() {
-        return originalURL;
-    }
-
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, new ToStringStyle() {
-            protected void appendDetail(StringBuffer buffer, String fieldName,
-                    byte[] array) {
-                super.appendDetail(buffer, fieldName, array.length + " bytes");
-            }
-        });
+        return "CachedPage{" +
+                "defaultContent=" + defaultContent.length + " bytes" +
+                ", ungzippedContent=" + (ungzippedContent != null ? ungzippedContent.length + " bytes" : null) +
+                ", contentType='" + contentType + '\'' +
+                ", characterEncoding='" + characterEncoding + '\'' +
+                ", statusCode=" + statusCode +
+                ", headers=" + headers +
+                ", lastModificationTime=" + lastModificationTime +
+                '}';
     }
 }

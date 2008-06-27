@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.cache.executor;
 
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CacheResponseWrapper;
@@ -51,7 +52,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.output.TeeOutputStream;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Wraps the response and stores the content in a cache Entry.
@@ -86,7 +86,7 @@ public class Store extends AbstractExecutor {
                 return;
             }
 
-            cachedEntry = makeCachedEntry(request, responseWrapper, cachingStream, modificationDate);
+            cachedEntry = makeCachedEntry(responseWrapper, cachingStream, modificationDate);
         } finally {
             // have to put cache entry no matter what even if it is null to release lock.
             cache.put(cachePolicy.getCacheKey(), cachedEntry);
@@ -96,7 +96,7 @@ public class Store extends AbstractExecutor {
         }
     }
 
-    protected CachedEntry makeCachedEntry(HttpServletRequest request, CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream, long modificationDate) throws IOException {
+    protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream, long modificationDate) throws IOException {
         // TODO : handle more of the 30x codes - although CacheResponseWrapper currently only sets the 302.
         if (cacheResponse.getStatus() == HttpServletResponse.SC_MOVED_TEMPORARILY) {
             return new CachedRedirect(cacheResponse.getStatus(), cacheResponse.getRedirectionLocation());
@@ -108,17 +108,11 @@ public class Store extends AbstractExecutor {
             return null;
         }
         final byte[] aboutToBeCached = cachingStream.toByteArray();
-                StringBuffer url = request.getRequestURL();
-                String query = request.getQueryString();
-                if (!StringUtils.isEmpty(query)) {
-                    url.append("?").append(query);
-                }
         return new CachedPage(aboutToBeCached,
                 cacheResponse.getContentType(),
                 cacheResponse.getCharacterEncoding(),
                 cacheResponse.getStatus(),
                 cacheResponse.getHeaders(),
-                url.toString(),
                 modificationDate);
     }
 
