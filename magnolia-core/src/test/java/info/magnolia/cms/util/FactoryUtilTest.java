@@ -100,7 +100,7 @@ public class FactoryUtilTest extends MgnlTestCase {
 
    public void testSingletonDefinedInRepository() throws RepositoryException, IOException{
        FactoryUtil.setDefaultImplementation(TestInterface.class, "/test");
-       initConfigRepository(
+       initMockConfigRepository(
            "test.class=" + TestImplementation.class.getName()
        );
        Object obj = FactoryUtil.getSingleton(TestInterface.class);
@@ -110,7 +110,7 @@ public class FactoryUtilTest extends MgnlTestCase {
 
    public void testSingletonDefinedInRepositoryUsingRepositoryPrefix() throws RepositoryException, IOException{
        FactoryUtil.setDefaultImplementation(TestInterface.class, "config:/test");
-       initConfigRepository(
+       initMockConfigRepository(
            "test.class=" + TestImplementation.class.getName()
        );
        Object obj = FactoryUtil.getSingleton(TestInterface.class);
