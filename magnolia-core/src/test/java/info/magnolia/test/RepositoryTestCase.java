@@ -38,24 +38,25 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
 import info.magnolia.context.SystemRepositoryStrategy;
 import info.magnolia.repository.Provider;
-import info.magnolia.test.mock.MockWebContext;
+import info.magnolia.test.mock.MockContext;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
-import java.net.URL;
 import java.util.HashSet;
 import java.util.Iterator;
 
 import javax.jcr.ImportUUIDBehavior;
 
-import junit.framework.TestCase;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -64,58 +65,97 @@ import org.apache.log4j.Logger;
  * @author ashapochka
  * @version $Revision: $ ($Author: $)
  */
-public abstract class RepositoryTestCase extends TestCase {
+public abstract class RepositoryTestCase extends MgnlTestCase {
 
-    private static final String JACKRABBIT_REPO_CONF_PROPERTY = "magnolia.repositories.jackrabbit.config";
-    private static final String EXTRACTED_REPO_CONF_FILE = "target/repo-conf/extracted.xml";
+    protected static final String REPO_CONF_PROPERTY = "magnolia.repositories.config";
+    protected static final String JACKRABBIT_REPO_CONF_PROPERTY = "magnolia.repositories.jackrabbit.config";
+    protected static final String EXTRACTED_REPO_CONF_FILE = "target/repositories.xml";
+    protected static final String EXTRACTED_JACKRABBIT_REPO_CONF_FILE = "target/repo-conf/extracted.xml";
+
+    private boolean autoStart = true;
+
+    private String repositoryConfigFileName;
+    private String jackrabbitRepositoryConfigFileName;
 
     protected void setUp() throws Exception {
         super.setUp();
+        if(isAutoStart()){
+            cleanUp();
+            startRepository();
+        }
+    }
 
+    protected void modifyContextesToUseRealRepository() {
+        // create a mock web context with same repository acquiring strategy as the system context
+        SystemContext systemContext = MgnlContext.getSystemContext();
+        SystemRepositoryStrategy repositoryStrategy = new SystemRepositoryStrategy(systemContext);
+
+        //update the mock context
+        ((MockContext)systemContext).setRepositoryStrategy(repositoryStrategy);
+        ((MockContext)MgnlContext.getInstance()).setRepositoryStrategy(repositoryStrategy);
+    }
+
+    protected void startRepository() throws Exception {
         final Logger logger = Logger.getLogger("info.magnolia");
         final Level originalLogLevel = logger.getLevel();
         logger.setLevel(Level.WARN);
 
-        FactoryUtil.clear();
-        // TODO move that to an util
-        MgnlTestCase.initDefaultImplementations();
-
-        // create a mock web context with same repository acquiring strategy as the system context
-        final MockWebContext ctx = new MockWebContext();
-        ctx.setRepositoryStrategy(new SystemRepositoryStrategy(ctx));
-        MgnlContext.setInstance(ctx);
-
-        InputStream fileStream = null;
-        try {
-            fileStream = getPropertiesStream();
-            SystemProperty.getProperties().load(fileStream);
-        } finally {
-            IOUtils.closeQuietly(fileStream);
-        }
-
         ContentRepository.REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
         ContentRepository.REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
-        // extract resource to the filesystem (jackrabbit can't use a stream)
-        String configFile = SystemProperty.getProperty(JACKRABBIT_REPO_CONF_PROPERTY);
-        String targetFilename = Path.getAbsoluteFileSystemPath(EXTRACTED_REPO_CONF_FILE);
-        File targetFile = new File(targetFilename);
-        if(!targetFile.exists()){
-            URL configFileURL = ClasspathResourcesUtil.getResource(configFile);
-            FileUtils.copyURLToFile(configFileURL, targetFile);
-        }
-        SystemProperty.setProperty(JACKRABBIT_REPO_CONF_PROPERTY, EXTRACTED_REPO_CONF_FILE);
+
+        extractConfigFile(REPO_CONF_PROPERTY, getRepositoryConfigFileStream(), EXTRACTED_REPO_CONF_FILE);
+        extractConfigFile(JACKRABBIT_REPO_CONF_PROPERTY, getJackrabbitRepositoryConfigFileStream(), EXTRACTED_JACKRABBIT_REPO_CONF_FILE);
+
         ContentRepository.init();
+
+        modifyContextesToUseRealRepository();
 
         logger.setLevel(originalLogLevel);
     }
 
-    protected InputStream getPropertiesStream() {
-        return this.getClass().getResourceAsStream("/test-magnolia.properties");
+    protected void extractConfigFile(String propertyName, InputStream configFileStream, String extractToPath) throws Exception {
+        String targetFilename = Path.getAbsoluteFileSystemPath(extractToPath);
+        File targetFile = new File(targetFilename);
+        // extract resource to the filesystem (jackrabbit can't use a stream)
+        new File(targetFile.getParent()).mkdirs();
+        IOUtils.copy(configFileStream, new FileOutputStream(targetFile));
+        SystemProperty.setProperty(propertyName, extractToPath);
+    }
+
+    protected InputStream getRepositoryConfigFileStream() throws Exception {
+        String configFile = getRepositoryConfigFileName();
+       return ClasspathResourcesUtil.getResource(configFile).openStream();
+    }
+
+    protected InputStream getJackrabbitRepositoryConfigFileStream() throws Exception {
+        String configFile = getJackrabbitRepositoryConfigFileName();
+       return ClasspathResourcesUtil.getResource(configFile).openStream();
+    }
+
+    protected String getRepositoryConfigFileName() {
+        if(StringUtils.isEmpty(repositoryConfigFileName)){
+            repositoryConfigFileName = SystemProperty.getProperty(REPO_CONF_PROPERTY);
+        }
+        return repositoryConfigFileName;
+    }
+
+    protected String getJackrabbitRepositoryConfigFileName() {
+        if(StringUtils.isEmpty(jackrabbitRepositoryConfigFileName)){
+            jackrabbitRepositoryConfigFileName = SystemProperty.getProperty(JACKRABBIT_REPO_CONF_PROPERTY);
+        }
+        return jackrabbitRepositoryConfigFileName;
     }
 
     protected void tearDown() throws Exception {
         super.tearDown();
 
+        if(isAutoStart()){
+            shutdownRepository(true);
+        }
+        SystemProperty.getProperties().clear();
+    }
+
+    protected void shutdownRepository(boolean cleanup) throws IOException {
         final Logger logger = Logger.getLogger("info.magnolia");
         final Level originalLogLevel = logger.getLevel();
         logger.setLevel(Level.WARN);
@@ -130,10 +170,14 @@ public abstract class RepositoryTestCase extends TestCase {
             Provider provider = ContentRepository.getRepositoryProvider(repositoryId);
             provider.shutdownRepository();
         }
-        FileUtils.deleteDirectory(new File(SystemProperty.getProperty("magnolia.repositories.home")));
-
-        SystemProperty.getProperties().clear();
+        if(cleanup){
+            cleanUp();
+        }
         logger.setLevel(originalLogLevel);
+    }
+
+    protected void cleanUp() throws IOException {
+        FileUtils.deleteDirectory(new File(SystemProperty.getProperty("magnolia.repositories.home")));
     }
 
     protected void bootstrapSingleResource(String resource) throws Exception{
@@ -143,5 +187,21 @@ public abstract class RepositoryTestCase extends TestCase {
     protected void bootstrap(ClasspathResourcesUtil.Filter filter) throws Exception{
         String[] resourcesToBootstrap = ClasspathResourcesUtil.findResources(filter);
         ModuleUtil.bootstrap(resourcesToBootstrap, false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
+    }
+
+    protected boolean isAutoStart() {
+        return this.autoStart;
+    }
+
+    protected void setAutoStart(boolean autoStart) {
+        this.autoStart = autoStart;
+    }
+
+    protected void setRepositoryConfigFileName(String repositoryConfigFileName) {
+        this.repositoryConfigFileName = repositoryConfigFileName;
+    }
+
+    protected void setJackrabbitRepositoryConfigFileName(String jackrabbitRepositoryConfigFileName) {
+        this.jackrabbitRepositoryConfigFileName = jackrabbitRepositoryConfigFileName;
     }
 }
