@@ -98,11 +98,27 @@ public class CleanBootstrapFiles{
         }, TrueFileFilter.TRUE);
     }
 
-    private static boolean clean(InputStream in, OutputStream out) throws JDOMException, IOException{
+    public static boolean clean(InputStream in, OutputStream out) throws JDOMException, IOException{
+        boolean modified = false;
+
         SAXBuilder builder = new SAXBuilder();
         Document doc = builder.build(in);
 
-        XPath xpath = XPath.newInstance("//sv:property[@sv:name='jcr:mixinTypes']/sv:value[text()='mix:versionable']");
+        String query = "//sv:property[@sv:name='jcr:mixinTypes']/sv:value[text()='mix:versionable']";
+        modified = removeElements(doc, query);
+        modified = removeElements(doc, "//sv:property[@sv:name='jcr:versionHistory']")? true : modified;
+        modified = removeElements(doc, "//sv:property[@sv:name='jcr:predecessors']")? true : modified;
+        modified = removeElements(doc, "//sv:property[@sv:name='jcr:baseVersion']")? true : modified;
+        modified = removeElements(doc, "//sv:property[@sv:name='jcr:isCheckedOut']")? true : modified;
+
+        final Format format = Format.getPrettyFormat();
+        format.setLineSeparator(System.getProperty("line.separator"));
+        new XMLOutputter(format).output(doc, out);
+        return true;
+   }
+
+    private static boolean removeElements(Document doc, String query) throws JDOMException {
+        XPath xpath = XPath.newInstance(query);
         Collection nodes = xpath.selectNodes(doc.getRootElement());
         if(nodes.isEmpty()){
             return false;
@@ -116,9 +132,6 @@ public class CleanBootstrapFiles{
                 node.detach();
             }
         }
-        final Format format = Format.getPrettyFormat();
-        format.setLineSeparator(System.getProperty("line.separator"));
-        new XMLOutputter(format).output(doc, out);
         return true;
-   }
+    }
 }
