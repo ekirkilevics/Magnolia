@@ -65,10 +65,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class MgnlTestCase extends TestCase {
 
-    private static final String MGNL_BEANS_PROPERTIES = "/mgnl-beans.properties";
-    /**
-     * Logger.
-     */
     private static Logger log = LoggerFactory.getLogger(MgnlTestCase.class);
 
     protected void setUp() throws Exception {
@@ -77,6 +73,11 @@ public abstract class MgnlTestCase extends TestCase {
 
         FactoryUtil.clear();
         initDefaultImplementations();
+        setMagnoliaProperties();
+        initContext();
+    }
+
+    protected void initContext() {
         MockUtil.initMockContext();
     }
 
@@ -86,14 +87,34 @@ public abstract class MgnlTestCase extends TestCase {
         MgnlContext.setInstance(null);
     }
 
-    public static void initDefaultImplementations() throws IOException {
+    protected void setMagnoliaProperties() throws Exception {
+        setMagnoliaProperties(getMagnoliaPropertiesStream());
+    }
+
+    protected void setMagnoliaProperties(InputStream propertiesStream) throws IOException {
+        try {
+            SystemProperty.getProperties().load(propertiesStream);
+        } finally {
+            IOUtils.closeQuietly(propertiesStream);
+        }
+    }
+
+    protected InputStream getMagnoliaPropertiesStream() throws IOException {
+        return this.getClass().getResourceAsStream(getMagnoliaPropertiesFileName());
+    }
+
+    protected String getMagnoliaPropertiesFileName() {
+        return "/test-magnolia.properties";
+    }
+
+    protected void initDefaultImplementations() throws IOException {
         PropertiesInitializer.getInstance().loadBeanProperties();
         PropertiesInitializer.getInstance().loadAllModuleProperties();
     }
 
-    public static MockHierarchyManager initConfigRepository(String conf) throws IOException, RepositoryException, UnsupportedRepositoryOperationException {
+    protected MockHierarchyManager initMockConfigRepository(String properties) throws IOException, RepositoryException, UnsupportedRepositoryOperationException {
 
-        MockHierarchyManager hm = MockUtil.createAndSetHierarchyManager(ContentRepository.CONFIG, conf);
+        MockHierarchyManager hm = MockUtil.createAndSetHierarchyManager(ContentRepository.CONFIG, properties);
 
         MockUtil.mockObservation(hm);
 
