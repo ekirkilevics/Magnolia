@@ -73,7 +73,7 @@ public class FilterTest extends MgnlTestCase {
             "/server/filters/second.prop1=val2\n" +
             "/server/filters/second.class=info.magnolia.cms.filters.FilterTest$TestFilter\n";
 
-        initConfigRepository(conf);
+        initMockConfigRepository(conf);
 
         MgnlMainFilter mf = initMainFilter();
         CompositeFilter rootFilter = (CompositeFilter)  mf.getRootFilter();
@@ -102,7 +102,7 @@ public class FilterTest extends MgnlTestCase {
             "/server/filters/decorated.class=info.magnolia.cms.filters.FilterDecorator\n" +
             "/server/filters/decorated/decoratedFilter.class=info.magnolia.cms.filters.FilterTest$NotMagnoliaFilter\n";
 
-        initConfigRepository(conf);
+        initMockConfigRepository(conf);
 
 
         MgnlMainFilter mf = initMainFilter();
@@ -133,7 +133,7 @@ public class FilterTest extends MgnlTestCase {
             "/server/filters/first/bypasses/dot.pattern=.\n" +
             "/server/filters/second.class=info.magnolia.cms.filters.FilterTest$TestFilter\n";
 
-        initConfigRepository(conf);
+        initMockConfigRepository(conf);
 
         MgnlMainFilter mf = initMainFilter();
 
