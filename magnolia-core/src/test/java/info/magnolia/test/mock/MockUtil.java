@@ -127,14 +127,9 @@ public class MockUtil {
      * Mocks the current and system context
      */
     public static MockContext initMockContext() {
-        final MockContext ctx = new MockContext();
+        final MockContext ctx = new MockWebContext();
         MgnlContext.setInstance(ctx);
-        // and system context as well
-        FactoryUtil.setInstanceFactory(SystemContext.class, new FactoryUtil.InstanceFactory(){
-        	public Object newInstance() {
-        	    return ctx;
-        	}
-        }); 
+        FactoryUtil.setImplementation(SystemContext.class, MockContext.class);
         return ctx;
     }
 
