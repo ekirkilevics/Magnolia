@@ -71,6 +71,15 @@ public class PropertiesInitializer {
     }
 
     private static Logger log =  LoggerFactory.getLogger(PropertiesInitializer.class);
+    /**
+     * Default value for the MAGNOLIA_INITIALIZATION_FILE parameter.
+     */
+    public static final String DEFAULT_INITIALIZATION_PARAMETER = //
+    "WEB-INF/config/${servername}/${webapp}/magnolia.properties," //$NON-NLS-1$
+        + "WEB-INF/config/${servername}/magnolia.properties," //$NON-NLS-1$
+        + "WEB-INF/config/${webapp}/magnolia.properties," //$NON-NLS-1$
+        + "WEB-INF/config/default/magnolia.properties," //$NON-NLS-1$
+        + "WEB-INF/config/magnolia.properties"; //$NON-NLS-1$
 
     public void loadAllProperties(String propertiesFilesString, String rootPath) {
         // load mgnl-beans.properties first
@@ -209,6 +218,13 @@ public class PropertiesInitializer {
                 SystemProperty.setProperty(key, value);
             }
         }
+    }
+
+    public static String processPropertyFilesString(String servername, String webapp, String propertiesFilesString) {
+        propertiesFilesString = StringUtils.replace(propertiesFilesString, "${servername}", servername); //$NON-NLS-1$
+        propertiesFilesString = StringUtils.replace(propertiesFilesString, "${webapp}", webapp); //$NON-NLS-1$
+
+        return propertiesFilesString;
     }
 
 }
