@@ -127,26 +127,13 @@ public class MgnlServletContextListener implements ServletContextListener {
     /**
      * Logger.
      */
-    private static Logger log = LoggerFactory.getLogger(MgnlServletContextListener.class);
+    public static Logger log = LoggerFactory.getLogger(MgnlServletContextListener.class);
 
     /**
      * Context parameter name.
      */
     public static final String MAGNOLIA_INITIALIZATION_FILE = "magnolia.initialization.file"; //$NON-NLS-1$
 
-    /**
-     * Default value for the MAGNOLIA_INITIALIZATION_FILE parameter.
-     */
-    public static final String DEFAULT_INITIALIZATION_PARAMETER = //
-    "WEB-INF/config/${servername}/${webapp}/magnolia.properties," //$NON-NLS-1$
-        + "WEB-INF/config/${servername}/magnolia.properties," //$NON-NLS-1$
-        + "WEB-INF/config/${webapp}/magnolia.properties," //$NON-NLS-1$
-        + "WEB-INF/config/default/magnolia.properties," //$NON-NLS-1$
-        + "WEB-INF/config/magnolia.properties"; //$NON-NLS-1$
-
-    /**
-     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
-     */
     public void contextDestroyed(ServletContextEvent sce) {
         ModuleManager.Factory.getInstance().stopModules();
 
@@ -188,55 +175,17 @@ public class MgnlServletContextListener implements ServletContextListener {
         }, true);
     }
 
-
-
     protected String getPropertiesFilesString(ServletContext context, String servername, String webapp) {
         String propertiesFilesString = context.getInitParameter(MAGNOLIA_INITIALIZATION_FILE);
-
         if (StringUtils.isEmpty(propertiesFilesString)) {
-            log.debug("{} value in web.xml is undefined, falling back to default: {}", MAGNOLIA_INITIALIZATION_FILE, DEFAULT_INITIALIZATION_PARAMETER);
-            propertiesFilesString = DEFAULT_INITIALIZATION_PARAMETER;
+            log.debug("{} value in web.xml is undefined, falling back to default: {}", MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE, PropertiesInitializer.DEFAULT_INITIALIZATION_PARAMETER);
+            propertiesFilesString = PropertiesInitializer.DEFAULT_INITIALIZATION_PARAMETER;
         }
         else {
-            log.debug("{} value in web.xml is :'{}'", MAGNOLIA_INITIALIZATION_FILE, propertiesFilesString); //$NON-NLS-1$
+            log.debug("{} value in web.xml is :'{}'", MgnlServletContextListener.MAGNOLIA_INITIALIZATION_FILE, propertiesFilesString); //$NON-NLS-1$
         }
-        propertiesFilesString = StringUtils.replace(propertiesFilesString, "${servername}", servername); //$NON-NLS-1$
-        propertiesFilesString = StringUtils.replace(propertiesFilesString, "${webapp}", webapp); //$NON-NLS-1$
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        return propertiesFilesString;
+        return PropertiesInitializer.processPropertyFilesString(servername, webapp, propertiesFilesString);
     }
-
 
     protected String initWebappName(String rootPath) {
         String webapp = StringUtils.substringAfterLast(rootPath, "/"); //$NON-NLS-1$
