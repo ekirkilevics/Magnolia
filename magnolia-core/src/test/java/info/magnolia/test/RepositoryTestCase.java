@@ -87,7 +87,7 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
 
     protected void modifyContextesToUseRealRepository() {
         // create a mock web context with same repository acquiring strategy as the system context
-        SystemContext systemContext = MgnlContext.getSystemContext();
+        SystemContext systemContext = (SystemContext) MgnlContext.getSystemContext();
         SystemRepositoryStrategy repositoryStrategy = new SystemRepositoryStrategy(systemContext);
 
         //update the mock context
