@@ -117,8 +117,12 @@ public class ContentUtil {
      * @version $Id$
      *
      */ // TODO : throws RepositoryException or none, but not Exception !?
-    public interface Visitor {
+    public static interface Visitor {
         void visit(Content node) throws Exception;
+    }
+
+    public static interface PostVisitor extends Visitor {
+        void postVisit(Content node) throws Exception;
     }
 
     /**
@@ -344,6 +348,9 @@ public class ContentUtil {
         visitor.visit(node);
         for (Iterator iter = node.getChildren(filter).iterator(); iter.hasNext();) {
             visit((Content) iter.next(), visitor, filter);
+        }
+        if(visitor instanceof PostVisitor){
+            ((PostVisitor)visitor).postVisit(node);
         }
     }
 
