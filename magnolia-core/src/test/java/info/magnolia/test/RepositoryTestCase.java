@@ -34,6 +34,7 @@
 package info.magnolia.test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.module.ModuleUtil;
@@ -75,7 +76,10 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     private boolean autoStart = true;
 
     private String repositoryConfigFileName;
+
     private String jackrabbitRepositoryConfigFileName;
+
+    private boolean quiet = true;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -98,8 +102,9 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     protected void startRepository() throws Exception {
         final Logger logger = Logger.getLogger("info.magnolia");
         final Level originalLogLevel = logger.getLevel();
-        logger.setLevel(Level.WARN);
-
+        if(this.isQuiet()){
+            logger.setLevel(Level.WARN);
+        }
         ContentRepository.REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
         ContentRepository.REPOSITORY_PSWD = SystemProperty.getProperty("magnolia.connection.jcr.password");
 
@@ -158,18 +163,12 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     protected void shutdownRepository(boolean cleanup) throws IOException {
         final Logger logger = Logger.getLogger("info.magnolia");
         final Level originalLogLevel = logger.getLevel();
-        logger.setLevel(Level.WARN);
-
-        Iterator i = ContentRepository.getAllRepositoryNames();
-        HashSet ids = new HashSet();
-        while (i.hasNext()) {
-            String repositoryName = i.next().toString();
-            String repositoryId = ContentRepository.getMappedRepositoryName(repositoryName);
-            if (ids.contains(repositoryId)) continue;
-            ids.add(repositoryId);
-            Provider provider = ContentRepository.getRepositoryProvider(repositoryId);
-            provider.shutdownRepository();
+        if(this.isQuiet()){
+            logger.setLevel(Level.WARN);
         }
+        MgnlContext.release();
+        ShutdownManager.getInstance().execute();
+        ShutdownManager.getInstance().clear();
         if(cleanup){
             cleanUp();
         }
@@ -203,5 +202,15 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
 
     protected void setJackrabbitRepositoryConfigFileName(String jackrabbitRepositoryConfigFileName) {
         this.jackrabbitRepositoryConfigFileName = jackrabbitRepositoryConfigFileName;
+    }
+
+
+    protected boolean isQuiet() {
+        return this.quiet;
+    }
+
+
+    protected void setQuiet(boolean quiet) {
+        this.quiet = quiet;
     }
 }
