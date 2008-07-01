@@ -36,17 +36,13 @@ package info.magnolia.test;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.PropertiesInitializer;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Iterator;
-import java.util.Properties;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
