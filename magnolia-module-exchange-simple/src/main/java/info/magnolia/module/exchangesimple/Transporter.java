@@ -73,7 +73,7 @@ public class Transporter {
      * @return File with all transport data.
      * @throws IOException when some activation content can't be read or writing into temp file fails.
      */
-    private static File prepareTempFile (ActivationContent ac) 
+    private static File prepareTempFile (ActivationContent ac)
         throws IOException {
 
         File f = File.createTempFile(""+System.currentTimeMillis(), ".mgnl_activation");
@@ -84,11 +84,12 @@ public class Transporter {
 
         DataOutputStream dos = new DataOutputStream(new FileOutputStream(f));
 
-        dos.writeBytes("--" + BOUNDARY + "\r\n");
 
         Iterator it = ac.getFiles().keySet().iterator();
         while (it.hasNext()) {
             String fileName = (String) it.next();
+
+            dos.writeBytes("--" + BOUNDARY + "\r\n");
 
             dos.writeBytes("content-disposition: form-data; name=\"" + fileName + "\"; filename=\"" + fileName + "\"\r\n");
             dos.writeBytes("content-type: application/octet-stream\r\n\r\n");
@@ -97,9 +98,9 @@ public class Transporter {
 
             IOUtils.copy(bis, dos);
             IOUtils.closeQuietly(bis);
-
-            dos.writeBytes("\r\n" + "--" + BOUNDARY + "\r\n");
         }
+
+        dos.writeBytes("\r\n--" + BOUNDARY + "--\r\n");
         return f;
     }
 
@@ -116,7 +117,7 @@ public class Transporter {
 
         try {
             tempFile = prepareTempFile(activationContent);
-            
+
             connection.setFixedLengthStreamingMode((int) tempFile.length());
             connection.setDoOutput(true);
             connection.setDoInput(true);
