@@ -125,14 +125,14 @@ public abstract class ObservedManager {
      * Reload a specifig node
      * @param node
      */
-    protected final void reload(Content node) {
+    protected void reload(Content node) {
         onRegister(node);
     }
 
     /**
      * Clears the registered uuids and calls onClear().
      */
-    public final void clear() {
+    public void clear() {
         this.registeredUUIDs.clear();
         onClear();
     }
