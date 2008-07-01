@@ -69,8 +69,6 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     protected List getBasicInstallTasks(InstallContext ctx) {
         List l = new ArrayList();
         l.addAll(GenericTasks.genericTasksFor35());
-        // is that really needed for fresh install? It should be correct in that case.
-        l.add(new CheckNodeTypesDefinitionTask());
         return l;
     }
 
