@@ -107,7 +107,7 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
      */
     public void contextInitialized(ServletContextEvent sce) {
         log.warn("\n***********\nThe use of ShutdownManager as ServletContextListener is deprecated in Magnolia 3.5, "
-            + "please update your web.xml and remove the listener but add a single listener with class name " 
+            + "please update your web.xml and remove the listener but add a single listener with class name "
             + "info.magnolia.cms.servlets.MgnlServletContextListener\n***********");
 
         // nothing to do
@@ -151,6 +151,11 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
             customTasks.add(0, mrc.getCommand((String) element)); // Last Registered First Executed
         }
 
+    }
+
+    public void clear() {
+        super.clear();
+        coreTasks.clear();
     }
 
     protected void onClear() {
