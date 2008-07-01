@@ -12,13 +12,17 @@
     </links>
     <menu name="Documentation">
       <item name="Home" href="index.html" />
+      <!--
       <item name="Build and install" href="/install/intro.html" collapse="true">
         <item name="Tomcat bundle" href="/install/install-bundle.html" />
         <item name="War files" href="/install/install-wars.html" />
         <item name="Nightly build or svn" href="/install/install-build.html" />
+      -->
         <item name="Upgrade" href="/install/upgrade.html" />
+      <!--
         <item name="Building Magnolia" href="/install/build.html" />
       </item>
+      -->
       <item name="Templating" href="/templating/templating.html" collapse="true">
         <item name="Templating Quickstart" href="/qs/00_cover.html" collapse="true">
           <item name="1. Introduction" href="/qs/01_introduction.html" />
@@ -33,23 +37,24 @@
         <item name="Controls" href="/templating/controls.html" />
         <item name="I18N" href="/templating/i18n.html" />
       </item>
-      <item name="Configuration" href="/config/config.html" collapse="true">
+      <!--<item name="Configuration" href="/config/config.html" collapse="true">-->
         <item name="Public instance" href="/config/public.html" />
         <item name="Author instance" href="/config/author.html" />
         <item name="Default Page and 404" href="/config/default_404.html" />
-        <item name="Cache" href="/config/cache.html" />
+        <!--<item name="Cache" href="/config/cache.html" />-->
         <item name="Activation - Subscribers" href="/config/subscribers.html" />
+        <item name="config - Subscribers" href="/config/config_subscribers.html" />
         <!-- <item name="web.xml" href="/config/webxml.html" /> -->
         <item name="One war, multiple configs" href="/config/multiconfig.html" />
-      </item>
-      <item name="Advanced Topics" href="/advanced/advanced.html" collapse="true">
+      <!--</item>-->
+<!--      <item name="Advanced Topics" href="/advanced/advanced.html" collapse="true">-->
         <item name="Export - Import" href="/advanced/export-import.html" />
         <item name="Custom Dialogs" href="/advanced/customDialogs.html" />
         <item name="Custom Controls" href="/advanced/customControls.html" />
         <item name="Custom Modules" href="/advanced/modules.html" />
         <item name="Customize Menu" href="/advanced/menu.html" />
         <item name="I18N" href="/advanced/i18n.html" />
-      </item>
+      <!--</item>-->
       <item name="Workflow" href="/workflow/overview.html" collapse="true">
         <!--<item name="Overview" href="/workflow/overview.html" />-->
         <item name="Integration of OpenWFE" href="/workflow/integration_openWFE.html" />
@@ -58,39 +63,45 @@
         <item name="Test" href="/workflow/test.html" />
         <item name="Timeframe" href="/workflow/timeframe.html" />
       </item>
-      <item name="Tag libraries" href="/taglib/intro.html" collapse="true">
+      <!--<item name="Tag libraries" href="/taglib/intro.html" collapse="true">-->
         <!-- TODO : the following two are generated and should linked to -->
-        <item name="Cms taglib" href="/magnolia-taglib-cms/tagreference.html" />
-        <item name="Cms util taglib" href="/magnolia-taglib-utility/tagreference.html" />
-      </item>
+        <!--<item name="Cms taglib" href="/magnolia-taglib-cms/tagreference.html" />-->
+        <!--<item name="Cms util taglib" href="/magnolia-taglib-utility/tagreference.html" />-->
+      <!--</item>-->
       <item name="Glossary" href="/glossary/glossary.html" />
-      <item name="Jira report" href="/magnolia/jira-report.html" />
-    </menu>
+      <!--<item name="Jira report" href="/magnolia/jira-report.html" />-->
+    <!--</menu>-->
+    <!--
     <menu name="Lists">
       <item name="News Letter" href="/lists/news-list.html" />
       <item name="User List" href="/lists/user-list.html" />
       <item name="Developer List" href="/lists/dev-list.html" />
       <item name="SVN List" href="/lists/svn-list.html" />
     </menu>
+    -->
+   <!--
     <menu name="Download">
       <item name="Releases (sourceforge)" href="http://sourceforge.net/project/showfiles.php?group_id=86297"
         target="_blank" />
     </menu>
-    <menu name="Developers">
-      <item name="Maven goals" href="/developer/mavengoals.html" />
-      <item name="Coding conventions" href="/developer/coding_conventions.html" />
+    -->
+    <!--<menu name="Developers">-->
+        <!--<item name="Maven goals" href="/developer/mavengoals.html" />-->
+        <!--<item name="Coding conventions" href="/developer/coding_conventions.html" />-->
       <item name="Eclipse" href="/developer/eclipseWTP.html" />
-    </menu>
-    <menu name="Contribute">
-      <item name="Contribute" href="/contribute/contribute.html" collapse="true">
+    <!--</menu>-->
+    <!--<menu name="Contribute">
+        <item name="Contribute" href="/contribute/contribute.html" collapse="true">
         <item name="Spread the word" href="/contribute/words.html" />
         <item name="Write Code" href="/contribute/code.html" />
         <item name="Contribute License" href="/contribute/license.html" />
       </item>
+    -->
     </menu>
 
 
 <!-- TODO : the following should be available/generated, at least for the reports we want -->
+<!--
     <menu name="Modules">
       <item name="core" href="/magnolia-core/index.html" collapse="true">
         <item name="Dependencies" href="/magnolia-core/dependencies.html" />
@@ -177,9 +188,12 @@
         <item name="Dependencies" href="/magnolia/dependencies.html" />
       </item>
     </menu>
+    -->
+<!--
     <menu name="" type="footer">
       <item name="Sourceforge" href="http://sourceforge.net/projects/magnolia"
         img="http://sourceforge.net/sflogo.php?group_id=86297&amp;type=8" />
     </menu>
-  </body>
+-->
+</body>
 </project>

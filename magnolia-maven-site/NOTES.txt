@@ -1,0 +1,17 @@
+# Pages to reuse
+  * config properties - /config/multiconfig.html
+  * upgrade since 2.x install/upgrade.html
+  * why instances - config/instances.html
+  * quick guide on how to make an instance public - config/public.html
+  * quick guide on how to make an instance author - config/author.html
+  * 404 - config/default_404.html
+  * some notes on subscribers - config/subscribers.html
+  * subs config - config/config_subscribers.html
+  
+  * glossary/glossary.html
+  
+  * eclipse : check with philipp: developer/eclipseWTP.html
+  
+  * check if "contribute" has been moved to documentation.m.i
+     * including contribution license ??
+
