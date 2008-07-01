@@ -77,6 +77,7 @@ public class LinkBrowserDialogPage extends SimplePageMVCHandler {
         String pathSelected = request.getParameter("pathSelected"); //$NON-NLS-1$
 
         StringBuffer html = new StringBuffer();
+        html.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"); //$NON-NLS-1$
         html.append("<html><head>"); //$NON-NLS-1$
         html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); //$NON-NLS-1$
         html.append(new Sources(request.getContextPath()).getHtmlJs());

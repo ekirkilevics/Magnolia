@@ -381,6 +381,9 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
 
         // after saving
         if (VIEW_CLOSE_WINDOW.equals(view)) {
+
+            out.write("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" ");
+            out.write(" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n");
             out.println("<html>"); //$NON-NLS-1$
             out.println(new Sources(this.getRequest().getContextPath()).getHtmlJs());
             out.println("<script type=\"text/javascript\">"); //$NON-NLS-1$
