@@ -36,7 +36,6 @@ package info.magnolia.test.mock;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.AbstractMapBasedContext;
 import info.magnolia.context.SystemContext;
-import info.magnolia.context.ThreadDependentSystemContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -48,7 +47,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
-public class MockContext extends AbstractMapBasedContext implements SystemContext, ThreadDependentSystemContext{
+public class MockContext extends AbstractMapBasedContext implements SystemContext{
 
     private static Logger log = LoggerFactory.getLogger(MockContext.class);
 
@@ -58,12 +57,6 @@ public class MockContext extends AbstractMapBasedContext implements SystemContex
 
     public void addHierarchyManager(String repositoryId, HierarchyManager hm){
         ((MockRepositoryAcquiringStrategy) this.getRepositoryStrategy()).addHierarchyManager(repositoryId, hm);
-    }
-
-    public void releaseThread() {
-        if(this.getRepositoryStrategy()!= null){
-            this.getRepositoryStrategy().release();
-        }
     }
 
 }

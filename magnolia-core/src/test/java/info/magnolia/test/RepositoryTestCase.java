@@ -167,6 +167,7 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
             logger.setLevel(Level.WARN);
         }
         MgnlContext.release();
+        MgnlContext.getSystemContext().release();
         ShutdownManager.getInstance().execute();
         ShutdownManager.getInstance().clear();
         if(cleanup){
