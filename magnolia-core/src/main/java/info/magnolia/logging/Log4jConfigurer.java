@@ -92,13 +92,6 @@ public abstract class Log4jConfigurer {
     }
 
     /**
-     * @deprecated since 3.5 : use initLogging() instead.
-     */
-    public static void initLogging(ServletContext servletContext) {
-        initLogging();
-    }
-
-    /**
      * Initialize Log4J, including setting the web app root system property.
      */
     public static void initLogging() {
@@ -159,13 +152,6 @@ public abstract class Log4jConfigurer {
             }
 
         }
-    }
-
-    /**
-     * @deprecated since 3.5 : use shutdownLogging() instead.
-     */
-    public static void shutdownLogging(Map parameters) {
-        shutdownLogging();
     }
 
     /**
