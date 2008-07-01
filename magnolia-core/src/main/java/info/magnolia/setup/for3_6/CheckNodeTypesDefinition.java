@@ -37,8 +37,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractTask;
-import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.module.delta.AbstractCondition;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,6 +49,8 @@ import org.jdom.Document;
 import org.jdom.Element;
 import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -58,13 +59,15 @@ import org.jdom.input.SAXBuilder;
  * @version $Id: $
  *
  */
-public class CheckNodeTypesDefinitionTask extends AbstractTask {
+public class CheckNodeTypesDefinition extends AbstractCondition {
 
-    public CheckNodeTypesDefinitionTask() {
+    private static Logger log = LoggerFactory.getLogger(CheckNodeTypesDefinition.class);
+
+    public CheckNodeTypesDefinition() {
         super("Check existing node types definition", "Checks existing node types definition for occurence of mix:versionable.");
     }
 
-    public void execute(InstallContext ctx) throws TaskExecutionException {
+    public boolean check(InstallContext installContext) {
         String home = SystemProperty.getProperty("magnolia.repositories.home");
         File repoHome = new File(Path.getAbsoluteFileSystemPath(home));
 
@@ -83,18 +86,21 @@ public class CheckNodeTypesDefinitionTask extends AbstractTask {
                     Element supertypeElement = (Element) iterator2.next();
                     String supertype = supertypeElement.getText();
                     if(supertype.equals(ItemType.MIX_VERSIONABLE)){
-                        throw new TaskExecutionException("Found mix:versionable as a supertype in the custom_nodetypes.xml. Please replace this with mix:referencable and restart the server. Refer to Magnolia Documentation at  http://documentation.magnolia.info/releases/3-6.html for details.");
+                        String msg = "Found mix:versionable as a supertype in the custom_nodetypes.xml. Please replace this with mix:referencable and restart the server. Refer to Magnolia Documentation at  http://documentation.magnolia.info/releases/3-6.html for details.";
+                        installContext.error(msg, new Exception(msg));
+                        return false;
                     }
                 }
             }
         } catch (JDOMException e) {
             String msg = "Failed to parse custom_nodetypes.xml due to " + e.getMessage();
             log.error(msg, e);
-            throw new TaskExecutionException(msg);
+            return false;
         } catch (IOException e) {
             String msg = "Failed to access custom_nodetypes.xml due to " + e.getMessage();
             log.error(msg, e);
-            throw new TaskExecutionException(msg);
+            return false;
         }
+        return true;
     }
 }
