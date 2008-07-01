@@ -71,12 +71,6 @@ public class DialogSelect extends DialogBox {
      */
     private static Logger log = LoggerFactory.getLogger(DialogSelect.class);
 
-    /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogSelect() {
-    }
-
     public void setOptions(Content configNode) {
         List options = new ArrayList();
         try {

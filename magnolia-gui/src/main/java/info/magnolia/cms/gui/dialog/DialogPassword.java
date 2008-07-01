@@ -50,12 +50,6 @@ import org.apache.commons.lang.StringUtils;
 public class DialogPassword extends DialogBox {
 
     /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogPassword() {
-    }
-
-    /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {

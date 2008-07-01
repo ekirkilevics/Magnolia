@@ -62,7 +62,7 @@ import org.slf4j.LoggerFactory;
  * <p>
  * Sample configuration:
  * </p>
- * 
+ *
  * <pre>
  * + dialog
  *   + tabText
@@ -83,7 +83,7 @@ import org.slf4j.LoggerFactory;
  *       * name           "link"
  *       * controlType    "editWithButtons"
  * </pre>
- * 
+ *
  * @author Fabrizio Giustina
  * @since 2.2
  */
@@ -98,12 +98,6 @@ public class DialogEditWithCustomButtons extends DialogBox {
      * List of Buttons loaded from configuration.
      */
     private List buttons = new ArrayList();
-
-    /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogEditWithCustomButtons() {
-    }
 
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)

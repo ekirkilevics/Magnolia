@@ -54,12 +54,6 @@ public class DialogDate extends DialogEditWithButton {
     Logger log = LoggerFactory.getLogger(DialogDate.class);
 
     /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogDate() {
-    }
-
-    /**
      * Customize the dialog.
      * @see info.magnolia.cms.gui.dialog.DialogEditWithButton#doBeforeDrawHtml()
      */

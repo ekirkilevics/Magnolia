@@ -48,11 +48,6 @@ import javax.jcr.PropertyType;
  */
 public class DialogEdit extends DialogBox {
 
-    /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogEdit() {
-    }
 
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)

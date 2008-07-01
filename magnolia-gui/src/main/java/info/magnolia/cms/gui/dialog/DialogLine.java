@@ -44,12 +44,6 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DialogLine {
 
-    /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    public DialogLine() {
-    }
-
     public String getHtml() {
         return this.getHtml(0, 2, 0);
     }
@@ -84,9 +78,9 @@ public class DialogLine {
 
     public String getHtml(String width) {
         StringBuffer html = new StringBuffer();
-        html.append("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:" + width + ";\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append("\n<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" style=\"width:" + width + ";\">"); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(this.getHtml(1));
-        html.append("</table>"); //$NON-NLS-1$
+        html.append("</table>\n"); //$NON-NLS-1$
         return html.toString();
     }
 }

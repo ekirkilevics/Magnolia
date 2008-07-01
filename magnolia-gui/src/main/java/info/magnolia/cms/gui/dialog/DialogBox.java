@@ -117,7 +117,7 @@ public class DialogBox extends DialogControlImpl {
 
     public void drawHtmlPost(Writer out) throws IOException {
         out.write(this.getHtmlDescription());
-        out.write("</td></tr>"); //$NON-NLS-1$
+        out.write("</td></tr>\n"); //$NON-NLS-1$
     }
 
     public String getHtmlDescription() {

@@ -44,12 +44,6 @@ import java.io.Writer;
 public class DialogStatic extends DialogBox {
 
     /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogStatic() {
-    }
-
-    /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {

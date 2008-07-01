@@ -58,12 +58,6 @@ public class DialogEditWithButton extends DialogBox {
     private List buttons = new ArrayList();
 
     /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogEditWithButton() {
-    }
-
-    /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)
@@ -108,7 +102,7 @@ public class DialogEditWithButton extends DialogBox {
         this.drawHtmlPre(out);
         String width = this.getConfigValue("width", "95%"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write("<table cellpadding=\"0\" cellspacing=\"0\" border=\"0\" width=\"" + width + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
-        out.write("<tr><td width=\"100%\"  class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
+        out.write("<tr><td style=\"width:100%\"  class=\"" + CssConstants.CSSCLASS_EDITWITHBUTTON + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         out.write(control.getHtml());
         if (this.getConfigValue("buttonLabel", null) != null) { //$NON-NLS-1$
             String label = this.getConfigValue("buttonLabel"); //$NON-NLS-1$

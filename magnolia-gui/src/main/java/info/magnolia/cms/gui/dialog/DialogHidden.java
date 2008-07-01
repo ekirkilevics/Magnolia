@@ -46,12 +46,6 @@ import java.io.Writer;
 public class DialogHidden extends DialogBox {
 
     /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogHidden() {
-    }
-
-    /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {

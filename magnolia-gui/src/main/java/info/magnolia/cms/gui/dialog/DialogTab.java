@@ -48,12 +48,6 @@ import org.apache.commons.lang.StringUtils;
  */
 public class DialogTab extends DialogControlImpl {
 
-    /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogTab() {
-    }
-
     public void drawHtmlPreSubs(Writer out) throws IOException {
         String parentId = this.getParent().getId();
         String id = this.getId();

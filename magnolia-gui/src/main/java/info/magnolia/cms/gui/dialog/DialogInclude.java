@@ -54,12 +54,6 @@ public class DialogInclude extends DialogBox {
     private static Logger log = LoggerFactory.getLogger(DialogInclude.class);
 
     /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogInclude() {
-    }
-
-    /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
      */
     public void drawHtml(Writer out) throws IOException {

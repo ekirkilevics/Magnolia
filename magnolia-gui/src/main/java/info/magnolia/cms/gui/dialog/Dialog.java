@@ -49,6 +49,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -131,6 +133,12 @@ public class Dialog extends DialogControlImpl {
 
     public DialogTab addTab(String label) {
         DialogTab tab = new DialogTab();
+        try {
+            tab.init(getRequest(), getResponse(), null, null);
+        }
+        catch (RepositoryException e) {
+            // ignore
+        }
         tab.setLabel(label);
         this.getSubs().add(tab);
         return tab;

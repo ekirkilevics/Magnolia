@@ -75,12 +75,6 @@ public class DialogButtonSet extends DialogBox {
 
     private int buttonType = ControlImpl.BUTTONTYPE_RADIO;
 
-    /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogButtonSet() {
-    }
-
     public void setOptions(Content configNode, boolean setDefaultSelected) {
         // setDefaultSelected: does not work properly (no difference between never stored and removed...)
         // therefor do only use for radio, not for checkbox
@@ -121,7 +115,7 @@ public class DialogButtonSet extends DialogBox {
 
     protected Collection getOptionNodes(Content configNode) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         Content optionsNode = null;
-        
+
         if(configNode.hasContent("options")){
             optionsNode = configNode.getContent("options"); //$NON-NLS-1$
         }
@@ -132,7 +126,7 @@ public class DialogButtonSet extends DialogBox {
                 optionsNode = ContentUtil.getContent(repository, path);
             }
         }
-        
+
         if(optionsNode != null){
             return ContentUtil.getAllChildren(optionsNode);
         }
@@ -210,13 +204,13 @@ public class DialogButtonSet extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
-        
+
         // translate
         for (int i = 0; i < this.getOptions().size(); i++) {
             Button b = (Button) this.getOptions().get(i);
             b.setLabel(this.getMessage(b.getLabel()));
         }
-        
+
         ButtonSet control;
         if (this.getConfigValue("valueType").equals("multiple")) { //$NON-NLS-1$ //$NON-NLS-2$
             // checkbox

@@ -63,12 +63,6 @@ public class DialogFile extends DialogBox {
     private List imageExtensions = new ArrayList();
 
     /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogFile() {
-    }
-
-    /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#init(HttpServletRequest, HttpServletResponse, Content, Content)
      */
     public void init(HttpServletRequest request, HttpServletResponse response, Content websiteNode, Content configNode)

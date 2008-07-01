@@ -43,12 +43,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 public class DialogLink extends DialogEditWithButton {
 
     /**
-     * Empty constructor should only be used by DialogFactory.
-     */
-    protected DialogLink() {
-    }
-
-    /**
      * Customize the dialog.
      * @see info.magnolia.cms.gui.dialog.DialogEditWithButton#doBeforeDrawHtml()
      */
@@ -63,7 +57,7 @@ public class DialogLink extends DialogEditWithButton {
         String tree = this.getConfigValue("tree", repository);
         String buttonOnClick = this.getConfigValue(
             "buttonOnClick",
-            "mgnlDialogLinkOpenBrowser('" + this.getName() + "','" + tree + "','" + extension + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$    
+            "mgnlDialogLinkOpenBrowser('" + this.getName() + "','" + tree + "','" + extension + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
         this.getButton().setOnclick(buttonOnClick);
 
     }
