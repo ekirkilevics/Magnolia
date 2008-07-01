@@ -46,6 +46,8 @@ import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckOrCreatePropertyTask;
 import info.magnolia.module.delta.CopyOrReplaceNodePropertiesTask;
 import info.magnolia.module.delta.CreateNodeTask;
+import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
 import info.magnolia.module.delta.ModuleFilesExtraction;
 import info.magnolia.module.delta.MoveAndRenamePropertyTask;
@@ -75,6 +77,7 @@ import info.magnolia.setup.for3_5.UpdateI18nConfiguration;
 import info.magnolia.setup.for3_5.UpdateURI2RepositoryMappings;
 import info.magnolia.setup.for3_5.UpdateURIMappings;
 import info.magnolia.setup.for3_5.WarnIgnoredModuleFilters;
+import info.magnolia.setup.for3_6.CheckNodeTypesDefinitionTask;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -99,16 +102,16 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private static final String UNSECURE_URIS_BACKUP_PATH = "/server/install/backup/unsecureURIList";
     private static final String SECURE_URIS_BACKUP_PATH = "/server/install/backup/secureURIList";
 
-    // tasks which have to be executed wether we're installing or upgrading from 3.0
+    // tasks which have to be executed whether we're installing or upgrading from 3.0
     private final List genericTasksFor35 = Arrays.asList(new Task[]{
             // - install server node
-            new NodeExistsDelegateTask("Server node", "Creates the server node in the config repository if needed.", ContentRepository.CONFIG, "/server", null, 
+            new NodeExistsDelegateTask("Server node", "Creates the server node in the config repository if needed.", ContentRepository.CONFIG, "/server", null,
                     new CreateNodeTask(null, null, ContentRepository.CONFIG, "/", "server", ItemType.CONTENT.getSystemName())),
-            
+
             // - install or update modules node
             new NodeExistsDelegateTask("Modules node", "Creates the modules node in the config repository if needed.", ContentRepository.CONFIG, "/modules", null,
                     new CreateNodeTask(null, null, ContentRepository.CONFIG, "/", "modules", ItemType.CONTENT.getSystemName())),
-                    
+
             new MigrateFilterConfiguration("/mgnl-bootstrap/core/config.server.filters.xml"),
 
             new BootstrapConditionally("IPConfig rules changed",
@@ -162,8 +165,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                     new AddURIPermissionsToAllRoles(false)),
 
             new IsAuthorInstanceDelegateTask("Anonymous role", "Anonymous role must exist",
-                new BootstrapConditionally("", "Author permissions", "/mgnl-bootstrap/core/userroles.anonymous.xml"), 
-                new BootstrapConditionally("", "Public permissions", "/mgnl-bootstrap/core/public/userroles.anonymous.xml")), 
+                new BootstrapConditionally("", "Author permissions", "/mgnl-bootstrap/core/userroles.anonymous.xml"),
+                new BootstrapConditionally("", "Public permissions", "/mgnl-bootstrap/core/public/userroles.anonymous.xml")),
 
             new BootstrapConditionally("Superuser role", "Bootstraps the superuser role if needed.", "/mgnl-bootstrap/core/userroles.superuser.xml"),
 
@@ -184,7 +187,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             // --- generic tasks
             new ModuleFilesExtraction(),
             new RegisterModuleServletsTask(),
-            
+
             // --- check and update old security configuration if necessary
             new NodeExistsDelegateTask("Security configuration", "The unsecureURIList configuration was removed from /servers and will be handled by the uriSecurityFilter in 3.5.", ContentRepository.CONFIG, "/server/unsecureURIList", new ArrayDelegateTask("UnsecureURIList update", new Task[] {
                 new MoveNodeTask("Unsecure URIs", "Moves the current configuration of unsecure URIs to a backup location", ContentRepository.CONFIG, "/server/unsecureURIList", UNSECURE_URIS_BACKUP_PATH, true),
@@ -205,10 +208,18 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
     public CoreModuleVersionHandler() {
         super();
+        final Delta delta35 = DeltaBuilder.update("3.5", "").addTasks(genericTasksFor35);
+        register(delta35);
+        final Delta delta36 = DeltaBuilder.update("3.6", "").addTask(new CheckNodeTypesDefinitionTask());
+        register(delta36);
     }
 
     protected List getBasicInstallTasks(InstallContext ctx) {
-        return genericTasksFor35;
+        List l = new ArrayList();
+        l.addAll(genericTasksFor35);
+        // is that really needed for fresh install? It should be correct in that case.
+        l.add(new CheckNodeTypesDefinitionTask());
+        return l;
     }
 
     protected List getInstallConditions() {
