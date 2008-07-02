@@ -46,7 +46,6 @@ import java.net.HttpURLConnection;
 import java.util.Iterator;
 
 import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ClassUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -73,10 +72,9 @@ public class Transporter {
      * @return File with all transport data.
      * @throws IOException when some activation content can't be read or writing into temp file fails.
      */
-    private static File prepareTempFile (ActivationContent ac) 
-        throws IOException {
+    private static File prepareTempFile(ActivationContent ac) throws IOException {
 
-        File f = File.createTempFile(""+System.currentTimeMillis(), ".mgnl_activation");
+        File f = File.createTempFile("" + System.currentTimeMillis(), ".mgnl_activation");
 
         log.debug("prepareTempFile() " + f.getPath());
 
@@ -90,7 +88,11 @@ public class Transporter {
         while (it.hasNext()) {
             String fileName = (String) it.next();
 
-            dos.writeBytes("content-disposition: form-data; name=\"" + fileName + "\"; filename=\"" + fileName + "\"\r\n");
+            dos.writeBytes("content-disposition: form-data; name=\""
+                + fileName
+                + "\"; filename=\""
+                + fileName
+                + "\"\r\n");
             dos.writeBytes("content-type: application/octet-stream\r\n\r\n");
 
             BufferedInputStream bis = new BufferedInputStream(new FileInputStream(ac.getFile(fileName)));
@@ -109,14 +111,15 @@ public class Transporter {
      * @param activationContent
      * @throws ExchangeException
      */
-    public static void transport(HttpURLConnection connection, ActivationContent activationContent) throws ExchangeException {
+    public static void transport(HttpURLConnection connection, ActivationContent activationContent)
+        throws ExchangeException {
         File tempFile = null;
         FileInputStream is = null;
         OutputStream os = null;
 
         try {
             tempFile = prepareTempFile(activationContent);
-            
+
             connection.setFixedLengthStreamingMode((int) tempFile.length());
             connection.setDoOutput(true);
             connection.setDoInput(true);
