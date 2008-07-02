@@ -38,16 +38,26 @@ import info.magnolia.module.cache.util.GZipUtil;
 import java.io.IOException;
 
 import org.apache.commons.collections.MultiMap;
+import org.apache.commons.lang.builder.ToStringBuilder;
+import org.apache.commons.lang.builder.ToStringStyle;
 
 /**
- * Wraps a page reponse. It is assumed that the given content is gzipped
+ * Wraps a page response. It is assumed that the given content is gzipped
  * if appropriate (i.e if the gzip filter is in the chain) and this class
  * thus ungzips it to be able to serve both contents.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public final class CachedPage implements CachedEntry {
+public class CachedPage implements CachedEntry {
+
+    private static final ToStringStyle BYTE_ARRAY_SIZE_STYLE = new ToStringStyle() {
+        protected void appendDetail(StringBuffer buffer, String fieldName,
+                byte[] array) {
+            super.appendDetail(buffer, fieldName, array.length + " bytes");
+        }
+    };
+
     // TODO : headers and cookies ?
     private final byte[] defaultContent;
     private final byte[] ungzippedContent;
@@ -109,14 +119,6 @@ public final class CachedPage implements CachedEntry {
     }
 
     public String toString() {
-        return "CachedPage{" +
-                "defaultContent=" + defaultContent.length + " bytes" +
-                ", ungzippedContent=" + (ungzippedContent != null ? ungzippedContent.length + " bytes" : null) +
-                ", contentType='" + contentType + '\'' +
-                ", characterEncoding='" + characterEncoding + '\'' +
-                ", statusCode=" + statusCode +
-                ", headers=" + headers +
-                ", lastModificationTime=" + lastModificationTime +
-                '}';
+        return ToStringBuilder.reflectionToString(this, BYTE_ARRAY_SIZE_STYLE);
     }
 }
