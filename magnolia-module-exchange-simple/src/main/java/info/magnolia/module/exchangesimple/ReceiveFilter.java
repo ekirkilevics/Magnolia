@@ -139,7 +139,6 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          if (StringUtils.isEmpty(authorization)) {
              authorization = request.getParameter(SimpleSyndicator.AUTH_USER);
          } else {
-             log.error("AUTH:" +authorization);
             authorization = new String(Base64.decodeBase64(authorization.substring(6).getBytes())); //Basic uname:pwd
             authorization = authorization.substring(0, authorization.indexOf(":"));
          }
