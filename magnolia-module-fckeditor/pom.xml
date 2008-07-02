@@ -2,7 +2,7 @@
   <parent>
     <artifactId>magnolia-project</artifactId>
     <groupId>info.magnolia</groupId>
-    <version>3.6-SNAPSHOT</version>
+    <version>3.6-m3</version>
     <relativePath>../pom.xml</relativePath>
   </parent>
   <modelVersion>4.0.0</modelVersion>
@@ -12,17 +12,17 @@
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
-      <version>3.6-SNAPSHOT</version>
+      <version>3.6-m3</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-module-admininterface</artifactId>
-      <version>3.6-SNAPSHOT</version>
+      <version>3.6-m3</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-gui</artifactId>
-      <version>3.6-SNAPSHOT</version>
+      <version>3.6-m3</version>
     </dependency>
     <dependency>
       <groupId>javax.servlet</groupId>
@@ -43,7 +43,7 @@
       <groupId>info.magnolia</groupId>
       <artifactId>magnolia-core</artifactId>
       <type>test-jar</type>
-      <version>3.6-SNAPSHOT</version>
+      <version>3.6-m3</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
