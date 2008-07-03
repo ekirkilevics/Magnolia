@@ -17,7 +17,7 @@
     <sv:value>info.magnolia.module.workflow.messages</sv:value>
   </sv:property>
   <sv:property sv:name="saveOnclick" sv:type="String">
-    <sv:value>opener.mgnl.workflow.WorkflowWebsiteTree.submitActivation($('comment').value);</sv:value>
+    <sv:value>window.close();opener.mgnl.workflow.WorkflowWebsiteTree.submitActivation($('comment').value);</sv:value>
   </sv:property>
   <sv:property sv:name="width" sv:type="String">
     <sv:value>600</sv:value>
