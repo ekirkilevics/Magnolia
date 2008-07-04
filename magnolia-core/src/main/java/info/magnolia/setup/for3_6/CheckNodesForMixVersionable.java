@@ -37,6 +37,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractCondition;
+import info.magnolia.module.delta.TaskExecutionException;
 
 import java.util.Iterator;
 
@@ -57,6 +58,9 @@ public class CheckNodesForMixVersionable extends AbstractCondition {
 
     private static Logger log = LoggerFactory.getLogger(CheckNodesForMixVersionable.class);
 
+    public static final String UPDATE_PATH= "server/install/3_6";
+    public static final String CONTENT_CHECK_FLAG = "contentMigrated";
+
     public CheckNodesForMixVersionable() {
         super("Check existing top level nodes", "Checks existing top level nodes for existence of mix:versionable.");
     }
@@ -64,17 +68,25 @@ public class CheckNodesForMixVersionable extends AbstractCondition {
     public boolean check(InstallContext installContext) {
         HierarchyManager hm = installContext.getHierarchyManager("website");
         try {
-        Iterator iter = hm.getRoot().getChildren().iterator();
-        while (iter.hasNext()) {
-            NodeType[] nt = ((Content) iter.next()).getMixinNodeTypes();
-            for (int i = 0; i < nt.length; i++) {
-                if ("mix:versionable".equals(nt[i].getName())) {
-                    installContext.warn("There are nodes in your repository that still contains unnecessary mix:versionable. Please replace all mix:versionable with mix:referencable supertype to achieve optimal repository performance.");
-                    return false;
+            // fast track for EE users
+            if ( installContext.getConfigHierarchyManager().getRoot().hasContent(CheckNodesForMixVersionable.UPDATE_PATH)) {
+                Content c = hm.getContent(CheckNodesForMixVersionable.UPDATE_PATH);
+                if (c.hasNodeData(CheckNodesForMixVersionable.CONTENT_CHECK_FLAG) && c.getNodeData(CheckNodesForMixVersionable.CONTENT_CHECK_FLAG).getBoolean()) {
+                    return true;
                 }
             }
-        }
-        return true;
+
+            Iterator iter = hm.getRoot().getChildren().iterator();
+            while (iter.hasNext()) {
+                NodeType[] nt = ((Content) iter.next()).getMixinNodeTypes();
+                for (int i = 0; i < nt.length; i++) {
+                    if ("mix:versionable".equals(nt[i].getName())) {
+                        installContext.warn("There are nodes in your repository that still contains unnecessary mix:versionable. Please replace all mix:versionable with mix:referencable supertype to achieve optimal repository performance.");
+                        return false;
+                    }
+                }
+            }
+            return true;
         } catch (RepositoryException e) {
             log.error(e.getMessage(), e);
             installContext.error(e.getMessage(), e);
