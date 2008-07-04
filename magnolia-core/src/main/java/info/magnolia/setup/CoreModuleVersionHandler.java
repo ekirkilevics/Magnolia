@@ -63,8 +63,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         super();
         final Delta delta35 = DeltaBuilder.update("3.5", "").addTasks(GenericTasks.genericTasksFor35());
         register(delta35);
-        final Delta delta36 = DeltaBuilder.update("3.6", "").addCondition(new CheckNodeTypesDefinition()).addCondition(new CheckNodesForMixVersionable());
-
+        final Delta delta36 = DeltaBuilder.update("3.6", "").addCondition(new CheckNodeTypesDefinition()).addTask(new CheckNodesForMixVersionable());
         register(delta36);
     }
 

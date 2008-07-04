@@ -36,7 +36,7 @@ package info.magnolia.setup.for3_6;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractCondition;
+import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.TaskExecutionException;
 
 import java.util.Iterator;
@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $
  *
  */
-public class CheckNodesForMixVersionable extends AbstractCondition {
+public class CheckNodesForMixVersionable extends AbstractTask {
 
     private static Logger log = LoggerFactory.getLogger(CheckNodesForMixVersionable.class);
 
@@ -65,14 +65,15 @@ public class CheckNodesForMixVersionable extends AbstractCondition {
         super("Check existing top level nodes", "Checks existing top level nodes for existence of mix:versionable.");
     }
 
-    public boolean check(InstallContext installContext) {
+    public void execute(InstallContext installContext)
+            throws TaskExecutionException {
         HierarchyManager hm = installContext.getHierarchyManager("website");
         try {
             // fast track for EE users
             if ( installContext.getConfigHierarchyManager().getRoot().hasContent(CheckNodesForMixVersionable.UPDATE_PATH)) {
                 Content c = hm.getContent(CheckNodesForMixVersionable.UPDATE_PATH);
                 if (c.hasNodeData(CheckNodesForMixVersionable.CONTENT_CHECK_FLAG) && c.getNodeData(CheckNodesForMixVersionable.CONTENT_CHECK_FLAG).getBoolean()) {
-                    return true;
+                    return;
                 }
             }
 
@@ -82,15 +83,13 @@ public class CheckNodesForMixVersionable extends AbstractCondition {
                 for (int i = 0; i < nt.length; i++) {
                     if ("mix:versionable".equals(nt[i].getName())) {
                         installContext.warn("There are nodes in your repository that still contains unnecessary mix:versionable. Please replace all mix:versionable with mix:referencable supertype to achieve optimal repository performance.");
-                        return false;
+                        return;
                     }
                 }
             }
-            return true;
         } catch (RepositoryException e) {
             log.error(e.getMessage(), e);
             installContext.error(e.getMessage(), e);
         }
-        return false;
     }
 }
