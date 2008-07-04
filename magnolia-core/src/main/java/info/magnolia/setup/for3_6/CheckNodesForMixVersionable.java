@@ -70,8 +70,9 @@ public class CheckNodesForMixVersionable extends AbstractTask {
         HierarchyManager hm = installContext.getHierarchyManager("website");
         try {
             // fast track for EE users
-            if ( installContext.getConfigHierarchyManager().getRoot().hasContent(CheckNodesForMixVersionable.UPDATE_PATH)) {
-                Content c = hm.getContent(CheckNodesForMixVersionable.UPDATE_PATH);
+            HierarchyManager chm = installContext.getConfigHierarchyManager();
+            if (chm.getRoot().hasContent(CheckNodesForMixVersionable.UPDATE_PATH)) {
+                Content c = chm.getRoot().getContent(CheckNodesForMixVersionable.UPDATE_PATH);
                 if (c.hasNodeData(CheckNodesForMixVersionable.CONTENT_CHECK_FLAG) && c.getNodeData(CheckNodesForMixVersionable.CONTENT_CHECK_FLAG).getBoolean()) {
                     return;
                 }
@@ -89,7 +90,8 @@ public class CheckNodesForMixVersionable extends AbstractTask {
             }
         } catch (RepositoryException e) {
             log.error(e.getMessage(), e);
-            installContext.error(e.getMessage(), e);
+            //installContext.error(e.getMessage(), e);
+            throw new TaskExecutionException("Failed to execute content node super type check.", e);
         }
     }
 }
