@@ -40,6 +40,7 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.setup.for3_5.GenericTasks;
+import info.magnolia.setup.for3_6.CheckNodesForMixVersionable;
 import info.magnolia.setup.for3_6.CheckNodeTypesDefinition;
 
 import java.util.ArrayList;
@@ -62,7 +63,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         super();
         final Delta delta35 = DeltaBuilder.update("3.5", "").addTasks(GenericTasks.genericTasksFor35());
         register(delta35);
-        final Delta delta36 = DeltaBuilder.update("3.6", "").addCondition(new CheckNodeTypesDefinition());
+        final Delta delta36 = DeltaBuilder.update("3.6", "").addCondition(new CheckNodeTypesDefinition()).addCondition(new CheckNodesForMixVersionable());
+
         register(delta36);
     }
 
