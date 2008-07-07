@@ -159,6 +159,7 @@ public abstract class BaseImageTag extends SimpleTagSupport {
         }
         else {
             imageContentNode = parentContentNode.createContent(this.imageContentNodeName, ItemType.CONTENTNODE);
+            parentContentNode.save();
         }
         return imageContentNode;
     }
@@ -198,7 +199,7 @@ public abstract class BaseImageTag extends SimpleTagSupport {
 
     /**
      * Converts HEX color to RGB color.
-     * @param The HEX value
+     * @param hex HEX value
      */
     public int[] convertHexToRGB(String hex) {
         hex.trim();
@@ -297,6 +298,6 @@ public abstract class BaseImageTag extends SimpleTagSupport {
 
         // update modification date and save the new image node
         imageNode.getMetaData().setModificationDate();        
-        imageNode.save();
+        imageNode.getParent().save();
     }
 }
