@@ -22,7 +22,7 @@
     </dependency>
     <dependency>
       <name>dms</name>
-      <version>1.2.4/*</version>
+      <version>1.2.5/*</version>
       <optional>true</optional>
     </dependency>
     <dependency>
