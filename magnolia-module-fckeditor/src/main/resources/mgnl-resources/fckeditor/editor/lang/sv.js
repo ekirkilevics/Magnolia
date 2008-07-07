@@ -1,6 +1,6 @@
 ﻿/*
  * FCKeditor - The text editor for Internet - http://www.fckeditor.net
- * Copyright (C) 2003-2007 Frederico Caldeira Knabben
+ * Copyright (C) 2003-2008 Frederico Caldeira Knabben
  *
  * == BEGIN LICENSE ==
  *
@@ -45,6 +45,7 @@ InsertLinkLbl		: "Länk",
 InsertLink			: "Infoga/Redigera länk",
 RemoveLink			: "Radera länk",
 Anchor				: "Infoga/Redigera ankarlänk",
+AnchorDelete		: "Remove Anchor",	//MISSING
 InsertImageLbl		: "Bild",
 InsertImage			: "Infoga/Redigera bild",
 InsertFlashLbl		: "Flash",
@@ -70,6 +71,7 @@ RightJustify		: "Högerjustera",
 BlockJustify		: "Justera till marginaler",
 DecreaseIndent		: "Minska indrag",
 IncreaseIndent		: "Öka indrag",
+Blockquote			: "Blockquote",	//MISSING
 Undo				: "Ångra",
 Redo				: "Gör om",
 NumberedListLbl		: "Numrerad lista",
@@ -103,20 +105,27 @@ SelectionField	: "Flervalslista",
 ImageButton		: "Bildknapp",
 
 FitWindow		: "Anpassa till fönstrets storlek",
+ShowBlocks		: "Show Blocks",	//MISSING
 
 // Context Menu
 EditLink			: "Redigera länk",
 CellCM				: "Cell",
 RowCM				: "Rad",
 ColumnCM			: "Kolumn",
-InsertRow			: "Infoga rad",
+InsertRowAfter		: "Insert Row After",	//MISSING
+InsertRowBefore		: "Insert Row Before",	//MISSING
 DeleteRows			: "Radera rad",
-InsertColumn		: "Infoga kolumn",
+InsertColumnAfter	: "Insert Column After",	//MISSING
+InsertColumnBefore	: "Insert Column Before",	//MISSING
 DeleteColumns		: "Radera kolumn",
-InsertCell			: "Infoga cell",
+InsertCellAfter		: "Insert Cell After",	//MISSING
+InsertCellBefore	: "Insert Cell Before",	//MISSING
 DeleteCells			: "Radera celler",
 MergeCells			: "Sammanfoga celler",
-SplitCell			: "Separera celler",
+MergeRight			: "Merge Right",	//MISSING
+MergeDown			: "Merge Down",	//MISSING
+HorizontalSplitCell	: "Split Cell Horizontally",	//MISSING
+VerticalSplitCell	: "Split Cell Vertically",	//MISSING
 TableDelete			: "Radera tabell",
 CellProperties		: "Cellegenskaper",
 TableProperties		: "Tabellegenskaper",
@@ -134,7 +143,7 @@ SelectionFieldProp	: "Egenskaper för flervalslista",
 TextareaProp		: "Egenskaper för textruta",
 FormProp			: "Egenskaper för formulär",
 
-FontFormats			: "Normal;Formaterad;Adress;Rubrik 1;Rubrik 2;Rubrik 3;Rubrik 4;Rubrik 5;Rubrik 6;Normal (DIV)",		//REVIEW : Check _getfontformat.html
+FontFormats			: "Normal;Formaterad;Adress;Rubrik 1;Rubrik 2;Rubrik 3;Rubrik 4;Rubrik 5;Rubrik 6;Normal (DIV)",
 
 // Alerts and Messages
 ProcessingXHTML		: "Bearbetar XHTML. Var god vänta...",
@@ -229,7 +238,7 @@ DlgLnkURL			: "URL",
 DlgLnkAnchorSel		: "Välj ett ankare",
 DlgLnkAnchorByName	: "efter ankarnamn",
 DlgLnkAnchorById	: "efter objektid",
-DlgLnkNoAnchors		: "(Inga ankare kunde hittas)",		//REVIEW : Change < and > with ( and )
+DlgLnkNoAnchors		: "(Inga ankare kunde hittas)",
 DlgLnkEMail			: "E-postadress",
 DlgLnkEMailSubject	: "Ämne",
 DlgLnkEMailBody		: "Innehåll",
@@ -322,6 +331,9 @@ DlgCellBackColor	: "Bakgrundsfärg",
 DlgCellBorderColor	: "Kantfärg",
 DlgCellBtnSelect	: "Välj...",
 
+// Find and Replace Dialog
+DlgFindAndReplaceTitle	: "Find and Replace",	//MISSING
+
 // Find Dialog
 DlgFindTitle		: "Sök",
 DlgFindFindBtn		: "Sök",
@@ -347,7 +359,6 @@ DlgPasteMsg2	: "Var god och klistra in Er text i rutan nedan genom att använda 
 DlgPasteSec		: "På grund av din webläsares säkerhetsinställningar kan verktyget inte få åtkomst till urklippsdatan. Var god och använd detta fönster istället.",
 DlgPasteIgnoreFont		: "Ignorera typsnittsdefinitioner",
 DlgPasteRemoveStyles	: "Radera Stildefinitioner",
-DlgPasteCleanBox		: "Töm rutans innehåll",
 
 // Color Picker
 ColorAutomatic	: "Automatisk",
