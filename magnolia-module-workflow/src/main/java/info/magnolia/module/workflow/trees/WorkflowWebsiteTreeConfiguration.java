@@ -54,12 +54,12 @@ public class WorkflowWebsiteTreeConfiguration extends WebsiteTreeConfiguration {
 
     public void prepareContextMenu(Tree tree, boolean browseMode, HttpServletRequest request) {
         super.prepareContextMenu(tree, browseMode, request);
+        if(!browseMode){
+            ContextMenuItem activate = tree.getMenu().getMenuItemByName("activate");
+            activate.setOnclick("mgnl.workflow.WorkflowWebsiteTree.enterComment(" + tree.getJavascriptTree() + ", " + Tree.ACTION_ACTIVATE + ", false);");
 
-        ContextMenuItem activate = tree.getMenu().getMenuItemByName("activate");
-        activate.setOnclick("mgnl.workflow.WorkflowWebsiteTree.enterComment(" + tree.getJavascriptTree() + ", " + Tree.ACTION_ACTIVATE + ", false);");
-
-        ContextMenuItem activateInclSubs = tree.getMenu().getMenuItemByName("activateInclSubs");
-        activateInclSubs.setOnclick("mgnl.workflow.WorkflowWebsiteTree.enterComment(" + tree.getJavascriptTree() + ", " + Tree.ACTION_ACTIVATE + ", true);");
-
+            ContextMenuItem activateInclSubs = tree.getMenu().getMenuItemByName("activateInclSubs");
+            activateInclSubs.setOnclick("mgnl.workflow.WorkflowWebsiteTree.enterComment(" + tree.getJavascriptTree() + ", " + Tree.ACTION_ACTIVATE + ", true);");
+        }
     }
 }
