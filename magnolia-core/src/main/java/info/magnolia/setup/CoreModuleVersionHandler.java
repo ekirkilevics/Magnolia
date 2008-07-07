@@ -35,14 +35,12 @@ package info.magnolia.setup;
 
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.ConditionalDelegateTask;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.setup.for3_5.GenericTasks;
-import info.magnolia.setup.for3_6.CheckMagoliaDevelopProperty;
+import info.magnolia.setup.for3_6.CheckMagnoliaDevelopProperty;
 import info.magnolia.setup.for3_6.CheckNodesForMixVersionable;
 import info.magnolia.setup.for3_6.CheckNodeTypesDefinition;
 
@@ -68,7 +66,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         register(delta35);
         final Delta delta36 = DeltaBuilder.update("3.6", "")
             .addCondition(new CheckNodeTypesDefinition())
-            .addCondition(new CheckMagoliaDevelopProperty())
+            .addCondition(new CheckMagnoliaDevelopProperty())
             .addTask(new CheckNodesForMixVersionable());
         register(delta36);
     }
