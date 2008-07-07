@@ -189,8 +189,12 @@ public class FckEditorDialog extends DialogBox {
 
     public static final String PARAM_SOURCE = "source"; //$NON-NLS-1$
 
+    private static final String PARAM_ENTER_MODE = "enterMode";
+
+    private static final String PARAM_SHIFT_ENTER_MODE = "shiftEnterMode";
+
     /**
-     * Default falues
+     * Default values
      */
     public static final String PARAM_JS_INIT_FILE_DEFAULT = "/.resources/fckeditor/custom/init/magnoliaStandard.js"; //$NON-NLS-1$
 
@@ -221,6 +225,11 @@ public class FckEditorDialog extends DialogBox {
     private static final String PARAM_LISTS_DEFAULT = "true";
 
     private static final String PARAM_ALIGNMENT_DEFAULT = "false";
+
+    private static final String PARAM_ENTER_MODE_DEFAULT = "p";
+
+    private static final String PARAM_SHIFT_ENTER_MODE_DEFAULT = "br";
+
 
     /**
      * Empty constructor should only be used by DialogFactory.
@@ -352,6 +361,8 @@ public class FckEditorDialog extends DialogBox {
         String tables = this.getConfigValue(PARAM_TABLES, PARAM_TABLES_DEFAULT);
         String images = this.getConfigValue(PARAM_IMAGES, PARAM_IMAGES_DEFAULT);
         String source = this.getConfigValue(PARAM_SOURCE, PARAM_SOURCE_DEFAULT);
+        String enterMode = this.getConfigValue(PARAM_ENTER_MODE, PARAM_ENTER_MODE_DEFAULT);
+        String shiftEnterMode = this.getConfigValue(PARAM_SHIFT_ENTER_MODE, PARAM_SHIFT_ENTER_MODE_DEFAULT);
 
         // create the the holder of the editors configs if not yet done
         out.write("if( window.MgnlFCKConfigs == null)\n");
@@ -379,6 +390,8 @@ public class FckEditorDialog extends DialogBox {
         out.write("MgnlFCKConfigs." + id + ".colors = '" + colors + "';\n");
         out.write("MgnlFCKConfigs." + id + ".styles = '" + styles + "';\n");
         out.write("MgnlFCKConfigs." + id + ".templates = '" + templates + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".enterMode = '" + enterMode + "';\n");
+        out.write("MgnlFCKConfigs." + id + ".shiftEnterMode = '" + shiftEnterMode + "';\n");
 
         // boolean values
         out.write("MgnlFCKConfigs." + id + ".lists = " + lists + ";\n");

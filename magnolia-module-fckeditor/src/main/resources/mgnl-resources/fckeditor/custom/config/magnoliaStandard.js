@@ -14,6 +14,10 @@ FCKConfig.SkinPath = MgnlFCKConfig.contextPath + "/.resources/fckeditor/custom/s
 FCKConfig.AutoDetectLanguage = false;
 FCKConfig.DefaultLanguage = MgnlFCKConfig.language;
 
+// line breaks
+FCKConfig.EnterMode = MgnlFCKConfig.enterMode;			// p | div | br
+FCKConfig.ShiftEnterMode = MgnlFCKConfig.shiftEnterMode;
+
 // create toolbar
 var toolbar = new Array();
 toolbar[0] = new Array();
