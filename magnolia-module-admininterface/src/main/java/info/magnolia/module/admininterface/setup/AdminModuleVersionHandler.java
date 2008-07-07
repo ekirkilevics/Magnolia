@@ -36,7 +36,6 @@ package info.magnolia.module.admininterface.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.admininterface.AdminTreeMVCHandler;
 import info.magnolia.module.admininterface.trees.WebsiteTreeHandler;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapConditionally;
@@ -97,9 +96,11 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         register(for35);
 
         final Delta for36 = DeltaBuilder.update("3.6", "")
-            .addTask(changeWebsiteTreeConfigurationTask);
-        register(for36);
+            .addTask(changeWebsiteTreeConfigurationTask)
+            .addTask(new BootstrapSingleResource("Javascript messages","Add dynamic virtual url","/mgnl-bootstrap/adminInterface/config.modules.adminInterface.virtualURIMapping.messages.xml"))
+            .addTask(new BootstrapSingleResource("Javascript messages","Add page to provide i18n messages in javascript.","/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.messages.xml"));
 
+        register(for36);
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
