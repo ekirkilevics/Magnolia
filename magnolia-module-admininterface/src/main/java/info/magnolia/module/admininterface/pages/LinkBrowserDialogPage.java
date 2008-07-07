@@ -76,20 +76,26 @@ public class LinkBrowserDialogPage extends SimplePageMVCHandler {
         String pathOpen = request.getParameter("pathOpen"); //$NON-NLS-1$
         String pathSelected = request.getParameter("pathSelected"); //$NON-NLS-1$
 
+        StringBuffer src = getIFrameSrc(request, repository, path, pathOpen, pathSelected);
+
         StringBuffer html = new StringBuffer();
-        html.append("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">"); //$NON-NLS-1$
+        html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.01 Transitional//EN\">"); //$NON-NLS-1$
         html.append("<html><head>"); //$NON-NLS-1$
         html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); //$NON-NLS-1$
         html.append(new Sources(request.getContextPath()).getHtmlJs());
         html.append(new Sources(request.getContextPath()).getHtmlCss());
-        html.append("</head>"); //$NON-NLS-1$
-        html.append("<body class=\"mgnlBgDark\" onload=\"mgnlDialogLinkBrowserResize();window.focus();\">"); //$NON-NLS-1$
+        html.append("<script>");
+        html.append("MgnlDHTMLUtil.addOnResize(mgnlDialogLinkBrowserResize);");
+        html.append("MgnlDHTMLUtil.addOnLoad(function(){mgnlDialogLinkBrowserResize();document.getElementById('mgnlDialogLinkBrowserIFrame').src='"+src+"';window.focus();})");
+        html.append("</script>");
 
-        StringBuffer src = getIFrameSrc(request, repository, path, pathOpen, pathSelected);
+        html.append("</head>"); //$NON-NLS-1$
+        html.append("<body class=\"mgnlBgDark\" >"); //$NON-NLS-1$
+
 
         html.append("<div id=\"mgnlTreeDiv\" class=\"mgnlDialogLinkBrowserTreeDiv\">"); //$NON-NLS-1$
         html.append("<iframe id=\"mgnlDialogLinkBrowserIFrame\" name=\"mgnlDialogLinkBrowserIFrame\" src=\"" //$NON-NLS-1$
-            + src
+            //+ src
             + "\" scrolling=\"no\" frameborder=\"0\" width=\"100%\" height=\"100%\"></iframe>"); //$NON-NLS-1$
         html.append("</div>"); //$NON-NLS-1$
 
@@ -118,16 +124,16 @@ public class LinkBrowserDialogPage extends SimplePageMVCHandler {
         StringBuffer src = new StringBuffer();
         src.append(request.getContextPath());
         src.append("/.magnolia/trees/" + repository + ".html"); //$NON-NLS-1$
-        src.append("?&amp;mgnlCK=" + new Date().getTime()); //$NON-NLS-1$
-        src.append("&amp;browseMode=true"); //$NON-NLS-1$
+        src.append("?mgnlCK=" + new Date().getTime()); //$NON-NLS-1$
+        src.append("&browseMode=true"); //$NON-NLS-1$
         if (path != null) {
-            src.append("&amp;path=" + path); //$NON-NLS-1$
+            src.append("&path=" + path); //$NON-NLS-1$
         }
         if (pathOpen != null) {
-            src.append("&amp;pathOpen=" + pathOpen); //$NON-NLS-1$
+            src.append("&pathOpen=" + pathOpen); //$NON-NLS-1$
         }
         if (pathSelected != null) {
-            src.append("&amp;pathSelected=" + pathSelected); //$NON-NLS-1$
+            src.append("&pathSelected=" + pathSelected); //$NON-NLS-1$
         }
         return src;
     }

@@ -205,6 +205,7 @@ function mgnlDialogLinkBrowserResize()
         divTree.style.height=h;
         var iFrameTree=document.getElementById("mgnlDialogLinkBrowserIFrame");
         iFrameTree.style.height=h;
+        iFrameTree.style.width=w;
         }
     }
 
