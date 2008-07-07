@@ -775,6 +775,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
             html.append("<meta http-equiv=\"Content-Type\" content=\"text/html; charset=UTF-8\"/>"); //$NON-NLS-1$
             renderHeaderIncludes(html);
             html.append("<title>Magnolia</title>"); //$NON-NLS-1$
+            html.append("</head>");
             html.append("<body class=\"mgnlBgDark\">");
         }
 
