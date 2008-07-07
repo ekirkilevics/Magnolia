@@ -35,27 +35,25 @@ package info.magnolia.setup.for3_6;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractCondition;
+import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.TaskExecutionException;
 
 /**
  * @author pbracher
  * @version $Id$
- *
  */
-public class CheckMagnoliaDevelopProperty extends AbstractCondition {
+public class CheckMagnoliaDevelopProperty extends AbstractTask {
 
-    private static final String MSG = "The magnolia property magnolia.develop must be set to false.";
+    private static final String MSG = "The magnolia.develop property should be set to false by default.";
+    private static final String MSG_DETAILED = "The magnolia.develop property is now set to false by default. It used to be true in previous version of Magnolia, so if this is not intentional on your part, you might want to set it back to false.";
 
     public CheckMagnoliaDevelopProperty() {
         super("Check magnolia.develop", MSG);
     }
 
-    public boolean check(InstallContext installContext) {
-        if(SystemProperty.getBooleanProperty("magnolia.develop")){
-            String msg = MSG + " Refer to Magnolia Documentation at  http://documentation.magnolia.info/releases/3-6.html for details.";
-            installContext.error(msg, new Exception(msg));
-            return true;
+    public void execute(InstallContext installContext) throws TaskExecutionException {
+        if (SystemProperty.getBooleanProperty("magnolia.develop")) {
+            installContext.warn(MSG_DETAILED);
         }
-        return false;
     }
 }

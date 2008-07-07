@@ -66,7 +66,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         register(delta35);
         final Delta delta36 = DeltaBuilder.update("3.6", "")
             .addCondition(new CheckNodeTypesDefinition())
-            .addCondition(new CheckMagnoliaDevelopProperty())
+            .addTask(new CheckMagnoliaDevelopProperty())
             .addTask(new CheckNodesForMixVersionable());
         register(delta36);
     }
