@@ -67,6 +67,10 @@ public class WebsiteSearchList extends AbstractSimpleSearchList {
     public void configureList(ListControl list) {
         list.setRenderer(new AdminListControlRenderer() {
 
+            public String onDblClick(ListControl list, Integer index) {
+                return "mgnl.admininterface.WebsiteSearchList.show();";
+            }
+
             public String onSelect(ListControl list, Integer index) {
                 String js = "mgnl.admininterface.WebsiteSearchList.selected = '" + list.getIteratorValue("path") + "';";
                 js += super.onSelect(list, index);
