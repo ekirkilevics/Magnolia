@@ -18,11 +18,12 @@
         <item name="War files" href="/install/install-wars.html" />
         <item name="Nightly build or svn" href="/install/install-build.html" />
       -->
-        <item name="Upgrade" href="/install/upgrade.html" />
+        <!--<item name="Upgrade" href="/install/upgrade.html" />-->
       <!--
         <item name="Building Magnolia" href="/install/build.html" />
       </item>
       -->
+      <item name="User manual" href="/usermanual/user01.html" collapse="true"/>
       <item name="Templating" href="/templating/templating.html" collapse="true">
         <item name="Templating Quickstart" href="/qs/00_cover.html" collapse="true">
           <item name="1. Introduction" href="/qs/01_introduction.html" />
