@@ -150,7 +150,7 @@ public class DateUtil {
             return SimpleDateFormat.getDateTimeInstance(SimpleDateFormat.LONG, SimpleDateFormat.LONG, locale).format(date);
         }
         else {
-            return DateFormatUtils.format(date, formatPattern);
+            return DateFormatUtils.format(date, formatPattern, locale);
         }
     }
 

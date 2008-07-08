@@ -32,36 +32,38 @@
  *
  */
 package info.magnolia.cms.taglibs;
-/**
- * @author Ryan Gardner
- */
+
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.test.mock.MockContent;
+import info.magnolia.test.mock.MockNodeData;
 import info.magnolia.test.MgnlTagTestCase;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
+import java.util.Calendar;
+import java.util.Locale;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
+/**
+ * @author Ryan Gardner
+ * @version $Revision$ ($Author$)
+ */
 public class OutTest extends MgnlTagTestCase {
-    private static Logger log = LoggerFactory.getLogger(OutTest.class);
+    private AggregationState agState;
 
     protected void setUp() throws Exception {
         super.setUp();
-        webContext.setAggregationState(initAgState());
+        agState = initAgState();
+        webContext.setAggregationState(agState);
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultExtension("html");
         FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
     }
-
 
     // UUID - related output tests
     protected Out basicUUID_test_instance(String linkResolvingType) throws RepositoryException {
@@ -86,7 +88,7 @@ public class OutTest extends MgnlTagTestCase {
     public void testUUIDLinkOutAbsolute() throws IOException, RepositoryException, JspException {
         Out out = basicUUID_test_instance(Out.LINK_RESOLVING_ABSOLUTE);
         out.doEndTag();
-        assertJspContent("UUID link is resolved as an absolute link", "/main/linkTarget");
+        assertJspContent("UUID link is resolved as an absolute link", "/main/linkTarget.html");
     }
 
     public void testUUIDLinkOutNone() throws IOException, RepositoryException, JspException {
@@ -95,7 +97,43 @@ public class OutTest extends MgnlTagTestCase {
         assertJspContent("UUID link is output unresolved", "3");
     }
 
+    public void testDateFormattingShouldUseAggregationStateLanguageIfNotSpecified() throws Exception {
+        doTestForDateProperty(null, null, "Jul 8, 2008");
+        agState.setLocale(Locale.GERMAN);
+        doTestForDateProperty(null, null, "08.07.2008");
+    }
 
+    public void testDateFormattingShouldUseGivenLanguageIfSpecified() throws Exception {
+        doTestForDateProperty("fr", null, "8 juil. 2008");
+    }
+
+    public void testDateFormattingShouldUseGivenPatternIfSpecified() throws Exception {
+        doTestForDateProperty(null, "EEEE, d. MMMM yyyy", "Tuesday, 8. July 2008");
+    }
+
+    public void testDateFormattingShouldUseGivenPatternAndLanguageIfSpecified() throws Exception {
+        doTestForDateProperty("fr", "EEEE, d. MMMM yyyy", "mardi, 8. juillet 2008");
+    }
+
+    private void doTestForDateProperty(String lang, String pattern, String expectedResult) throws JspException {
+        final Calendar cal = Calendar.getInstance();
+        cal.set(2008, 6, 8, 18, 55, 20);
+        final MockContent testNode = new MockContent("test");
+        testNode.addNodeData(new MockNodeData("myDate", cal));
+
+        final Out out = new Out();
+        out.setContentNode(testNode);
+        out.setPageContext(pageContext);
+        out.setNodeDataName("myDate");
+        if (lang != null) {
+            out.setDateLanguage(lang);
+        }
+        if (pattern != null) {
+            out.setDatePattern(pattern);
+        }
+        out.doEndTag();
+        assertJspContent(expectedResult);
+    }
 
 
     // setup methods and utilities
@@ -106,6 +144,7 @@ public class OutTest extends MgnlTagTestCase {
         agState.setRepository(ContentRepository.WEBSITE);
         agState.setHandle("/main");
         agState.setMainContent(webContext.getHierarchyManager(ContentRepository.WEBSITE).getContentByUUID("1"));
+        agState.setLocale(Locale.US);
         return agState;
     }
 
