@@ -35,6 +35,8 @@ package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.EmptyMessages;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.exchange.ActivationManagerFactory;
 
 /**
  * A base implementation of AdminTreeConfiguration that provides the i18n messages. 
@@ -55,4 +57,13 @@ public abstract class AbstractTreeConfiguration implements AdminTreeConfiguratio
         }
         return messages;
     }
+
+    protected boolean isAdminInstance() {
+        return ServerConfiguration.getInstance().isAdmin();
+    }
+
+    protected boolean hasAnyActiveSubscriber() {
+        return ActivationManagerFactory.getActivationManager().hasAnyActiveSubscriber();
+    }
+
 }
