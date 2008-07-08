@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.taglibs.util;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.Resource;
@@ -234,7 +234,7 @@ public class FileSrc extends TagSupport {
      * @deprecated
      */
     private void setFileProperties() {
-        this.fileExtension = Server.getDefaultExtension();
+        this.fileExtension = ServerConfiguration.getInstance().getDefaultExtension();
         Content properties = null;
         String contentNodeCollectionName = (String) pageContext.getAttribute("contentNodeCollectionName", //$NON-NLS-1$
             PageContext.REQUEST_SCOPE);

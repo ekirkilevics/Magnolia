@@ -41,7 +41,6 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
-import info.magnolia.cms.beans.config.Server;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
@@ -93,7 +92,7 @@ public class FreemarkerHelper {
      * - contextPath, if we have an available WebContext (@deprecated)
      * - defaultBaseUrl, as per Server.getDefaultBaseUrl()
      *
-     * @see Server#getDefaultBaseUrl()
+     * @see ServerConfiguration#getDefaultBaseUrl()
      */
     public void render(String templatePath, Locale locale, String i18nBasename, Object root, Writer out) throws TemplateException, IOException {
         locale = locale != null ? locale : determineLocale();

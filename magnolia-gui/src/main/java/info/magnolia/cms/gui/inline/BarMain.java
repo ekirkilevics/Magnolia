@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.gui.inline;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.Sources;
@@ -253,7 +253,7 @@ public class BarMain extends Bar {
      * </p>
      */
     public void drawHtml(JspWriter out) throws IOException {
-        if (Server.isAdmin()) {
+        if (ServerConfiguration.getInstance().isAdmin()) {
 
             boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
             if (isGranted) {

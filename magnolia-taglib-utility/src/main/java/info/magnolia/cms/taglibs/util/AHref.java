@@ -34,7 +34,7 @@
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
@@ -232,7 +232,7 @@ public class AHref extends BodyTagSupport {
                 out.print(path);
                 if (MgnlContext.getHierarchyManager(ContentRepository.WEBSITE).isPage(path)) {
                     out.print("."); //$NON-NLS-1$
-                    out.print(Server.getDefaultExtension());
+                    out.print(ServerConfiguration.getInstance().getDefaultExtension());
                 }
                 if (this.postHref != null) {
                     out.print(this.postHref);

@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.link;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 
 /**
  * Constructs URLs by prefixing the path with Server..getDefaultBaseUrl()
@@ -50,6 +50,6 @@ public class CompleteUrlPathTransformer extends AbsolutePathTransformer {
     }
 
     protected String prefixLink(String linkStr) {
-        return Server.getDefaultBaseUrl() + linkStr;
+        return ServerConfiguration.getInstance().getDefaultBaseUrl() + linkStr;
     }
 }

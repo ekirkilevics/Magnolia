@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.taglibs.util;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
@@ -126,7 +126,7 @@ public class RedirectTag extends BodyTagSupport {
         Content activePage = Resource.getActivePage();
 
         // on public servers, during preview or when the user can't edit the page, just send the redirect
-        if (!Server.isAdmin() || Resource.showPreview() || !activePage.isGranted(Permission.SET)) {
+        if (!ServerConfiguration.getInstance().isAdmin() || Resource.showPreview() || !activePage.isGranted(Permission.SET)) {
             if (location != null) {
                 try {
                     ((HttpServletResponse) pageContext.getResponse()).sendRedirect(request.getContextPath() + location);
@@ -161,7 +161,7 @@ public class RedirectTag extends BodyTagSupport {
         Iterator it = page.getChildren().iterator();
         if (it.hasNext()) {
             Content c = (Content) it.next();
-            return c.getHandle() + '.' + Server.getDefaultExtension();
+            return c.getHandle() + '.' + ServerConfiguration.getInstance().getDefaultExtension();
         }
 
         return null;

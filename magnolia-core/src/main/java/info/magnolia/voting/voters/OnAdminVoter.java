@@ -33,7 +33,7 @@
  */
 package info.magnolia.voting.voters;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 
 /**
  * @author fgiust
@@ -42,7 +42,7 @@ import info.magnolia.cms.beans.config.Server;
 public class OnAdminVoter extends AbstractBoolVoter {
 
     protected boolean boolVote(Object value) {
-        return Server.isAdmin();
+        return ServerConfiguration.getInstance().isAdmin();
     }
 
 }

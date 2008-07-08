@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.gui.inline;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -182,7 +182,7 @@ public class BarEdit extends Bar {
      */
     public void drawHtml(JspWriter out) throws IOException {
         boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
-        if (!Resource.showPreview() && isGranted && Server.isAdmin()) {
+        if (!Resource.showPreview() && isGranted && ServerConfiguration.getInstance().isAdmin()) {
             this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);"); //$NON-NLS-1$ //$NON-NLS-2$
             this.setEvent("onmouseout", "mgnlMoveNodeReset(this);"); //$NON-NLS-1$ //$NON-NLS-2$
