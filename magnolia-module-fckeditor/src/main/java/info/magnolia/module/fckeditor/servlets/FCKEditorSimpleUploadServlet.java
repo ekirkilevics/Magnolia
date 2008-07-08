@@ -43,6 +43,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.io.FileUtils;
 import org.safehaus.uuid.UUIDGenerator;
 import org.slf4j.Logger;
@@ -157,11 +158,11 @@ public class FCKEditorSimpleUploadServlet extends ContextSensitiveServlet {
         out.println("window.parent.OnUploadCompleted("
             + retVal
             + ",'"
-            + fileUrl
+            + StringEscapeUtils.escapeJavaScript( fileUrl )
             + "','"
-            + newName
+            + StringEscapeUtils.escapeJavaScript( newName )
             + "','"
-            + errorMessage
+            + StringEscapeUtils.escapeJavaScript( errorMessage )
             + "');");
         out.println("</script>");
         out.flush();
