@@ -593,12 +593,6 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     </attribute>
   </tag>
   <tag>
-    <name>init</name>
-    <tag-class>info.magnolia.cms.taglibs.Init</tag-class>
-    <body-content>EMPTY</body-content>
-    <description>@deprecated this tag does nothing in magnolia 2.x</description>
-  </tag>
-  <tag>
     <name>contentNodeIterator</name>
     <tag-class>info.magnolia.cms.taglibs.ContentNodeIterator</tag-class>
     <body-content>JSP</body-content>
