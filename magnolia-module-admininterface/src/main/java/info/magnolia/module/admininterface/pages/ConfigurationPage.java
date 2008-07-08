@@ -33,18 +33,17 @@
  */
 package info.magnolia.module.admininterface.pages;
 
-import info.magnolia.cms.beans.config.Server;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Collection;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -63,16 +62,8 @@ public class ConfigurationPage extends TemplatedMVCHandler {
         super(name, request, response);
     }
 
-    public Server getServer() {
-        return Server.getInstance();
-    }
-
-    public String getDefaultMailServer() {
-        return Server.getDefaultMailServer();
-    }
-
-    public String getServerId() {
-        return Server.getServerId();
+    public ServerConfiguration getServer() {
+        return ServerConfiguration.getInstance();
     }
 
     public Collection getVirtualUriMappings() {

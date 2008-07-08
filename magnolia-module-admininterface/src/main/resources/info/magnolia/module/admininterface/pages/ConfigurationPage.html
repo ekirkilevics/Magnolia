@@ -15,25 +15,15 @@
           <th scope="col">Value</th>
         </tr>
       </thead>
+        [#comment] uptime was giving wrong figures since 3.5  / see MAGNOLIA-1821
       <tr>
         <td>Server up since...</td>
         <td>${this.server.getUptime()}</td>
       </tr>
+        [/#comment]
       <tr>
         <td>Is admin server</td>
         <td>${this.server.isAdmin()?string}</td>
-      </tr>
-      <tr>
-        <td>Server ID</td>
-        <td>${this.serverId}</td>
-      </tr>
-      <tr>
-        <td>Default Mail Server</td>
-        <td>${this.defaultMailServer}</td>
-      </tr>
-      <tr>
-        <td>Basic Realm</td>
-        <td>${this.server.getBasicRealm()}</td>
       </tr>
     </table>
     <h3>General Magnolia System Data</h3>
