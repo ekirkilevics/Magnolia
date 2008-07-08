@@ -103,6 +103,22 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
     }
 
     /**
+     * Test the value of the jsp document, clearing the JSP buffer after the check is done.
+     *  - Delegates to {@link #assertJspContent(String, String)}
+     */
+    protected void assertJspContent(String expectedResult) throws JspException {
+        assertJspContent(null, expectedResult);
+    }
+
+    /**
+     * Test the value of the jsp document, clearing the JSP buffer after the check is done.
+     *  - Delegates to {@link #assertJspContent(String, String, boolean)}
+     */
+    protected void assertJspContent(String explanation, String expectedResult) throws JspException {
+        assertJspContent(explanation, expectedResult, false);
+    }
+
+    /**
      * Tests that the doEndTag() method outputs a value that matches the result parameter
      * After testing this, the JspWriter buffer is cleared to allow for further tests
      *
@@ -113,18 +129,10 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
      * @throws JspException  Thrown if there is a JSP Exception thrown by the tag
      */
     protected void assertJspContent(String explanation,  String expectedResult, boolean leaveJspIntact ) throws JspException {
-         String output = getJspOutput();
+         assertEquals(explanation, expectedResult, getJspOutput());
          if (!leaveJspIntact) {
             clearJsp();
          }
-    }
-
-    /**
-     * Test the value of the jsp document, clearing the JSP buffer after the check is done.
-     *  - Delegates to {@link #assertJspContent(String, String, boolean)}
-     */
-    protected void assertJspContent(String explanation, String expectedResult) throws JspException {
-        assertJspContent(explanation, expectedResult, false);
     }
 
     /**
