@@ -39,18 +39,17 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CacheConfiguration;
-import info.magnolia.module.cache.CacheLifecycleListener;
+import info.magnolia.module.cache.CacheModuleLifecycleListener;
 import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicyExecutor;
 import info.magnolia.module.cache.CachePolicyResult;
-
-import java.io.IOException;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 
 /**
  * Uses the CachePolicy to determine the cache behavior. Uses then the
@@ -59,21 +58,22 @@ import javax.servlet.http.HttpServletResponse;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements CacheLifecycleListener {
+public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements CacheModuleLifecycleListener {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CacheFilter.class);
 
     private static final String MODULE_NAME = "cache";
+    private static final String DEFAULT_CACHE_CONFIG = "default";
 
-    private String cacheConfigurationName = "default";
+    private String cacheConfigurationName;
     private CacheConfiguration cacheConfig;
     private Cache cache;
 
-    public String getCacheConfiguration() {
+    public String getCacheConfigurationName() {
         return cacheConfigurationName;
     }
 
-    public void setCacheConfiguration(String cacheConfiguration) {
-        this.cacheConfigurationName = cacheConfiguration;
+    public void setCacheConfigurationName(String cacheConfigurationName) {
+        this.cacheConfigurationName = cacheConfigurationName;
     }
 
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -84,9 +84,19 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     }
 
     public void onCacheModuleStart() {
+        if (cacheConfigurationName == null) {
+            log.warn("The cacheConfigurationName property is not set for the {} CacheFilter, falling back to {}.", getName(), DEFAULT_CACHE_CONFIG);
+            this.cacheConfigurationName = DEFAULT_CACHE_CONFIG;
+        }
+
         final CacheModule cacheModule = getModule();
         this.cacheConfig = cacheModule.getConfiguration(cacheConfigurationName);
         this.cache = cacheModule.getCacheFactory().getCache(cacheConfigurationName);
+
+        if (cacheConfig == null || cache == null) {
+            log.error("The " + getName() + " CacheFilter is not properly configured, either cacheConfig(" + cacheConfig + ") or cache(" + cache + ") is null. Check if " + cacheConfigurationName + " is a valid cache configuration name. Will disable temporarily.");
+            setEnabled(false);
+        }
     }
 
     // TODO : maybe this method could be generalized ...
@@ -95,10 +105,6 @@ public class CacheFilter extends OncePerRequestAbstractMgnlFilter implements Cac
     }
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        if (cacheConfig == null || cache == null) {
-            throw new IllegalStateException("CacheFilter is not properly configured, either cacheConfig(" + cacheConfig + ") or cache(" + cache + ") is null.");
-        }
-
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final CachePolicyResult cachePolicyResult = cacheConfig.getCachePolicy().shouldCache(cache, aggregationState, cacheConfig.getFlushPolicy());
 

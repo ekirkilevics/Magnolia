@@ -54,7 +54,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision: $ ($Author: $)
  */
 public class CacheModule implements ModuleLifecycle {
-    Logger log = LoggerFactory.getLogger(CacheModule.class);
+    private static final Logger log = LoggerFactory.getLogger(CacheModule.class);
 
     private final Set listeners = new HashSet();
     private CacheFactory cacheFactory;
@@ -84,7 +84,7 @@ public class CacheModule implements ModuleLifecycle {
         return (CacheConfiguration) configurations.get(name);
     }
 
-    public void register(CacheLifecycleListener listener) {
+    public void register(CacheModuleLifecycleListener listener) {
         listeners.add(listener);
     }
 
@@ -109,7 +109,7 @@ public class CacheModule implements ModuleLifecycle {
 
         final Iterator itL = listeners.iterator();
         while (itL.hasNext()) {
-            final CacheLifecycleListener listener = (CacheLifecycleListener) itL.next();
+            final CacheModuleLifecycleListener listener = (CacheModuleLifecycleListener) itL.next();
             listener.onCacheModuleStart();
         }
     }

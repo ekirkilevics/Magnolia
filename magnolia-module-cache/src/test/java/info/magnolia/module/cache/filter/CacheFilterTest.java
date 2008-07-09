@@ -103,7 +103,7 @@ public class CacheFilterTest extends TestCase {
 
         final CacheFilter filter = new CacheFilter();
         filter.setName("the-filter-name");
-        filter.setCacheConfiguration("the-config-name");
+        filter.setCacheConfigurationName("the-config-name");
 
         moduleRegistry.registerModuleInstance("cache", cacheModule);
         final FilterConfig filterConfig = createStrictMock(FilterConfig.class);
@@ -410,7 +410,7 @@ public class CacheFilterTest extends TestCase {
 
         filter = new CacheFilter();
         filter.setName("cache-filter");
-        filter.setCacheConfiguration("my-config");
+        filter.setCacheConfigurationName("my-config");
         filter.init(null);
         // called by init() : filter.onCacheModuleStart();
 
