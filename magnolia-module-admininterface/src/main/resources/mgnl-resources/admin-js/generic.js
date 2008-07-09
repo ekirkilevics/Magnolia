@@ -108,30 +108,9 @@ function mgnlIsKey(event,keyCode){
         return false;
 }
 
-function mgnlGetWindowSize()
-    {
-    var obj=new Object();
-    if( typeof (window.innerWidth) == 'number' )
-        {
-        //Non-IE
-        obj.w=window.innerWidth;
-        obj.h=window.innerHeight;
-        }
-    else if (document.documentElement && (document.documentElement.clientWidth || document.documentElement.clientHeight ) )
-        {
-        //IE 6+ in 'standards compliant mode'
-        obj.w=document.documentElement.clientWidth;
-        obj.h=document.documentElement.clientHeight;
-        }
-    else if( document.body && ( document.body.clientWidth || document.body.clientHeight ) )
-        {
-        //IE 4 compatible
-        obj.w=document.body.clientWidth;
-        obj.h=document.body.clientHeight;
-        }
-    //alert(h+'//'+w);
-    return obj;
-    }
+function mgnlGetWindowSize() {
+    return mgnl.util.DHTMLUtil.getWindowSize();
+}
 
 
 function mgnlGetIFrameDocument(iFrameName)
@@ -163,7 +142,7 @@ function mgnlAddParameter(href, name, value)
         delimiter = "?";
     else
         delimiter = "&";
-        
+
     return href + delimiter + name + "=" + value + anchor;
 }
 
