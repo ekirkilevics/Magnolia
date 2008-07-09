@@ -9,8 +9,15 @@
   <version>${project.version}</version>
   <properties>
     <property>
-    	<name>info.magnolia.module.cache.CachePolicyExecutor</name>
-    	<value>info.magnolia.module.cache.executor.CompositeExecutor</value>
+      <name>info.magnolia.module.cache.CachePolicyExecutor</name>
+      <value>info.magnolia.module.cache.executor.CompositeExecutor</value>
+    </property>
+    <!-- Custom transformer for net.sf.ehcache.config.CacheConfiguration
+         because it does not respect the javabeans conventions for setting
+         MemoryStoreEvictionPolicy -->
+    <property>
+      <name>net.sf.ehcache.config.CacheConfiguration.transformer</name>
+      <value>info.magnolia.module.cache.ehcache.CacheConfigurationTransformer</value>
     </property>
   </properties>
 
