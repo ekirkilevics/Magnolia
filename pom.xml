@@ -853,6 +853,12 @@ for Java Content Repositories (JCR).
         <scope>test</scope>
       </dependency>
       <dependency>
+        <groupId>com.mockrunner</groupId>
+        <artifactId>mockrunner</artifactId>
+        <version>0.3.1</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
         <groupId>servlets.com</groupId>
         <artifactId>cos</artifactId>
         <version>05Nov2002</version>
