@@ -222,7 +222,7 @@ public class PageHandlerManager extends ObservedManager {
                                     new Object[]{getName(), request, response});
                             }
                             catch (Exception e) {
-                                throw new Content2BeanException("no proper constuctor found", e);
+                                throw new Content2BeanException("no proper constructor found", e);
                             }
                         }
 
