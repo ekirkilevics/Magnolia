@@ -89,26 +89,51 @@ public class MockNodeData extends DefaultNodeData {
     }
 
     public boolean getBoolean() {
-        return ((Boolean) value).booleanValue();
+        try {
+            return ((Boolean) value).booleanValue();
+        } catch (Exception e) {
+            // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
+            return false;
+        }
     }
 
     public Calendar getDate() {
-        return (Calendar) value;
+        try {
+            return (Calendar) value;
+        } catch (Exception e) {
+            // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
+            return null;
+        }
     }
 
     public double getDouble() {
-        return ((Double) value).doubleValue();
+        try {
+            return ((Double) value).doubleValue();
+        } catch (Exception e) {
+            // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
+            return 0;
+        }
     }
 
     public long getLong() {
-        if (value instanceof Integer) {
-            return ((Integer)value).longValue();
+        try {
+            if (value instanceof Integer) {
+                return ((Integer)value).longValue();
+            }
+            return ((Long) value).longValue();
+        } catch (Exception e) {
+            // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
+            return 0;
         }
-        return ((Long) value).longValue();
     }
 
     public InputStream getStream() {
-        return (InputStream) value;
+        try {
+            return (InputStream) value;
+        } catch (Exception e) {
+            // TODO : this is mimicing the (very wrong) behaviour of DefaultNodeData - see MAGNOLIA-2237
+            return null;
+        }
     }
 
     public Content getReferencedContent() throws RepositoryException {
