@@ -279,7 +279,7 @@
                 this.divMain.style.width=sizeObj.w-this.paddingLeft-this.paddingRight-2;
 
             if(this.browseMode)
-                this.divMain.style.height=sizeObj.h - 50;
+                this.divMain.style.height=sizeObj.h - 60;
             else
                 this.divMain.style.height=sizeObj.h - 68;
 
