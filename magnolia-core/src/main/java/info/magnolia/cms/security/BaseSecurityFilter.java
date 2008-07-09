@@ -36,13 +36,15 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.security.auth.callback.HttpClientCallback;
 
-import javax.servlet.*;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
  * Provides basic infrastructure to authenticate request using form or basic realm
+ *
  * @author Sameer Charles
  * $Id$
  */
@@ -54,23 +56,21 @@ public abstract class BaseSecurityFilter extends AbstractMgnlFilter {
      * Continue with the magnolia defined filter chain if isAllowed returns true
      * else send an authentication request to the client as configured
      */
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (isAllowed(request, response)) {
             chain.doFilter(request, response);
         } else {
             doAuthenticate(request, response);
         }
-
     }
 
-    public abstract boolean isAllowed (HttpServletRequest request, HttpServletResponse response) throws IOException;
+    protected abstract boolean isAllowed(HttpServletRequest request, HttpServletResponse response) throws IOException;
 
     /**
      * In most cases this will provide a standard login mechanism, override this to support
      * other login strategies
-     * */
-    public void doAuthenticate(HttpServletRequest request, HttpServletResponse response) {
+     */
+    protected void doAuthenticate(HttpServletRequest request, HttpServletResponse response) {
         /*
         HttpSession httpsession = request.getSession(false);
         if (httpsession != null) {
