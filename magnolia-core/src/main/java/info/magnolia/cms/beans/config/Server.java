@@ -69,20 +69,6 @@ public class Server {
         return new Server();
     }
 
-    public static final class Observer extends FactoryUtil.ObservedObjectFactory {
-        public Observer() {
-            super(ContentRepository.CONFIG, "/server", ServerConfiguration.class);
-        }
-
-        protected Object transformNode(Content node) throws Content2BeanException {
-            return Content2BeanUtil.toBean(node, false, new Content2BeanTransformerImpl(){
-                public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
-                    return new ServerConfiguration();
-                }
-            });
-        }
-    }
-
     /**
      * @deprecated since 3.5 - not used anymore, this is now an ObservedManager
      */

@@ -33,11 +33,18 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.content2bean.TransformationState;
+import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
+
+import java.util.Map;
 
 /**
  * Holds the basic server configuration info.
- * 
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -72,5 +79,20 @@ public class ServerConfiguration {
 
     public static ServerConfiguration getInstance() {
         return (ServerConfiguration) FactoryUtil.getSingleton(ServerConfiguration.class);
+    }
+
+    public static final class Observer extends FactoryUtil.ObservedObjectFactory {
+        public Observer() {
+            super(ContentRepository.CONFIG, "/server", ServerConfiguration.class);
+        }
+
+        // the false parameter here is the important thing to keep (not recursive)
+        protected Object transformNode(Content node) throws Content2BeanException {
+            return Content2BeanUtil.toBean(node, false, new Content2BeanTransformerImpl() {
+                public Object newBeanInstance(TransformationState state, Map properties) throws Content2BeanException {
+                    return new ServerConfiguration();
+                }
+            });
+        }
     }
 }
