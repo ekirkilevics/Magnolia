@@ -64,6 +64,8 @@ import org.slf4j.LoggerFactory;
  * This utility class provides static methods for turning a content [node] into an XML document.
  * @author Mettraux John (john.mettraux &gt;at&lt; openwfe.org)
  * @version 0.1 $Id :$
+ *
+ * @deprecated deprecated since 3.6 but wasn't used before - MAGNOLIA-405
  */
 public class XmlExport implements ExportHandler {
 

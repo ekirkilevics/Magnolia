@@ -44,6 +44,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author Sameer Charles $Id :$
+ *
+ * @deprecated deprecated since 3.6 but wasn't used before - MAGNOLIA-405
  */
 public final class ContentImporter {
 

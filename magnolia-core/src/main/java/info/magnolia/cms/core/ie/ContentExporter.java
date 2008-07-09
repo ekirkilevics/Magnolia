@@ -45,6 +45,8 @@ import org.slf4j.LoggerFactory;
 /**
  * This class is a main export handler, which could be used to instanciate appropriate export handlers using ID
  * @author Sameer Charles $Id :$
+ *
+ * @deprecated deprecated since 3.6 but wasn't used before - MAGNOLIA-405
  */
 public final class ContentExporter {
 

@@ -44,6 +44,8 @@ import javax.jcr.RepositoryException;
 /**
  * Date: May 24, 2005 Time: 4:48:26 PM
  * @author Sameer Charles $Id :$
+ *
+ * @deprecated deprecated since 3.6 but wasn't used before - MAGNOLIA-405
  */
 public interface ImportHandler {
 
