@@ -169,21 +169,13 @@ public class RequestAttributeStrategy implements AttributeStrategy {
                 break;
             case Context.SESSION_SCOPE:
                 if (!(value instanceof Serializable)) {
-                    log.warn("Trying to store a non-serializable attribute in session: "
-                        + name
-                        + ". Object type is "
-                        + value.getClass().getName(), new Throwable(
-                        "This stacktrace has been added to provide debugging information"));
+                    log.warn("Trying to store a non-serializable attribute in session: " + name + ". Object type is " + value.getClass().getName(), new Throwable("This stacktrace has been added to provide debugging information"));
                     return;
                 }
 
                 HttpSession httpsession = request.getSession(false);
                 if (httpsession == null) {
-                    log
-                        .debug(
-                            "Session initialized in order to set attribute '{}' to '{}'. You should avoid using session when possible!",
-                            name,
-                            value);
+                    log.debug("Session initialized in order to set attribute '{}' to '{}'. You should avoid using session when possible!", name, value);
                     httpsession = request.getSession(true);
                 }
 
