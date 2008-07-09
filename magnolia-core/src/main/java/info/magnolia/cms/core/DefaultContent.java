@@ -686,7 +686,7 @@ public class DefaultContent extends ContentHandler implements Content {
         int level = this.getLevel();
         while (level != 0) {
             try {
-                allAncestors.add(new DefaultContent(this.node.getAncestor(--level), this.accessManager));
+                allAncestors.add(getAncestor(--level));
             }
             catch (AccessDeniedException e) {
                 // valid

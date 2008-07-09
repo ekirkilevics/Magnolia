@@ -316,6 +316,17 @@ public class MockContent extends DefaultContent {
         this.parent = parent;
     }
 
+    public Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        if (digree > this.getLevel()) {
+            throw new PathNotFoundException();
+        }
+        Content ancestor = this;
+        for (int i=getLevel();i==digree;i--){
+            ancestor=ancestor.getParent();
+        }
+        return ancestor;
+    }
+
     public MockHierarchyManager getHierarchyManager() {
         if (this.hierarchyManager == null && getParent() != null) {
             return ((MockContent) getParent()).getHierarchyManager();
