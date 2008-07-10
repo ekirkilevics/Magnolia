@@ -44,7 +44,7 @@ import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.delta.IsModuleInstalledDelegateTask;
+import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
 import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
@@ -89,7 +89,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         "configurationClass",
         WorkflowWebsiteTreeConfiguration.class.getName());
 
-    private Task changeDMSTreeConfigurationTask = new IsModuleInstalledDelegateTask(
+    private Task changeDMSTreeConfigurationTask = new IsModuleInstalledOrRegistered(
         "DMS Tree Configuration",
         "Enter comment dialog on activation",
         "dms",
@@ -126,10 +126,14 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the 'workflow-base' role.", "/mgnl-bootstrap/workflow/userroles.workflow-base.xml"));
         register(delta35);
 
-        final Delta delta36 = DeltaBuilder.update("3.6", "")
-            .addTask(changeWebsiteTreeConfigurationTask)
-            .addTask(changeDMSTreeConfigurationTask);
-        register(delta36);
+        register(DeltaBuilder.update("3.6", "")
+                .addTask(changeWebsiteTreeConfigurationTask)
+                .addTask(changeDMSTreeConfigurationTask)
+                .addTask(new IsModuleInstalledOrRegistered("Sample users and groups", "Adds sample users to sample editors and publishers group, if the sample module is installed or registered.",
+                        "samples", new ArrayDelegateTask("",
+                        new AddUserToGroupTask("Sample user", "eve", "editors"),
+                        new AddUserToGroupTask("Sample user", "patrick", "publishers"))
+                )));
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {
@@ -145,8 +149,8 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(changeDMSTreeConfigurationTask);
 
         if (ctx.isModuleRegistered("samples")) {
-            tasks.add(new AddUserToGroupTask("Sample user", "joe", "editors"));
-            tasks.add(new AddUserToGroupTask("Sample user", "melinda", "publishers"));
+            tasks.add(new AddUserToGroupTask("Sample user", "eve", "editors"));
+            tasks.add(new AddUserToGroupTask("Sample user", "patrick", "publishers"));
         }
 
         return tasks;

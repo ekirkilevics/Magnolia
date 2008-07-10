@@ -43,6 +43,8 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsInstallSamplesTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.delta.WarnTask;
+import info.magnolia.module.delta.ArrayDelegateTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -88,11 +90,16 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
             .addTask(new BootstrapSingleResource("Bootstrap", "Installs the paragraph configuration", "/mgnl-bootstrap/samples/config.modules.samples.config.paragraphCollections.xml"));
 
         final Delta for354 = DeltaBuilder.update("3.5.4", "")
-        .addTask(new RemoveNodeTask("Remove Kupu editor", "Since 3.5 the Kupu editor is not supported anymore", ContentRepository.CONFIG, "/modules/samples/dialogs/samples-devshow-allcontrols/tabRichEdit"));
+            .addTask(new RemoveNodeTask("Remove Kupu editor", "Since 3.5 the Kupu editor is not supported anymore", ContentRepository.CONFIG, "/modules/samples/dialogs/samples-devshow-allcontrols/tabRichEdit"));
 
         register(for35);
         register(for354);
 
+        register(DeltaBuilder.update("3.6", "")
+                .addTask(replaceIfExists("Bob", "bob", "David the Example Developer", "david"))
+                .addTask(replaceIfExists("Joe", "joe", "Eve the Example Editor", "eve"))
+                .addTask(replaceIfExists("Melinda", "melinda", "Patrick the Example Publisher", "patrick"))
+        );
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
@@ -100,6 +107,25 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
         // add the default uri task
         installTasks.add(new IsInstallSamplesTask("Default URI", "Sets a new default URI if samples are to be installed.", getSetDefaultPublicURITask(installContext)));
         return installTasks;
+    }
+
+    private ReplaceIfExists replaceIfExists(String oldName, String oldShortName, String newName, String newShortName) {
+        final String desc = "In 3.6, sample users were renamed for clarity: \"" + oldName + "\"  (" + oldShortName + ") is now \"" + newName + "\" (" + newShortName + ").";
+        final String warning = desc + " Since there was no user with shortname \"" + oldShortName + "\" on your system, \"" + newShortName + "\" was not added either.";
+        final String path = "/admin/" + oldShortName;
+        final String bootstrapFile = "/mgnl-bootstrap-samples/samples/users.admin." + newShortName + ".xml";
+        return new ReplaceIfExists("Sample user " + newName, desc, warning, "users", path, bootstrapFile);
+    }
+
+    private final static class ReplaceIfExists extends NodeExistsDelegateTask {
+        public ReplaceIfExists(String name, String description, String warningMessageIfNotExisting, String workspaceName, String pathToCheck, String bootstrapFile) {
+            super(name, description, workspaceName, pathToCheck,
+                    new ArrayDelegateTask("",
+                            new RemoveNodeTask("", "", workspaceName, pathToCheck), 
+                            new BootstrapSingleResource(name,description,bootstrapFile)
+                    ),
+                    new WarnTask(name, warningMessageIfNotExisting));
+        }
     }
 
 }
