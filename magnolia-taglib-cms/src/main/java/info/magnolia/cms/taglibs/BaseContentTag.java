@@ -127,9 +127,8 @@ public class BaseContentTag extends TagSupport {
      * @return the active node, or the first matching one if nodedata is null and inherit is set.
      */
     protected Content getFirstMatchingNode() {
-        Content currentPage = Resource.getCurrentActivePage();
         if (actpage) {
-            return currentPage;
+            return getCurrentPage();
         }
 
         Content contentNode = null;
@@ -145,7 +144,18 @@ public class BaseContentTag extends TagSupport {
         }
 
         if (contentNode == null) {
+            Content currentPage = getCurrentPage();
             contentNode = resolveNode(currentPage);
+
+            try {
+                while (inherit && currentPage.getLevel() > 0 && contentNode == null) {
+                    currentPage = currentPage.getParent();
+                    contentNode = resolveNode(currentPage);
+                }
+            }
+            catch (RepositoryException e) {
+                log.error(e.getMessage(), e);
+            }
         }
 
         if (contentNode == null) {
@@ -153,6 +163,7 @@ public class BaseContentTag extends TagSupport {
         }
 
         if (StringUtils.isNotEmpty(this.nodeDataName)) {
+            Content currentPage = getCurrentPage();
             NodeData nodeData = contentNode.getNodeData(this.nodeDataName);
 
             try {
@@ -168,6 +179,10 @@ public class BaseContentTag extends TagSupport {
         }
 
         return contentNode;
+    }
+
+    protected Content getCurrentPage() {
+        return Resource.getCurrentActivePage();
     }
 
     protected Content resolveNode(Content currentPage) {
