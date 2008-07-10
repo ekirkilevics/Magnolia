@@ -190,7 +190,11 @@ public class LinkHelper {
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
             UUIDLink link = new UUIDLink().initByUUIDPatternMatcher(matcher);
-            matcher.appendReplacement(res, transformer.transform(link));
+            String replacement = transformer.transform(link);
+            // Replace "\" with "\\" and "$" with "\$" since Matcher.appendReplacement treats these characters specially
+            replacement = StringUtils.replace(replacement, "\\", "\\\\");
+            replacement = StringUtils.replace(replacement,"$", "\\$");
+            matcher.appendReplacement(res, replacement);
         }
         matcher.appendTail(res);
         return res.toString();

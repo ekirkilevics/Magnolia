@@ -109,6 +109,14 @@ public class LinkResolverTest extends BaseLinkTest {
         assertEquals(StringUtils.replace(HTML_WITH_ABSOLUTE_LINK, "/parent/sub.html", "sub.html"), res);
     }
 
+    public void testUUIDToAbsoluteLinkWithDollar() throws IOException, RepositoryException {
+        String htmlAbsoluteWithDollar = "this is a <a href=\"" + HREF_ABSOLUTE_LINK + "?var=${some_var}\">test</a>";       
+        String htmlUuidWithDollar = "this is a <a href=\"" + UUID_PATTNER_SIMPLE + "?var=${some_var}\">test</a>";
+
+        String res = getLinkResolver().convertToAbsoluteLinks(htmlUuidWithDollar, false);
+        assertEquals(htmlAbsoluteWithDollar, res);
+    }
+
     public LinkResolver getLinkResolver(){
         return LinkResolver.Factory.getInstance();
     }
