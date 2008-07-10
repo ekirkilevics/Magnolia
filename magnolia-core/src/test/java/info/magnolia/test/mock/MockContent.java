@@ -110,7 +110,7 @@ public class MockContent extends DefaultContent {
 
     public boolean isNodeType(String type) {
         try {
-            return this.getNodeTypeName().equalsIgnoreCase(type);
+            return this.getNodeTypeName().equals(type);
         }
         catch (RepositoryException e) {
             log.error("can't read node type name", e);
