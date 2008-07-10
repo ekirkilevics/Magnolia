@@ -587,6 +587,13 @@ This page has no content and it will redirect to
       <type>int</type>
       <description>The maximum height of the image in pixels.</description>
     </attribute>
+    <attribute>
+      <name>allowOversize</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>Allow resizing images beyond their original dimensions?</description>
+    </attribute>
   </tag>
   <tag>
     <name>simpleMail</name>

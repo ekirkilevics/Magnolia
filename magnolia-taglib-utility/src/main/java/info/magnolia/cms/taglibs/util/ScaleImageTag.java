@@ -102,6 +102,13 @@ public class ScaleImageTag extends BaseImageTag {
      * Attribute: Image maximum width
      */
     private int maxWidth = 0;
+    
+    /**
+     * Attribute: Allow resizing images beyond their original dimensions.
+     * Enabled by default for backwards compatibility but keep in mind this can
+     * result in images of very poor quality.
+     */
+    private boolean allowOversize = true;
 
     /**
      * Attribute: The name of the new content node to create
@@ -132,6 +139,14 @@ public class ScaleImageTag extends BaseImageTag {
      */
     public void setMaxWidth(int maxWidth) {
         this.maxWidth = maxWidth;
+    }
+    
+    /**
+     * Setter for the <code>allowOversize</code> tag attribute.
+     * @param allowOversize
+     */
+    public void setAllowOversize(boolean allowOversize) {
+        this.allowOversize = allowOversize;
     }
 
     /**
@@ -320,24 +335,33 @@ public class ScaleImageTag extends BaseImageTag {
      * @param the image height
      * @return the scale factor
      */
-    private double scaleFactor(int width, int height) {
+    private double scaleFactor(int originalWidth, int originalHeight) {
         double scaleFactor;
-        if (this.maxWidth <= 0 && this.maxHeight <= 0) {
+
+        int scaleWidth = this.maxWidth;
+        int scaleHeight = this.maxHeight;
+        
+        if (!this.allowOversize) {
+            scaleWidth = Math.min(this.maxWidth, originalWidth);
+            scaleHeight = Math.min(this.maxHeight, originalHeight);
+        }
+        
+        if (scaleWidth <= 0 && scaleHeight <= 0) {
             // may a copy at the same size
             scaleFactor = 1;
         }
-        else if (this.maxWidth <= 0) {
+        else if (scaleWidth <= 0) {
             // use height
-            scaleFactor = this.maxHeight / height;
+            scaleFactor = (double) scaleHeight / (double) originalHeight;
         }
-        else if (this.maxHeight <= 0) {
+        else if (scaleHeight <= 0) {
             // use width
-            scaleFactor = (double) this.maxWidth / (double) width;
+            scaleFactor = (double) scaleWidth / (double) originalWidth;
         }
         else {
             // create two scale factors, and see which is smaller
-            double scaleFactorWidth = (double) this.maxWidth / (double) width;
-            double scaleFactorHeight = (double) this.maxHeight / (double) height;
+            double scaleFactorWidth = (double) scaleWidth / (double) originalWidth;
+            double scaleFactorHeight = (double) scaleHeight / (double) originalHeight;
             scaleFactor = Math.min(scaleFactorWidth, scaleFactorHeight);
         }
         return scaleFactor;
