@@ -21,9 +21,6 @@
   <sv:property sv:name="language" sv:type="String">
     <sv:value>en</sv:value>
   </sv:property>
-  <sv:property sv:name="lastaccess" sv:type="Date">
-    <sv:value>2008-07-10T15:08:22.360+02:00</sv:value>
-  </sv:property>
   <sv:property sv:name="pswd" sv:type="String">
     <sv:value>ZXZl</sv:value>
   </sv:property>
@@ -58,9 +55,6 @@
       <sv:value>d505938b-8ff2-4880-954c-0010fbb0da5e</sv:value>
     </sv:property>
     <sv:property sv:name="0" sv:type="String">
-      <sv:value>5e6895a6-aca3-4fed-9d38-216e3b889f2a</sv:value>
-    </sv:property>
-    <sv:property sv:name="1" sv:type="String">
       <sv:value>d2729f91-a432-429e-a345-18912815606a</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
