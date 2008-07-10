@@ -1,10 +1,10 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2007-2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
  * This file is dual-licensed under both the Magnolia
- * Network Agreement and the GNU General Public License.
+ * Network Agreement and the GNU General Public License. 
  * You may elect to use one or the other of these licenses.
  *
  * This file is distributed in the hope that it will be
@@ -33,18 +33,30 @@
  */
 package info.magnolia.module.delta;
 
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.module.InstallContext;
+
+
 /**
- * @author gjoseph
- * @version $Revision$ ($Author$)
- *
- * @deprecated replaced by IsModuleInstalledOrRegistered
+ * @author vsteller
+ * @version $Id$
  */
-public class IsModuleInstalledDelegateTask extends IsModuleInstalledOrRegistered {
-    public IsModuleInstalledDelegateTask(String taskName, String taskDescription, String moduleName, Task ifTrue) {
-        super(taskName, taskDescription, moduleName, ifTrue);
+public class IsModuleInstalledOrRegistered extends NodeExistsDelegateTask {
+
+    private static final String MODULES_PATH = "/modules";
+    private final String moduleName;
+
+    public IsModuleInstalledOrRegistered(String taskName, String taskDescription, String moduleName, Task ifTrue) {
+        super(taskName, taskDescription, ContentRepository.CONFIG, MODULES_PATH + "/" + moduleName, ifTrue);
+        this.moduleName = moduleName;
     }
 
-    public IsModuleInstalledDelegateTask(String taskName, String taskDescription, String moduleName, Task ifTrue, Task ifFalse) {
-        super(taskName, taskDescription, moduleName, ifTrue, ifFalse);
+    public IsModuleInstalledOrRegistered(String taskName, String taskDescription, String moduleName, Task ifTrue, Task ifFalse) {
+        super(taskName, taskDescription, ContentRepository.CONFIG, MODULES_PATH + "/" + moduleName, ifTrue, ifFalse);
+        this.moduleName = moduleName;
+    }
+
+    protected boolean condition(InstallContext ctx) {
+        return super.condition(ctx) || ctx.isModuleRegistered(moduleName);
     }
 }

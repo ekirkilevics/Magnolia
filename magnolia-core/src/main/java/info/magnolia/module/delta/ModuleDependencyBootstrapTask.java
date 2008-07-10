@@ -37,13 +37,14 @@ import info.magnolia.module.InstallContext;
 import org.apache.commons.lang.StringUtils;
 
 /**
- * A Task which will bootstrap files if an optional module is install: any resource directly under
- * "/mgnl-bootstrap/moduleName/dependencyName" (but not recursive into sub-directories)
+ * A Task which will bootstrap files if an optional module is installed or registered:
+ * any resource directly under "/mgnl-bootstrap/moduleName/dependencyName"
+ * (but not recursive into sub-directories)
  * 
  * @author vsteller
  * @version $Id$
  */
-public class ModuleDependencyBootstrapTask extends IsModuleInstalledDelegateTask {
+public class ModuleDependencyBootstrapTask extends IsModuleInstalledOrRegistered {
 
     public ModuleDependencyBootstrapTask(final String dependencyName) {
         super("Bootstrap " + dependencyName, "Bootstraps " + dependencyName + " content if installed.", dependencyName, new BootstrapResourcesTask("", "") {
