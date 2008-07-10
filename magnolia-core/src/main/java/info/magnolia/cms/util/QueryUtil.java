@@ -38,16 +38,15 @@ import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.core.search.QueryResult;
 import info.magnolia.context.MgnlContext;
-
-import java.util.Calendar;
-import java.util.Collection;
-import java.util.Collections;
-
 import org.apache.commons.lang.time.DateFormatUtils;
 import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
+import java.util.Calendar;
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Util to execute queries as simple as possible.
@@ -59,7 +58,7 @@ public class QueryUtil {
     private static Logger log = LoggerFactory.getLogger(QueryUtil.class);
 
     /**
-     * Execute a query
+     * Executes a query.
      * @param repository
      * @param statement
      * @return
@@ -69,7 +68,7 @@ public class QueryUtil {
     }
 
     /**
-     * Execute a query
+     * Executes a query.
      * @param repository
      * @param statement
      * @param language
@@ -80,24 +79,29 @@ public class QueryUtil {
     }
 
     /**
-     * Execute a query
+     * Executes a query, throwing any exceptions that arise as a result.
+     */
+    public static Collection exceptionThrowingQuery(String repository, String statement, String language, String returnItemType) throws RepositoryException {
+        QueryManager qm = MgnlContext.getQueryManager(repository);
+        Query query= qm.createQuery(statement, language);
+        QueryResult result = query.execute();
+        return result.getContent(returnItemType);
+    }
+
+    /**
+     * Executes a query - if an exception is thrown, it is logged and an empty collection is returned.
      * @param repository
      * @param statement
      * @param language
      * @param returnItemType
      * @return
      */
-    public static Collection query(String repository, String statement, String language, String returnItemType){
+    public static Collection query(String repository, String statement, String language, String returnItemType) {
         try {
-            QueryManager qm = MgnlContext.getQueryManager(repository);
-            Query query= qm.createQuery(statement, language);
-            QueryResult result = query.execute();
-            return result.getContent(returnItemType);
-        }
-        catch (Exception e) {
+            return exceptionThrowingQuery(repository, statement, language, returnItemType);
+        } catch (Exception e) {
             log.error("can't execute query [" + statement  + "], will return empty collection", e);
         }
-        
         return Collections.EMPTY_LIST;
     }
 

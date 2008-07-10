@@ -41,17 +41,20 @@ import info.magnolia.cms.util.DumperUtil;
 import info.magnolia.cms.util.QueryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
 import java.util.Iterator;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-
 
 public class JCRUtilsPage extends TemplatedMVCHandler {
+    private static final Logger log = LoggerFactory.getLogger(JCRUtilsPage.class);
+
     public JCRUtilsPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
@@ -62,20 +65,20 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
 
     private String path = "/";
 
-    private String result  = "";
+    private String result = "";
 
     private String statement = "";
 
-    private static String[] languages = new String[] {Query.SQL, Query.XPATH};
+    private static String[] languages = new String[]{Query.SQL, Query.XPATH};
 
     private String language = Query.SQL;
 
     private String itemType = "nt:base";
 
-    public String dump(){
-        if(StringUtils.isNotEmpty(repository) && StringUtils.isNotEmpty(path)){
+    public String dump() {
+        if (StringUtils.isNotEmpty(repository) && StringUtils.isNotEmpty(path)) {
             Content node = ContentUtil.getContent(repository, path);
-            if(node == null){
+            if (node == null) {
                 return "path not found: " + this.path;
             }
             result = DumperUtil.dump(node, level);
@@ -83,19 +86,33 @@ public class JCRUtilsPage extends TemplatedMVCHandler {
         return VIEW_SHOW;
     }
 
-    public String query(){
-        long start = System.currentTimeMillis();
-        Collection nodes = QueryUtil.query(repository, statement, language, this.itemType);
-        this.result +=(System.currentTimeMillis() - start) + "ms\n";
+    public String query() {
+        final long start = System.currentTimeMillis();
+        final Collection nodes;
+        try {
+            nodes = QueryUtil.exceptionThrowingQuery(repository, statement, language, this.itemType);
+        } catch (RepositoryException e) {
+            this.result = e.getMessage();
+            log.error("Error in JCR query:", e);
+            return VIEW_SHOW;
+        }
+        final StringBuffer sb = new StringBuffer();
+        sb.append(nodes.size());
+        sb.append(" nodes returned in ");
+        sb.append(System.currentTimeMillis() - start);
+        sb.append("ms\n");
 
         for (Iterator iter = nodes.iterator(); iter.hasNext();) {
             Content node = (Content) iter.next();
-            this.result += node.getHandle() + "\n";
+            sb.append(node.getHandle());
+            sb.append("\n");
         }
+
+        this.result = sb.toString();
         return VIEW_SHOW;
     }
 
-    public String delete(){
+    public String delete() {
         try {
             MgnlContext.getHierarchyManager(repository).delete(path);
         }
