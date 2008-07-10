@@ -38,7 +38,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SecurityUtil;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
@@ -46,7 +45,6 @@ import java.util.Properties;
 import java.util.Collection;
 
 import javax.jcr.RepositoryException;
-import javax.jcr.PathNotFoundException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
