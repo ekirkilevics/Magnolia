@@ -111,7 +111,7 @@ public class NoOpCache implements Cache {
      * @see info.magnolia.cms.cache.Cache#getCreationTime(info.magnolia.cms.cache.CacheKey)
      */
     public long getCreationTime(String request) {
-        return 0;
+        return Cache.UNKNOWN_CREATION_TIME;
     }
 
     /**
