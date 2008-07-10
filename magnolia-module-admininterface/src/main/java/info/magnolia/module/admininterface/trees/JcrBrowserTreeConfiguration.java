@@ -48,6 +48,7 @@ public class JcrBrowserTreeConfiguration extends ConfigTreeConfiguration {
     public void prepareTree(Tree tree, boolean browseMode, HttpServletRequest request) {
         super.prepareTree(tree, browseMode, request);
         tree.addItemType(ItemType.NT_UNSTRUCTURED);
+        tree.addItemType(ItemType.NT_FOLDER);
         tree.addItemType(ItemType.EXPRESSION.getSystemName());
         tree.addItemType(ItemType.WORKITEM.getSystemName());
         tree.addItemType(ItemType.USER.getSystemName());
