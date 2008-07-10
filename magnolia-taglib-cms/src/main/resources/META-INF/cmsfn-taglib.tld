@@ -106,4 +106,15 @@
     <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
     <function-signature>boolean firstPageWithNode(java.lang.String,int)</function-signature>
   </function>
+  <function>
+    <description>
+      Function to iterate over a node Data that has "checkbox" as control type, for example.
+      See http://jira.magnolia.info/browse/MAGNOLIA-1969
+    </description>
+    <name>nodeDataIterator</name>
+    <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>
+    <function-signature>java.util.Collection nodeDataIterator(info.magnolia.cms.core.Content, java.lang.String)</function-signature>
+  </function>
+
+
 </taglib>
