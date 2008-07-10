@@ -35,9 +35,9 @@ package info.magnolia.module.delta;
 
 /**
  * @author gjoseph
- * @version $Revision$ ($Author$)
+ * @version $Revision: 16698 $ ($Author: gjoseph $)
  *
- * @deprecated replaced by IsModuleInstalledOrRegistered
+ * @deprecated since 3.6 - replaced by IsModuleInstalledOrRegistered
  */
 public class IsModuleInstalledDelegateTask extends IsModuleInstalledOrRegistered {
     public IsModuleInstalledDelegateTask(String taskName, String taskDescription, String moduleName, Task ifTrue) {
