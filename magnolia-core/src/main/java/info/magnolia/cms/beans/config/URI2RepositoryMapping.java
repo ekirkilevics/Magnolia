@@ -33,8 +33,6 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.link.UUIDLink;
 import info.magnolia.cms.link.UUIDLinkException;
 
