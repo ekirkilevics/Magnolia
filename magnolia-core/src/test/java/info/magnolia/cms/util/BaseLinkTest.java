@@ -60,10 +60,10 @@ public abstract class BaseLinkTest extends MgnlTestCase {
 
     protected static final String SOME_CONTEXT = "/some-context";
     protected static final String HANDLE_PARENT_SUB = "/parent/sub";
-    protected static final String UUID_PATTNER_OLD_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',workspace:'{'default'}',path:'{'{2}'}}}'";
-    protected static final String UUID_PATTNER_NEW_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',handle:'{'{2}'}',nodeData:'{'{3}'}',extension:'{'{4}'}}}'";
-    protected static final String UUID_PATTNER_SIMPLE = MessageFormat.format(UUID_PATTNER_NEW_FORMAT, new String[]{"2", ContentRepository.WEBSITE, HANDLE_PARENT_SUB, "", "html"});
-    protected static final String UUID_PATTNER_SIMPLE_OLD_FORMAT = MessageFormat.format(UUID_PATTNER_OLD_FORMAT, new String[]{"2", ContentRepository.WEBSITE, HANDLE_PARENT_SUB});
+    protected static final String UUID_PATTERN_OLD_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',workspace:'{'default'}',path:'{'{2}'}}}'";
+    protected static final String UUID_PATTERN_NEW_FORMAT = "$'{'link:'{'uuid:'{'{0}'}',repository:'{'{1}'}',handle:'{'{2}'}',nodeData:'{'{3}'}',extension:'{'{4}'}}}'";
+    protected static final String UUID_PATTERN_SIMPLE = MessageFormat.format(UUID_PATTERN_NEW_FORMAT, new String[]{"2", ContentRepository.WEBSITE, HANDLE_PARENT_SUB, "", "html"});
+    protected static final String UUID_PATTERN_SIMPLE_OLD_FORMAT = MessageFormat.format(UUID_PATTERN_OLD_FORMAT, new String[]{"2", ContentRepository.WEBSITE, HANDLE_PARENT_SUB});
 
     protected static final String HREF_ABSOLUTE_LINK = HANDLE_PARENT_SUB + ".html";
 

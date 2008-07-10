@@ -33,10 +33,7 @@
  */
 package info.magnolia.cms.link;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.BaseLinkTest;
-import info.magnolia.cms.util.ContentUtil;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -51,7 +48,7 @@ public class LinkResolverTest extends BaseLinkTest {
 
     private static final String HTML_WITH_ABSOLUTE_LINK = "this is a <a href=\"" + HREF_ABSOLUTE_LINK + "\">test</a>";
 
-    private static final String HTML_WITH_UUIDS = "this is a <a href=\"" + UUID_PATTNER_SIMPLE + "\">test</a>";
+    private static final String HTML_WITH_UUIDS = "this is a <a href=\"" + UUID_PATTERN_SIMPLE + "\">test</a>";
 
     public void testParsingLinks() throws IOException, RepositoryException {
         String res = getLinkResolver().parseLinks(HTML_WITH_ABSOLUTE_LINK);
@@ -75,11 +72,11 @@ public class LinkResolverTest extends BaseLinkTest {
 
     public void testParsingLinksShouldPreserverParameters() throws IOException, RepositoryException {
         doTestParsingLinks("http://www.magnolia.info/foo?bar=baz", "http://www.magnolia.info/foo?bar=baz");
-        doTestParsingLinks(UUID_PATTNER_SIMPLE + "?bar=baz", HREF_ABSOLUTE_LINK + "?bar=baz");
+        doTestParsingLinks(UUID_PATTERN_SIMPLE + "?bar=baz", HREF_ABSOLUTE_LINK + "?bar=baz");
     }
 
     public void testParsingLinksShouldPreserveAnchors() throws IOException, RepositoryException {
-        doTestParsingLinks(UUID_PATTNER_SIMPLE + "#bar", HREF_ABSOLUTE_LINK + "#bar");
+        doTestParsingLinks(UUID_PATTERN_SIMPLE + "#bar", HREF_ABSOLUTE_LINK + "#bar");
         doTestParsingLinks("http://www.magnolia.info/foo#bar", "http://www.magnolia.info/foo#bar");
     }
 
@@ -111,7 +108,7 @@ public class LinkResolverTest extends BaseLinkTest {
 
     public void testUUIDToAbsoluteLinkWithDollar() throws IOException, RepositoryException {
         String htmlAbsoluteWithDollar = "this is a <a href=\"" + HREF_ABSOLUTE_LINK + "?var=${some_var}\">test</a>";       
-        String htmlUuidWithDollar = "this is a <a href=\"" + UUID_PATTNER_SIMPLE + "?var=${some_var}\">test</a>";
+        String htmlUuidWithDollar = "this is a <a href=\"" + UUID_PATTERN_SIMPLE + "?var=${some_var}\">test</a>";
 
         String res = getLinkResolver().convertToAbsoluteLinks(htmlUuidWithDollar, false);
         assertEquals(htmlAbsoluteWithDollar, res);
