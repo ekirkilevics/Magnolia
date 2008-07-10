@@ -10,7 +10,9 @@
       // <!-- 
         function setURI() {
           opener.SetUrl("${this.absoluteURI}");
-          opener.document.getElementById('cmbLinkProtocol').value = '';
+          if ( opener.document.getElementById('cmbLinkProtocol') != null ) {
+          	opener.document.getElementById('cmbLinkProtocol').value = '';
+          }
           window.top.close();
         }
       // -->
