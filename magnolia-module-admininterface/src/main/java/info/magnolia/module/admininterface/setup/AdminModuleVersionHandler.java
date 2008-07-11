@@ -95,6 +95,10 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
 
         register(for35);
 
+        register(DeltaBuilder.update("3.5.9", "")
+                .addTask(new RemoveNodeTask("Remove Secured URIs menu item", "Removes deprecated menu iten, since secured URIs are now handled through the anonymous user's permissions.", ContentRepository.CONFIG, "/modules/adminInterface/config/menu/config/secureURIs"))
+        );
+
         final Delta for36 = DeltaBuilder.update("3.6", "")
             .addTask(changeWebsiteTreeConfigurationTask)
             .addTask(new BootstrapSingleResource("Javascript messages","Add dynamic virtual url","/mgnl-bootstrap/adminInterface/config.modules.adminInterface.virtualURIMapping.messages.xml"))
