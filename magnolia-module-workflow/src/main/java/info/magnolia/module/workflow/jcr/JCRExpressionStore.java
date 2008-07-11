@@ -50,6 +50,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.NoSuchElementException;
 
+import javax.jcr.RepositoryException;
 import javax.jcr.ValueFactory;
 
 import openwfe.org.ApplicationContext;
@@ -177,7 +178,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     /**
      * Loads an expression given its id.
      */
-    public FlowExpression loadExpression(final FlowExpressionId fei) throws PoolException {
+    public synchronized FlowExpression loadExpression(final FlowExpressionId fei) throws PoolException {
         try {
             Content cExpression = findExpression(fei);
 
@@ -278,12 +279,26 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     }
 
     protected HierarchyManager getHierarchyManager() {
+        HierarchyManager hm;
         if(useLifeTimeJCRSession){
-            return LifeTimeJCRSessionUtil.getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
+            hm = LifeTimeJCRSessionUtil.getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
         }
         else{
-            return MgnlContext.getSystemContext().getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
+            hm =  MgnlContext.getSystemContext().getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
         }
+        try {
+            if(hm.hasPendingChanges()){
+                // If this happens it might be related to MAGNOLIA-2172
+                // the methods of the expression store are synchronized so this should not happen!
+                log.warn("The workflow expression session has pending changes. Will clean the session");
+                hm.refresh(true);
+            }
+        }
+        catch (RepositoryException e) {
+            // should really not happen
+            log.error("Can't check/refresh worflow expression session.",e);
+        }
+        return hm;
     }
 
     /**
