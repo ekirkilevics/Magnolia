@@ -56,6 +56,7 @@ import org.slf4j.LoggerFactory;
  * @version 3.0
  */
 public class WorkflowModule extends AbstractAdminModule {
+
     private static final Logger log = LoggerFactory.getLogger(WorkflowModule.class);
 
     private static WorkflowModule instance;
@@ -80,7 +81,7 @@ public class WorkflowModule extends AbstractAdminModule {
     /**
      * Cleanup empty parent nodes (for expressions, workitems)
      */
-    private boolean cleanup = false;
+    private boolean cleanup = true;
 
     protected void onInit() {
         try {
@@ -167,6 +168,8 @@ public class WorkflowModule extends AbstractAdminModule {
     }
 
     public void setUseLifeTimeJCRSession(boolean useLifeTimeJCRSession) {
+        log.warn("Setting useLifeTimeJCRSession flag should not be used unless you really know what you do.");
+
         this.useLifeTimeJCRSession = useLifeTimeJCRSession;
     }
 
@@ -175,6 +178,7 @@ public class WorkflowModule extends AbstractAdminModule {
     }
 
     public void setCleanup(boolean cleanup) {
+        log.warn("Setting cleanup flag should not be used unless you really know what you do.");
         this.cleanup = cleanup;
     }
 
