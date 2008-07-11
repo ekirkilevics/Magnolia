@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.util;
 
+import java.io.Serializable;
+
 import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.core.Content;
@@ -48,13 +50,13 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
-public class LazyContentWrapper extends ContentWrapper {
+public class LazyContentWrapper extends ContentWrapper implements Serializable {
 
     private String repository;
 
     private String uuid;
 
-    protected Content node;
+    protected transient Content node;
 
     /**
      * Logger.
