@@ -50,9 +50,10 @@ import javax.jcr.RepositoryException;
 
 
 /**
- * Checks for modifications between current secureURI configuration and the 3.0 default configuration. Modified secureURIs are added as 
- * URI permissions to the anonymous user URI ACLs. 
- * TODO deletion of secureURIs is not detected.
+ * Checks for modifications between current secureURI configuration and the 3.0 default configuration.
+ * Modified secureURIs are added as URI permissions to the anonymous user URI ACLs. <strong>If the default
+ * secured URIs ("root" and "admininterface") had been removed, they are re-added (by means of the default
+ * anonymous role's new permissions)
  * 
  * @author vsteller
  * @version $Id$
@@ -81,7 +82,8 @@ public class CheckAndUpdateSecureURIs extends AllChildrenNodesOperation implemen
         TaskExecutionException {
         final String secureURIName = node.getName();
         final String secureURI = NodeDataUtil.getString(node, PROPERTY_URI);
-        
+
+        // ignore secureURIs from the secureURIs30 map
         if (!secureURIs30.containsKey(secureURIName) || !((String) secureURIs30.get(secureURIName)).equals(secureURI)) {
             subtasks.addTask(new AddURIPermissionTask("Permissions", "Transform secure URI " + secureURI + " to permission of anonymous role", UserManager.ANONYMOUS_USER, secureURI, AddURIPermissionTask.DENY));
             ctx.info("Existing configuration of secureURIList was modified. Magnolia put a backup in " + node.getHandle() + " and will add an URI restriction for the URI '" + secureURI + "' to the anonymous role.");
