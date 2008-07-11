@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.model.ModuleDefinition;
 
 import javax.jcr.RepositoryException;
@@ -61,7 +62,7 @@ public class InstallContextImpl implements InstallContext {
     private boolean restartNeeded;
     private int executedTaskCount;
     private int totalTaskCount;
-    // ensure we'll keep messages in the order they were added 
+    // ensure we'll keep messages in the order they were added
     private final Map messages = new LinkedHashMap();
 
     public void setCurrentModule(ModuleDefinition module) {
@@ -130,8 +131,7 @@ public class InstallContextImpl implements InstallContext {
     }
 
     public HierarchyManager getHierarchyManager(String workspace) {
-        // TODO : use MgnlContext ??
-        return ContentRepository.getHierarchyManager(workspace);
+        return MgnlContext.getSystemContext().getHierarchyManager(workspace);
     }
 
     public HierarchyManager getConfigHierarchyManager() {
