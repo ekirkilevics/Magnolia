@@ -332,7 +332,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
         if (storageNode == null && hm != null) {
             try {
                 if(this.path == null){
-                    log.warn("No path defined for a dialog called by the url [{}]", this.getRequest().getRequestURL());
+                    log.debug("No path defined for a dialog called by the url [{}]", this.getRequest().getRequestURL());
                     return null;
                 }
                 Content parentContent = hm.getContent(path);
