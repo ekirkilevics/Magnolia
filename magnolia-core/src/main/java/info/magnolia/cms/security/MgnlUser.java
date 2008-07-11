@@ -40,6 +40,8 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.SystemContentWrapper;
+
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -49,7 +51,6 @@ import javax.jcr.ItemNotFoundException;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import java.io.ObjectStreamField;
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -67,14 +68,6 @@ public class MgnlUser extends AbstractUser implements Serializable {
 
     private static final long serialVersionUID = 222L;
 
-    /**
-     * instead of defining each field transient, we explicitly says what needs to be
-     * serialized
-     * */
-    private static final ObjectStreamField[] serialPersistentFields = {
-            new ObjectStreamField("uuid", String.class)
-    };
-
     private static final Logger log = LoggerFactory.getLogger(MgnlUser.class);
 
     /**
@@ -84,35 +77,14 @@ public class MgnlUser extends AbstractUser implements Serializable {
 
     private static final String NODE_GROUPS = "groups"; //$NON-NLS-1$
 
-    private Content userNode;
-
-    /**
-     * Used to refetch the user node after deserializing
-     */
-    private String uuid;
+    // serialiyed
+    private SystemContentWrapper userNode;
 
     /**
      * @param userNode the Content object representing this user
      */
     protected MgnlUser(Content userNode) {
-        init(userNode);
-    }
-
-    protected void init(Content userNode) {
-        this.userNode = userNode;
-        this.uuid = userNode.getUUID();
-    }
-
-    /**
-     * Reinitialize itself with the partial deserialized data
-     * */
-    private void reInitialize() {
-        try {
-            HierarchyManager usersHm = MgnlSecurityUtil.getSystemHierarchyManager(ContentRepository.USERS);
-            init(usersHm.getContentByUUID(uuid));
-        } catch (RepositoryException re) {
-            log.error("Failed to load MgnlUser from persistent storage", re);
-        }
+        this.userNode = new SystemContentWrapper(userNode);
     }
 
     /**
@@ -409,14 +381,6 @@ public class MgnlUser extends AbstractUser implements Serializable {
     }
 
     public Content getUserNode() {
-        try {
-            if (null == userNode || !userNode.getJCRNode().getSession().isLive()) {
-                reInitialize();
-            }
-        }
-        catch (RepositoryException e) {
-            log.error("can't reinitialize the user's content node ",e);
-        }
         return userNode;
     }
 }
