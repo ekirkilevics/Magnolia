@@ -462,7 +462,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
                 // move source into destinatin not possible
                 return null;
             }
-            this.deactivateNode(source);
+            //this.deactivateNode(source);
             try {
                 getHierarchyManager().moveTo(source, destination);
             }
@@ -513,7 +513,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
             newLabel = Path.getUniqueLabel(getHierarchyManager(), parentPath, newLabel);
             dest = parentPath + "/" + newLabel; //$NON-NLS-1$
         }
-        this.deactivateNode(this.getPath());
+        //this.deactivateNode(this.getPath());
 
         if (log.isInfoEnabled()) {
             log.info("Moving node from " + this.getPath() + " to " + dest); //$NON-NLS-1$ //$NON-NLS-2$
@@ -677,7 +677,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
                     if (move) {
                         tomove.getParent().orderBefore(nameOrigin, nameSelected);
                         // deactivate
-                        this.deactivateNode(pathOrigin);
+                        // this.deactivateNode(pathOrigin);
                         tomove.getParent().save();
                     }
                     else {
