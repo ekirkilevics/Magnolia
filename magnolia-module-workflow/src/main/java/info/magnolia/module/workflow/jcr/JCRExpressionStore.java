@@ -103,7 +103,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         boolean release = !useLifeTimeJCRSession && !MgnlContext.hasInstance();
         try {
             HierarchyManager hm = getHierarchyManager();
-            final Content cExpression = findExpression(fe);
+            final Content cExpression = findExpression(fe, hm);
 
             log.debug("storeExpression() handle is " + cExpression.getHandle());
 
@@ -135,7 +135,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
     public synchronized void unstoreExpression(final FlowExpression fe) throws PoolException {
         boolean release = !useLifeTimeJCRSession && !MgnlContext.hasInstance();
         try {
-            final Content cExpression = findExpression(fe);
+            final HierarchyManager hm = getHierarchyManager();
+            final Content cExpression = findExpression(fe, hm);
 
             if (cExpression != null) {
                 if(cleanUp){
@@ -144,7 +145,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 else{
                     cExpression.delete();
                 }
-                getHierarchyManager().save();
+                hm.save();
             } else {
                 log.info("unstoreExpression() " + "didn't find content node for fe " + fe.getId().toParseableString());
             }
@@ -180,7 +181,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public synchronized FlowExpression loadExpression(final FlowExpressionId fei) throws PoolException {
         try {
-            Content cExpression = findExpression(fei);
+            Content cExpression = findExpression(fei, getHierarchyManager());
 
             if (cExpression != null) {
                 final FlowExpression expression = deserializeExpressionAsXml(cExpression);
@@ -247,18 +248,17 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         return buffer.toString();
     }
 
-    private Content findExpression(final FlowExpression fe) throws Exception {
-        return findExpression(fe.getId());
+    private Content findExpression(final FlowExpression fe, HierarchyManager hm) throws Exception {
+        return findExpression(fe.getId(), hm);
     }
 
-    private Content findExpression(final FlowExpressionId fei) throws Exception {
+    private Content findExpression(final FlowExpressionId fei, HierarchyManager hm) throws Exception {
         if (log.isDebugEnabled()) {
             log.debug("findExpression() looking for " + fei.toParseableString());
         }
 
         final String path = toXPathFriendlyString(fei);
 
-        final HierarchyManager hm = getHierarchyManager();
         if (hm.isExist(path)) {
             return hm.getContent(path);
         } else {
@@ -290,7 +290,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             if(hm.hasPendingChanges()){
                 // If this happens it might be related to MAGNOLIA-2172
                 // the methods of the expression store are synchronized so this should not happen!
-                log.warn("The workflow expression session has pending changes. Will clean the session");
+                log.warn("The workflow expression session has pending changes. Will clean the session", new Exception());
                 hm.refresh(true);
             }
         }
