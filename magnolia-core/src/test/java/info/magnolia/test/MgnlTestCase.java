@@ -112,8 +112,6 @@ public abstract class MgnlTestCase extends TestCase {
 
         MockHierarchyManager hm = MockUtil.createAndSetHierarchyManager(ContentRepository.CONFIG, properties);
 
-        MockUtil.mockObservation(hm);
-
         return hm;
     }
 }
