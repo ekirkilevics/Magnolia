@@ -78,6 +78,15 @@ public class MockSession implements Session {
      */
     private static Logger log = LoggerFactory.getLogger(MockSession.class);
 
+    private Workspace workspace;
+
+    private MockHierarchyManager mockHM;
+
+    public MockSession(MockHierarchyManager mockHierarchyManager) {
+        this.mockHM = mockHierarchyManager;
+        workspace = new MockWorkspace(mockHM.getName(), this);
+    }
+
     public void addLockToken(String lt) {
     }
 
@@ -154,7 +163,7 @@ public class MockSession implements Session {
     }
 
     public Workspace getWorkspace() {
-        return null;
+        return workspace;
     }
 
     public boolean hasPendingChanges() throws RepositoryException {
@@ -196,5 +205,10 @@ public class MockSession implements Session {
     }
 
     public void setNamespacePrefix(String prefix, String uri) throws NamespaceException, RepositoryException {
+    }
+
+
+    public void setWorkspace(Workspace workspace) {
+        this.workspace = workspace;
     }
 }

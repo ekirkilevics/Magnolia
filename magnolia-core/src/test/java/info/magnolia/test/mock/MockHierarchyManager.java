@@ -33,6 +33,7 @@
  */
 package info.magnolia.test.mock;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -61,22 +62,26 @@ import org.slf4j.LoggerFactory;
  */
 public class MockHierarchyManager extends DefaultHierarchyManager {
 
+    private static Logger log = LoggerFactory.getLogger(MockHierarchyManager.class);
+
     private Map nodes = new HashMap();
 
     private MockContent root ;
 
-    private Workspace workspace;
+    private MockSession session;
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MockHierarchyManager.class);
-
+    private String name;
 
     public MockHierarchyManager() {
-       root = new MockContent("jcr:root");
-       root.setUUID("jcr:root");
-       root.setHierarchyManager(this);
+        this(ContentRepository.CONFIG);
+    }
+
+    public MockHierarchyManager(String name) {
+        this.name = name;
+        session = new MockSession(this);
+        root = new MockContent("jcr:root");
+        root.setUUID("jcr:root");
+        root.setHierarchyManager(this);
     }
 
     public Content getContent(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
@@ -197,14 +202,34 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
     }
 
     public Workspace getWorkspace() {
-        return this.workspace;
+        return this.session.getWorkspace();
     }
 
     /**
      * Set mock workspace if observation or similar things are needed
      */
     public void setWorkspace(Workspace workspace) {
-        this.workspace = workspace;
+        this.session.setWorkspace(workspace);
+    }
+
+
+    public String getName() {
+        return this.name;
+    }
+
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    public MockSession getSession() {
+        return this.session;
+    }
+
+
+    public void setSession(MockSession session) {
+        this.session = session;
     }
 
 }

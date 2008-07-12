@@ -361,8 +361,7 @@ public class MockJCRNode implements Node {
     }
 
     public Session getSession() throws RepositoryException {
-        // TODO get that session from the hierarchy manager
-        return new MockSession();
+        return mockContent.getHierarchyManager().getSession();
     }
 
     public boolean isModified() {
