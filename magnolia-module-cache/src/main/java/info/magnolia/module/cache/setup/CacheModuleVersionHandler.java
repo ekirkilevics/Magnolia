@@ -73,6 +73,8 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                         "/mgnl-bootstrap/cache/config.modules.cache.config.cacheFactory.xml"
                 };
             }
+            // TODO : add new gzip filter
+            // TODO : replace old cache cache filter
         })
         );
 
