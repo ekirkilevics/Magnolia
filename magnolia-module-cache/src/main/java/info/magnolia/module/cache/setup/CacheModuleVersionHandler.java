@@ -40,8 +40,10 @@ import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
+import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
+import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -67,7 +69,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 // bootstrap file removed - and not needed even if we're upgrading from 3.0
                 // .addTask(new BootstrapSingleResource("Configured Observation", "Adds the repositories to be observed.", "/mgnl-bootstrap/cache/config.modules.cache.config.repositories.xml"))
         );
-        
+
         final NodeExistsDelegateTask addFilterIfNotExisting = new NodeExistsDelegateTask("Check cache filter", "A bug in previous 3.5 releases made it possible for the cache filter to be removed. This task readds it if necessary.",
                 ContentRepository.CONFIG, "/server/filters/cache", null, new ArrayDelegateTask("",
                 new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.server.filters.cache.xml"),
@@ -82,15 +84,22 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("3.6", "New cache API and configuration.")
                 .addTask(new BackupTask("config", "/modules/cache/config", true))
                 .addTask(new BootstrapResourcesTask("New configuration", "Bootstraps new default cache configuration.") {
-            protected String[] getResourcesToBootstrap(final InstallContext installContext) {
-                return new String[]{
-                        "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml",
-                        "/mgnl-bootstrap/cache/config.modules.cache.config.cacheFactory.xml"
-                };
-            }
-            // TODO : add new gzip filter
-            // TODO : replace old cache cache filter
-        })
+                    protected String[] getResourcesToBootstrap(final InstallContext installContext) {
+                        return new String[]{
+                                "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.xml",
+                                "/mgnl-bootstrap/cache/config.modules.cache.config.cacheFactory.xml"
+                        };
+                    }
+                })
+                .addTask(new ArrayDelegateTask("New cache filter", "Replaces the old cache filter with info.magnolia.module.cache.filter.CacheFilter.",
+                        new CheckAndModifyPropertyValueTask("", "", ContentRepository.CONFIG, "/server/filters/cache", "class", "info.magnolia.cms.cache.CacheFilter", "info.magnolia.module.cache.filter.CacheFilter"),
+                        new NewPropertyTask("", "", ContentRepository.CONFIG, "/server/filters/cache", "cacheConfigurationName", "default")
+                ))
+                .addTask(new FilterOrderingTask("cache", "The cache filter should now be placed before the i18n filter.", new String[]{"context", "multipartRequest", "activation"}))
+                .addTask(new ArrayDelegateTask("New gzip filter", "Adds the new gzip filter.",
+                        new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.server.filters.gzip.xml"),
+                        new FilterOrderingTask("gzip", new String[]{"cache"})
+                ))
         );
 
 
@@ -98,7 +107,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
 
     protected List getExtraInstallTasks(InstallContext installContext) {
         final List tasks = new ArrayList();
-        tasks.add(new FilterOrderingTask("cache", new String[]{"i18n"}));
+        tasks.add(new FilterOrderingTask("cache", new String[]{"context", "multipartRequest", "activation"}));
         tasks.add(new FilterOrderingTask("gzip", new String[]{"cache"}));
         return tasks;
     }
