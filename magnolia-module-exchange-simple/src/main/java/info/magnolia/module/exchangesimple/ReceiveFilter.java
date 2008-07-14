@@ -76,6 +76,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Element;
+import org.jdom.JDOMException;
 import org.jdom.input.SAXBuilder;
 import org.safehaus.uuid.UUIDGenerator;
 import org.slf4j.Logger;
@@ -94,10 +95,11 @@ public class ReceiveFilter extends AbstractMgnlFilter {
             throws IOException, ServletException {
         String statusMessage = "";
         String status = "";
+        String result = null;
         try {
             applyLock(request);
-            receive(request);
-            status = SimpleSyndicator.ACTIVATION_SUCCESSFUL;
+            result = receive(request);
+            status = BaseSyndicatorImpl.ACTIVATION_SUCCESSFUL;
         }
         catch (OutOfMemoryError e) {
             Runtime rt = Runtime.getRuntime();
@@ -107,23 +109,28 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                 + rt.freeMemory()
                 + "\n---------"); //$NON-NLS-1$
             statusMessage = e.getMessage();
-            status = SimpleSyndicator.ACTIVATION_FAILED;
+            status = BaseSyndicatorImpl.ACTIVATION_FAILED;
         }
         catch (PathNotFoundException e) {
             log.error(e.getMessage(), e);
             statusMessage = "Parent not found (not yet activated): " + e.getMessage();
-            status = SimpleSyndicator.ACTIVATION_FAILED;
+            status = BaseSyndicatorImpl.ACTIVATION_FAILED;
         }
         catch (Throwable e) {
             log.error(e.getMessage(), e);
-            statusMessage = e.getMessage();
-            status = SimpleSyndicator.ACTIVATION_FAILED;
+            statusMessage = StringUtils.isEmpty(e.getMessage()) ? (e instanceof NullPointerException ? "NPE" : e.getClass().getName()) : e.getMessage();
+            status = BaseSyndicatorImpl.ACTIVATION_FAILED;
         }
         finally {
             cleanUp(request);
-            response.setHeader(SimpleSyndicator.ACTIVATION_ATTRIBUTE_STATUS, status);
-            response.setHeader(SimpleSyndicator.ACTIVATION_ATTRIBUTE_MESSAGE, statusMessage);
+            setResponseHeaders(response, statusMessage, status, result);
         }
+    }
+
+    protected void setResponseHeaders(HttpServletResponse response,
+            String statusMessage, String status, String result) {
+        response.setHeader(BaseSyndicatorImpl.ACTIVATION_ATTRIBUTE_STATUS, status);
+        response.setHeader(BaseSyndicatorImpl.ACTIVATION_ATTRIBUTE_MESSAGE, statusMessage);
     }
 
     /**
@@ -131,19 +138,12 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param request
       * @throws Exception if fails to update
       */
-     protected synchronized void receive(HttpServletRequest request) throws Exception {
+     protected synchronized String receive(HttpServletRequest request) throws Exception {
          String action = request.getHeader(SimpleSyndicator.ACTION);
+         log.debug("action: " + action);
+         String authorization = getUser(request);
+         String webapp = getWebappName();
 
-         // get the user who authorized this request.
-         String authorization = request.getHeader(SimpleSyndicator.AUTHORIZATION);
-         if (StringUtils.isEmpty(authorization)) {
-             authorization = request.getParameter(SimpleSyndicator.AUTH_USER);
-         } else {
-            authorization = new String(Base64.decodeBase64(authorization.substring(6).getBytes())); //Basic uname:pwd
-            authorization = authorization.substring(0, authorization.indexOf(":"));
-         }
-
-         String webapp = SystemProperty.getProperty(SystemProperty.MAGNOLIA_WEBAPP);
          if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
              String name = update(request);
              // Everything went well
@@ -157,7 +157,25 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          else {
              throw new UnsupportedOperationException("Method not supported : " + action);
          }
+         return null;
      }
+
+    protected String getWebappName() {
+        String webapp = SystemProperty.getProperty(SystemProperty.MAGNOLIA_WEBAPP);
+        return webapp;
+    }
+
+    protected String getUser(HttpServletRequest request) {
+        // get the user who authorized this request.
+         String user = request.getHeader(BaseSyndicatorImpl.AUTHORIZATION);
+         if (StringUtils.isEmpty(user)) {
+             user = request.getParameter(BaseSyndicatorImpl.AUTH_USER);
+         } else {
+            user = new String(Base64.decodeBase64(user.substring(6).getBytes())); //Basic uname:pwd
+            user = user.substring(0, user.indexOf(":"));
+         }
+        return user;
+    }
 
      /**
       * handle update (activate) request
@@ -168,58 +186,98 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          MultipartForm data = Resource.getPostedForm();
          String name = null;
          if (null != data) {
-             String parentPath = this.getParentPath(request);
-             String resourceFileName = request.getHeader(SimpleSyndicator.RESOURCE_MAPPING_FILE);
+             String newParentPath = this.getParentPath(request);
+             String resourceFileName = request.getHeader(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE);
              HierarchyManager hm = getHierarchyManager(request);
-             Document resourceDocument = data.getDocument(resourceFileName);
-             SAXBuilder builder = new SAXBuilder();
-             InputStream documentInputStream = resourceDocument.getStream();
-             org.jdom.Document jdomDocument = builder.build(documentInputStream);
-             IOUtils.closeQuietly(documentInputStream);
-             Element rootElement = jdomDocument.getRootElement();
-             Element topContentElement = rootElement.getChild(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT);
+             Element rootElement = getImportedContentRoot(data, resourceFileName);
+             Element topContentElement = rootElement.getChild(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT);
              try {
-                 String uuid = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_UUID_ATTRIBUTE);
+                 String uuid = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_UUID_ATTRIBUTE);
                  Content content = hm.getContentByUUID(uuid);
-                 String ruleString = request.getHeader(SimpleSyndicator.CONTENT_FILTER_RULE);
-                 Rule rule = new Rule(ruleString, ",");
-                 RuleBasedContentFilter filter = new RuleBasedContentFilter(rule);
-                 // remove all child nodes
-                 this.removeChildren(content, filter);
-                 // import all child nodes
+                 // move content to new location if necessary.
+                 newParentPath = handleMovedContent(newParentPath, hm, topContentElement, content);
+
+                 handleChildren(request, content);
                  this.importOnExisting(topContentElement, data, hm, content);
              }
              catch (ItemNotFoundException e) {
-                 importFresh(topContentElement, data, hm, parentPath);
+                 // new content
+                 importFresh(topContentElement, data, hm, newParentPath);
              }
 
-             // order imported node
-             name = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
-             Content parent = hm.getContent(parentPath);
-             List siblings = rootElement.getChild(SimpleSyndicator.SIBLINGS_ROOT_ELEMENT)
-                     .getChildren(SimpleSyndicator.SIBLINGS_ELEMENT);
-             Iterator siblingsIterator = siblings.iterator();
-             while (siblingsIterator.hasNext()) {
-                 Element sibling = (Element) siblingsIterator.next();
-                 // check for existence and order
-                 try {
-                     String siblingUUID = sibling.getAttributeValue(SimpleSyndicator.SIBLING_UUID);
-                     // be compatible with 3.0 (MAGNOLIA-2016)
-                     siblingUUID = StringUtils.defaultIfEmpty(siblingUUID, sibling.getAttributeValue(SimpleSyndicator.DEPRECATED_SIBLING_UUID));
-                     Content beforeContent = hm.getContentByUUID(siblingUUID);
-                     parent.orderBefore(name, beforeContent.getName());
-                     parent.save();
-                     break;
-                 } catch (ItemNotFoundException e) {
-                     // ignore
-                 } catch (RepositoryException re) {
-                     log.warn("Failed to order node");
-                     log.debug("Failed to order node", re);
-                 }
-             }
+             name = orderImportedNode(newParentPath, hm, rootElement, topContentElement);
          }
          return name;
      }
+
+    protected Element getImportedContentRoot(MultipartForm data,
+            String resourceFileName) throws JDOMException, IOException {
+        Document resourceDocument = data.getDocument(resourceFileName);
+         SAXBuilder builder = new SAXBuilder();
+         InputStream documentInputStream = resourceDocument.getStream();
+         org.jdom.Document jdomDocument = builder.build(documentInputStream);
+         IOUtils.closeQuietly(documentInputStream);
+         Element rootElement = jdomDocument.getRootElement();
+        return rootElement;
+    }
+
+    protected void handleChildren(HttpServletRequest request, Content content) {
+        String ruleString = request.getHeader(BaseSyndicatorImpl.CONTENT_FILTER_RULE);
+         Rule rule = new Rule(ruleString, ",");
+         RuleBasedContentFilter filter = new RuleBasedContentFilter(rule);
+         // remove all child nodes
+         this.removeChildren(content, filter);
+    }
+
+    protected String handleMovedContent(String newParentPath,
+            HierarchyManager hm, Element topContentElement, Content content)
+            throws RepositoryException {
+        String currentParentPath = content.getHandle();
+         currentParentPath = currentParentPath.substring(0, currentParentPath.lastIndexOf('/'));
+         String newName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
+         if (!newParentPath.endsWith("/")) {
+             newParentPath += "/";
+         }
+         if (!currentParentPath.endsWith("/")) {
+             currentParentPath += "/";
+         }
+         if (!newParentPath.equals(currentParentPath) || !content.getName().equals(newName)) {
+             log.info("Moving content from {} to {} due to activation request.", new Object[] { content.getHandle(), newParentPath  + newName});
+             hm.moveTo(content.getHandle(), newParentPath + newName);
+         }
+        return newParentPath;
+    }
+
+    protected String orderImportedNode(String newParentPath, HierarchyManager hm,
+            Element rootElement, Element topContentElement)
+            throws RepositoryException {
+        String name;
+        // order imported node
+         name = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
+         Content parent = hm.getContent(newParentPath);
+         List siblings = rootElement.getChild(BaseSyndicatorImpl.SIBLINGS_ROOT_ELEMENT)
+                 .getChildren(BaseSyndicatorImpl.SIBLINGS_ELEMENT);
+         Iterator siblingsIterator = siblings.iterator();
+         while (siblingsIterator.hasNext()) {
+             Element sibling = (Element) siblingsIterator.next();
+             // check for existence and order
+             try {
+                 String siblingUUID = sibling.getAttributeValue(BaseSyndicatorImpl.SIBLING_UUID);
+                 // be compatible with 3.0 (MAGNOLIA-2016)
+                 siblingUUID = StringUtils.defaultIfEmpty(siblingUUID, sibling.getAttributeValue(BaseSyndicatorImpl.DEPRECATED_SIBLING_UUID));
+                 Content beforeContent = hm.getContentByUUID(siblingUUID);
+                 parent.orderBefore(name, beforeContent.getName());
+                 parent.save();
+                 break;
+             } catch (ItemNotFoundException e) {
+                 // ignore
+             } catch (RepositoryException re) {
+                 log.warn("Failed to order node");
+                 log.debug("Failed to order node", re);
+             }
+         }
+        return name;
+    }
 
      /**
       * Copy all properties from source to destination (by cleaning the old properties).
@@ -314,7 +372,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      protected synchronized void importOnExisting(Element topContentElement, MultipartForm data,
          HierarchyManager hierarchyManager, Content existingContent) throws ExchangeException, RepositoryException {
          Iterator fileListIterator = topContentElement
-             .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)
+             .getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT)
              .iterator();
          String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
          String transientStore = existingContent.getHandle() + "/" + uuid;
@@ -325,8 +383,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              }
              // use temporary transient store to extract top level node and copy properties
              existingContent.createContent(uuid, ItemType.CONTENTNODE.toString());
-             //hierarchyManager.createContent("/", uuid, ItemType.CONTENTNODE.toString());
-             String fileName = topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
+             String fileName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
              GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
              hierarchyManager.getWorkspace().getSession().importXML(
                  transientStore,
@@ -336,13 +393,12 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              StringBuffer newPath = new StringBuffer();
              newPath.append(transientStore);
              newPath.append("/");
-             newPath.append(topContentElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE));
+             newPath.append(topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE));
              Content tmpContent = hierarchyManager.getContent(newPath.toString());
              copyProperties(tmpContent, existingContent);
              hierarchyManager.delete(transientStore);
              hierarchyManager.save();
-         }
-         catch (Exception e) {
+         } catch (Exception e) {
              hierarchyManager.refresh(false); // revert all transient changes made in this session till now.
              log.error("Exception caught", e);
              throw new ExchangeException("Activation failed | " + e.getMessage());
@@ -360,11 +416,11 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      protected synchronized void importResource(MultipartForm data, Element resourceElement, HierarchyManager hm,
          String parentPath) throws Exception {
 
-         // throws an excpetion in case you don't have the permission
+         // throws an exception in case you don't have the permission
          Access.isGranted(hm.getAccessManager(), parentPath, Permission.WRITE);
 
-         String name = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_NAME_ATTRIBUTE);
-         String fileName = resourceElement.getAttributeValue(SimpleSyndicator.RESOURCE_MAPPING_ID_ATTRIBUTE);
+         String name = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
+         String fileName = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
          // do actual import
          GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
          hm.getWorkspace().getSession().importXML(
@@ -373,7 +429,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
          IOUtils.closeQuietly(inputStream);
          Iterator fileListIterator = resourceElement
-             .getChildren(SimpleSyndicator.RESOURCE_MAPPING_FILE_ELEMENT)
+             .getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT)
              .iterator();
          // parent path
          if (parentPath.equals("/")) {
@@ -387,7 +443,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      }
 
      /**
-      * handle remove (de-activate) request
+      * Deletes (de-activate) the content specified by the request.
       * @param request
       * @throws Exception if fails to update
       */
@@ -399,8 +455,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              handle = node.getHandle();
              hm.delete(handle);
              hm.save();
-         }
-         catch (ItemNotFoundException e) {
+         } catch (ItemNotFoundException e) {
              if (log.isDebugEnabled()) {
                  log.debug("Unable to delete node", e);
              }
@@ -414,8 +469,8 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @throws ExchangeException
       */
      protected HierarchyManager getHierarchyManager(HttpServletRequest request) throws ExchangeException {
-         String repositoryName = request.getHeader(SimpleSyndicator.REPOSITORY_NAME);
-         String workspaceName = request.getHeader(SimpleSyndicator.WORKSPACE_NAME);
+         String repositoryName = request.getHeader(BaseSyndicatorImpl.REPOSITORY_NAME);
+         String workspaceName = request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME);
 
          if (StringUtils.isEmpty(repositoryName) || StringUtils.isEmpty(workspaceName)) {
              throw new ExchangeException("Repository or workspace name not sent, unable to activate.");
@@ -434,7 +489,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @param request
       */
      protected void cleanUp(HttpServletRequest request) {
-         if (SimpleSyndicator.ACTIVATE.equalsIgnoreCase(request.getHeader(SimpleSyndicator.ACTION))) {
+         if (BaseSyndicatorImpl.ACTIVATE.equalsIgnoreCase(request.getHeader(BaseSyndicatorImpl.ACTION))) {
              MultipartForm data = Resource.getPostedForm();
              if (null != data) {
                  Iterator keys = data.getDocuments().keySet().iterator();
@@ -448,24 +503,22 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                  if (content.isLocked()) {
                      content.unlock();
                  }
-             }
-             catch (LockException le) {
+             } catch (LockException le) {
                  // either repository does not support locking OR this node never locked
                  if (log.isDebugEnabled()) {
                      log.debug(le.getMessage());
                  }
-             }
-             catch (RepositoryException re) {
+             } catch (RepositoryException re) {
                  // should never come here
                  log.warn("Exception caught", re);
-             }
-             catch (ExchangeException e) {
+             } catch (ExchangeException e) {
                  // should never come here
                  log.warn("Exception caught", e);
              }
          }
 
          try {
+             getHierarchyManager(request).getWorkspace().getSession().logout();
              HttpSession httpSession = request.getSession(false);
              if (httpSession != null) httpSession.invalidate();
          } catch (Throwable t) {
@@ -492,32 +545,30 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                  log.debug(le.getMessage());
              }
          } catch (RepositoryException re) {
-             // should never come here
+             // should never come here ... but does when creating new piece of content on the author and mgnl tries to deactivate it on public automatically ...
              log.warn("Exception caught", re);
          }
      }
 
      protected Content getNode(HttpServletRequest request)
              throws ExchangeException, RepositoryException {
-
-         String action = request.getHeader(SimpleSyndicator.ACTION);
-         if (SimpleSyndicator.ACTIVATE.equalsIgnoreCase(action)) {
+         String action = request.getHeader(BaseSyndicatorImpl.ACTION);
+         if (request.getHeader(BaseSyndicatorImpl.PARENT_PATH) != null) {
+             log.debug("parent path:" + this.getParentPath(request));
              return this.getHierarchyManager(request).getContent(this.getParentPath(request));
+         } else if (request.getHeader(BaseSyndicatorImpl.NODE_UUID) != null){
+             log.debug("node uuid:" + request.getHeader(BaseSyndicatorImpl.NODE_UUID));
+             return this.getHierarchyManager(request).getContentByUUID(request.getHeader(BaseSyndicatorImpl.NODE_UUID));
          }
-         else if (SimpleSyndicator.DEACTIVATE.equalsIgnoreCase(action)) {
-             if(request.getHeader(SimpleSyndicator.NODE_UUID) != null){
-                 return this.getHierarchyManager(request).getContentByUUID(request.getHeader(SimpleSyndicator.NODE_UUID));
-             }
-             // 3.0 protocol
-             else {
-                 return this.getHierarchyManager(request).getContent(request.getHeader(SimpleSyndicator.PATH));
-             }
+         // 3.0 protocol
+         else {
+             log.debug("path:" + request.getHeader(BaseSyndicatorImpl.PATH));
+             return this.getHierarchyManager(request).getContent(request.getHeader(BaseSyndicatorImpl.PATH));
          }
-         throw new ExchangeException("Node not found");
      }
 
      protected String getParentPath(HttpServletRequest request) {
-         String parentPath = request.getHeader(SimpleSyndicator.PARENT_PATH);
+         String parentPath = request.getHeader(BaseSyndicatorImpl.PARENT_PATH);
          if (StringUtils.isNotEmpty(parentPath)) {
              return parentPath;
          }
