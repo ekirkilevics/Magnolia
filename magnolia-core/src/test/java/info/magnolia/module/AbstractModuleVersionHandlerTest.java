@@ -173,7 +173,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         assertDefaultUpdateDelta((Delta) deltas.get(5));
     }
 
-    public void testVersionUpdateTaskAndFileExtrationAreAdded() {
+    public void testVersionUpdateTaskAndFileExtractionAreAdded() {
         final NullTask nullTask = new NullTask("test", "test");
         final NullTask nullTask2 = new NullTask("test2", "test2");
         final Delta delta = DeltaBuilder.update(Version.parseVersion("2.0"), "").addTask(nullTask).addTask(nullTask2);
