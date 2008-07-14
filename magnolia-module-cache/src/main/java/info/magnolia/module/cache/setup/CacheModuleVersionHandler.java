@@ -33,19 +33,23 @@
  */
 package info.magnolia.module.cache.setup;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
+import info.magnolia.module.delta.NodeExistsDelegateTask;
+import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author fgiust
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -58,11 +62,22 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsRemoved("CacheServlet");
         u.servletIsRemoved("CacheGeneratorServlet");
-        final DeltaBuilder deltaTo35 = DeltaBuilder.update("3.5.0", "");
-        // bootstrap file removed - and not needed even if we're upgrading from 3.0
-        // deltaTo35.addTask(new BootstrapSingleResource("Configured Observation", "Adds the repositories to be observed.", "/mgnl-bootstrap/cache/config.modules.cache.config.repositories.xml"));
-        deltaTo35.addConditions(conditions);
-        register(deltaTo35);
+        register(DeltaBuilder.update("3.5.0", "")
+                .addConditions(conditions)
+                // bootstrap file removed - and not needed even if we're upgrading from 3.0
+                // .addTask(new BootstrapSingleResource("Configured Observation", "Adds the repositories to be observed.", "/mgnl-bootstrap/cache/config.modules.cache.config.repositories.xml"))
+        );
+        
+        final NodeExistsDelegateTask addFilterIfNotExisting = new NodeExistsDelegateTask("Check cache filter", "A bug in previous 3.5 releases made it possible for the cache filter to be removed. This task readds it if necessary.",
+                ContentRepository.CONFIG, "/server/filters/cache", null, new ArrayDelegateTask("",
+                new BootstrapSingleResource("", "", "/mgnl-bootstrap/cache/config.server.filters.cache.xml"),
+                new FilterOrderingTask("cache", new String[]{"i18n"}),
+                new WarnTask("", "The cache filter was not found, and was just added. If you removed it on purpose, you should consider disabling it instead.")
+        )
+        );
+        register(DeltaBuilder.update("3.5.9", "")
+                .addTask(addFilterIfNotExisting)
+        );
 
         register(DeltaBuilder.update("3.6", "New cache API and configuration.")
                 .addTask(new BackupTask("config", "/modules/cache/config", true))
