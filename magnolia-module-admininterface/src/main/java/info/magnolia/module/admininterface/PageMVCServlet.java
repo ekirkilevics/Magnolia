@@ -90,7 +90,7 @@ public class PageMVCServlet extends MVCServlet {
                 handler = PageHandlerManager.getInstance().getPageHandler(pageName, request, response);
             }
             catch (InvalidDialogPageHandlerException e) {
-                log.error("no page found with name \"{}\" ({})", pageName, e.getMessage()); //$NON-NLS-1$
+                log.error("Could not instanciate page handler with name " + pageName, e);
             }
         }
         else {
