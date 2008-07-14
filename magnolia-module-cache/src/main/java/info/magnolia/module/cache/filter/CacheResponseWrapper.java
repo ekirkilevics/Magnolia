@@ -79,6 +79,10 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
     public void flushBuffer() throws IOException {
         super.flushBuffer();
+        flush();
+    }
+
+    public void flush() throws IOException {
         wrappedStream.flush();
 
         if (wrappedWriter != null) {

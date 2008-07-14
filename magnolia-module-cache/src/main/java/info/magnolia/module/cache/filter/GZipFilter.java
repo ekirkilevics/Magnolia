@@ -61,7 +61,7 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         // we can't tee the outputstream, because we need to setContentLength before writing content ...
         // (otherwise Tomcat adds a Transfer-Encoding: chunked header, which seems to cause trouble
-        // to browsers ...
+        // to browsers ...)
         final ByteArrayOutputStream compressed = new ByteArrayOutputStream();
         final GZIPOutputStream gzout = new GZIPOutputStream(compressed);
         final SimpleServletOutputStream wrappedOut = new SimpleServletOutputStream(gzout);
@@ -73,26 +73,34 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
                 // we're going to set it later to the appropriate
                 // value - once it's gzipped !
             }
+
+            public void flushBuffer() throws IOException {
+                // let's ignore this for now, we're flushing manually ourselves a bit later.
+                // TODO : See MAGNOLIA-2129, MAGNOLIA-2177 and MAGNOLIA-2178
+                //DeprecationUtil.isDeprecated("Should not flush the response manually:");
+            }
         };
-        addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
-        addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
         chain.doFilter(request, responseWrapper);
 
-        responseWrapper.flushBuffer();
+        responseWrapper.flush();
         gzout.flush();
         gzout.close();
+
+        //return on error or redirect code, because response is already committed
+        int statusCode = responseWrapper.getStatus();
+        if (statusCode != HttpServletResponse.SC_OK) {
+            return;
+        }
+
+        addAndVerifyHeader(response, "Content-Encoding", "gzip");
+        addAndVerifyHeader(response, "Vary", "Accept-Encoding"); // needed for proxies
 
         final byte[] compressedBytes = compressed.toByteArray();
         response.setContentLength(compressedBytes.length);
         response.getOutputStream().write(compressedBytes);
+        response.flushBuffer();
 
         // TODO :
-         //return on error or redirect code, because response is already committed
-//            int statusCode = wrapper.getStatusCode();
-//            if (statusCode != HttpServletResponse.SC_OK) {
-//                return;
-//            }
-
          //Sanity checks
 //            byte[] compressedBytes = compressed.toByteArray();
 //            boolean shouldGzippedBodyBeZero = ResponseUtil.shouldGzippedBodyBeZero(compressedBytes, request);
