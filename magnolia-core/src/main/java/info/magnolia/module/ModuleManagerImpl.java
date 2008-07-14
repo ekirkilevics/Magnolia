@@ -315,7 +315,7 @@ public class ModuleManagerImpl implements ModuleManager {
                     startModule(moduleInstance, moduleDefinition, lifecycleContext);
 
                     // start observation
-                    ObservationUtil.registerDefferedChangeListener(ContentRepository.CONFIG, "/modules/" + moduleName + "/config", new EventListener() {
+                    ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, "/modules/" + moduleName + "/config", new EventListener() {
 
                         public void onEvent(EventIterator events) {
                             final Object moduleInstance = registry.getModuleInstance(moduleName);
