@@ -62,7 +62,7 @@ import java.util.TimeZone;
  *    + filters
  *      + ...
  *      + headers-cache
- *        - class                  info.magnolia.cms.filters.CacheHeadersFilter
+ *        - class                  info.magnolia.module.cache.filter.CacheHeadersFilter
  *        - expirationMinutes      1440 <em>(default)</em>
  *        + bypasses
  *          + extensions
@@ -70,7 +70,8 @@ import java.util.TimeZone;
  *            - allow              gif,jpg,png,swf,css,js
  *            - not                true
  *      + headers-nocache
- *        - class                  info.magnolia.cms.filters.CacheHeadersFilter
+ *        - class                  info.magnolia.module.cache.filter.CacheHeadersFilter
+ *        - nocache                true
  *        + bypasses
  *          + extensions
  *            - class              info.magnolia.voting.voters.ExtensionVoter
