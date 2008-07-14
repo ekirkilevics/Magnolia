@@ -43,8 +43,7 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsInstallSamplesTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RemoveNodeTask;
-import info.magnolia.module.delta.WarnTask;
-import info.magnolia.module.delta.ArrayDelegateTask;
+import info.magnolia.module.delta.ReplaceIfExistsTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -109,23 +108,12 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
         return installTasks;
     }
 
-    private ReplaceIfExists replaceIfExists(String oldName, String oldShortName, String newName, String newShortName) {
+    private ReplaceIfExistsTask replaceIfExists(String oldName, String oldShortName, String newName, String newShortName) {
         final String desc = "In 3.6, sample users were renamed for clarity: \"" + oldName + "\"  (" + oldShortName + ") is now \"" + newName + "\" (" + newShortName + ").";
         final String warning = desc + " Since there was no user with shortname \"" + oldShortName + "\" on your system, \"" + newShortName + "\" was not added either.";
         final String path = "/admin/" + oldShortName;
         final String bootstrapFile = "/mgnl-bootstrap-samples/samples/users.admin." + newShortName + ".xml";
-        return new ReplaceIfExists("Sample user " + newName, desc, warning, "users", path, bootstrapFile);
-    }
-
-    private final static class ReplaceIfExists extends NodeExistsDelegateTask {
-        public ReplaceIfExists(String name, String description, String warningMessageIfNotExisting, String workspaceName, String pathToCheck, String bootstrapFile) {
-            super(name, description, workspaceName, pathToCheck,
-                    new ArrayDelegateTask("",
-                            new RemoveNodeTask("", "", workspaceName, pathToCheck), 
-                            new BootstrapSingleResource(name,description,bootstrapFile)
-                    ),
-                    new WarnTask(name, warningMessageIfNotExisting));
-        }
+        return new ReplaceIfExistsTask("Sample user " + newName, desc, warning, "users", path, bootstrapFile);
     }
 
 }
