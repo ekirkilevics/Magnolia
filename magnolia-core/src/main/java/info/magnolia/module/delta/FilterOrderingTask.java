@@ -59,7 +59,11 @@ public class FilterOrderingTask extends AbstractRepositoryTask {
      * @param requiredFiltersBefore an array of filter names that must appear <strong>before</strong> the filter specified as filterName.
      */
     public FilterOrderingTask(String filterName, String[] requiredFiltersBefore) {
-        super("Setup filter", "Sets the new " + filterName + " in the proper place.");
+        this(filterName, "Sets the new " + filterName + " in the proper place.", requiredFiltersBefore);
+    }
+
+    public FilterOrderingTask(String filterName, String description, String[] requiredFiltersBefore) {
+        super("Setup " + filterName + " filter", description);
         this.filterToBeOrderedName = filterName;
         this.requiredFilters = new ArrayList(Arrays.asList(requiredFiltersBefore));
     }
