@@ -66,15 +66,27 @@ public class ArrayDelegateTask implements Task {
     }
 
     public ArrayDelegateTask(String name, Task task1, Task task2) {
-        this(name, new Task[]{task1, task2});
+        this(name, (String) null, task1, task2);
+    }
+
+    public ArrayDelegateTask(String name, String description, Task task1, Task task2) {
+        this(name, description, new Task[]{task1, task2});
     }
 
     public ArrayDelegateTask(String name, Task task1, Task task2, Task task3) {
-        this(name, new Task[]{task1, task2, task3});
+        this(name, (String) null, task1, task2, task3);
+    }
+
+    public ArrayDelegateTask(String name, String description, Task task1, Task task2, Task task3) {
+        this(name, description, new Task[]{task1, task2, task3});
     }
 
     public ArrayDelegateTask(String name, Task task1, Task task2, Task task3, Task task4) {
-        this(name, new Task[]{task1, task2, task3, task4});
+        this(name, null, task1, task2, task3, task4);
+    }
+
+    public ArrayDelegateTask(String name, String description, Task task1, Task task2, Task task3, Task task4) {
+        this(name, description, new Task[]{task1, task2, task3, task4});
     }
 
     public String getName() {
