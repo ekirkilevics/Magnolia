@@ -37,16 +37,17 @@ import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.ModuleFilesExtraction;
+import info.magnolia.module.delta.Task;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -192,6 +193,48 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
         }
         assertTrue(tasks.get(2) instanceof ModuleFilesExtraction);
         assertTrue(tasks.get(3) instanceof AbstractModuleVersionHandler.ModuleVersionUpdateTask);
+    }
+
+    public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatDoesNotHaveSpecificDeltaAndIsSnapshot() {
+        doTestStoresModuleDescriptorVersion("2.2-SNAPSHOT", Version.parseVersion("1.0"));
+    }
+    
+    public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatDoesNotHaveSpecificDelta() {
+        doTestStoresModuleDescriptorVersion("2.2", Version.parseVersion("1.0"));
+    }
+
+    public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatHasSpecificDelta() {
+        doTestStoresModuleDescriptorVersion("2.0", Version.parseVersion("1.0"));
+    }
+
+//    public void testStoresTheModuleDescriptorVersionOnUpdateOfVersionThatHasSpecificDeltaButIsSnapshot() {
+//        doTestStoresModuleDescriptorVersion("2.0-SNAPSHOT", Version.parseVersion("1.0"));
+//    }
+
+    public void testStoresTheModuleDescriptorVersionOnInstall() {
+        doTestStoresModuleDescriptorVersion("2.2-SNAPSHOT", null);
+    }
+
+    private void doTestStoresModuleDescriptorVersion(String moduleDescriptorVersionStr, Version currentVersion) {
+        final NullTask nullTask = new NullTask("test", "test");
+        final NullTask nullTask2 = new NullTask("test2", "test2");
+        final Delta delta = DeltaBuilder.update(Version.parseVersion("2.0"), "").addTask(nullTask).addTask(nullTask2);
+
+        final AbstractModuleVersionHandler versionHandler = new AbstractModuleVersionHandler() {
+            protected List getBasicInstallTasks(InstallContext installContext) {
+                return Collections.EMPTY_LIST;
+            }
+        };
+        versionHandler.register(delta);
+
+        final Version moduleDescriptorVersion = Version.parseVersion(moduleDescriptorVersionStr);
+        final InstallContext installContext = makeInstallContext(moduleDescriptorVersionStr);
+        final List retrievedDeltas = versionHandler.getDeltas(installContext, currentVersion);
+        final Delta lastDelta = (Delta) retrievedDeltas.get(retrievedDeltas.size() - 1);
+        final List tasks = lastDelta.getTasks();
+        final Task lastTask = (Task) tasks.get(tasks.size() - 1);
+        assertTrue(lastTask instanceof AbstractModuleVersionHandler.ModuleVersionToLatestTask);
+        assertEquals(moduleDescriptorVersion, ((AbstractModuleVersionHandler.ModuleVersionToLatestTask)lastTask).getVersion(installContext));
     }
 
     private AbstractModuleVersionHandler newTestModuleVersionHandler() {
