@@ -74,6 +74,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     protected List getBasicInstallTasks(InstallContext ctx) {
         List l = new ArrayList();
         l.addAll(GenericTasks.genericTasksFor35());
+        l.add(new CheckMagnoliaDevelopProperty());
+        l.add(new CheckNodesForMixVersionable());
         return l;
     }
 
@@ -94,6 +96,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         u.listenerIsDeprecated("info.magnolia.cms.beans.config.ShutdownManager", "info.magnolia.cms.servlets.MgnlServletContextListener");
         final WorkspaceXmlConditionsUtil u2 = new WorkspaceXmlConditionsUtil(conditions);
         u2.workspaceHasOldIndexer();
+
+        conditions.add(new CheckNodeTypesDefinition());
         return conditions;
     }
 }
