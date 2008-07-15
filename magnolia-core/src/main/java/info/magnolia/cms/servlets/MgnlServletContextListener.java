@@ -135,11 +135,16 @@ public class MgnlServletContextListener implements ServletContextListener {
     public static final String MAGNOLIA_INITIALIZATION_FILE = "magnolia.initialization.file"; //$NON-NLS-1$
 
     public void contextDestroyed(ServletContextEvent sce) {
-        ModuleManager.Factory.getInstance().stopModules();
-
+        // avoid disturbing NPEs if the context has never been started (classpath problems, etc)
+        ModuleManager mm = ModuleManager.Factory.getInstance();
+        if (mm != null) {
+            mm.stopModules();
+        }
         // TODO currently only used for shutting down the repository
-        ShutdownManager.getInstance().execute();
-
+        ShutdownManager sm = ShutdownManager.getInstance();
+        if (sm != null) {
+            sm.execute();
+        }
         Log4jConfigurer.shutdownLogging();
 
     }
