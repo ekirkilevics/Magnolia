@@ -73,6 +73,12 @@ public class CheckNodeTypesDefinition extends AbstractCondition {
 
         File nodeTypeFile = new File(repoHome, "magnolia/repository/nodetypes/custom_nodetypes.xml");
 
+        if (!nodeTypeFile.exists()) {
+            // don't crash if the repository.xml has been customized and doesn't use the magnolia.repositories.home
+            // property for the base path
+            return true;
+        }
+
         SAXBuilder builder = new SAXBuilder();
         Document doc;
         try {
