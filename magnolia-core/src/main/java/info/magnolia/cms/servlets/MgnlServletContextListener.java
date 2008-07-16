@@ -208,8 +208,14 @@ public class MgnlServletContextListener implements ServletContextListener {
         String realPath = StringUtils.replace(context.getRealPath(StringUtils.EMPTY), "\\", "/"); //$NON-NLS-1$ //$NON-NLS-2$
         realPath = StringUtils.removeEnd(realPath, "/");
         if (realPath == null) {
+
+            // don't use new java.io.File("x").getParentFile().getAbsolutePath(), will throw a NPE for unexpanded war
+
             // not great but better then npe that would come out otherwise
-            throw new RuntimeException("Failed to initialize magnolia configuration. Error details: [ctx real path:" + context.getRealPath(StringUtils.EMPTY) + ", real dir:" + new java.io.File("x").getParentFile().getAbsolutePath() + " ]");
+            throw new RuntimeException(
+                "Failed to initialize magnolia configuration. Error details: [ctx real path:"
+                    + context.getRealPath(StringUtils.EMPTY)
+                    + "]. Magnolia needs to be run from an expanded webapp, please check your server configuration (maybe unpackWARs is set to false?).");
         }
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR, realPath);
         return realPath;
