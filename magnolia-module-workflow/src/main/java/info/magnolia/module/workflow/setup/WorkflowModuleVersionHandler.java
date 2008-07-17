@@ -131,6 +131,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         register(DeltaBuilder.update("3.6", "")
                 .addTask(changeWebsiteTreeConfigurationTask)
                 .addTask(changeDMSTreeConfigurationTask)
+                .addTask(new BootstrapSingleResource("Comment on activation dialog", "Registers the dialog for activation comments.", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.startActivationWorkflow.xml"))
                 .addTask(new IsModuleInstalledOrRegistered("Sample users and groups", "Adds sample users to sample editors and publishers group, if the sample module is installed or registered.",
                         "samples", new ArrayDelegateTask("",
                         new AddUserToGroupTask("Sample user", "eve", "editors"),
@@ -145,8 +146,6 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(flowsPageMenu);
         tasks.add(new InstallWorkflowDefinitionTask("Setup default activation workflow definition", "Adds the default activation workflow definition under the /modules/workflow/config/flows/activation config node.",
                 "activation", "info/magnolia/module/workflow/default-activation-workflow.xml"));
-        tasks.add(changeWebsiteTreeConfigurationTask);
-
         tasks.add(changeWebsiteTreeConfigurationTask);
         tasks.add(changeDMSTreeConfigurationTask);
 
