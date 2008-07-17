@@ -38,15 +38,16 @@ import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
+import info.magnolia.module.admininterface.trees.WebsiteTreeConfiguration;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
+import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsModuleInstalledOrRegistered;
 import info.magnolia.module.delta.ModuleDependencyBootstrapTask;
-import info.magnolia.module.delta.SetPropertyTask;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.workflow.setup.for3_5.AddNewDefaultConfig;
@@ -83,21 +84,22 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         }
     };
 
-    private Task changeWebsiteTreeConfigurationTask = new SetPropertyTask(
+    private Task changeWebsiteTreeConfigurationTask = new CheckAndModifyPropertyValueTask("Website tree configuration", "Modifies the website tree configuration so that a message window pops up for activation.",
         ContentRepository.CONFIG,
         "/modules/adminInterface/trees/website",
         "configurationClass",
+        WebsiteTreeConfiguration.class.getName(),
         WorkflowWebsiteTreeConfiguration.class.getName());
 
     private Task changeDMSTreeConfigurationTask = new IsModuleInstalledOrRegistered(
-        "DMS Tree Configuration",
-        "Enter comment dialog on activation",
+        "DMS tree configuration", "Modifies the dms tree configuration so that a comment window pops up for activation.",
         "dms",
-        new SetPropertyTask(
+        new CheckAndModifyPropertyValueTask("DMS tree configuration", "Modifies the dms tree configuration so that a comment window pops up for activation.",
             ContentRepository.CONFIG,
             "/modules/dms/trees/dms",
             "configurationClass",
-            // can't add a dependency to the dms so must use the class' name
+            // can't add a dependency to the dms so must use the class names
+            "info.magnolia.module.dms.DMSAdminTreeConfig",
             "info.magnolia.module.dms.WorkflowDMSAdminTreeConfig"
     ));
 
@@ -106,12 +108,12 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
         final Delta delta35 = DeltaBuilder.update("3.5", "")
                 .addTask(inboxMenu)
                 .addTask(flowsPageMenu)
-                .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the Workflow Utils page", "/mgnl-bootstrap/workflow/config.modules.workflow.pages.flows.xml"))
-                .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the Inbox Subpages", "/mgnl-bootstrap/workflow/config.modules.workflow.pages.inboxSubPages.xml"))
+                .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the Workflow Utils page.", "/mgnl-bootstrap/workflow/config.modules.workflow.pages.flows.xml"))
+                .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the Inbox Subpages.", "/mgnl-bootstrap/workflow/config.modules.workflow.pages.inboxSubPages.xml"))
                 // TODO refactor the following ArrayDelegateTask into a single one: BackupAndBootstrap("resource.xml", "/backup/location", "Message", MessageType.WARNING), will be fixed with MAGNOLIA-1945
                 .addTask(new ArrayDelegateTask("Backup and Bootstrap", "Makes a backup of the current 'EditWorkItem' dialog and re-installs it.", new Task[] {
                         new BackupTask(ContentRepository.CONFIG, "/modules/workflow/dialogs/editWorkItem", true),
-                        new BootstrapSingleResource("Bootstrap", "Bootstraps the Inbox Subpages", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.editWorkItem.xml", ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW),
+                        new BootstrapSingleResource("Bootstrap", "Bootstraps the Inbox Subpages.", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.editWorkItem.xml", ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW),
                         new WarnTask("Note: ", "Note that the 'EditWorkItem' dialog was re-installed. Magnolia put a backup of original dialog into '" + BACKUP_PATH + "/editWorkItem'. Please review the changes manually.")
                     }))
                 .addTask(new BootstrapSingleResource("Bootstrap", "Bootstraps the 'EditActivationWorkItem' dialog", "/mgnl-bootstrap/workflow/config.modules.workflow.dialogs.editActivationWorkItem.xml"))

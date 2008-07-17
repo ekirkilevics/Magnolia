@@ -45,7 +45,10 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Sets a new value for a property.
+ * Sets a new value for a property. Consider using CheckAndModifyPropertyValueTask if you want your update tasks
+ * to only modify expected values.
+ * @see CheckAndModifyPropertyValueTask
+ *  
  * @author fgiust
  * @version $Revision: $ ($Author: $)
  */
