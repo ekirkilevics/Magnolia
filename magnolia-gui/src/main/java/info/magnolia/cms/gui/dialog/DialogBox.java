@@ -117,6 +117,21 @@ public class DialogBox extends DialogControlImpl {
 
     public void drawHtmlPost(Writer out) throws IOException {
         out.write(this.getHtmlDescription());
+
+        if (this.getConfigValue("saveHandler") != null) {
+            out.write("<input type=\"hidden\" name=\"");
+            out.write(this.getName());
+            out.write("_saveHandler\" value=\"");
+            out.write(this.getConfigValue("saveHandler"));
+            out.write("\" />");
+
+            out.write("<input type=\"hidden\" name=\"");
+            out.write(this.getName());
+            out.write("_configNode\" value=\"");
+            out.write(this.getConfigValue("handler"));
+            out.write("\" />");
+        }
+
         out.write("</td></tr>\n"); //$NON-NLS-1$
     }
 

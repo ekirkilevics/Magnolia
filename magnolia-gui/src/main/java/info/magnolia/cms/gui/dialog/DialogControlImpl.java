@@ -495,6 +495,8 @@ public abstract class DialogControlImpl implements DialogControl {
             config.put(name, value);
         }
 
+        config.put("handle", configNodeParent.getHandle());
+
         // name is usually mandatory, use node name if a name property is not set
         if (!config.containsKey("name")) {
             config.put("name", configNodeParent.getName());
