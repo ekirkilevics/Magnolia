@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.admininterface;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.Path;
@@ -53,21 +53,7 @@ import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.devlib.schmidt.imageinfo.ImageInfo;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
-import javax.jcr.Value;
-import javax.jcr.ValueFactory;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -82,11 +68,30 @@ import java.util.TimeZone;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.jcr.Node;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.PropertyType;
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+import javax.jcr.ValueFactory;
+
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.devlib.schmidt.imageinfo.ImageInfo;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
+ * <p>
  * This class handels the saving in the dialogs. It uses the mgnlSaveInfo parameters sendend from the browser to store
  * the data in the node.The structure of the parameter is the following: <br>
- * <code>name, type, valueType, isRichEditValue, encoding</code> <p/> To find the consts see ControlImpl
+ * <code>name, type, valueType, isRichEditValue, encoding</code>
+ * </p>
+ * <p>To find the consts see ControlImpl</p>
  * <table>
  * <tr>
  * <td>name</td>
@@ -109,6 +114,10 @@ import java.util.regex.Pattern;
  * <td>base64, unix, none</td>
  * </tr>
  * </table>
+ * <p>
+ * You can specify a custom save handled (a class that implements info.magnolia.module.admininterface.CustomSaveHandler)
+ * by adding a "saveHandler" property to a dialog field configuration.
+ * </p>
  * @author Vinzenz Wyser
  * @version 2.0
  */
@@ -285,6 +294,43 @@ public class SaveHandlerImpl implements SaveHandler {
         else {
             name = saveInfo;
         }
+
+        // handing of custom save handler start
+        String customSaveHandler = this.getForm().getParameter(name + "_saveHandler");
+        if (!StringUtils.isEmpty(customSaveHandler)) {
+            try {
+                Class cshClazz = Class.forName(customSaveHandler);
+                if (!CustomSaveHandler.class.isAssignableFrom(cshClazz)) {
+                    log.error("Class {} must implement CustomSaveHandler interface", cshClazz);
+                    throw new ClassCastException("Class " + cshClazz + " must implement CustomSaveHandler interface");
+                }
+                else {
+                    CustomSaveHandler csh = (CustomSaveHandler) cshClazz.newInstance();
+                    HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+                    String configPath = this.getForm().getParameter(name + "_configNode");
+                    csh.save(
+                        node,
+                        hm.getContent(configPath),
+                        name,
+                        getForm(),
+                        type,
+                        valueType,
+                        isRichEditValue,
+                        encoding);
+                }
+            }
+            catch (ClassNotFoundException e) {
+                log.error("Error loading class " + customSaveHandler, e);
+            }
+            catch (InstantiationException e) {
+                log.error("Error creating instance of class " + customSaveHandler, e);
+            }
+            catch (IllegalAccessException e) {
+                log.error("Illegal access to class " + customSaveHandler, e);
+            }
+        }
+        else
+        // handing of custom save handler end
 
         if (type == PropertyType.BINARY) {
             processBinary(node, name);
