@@ -86,7 +86,8 @@ import java.util.regex.Pattern;
 /**
  * This class handels the saving in the dialogs. It uses the mgnlSaveInfo parameters sendend from the browser to store
  * the data in the node.The structure of the parameter is the following: <br>
- * <code>name, type, valueType, isRichEditValue, encoding</code> <p/> To find the consts see ControlImpl <table>
+ * <code>name, type, valueType, isRichEditValue, encoding</code> <p/> To find the consts see ControlImpl
+ * <table>
  * <tr>
  * <td>name</td>
  * <td>the name of the field</td>
@@ -231,8 +232,8 @@ public class SaveHandlerImpl implements SaveHandler {
 
                 // FIX for MAGNOLIA-1814
                 // mark page as changed also for nested paragraph changes
-                if(this.getRepository().equals(ContentRepository.WEBSITE)){
-                    while(node.getItemType().equals(ItemType.CONTENTNODE)){
+                if (this.getRepository().equals(ContentRepository.WEBSITE)) {
+                    while (node.getItemType().equals(ItemType.CONTENTNODE)) {
                         node = node.getParent();
                         node.updateMetaData();
                     }
@@ -311,7 +312,7 @@ public class SaveHandlerImpl implements SaveHandler {
                 if (log.isDebugEnabled()) {
                     log.debug("Date has no value. Deleting node data" + name);
                 }
-                if(node.hasNodeData(name)){
+                if (node.hasNodeData(name)) {
                     node.deleteNodeData(name);
                 }
             }
@@ -355,7 +356,8 @@ public class SaveHandlerImpl implements SaveHandler {
 
     /**
      * Clean up the linebreaks and
-     * <p>, <br>
+     * <p>
+     * , <br>
      * tags returned by the rich text editors
      * @param valueStr
      * @return the cleaned string
@@ -434,7 +436,7 @@ public class SaveHandlerImpl implements SaveHandler {
             link = StringUtils.replace(link, "$", "\\$");
 
             imageOrDowloadMatcher.appendReplacement(res, "$1" + link + "$5"); //$NON-NLS-1$
-            if(link.startsWith(filesNode.getHandle())){
+            if (link.startsWith(filesNode.getHandle())) {
                 String fileNodeName = StringUtils.removeStart(link, filesNode.getHandle() + "/");
                 fileNodeName = StringUtils.substringBefore(fileNodeName, "/");
                 usedFiles.add(fileNodeName);
@@ -444,7 +446,7 @@ public class SaveHandlerImpl implements SaveHandler {
         // delete not used files
         for (Iterator iter = filesNode.getNodeDataCollection().iterator(); iter.hasNext();) {
             NodeData fileNodeData = (NodeData) iter.next();
-            if(!usedFiles.contains(fileNodeData.getName())){
+            if (!usedFiles.contains(fileNodeData.getName())) {
                 fileNodeData.delete();
             }
         }
