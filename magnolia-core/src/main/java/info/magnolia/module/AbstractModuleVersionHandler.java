@@ -202,7 +202,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
     // TODO : make this mandatory and "hidden" ?
     public class ModuleVersionToLatestTask extends AbstractRepositoryTask {
         protected ModuleVersionToLatestTask() {
-            super("Version number", "Sets installed module version number");
+            super("Version number", "Sets installed module version number.");
         }
 
         protected void doExecute(InstallContext ctx) throws RepositoryException, TaskExecutionException {
