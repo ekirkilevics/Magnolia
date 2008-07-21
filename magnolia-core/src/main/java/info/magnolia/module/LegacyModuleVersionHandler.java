@@ -41,7 +41,9 @@ import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.model.ModuleDefinition;
 
 /**
- * A ModuleVersionHandler used for modules which don't specify one.
+ * A ModuleVersionHandler used for modules which don't specify one and where
+ * the module class is a subclass of the deprecated {@link info.magnolia.cms.module.Module}.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
