@@ -47,7 +47,7 @@ import info.magnolia.module.model.ModuleDefinition;
 public interface ModuleLifecycleContext {
 
     /**
-     * System is starting up
+     * System is starting up.
      */
     public int PHASE_SYSTEM_STARTUP = 1;
 
@@ -57,13 +57,13 @@ public interface ModuleLifecycleContext {
     public int PHASE_MODULE_RESTART = 2;
 
     /**
-     * The system is shutting down
+     * The system is shutting down.
      */
     public int PHASE_SYSTEM_SHUTDOWN = 3;
 
 
     /**
-     * Get the current module defintion
+     * Gets the current module definition.
      */
     ModuleDefinition getCurrentModuleDefinition();
 
