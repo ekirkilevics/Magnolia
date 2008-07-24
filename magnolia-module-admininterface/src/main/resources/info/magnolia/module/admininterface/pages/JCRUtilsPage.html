@@ -6,44 +6,44 @@
     <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
   </head>
   <body id="mgnl">
-  	<table>
-  	<tr><td valign="top">
-	    <div class="pageframe">
-	      <h3>Dump</h3>
-	      <form action="">
-	        <input type="hidden" name="command" value="dump"/>
-	        <div class="formelement">
-	          <label for="repository">Repository</label>
-	          <select name="repository">
-	            [#list this.repositories as item]
-	            <option [#if item == this.repository]selected[/#if]>${item}</option>
-	            [/#list]
-	          </select>
-	        </div>
-	        <div class="formelement">
-	          <label for="repository">Path</label>
-	          <input type="text" name="path" value="${this.path}" />
-	        </div>
-	        <div class="formelement">
-	          <label for="repository">Level</label>
-	          <input type="text" name="level" value="${this.level}" />
-	        </div>
-	        <input type="submit" value="Execute" class="mgnlControlButton" />
-	      </form>
-	    </div>
-	    <div class="pageframe">
-	      <h3>Query</h3>
-	      <form action="">
-	      	<input type="hidden" name="command" value="query"/>
-	        <div class="formelement">
-	          <label for="repository">Repository</label>
-	          <select name="repository">
-	            [#list this.repositories as item]
-	            <option [#if item == this.repository]selected[/#if]>${item}</option>
-	            [/#list]
-	          </select>
-	        </div>
-	        <div class="formelement">
+      <table>
+      <tr><td valign="top">
+        <div class="pageframe">
+          <h3>Dump</h3>
+          <form action="">
+            <input type="hidden" name="command" value="dump"/>
+            <div class="formelement">
+              <label for="repository">Repository</label>
+              <select name="repository">
+                [#list this.repositories as item]
+                <option [#if item == this.repository]selected[/#if]>${item}</option>
+                [/#list]
+              </select>
+            </div>
+            <div class="formelement">
+              <label for="repository">Path</label>
+              <input type="text" name="path" value="${this.path}" />
+            </div>
+            <div class="formelement">
+              <label for="repository">Level</label>
+              <input type="text" name="level" value="${this.level}" />
+            </div>
+            <input type="submit" value="Execute" class="mgnlControlButton" />
+          </form>
+        </div>
+        <div class="pageframe">
+          <h3>Query</h3>
+          <form action="">
+              <input type="hidden" name="command" value="query"/>
+            <div class="formelement">
+              <label for="repository">Repository</label>
+              <select name="repository">
+                [#list this.repositories as item]
+                <option [#if item == this.repository]selected[/#if]>${item}</option>
+                [/#list]
+              </select>
+            </div>
+            <div class="formelement">
              <label for="language">Query Language</label>
              <select name="language">
                [#list this.languages as item]
@@ -52,46 +52,46 @@
              </select>
            </div>
            <div class="formelement">
-	          <label for="repository">Result ItemType</label>
-	          <input type="text" name="itemType" value="${this.itemType}" />
-	        </div>
-	        <div>
-           		<textarea name="statement" rows="4" cols="40">${this.statement}</textarea>
-        	</div>
-        	<input type="submit" value="Execute" class="mgnlControlButton" />
-	      </form>
-	    </div>
-	    <!-- 
-	    <div class="pageframe">
-	      <h3>Delete</h3>
-	      <form action="">
-	        <input type="hidden" name="command" value="delete"/>
-	        <div class="formelement">
-	          <label for="repository">Repository</label>
-	          <select name="repository">
-	            [#list this.repositories as item]
-	            <option [#if item == this.repository]selected[/#if]>${item}</option>
-	            [/#list]
-	          </select>
-	        </div>
-	        <div class="formelement">
-	          <label for="repository">Path</label>
-	          <input type="text" name="path" value="${this.path}" />
-	        </div>
-	        <input type="submit" value="Execute" class="mgnlControlButton" />
-	      </form>
-	    </div>
-	    -->
-	</td>
-	<td valign="top">
-	    <div class="pageframe">
-	      <h3>Result</h3>
-	      <textarea rows="40" cols="60">${this.result}</textarea>
-	    </div>
-	</td>
-	</tr></table>
+              <label for="repository">Result ItemType</label>
+              <input type="text" name="itemType" value="${this.itemType}" />
+            </div>
+            <div>
+                   <textarea name="statement" rows="4" cols="40">${this.statement}</textarea>
+            </div>
+            <input type="submit" value="Execute" class="mgnlControlButton" />
+          </form>
+        </div>
+        <!--
+        <div class="pageframe">
+          <h3>Delete</h3>
+          <form action="">
+            <input type="hidden" name="command" value="delete"/>
+            <div class="formelement">
+              <label for="repository">Repository</label>
+              <select name="repository">
+                [#list this.repositories as item]
+                <option [#if item == this.repository]selected[/#if]>${item}</option>
+                [/#list]
+              </select>
+            </div>
+            <div class="formelement">
+              <label for="repository">Path</label>
+              <input type="text" name="path" value="${this.path}" />
+            </div>
+            <input type="submit" value="Execute" class="mgnlControlButton" />
+          </form>
+        </div>
+        -->
+    </td>
+    <td valign="top">
+        <div class="pageframe">
+          <h3>Result</h3>
+          <textarea rows="40" cols="60">${this.result}</textarea>
+        </div>
+    </td>
+    </tr></table>
     [#if message?exists]
- 	   <script>alert('${message}')</script>
+        <script>alert('${message}')</script>
     [/#if]
   </body>
 </html>
