@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE Repository PUBLIC "-//The Apache Software Foundation//DTD Jackrabbit 1.2//EN" "http://jackrabbit.apache.org/dtd/repository-1.2.dtd">
+<!DOCTYPE Repository PUBLIC "-//The Apache Software Foundation//DTD Jackrabbit 1.4//EN" "http://jackrabbit.apache.org/dtd/repository-1.4.dtd">
 <!--
-  
+
   Warning, jackrabbit 1.2.2 doesn't include a ready to use ddl for mysql clustering,
   see https://issues.apache.org/jira/browse/JCR-749
-  
+
 -->
 <Repository>
   <FileSystem class="org.apache.jackrabbit.core.fs.local.LocalFileSystem">
