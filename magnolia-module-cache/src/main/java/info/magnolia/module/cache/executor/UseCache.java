@@ -59,6 +59,7 @@ import org.apache.commons.collections.MultiMap;
  * @version $Revision: $ ($Author: $)
  */
 public class UseCache extends AbstractExecutor {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(UseCache.class);
 
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
@@ -96,7 +97,6 @@ public class UseCache extends AbstractExecutor {
      * @return boolean true if the server resource is newer
      */
     protected boolean ifModifiedSince(HttpServletRequest request, long lastModified) {
-        // TODO : what is this magic 1sec gap all about ?
         try {
             long headerValue = request.getDateHeader("If-Modified-Since");
             if (headerValue != -1) {
