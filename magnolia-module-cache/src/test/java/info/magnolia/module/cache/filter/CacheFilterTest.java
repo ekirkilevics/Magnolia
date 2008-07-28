@@ -67,6 +67,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Set;
+import java.util.Calendar;
+import java.util.Date;
 
 /**
  *
@@ -137,8 +139,8 @@ public class CacheFilterTest extends TestCase {
 
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         fakedOut.write("my test".getBytes());
-        response.setDateHeader(eq("Last-Modified"), anyLong());
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
+        response.setDateHeader(eq("Last-Modified"), anyLong());
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
         response.flushBuffer();
 
@@ -165,13 +167,20 @@ public class CacheFilterTest extends TestCase {
     public void testBlindlyObeysCachePolicyAndGetsStuffOutOfCacheWhenAskedToDoSo() throws Exception {
         final String dummyContent = "hello i'm a page that was cached";
 
-        final CachedPage cachedPage = new CachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 123, new MultiValueMap(), System.currentTimeMillis());
+        final MultiValueMap headers = new MultiValueMap();
+        headers.put("Last-Modified", 2000l);
+        headers.put("Dummy", "dummy");
+        headers.put("Dummy", "dummy2");
+
+        final CachedPage cachedPage = new CachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration("foo", "gzip", "bar"));
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(123);
-        response.setDateHeader(eq("Last-Modified"), anyLong());
+        response.addDateHeader("Last-Modified", 2000);
+        response.addHeader("Dummy", "dummy");
+        response.addHeader("Dummy", "dummy2");
         response.setContentType("text/plain");
         response.setCharacterEncoding("ASCII");
         response.setContentLength(dummyContent.length());
@@ -198,7 +207,6 @@ public class CacheFilterTest extends TestCase {
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(123);
         response.addHeader("Dummy", "Some Value");
-        response.setDateHeader(eq("Last-Modified"), anyLong());
         response.setContentType("text/plain");
         response.setCharacterEncoding("ASCII");
         response.setContentLength(dummyContent.length());
@@ -219,7 +227,6 @@ public class CacheFilterTest extends TestCase {
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration("foo", "gzip", "bar"));
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(123);
-        response.setDateHeader(eq("Last-Modified"), anyLong());
         response.setContentType("text/plain");
         response.setCharacterEncoding("ASCII");
         response.setContentLength(gzipped.length);
@@ -262,7 +269,6 @@ public class CacheFilterTest extends TestCase {
 
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(200);
-        response.setDateHeader(eq("Last-Modified"), anyLong());
         response.setContentType("text/plain");
         response.setCharacterEncoding("ASCII");
         response.setContentLength(dummyContent.length());
@@ -287,9 +293,9 @@ public class CacheFilterTest extends TestCase {
                 return null;
             }
         });
-        response.setDateHeader(eq("Last-Modified"), anyLong());
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
+        response.setDateHeader(eq("Last-Modified"), anyLong());
         response.sendRedirect(redirectLocation);
         response.flushBuffer();
 
@@ -328,9 +334,9 @@ public class CacheFilterTest extends TestCase {
                 return null;
             }
         });
-        response.setDateHeader(eq("Last-Modified"), anyLong());
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
+        response.setDateHeader(eq("Last-Modified"), anyLong());
         response.sendError(404);
         response.flushBuffer();
 
@@ -354,6 +360,76 @@ public class CacheFilterTest extends TestCase {
 
         response.sendError(404);
         executeFilterAndVerify();
+    }
+
+    public void testLastModifiedHeaderCanBeOverriddenByFurtherFiltersAndIsProperlyStoredAndReturned() throws Exception {
+        final Calendar cal = Calendar.getInstance();
+        cal.set(2008, 7, 8, 18, 0, 0);
+        final Date expectedLastModified = cal.getTime();
+        
+        expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(
+                new CachePolicyResult(CachePolicyResult.store, "/dummy", null));
+
+        final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
+        expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
+        // the header set by the Store executor
+        response.setDateHeader(eq("Last-Modified"), anyLong());
+
+        filterChain.doFilter(same(request), isA(CacheResponseWrapper.class));
+
+        // some filter or servlet down the chain sets Last-Modified
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                final Object[] args = getCurrentArguments();
+                ((CacheResponseWrapper) args[1]).setDateHeader("Last-Modified", expectedLastModified.getTime());
+                return null;
+            }
+        });
+        response.setDateHeader(eq("Last-Modified"), eq(expectedLastModified.getTime()));
+
+        response.flushBuffer();
+
+        // when instanciating CachedPage:
+        expect(response.getContentType()).andReturn("some content type");
+        expect(response.getCharacterEncoding()).andReturn("UTF-8");
+
+        cache.put(eq("/dummy"), isA(CachedPage.class));
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                final Object[] args = getCurrentArguments();
+                final CachedPage cachedEntry = ((CachedPage) args[1]);
+                assertEquals(expectedLastModified.getTime(), cachedEntry.getLastModificationTime());
+                return null;
+            }
+        });
+
+        executeFilterAndVerify();
+    }
+
+    public void test304IsNotCached() throws Exception {
+        expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(
+                new CachePolicyResult(CachePolicyResult.store, "/dummy", null));
+
+        final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
+        expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
+        // the header set by the Store executor
+        response.setDateHeader(eq("Last-Modified"), anyLong());
+
+        filterChain.doFilter(same(request), isA(CacheResponseWrapper.class));
+
+        // some filter or servlet down the chain sends a 304
+        expectLastCall().andAnswer(new IAnswer<Object>() {
+            public Object answer() throws Throwable {
+                final Object[] args = getCurrentArguments();
+                ((CacheResponseWrapper) args[1]).setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                return null;
+            }
+        });
+        response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+
+        // this is what Store does if makeCachedEntry() returns null
+        cache.put(eq("/dummy"), isNull());
+        cache.remove(eq("/dummy"));
     }
 
     private void executeFilterAndVerify() throws IOException, ServletException, NoSuchFieldException, IllegalAccessException {

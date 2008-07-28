@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.cache.executor;
 
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CacheResponseWrapper;
@@ -66,16 +65,15 @@ public class Store extends AbstractExecutor {
             CachePolicyResult cachePolicy) throws IOException, ServletException {
         CachedEntry cachedEntry = null;
         try {
-
-            // setting Last-Modified to when this resource was stored in the cache
-            long modificationDate = System.currentTimeMillis();
-            response.setDateHeader("Last-Modified", modificationDate);
-
             // will write to both the response stream and an internal byte array for caching
             final ByteArrayOutputStream cachingStream = new ByteArrayOutputStream();
             final TeeOutputStream teeOutputStream = new TeeOutputStream(response.getOutputStream(), cachingStream);
             final SimpleServletOutputStream out = new SimpleServletOutputStream(teeOutputStream);
             final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, out);
+
+            // setting Last-Modified to when this resource was stored in the cache. This value might get overriden by further filters or servlets.
+            final long modificationDate = System.currentTimeMillis();
+            responseWrapper.setDateHeader("Last-Modified", modificationDate);
             chain.doFilter(request, responseWrapper);
 
             try {
@@ -86,7 +84,7 @@ public class Store extends AbstractExecutor {
                 return;
             }
 
-            cachedEntry = makeCachedEntry(responseWrapper, cachingStream, modificationDate);
+            cachedEntry = makeCachedEntry(responseWrapper, cachingStream);
         } finally {
             // have to put cache entry no matter what even if it is null to release lock.
             cache.put(cachePolicy.getCacheKey(), cachedEntry);
@@ -96,17 +94,19 @@ public class Store extends AbstractExecutor {
         }
     }
 
-    protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream, long modificationDate) throws IOException {
+    protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream) throws IOException {
         // TODO : handle more of the 30x codes - although CacheResponseWrapper currently only sets the 302.
         if (cacheResponse.getStatus() == HttpServletResponse.SC_MOVED_TEMPORARILY) {
             return new CachedRedirect(cacheResponse.getStatus(), cacheResponse.getRedirectionLocation());
         }
+        if (cacheResponse.getStatus() == HttpServletResponse.SC_NOT_MODIFIED) {
+            return null;
+        }
         if (cacheResponse.isError()) {
             return new CachedError(cacheResponse.getStatus());
         }
-        if (cachingStream == null) {
-            return null;
-        }
+
+        final long modificationDate = cacheResponse.getLastModified();
         final byte[] aboutToBeCached = cachingStream.toByteArray();
         return new CachedPage(aboutToBeCached,
                 cacheResponse.getContentType(),

@@ -100,11 +100,10 @@ public class UseCache extends AbstractExecutor {
         try {
             long headerValue = request.getDateHeader("If-Modified-Since");
             if (headerValue != -1) {
-                // If an If-None-Match header has been specified, if modified since
-                // is ignored.
-                // the header defines only seconds so we ignore the milliseconds
-                if ((request.getHeader("If-None-Match") == null)
-                        && (lastModified > 0 && (lastModified - (lastModified % 1000) >= headerValue ))) {
+                // If an If-None-Match header has been specified, If-Modified-Since is ignored.
+                // The header defines only seconds, so we ignore the milliseconds.
+                final long lastModifiedRoundedToSeconds = lastModified - (lastModified % 1000);
+                if ((request.getHeader("If-None-Match") == null) && lastModified > 0 && (lastModifiedRoundedToSeconds >= headerValue)) {
                     return false;
                 }
             }
@@ -120,10 +119,6 @@ public class UseCache extends AbstractExecutor {
 
         response.setStatus(cachedEntry.getStatusCode());
         addHeaders(cachedEntry, acceptsGzipEncoding, response);
-
-        if(cachedEntry.getLastModificationTime()>0){
-            response.setDateHeader("Last-Modified", cachedEntry.getLastModificationTime());
-        }
 
         // TODO : cookies ?
         response.setContentType(cachedEntry.getContentType());
