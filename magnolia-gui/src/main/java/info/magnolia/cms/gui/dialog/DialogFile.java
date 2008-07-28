@@ -216,7 +216,14 @@ public class DialogFile extends DialogBox {
                 String iconPath = MIMEMapping.getMIMETypeIcon(control.getExtension());
 
                 out.write(Spacer.getHtml(0, 0));
-                out.write("<a href=" + this.getRequest().getContextPath() + control.getPath() + " target=\"_blank\">"); //$NON-NLS-1$ //$NON-NLS-2$
+                
+                out.write("<a href=");
+                out.write(this.getRequest().getContextPath() + this.getFileURI(control));
+                if (!StringUtils.isEmpty(control.getExtension())) {
+                    out.write("." + control.getExtension());
+                }
+                out.write(" target=\"_blank\">"); //$NON-NLS-1$ //$NON-NLS-2$
+                
                 out.write("<img src=\"" //$NON-NLS-1$
                     + this.getRequest().getContextPath()
                     + iconPath
