@@ -95,6 +95,8 @@ public class EhCacheFactory implements CacheFactory {
         }
         cacheManager = new CacheManager(cfg);
 
+        // TODO cacheManager.setName(...magnolia instance name ...);
+
         final MBeanServer mBeanServer = MBeanUtil.getMBeanServer();
         ManagementService.registerMBeans(cacheManager, mBeanServer, true, true, true, true);
     }
