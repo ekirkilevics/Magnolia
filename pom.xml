@@ -9,7 +9,7 @@
   <artifactId>magnolia-project</artifactId>
   <packaging>pom</packaging>
   <name>magnolia-project</name>
-  <version>3.6.1-SNAPSHOT</version>
+  <version>3.6.1</version>
   <description>
 Magnolia is an open-source enterprise class
 Content Management System developed by
@@ -124,9 +124,9 @@ for Java Content Repositories (JCR).
     </contributor>
   </contributors>
   <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/trunk</developerConnection>
-    <url>http://svn.magnolia.info/view/magnolia/trunk/</url>
+    <connection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-3.6.1</connection>
+    <developerConnection>scm:svn:http://svn.magnolia.info/svn/magnolia/tags/magnolia-3.6.1</developerConnection>
+    <url>http://svn.magnolia.info/view/magnolia/tags/magnolia-3.6.1</url>
   </scm>
   <profiles>
     <profile>
