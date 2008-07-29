@@ -116,4 +116,11 @@ public class Store extends AbstractExecutor {
                 modificationDate);
     }
 
+    /**
+     * @deprecated not used, since 3.6.1, the modificationDate is retrieved from the CacheResponseWrapper, using the
+     * appropriate header. It has been set by processCacheRequest() and possibly overwritten by another filter or servlet.
+     */
+    protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream, long modificationDate) throws IOException {
+        return makeCachedEntry(cacheResponse, cachingStream);
+    }
 }
