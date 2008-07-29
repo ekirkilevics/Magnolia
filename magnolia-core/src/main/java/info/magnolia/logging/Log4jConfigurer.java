@@ -112,10 +112,7 @@ public abstract class Log4jConfigurer {
                 config = ConfigUtil.replaceTokens(stream);
             }
             catch (IOException e) {
-                log("Unable to initialize Log4J from [" //$NON-NLS-1$
-                    + log4jFileName
-                    + "], got a IOException " //$NON-NLS-1$
-                    + e.getMessage());
+                log("Unable to initialize Log4J from [" + log4jFileName + "], got a IOException " + e.getMessage());
                 return;
             }
 
@@ -128,10 +125,7 @@ public abstract class Log4jConfigurer {
                     document = ConfigUtil.string2DOM(config, dtds);
                 }
                 catch (Exception e) {
-                    log("Unable to initialize Log4J from [" //$NON-NLS-1$
-                        + log4jFileName
-                        + "], got an Exception during reading the xml file " //$NON-NLS-1$
-                        + e.getMessage());
+                    log("Unable to initialize Log4J from [" + log4jFileName + "], got an Exception during reading the xml file : " + e.getMessage());
                     return;
                 }
                 DOMConfigurator.configure(document.getDocumentElement());
@@ -142,13 +136,10 @@ public abstract class Log4jConfigurer {
                     properties.load(IOUtils.toInputStream(config));
                 }
                 catch (IOException e) {
-                    log("Unable to initialize Log4J from [" //$NON-NLS-1$
-                        + log4jFileName
-                        + "], got an Exception during reading the properties file " //$NON-NLS-1$
-                        + e.getMessage());
+                    log("Unable to initialize Log4J from ["+ log4jFileName+ "], got an Exception during reading the properties file : " + e.getMessage());
                     return;
                 }
-                PropertyConfigurator.configure(log4jFileName);
+                PropertyConfigurator.configure(properties);
             }
 
         }
