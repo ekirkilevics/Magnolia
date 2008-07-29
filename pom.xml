@@ -19,7 +19,7 @@ for Java Content Repositories (JCR).
   <url>http://www.magnolia.info</url>
   <properties>
     <magnoliaEdition>Community Edition</magnoliaEdition>
-    <documentationURL>http://documentation.magnolia.info</documentationURL>
+    <documentationURL>http://documentation.magnolia.info/release/3-6-1.html</documentationURL>
   </properties>
   <issueManagement>
     <system>Jira</system>
@@ -423,7 +423,7 @@ for Java Content Repositories (JCR).
         </executions>
         <configuration>
           <resourceBundles>
-            <resourceBundle>info.magnolia:magnolia-build-tools-dual-licensed:1.3</resourceBundle>
+            <resourceBundle>info.magnolia:magnolia-build-tools-dual-licensed:1.4</resourceBundle>
           </resourceBundles>
         </configuration>
       </plugin>
@@ -442,7 +442,7 @@ for Java Content Repositories (JCR).
           <dependency>
             <groupId>info.magnolia</groupId>
             <artifactId>magnolia-build-tools-dual-licensed</artifactId>
-            <version>1.3</version>
+            <version>1.4</version>
           </dependency>
         </dependencies>
         <configuration>
