@@ -69,6 +69,7 @@ public class UseCache extends AbstractExecutor {
     }
 
     protected void processCachedEntry(CachedEntry cached, HttpServletRequest request, HttpServletResponse response) throws IOException {
+        log.debug("Serving {}", cached);
         if (cached instanceof CachedPage) {
             final CachedPage page = (CachedPage) cached;
             if (!ifModifiedSince(request, page.getLastModificationTime())) {
