@@ -39,14 +39,11 @@ import java.util.Locale;
 
 import junit.framework.TestCase;
 
-
-
 /**
- *
  * @version $Revision:  $ ($Author:  $)
  */
 public class DateUtilTest extends TestCase {
-    
+
     private Date getTestDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.set(Calendar.YEAR, 2008);
@@ -58,11 +55,10 @@ public class DateUtilTest extends TestCase {
         calendar.set(Calendar.MILLISECOND, 0);
         return calendar.getTime();
     }
-    
+
     public void testCustomFormatShouldUseGivenLocale() {
         assertEquals("Sunday, 6. July 2008", DateUtil.format(getTestDate(), "EEEE, d. MMMM yyyy", new Locale("en")));
         assertEquals("Sonntag, 6. Juli 2008", DateUtil.format(getTestDate(), "EEEE, d. MMMM yyyy", new Locale("de")));
-        assertEquals("sunnuntai, 6. heinäkuu 2008", DateUtil.format(getTestDate(), "EEEE, d. MMMM yyyy", new Locale("fi")));
+        assertEquals("sunnuntai, 6. hein\u00e4kuu 2008", DateUtil.format(getTestDate(), "EEEE, d. MMMM yyyy", new Locale("fi")));
     }
-
 }
