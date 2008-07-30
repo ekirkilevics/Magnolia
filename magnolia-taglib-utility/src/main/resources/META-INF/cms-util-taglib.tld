@@ -818,4 +818,30 @@ This page has no content and it will redirect to
       <description>Standard html attribute</description>
     </attribute>
   </tag>
+  <tag>
+    <name>poweredBy</name>
+    <tag-class>info.magnolia.cms.taglibs.util.PoweredByTag</tag-class>
+    <body-content>EMPTY</body-content>
+    <description>A simple tag which can display the version and edition of the running Magnolia instance.</description>
+    <attribute>
+      <name>pattern</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[
+        Sets a different message pattern than the default. This uses the java.text.MessageFormat syntax.
+        Available parameters are:
+        {0} Magnolia edition
+        {1} Magnolia version
+        {2} Magnolia build number or date
+        {3} Magnolia product url
+        {4} Magnolia provider name
+        {5} Magnolia provider address
+        {6} Magnolia provider email
+
+        <strong>Warning: since this is using java.text.MessageFormat, you need to escape single quotes, for example:
+          "I''m showing my Magnolia love by using the {0} version {1}."
+        </strong>]]>
+      </description>
+    </attribute>
+  </tag>
 </taglib>
