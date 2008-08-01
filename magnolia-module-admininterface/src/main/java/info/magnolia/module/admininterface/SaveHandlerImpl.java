@@ -307,10 +307,17 @@ public class SaveHandlerImpl implements SaveHandler {
                 else {
                     CustomSaveHandler csh = (CustomSaveHandler) cshClazz.newInstance();
                     HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
+
                     String configPath = this.getForm().getParameter(name + "_configNode");
+                    Content configNode = null;
+                    if (StringUtils.isNotEmpty(configPath))
+                    {
+                        configNode = hm.getContent(configPath);
+                    }
+
                     csh.save(
                         node,
-                        hm.getContent(configPath),
+                        configNode,
                         name,
                         getForm(),
                         type,
