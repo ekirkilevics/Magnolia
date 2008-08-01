@@ -128,7 +128,7 @@ public class DialogBox extends DialogControlImpl {
             out.write("<input type=\"hidden\" name=\"");
             out.write(this.getName());
             out.write("_configNode\" value=\"");
-            out.write(this.getConfigValue("handler"));
+            out.write(this.getConfigValue("handle"));
             out.write("\" />");
         }
 
