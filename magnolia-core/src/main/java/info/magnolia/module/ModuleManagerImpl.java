@@ -130,6 +130,11 @@ public class ModuleManagerImpl implements ModuleManager {
         return orderedModuleDescriptors;
     }
 
+    /**
+     * In difference to the contract specified by interface - checking for install or updates this method also loads repositories when there are no pending install or update tasks !!!
+     *
+     * @see info.magnolia.module.ModuleManager#checkForInstallOrUpdates()
+     */
     public void checkForInstallOrUpdates() {
         // compare and determine if we need to do anything
         state = new ModuleManagementState();
