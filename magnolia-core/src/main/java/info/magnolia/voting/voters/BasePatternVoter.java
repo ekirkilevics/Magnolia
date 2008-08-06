@@ -42,8 +42,8 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Voters which uses the urls to match against the pattern. The returned vote is
- * the length of the pattern. This allows overstearing less precise votes (lie
- * allo /something/* but deny /somthin/otherthing/*). You can use the inverse
+ * the length of the pattern. This allows overstearing less precise votes (like
+ * allow /something/* but deny /somthing/otherthing/*). You can use the inverse
  * property which will then return the negative value on a match. This is not
  * the same thing as using the not property which will then vote if the pattern
  * does not match at all.
@@ -54,7 +54,8 @@ import org.apache.commons.lang.StringUtils;
  */
 public abstract class BasePatternVoter extends AbstractBoolVoter {
 
-    private String pattern;
+    // use default value to prevent NPE when initialized before pattern is set.
+    private String pattern = StringUtils.EMPTY;
     private boolean inverse;
     private boolean autoTrueValue = true;
 
