@@ -517,6 +517,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              }
          }
 
+         // TODO : why is this here ? as far as I can tell, http sessions are never created when reaching this
          try {
              HttpSession httpSession = request.getSession(false);
              if (httpSession != null) httpSession.invalidate();

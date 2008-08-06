@@ -30,6 +30,12 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
+      <!-- needed for tests ... -->
+      <groupId>javax.servlet</groupId>
+      <artifactId>jsp-api</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
       <groupId>javax.jcr</groupId>
       <artifactId>jcr</artifactId>
     </dependency>
