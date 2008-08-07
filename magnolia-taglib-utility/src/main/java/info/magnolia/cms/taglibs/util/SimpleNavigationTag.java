@@ -34,6 +34,7 @@
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
@@ -161,7 +162,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Stable serialVersionUID.
      */
-    private static final long serialVersionUID = 223L;
+    private static final long serialVersionUID = 224L;
 
     /**
      * Logger.
@@ -193,7 +194,6 @@ public class SimpleNavigationTag extends TagSupport {
      */
     private String style;
 
-
     /**
      * html element to wrap the anchortext. (i.e. <a><wrapper>...</wrapper></a>
      */
@@ -214,6 +214,16 @@ public class SimpleNavigationTag extends TagSupport {
      */
     private String nofollow;
 
+
+    /**
+     * Content Filter to use to evaluate if a page should be drawn
+     */
+    private ContentFilter filter;
+
+    /**
+     * Name of a property that identifies a contentFilter in the pageContext
+     */
+    private String contentFilter = "";
 
     /**
      * Setter for the <code>startLevel</code> tag attribute.
@@ -264,6 +274,14 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
+     * A variable in the pageContext that contains a content filter
+     * @param contentFilter a content filter that will be used to determine if a given page should be drawn or not
+     */
+    public void setContentFilter(String contentFilter) {
+        this.contentFilter = contentFilter;
+    }
+
+    /**
      * @param expandAll The expandAll to set. If the value is different than <code>EXPAND_SHOW</code> then the call
      * expandAll is set to <code>EXPAND_ALL</code>
      */
@@ -299,6 +317,17 @@ public class SimpleNavigationTag extends TagSupport {
         Content activePage = Resource.getCurrentActivePage();
         JspWriter out = this.pageContext.getOut();
 
+        if (StringUtils.isNotEmpty(this.contentFilter)) {
+            try {
+                filter = (ContentFilter) this.pageContext.getAttribute(this.contentFilter);
+            }
+            catch(ClassCastException e) {
+                log.error("contentFilter assigned was not a content filter", e);
+            }
+        } else {
+            filter = null;
+        }
+
         if (startLevel > endLevel) {
             endLevel = 0;
         }
@@ -308,6 +337,7 @@ public class SimpleNavigationTag extends TagSupport {
                 Content startContent = activePage.getAncestor(this.startLevel);
                 drawChildren(startContent, activePage, out);
             }
+
         }
         catch (RepositoryException e) {
             log.error("RepositoryException caught while drawing navigation: " + e.getMessage(), e); //$NON-NLS-1$
@@ -317,6 +347,7 @@ public class SimpleNavigationTag extends TagSupport {
             // should never happen
             throw new NestableRuntimeException(e);
         }
+
         return EVAL_PAGE;
     }
 
@@ -331,6 +362,9 @@ public class SimpleNavigationTag extends TagSupport {
         this.style = null;
         this.classProperty = null;
         this.expandAll = EXPAND_NONE;
+        this.wrapperElement = "";
+        this.contentFilter = "";
+        this.filter = null;
         this.nofollow = null;
         super.release();
     }
@@ -369,6 +403,13 @@ public class SimpleNavigationTag extends TagSupport {
                     .getBoolean()) {
                     continue;
                 }
+                // use a filter
+                if (filter != null) {
+                    if (!filter.accept(child)) {
+                        continue;
+                    }
+                }
+
             }
 
             List cssClasses = new ArrayList(3);
@@ -448,7 +489,6 @@ public class SimpleNavigationTag extends TagSupport {
             out.print(((HttpServletRequest) this.pageContext.getRequest()).getContextPath());
             out.print(I18nContentSupportFactory.getI18nSupport().toI18NURI(child.getHandle()));
             out.print(".html\""); //$NON-NLS-1$
-
 
             if (StringUtils.isNotEmpty(accesskey)) {
                 out.print(" accesskey=\""); //$NON-NLS-1$
