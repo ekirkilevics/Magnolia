@@ -48,14 +48,16 @@ import org.easymock.IAnswer;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.util.Collections;
 import java.util.zip.GZIPInputStream;
 
 /**
@@ -63,8 +65,112 @@ import java.util.zip.GZIPInputStream;
  * @version $Revision: $ ($Author: $)
  */
 public class ReceiveFilterTest extends TestCase {
+    private static final String PARENT_PATH = "/foo/bar";
+
+    private static interface TestCallBack {
+        void checkPermissions(HierarchyManager hm);
+
+        void checkNode(HierarchyManager hm) throws Exception;
+
+        void importNode(HierarchyManager hm, Session session) throws Exception;
+    }
 
     public void testActivateShouldCreateNewNodeIfItDoesNotExist() throws Exception {
+        doTest("activate", "sa_success", "", new TestCallBack() {
+            public void checkPermissions(HierarchyManager hm) {
+                // TODO : really, really, this should just crash
+                //  - and we should actually check permissions and assert the behaviour of ReceiveFilter when the user does not have the appropriate permissions
+                expect(hm.getAccessManager()).andReturn(null);
+
+            }
+
+            public void checkNode(HierarchyManager hm) throws Exception {
+                expect(hm.getContentByUUID("DUMMY-UUID")).andThrow(new ItemNotFoundException());
+            }
+
+
+            public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
+                session.importXML(eq(PARENT_PATH), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING));
+                expectLastCall().andAnswer(new IAnswer<Object>() {
+                    public Object answer() throws Throwable {
+                        final InputStream passedStream = (InputStream) getCurrentArguments()[1];
+                        final InputStream expectedStream = new GZIPInputStream(getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz"));
+                        assertTrue("Tried to import an unexpected stream", IOUtils.contentEquals(expectedStream, passedStream));
+                        return null;
+                    }
+                });
+            }
+        });
+    }
+
+    public void testActivateShouldUpdateNodeIfItAlreadyExists() throws Exception {
+        final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
+        final Content tempNode = createStrictMock(Content.class);
+        expect(existingNode.getHandle()).andReturn(PARENT_PATH + "/nodename").anyTimes();
+        expect(existingNode.getName()).andReturn("nodename");
+        // TODO : test when existing node has children ?
+        expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.emptyList());
+
+        // creating temp node:
+        expect(existingNode.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(null);
+
+        // for the sake of this test we'll just pretend we have no properties on the existing node
+        expect(existingNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+
+        // TODO : why are properties copied using the jcr api ??
+        expect(existingNode.getJCRNode()).andReturn(null);
+
+        // for the sake of this test we'll just pretend we have no properties on the imported node either
+        expect(tempNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+
+        replay(existingNode, tempNode);
+        doTest("activate", "sa_success", "", new TestCallBack() {
+            public void checkPermissions(HierarchyManager hm) {
+                // expect(hm.getAccessManager()).andReturn(null);
+            }
+
+            public void checkNode(HierarchyManager hm) throws Exception {
+                expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(existingNode);
+            }
+
+            public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
+                session.importXML(startsWith(PARENT_PATH + "/nodename/"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
+                expectLastCall().andAnswer(new IAnswer<Object>() {
+                    public Object answer() throws Throwable {
+                        final InputStream passedStream = (InputStream) getCurrentArguments()[1];
+                        final InputStream expectedStream = new GZIPInputStream(getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz"));
+                        assertTrue("Tried to import an unexpected stream", IOUtils.contentEquals(expectedStream, passedStream));
+                        return null;
+                    }
+                });
+
+                // can't really get the temp uuid here
+                expect(hm.getContent(and(startsWith(PARENT_PATH + "/nodename/"), endsWith("/nodename")))).andReturn(tempNode);
+                hm.delete(startsWith(PARENT_PATH + "/nodename/"));
+            }
+        });
+        verify(existingNode, tempNode);
+    }
+
+    /**
+    public void testActivateShouldCreateNodeInNewLocationAndRemoveOldOneIfItHasBeenMovedToADifferentPath() {
+        fail();
+    }
+
+    public void testActivateShouldCreateNodeInNewLocationAndRemoveOldOneIfItHasBeenRenamedButInSameParent() {
+        fail();
+    }
+
+    public void testCantActivateInLockedNode() {
+        fail();
+    }
+
+    public void testCanUseAuthorizationOrUserId() {
+        fail();
+    }
+    */
+
+    private void doTest(final String action, final String expectedStatus, final String expectedMessage, TestCallBack testCallBack) throws Exception {
         final HttpServletRequest request = createMock(HttpServletRequest.class); // not strict: we don't want to check method call order
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final FilterChain filterChain = createStrictMock(FilterChain.class);
@@ -87,50 +193,38 @@ public class ReceiveFilterTest extends TestCase {
         FactoryUtil.setInstance(SystemContext.class, sysCtx);
         MgnlContext.setInstance(ctx);
 
-        final String parentPath = "/foo/bar";
-        final String action = "activate";
         // checking headers
         expect(request.getHeader("mgnlExchangeAction")).andReturn(action).anyTimes();
-        expect(request.getHeader("mgnlExchangeParentPath")).andReturn(parentPath).anyTimes();
+        expect(request.getHeader("mgnlExchangeParentPath")).andReturn(PARENT_PATH).anyTimes();
         expect(request.getHeader("mgnlExchangeRepositoryName")).andReturn("some-repo").anyTimes();
         expect(request.getHeader("mgnlExchangeWorkspaceName")).andReturn("some-workspace").anyTimes();
         expect(request.getHeader("mgnlExchangeResourceMappingFile")).andReturn("blah.xml").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
+        // TODO : check if different rules are passed in different cases ?
+        expect(request.getHeader("mgnlExchangeFilterRule")).andReturn("mgnl:contentNode,mgnl:metaData,mgnl:resource,").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
         expect(request.getHeader("Authorization")).andReturn(null).anyTimes();
         expect(request.getParameter("mgnlUserId")).andReturn("testuser").anyTimes();
         expect(sysCtx.getHierarchyManager("some-repo", "some-workspace")).andReturn(hm).anyTimes();
 
         // checking parent node
-        expect(hm.getContent(parentPath)).andReturn(parentNode).anyTimes();
+        expect(hm.getContent(PARENT_PATH)).andReturn(parentNode).anyTimes();
+        expect(hm.getContent(PARENT_PATH + "/")).andReturn(parentNode).anyTimes();
         expect(parentNode.isLocked()).andReturn(false).anyTimes();
         expect(parentNode.lock(true, true)).andReturn(null);
 
         expect(ctx.getAttribute("multipartform")).andReturn(form).anyTimes();
 
-        // checking permissions
-        // TODO : really, really, this should just crash
-        //  - and we should actually check permissions and assert the behaviour of ReceiveFilter when the user does not have the appropriate permissions
-        expect(hm.getAccessManager()).andReturn(null);
-
-        // check node existence
-        expect(hm.getContentByUUID("DUMMY-UUID")).andThrow(new ItemNotFoundException());
+        testCallBack.checkPermissions(hm);
+        testCallBack.checkNode(hm);
 
         // importing node
-        expect(hm.getWorkspace()).andReturn(workspace);
-        expect(workspace.getSession()).andReturn(session);
-        session.importXML(eq(parentPath), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING));
-        expectLastCall().andAnswer(new IAnswer<Object>() {
-            public Object answer() throws Throwable {
-                final InputStream passedStream = (InputStream) getCurrentArguments()[1];
-                final InputStream expectedStream = new GZIPInputStream(new FileInputStream("/Users/gjoseph/Dev/magnolia/svn/magnolia/trunk/magnolia-module-exchange-simple/src/test/resources/exchange_threadReply4173.xml.gz"));
-                assertTrue("Tried to import an unexpected stream", IOUtils.contentEquals(expectedStream, passedStream));
-                return null;
-            }
-        });
+        expect(hm.getWorkspace()).andReturn(workspace).anyTimes();
+        expect(workspace.getSession()).andReturn(session).anyTimes();
+        testCallBack.importNode(hm, session);
         hm.save();
 
         // response
-        response.setHeader("sa_attribute_status", "sa_success");
-        response.setHeader("sa_attribute_message", "");
+        response.setHeader("sa_attribute_status", expectedStatus);
+        response.setHeader("sa_attribute_message", expectedMessage);
 
         final ReceiveFilter filter = new ReceiveFilter();
         replay(request, response, filterChain, sysCtx, ctx, hm, workspace, session, parentNode);
@@ -138,23 +232,6 @@ public class ReceiveFilterTest extends TestCase {
         verify(request, response, filterChain, sysCtx, ctx, hm, workspace, session, parentNode);
     }
 
-    /**
-    public void testActivateShouldUpdateNodeIfItAlreadyExists() {
-        fail();
-    }
-
-    public void testActivateShouldCreateNodeInNewLocationAndRemoveOldOneIfItHasBeenMoved() {
-        fail();
-    }
-
-    public void testCantActivateInLockedNode() {
-        fail();
-    }
-
-    public void testCanUseAuthorizationOrUserId() {
-        fail();
-    }
-    */
 
     /**
      * A subclass of Document which ensures we don't do anything else with it
