@@ -69,17 +69,15 @@ public class DialogMVCServlet extends MVCServlet {
         String dialogName = RequestFormUtil.getParameter(request, "mgnlDialog"); //$NON-NLS-1$
 
         if (StringUtils.isEmpty(dialogName)) {
+            dialogName = (String) request.getAttribute("javax.servlet.include.request_uri"); //$NON-NLS-1$
             if (StringUtils.isEmpty(dialogName)) {
-                dialogName = (String) request.getAttribute("javax.servlet.include.request_uri"); //$NON-NLS-1$
-                if (StringUtils.isEmpty(dialogName)) {
-                    dialogName = (String) request.getAttribute("javax.servlet.forward.servlet_path"); //$NON-NLS-1$
-                }
-                if (StringUtils.isEmpty(dialogName)) {
-                    dialogName = request.getRequestURI();
-                }
-                dialogName = StringUtils.replaceOnce(StringUtils.substringAfterLast(dialogName, "/dialogs/"), ".html", //$NON-NLS-1$ //$NON-NLS-2$
-                    StringUtils.EMPTY);
+                dialogName = (String) request.getAttribute("javax.servlet.forward.servlet_path"); //$NON-NLS-1$
             }
+            if (StringUtils.isEmpty(dialogName)) {
+                dialogName = request.getRequestURI();
+            }
+            dialogName = StringUtils.replaceOnce(StringUtils.substringAfterLast(dialogName, "/dialogs/"), ".html", //$NON-NLS-1$ //$NON-NLS-2$
+                StringUtils.EMPTY);
         }
 
         DialogMVCHandler handler = null;
