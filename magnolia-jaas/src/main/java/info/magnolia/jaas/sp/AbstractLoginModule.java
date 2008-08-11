@@ -66,8 +66,6 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractLoginModule implements LoginModule {
 
-    public static final Logger log = LoggerFactory.getLogger(AbstractLoginModule.class);
-
     // magnolia specific option to define if "this" module needs to be
     // skipped based on previous (in JAAS module chain) module status
     public static final String OPTION_SKIP_ON_PREVIOUS_SUCCESS = "skip_on_previous_success";
@@ -139,6 +137,8 @@ public abstract class AbstractLoginModule implements LoginModule {
 
     // this status is sent back to the LoginModule chain
     public boolean success;
+
+    protected Logger log = LoggerFactory.getLogger(getClass());
 
     private boolean skipOnPreviousSuccess;
 
