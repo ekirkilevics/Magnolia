@@ -23,7 +23,13 @@
       <name>paragraph</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Name of the paragraph for the page properties (as defined in config)</description>
+      <description>@deprecated: use the dialog attribute instead</description>
+    </attribute>
+    <attribute>
+      <name>dialog</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Name of the dialog for the page properties (as defined in config)</description>
     </attribute>
     <attribute>
       <name>label</name>
