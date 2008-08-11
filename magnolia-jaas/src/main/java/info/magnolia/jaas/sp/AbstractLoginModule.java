@@ -190,9 +190,9 @@ public abstract class AbstractLoginModule implements LoginModule {
             if(this.useRealmCallback){
                 this.realm = StringUtils.defaultIfEmpty(((RealmCallback)callbacks[2]).getRealm(), this.realm);
             }
-            
+
             this.validateUser();
-            
+
             // FIXME we do that only to be compatible to the old way jaas modules were written
             if(this instanceof UserAwareLoginModule){
                 User user = ((UserAwareLoginModule)this).getUser();
@@ -225,7 +225,7 @@ public abstract class AbstractLoginModule implements LoginModule {
     public boolean commit() throws LoginException {
         /**
          * If login module failed to authenticate then this method should simply return false
-         * instead of throwing an exception - refer to specs for more details 
+         * instead of throwing an exception - refer to specs for more details
          * */
         if (!this.success) {
             return false;
@@ -265,7 +265,7 @@ public abstract class AbstractLoginModule implements LoginModule {
      * test if the option skip_on_previous_success is set to true
      * and preceding LoginModule was successful
      * */
-    private boolean getSkip() {
+    protected boolean getSkip() {
         return skipOnPreviousSuccess && this.getSharedStatus() == STATUS_SUCCEEDED;
     }
 
