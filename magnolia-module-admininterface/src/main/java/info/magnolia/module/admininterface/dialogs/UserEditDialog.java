@@ -118,7 +118,7 @@ public class UserEditDialog extends ConfiguredDialog {
      */
     protected Dialog createDialog(Content configNode, Content storageNode) throws RepositoryException {
         Dialog dialog = super.createDialog(configNode, storageNode);
-        // dont do anythig if command is "save"
+        // don't do anything if command is "save"
         if (this.getCommand().equalsIgnoreCase(COMMAND_SAVE)) {
             return dialog;
         }
