@@ -155,8 +155,15 @@ public abstract class AbstractLoginModule implements LoginModule {
         this.callbackHandler = callbackHandler;
         this.sharedState = sharedState;
         this.options = options;
-        this.sharedState.put("groupNames",new LinkedHashSet());
-        this.sharedState.put("roleNames",new LinkedHashSet());
+        // don't overwrite group and roles set in the shared state
+        if (this.sharedState.get("groupNames") == null)
+        {
+            this.sharedState.put("groupNames", new LinkedHashSet());
+        }
+        if (this.sharedState.get("roleNames") == null)
+        {
+            this.sharedState.put("roleNames", new LinkedHashSet());
+        }
         this.realm = StringUtils.defaultIfEmpty((String) options.get(OPTION_REALM), Realm.DEFAULT_REALM);
 
         this.useRealmCallback = BooleanUtil.toBoolean((String) options.get(OPTION_USE_REALM_CALLBACK), true);
