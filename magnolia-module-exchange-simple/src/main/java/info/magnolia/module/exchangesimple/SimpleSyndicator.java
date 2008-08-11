@@ -143,11 +143,13 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             throw new ExchangeException("Null Subscriber");
         }
 
+        String parentPath = null;
+
         Subscription subscription = subscriber.getMatchedSubscription(this.path, this.repositoryName);
         if (null != subscription) {
             // its subscribed since we found the matching subscription
-            String mappedPath = this.getMappedPath(this.parent, subscription);
-            activationContent.setProperty(PARENT_PATH, mappedPath);
+            // unfortunately activationContent is not thread safe and is used by multiple threads in case of multiple subscribers so we can't use it as a vessel for transfer of parentPath value
+            parentPath = this.getMappedPath(this.parent, subscription);
         } else {
             if (log.isDebugEnabled()) {
                 log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), this.path);
@@ -160,10 +162,12 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
 
         URLConnection urlConnection = null;
-        String versionName = null;
         try {
             urlConnection = prepareConnection(subscriber);
             this.addActivationHeaders(urlConnection, activationContent);
+            // set a parent path manually instead of via activationHeaders since it can differ between subscribers.
+            urlConnection.setRequestProperty(PARENT_PATH, parentPath);
+
 
             Transporter.transport((HttpURLConnection) urlConnection, activationContent);
 
