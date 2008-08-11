@@ -80,7 +80,7 @@
   <tag>
     <name>aAttribute</name>
     <tag-class>info.magnolia.cms.taglibs.util.AAttribute</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>adds an attribute to the aHref tag (child as aHref)</description>
     <attribute>
       <name>name</name>
@@ -98,7 +98,7 @@
   <tag>
     <name>date</name>
     <tag-class>info.magnolia.cms.taglibs.util.Date</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>@deprecated see cms-taglib:out.</description>
     <attribute>
       <name>nodeDataName</name>
@@ -135,7 +135,7 @@
   <tag>
     <name>breadcrumb</name>
     <tag-class>info.magnolia.cms.taglibs.util.Breadcrumb</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>displays a breadcrumb</description>
     <attribute>
       <name>startLevel</name>
@@ -190,7 +190,7 @@
   <tag>
     <name>fileSrc</name>
     <tag-class>info.magnolia.cms.taglibs.util.FileSrc</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>@deprecated see cms:out. Returns informations as path, name or size of a file</description>
     <attribute>
       <name>nodeDataName</name>
@@ -240,7 +240,7 @@
   <tag>
     <name>simpleNavigation</name>
     <tag-class>info.magnolia.cms.taglibs.util.SimpleNavigationTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>
       Draws a simple, css based, navigation menu. The menu layout can then be customized using css, and the default menu
       should be enough for most uses.
@@ -346,7 +346,7 @@
   <tag>
     <name>simpleSearch</name>
     <tag-class>info.magnolia.cms.taglibs.util.SimpleSearchTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>
       A simple tag which allows searching in all the site content with a "natural language" query. It simply strips all
       the reserved chars from input string, build an xpath query and feed Magnolia QueryManager. By defaults search
@@ -435,7 +435,7 @@
   <tag>
     <name>searchResultSnippet</name>
     <tag-class>info.magnolia.cms.taglibs.util.SearchResultSnippetTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>
       Output a set of snippets taken from any paragraph in the given page mathing any of the search term.
     </description>
@@ -504,7 +504,7 @@ This page has no content and it will redirect to
   <tag>
     <name>txt2img</name>
     <tag-class>info.magnolia.cms.taglibs.util.TextToImageTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>Convert the text to images.</description>
     <attribute>
       <name>parentContentNodeName</name>
@@ -572,7 +572,7 @@ This page has no content and it will redirect to
   <tag>
     <name>scaleImage</name>
     <tag-class>info.magnolia.cms.taglibs.util.ScaleImageTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>Creates a scaled copy of an image.</description>
     <attribute>
       <name>parentContentNodeName</name>
@@ -715,7 +715,7 @@ This page has no content and it will redirect to
   <tag>
     <name>img</name>
     <tag-class>info.magnolia.cms.taglibs.util.ImgTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>
       Writes an html img tag for the image at "nodeDataName". Also supports writing object tags for flash movies
       (detected by the "swf" extension.
@@ -840,7 +840,7 @@ This page has no content and it will redirect to
   <tag>
     <name>poweredBy</name>
     <tag-class>info.magnolia.cms.taglibs.util.PoweredByTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>A simple tag which can display the version and edition of the running Magnolia instance.</description>
     <attribute>
       <name>pattern</name>

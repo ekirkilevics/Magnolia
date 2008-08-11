@@ -48,7 +48,7 @@
   <tag>
     <name>links</name>
     <tag-class>info.magnolia.cms.taglibs.LinksTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <display-name>links</display-name>
     <description>
       Add the needed css and js links for magnolia edit controls. This tag should always bee added to html head.
@@ -163,7 +163,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
   <tag>
     <name>editButton</name>
     <tag-class>info.magnolia.cms.taglibs.EditButton</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>display edit button</description>
     <attribute>
       <name>contentNodeName</name>
@@ -225,7 +225,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
   <tag>
     <name>out</name>
     <tag-class>info.magnolia.cms.taglibs.Out</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>
       Writes out the content of a nodeData or - for nodeData of type binary - information of the nodeData
     </description>
@@ -491,7 +491,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
   <tag>
     <name>set</name>
     <tag-class>info.magnolia.cms.taglibs.Set</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>Set contentNode in resource</description>
 
     <attribute>
@@ -716,7 +716,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
   <tag>
     <name>attribute</name>
     <tag-class>info.magnolia.cms.taglibs.Attribute</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>adds an attribute to the request within an includeTemplate tag</description>
     <attribute>
       <name>name</name>
@@ -932,7 +932,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
   <tag>
     <name>unloadPage</name>
     <tag-class>info.magnolia.cms.taglibs.UnloadPage</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>
       The unloadPage-tag will restore actpage to the currently displayed page. This can be necessary after you have used
       loadPage to temporarily have access to a different page, e.g. for building a menu.
@@ -941,7 +941,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
   <tag>
     <name>setNode</name>
     <tag-class>info.magnolia.cms.taglibs.SetNode</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <description>
       Exposes a content node to the pagecontext as a Map of nodeData, in order to access the exposed object using JSTL.
     </description>
@@ -1042,7 +1042,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
   <tag>
     <name>button</name>
     <tag-class>info.magnolia.cms.taglibs.ButtonTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <display-name>button</display-name>
     <description>Adds a button to a parent bar. Must be nested into a mainBar or newBar to work.</description>
     <attribute>
@@ -1067,7 +1067,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
   <tag>
     <name>query</name>
     <tag-class>info.magnolia.cms.taglibs.QueryTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <display-name>query</display-name>
     <description>Execute a query on a magnolia repository.</description>
     <attribute>
@@ -1106,7 +1106,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
   <tag>
     <name>user</name>
     <tag-class>info.magnolia.cms.taglibs.UserTag</tag-class>
-    <body-content>EMPTY</body-content>
+    <body-content>empty</body-content>
     <display-name>user</display-name>
     <description>Set the current user (info.magnolia.cms.security.User) into a pageContext variable.</description>
     <attribute>
