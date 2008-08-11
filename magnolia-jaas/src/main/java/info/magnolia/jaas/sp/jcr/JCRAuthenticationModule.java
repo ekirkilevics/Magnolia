@@ -42,8 +42,6 @@ import info.magnolia.jaas.principal.EntityImpl;
 import info.magnolia.jaas.sp.AbstractLoginModule;
 import info.magnolia.jaas.sp.UserAwareLoginModule;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import javax.security.auth.login.FailedLoginException;
 import javax.security.auth.login.LoginException;
@@ -54,8 +52,6 @@ import java.util.Iterator;
  * @author Sameer Charles $Id$
  */
 public class JCRAuthenticationModule extends AbstractLoginModule implements UserAwareLoginModule {
-
-    private static final Logger log = LoggerFactory.getLogger(JCRAuthenticationModule.class);
 
     private static final String ACCOUNT_LOCKED_EXCEPTION = "javax.security.auth.login.AccountLockedException";
     private static final String ACCOUNT_NOTFOUND_EXCEPTION = "javax.security.auth.login.AccountNotFoundException";

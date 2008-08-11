@@ -45,10 +45,12 @@ import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.cms.security.auth.RoleList;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.jaas.principal.ACLImpl;
 import info.magnolia.jaas.principal.GroupListImpl;
 import info.magnolia.jaas.principal.PrincipalCollectionImpl;
 import info.magnolia.jaas.principal.RoleListImpl;
+import info.magnolia.jaas.sp.AbstractLoginModule;
 
 import java.security.Principal;
 import java.util.Iterator;
@@ -59,8 +61,6 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -68,14 +68,18 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Id$
  */
-public class JCRAuthorizationModule extends JCRAuthenticationModule {
-
-    /**
-     * Logger
-     */
-    private static final Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
+public class JCRAuthorizationModule extends AbstractLoginModule {
 
     public void validateUser() throws LoginException {
+    }
+
+
+    // do nothing here, we are only responsible for authorization, not authentication!
+    public boolean login() throws LoginException
+    {
+        this.success = true;
+        this.setSharedStatus(STATUS_SUCCEEDED);
+        return this.success;
     }
 
     /**
@@ -145,7 +149,7 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      */
     protected void setACLForRoles(String[] roles, PrincipalCollection principalList) {
 
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USER_ROLES);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
 
         for (int j = 0; j < roles.length; j++) {
             String role = roles[j];
@@ -167,7 +171,7 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
      * @param principalList PrincipalCollection
      */
     protected void setACLForGroups(String[] groups, PrincipalCollection principalList) {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USER_GROUPS);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
 
         for (int j = 0; j < groups.length; j++) {
             String group = groups[j];
@@ -230,6 +234,14 @@ public class JCRAuthorizationModule extends JCRAuthenticationModule {
                 acl.addPermission(permission);
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public boolean release() {
+        return true;
     }
 
 }
