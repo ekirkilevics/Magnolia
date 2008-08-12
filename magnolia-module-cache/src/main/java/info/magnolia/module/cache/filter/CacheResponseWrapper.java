@@ -46,6 +46,7 @@ import java.text.SimpleDateFormat;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.Collection;
+import java.util.Locale;
 
 /**
  *
@@ -132,26 +133,29 @@ public class CacheResponseWrapper extends HttpServletResponseWrapper {
 
     public long getLastModified() {
         // we're using a MultiMap. And all this is to workaround code that would possibly set the Last-Modified header with a String value
-        // it will also fail if mu
+        // it will also fail if multiple values have been set.
         final Collection values = (Collection) headers.get("Last-Modified");
         if (values == null || values.size() != 1) {
             throw new IllegalStateException("Can't get Last-Modified header : no or multiple values : " + values);
         }
         final Object value = values.iterator().next();
         if (value instanceof String) {
-            final SimpleDateFormat f = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz");
-            try {
-                final Date date = f.parse((String) value);
-                return date.getTime();
-            } catch (ParseException e) {
-                throw new IllegalStateException("Could not parse Last-Modified header with value " + value + " : " + e.getMessage());
-            }
+            return parseStringDate((String) value);
         } else if (value instanceof Long) {
             return ((Long)value).longValue();
         } else {
             throw new IllegalStateException("Can't get Last-Modified header : " + value);
         }
+    }
 
+    private long parseStringDate(String value) {
+        try {
+            final SimpleDateFormat f = new SimpleDateFormat("EEE, dd MMM yyyy HH:mm:ss zzz", Locale.ENGLISH);
+            final Date date = f.parse(value);
+            return date.getTime();
+        } catch (ParseException e) {
+            throw new IllegalStateException("Could not parse Last-Modified header with value " + value + " : " + e.getMessage());
+        }
     }
 
     public String getRedirectionLocation() {

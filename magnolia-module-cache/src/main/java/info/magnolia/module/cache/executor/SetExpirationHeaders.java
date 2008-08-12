@@ -54,7 +54,7 @@ import org.apache.commons.lang.time.FastDateFormat;
  * TODO : avoid duplication with CacheHeadersFilter ???
  * 
  * @author pbracher
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class SetExpirationHeaders extends AbstractExecutor {
     private final FastDateFormat formatter = FastDateFormat.getInstance("EEE, d MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.ENGLISH);
@@ -72,8 +72,9 @@ public class SetExpirationHeaders extends AbstractExecutor {
             response.setDateHeader("Expires", 0);
             response.setHeader("Expires", "Fri, 30 Oct 1998 14:19:41 GMT");
         } else {
+            final long maxAgeSeconds = (clientCacheResult.getExpirationDate() - System.currentTimeMillis()) / 1000;
             response.setHeader("Pragma", "");
-            response.setHeader("Cache-Control", "max-age=" + clientCacheResult.getExpirationDate() / 1000 + ", public");
+            response.setHeader("Cache-Control", "max-age=" + maxAgeSeconds + ", public");
             // TODO : use setDateHeader ?
             response.setHeader("Expires", formatter.format(new Date(clientCacheResult.getExpirationDate())));
         }
