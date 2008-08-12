@@ -37,12 +37,16 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.security.MgnlUser;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.PermissionImpl;
+import info.magnolia.cms.security.SecuritySupport;
+import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.auth.ACL;
 import info.magnolia.cms.security.auth.GroupList;
 import info.magnolia.cms.security.auth.PrincipalCollection;
 import info.magnolia.cms.security.auth.RoleList;
+import info.magnolia.cms.security.auth.callback.CredentialsCallbackHandler;
 import info.magnolia.cms.util.SimpleUrlPattern;
 import info.magnolia.cms.util.UrlPattern;
 import info.magnolia.context.MgnlContext;
@@ -61,6 +65,8 @@ import javax.security.auth.login.LoginException;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -73,6 +79,10 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
     public void validateUser() throws LoginException {
     }
 
+    /**
+     * Logger
+     */
+    private static final Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
 
     // do nothing here, we are only responsible for authorization, not authentication!
     public boolean login() throws LoginException
@@ -100,6 +110,18 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
         PrincipalCollection principalList = new PrincipalCollectionImpl();
         setACLForRoles(roles, principalList);
         setACLForGroups(groups, principalList);
+        User user = null;
+        if (callbackHandler instanceof CredentialsCallbackHandler) {
+            user = ((CredentialsCallbackHandler) callbackHandler).getUser();
+        }
+        // not all jaas modules will support magnolia users
+        if(user == null){
+            user = SecuritySupport.Factory.getInstance().getUserManager().getUser(subject);
+        }
+
+        if (user instanceof MgnlUser) {
+            setACL(((MgnlUser)user).getUserNode(), principalList);
+        }
 
         if (log.isDebugEnabled()) {
             for (Iterator iterator = ((PrincipalCollectionImpl) principalList).iterator(); iterator.hasNext();) {
@@ -239,7 +261,6 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
     /**
      * {@inheritDoc}
      */
-    @Override
     public boolean release() {
         return true;
     }
