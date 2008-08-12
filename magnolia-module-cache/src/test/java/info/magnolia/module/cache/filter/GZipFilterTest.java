@@ -107,7 +107,7 @@ public class GZipFilterTest extends TestCase {
         final byte[] compressedBytes = finalOutput.toByteArray();
         assertTrue("output should be gzipped", GZipUtil.isGZipped(compressedBytes));
         final byte[] uncompressed = GZipUtil.ungzip(compressedBytes);
-        final int expectedLength = iterations * (SOME_10CHARSLONG_CHAIN.length() + 1); // n chars + newline
+        final int expectedLength = iterations * (SOME_10CHARSLONG_CHAIN.length() + System.getProperty("line.separator").length()); // n chars + newline
         assertEquals(expectedLength, uncompressed.length);
     }
 }
