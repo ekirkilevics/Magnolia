@@ -43,6 +43,7 @@ import info.magnolia.setup.for3_5.GenericTasks;
 import info.magnolia.setup.for3_6.CheckMagnoliaDevelopProperty;
 import info.magnolia.setup.for3_6.CheckNodesForMixVersionable;
 import info.magnolia.setup.for3_6.CheckNodeTypesDefinition;
+import info.magnolia.setup.for3_6_2.UpdateUsers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +70,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             .addTask(new CheckMagnoliaDevelopProperty())
             .addTask(new CheckNodesForMixVersionable());
         register(delta36);
+        final Delta delta362 = DeltaBuilder.update("3.6.2", "").addTask(new UpdateUsers());
+        register(delta362);
     }
 
     protected List getBasicInstallTasks(InstallContext ctx) {
