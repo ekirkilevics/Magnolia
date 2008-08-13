@@ -36,6 +36,7 @@ package info.magnolia.setup.for3_6_2;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractTask;
@@ -75,6 +76,11 @@ public class UpdateUsers extends AbstractTask {
                     String handle = user.getHandle();
                     boolean hasAccess = false;
                     Content acls = user.getChildByName("acl_users");
+                    if (acls == null) {
+                        // not a proper user node just skip over.
+                        log.warn("User {} doesn't seem to be properly configured. Account path is {}.", user, handle);
+                        continue;
+                    }
                     Iterator iter3 = acls.getChildren().iterator();
                     while (iter3.hasNext()) {
                         Content permission = (Content)iter3.next();
@@ -84,9 +90,7 @@ public class UpdateUsers extends AbstractTask {
                         }
                     }
                     if (!hasAccess) {
-                        int i = 0;
-                        for (; acls.hasContent((i < 10 ? "0": "") + i); i++);
-                        Content acl = acls.createContent((i < 10 ? "0": "") + i, ItemType.CONTENTNODE);
+                        Content acl = acls.createContent(Path.getUniqueLabel(hm, acls.getHandle(), "0"), ItemType.CONTENTNODE);
                         acl.createNodeData("path", handle);
                         acl.createNodeData("permissions", Permission.READ);
                         acls.save();
