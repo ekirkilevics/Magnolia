@@ -290,7 +290,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>datePattern</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Sets the output date format, as per java.text.SimpleDateFormat. Default is "yyyy-MM-dd". Only applies for nodeDatas of type=Date.</description>
+      <description><![CDATA[Sets the output date format, as per java.text.SimpleDateFormat. Default is "yyyy-MM-dd". Only applies for nodeDatas of type=Date.  <ul> <li><b>G </b> Era designator Text AD <li><b>y </b> Year Year 1996; 96 <li><b>M </b> Month in year Month July; Jul; 07 <li><b>w </b> Week in year Number 27 <li><b>W </b> Week in month Number 2 <li><b>D </b> Day in year Number 189 <li><b>d </b> Day in month Number 10 <li><b>F </b> Day of week in month Number 2 <li><b>E </b> Day in week Text Tuesday; Tue <li><b>a </b> Am/pm marker Text PM <li><b>H </b> Hour in day (0-23) Number 0 <li><b>k </b> Hour in day (1-24) Number 24 <li><b>K </b> Hour in am/pm (0-11) Number 0 <li><b>h </b> Hour in am/pm (1-12) Number 12 <li><b>m </b> Minute in hour Number 30 <li><b>s </b> Second in minute Number 55 <li><b>S </b> Millisecond Number 978 <li><b>z </b> Time zone General time zone Pacific Standard Time; PST; GMT-08:00 <li><b>Z </b> Time zone RFC 822 time zone -0800 </ul>]]></description>
     </attribute>
     <attribute>
       <name>lineBreak</name>
@@ -930,7 +930,10 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <tag-class>info.magnolia.cms.taglibs.SetNode</tag-class>
     <body-content>empty</body-content>
     <description>
+      <![CDATA[
       Exposes a content node to the pagecontext as a Map of nodeData, in order to access the exposed object using JSTL.
+      Since JSTL doesn't allow calling a method like <code>Content.getNodeData(String)</code> the <code>Content</code> is wrapped into a <code>NodeMapWrapper</code> which exposes NodeData using a map interface. This tag can be useful in similar situations: (see @jsp.tag-example)
+      ]]>
     </description>
     <attribute>
       <name>contentNodeName</name>
