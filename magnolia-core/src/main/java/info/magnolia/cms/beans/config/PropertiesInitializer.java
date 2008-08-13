@@ -46,9 +46,11 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.MessageFormat;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
@@ -58,7 +60,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * @author pbracher
- *
+ * @Author fgiust
  */
 public class PropertiesInitializer {
     /**
@@ -66,7 +68,17 @@ public class PropertiesInitializer {
      */
     private static final String MGNL_BEANS_PROPERTIES = "/mgnl-beans.properties";
 
-    public static PropertiesInitializer getInstance(){
+    /**
+     * Placeholder prefix: "${"
+     */
+    public static final String PLACEHOLDER_PREFIX = "${";
+
+    /**
+     * Placeholder suffix: "}"
+     */
+    public static final String PLACEHOLDER_SUFFIX = "}";
+
+    public static PropertiesInitializer getInstance() {
         return (PropertiesInitializer) FactoryUtil.getSingleton(PropertiesInitializer.class);
     }
 
@@ -92,6 +104,22 @@ public class PropertiesInitializer {
 
         // complete or override with JVM system properties
         overloadWithSystemProperties();
+
+        // resolve nested properties
+        resolveNestedProperties();
+    }
+
+    private void resolveNestedProperties() {
+
+        Properties sysProps = SystemProperty.getProperties();
+
+        for (Iterator it = sysProps.keySet().iterator(); it.hasNext();) {
+            String key = (String) it.next();
+            String oldValue = (String) sysProps.get(key);
+            String value = parseStringValue(oldValue, new HashSet());
+            SystemProperty.getProperties().put(key, value);
+        }
+
     }
 
     public void loadAllModuleProperties() {
@@ -225,6 +253,72 @@ public class PropertiesInitializer {
         propertiesFilesString = StringUtils.replace(propertiesFilesString, "${webapp}", webapp); //$NON-NLS-1$
 
         return propertiesFilesString;
+    }
+
+    /**
+     * Parse the given String value recursively, to be able to resolve nested placeholders. Partly borrowed from
+     * org.springframework.beans.factory.config.PropertyPlaceholderConfigurer (original author: Juergen Hoeller)
+     */
+    protected String parseStringValue(String strVal, Set visitedPlaceholders) {
+
+        StringBuffer buf = new StringBuffer(strVal);
+
+        int startIndex = strVal.indexOf(PLACEHOLDER_PREFIX);
+        while (startIndex != -1) {
+            int endIndex = -1;
+
+            int index = startIndex + PLACEHOLDER_PREFIX.length();
+            int withinNestedPlaceholder = 0;
+            while (index < buf.length()) {
+                if (PLACEHOLDER_SUFFIX.equals(buf.subSequence(index, index + PLACEHOLDER_SUFFIX.length()))) {
+                    if (withinNestedPlaceholder > 0) {
+                        withinNestedPlaceholder--;
+                        index = index + PLACEHOLDER_SUFFIX.length();
+                    }
+                    else {
+                        endIndex = index;
+                        break;
+                    }
+                }
+                else if (PLACEHOLDER_PREFIX.equals(buf.subSequence(index, index + PLACEHOLDER_PREFIX.length()))) {
+                    withinNestedPlaceholder++;
+                    index = index + PLACEHOLDER_PREFIX.length();
+                }
+                else {
+                    index++;
+                }
+            }
+
+            if (endIndex != -1) {
+                String placeholder = buf.substring(startIndex + PLACEHOLDER_PREFIX.length(), endIndex);
+                if (!visitedPlaceholders.add(placeholder)) {
+
+                    log.warn("Circular reference detected in properties, \"{}\" is not resolvable", strVal);
+                    return strVal;
+                }
+                // Recursive invocation, parsing placeholders contained in the placeholder key.
+                placeholder = parseStringValue(placeholder, visitedPlaceholders);
+                // Now obtain the value for the fully resolved key...
+                String propVal = SystemProperty.getProperty(placeholder);
+                if (propVal != null) {
+                    // Recursive invocation, parsing placeholders contained in the
+                    // previously resolved placeholder value.
+                    propVal = parseStringValue(propVal, visitedPlaceholders);
+                    buf.replace(startIndex, endIndex + PLACEHOLDER_SUFFIX.length(), propVal);
+                    startIndex = buf.indexOf(PLACEHOLDER_PREFIX, startIndex + propVal.length());
+                }
+                else {
+                    // Proceed with unprocessed value.
+                    startIndex = buf.indexOf(PLACEHOLDER_PREFIX, endIndex + PLACEHOLDER_SUFFIX.length());
+                }
+                visitedPlaceholders.remove(placeholder);
+            }
+            else {
+                startIndex = -1;
+            }
+        }
+
+        return buf.toString();
     }
 
 }
