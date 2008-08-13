@@ -797,7 +797,6 @@ This page has no content and it will redirect to
     <name>table</name>
     <tag-class>info.magnolia.cms.taglibs.util.TableTag</tag-class>
     <body-content>JSP</body-content>
-    <display-name>table</display-name>
     <description>Table</description>
     <attribute>
       <name>header</name>

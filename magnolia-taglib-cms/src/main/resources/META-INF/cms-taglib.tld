@@ -13,7 +13,6 @@
     <name>mainBar</name>
     <tag-class>info.magnolia.cms.taglibs.MainBar</tag-class>
     <body-content>JSP</body-content>
-    <display-name>mainBar</display-name>
     <description>
       Displays the mainBar, i.e. the bar that allows you to change the page properties and switch to preview mode. This
       tag also add the CSS and JS links if not previously defined, but it's recommended to add the cms:links tag to the
@@ -23,7 +22,7 @@
       <name>paragraph</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>@deprecated: use the dialog attribute instead</description>
+      <description>@deprecated use the dialog attribute instead</description>
     </attribute>
     <attribute>
       <name>dialog</name>
@@ -42,16 +41,15 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>Set it to false if you don't want to show the AdminCentral button</description>
+      <description>Set this to false if you don't want to show the AdminCentral button</description>
     </attribute>
   </tag>
   <tag>
     <name>links</name>
     <tag-class>info.magnolia.cms.taglibs.LinksTag</tag-class>
     <body-content>empty</body-content>
-    <display-name>links</display-name>
     <description>
-      Add the needed css and js links for magnolia edit controls. This tag should always bee added to html head.
+      Adds the needed css and js links for magnolia edit controls. This tag should always bee added to html head.
     </description>
     <attribute>
       <name>adminOnly</name>
@@ -59,7 +57,7 @@
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
       <description>
-        Show links only in admin instance, default to true. You can set it to false if you want magnolia css and js
+        Show links only in admin instance, defaults to true. You can set it to false if you want magnolia css and js
         files added also for a public instance.
       </description>
     </attribute>
@@ -68,7 +66,6 @@
     <name>editBar</name>
     <tag-class>info.magnolia.cms.taglibs.EditBar</tag-class>
     <body-content>JSP</body-content>
-    <display-name>editBar</display-name>
     <description>
       Displays Magnolia editBar which allows you to edit a paragraph. This tag is often used within
       contentNodeIterator, which in turn will set all relevant parameters automatically.
@@ -103,13 +100,13 @@
       <name>deleteLabel</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>The text of the delete button, defaults to "Delete"; use "" to get no delete button.</description>
+      <description>The text of the delete button, defaults to "Delete". Use "" to get no delete button.</description>
     </attribute>
     <attribute>
       <name>moveLabel</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>The text of the move button, defaults to "Move"; use "" to get no move button.</description>
+      <description>The text of the move button, defaults to "Move". Use "" to get no move button.</description>
     </attribute>
     <attribute>
       <name>adminOnly</name>
@@ -129,21 +126,19 @@
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>
-        stored under this name, you will need the name for later retrieval of contents. (required)
-      </description>
+      <description>New paragraphs will be stored under this node's name. You will need the name for later retrieval of contents.</description>
     </attribute>
     <attribute>
       <name>paragraph</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>comma separated list of paragraph types</description>
+      <description>Comma separated list of allowed paragraph types.</description>
     </attribute>
     <attribute>
       <name>newLabel</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>text of the button, defaults to "New"</description>
+      <description>Text of the button, defaults to "New".</description>
     </attribute>
     <attribute>
       <name>adminOnly</name>
@@ -164,55 +159,52 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <name>editButton</name>
     <tag-class>info.magnolia.cms.taglibs.EditButton</tag-class>
     <body-content>empty</body-content>
-    <description>display edit button</description>
+    <description>Displays an edit button.</description>
     <attribute>
       <name>contentNodeName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
     </attribute>
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
     </attribute>
     <attribute>
       <name>paragraph</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>The paragraph type.</description>
     </attribute>
     <attribute>
       <name>parFile</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>@deprecated</description>
+      <description>@deprecated use the paragraph attribute</description>
     </attribute>
     <attribute>
       <name>template</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
     </attribute>
     <attribute>
       <name>label</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>The button's label. (defaults to "Edit")</description>
     </attribute>
     <attribute>
       <name>editLabel</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>@deprecated</description>
+      <description>@deprecated use the label attribute instead.</description>
     </attribute>
     <attribute>
       <name>small</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description></description>
+      <description>Sets the size of the button. (defaults to true) </description>
     </attribute>
     <attribute>
       <name>adminOnly</name>
@@ -227,13 +219,13 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <tag-class>info.magnolia.cms.taglibs.Out</tag-class>
     <body-content>empty</body-content>
     <description>
-      Writes out the content of a nodeData or - for nodeData of type binary - information of the nodeData
+      Writes out the content of a nodeData or - for nodeData of type binary - information of the nodeData.
     </description>
     <attribute>
       <name>nodeDataName</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>the name of the nodeData you wish to write out (required). There are following special values supported
+      <description>The name of the nodeData you wish to write out (required). There are following special values supported
         name, uuid, path, handle. If you specify one of special values, the behavior changes to output the name, uuid,
         path, or handle of the node instead of the value it stores.
       </description>
@@ -243,7 +235,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Default value used if the expresion evaluates to null or an empty string
+        Default value used if the expresion evaluates to null or an empty string.
       </description>
     </attribute>
     <attribute>
@@ -251,43 +243,60 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        # Inside a "contentNodeIterator" * if not set, the current content node is taken. * if set empty
-        (contentNodeName=""), the top level content is taken. * if specified, the named content node is taken. # Outside
-        a "contentNodeIterator" * if not set or empty: the top level content is taken * if specified, the named content
-        node is taken
+        Inside a "contentNodeIterator": if not set, the current content node is taken. If set empty
+        (contentNodeName=""), the top level content is taken. If specified, the named content node is taken. Outside
+        a "contentNodeIterator": if not set or empty: the top level content is taken. If specified, the named content
+        node is taken.
       </description>
     </attribute>
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs".</description>
     </attribute>
     <attribute>
       <name>fileProperty</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description><![CDATA[Sets which information of a file to retrieve. Only applies for nodeDatas of type=Binary.
+        Supported values (sample value):
+        <ul>
+        <li><b>path (default): </b> path inlcuding the filename (/dev/mainColumnParagraphs/0/image/Alien.png)</li>
+        <li><b>name </b>: name and extension (Alien.png)</li>
+        <li><b>extension: </b> extension as is (Png)</li>
+        <li><b>extensionLowerCase: </b> extension lower case (png)</li>
+        <li><b>extensionUpperCase: </b> extension upper case (PNG)</li>
+        <li><b>nameWithoutExtension: </b> (Alien)</li>
+        <li><b>handle: </b> /dev/mainColumnParagraphs/0/image</li>
+        <li><b>icon: </b>the default icon for the type of document</li>
+        <li><b>pathWithoutName: </b> (/dev/mainColumnParagraphs/0/image.png)</li>
+        <li><b>size: </b> size in bytes (2827)</li>
+        <li><b>sizeString: </b> size in bytes, KB or MB - max. 3 digits before comma - with unit (2.7 KB)</li>
+        <li><b>contentType: </b> (image/png)</li>
+        <li><b>width: </b>image width in pixels (images only)</li>
+        <li><b>height: </b>image height in pixels (images only)</li>
+        </ul>
+      ]]>
+      </description>
     </attribute>
     <attribute>
       <name>dateLanguage</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description><![CDATA[Set which date format shall be delivered. Does only apply for nodeDatas of type=Date. Language according to <code>java.util.Locale</code>.]]></description>
     </attribute>
     <attribute>
       <name>datePattern</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>Sets the output date format, as per java.text.SimpleDateFormat. Default is "yyyy-MM-dd". Only applies for nodeDatas of type=Date.</description>
     </attribute>
     <attribute>
       <name>lineBreak</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>
-        defaults to BR-tag. Set to "" to have no line break at all, or any other value to be used as the line break.
-      </description>
+      <description><![CDATA[Determines how line breaks are converted. Defaults to "<br />". Set to "" to have no line break at all, or any other value to be used as the line break.]]></description>
     </attribute>
     <attribute>
       <name>contentNode</name>
@@ -320,19 +329,22 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Used if the uuid or path attribute is set. Defaults to website.
+        Used if the uuid or path attribute is set. Defaults to "website".
       </description>
     </attribute>
     <attribute>
       <name>uuidToLink</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>
-        Transform a uuid value to a link. The following values are supported:
-        none: no uuid to link resolving. (default value)
-        absolute: Resolve to a absolute link using the repository to uri mapping feature.
-        handle: resolve to a absolute link but do not use the repository to uri mapping.
-        relative: resolve to relative path. Path is relative to current page.
+      <description><![CDATA[
+      Transform a uuid value to a link. The following values are supported:
+      <ul>
+      <li>none: no uuid to link resolving. (default value)</li>
+      <li>absolute: Resolve to a absolute link using the repository to uri mapping feature.</li>
+      <li>handle: resolve to a absolute link but do not use the repository to uri mapping.</li>
+      <li>relative: resolve to relative path. Path is relative to current page.</li>
+      </ul>
+      ]]>
       </description>
     </attribute>
     <attribute>
@@ -340,7 +352,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Used if the uuidToLink attribute is set. The content is found in this repository. Defaults to website.
+        Used if the uuidToLink attribute is set. The content is found in this repository. Defaults to "website".
       </description>
     </attribute>
     <attribute>
@@ -421,7 +433,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>Show content in the Preview. Default is false.</description>
+      <description>Also show content in preview mode. Default is false.</description>
     </attribute>
     <example>
       <![CDATA[
@@ -441,7 +453,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>Show content in the Preview. Default is true.</description>
+      <description>Also show content in preview mode. Default is true.</description>
     </attribute>
     <example>
       <![CDATA[
@@ -456,15 +468,18 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <tag-class>info.magnolia.cms.taglibs.Include</tag-class>
     <body-content>JSP</body-content>
     <description>
-      Include a JSP. This is typically used to render a paragraph. Within contentNodeIterator, parameters are provided
+      Delegates to an appropriate ParagraphRenderer, or include a JSP.
+      This is typically used to render a paragraph. Within contentNodeIterator, parameters are provided
       automatically by the loop.
     </description>
     <attribute>
       <name>path</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>@deprecated. file to be included (e.g. /templates/jsp/x.jsp) 
-      This is deprecated: just use basic jsp tags (i.e. &lt;jsp:include/&gt;) if you need to include a jsp in your templates.
+      <description><![CDATA[
+        @deprecated file to be included (e.g. "/templates/jsp/x.jsp").
+        Just use basic jsp tags (i.e. <jsp:include/>) if you need to include a jsp in your templates.
+         ]]>
       </description>
     </attribute>
     <attribute>
@@ -472,20 +487,19 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>info.magnolia.cms.core.Content</type>
-      <description></description>
     </attribute>
     <attribute>
       <name>contentNodeName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>the name of the contentNode (i.e. paragraph) you wish to show</description>
+      <description>The name of the contentNode (i.e. paragraph) you wish to show.</description>
     </attribute>
     <attribute>
       <name>container</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>info.magnolia.cms.core.Content</type>
-      <description>@deprecated use contentNode</description>
+      <description>@deprecated use the contentNode attribute instead</description>
     </attribute>
   </tag>
   <tag>
@@ -493,21 +507,22 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <tag-class>info.magnolia.cms.taglibs.Set</tag-class>
     <body-content>empty</body-content>
     <description>Set contentNode in resource</description>
-
     <attribute>
       <name>scope</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>
+      <description><![CDATA[
         Attention this is not the jstl scope but the magnolia scope! Values are
-        local: same as paragraph
-        paragraph: the current paragraph
-        global: a globally use node (default value)
-        page: same as page
-        current: the current page
+        <ul>
+        <li>local: same as paragraph</li>
+        <li>paragraph: the current paragraph</li>
+        <li>global: a globally use node (default value)</li>
+        <li>page: same as page</li>
+        <li>current: the current page</li>
+        </ul>
+        ]]>
       </description>
     </attribute>
-
     <attribute>
       <name>forBodyOnly</name>
       <required>false</required>
@@ -516,34 +531,22 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         If true the node is unset after the end tag. Default is false.
       </description>
     </attribute>
-
     <attribute>
       <name>contentNodeName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Inside a "contentNodeIterator": if not set the current content node is taken, if set empty (contentNodeName="")
-        the top level content is taken, if specified the named content node is taken. Outside a "contentNodeIterator":
-        if not set or empty: the top level content is taken, if specified, the named content node is taken
+        Inside a "contentNodeIterator": if not set, the current content node is taken. If set empty (contentNodeName=""),
+        the top level content is taken. If specified, the named content node is taken. Outside a "contentNodeIterator":
+        if not set or empty: the top level content is taken. If specified, the named content node is taken.
       </description>
     </attribute>
-
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs"</description>
+      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs".</description>
     </attribute>
-
-    <attribute>
-      <name>content</name>
-      <required>false</required>
-      <rtexprvalue>true</rtexprvalue>
-      <description>
-        Same as contentNode but deprecated
-      </description>
-    </attribute>
-
     <attribute>
       <name>contentNode</name>
       <required>false</required>
@@ -552,57 +555,51 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         The content object to use.
       </description>
     </attribute>
-
     <attribute>
       <name>uuid</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
         The uuid to use for finding the content.
-        You must define the repository attribute if the content is not stored in the website repositoty
+        You must define the repository attribute if the content is not stored in the website repository.
       </description>
     </attribute>
-
     <attribute>
       <name>path</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
         The absolute path to the content.
-        You must define the repository attribute if the content is not stored in the website repositoty
+        You must define the repository attribute if the content is not stored in the website repository.
       </description>
     </attribute>
-
     <attribute>
       <name>repository</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Used if the uuid or path attribute is set. Defaults to website
+        Used if the uuid or path attribute is set. Defaults to "website".
       </description>
     </attribute>
-
-
     <attribute>
       <name>containerName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>@deprecated use contentNodeName</description>
+      <description>@deprecated use the contentNodeName attribute</description>
     </attribute>
-
     <attribute>
       <name>container</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>info.magnolia.cms.core.Content</type>
-      <description>@deprecated use contentNode</description>
+      <description>@deprecated use the contentNode attribute</description>
     </attribute>
   </tag>
   <tag>
     <name>contentNodeIterator</name>
     <tag-class>info.magnolia.cms.taglibs.ContentNodeIterator</tag-class>
     <body-content>JSP</body-content>
-    <description>iterate over contentNode collection</description>
+    <description>Iterate over contentNode collection.</description>
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
@@ -639,7 +636,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <rtexprvalue>true</rtexprvalue>
       <description>
         The uuid to use for finding the content.
-        You must define the repository attribute if the content is not stored in the website repositoty
+        You must define the repository attribute if the content is not stored in the website repository.
       </description>
     </attribute>
     <attribute>
@@ -648,7 +645,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <rtexprvalue>true</rtexprvalue>
       <description>
         The absolute path to the content.
-        You must define the repository attribute if the content is not stored in the website repositoty
+        You must define the repository attribute if the content is not stored in the website repository.
       </description>
     </attribute>
     <attribute>
@@ -656,7 +653,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Used if the uuid or path attribute is set. Defaults to website
+        Used if the uuid or path attribute is set. Defaults to "website".
       </description>
     </attribute>
     <attribute>
@@ -670,7 +667,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>end</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>java.lang.Integer</type>
+      <type>int</type>
       <description>Zero-based index of last item to process, inclusive.</description>
     </attribute>
     <attribute>
@@ -685,9 +682,9 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Name of variable to hold the loop status with the following properties: index – position of the current item;
-        count – number of times through the loop (starting with 1); first – boolean indicator if this is the first
-        iteration; last – boolean indicator if this is the last iteration
+        Name of variable to hold the loop status with the following properties: index: position of the current item;
+        count: number of times through the loop (starting with 1); first: boolean indicator if this is the first
+        iteration; last: boolean indicator if this is the last iteration.
       </description>
     </attribute>
     <example>
@@ -705,162 +702,155 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <name>ifLastContentNode</name>
     <tag-class>info.magnolia.cms.taglibs.IfLastContentNode</tag-class>
     <body-content>JSP</body-content>
-    <description>checks if the current container is last in collection</description>
+    <description>Checks if the current container is last in collection.</description>
   </tag>
   <tag>
     <name>ifFirstContentNode</name>
     <tag-class>info.magnolia.cms.taglibs.IfFirstContentNode</tag-class>
     <body-content>JSP</body-content>
-    <description>checks if the current container is first in the collection</description>
+    <description>Checks if the current container is first in the collection.</description>
   </tag>
   <tag>
     <name>attribute</name>
     <tag-class>info.magnolia.cms.taglibs.Attribute</tag-class>
     <body-content>empty</body-content>
-    <description>adds an attribute to the request within an includeTemplate tag</description>
+    <description>Adds an attribute to the request within an includeTemplate tag.</description>
     <attribute>
       <name>name</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
     </attribute>
     <attribute>
       <name>value</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>java.lang.Object</type>
-      <description></description>
     </attribute>
   </tag>
   <tag>
     <name>ifNotEmpty</name>
     <tag-class>info.magnolia.cms.taglibs.IfNotEmpty</tag-class>
     <body-content>JSP</body-content>
-    <description>
-      evaluates the body only if a container exitsts and / or the corresponding atom exists and is not empty
-    </description>
+    <description>Evaluates the body only if a container exitsts and / or the corresponding atom exists and is not empty.</description>
     <attribute>
       <name>nodeDataName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
     </attribute>
     <attribute>
       <name>atomName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>@deprecated</description>
     </attribute>
     <attribute>
       <name>contentNodeName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description><![CDATA[Inside a "contentNodeIterator": if not set, the current content node is taken. If set empty (contentNodeName=""), the top level content is taken. If specified, the named content node is taken. Outside a "contentNodeIterator": if not set or empty: the top level content is taken. If specified, the named content node is taken.]]></description>
     </attribute>
     <attribute>
       <name>containerName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>@deprecated use contentNode</description>
+      <description>@deprecated use the contentNodeName attribute instead.</description>
     </attribute>
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs".</description>
     </attribute>
     <attribute>
       <name>containerListName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>@deprecated use contentNodeCollectionName</description>
+      <description>@deprecated use the contentNodeCollectionName attribute instead.</description>
     </attribute>
     <attribute>
       <name>actpage</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current page instead of the current paragraph</description>
+      <description>If true we work on the current active page instead of any other node.</description>
     </attribute>
   </tag>
   <tag>
     <name>ifEmpty</name>
     <tag-class>info.magnolia.cms.taglibs.IfEmpty</tag-class>
     <body-content>JSP</body-content>
-    <description>this is exactly the opposite of the ifNotEmpty Tag</description>
+    <description>This is exactly the opposite of the ifNotEmpty tag.</description>
     <attribute>
       <name>nodeDataName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
     </attribute>
     <attribute>
       <name>atomName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>@deprecated</description>
     </attribute>
     <attribute>
       <name>contentNodeName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description><![CDATA[Inside a "contentNodeIterator": if not set, the current content node is taken. If set empty (contentNodeName=""), the top level content is taken. If specified, the named content node is taken. Outside a "contentNodeIterator": if not set or empty: the top level content is taken. If specified, the named content node is taken.]]></description>
     </attribute>
     <attribute>
       <name>containerName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>@deprecated use contentNode</description>
+      <description>@deprecated use the contentNodeName attribute instead.</description>
     </attribute>
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs".</description>
     </attribute>
     <attribute>
       <name>containerListName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>@deprecated use contentNodeCollectionName</description>
+      <description>@deprecated use the contentNodeCollectionName attribute instead.</description>
     </attribute>
     <attribute>
       <name>actpage</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current page instead of the current paragraph</description>
+      <description>If true we work on the current active page instead of any other node.</description>
     </attribute>
   </tag>
   <tag>
     <name>ifNotExisting</name>
     <tag-class>info.magnolia.cms.taglibs.IfNotExisting</tag-class>
     <body-content>JSP</body-content>
-    <description>evaluates the body only if a container and / or the corresponding atom does not exist</description>
+    <description>Evaluates the body only if a container and / or the corresponding atom does not exist.</description>
     <attribute>
       <name>nodeDataName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
     </attribute>
     <attribute>
       <name>contentNodeName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>Inside a "contentNodeIterator": if not set, the current content node is taken. If set empty (contentNodeName=""), the top level content is taken. If specified, the named content node is taken. Outside a "contentNodeIterator": if not set or empty: the top level content is taken. If specified, the named content node is taken.</description>
     </attribute>
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs".</description>
     </attribute>
     <attribute>
       <name>actpage</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current page instead of the current paragraph.</description>
+      <description>If true we work on the current active page instead of any other node.</description>
     </attribute>
   </tag>
   <tag>
@@ -872,26 +862,25 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>nodeDataName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
     </attribute>
     <attribute>
       <name>contentNodeName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>Inside a "contentNodeIterator": if not set, the current content node is taken. If set empty (contentNodeName=""), the top level content is taken. If specified, the named content node is taken. Outside a "contentNodeIterator": if not set or empty: the top level content is taken. If specified, the named content node is taken.</description>
     </attribute>
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description></description>
+      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs".</description>
     </attribute>
     <attribute>
       <name>actpage</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current page instead of the current paragraph</description>
+      <description>If true we work on the current active page instead of any other node.</description>
     </attribute>
   </tag>
   <tag>
@@ -900,41 +889,39 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <body-content>JSP</body-content>
     <description>
       Loads another page into actpage. One usage would be within a site-menu structure. loadPage does not nest pages, so
-      the corresponding unloadPage-tag will not revert to the previously loaded page, but restore actpage to the
+      the corresponding unloadPage tag will not revert to the previously loaded page, but restore actpage to the
       currently displayed page, i.e. the value it held before loadPage was called for the first time.
     </description>
     <attribute>
       <name>path</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>path of the page to be loaded</description>
+      <description>Path of the page to be loaded.</description>
     </attribute>
     <attribute>
       <name>templateName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>???</description>
     </attribute>
     <attribute>
       <name>level</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>int</type>
-      <description>???</description>
     </attribute>
   </tag>
   <tag>
     <name>loadPagePath</name>
     <tag-class>info.magnolia.cms.taglibs.LoadPagePath</tag-class>
     <body-content>JSP</body-content>
-    <description>sub tag of loadPage, its body contains the path of the page to load</description>
+    <description>Sub tag of loadPage, its body contains the path of the page to load.</description>
   </tag>
   <tag>
     <name>unloadPage</name>
     <tag-class>info.magnolia.cms.taglibs.UnloadPage</tag-class>
     <body-content>empty</body-content>
     <description>
-      The unloadPage-tag will restore actpage to the currently displayed page. This can be necessary after you have used
+      The unloadPage tag will restore actpage to the currently displayed page. This can be necessary after you have used
       loadPage to temporarily have access to a different page, e.g. for building a menu.
     </description>
   </tag>
@@ -950,24 +937,22 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Inside a "contentNodeIterator": if not set the current content node is taken, if set empty (contentNodeName="")
-        the top level content is taken, if specified the named content node is taken. Outside a "contentNodeIterator":
-        if not set or empty: the top level content is taken, if specified, the named content node is taken
+        Inside a "contentNodeIterator": if not set, the current content node is taken. If set empty (contentNodeName=""),
+        the top level content is taken. If specified, the named content node is taken. Outside a "contentNodeIterator":
+        if not set or empty: the top level content is taken. If specified, the named content node is taken.
       </description>
     </attribute>
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs"</description>
+      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs".</description>
     </attribute>
     <attribute>
       <name>content</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>
-        Same as contentNode but deprecated
-      </description>
+      <description>@deprecated use the contentNode attribute</description>
     </attribute>
     <attribute>
       <name>contentNode</name>
@@ -983,7 +968,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <rtexprvalue>true</rtexprvalue>
       <description>
         The uuid to use for finding the content.
-        You must define the repository attribute if the content is not stored in the website repositoty
+        You must define the repository attribute if the content is not stored in the website repository.
       </description>
     </attribute>
     <attribute>
@@ -992,7 +977,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <rtexprvalue>true</rtexprvalue>
       <description>
         The absolute path to the content.
-        You must define the repository attribute if the content is not stored in the website repositoty
+        You must define the repository attribute if the content is not stored in the website repository.
       </description>
     </attribute>
     <attribute>
@@ -1000,7 +985,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>
-        Used if the uuid or path attribute is set. Defaults to website
+        Used if the uuid or path attribute is set. Defaults to "website".
       </description>
     </attribute>
     <attribute>
@@ -1013,7 +998,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>scope</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Scope for the variable. Can be "page" (default), "request", "session", "application"</description>
+      <description>Scope for the declared variable. Can be "page" (default), "request", "session" or "application".</description>
     </attribute>
     <example>
       <![CDATA[
@@ -1028,7 +1013,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <name>pageIterator</name>
     <tag-class>info.magnolia.cms.taglibs.PageIterator</tag-class>
     <body-content>JSP</body-content>
-    <description>iterate over Content (page) collection</description>
+    <description>Iterate over a Content (page) collection.</description>
     <attribute>
       <name>hiddenAttribute</name>
       <required>false</required>
@@ -1043,33 +1028,31 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <name>button</name>
     <tag-class>info.magnolia.cms.taglibs.ButtonTag</tag-class>
     <body-content>empty</body-content>
-    <display-name>button</display-name>
     <description>Adds a button to a parent bar. Must be nested into a mainBar or newBar to work.</description>
     <attribute>
       <name>label</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Label for this button</description>
+      <description>Label for this button.</description>
     </attribute>
     <attribute>
       <name>dialogName</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Name of the dialog to open</description>
+      <description>Name of the dialog to open.</description>
     </attribute>
     <attribute>
       <name>position</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Where to add this button. Can be left or right. Default is left</description>
+      <description>Where to add this button. Can be "left" or "right". Default is "left".</description>
     </attribute>
   </tag>
   <tag>
     <name>query</name>
     <tag-class>info.magnolia.cms.taglibs.QueryTag</tag-class>
     <body-content>empty</body-content>
-    <display-name>query</display-name>
-    <description>Execute a query on a magnolia repository.</description>
+    <description>Executes a query on a magnolia repository.</description>
     <attribute>
       <name>var</name>
       <required>true</required>
@@ -1082,7 +1065,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>query</name>
       <required>true</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>the query</description>
+      <description>The query.</description>
     </attribute>
     <attribute>
       <name>type</name>
@@ -1094,20 +1077,19 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>repository</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>The repository to execute this query on. Defaults to "website"</description>
+      <description>The repository to execute this query on. Defaults to "website".</description>
     </attribute>
     <attribute>
       <name>nodeType</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>Nodetype for nodes to return. Defaults to "mgnl:content"</description>
+      <description>Nodetype for nodes to return. Defaults to "mgnl:content".</description>
     </attribute>
   </tag>
   <tag>
     <name>user</name>
     <tag-class>info.magnolia.cms.taglibs.UserTag</tag-class>
     <body-content>empty</body-content>
-    <display-name>user</display-name>
     <description>Set the current user (info.magnolia.cms.security.User) into a pageContext variable.</description>
     <attribute>
       <name>var</name>
