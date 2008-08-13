@@ -78,7 +78,7 @@ public class UpdateUsers extends AbstractTask {
                     Content acls = user.getChildByName("acl_users");
                     if (acls == null) {
                         // not a proper user node just skip over.
-                        log.warn("User {} doesn't seem to be properly configured. Account path is {}.", user, handle);
+                        log.warn("User {} doesn't seem to be properly configured. Account path is {}.", user.getName(), handle);
                         continue;
                     }
                     Iterator iter3 = acls.getChildren().iterator();

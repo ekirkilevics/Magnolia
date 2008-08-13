@@ -187,10 +187,14 @@ public class UserEditDialog extends ConfiguredDialog {
         node.createContent(NODE_ACLROLES, ItemType.CONTENTNODE);
         node.createContent(NODE_ACLCONFIG, ItemType.CONTENTNODE);
 
-        // give user permission to read and edit himself
+        // give user permission to edit himself
         Content u3 = aclUsers.createContent("0", ItemType.CONTENTNODE); //$NON-NLS-1$
         u3.createNodeData("path").setValue(node.getHandle() + "/*"); //$NON-NLS-1$ //$NON-NLS-2$
         u3.createNodeData("permissions").setValue(Permission.ALL); //$NON-NLS-1$
+        // give user permission to read himself
+        Content u4 = aclUsers.createContent("00", ItemType.CONTENTNODE); //$NON-NLS-1$
+        u4.createNodeData("path").setValue(node.getHandle()); //$NON-NLS-1$
+        u4.createNodeData("permissions").setValue(Permission.READ); //$NON-NLS-1$
     }
 
     protected boolean onPostSave(SaveHandler saveControl) {
