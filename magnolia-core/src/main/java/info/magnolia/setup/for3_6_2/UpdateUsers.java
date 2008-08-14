@@ -33,13 +33,14 @@
  */
 package info.magnolia.setup.for3_6_2;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.NodeTypeFilter;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
 
 import java.util.Iterator;
@@ -56,45 +57,43 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $
  *
  */
-public class UpdateUsers extends AbstractTask {
+public class UpdateUsers extends AllChildrenNodesOperation {
 
     private static Logger log = LoggerFactory.getLogger(UpdateUsers.class);
 
     public UpdateUsers() {
-        super("Updates existing user definition", "Adds right to read their own node to all existing users.");
+        super("Updates existing user definition", "Adds right to read their own node to all existing users.", ContentRepository.USERS,  "/", new NodeTypeFilter(ItemType.FOLDER));
     }
 
-    public void execute(InstallContext installContext)
-            throws TaskExecutionException {
+    public void operateOnChildNode(Content node, InstallContext installContext)
+        throws RepositoryException, TaskExecutionException {
         try {
-            HierarchyManager hm = installContext.getHierarchyManager("users");
-            Iterator iter = hm.getRoot().getChildren(ItemType.FOLDER).iterator();
+            Iterator iter = node.getChildren(ItemType.USER).iterator();
             while (iter.hasNext()) {
-                Iterator iter2 = ((Content) iter.next()).getChildren(ItemType.USER).iterator();
+                Content user = (Content) iter.next();
+                String handle = user.getHandle();
+                boolean hasAccess = false;
+                Content acls = user.getChildByName("acl_users");
+                if (acls == null) {
+                    // not a proper user node just skip over.
+                    String message = "User " + user.getName() + " doesn't seem to be properly configured. Account path is " + handle + ".";
+                    log.warn(message);
+                    installContext.warn(message);
+                    continue;
+                }
+                Iterator iter2 = acls.getChildren().iterator();
                 while (iter2.hasNext()) {
-                    Content user = (Content) iter2.next();
-                    String handle = user.getHandle();
-                    boolean hasAccess = false;
-                    Content acls = user.getChildByName("acl_users");
-                    if (acls == null) {
-                        // not a proper user node just skip over.
-                        log.warn("User {} doesn't seem to be properly configured. Account path is {}.", user.getName(), handle);
-                        continue;
+                    Content permission = (Content)iter2.next();
+                    if (handle.equals(permission.getNodeData("path").getString()) && (permission.getNodeData("permissions").getLong() >= 8)) {
+                        hasAccess = true;
+                        break;
                     }
-                    Iterator iter3 = acls.getChildren().iterator();
-                    while (iter3.hasNext()) {
-                        Content permission = (Content)iter3.next();
-                        if (handle.equals(permission.getNodeData("path").getString()) && (permission.getNodeData("permissions").getLong() >= 8)) {
-                            hasAccess = true;
-                            break;
-                        }
-                    }
-                    if (!hasAccess) {
-                        Content acl = acls.createContent(Path.getUniqueLabel(hm, acls.getHandle(), "0"), ItemType.CONTENTNODE);
-                        acl.createNodeData("path", handle);
-                        acl.createNodeData("permissions", new Long(Permission.READ));
-                        acls.save();
-                    }
+                }
+                if (!hasAccess) {
+                    Content acl = acls.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(ContentRepository.USERS), acls.getHandle(), "0"), ItemType.CONTENTNODE);
+                    acl.createNodeData("path", handle);
+                    acl.createNodeData("permissions", new Long(Permission.READ));
+                    acls.save();
                 }
             }
         } catch (RepositoryException e) {
