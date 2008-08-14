@@ -267,7 +267,7 @@ public interface Content extends Cloneable {
     /**
      * Get a collection containing child nodes which satisfies the given filter
      * @param filter
-     * @return Collection of content objects
+     * @return Collection of content objects or empty collection when no children are found.
      */
     Collection getChildren(ContentFilter filter);
 
@@ -277,7 +277,7 @@ public interface Content extends Cloneable {
      * @param filter filter for the child nodes
      * @param orderCriteria ordering for the selected child nodes; if <tt>null</tt> than no particular order of the
      * child nodes
-     * @return Collection of content objects
+     * @return Collection of content objects or empty collection when no children are found.
      */
     Collection getChildren(ContentFilter filter, Comparator orderCriteria);
 
