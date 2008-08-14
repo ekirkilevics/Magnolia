@@ -387,6 +387,13 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <type>boolean</type>
       <description>If true we work on the current active page instead of any other node.</description>
     </attribute>
+    <attribute>
+      <name>escapeXml</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <type>boolean</type>
+      <description>Determines whether output will be XML escaped.</description>
+    </attribute>
     <example>
       <![CDATA[
 <!-- EXAMPLE - outputting a nodes value into the page -->

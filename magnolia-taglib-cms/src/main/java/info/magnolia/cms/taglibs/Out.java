@@ -54,6 +54,7 @@ import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
 
@@ -123,6 +124,12 @@ public class Out extends BaseContentTag {
 
     private String lineBreak = DEFAULT_LINEBREAK;
 
+    /**
+     * If set to true, output from this tag will be escaped using XML escaping rules. Defaults
+     * to false because existing code (especially FCKEditor paragraphs) rely on that behavior.
+     */
+    private boolean escapeXml = false;
+
     private String uuidToLink = LINK_RESOLVING_NONE;
 
     private String uuidToLinkRepository = ContentRepository.WEBSITE;
@@ -146,6 +153,14 @@ public class Out extends BaseContentTag {
      */
     public void setVar(String var) {
         this.var = var;
+    }
+
+    /**
+     * Setter for <code>escapeXml</code>.
+     * @param var The var to set.
+     */
+    public void setEscapeXml(boolean escapeXml) {
+        this.escapeXml = escapeXml;
     }
 
     /**
@@ -355,6 +370,11 @@ public class Out extends BaseContentTag {
             pageContext.setAttribute(var, value, scope);
         }
         else if (value != null) {
+
+            if ( escapeXml ) {
+                value = StringEscapeUtils.escapeXml( value );
+            }
+
             JspWriter out = pageContext.getOut();
             try {
                 out.print(value);
