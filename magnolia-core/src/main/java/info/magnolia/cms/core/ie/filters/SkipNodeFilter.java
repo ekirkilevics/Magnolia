@@ -49,25 +49,52 @@ public abstract class SkipNodeFilter extends XMLFilterImpl {
     private final static String NODE_TAG = "sv:node";
     private final static String NAME_TAG = "sv:name";
 
-    private boolean skipNode;
-    /**
-     * Instantiates a new filter.
-     *
-     * @param parent
-     *            wrapped XMLReader
-     */
+    private boolean skipping;
+
+    private int skipDepth;
+
     public SkipNodeFilter(XMLReader parent) {
         super(parent);
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public void ignorableWhitespace(char[] ch, int start, int length) throws SAXException {
+        if (!skipping) {
+            ignorableWhitespace(ch, start, length);
+        }
+    }
+
+    public void characters(char[] ch, int start, int length)
+            throws SAXException {
+        if (!skipping) {
+            super.characters(ch, start, length);
+        }
+    }
+
+    public void startElement(String uri, String localName, String qName, Attributes atts) throws SAXException {
+
+        String svname = atts.getValue(NAME_TAG);
+
+        if (skipping) {
+            skipDepth++;
+            return;
+        }
+        if (NODE_TAG.equals(qName) && getFilteredNodeName().equals(svname)) {
+            skipping = true;
+            return;
+        }
+
+        super.startElement(uri, localName, qName, atts);
+    }
+
     public void endElement(String uri, String localName, String qName)
             throws SAXException {
 
-        if (skipNode && NODE_TAG.equals(qName)) {
-            skipNode = false;
+        if (skipping) {
+            if (skipDepth == 0) {
+                skipping = false;
+            } else {
+                skipDepth--;
+            }
             return;
         }
 
@@ -75,37 +102,8 @@ public abstract class SkipNodeFilter extends XMLFilterImpl {
     }
 
     /**
-     * {@inheritDoc}
-     */
-    public void characters(char[] ch, int start, int length)
-            throws SAXException {
-        if (!skipNode) {
-            super.characters(ch, start, length);
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void startElement(String uri, String localName, String qName,
-            Attributes atts) throws SAXException {
-
-        String svname = atts.getValue(NAME_TAG);
-
-        if (NODE_TAG.equals(qName) && getFilteredNodeName().equals(svname)) {
-            skipNode = true;
-        }
-
-        if (skipNode) {
-            return;
-        }
-
-        super.startElement(uri, localName, qName, atts);
-
-    }
-
-    /**
      * Implement this method to specify the name of the node you want to filter.
+     *
      * @return filtered node name
      */
     protected abstract String getFilteredNodeName();
