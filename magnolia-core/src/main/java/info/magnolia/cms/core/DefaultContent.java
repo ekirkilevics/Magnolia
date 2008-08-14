@@ -506,12 +506,13 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public Collection getChildren(String contentType, String namePattern) {
-        Collection children = new ArrayList();
+        Collection children = null;
         try {
             children = this.getChildContent(contentType, namePattern);
         }
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
+            children = new ArrayList();
         }
         return children;
     }
@@ -524,7 +525,7 @@ public class DefaultContent extends ContentHandler implements Content {
         catch (RepositoryException e) {
             log.error(e.getMessage(), e);
         }
-        if (children != null && !children.isEmpty()) {
+        if (!children.isEmpty()) {
             return (Content) children.iterator().next();
         }
         return null;
@@ -533,7 +534,7 @@ public class DefaultContent extends ContentHandler implements Content {
     /**
      * @param contentType JCR node type as configured, <code>null</code> means no filter
      * @param namePattern, <code>null</code> means no filter
-     * @return COllection of <code>Content</code> objects
+     * @return Collection of <code>Content</code> objects or empty collection when no children are found.
      * @throws RepositoryException if an error occurs
      */
     private Collection getChildContent(String contentType, String namePattern) throws RepositoryException {
