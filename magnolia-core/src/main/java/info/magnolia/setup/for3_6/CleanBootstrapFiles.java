@@ -33,6 +33,8 @@
  */
 package info.magnolia.setup.for3_6;
 
+import info.magnolia.cms.core.ie.filters.RemoveMixversionableFilter;
+
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -40,20 +42,18 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Collection;
 import java.util.Iterator;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
 import org.apache.commons.io.filefilter.TrueFileFilter;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
-import org.jdom.xpath.XPath;
+import org.apache.xml.serialize.XMLSerializer;
+import org.xml.sax.ContentHandler;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.XMLReaderFactory;
 
 
 /**
@@ -63,7 +63,7 @@ import org.jdom.xpath.XPath;
  */
 public class CleanBootstrapFiles{
 
-    public static void main(String[] args) throws FileNotFoundException, JDOMException, IOException{
+    public static void main(String[] args) throws FileNotFoundException, SAXException, IOException{
         for (Iterator iter = findFiles(new File(".")); iter.hasNext();) {
             File file = (File) iter.next();
             System.out.println("Processing: " + file);
@@ -76,7 +76,7 @@ public class CleanBootstrapFiles{
         };
     }
 
-    public static boolean cleanFile(File file) throws FileNotFoundException, JDOMException, IOException {
+    public static boolean cleanFile(File file) throws FileNotFoundException, IOException, SAXException {
         FileInputStream in = new FileInputStream(file);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         final boolean cleaned = clean(in, buffer);
@@ -93,45 +93,19 @@ public class CleanBootstrapFiles{
     public static Iterator findFiles(File root){
         return FileUtils.iterateFiles(root, new AbstractFileFilter(){
             public boolean accept(File file) {
-                return file.getName().endsWith(".xml") && file.getPath().contains(File.separator + "mgnl-bootstrap");
+                return file.getName().endsWith(".xml");
             }
         }, TrueFileFilter.TRUE);
     }
 
-    public static boolean clean(InputStream in, OutputStream out) throws JDOMException, IOException{
-        boolean modified = false;
+    public static boolean clean(InputStream in, OutputStream out) throws IOException, SAXException{
 
-        SAXBuilder builder = new SAXBuilder();
-        Document doc = builder.build(in);
-
-        String query = "//sv:property[@sv:name='jcr:mixinTypes']/sv:value[text()='mix:versionable']";
-        modified = removeElements(doc, query);
-        modified = removeElements(doc, "//sv:property[@sv:name='jcr:versionHistory']")? true : modified;
-        modified = removeElements(doc, "//sv:property[@sv:name='jcr:predecessors']")? true : modified;
-        modified = removeElements(doc, "//sv:property[@sv:name='jcr:baseVersion']")? true : modified;
-        modified = removeElements(doc, "//sv:property[@sv:name='jcr:isCheckedOut']")? true : modified;
-
-        final Format format = Format.getPrettyFormat();
-        format.setLineSeparator(System.getProperty("line.separator"));
-        new XMLOutputter(format).output(doc, out);
+        XMLReader reader = XMLReaderFactory.createXMLReader(org.apache.xerces.parsers.SAXParser.class.getName());
+        XMLReader finalReader = new RemoveMixversionableFilter(reader);
+        ContentHandler handler = new XMLSerializer(out, null);
+        finalReader.setContentHandler(handler);
+        finalReader.parse(new InputSource(in));
         return true;
    }
 
-    private static boolean removeElements(Document doc, String query) throws JDOMException {
-        XPath xpath = XPath.newInstance(query);
-        Collection nodes = xpath.selectNodes(doc.getRootElement());
-        if(nodes.isEmpty()){
-            return false;
-        }
-        for (Iterator iter = nodes.iterator(); iter.hasNext();) {
-            Element node = (Element) iter.next();
-            if(node.getParentElement().getChildren().size()==1){
-                node.getParentElement().detach();
-            }
-            else{
-                node.detach();
-            }
-        }
-        return true;
-    }
 }
