@@ -34,9 +34,8 @@
 package info.magnolia.module.workflow;
 
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.module.admininterface.AbstractAdminModule;
+import info.magnolia.module.ModuleLifecycle;
+import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.module.workflow.jcr.JCRPersistedEngine;
 import info.magnolia.module.workflow.jcr.JCRWorkItemStore;
@@ -55,7 +54,7 @@ import org.slf4j.LoggerFactory;
  * @author Nicolas Modrzyk
  * @version 3.0
  */
-public class WorkflowModule extends AbstractAdminModule {
+public class WorkflowModule implements ModuleLifecycle {
 
     private static final Logger log = LoggerFactory.getLogger(WorkflowModule.class);
 
@@ -77,23 +76,35 @@ public class WorkflowModule extends AbstractAdminModule {
      * Use life time jcr sessions or a session per operation
      */
     private boolean useLifeTimeJCRSession = true;
+    
+    
+    public void start(ModuleLifecycleContext moduleLifecycleContext) {
+        instance = this;
+        startEngine();
+        initializeWorkItemStore();
+    }
+    
+    public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+        JCRPersistedEngine engine = getEngine();
+        if (engine != null && engine.isRunning()) {
+            log.info("Stopping workflow engine..");
+            try {
+                // before try to stop purge and scheduling tasks
+                // TODO : this is already done by engine.stop() ... ?
+                ((SimpleExpressionPool) engine.getExpressionPool()).stop();
+                engine.stop();
+            }
+            catch (ServiceException se) {
+                log.error("Failed to stop Open WFE engine");
+                log.error(se.getMessage(), se);
+            }
+        }
+    }
 
     /**
      * Cleanup empty parent nodes (for expressions, workitems)
      */
     private boolean cleanup = true;
-
-    protected void onInit() {
-        try {
-            Content2BeanUtil.setProperties(this, getConfigNode());
-        }
-        catch (Content2BeanException e) {
-            log.error("can't initialize workflow module",e);
-        }
-        instance = this;
-        startEngine();
-        initializeWorkItemStore();
-    }
 
     protected void startEngine() {
         try {
@@ -115,23 +126,6 @@ public class WorkflowModule extends AbstractAdminModule {
         }
         catch (Exception e) {
             log.error("can't initialize the workflow util", e);
-        }
-    }
-
-    public void destroy() {
-        JCRPersistedEngine engine = getEngine();
-        if (engine != null && engine.isRunning()) {
-            log.info("Stopping workflow engine..");
-            try {
-                // before try to stop purge and scheduling tasks
-                // TODO : this is already done by engine.stop() ... ?
-                ((SimpleExpressionPool) engine.getExpressionPool()).stop();
-                engine.stop();
-            }
-            catch (ServiceException se) {
-                log.error("Failed to stop Open WFE engine");
-                log.error(se.getMessage(), se);
-            }
         }
     }
 
