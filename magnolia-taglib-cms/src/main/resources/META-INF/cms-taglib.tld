@@ -740,6 +740,37 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <body-content>JSP</body-content>
     <description>Evaluates the body only if a container exitsts and / or the corresponding atom exists and is not empty.</description>
     <attribute>
+      <name>inherit</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description><![CDATA[Inherit the value from parent pages, if not set in the current one.]]></description>
+    </attribute>
+    <attribute>
+      <name>repository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Used if the uuid or path attribute is set. Defaults to "website".]]></description>
+    </attribute>
+    <attribute>
+      <name>uuid</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The uuid to use for finding the content. You must define the repository attribute if the content is not stored in the website repository.]]></description>
+    </attribute>
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The absolute path to the content. You must define the repository attribute if the content is not stored in the website repository.]]></description>
+    </attribute>
+    <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The content object to use.]]></description>
+    </attribute>
+    <attribute>
       <name>nodeDataName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
@@ -787,6 +818,37 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <tag-class>info.magnolia.cms.taglibs.IfEmpty</tag-class>
     <body-content>JSP</body-content>
     <description>This is exactly the opposite of the ifNotEmpty tag.</description>
+    <attribute>
+      <name>inherit</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description><![CDATA[Inherit the value from parent pages, if not set in the current one.]]></description>
+    </attribute>
+    <attribute>
+      <name>repository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Used if the uuid or path attribute is set. Defaults to "website".]]></description>
+    </attribute>
+    <attribute>
+      <name>uuid</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The uuid to use for finding the content. You must define the repository attribute if the content is not stored in the website repository.]]></description>
+    </attribute>
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The absolute path to the content. You must define the repository attribute if the content is not stored in the website repository.]]></description>
+    </attribute>
+    <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The content object to use.]]></description>
+    </attribute>
     <attribute>
       <name>nodeDataName</name>
       <required>false</required>
@@ -836,6 +898,37 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <body-content>JSP</body-content>
     <description>Evaluates the body only if a container and / or the corresponding atom does not exist.</description>
     <attribute>
+      <name>inherit</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description><![CDATA[Inherit the value from parent pages, if not set in the current one.]]></description>
+    </attribute>
+    <attribute>
+      <name>repository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Used if the uuid or path attribute is set. Defaults to "website".]]></description>
+    </attribute>
+    <attribute>
+      <name>uuid</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The uuid to use for finding the content. You must define the repository attribute if the content is not stored in the website repository.]]></description>
+    </attribute>
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The absolute path to the content. You must define the repository attribute if the content is not stored in the website repository.]]></description>
+    </attribute>
+    <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The content object to use.]]></description>
+    </attribute>
+    <attribute>
       <name>nodeDataName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
@@ -865,6 +958,37 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <tag-class>info.magnolia.cms.taglibs.IfExisting</tag-class>
     <body-content>JSP</body-content>
     <description>This is exactly the opposite of the ifNotExisting Tag.</description>
+    <attribute>
+      <name>inherit</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description><![CDATA[Inherit the value from parent pages, if not set in the current one.]]></description>
+    </attribute>
+    <attribute>
+      <name>repository</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Used if the uuid or path attribute is set. Defaults to "website".]]></description>
+    </attribute>
+    <attribute>
+      <name>uuid</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The uuid to use for finding the content. You must define the repository attribute if the content is not stored in the website repository.]]></description>
+    </attribute>
+    <attribute>
+      <name>path</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The absolute path to the content. You must define the repository attribute if the content is not stored in the website repository.]]></description>
+    </attribute>
+    <attribute>
+      <name>contentNode</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[The content object to use.]]></description>
+    </attribute>
     <attribute>
       <name>nodeDataName</name>
       <required>false</required>
