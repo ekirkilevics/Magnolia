@@ -186,6 +186,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <name>template</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
+      <description><![CDATA[Set display handler (JSP / Servlet), needs to know the relative path from WEB-INF.]]></description>
     </attribute>
     <attribute>
       <name>label</name>
@@ -204,7 +205,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>Sets the size of the button. (defaults to true) </description>
+      <description>Sets the size of the button, true for small button, false for a large one (defaults to true).</description>
     </attribute>
     <attribute>
       <name>adminOnly</name>
@@ -513,7 +514,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <name>set</name>
     <tag-class>info.magnolia.cms.taglibs.Set</tag-class>
     <body-content>empty</body-content>
-    <description>Set contentNode in resource</description>
+    <description>Set contentNode in resource.</description>
     <attribute>
       <name>scope</name>
       <required>false</required>
@@ -1213,7 +1214,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <name>pageIterator</name>
     <tag-class>info.magnolia.cms.taglibs.PageIterator</tag-class>
     <body-content>JSP</body-content>
-    <description>Iterate over a Content (page) collection.</description>
+    <description>Iterates over a Content (page) collection.</description>
     <attribute>
       <name>hiddenAttribute</name>
       <required>false</required>
@@ -1252,7 +1253,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <name>query</name>
     <tag-class>info.magnolia.cms.taglibs.QueryTag</tag-class>
     <body-content>empty</body-content>
-    <description>Executes a query on a magnolia repository.</description>
+    <description>Executes a query on a Magnolia repository.</description>
     <attribute>
       <name>var</name>
       <required>true</required>
