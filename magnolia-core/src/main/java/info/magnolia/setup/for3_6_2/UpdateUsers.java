@@ -92,7 +92,7 @@ public class UpdateUsers extends AbstractTask {
                     if (!hasAccess) {
                         Content acl = acls.createContent(Path.getUniqueLabel(hm, acls.getHandle(), "0"), ItemType.CONTENTNODE);
                         acl.createNodeData("path", handle);
-                        acl.createNodeData("permissions", Permission.READ);
+                        acl.createNodeData("permissions", new Long(Permission.READ));
                         acls.save();
                     }
                 }
