@@ -51,7 +51,7 @@ import org.slf4j.LoggerFactory;
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
-public class BaseContentTag extends TagSupport {
+public abstract class BaseContentTag extends TagSupport {
 
     /**
      * Stable serialVersionUID.
@@ -60,62 +60,64 @@ public class BaseContentTag extends TagSupport {
 
     private final static Logger log = LoggerFactory.getLogger(BaseContentTag.class);
 
-    protected String nodeDataName;
+    private String nodeDataName;
 
-    protected Content contentNode;
+    private Content contentNode;
 
-    protected String contentNodeName;
+    private String contentNodeName;
 
-    protected String contentNodeCollectionName;
+    private String contentNodeCollectionName;
 
-    protected String uuid;
+    private String uuid;
 
-    protected String path;
+    private String path;
 
-    protected String repository = ContentRepository.WEBSITE;
+    private String repository = ContentRepository.WEBSITE;
 
-    protected boolean inherit;
+    private boolean inherit;
 
     /**
      * This is historically. Meaning that we work on the page node itself even when we are in an iterator.
      */
-    protected boolean actpage;
+    private boolean actpage;
 
     /**
      * Set the node data name, e.g. "mainText".
-     * @param name
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNodeDataName(String name) {
         this.nodeDataName = name;
     }
 
     /**
-     * Set the content node name name, e.g. "01".
-     * @param name
+     * Inside a "contentNodeIterator": if not set, the current content node is taken. If set empty
+     * (contentNodeName=""), the top level content is taken. If specified, the named content node is taken. Outside
+     * a "contentNodeIterator": if not set or empty: the top level content is taken. If specified, the named content
+     * node is taken.
+     *
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentNodeName(String name) {
         this.contentNodeName = name;
     }
 
     /**
-     * Set the content node collection name name, e.g. "mainColumnParagraphs".
-     * @param name
+     * Name of the collection holding the content node, e.g. "mainColumnParagraphs".
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentNodeCollectionName(String name) {
         this.contentNodeCollectionName = name;
     }
 
     /**
-     * Setter for <code>inherit</code>.
-     * @param inherit <code>true</code> to inherit from parent pages if value is not set.
+     * Inherit the value from parent pages, if not set in the current one.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setInherit(boolean inherit) {
         this.inherit = inherit;
     }
 
     /**
-     * Get the first matching node containing a NodeData named <code>nodeDataName</code>
-     * @return the active node, or the first matching one if nodedata is null and inherit is set.
      * @deprecated Use {@link #getFirstMatchingNode()} instead
      */
     protected Content getFirtMatchingNode() {
@@ -254,13 +256,23 @@ public class BaseContentTag extends TagSupport {
         this.nodeDataName = null;
         this.contentNodeName = null;
         this.contentNodeCollectionName = null;
+        this.contentNode = null;
         this.inherit = false;
+        this.actpage = false;
+        this.uuid = null;
+        this.path = null;
+        this.repository = ContentRepository.WEBSITE;
     }
 
     public boolean isActpage() {
         return this.actpage;
     }
 
+    /**
+     * If true we work on the current active page instead of any other node.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     * @deprecated
+     */
     public void setActpage(boolean actpage) {
         this.actpage = actpage;
     }
@@ -269,6 +281,10 @@ public class BaseContentTag extends TagSupport {
         return this.repository;
     }
 
+    /**
+     * Used if the uuid or path attribute is set. Defaults to "website".
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setRepository(String repository) {
         this.repository = repository;
     }
@@ -277,6 +293,11 @@ public class BaseContentTag extends TagSupport {
         return this.uuid;
     }
 
+    /**
+     * The uuid to use for finding the content.
+     * You must define the repository attribute if the content is not stored in the website repository.
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setUuid(String uuid) {
         this.uuid = uuid;
     }
@@ -285,6 +306,11 @@ public class BaseContentTag extends TagSupport {
         return this.path;
     }
 
+    /**
+     * The absolute path to the content.
+     * You must define the repository attribute if the content is not stored in the website repository.
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setPath(String path) {
         this.path = path;
     }
@@ -293,8 +319,23 @@ public class BaseContentTag extends TagSupport {
         return this.contentNode;
     }
 
+    /**
+     * The content object to use.
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setContentNode(Content content) {
         this.contentNode = content;
     }
 
+    protected String getNodeDataName() {
+        return nodeDataName;
+    }
+
+    protected String getContentNodeName() {
+        return contentNodeName;
+    }
+
+    protected String getContentNodeCollectionName() {
+        return contentNodeCollectionName;
+    }
 }

@@ -34,6 +34,9 @@
 package info.magnolia.cms.taglibs;
 
 /**
+ * Evaluates the body only if a container exitsts and / or the corresponding atom exists and is not empty.
+ * @jsp.tag name="ifNotEmpty" body-content="JSP"
+ *
  * @author Marcel Salathe
  * @version $Revision $ ($Author $)
  */

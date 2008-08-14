@@ -385,12 +385,12 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current active page instead of any other node.</description>
+      <description>If true we work on the current active page instead of any other node. @deprecated</description>
     </attribute>
     <attribute>
       <name>escapeXml</name>
       <required>false</required>
-      <rtexprvalue>false</rtexprvalue>
+      <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
       <description>Determines whether output will be XML escaped.</description>
     </attribute>
@@ -601,22 +601,42 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <type>info.magnolia.cms.core.Content</type>
       <description>@deprecated use the contentNode attribute</description>
     </attribute>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>nodeDataName is not supported in this tag !</description>
+    </attribute>
+    <attribute>
+      <name>inherit</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description><![CDATA[Inherit the value from parent pages, if not set in the current one.]]></description>
+    </attribute>
+    <attribute>
+      <name>actpage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>If true we work on the current active page instead of any other node. @deprecated</description>
+    </attribute>
   </tag>
   <tag>
     <name>contentNodeIterator</name>
     <tag-class>info.magnolia.cms.taglibs.ContentNodeIterator</tag-class>
     <body-content>JSP</body-content>
-    <description>Iterate over contentNode collection.</description>
+    <description>Iterate over contentNode collection.
+      contentNodeIterator is used whenever you want to loop over content, typically paragraphs. A parameter
+      contentNodeCollectionName will contain the name of the contentNode you are looping over.
+      contentNodeCollectionName is created by providing a newBar with the corresponding name. This will result in
+      elements being created within that contentNode, and thus allow you to loop over these.
+    </description>
     <attribute>
       <name>contentNodeCollectionName</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <description>
-        contentNodeIterator is used whenever you want to loop over content, typically paragraphs. A parameter
-        contentNodeCollectionName will contain the name of the contentNode you are looping over.
-        contentNodeCollectionName is created by providing a newBar with the corresponding name. This will result in
-        elements being created within that contentNode, and thus allow you to loop over these.
-      </description>
+      <description>Name of the collection holding the content node, e.g. "mainColumnParagraphs".</description>
     </attribute>
     <attribute>
       <name>items</name>
@@ -693,6 +713,32 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
         count: number of times through the loop (starting with 1); first: boolean indicator if this is the first
         iteration; last: boolean indicator if this is the last iteration.
       </description>
+    </attribute>
+    <attribute>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <description>Inside a "contentNodeIterator": if not set, the current content node is taken. If set empty (contentNodeName=""), the top level content is taken. If specified, the named content node is taken. Outside a "contentNodeIterator": if not set or empty: the top level content is taken. If specified, the named content node is taken.</description>
+    </attribute>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>nodeDataName is not supported in this tag !</description>
+    </attribute>
+    <attribute>
+      <name>inherit</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description><![CDATA[Inherit the value from parent pages, if not set in the current one.]]></description>
+    </attribute>
+    <attribute>
+      <name>actpage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>If true we work on the current active page instead of any other node. @deprecated</description>
     </attribute>
     <example>
       <![CDATA[
@@ -810,7 +856,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current active page instead of any other node.</description>
+      <description>If true we work on the current active page instead of any other node. @deprecated</description>
     </attribute>
   </tag>
   <tag>
@@ -889,7 +935,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current active page instead of any other node.</description>
+      <description>If true we work on the current active page instead of any other node. @deprecated</description>
     </attribute>
   </tag>
   <tag>
@@ -950,7 +996,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current active page instead of any other node.</description>
+      <description>If true we work on the current active page instead of any other node. @deprecated</description>
     </attribute>
   </tag>
   <tag>
@@ -1011,7 +1057,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
-      <description>If true we work on the current active page instead of any other node.</description>
+      <description>If true we work on the current active page instead of any other node. @deprecated</description>
     </attribute>
   </tag>
   <tag>
@@ -1133,6 +1179,26 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
       <description>Scope for the declared variable. Can be "page" (default), "request", "session" or "application".</description>
+    </attribute>
+    <attribute>
+      <name>nodeDataName</name>
+      <required>false</required>
+      <rtexprvalue>false</rtexprvalue>
+      <description>nodeDataName is not supported in this tag !</description>
+    </attribute>
+    <attribute>
+      <name>inherit</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description><![CDATA[Inherit the value from parent pages, if not set in the current one.]]></description>
+    </attribute>
+    <attribute>
+      <name>actpage</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+      <description>If true we work on the current active page instead of any other node. @deprecated</description>
     </attribute>
     <example>
       <![CDATA[

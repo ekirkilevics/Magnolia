@@ -57,17 +57,17 @@ import java.util.Set;
 
 
 /**
- * Exposes a content node to the pagecontext as a Map of nodeData, in order to access the exposed object using jstl.
+ * Exposes a content node to the pagecontext as a Map of nodeData, in order to access the exposed object using JSTL.
  * Since JSTL doesn't allow calling a method like <code>Content.getNodeData(String)</code> the <code>Content</code>
  * is wrapped into a <code>NodeMapWrapper</code> which exposes NodeData using a map interface. This tag can be useful
- * in similar situations: <p/>
+ * in similar situations: (see @jsp.tag-example)
  *
- * <pre>
- * &lt;cms:setNode var="currentNode"/>
- * &lt;c:if test="${!empty currentNode.title}">
- *   &lt;c:out value="${currentNode.title}"/>
- * &lt;/c:if>
- * </pre>
+ * @jsp.tag name="setNode" body-content="empty"
+ * @jsp.tag-example
+ * <cms:setNode var="currentNode"/>
+ * <c:if test="${!empty currentNode.title}">
+ *   <c:out value="${currentNode.title}"/>
+ * </c:if>
  *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
@@ -96,24 +96,24 @@ public class SetNode extends BaseContentTag {
     private int scope = PageContext.PAGE_SCOPE;
 
     /**
-     * Setter fot the <code>var</code> tag attribute.
-     * @param var variable name: the content node will be added to the pagecontext with this name
+     * The content node will be added to the pagecontext with this name.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setVar(String var) {
         this.var = var;
     }
 
     /**
-     * @deprecated use setContentNode(node)
+     * @deprecated use the contentNode attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContent(Content node){
         this.setContentNode(node);
     }
 
     /**
-     * Scope for the declared variable.
-     * @param scope Can be <code>page</code>, <code>request</code>, <code>session</code> or
-     * <code>application</code><code></code>.
+     * Scope for the declared variable. Can be "page" (default), "request", "session" or "application".
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setScope(String scope) {
         if ("request".equalsIgnoreCase(scope)) { //$NON-NLS-1$
@@ -129,6 +129,13 @@ public class SetNode extends BaseContentTag {
             // default
             this.scope = PageContext.PAGE_SCOPE;
         }
+    }
+
+    /**
+     * @jsp.attribute description="nodeDataName is not supported in this tag !" required="false" rtexprvalue="false"
+     */
+    public void setNodeDataName(String name) {
+        throw new UnsupportedOperationException("nodeDataName not supported in this tag");
     }
 
     /**
@@ -156,7 +163,6 @@ public class SetNode extends BaseContentTag {
     public void release() {
         super.release();
         this.var = null;
-        this.contentNode = null;
         this.scope = PageContext.PAGE_SCOPE;
     }
 

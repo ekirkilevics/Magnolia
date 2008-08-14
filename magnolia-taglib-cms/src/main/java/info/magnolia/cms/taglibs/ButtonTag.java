@@ -42,6 +42,9 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
+ * Adds a button to a parent bar. Must be nested into a mainBar or newBar to work.
+ * @jsp.tag name="button" body-content="empty"
+ *
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
@@ -68,24 +71,24 @@ public class ButtonTag extends TagSupport {
     private String position;
 
     /**
-     * Setter for <code>dialogName</code>.
-     * @param dialogName The dialogName to set.
+     * Name of the dialog to open.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setDialogName(String dialogName) {
         this.dialogName = dialogName;
     }
 
     /**
-     * Setter for <code>label</code>.
-     * @param label The label to set.
+     * Label for this button.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setLabel(String label) {
         this.label = label;
     }
 
     /**
-     * Setter for <code>position</code>.
-     * @param position The position to set.
+     * Where to add this button. Can be "left" or "right". Default is "left".
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setPosition(String position) {
         this.position = position;

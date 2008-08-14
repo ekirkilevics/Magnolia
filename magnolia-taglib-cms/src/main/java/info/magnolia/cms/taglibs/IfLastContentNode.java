@@ -38,6 +38,10 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
+ * Checks if the current container is last in collection.
+ * 
+ * @jsp.tag name="ifLastContentNode" body-content="JSP"
+ *
  * @author Marcel Salathe
  * @author Fabrizio Giustina
  * @version $Id $

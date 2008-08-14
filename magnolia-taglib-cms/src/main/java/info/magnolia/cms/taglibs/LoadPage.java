@@ -48,9 +48,12 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Loads another page into actPage. One usage would be within a site-menu structure. loadPage does not nest pages, so
- * the corresponding unloadPage-tag will not revert to the previously loaded page, but restore actPage to the currently
+ * Loads another page into actpage. One usage would be within a site-menu structure. loadPage does not nest pages, so
+ * the corresponding unloadPage tag will not revert to the previously loaded page, but restore actpage to the currently
  * displayed page, i.e. the value it held before loadPage was called for the first time.
+ *
+ * @jsp.tag name="loadPage" body-content="JSP"
+ *
  * @author Marcel Salathe
  * @version $Revision$ ($Author$)
  */
@@ -82,24 +85,22 @@ public class LoadPage extends BodyTagSupport {
     private int level;
 
     /**
-     * Setter for the "path" tag attribute.
-     * @param path path of the page to be loaded
+     * Path of the page to be loaded.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setPath(String path) {
         this.path = path;
     }
 
     /**
-     * Setter for the "templateName" tag attribute.
-     * @param templateName
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTemplateName(String templateName) {
         this.templateName = templateName;
     }
 
     /**
-     * Setter for the "level" tag attribute.
-     * @param level
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setLevel(int level) {
         this.level = level;

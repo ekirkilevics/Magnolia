@@ -42,6 +42,9 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
+ * Set the current user (info.magnolia.cms.security.User) into a pageContext variable.
+ * @jsp.tag name="user" body-content="empty"
+ *
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
@@ -63,16 +66,16 @@ public class UserTag extends TagSupport {
     private boolean anonymous;
 
     /**
-     * Setter for <code>anonymous</code>.
-     * @param anonymous The anonymous to set.
+     * Display anonymous users as "anonymous". Default to false (variable will not be set for anonymous users)
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setAnonymous(boolean anonymous) {
         this.anonymous = anonymous;
     }
 
     /**
-     * Setter for <code>var</code>.
-     * @param var The var to set.
+     * The current user will be set to the pageContext variable with this name.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setVar(String var) {
         this.var = var;

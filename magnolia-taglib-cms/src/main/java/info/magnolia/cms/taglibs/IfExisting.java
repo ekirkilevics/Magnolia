@@ -43,6 +43,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * This is exactly the opposite of the ifNotExisting Tag.
+ * @jsp.tag name="ifExisting" body-content="JSP"
+ *
  * @author Michael Aemisegger
  * @version $Revision $ ($Author $)
  */
@@ -62,6 +65,7 @@ public class IfExisting extends BaseConditionalContentTag {
 
     /**
      * @param name , antom name to evaluate
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNodeDataName(String name) {
         this.nodeDataName = name;

@@ -40,6 +40,13 @@ import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 
 
 /**
+ * Everything between publicOnly tags will only be shown on the public instance.
+ * @jsp.tag name="publicOnly" body-content="JSP"
+ * @jsp.tag-example
+ * <cms:publicOnly>
+ *    Public now!
+ * </cms:publicOnly>
+ *
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
@@ -57,8 +64,8 @@ public class PublicOnly extends ConditionalTagSupport {
     private boolean showInPreview;
 
     /**
-     * Show in preview mode?
-     * @param showInPreview if <code>true</code> the content of the tag is shown in preview mode.
+     * Also show content in preview mode. Default is true.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setShowInPreview(boolean showInPreview) {
         this.showInPreview = showInPreview;

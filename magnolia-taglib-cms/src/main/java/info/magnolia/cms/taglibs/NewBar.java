@@ -52,6 +52,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Displays a newBar that allows you to create new paragraphs.
+ * @jsp.tag name="newBar" body-content="JSP"
+ * @jsp.tag-example
+ *     <cms:newBar contentNodeCollectionName="mainColumnParagraphs"
+ *                 paragraph="samplesTextImage,samplesDownload,samplesLink"/>
+ *
+ *
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -91,32 +98,34 @@ public class NewBar extends TagSupport implements BarTag {
     private List buttonRight;
 
     /**
-     * Set the new label.
-     * @param label
+     * Text of the button, defaults to "New".
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNewLabel(String label) {
         this.newLabel = label;
     }
 
     /**
-     * Setter for <code>adminOnly</code>.
-     * @param adminOnly The adminOnly to set.
+     * Show only in admin instance, default to true.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setAdminOnly(boolean adminOnly) {
         this.adminOnly = adminOnly;
     }
 
     /**
-     * Set working container list.
+     * New paragraphs will be stored under this node's name. You will need the name for later retrieval of contents.
      * @param name container list name
+     * @jsp.attribute required="false" rtexprvalue="true"
+     * TODO : the doc used to say that this attribute was required, although the TLD declared the opposite - quid ?
      */
     public void setContentNodeCollectionName(String name) {
         this.contentNodeCollectionName = name;
     }
 
     /**
-     * Comma separated list of paragraphs.
-     * @param list , comma separated list of all allowed paragraphs
+     * Comma separated list of allowed paragraph types.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setParagraph(String list) {
         this.paragraph = list;

@@ -52,6 +52,12 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Displays the mainBar, i.e. the bar that allows you to change the page properties and switch to preview mode. This
+ * tag also add the CSS and JS links if not previously defined, but it's recommended to add the cms:links tag to the
+ * header of the page. CSS links are not valid inside the HTML body tag.
+ * 
+ * @jsp.tag name="mainBar" body-content="JSP"
+ * 
  * @author Marcel Salathe
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
@@ -88,26 +94,34 @@ public class MainBar extends TagSupport implements BarTag {
     private List buttonRight;
 
     /**
-     * Setter for <code>label</code>.
-     * @param label The label to set.
+     * Label for the page properties button
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setLabel(String label) {
         this.label = label;
     }
 
     /**
-     * Set dialogName type.
      * @param s dialogName type
-     * @deprecated use setDialog(String s)
+     * @deprecated use the dialog attribute instead
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setParagraph(String s) {
         this.dialog = s;
     }
 
+    /**
+     * Name of the dialog for the page properties (as defined in config)
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setDialog(String dialog) {
         this.dialog = dialog;
     }
 
+    /**
+     * Set this to false if you don't want to show the AdminCentral button
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
     public void setAdminButtonVisible(boolean adminButtonVisible) {
         this.adminButtonVisible = adminButtonVisible;
     }

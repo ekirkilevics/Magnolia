@@ -50,7 +50,9 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 
 /**
- * Tags that executes a query in a Magnolia repository.
+ * Executes a query on a Magnolia repository.
+ * @jsp.tag name="query" body-content="empty"
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -87,40 +89,40 @@ public class QueryTag extends TagSupport {
     private String type = Query.XPATH;
 
     /**
-     * Setter for <code>query</code>.
-     * @param query The query to set.
+     * The query.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setQuery(String query) {
         this.query = query;
     }
 
     /**
-     * Setter for <code>type</code>.
-     * @param type The type to set.
+     * Query type: "sql" or "xpath". Defaults to xpath.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setType(String type) {
         this.type = type;
     }
 
     /**
-     * Setter for <code>var</code>.
-     * @param var The var to set.
+     * The result for this query (Collection of content objects) will be added to the pageContext with this name.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setVar(String var) {
         this.var = var;
     }
 
     /**
-     * Setter for <code>repository</code>.
-     * @param repository The repository to set.
+     * The repository to execute this query on. Defaults to "website".
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setRepository(String repository) {
         this.repository = repository;
     }
 
     /**
-     * Setter for <code>nodeType</code>.
-     * @param nodeType The nodeType to set.
+     * Nodetype for nodes to return. Defaults to "mgnl:content".
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNodeType(String nodeType) {
         this.nodeType = nodeType;

@@ -45,7 +45,9 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
- * Iterates over subpages.
+ * Iterates over a Content (page) collection.
+ * @jsp.tag name="pageIterator" body-content="JSP"
+ *
  * @author Andreas Brenk
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
@@ -105,6 +107,11 @@ public class PageIterator extends TagSupport {
         super.release();
     }
 
+    /**
+     * If a page contains a boolean property with this name and it is set to true, the page is skipped by the iterator.
+     * Defaults to "hidden".
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setHiddenAttribute(String hiddenAttribute) {
         this.hiddenAttribute = hiddenAttribute;
     }

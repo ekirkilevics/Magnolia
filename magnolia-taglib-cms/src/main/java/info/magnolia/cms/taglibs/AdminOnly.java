@@ -40,6 +40,14 @@ import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 
 
 /**
+ * Everything between adminOnly tags will only be shown on an authoring instance, not on a public instance. This
+ * allows you to provide functionality that is only available to page authors but not to the general public.
+ * @jsp.tag name="adminOnly" body-content="JSP"
+ * @jsp.tag-example
+ * <cms:adminOnly>
+ *    <cms:editBar/>
+ * </cms:adminOnly>
+ *
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)
@@ -57,8 +65,8 @@ public class AdminOnly extends ConditionalTagSupport {
     private boolean showInPreview;
 
     /**
-     * Show in preview mode?
-     * @param showInPreview if <code>true</code> the content of the tag is shown in preview mode.
+     * Also show content in preview mode. Default is false.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setShowInPreview(boolean showInPreview) {
         this.showInPreview = showInPreview;

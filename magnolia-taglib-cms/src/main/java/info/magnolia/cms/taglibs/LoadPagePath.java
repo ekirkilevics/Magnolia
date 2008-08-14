@@ -38,6 +38,9 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 
 /**
+ * Sub tag of loadPage, its body contains the path of the page to load.
+ * @jsp.tag name="loadPagePath" body-content="JSP"
+ *
  * @author Marcel Salathe
  * @version $Revision$ ($Author$)
  */

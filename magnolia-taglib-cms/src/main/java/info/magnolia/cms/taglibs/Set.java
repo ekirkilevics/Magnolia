@@ -41,6 +41,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Set contentNode in resource.
+ * @jsp.tag name="set" body-content="empty"
+ *
  * @author Sameer Charles
  * @version $Revision$ ($Author$)
  */
@@ -72,25 +75,34 @@ public class Set extends BaseContentTag {
     /**
      * Reset the former status after executing the body.
      */
-    protected boolean forBodyOnly = false;
+    private boolean forBodyOnly = false;
 
     /**
      * If forBodyOnly is true we have to reset the former status
      */
-    protected Content previousNode;
+    private Content previousNode;
     
     /**
-     * @deprecated
+     * @deprecated use the contentNode attribute
+     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
      */
     public void setContainer(Content contentNode) {
         this.setContentNode(contentNode);
     }
 
     /**
-     * @deprecated
+     * @deprecated use the contentNodeName attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContainerName(String name) {
         this.setContentNodeName(name);
+    }
+
+    /**
+     * @jsp.attribute description="nodeDataName is not supported in this tag !" required="false" rtexprvalue="false"
+     */
+    public void setNodeDataName(String name) {
+        throw new UnsupportedOperationException("nodeDataName not supported in this tag");
     }
 
     /**
@@ -147,14 +159,26 @@ public class Set extends BaseContentTag {
      */
     public void release() {
         super.release();
-        this.contentNode = null;
-        this.contentNodeName = null;
+        this.scope = SCOPE_GLOBAL;
+        this.forBodyOnly = false;
+        this.previousNode = null;
     }
     
     public String getScope() {
         return this.scope;
     }
-    
+
+    /**
+     * Attention this is not the jstl scope but the magnolia scope! Values are
+     * <ul>
+     * <li>local: same as paragraph</li>
+     * <li>paragraph: the current paragraph</li>
+     * <li>global: a globally use node (default value)</li>
+     * <li>page: same as page</li>
+     * <li>current: the current page</li>
+     * </ul>
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setScope(String scope) {
         this.scope = scope;
     }
@@ -162,7 +186,11 @@ public class Set extends BaseContentTag {
     public boolean isForBodyOnly() {
         return this.forBodyOnly;
     }
-    
+
+    /**
+     * If true the node is unset after the end tag. Default is false.
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setForBodyOnly(boolean forBodyOnly) {
         this.forBodyOnly = forBodyOnly;
     }

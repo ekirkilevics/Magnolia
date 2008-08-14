@@ -38,6 +38,9 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
+ * Adds an attribute to the request within an includeTemplate tag.
+ * @jsp.tag name="attribute" body-content="empty"
+ *
  * @author Marcel Salathe
  * @version $Revision$ ($Author$)
  */
@@ -60,6 +63,7 @@ public class Attribute extends TagSupport {
 
     /**
      * @param name name of the attribute
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setName(String name) {
         this.name = name;
@@ -67,6 +71,7 @@ public class Attribute extends TagSupport {
 
     /**
      * @param value value of the attribute
+     * @jsp.attribute required="false" rtexprvalue="true" type="java.lang.Object"
      */
     public void setValue(Object value) {
         this.value = value;

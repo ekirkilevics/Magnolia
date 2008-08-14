@@ -50,6 +50,10 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Displays an edit button.
+ *
+ * @jsp.tag name="editButton" body-content="empty"
+ *
  * @author Marcel Salathe
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)
@@ -122,8 +126,8 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * Set working contentNode.
      * @param name Container name which will be used to access/write content.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentNodeName(String name) {
         this.nodeName = name;
@@ -143,8 +147,8 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * Set working contentNode.
      * @param name , container name which will be used to access/write content.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentNodeCollectionName(String name) {
         this.nodeCollectionName = name;
@@ -161,16 +165,18 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * @deprecated set current content type, could be any developer defined name
+     * @deprecated use the paragraph attribute
      * @param type , content type
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setParFile(String type) {
         this.setParagraph(type);
     }
 
     /**
-     * set current content type, could be any developer defined name
+     * The paragraph type.
      * @param type , content type
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setParagraph(String type) {
         this.paragraph = type;
@@ -190,16 +196,17 @@ public class EditButton extends TagSupport {
 
     /**
      * Set display handler (JSP / Servlet), needs to know the relative path from WEB-INF.
+     * @TODO: deprecate this ???
      * @param path relative to WEB-INF.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTemplate(String path) {
         this.displayHandler = path;
     }
 
-
     /**
-     * Setter for <code>adminOnly</code>.
-     * @param adminOnly The adminOnly to set.
+     * Show only in admin instance, defaults to true.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setAdminOnly(boolean adminOnly) {
         this.adminOnly = adminOnly;
@@ -231,16 +238,16 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * @deprecated set the edit label (default "Edit")
-     * @param label , under which content must be stored
+     * @deprecated use the label attribute instead.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setEditLabel(String label) {
         this.setLabel(label);
     }
 
     /**
-     * set the edit label (default "Edit")
-     * @param label , under which content must be stored
+     * The button's label. (defaults to "Edit")
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setLabel(String label) {
         this.label = label;
@@ -254,8 +261,8 @@ public class EditButton extends TagSupport {
     }
 
     /**
-     * sets the size of the button
-     * @param s <code>true</code> for a small button (default), <code>false</code> for a large
+     * Sets the size of the button, true for small button, false for a large one (defaults to true).
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setSmall(boolean small) {
         this.small = small;

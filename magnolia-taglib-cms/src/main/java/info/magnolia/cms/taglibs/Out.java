@@ -59,6 +59,37 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 
 /**
+ * Writes out the content of a nodeData or - for nodeData of type binary - information of the nodeData.
+ * @jsp.tag name="out" body-content="empty"
+ * @jsp.tag-example
+ * <!-- EXAMPLE - outputting a nodes value into the page -->
+ * <!-- output the value stored in the node namd "title" -->
+ *
+ * <cms:out nodeDataName="title"/>
+ *
+ * <!-- EXAMPLE - outputting a node into an EL variable -->
+ * <!-- output the value stored in the node namd "myprop" to a variable named "check" -->
+ * <!-- thus exposing it to EL functionality -->
+ *
+ * <cms:out nodeDataName="myprop" var="check"/>
+ * <c:if test="${check == 'ok'}">
+ * done
+ * </if>
+ *
+ * <!-- EXAMPLE - outputing a link from a uuid stored in a node -->
+ * <!-- output a relative link to the page whose UUID is stored in the node named "link" to a variable "relative_link" -->
+ *
+ * <cms:out nodeDataName="link" var="relative_link uuidToLink="relative" />
+ * <a href="${relative_link}">go to page</a>
+ *
+ * <!-- EXAMPLE - writing a binary file's URL out as a variable -->
+ * <!-- this example shows how to display an image stored in the content repository using cms:out -->
+ *
+ * <cms:ifNotEmpty nodeDataName="image">
+ * <cms:out nodeDataName="image" var="imageurl" />
+ * <img class="navIcon" src="${pageContext.request.contextPath}${imageurl}" />
+ * </cms:ifNotEmpty>
+ *
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
@@ -66,22 +97,22 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 public class Out extends BaseContentTag {
 
     /**
-     * Facke nodeDataName returning the node's name.
+     * Fake nodeDataName returning the node's name.
      */
     public static final String NODE_NAME_NODEDATANAME = "name";
 
     /**
-     * Facke nodeDataName returning the node's handle.
+     * Fake nodeDataName returning the node's handle.
      */
     private static final String PATH_NODEDATANAME = "path";
 
     /**
-     * Facke nodeDataName returning the node's handle.
+     * Fake nodeDataName returning the node's handle.
      */
     private static final String HANDLE_NODEDATANAME = "handle";
 
     /**
-     * Facke nodeDataName returning the node's uuid.
+     * Fake nodeDataName returning the node's uuid.
      */
     private static final String UUID_NODEDATANAME = "uuid";
 
@@ -124,10 +155,6 @@ public class Out extends BaseContentTag {
 
     private String lineBreak = DEFAULT_LINEBREAK;
 
-    /**
-     * If set to true, output from this tag will be escaped using XML escaping rules. Defaults
-     * to false because existing code (especially FCKEditor paragraphs) rely on that behavior.
-     */
     private boolean escapeXml = false;
 
     private String uuidToLink = LINK_RESOLVING_NONE;
@@ -148,24 +175,37 @@ public class Out extends BaseContentTag {
     private int scope = PageContext.PAGE_SCOPE;
 
     /**
-     * Setter for <code>var</code>.
-     * @param var The var to set.
+     * The name of the nodeData you wish to write out (required). There are following special values supported
+     * name, uuid, path, handle. If you specify one of special values, the behavior changes to output the name, uuid,
+     * path, or handle of the node instead of the value it stores.
+     * @jsp.attribute required="true" rtexprvalue="true"
+     * TODO ... this is just overriding BaseContentTag.setNodeDataName() to set proper description and attributes ... :(
+     */
+    public void setNodeDataName(String name) {
+        super.setNodeDataName(name);
+    }
+
+    /**
+     * If set, the result of the evaluation will be set to a variable named from this attribute (and in the scope
+     * defined using the "scope" attribute, defaulting to PAGE) instead of being written directly to the page.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setVar(String var) {
         this.var = var;
     }
 
     /**
-     * Setter for <code>escapeXml</code>.
-     * @param var The var to set.
+     * Determines whether output will be XML escaped.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setEscapeXml(boolean escapeXml) {
         this.escapeXml = escapeXml;
     }
 
     /**
-     * Setter for <code>scope</code>.
-     * @param scope The scope to set.
+     * Scope for the attribute named from the "var" parameter.
+     * Setting this attribute doesn't have any effect if "var" is not set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setScope(String scope) {
         if ("request".equalsIgnoreCase(scope)) { //$NON-NLS-1$
@@ -184,15 +224,9 @@ public class Out extends BaseContentTag {
     }
 
     /**
-     * <p>
-     * set which information of a file to retrieve
-     * </p>
-     * <p>
-     * does only apply for nodeDatas of type=Binary
-     * </p>
-     * <p>
-     * supported values (sample value):
-     * </p>
+     * Sets which information of a file to retrieve. Only applies for nodeDatas of type=Binary.
+     * Supported values (sample value):
+     *
      * <ul>
      * <li><b>path (default): </b> path inlcuding the filename (/dev/mainColumnParagraphs/0/image/Alien.png)</li>
      * <li><b>name </b>: name and extension (Alien.png)</li>
@@ -209,19 +243,16 @@ public class Out extends BaseContentTag {
      * <li><b>width: </b>image width in pixels (images only)</li>
      * <li><b>height: </b>image height in pixels (images only)</li>
      * </ul>
-     * </p>
-     * @param property
+     *
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setFileProperty(String property) {
         this.fileProperty = property;
     }
 
     /**
-     * <p/> set which date format shall be delivered
-     * </p>
-     * <p/> does only apply for nodeDatas of type=Date
-     * </p>
-     * <p/> language according to java.text.SimpleDateFormat:
+     * Sets the output date format, as per java.text.SimpleDateFormat. Default is "yyyy-MM-dd".
+     * Only applies for nodeDatas of type=Date.
      * <ul>
      * <li><b>G </b> Era designator Text AD
      * <li><b>y </b> Year Year 1996; 96
@@ -243,8 +274,7 @@ public class Out extends BaseContentTag {
      * <li><b>z </b> Time zone General time zone Pacific Standard Time; PST; GMT-08:00
      * <li><b>Z </b> Time zone RFC 822 time zone -0800
      * </ul>
-     * </p>
-     * @param pattern , default is yyyy-MM-dd
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setDatePattern(String pattern) {
         this.datePattern = pattern;
@@ -253,22 +283,23 @@ public class Out extends BaseContentTag {
     /**
      * Set which date format shall be delivered. Does only apply for nodeDatas of type=Date. Language according to
      * <code>java.util.Locale</code>.
-     * @param language
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setDateLanguage(String language) {
         this.dateLanguage = language;
     }
 
     /**
-     * Set the lineBreak String.
-     * @param lineBreak
+     * Determines how line breaks are converted. Defaults to "<br />".
+     * Set to "" to have no line break at all, or any other value to be used as the line break.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setLineBreak(String lineBreak) {
         this.lineBreak = lineBreak;
     }
 
     protected String getFilePropertyValue(Content contentNode) {
-        NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(contentNode, this.nodeDataName);
+        NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(contentNode, this.getNodeDataName());
         FileProperties props = new FileProperties(contentNode, nodeData.getName());
         String value = props.getProperty(this.fileProperty);
         return value;
@@ -285,7 +316,7 @@ public class Out extends BaseContentTag {
             return EVAL_PAGE;
         }
 
-        NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(contentNode, this.nodeDataName);
+        NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(contentNode, this.getNodeDataName());
 
         String value = null;
 
@@ -293,13 +324,13 @@ public class Out extends BaseContentTag {
         if (!nodeData.isExist()) {
             // either a special case was passed in as the nodeDataName, or a bad value was passed in for the name
             // - handle either case here
-            if(UUID_NODEDATANAME.equals(this.nodeDataName)){
+            if(UUID_NODEDATANAME.equals(this.getNodeDataName())){
                 value = contentNode.getUUID();
             }
-            else if(PATH_NODEDATANAME.equals(this.nodeDataName) || HANDLE_NODEDATANAME.equals(this.nodeDataName)){
+            else if(PATH_NODEDATANAME.equals(this.getNodeDataName()) || HANDLE_NODEDATANAME.equals(this.getNodeDataName())){
                 value = contentNode.getHandle();
             }
-            else if(NODE_NAME_NODEDATANAME.equals(this.nodeDataName)){
+            else if(NODE_NAME_NODEDATANAME.equals(this.getNodeDataName())){
                 value = contentNode.getName();
             }
             else if(StringUtils.isNotEmpty(this.getDefaultValue())){
@@ -406,6 +437,17 @@ public class Out extends BaseContentTag {
         return this.uuidToLink;
     }
 
+
+    /**
+     * Transform a uuid value to a link. The following values are supported:
+     * <ul>
+     *   <li>none: no uuid to link resolving. (default value)</li>
+     *   <li>absolute: Resolve to a absolute link using the repository to uri mapping feature.</li>
+     *   <li>handle: resolve to a absolute link but do not use the repository to uri mapping.</li>
+     *   <li>relative: resolve to relative path. Path is relative to current page.</li>
+     * </ul>
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setUuidToLink(String uuidToLink) {
         this.uuidToLink = uuidToLink;
     }
@@ -414,6 +456,10 @@ public class Out extends BaseContentTag {
         return this.uuidToLinkRepository;
     }
 
+    /**
+     * Used if the uuidToLink attribute is set. The content is found in this repository. Defaults to "website".
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setUuidToLinkRepository(String uuidToLinkRepository) {
         this.uuidToLinkRepository = uuidToLinkRepository;
     }
@@ -422,6 +468,10 @@ public class Out extends BaseContentTag {
         return this.defaultValue;
     }
 
+    /**
+     * Default value used if the expresion evaluates to null or an empty string.
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
     }

@@ -43,6 +43,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * This is exactly the opposite of the ifNotEmpty tag.
+ * @jsp.tag name="ifEmpty" body-content="JSP"
+ *
  * @author Marcel Salathe
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)
@@ -63,6 +66,7 @@ public class IfEmpty extends BaseConditionalContentTag {
 
     /**
      * @deprecated
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setAtomName(String name) {
         this.setNodeDataName(name);
@@ -70,21 +74,23 @@ public class IfEmpty extends BaseConditionalContentTag {
 
     /**
      * @param name , antom name to evaluate
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNodeDataName(String name) {
         this.nodeDataName = name;
     }
 
     /**
-     * @deprecated
+     * @deprecated use the contentNodeName attribute instead.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContainerName(String name) {
         this.setContentNodeName(name);
     }
 
     /**
-     * @param name , contentNode collection name
-     * @deprecated
+     * @deprecated use the contentNodeCollectionName attribute instead.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContainerListName(String name) {
         this.setContentNodeCollectionName(name);
@@ -100,7 +106,7 @@ public class IfEmpty extends BaseConditionalContentTag {
             return true;
         }
 
-        if (StringUtils.isNotEmpty(this.contentNodeCollectionName)) {
+        if (StringUtils.isNotEmpty(this.getContentNodeCollectionName())) {
             return !node.hasChildren();
         }
         

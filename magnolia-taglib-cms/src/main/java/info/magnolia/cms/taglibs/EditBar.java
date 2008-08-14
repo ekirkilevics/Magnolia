@@ -49,6 +49,11 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 
 /**
+ * Displays Magnolia editBar which allows you to edit a paragraph. This tag is often used within
+ * contentNodeIterator, which in turn will set all relevant parameters automatically.
+ *
+ * @jsp.tag name="editBar" body-content="JSP"
+ *
  * @author Sameer Charles
  * @author Marcel Salathe
  * @version $Revision$ ($Author$)
@@ -78,56 +83,58 @@ public class EditBar extends TagSupport {
     private boolean adminOnly = true;
 
     /**
-     * Set working contentNode.
-     * @param name container name which will be used to access/write content.
+     * The contentNode (i.e. paragraph) you wish to edit.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentNodeName(String name) {
         this.nodeName = name;
     }
 
     /**
-     * Set working contentNode.
-     * @param name container name which will be used to access/write content.
+     * The contentNode collection.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentNodeCollectionName(String name) {
         this.nodeCollectionName = name;
     }
 
     /**
-     * Set current content type, could be any developer defined name.
-     * @param type content type.
+     * Name of paragraph (as defined in config). Does not
+     * have to be set inside "contentNodeIterator".
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
-    public void setParagraph(String type) {
-        this.paragraph = type;
+    public void setParagraph(String paragraph) {
+        this.paragraph = paragraph;
     }
 
     /**
-     * Set the edit label (defaults to "Edit").
-     * @param label of the Edit button.
+     * The text of the edit button, defaults to "Edit".
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setEditLabel(String label) {
         this.editLabel = label;
     }
 
     /**
-     * Set the delete label (defaults to "Delete").
-     * @param label of the Delete button.
+     * The text of the delete button, defaults to "Delete". Use "" to get no delete button.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setDeleteLabel(String label) {
         this.deleteLabel = label;
     }
 
     /**
-     * Set the move label (defaults to "Move").
-     * @param label of the move.
+     * The text of the move button, defaults to "Move". Use "" to get no move button.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setMoveLabel(String label) {
         this.moveLabel = label;
     }
 
     /**
-     * Setter for <code>adminOnly</code>.
+     * Show only in admin instance, default to true.
      * @param adminOnly The adminOnly to set.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setAdminOnly(boolean adminOnly) {
         this.adminOnly = adminOnly;

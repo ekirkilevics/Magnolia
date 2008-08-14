@@ -55,6 +55,20 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Iterate over contentNode collection. contentNodeIterator is used whenever you want to loop over content, typically paragraphs. A parameter
+        contentNodeCollectionName will contain the name of the contentNode you are looping over.
+        contentNodeCollectionName is created by providing a newBar with the corresponding name. This will result in
+        elements being created within that contentNode, and thus allow you to loop over these.
+
+ * @jsp.tag name="contentNodeIterator" body-content="JSP"
+ * @jsp.tag-example
+ * <cms:contentNodeIterator contentNodeCollectionName="mainColumnParagraphs">
+ *   <cms:adminOnly>
+ *     <cms:editBar/>
+ *   </cms:adminOnly>
+ *   <cms:includeTemplate/>
+ * </cms:contentNodeIterator>
+ *
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @author David Smith
@@ -144,40 +158,62 @@ public class ContentNodeIterator extends BaseContentTag {
     private boolean restorePreviousState = false;
 
     /**
-     * @param index index to begin with
+     * Zero-based index of first item to process, inclusive.
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setBegin(int index) {
         this.begin = index;
     }
 
     /**
-     * @param index index to end at
+     * Zero-based index of last item to process, inclusive.
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setEnd(Integer index) {
         this.end = index;
     }
 
     /**
-     * @param step to jump to
+     * Process every stepth element (e.g 2 = every second element).
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setStep(int step) {
         this.step = step;
     }
 
     /**
-     * Setter for <code>varStatus</code>.
-     * @param varStatus The varStatus to set.
+     * Name of variable to hold the loop status with the following properties: index: position of the current item;
+     *  count: number of times through the loop (starting with 1); first: boolean indicator if this is the first
+     *  iteration; last: boolean indicator if this is the last iteration.
+     *
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setVarStatus(String varStatus) {
         this.varStatus = varStatus;
     }
 
     /**
-     * Setter for <code>items</code>.
-     * @param items The items to set.
+     * if this attribute is set, the tag will iterate on the collection directly passed here instead of fetching the
+     * collection named by contentNodeCollectionName. This collection must contains info.magnolia.cms.core.Content
+     * items.
+     * @jsp.attribute required="false" rtexprvalue="true" type="java.util.Collection"
      */
     public void setItems(Collection items) {
         this.items = items;
+    }
+
+    /**
+     * @jsp.attribute description="nodeDataName is not supported in this tag !" required="false" rtexprvalue="false"
+     */
+    public void setNodeDataName(String name) {
+        throw new UnsupportedOperationException("nodeDataName not supported in this tag");
+    }
+
+    /**
+     * TODO : provide relevant doc for this attribute -- only overriden to do so.
+     */
+    public void setContentNodeName(String name) {
+        super.setContentNodeName(name);
     }
 
     /**
@@ -279,12 +315,9 @@ public class ContentNodeIterator extends BaseContentTag {
 
         pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, new Integer(this.count), PageContext.REQUEST_SCOPE);
 
-        pageContext.setAttribute(
-            ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME,
-            this.contentNodeCollectionName,
-            PageContext.REQUEST_SCOPE);
+        pageContext.setAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME, getContentNodeCollectionName(), PageContext.REQUEST_SCOPE);
 
-        Resource.setLocalContentNodeCollectionName(request, this.contentNodeCollectionName);
+        Resource.setLocalContentNodeCollectionName(request, getContentNodeCollectionName());
 
         this.contentNodeIterator = children.iterator();
         for (int i = 0; i < begin; i++) {
@@ -358,7 +391,7 @@ public class ContentNodeIterator extends BaseContentTag {
      * @see javax.servlet.jsp.tagext.TagSupport#release()
      */
     public void reset() {
-        this.contentNodeCollectionName = null;
+        setContentNodeCollectionName(null); // TODO : is this correct - here ?
         this.contentNodeIterator = null;
         this.begin = 0;
         this.end = null;

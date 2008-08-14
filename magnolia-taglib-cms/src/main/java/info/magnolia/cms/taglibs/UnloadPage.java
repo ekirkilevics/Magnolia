@@ -41,6 +41,11 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
 
 
 /**
+ * The unloadPage tag will restore actpage to the currently displayed page. This can be necessary after you have used
+ * loadPage to temporarily have access to a different page, e.g. for building a menu.
+ *
+ * @jsp.tag name="unloadPage" body-content="empty"
+ *
  * @author Marcel Salathe
  * @version $Revision$ ($Author$)
  */

@@ -46,6 +46,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 
 /**
+ * Delegates to an appropriate ParagraphRenderer, or include a JSP.
+ * This is typically used to render a paragraph. Within contentNodeIterator, parameters are provided
+ * automatically by the loop.
+ * @jsp.tag name="includeTemplate" body-content="JSP"
+ *
  * @author marcel Salathe
  * @author Sameer Charles
  * @author Fabrizio Giustina
@@ -81,33 +86,34 @@ public class Include extends BodyTagSupport {
     private String contentNodeName;
 
     /**
-     * @deprecated
+     * @deprecated use the contentNode attribute instead
      * @see #setContentNode(Content)
+     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
      */
     public void setContainer(Content contentNode) {
         this.setContentNode(contentNode);
     }
 
     /**
-     * Set the content object.
      * @param contentNode the instance contentNode (i.e. paragraph) you wish to show
+     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
      */
     public void setContentNode(Content contentNode) {
         this.contentNode = contentNode;
     }
 
     /**
-     * Set the file to be included.
-     * @param path file to be included (e.g. /templates/jsp/x.jsp)
-     * @deprecated this only includes a jsp file, use the default jsp tags to do this
+     * @deprecated file to be included (e.g. "/templates/jsp/x.jsp").
+     * Just use basic jsp tags (i.e. <jsp:include/>) if you need to include a jsp in your templates. 
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setPath(String path) {
         this.path = path;
     }
 
     /**
-     * If this parameter is passed the include tag uses the defined node of the page
-     * @param contentNodeName the name of the contentNode (i.e. paragraph) you wish to show
+     * The name of the contentNode (i.e. paragraph) you wish to show.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentNodeName(String contentNodeName) {
         this.contentNodeName = contentNodeName;

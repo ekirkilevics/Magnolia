@@ -38,6 +38,9 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 
 /**
+ * Checks if the current container is first in the collection.
+ * @jsp.tag name="ifFirstContentNode" body-content="JSP"
+ *
  * @author Marcel Salathe
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)

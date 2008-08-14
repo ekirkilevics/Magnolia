@@ -47,7 +47,10 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 
 /**
- * Draws css and js links for admin controls. Separated from mainbar tag since css links must be inside html head.
+ * Adds the needed css and js links for magnolia edit controls. This tag should always bee added to html head.
+
+ * @jsp.tag name="links" body-content="empty"
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  * @since 2.1
@@ -94,9 +97,9 @@ public class LinksTag extends TagSupport {
     }
 
     /**
-     * Setter for the <code>adminOnly</code> tag attribute.
-     * @param adminOnly <code>false</code> if links should be written also in a public instance (default to
-     * <code>true</code>).
+     * Show links only in admin instance, defaults to true. You can set it to false if you want magnolia css and js
+     * files added also for a public instance.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setAdminOnly(boolean adminOnly) {
         this.adminOnly = adminOnly;

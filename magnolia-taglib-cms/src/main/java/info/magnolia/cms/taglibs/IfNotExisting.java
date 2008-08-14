@@ -34,6 +34,10 @@
 package info.magnolia.cms.taglibs;
 
 /**
+ * Evaluates the body only if a container and / or the corresponding atom does not exist.
+ * 
+ * @jsp.tag name="ifNotExisting" body-content="JSP"
+ *
  * @author Marcel Salathe
  * @version $Revision$ ($Author$)
  */
