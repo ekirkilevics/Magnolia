@@ -33,17 +33,39 @@
  */
 package info.magnolia.cms.core.ie.filters;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.AttributesImpl;
+import org.xml.sax.helpers.XMLFilterImpl;
+
+import com.sun.org.apache.xalan.internal.xsltc.runtime.AttributeList;
 
 
 /**
- * A filter that removed "mix:versionable" from jcr:mixinTypes while importing xml files. Can be used to automatically
- * adapt version 3.5 xml files to magnolia 3.6 during bootstrap or activation. Not enabled by default, you need to
- * modify DataTransporter in order to use it (see the comments in DataTransporter.importXmlStream())
+ * A filter that removed "mix:versionable" from jcr:mixinTypes while importing
+ * xml files. Can be used to automatically adapt version 3.5 xml files to
+ * magnolia 3.6 during bootstrap or activation. Not enabled by default, you need
+ * to modify DataTransporter in order to use it (see the comments in
+ * DataTransporter.importXmlStream())
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
-public class RemoveMixversionableFilter extends SkipNodePropertyFilter {
+public class RemoveMixversionableFilter extends XMLFilterImpl {
+
+    private boolean inMixinTypes = false;
+
+    private boolean inValue = false;
+
+    private List values = new ArrayList();
+
+    private String value;
+
+    private Attributes atts;
 
     /**
      * Instantiates a new MetadataUuidFilter filter.
@@ -53,16 +75,58 @@ public class RemoveMixversionableFilter extends SkipNodePropertyFilter {
         super(parent);
     }
 
-    protected String getFilteredPropertyName() {
-        return "jcr:mixinTypes";
+    public void startElement(String uri, String localName, String name, Attributes atts) throws SAXException {
+        if (name.equals("sv:property") && atts.getValue("sv:name").equals("jcr:mixinTypes")) {
+            this.atts = new AttributesImpl(atts);
+            inMixinTypes = true;
+            values.clear();
+        }
+        else if (inMixinTypes && name.equals("sv:value")) {
+            inValue = true;
+        }
+        else {
+            super.startElement(uri, localName, name, atts);
+        }
     }
 
-    protected boolean filter(String propertyValue, String parentNodeName) {
-        boolean result = "mix:versionable".equals(propertyValue);
-        if (result) {
-            log.info("Removing mix:versionable from {}", this.lastNodeName);
+    public void characters(char[] ch, int start, int length) throws SAXException {
+        if (inValue) {
+            if(value == null){
+                value = new String(ch, start, length);
+            }
+            else{
+                value += new String(ch, start, length);
+            }
         }
+        else {
+            super.characters(ch, start, length);
+        }
+    }
 
-        return result;
+    public void endElement(String uri, String localName, String name) throws SAXException {
+        if (inValue && name.equals("sv:value")) {
+            inValue = false;
+            if (!value.equals("mix:versionable")) {
+                values.add(value);
+            }
+            value = null;
+        }
+        else if (inMixinTypes && name.equals("sv:property")) {
+            inMixinTypes = false;
+            // process the buffer
+            if (values.size() > 0) {
+                super.startElement(uri, "property", "sv:property", this.atts);
+                for (Iterator iterator = values.iterator(); iterator.hasNext();) {
+                    String value = (String) iterator.next();
+                    super.startElement(uri, "value", "sv:value", new AttributeList());
+                    super.characters(value.toCharArray(), 0, value.length());
+                    super.endElement(uri, "value", "sv:value");
+                }
+                super.endElement(uri, "property", "sv:property");
+            }
+        }
+        else {
+            super.endElement(uri, localName, name);
+        }
     }
 }
