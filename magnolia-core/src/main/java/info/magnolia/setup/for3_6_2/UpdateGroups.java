@@ -57,46 +57,41 @@ import org.slf4j.LoggerFactory;
  * @version $Id: $
  *
  */
-public class UpdateUsers extends AllChildrenNodesOperation {
+public class UpdateGroups extends AllChildrenNodesOperation {
 
-    private static Logger log = LoggerFactory.getLogger(UpdateUsers.class);
+    private static Logger log = LoggerFactory.getLogger(UpdateGroups.class);
 
-    public UpdateUsers() {
-        super("User definition update", "Adds right to read their own node to all existing users.", ContentRepository.USERS,  "/", new NodeTypeFilter(ItemType.FOLDER));
+    public UpdateGroups() {
+        super("Groups definition update", "Adds right to read their own node to all existing groups.", ContentRepository.USER_GROUPS,  "/", new NodeTypeFilter(ItemType.GROUP));
     }
 
-    public void operateOnChildNode(Content node, InstallContext installContext)
+    public void operateOnChildNode(Content group, InstallContext installContext)
         throws RepositoryException, TaskExecutionException {
         try {
-            Iterator iter = node.getChildren(ItemType.USER).iterator();
-            while (iter.hasNext()) {
-                Content user = (Content) iter.next();
-                String handle = user.getHandle();
-                boolean hasAccess = false;
-                Content acls = user.getChildByName("acl_users");
-                if (acls == null) {
-                    // not a proper user node just skip over.
-                    installContext.warn("User " + user.getName() + " doesn't seem to be properly configured. Account path is " + handle + ".");
-                    continue;
+            String handle = group.getHandle();
+            boolean hasAccess = false;
+            Content acls = group.getChildByName("acl_usergroups");
+            if (acls == null) {
+                acls = group.createContent("acl_usergroups", ItemType.CONTENTNODE);
+                group.save();
+            }
+            Iterator iter2 = acls.getChildren().iterator();
+            while (iter2.hasNext()) {
+                Content permission = (Content)iter2.next();
+                if (handle.equals(permission.getNodeData("path").getString()) && (permission.getNodeData("permissions").getLong() >= Permission.READ)) {
+                    hasAccess = true;
+                    break;
                 }
-                Iterator iter2 = acls.getChildren().iterator();
-                while (iter2.hasNext()) {
-                    Content permission = (Content)iter2.next();
-                    if (handle.equals(permission.getNodeData("path").getString()) && (permission.getNodeData("permissions").getLong() >= Permission.READ)) {
-                        hasAccess = true;
-                        break;
-                    }
-                }
-                if (!hasAccess) {
-                    Content acl = acls.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(ContentRepository.USERS), acls.getHandle(), "0"), ItemType.CONTENTNODE);
-                    acl.createNodeData("path", handle);
-                    acl.createNodeData("permissions", new Long(Permission.READ));
-                    acls.save();
-                }
+            }
+            if (!hasAccess) {
+                Content acl = acls.createContent(Path.getUniqueLabel(installContext.getHierarchyManager(ContentRepository.USER_GROUPS), acls.getHandle(), "0"), ItemType.CONTENTNODE);
+                acl.createNodeData("path", handle);
+                acl.createNodeData("permissions", new Long(Permission.READ));
+                acls.save();
             }
         } catch (RepositoryException e) {
             log.error(e.getMessage(), e);
-            throw new TaskExecutionException("Failed to update user permissions. See log file for more details.");
+            throw new TaskExecutionException("Failed to update group permissions. See log file for more details.");
         }
     }
 }
