@@ -125,6 +125,7 @@ public class UserEditDialog extends ConfiguredDialog {
 
         // replace UUID with Path for groups and roles
         DialogControlImpl control = dialog.getSub("groups");
+        // it is ok to use system context here as long as it is used only to retrieve UUIDs of nodes we are interested in
         HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_GROUPS);
         List values = control.getValues();
         for (int index = 0; index < values.size(); index++) {
@@ -143,6 +144,7 @@ public class UserEditDialog extends ConfiguredDialog {
         }
 
         control = dialog.getSub("roles");
+        // it is ok to use system context here as long as it is used only to retrieve UUIDs of nodes we are interested in
         HierarchyManager rolesHM = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USER_ROLES);
         values = control.getValues();
         for (int index = 0; index < values.size(); index++) {
@@ -201,9 +203,9 @@ public class UserEditDialog extends ConfiguredDialog {
 
         Content node = this.getStorageNode();
 
-        HierarchyManager groupsHM = MgnlContext.getSystemContext().getHierarchyManager(
+        HierarchyManager groupsHM = MgnlContext.getHierarchyManager(
             ContentRepository.USER_GROUPS);
-        HierarchyManager rolesHM = MgnlContext.getSystemContext().getHierarchyManager(
+        HierarchyManager rolesHM = MgnlContext.getHierarchyManager(
             ContentRepository.USER_ROLES);
 
         try {
