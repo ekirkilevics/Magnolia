@@ -303,6 +303,31 @@
         <sv:value>2007-04-27T14:46:06.350+02:00</sv:value>
       </sv:property>
     </sv:node>
+    <sv:node sv:name="0">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:contentNode</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+        <sv:value>mix:lockable</sv:value>
+      </sv:property>
+      <sv:property sv:name="jcr:uuid" sv:type="String">
+        <sv:value>973003c1-1510-4c79-a170-f9b814dc8f94</sv:value>
+      </sv:property>
+      <sv:property sv:name="path" sv:type="String">
+        <sv:value>/developer</sv:value>
+      </sv:property>
+      <sv:property sv:name="permissions" sv:type="Long">
+        <sv:value>8</sv:value>
+      </sv:property>
+      <sv:node sv:name="MetaData">
+        <sv:property sv:name="jcr:primaryType" sv:type="Name">
+          <sv:value>mgnl:metaData</sv:value>
+        </sv:property>
+        <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+          <sv:value>2007-10-10T12:09:08.477+02:00</sv:value>
+        </sv:property>
+      </sv:node>
+    </sv:node>
   </sv:node>
   <sv:node sv:name="acl_mgnlSystem">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
