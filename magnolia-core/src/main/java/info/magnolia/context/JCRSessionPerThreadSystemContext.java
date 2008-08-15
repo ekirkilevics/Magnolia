@@ -58,6 +58,7 @@ public class JCRSessionPerThreadSystemContext extends AbstractSystemContext impl
     }
 
     public void releaseThread() {
+        //FIXME: MAGNOLIA-2324
         getRepositoryStrategy().release();
         repositoryStrategyThreadLocal.set(null);
     }
