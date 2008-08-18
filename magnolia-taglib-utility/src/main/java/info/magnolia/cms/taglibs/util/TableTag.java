@@ -48,6 +48,10 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Draws an html table.
+ * 
+ * @jsp.tag name="table" body-content="JSP"
+ *
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)
  */
@@ -69,7 +73,7 @@ public class TableTag extends BodyTagSupport {
 
     /**
      * Setter for <code>header</code>.
-     * @param header show header
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setHeader(boolean header) {
         this.header = header;
@@ -77,7 +81,7 @@ public class TableTag extends BodyTagSupport {
 
     /**
      * Setter for <code>class</code>.
-     * @param value html attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setClass(String value) {
         this.htmlAttributes.put("class", value);
@@ -85,7 +89,7 @@ public class TableTag extends BodyTagSupport {
 
     /**
      * Setter for <code>style</code>.
-     * @param value html attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStyle(String value) {
         this.htmlAttributes.put("style", value);
@@ -93,7 +97,7 @@ public class TableTag extends BodyTagSupport {
 
     /**
      * Setter for <code>id</code>.
-     * @param value html attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setId(String value) {
         this.htmlAttributes.put("id", value);
@@ -101,7 +105,7 @@ public class TableTag extends BodyTagSupport {
 
     /**
      * Setter for <code>cellspacing</code>.
-     * @param value html attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setCellspacing(String value) {
         this.htmlAttributes.put("cellspacing", value);
@@ -109,7 +113,7 @@ public class TableTag extends BodyTagSupport {
 
     /**
      * Setter for <code>cellpadding</code>.
-     * @param value html attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setCellpadding(String value) {
         this.htmlAttributes.put("cellpadding", value);

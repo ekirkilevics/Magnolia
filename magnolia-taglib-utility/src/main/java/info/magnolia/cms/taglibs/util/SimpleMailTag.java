@@ -66,7 +66,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Quick way to send a mail
+ * Quick way to send a mail.
+ * @jsp.tag name="simpleMail" body-content="JSP"
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -133,6 +135,7 @@ public class SimpleMailTag extends TagSupport {
     /**
      * Setter for <code>bcc</code>.
      * @param bcc The bcc to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setBcc(String bcc) {
         this.bcc = bcc;
@@ -141,6 +144,7 @@ public class SimpleMailTag extends TagSupport {
     /**
      * Setter for <code>replyTo</code>.
      * @param replyTo The replyTo to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setReplyTo(String replyTo) {
         this.replyTo = replyTo;
@@ -149,6 +153,7 @@ public class SimpleMailTag extends TagSupport {
     /**
      * Setter for <code>cc</code>.
      * @param cc The cc to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setCc(String cc) {
         this.cc = cc;
@@ -157,6 +162,7 @@ public class SimpleMailTag extends TagSupport {
     /**
      * Setter for <code>from</code>.
      * @param from The from to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setFrom(String from) {
         this.from = from;
@@ -165,6 +171,7 @@ public class SimpleMailTag extends TagSupport {
     /**
      * Setter for <code>nodeCollectionName</code>.
      * @param nodeCollectionName The nodeCollectionName to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNodeCollectionName(String nodeCollectionName) {
         this.nodeCollectionName = nodeCollectionName;
@@ -173,6 +180,7 @@ public class SimpleMailTag extends TagSupport {
     /**
      * Setter for <code>to</code>.
      * @param to The to to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTo(String to) {
         this.to = to;
@@ -181,6 +189,7 @@ public class SimpleMailTag extends TagSupport {
     /**
      * Setter for <code>subject</code>.
      * @param subject The subject to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setSubject(String subject) {
         this.subject = subject;
@@ -189,6 +198,7 @@ public class SimpleMailTag extends TagSupport {
     /**
      * Setter for <code>redirect</code>.
      * @param redirect The redirect to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setRedirect(String redirect) {
         this.redirect = redirect;
@@ -197,19 +207,24 @@ public class SimpleMailTag extends TagSupport {
     /**
      * Setter for <code>type</code>.
      * @param type The type to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setType(String type) {
         this.type = type;
     }
 
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
     public void setLogging(boolean trackMail) {
         this.logging = trackMail;
     }
 
-    public String getTemplate() {
-        return template;
-    }
-
+    /**
+     * Instead of the mail type you can define a template to use.
+     * This template must be registered in the mail module.
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setTemplate(String template) {
         this.template = template;
     }
@@ -405,6 +420,9 @@ public class SimpleMailTag extends TagSupport {
         return loggingDirectory;
     }
 
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setLoggingDirectory(String loggingDirectory) {
         this.loggingDirectory = loggingDirectory;
     }
@@ -413,6 +431,9 @@ public class SimpleMailTag extends TagSupport {
         return loggingEncoding;
     }
 
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setLoggingEncoding(String loggingEncoding) {
         this.loggingEncoding = loggingEncoding;
     }
@@ -421,6 +442,9 @@ public class SimpleMailTag extends TagSupport {
         return logging;
     }
 
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setLoggingExtension(String loggingExtension) {
         this.loggingExtension = loggingExtension;
     }
@@ -429,6 +453,9 @@ public class SimpleMailTag extends TagSupport {
         return loggingExtension;
     }
 
+    /**
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setLoggingFilename(String loggingFilename) {
         this.loggingFilename = loggingFilename;
     }

@@ -68,26 +68,23 @@ import org.slf4j.LoggerFactory;
  * <li><code>wrappingElement</code>: an optional html element (div, span, p, etc) to go within the <a> tag wrapping the anchor text
  * </ul>
  *
- * <pre>
- *   &lt;cmsu:simpleNavigation startLevel="3" style="mystyle"/>
- * </pre>
- *
+ * @jsp.tag name="simpleNavigation" body-content="JSP"
+ * @jsp.tag-example
+ * <cmsu:simpleNavigation startLevel="3" style="mystyle"/>
  * Will output the following:
- *
- * <pre>
- *   &lt;ul class="level3 mystyle">
- *     &lt;li>&lt;a href="...">page 1 name &lt;/a>&lt;/li>
- *     &lt;li>&lt;a href="...">page 2 name &lt;/a>&lt;/li>
- *     &lt;li class="trail">&lt;a href="...">page 3 name &lt;/a>
- *       &lt;ul class="level4">
- *         &lt;li>&lt;a href="...">subpage 1 name &lt;/a>&lt;/li>
- *         &lt;li>&lt;a href="...">subpage 2 name &lt;/a>&lt;/li>
- *         &lt;li>&lt;strong>&lt;a href="...">selected page name &lt;/a>&lt;/strong>&lt;/li>
- *       &lt;/ul>
- *     &lt;/li>
- *     &lt;li>&lt;a href="...">page 4 name &lt;/a>&lt;/li>
- *   &lt;/ul>
- * </pre>
+ * <ul class="level3 mystyle">
+ *     <li><a href="...">page 1 name </a></li>
+ *     <li><a href="...">page 2 name </a></li>
+ *     <li class="trail"><a href="...">page 3 name </a>
+ *         <ul class="level3">
+ *             <li><a href="...">subpage 1 name </a></li>
+ *             <li><a href="...">subpage 2 name </a></li>
+ *             <li><strong><a href="...">selected page name </a></strong></li>
+ *         </ul>
+ *     </li>
+ *     <li><a href="...">page 4 name </a></li>
+ * </ul>
+
  *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
@@ -228,6 +225,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Setter for the <code>startLevel</code> tag attribute.
      * @param startLevel the start level for navigation, defaults to <code>0</code>.
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setStartLevel(int startLevel) {
         this.startLevel = startLevel;
@@ -236,6 +234,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Setter for the <code>endLevel</code> tag attribute.
      * @param endLevel the end level for navigation, defaults to not used if not set
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setEndLevel(int endLevel) {
         this.endLevel = endLevel;
@@ -244,6 +243,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Setter for the <code>style</code> tag attribute.
      * @param style to apply to this menu, default is empty and not used
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStyle(String style) {
         this.style = style;
@@ -252,14 +252,17 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Setter for <code>hideInNav</code> tag attribute.
      * @param hideInNav name for the "hide in nav" nodeData.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setHideInNav(String hideInNav) {
         this.hideInNav = hideInNav;
     }
 
     /**
-     * Setter for <code>openMenu</code> tag attribute.
-     * @param openMenu name for the "open menu" nodeData.
+     * Name for the "open menu" nodeData. If a page contains a boolean property with this name and
+     * it is set to true, subpages are always shown also if the page is not selected.
+     * Defaults to "openMenu".
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setOpenMenu(String openMenu) {
         this.openMenu = openMenu;
@@ -268,6 +271,7 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Setter for <code>nofollow</code>.
      * @param nofollow The nofollow to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNofollow(String nofollow) {
         this.nofollow = nofollow;
@@ -276,14 +280,16 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * A variable in the pageContext that contains a content filter
      * @param contentFilter a content filter that will be used to determine if a given page should be drawn or not
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentFilter(String contentFilter) {
         this.contentFilter = contentFilter;
     }
 
     /**
-     * @param expandAll The expandAll to set. If the value is different than <code>EXPAND_SHOW</code> then the call
-     * expandAll is set to <code>EXPAND_ALL</code>
+     * Sitemap mode. Can be assigned the "show" value. Only showable pages will be displayed. Any other value will
+     * result in displaying all pages.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setExpandAll(String expandAll) {
         if (expandAll.equalsIgnoreCase(EXPAND_SHOW)) {
@@ -297,14 +303,16 @@ public class SimpleNavigationTag extends TagSupport {
     /**
      * Setter for <code>classProperty</code> tag attribute.
      * @param classProperty name for a page property which will be written to the css class attribute.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setClassProperty(String classProperty) {
         this.classProperty = classProperty;
     }
 
     /**
-     * Setter for <code>wrapperElement</code> tag attribute.
+     * When specified, all links will have the anchortext wrapped in the supplied element (such as "span")
      * @param wrapperElement name of an html element that will be included in the anchor, wrapping the anchortext
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setWrapperElement(String wrapperElement) {
         this.wrapperElement = wrapperElement;

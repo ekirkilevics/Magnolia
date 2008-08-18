@@ -39,6 +39,8 @@ import javax.servlet.jsp.tagext.TagSupport;
 
 /**
  * Tag which can be nested in a AHref tag in order to add parameters.
+ * @jsp.tag name="aAttribute" body-content="empty"
+ *
  * @author Marcel Salathe
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)
@@ -61,16 +63,16 @@ public class AAttribute extends TagSupport {
     private String name;
 
     /**
-     * Setter for the <code>name</code> tag attribute.
-     * @param name name of the attribute
+     * The name of the attribute.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setName(String name) {
         this.name = name;
     }
 
     /**
-     * Setter for the <code>value</code> tag attribute.
-     * @param value value of the attribute
+     * The value of the attribute.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setValue(String value) {
         this.value = value;

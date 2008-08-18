@@ -53,6 +53,8 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Draws a breadcrumbs with links to parents of the current page.
+ * @jsp.tag name="breadcrumb" body-content="JSP"
+ *
  * @author Marcel Salathe
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)
@@ -89,9 +91,6 @@ public class Breadcrumb extends TagSupport {
      */
     private boolean link = true;
 
-    /**
-     * Name for a page property which, if set, will make the page hidden in the breadcrumb.
-     */
     private String hideProperty;
 
     /**
@@ -107,6 +106,7 @@ public class Breadcrumb extends TagSupport {
     /**
      * Setter for the <code>delimeter</code> tag attribute.
      * @param delimiter delimeter between links
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setDelimiter(String delimiter) {
         this.delimiter = delimiter;
@@ -115,6 +115,7 @@ public class Breadcrumb extends TagSupport {
     /**
      * Setter for the <code>startLevel</code> tag attribute.
      * @param startLevel breadcrumb start level
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStartLevel(String startLevel) {
         this.startLevel = (new Integer(startLevel)).intValue();
@@ -123,6 +124,10 @@ public class Breadcrumb extends TagSupport {
         }
     }
 
+    /**
+     * Name for a page property which, if set, will make the page hidden in the breadcrumb.
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setHideProperty(String hideProperty) {
         this.hideProperty = hideProperty;
     }
@@ -130,6 +135,7 @@ public class Breadcrumb extends TagSupport {
     /**
      * Setter for <code>excludeCurrent</code>.
      * @param excludeCurrent if <code>true</code> the current (active) page is not included in breadcrumb.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setExcludeCurrent(boolean excludeCurrent) {
         this.excludeCurrent = excludeCurrent;
@@ -138,6 +144,7 @@ public class Breadcrumb extends TagSupport {
     /**
      * Setter for <code>link</code>.
      * @param link if <code>true</code> all pages are linked to.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setLink(boolean link) {
         this.link = link;
@@ -146,6 +153,7 @@ public class Breadcrumb extends TagSupport {
     /**
      * Setter for <code>titleProperty</code>.
      * @param titleProperty name of nodeData for page title
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTitleProperty(String titleProperty) {
         this.titleProperty = titleProperty;
@@ -154,6 +162,7 @@ public class Breadcrumb extends TagSupport {
     /**
      * Setter for <code>activeCss</code>.
      * @param activeCss The activeCss to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setActiveCss(String activeCss) {
         this.activeCss = activeCss;

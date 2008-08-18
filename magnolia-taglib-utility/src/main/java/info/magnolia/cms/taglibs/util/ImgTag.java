@@ -50,6 +50,11 @@ import java.util.Map;
 
 
 /**
+ * Writes an html img tag for the image at "nodeDataName". Also supports writing object tags for flash movies.
+ * (detected by the "swf" extension)
+ *
+ * @jsp.tag name="img" body-content="empty"
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -64,17 +69,18 @@ public class ImgTag extends BaseContentTag {
 
     private String altNodeDataName;
 
-    /**
-     * Setter for <code>nodeDataName</code>.
-     * @param nodeDataName The nodeDataName to set.
-     */
-    public void setNodeDataName(String nodeDataName) {
-        this.nodeDataName = nodeDataName;
-    }
+//    /**
+//     * Setter for <code>nodeDataName</code>.
+//     * @param nodeDataName The nodeDataName to set.
+//     */
+//    public void setNodeDataName(String nodeDataName) {
+//        this.nodeDataName = nodeDataName;
+//    }
 
     /**
      * Setter for <code>altNodeDataName</code>.
      * @param altNodeDataName The altNodeDataName to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setAltNodeDataName(String altNodeDataName) {
         this.altNodeDataName = altNodeDataName;
@@ -83,6 +89,7 @@ public class ImgTag extends BaseContentTag {
     /**
      * Setter for <code>height</code>.
      * @param height html attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setHeight(String value) {
         this.htmlAttributes.put("height", value);
@@ -91,6 +98,7 @@ public class ImgTag extends BaseContentTag {
     /**
      * Setter for <code>width</code>.
      * @param width html attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setWidth(String value) {
         this.htmlAttributes.put("width", value);
@@ -99,6 +107,7 @@ public class ImgTag extends BaseContentTag {
     /**
      * Setter for <code>class</code>.
      * @param class html attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setClass(String value) {
         this.htmlAttributes.put("class", value);
@@ -107,6 +116,7 @@ public class ImgTag extends BaseContentTag {
     /**
      * Setter for <code>style</code>.
      * @param style html attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStyle(String value) {
         this.htmlAttributes.put("style", value);
@@ -115,6 +125,7 @@ public class ImgTag extends BaseContentTag {
     /**
      * Setter for <code>id</code>.
      * @param id html attribute
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setId(String value) {
         this.htmlAttributes.put("id", value);
@@ -131,18 +142,18 @@ public class ImgTag extends BaseContentTag {
             return EVAL_PAGE;
         }
 
-        NodeData imageNodeData = contentNode.getNodeData(this.nodeDataName);
+        NodeData imageNodeData = contentNode.getNodeData(this.getNodeDataName());
 
         if (!imageNodeData.isExist()) {
             return EVAL_PAGE;
         }
 
-        FileProperties props = new FileProperties(contentNode, this.nodeDataName);
+        FileProperties props = new FileProperties(contentNode, this.getNodeDataName());
         String imgSrc = props.getProperty(FileProperties.PATH);
 
         String altNodeDataNameDef = this.altNodeDataName;
         if (StringUtils.isEmpty(altNodeDataNameDef)) {
-            altNodeDataNameDef = nodeDataName + "Alt";
+            altNodeDataNameDef = getNodeDataName() + "Alt";
         }
 
         String alt = contentNode.getNodeData(altNodeDataNameDef).getString();

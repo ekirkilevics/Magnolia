@@ -59,6 +59,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Utility tag which can be used to print out a link based on the value of a node data.
+ * @jsp.tag name="aHref" body-content="JSP"
+ * @jsp.tag-example <cmsu:aHref ... />
+ *
  * @author Marcel Salathe
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)
@@ -107,15 +110,16 @@ public class AHref extends BodyTagSupport {
 
     /**
      * @param name name of nodeData to evaluate
-     * @deprecated nodeDataName
+     * @deprecated use the nodeDataName attribute instead.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setAtomName(String name) {
         this.setNodeDataName(name);
     }
 
     /**
-     * Setter for the <code>nodeDataName</code> tag attribute.
-     * @param name name of nodeData to evaluate
+     * node containing the link information
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNodeDataName(String name) {
         this.nodeDataName = name;
@@ -124,6 +128,7 @@ public class AHref extends BodyTagSupport {
     /**
      * Setter for the <code>preHref</code> tag attribute.
      * @param preHref href part that is added before the nodeData content
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setPreHref(String preHref) {
         this.preHref = preHref;
@@ -132,6 +137,7 @@ public class AHref extends BodyTagSupport {
     /**
      * Setter for the <code>postHref</code> tag attribute.
      * @param postHref href part that is added after the nodeData content
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setPostHref(String postHref) {
         this.postHref = postHref;
@@ -140,6 +146,7 @@ public class AHref extends BodyTagSupport {
     /**
      * Setter for the <code>templateName</code> tag attribute.
      * @param templateName template name to search for
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTemplateName(String templateName) {
         this.templateName = templateName;
@@ -148,6 +155,7 @@ public class AHref extends BodyTagSupport {
     /**
      * Setter for the <code>level</code> tag attribute.
      * @param level level from where to start the template search
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setLevel(int level) {
         this.level = level;

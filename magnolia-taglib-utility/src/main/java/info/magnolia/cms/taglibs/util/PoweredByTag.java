@@ -43,7 +43,8 @@ import java.text.MessageFormat;
 
 /**
  * A simple tag which can display the version and edition of the running Magnolia instance.
- * 
+ * @jsp.tag name="poweredBy" body-content="empty"
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -63,6 +64,7 @@ public class PoweredByTag extends SimpleTagSupport {
      *
      * <strong>Warning: since this is using java.text.MessageFormat, you need to escape single quotes, for example:
      * "I''m showing my Magnolia love by using the {0} version {1}."</strong>
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setPattern(String pattern) {
         this.pattern = pattern;

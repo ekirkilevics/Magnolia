@@ -87,6 +87,12 @@ import org.slf4j.LoggerFactory;
  * &lt;a href="${pageContext.request.contextPath}${destpage}">${destpage}&lt;/a> in a public instance.
  * </pre>
  *
+ * @jsp.tag name="redirect" body-content="empty"
+ * @jsp.tag-example
+ * <cmsu:redirect var="destpage" />
+ * This page has no content and it will redirect to
+ * <a href="${pageContext.request.contextPath}${destpage}">${destpage}</a> in a public instance.
+ *
  * @author Fabrizio Giustina
  * @version $Id$
  * @since 2.2
@@ -111,6 +117,7 @@ public class RedirectTag extends BodyTagSupport {
     /**
      * Setter for the <code>var</code> tag parameter.
      * @param var Name for the variable which will contain the URL of the page this tag will redirect to
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setVar(String var) {
         this.var = var;

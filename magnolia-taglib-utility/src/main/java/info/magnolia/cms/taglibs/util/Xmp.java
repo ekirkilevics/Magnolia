@@ -44,6 +44,8 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 /**
  * Escapes html in body.
+ * @jsp.tag name="xmp" body-content="JSP"
+ *
  * @author Marcel Salathe
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)

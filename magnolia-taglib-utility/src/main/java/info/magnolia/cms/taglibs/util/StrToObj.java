@@ -40,6 +40,9 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
+ * converts a string to an object using split.
+ * @jsp.tag name="strToObj" body-content="JSP"
+ *
  * @author Vinzenz Wyser
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)
@@ -55,10 +58,18 @@ public class StrToObj extends BodyTagSupport {
 
     private String delims;
 
+    /**
+     * name of the pageContext variable where the obj is put to
+     * @jsp.attribute required="true" rtexprvalue="false"
+     */
     public void setVar(String var) {
         this.var = var;
     }
 
+    /**
+     * delimiters characters; default: "\n"
+     * @jsp.attribute required="false" rtexprvalue="false"
+     */
     public void setDelims(String delims) {
         this.delims = delims;
     }

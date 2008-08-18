@@ -86,6 +86,9 @@ import org.slf4j.LoggerFactory;
  * file. The class to generate PNG images from TrueType font strings is originally by Philip McCarthy -
  * http://chimpen.com (http://chimpen.com/things/archives/001139.php). I have made a couple of small changes. <br />
  * <br />
+ *
+ * @jsp.tag name="txt2Img" body-content="empty"
+ *
  * @author Patrick Janssen
  * @author Fabrizio Giustina
  * @version 1.0
@@ -172,7 +175,7 @@ public class TextToImageTag extends BaseImageTag {
 
     /**
      * Setter for the <code>text</code> tag attribute.
-     * @param text
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setText(String text) {
         this.text = text;
@@ -180,7 +183,7 @@ public class TextToImageTag extends BaseImageTag {
 
     /**
      * Setter for the <code>imageContentNodeName</code> tag attribute.
-     * @param imageContentNodeName
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setImageContentNodeName(String imageContentNodeName) {
         this.imageContentNodeName = imageContentNodeName;
@@ -188,7 +191,7 @@ public class TextToImageTag extends BaseImageTag {
 
     /**
      * Setter for the <code>parentContentNodeName</code> tag attribute.
-     * @param parentContentNodeName
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setParentContentNodeName(String parentContentNodeName) {
         this.parentContentNodeName = parentContentNodeName;
@@ -196,7 +199,7 @@ public class TextToImageTag extends BaseImageTag {
 
     /**
      * Setter for the <code>textFontFace</code> tag attribute.
-     * @param textFontFace
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTextFontFace(String textFontFace) {
         this.textFontFace = textFontFace;
@@ -204,7 +207,7 @@ public class TextToImageTag extends BaseImageTag {
 
     /**
      * Setter for the <code>textFontSize</code> tag attribute.
-     * @param textFontSize
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setTextFontSize(int textFontSize) {
         this.textFontSize = textFontSize;
@@ -212,7 +215,7 @@ public class TextToImageTag extends BaseImageTag {
 
     /**
      * Setter for the <code>textFontColor</code> tag attribute.
-     * @param textFontColor
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTextFontColor(String textFontColor) {
         this.textFontColor = textFontColor;
@@ -220,7 +223,7 @@ public class TextToImageTag extends BaseImageTag {
 
     /**
      * Setter for the <code>textBackColor</code> tag attribute.
-     * @param textBackColor
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTextBackColor(String textBackColor) {
         this.textBackColor = textBackColor;
@@ -228,7 +231,7 @@ public class TextToImageTag extends BaseImageTag {
 
     /**
      * Setter for the <code>textSplit</code> tag attribute.
-     * @param textBackColor
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTextSplit(String textSplit) {
         this.textSplit = textSplit;
@@ -236,7 +239,7 @@ public class TextToImageTag extends BaseImageTag {
 
     /**
      * Setter for the <code>divCSS</code> tag attribute.
-     * @param divCSS
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setDivCSS(String divCSS) {
         this.divCSS = divCSS;

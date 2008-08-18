@@ -55,6 +55,14 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Output a set of snippets taken from any paragraph in the given page mathing any of the search term.
+ * @jsp.tag name="searchResultSnippet" body-content="empty"
+ * @jsp.tag-example
+ * <cmsu:simplesearch query="${param.search}" var="results" />
+ * <c:forEach items="${results}" var="page">
+ *   <cmsu:searchResultSnippet query="${param.search}" page="${page}" />
+ * </c:forEach>
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
@@ -93,6 +101,7 @@ public class SearchResultSnippetTag extends TagSupport {
     /**
      * Setter for <code>query</code>.
      * @param query The query to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setQuery(String query) {
         this.query = query;
@@ -101,6 +110,7 @@ public class SearchResultSnippetTag extends TagSupport {
     /**
      * Setter for <code>chars</code>.
      * @param chars The chars to set.
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setChars(int chars) {
         this.chars = chars;
@@ -109,6 +119,7 @@ public class SearchResultSnippetTag extends TagSupport {
     /**
      * Setter for <code>maxSnippets</code>.
      * @param maxSnippets The maxSnippets to set.
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setMaxSnippets(int maxSnippets) {
         this.maxSnippets = maxSnippets;
@@ -117,6 +128,7 @@ public class SearchResultSnippetTag extends TagSupport {
     /**
      * Setter for <code>page</code>.
      * @param page The page to set.
+     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
      */
     public void setPage(Content page) {
         this.page = page;

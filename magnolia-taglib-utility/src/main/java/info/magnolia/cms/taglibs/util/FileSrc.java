@@ -50,9 +50,12 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Returns informations as path, name or size of a file.
+ * @jsp.tag name="fileSrc" body-content="empty"
+ * @deprecated see cms:out
+ *
  * @author Marcel Salathe
  * @version $Revision $ ($Author $)
- * @deprecated
  */
 public class FileSrc extends TagSupport {
 
@@ -96,8 +99,8 @@ public class FileSrc extends TagSupport {
     }
 
     /**
-     * @param nodeDataName
      * @deprecated
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setNodeDataName(String nodeDataName) {
         this.nodeDataName = nodeDataName;
@@ -111,16 +114,16 @@ public class FileSrc extends TagSupport {
     }
 
     /**
-     * @param contentNodeName
      * @deprecated
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentNodeName(String contentNodeName) {
         this.contentNodeName = contentNodeName;
     }
 
     /**
-     * @param value
      * @deprecated
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setFileNameOnly(String value) {
         this.fileNameOnly = "true"; //$NON-NLS-1$

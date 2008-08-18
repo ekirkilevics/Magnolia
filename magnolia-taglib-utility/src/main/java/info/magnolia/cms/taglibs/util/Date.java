@@ -49,8 +49,10 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * @jsp.tag name="date" body-content="JSP"
+ * @deprecated see cms:out
+ *
  * @author Marcel Salathe
- * @deprecated
  * @version $Revision $ ($Author $)
  */
 public class Date extends TagSupport {
@@ -100,6 +102,7 @@ public class Date extends TagSupport {
      * </pre>
      * 
      * @deprecated
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setPattern(String pattern) {
         this.pattern = pattern;
@@ -107,6 +110,7 @@ public class Date extends TagSupport {
 
     /**
      * @deprecated
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setAtomName(String name) {
         this.setNodeDataName(name);
@@ -114,7 +118,7 @@ public class Date extends TagSupport {
 
     /**
      * @deprecated
-     * @param nodeDataName
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNodeDataName(String nodeDataName) {
         this.nodeDataName = nodeDataName;
@@ -122,7 +126,7 @@ public class Date extends TagSupport {
 
     /**
      * @deprecated
-     * @param actpage
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setActpage(boolean actpage) {
         this.actpage = actpage;
@@ -130,7 +134,7 @@ public class Date extends TagSupport {
 
     /**
      * @deprecated
-     * @param language
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setLanguage(String language) {
         this.language = language;

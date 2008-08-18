@@ -63,7 +63,7 @@ import org.slf4j.LoggerFactory;
  * </p>
  * <p/> A collection on Content (page) objects is added to the specified scope with the specified name.
  * </p>
- * <p/> Tipical usage:
+ * <p/> Typical usage:
  * </p>
  * <p/>
  *
@@ -73,6 +73,13 @@ import org.slf4j.LoggerFactory;
  *     &lt;a href="${pageContext.request.contextPath}${node.handle}.html">${node.title}&lt;/a>
  *   &lt;/c:forEach>
  * </pre>
+ *
+ * @jsp.tag name="simpleSearch" body-content="JSP"
+ * @jsp.tag-example
+ * <cmsu:simplesearch query="${param.search}" var="results" />
+ *   <c:forEach items="${results}" var="page">
+ *   <a href="${pageContext.request.contextPath}${page.handle}.html">${page.title}</a>
+ * </c:forEach>
  *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
@@ -133,9 +140,6 @@ public class SimpleSearchTag extends TagSupport {
      */
     private boolean useSimpleJcrQuery = true;
 
-    /**
-     * The path we search in.
-     */
     private String startPath;
 
     /**
@@ -144,9 +148,9 @@ public class SimpleSearchTag extends TagSupport {
      */
     private int scope = PageContext.PAGE_SCOPE;
 
-     /**
+    /**
      * Setter for <code>query</code>.
-     * @param query The query to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setQuery(String query) {
         this.query = query;
@@ -154,7 +158,7 @@ public class SimpleSearchTag extends TagSupport {
 
     /**
      * Setter for <code>var</code>.
-     * @param var The var to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setVar(String var) {
         this.var = var;
@@ -162,7 +166,7 @@ public class SimpleSearchTag extends TagSupport {
 
     /**
      * Setter for <code>scope</code>.
-     * @param scope The scope to set.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setScope(String scope) {
         if ("request".equalsIgnoreCase(scope)) { //$NON-NLS-1$
@@ -182,7 +186,7 @@ public class SimpleSearchTag extends TagSupport {
 
     /**
      * Setter for <code>startLevel</code>.
-     * @param startLevel The startLevel to set.
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setStartLevel(int startLevel) {
         this.startLevel = startLevel;
@@ -338,6 +342,10 @@ public class SimpleSearchTag extends TagSupport {
         return this.repository;
     }
 
+    /**
+     * The repository we search in. Default is website repository.
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setRepository(String repository) {
         this.repository = repository;
     }
@@ -346,10 +354,23 @@ public class SimpleSearchTag extends TagSupport {
         return this.supportSubstringSearch;
     }
 
+    /**
+     * Seach for substrings too. This can decrease performance. Default value is false.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
     public void setSupportSubstringSearch(boolean supportSubstringSearch) {
         this.supportSubstringSearch = supportSubstringSearch;
     }
 
+    /**
+     * Set to false to generate the search query as it was generated until Magnolia 3.5.4
+     * (which will force a search on non-indexed word, which usually leads in less good results).
+     * Default value is true. See "6.6.5.2 jcr:contains Function" from the JCR Spec (pages 110-111) for details.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
+    public void setUseSimpleJcrQuery(boolean useSimpleJcrQuery) {
+        this.useSimpleJcrQuery = useSimpleJcrQuery;
+    }
 
     /**
      * @return the itemType
@@ -358,9 +379,9 @@ public class SimpleSearchTag extends TagSupport {
         return this.itemType;
     }
 
-
     /**
-     * @param itemType the itemType to set
+     * The itemTypes search/returned by this tag. Default is mgnl:content which is used for pages.
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setItemType(String itemType) {
         this.itemType = itemType;
@@ -371,7 +392,10 @@ public class SimpleSearchTag extends TagSupport {
         return this.startPath;
     }
 
-
+    /**
+     * The path we search in.
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
     public void setStartPath(String startPath) {
         this.startPath = startPath;
     }

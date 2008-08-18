@@ -77,6 +77,9 @@ import org.apache.log4j.Logger;
  * <br />
  * This tag writes out the handle of the content node that contains the image. <br />
  * <br />
+ *
+ * @jsp.tag name="scaleImage" body-content="JSP"
+ * 
  * @author Patrick Janssen
  * @author Fabrizio Giustina
  * @version 1.0
@@ -128,6 +131,7 @@ public class ScaleImageTag extends BaseImageTag {
     /**
      * Setter for the <code>maxHeight</code> tag attribute.
      * @param maxHeight
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setMaxHeight(int maxHeight) {
         this.maxHeight = maxHeight;
@@ -136,6 +140,7 @@ public class ScaleImageTag extends BaseImageTag {
     /**
      * Setter for the <code>maxWidth</code> tag attribute.
      * @param maxWidth
+     * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setMaxWidth(int maxWidth) {
         this.maxWidth = maxWidth;
@@ -144,6 +149,7 @@ public class ScaleImageTag extends BaseImageTag {
     /**
      * Setter for the <code>allowOversize</code> tag attribute.
      * @param allowOversize
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setAllowOversize(boolean allowOversize) {
         this.allowOversize = allowOversize;
@@ -152,6 +158,7 @@ public class ScaleImageTag extends BaseImageTag {
     /**
      * Setter for the <code>parentContentNodeName</code> tag attribute.
      * @param parentContentNodeName
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setParentContentNodeName(String parentContentNodeName) {
         this.parentContentNodeName = parentContentNodeName;
@@ -160,6 +167,7 @@ public class ScaleImageTag extends BaseImageTag {
     /**
      * Setter for the <code>parentNodeDataName</code> tag attribute.
      * @param parentNodeDataName
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setParentNodeDataName(String parentNodeDataName) {
         this.parentNodeDataName = parentNodeDataName;
@@ -168,6 +176,7 @@ public class ScaleImageTag extends BaseImageTag {
     /**
      * Setter for the <code>imageContentNodeName</code> tag attribute.
      * @param imageContentNodeName
+     * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setImageContentNodeName(String imageContentNodeName) {
         this.imageContentNodeName = imageContentNodeName;
