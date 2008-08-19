@@ -66,8 +66,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Quick way to send a mail.
- * @jsp.tag name="simpleMail" body-content="JSP"
+ * Sends a simple mail generated with all the fields found in nodeCollectionName.
+ *
+ * @jsp.tag name="simpleMail" body-content="empty"
  *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
@@ -133,8 +134,7 @@ public class SimpleMailTag extends TagSupport {
     private static Logger log = LoggerFactory.getLogger(SimpleMailTag.class);
 
     /**
-     * Setter for <code>bcc</code>.
-     * @param bcc The bcc to set.
+     * Mail "bcc" field.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setBcc(String bcc) {
@@ -142,8 +142,7 @@ public class SimpleMailTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>replyTo</code>.
-     * @param replyTo The replyTo to set.
+     * Mail "replyTo" field.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setReplyTo(String replyTo) {
@@ -151,8 +150,7 @@ public class SimpleMailTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>cc</code>.
-     * @param cc The cc to set.
+     * Mail "cc" field.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setCc(String cc) {
@@ -160,17 +158,15 @@ public class SimpleMailTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>from</code>.
-     * @param from The from to set.
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * Mail "from" field.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setFrom(String from) {
         this.from = from;
     }
 
     /**
-     * Setter for <code>nodeCollectionName</code>.
-     * @param nodeCollectionName The nodeCollectionName to set.
+     * Collection (paragraphs) that holds the configured form fields. If not set the current collection is used.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNodeCollectionName(String nodeCollectionName) {
@@ -178,26 +174,23 @@ public class SimpleMailTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>to</code>.
-     * @param to The to to set.
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * Mail "to" field.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setTo(String to) {
         this.to = to;
     }
 
     /**
-     * Setter for <code>subject</code>.
-     * @param subject The subject to set.
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * Mail "subject" field.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setSubject(String subject) {
         this.subject = subject;
     }
 
     /**
-     * Setter for <code>redirect</code>.
-     * @param redirect The redirect to set.
+     * Page to redirect to after a successfull submission.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setRedirect(String redirect) {
@@ -205,8 +198,7 @@ public class SimpleMailTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>type</code>.
-     * @param type The type to set.
+     * Mail type. Used to get the mail from the factory.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setType(String type) {
@@ -214,6 +206,7 @@ public class SimpleMailTag extends TagSupport {
     }
 
     /**
+     * Log all the information sent by the mail.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setLogging(boolean trackMail) {
@@ -421,6 +414,7 @@ public class SimpleMailTag extends TagSupport {
     }
 
     /**
+     * Where to log to. For each page the log is created separately on a weekly basis.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setLoggingDirectory(String loggingDirectory) {
@@ -432,6 +426,7 @@ public class SimpleMailTag extends TagSupport {
     }
 
     /**
+     * Encoding of the log file. Default is UTF8. For windows excel use ISO-8859-1.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setLoggingEncoding(String loggingEncoding) {
@@ -443,6 +438,7 @@ public class SimpleMailTag extends TagSupport {
     }
 
     /**
+     * The file extension to use for new files. Default is log. Use csv for easy opening with Excel.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setLoggingExtension(String loggingExtension) {
@@ -454,6 +450,7 @@ public class SimpleMailTag extends TagSupport {
     }
 
     /**
+     * Name for the file (without extension). If not set, the pages path is used to create a file.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setLoggingFilename(String loggingFilename) {

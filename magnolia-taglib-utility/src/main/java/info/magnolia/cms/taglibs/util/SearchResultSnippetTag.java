@@ -99,17 +99,15 @@ public class SearchResultSnippetTag extends TagSupport {
     private int maxSnippets = 3;
 
     /**
-     * Setter for <code>query</code>.
-     * @param query The query to set.
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * Search query.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setQuery(String query) {
         this.query = query;
     }
 
     /**
-     * Setter for <code>chars</code>.
-     * @param chars The chars to set.
+     * Number of characters to include in search snippets. Default is 100.
      * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setChars(int chars) {
@@ -117,8 +115,7 @@ public class SearchResultSnippetTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>maxSnippets</code>.
-     * @param maxSnippets The maxSnippets to set.
+     * Maximum number of snippets to print out.
      * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setMaxSnippets(int maxSnippets) {
@@ -126,9 +123,8 @@ public class SearchResultSnippetTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>page</code>.
-     * @param page The page to set.
-     * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
+     * A Content node of type mgnl:content (a magnolia page), typically returned by the simpleSearch tag.
+     * @jsp.attribute required="true" rtexprvalue="true" type="info.magnolia.cms.core.Content"
      */
     public void setPage(Content page) {
         this.page = page;

@@ -51,8 +51,9 @@ import org.slf4j.LoggerFactory;
 
 /**
  * Returns informations as path, name or size of a file.
+ * @deprecated see cms:out.
+ * 
  * @jsp.tag name="fileSrc" body-content="empty"
- * @deprecated see cms:out
  *
  * @author Marcel Salathe
  * @version $Revision $ ($Author $)
@@ -114,6 +115,8 @@ public class FileSrc extends TagSupport {
     }
 
     /**
+     * If left empty, local contentNode is used as set by contentNodeIterator, otherwise the global
+     * contentNode is used.
      * @deprecated
      * @jsp.attribute required="false" rtexprvalue="true"
      */
@@ -122,6 +125,7 @@ public class FileSrc extends TagSupport {
     }
 
     /**
+     * If "true", the file name without the path will be generated.
      * @deprecated
      * @jsp.attribute required="false" rtexprvalue="true"
      */

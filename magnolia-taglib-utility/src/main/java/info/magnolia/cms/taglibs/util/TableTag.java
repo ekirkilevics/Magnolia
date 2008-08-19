@@ -72,7 +72,7 @@ public class TableTag extends BodyTagSupport {
     private Map htmlAttributes = new HashMap();
 
     /**
-     * Setter for <code>header</code>.
+     * Use first row as column headers.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setHeader(boolean header) {
@@ -80,7 +80,7 @@ public class TableTag extends BodyTagSupport {
     }
 
     /**
-     * Setter for <code>class</code>.
+     * Standard html attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setClass(String value) {
@@ -88,7 +88,7 @@ public class TableTag extends BodyTagSupport {
     }
 
     /**
-     * Setter for <code>style</code>.
+     * Standard html attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStyle(String value) {
@@ -96,7 +96,7 @@ public class TableTag extends BodyTagSupport {
     }
 
     /**
-     * Setter for <code>id</code>.
+     * Standard html attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setId(String value) {
@@ -104,7 +104,7 @@ public class TableTag extends BodyTagSupport {
     }
 
     /**
-     * Setter for <code>cellspacing</code>.
+     * Standard html attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setCellspacing(String value) {
@@ -112,7 +112,7 @@ public class TableTag extends BodyTagSupport {
     }
 
     /**
-     * Setter for <code>cellpadding</code>.
+     * Standard html attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setCellpadding(String value) {

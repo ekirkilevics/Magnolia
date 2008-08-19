@@ -68,7 +68,7 @@ import org.slf4j.LoggerFactory;
  * <li><code>wrappingElement</code>: an optional html element (div, span, p, etc) to go within the <a> tag wrapping the anchor text
  * </ul>
  *
- * @jsp.tag name="simpleNavigation" body-content="JSP"
+ * @jsp.tag name="simpleNavigation" body-content="empty"
  * @jsp.tag-example
  * <cmsu:simpleNavigation startLevel="3" style="mystyle"/>
  * Will output the following:
@@ -217,14 +217,10 @@ public class SimpleNavigationTag extends TagSupport {
      */
     private ContentFilter filter;
 
-    /**
-     * Name of a property that identifies a contentFilter in the pageContext
-     */
     private String contentFilter = "";
 
     /**
-     * Setter for the <code>startLevel</code> tag attribute.
-     * @param startLevel the start level for navigation, defaults to <code>0</code>.
+     * The start level for navigation, defaults to 0.
      * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setStartLevel(int startLevel) {
@@ -232,8 +228,7 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
-     * Setter for the <code>endLevel</code> tag attribute.
-     * @param endLevel the end level for navigation, defaults to not used if not set
+     * The end level for navigation, defaults to 0.
      * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setEndLevel(int endLevel) {
@@ -241,8 +236,7 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
-     * Setter for the <code>style</code> tag attribute.
-     * @param style to apply to this menu, default is empty and not used
+     * The css class to be applied to the first ul. Default is empty.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStyle(String style) {
@@ -250,8 +244,8 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>hideInNav</code> tag attribute.
-     * @param hideInNav name for the "hide in nav" nodeData.
+     * Name for the "hide in nav" nodeData. If a page contains a boolean property with this name and
+     * it is set to true, the page is not shown in navigation. Defaults to "hideInNav".
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setHideInNav(String hideInNav) {
@@ -269,8 +263,9 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>nofollow</code>.
-     * @param nofollow The nofollow to set.
+     * Name for the "nofollow" nodeData. If a page contains a boolean property with this name
+     * and it is set to true, rel="nofollow" will be added to the generated link
+     * (for links the should be ignored by search engines).
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setNofollow(String nofollow) {
@@ -278,8 +273,7 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
-     * A variable in the pageContext that contains a content filter
-     * @param contentFilter a content filter that will be used to determine if a given page should be drawn or not
+     * A variable in the pageContext that contains a content filter, determining if a given page should be drawn or not.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setContentFilter(String contentFilter) {
@@ -301,8 +295,7 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>classProperty</code> tag attribute.
-     * @param classProperty name for a page property which will be written to the css class attribute.
+     * Name for a page property that will hold a css class name which will be added to the html class attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setClassProperty(String classProperty) {

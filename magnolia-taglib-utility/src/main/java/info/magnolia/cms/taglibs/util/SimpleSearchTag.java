@@ -55,26 +55,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * <p/> A simple tag which allows searching in all the site content with a "natural language" query. It simply strips
- * all the reserved chars from input string, build an xpath query and feed Magnolia QueryManager.
- * </p>
- * <p/> By defaults search terms are ANDed, but it also supports using the AND or OR keywords in the query string.
+ * A simple tag which allows searching in all the site content with a "natural language" query.
+ * It simply strips all the reserved chars from input string, build an xpath query and feed Magnolia QueryManager.
+ * By defaults search terms are ANDed, but it also supports using the AND or OR keywords in the query string.
  * Search is not case sensitive and it's performed on any non-binary property.
- * </p>
- * <p/> A collection on Content (page) objects is added to the specified scope with the specified name.
- * </p>
- * <p/> Typical usage:
- * </p>
- * <p/>
+ * A collection on Content (page) objects is added to the specified scope with the specified name.
  *
- * <pre>
- *   &lt;cmsu:simplesearch query="${param.search}" startLevel="3" var="results" />
- *   &lt;c:forEach items="${results}">
- *     &lt;a href="${pageContext.request.contextPath}${node.handle}.html">${node.title}&lt;/a>
- *   &lt;/c:forEach>
- * </pre>
- *
- * @jsp.tag name="simpleSearch" body-content="JSP"
+ * @jsp.tag name="simpleSearch" body-content="empty"
  * @jsp.tag-example
  * <cmsu:simplesearch query="${param.search}" var="results" />
  *   <c:forEach items="${results}" var="page">
@@ -101,71 +88,36 @@ public class SimpleSearchTag extends TagSupport {
      */
     static final String[] KEYWORDS = new String[]{"and", "or"}; //$NON-NLS-1$ //$NON-NLS-2$
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(SimpleSearchTag.class);
+    private static final Logger log = LoggerFactory.getLogger(SimpleSearchTag.class);
 
-    /**
-     * Start level.
-     */
     private int startLevel;
-
-    /**
-     * Query, natural language.
-     */
     private String query;
-
-    /**
-     * Variable name for results.
-     */
     private String var;
-
-    /**
-     * The repository we search in. Default is the website repository
-     */
     private String repository = ContentRepository.WEBSITE;
-
-
     private String itemType = ItemType.CONTENT.getSystemName();
-
-    /**
-     * Search for substring. Means contains(. '*str*'). This will decrease performance.
-     * @deprecated not used when useSimpleJcrQuery is set to true.
-     */
     private boolean supportSubstringSearch = false;
-
-    /**
-     * As from 3.5.5, this is true by default, and generates simpler and better queries
-     */
     private boolean useSimpleJcrQuery = true;
-
     private String startPath;
-
-    /**
-     * Tag attribute. Scope for the declared variable. Can be <code>page</code>, <code>request</code>,
-     * <code>session</code> or <code>application</code><code></code>.
-     */
     private int scope = PageContext.PAGE_SCOPE;
 
     /**
-     * Setter for <code>query</code>.
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * Query to execute (e.g. "magnolia AND cms OR info")
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setQuery(String query) {
         this.query = query;
     }
 
     /**
-     * Setter for <code>var</code>.
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * The search results (a collection of Content nodes (pages)) will be added to the pagecontext using this name.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setVar(String var) {
         this.var = var;
     }
 
     /**
-     * Setter for <code>scope</code>.
+     * Scope for the variable. Can be "page" (default), "request", "session", "application".
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setScope(String scope) {
@@ -185,16 +137,13 @@ public class SimpleSearchTag extends TagSupport {
     }
 
     /**
-     * Setter for <code>startLevel</code>.
+     * The start level for search, defaults to 0. Can be used to limit the search only to the current website tree.
      * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setStartLevel(int startLevel) {
         this.startLevel = startLevel;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#doStartTag()
-     */
     public int doStartTag() throws JspException {
 
         final String queryString = useSimpleJcrQuery ? generateSimpleQuery(query) : generateComplexXPathQuery();
@@ -355,7 +304,8 @@ public class SimpleSearchTag extends TagSupport {
     }
 
     /**
-     * Seach for substrings too. This can decrease performance. Default value is false.
+     * Search for substrings too. This can decrease performance. Default value is false.
+     * @deprecated not used when useSimpleJcrQuery is set to true.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setSupportSubstringSearch(boolean supportSubstringSearch) {
@@ -363,9 +313,10 @@ public class SimpleSearchTag extends TagSupport {
     }
 
     /**
-     * Set to false to generate the search query as it was generated until Magnolia 3.5.4
+     * Set this attribute to false to generate the search query as it was generated until Magnolia 3.5.4
      * (which will force a search on non-indexed word, which usually leads in less good results).
-     * Default value is true. See "6.6.5.2 jcr:contains Function" from the JCR Spec (pages 110-111) for details.
+     * As from 3.5.5, this is true by default, and generates simpler and better queries.
+     * See "6.6.5.2 jcr:contains Function" from the JCR Spec (pages 110-111) for details.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setUseSimpleJcrQuery(boolean useSimpleJcrQuery) {

@@ -60,7 +60,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Tag that converts text into PNG iamges, and outputs a div element containing a set of img elements. The font face,
+ * Tag that converts text into PNG images, and outputs a div element containing a set of img elements. The font face,
  * text color, text size and background color can be set via the tag attributes. <br />
  * <br />
  * The images are saved under the node specified by the attribute parentContentNodeName. Under this parent node, a new
@@ -87,7 +87,7 @@ import org.slf4j.LoggerFactory;
  * http://chimpen.com (http://chimpen.com/things/archives/001139.php). I have made a couple of small changes. <br />
  * <br />
  *
- * @jsp.tag name="txt2Img" body-content="empty"
+ * @jsp.tag name="txt2img" body-content="empty"
  *
  * @author Patrick Janssen
  * @author Fabrizio Giustina
@@ -132,65 +132,34 @@ public class TextToImageTag extends BaseImageTag {
      */
     private static final String TEXT_SPLIT_CHARACTERS = "characters";
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(BaseImageTag.class);
+    private static final Logger log = LoggerFactory.getLogger(BaseImageTag.class);
 
-    /**
-     * Attribute: Text to convert to an image
-     */
     private String text;
-
-    /**
-     * Attribute: Text Font Face
-     */
     private String textFontFace;
-
-    /**
-     * Attribute: Text Font Size
-     */
     private int textFontSize;
-
-    /**
-     * Attribute: Text Font Color
-     */
     private String textFontColor;
-
-    /**
-     * Attribute: Text Background Color
-     */
     private String textBackColor;
-
-    /**
-     * Attribute: Method for splitting text: words, characters or none.
-     */
     private String textSplit;
-
-    /**
-     * Attribute: The name of the CSS class to apply to the text box div. If this is null, the default will be
-     * 'text-box'.
-     */
     private String divCSS;
 
     /**
-     * Setter for the <code>text</code> tag attribute.
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * The text to be converted.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setText(String text) {
         this.text = text;
     }
 
     /**
-     * Setter for the <code>imageContentNodeName</code> tag attribute.
-     * @jsp.attribute required="false" rtexprvalue="true"
+     * The name of the new contentNode to create, under which all image nodes will be saved.
+     * @jsp.attribute required="true" rtexprvalue="true"
      */
     public void setImageContentNodeName(String imageContentNodeName) {
         this.imageContentNodeName = imageContentNodeName;
     }
 
     /**
-     * Setter for the <code>parentContentNodeName</code> tag attribute.
+     * The name of the parent of the new contentNode.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setParentContentNodeName(String parentContentNodeName) {
@@ -198,7 +167,7 @@ public class TextToImageTag extends BaseImageTag {
     }
 
     /**
-     * Setter for the <code>textFontFace</code> tag attribute.
+     * The font face of the text, e.g. 'Helvetica'. Default is 'Helvetica'.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTextFontFace(String textFontFace) {
@@ -206,7 +175,7 @@ public class TextToImageTag extends BaseImageTag {
     }
 
     /**
-     * Setter for the <code>textFontSize</code> tag attribute.
+     * The size of the text, in points, e.g. 12. Default is '12'.
      * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setTextFontSize(int textFontSize) {
@@ -214,7 +183,7 @@ public class TextToImageTag extends BaseImageTag {
     }
 
     /**
-     * Setter for the <code>textFontColor</code> tag attribute.
+     * The color of the text in hexadecimal format, e.g. 'ff0044'. Default is '000000' (black).
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTextFontColor(String textFontColor) {
@@ -222,7 +191,7 @@ public class TextToImageTag extends BaseImageTag {
     }
 
     /**
-     * Setter for the <code>textBackColor</code> tag attribute.
+     * The color of the background in hexadecimal format, e.g. 'ff0044'. Default is 'ffffff' (white).
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTextBackColor(String textBackColor) {
@@ -230,7 +199,7 @@ public class TextToImageTag extends BaseImageTag {
     }
 
     /**
-     * Setter for the <code>textSplit</code> tag attribute.
+     * The method used to split the text into sub-strings: 'none', 'words', or 'characters'. Default is 'none'.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTextSplit(String textSplit) {
@@ -238,7 +207,8 @@ public class TextToImageTag extends BaseImageTag {
     }
 
     /**
-     * Setter for the <code>divCSS</code> tag attribute.
+     * The CSS class that will be applied to the div that contains these text images.
+     * Defaults to "text-box".
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setDivCSS(String divCSS) {

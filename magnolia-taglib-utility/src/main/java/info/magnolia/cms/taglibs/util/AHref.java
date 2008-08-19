@@ -58,7 +58,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Utility tag which can be used to print out a link based on the value of a node data.
+ * Utility tag which can be used to print out a link based on the value of a node data or tries to find the first page
+ * with a specific template name, starting from a specific page.
  * @jsp.tag name="aHref" body-content="JSP"
  * @jsp.tag-example <cmsu:aHref ... />
  *
@@ -126,8 +127,7 @@ public class AHref extends BodyTagSupport {
     }
 
     /**
-     * Setter for the <code>preHref</code> tag attribute.
-     * @param preHref href part that is added before the nodeData content
+     * href part that is added before the nodeData content.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setPreHref(String preHref) {
@@ -135,8 +135,7 @@ public class AHref extends BodyTagSupport {
     }
 
     /**
-     * Setter for the <code>postHref</code> tag attribute.
-     * @param postHref href part that is added after the nodeData content
+     * href part that is added after the nodeData content.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setPostHref(String postHref) {
@@ -144,8 +143,7 @@ public class AHref extends BodyTagSupport {
     }
 
     /**
-     * Setter for the <code>templateName</code> tag attribute.
-     * @param templateName template name to search for
+     * template name to search for.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTemplateName(String templateName) {
@@ -153,8 +151,7 @@ public class AHref extends BodyTagSupport {
     }
 
     /**
-     * Setter for the <code>level</code> tag attribute.
-     * @param level level from where to start the template search
+     * level from where to start the template search.
      * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
     public void setLevel(int level) {

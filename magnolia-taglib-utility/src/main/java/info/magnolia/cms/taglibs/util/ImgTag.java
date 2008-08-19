@@ -69,17 +69,17 @@ public class ImgTag extends BaseContentTag {
 
     private String altNodeDataName;
 
-//    /**
-//     * Setter for <code>nodeDataName</code>.
-//     * @param nodeDataName The nodeDataName to set.
-//     */
-//    public void setNodeDataName(String nodeDataName) {
-//        this.nodeDataName = nodeDataName;
-//    }
+    /**
+     * the name of the nodeData containing the image path
+     * @jsp.attribute required="true" rtexprvalue="true"
+     */
+    public void setNodeDataName(String nodeDataName) {
+        super.setNodeDataName(nodeDataName);
+    }
 
     /**
-     * Setter for <code>altNodeDataName</code>.
-     * @param altNodeDataName The altNodeDataName to set.
+     * Name of the node data holding the alt text for the image.
+     * If not set the default is nodeDataName + "Alt". The same value is added to the "title" attribute, if not null.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setAltNodeDataName(String altNodeDataName) {
@@ -87,8 +87,7 @@ public class ImgTag extends BaseContentTag {
     }
 
     /**
-     * Setter for <code>height</code>.
-     * @param height html attribute
+     * html pass through attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setHeight(String value) {
@@ -96,8 +95,7 @@ public class ImgTag extends BaseContentTag {
     }
 
     /**
-     * Setter for <code>width</code>.
-     * @param width html attribute
+     * html pass through attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setWidth(String value) {
@@ -105,8 +103,7 @@ public class ImgTag extends BaseContentTag {
     }
 
     /**
-     * Setter for <code>class</code>.
-     * @param class html attribute
+     * html pass through attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setClass(String value) {
@@ -114,8 +111,7 @@ public class ImgTag extends BaseContentTag {
     }
 
     /**
-     * Setter for <code>style</code>.
-     * @param style html attribute
+     * html pass through attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStyle(String value) {
@@ -123,8 +119,7 @@ public class ImgTag extends BaseContentTag {
     }
 
     /**
-     * Setter for <code>id</code>.
-     * @param id html attribute
+     * html pass through attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setId(String value) {

@@ -45,8 +45,8 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Converts text in the body of the tag adding %lt;br /> tags at new lines or wrapping lines in paragraphs.
- * @jsp.tag name="newLines" body-content="JSP"
+ * Converts text in the body of the tag adding <br /> tags at new lines or wrapping lines in paragraphs.
+ * @jsp.tag name="newlines" body-content="JSP"
  *
  * @author Fabrizio Giustina
  * @version $Revision $ ($Author $)
@@ -64,8 +64,7 @@ public class ConvertNewLineTag extends BodyTagSupport {
     private boolean para;
 
     /**
-     * Setter for the <code>para</code> attribute.
-     * @param paragraphs <code>true</code> is each line should be wrapped in a %lt;p> tag.
+     * If true each line will be wrapped in a <p> tag. Default to false (use br's).
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setPara(boolean paragraphs) {

@@ -49,8 +49,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * @jsp.tag name="date" body-content="JSP"
- * @deprecated see cms:out
+ * @jsp.tag name="date" body-content="empty"
+ * @deprecated see cms:out.
  *
  * @author Marcel Salathe
  * @version $Revision $ ($Author $)
@@ -77,30 +77,9 @@ public class Date extends TagSupport {
     private boolean actpage;
 
     /**
-     * Date pattern. see http://java.sun.com/j2se/1.4.1/docs/api/java/text/SimpleDateFormat.html
-     * 
-     * <pre>
-     *   G  Era designator          Text                AD
-     *   y  Year                    Year                1996; 96
-     *   M  Month in year           Month               July; Jul; 07
-     *   w  Week in year            Number              27
-     *   W  Week in month           Number              2
-     *   D  Day in year             Number              189
-     *   d  Day in month            Number              10
-     *   F  Day of week in month    Number              2
-     *   E  Day in week             Text                Tuesday; Tue
-     *   a  Am/pm marker            Text                PM
-     *   H  Hour in day (0-23)      Number              0
-     *   k  Hour in day (1-24)      Number              24
-     *   K  Hour in am/pm (0-11)    Number              0
-     *   h  Hour in am/pm (1-12)    Number              12
-     *   m  Minute in hour          Number              30
-     *   s  Second in minute        Number              55
-     *   S  Millisecond             Number              978
-     *   z  Time zone               General time zone   Pacific Standard Time; PST; GMT-08:00
-     *   Z  Time zone               RFC 822 time zone   -0800
-     * </pre>
-     * 
+     * Date pattern. Defaults to "yyyy.MM.dd - HH:mm:ss".
+     * See the java.text.SimpleDateFormat javadoc for details.
+     *
      * @deprecated
      * @jsp.attribute required="false" rtexprvalue="true"
      */
@@ -117,6 +96,7 @@ public class Date extends TagSupport {
     }
 
     /**
+     * Where the date comes from.
      * @deprecated
      * @jsp.attribute required="false" rtexprvalue="true"
      */
@@ -125,6 +105,7 @@ public class Date extends TagSupport {
     }
 
     /**
+     * If "true", atom is taken from the currently active page.
      * @deprecated
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
@@ -133,6 +114,7 @@ public class Date extends TagSupport {
     }
 
     /**
+     * Locale string (see java.util.Locale)
      * @deprecated
      * @jsp.attribute required="false" rtexprvalue="true"
      */

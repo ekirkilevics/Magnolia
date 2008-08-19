@@ -52,8 +52,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Draws a breadcrumbs with links to parents of the current page.
- * @jsp.tag name="breadcrumb" body-content="JSP"
+ * Outputs "breadcrumbs" with links to parents of the current page.
+ * @jsp.tag name="breadcrumb" body-content="empty"
  *
  * @author Marcel Salathe
  * @author Fabrizio Giustina
@@ -76,9 +76,6 @@ public class Breadcrumb extends TagSupport {
      */
     private String delimiter;
 
-    /**
-     * Breadcrumb start level.
-     */
     private int startLevel = 1;
 
     /**
@@ -104,8 +101,7 @@ public class Breadcrumb extends TagSupport {
     private String activeCss = "active";
 
     /**
-     * Setter for the <code>delimeter</code> tag attribute.
-     * @param delimiter delimeter between links
+     * displayed between the page names, e.g. ">"
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setDelimiter(String delimiter) {
@@ -113,8 +109,8 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
-     * Setter for the <code>startLevel</code> tag attribute.
-     * @param startLevel breadcrumb start level
+     * At which level to start.
+     * Often you will want to omit top levels, e.g. if you split your site into multiple languages.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setStartLevel(String startLevel) {
@@ -133,8 +129,8 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
-     * Setter for <code>excludeCurrent</code>.
-     * @param excludeCurrent if <code>true</code> the current (active) page is not included in breadcrumb.
+     * Exclude the current (active) page from the breadcrumb. Defaults to false.
+     * If true, the current (active) page is not included in breadcrumb.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setExcludeCurrent(boolean excludeCurrent) {
@@ -142,8 +138,7 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
-     * Setter for <code>link</code>.
-     * @param link if <code>true</code> all pages are linked to.
+     * Create links to pages. Defaults to true.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setLink(boolean link) {
@@ -151,8 +146,8 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
-     * Setter for <code>titleProperty</code>.
-     * @param titleProperty name of nodeData for page title
+     * Name for a page property which holds the title to display in breadcrumbs.
+     * If empty, the standard title is used.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setTitleProperty(String titleProperty) {
@@ -160,17 +155,13 @@ public class Breadcrumb extends TagSupport {
     }
 
     /**
-     * Setter for <code>activeCss</code>.
-     * @param activeCss The activeCss to set.
+     * Css class added to the current page link.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setActiveCss(String activeCss) {
         this.activeCss = activeCss;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public int doStartTag() throws JspException {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         Content actpage = Resource.getCurrentActivePage();

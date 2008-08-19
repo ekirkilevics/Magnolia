@@ -43,7 +43,7 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 
 
 /**
- * Escapes html in body.
+ * Simulates the xmp tag, escaping content. This is useful for displaying code examples.
  * @jsp.tag name="xmp" body-content="JSP"
  *
  * @author Marcel Salathe

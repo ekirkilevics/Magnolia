@@ -53,11 +53,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * <p>
  * Redirects to the first child page. If the server is an authoring instance or magnolia and the preview mode is not
  * active the tag will simply add to the pagecontext a variable named from the <code>var</code> attribute containing
  * the path of the child page.
- * </p>
  * <p>
  * A typical requirement is to have pages with no content which will simply redirect to a child page: using this tag you
  * can easily build a "redirect" template and use it for empty pages:
@@ -109,14 +107,10 @@ public class RedirectTag extends BodyTagSupport {
      */
     private static Logger log = LoggerFactory.getLogger(RedirectTag.class);
 
-    /**
-     * Name for the variable which will contain the URL of the page this tag will redirect to.
-     */
     private String var;
 
     /**
-     * Setter for the <code>var</code> tag parameter.
-     * @param var Name for the variable which will contain the URL of the page this tag will redirect to
+     * Name for the variable which will contain the URL of the page this tag will redirect to.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setVar(String var) {
