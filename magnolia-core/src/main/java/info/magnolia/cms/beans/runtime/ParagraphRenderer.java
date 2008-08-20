@@ -40,7 +40,7 @@ import java.io.IOException;
 import java.io.Writer;
 
 /**
- * An interface to renderer paragraphs of content.
+ * An interface to render paragraphs of content.
  * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

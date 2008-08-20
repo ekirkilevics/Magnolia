@@ -43,9 +43,10 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * A Template Rendered implementation is responsible for generating the actual response from request data and a
+ * A TemplateRenderer implementation is responsible for generating the actual response from request data and a
  * template. A typical jsp implementation will simply forward the request to the jsp through request dispatcher, but
  * anybody is free to bind a specific implementation to a template type.
+ * 
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
