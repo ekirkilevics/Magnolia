@@ -94,6 +94,9 @@
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.plaintext.contentType.label</sv:value>
       </sv:property>
+      <sv:property sv:name="line" sv:type="String">
+        <sv:value>false</sv:value>
+      </sv:property>
       <sv:property sv:name="rows" sv:type="String">
         <sv:value>1</sv:value>
       </sv:property>
@@ -123,7 +126,7 @@
           <sv:value>2006-05-01T21:47:36.208+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2008-08-21T20:15:52.917+02:00</sv:value>
+          <sv:value>2008-08-21T21:20:43.541+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -143,8 +146,11 @@
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.plaintext.text.label</sv:value>
       </sv:property>
+      <sv:property sv:name="line" sv:type="String">
+        <sv:value>false</sv:value>
+      </sv:property>
       <sv:property sv:name="rows" sv:type="String">
-        <sv:value>30</sv:value>
+        <sv:value>28</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -169,7 +175,7 @@
           <sv:value>2008-01-15T17:52:23.492+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2007-12-20T18:07:31.631+01:00</sv:value>
+          <sv:value>2008-08-21T21:21:06.973+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
@@ -195,8 +201,8 @@
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.pageProperties.tabGeneral.hideInNav.label</sv:value>
       </sv:property>
-      <sv:property sv:name="lineSemi" sv:type="String">
-        <sv:value>true</sv:value>
+      <sv:property sv:name="line" sv:type="String">
+        <sv:value>false</sv:value>
       </sv:property>
       <sv:property sv:name="type" sv:type="String">
         <sv:value>Boolean</sv:value>
@@ -224,7 +230,7 @@
           <sv:value>2008-01-15T17:52:23.493+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2007-12-27T19:17:10.742+01:00</sv:value>
+          <sv:value>2008-08-21T21:20:25.448+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
