@@ -41,6 +41,7 @@ import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -133,18 +134,25 @@ public class BarNew extends Bar {
     }
 
     /**
+     * @deprecated use drawHtml(Writer out) instead.
+     */
+    public void drawHtml(JspWriter out) throws IOException {
+        drawHtml((Writer) out);
+    }
+    
+    /**
      * <p>
      * draws the main bar (incl. all magnolia specific js and css sources)
      * </p>
      */
-    public void drawHtml(JspWriter out) throws IOException {
+    public void drawHtml(Writer out) throws IOException {
         boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
         if (!Resource.showPreview() && isGranted) {
             this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);"); //$NON-NLS-1$ //$NON-NLS-2$
             this.setEvent("onmouseout", "mgnlMoveNodeReset(this);"); //$NON-NLS-1$ //$NON-NLS-2$
             this.setId(this.getNodeCollectionName() + "__" + this.getNodeName()); //$NON-NLS-1$
-            out.println(this.getHtml());
+            println(out, this.getHtml());
         }
     }
 }

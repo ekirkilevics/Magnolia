@@ -43,6 +43,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.io.Writer;
+import java.io.IOException;
 
 import javax.jcr.PropertyType;
 import javax.servlet.http.HttpServletRequest;
@@ -138,20 +140,26 @@ public class ControlImpl implements Control {
 
     private String paragraph;
 
+    private final String newLine;
+
     public ControlImpl() {
+        this.newLine = System.getProperty("line.separator");
     }
 
     public ControlImpl(String name, String value) {
+        this();
         this.setName(name);
         this.setValue(value);
     }
 
     public ControlImpl(String name, List values) {
+        this();
         this.setName(name);
         this.setValues(values);
     }
 
     public ControlImpl(String name, Content websiteNode) {
+        this();
         this.setName(name);
         this.setWebsiteNode(websiteNode);
     }
@@ -507,6 +515,11 @@ public class ControlImpl implements Control {
 
     public static String escapeHTML(String str) {
         return str.replaceAll("\"", "&quot;").replaceAll("<", "&lt;").replaceAll(">", "&gt;"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+    }
+
+    protected void println(Writer out, String s) throws IOException {
+        out.write(s);
+        out.write(newLine);
     }
 
 }

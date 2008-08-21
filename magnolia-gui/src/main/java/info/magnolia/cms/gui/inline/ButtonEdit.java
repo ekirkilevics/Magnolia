@@ -40,6 +40,7 @@ import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -108,18 +109,20 @@ public class ButtonEdit extends Button {
     }
 
     /**
-     * <p>
-     * draws the edit button
-     * </p>
-     * <p>
-     * request has to be set!
-     * </p>
+     * @deprecated use drawHtml(Writer out) instead.
      */
     public void drawHtml(JspWriter out) throws IOException {
+        drawHtml((Writer)out);
+    }
+
+    /**
+     * Draws the edit button. The request has to be set!
+     */
+    public void drawHtml(Writer out) throws IOException {
         if (this.getRequest() != null) {
             boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
             if (!Resource.showPreview() && isGranted) {
-                out.println(this.getHtml());
+                println(out, this.getHtml());
             }
         }
     }

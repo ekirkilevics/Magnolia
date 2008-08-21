@@ -43,6 +43,7 @@ import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
@@ -248,11 +249,16 @@ public class BarMain extends Bar {
     }
 
     /**
-     * <p>
-     * draws the main bar (incl. all magnolia specific js and css links)
-     * </p>
+     * @deprecated use drawHtml(Writer out) instead.
      */
     public void drawHtml(JspWriter out) throws IOException {
+        drawHtml((Writer) out);
+    }
+
+    /**
+     * Draws the main bar (incl. all magnolia specific js and css links).
+     */
+    public void drawHtml(Writer out) throws IOException {
         if (ServerConfiguration.getInstance().isAdmin()) {
 
             boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
@@ -271,7 +277,7 @@ public class BarMain extends Bar {
                     // is edit mode
                     this.setSmall(false);
                     if (this.getOverlay()) {
-                        out.println("<div class=\"mgnlMainbar\" style=\"top:" //$NON-NLS-1$
+                        println(out, "<div class=\"mgnlMainbar\" style=\"top:" //$NON-NLS-1$
                             + top
                             + "px;left:" //$NON-NLS-1$
                             + left
@@ -279,31 +285,35 @@ public class BarMain extends Bar {
                             + this.getWidth()
                             + ";\">"); //$NON-NLS-1$
                     }
-                    out.println(this.getHtml());
+                    println(out, this.getHtml());
                     if (this.getOverlay()) {
-                        out.println("</div>"); //$NON-NLS-1$
+                        println(out, "</div>"); //$NON-NLS-1$
                     }
                 }
                 else {
                     // is in preview mode
                     top += 4;
                     left += 4;
-                    out.println("<div class=\"mgnlMainbarPreview\" style=\"top:" + top + "px;left:" + left + "px;\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
-                    out.println(this.getButtonEditView().getHtml());
-                    out.println("</div>"); //$NON-NLS-1$
+                    println(out, "<div class=\"mgnlMainbarPreview\" style=\"top:" + top + "px;left:" + left + "px;\">"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+                    println(out, this.getButtonEditView().getHtml());
+                    println(out, "</div>"); //$NON-NLS-1$
                 }
             }
         }
     }
-
     /**
-     * <p>
-     * draws the magnolia specific js and css links)
-     * </p>
+     * @deprecated use drawHtmlLinks(Writer out) instead.
      */
     public void drawHtmlLinks(JspWriter out) throws IOException {
-        out.println(new Sources(this.getRequest().getContextPath()).getHtmlCss());
-        out.println(new Sources(this.getRequest().getContextPath()).getHtmlJs());
+        drawHtmlLinks((Writer) out);
+    }
+
+    /**
+     * Draws the magnolia specific js and css links).
+     */
+    public void drawHtmlLinks(Writer out) throws IOException {
+        println(out, new Sources(this.getRequest().getContextPath()).getHtmlCss());
+        println(out, new Sources(this.getRequest().getContextPath()).getHtmlJs());
     }
 
     public boolean isAdminButtonVisible() {
