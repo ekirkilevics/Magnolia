@@ -21,7 +21,7 @@ Magnolia Integration
 
   More information is found {{{http://magnolia.sourceforge.net/advanced/modules.html}here}}.
 
-  The best practice is to start with the module magnolia-templating from the {{{http://svn.magnolia.info/view/magnolia/trunk/}svn trunk}}. This module is very small and already working together with maven 2. During the development process it's easy to make a dummy jar containing only the manifest and to expose the classes into the WEB-INF/classes directory.
+  The best practice is to start with the module magnolia-templating from the {{{http://svn.magnolia.info/view/community/magnolia/trunk/}svn trunk}}. This module is very small and already working together with maven 2. During the development process it's easy to make a dummy jar containing only the manifest and to expose the classes into the WEB-INF/classes directory.
 
 
 
