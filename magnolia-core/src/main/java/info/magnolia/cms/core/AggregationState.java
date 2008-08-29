@@ -152,10 +152,16 @@ public class AggregationState {
         this.repository = repository;
     }
 
+    /**
+     * @deprecated selectors are officially deprecated since Magnolia 3.6.2  - please consider using virtual uri mappings instead
+     */
     public String getSelector() {
         return selector;
     }
 
+    /**
+     * @deprecated selectors are officially deprecated since Magnolia 3.6.2  - please consider using virtual uri mappings instead
+     */
     public void setSelector(String selector) {
         this.selector = selector;
     }

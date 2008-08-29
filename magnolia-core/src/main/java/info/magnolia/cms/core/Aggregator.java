@@ -105,12 +105,15 @@ public class Aggregator {
         return  getAggregationState().getRepository();
     }
 
+    /**
+     * @deprecated selectors are officially deprecated since Magnolia 3.6.2  - please consider using virtual uri mappings instead
+     */
     public static String getSelector() {
-        return  getAggregationState().getSelector();
+        return getAggregationState().getSelector();
     }
 
     public static Template getTemplate() {
-        return  getAggregationState().getTemplate();
+        return getAggregationState().getTemplate();
     }
 
     public static void setCurrentContent(Content node) {
@@ -138,6 +141,9 @@ public class Aggregator {
         getAggregationState().setRepository(repository);
     }
 
+    /**
+     * @deprecated selectors are officially deprecated since Magnolia 3.6.2  - please consider using virtual uri mappings instead
+     */
     public static void setSelector(String selector) {
         getAggregationState().setSelector(selector);
     }
