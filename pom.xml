@@ -256,7 +256,7 @@ for Java Content Repositories (JCR).
       <plugin>
         <groupId>info.magnolia</groupId>
         <artifactId>maven-setproperty-plugin</artifactId>
-        <version>1.0.1</version>
+        <version>1.0.2-SNAPSHOT</version>
         <executions>
           <!-- set the current date -->
           <execution>
@@ -265,23 +265,6 @@ for Java Content Repositories (JCR).
             <goals>
               <goal>set-property</goal>
             </goals>
-            <configuration>
-              <properties>
-                <property implementation="info.magnolia.maven.setproperty.CurrentDateValueProvider">
-                  <name>magnoliaCurrentDate</name>
-                  <format>d. MMMM yyyy</format>
-                </property>
-                <!-- don't use magnolia.version. By some plugins it would get treated as project.version -->
-                <property implementation="info.magnolia.maven.setproperty.VersionNameValueProvider">
-                  <name>magnoliaNiceVersion</name>
-                </property>
-                <!-- set the release date (default current) -->
-                <property implementation="info.magnolia.maven.setproperty.CurrentDateValueProvider">
-                  <name>magnoliaReleaseDate</name>
-                  <format>d. MMMM yyyy</format>
-                </property>
-              </properties>
-            </configuration>
           </execution>
         </executions>
       </plugin>
