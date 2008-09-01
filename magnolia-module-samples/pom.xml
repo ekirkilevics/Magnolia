@@ -36,8 +36,8 @@
   </dependencies>
   <build>
     <plugins>
-    <!-- is currently not working because the tag libraries defined in the other modules are not
-         regognized. Normal tags are rendererd as is but the functions do create exceptions
+    <!-- This is currently not working in reactor mode: the tag libraries defined in the other modules are not
+         regognized: normal tags are rendered as-is (i.e out.println("cms:out"), and the functions create exceptions.
       <plugin>
         <groupId>org.codehaus.mojo.jspc</groupId>
         <artifactId>jspc-maven-plugin</artifactId>
