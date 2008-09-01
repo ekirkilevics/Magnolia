@@ -3,7 +3,7 @@
   <parent>
     <groupId>info.magnolia</groupId>
     <artifactId>magnolia-parent-pom</artifactId>
-    <version>4</version>
+    <version>5-SNAPSHOT</version>
   </parent>
   <groupId>info.magnolia</groupId>
   <artifactId>magnolia-project</artifactId>
@@ -130,41 +130,6 @@ for Java Content Repositories (JCR).
   </scm>
   <profiles>
     <profile>
-      <id>bundle</id>
-      <modules>
-        <module>magnolia-bundle</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>enterprise</id>
-      <modules>
-        <module>../magnolia-enterprise</module>
-      </modules>
-    </profile>
-    <profile>
-      <id>modules</id>
-      <activation>
-        <property>
-          <name>all</name>
-        </property>
-      </activation>
-      <modules>
-        <module>magnolia-module-data</module>
-        <module>magnolia-module-documentation</module>
-        <module>magnolia-module-docutools</module>
-        <module>magnolia-module-dms</module>
-        <module>magnolia-module-excelrenderer</module>
-        <module>magnolia-module-forum</module>
-        <module>magnolia-module-imagefiltering</module>
-        <module>magnolia-module-observation</module>
-        <module>magnolia-module-poll</module>
-        <module>magnolia-module-scheduler</module>
-        <module>magnolia-module-todolist</module>
-        <module>magnolia-module-public-user-registration</module>
-        <module>magnolia-module-wiki</module>
-      </modules>
-    </profile>
-    <profile>
       <id>fullsite</id>
       <distributionManagement>
         <site>
@@ -263,66 +228,10 @@ for Java Content Repositories (JCR).
         </plugins>
       </reporting>
     </profile>
-    <profile>
-      <id>eclipse</id>
-      <build>
-        <pluginManagement>
-          <plugins>
-            <plugin>
-              <groupId>org.apache.maven.plugins</groupId>
-              <artifactId>maven-enforcer-plugin</artifactId>
-              <configuration>
-                <skip>true</skip>
-              </configuration>
-            </plugin>
-          </plugins>
-        </pluginManagement>
-      </build>
-      <modules>
-        <module>magnolia-bundle</module>
-      </modules>
-    </profile>
   </profiles>
   <build>
     <pluginManagement>
       <plugins>
-        <!-- precompile/validate JSPs : -->
-        <plugin>
-          <groupId>org.codehaus.mojo.jspc</groupId>
-          <artifactId>jspc-maven-plugin</artifactId>
-          <version>2.0-alpha-1</version>
-          <executions>
-            <execution>
-              <goals>
-                <goal>compile</goal>
-              </goals>
-            </execution>
-          </executions>
-          <dependencies>
-            <dependency>
-              <groupId>org.codehaus.mojo.jspc</groupId>
-              <artifactId>jspc-compiler-tomcat5</artifactId>
-              <version>2.0-alpha-1</version>
-            </dependency>
-          </dependencies>
-          <configuration>
-            <sources>
-              <directory>${basedir}/src/main/resources/</directory>
-              <includes>
-                <include>**/*.jsp</include>
-              </includes>
-            </sources>
-            <source>1.4</source>
-            <target>1.4</target>
-            <verbose>1</verbose>
-          </configuration>
-        </plugin>
-        <plugin>
-          <artifactId>maven-release-plugin</artifactId>
-          <configuration>
-            <autoVersionSubmodules>true</autoVersionSubmodules>
-          </configuration>
-        </plugin>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
           <configuration>
@@ -330,15 +239,6 @@ for Java Content Repositories (JCR).
               <descriptor>info.magnolia:magnolia-bundle-assembly:1.1</descriptor>
             </descriptors>
           </configuration>
-          <executions>
-            <execution>
-              <id>make-assembly</id>
-              <phase>package</phase>
-              <goals>
-                <goal>attached</goal>
-              </goals>
-            </execution>
-          </executions>
         </plugin>
       </plugins>
     </pluginManagement>
@@ -346,26 +246,6 @@ for Java Content Repositories (JCR).
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <configuration>
-          <source>1.4</source>
-          <target>1.4</target>
-        </configuration>
-        <executions>
-          <execution>
-            <id>compile-tests</id>
-            <phase>process-test-sources</phase>
-            <goals>
-              <goal>testCompile</goal>
-            </goals>
-            <configuration>
-              <source>1.5</source>
-              <target>1.5</target>
-            </configuration>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
@@ -406,21 +286,7 @@ for Java Content Repositories (JCR).
         </executions>
       </plugin>
       <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <configuration>
-          <encoding>UTF-8</encoding>
-        </configuration>
-      </plugin>
-      <plugin>
         <artifactId>maven-remote-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>process</goal>
-            </goals>
-          </execution>
-        </executions>
         <configuration>
           <resourceBundles>
             <resourceBundle>info.magnolia:magnolia-build-tools-dual-licensed:1.4</resourceBundle>
@@ -429,15 +295,6 @@ for Java Content Repositories (JCR).
       </plugin>
       <plugin>
         <artifactId>maven-checkstyle-plugin</artifactId>
-        <!-- 2.2 will be needed to check test sources as well -->
-        <version>2.1</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>check</goal>
-            </goals>
-          </execution>
-        </executions>
         <dependencies>
           <dependency>
             <groupId>info.magnolia</groupId>
@@ -445,56 +302,9 @@ for Java Content Repositories (JCR).
             <version>1.4</version>
           </dependency>
         </dependencies>
-        <configuration>
-          <configLocation>magnolia-build-tools/checkstyle.xml</configLocation>
-          <headerLocation>magnolia-build-tools/license-header-dual.regex</headerLocation>
-          <enableRulesSummary>true</enableRulesSummary>
-          <consoleOutput>true</consoleOutput>
-          <!-- this is unfortunately not supported in the 2.1 version of the checkstyle plugin -->
-          <includeTestSourceDirectory>true</includeTestSourceDirectory>
-        </configuration>
       </plugin>
     </plugins>
-    <resources>
-      <resource>
-        <filtering>false</filtering>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>**/*</include>
-        </includes>
-        <!--
-          leaving this exclude out is not a problem for maven (resources will be overridden with filtered ones in the
-          next definition) and makes eclipse working. Eclipse configuration will not work with a resource dir defined
-          twice with opposite excludes/includes.
-          <excludes>
-          <exclude>META-INF/magnolia/*</exclude>
-          </excludes>
-        -->
-      </resource>
-      <resource>
-        <filtering>true</filtering>
-        <directory>src/main/resources</directory>
-        <includes>
-          <include>META-INF/magnolia/*</include>
-          <include>**/license.xml</include>
-        </includes>
-      </resource>
-    </resources>
-    <testResources>
-      <testResource>
-        <directory>src/test/resources</directory>
-        <includes>
-          <include>**/*</include>
-        </includes>
-      </testResource>
-      <testResource>
-        <directory>src/test/java</directory>
-        <includes>
-          <include>**/*.xml</include>
-          <include>**/*.properties</include>
-        </includes>
-      </testResource>
-    </testResources>
+    
   </build>
   <dependencyManagement>
     <dependencies>
@@ -731,11 +541,6 @@ for Java Content Repositories (JCR).
         <groupId>org.apache.velocity</groupId>
         <artifactId>velocity</artifactId>
         <version>1.5</version>
-      </dependency>
-      <dependency>
-        <groupId>com.metaparadigm</groupId>
-        <artifactId>json-rpc</artifactId>
-        <version>1.0</version>
       </dependency>
       <dependency>
         <groupId>org.devlib.schmidt</groupId>
