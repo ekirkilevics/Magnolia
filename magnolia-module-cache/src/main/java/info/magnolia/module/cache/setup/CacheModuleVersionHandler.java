@@ -101,14 +101,25 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                         new FilterOrderingTask("gzip", new String[]{"cache"})
                 ))
         );
+        register(DeltaBuilder.update("3.6.2", "Updated executors and filter configuration.")
+                .addTask(new BootstrapResourcesTask("Updated configuration", "Bootstraps new default cache configuration.") {
+                    protected String[] getResourcesToBootstrap(final InstallContext installContext) {
+                        return new String[]{
+                                "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.executors.store.cacheContent.compressible.xml",
+                                "/mgnl-bootstrap/cache/config.modules.cache.config.configurations.default.executors.store.serveContent.xml"
+                        };
+                    }
+                })
+                .addTask(new FilterOrderingTask("cache", "The gzip filter should now be placed before the cache filter.", new String[]{"gzip"}))
+        );
 
 
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
         final List tasks = new ArrayList();
-        tasks.add(new FilterOrderingTask("cache", new String[]{"context", "multipartRequest", "activation"}));
-        tasks.add(new FilterOrderingTask("gzip", new String[]{"cache"}));
+        tasks.add(new FilterOrderingTask("gzip", new String[]{"context", "multipartRequest", "activation"}));
+        tasks.add(new FilterOrderingTask("cache", new String[]{"gzip"}));
         return tasks;
     }
 
