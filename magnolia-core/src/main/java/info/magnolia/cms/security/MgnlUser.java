@@ -44,6 +44,7 @@ import info.magnolia.cms.util.SystemContentWrapper;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -76,6 +77,11 @@ public class MgnlUser extends AbstractUser implements Serializable {
     private static final String NODE_ROLES = "roles"; //$NON-NLS-1$
 
     private static final String NODE_GROUPS = "groups"; //$NON-NLS-1$
+
+    /**
+     * Used for a global synchronization
+     */
+    private static final Object mutex = new Object();
 
     // serialiyed
     private SystemContentWrapper userNode;
@@ -367,17 +373,32 @@ public class MgnlUser extends AbstractUser implements Serializable {
      */
     public void setLastAccess() {
         NodeData lastaccess;
-        try {
-            synchronized (this.getUserNode().getJCRNode()) {
-                lastaccess = NodeDataUtil.getOrCreate(this.getUserNode(), "lastaccess", PropertyType.DATE);
-                lastaccess.setValue(new GregorianCalendar());
-                getUserNode().save();
+        Exception finalException = null;
+        boolean success = false;
+        // try three times to save the lastaccess property
+        for(int i= 1; !success && i <=3; i++){
+            finalException = null;
+            try {
+                // synchronize on a static mutex
+                synchronized (mutex) {
+                    // refresh the session on retries
+                    if(i>1){
+                        getUserNode().refresh(false);
+                    }
+                    lastaccess = NodeDataUtil.getOrCreate(this.getUserNode(), "lastaccess", PropertyType.DATE);
+                    lastaccess.setValue(new GregorianCalendar());
+                    getUserNode().save();
+                    success = true;
+                }
+            }
+            catch (RepositoryException e) {
+                finalException = e;
+                log.debug("Unable to set the last access", e);
             }
         }
-        catch (RepositoryException e) {
-            log.warn("Unable to set the last access date due to a " + e.getClass().getName() + " - " + e.getMessage(), e);
+        if(finalException != null){
+            log.warn("Unable to set the last access date due to a " + ExceptionUtils.getMessage(finalException));
         }
-
     }
 
     public Content getUserNode() {
