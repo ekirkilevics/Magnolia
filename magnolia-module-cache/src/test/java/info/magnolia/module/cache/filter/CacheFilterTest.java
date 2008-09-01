@@ -147,6 +147,7 @@ public class CacheFilterTest extends TestCase {
         //expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.setDateHeader(eq("Last-Modified"), anyLong());
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
+        expect(response.getContentType()).andReturn("text/html");
 
         expect(request.getHeaders("Accept-Encoding")).andReturn(new Enumeration() {
             private boolean has = true;
@@ -206,6 +207,7 @@ public class CacheFilterTest extends TestCase {
         //expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.setDateHeader(eq("Last-Modified"), anyLong());
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
+        expect(response.getContentType()).andReturn("text/html");
 
         expect(request.getHeaders("Accept-Encoding")).andReturn(new Enumeration() {
             private boolean has = true;
@@ -310,8 +312,7 @@ public class CacheFilterTest extends TestCase {
 
     public void testServesGZippedContentIfClientAcceptsGZipEncoding() throws Exception {
         final String dummyContent = "hello i'm a page that was cached";
-        final byte[] gzipped = GZipUtil.gzip(dummyContent.getBytes());
-        final CachedPage cachedPage = new CachedPage(gzipped, "text/plain", "ASCII", 123, new MultiValueMap(), System.currentTimeMillis());
+        final CachedPage cachedPage = new CachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 123, new MultiValueMap(), System.currentTimeMillis(), true);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration("foo", "gzip", "bar"));
@@ -325,6 +326,7 @@ public class CacheFilterTest extends TestCase {
         expect(response.containsHeader("Content-Encoding")).andReturn(true);
         response.addHeader("Vary", "Accept-Encoding");
         expect(response.containsHeader("Vary")).andReturn(true);
+        byte[] gzipped = GZipUtil.gzip(dummyContent.getBytes());
         response.setContentLength(gzipped.length);
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
@@ -489,6 +491,7 @@ public class CacheFilterTest extends TestCase {
             }
         });
         response.setDateHeader(eq("Last-Modified"), eq(expectedLastModified.getTime()));
+        expect(response.getContentType()).andReturn("text/html");
 
         expect(request.getHeaders("Accept-Encoding")).andReturn(new Enumeration() {
             private boolean has = true;

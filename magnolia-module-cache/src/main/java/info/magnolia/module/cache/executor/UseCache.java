@@ -121,7 +121,8 @@ public class UseCache extends AbstractExecutor {
     }
 
     protected void writePage(final HttpServletRequest request, final HttpServletResponse response, final CachedPage cachedEntry) throws IOException {
-        final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request);
+        // write gzip header only if accepts zgip and we have compressed and uncompressed entries
+        final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request) && cachedEntry.getUngzippedContent() != null;
         log.debug("Accepts gzip encoding: {}", "" + acceptsGzipEncoding);
 
         response.setStatus(cachedEntry.getStatusCode());
@@ -173,11 +174,19 @@ public class UseCache extends AbstractExecutor {
 
     protected void writeContent(final HttpServletResponse response, final CachedPage cachedEntry, boolean acceptsGzipEncoding) throws IOException {
         final byte[] body;
-        if (!acceptsGzipEncoding && cachedEntry.getUngzippedContent() != null) {
-            body = cachedEntry.getUngzippedContent();
+        if (!acceptsGzipEncoding ) {
+            if (cachedEntry.getUngzippedContent() != null) {
+                // we have both zipped and unzipped version, serve unzipped
+                body = cachedEntry.getUngzippedContent();
+            } else {
+                // we have only one version as the content can't be zipped or is not desirable to zip it
+                body = cachedEntry.getDefaultContent();
+            }
         } else {
+            // zipped is always default (when both exists)
             body = cachedEntry.getDefaultContent();
-            if (acceptsGzipEncoding && !response.isCommitted() && !response.containsHeader("Content-Encoding")) {
+            // write the headers as well (if not written already)
+            if (!response.isCommitted() && !response.containsHeader("Content-Encoding")) {
                 RequestHeaderUtil.addAndVerifyHeader(response, "Content-Encoding", "gzip");
                 RequestHeaderUtil.addAndVerifyHeader(response, "Vary", "Accept-Encoding"); // needed for proxies
             }

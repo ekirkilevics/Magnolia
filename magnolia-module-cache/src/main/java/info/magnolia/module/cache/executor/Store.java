@@ -94,7 +94,7 @@ public class Store extends AbstractExecutor {
 
             if ((responseWrapper.getStatus() != HttpServletResponse.SC_MOVED_TEMPORARILY) && (responseWrapper.getStatus() != HttpServletResponse.SC_NOT_MODIFIED) && !responseWrapper.isError()) {
                 //handle gzip headers (have to be written BEFORE commiting the response
-                final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request);
+                final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request) && compressible != null && compressible.values().contains(response.getContentType());
                 if (acceptsGzipEncoding) {
                     RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
                     RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
@@ -163,7 +163,6 @@ public class Store extends AbstractExecutor {
     }
 
     public void setCompressible(Map compressible) {
-        log.error("Setting the map " + compressible.size());
         this.compressible = compressible;
     }
 }
