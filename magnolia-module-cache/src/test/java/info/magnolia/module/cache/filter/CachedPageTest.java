@@ -44,23 +44,22 @@ import java.io.IOException;
  * @version $Revision: $ ($Author: $)
  */
 public class CachedPageTest extends TestCase {
-    public void testUnzipsContentIfPassedContentIsGZippedAndNotOfGzipMimeType() throws IOException {
+    public void testDoesNotAttemptToUnzipsContentIfPassedContentIsGZipped() throws IOException {
         final String s = "hello";
         final byte[] gzipped = GZipUtil.gzip(s.getBytes());
-        final CachedPage p = new CachedPage(gzipped, "text/plain", "cha", 1, null, System.currentTimeMillis());
-        assertEquals(gzipped, p.getDefaultContent());
-        assertEquals("hello", new String(p.getUngzippedContent()));
-    }
-
-    public void testDoesNotAttemptToUnzipIfMimeTypeSaysTheContentIsGZipEvenIfContentActuallyIsGZipped() throws IOException {
-        final byte[] gzipped = GZipUtil.gzip("hello".getBytes());
-        final CachedPage p = new CachedPage(gzipped, "application/x-gzip", "cha", 1, null, System.currentTimeMillis());
+        final CachedPage p = new CachedPage(gzipped, "text/plain", "cha", 1, null, System.currentTimeMillis(), true);
         assertEquals(gzipped, p.getDefaultContent());
         assertEquals(null, p.getUngzippedContent());
     }
 
-    public void testDoesNotAttemptToUnzipIfContentIsNotGZipped() throws IOException {
-        final CachedPage p = new CachedPage("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis());
+    public void testGZipIfContentIsNotGZipped() throws IOException {
+        final CachedPage p = new CachedPage("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis(), true);
+        assertEquals("hello", new String(GZipUtil.ungzip(p.getDefaultContent())));
+        assertEquals("hello", new String(p.getUngzippedContent()));
+    }
+
+    public void testDontGZipIfContentIsNotGZippedAndShouldNotBe() throws IOException {
+        final CachedPage p = new CachedPage("hello".getBytes(), "foo/bar", "cha", 1, null, System.currentTimeMillis(), false);
         assertEquals("hello", new String(p.getDefaultContent()));
         assertEquals(null, p.getUngzippedContent());
     }

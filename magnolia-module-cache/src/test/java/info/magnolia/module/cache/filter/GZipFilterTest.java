@@ -36,6 +36,7 @@ package info.magnolia.module.cache.filter;
 import info.magnolia.module.cache.util.GZipUtil;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
+
 import org.easymock.IAnswer;
 
 import javax.servlet.FilterChain;
@@ -47,6 +48,7 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Enumeration;
 
 /**
  *
@@ -61,11 +63,21 @@ public class GZipFilterTest extends TestCase {
 
         final FilterChain chain = createStrictMock(FilterChain.class);
         final HttpServletRequest mockRequest = createStrictMock(HttpServletRequest.class);
+        expect(mockRequest.getHeaders("Accept-Encoding")).andReturn(new Enumeration() {
+            private boolean has = true;
+            public boolean hasMoreElements() {
+                return has;
+            }
+            public Object nextElement() {
+                has = false;
+                return "gzip";
+            }});
         // using a nice mock for reponse, because the point here is to not enforce the specific usage of flushBuffer()
         // on the response by the GZipFilter, but rather to make sure that however this is handled, all content
         // is actually there (which last time check was solved by calling flushBuffer() indeed)
         final HttpServletResponse mockResponse = createNiceMock(HttpServletResponse.class);
         // expectactions - which contradict the comment above - they'll move to another test soonish.
+        expect(mockResponse.containsHeader("Content-Encoding")).andReturn(false);
         mockResponse.addHeader("Content-Encoding", "gzip");
         expect(mockResponse.containsHeader("Content-Encoding")).andReturn(true);
         mockResponse.addHeader("Vary", "Accept-Encoding");

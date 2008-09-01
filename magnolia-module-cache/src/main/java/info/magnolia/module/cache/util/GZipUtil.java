@@ -98,6 +98,14 @@ public class GZipUtil {
         }
     }
 
+    public static boolean isGZipped(int[] candidate) {
+        if (candidate == null || candidate.length < 2) {
+            return false;
+        } else {
+            return (candidate[0] == GZIP_MAGIC_NUMBER_BYTE_1 && candidate[1] == GZIP_MAGIC_NUMBER_BYTE_2);
+        }
+    }
+
     public static boolean isGZipMimeType(String contentType) {
         return GZIP_MIMETYPES.contains(contentType);
     }

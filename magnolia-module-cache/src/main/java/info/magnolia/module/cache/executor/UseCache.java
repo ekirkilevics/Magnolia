@@ -64,7 +64,7 @@ public class UseCache extends AbstractExecutor {
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
             CachePolicyResult cachePolicy) throws IOException, ServletException {
-        final CachedEntry cached = (CachedEntry) cachePolicy.getCachedEntry();
+        CachedEntry cached = (CachedEntry) cachePolicy.getCachedEntry();
         processCachedEntry(cached, request, response);
     }
 
@@ -86,7 +86,12 @@ public class UseCache extends AbstractExecutor {
             final CachedRedirect redir = (CachedRedirect) cached;
             // we'll ignore the redirection code for now - especially since the servlet api doesn't really let us choose anyway
             // except if someone sets the header manually ?
-            response.sendRedirect(redir.getLocation());
+            if (!response.isCommitted()) {
+                response.sendRedirect(redir.getLocation());
+            }
+        } else if (cached == null) {
+            // 304 or nothing to write to the output
+            return;
         } else {
             throw new IllegalStateException("Unexpected CachedEntry type: " + cached);
         }
@@ -117,6 +122,7 @@ public class UseCache extends AbstractExecutor {
 
     protected void writePage(final HttpServletRequest request, final HttpServletResponse response, final CachedPage cachedEntry) throws IOException {
         final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request);
+        log.debug("Accepts gzip encoding: {}", "" + acceptsGzipEncoding);
 
         response.setStatus(cachedEntry.getStatusCode());
         addHeaders(cachedEntry, acceptsGzipEncoding, response);
@@ -137,9 +143,14 @@ public class UseCache extends AbstractExecutor {
         while (it.hasNext()) {
             final String header = (String) it.next();
             if (!acceptsGzipEncoding) {
+                //TODO: this should not be necessary any more ...
                 if ("Content-Encoding".equals(header) || "Vary".equals(header)) {
                     continue;
                 }
+            }
+            if (response.containsHeader(header)) {
+                // do not duplicate headers. Some of the headers we have to set in Store to have them added to the cache entry, on the other hand we don't want to duplicate them if they are already set.
+                continue;
             }
 
             final Collection values = (Collection) headers.get(header);
@@ -166,6 +177,10 @@ public class UseCache extends AbstractExecutor {
             body = cachedEntry.getUngzippedContent();
         } else {
             body = cachedEntry.getDefaultContent();
+            if (acceptsGzipEncoding && !response.isCommitted() && !response.containsHeader("Content-Encoding")) {
+                RequestHeaderUtil.addAndVerifyHeader(response, "Content-Encoding", "gzip");
+                RequestHeaderUtil.addAndVerifyHeader(response, "Vary", "Accept-Encoding"); // needed for proxies
+            }
         }
 
         // TODO : check for empty responses

@@ -67,14 +67,31 @@ public class CachedPage implements CachedEntry {
     private final MultiMap headers;
     private final long lastModificationTime;
 
+    /**
+     * @deprecated not used, since 3.6.2, as it will compress all not gzipped content of every entry created using this constructor which is not desirable for already compressed content (e.g. jpg & tif images)
+     */
     public CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate) throws IOException {
+        this(out, contentType, characterEncoding, statusCode, headers, modificationDate, true);
+    }
+
+    /**
+     * @param out Cached content.
+     * @param contentType MIME type of the cached content.
+     * @param characterEncoding Character encoding of the cached content.
+     * @param statusCode HTTP response status code (E.g. 200 - OK);
+     * @param headers Additional HTTP headers to be sent when serving this cached content.
+     * @param modificationDate Content modification date to set in the response.
+     * @param shouldCompress Flag marking this content as desirable to be sent in compressed form (should the client support such compression). Setting this to true means cache entry will contain both, compressed and flat version of the content. Compression is applied here only if content is not gzipped already.
+     * @throws IOException when failing to compress the content.
+     */
+    public CachedPage(byte[] out, String contentType, String characterEncoding, int statusCode, MultiMap headers, long modificationDate, boolean shouldCompress) throws IOException {
         // content which is actually of a compressed type must stay that way
-        if (!GZipUtil.isGZipMimeType(contentType) && GZipUtil.isGZipped(out)) {
-            this.defaultContent = out;
-            this.ungzippedContent = GZipUtil.ungzip(out);
-        } else {
+        if (GZipUtil.isGZipped(out) || !shouldCompress) {
             this.defaultContent = out;
             this.ungzippedContent = null;
+        } else {
+            this.defaultContent = GZipUtil.gzip(out);
+            this.ungzippedContent = out;
         }
         this.contentType = contentType;
         this.characterEncoding = characterEncoding;

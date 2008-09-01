@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.cache.executor;
 
+import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CacheResponseWrapper;
@@ -41,16 +42,23 @@ import info.magnolia.module.cache.filter.CachedError;
 import info.magnolia.module.cache.filter.CachedPage;
 import info.magnolia.module.cache.filter.CachedRedirect;
 import info.magnolia.module.cache.filter.SimpleServletOutputStream;
+import info.magnolia.module.cache.util.GZipUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.util.Map;
+import java.util.zip.GZIPInputStream;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.output.NullOutputStream;
 import org.apache.commons.io.output.TeeOutputStream;
+import org.apache.jackrabbit.commons.packaging.ContentPackage;
 
 /**
  * Wraps the response and stores the content in a cache Entry.
@@ -60,6 +68,10 @@ import org.apache.commons.io.output.TeeOutputStream;
  */
 public class Store extends AbstractExecutor {
 
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Store.class);
+    private Map compressible;
+
+
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
             CachePolicyResult cachePolicy) throws IOException, ServletException {
@@ -67,17 +79,33 @@ public class Store extends AbstractExecutor {
         try {
             // will write to both the response stream and an internal byte array for caching
             final ByteArrayOutputStream cachingStream = new ByteArrayOutputStream();
-            final TeeOutputStream teeOutputStream = new TeeOutputStream(response.getOutputStream(), cachingStream);
-            final SimpleServletOutputStream out = new SimpleServletOutputStream(teeOutputStream);
-            final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, out);
+
+            final SimpleServletOutputStream out = new SimpleServletOutputStream(cachingStream);
+            final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, out) {
+                public void flushBuffer() throws IOException {
+                    // do nothing we will flush later.
+                }
+            };
 
             // setting Last-Modified to when this resource was stored in the cache. This value might get overriden by further filters or servlets.
             final long modificationDate = System.currentTimeMillis();
             responseWrapper.setDateHeader("Last-Modified", modificationDate);
             chain.doFilter(request, responseWrapper);
 
+            if ((responseWrapper.getStatus() != HttpServletResponse.SC_MOVED_TEMPORARILY) && (responseWrapper.getStatus() != HttpServletResponse.SC_NOT_MODIFIED) && !responseWrapper.isError()) {
+                //handle gzip headers (have to be written BEFORE commiting the response
+                final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request);
+                if (acceptsGzipEncoding) {
+                    RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
+                    RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
+                }
+            }
+
+
             try {
-                responseWrapper.flushBuffer();
+                response.flushBuffer();
+                responseWrapper.flush();
+
             } catch (IOException e) {
                 //TODO better handling ?
                 // ignore and don't cache, should be a ClientAbortException
@@ -85,11 +113,16 @@ public class Store extends AbstractExecutor {
             }
 
             cachedEntry = makeCachedEntry(responseWrapper, cachingStream);
+
+        } catch (Throwable t) {
+            t.printStackTrace();
         } finally {
             // have to put cache entry no matter what even if it is null to release lock.
             cache.put(cachePolicy.getCacheKey(), cachedEntry);
             if (cachedEntry == null ) {
                 cache.remove(cachePolicy.getCacheKey());
+            } else {
+                cachePolicy.setCachedEntry(cachedEntry);
             }
         }
     }
@@ -108,12 +141,13 @@ public class Store extends AbstractExecutor {
 
         final long modificationDate = cacheResponse.getLastModified();
         final byte[] aboutToBeCached = cachingStream.toByteArray();
+        final String contentType = cacheResponse.getContentType();
         return new CachedPage(aboutToBeCached,
-                cacheResponse.getContentType(),
+                contentType,
                 cacheResponse.getCharacterEncoding(),
                 cacheResponse.getStatus(),
                 cacheResponse.getHeaders(),
-                modificationDate);
+                modificationDate, compressible != null && compressible.values().contains(contentType));
     }
 
     /**
@@ -122,5 +156,14 @@ public class Store extends AbstractExecutor {
      */
     protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream, long modificationDate) throws IOException {
         return makeCachedEntry(cacheResponse, cachingStream);
+    }
+
+    public Map getCompressible() {
+        return compressible;
+    }
+
+    public void setCompressible(Map compressible) {
+        log.error("Setting the map " + compressible.size());
+        this.compressible = compressible;
     }
 }

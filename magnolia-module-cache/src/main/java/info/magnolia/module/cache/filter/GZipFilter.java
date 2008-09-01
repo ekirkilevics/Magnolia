@@ -34,6 +34,8 @@
 package info.magnolia.module.cache.filter;
 
 import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
+import info.magnolia.cms.util.RequestHeaderUtil;
+import info.magnolia.module.cache.util.GZipUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -59,15 +61,14 @@ import javax.servlet.http.HttpServletResponse;
 public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
-        // we can't tee the outputstream, because we need to setContentLength before writing content ...
+        // we need to setContentLength before writing content ...
         // (otherwise Tomcat adds a Transfer-Encoding: chunked header, which seems to cause trouble
         // to browsers ...)
-        final ByteArrayOutputStream compressed = new ByteArrayOutputStream();
-        final GZIPOutputStream gzout = new GZIPOutputStream(compressed);
-        final SimpleServletOutputStream wrappedOut = new SimpleServletOutputStream(gzout);
+        final ByteArrayOutputStream flat = new ByteArrayOutputStream();
+        final SimpleServletOutputStream wrappedOut = new SimpleServletOutputStream(flat);
 
         // Handle the request
-        final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response, wrappedOut) {
+        final CacheResponseWrapper responseWrapper = new CacheResponseWrapper(response,wrappedOut) {
             public void setContentLength(int len) {
                 // don't let the container set a (wrong) content-length too early,
                 // we're going to set it later to the appropriate
@@ -83,8 +84,6 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
         chain.doFilter(request, responseWrapper);
 
         responseWrapper.flush();
-        gzout.flush();
-        gzout.close();
 
         //return on error or redirect code, because response is already committed
         int statusCode = responseWrapper.getStatus();
@@ -92,12 +91,19 @@ public class GZipFilter extends OncePerRequestAbstractMgnlFilter {
             return;
         }
 
-        addAndVerifyHeader(response, "Content-Encoding", "gzip");
-        addAndVerifyHeader(response, "Vary", "Accept-Encoding"); // needed for proxies
+        byte[] array = flat.toByteArray();
+        if (!GZipUtil.isGZipped(array) && RequestHeaderUtil.acceptsGzipEncoding(request)) {
+            array = GZipUtil.gzip(array);
+        }
 
-        final byte[] compressedBytes = compressed.toByteArray();
-        response.setContentLength(compressedBytes.length);
-        response.getOutputStream().write(compressedBytes);
+        // add headers only if not set yet.
+        if (GZipUtil.isGZipped(array) && !response.containsHeader("Content-Encoding")) {
+            RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
+            RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
+        }
+
+        response.setContentLength(array.length);
+        response.getOutputStream().write(array);
         response.flushBuffer();
 
         // TODO :

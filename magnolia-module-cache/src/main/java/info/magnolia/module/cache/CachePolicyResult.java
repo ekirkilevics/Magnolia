@@ -48,7 +48,7 @@ public class CachePolicyResult {
 
     private final CachePolicyBehaviour behaviour;
     private final Object cacheKey;
-    private final Object cachedEntry;
+    private Object cachedEntry;
 
     public CachePolicyResult(CachePolicyBehaviour behaviour, Object cacheKey, Object cachedEntry) {
         this.behaviour = behaviour;
@@ -90,6 +90,10 @@ public class CachePolicyResult {
         public String getName() {
             return name;
         }
+    }
+
+    public void setCachedEntry(Object entry) {
+        cachedEntry = entry;
     }
 
 }
