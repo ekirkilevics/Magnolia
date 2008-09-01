@@ -610,24 +610,6 @@ for Java Content Repositories (JCR).
         <version>0.7.1</version>
       </dependency>
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
-        <version>3.8.1</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>xmlunit</groupId>
-        <artifactId>xmlunit</artifactId>
-        <version>1.0</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>httpunit</groupId>
-        <artifactId>httpunit</artifactId>
-        <version>1.6</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
         <groupId>tomcat</groupId>
         <artifactId>jasper-compiler</artifactId>
         <version>5.5.9</version>
@@ -643,24 +625,6 @@ for Java Content Repositories (JCR).
         <groupId>commons-el</groupId>
         <artifactId>commons-el</artifactId>
         <version>1.0</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.easymock</groupId>
-        <artifactId>easymock</artifactId>
-        <version>2.3</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.easymock</groupId>
-        <artifactId>easymockclassextension</artifactId>
-        <version>2.3</version>
-        <scope>test</scope>
-      </dependency>
-      <dependency>
-        <groupId>com.mockrunner</groupId>
-        <artifactId>mockrunner</artifactId>
-        <version>0.3.1</version>
         <scope>test</scope>
       </dependency>
       <dependency>
