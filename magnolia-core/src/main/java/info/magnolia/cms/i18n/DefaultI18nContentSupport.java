@@ -60,7 +60,10 @@ public class DefaultI18nContentSupport extends AbstractI18nContentSupport {
     }
 
     protected String toRawURI(String i18nURI, Locale locale) {
-        return StringUtils.removeStart(i18nURI, "/" + locale.toString());
+        //MAGNOLIA-2142 - make sure we strip language only when it is actually present
+        String raw = StringUtils.removeStart(i18nURI, "/" + locale.toString() + "/");
+        // put back leading slash if removed while stripping language identifier
+        return raw == null || raw.startsWith("/") ? raw : ("/" + raw);
     }
 
     protected Locale onDetermineLocale() {
