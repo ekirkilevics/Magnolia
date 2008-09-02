@@ -31,7 +31,6 @@
  * intact.
  *
  */
-
 package info.magnolia.test.mock;
 
 import java.io.IOException;

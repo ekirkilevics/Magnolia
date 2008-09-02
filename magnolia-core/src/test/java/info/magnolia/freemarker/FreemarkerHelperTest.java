@@ -493,9 +493,9 @@ public class FreemarkerHelperTest extends TestCase {
         }
         FactoryUtil.setInstance(SystemContext.class, sysMockCtx);
 //        FactoryUtil.setInstanceFactory(SystemContext.class, new FactoryUtil.InstanceFactory(){
-//        	public Object newInstance() {
-//        	    return sysMockCtx;
-//        	}
+//            public Object newInstance() {
+//                return sysMockCtx;
+//            }
 //        });
         replay(sysMockCtx);
 

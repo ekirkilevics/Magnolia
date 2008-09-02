@@ -74,7 +74,7 @@ public class WebContextTest extends TestCase {
         expect(user.getLanguage()).andReturn("en");
         expect(request.getSession(false)).andReturn(session).anyTimes();
         session.setAttribute(SESSION_USER, user);
-        expect(session.getAttribute(SESSION_USER)).andReturn(user);		
+        expect(session.getAttribute(SESSION_USER)).andReturn(user);
         session.invalidate();
         expect(securitySupport.getUserManager(Realm.REALM_SYSTEM)).andReturn(userManager);
         expect(userManager.getAnonymousUser()).andReturn(anonymousUser);
