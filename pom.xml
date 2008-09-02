@@ -173,10 +173,17 @@ for Java Content Repositories (JCR).
       <plugins>
         <plugin>
           <artifactId>maven-assembly-plugin</artifactId>
+          <dependencies>
+            <dependency>
+              <groupId>info.magnolia</groupId>
+              <artifactId>magnolia-bundle-assembly</artifactId>
+              <version>1.1.1-SNAPSHOT</version>
+            </dependency>
+          </dependencies>
           <configuration>
-            <descriptors>
-              <descriptor>info.magnolia:magnolia-bundle-assembly:1.1.1-SNAPSHOT</descriptor>
-            </descriptors>
+            <descriptorRefs>
+              <descriptorRef>module-assembly-descriptor</descriptorRef>
+            </descriptorRefs>
           </configuration>
         </plugin>
       </plugins>
