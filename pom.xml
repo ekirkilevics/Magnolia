@@ -132,7 +132,7 @@ for Java Content Repositories (JCR).
     <profile>
       <id>fullsite</id>
       <!-- TODO:
-           This is commented out for now - once we're sure it's fine, we can remove it.
+           This is commented out for now - once we're sure it's fine, we can remove it along with the clover configuration below.
            See http://confluence.magnolia.info/display/DEVINT/Release+process#Releaseprocess-Sitegeneration
       -->
       <!--<distributionManagement>-->
@@ -243,6 +243,8 @@ for Java Content Repositories (JCR).
         </configuration>
       </plugin>
       <plugin>
+        <!-- We don't want the release plugin to generate a site for this big project,
+             we'll generate it manually as a separate process -->
         <artifactId>maven-release-plugin</artifactId>
         <configuration>
           <goals>deploy</goals>
@@ -595,6 +597,20 @@ for Java Content Repositories (JCR).
       </dependency>
     </dependencies>
   </dependencyManagement>
+  <reporting>
+    <plugins>
+      <plugin>
+        <artifactId>maven-checkstyle-plugin</artifactId>
+        <configuration>
+          <headerLocation>magnolia-build-tools/license-header-dual.regex</headerLocation>
+          <configLocation>magnolia-build-tools/checkstyle.xml</configLocation>
+          <enableRulesSummary>true</enableRulesSummary>
+          <!-- TODO : add headers to tests !! -->
+          <includeTestSourceDirectory>true</includeTestSourceDirectory>
+        </configuration>
+      </plugin>
+    </plugins>
+  </reporting>
   <distributionManagement>
     <!-- TODO : the following note is outdated but left here for now, as we're not sure
          this will work perfectly. We reconfigured the <goals> for the release plugin
