@@ -81,7 +81,12 @@ public class UseCache extends AbstractExecutor {
             response.flushBuffer();
         } else if (cached instanceof CachedError) {
             final CachedError error = (CachedError) cached;
-            response.sendError(error.getStatusCode());
+            if (!response.isCommitted()) {
+                response.sendError(error.getStatusCode());
+            } else {
+                //TODO: why do we cache errors at all?
+                log.debug("Failed to serve cached error due to response already commited.");
+            }
         } else if (cached instanceof CachedRedirect) {
             final CachedRedirect redir = (CachedRedirect) cached;
             // we'll ignore the redirection code for now - especially since the servlet api doesn't really let us choose anyway
