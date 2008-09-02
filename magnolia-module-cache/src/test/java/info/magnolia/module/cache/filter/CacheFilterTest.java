@@ -462,7 +462,7 @@ public class CacheFilterTest extends TestCase {
     public void testCachedErrorsAreServed() throws Exception {
         final CachedError cachedError = new CachedError(404);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/non-existing", cachedError));
-
+        expect(response.isCommitted()).andReturn(false);
         response.sendError(404);
         executeFilterAndVerify();
     }
