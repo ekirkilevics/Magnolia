@@ -285,6 +285,9 @@ for Java Content Repositories (JCR).
             <version>1.4</version>
           </dependency>
         </dependencies>
+        <configuration>
+          <headerLocation>magnolia-build-tools/license-header-dual.regex</headerLocation>
+        </configuration>
       </plugin>
     </plugins>
     
