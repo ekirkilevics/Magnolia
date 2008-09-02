@@ -36,8 +36,18 @@ package info.magnolia.module.cache.filter;
 import info.magnolia.module.cache.util.GZipUtil;
 
 import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import org.apache.commons.collections.MultiMap;
+import org.apache.commons.collections.map.MultiValueMap;
 import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
@@ -49,7 +59,7 @@ import org.apache.commons.lang.builder.ToStringStyle;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CachedPage implements CachedEntry {
+public class CachedPage implements CachedEntry, Serializable {
 
     private static final ToStringStyle BYTE_ARRAY_SIZE_STYLE = new ToStringStyle() {
         protected void appendDetail(StringBuffer buffer, String fieldName,
@@ -64,7 +74,8 @@ public class CachedPage implements CachedEntry {
     private final String contentType;
     private final String characterEncoding;
     private final int statusCode;
-    private final MultiMap headers;
+    private transient MultiMap headers;
+    private Map serializableHeadersBackingList;
     private final long lastModificationTime;
 
     /**
@@ -138,4 +149,29 @@ public class CachedPage implements CachedEntry {
     public String toString() {
         return ToStringBuilder.reflectionToString(this, BYTE_ARRAY_SIZE_STYLE);
     }
+
+    // serialization support until commons  collection 3.3 is released
+    private void writeObject(ObjectOutputStream out) throws IOException {
+        serializableHeadersBackingList = new HashMap();
+        Iterator iter = headers.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Entry) iter.next();
+            serializableHeadersBackingList.put(entry.getKey(), new ArrayList((Collection)entry.getValue()));
+        }
+        out.defaultWriteObject();
+    }
+
+    private void readObject(ObjectInputStream in) throws IOException, ClassNotFoundException {
+        in.defaultReadObject();
+        headers = new MultiValueMap();
+        Iterator iter = serializableHeadersBackingList.entrySet().iterator();
+        while (iter.hasNext()) {
+            Map.Entry entry = (Entry) iter.next();
+            Collection c = (Collection) entry.getValue();
+            for (Iterator ic = c.iterator(); ic.hasNext();) {
+                headers.put(entry.getKey(), ic.next());
+            }
+        }
+        serializableHeadersBackingList = null;
+   }
 }
