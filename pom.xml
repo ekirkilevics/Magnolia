@@ -19,7 +19,7 @@ for Java Content Repositories (JCR).
   <url>http://www.magnolia.info</url>
   <properties>
     <magnoliaEdition>Community Edition</magnoliaEdition>
-    <documentationURL>http://documentation.magnolia.info/release/3-6-1.html</documentationURL>
+    <documentationURL>http://documentation.magnolia.info/release/3-6-2.html</documentationURL>
   </properties>
   <issueManagement>
     <system>Jira</system>
@@ -131,13 +131,17 @@ for Java Content Repositories (JCR).
   <profiles>
     <profile>
       <id>fullsite</id>
-      <distributionManagement>
-        <site>
-          <id>dev.magnolia.info</id>
-          <name>dev.magnolia.info</name>
-          <url>scp://dev.magnolia.info/sites/dev/ref/${project.version}</url>
-        </site>
-      </distributionManagement>
+      <!-- TODO:
+           This is commented out for now - once we're sure it's fine, we can remove it.
+           See http://confluence.magnolia.info/display/DEVINT/Release+process#Releaseprocess-Sitegeneration
+      -->
+      <!--<distributionManagement>-->
+        <!--<site>-->
+          <!--<id>dev.magnolia.info</id>-->
+          <!--<name>dev.magnolia.info</name>-->
+          <!--<url>scp://dev.magnolia.info/sites/dev/ref/${project.version}</url>-->
+        <!--</site>-->
+      <!--</distributionManagement>-->
       <build>
         <plugins>
           <!-- this needs some more memory than the defaults ... -->
@@ -162,71 +166,6 @@ for Java Content Repositories (JCR).
           </plugin>
         </plugins>
       </build>
-      <reporting>
-        <plugins>
-          <plugin>
-            <artifactId>maven-project-info-reports-plugin</artifactId>
-            <reportSets>
-              <reportSet>
-                <reports>
-                  <report>index</report>
-                  <report>summary</report>
-                  <report>dependencies</report>
-                  <report>dependency-convergence</report>
-                  <report>issue-tracking</report>
-                  <report>license</report>
-                  <report>mailing-list</report>
-                  <report>project-team</report>
-                  <report>scm</report>
-                  <report>cim</report>
-                </reports>
-              </reportSet>
-            </reportSets>
-          </plugin>
-          <plugin>
-            <artifactId>maven-javadoc-plugin</artifactId>
-            <configuration>
-              <quiet>true</quiet>
-              <aggregate>true</aggregate>
-            </configuration>
-          </plugin>
-          <plugin>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <artifactId>maven-pmd-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <artifactId>maven-jxr-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>clirr-maven-plugin</artifactId>
-            <configuration>
-              <minSeverity>info</minSeverity>
-              <!-- this is detected automatically by default: -->
-              <!--<comparisonVersion>3.0.2</comparisonVersion>-->
-            </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-clover-plugin</artifactId>
-          </plugin>
-          <!-- this report is pretty useless, since we don't allow building with failing tests ... -->
-          <plugin>
-            <artifactId>maven-surefire-report-plugin</artifactId>
-          </plugin>
-          <!-- this report is very obscure - do we want it ? -->
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>jdepend-maven-plugin</artifactId>
-          </plugin>
-          <plugin>
-            <groupId>net.sourceforge.maven-taglib</groupId>
-            <artifactId>maven-taglib-plugin</artifactId>
-          </plugin>
-        </plugins>
-      </reporting>
     </profile>
   </profiles>
   <build>
@@ -296,8 +235,13 @@ for Java Content Repositories (JCR).
           <headerLocation>magnolia-build-tools/license-header-dual.regex</headerLocation>
         </configuration>
       </plugin>
+      <plugin>
+        <artifactId>maven-release-plugin</artifactId>
+        <configuration>
+          <goals>deploy</goals>
+        </configuration>
+      </plugin>
     </plugins>
-    
   </build>
   <dependencyManagement>
     <dependencies>
@@ -625,26 +569,37 @@ for Java Content Repositories (JCR).
         <artifactId>cos</artifactId>
         <version>05Nov2002</version>
       </dependency>
+      <!-- Little tricks to avoid that a transitive dependency slips one of these unwanted artifacts in.
+           If a specific project needs one of these, the dependency can be respecified with a real version -->
       <dependency>
         <groupId>commons-logging</groupId>
         <artifactId>commons-logging</artifactId>
-        <version>BANNED</version><!-- little trick to avoid that any transitive dependency slips in -->
+        <version>BANNED</version>
       </dependency>
       <dependency>
         <groupId>xml-apis</groupId>
         <artifactId>xml-apis</artifactId>
-        <version>BANNED</version><!-- little trick to avoid that any transitive dependency slips in -->
+        <version>BANNED</version>
       </dependency>
       <dependency>
         <groupId>commons-beanutils</groupId>
         <artifactId>commons-beanutils-core</artifactId>
-        <version>BANNED</version><!-- little trick to avoid that any transitive dependency slips in -->
+        <version>BANNED</version>
       </dependency>
     </dependencies>
   </dependencyManagement>
   <distributionManagement>
-    <!-- no <site> here, so that we don't generate a site with the release plugin.
+    <!-- TODO : the following note is outdated but left here for now, as we're not sure
+         this will work perfectly. We reconfigured the <goals> for the release plugin
+         so that it does not generate a site, specifically for this project.
+         See http://confluence.magnolia.info/display/DEVINT/Release+process#Releaseprocess-Sitegeneration
+         no <site> here, so that we don't generate a site with the release plugin.
          use the fullsite profile to generate it -->
+    <site>
+      <id>dev.magnolia.info</id>
+      <name>dev.magnolia.info</name>
+      <url>scp://dev.magnolia.info/sites/dev/ref/${project.version}</url>
+    </site>
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
   </distributionManagement>
   <repositories>
