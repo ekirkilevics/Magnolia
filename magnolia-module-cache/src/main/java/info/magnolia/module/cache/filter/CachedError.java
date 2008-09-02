@@ -33,12 +33,14 @@
  */
 package info.magnolia.module.cache.filter;
 
+import java.io.Serializable;
+
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CachedError implements CachedEntry {
+public class CachedError implements CachedEntry, Serializable {
     private final int statusCode;
 
     public CachedError(int statusCode) {

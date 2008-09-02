@@ -33,12 +33,14 @@
  */
 package info.magnolia.module.cache.filter;
 
+import java.io.Serializable;
+
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CachedRedirect implements CachedEntry {
+public class CachedRedirect implements CachedEntry, Serializable {
     private final int statusCode;
     private final String location;
 
