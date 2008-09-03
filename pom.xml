@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>info.magnolia</groupId>
-    <artifactId>magnolia-parent-pom</artifactId>
+    <artifactId>magnolia-parent-pom-ce</artifactId>
     <version>5-SNAPSHOT</version>
   </parent>
   <groupId>info.magnolia</groupId>
@@ -19,6 +19,7 @@ for Java Content Repositories (JCR).
   <url>http://www.magnolia.info</url>
   <properties>
     <magnoliaEdition>Community Edition</magnoliaEdition>
+    <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
     <documentationURL>http://documentation.magnolia.info/release/3-6-2.html</documentationURL>
   </properties>
   <issueManagement>
@@ -169,77 +170,11 @@ for Java Content Repositories (JCR).
     </profile>
   </profiles>
   <build>
-    <pluginManagement>
-      <plugins>
-        <plugin>
-          <artifactId>maven-assembly-plugin</artifactId>
-          <dependencies>
-            <dependency>
-              <groupId>info.magnolia</groupId>
-              <artifactId>magnolia-bundle-assembly</artifactId>
-              <version>1.1.1-SNAPSHOT</version>
-            </dependency>
-          </dependencies>
-          <configuration>
-            <descriptorRefs>
-              <descriptorRef>module-assembly-descriptor</descriptorRef>
-            </descriptorRefs>
-          </configuration>
-        </plugin>
-      </plugins>
-    </pluginManagement>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-      </plugin>
       <plugin>
         <artifactId>maven-surefire-plugin</artifactId>
         <configuration>
           <useManifestOnlyJar>false</useManifestOnlyJar>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>info.magnolia</groupId>
-        <artifactId>maven-setproperty-plugin</artifactId>
-        <version>1.0.2-SNAPSHOT</version>
-        <executions>
-          <!-- set the current date -->
-          <execution>
-            <phase>generate-resources</phase>
-            <id>currentDate</id>
-            <goals>
-              <goal>set-property</goal>
-            </goals>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <artifactId>maven-remote-resources-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>process</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <resourceBundles>
-            <resourceBundle>info.magnolia:magnolia-build-tools-dual-licensed:1.4.1-SNAPSHOT</resourceBundle>
-          </resourceBundles>
-        </configuration>
-      </plugin>
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <dependencies>
-          <dependency>
-            <groupId>info.magnolia</groupId>
-            <artifactId>magnolia-build-tools-dual-licensed</artifactId>
-            <version>1.4.1-SNAPSHOT</version>
-          </dependency>
-        </dependencies>
-        <configuration>
-          <headerLocation>magnolia-build-tools/license-header-dual.regex</headerLocation>
         </configuration>
       </plugin>
       <plugin>
@@ -578,39 +513,8 @@ for Java Content Repositories (JCR).
         <artifactId>cos</artifactId>
         <version>05Nov2002</version>
       </dependency>
-      <!-- Little tricks to avoid that a transitive dependency slips one of these unwanted artifacts in.
-           If a specific project needs one of these, the dependency can be respecified with a real version -->
-      <dependency>
-        <groupId>commons-logging</groupId>
-        <artifactId>commons-logging</artifactId>
-        <version>BANNED</version>
-      </dependency>
-      <dependency>
-        <groupId>xml-apis</groupId>
-        <artifactId>xml-apis</artifactId>
-        <version>BANNED</version>
-      </dependency>
-      <dependency>
-        <groupId>commons-beanutils</groupId>
-        <artifactId>commons-beanutils-core</artifactId>
-        <version>BANNED</version>
-      </dependency>
     </dependencies>
   </dependencyManagement>
-  <reporting>
-    <plugins>
-      <plugin>
-        <artifactId>maven-checkstyle-plugin</artifactId>
-        <configuration>
-          <headerLocation>magnolia-build-tools/license-header-dual.regex</headerLocation>
-          <configLocation>magnolia-build-tools/checkstyle.xml</configLocation>
-          <enableRulesSummary>true</enableRulesSummary>
-          <!-- TODO : add headers to tests !! -->
-          <includeTestSourceDirectory>true</includeTestSourceDirectory>
-        </configuration>
-      </plugin>
-    </plugins>
-  </reporting>
   <distributionManagement>
     <!-- TODO : the following note is outdated but left here for now, as we're not sure
          this will work perfectly. We reconfigured the <goals> for the release plugin
