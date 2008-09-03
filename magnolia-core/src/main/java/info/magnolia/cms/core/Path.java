@@ -263,6 +263,7 @@ public final class Path {
 
     /**
      * Decodes the URI with the passed encoding and removes the context path.
+     * WARNING: If passing URI without context path but it starts with same text as the context path it will be stripped off as well!!!
      * @return URI without servlet context
      * TODO : move to AggregationState ?
      */
@@ -274,7 +275,13 @@ public final class Path {
         catch (UnsupportedEncodingException e) {
             decodedURL = uri;
         }
-        return StringUtils.removeStart(decodedURL, MgnlContext.getContextPath());
+        // MAGNOLIA-2064 & others ... remove context path only when it is actually present not when page name starts with context path
+        String contextPath = MgnlContext.getContextPath();
+        if (decodedURL != null && decodedURL.startsWith(contextPath + "/")) {
+            return StringUtils.removeStart(decodedURL, contextPath);
+        } else {
+            return decodedURL;
+        }
     }
 
     /**

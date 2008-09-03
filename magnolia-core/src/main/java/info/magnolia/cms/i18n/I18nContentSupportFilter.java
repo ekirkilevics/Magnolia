@@ -61,8 +61,12 @@ public class I18nContentSupportFilter extends AbstractMgnlFilter {
             i18nSupport.setLocale(locale);
 
             AggregationState aggregationState = MgnlContext.getAggregationState();
-            String newUri = i18nSupport.toRawURI(aggregationState.getCurrentURI());
-            aggregationState.setCurrentURI(newUri);
+            String currentUri = aggregationState.getCurrentURI();
+            String newUri = i18nSupport.toRawURI(currentUri);
+            // MAGNOLIA-2064 ... do not set current uri if it hasn't changed to prevent double removal of context path.
+            if (!currentUri.equals(newUri)) {
+                aggregationState.setCurrentURI(newUri);
+            }
 
             // make the locale available to jstl
             Config.set(request, Config.FMT_LOCALE, locale);
