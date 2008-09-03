@@ -106,11 +106,17 @@ public class MgnlUserManager implements UserManager {
     public User getUser(Subject subject) throws UnsupportedOperationException {
         // this could be the case if no one is logged in yet
         if (subject == null) {
+            log.debug("subject not set.");
             return new DummyUser();
         }
 
         Set principalSet = subject.getPrincipals(Entity.class);
         Iterator entityIterator = principalSet.iterator();
+        if (!entityIterator.hasNext()) {
+            // happens when JCR authentication module set to optional and user doesn't exist in magnolia
+            log.debug("user name not contained in principal set.");
+            return new DummyUser();
+        }
         Entity userDetails = (Entity) entityIterator.next();
         String name = (String) userDetails.getProperty(Entity.NAME);
         try {
