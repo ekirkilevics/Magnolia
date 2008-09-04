@@ -77,7 +77,7 @@ public class DialogButtonSet extends DialogBox {
 
     public void setOptions(Content configNode, boolean setDefaultSelected) {
         // setDefaultSelected: does not work properly (no difference between never stored and removed...)
-        // therefor do only use for radio, not for checkbox
+        // therefore do only use for radio, not for checkbox
         List options = new ArrayList();
         try {
             Iterator it = getOptionNodes(configNode).iterator();
