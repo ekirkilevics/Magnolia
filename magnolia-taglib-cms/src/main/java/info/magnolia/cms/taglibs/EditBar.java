@@ -258,6 +258,11 @@ public class EditBar extends TagSupport {
         return showParagraphName;
     }
 
+    /**
+     * Show the paragraph name, default to false.
+     * @param showParagraphName Show the paragraph name.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
     public void setShowParagraphName(boolean showParagraphName) {
         this.showParagraphName = showParagraphName;
     }
