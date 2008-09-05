@@ -83,6 +83,11 @@ public class EditBar extends TagSupport {
     private boolean adminOnly = true;
 
     /**
+     * Show paragraph name in the bar.
+     */
+    private boolean showParagraphName = false;
+
+    /**
      * The contentNode (i.e. paragraph) you wish to edit.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
@@ -155,6 +160,8 @@ public class EditBar extends TagSupport {
         if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && Resource.getActivePage().isGranted(Permission.SET)) {
             try {
                 BarEdit bar = new BarEdit((HttpServletRequest) this.pageContext.getRequest());
+
+                bar.setShowTitle(isShowParagraphName());
 
                 Content localContentNode = Resource.getLocalContentNode();
 
@@ -244,6 +251,15 @@ public class EditBar extends TagSupport {
         this.deleteLabel = null;
         this.moveLabel = null;
         this.adminOnly = true;
+        this.showParagraphName = false;
+    }
+
+    public boolean isShowParagraphName() {
+        return showParagraphName;
+    }
+
+    public void setShowParagraphName(boolean showParagraphName) {
+        this.showParagraphName = showParagraphName;
     }
 
 }

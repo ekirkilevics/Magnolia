@@ -111,6 +111,13 @@
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
     </attribute>
+    <attribute>
+      <description>Show name of the paragraph in the bar, default to false.</description>
+      <name>showParagraphName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+    </attribute>
   </tag>
   <!-- new bar tag -->
   <tag>
