@@ -19,6 +19,10 @@ Calendar._SMN = new Array
 Calendar._TT = {};
 Calendar._TT["INFO"] = "O kalendarzu";
 
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
+
 Calendar._TT["ABOUT"] =
 "DHTML Date/Time Selector\n" +
 "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" + // don't translate this this ;-)

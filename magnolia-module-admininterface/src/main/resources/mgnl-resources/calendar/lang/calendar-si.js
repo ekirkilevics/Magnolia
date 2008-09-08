@@ -1,4 +1,4 @@
-/* Slovenian language file for the DHTML Calendar version 0.9.2 
+/* Slovenian language file for the DHTML Calendar version 0.9.2
 * Author David Milost <mercy@volja.net>, January 2004.
 * Feel free to use this script under the terms of the GNU Lesser General
 * Public License, as long as you do not remove or alter this notice.
@@ -51,6 +51,10 @@ Calendar._MN = new Array
  "Oktober",
  "November",
  "December");
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
 
 // tooltips
 // tooltips

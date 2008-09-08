@@ -8,7 +8,7 @@
 // For translators: please use UTF-8 if possible.  We strongly believe that
 // Unicode is the answer to a real internationalized world.  Also please
 // include your contact information in the header, as can be seen above.
-	
+
 // full day names
 Calendar._DN = new Array
 ("星期日",
@@ -72,6 +72,10 @@ Calendar._SMN = new Array
  "十月",
  "十一月",
  "十二月");
+
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
 
 // tooltips
 Calendar._TT = {};

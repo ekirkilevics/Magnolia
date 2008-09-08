@@ -74,6 +74,10 @@ Calendar._SMN = new Array
  "\u5341\u4e00\u6708",
  "\u5341\u4e8c\u6708");
 
+// First day of the week. "0" means display Sunday first, "1" means display
+// Monday first, etc.
+Calendar._FD = 1;
+
 // tooltips
 Calendar._TT = {};
 Calendar._TT["INFO"] = "\u5173\u4e8e";
