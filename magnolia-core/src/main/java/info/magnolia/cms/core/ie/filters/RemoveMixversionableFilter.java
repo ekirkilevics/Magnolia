@@ -43,8 +43,6 @@ import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLFilterImpl;
 
-import com.sun.org.apache.xalan.internal.xsltc.runtime.AttributeList;
-
 
 /**
  * A filter that removed "mix:versionable" from jcr:mixinTypes while importing
@@ -118,7 +116,7 @@ public class RemoveMixversionableFilter extends XMLFilterImpl {
                 super.startElement(uri, "property", "sv:property", this.atts);
                 for (Iterator iterator = values.iterator(); iterator.hasNext();) {
                     String value = (String) iterator.next();
-                    super.startElement(uri, "value", "sv:value", new AttributeList());
+                    super.startElement(uri, "value", "sv:value", new AttributesImpl());
                     super.characters(value.toCharArray(), 0, value.length());
                     super.endElement(uri, "value", "sv:value");
                 }
