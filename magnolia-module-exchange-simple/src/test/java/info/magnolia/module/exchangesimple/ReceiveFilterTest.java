@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -68,15 +68,22 @@ public class ReceiveFilterTest extends TestCase {
     private static final String PARENT_PATH = "/foo/bar";
 
     private static interface TestCallBack {
+        
+        Content getParentNode();
+        
         void checkPermissions(HierarchyManager hm);
 
         void checkNode(HierarchyManager hm) throws Exception;
 
+        void checkParent(HierarchyManager hm) throws Exception;
+
         void importNode(HierarchyManager hm, Session session) throws Exception;
+
+        void saveSession(HierarchyManager hm) throws Exception;
     }
 
     public void testActivateShouldCreateNewNodeIfItDoesNotExist() throws Exception {
-        doTest("activate", "sa_success", "", new TestCallBack() {
+        doTest("activate", "sa_success", "", new AbstractTestCallBack() {
             public void checkPermissions(HierarchyManager hm) {
                 // TODO : really, really, this should just crash
                 //  - and we should actually check permissions and assert the behaviour of ReceiveFilter when the user does not have the appropriate permissions
@@ -124,10 +131,7 @@ public class ReceiveFilterTest extends TestCase {
         expect(tempNode.getNodeDataCollection()).andReturn(Collections.emptyList());
 
         replay(existingNode, tempNode);
-        doTest("activate", "sa_success", "", new TestCallBack() {
-            public void checkPermissions(HierarchyManager hm) {
-                // expect(hm.getAccessManager()).andReturn(null);
-            }
+        doTest("activate", "sa_success", "", new AbstractTestCallBack() {
 
             public void checkNode(HierarchyManager hm) throws Exception {
                 expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(existingNode);
@@ -152,19 +156,141 @@ public class ReceiveFilterTest extends TestCase {
         verify(existingNode, tempNode);
     }
 
-    /**
-    public void testActivateShouldCreateNodeInNewLocationAndRemoveOldOneIfItHasBeenMovedToADifferentPath() {
-        fail();
+    public void testActivateShouldMoveToNewLocationIfItHasBeenMovedToADifferentPath() throws Exception {
+        final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
+        final Content tempNode = createStrictMock(Content.class);
+        expect(existingNode.getHandle()).andReturn(PARENT_PATH + "/oldnodename").anyTimes();
+        expect(existingNode.getName()).andReturn("oldnodename");
+        // TODO : test when existing node has children ?
+        expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.emptyList());
+
+        // creating temp node:
+        expect(existingNode.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(null);
+
+        // for the sake of this test we'll just pretend we have no properties on the existing node
+        expect(existingNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+
+        // TODO : why are properties copied using the jcr api ??
+        expect(existingNode.getJCRNode()).andReturn(null);
+
+        // for the sake of this test we'll just pretend we have no properties on the imported node either
+        expect(tempNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+
+        replay(existingNode, tempNode);
+        doTest("activate", "sa_success", "", new AbstractTestCallBack() {
+
+            public void checkNode(HierarchyManager hm) throws Exception {
+                expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(existingNode);
+            }
+
+            public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
+                session.importXML(startsWith(PARENT_PATH + "/oldnodename/"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
+                expectLastCall().andAnswer(new IAnswer<Object>() {
+                    public Object answer() throws Throwable {
+                        final InputStream passedStream = (InputStream) getCurrentArguments()[1];
+                        final InputStream expectedStream = new GZIPInputStream(getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz"));
+                        assertTrue("Tried to import an unexpected stream", IOUtils.contentEquals(expectedStream, passedStream));
+                        return null;
+                    }
+                });
+
+                hm.moveTo(PARENT_PATH + "/oldnodename", PARENT_PATH + "/nodename");
+                // can't really get the temp uuid here
+                expect(hm.getContent(and(startsWith(PARENT_PATH + "/oldnodename/"), endsWith("/nodename")))).andReturn(tempNode);
+                hm.delete(startsWith(PARENT_PATH + "/oldnodename/"));
+            }
+        });
+        verify(existingNode, tempNode);
+    }
+    
+    public void testActivateShouldMoveWhenParentHasChanged() throws Exception {
+        final Content existingNode = createMock(Content.class); // can't make it strict, as getHandle and getName are called plenty of times
+        final Content tempNode = createStrictMock(Content.class);
+        expect(existingNode.getHandle()).andReturn(PARENT_PATH + "old/nodename").anyTimes();
+        // TODO : test when existing node has children ?
+        expect(existingNode.getChildren(isA(Content.ContentFilter.class))).andReturn(Collections.emptyList());
+
+        // creating temp node:
+        expect(existingNode.createContent(isA(String.class), eq("mgnl:contentNode"))).andReturn(null);
+
+        // for the sake of this test we'll just pretend we have no properties on the existing node
+        expect(existingNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+
+        // TODO : why are properties copied using the jcr api ??
+        expect(existingNode.getJCRNode()).andReturn(null);
+
+        // for the sake of this test we'll just pretend we have no properties on the imported node either
+        expect(tempNode.getNodeDataCollection()).andReturn(Collections.emptyList());
+
+        replay(existingNode, tempNode);
+        doTest("activate", "sa_success", "", new AbstractTestCallBack() {
+
+            public void checkNode(HierarchyManager hm) throws Exception {
+                expect(hm.getContentByUUID("DUMMY-UUID")).andReturn(existingNode);
+            }
+
+            public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
+                session.importXML(startsWith(PARENT_PATH + "old/nodename/"), isA(InputStream.class), eq(ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW));
+                expectLastCall().andAnswer(new IAnswer<Object>() {
+                    public Object answer() throws Throwable {
+                        final InputStream passedStream = (InputStream) getCurrentArguments()[1];
+                        final InputStream expectedStream = new GZIPInputStream(getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz"));
+                        assertTrue("Tried to import an unexpected stream", IOUtils.contentEquals(expectedStream, passedStream));
+                        return null;
+                    }
+                });
+
+                hm.moveTo(PARENT_PATH + "old/nodename", PARENT_PATH + "/nodename");
+                // can't really get the temp uuid here
+                expect(hm.getContent(and(startsWith(PARENT_PATH + "old/nodename/"), endsWith("/nodename")))).andReturn(tempNode);
+                hm.delete(startsWith(PARENT_PATH + "old/nodename/"));
+            }
+        });
+        verify(existingNode, tempNode);
     }
 
-    public void testActivateShouldCreateNodeInNewLocationAndRemoveOldOneIfItHasBeenRenamedButInSameParent() {
-        fail();
-    }
+    
+    public void testCantActivateInLockedNode() throws Exception {
+        final Content parentNode = createStrictMock(Content.class);
+        final Content existingNode = createStrictMock(Content.class);
+        final Content tempNode = createStrictMock(Content.class);
 
-    public void testCantActivateInLockedNode() {
-        fail();
-    }
+        replay(existingNode, tempNode);
+        doTest("activate", "sa_failed", "Operation not permitted, /foo/bar is locked", new AbstractTestCallBack() {
 
+            public Content getParentNode() {
+                return parentNode;
+            }
+
+            public void checkParent(HierarchyManager hm) throws Exception {
+                expect(hm.getContent(PARENT_PATH)).andReturn(parentNode).anyTimes();
+                expect(hm.getContent(PARENT_PATH + "/")).andReturn(parentNode).anyTimes();
+                // check the lock
+                expect(parentNode.isLocked()).andReturn(true);
+                // create exception message
+                expect(parentNode.getHandle()).andReturn(PARENT_PATH);
+                // clean up ... check the lock again 
+                expect(parentNode.isLocked()).andReturn(true);
+                // try to unlock ... TODO: is that a right thing to do ... we are not the ones who locked it here
+                parentNode.unlock();
+            }
+
+            public void checkNode(HierarchyManager hm) throws Exception {
+                // won't be called as parent is locked
+            }
+
+            public void saveSession(HierarchyManager hm) throws Exception {
+                // don't save ... we've not activated anything
+            }
+
+            public void importNode(HierarchyManager hm, Session session) throws IOException, RepositoryException {
+                // won't be called as parent is locked
+            }
+
+        });
+        verify(existingNode, tempNode);
+    }
+/*
     public void testCanUseAuthorizationOrUserId() {
         fail();
     }
@@ -179,7 +305,6 @@ public class ReceiveFilterTest extends TestCase {
         final HierarchyManager hm = createMock(HierarchyManager.class);
         final Workspace workspace = createStrictMock(Workspace.class);
         final Session session = createStrictMock(Session.class);
-        final Content parentNode = createMock(Content.class); // TODO this should maybe be strict
 
         final InputStream xmlStream = getClass().getResourceAsStream("/resources4189.xml");
         final InputStream nodeStream = getClass().getResourceAsStream("/exchange_threadReply4173.xml.gz");
@@ -206,10 +331,7 @@ public class ReceiveFilterTest extends TestCase {
         expect(sysCtx.getHierarchyManager("some-repo", "some-workspace")).andReturn(hm).anyTimes();
 
         // checking parent node
-        expect(hm.getContent(PARENT_PATH)).andReturn(parentNode).anyTimes();
-        expect(hm.getContent(PARENT_PATH + "/")).andReturn(parentNode).anyTimes();
-        expect(parentNode.isLocked()).andReturn(false).anyTimes();
-        expect(parentNode.lock(true, true)).andReturn(null);
+        testCallBack.checkParent(hm);
 
         expect(ctx.getAttribute("multipartform")).andReturn(form).anyTimes();
 
@@ -220,16 +342,16 @@ public class ReceiveFilterTest extends TestCase {
         expect(hm.getWorkspace()).andReturn(workspace).anyTimes();
         expect(workspace.getSession()).andReturn(session).anyTimes();
         testCallBack.importNode(hm, session);
-        hm.save();
+        testCallBack.saveSession(hm);
 
         // response
         response.setHeader("sa_attribute_status", expectedStatus);
         response.setHeader("sa_attribute_message", expectedMessage);
 
         final ReceiveFilter filter = new ReceiveFilter();
-        replay(request, response, filterChain, sysCtx, ctx, hm, workspace, session, parentNode);
+        replay(request, response, filterChain, sysCtx, ctx, hm, workspace, session, testCallBack.getParentNode());
         filter.doFilter(request, response, filterChain);
-        verify(request, response, filterChain, sysCtx, ctx, hm, workspace, session, parentNode);
+        verify(request, response, filterChain, sysCtx, ctx, hm, workspace, session, testCallBack.getParentNode());
     }
 
 
@@ -277,6 +399,29 @@ public class ReceiveFilterTest extends TestCase {
 
         public InputStream getStream() {
             return stream;
+        }
+    }
+    
+    public abstract class AbstractTestCallBack implements TestCallBack {
+        private final Content parentNode = createMock(Content.class); // TODO this should maybe be strict
+
+        public void checkParent(HierarchyManager hm) throws Exception {
+            expect(hm.getContent(PARENT_PATH)).andReturn(parentNode).anyTimes();
+            expect(hm.getContent(PARENT_PATH + "/")).andReturn(parentNode).anyTimes();
+            expect(parentNode.isLocked()).andReturn(false).anyTimes();
+            expect(parentNode.lock(true, true)).andReturn(null);
+        }
+
+        public void checkPermissions(HierarchyManager hm) {
+            // do nothing by default
+        }
+
+        public Content getParentNode() {
+            return parentNode;
+        }
+
+        public void saveSession(HierarchyManager hm) throws Exception {
+            hm.save();            
         }
     }
 }
