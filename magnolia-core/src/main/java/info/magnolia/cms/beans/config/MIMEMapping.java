@@ -145,7 +145,7 @@ public class MIMEMapping {
                 MIMEMappingItem item = new MIMEMappingItem();
                 item.ext = NodeDataUtil.getString(c, "extension", c.getName());//$NON-NLS-1$
                 item.mime = c.getNodeData("mime-type").getString();//$NON-NLS-1$
-                item.icon = NodeDataUtil.getString(c, "icon", "general.png");
+                item.icon = NodeDataUtil.getString(c, "icon");
 
                 MIMEMapping.cachedContent.put(item.ext, item);
             }
