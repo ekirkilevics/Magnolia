@@ -18,17 +18,17 @@
         <dependency>
           <groupId>info.magnolia</groupId>
           <artifactId>magnolia-module-workflow</artifactId>
-          <version>3.6.1</version>
+          <version>3.6.2-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>info.magnolia</groupId>
           <artifactId>magnolia-module-dms</artifactId>
-          <version>1.2.5</version>
+          <version>1.2.6-SNAPSHOT</version>
         </dependency>
         <dependency>
           <groupId>info.magnolia</groupId>
           <artifactId>magnolia-module-samples</artifactId>
-          <version>3.6.1</version>
+          <version>3.6.2-SNAPSHOT</version>
         </dependency>
       </dependencies>
     </profile>
