@@ -62,7 +62,8 @@ public class FilterTest extends MgnlTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        org.apache.log4j.Logger.getLogger(MgnlMainFilter.class).setLevel(org.apache.log4j.Level.INFO);
+        // shunt log4j
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
     public void testInitialization() throws IOException, RepositoryException, ServletException{

@@ -65,6 +65,9 @@ public class ModuleManagerImplTest extends TestCase {
         super.setUp();
         FactoryUtil.setInstance(ModuleRegistry.class, new ModuleRegistryImpl());
         FactoryUtil.setInstance(SystemContext.class, createStrictMock(SystemContext.class));
+
+        // shunt log4j
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
     protected void tearDown() throws Exception {

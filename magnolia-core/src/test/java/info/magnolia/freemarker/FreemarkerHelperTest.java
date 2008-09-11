@@ -89,8 +89,8 @@ public class FreemarkerHelperTest extends TestCase {
 
         // seems useless when running tests from maven (?), so we'll shunt log4j as well
         freemarker.log.Logger.selectLoggerLibrary(freemarker.log.Logger.LIBRARY_NONE);
-        final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger("freemarker.runtime");
-        logger.setLevel(org.apache.log4j.Level.OFF);
+        // shunt log4j
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);        
     }
 
     protected void tearDown() throws Exception {

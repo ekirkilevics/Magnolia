@@ -54,8 +54,8 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        // shunt Digester logging ...
-        org.apache.log4j.Logger.getLogger("org.apache.commons.digester.Digester").setLevel(org.apache.log4j.Level.OFF);
+        // shunt log4j (Digester is chatty)
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);        
     }
 
     public void testDisplayNameCanBeWrittenWithDashEventhoughThisIsDeprecated() throws Exception {

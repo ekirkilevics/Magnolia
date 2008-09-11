@@ -57,6 +57,9 @@ public class ResponseContentTypeVoterTest extends TestCase {
         response = createStrictMock(HttpServletResponse.class);
         expect(ctx.getResponse()).andReturn(response);
         MgnlContext.setInstance(ctx);
+
+        // shunt log4j
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);        
     }
 
     protected void tearDown() throws Exception {

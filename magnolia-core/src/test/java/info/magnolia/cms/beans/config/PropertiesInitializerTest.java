@@ -46,6 +46,11 @@ import junit.framework.TestCase;
  * @version $Revision$ ($Author$)
  */
 public class PropertiesInitializerTest extends TestCase {
+    protected void setUp() throws Exception {
+        super.setUp();
+        // shunt log4j
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
+    }
 
     public void testSimpleProperty() throws Exception {
         PropertiesInitializer pi = PropertiesInitializer.getInstance();

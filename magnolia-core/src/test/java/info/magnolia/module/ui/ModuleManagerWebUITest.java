@@ -59,8 +59,8 @@ public class ModuleManagerWebUITest extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         // shunt log4j
-        final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger("info.magnolia");
-        logger.setLevel(org.apache.log4j.Level.OFF);
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
+        
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
