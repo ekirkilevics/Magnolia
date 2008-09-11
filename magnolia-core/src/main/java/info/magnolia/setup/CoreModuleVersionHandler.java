@@ -72,7 +72,10 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
             .addTask(new CheckMagnoliaDevelopProperty())
             .addTask(new CheckNodesForMixVersionable());
         register(delta36);
-        final Delta delta362 = DeltaBuilder.update("3.6.2", "").addTask(new UpdateUsers()).addTask(new UpdateRoles()).addTask(new UpdateGroups());
+        final Delta delta362 = DeltaBuilder.update("3.6.2", "")
+            .addTask(new UpdateUsers())
+            .addTask(new UpdateRoles())
+            .addTask(new UpdateGroups());
         register(delta362);
     }
 
