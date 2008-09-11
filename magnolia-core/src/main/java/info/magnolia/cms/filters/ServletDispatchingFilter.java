@@ -62,7 +62,9 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * A filter that dispatches requests to wrapped servlets.
+ * A filter that dispatches requests to a wrapped servlet.
+ *
+ * TODO : cache matching URIs ?
  *
  * @author vsteller
  * @version $Id$
