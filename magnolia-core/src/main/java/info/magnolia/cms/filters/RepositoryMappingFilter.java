@@ -62,7 +62,7 @@ public class RepositoryMappingFilter extends AbstractMgnlFilter {
         String uri = MgnlContext.getAggregationState().getCurrentURI();
         int firstDotPos = StringUtils.indexOf(uri, '.', StringUtils.lastIndexOf(uri, '/'));
         String handle;
-        // TODO selectors are officially deprecated since Magnolia 3.6.2  - please consider using virtual uri mappings instead
+        // TODO Warning - this might change in the future - see MAGNOLIA-2343 for details.
         String selector;
         if (firstDotPos > -1) {
             int lastDotPos = StringUtils.lastIndexOf(uri, '.');

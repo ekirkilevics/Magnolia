@@ -218,16 +218,16 @@ public final class Resource {
      * get selector as requested from the URI. The selector is the part between the handle and the extension.
      * selector("http://server/a.x.1.f.4.html") = "x.1.f.4"
      * </p>
+     * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      * @return selector String as requested from the URI
-     * @deprecated selectors are officially deprecated since Magnolia 3.6.2  - please consider using virtual uri mappings instead
      */
     public static String getSelector() {
         return MgnlContext.getAggregationState().getSelector();
     }
 
     /**
+     * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      * @deprecated don't pass the request
-     * @deprecated selectors are officially deprecated since Magnolia 3.6.2  - please consider using virtual uri mappings instead
      */
     public static String getSelector(HttpServletRequest req) {
         return getSelector();
@@ -235,9 +235,9 @@ public final class Resource {
 
     /**
      * Get the selector by index
+     * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      * @param index
      * @return the selector value
-     * @deprecated selectors are officially deprecated since Magnolia 3.6.2  - please consider using virtual uri mappings instead
      */
     public static String getSelector(int index) {
         String[] selectors = StringUtils.split(getSelector(), ".");

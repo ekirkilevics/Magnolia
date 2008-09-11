@@ -106,7 +106,7 @@ public class Aggregator {
     }
 
     /**
-     * @deprecated selectors are officially deprecated since Magnolia 3.6.2  - please consider using virtual uri mappings instead
+     * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      */
     public static String getSelector() {
         return getAggregationState().getSelector();
@@ -142,7 +142,7 @@ public class Aggregator {
     }
 
     /**
-     * @deprecated selectors are officially deprecated since Magnolia 3.6.2  - please consider using virtual uri mappings instead
+     * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      */
     public static void setSelector(String selector) {
         getAggregationState().setSelector(selector);
