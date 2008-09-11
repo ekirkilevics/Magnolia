@@ -111,8 +111,29 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
      * the bypasses content node of this filter are taken into account as well.
      */
     public boolean bypasses(HttpServletRequest request) {
+        return determineMatchingEnd(request) < 0 || super.bypasses(request);
+    }
+
+    /**
+     * Determines the index of the first pathInfo character. If the uri does not match any mapping this method returns
+     * -1.
+     */
+    protected int determineMatchingEnd(HttpServletRequest request) {
+        final Matcher matcher = findMatcher(request);
+        if (matcher == null) {
+            return -1;
+        } else {
+            if (matcher.groupCount() > 0) {
+                return matcher.end(1);
+            } else {
+                return matcher.end();
+            }
+        }
+    }
+
+    protected Matcher findMatcher(HttpServletRequest request) {
         final String uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
-        return determineMatchingEnd(uri) < 0 || super.bypasses(request);
+        return findMatcher(uri);
     }
 
     protected Matcher findMatcher(String uri) {
@@ -128,26 +149,6 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
     }
 
     /**
-     * Determines the index of the first pathInfo character. If the uri does not match any mapping this method returns
-     * -1.
-     */
-    protected int determineMatchingEnd(String uri) {
-        for (Iterator iter = mappings.iterator(); iter.hasNext();) {
-            final Matcher matcher = ((Pattern) iter.next()).matcher(uri);
-
-            if (matcher.find()) {
-                if (matcher.groupCount() > 0) {
-                    return matcher.end(1);
-                } else {
-                    return matcher.end();
-                }
-            }
-        }
-
-        return -1;
-    }
-
-    /**
      * Dispatches the request to the servlet if not already bypassed. The request is wrapped for properly setting the
      * pathInfo.
      */
@@ -155,8 +156,7 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
             throws IOException, ServletException {
 
         log.debug("Dispatching to servlet " + getServletClass());
-        final String uri = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
-        final Matcher matcher = findMatcher(uri);
+        final Matcher matcher = findMatcher(request);
         servlet.service(new WrappedRequest(request, matcher), response);
     }
 
