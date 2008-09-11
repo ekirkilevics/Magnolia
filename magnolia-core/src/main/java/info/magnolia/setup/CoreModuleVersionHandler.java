@@ -65,18 +65,22 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
     public CoreModuleVersionHandler() {
         super();
-        final Delta delta35 = DeltaBuilder.update("3.5", "").addTasks(GenericTasks.genericTasksFor35());
-        register(delta35);
-        final Delta delta36 = DeltaBuilder.update("3.6", "")
+
+        register(DeltaBuilder.update("3.5", "")
+                .addTasks(GenericTasks.genericTasksFor35())
+        );
+
+        register(DeltaBuilder.update("3.6", "")
             .addCondition(new CheckNodeTypesDefinition())
             .addTask(new CheckMagnoliaDevelopProperty())
-            .addTask(new CheckNodesForMixVersionable());
-        register(delta36);
-        final Delta delta362 = DeltaBuilder.update("3.6.2", "")
-            .addTask(new UpdateUsers())
-            .addTask(new UpdateRoles())
-            .addTask(new UpdateGroups());
-        register(delta362);
+            .addTask(new CheckNodesForMixVersionable())
+        );
+
+        register(DeltaBuilder.update("3.6.2", "")
+                .addTask(new UpdateUsers())
+                .addTask(new UpdateRoles())
+                .addTask(new UpdateGroups())
+        );
     }
 
     protected List getBasicInstallTasks(InstallContext ctx) {
