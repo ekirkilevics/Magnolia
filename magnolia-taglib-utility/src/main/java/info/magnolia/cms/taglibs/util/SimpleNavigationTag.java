@@ -201,6 +201,8 @@ public class SimpleNavigationTag extends TagSupport {
      */
     private String expandAll = EXPAND_NONE;
 
+    private boolean relativeLevels = false;
+
     /**
      * Name for a page property which will be written to the css class attribute.
      */
@@ -295,6 +297,15 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
+     * If set to true, the startLevel and endLevel values are treated relatively to the current active page.
+     * The default value is false.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
+    public void setRelativeLevels(boolean relativeLevels) {
+        this.relativeLevels = relativeLevels;
+    }
+
+    /**
      * Name for a page property that will hold a css class name which will be added to the html class attribute.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
@@ -334,7 +345,14 @@ public class SimpleNavigationTag extends TagSupport {
         }
 
         try {
-            if (this.startLevel <= activePage.getLevel()) {
+            final int activePageLevel = activePage.getLevel();
+            // if we are to treat the start and end level as relative
+            // to the active page, we adjust them here...
+            if (relativeLevels) {
+                this.startLevel += activePageLevel;
+                this.endLevel += activePageLevel;
+            }
+            if (this.startLevel <= activePageLevel) {
                 Content startContent = activePage.getAncestor(this.startLevel);
                 drawChildren(startContent, activePage, out);
             }
@@ -363,6 +381,7 @@ public class SimpleNavigationTag extends TagSupport {
         this.style = null;
         this.classProperty = null;
         this.expandAll = EXPAND_NONE;
+        this.relativeLevels = false;
         this.wrapperElement = "";
         this.contentFilter = "";
         this.filter = null;

@@ -319,6 +319,13 @@
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
     </attribute>
+    <attribute>
+      <description>If set to true, the startLevel and endLevel values are treated relatively to the current active page. The default value is false.</description>
+      <name>relativeLevels</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+    </attribute>
     <example>
       <![CDATA[
             <cmsu:simpleNavigation startLevel="3" style="mystyle"/>
