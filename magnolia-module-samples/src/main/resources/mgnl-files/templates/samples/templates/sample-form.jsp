@@ -25,7 +25,7 @@
       </script>
     </head>
     <body>
-      <cms:mainBar paragraph="${module.paragraphs.page}" label="Page Properties">
+      <cms:mainBar dialog="${module.paragraphs.page}" label="Page Properties">
         <cms:button label="Form properties" dialogName="samplesFormProperties" position="right" />
       </cms:mainBar>
       <div id="contentDivMainColumn">

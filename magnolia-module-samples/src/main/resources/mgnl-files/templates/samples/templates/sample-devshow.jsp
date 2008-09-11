@@ -12,7 +12,7 @@
       <c:import url="/templates/samples/templates/inc/head.jsp" charEncoding="UTF-8"/>
     </head>
     <body>
-      <cms:mainBar paragraph="${module.paragraphs.page}" />
+      <cms:mainBar dialog="${module.paragraphs.page}" />
       <div id="contentDivMainColumnTotalWidth">
         <!-- content title -->
         <h1>

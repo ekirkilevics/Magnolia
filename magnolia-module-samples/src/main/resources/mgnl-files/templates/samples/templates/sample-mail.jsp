@@ -13,7 +13,7 @@
     </head>
     <body>
       <c:if test="${empty(param.mail)}">
-        <cms:mainBar paragraph="${module.paragraphs.page}" label="Page Properties" />
+        <cms:mainBar dialog="${module.paragraphs.page}" label="Page Properties" />
       </c:if>
       <br />
       <br />
