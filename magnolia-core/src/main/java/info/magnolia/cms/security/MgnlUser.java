@@ -61,7 +61,7 @@ import java.util.TreeSet;
 
 
 /**
- * This class wrapps a user content object to provide some nice methods
+ * This class wraps a user content object to provide some nice methods
  * @author philipp
  * @version $Revision$ ($Author$)
  */
@@ -83,7 +83,7 @@ public class MgnlUser extends AbstractUser implements Serializable {
      */
     private static final Object mutex = new Object();
 
-    // serialiyed
+    // serialized
     private SystemContentWrapper userNode;
 
     /**
