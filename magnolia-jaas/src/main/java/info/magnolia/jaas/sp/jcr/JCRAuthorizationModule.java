@@ -54,7 +54,6 @@ import info.magnolia.jaas.principal.ACLImpl;
 import info.magnolia.jaas.principal.GroupListImpl;
 import info.magnolia.jaas.principal.PrincipalCollectionImpl;
 import info.magnolia.jaas.principal.RoleListImpl;
-import info.magnolia.jaas.sp.AbstractLoginModule;
 
 import java.security.Principal;
 import java.util.Iterator;
@@ -74,22 +73,14 @@ import org.slf4j.LoggerFactory;
  * @author Sameer Charles
  * @version $Id$
  */
-public class JCRAuthorizationModule extends AbstractLoginModule {
-
-    public void validateUser() throws LoginException {
-    }
+public class JCRAuthorizationModule extends JCRAuthenticationModule {
 
     /**
      * Logger
      */
     private static final Logger log = LoggerFactory.getLogger(JCRAuthorizationModule.class);
 
-    // do nothing here, we are only responsible for authorization, not authentication!
-    public boolean login() throws LoginException
-    {
-        this.success = true;
-        this.setSharedStatus(STATUS_SUCCEEDED);
-        return this.success;
+    public void validateUser() throws LoginException {
     }
 
     /**
@@ -256,13 +247,6 @@ public class JCRAuthorizationModule extends AbstractLoginModule {
                 acl.addPermission(permission);
             }
         }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public boolean release() {
-        return true;
     }
 
 }
