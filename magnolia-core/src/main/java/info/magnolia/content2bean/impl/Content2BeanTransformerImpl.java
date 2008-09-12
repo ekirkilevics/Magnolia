@@ -56,7 +56,6 @@ import javax.jcr.RepositoryException;
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.MethodUtils;
 import org.apache.commons.beanutils.PropertyUtils;
-import org.apache.commons.lang.ClassUtils;
 import org.apache.commons.lang.LocaleUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -96,13 +95,16 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         try {
             if (node.hasNodeData("class")) {
                 String className = node.getNodeData("class").getString();
+                if (StringUtils.isBlank(className)) {
+                    throw new ClassNotFoundException("(no value for class property)");
+                }
                 Class clazz = ClassUtil.classForName(className);
                 typeDscr = getTypeMapping().getTypeDescriptor(clazz);
             }
         }
         catch (RepositoryException e) {
             // ignore
-            Content2BeanProcessorImpl.log.warn("can't read class property", e);
+            log.warn("can't read class property", e);
         }
 
         if (typeDscr == null && state.getLevel() > 1) {
@@ -147,8 +149,8 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         }
 
         if (typeDscr == null || typeDscr.isMap() || typeDscr.isCollection()) {
-            if(typeDscr== null && log.isDebugEnabled()){
-                log.debug("was not able to resolve type for node [{}] will use a map", node );
+            if(typeDscr== null){
+                log.debug("was not able to resolve type for node [{}] will use a map", node);
             }
             typeDscr = TypeMapping.MAP_TYPE;
         }
@@ -282,9 +284,7 @@ public class Content2BeanTransformerImpl implements Content2BeanTransformer, Con
         catch (Exception e) {
             // do it better
             log.error("can't set property [" + propertyName + "] to value [" + value + "] in bean [" + bean.getClass().getName() + "]");
-            if(log.isDebugEnabled()){
-                log.debug("stacktrace", e);
-            }
+            log.debug("stacktrace", e);
         }
 
     }
