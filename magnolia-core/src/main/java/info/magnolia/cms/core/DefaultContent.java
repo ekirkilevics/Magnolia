@@ -372,6 +372,11 @@ public class DefaultContent extends ContentHandler implements Content {
         return (new DefaultNodeData(this.node, name, value, this.accessManager));
     }
 
+    public NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException,
+        AccessDeniedException {
+        return (new DefaultNodeData(this.node, name, value, this.accessManager));
+    }
+
     public NodeData createNodeData(String name, Object obj) throws RepositoryException {
         final ValueFactory valueFactory = node.getSession().getValueFactory();
         final Value value;
@@ -399,6 +404,19 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public NodeData setNodeData(String name, Value value) throws PathNotFoundException, RepositoryException,
+        AccessDeniedException {
+        NodeData nodeData;
+        try {
+            nodeData = new DefaultNodeData(this.node, name, this.accessManager);
+            nodeData.setValue(value);
+        }
+        catch (PathNotFoundException e) {
+            nodeData = new DefaultNodeData(this.node, name, value, this.accessManager);
+        }
+        return nodeData;
+    }
+
+    public NodeData setNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
         NodeData nodeData;
         try {

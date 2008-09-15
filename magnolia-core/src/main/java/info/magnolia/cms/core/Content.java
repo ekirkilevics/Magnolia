@@ -221,6 +221,19 @@ public interface Content extends Cloneable {
             AccessDeniedException;
 
     /**
+     * Create NodeData with the given value and type.
+     * @param name to be created
+     * @param value[] to be set initially
+     * @return NodeData requested <code>NodeData</code> object
+     * @throws PathNotFoundException
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
+     */
+    NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException,
+            AccessDeniedException;
+
+    /**
      * Creates a property and set its value immediately, according to the type of the
      * passed instance, hiding the complexity of using JCR's ValueFactory and providing
      * a sensible default behaviour.
@@ -238,6 +251,19 @@ public interface Content extends Cloneable {
      * operation
      */
     NodeData setNodeData(String name, Value value) throws PathNotFoundException, RepositoryException,
+            AccessDeniedException;
+
+    /**
+     * Set NodeData value.
+     * @param name to be created
+     * @param value[] to be set initially
+     * @return NodeData requested <code>NodeData</code> object
+     * @throws PathNotFoundException
+     * @throws RepositoryException if an error occurs
+     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
+     * operation
+     */
+    NodeData setNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException,
             AccessDeniedException;
 
     /**
