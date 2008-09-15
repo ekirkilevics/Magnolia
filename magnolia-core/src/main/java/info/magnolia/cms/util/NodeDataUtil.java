@@ -35,6 +35,7 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -44,6 +45,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
 
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -164,7 +166,9 @@ public class NodeDataUtil {
             }
             return nodeData.getHandle() + "/" + fullName;
         }
-        else{
+        else if (nodeData.isMultiValue() == DefaultNodeData.MULTIVALUE_TRUE){
+            return StringUtils.join(getValuesStringList(nodeData.getValues()), ",");
+        } else {
             return getValueString(nodeData.getValue(), dateFormat);
         }
     }
@@ -450,6 +454,16 @@ public class NodeDataUtil {
         return getOrCreateAndSet(node, name, new Long(value));
     }
 
+    public static NodeData getOrCreateAndSet(Content node, String name, Value[] value) throws AccessDeniedException, RepositoryException {
+        if (node.hasNodeData(name)) {
+            node.setNodeData(name, value);
+            return node.getNodeData(name);
+        }
+
+        return node.createNodeData(name, value);
+
+    }
+
     public static NodeData getOrCreateAndSet(Content node, String name, int value) throws AccessDeniedException, RepositoryException {
         return getOrCreateAndSet(node, name, new Long(value));
     }
@@ -640,5 +654,55 @@ public class NodeDataUtil {
         return PropertyType.UNDEFINED;
     }
 
+    public static ArrayList getValuesStringList(Value[] values) {
+        ArrayList list = new ArrayList();
+        try{
+            Value value;
+            for( int i = 0; i < values.length; i++) {
+                value = values[i];
+                switch (value.getType()) {
+                    case (PropertyType.STRING):
+                        list.add(value.getString());
+                        break;
+                    case (PropertyType.DOUBLE):
+                        list.add(Double.toString(value.getDouble()));
+                        break;
+                    case (PropertyType.LONG):
+                        list.add(Long.toString(value.getLong()));
+                        break;
+                    case (PropertyType.BOOLEAN):
+                        list.add(Boolean.toString(value.getBoolean()));
+                        break;
+                    case (PropertyType.DATE):
+                        Date valueDate = value.getDate().getTime();
+                        list.add(DateUtil.format(valueDate, NodeDataUtil.getDateFormat()));
+                        break;
+                    case (PropertyType.BINARY):
+                        // ???
+                    default:
+                        list.add(StringUtils.EMPTY);
+                }
+            }
+        }
+        catch (Exception e) {
+            if (log.isDebugEnabled()) {
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
+            }
+        }
+        return list;
+    }
 
+    public static String getDateFormat() {
+        String dateFormat = null;
+        try{
+            dateFormat = FastDateFormat.getDateInstance(
+            FastDateFormat.SHORT,
+            MgnlContext.getLocale()).getPattern();
+        }
+        // this happens if the context is not (yet) set
+        catch(IllegalStateException e){
+            dateFormat = DateUtil.YYYY_MM_DD;
+        }
+        return dateFormat;
+    }
 }

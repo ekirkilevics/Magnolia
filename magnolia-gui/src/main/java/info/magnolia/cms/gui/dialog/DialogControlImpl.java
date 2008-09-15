@@ -34,6 +34,7 @@
 package info.magnolia.cms.gui.dialog;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
@@ -41,6 +42,7 @@ import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.RequestFormUtil;
 
 import java.io.IOException;
@@ -435,10 +437,15 @@ public abstract class DialogControlImpl implements DialogControl {
         List values = new ArrayList();
         if (this.getStorageNode() != null) {
             try {
-                Iterator it = this.getStorageNode().getContent(this.getName()).getNodeDataCollection().iterator();
-                while (it.hasNext()) {
-                    NodeData data = (NodeData) it.next();
-                    values.add(data.getString());
+                NodeData node = this.getStorageNode().getNodeData(this.getName());
+                if(node.isMultiValue() == DefaultNodeData.MULTIVALUE_TRUE) {
+                    values = NodeDataUtil.getValuesStringList(node.getValues());
+                } else {
+                    Iterator it = this.getStorageNode().getContent(this.getName()).getNodeDataCollection().iterator();
+                    while (it.hasNext()) {
+                        NodeData data = (NodeData) it.next();
+                        values.add(data.getString());
+                    }
                 }
             }
             catch (PathNotFoundException e) {
