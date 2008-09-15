@@ -98,7 +98,7 @@ public class TemplateRendererManager extends ObservedManager {
                 log.warn(
 
                 MessageFormat.format(
-                    "Can't register template render at {0}, type=\"{1}\" renderer=\"{2}\" due to a {3} exception: {4}",
+                    "Can't register template render at {}, type=\"{}\" renderer=\"{}\" due to a {} exception: {}",
                     new Object[]{tr.getHandle(), type, rendererClass, e.getClass().getName(), e.getMessage()}), e);
                 continue;
             }
