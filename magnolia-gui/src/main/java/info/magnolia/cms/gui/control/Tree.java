@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
@@ -500,39 +499,37 @@ public class Tree extends ControlImpl {
                     type = node.getType();
                 }
                 // todo: share with Contorol.Save
-                if (node.isMultiValue() != DefaultNodeData.MULTIVALUE_TRUE) {
-                    switch (type) {
-                        case PropertyType.STRING:
-                            node.setValue(value);
-                            break;
-                        case PropertyType.BOOLEAN:
-                            if (value.equals("true")) { //$NON-NLS-1$
-                                node.setValue(true);
-                            }
-                            else {
-                                node.setValue(false);
-                            }
-                            break;
-                        case PropertyType.DOUBLE:
-                            try {
-                                node.setValue(Double.valueOf(value).doubleValue());
-                            }
-                            catch (Exception e) {
-                                node.setValue(0);
-                            }
-                            break;
-                        case PropertyType.LONG:
-                            try {
-                                node.setValue(Long.valueOf(value).longValue());
-                            }
-                            catch (Exception e) {
-                                node.setValue(0);
-                            }
-                            break;
-                        case PropertyType.DATE:
-                            // todo
-                            break;
-                    }
+                switch (type) {
+                    case PropertyType.STRING:
+                        node.setValue(value);
+                        break;
+                    case PropertyType.BOOLEAN:
+                        if (value.equals("true")) { //$NON-NLS-1$
+                            node.setValue(true);
+                        }
+                        else {
+                            node.setValue(false);
+                        }
+                        break;
+                    case PropertyType.DOUBLE:
+                        try {
+                            node.setValue(Double.valueOf(value).doubleValue());
+                        }
+                        catch (Exception e) {
+                            node.setValue(0);
+                        }
+                        break;
+                    case PropertyType.LONG:
+                        try {
+                            node.setValue(Long.valueOf(value).longValue());
+                        }
+                        catch (Exception e) {
+                            node.setValue(0);
+                        }
+                        break;
+                    case PropertyType.DATE:
+                        // todo
+                        break;
                 }
                 content.updateMetaData();
                 content.save();
@@ -562,7 +559,7 @@ public class Tree extends ControlImpl {
                 content.deleteNodeData(nodeDataName);
             }
             NodeData node = content.createNodeData(nodeDataName);
-            if (value != null && node.isMultiValue() != DefaultNodeData.MULTIVALUE_TRUE) {
+            if (value != null) {
                 switch (type) {
                     case PropertyType.STRING:
                         node.setValue(value.getString());

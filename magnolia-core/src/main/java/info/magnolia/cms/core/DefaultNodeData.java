@@ -50,7 +50,6 @@ import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import javax.jcr.Value;
-import javax.jcr.ValueFormatException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -78,12 +77,6 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
      * Wrapped javax.jcr.Node for nt:resource type
      */
     protected Node node;
-
-    public static int MULTIVALUE_UNDEFINED = -1;
-    public static int MULTIVALUE_TRUE = 1;
-    public static int MULTIVALUE_FALSE = 0;
-
-    private int multiValue = MULTIVALUE_UNDEFINED;
 
     /**
      * Empty constructor. Should NEVER be used for standard use, test only.
@@ -124,7 +117,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         AccessDeniedException {
         if (createNew) {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-            this.init(workingNode, name, type, (Value) null);
+            this.init(workingNode, name, type, null);
         }
         else {
             Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
@@ -132,7 +125,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         }
         this.setAccessManager(manager);
     }
- 
+
     /**
      * Constructor. Creates a new initialized NodeData
      * @param workingNode current active <code>Node</code>
@@ -147,23 +140,6 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         AccessDeniedException {
         Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
         this.init(workingNode, name, value.getType(), value);
-        this.setAccessManager(manager);
-    }
-
-    /**
-     * Constructor. Creates a new initialized NodeData
-     * @param workingNode current active <code>Node</code>
-     * @param name <code>NodeData</code> name to be created
-     * @param value Value to be set
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     */
-    protected DefaultNodeData(Node workingNode, String name, Value[] value, AccessManager manager)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
-        Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-        this.init(workingNode, name, value[0].getType(), value);
         this.setAccessManager(manager);
     }
 
@@ -220,31 +196,6 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
     }
 
     /**
-     * create a new nt:resource node
-     * @param workingNode
-     * @param name
-     * @param type
-     * @param value
-     */
-    private void init(Node workingNode, String name, int type, Value[] value) throws PathNotFoundException,
-        RepositoryException, AccessDeniedException {
-        if (PropertyType.BINARY == type) {
-            this.node = workingNode.addNode(name, ItemType.NT_RESOURCE);
-            if (null != value) {
-                this.property = this.node.setProperty(ItemType.JCR_DATA, value, value[0].getType());
-            }
-        }
-        else {
-            if (null == value  || value.length == 0) {
-                this.property = workingNode.setProperty(name, new Value[]{null});
-            }
-            else {
-                this.property = workingNode.setProperty(name, value, value[0].getType());
-            }
-        }
-    }
-
-    /**
      * initialize this object based on existing property or nt:resource node
      * @param workingNode
      * @param name
@@ -276,18 +227,6 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
                 log.debug(e.getMessage(), e);
             }
             return null;
-        }
-    }
-
-    public Value[] getValues() {
-        try {
-            return this.property.getValues();
-        }
-        catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug(e.getMessage(), e);
-            }
-            return (Value[])null;
         }
     }
 
@@ -482,11 +421,6 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         this.property.setValue(value);
     }
 
-    public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
-        this.property.setValue(value);
-    }
-
     public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException,
         UnsupportedOperationException {
         Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
@@ -583,26 +517,6 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
 
     public void refresh(boolean keepChanges) throws RepositoryException {
         this.property.refresh(keepChanges);
-    }
-
-    public int isMultiValue() {
-        if(multiValue == MULTIVALUE_UNDEFINED) {
-            try {
-                    if(this.property != null) {
-                        this.property.getValue();
-                        multiValue = MULTIVALUE_FALSE;
-                    }
-
-                } catch (ValueFormatException e) {
-                    multiValue = MULTIVALUE_TRUE;
-
-                } catch (Exception e) {
-                    if (log.isDebugEnabled()) {
-                        log.debug(e.getMessage(), e);
-                    }
-                }
-        }
-        return this.multiValue;
     }
 
 }

@@ -66,12 +66,6 @@ public interface NodeData extends Cloneable {
     Value getValue();
 
     /**
-     * For multi-value properties
-     * @return Value[]
-     */
-    Value[] getValues();
-
-    /**
      * Returns the <code>String</code> representation of the value: decodes like breaks with the specified regular
      * expression.
      * @param lineBreak , regular expression
@@ -212,13 +206,6 @@ public interface NodeData extends Cloneable {
     void setValue(Value value) throws RepositoryException, AccessDeniedException;
 
     /**
-     * set value of type <code>Value[]</code>
-     * @param value[]
-     * @throws javax.jcr.RepositoryException
-     */
-    void setValue(Value[] value) throws RepositoryException, AccessDeniedException;
-
-    /**
      * set attribute, available only if NodeData is of type <code>Binary</code>
      * @param name
      * @param value
@@ -291,10 +278,4 @@ public interface NodeData extends Cloneable {
      * @see javax.jcr.Node#refresh(boolean)
      */
     void refresh(boolean keepChanges) throws RepositoryException;
-
-    /**
-     * for multi-value controls
-     * @return
-     */
-    int isMultiValue();
 }

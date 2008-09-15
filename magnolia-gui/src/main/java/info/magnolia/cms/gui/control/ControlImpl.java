@@ -34,9 +34,7 @@
 package info.magnolia.cms.gui.control;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.DefaultNodeData;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
@@ -278,18 +276,13 @@ public class ControlImpl implements Control {
             return this.values;
         }
         try {
-            NodeData node = this.getWebsiteNode().getNodeData(this.getName());
-            if(node.isMultiValue() != DefaultNodeData.MULTIVALUE_FALSE) {
-                return NodeDataUtil.getValuesStringList(node.getValues());
-            } else {
-                Iterator it = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().iterator();
-                List l = new ArrayList();
-                while (it.hasNext()) {
-                    NodeData data = (NodeData) it.next();
-                    l.add(data.getString());
-                }
-                return l;
+            Iterator it = this.getWebsiteNode().getContent(this.getName()).getNodeDataCollection().iterator();
+            List l = new ArrayList();
+            while (it.hasNext()) {
+                NodeData data = (NodeData) it.next();
+                l.add(data.getString());
             }
+            return l;
         }
         catch (Exception re) {
             return this.values;
