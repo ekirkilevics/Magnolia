@@ -39,7 +39,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.FactoryUtil;
 
-import java.text.MessageFormat;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -96,10 +95,8 @@ public class TemplateRendererManager extends ObservedManager {
             }
             catch (Exception e) {
                 log.warn(
-
-                MessageFormat.format(
                     "Can't register template render at {}, type=\"{}\" renderer=\"{}\" due to a {} exception: {}",
-                    new Object[]{tr.getHandle(), type, rendererClass, e.getClass().getName(), e.getMessage()}), e);
+                    new Object[]{tr.getHandle(), type, rendererClass, e.getClass().getName(), e.getMessage()}, e);
                 continue;
             }
 
