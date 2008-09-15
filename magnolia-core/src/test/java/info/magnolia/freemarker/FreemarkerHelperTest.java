@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2007-2008 Magnolia International
+ * This file Copyright (c) 2003-2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -48,6 +48,7 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.mock.MockAggregationState;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockMetaData;
@@ -348,6 +349,9 @@ public class FreemarkerHelperTest extends TestCase {
         expect(context.getLocale()).andReturn(Locale.US);
 
         expect(context.getContextPath()).andReturn("/tralala");
+        expect(context.getAggregationState()).andReturn(new MockAggregationState());
+        expect(context.getServletContext()).andReturn(null);
+        expect(context.getRequest()).andReturn(null);
         expect(context.getServletContext()).andReturn(null);
         replay(context);
         MgnlContext.setInstance(context);
@@ -380,6 +384,9 @@ public class FreemarkerHelperTest extends TestCase {
         expect(context.getLocale()).andReturn(Locale.US);
 
         expect(context.getContextPath()).andReturn("/tralala"); // called when preparing the freemarker data model
+        expect(context.getAggregationState()).andReturn(new MockAggregationState());
+        expect(context.getServletContext()).andReturn(null);
+        expect(context.getRequest()).andReturn(null);
         expect(context.getServletContext()).andReturn(null);
         expect(context.getContextPath()).andReturn("/tralala"); // actual call from the template
         replay(context);

@@ -98,6 +98,8 @@ public class FreemarkerParagraphRenderer implements ParagraphRenderer {
 
         final Map freemarkerCtx = new HashMap();
         freemarkerCtx.put("content", content);
+        freemarkerCtx.put("actpage", MgnlContext.getAggregationState().getMainContent());
+        freemarkerCtx.put("paragraphConfig", paragraph);
         if (actionResult != null) {
             freemarkerCtx.put("result", actionResult.getResult());
             freemarkerCtx.put("action", actionResult.getActionBean());

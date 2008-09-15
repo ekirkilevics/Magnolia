@@ -1,0 +1,91 @@
+<!-- This is a page that was renderer using the freemarker-renderer, page template is ${templateConfig} -->
+[#assign cms=JspTaglibs["cms-taglib"]]
+[#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]]
+[#assign cmsu=JspTaglibs["cms-util-taglib"]]
+[#assign fmt=JspTaglibs["http://java.sun.com/jsp/jstl/fmt"]]
+[#assign messages=templateAction.messages]
+<html>
+<head>
+  [@cms.setNode var="pageProperties" /]
+
+  <title>${pageProperties.title}</title>
+
+  <!--  add magnolia css and js links -->
+  [@cms.links /]
+  
+  [#assign module=templateAction.moduleConfig]
+
+  <!-- include css files that are configured in AdminCentral under config:/modules/samples/config/cssFiles -->
+  [#list module.cssFiles as cssFile]
+      <link rel="stylesheet" type="text/css" href="${contextPath}${cssFile}"/>
+  [/#list]
+
+  <!-- include js files that are configured in AdminCentral under config:/modules/samples/config/jsFiles -->
+  [#list module.jsFiles as jsFile]
+    <script type="text/javascript" src="${contextPath}${jsFile}">
+        <!--  -->
+    </script>
+  [/#list]
+
+  [#if pageProperties.metaDescription?has_content]
+    <meta name="description" content="${pageProperties.metaDescription}" />
+  [/#if]
+  [#if pageProperties.metaKeywords?has_content]
+    <meta name="keywords" content="${pageProperties.metaKeywords}" />
+  [/#if]
+</head>
+<body>
+  [@cms.mainBar dialog="${module.paragraphs.page}" /]
+  <div id="contentDivMainColumnTotalWidth">
+  
+  <!-- content title -->
+  [@cms.out nodeDataName="title" var="title" /]
+  [#if !title?has_content]
+    [@cms.out nodeDataName="contentTitle" var="title" /]
+  [/#if]
+  <h1>${title}</h1>
+  
+  [@cms.contentNodeIterator contentNodeCollectionName="mainColumnParagraphs"]
+    [@cms.out nodeDataName="lineAbove" var="lineAbove" /]
+    [@cms.out nodeDataName="spacer" var="spacer" /]
+    <div style="clear:both;" class="spacer${spacer}">
+      [@cms.editBar adminOnly=true /]
+      <!-- line -->
+      [#if lineAbove=="true"]
+        <hr />
+      [/#if]
+      [@cms.includeTemplate /]
+    </div>
+  [/@cms.contentNodeIterator]
+  [@cms.adminOnly]
+    <div style="clear:both;">
+      [@cms.newBar contentNodeCollectionName="mainColumnParagraphs" paragraph="${module.paragraphs.mainColumn}" /]
+    </div>
+  [/@cms.adminOnly]
+    <!-- footer -->
+    <div id="footer">
+      [@cms.adminOnly]
+        [@cms.editButton label=messages.get("buttons.editfooter") paragraph="${module.paragraphs.footer}" contentNodeName="footerPar" /]
+      [/@cms.adminOnly]
+      [@cms.ifNotEmpty nodeDataName="footerText" contentNodeName="footerPar"]
+        <p>
+          [@cms.out nodeDataName="footerText" contentNodeName="footerPar" /]
+        </p>
+      [/@cms.ifNotEmpty]
+      <a href="http://www.magnolia.info">
+        <img src="${contextPath}/docroot/samples/imgs/poweredSmall.gif"
+             alt="Powered by Magnolia" />
+      </a>
+    </div>
+
+    <div class="freemarker-sample-paragraph">
+      [#if templateConfig.title?has_content]<p>template: ${templateConfig.title}</p>[/#if]
+      <p>${templateConfig.path}</p>
+    </div>
+  </div>
+  <div style="position:absolute;left:0px;top:0px;">
+    [@cmsu.img nodeDataName="headerImage" inherit=true /]
+  </div>
+  [@cmsu.simpleNavigation /]
+</body>
+</html>
