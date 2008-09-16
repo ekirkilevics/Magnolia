@@ -33,8 +33,9 @@
  */
 package info.magnolia.cms.mail.setup;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
-import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -42,7 +43,6 @@ import info.magnolia.module.delta.WebXmlConditionsUtil;
 import java.util.ArrayList;
 
 /**
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -53,9 +53,20 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsNowWrapped("Mail");
 
-        final Delta for35 = DeltaBuilder.update("3.5", "")
+        register(DeltaBuilder.update("3.5", "")
                 .addTask(new RegisterModuleServletsTask())
-                .addConditions(conditions);
-        register(for35);
+                .addConditions(conditions)
+        );
+
+        final CheckAndModifyPropertyValueTask mailServletMapping = new CheckAndModifyPropertyValueTask("Mapping for mail servlet", "Fixes the mapping for the mail servlet, making it specification compliant.",
+                ContentRepository.CONFIG,
+                "/server/filters/servlets/Mail/mappings/--magnolia-mail-",
+                "pattern", "/.magnolia/mail*", "/.magnolia/mail"
+        );
+
+        register(DeltaBuilder.update("3.6.2", "")
+                .addTask(mailServletMapping)
+        );
+
     }
 }

@@ -33,16 +33,17 @@
  */
 package info.magnolia.setup;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
-import info.magnolia.module.delta.Delta;
+import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.setup.for3_5.GenericTasks;
 import info.magnolia.setup.for3_6.CheckMagnoliaDevelopProperty;
-import info.magnolia.setup.for3_6.CheckNodesForMixVersionable;
 import info.magnolia.setup.for3_6.CheckNodeTypesDefinition;
+import info.magnolia.setup.for3_6.CheckNodesForMixVersionable;
 import info.magnolia.setup.for3_6_2.UpdateGroups;
 import info.magnolia.setup.for3_6_2.UpdateRoles;
 import info.magnolia.setup.for3_6_2.UpdateUsers;
@@ -71,15 +72,22 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         );
 
         register(DeltaBuilder.update("3.6", "")
-            .addCondition(new CheckNodeTypesDefinition())
-            .addTask(new CheckMagnoliaDevelopProperty())
-            .addTask(new CheckNodesForMixVersionable())
+                .addCondition(new CheckNodeTypesDefinition())
+                .addTask(new CheckMagnoliaDevelopProperty())
+                .addTask(new CheckNodesForMixVersionable())
+        );
+
+        final CheckAndModifyPropertyValueTask log4jServletMapping = new CheckAndModifyPropertyValueTask("Mapping for log4j configuration servlet", "Fixes the mapping for the log4j configuration servlet, making it specification compliant.",
+                ContentRepository.CONFIG,
+                "/server/filters/servlets/log4j/mappings/--magnolia-log4j-",
+                "pattern", "/.magnolia/log4j*", "/.magnolia/log4j"
         );
 
         register(DeltaBuilder.update("3.6.2", "")
                 .addTask(new UpdateUsers())
                 .addTask(new UpdateRoles())
                 .addTask(new UpdateGroups())
+                .addTask(log4jServletMapping)
         );
     }
 

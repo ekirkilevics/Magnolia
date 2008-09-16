@@ -20,7 +20,7 @@
       <name>log4j</name>
       <class>it.openutils.log4j.Log4jConfigurationServlet</class>
       <mappings>
-        <mapping>/.magnolia/log4j*</mapping>
+        <mapping>/.magnolia/log4j</mapping>
       </mappings>
     </servlet>
   </servlets>
