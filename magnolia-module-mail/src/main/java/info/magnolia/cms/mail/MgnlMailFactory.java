@@ -95,7 +95,7 @@ public class MgnlMailFactory extends ObservedManager {
 
     protected static final String SMTP_PASSWORD = "smtpPassword";
 
-    /** @deprecated not used anymore */
+    /** @deprecated not used anymore since 3.6.2 */
     protected static final String SMTP_AUTH = "smtpAuth";
 
     protected static final String SMTP_DEFAULT_HOST = "127.0.0.1";
