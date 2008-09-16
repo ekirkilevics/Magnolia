@@ -76,16 +76,32 @@ public class BarMain extends Bar {
      */
     private boolean adminButtonVisible = true;
 
+    /**
+     * @deprecated since 3.7 - use the empty constructor.
+     */
     public BarMain(HttpServletRequest request) {
         this.setRequest(request);
     }
 
+    /**
+     * @deprecated since 3.7
+     */
     public BarMain(HttpServletRequest request, String path, String nodeCollectionName, String nodeName, String paragraph) {
         this.setRequest(request);
         this.setPath(path);
         this.setNodeCollectionName(nodeCollectionName);
         this.setNodeName(nodeName);
         this.setParagraph(paragraph);
+    }
+
+    public BarMain(String path, String nodeCollectionName, String nodeName, String paragraph) {
+        this.setPath(path);
+        this.setNodeCollectionName(nodeCollectionName);
+        this.setNodeName(nodeName);
+        this.setParagraph(paragraph);
+    }
+
+    public BarMain() {
     }
 
     /**
