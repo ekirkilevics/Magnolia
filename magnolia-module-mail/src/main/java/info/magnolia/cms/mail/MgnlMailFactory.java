@@ -95,6 +95,7 @@ public class MgnlMailFactory extends ObservedManager {
 
     protected static final String SMTP_PASSWORD = "smtpPassword";
 
+    /** @deprecated not used anymore */
     protected static final String SMTP_AUTH = "smtpAuth";
 
     protected static final String SMTP_DEFAULT_HOST = "127.0.0.1";
@@ -300,15 +301,14 @@ public class MgnlMailFactory extends ObservedManager {
         props.put("mail.smtp.host", this.mailParameters.get(SMTP_SERVER));
         props.put("mail.smtp.port", this.mailParameters.get(SMTP_PORT));
         Authenticator auth = null;
-        if (Boolean.valueOf((String) this.mailParameters.get(SMTP_AUTH)).booleanValue()) {
+        final String smtpUser = (String) this.mailParameters.get(SMTP_USER);
+        final String smtpPassword = (String) this.mailParameters.get(SMTP_PASSWORD);
+        if (StringUtils.isNotBlank(smtpUser)) {
             props.put("mail.smtp.auth", "true");
-            props.put("mail.smtp.user", this.mailParameters.get(SMTP_USER));
+            props.put("mail.smtp.user", smtpUser);
             auth = new Authenticator() {
-
                 protected PasswordAuthentication getPasswordAuthentication() {
-                    return new PasswordAuthentication(
-                        (String) MgnlMailFactory.this.mailParameters.get(SMTP_USER),
-                        (String) MgnlMailFactory.this.mailParameters.get(SMTP_PASSWORD));
+                    return new PasswordAuthentication(smtpUser, smtpPassword);
                 }
             };
         }
