@@ -43,6 +43,7 @@ import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.regex.Pattern;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
@@ -113,5 +114,13 @@ public abstract class MgnlTestCase extends TestCase {
         MockHierarchyManager hm = MockUtil.createAndSetHierarchyManager(ContentRepository.CONFIG, properties);
 
         return hm;
+    }
+    
+    /**
+     * Utility assertion that will match a String against a regex, with the DOTALL flag enabled,
+     * which means the . character will also matche new lines.
+     */
+    public static void assertMatchesDotAll(String message, String s, String regex) {
+        assertTrue(message, Pattern.compile(regex, Pattern.DOTALL).matcher(s).matches());
     }
 }
