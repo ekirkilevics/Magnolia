@@ -39,6 +39,7 @@ import java.util.List;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
@@ -67,8 +68,15 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         DeltaBuilder delta354 = DeltaBuilder.update("3.5.4", "");
         delta354.addTask(orderBackwardCompatibilityFilter);
 
+        DeltaBuilder delta37 = DeltaBuilder.update("3.7", "");
+        delta37.addTask(new BootstrapSingleResource(
+                "Freemarker Template Renderer", 
+                "Add freemarker template renderer configuration", 
+                "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"));
+        
         register(delta35);
         register(delta354);
+        register(delta37);
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
