@@ -172,10 +172,10 @@ public class WorkspaceAccessUtil {
      * @param jcrSession
      * @param accessManager
      * */
-    public QueryManager createQueryManager(Session jcrSession, AccessManager accessManager)
+    public QueryManager createQueryManager(Session jcrSession, AccessManager accessManager, HierarchyManager hm)
             throws RepositoryException {
         javax.jcr.query.QueryManager jcrQueryManager = jcrSession.getWorkspace().getQueryManager();
-        return SearchFactory.getAccessControllableQueryManager(jcrQueryManager, accessManager);
+        return SearchFactory.getAccessControllableQueryManager(jcrQueryManager, accessManager, hm);
     }
 
     /**
@@ -187,9 +187,8 @@ public class WorkspaceAccessUtil {
      * */
     public HierarchyManager createHierarchyManager(String userId,
                                                       Session jcrSession,
-                                                      AccessManager accessManager,
-                                                      QueryManager queryManager) throws RepositoryException {
-        return new DefaultHierarchyManager(userId ,jcrSession, accessManager, queryManager);
+                                                      AccessManager accessManager) throws RepositoryException {
+        return new DefaultHierarchyManager(userId ,jcrSession, accessManager);
     }
 
 }

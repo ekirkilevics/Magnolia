@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.core.search;
 
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.AccessManager;
 
 
@@ -50,8 +51,8 @@ public final class SearchFactory {
     }
 
     public static QueryManager getAccessControllableQueryManager(javax.jcr.query.QueryManager queryManager,
-        AccessManager accessManager) {
-        return (new QueryManagerImpl(queryManager, accessManager));
+        AccessManager accessManager, HierarchyManager hm) {
+        return (new QueryManagerImpl(queryManager, accessManager, hm));
     }
 
 }

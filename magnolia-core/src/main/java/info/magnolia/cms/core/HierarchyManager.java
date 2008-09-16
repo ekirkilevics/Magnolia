@@ -121,4 +121,6 @@ public interface HierarchyManager {
     boolean hasPendingChanges() throws RepositoryException;
 
     void refresh(boolean keepChanges) throws RepositoryException;
+
+    String getName();
 }

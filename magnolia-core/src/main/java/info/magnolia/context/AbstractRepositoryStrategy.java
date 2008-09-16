@@ -76,8 +76,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
             try {
                 hm = util.createHierarchyManager(getUserId(),
                         getRepositorySession(repositoryId, workspaceId),
-                        getAccessManager(repositoryId, workspaceId),
-                        getQueryManager(repositoryId, workspaceId));
+                        getAccessManager(repositoryId, workspaceId));
                 hierarchyManagers.put(hmAttrName, hm);
             }
             catch (RepositoryException e) {
@@ -91,17 +90,7 @@ public abstract class AbstractRepositoryStrategy implements RepositoryAcquiringS
     abstract protected String getUserId();
 
     public QueryManager getQueryManager(String repositoryId, String workspaceId) {
-        QueryManager queryManager = null;
-        try {
-            queryManager = WorkspaceAccessUtil.getInstance().createQueryManager(
-                getRepositorySession(repositoryId, workspaceId),
-                getAccessManager(repositoryId, workspaceId));
-        }
-        catch (Exception t) {
-            log.error("Failed to create QueryManager", t);
-        }
-
-        return queryManager;
+        return this.getHierarchyManager(repositoryId, workspaceId).getQueryManager();
     }
 
     protected Session getRepositorySession(String repositoryName, String workspaceName) throws LoginException, RepositoryException {

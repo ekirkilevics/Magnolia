@@ -41,6 +41,7 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Rule;
+import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.InputStream;
@@ -59,6 +60,7 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
 import javax.jcr.ValueFactory;
@@ -108,6 +110,7 @@ public class DefaultContent extends ContentHandler implements Content {
      */
     private MetaData metaData;
 
+    private HierarchyManager hierarchyManager;
     /**
      * Empty constructor. Should NEVER be used for standard use, test only.
      */
@@ -118,33 +121,35 @@ public class DefaultContent extends ContentHandler implements Content {
      * Constructor to get existing node.
      * @param rootNode node to start with
      * @param path absolute (primary) path to this <code>Node</code>
-     * @param manager AccessManager instance
+     * @param hierarchyManager HierarchyManager instance
      * @throws PathNotFoundException if the node at <code>path</code> does not exist
      * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
      * operation
      * @throws RepositoryException if an error occurs
      */
-    DefaultContent(Node rootNode, String path, AccessManager manager) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        Access.isGranted(manager, Path.getAbsolutePath(rootNode.getPath(), path), Permission.READ);
+    DefaultContent(Node rootNode, String path, HierarchyManager hierarchyManager) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.READ);
         this.setPath(path);
         this.setRootNode(rootNode);
         this.setNode(this.rootNode.getNode(this.path));
-        this.setAccessManager(manager);
+        this.setAccessManager(hierarchyManager.getAccessManager());
+        this.setHierarchyManager(hierarchyManager);
     }
 
     /**
      * Constructor to get existing node.
      * @param elem initialized node object
-     * @param manager AccessManager instance
+     * @param hierarchyManager HierarchyManager instance
      * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
      * operation
      * @throws RepositoryException if an error occurs
      */
-    public DefaultContent(Item elem, AccessManager manager) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(manager, Path.getAbsolutePath(elem.getPath()), Permission.READ);
+    public DefaultContent(Item elem,HierarchyManager hierarchyManager) throws RepositoryException, AccessDeniedException {
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(elem.getPath()), Permission.READ);
         this.setNode((Node) elem);
         this.setPath(this.getHandle());
-        this.setAccessManager(manager);
+        this.setAccessManager(hierarchyManager.getAccessManager());
+        this.setHierarchyManager(hierarchyManager);
     }
 
     /**
@@ -153,25 +158,26 @@ public class DefaultContent extends ContentHandler implements Content {
      * @param rootNode node to start with
      * @param path absolute (primary) path to this <code>Node</code>
      * @param contentType JCR node type as configured
-     * @param manager AccessManager instance
+     * @param hierarchyManager HierarchyManager instance
      * @throws PathNotFoundException if the node at <code>path</code> does not exist
      * @throws RepositoryException if an error occurs
      * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
      * operation
      */
-    DefaultContent(Node rootNode, String path, String contentType, AccessManager manager)
+    DefaultContent(Node rootNode, String path, String contentType, HierarchyManager hierarchyManager)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
-        Access.isGranted(manager, Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
         this.setPath(path);
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, contentType);
-        this.setAccessManager(manager);
+        this.setAccessManager(hierarchyManager.getAccessManager());
         // add mix:lockable as default for all nodes created using this manager
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518
         this.addMixin(ItemType.MIX_LOCKABLE);
+        this.setHierarchyManager(hierarchyManager);
     }
 
     /**
@@ -196,7 +202,7 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return new DefaultContent(this.node, path, this.accessManager);
+        return new DefaultContent(this.node, path, this.hierarchyManager);
     }
 
     public Content createContentNode(String name) throws PathNotFoundException, RepositoryException,
@@ -205,7 +211,7 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new DefaultContent(this.node, name, this.accessManager));
+        return (new DefaultContent(this.node, name, this.hierarchyManager));
     }
 
     public Content getContent(String name, boolean create, ItemType contentType) throws AccessDeniedException,
@@ -231,7 +237,7 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        Content content = (new DefaultContent(this.node, name, contentType, this.accessManager));
+        Content content = (new DefaultContent(this.node, name, contentType, this.hierarchyManager));
         MetaData metaData = content.getMetaData();
         metaData.setCreationDate();
         return content;
@@ -239,7 +245,7 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public Content createContent(String name, ItemType contentType) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        Content content = (new DefaultContent(this.node, name, contentType.getSystemName(), this.accessManager));
+        Content content = (new DefaultContent(this.node, name, contentType.getSystemName(), this.hierarchyManager));
         MetaData metaData = content.getMetaData();
         metaData.setCreationDate();
         return content;
@@ -263,7 +269,7 @@ public class DefaultContent extends ContentHandler implements Content {
     public NodeData getNodeData(String name) {
         NodeData nodeData = null;
         try {
-            nodeData = new DefaultNodeData(this.node, name, this.accessManager);
+            nodeData = new DefaultNodeData(this.node, name, this.hierarchyManager, this);
         }
         catch (PathNotFoundException e) {
             if (log.isDebugEnabled()) {
@@ -308,7 +314,7 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public NodeData getNodeData(String name, boolean create) {
         try {
-            return (new DefaultNodeData(this.node, name, this.accessManager));
+            return (new DefaultNodeData(this.node, name, this.hierarchyManager, this));
         }
         catch (PathNotFoundException e) {
             if (create) {
@@ -359,22 +365,22 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        return (new DefaultNodeData(this.node, name, PropertyType.STRING, true, this.accessManager));
+        return (new DefaultNodeData(this.node, name, PropertyType.STRING, true, this.hierarchyManager, this));
     }
 
     public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        return (new DefaultNodeData(this.node, name, type, true, this.accessManager));
+        return (new DefaultNodeData(this.node, name, type, true, this.hierarchyManager, this));
     }
 
     public NodeData createNodeData(String name, Value value) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        return (new DefaultNodeData(this.node, name, value, this.accessManager));
+        return (new DefaultNodeData(this.node, name, value, this.hierarchyManager, this));
     }
 
     public NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
-        return (new DefaultNodeData(this.node, name, value, this.accessManager));
+        return (new DefaultNodeData(this.node, name, value, this.hierarchyManager, this));
     }
 
     public NodeData createNodeData(String name, Object obj) throws RepositoryException {
@@ -407,11 +413,11 @@ public class DefaultContent extends ContentHandler implements Content {
         AccessDeniedException {
         NodeData nodeData;
         try {
-            nodeData = new DefaultNodeData(this.node, name, this.accessManager);
+            nodeData = new DefaultNodeData(this.node, name, this.hierarchyManager, this);
             nodeData.setValue(value);
         }
         catch (PathNotFoundException e) {
-            nodeData = new DefaultNodeData(this.node, name, value, this.accessManager);
+            nodeData = new DefaultNodeData(this.node, name, value, this.hierarchyManager, this);
         }
         return nodeData;
     }
@@ -420,11 +426,11 @@ public class DefaultContent extends ContentHandler implements Content {
         AccessDeniedException {
         NodeData nodeData;
         try {
-            nodeData = new DefaultNodeData(this.node, name, this.accessManager);
+            nodeData = new DefaultNodeData(this.node, name, this.hierarchyManager, this);
             nodeData.setValue(value);
         }
         catch (PathNotFoundException e) {
-            nodeData = new DefaultNodeData(this.node, name, value, this.accessManager);
+            nodeData = new DefaultNodeData(this.node, name, value, this.hierarchyManager, this);
         }
         return nodeData;
     }
@@ -469,7 +475,7 @@ public class DefaultContent extends ContentHandler implements Content {
             while (nodeIterator.hasNext()) {
                 Node subNode = (Node) nodeIterator.next();
                 try {
-                    Content content = new DefaultContent(subNode, this.accessManager);
+                    Content content = new DefaultContent(subNode, this.hierarchyManager);
                     if (filter.accept(content)) {
                         children.add(content);
                     }
@@ -562,7 +568,7 @@ public class DefaultContent extends ContentHandler implements Content {
             Node subNode = (Node) nodeIterator.next();
             try {
                 if (contentType == null || this.isNodeType(subNode, contentType)) {
-                    children.add(new DefaultContent(subNode, this.accessManager));
+                    children.add(new DefaultContent(subNode, this.hierarchyManager));
                 }
             }
             catch (PathNotFoundException e) {
@@ -583,7 +589,7 @@ public class DefaultContent extends ContentHandler implements Content {
                 Property property = (Property) propertyIterator.next();
                 try {
                     if (!property.getName().startsWith("jcr:") && !property.getName().startsWith("mgnl:")) { //$NON-NLS-1$ //$NON-NLS-2$
-                        children.add(new DefaultNodeData(property, this.accessManager));
+                        children.add(new DefaultNodeData(property, this.hierarchyManager, this));
                     }
                 }
                 catch (PathNotFoundException e) {
@@ -612,7 +618,7 @@ public class DefaultContent extends ContentHandler implements Content {
             while (propertyIterator.hasNext()) {
                 Property property = (Property) propertyIterator.next();
                 try {
-                    children.add(new DefaultNodeData(property, this.accessManager));
+                    children.add(new DefaultNodeData(property, this.hierarchyManager, this));
                 }
                 catch (PathNotFoundException e) {
                     log.error("Exception caught", e);
@@ -642,7 +648,7 @@ public class DefaultContent extends ContentHandler implements Content {
             Node subNode = (Node) nodeIterator.next();
             try {
                 if (this.isNodeType(subNode, ItemType.NT_RESOURCE)) {
-                    children.add(new DefaultNodeData(subNode, this.accessManager));
+                    children.add(new DefaultNodeData(subNode, this.hierarchyManager, this));
                 }
             }
             catch (PathNotFoundException e) {
@@ -690,14 +696,14 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return (new DefaultContent(this.node.getParent(), this.accessManager));
+        return (new DefaultContent(this.node.getParent(), this.hierarchyManager));
     }
 
     public Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         if (digree > this.getLevel()) {
             throw new PathNotFoundException();
         }
-        return (new DefaultContent(this.node.getAncestor(digree), this.accessManager));
+        return (new DefaultContent(this.node.getAncestor(digree), this.hierarchyManager));
     }
 
     public Collection getAncestors() throws PathNotFoundException, RepositoryException {
@@ -1007,6 +1013,14 @@ public class DefaultContent extends ContentHandler implements Content {
         buffer.append("]");
 
         return buffer.toString();
+    }
+
+    public HierarchyManager getHierarchyManager() throws RepositoryException {
+        return this.hierarchyManager;
+    }
+
+    public void setHierarchyManager(HierarchyManager hierarchyManager) {
+        this.hierarchyManager = hierarchyManager;
     }
 
 }

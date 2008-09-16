@@ -34,6 +34,7 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
@@ -404,5 +405,9 @@ public abstract class ContentWrapper implements Content{
 
     public void updateMetaData(HttpServletRequest request) throws RepositoryException, AccessDeniedException {
         this.getWrappedContent().updateMetaData(request);
+    }
+
+    public HierarchyManager getHierarchyManager() throws RepositoryException {
+        return this.getHierarchyManager();
     }
 }

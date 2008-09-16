@@ -35,6 +35,7 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessDeniedException;
 
+import javax.jcr.ItemNotFoundException;
 import javax.jcr.Value;
 import javax.jcr.RepositoryException;
 import javax.jcr.PathNotFoundException;
@@ -297,4 +298,16 @@ public interface NodeData extends Cloneable {
      * @return
      */
     int isMultiValue();
+
+    /**
+     * returns Parent node
+     * @return
+     * @throws RepositoryException
+     * @throws javax.jcr.AccessDeniedException
+     * @throws ItemNotFoundException
+     * @throws AccessDeniedException
+     */
+    Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException;
+
+    HierarchyManager getHierarchyManager() throws RepositoryException;
 }

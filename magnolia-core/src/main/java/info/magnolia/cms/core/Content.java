@@ -762,4 +762,6 @@ public interface Content extends Cloneable {
         public boolean accept(Content content);
 
     }
+
+    HierarchyManager getHierarchyManager() throws RepositoryException;
 }

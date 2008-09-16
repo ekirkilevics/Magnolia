@@ -34,10 +34,12 @@
 package info.magnolia.cms.core.search;
 
 import info.magnolia.cms.core.DefaultContent;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -76,11 +78,14 @@ public class QueryResultImpl implements QueryResult {
 
     private AccessManager accessManager;
 
+    private HierarchyManager hm;
+
     private Map dirtyHandles = new Hashtable();
 
-    protected QueryResultImpl(javax.jcr.query.QueryResult result, AccessManager accessManager) {
+    protected QueryResultImpl(javax.jcr.query.QueryResult result, AccessManager accessManager, HierarchyManager hm) {
         this.result = result;
         this.accessManager = accessManager;
+        this.hm = hm;
     }
 
     public AccessManager getAccessManager() {
@@ -124,7 +129,7 @@ public class QueryResultImpl implements QueryResult {
             if (this.dirtyHandles.get(node.getPath()) == null) {
                 boolean isAllowed = this.accessManager.isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
                 if (isAllowed) {
-                    collection.add(new DefaultContent(node, this.accessManager));
+                    collection.add(new DefaultContent(node, this.hm));
                     this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);
                 }
             }

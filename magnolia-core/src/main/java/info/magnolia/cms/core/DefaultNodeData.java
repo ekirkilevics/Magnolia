@@ -85,6 +85,10 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
 
     private int multiValue = MULTIVALUE_UNDEFINED;
 
+    private HierarchyManager hierarchyManager;
+
+    private Content parent;
+
     /**
      * Empty constructor. Should NEVER be used for standard use, test only.
      */
@@ -99,13 +103,15 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
      * @param name <code>NodeData</code> name to be retrieved
      * @param manager Access manager to be used for this object
      */
-    protected DefaultNodeData(Node workingNode, String name, AccessManager manager)
+    protected DefaultNodeData(Node workingNode, String name, HierarchyManager hierarchyManager, Content parent)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
-        Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
         this.init(workingNode, name);
-        this.setAccessManager(manager);
+        this.setAccessManager(hierarchyManager.getAccessManager());
+        this.setHierarchyManager(hierarchyManager);
+        this.setParent(parent);
     }
 
     /**
@@ -118,36 +124,21 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
-    protected DefaultNodeData(Node workingNode, String name, int type, boolean createNew, AccessManager manager)
+    protected DefaultNodeData(Node workingNode, String name, int type, boolean createNew, HierarchyManager hierarchyManager, Content parent)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
         if (createNew) {
-            Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
+            Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
             this.init(workingNode, name, type, (Value) null);
         }
         else {
-            Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
+            Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
             this.init(workingNode, name);
         }
-        this.setAccessManager(manager);
-    }
- 
-    /**
-     * Constructor. Creates a new initialized NodeData
-     * @param workingNode current active <code>Node</code>
-     * @param name <code>NodeData</code> name to be created
-     * @param value Value to be set
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     */
-    protected DefaultNodeData(Node workingNode, String name, Value value, AccessManager manager)
-        throws PathNotFoundException,
-        RepositoryException,
-        AccessDeniedException {
-        Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
-        this.init(workingNode, name, value.getType(), value);
-        this.setAccessManager(manager);
+        this.setAccessManager(hierarchyManager.getAccessManager());
+        this.setHierarchyManager(hierarchyManager);
+        this.setParent(parent);
     }
 
     /**
@@ -158,40 +149,65 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
      * @throws PathNotFoundException
      * @throws RepositoryException
      */
-    protected DefaultNodeData(Node workingNode, String name, Value[] value, AccessManager manager)
+    protected DefaultNodeData(Node workingNode, String name, Value value, HierarchyManager hierarchyManager, Content parent)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
-        Access.isGranted(manager, Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
+        this.init(workingNode, name, value.getType(), value);
+        this.setAccessManager(hierarchyManager.getAccessManager());
+        this.setHierarchyManager(hierarchyManager);
+        this.setParent(parent);
+    }
+
+    /**
+     * Constructor. Creates a new initialized NodeData
+     * @param workingNode current active <code>Node</code>
+     * @param name <code>NodeData</code> name to be created
+     * @param value Value to be set
+     * @throws PathNotFoundException
+     * @throws RepositoryException
+     */
+    protected DefaultNodeData(Node workingNode, String name, Value[] value, HierarchyManager hierarchyManager, Content parent)
+        throws PathNotFoundException,
+        RepositoryException,
+        AccessDeniedException {
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
         this.init(workingNode, name, value[0].getType(), value);
-        this.setAccessManager(manager);
+        this.setAccessManager(hierarchyManager.getAccessManager());
+        this.setHierarchyManager(hierarchyManager);
+        this.setParent(parent);
     }
 
     /**
      * Constructor. Creates a new initialized NodeData
      * @param node <code>Node</code> of type nt:resource
      */
-    public DefaultNodeData(Node node, AccessManager manager)
+    public DefaultNodeData(Node node, HierarchyManager hierarchyManager, Content parent)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
-        Access.isGranted(manager, Path.getAbsolutePath(node.getPath()), Permission.READ);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(node.getPath()), Permission.READ);
         this.node = node;
         this.property = this.node.getProperty(ItemType.JCR_DATA);
-        this.setAccessManager(manager);
+        this.setAccessManager(hierarchyManager.getAccessManager());
+        this.setHierarchyManager(hierarchyManager);
+        this.setParent(parent);
     }
 
     /**
      * Constructor. Creates a new initialized NodeData
      * @param property
      */
-    public DefaultNodeData(Property property, AccessManager manager)
+    public DefaultNodeData(Property property, HierarchyManager hierarchyManager, Content parent)
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
         this.property = property;
-        Access.isGranted(manager, Path.getAbsolutePath(this.property.getPath()), Permission.READ);
-        this.setAccessManager(manager);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.property.getPath()), Permission.READ);
+        this.setAccessManager(hierarchyManager.getAccessManager());
+        this.setHierarchyManager(hierarchyManager);
+        this.setParent(parent);
     }
 
     /**
@@ -394,7 +410,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
             throw new ItemNotFoundException("can't find referenced node for value [" + getString() + "]");
         }
 
-        return new DefaultContent(refNode, getAccessManager());
+        return new DefaultContent(refNode, getHierarchyManager());
     }
 
     public int getType() {
@@ -603,6 +619,22 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
                 }
         }
         return this.multiValue;
+    }
+
+    public Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
+        return this.parent;
+    }
+
+    public HierarchyManager getHierarchyManager() throws RepositoryException {
+        return this.hierarchyManager;
+    }
+
+    public void setHierarchyManager(HierarchyManager hierarchyManager) {
+        this.hierarchyManager = hierarchyManager;
+    }
+
+    public void setParent(Content parent) {
+        this.parent = parent;
     }
 
 }

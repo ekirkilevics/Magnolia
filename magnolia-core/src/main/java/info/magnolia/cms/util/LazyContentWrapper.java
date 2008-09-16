@@ -91,7 +91,7 @@ public class LazyContentWrapper extends ContentWrapper implements Serializable {
         return node;
     }
 
-    protected HierarchyManager getHierarchyManager() {
+    public HierarchyManager getHierarchyManager() {
         return MgnlContext.getSystemContext().getHierarchyManager(getRepository());
     }
 

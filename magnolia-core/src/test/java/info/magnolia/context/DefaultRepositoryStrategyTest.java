@@ -4,7 +4,7 @@
  *
  *
  * This file is dual-licensed under both the Magnolia
- * Network Agreement and the GNU General Public License. 
+ * Network Agreement and the GNU General Public License.
  * You may elect to use one or the other of these licenses.
  *
  * This file is distributed in the hope that it will be
@@ -90,7 +90,8 @@ public class DefaultRepositoryStrategyTest extends RepositoryTestCase {
         principalSet.add(principals);
         ACL acl = createMock(ACL.class);
         Subject subject = new Subject(false, principalSet, new HashSet(), new HashSet());
-        expect(context.getUser()).andReturn(user);
+        expect(context.getUser()).andReturn(user).anyTimes();
+        expect(user.getName()).andReturn("admin").anyTimes();
         expect(user.getSubject()).andReturn(subject);
         expect(principals.get("magnolia_website")).andReturn(acl);
         expect(acl.getList()).andReturn(new ArrayList());
