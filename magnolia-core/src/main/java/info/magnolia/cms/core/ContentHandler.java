@@ -33,6 +33,8 @@
  */
 package info.magnolia.cms.core;
 
+import javax.jcr.RepositoryException;
+
 import info.magnolia.cms.security.AccessManager;
 
 import org.apache.commons.lang.exception.NestableRuntimeException;
@@ -45,30 +47,14 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 public abstract class ContentHandler implements Cloneable {
 
     /**
-     * AccessManager instance.
+     * HierarchyManager instance.
      */
-    protected AccessManager accessManager;
+    protected HierarchyManager hierarchyManager;
 
     /**
      * package private constructor
      */
     ContentHandler() {
-    }
-
-    /**
-     * Set access manager for this object
-     * @param manager
-     */
-    public void setAccessManager(AccessManager manager) {
-        this.accessManager = manager;
-    }
-
-    /**
-     * Get access manager if previously set for this object
-     * @return AccessManager
-     */
-    public AccessManager getAccessManager() {
-        return this.accessManager;
     }
 
     /**
@@ -83,6 +69,14 @@ public abstract class ContentHandler implements Cloneable {
             // should never happen
             throw new NestableRuntimeException(e);
         }
+    }
+
+    public HierarchyManager getHierarchyManager() throws RepositoryException {
+        return this.hierarchyManager;
+    }
+
+    public void setHierarchyManager(HierarchyManager hierarchyManager) {
+        this.hierarchyManager = hierarchyManager;
     }
 
 }

@@ -50,24 +50,21 @@ public class QueryManagerImpl implements QueryManager {
 
     private javax.jcr.query.QueryManager queryManager;
 
-    private AccessManager accessManager;
-
     private HierarchyManager hm;
 
-    protected QueryManagerImpl(javax.jcr.query.QueryManager queryManager, AccessManager accessManager, HierarchyManager hm) {
+    protected QueryManagerImpl(javax.jcr.query.QueryManager queryManager, HierarchyManager hm) {
         this.queryManager = queryManager;
-        this.accessManager = accessManager;
         this.hm = hm;
     }
 
     public Query createQuery(String s, String s1) throws InvalidQueryException, RepositoryException {
         javax.jcr.query.Query query = this.queryManager.createQuery(s, s1);
-        return (new QueryImpl(query, this.accessManager, this.hm));
+        return (new QueryImpl(query, this.hm));
     }
 
     public Query getQuery(Node node) throws InvalidQueryException, RepositoryException {
         javax.jcr.query.Query query = this.queryManager.getQuery(node);
-        return (new QueryImpl(query, this.accessManager, this.hm));
+        return (new QueryImpl(query, this.hm));
     }
 
     public String[] getSupportedQueryLanguages() throws RepositoryException {

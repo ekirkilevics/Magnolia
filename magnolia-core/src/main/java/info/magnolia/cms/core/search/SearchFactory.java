@@ -51,8 +51,8 @@ public final class SearchFactory {
     }
 
     public static QueryManager getAccessControllableQueryManager(javax.jcr.query.QueryManager queryManager,
-        AccessManager accessManager, HierarchyManager hm) {
-        return (new QueryManagerImpl(queryManager, accessManager, hm));
+            HierarchyManager hm) {
+        return (new QueryManagerImpl(queryManager, hm));
     }
 
 }

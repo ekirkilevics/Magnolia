@@ -34,11 +34,11 @@
 package info.magnolia.cms.core.version;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Rule;
 
@@ -685,20 +685,8 @@ public class ContentVersion extends DefaultContent {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
 
-    /**
-     * Set access manager for this object
-     * @param manager
-     */
-    public void setAccessManager(AccessManager manager) {
-        log.error("Not allowed to set access manager on Version preview");
-    }
-
-    /**
-     * Get access manager if previously set for this object
-     * @return AccessManager
-     */
-    public AccessManager getAccessManager() {
-        return this.base.getAccessManager();
+    public HierarchyManager getAccessManager() throws RepositoryException {
+        return this.base.getHierarchyManager();
     }
 
 }

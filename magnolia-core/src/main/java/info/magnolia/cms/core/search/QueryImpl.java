@@ -56,19 +56,16 @@ public class QueryImpl implements Query {
 
     private javax.jcr.query.Query query;
 
-    private AccessManager accessManager;
-
     private HierarchyManager hm;
 
-    protected QueryImpl(javax.jcr.query.Query query, AccessManager accessManager, HierarchyManager hm) {
+    protected QueryImpl(javax.jcr.query.Query query, HierarchyManager hm) {
         this.query = query;
-        this.accessManager = accessManager;
         this.hm = hm;
     }
 
     public QueryResult execute() throws RepositoryException {
         javax.jcr.query.QueryResult result = this.query.execute();
-        QueryResultImpl filteredResult = new QueryResultImpl(result, this.accessManager, this.hm);
+        QueryResultImpl filteredResult = new QueryResultImpl(result, this.hm);
         return filteredResult;
     }
 

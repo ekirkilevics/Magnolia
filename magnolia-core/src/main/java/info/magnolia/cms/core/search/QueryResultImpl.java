@@ -76,20 +76,13 @@ public class QueryResultImpl implements QueryResult {
      */
     private Map objectStore = new Hashtable();
 
-    private AccessManager accessManager;
-
     private HierarchyManager hm;
 
     private Map dirtyHandles = new Hashtable();
 
-    protected QueryResultImpl(javax.jcr.query.QueryResult result, AccessManager accessManager, HierarchyManager hm) {
+    protected QueryResultImpl(javax.jcr.query.QueryResult result, HierarchyManager hm) {
         this.result = result;
-        this.accessManager = accessManager;
         this.hm = hm;
-    }
-
-    public AccessManager getAccessManager() {
-        return accessManager;
     }
 
     public javax.jcr.query.QueryResult getJcrResult() {
@@ -127,7 +120,7 @@ public class QueryResultImpl implements QueryResult {
          */
         if ((node.isNodeType(nodeType) || StringUtils.isEmpty(nodeType)) && !node.isNodeType(ItemType.NT_RESOURCE)) {
             if (this.dirtyHandles.get(node.getPath()) == null) {
-                boolean isAllowed = this.accessManager.isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
+                boolean isAllowed = this.hm.getAccessManager().isGranted(Path.getAbsolutePath(node.getPath()), Permission.READ);
                 if (isAllowed) {
                     collection.add(new DefaultContent(node, this.hm));
                     this.dirtyHandles.put(node.getPath(), StringUtils.EMPTY);

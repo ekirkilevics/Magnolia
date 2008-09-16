@@ -85,8 +85,6 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
 
     private int multiValue = MULTIVALUE_UNDEFINED;
 
-    private HierarchyManager hierarchyManager;
-
     private Content parent;
 
     /**
@@ -107,10 +105,9 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
+        this.setHierarchyManager(hierarchyManager);
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
         this.init(workingNode, name);
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        this.setHierarchyManager(hierarchyManager);
         this.setParent(parent);
     }
 
@@ -128,6 +125,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
+        this.setHierarchyManager(hierarchyManager);
         if (createNew) {
             Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
             this.init(workingNode, name, type, (Value) null);
@@ -136,8 +134,6 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
             Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
             this.init(workingNode, name);
         }
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        this.setHierarchyManager(hierarchyManager);
         this.setParent(parent);
     }
 
@@ -153,10 +149,9 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
+        this.setHierarchyManager(hierarchyManager);
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
         this.init(workingNode, name, value.getType(), value);
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        this.setHierarchyManager(hierarchyManager);
         this.setParent(parent);
     }
 
@@ -172,10 +167,9 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
+        this.setHierarchyManager(hierarchyManager);
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
         this.init(workingNode, name, value[0].getType(), value);
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        this.setHierarchyManager(hierarchyManager);
         this.setParent(parent);
     }
 
@@ -187,11 +181,10 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
+        this.setHierarchyManager(hierarchyManager);
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(node.getPath()), Permission.READ);
         this.node = node;
         this.property = this.node.getProperty(ItemType.JCR_DATA);
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        this.setHierarchyManager(hierarchyManager);
         this.setParent(parent);
     }
 
@@ -204,9 +197,8 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         RepositoryException,
         AccessDeniedException {
         this.property = property;
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.property.getPath()), Permission.READ);
-        this.setAccessManager(hierarchyManager.getAccessManager());
         this.setHierarchyManager(hierarchyManager);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.property.getPath()), Permission.READ);
         this.setParent(parent);
     }
 
@@ -454,22 +446,22 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
     }
 
     public void setValue(String value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
 
     public void setValue(int value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
 
     public void setValue(long value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
 
     public void setValue(InputStream value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         if (this.node != null) {
             this.property = this.node.setProperty(ItemType.JCR_DATA, value);
         }
@@ -479,33 +471,33 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
     }
 
     public void setValue(double value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
 
     public void setValue(boolean value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
 
     public void setValue(Calendar value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
 
     public void setValue(Value value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
 
     public void setValue(Value[] value) throws RepositoryException, AccessDeniedException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         this.property.setValue(value);
     }
 
     public void setAttribute(String name, String value) throws RepositoryException, AccessDeniedException,
         UnsupportedOperationException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         if (null == this.node) {
             throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
         }
@@ -514,7 +506,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
 
     public void setAttribute(String name, Calendar value) throws RepositoryException, AccessDeniedException,
         UnsupportedOperationException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.getHandle()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.getHandle()), Permission.SET);
         if (null == this.node) {
             throw new UnsupportedOperationException("Attributes are only supported for BINARY type");
         }
@@ -578,7 +570,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
 
     public boolean isGranted(long permissions) {
         try {
-            Access.isGranted(this.accessManager, Path.getAbsolutePath(property.getPath()), permissions);
+            Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(property.getPath()), permissions);
             return true;
         }
         catch (RepositoryException re) {
@@ -588,7 +580,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
     }
 
     public void delete() throws RepositoryException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.property.getPath()), Permission.REMOVE);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.property.getPath()), Permission.REMOVE);
         if (null != this.node) {
             this.node.remove();
         }
@@ -623,14 +615,6 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
 
     public Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException {
         return this.parent;
-    }
-
-    public HierarchyManager getHierarchyManager() throws RepositoryException {
-        return this.hierarchyManager;
-    }
-
-    public void setHierarchyManager(HierarchyManager hierarchyManager) {
-        this.hierarchyManager = hierarchyManager;
     }
 
     public void setParent(Content parent) {

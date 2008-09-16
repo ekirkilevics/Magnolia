@@ -139,10 +139,6 @@ public abstract class ContentWrapper implements Content{
         this.getWrappedContent().deleteNodeData(name);
     }
 
-    public AccessManager getAccessManager() {
-        return this.getWrappedContent().getAccessManager();
-    }
-
     public VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException {
         return this.getWrappedContent().getAllVersions();
     }

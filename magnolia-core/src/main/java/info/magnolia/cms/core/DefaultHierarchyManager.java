@@ -115,7 +115,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         try {
             this.jcrSession =
                     util.createRepositorySession(util.getDefaultCredentials(), this.repositoryName, this.workspaceName);
-            this.queryManager = util.createQueryManager(this.jcrSession, this.accessManager, this);
+            this.queryManager = util.createQueryManager(this.jcrSession, this);
             this.rootNode = this.jcrSession.getRootNode();
             this.workspace = this.jcrSession.getWorkspace();
         } catch (RepositoryException re) {
@@ -151,7 +151,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         if (null == this.queryManager) {
             WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
             try {
-                this.queryManager = util.createQueryManager(this.jcrSession, this.accessManager, this);
+                this.queryManager = util.createQueryManager(this.jcrSession, this);
             } catch (RepositoryException e) {
                 reInitialize();
             }

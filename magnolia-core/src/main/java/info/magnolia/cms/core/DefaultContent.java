@@ -110,7 +110,6 @@ public class DefaultContent extends ContentHandler implements Content {
      */
     private MetaData metaData;
 
-    private HierarchyManager hierarchyManager;
     /**
      * Empty constructor. Should NEVER be used for standard use, test only.
      */
@@ -128,12 +127,11 @@ public class DefaultContent extends ContentHandler implements Content {
      * @throws RepositoryException if an error occurs
      */
     DefaultContent(Node rootNode, String path, HierarchyManager hierarchyManager) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+        this.setHierarchyManager(hierarchyManager);
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.READ);
         this.setPath(path);
         this.setRootNode(rootNode);
         this.setNode(this.rootNode.getNode(this.path));
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        this.setHierarchyManager(hierarchyManager);
     }
 
     /**
@@ -145,11 +143,10 @@ public class DefaultContent extends ContentHandler implements Content {
      * @throws RepositoryException if an error occurs
      */
     public DefaultContent(Item elem,HierarchyManager hierarchyManager) throws RepositoryException, AccessDeniedException {
+        this.setHierarchyManager(hierarchyManager);
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(elem.getPath()), Permission.READ);
         this.setNode((Node) elem);
         this.setPath(this.getHandle());
-        this.setAccessManager(hierarchyManager.getAccessManager());
-        this.setHierarchyManager(hierarchyManager);
     }
 
     /**
@@ -168,16 +165,16 @@ public class DefaultContent extends ContentHandler implements Content {
         throws PathNotFoundException,
         RepositoryException,
         AccessDeniedException {
+        this.setHierarchyManager(hierarchyManager);
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
         this.setPath(path);
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, contentType);
-        this.setAccessManager(hierarchyManager.getAccessManager());
         // add mix:lockable as default for all nodes created using this manager
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518
         this.addMixin(ItemType.MIX_LOCKABLE);
-        this.setHierarchyManager(hierarchyManager);
+
     }
 
     /**
@@ -261,7 +258,7 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public MetaData getMetaData() {
         if (this.metaData == null) {
-            this.metaData = new MetaData(this.node, this.accessManager);
+            this.metaData = new MetaData(this.node, this.hierarchyManager.getAccessManager());
         }
         return this.metaData;
     }
@@ -436,7 +433,7 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
         if (this.node.hasNode(name)) {
             this.node.getNode(name).remove();
         }
@@ -789,14 +786,14 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public void restore(String versionName, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
-        Access.isGranted(this.getAccessManager(), this.getHandle(), Permission.WRITE);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), this.getHandle(), Permission.WRITE);
         Version version = this.getVersionHistory().getVersion(versionName);
         this.restore(version, removeExisting);
     }
 
     public void restore(Version version, boolean removeExisting) throws VersionException,
         UnsupportedRepositoryOperationException, RepositoryException {
-        Access.isGranted(this.getAccessManager(), this.getHandle(), Permission.WRITE);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), this.getHandle(), Permission.WRITE);
         VersionManager.getInstance().restore(this, version, removeExisting);
     }
 
@@ -862,7 +859,7 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public void removeVersionHistory() throws AccessDeniedException, RepositoryException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(node.getPath()), Permission.WRITE);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(node.getPath()), Permission.WRITE);
         VersionManager.getInstance().removeVersionHistory(this.node.getUUID());
     }
 
@@ -872,7 +869,7 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public boolean isGranted(long permissions) {
         try {
-            return accessManager.isGranted(Path.getAbsolutePath(node.getPath()), permissions);
+            return hierarchyManager.getAccessManager().isGranted(Path.getAbsolutePath(node.getPath()), permissions);
         }
         catch (RepositoryException re) {
             log.error("Could not get node path: " + re, re);
@@ -881,12 +878,12 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public void delete() throws RepositoryException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
         this.node.remove();
     }
 
     public void delete(String path) throws RepositoryException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath(), path), Permission.REMOVE);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath(), path), Permission.REMOVE);
         if (this.isNodeData(path)) {
             this.getNodeData(path).delete();
         }
@@ -896,7 +893,7 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public boolean isNodeData(String path) throws AccessDeniedException, RepositoryException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath(), path), Permission.READ);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath(), path), Permission.READ);
         boolean result = false;
         try {
             result = this.node.hasProperty(path);
@@ -931,7 +928,7 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public void addMixin(String type) throws RepositoryException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.SET);
         if (this.node.canAddMixin(type)) {
             this.node.addMixin(type);
         }
@@ -941,7 +938,7 @@ public class DefaultContent extends ContentHandler implements Content {
     }
 
     public void removeMixin(String type) throws RepositoryException {
-        Access.isGranted(this.accessManager, Path.getAbsolutePath(this.node.getPath()), Permission.SET);
+        Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.SET);
         this.node.removeMixin(type);
     }
 
@@ -1013,14 +1010,6 @@ public class DefaultContent extends ContentHandler implements Content {
         buffer.append("]");
 
         return buffer.toString();
-    }
-
-    public HierarchyManager getHierarchyManager() throws RepositoryException {
-        return this.hierarchyManager;
-    }
-
-    public void setHierarchyManager(HierarchyManager hierarchyManager) {
-        this.hierarchyManager = hierarchyManager;
     }
 
 }
