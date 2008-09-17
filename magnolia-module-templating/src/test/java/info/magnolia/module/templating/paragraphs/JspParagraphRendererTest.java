@@ -87,8 +87,10 @@ public class JspParagraphRendererTest extends TestCase {
         expect(ctx.getAttribute("content")).andReturn(null);
         expect(ctx.getAggregationState()).andReturn(mas);
         ctx.setAttribute(eq("content"), isA(NodeMapWrapper.class), eq(1));
+        ctx.setAttribute(eq("paragraphConfig"), isA(Paragraph.class), eq(1));
         ctx.include("/foo/bar.jsp", w);
         ctx.setAttribute("content", null, 1);
+        ctx.setAttribute("paragraphConfig", null, 1);
         replay(ctx);
 
         renderer.render(null, paragraph, w);
