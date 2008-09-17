@@ -39,6 +39,8 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author Vinzenz Wyser
  * @version 2.0
+ *
+ * @deprecated this is unused
  */
 public class InlineSuper {
 
