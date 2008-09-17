@@ -48,7 +48,6 @@ import static org.easymock.EasyMock.*;
 import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.util.Collections;
-import java.util.regex.Pattern;
 
 /**
  * @author gjoseph
@@ -99,8 +98,8 @@ public class EditBarTest extends MgnlTagTestCase {
         final String output = getJspOutput();
         assertTrue("Output should contain the paragraph's title", output.contains(paraTitle));
 
-        assertMatchesDotAll("Output should contain the paragraph's title in a <td>",
-                output, ".*<td class=\"smothParagraphTitle\"( style=\"[a-z;: -]+)?\">" + paraTitle + "</td>.*");
+        assertMatches("Output should contain the paragraph's title in a <td>",
+                output, ".*<td class=\"smothParagraphTitle\"( style=\"[a-z;: -]+\")?>" + paraTitle + "</td>.*");
 
         verify(currentPage);
     }

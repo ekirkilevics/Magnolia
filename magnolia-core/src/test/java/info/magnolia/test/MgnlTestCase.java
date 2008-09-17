@@ -115,12 +115,27 @@ public abstract class MgnlTestCase extends TestCase {
 
         return hm;
     }
-    
+
     /**
-     * Utility assertion that will match a String against a regex, with the DOTALL flag enabled,
-     * which means the . character will also matche new lines.
+     * Utility assertion that will match a String against a regex,
+     * <strong>with the DOTALL flag enabled, which means the . character will also matche new lines</strong>.
      */
-    public static void assertMatchesDotAll(String message, String s, String regex) {
-        assertTrue(message, Pattern.compile(regex, Pattern.DOTALL).matcher(s).matches());
+    public static void assertMatches(String message, String s, String regex) {
+        assertMatches(message, s, regex, Pattern.DOTALL);
+    }
+
+    /**
+     * Utility assertion that will match a String against a regex.
+     */
+    public static void assertMatches(String message, String s, String regex, int flags) {
+        final StringBuffer completeMessage = new StringBuffer();
+        if (message!=null) {
+            completeMessage.append(message).append(":\n");
+        }
+        completeMessage.append("Input:\n    ");
+        completeMessage.append(s);
+        completeMessage.append("did not match regex:\n    ");
+        completeMessage.append(regex);
+        assertTrue(completeMessage.toString(), Pattern.compile(regex, flags).matcher(s).matches());
     }
 }
