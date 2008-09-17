@@ -61,7 +61,6 @@ public class BarNew extends Bar {
      * @deprecated since 3.7 - use the empty constructor.
      */
     public BarNew(HttpServletRequest request) {
-        this.setRequest(request);
     }
 
     public BarNew() {

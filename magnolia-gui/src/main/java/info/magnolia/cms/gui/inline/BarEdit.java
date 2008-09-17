@@ -65,7 +65,6 @@ public class BarEdit extends Bar {
      * @deprecated since 3.7 - use the empty constructor.
      */
     public BarEdit(HttpServletRequest request) {
-        this.setRequest(request);
     }
 
     public BarEdit() {
@@ -123,8 +122,8 @@ public class BarEdit extends Bar {
      * @param paragraph , paragraph type
      */
     public void setButtonEdit(String path, String nodeCollectionName, String nodeName, String paragraph) {
-        ButtonEdit b = new ButtonEdit(this.getRequest(), path, nodeCollectionName, nodeName, paragraph);
-        b.setDefaultOnclick(this.getRequest());
+        ButtonEdit b = new ButtonEdit(path, nodeCollectionName, nodeName, paragraph);
+        b.setDefaultOnclick();
         this.setButtonEdit(b);
     }
 

@@ -59,24 +59,34 @@ public class ButtonEdit extends Button {
     public ButtonEdit() {
     }
 
+    /**
+     * @deprecated since 3.7 - use the empty constructor.
+     */
     public ButtonEdit(HttpServletRequest request) {
-        this.setRequest(request);
     }
 
-    public ButtonEdit(
-        HttpServletRequest request,
-        String path,
-        String nodeCollectionName,
-        String nodeName,
-        String paragraph) {
-        this.setRequest(request);
+    /**
+     * @deprecated since 3.7 - do not pass an HttpServletRequest
+     */
+    public ButtonEdit(HttpServletRequest request, String path, String nodeCollectionName, String nodeName, String paragraph) {
+        this(path, nodeCollectionName, nodeName, paragraph);
+    }
+
+    public ButtonEdit(String path, String nodeCollectionName, String nodeName, String paragraph) {
         this.setPath(path);
         this.setNodeCollectionName(nodeCollectionName);
         this.setNodeName(nodeName);
         this.setParagraph(paragraph);
     }
 
+    /**
+     * @deprecated since 3.7 - do not pass an HttpServletRequest
+     */
     public void setDefaultOnclick(HttpServletRequest request) {
+        setDefaultOnclick();
+    }
+
+    public void setDefaultOnclick() {
         String nodeCollectionName = this.getNodeCollectionName();
         if (nodeCollectionName == null) {
             nodeCollectionName = StringUtils.EMPTY;
