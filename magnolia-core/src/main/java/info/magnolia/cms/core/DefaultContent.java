@@ -128,7 +128,8 @@ public class DefaultContent extends ContentHandler implements Content {
      */
     DefaultContent(Node rootNode, String path, HierarchyManager hierarchyManager) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.READ);
+        // TODO: is it safe to assume that when HM doesn't exist we want system level access rights? No it's not safe. FIXME!!!!
+        Access.isGranted(hierarchyManager == null ? null : hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.READ);
         this.setPath(path);
         this.setRootNode(rootNode);
         this.setNode(this.rootNode.getNode(this.path));
@@ -144,7 +145,7 @@ public class DefaultContent extends ContentHandler implements Content {
      */
     public DefaultContent(Item elem,HierarchyManager hierarchyManager) throws RepositoryException, AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(elem.getPath()), Permission.READ);
+        Access.isGranted(hierarchyManager == null ? null : hierarchyManager.getAccessManager(), Path.getAbsolutePath(elem.getPath()), Permission.READ);
         this.setNode((Node) elem);
         this.setPath(this.getHandle());
     }
@@ -166,7 +167,7 @@ public class DefaultContent extends ContentHandler implements Content {
         RepositoryException,
         AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
+        Access.isGranted(hierarchyManager == null ? null : hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
         this.setPath(path);
         this.setRootNode(rootNode);
         this.node = this.rootNode.addNode(this.path, contentType);
