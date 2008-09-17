@@ -761,7 +761,7 @@ public class Tree extends ControlImpl {
             handle = d.getHandle();
             name = d.getName();
 
-            if (d.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
+            if (d.isGranted(info.magnolia.cms.security.Permission.WRITE) && d.isMultiValue() != DefaultNodeData.MULTIVALUE_TRUE) {
                 permissionWrite = true;
             }
         }
