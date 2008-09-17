@@ -35,9 +35,11 @@ package info.magnolia.module.templating.paragraphs;
 
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.NodeMapWrapper;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.test.mock.MockAggregationState;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
@@ -80,7 +82,13 @@ public class JspParagraphRendererTest extends TestCase {
 
         final StringWriter w = new StringWriter();
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
+        MockAggregationState mas = new MockAggregationState();
+        mas.setMainContent(new MockContent("bla"));
+        expect(ctx.getAttribute("content")).andReturn(null);
+        expect(ctx.getAggregationState()).andReturn(mas);
+        ctx.setAttribute(eq("content"), isA(NodeMapWrapper.class), eq(1));
         ctx.include("/foo/bar.jsp", w);
+        ctx.setAttribute("content", null, 1);
         replay(ctx);
 
         renderer.render(null, paragraph, w);

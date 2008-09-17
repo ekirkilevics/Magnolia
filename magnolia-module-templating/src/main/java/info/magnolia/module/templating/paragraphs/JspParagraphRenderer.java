@@ -36,6 +36,7 @@ package info.magnolia.module.templating.paragraphs;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.NodeMapWrapper;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -70,7 +71,13 @@ public class JspParagraphRenderer implements ParagraphRenderer {
             if (!(ctx instanceof WebContext)) {
                 throw new IllegalStateException("This paragraph renderer can only be used with a WebContext");
             }
+            Object attContent = ctx.getAttribute("content");
+            ctx.setAttribute("content", new NodeMapWrapper(content, MgnlContext.getAggregationState().getMainContent().getHandle()), Context.LOCAL_SCOPE);
+            ctx.setAttribute("paragraphConfig", paragraph, Context.LOCAL_SCOPE);
             ((WebContext) ctx).include(jspPath, out);
+            // restore back original value of the parameter
+            ctx.setAttribute("content", attContent, Context.LOCAL_SCOPE);
+            ctx.setAttribute("paragraphConfig", null, Context.LOCAL_SCOPE);
         } catch (ServletException e) {
             throw new RuntimeException(e); // TODO
         }

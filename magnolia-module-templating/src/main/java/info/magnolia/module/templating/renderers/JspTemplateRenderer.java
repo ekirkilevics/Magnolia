@@ -35,6 +35,9 @@ package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.NodeMapWrapper;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 
 import javax.servlet.RequestDispatcher;
@@ -71,11 +74,18 @@ public class JspTemplateRenderer implements TemplateRenderer {
             log.warn("Including {} for request {}, but response is already committed.", requestReceiver, request.getRequestURL());
         }
 
+        Content page = MgnlContext.getAggregationState().getMainContent();
+        request.setAttribute("content", new NodeMapWrapper(page, page.getHandle()));
+        request.setAttribute("actpage", new NodeMapWrapper(page, page.getHandle()));
+        request.setAttribute("templateConfig", template);
+        request.setAttribute("aggregationState", MgnlContext.getAggregationState());
+        request.setAttribute("ctx", MgnlContext.getInstance());
         RequestDispatcher rd = request.getRequestDispatcher(requestReceiver);
         // set this attribute to avoid a second dispatching of the filters
         request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
         // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
         rd.forward(request, response);
+        // TODO: should we remove extra attributes again?
     }
 
 }
