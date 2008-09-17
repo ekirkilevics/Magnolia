@@ -81,12 +81,6 @@ public class RenderingFilter extends AbstractMgnlFilter {
      * @throws ServletException
      */
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
-        if (ConfigLoader.isBootstrapping()) {
-            // @todo a nice page, with the log content...
-            response.getWriter().write("Magnolia bootstrapping has failed, check bootstrap.log in magnolia/logs"); //$NON-NLS-1$
-            return;
-        }
-
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final Template template = aggregationState.getTemplate();
 

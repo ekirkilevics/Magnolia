@@ -58,24 +58,9 @@ public class ConfigLoader {
     private static final String JAAS_PROPERTYNAME = "java.security.auth.login.config";
 
     /**
-     * @deprecated only used in bootstrap(), which is deprecated and should be reimplemented.
-     */
-    public final class BootstrapFileFilter implements Bootstrapper.BootstrapFilter {
-        // do not import modules configuration files yet. the module will do it after the registration process
-        public boolean accept(String filename) {
-            return !filename.startsWith("config.modules");
-        }
-    }
-
-    /**
      * Is this magnolia istance configured?
      */
     private static boolean configured;
-
-    /**
-     * Set to true when bootstrapping is in progress or if it has failed.
-     */
-    private static boolean bootstrapping;
 
     /**
      * Initialize a ConfigLoader instance. All the supplied parameters will be set in
@@ -161,29 +146,21 @@ public class ConfigLoader {
     /**
      * Returns true is magnolia is running with all basic configuration.
      * @return <code>true</code> if Magnolia is configured
+     *
+     * @deprecated this is very dubious - single use is probably useless.
      */
     public static boolean isConfigured() {
         return configured;
     }
 
     /**
-     * Returns true if repository bootstrapping has started but the configuration has not been loaded successfully.
-     * @return <code>true</code> if repository bootstrapping has started but the configuration has not been loaded
-     * successfully
-     */
-    public static boolean isBootstrapping() {
-        return bootstrapping;
-    }
-
-    /**
      * Set the current state of Magnolia.
      * @param cfg <code>true</code> if Magnolia is configured
+     *
+     * @deprecated this is very dubious - single use is probably useless.
      */
     private static void setConfigured(boolean cfg) {
         configured = cfg;
-
-        // if we are here, bootstrapping has completed or never started
-        bootstrapping = false;
     }
 
     /**
