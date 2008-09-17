@@ -99,7 +99,7 @@ public class EditBarTest extends MgnlTagTestCase {
         assertTrue("Output should contain the paragraph's title", output.contains(paraTitle));
 
         assertMatches("Output should contain the paragraph's title in a <td>",
-                output, ".*<td class=\"smothParagraphTitle\"( style=\"[a-z;: -]+\")?>" + paraTitle + "</td>.*");
+                output, ".*<td class=\"smothBarLabel\"( style=\"[a-z;: -]+\")?>" + paraTitle + "</td>.*");
 
         verify(currentPage);
     }

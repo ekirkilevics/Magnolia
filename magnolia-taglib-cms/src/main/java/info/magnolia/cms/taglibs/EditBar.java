@@ -33,20 +33,23 @@
  */
 package info.magnolia.cms.taglibs;
 
+import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarEdit;
+import info.magnolia.cms.i18n.Messages;
+import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
-
-import java.io.IOException;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.tagext.TagSupport;
-
+import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
+import javax.servlet.jsp.tagext.TagSupport;
+import java.io.IOException;
 
 /**
  * Displays Magnolia editBar which allows you to edit a paragraph. This tag is often used within
@@ -145,6 +148,19 @@ public class EditBar extends TagSupport {
         this.adminOnly = adminOnly;
     }
 
+    public boolean isShowParagraphName() {
+        return showParagraphName;
+    }
+
+    /**
+     * Show the paragraph name, default to false.
+     * @param showParagraphName Show the paragraph name.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
+    public void setShowParagraphName(boolean showParagraphName) {
+        this.showParagraphName = showParagraphName;
+    }
+
     /**
      * @see javax.servlet.jsp.tagext.Tag#doStartTag()
      */
@@ -157,11 +173,10 @@ public class EditBar extends TagSupport {
      */
     public int doEndTag() {
 
-        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && Resource.getActivePage().isGranted(Permission.SET)) {
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && aggregationState.getMainContent().isGranted(Permission.SET)) {
             try {
-                BarEdit bar = new BarEdit((HttpServletRequest) this.pageContext.getRequest());
-
-                bar.setShowTitle(isShowParagraphName());
+                BarEdit bar = new BarEdit();
 
                 Content localContentNode = Resource.getLocalContentNode();
 
@@ -232,6 +247,17 @@ public class EditBar extends TagSupport {
                     }
                 }
                 bar.placeDefaultButtons();
+
+                if (isShowParagraphName()) {
+                    Messages msgs = TemplateMessagesUtil.getMessages();
+                    final Paragraph paragraphInfo = ParagraphManager.getInstance().getInfo(paragraph);
+                    if (StringUtils.isNotEmpty(paragraphInfo.getI18nBasename())) {
+                        msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
+                    }
+                    final String label = msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle());
+                    bar.setLabel(label);
+                }
+
                 bar.drawHtml(pageContext.getOut());
             }
             catch (IOException e) {
@@ -252,19 +278,6 @@ public class EditBar extends TagSupport {
         this.moveLabel = null;
         this.adminOnly = true;
         this.showParagraphName = false;
-    }
-
-    public boolean isShowParagraphName() {
-        return showParagraphName;
-    }
-
-    /**
-     * Show the paragraph name, default to false.
-     * @param showParagraphName Show the paragraph name.
-     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
-     */
-    public void setShowParagraphName(boolean showParagraphName) {
-        this.showParagraphName = showParagraphName;
     }
 
 }

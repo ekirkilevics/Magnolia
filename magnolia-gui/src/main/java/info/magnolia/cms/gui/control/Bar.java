@@ -33,13 +33,6 @@
  */
 package info.magnolia.cms.gui.control;
 
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.ParagraphManager;
-import info.magnolia.cms.gui.inline.BarEdit;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.i18n.TemplateMessagesUtil;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -58,8 +51,6 @@ public class Bar extends ControlImpl {
     private List buttonsRight = new ArrayList();
 
     private boolean small = true;
-
-    private boolean showTitle = false;
 
     public void setButtonsLeft(List buttons) {
         this.buttonsLeft = buttons;
@@ -109,7 +100,7 @@ public class Bar extends ControlImpl {
         if (this.getId() != null) {
             html.append(" id=\"" + this.getId() + "\" cellspacing=\"0\""); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        html.append(" >"); //$NON-NLS-1$
+        html.append(">"); //$NON-NLS-1$
         html.append("<tr>"); //$NON-NLS-1$
 
         // left
@@ -128,18 +119,15 @@ public class Bar extends ControlImpl {
             }
             html.append("</td>"); //$NON-NLS-1$
         }
-        // title in the middle
-        if (this instanceof BarEdit && showTitle) {
-            Messages msgs = TemplateMessagesUtil.getMessages();
-            final Paragraph paragraphInfo = ParagraphManager.getInstance().getInfo(getParagraph());
-            if (StringUtils.isNotEmpty(paragraphInfo.getI18nBasename())) {
-                msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
-            }
 
-            html.append("<td ><table ");
-            html.append(" class=\"smothParagraphTitle\" style=\"table-layout: fixed; width: 100%;\" cellpadding=\"0\" cellspacing=\"0\" border=\"0\" ><td class=\"smothParagraphTitle\" style=\"overflow: hidden; white-space: nowrap;\">");
-            html.append(msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle()));
-            html.append("</td></table></td>");
+        // title in the middle
+        final String label = getLabel();
+        if (StringUtils.isNotEmpty(label)) {
+            html.append("<td class=\"smothBarLabelContainer\">");
+            html.append("<table class=\"smothBarLabel\"><tr><td class=\"smothBarLabel\">");
+            html.append(label);
+            html.append("</td></tr></table>");
+            html.append("</td>");
         }
 
         // right
@@ -163,14 +151,6 @@ public class Bar extends ControlImpl {
         html.append("</tr>"); //$NON-NLS-1$
         html.append("</table>"); //$NON-NLS-1$
         return html.toString();
-    }
-
-    public boolean isShowTitle() {
-        return showTitle;
-    }
-
-    public void setShowTitle(boolean showTitle) {
-        this.showTitle = showTitle;
     }
 
 }
