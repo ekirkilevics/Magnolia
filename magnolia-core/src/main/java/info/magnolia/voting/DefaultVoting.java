@@ -55,16 +55,16 @@ public class DefaultVoting implements Voting {
             if(voter.isEnabled()){
                 int vote  = voter.vote(value);
                 if(log.isDebugEnabled()){
-                    log.debug("voter [{}] fired {}", voter, Integer.valueOf(vote));
+                    log.debug("voter [{}] fired {}", voter, String.valueOf(vote));
                 }
                 if(Math.abs(vote) > Math.abs(highestVote)){
                     highestVote = vote;
-                    log.debug("highest vote is now {}", Integer.valueOf(highestVote));
+                    log.debug("highest vote is now {}", String.valueOf(highestVote));
                 }
                 // same value but not same sign
                 else if (vote == -highestVote){
                     highestVote = Math.abs(vote);
-                    log.debug("highest vote is now {}", Integer.valueOf(highestVote));
+                    log.debug("highest vote is now {}", String.valueOf(highestVote));
                 }
             }
         }
