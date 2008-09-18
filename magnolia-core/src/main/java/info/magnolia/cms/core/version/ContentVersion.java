@@ -109,6 +109,8 @@ public class ContentVersion extends DefaultContent {
         }
         this.state = thisVersion;
         this.base = base;
+        this.hierarchyManager = base.getHierarchyManager();
+        this.accessManager = base.getAccessManager();
         this.init();
     }
 
@@ -691,7 +693,7 @@ public class ContentVersion extends DefaultContent {
      * @return HierarchyManager
      */
     public HierarchyManager getHierarchyManager() throws RepositoryException {
-        return base.getHierarchyManager();
+        return this.base.getHierarchyManager();
     }
 
     /**
