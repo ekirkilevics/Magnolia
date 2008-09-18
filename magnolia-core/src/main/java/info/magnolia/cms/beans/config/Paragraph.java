@@ -33,6 +33,9 @@
  */
 package info.magnolia.cms.beans.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 
@@ -48,6 +51,7 @@ public class Paragraph {
     private String type;
     private String description;
     private String i18nBasename;
+    private Map params = new HashMap();
 
     public Paragraph() {
     }
@@ -140,6 +144,16 @@ public class Paragraph {
             .append("title", this.title) //$NON-NLS-1$
             .append("templatePath", this.templatePath) //$NON-NLS-1$
             .toString();
+    }
+
+
+    public Map getParams() {
+        return this.params;
+    }
+
+
+    public void setParams(Map params) {
+        this.params = params;
     }
 
 }
