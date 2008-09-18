@@ -128,6 +128,7 @@ public class DefaultContent extends ContentHandler implements Content {
      */
     DefaultContent(Node rootNode, String path, HierarchyManager hierarchyManager) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
+        this.setAccessManager(hierarchyManager.getAccessManager());
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.READ);
         this.setPath(path);
         this.setRootNode(rootNode);
@@ -144,6 +145,7 @@ public class DefaultContent extends ContentHandler implements Content {
      */
     public DefaultContent(Item elem,HierarchyManager hierarchyManager) throws RepositoryException, AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
+        this.setAccessManager(hierarchyManager.getAccessManager());
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(elem.getPath()), Permission.READ);
         this.setNode((Node) elem);
         this.setPath(this.getHandle());
@@ -166,6 +168,7 @@ public class DefaultContent extends ContentHandler implements Content {
         RepositoryException,
         AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
+        this.setAccessManager(hierarchyManager.getAccessManager());
         Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(rootNode.getPath(), path), Permission.WRITE);
         this.setPath(path);
         this.setRootNode(rootNode);
