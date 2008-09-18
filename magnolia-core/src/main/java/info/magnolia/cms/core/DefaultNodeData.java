@@ -106,7 +106,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         RepositoryException,
         AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager == null ? null : hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
         this.init(workingNode, name);
         this.setParent(parent);
     }
@@ -127,11 +127,11 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
         if (createNew) {
-            Access.isGranted(hierarchyManager == null ? null : hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
+            Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
             this.init(workingNode, name, type, (Value) null);
         }
         else {
-            Access.isGranted(hierarchyManager == null ? null : hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
+            Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.READ);
             this.init(workingNode, name);
         }
         this.setParent(parent);
@@ -150,7 +150,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         RepositoryException,
         AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager == null ? null : hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
         this.init(workingNode, name, value.getType(), value);
         this.setParent(parent);
     }
@@ -168,7 +168,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         RepositoryException,
         AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager == null ? null : hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(workingNode.getPath(), name), Permission.WRITE);
         this.init(workingNode, name, value[0].getType(), value);
         this.setParent(parent);
     }
@@ -182,7 +182,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         RepositoryException,
         AccessDeniedException {
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager == null ? null : hierarchyManager.getAccessManager(), Path.getAbsolutePath(node.getPath()), Permission.READ);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(node.getPath()), Permission.READ);
         this.node = node;
         this.property = this.node.getProperty(ItemType.JCR_DATA);
         this.setParent(parent);
@@ -198,7 +198,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         AccessDeniedException {
         this.property = property;
         this.setHierarchyManager(hierarchyManager);
-        Access.isGranted(hierarchyManager == null ? null : hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.property.getPath()), Permission.READ);
+        Access.isGranted(hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.property.getPath()), Permission.READ);
         this.setParent(parent);
     }
 
