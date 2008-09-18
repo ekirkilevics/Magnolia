@@ -58,9 +58,15 @@ public class QueryImpl implements Query {
 
     private HierarchyManager hm;
 
+    /**
+     * @deprecated
+     */
+    private AccessManager accessManager;
+
     protected QueryImpl(javax.jcr.query.Query query, HierarchyManager hm) {
         this.query = query;
         this.hm = hm;
+        this.accessManager = hm.getAccessManager();
     }
 
     public QueryResult execute() throws RepositoryException {

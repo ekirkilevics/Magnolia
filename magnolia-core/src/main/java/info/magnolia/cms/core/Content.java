@@ -738,6 +738,13 @@ public interface Content extends Cloneable {
     Workspace getWorkspace() throws RepositoryException;
 
     /**
+     * @return the underlying AccessManager
+     * TODO : this should probably not be exposed, but was used by some code ...
+     * @deprecated use getHierarchyManager instead
+     */
+    AccessManager getAccessManager();
+
+    /**
      * checks if this node has a sub node with name MetaData
      * @return true if MetaData exists
      */

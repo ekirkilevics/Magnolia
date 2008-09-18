@@ -47,6 +47,12 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 public abstract class ContentHandler implements Cloneable {
 
     /**
+     * AccessManager instance.
+     * @deprecated
+     */
+    protected AccessManager accessManager;
+
+    /**
      * HierarchyManager instance.
      */
     protected HierarchyManager hierarchyManager;
@@ -55,6 +61,24 @@ public abstract class ContentHandler implements Cloneable {
      * package private constructor
      */
     ContentHandler() {
+    }
+
+    /**
+     * Set access manager for this object
+     * @param manager
+     * @deprecated use setHierarchyManager instead
+     */
+    public void setAccessManager(AccessManager manager) {
+        this.accessManager = manager;
+    }
+
+    /**
+     * Get access manager if previously set for this object
+     * @return AccessManager
+     * @deprecated use getHierarchyManager instead
+     */
+    public AccessManager getAccessManager() {
+        return this.accessManager;
     }
 
     /**
@@ -71,10 +95,19 @@ public abstract class ContentHandler implements Cloneable {
         }
     }
 
+    /**
+     * Get hierarchy manager if previously set for this object
+     * @return HierarchyManager
+     * @throws RepositoryException
+     */
     public HierarchyManager getHierarchyManager() throws RepositoryException {
-        return this.hierarchyManager;
+        return hierarchyManager;
     }
 
+    /**
+     * Set hierarchy manager
+     * @param hierarchyManager
+     */
     public void setHierarchyManager(HierarchyManager hierarchyManager) {
         this.hierarchyManager = hierarchyManager;
     }

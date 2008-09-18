@@ -76,6 +76,11 @@ public class QueryResultImpl implements QueryResult {
      */
     private Map objectStore = new Hashtable();
 
+    /**
+     * @deprecated
+     */
+    private AccessManager accessManager;
+
     private HierarchyManager hm;
 
     private Map dirtyHandles = new Hashtable();
@@ -83,6 +88,15 @@ public class QueryResultImpl implements QueryResult {
     protected QueryResultImpl(javax.jcr.query.QueryResult result, HierarchyManager hm) {
         this.result = result;
         this.hm = hm;
+        this.accessManager = hm.getAccessManager();
+    }
+
+    /**
+     * @deprecated
+     * @return
+     */
+    public AccessManager getAccessManager() {
+        return accessManager;
     }
 
     public javax.jcr.query.QueryResult getJcrResult() {

@@ -39,6 +39,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.DefaultContent;
 import info.magnolia.cms.security.AccessDeniedException;
+import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Rule;
 
@@ -685,8 +686,21 @@ public class ContentVersion extends DefaultContent {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
 
+    /**
+     * Get hierarchy manager if previously set for this object
+     * @return HierarchyManager
+     */
     public HierarchyManager getHierarchyManager() throws RepositoryException {
         return base.getHierarchyManager();
+    }
+
+    /**
+     * Get access manager if previously set for this object
+     * @return AccessManager
+     * @deprecated use getHierarchyManager instead
+     */
+    public AccessManager getAccessManager() {
+        return this.base.getAccessManager();
     }
 
 }

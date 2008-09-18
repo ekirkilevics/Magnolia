@@ -404,6 +404,13 @@ public abstract class ContentWrapper implements Content{
     }
 
     public HierarchyManager getHierarchyManager() throws RepositoryException {
-        return this.getHierarchyManager();
+        return this.getWrappedContent().getHierarchyManager();
+    }
+
+    /**
+     * @deprecated
+     */
+    public AccessManager getAccessManager() {
+        return this.getWrappedContent().getAccessManager();
     }
 }
