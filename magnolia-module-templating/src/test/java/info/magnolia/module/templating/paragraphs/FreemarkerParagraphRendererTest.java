@@ -64,7 +64,7 @@ import java.util.Map;
  */
 public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     private StringTemplateLoader tplLoader;
-    private FreemarkerParagraphRenderer renderer;
+    private ActionBasedParagraphRenderer renderer;
 
     protected void setUp() throws Exception {
         super.setUp();

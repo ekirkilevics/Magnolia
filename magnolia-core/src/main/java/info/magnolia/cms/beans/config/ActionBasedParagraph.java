@@ -39,7 +39,7 @@ import org.apache.commons.lang.StringUtils;
  * A paragraph that also defines an action class.
  *
  * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class ActionBasedParagraph extends Paragraph {
     private Class actionClass;
@@ -54,6 +54,13 @@ public class ActionBasedParagraph extends Paragraph {
 
     public void setActionClass(Class actionClass) {
         this.actionClass = actionClass;
+    }
+
+    /**
+     * Override this method if you need specific templates depending on the action result.
+     */
+    public String determineTemplatePath(String originalTemplateName, Object result, Object action) {
+        return originalTemplateName;
     }
 
     public String[] getAllowedParametersList() {

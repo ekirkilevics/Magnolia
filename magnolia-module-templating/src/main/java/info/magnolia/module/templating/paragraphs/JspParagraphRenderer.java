@@ -51,7 +51,7 @@ import java.io.Writer;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class JspParagraphRenderer implements ParagraphRenderer {
+public class JspParagraphRenderer extends ActionBasedParagraphRenderer {
 
     /**
      * The given content node is ignored here (except for exception messages),
@@ -59,12 +59,7 @@ public class JspParagraphRenderer implements ParagraphRenderer {
      * and that's also how the included jsp will render it.
      * (this is subject to change in the future)
      */
-    public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
-        final String jspPath = paragraph.getTemplatePath();
-
-        if (jspPath == null) {
-            throw new IllegalStateException("Unable to render paragraph " + paragraph.getName() + " in page " + content.getHandle() + ": templatePath not set.");
-        }
+    protected void render(String template, Content content, Paragraph paragraph, ActionResult actionResult, Writer out) throws IOException{
 
         try {
             final Context ctx = MgnlContext.getInstance();
@@ -74,7 +69,11 @@ public class JspParagraphRenderer implements ParagraphRenderer {
             Object attContent = ctx.getAttribute("content");
             ctx.setAttribute("content", new NodeMapWrapper(content, MgnlContext.getAggregationState().getMainContent().getHandle()), Context.LOCAL_SCOPE);
             ctx.setAttribute("paragraphConfig", paragraph, Context.LOCAL_SCOPE);
-            ((WebContext) ctx).include(jspPath, out);
+            if (actionResult != null) {
+                ctx.setAttribute("result", actionResult.getResult(), Context.LOCAL_SCOPE);
+                ctx.setAttribute("action", actionResult.getActionBean(), Context.LOCAL_SCOPE);
+            }
+            ((WebContext) ctx).include(template, out);
             // restore back original value of the parameter
             ctx.setAttribute("content", attContent, Context.LOCAL_SCOPE);
             ctx.setAttribute("paragraphConfig", null, Context.LOCAL_SCOPE);
@@ -83,4 +82,5 @@ public class JspParagraphRenderer implements ParagraphRenderer {
         }
 
     }
+
 }
