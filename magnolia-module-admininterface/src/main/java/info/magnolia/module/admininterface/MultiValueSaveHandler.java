@@ -73,9 +73,9 @@ public class MultiValueSaveHandler extends SaveHandlerImpl implements CustomSave
                     }
                 }
             }
-            NodeData data = NodeDataUtil.getOrCreateAndSet(node, name, (Value[])l.toArray(new Value[l.size()]));
-        } else {
-            NodeData data = NodeDataUtil.getOrCreateAndSet(node, name, new Value[]{null});
+            if(l.size() > 0) {
+                NodeData data = NodeDataUtil.getOrCreateAndSet(node, name, (Value[])l.toArray(new Value[l.size()]));
+            }
         }
     }
 
