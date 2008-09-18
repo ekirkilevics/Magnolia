@@ -685,8 +685,8 @@ public class ContentVersion extends DefaultContent {
         throw new AccessDeniedException("Lock not supported on version preview");
     }
 
-    public HierarchyManager getAccessManager() throws RepositoryException {
-        return this.base.getHierarchyManager();
+    public HierarchyManager getHierarchyManager() throws RepositoryException {
+        return base.getHierarchyManager();
     }
 
 }
