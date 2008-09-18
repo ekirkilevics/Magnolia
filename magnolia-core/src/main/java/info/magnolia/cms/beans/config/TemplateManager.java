@@ -38,6 +38,8 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.content2bean.Content2BeanException;
+import info.magnolia.content2bean.Content2BeanUtil;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;
@@ -140,14 +142,19 @@ public class TemplateManager extends ObservedManager {
         while (templates.hasNext()) {
             Content c = (Content) templates.next();
 
-            Template ti = new Template(c);
-            cachedContent.put(ti.getName(), ti);
-            if (ti.isVisible()) {
-                visibleTemplates.add(ti);
-            }
+            try {
+                Template ti = (Template) Content2BeanUtil.toBean(c, Template.class);
+                cachedContent.put(ti.getName(), ti);
+                if (ti.isVisible()) {
+                    visibleTemplates.add(ti);
+                }
 
-            if (log.isDebugEnabled()) {
-                log.debug(MessageFormat.format("Registering template [{0}]", new Object[]{ti.getName()})); //$NON-NLS-1$
+                if (log.isDebugEnabled()) {
+                    log.debug(MessageFormat.format("Registering template [{0}]", new Object[]{ti.getName()})); //$NON-NLS-1$
+                }
+            }
+            catch (Content2BeanException e) {
+                log.error("Can't register template ["+c.getName()+"]",e);
             }
 
         }

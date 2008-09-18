@@ -33,20 +33,14 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.collections.IteratorUtils;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -62,39 +56,33 @@ public class Template implements Serializable {
      */
     private static final long serialVersionUID = 222L;
 
-    /**
-     * Contains all the Template parameters.
-     */
-    private Map parameters;
+    private String name;
 
-    /**
-     * Mandatory.
-     */
+    private String path;
+
+    private String type;
+
+    private String title;
+
+    private String location;
+
+    private String description;
+
+    private String i18nBasename;
+
     private boolean visible;
 
-    private Map alternativeTemplates;
+    private String image;
+
+    private Map params = new HashMap();
+
+    private Map subTemplates = new HashMap();
 
     /**
      * Used internally for SubTemplates.
      */
-    private Template() {
+    public Template() {
 
-    }
-
-    public Template(Content c) {
-
-        parameters = nodeDataCollectionToStringMap(c.getNodeDataCollection());
-        if (getName() == null) {
-            parameters.put("name", c.getName());
-        }
-
-        if (getLocation() == null) {
-            parameters.put("location", c.getHandle());
-        }
-
-        this.visible = c.getNodeData("visible").getBoolean(); //$NON-NLS-1$
-
-        addAlternativePaths(c);
     }
 
     /**
@@ -102,7 +90,7 @@ public class Template implements Serializable {
      * @return Returns the description.
      */
     public String getDescription() {
-        return getParameter("description");
+        return description;
     }
 
     /**
@@ -110,7 +98,7 @@ public class Template implements Serializable {
      * @return Returns the name.
      */
     public String getName() {
-        return getParameter("name");
+        return name;
     }
 
     /**
@@ -118,7 +106,7 @@ public class Template implements Serializable {
      * @return Returns the path.
      */
     public String getPath() {
-        return getParameter("path");
+        return path;
     }
 
     /**
@@ -126,17 +114,16 @@ public class Template implements Serializable {
      * @return Returns the title.
      */
     public String getTitle() {
-        return getParameter("title");
+        return title;
     }
 
     public String getI18NTitle() {
         Messages msgs;
-        final String i18nBasename = getParameter("i18nBasename");
 
-        if(StringUtils.isNotEmpty(i18nBasename)){
+        if (StringUtils.isNotEmpty(i18nBasename)) {
             msgs = MessagesManager.getMessages(i18nBasename);
         }
-        else{
+        else {
             msgs = TemplateMessagesUtil.getMessages();
         }
 
@@ -148,7 +135,7 @@ public class Template implements Serializable {
      * @return Returns the image.
      */
     public String getImage() {
-        return getParameter("image");
+        return image;
     }
 
     /**
@@ -156,7 +143,7 @@ public class Template implements Serializable {
      * @return Returns the type.
      */
     public String getType() {
-        return getParameter("type");
+        return type;
     }
 
     /**
@@ -164,11 +151,14 @@ public class Template implements Serializable {
      * @return Returns the location.
      */
     public String getLocation() {
-        return getParameter("location");
+        return location;
     }
 
+    /**
+     * @deprecated since 3.7 use getParams().get(key)
+     */
     public String getParameter(String key) {
-        return (String) parameters.get(key);
+        return (String) getParams().get(key);
     }
 
     /**
@@ -181,7 +171,8 @@ public class Template implements Serializable {
 
     /**
      * @param extension
-     * @deprecated obtain the template using {@link TemplateManager#getInfo(String, String)} and then use
+     * @deprecated obtain the template using
+     * {@link TemplateManager#getInfo(String, String)} and then use
      * {@link Template#getPath()}.
      * @return template path for the specified extension
      */
@@ -192,64 +183,71 @@ public class Template implements Serializable {
             return template.getPath();
         }
 
-        return getParameter("path");
+        return path;
     }
 
-    /**
-     * @param extension
-     * @return template path for the specified extension
-     */
     public Template getSubTemplate(String extension) {
-        if (alternativeTemplates != null) {
-            return (Template) this.alternativeTemplates.get(extension);
-        }
-        return null;
+        return (Template) this.subTemplates.get(extension);
     }
 
-    /**
-     * Add alternative extention paths to templates cache.
-     * @param node
-     * @param ti TemplateInfo
-     */
-    public void addAlternativePaths(Content node) {
-
-        Content cl = node.getChildByName("SubTemplates");//$NON-NLS-1$
-
-        if (cl == null) {
-            return;
-        }
-
-        Iterator it = cl.getChildren(ItemType.CONTENTNODE).iterator();
-
-        this.alternativeTemplates = new HashMap();
-
-        while (it.hasNext()) {
-            Content c = (Content) it.next();
-
-            Template template = new Template();
-
-            template.parameters = new HashMap(this.parameters);
-            template.parameters.putAll(nodeDataCollectionToStringMap(c.getNodeDataCollection()));
-
-            nodeDataCollectionToStringMap(c.getNodeDataCollection());
-
-            template.visible = visible;
-
-            synchronized (alternativeTemplates) {
-                this.alternativeTemplates.put(c.getNodeData("extension").getString(), template); //$NON-NLS-1$
-            }
-        }
-
+    public void addSubTemplate(String extension, Template subTemplate) {
+        this.subTemplates.put(extension, subTemplate);
     }
 
-    private Map nodeDataCollectionToStringMap(Collection collection) {
-        Map map = new HashMap();
-        Iterator it = IteratorUtils.getIterator(collection);
-        while (it.hasNext()) {
-            NodeData data = (NodeData) it.next();
-            map.put(data.getName(), data.getString());
-        }
-        return map;
+    public String getI18nBasename() {
+        return this.i18nBasename;
+    }
+
+    public void setI18nBasename(String basename) {
+        this.i18nBasename = basename;
+    }
+
+    public Map getParams() {
+        return this.params;
+    }
+
+    public void setParams(Map params) {
+        this.params = params;
+    }
+
+    public Map getSubTemplates() {
+        return this.subTemplates;
+    }
+
+    public void setSubTemplates(Map subTemplates) {
+        this.subTemplates = subTemplates;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setLocation(String location) {
+        this.location = location;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public void setVisible(boolean visible) {
+        this.visible = visible;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
     }
 
 }
