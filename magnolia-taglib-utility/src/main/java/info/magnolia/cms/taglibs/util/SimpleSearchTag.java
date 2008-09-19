@@ -183,7 +183,7 @@ public class SimpleSearchTag extends TagSupport {
      */
     protected String generateSimpleQuery(String input) {
         // jcr and xpath escaping :
-        final String escapedQuery = input.replace("'", "\\''");
+        final String escapedQuery = input.replaceAll("'", "\\\\''");
         return "//*[@jcr:primaryType='mgnl:content']//*[jcr:contains(., '"+ escapedQuery +"')]";
     }
 

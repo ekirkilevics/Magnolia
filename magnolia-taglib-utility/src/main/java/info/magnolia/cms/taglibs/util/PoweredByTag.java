@@ -84,6 +84,6 @@ public class PoweredByTag extends SimpleTagSupport {
         };
 
         final String message = MessageFormat.format(pattern, licenseValues);
-        out.append(message);
+        out.write(message);
     }
 }

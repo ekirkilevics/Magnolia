@@ -65,8 +65,8 @@ public class DumpHeadersFilter extends AbstractMgnlFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         long nr = count++;
         LoggingResponse wrappedResponse = new LoggingResponse(response);
-        log.info("{} uri: {}", Long.valueOf(nr), request.getRequestURI());
-        log.info("{} session: {}", Long.valueOf(nr), Boolean.valueOf(request.getSession(false)!=null));
+        log.info("{} uri: {}", Long.toString(nr), request.getRequestURI());
+        log.info("{} session: {}", Long.toString(nr), Boolean.valueOf(request.getSession(false)!=null));
 
         StringBuffer params = new StringBuffer();
         for(Enumeration paramEnum =request.getParameterNames(); paramEnum.hasMoreElements();){
@@ -76,14 +76,14 @@ public class DumpHeadersFilter extends AbstractMgnlFilter {
                 params.append("; ");
             }
         }
-        log.info("{} parameters: {}", Long.valueOf(nr),  params);
+        log.info("{} parameters: {}", Long.toString(nr),  params);
         for (Enumeration en = request.getHeaderNames(); en.hasMoreElements();) {
             String name = (String) en.nextElement();
             log.info("{} header: {}={}", new String[]{String.valueOf(nr), name, request.getHeader(name)});
         }
         chain.doFilter(request, wrappedResponse);
-        log.info("{} response status: {}", Long.valueOf(nr),Integer.valueOf(wrappedResponse.getStatus()));
-        log.info("{} response length: {}", Long.valueOf(nr),Long.valueOf(wrappedResponse.getLength()));
+        log.info("{} response status: {}", Long.toString(nr),Integer.toString(wrappedResponse.getStatus()));
+        log.info("{} response length: {}", Long.toString(nr),Long.toString(wrappedResponse.getLength()));
         for (Iterator iter = wrappedResponse.getHeaders().keySet().iterator(); iter.hasNext();) {
             String name = (String) iter.next();
             log.info(request.getRequestURI()

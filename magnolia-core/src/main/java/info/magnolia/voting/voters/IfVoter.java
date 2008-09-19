@@ -66,7 +66,7 @@ public class IfVoter extends BaseVoterImpl {
             }
             outcome = 0 ;
         }
-        log.debug("result is {}", Integer.valueOf(outcome));
+        log.debug("result is {}", Integer.toString(outcome));
         return outcome;
 
     }
