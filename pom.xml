@@ -131,6 +131,38 @@ for Java Content Repositories (JCR).
   </scm>
   <profiles>
     <profile>
+      <id>java-1.4</id>
+      <activation>
+        <jdk>1.4</jdk>
+      </activation>
+      <dependencies>
+        <dependency>
+          <groupId>javax.management</groupId>
+          <artifactId>jmx</artifactId>
+          <version>1.2.1</version>
+          <scope>provided</scope>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+           <artifactId>maven-jar-plugin</artifactId>
+           <executions>
+             <execution>
+               <phase>package</phase>
+               <goals>
+                 <goal>jar</goal>
+               </goals>
+               <configuration>
+                 <classifier>jdk14</classifier>
+               </configuration>
+             </execution>
+           </executions>
+         </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
       <id>fullsite</id>
       <!-- TODO:
            This is commented out for now - once we're sure it's fine, we can remove it along with the clover configuration below.
