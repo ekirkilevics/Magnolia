@@ -49,8 +49,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Repository;
 import javax.security.auth.Subject;
 
-import org.apache.log4j.jmx.AbstractDynamicMBean;
-
 import java.util.List;
 import java.util.Set;
 import java.util.Iterator;
