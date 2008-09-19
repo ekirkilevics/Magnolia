@@ -43,6 +43,8 @@ import info.magnolia.cms.security.User;
 import info.magnolia.cms.security.UserManager;
 import info.magnolia.cms.util.FactoryUtil;
 
+import java.io.ByteArrayOutputStream;
+import java.io.ObjectOutputStream;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -90,5 +92,12 @@ public class WebContextTest extends TestCase {
         context.logout();
         assertSame(anonymousUser, context.getUser());
         verify(request, response, servletContext, user, session, securitySupport, userManager, anonymousUser);
+    }
+    
+    public void testSerializable() throws Exception {
+        WebContextImpl context = new WebContextImpl();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        ObjectOutputStream oos = new ObjectOutputStream(baos);
+        oos.writeObject(context);
     }
 }

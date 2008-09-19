@@ -42,6 +42,7 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.security.User;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -58,7 +59,7 @@ import org.slf4j.LoggerFactory;
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public abstract class AbstractContext implements Context {
+public abstract class AbstractContext implements Context, Serializable {
 
     /**
      * Logger
