@@ -45,6 +45,7 @@ import info.magnolia.cms.util.FactoryUtil;
 
 import java.io.ByteArrayOutputStream;
 import java.io.ObjectOutputStream;
+import java.io.NotSerializableException;
 import java.util.Locale;
 
 import javax.servlet.ServletContext;
@@ -59,7 +60,7 @@ import junit.framework.TestCase;
  * @author ashapochka
  * @version $Revision: $ ($Author: $)
  */
-public class WebContextTest extends TestCase {
+public class WebContextImplTest extends TestCase {
     // setting the user attribute on the session is done in UserContextImpl, which is why the following constant uses this class' name.
     private static final String SESSION_USER = UserContextImpl.class.getName() + ".user";
 
@@ -98,6 +99,10 @@ public class WebContextTest extends TestCase {
         WebContextImpl context = new WebContextImpl();
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         ObjectOutputStream oos = new ObjectOutputStream(baos);
-        oos.writeObject(context);
+        try {
+            oos.writeObject(context);
+        } catch (NotSerializableException e) {
+            fail("WebContextImpl should be serializable, failed with: " + e);
+        }
     }
 }
