@@ -33,28 +33,13 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.ContentWrapper;
-import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.Resource;
 
-import org.apache.commons.beanutils.PropertyUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.PropertyType;
-import javax.jcr.RepositoryException;
 import javax.servlet.jsp.PageContext;
-
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
 
 /**
  * Exposes a content node to the pagecontext as a Map of nodeData, in order to access the exposed object using JSTL.
@@ -170,187 +155,12 @@ public class SetNode extends BaseContentTag {
      * Wrapper for a content Node which exposes a Map interface, used to access its content using jstl.
      * @author fgiust
      * @version $Revision$ ($Author$)
+     * @deprecated use info.magnolia.cms.util.NodeMapWrapper instead
      */
-    public class NodeMapWrapper extends ContentWrapper implements Map {
+    public class NodeMapWrapper extends info.magnolia.cms.util.NodeMapWrapper {
 
-        /**
-         * Static active page, needed for links.
-         */
-        private Content actPage;
-
-        /**
-         * Instantiates a new NodeMapWrapper for the given node.
-         * @param node Content node
-         */
         public NodeMapWrapper(Content node, Content actPage) {
-            super(node);
-            this.actPage = actPage;
-        }
-
-        /**
-         * @see java.util.Map#size()
-         */
-        public int size() {
-            return getWrappedContent().getNodeDataCollection().size();
-        }
-
-        /**
-         * @see java.util.Map#isEmpty()
-         */
-        public boolean isEmpty() {
-            return getWrappedContent().getNodeDataCollection().isEmpty();
-        }
-
-        /**
-         * @see java.util.Map#containsKey(java.lang.Object)
-         */
-        public boolean containsKey(Object key) {
-            return this.getWrappedContent().getNodeData((String) key).isExist() || hasProperty((String) key);
-        }
-
-        /**
-         * @see java.util.Map#containsValue(java.lang.Object)
-         */
-        public boolean containsValue(Object value) {
-            // not implemented, only get() is needed
-            return false;
-        }
-
-        /**
-         * Shortcut for Content.getNodeData(name).getString() or Content.getNodeData(name).getName().
-         * @see java.util.Map#get(Object)
-         */
-        public Object get(Object key) {
-            try {
-                if(!getWrappedContent().hasNodeData((String)key)){
-                    // support the old lower case value
-                    if("uuid".equalsIgnoreCase((String)key)){
-                        key = "UUID";
-                    }
-                    if(hasProperty((String)key)){
-                        try {
-                            return PropertyUtils.getProperty(this.getWrappedContent(), (String)key);
-                        }
-                        catch (Exception e) {
-                            log.error("can't read property " + key + " from the node " + this.getWrappedContent(), e);
-                        }
-                    }
-                }
-            }
-            catch (RepositoryException e) {
-                // should really not happen
-                log.error("can't check for node data {" + key + "}", e);
-            }
-
-            NodeData nodeData = getWrappedContent().getNodeData((String) key);
-            Object value;
-            int type = nodeData.getType();
-            if (type == PropertyType.DATE) {
-                value = nodeData.getDate();
-            }
-            else if (type == PropertyType.BINARY) {
-                // only file path is supported
-                FileProperties props = new FileProperties(getWrappedContent(), (String) key);
-                value = props.getProperty(FileProperties.PATH);
-            }
-            else {
-                value = LinkUtil.convertUUIDsToBrowserLinks(nodeData.getString(), this.actPage);
-            }
-            return value;
-        }
-
-        protected boolean hasProperty(Object key){
-            try {
-                return PropertyUtils.getPropertyDescriptor(this.getWrappedContent(), (String)key) != null;
-            }
-            catch (Exception e) {
-                return false;
-            }
-        }
-
-        /**
-         * @see java.util.Map#put(java.lang.Object, java.lang.Object)
-         */
-        public Object put(Object arg0, Object arg1) {
-            // not implemented, only get() is needed
-            return null;
-        }
-
-        /**
-         * @see java.util.Map#remove(java.lang.Object)
-         */
-        public Object remove(Object key) {
-            // not implemented, only get() is needed
-            return null;
-        }
-
-        /**
-         * @see java.util.Map#putAll(java.util.Map)
-         */
-        public void putAll(Map t) {
-            // not implemented, only get() is needed
-        }
-
-        /**
-         * @see java.util.Map#clear()
-         */
-        public void clear() {
-            // not implemented, only get() is needed
-        }
-
-        /**
-         * @see java.util.Map#keySet()
-         */
-        public Set keySet() {
-            Collection nodeDataCollection = getWrappedContent().getNodeDataCollection();
-            Set keys = new HashSet();
-            for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
-                keys.add(((NodeData) iter.next()).getName());
-            }
-
-            return keys;
-        }
-
-        /**
-         * @see java.util.Map#values()
-         */
-        public Collection values() {
-            Collection nodeDataCollection = getWrappedContent().getNodeDataCollection();
-            Collection values = new ArrayList();
-            for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
-                values.add(((NodeData) iter.next()).getString());
-            }
-
-            return values;
-        }
-
-        /**
-         * @see java.util.Map#entrySet()
-         */
-        public Set entrySet() {
-            Collection nodeDataCollection = getWrappedContent().getNodeDataCollection();
-            Set keys = new HashSet();
-            for (Iterator iter = nodeDataCollection.iterator(); iter.hasNext();) {
-                NodeData nd = (NodeData) iter.next();
-                final String key = nd.getName();
-                final String value = nd.getString();
-                keys.add(new Map.Entry() {
-
-                    public Object getKey() {
-                        return key;
-                    }
-
-                    public Object getValue() {
-                        return value;
-                    }
-
-                    public Object setValue(Object value) {
-                        return value;
-                    }
-                });
-            }
-
-            return keys;
+            super(node, actPage.getHandle());
         }
     }
 
