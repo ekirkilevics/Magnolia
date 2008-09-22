@@ -33,9 +33,6 @@
  */
 package info.magnolia.module.templating.setup;
 
-import java.util.Collections;
-import java.util.List;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
@@ -45,6 +42,9 @@ import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
 
+import java.util.Collections;
+import java.util.List;
+
 
 /**
  * @author gjoseph
@@ -52,31 +52,30 @@ import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
  */
 public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler {
 
-    private OrderNodeBeforeTask orderBackwardCompatibilityFilter = new OrderNodeBeforeTask("Move backward compatiblity filter","",ContentRepository.CONFIG, "/server/filters/cms/backwardCompatibility", "rendering");
+    private OrderNodeBeforeTask orderBackwardCompatibilityFilter = new OrderNodeBeforeTask("Move backward compatiblity filter", "", ContentRepository.CONFIG, "/server/filters/cms/backwardCompatibility", "rendering");
 
     public TemplatingModuleVersionHandler() {
-        DeltaBuilder delta35 = DeltaBuilder.update("3.5", "");
-        delta35.addTask(new IntroduceParagraphRenderers());
-        delta35.addTask(new BootstrapSingleResourceAndOrderBefore(
+        register(DeltaBuilder.update("3.5", "")
+                .addTask(new IntroduceParagraphRenderers())
+                .addTask(new BootstrapSingleResourceAndOrderBefore(
                 "Compatibility Filter",
                 "${actpage} is deprecated. Adds a compatibility filter still supporting it but writing warn messages to the log",
                 "/mgnl-bootstrap/templating/config.server.filters.cms.backwardCompatibility.xml",
-                "rendering"));
+                "rendering"))
+        );
 
         // move the filter in case it is in the wrong place
         // this happened in case of a fresh install of former version
-        DeltaBuilder delta354 = DeltaBuilder.update("3.5.4", "");
-        delta354.addTask(orderBackwardCompatibilityFilter);
+        register(DeltaBuilder.update("3.5.4", "")
+                .addTask(orderBackwardCompatibilityFilter)
+        );
 
-        DeltaBuilder delta37 = DeltaBuilder.update("3.7", "");
-        delta37.addTask(new BootstrapSingleResource(
-                "Freemarker Template Renderer", 
-                "Add freemarker template renderer configuration", 
-                "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"));
-        
-        register(delta35);
-        register(delta354);
-        register(delta37);
+        register(DeltaBuilder.update("3.7", "")
+                .addTask(new BootstrapSingleResource(
+                "Freemarker Template Renderer",
+                "Add freemarker template renderer configuration",
+                "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"))
+        );
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
