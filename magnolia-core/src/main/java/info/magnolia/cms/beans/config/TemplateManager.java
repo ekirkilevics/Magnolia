@@ -143,7 +143,7 @@ public class TemplateManager extends ObservedManager {
             Content c = (Content) templates.next();
 
             try {
-                Template ti = (Template) Content2BeanUtil.toBean(c, Template.class);
+                Template ti = (Template) Content2BeanUtil.toBean(c, true, Template.class);
                 cachedContent.put(ti.getName(), ti);
                 if (ti.isVisible()) {
                     visibleTemplates.add(ti);
