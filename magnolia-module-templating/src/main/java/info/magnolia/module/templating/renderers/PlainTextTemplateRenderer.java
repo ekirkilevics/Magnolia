@@ -74,7 +74,7 @@ public class PlainTextTemplateRenderer implements TemplateRenderer {
             out.println("<body>");
 
             if (content.isGranted(Permission.SET)) {
-                BarMain bar = new BarMain(request);
+                BarMain bar = new BarMain();
                 bar.setPath(content.getHandle());
                 bar.setParagraph(dialogName);
                 bar.setAdminButtonVisible(true);
