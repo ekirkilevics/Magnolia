@@ -87,15 +87,15 @@ public class FreemarkerTemplateRenderer implements TemplateRenderer {
     }
 
     public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        final String requestReceiver = template.getPath();
+        final String templatePath = template.getPath();
 
-        if (requestReceiver == null) {
-            log.error("requestReceiver is missing for {}, returning a 404 error", request.getRequestURL()); //$NON-NLS-1$
+        if (templatePath == null) {
+            log.error("templatePath is missing for {}, returning a 404 error", request.getRequestURL()); //$NON-NLS-1$
             response.sendError(404);
             return;
         }
 
-        log.debug("Processing request for [{}] - using template [{}]", request.getRequestURL(), requestReceiver);
+        log.debug("Processing request for [{}] - using template [{}]", request.getRequestURL(), templatePath);
 
         final Map freemarkerCtx = new HashMap();
         freemarkerCtx.put("templateConfig", template);
@@ -114,7 +114,7 @@ public class FreemarkerTemplateRenderer implements TemplateRenderer {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
-            fmHelper.render(requestReceiver, locale, template.getI18NTitle(), freemarkerCtx, response.getWriter());
+            fmHelper.render(templatePath, locale, template.getI18NTitle(), freemarkerCtx, response.getWriter());
         } catch (TemplateException e) {
             log.error("Failed to process Freemarker template with " + e.getMessage(), e);
             throw new ServletException(e);
