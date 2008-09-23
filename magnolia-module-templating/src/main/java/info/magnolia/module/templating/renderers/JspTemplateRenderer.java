@@ -63,7 +63,7 @@ public class JspTemplateRenderer implements TemplateRenderer {
         final String requestReceiver = template.getPath();
 
         if (requestReceiver == null) {
-            log.error("requestReceiver is missing for {}, returning a 404 error", request.getRequestURL()); //$NON-NLS-1$
+            log.error("JSP path is missing for {}, returning a 404 error", request.getRequestURL()); //$NON-NLS-1$
             response.sendError(404);
             return;
         }
