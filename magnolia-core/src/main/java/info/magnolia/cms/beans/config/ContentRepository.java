@@ -523,6 +523,9 @@ public final class ContentRepository {
             if (mappedRepositoryName != null) {
                 return (Repository) ContentRepository.repositories.get(mappedRepositoryName);
             }
+            if (repository == null) {
+                log.warn("Failed to retrieve repository "+repositoryID+" mapped as "+mappedRepositoryName+". Your Magnolia instance might not have been initialized properly.");
+            }
         }
         return repository;
     }
@@ -538,6 +541,9 @@ public final class ContentRepository {
             String mappedRepositoryName = getMappedRepositoryName(repositoryID);
             if (mappedRepositoryName != null) {
                 provider = (Provider) ContentRepository.repositoryProviders.get(mappedRepositoryName);
+            }
+            if (provider == null) {
+                log.warn("Failed to retrieve repository provider "+repositoryID+" mapped as "+mappedRepositoryName+". Your Magnolia instance might not have been initialized properly.");
             }
         }
         return provider;
