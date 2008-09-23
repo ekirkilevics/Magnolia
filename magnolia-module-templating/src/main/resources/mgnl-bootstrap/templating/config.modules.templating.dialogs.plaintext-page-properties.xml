@@ -187,7 +187,7 @@
         <sv:value>13d435ab-0cc1-4c61-89ca-7503ee4d145f</sv:value>
       </sv:property>
       <sv:property sv:name="buttonLabel" sv:type="String">
-        <sv:value>Do not show this page in the navigation</sv:value>
+        <sv:value>dialog.pageProperties.tabGeneral.hideInNav.buttonLabel</sv:value>
       </sv:property>
       <sv:property sv:name="controlType" sv:type="String">
         <sv:value>checkboxSwitch</sv:value>

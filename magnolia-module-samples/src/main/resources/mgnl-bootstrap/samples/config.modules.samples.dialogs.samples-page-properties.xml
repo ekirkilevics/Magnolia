@@ -192,7 +192,7 @@
         <sv:value>Boolean</sv:value>
       </sv:property>
       <sv:property sv:name="buttonLabel" sv:type="String">
-        <sv:value>Do not show this page in the navigation</sv:value>
+        <sv:value>dialog.pageProperties.tabGeneral.hideInNav.buttonLabel</sv:value>
       </sv:property>
       <sv:property sv:name="label" sv:type="String">
         <sv:value>dialog.pageProperties.tabGeneral.hideInNav.label</sv:value>
