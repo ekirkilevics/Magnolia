@@ -214,6 +214,7 @@ public class Document implements Serializable {
             return (this.inputStream = (new FileInputStream(this.file)));
         }
         catch (FileNotFoundException e) {
+            log.error("Failed to locate file {}" + this.file.getAbsolutePath());
             return null;
         }
     }

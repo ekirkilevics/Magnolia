@@ -37,7 +37,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
-import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.context.Context;
 
 import java.util.*;
@@ -73,42 +72,41 @@ public class ActivationCommand extends BaseActivationCommand {
      * Execute activation
      */
     public boolean execute(Context ctx) {
-        synchronized(ExclusiveWrite.getInstance()) {
-            try {
-                Content thisState = getNode(ctx);
-                String parentPath = StringUtils.substringBeforeLast(thisState.getHandle(), "/");
-                if (StringUtils.isEmpty(parentPath)) {
-                    parentPath = "/";
-                }
-                // make multiple activations instead of a big bulp
-                if (recursive) {
-                    List versionMap = getVersionMap();
-                    if (versionMap == null) {
-                        activateRecursive(parentPath, thisState, ctx);
-                    } else {
-                        activateRecursive(ctx, versionMap);
-                    }
-                }
-                else {
-                    List orderInfo = getOrderingInfo(thisState);
-                    if (StringUtils.isNotEmpty(getVersion())) {
-                        try {
-                            thisState = thisState.getVersionedContent(getVersion());
-                        } catch (RepositoryException re) {
-                            log.error("Failed to get version "+getVersion()+" for "+thisState.getHandle(), re);
-                        }
-                    }
-                    getSyndicator().activate(parentPath, thisState, orderInfo);
+        boolean success = false;
+        try {
+            Content thisState = getNode(ctx);
+            String parentPath = StringUtils.substringBeforeLast(thisState.getHandle(), "/");
+            if (StringUtils.isEmpty(parentPath)) {
+                parentPath = "/";
+            }
+            // make multiple activations instead of a big bulk
+            if (recursive) {
+                List versionMap = getVersionMap();
+                if (versionMap == null) {
+                    activateRecursive(parentPath, thisState, ctx);
+                } else {
+                    activateRecursive(ctx, versionMap);
                 }
             }
-            catch (Exception e) {
-                log.error("can't activate", e);
-                AlertUtil.setException(MessagesManager.get("tree.error.activate"), e, ctx);
-                return false;
+            else {
+                List orderInfo = getOrderingInfo(thisState);
+                if (StringUtils.isNotEmpty(getVersion())) {
+                    try {
+                        thisState = thisState.getVersionedContent(getVersion());
+                    } catch (RepositoryException re) {
+                        log.error("Failed to get version "+getVersion()+" for "+thisState.getHandle(), re);
+                    }
+                }
+                getSyndicator().activate(parentPath, thisState, orderInfo);
             }
-            log.info("exec successfully.");
-            return true;
+            log.debug("exec successfully.");
+            success = true;
         }
+        catch (Exception e) {
+            log.error("can't activate", e);
+            AlertUtil.setException(MessagesManager.get("tree.error.activate"), e, ctx);
+        }
+        return success;
     }
 
     /**
@@ -181,6 +179,7 @@ public class ActivationCommand extends BaseActivationCommand {
      * */
     protected List getOrderingInfo(Content node) {
         //do not use magnolia Content class since these objects are only meant for a single use to read UUID
+        // TODO: what's wrong with using magnolia content???
         List siblings = new ArrayList();
         Node thisNode = node.getJCRNode();
         try {

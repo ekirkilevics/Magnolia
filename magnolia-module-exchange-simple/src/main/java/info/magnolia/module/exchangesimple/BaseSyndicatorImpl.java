@@ -67,6 +67,7 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import java.util.List;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 import java.net.URLConnection;
 import java.io.IOException;
@@ -291,7 +292,16 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          }
          catch (Exception e) {
              if (log.isDebugEnabled()) {
-                 log.error("Excahnge: activation failed for path:" + ((path != null) ? path : "[null]"), e);
+                 log.error("Exchange: activation failed for path:" + ((path != null) ? path : "[null]"), e);
+                 long timestamp = System.currentTimeMillis();
+                 log.warn("moving files from failed activation to *.failed" + timestamp );
+                 Iterator keys = activationContent.getFiles().values().iterator();
+                 while (keys.hasNext()) {
+                     File f = (File) keys.next();
+                     f.renameTo(new File(f.getAbsolutePath()+".failed" + timestamp));
+                 }
+                 activationContent.getFiles().clear();
+
              }
              throw new ExchangeException(e);
          }
@@ -503,12 +513,14 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws Exception
       */
      protected ActivationContent collect(Content node, List orderBefore) throws Exception {
+         File resourceFile = File.createTempFile("resources", ".xml", Path.getTempDirectory());
+
          ActivationContent activationContent = new ActivationContent();
          // add global properties true for this path/hierarchy
          activationContent.addProperty(PARENT_PATH, this.parent);
          activationContent.addProperty(WORKSPACE_NAME, this.workspaceName);
          activationContent.addProperty(REPOSITORY_NAME, this.repositoryName);
-         activationContent.addProperty(RESOURCE_MAPPING_FILE, "resources.xml");
+         activationContent.addProperty(RESOURCE_MAPPING_FILE, resourceFile.getName());//"resources.xml");
          activationContent.addProperty(ACTION, ACTIVATE);
          activationContent.addProperty(CONTENT_FILTER_RULE, this.contentFilterRule.toString());
          activationContent.addProperty(NODE_UUID, node.getUUID());
@@ -521,11 +533,11 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          addOrderingInfo(root, orderBefore);
 
          this.addResources(root, node.getWorkspace().getSession(), node, this.contentFilter, activationContent);
-         File resourceFile = File.createTempFile("resources", ".xml", Path.getTempDirectory());
          XMLOutputter outputter = new XMLOutputter();
          outputter.output(document, new FileOutputStream(resourceFile));
          // add resource file to the list
-         activationContent.addFile("resources.xml", resourceFile);
+         //activationContent.addFile("resources.xml", resourceFile);
+         activationContent.addFile(resourceFile.getName(), resourceFile);
 
          return activationContent;
      }
