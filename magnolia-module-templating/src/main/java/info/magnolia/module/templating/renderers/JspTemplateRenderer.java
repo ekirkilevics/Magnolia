@@ -60,18 +60,18 @@ public class JspTemplateRenderer implements TemplateRenderer {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JspTemplateRenderer.class);
 
     public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        final String requestReceiver = template.getPath();
+        final String jspPath = template.getPath();
 
-        if (requestReceiver == null) {
+        if (jspPath == null) {
             log.error("JSP path is missing for {}, returning a 404 error", request.getRequestURL()); //$NON-NLS-1$
             response.sendError(404);
             return;
         }
 
-        log.debug("Dispatching request for [{}] - forward to [{1}]", request.getRequestURL(), requestReceiver);
+        log.debug("Dispatching request for [{}] - forward to [{1}]", request.getRequestURL(), jspPath);
 
         if (response.isCommitted()) {
-            log.warn("Including {} for request {}, but response is already committed.", requestReceiver, request.getRequestURL());
+            log.warn("Including {} for request {}, but response is already committed.", jspPath, request.getRequestURL());
         }
 
         Content page = MgnlContext.getAggregationState().getMainContent();
@@ -80,7 +80,7 @@ public class JspTemplateRenderer implements TemplateRenderer {
         request.setAttribute("templateConfig", template);
         request.setAttribute("aggregationState", MgnlContext.getAggregationState());
         request.setAttribute("ctx", MgnlContext.getInstance());
-        RequestDispatcher rd = request.getRequestDispatcher(requestReceiver);
+        RequestDispatcher rd = request.getRequestDispatcher(jspPath);
         // set this attribute to avoid a second dispatching of the filters
         request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
         // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
