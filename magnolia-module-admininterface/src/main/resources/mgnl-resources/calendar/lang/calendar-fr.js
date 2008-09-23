@@ -52,7 +52,7 @@ Calendar._FD = 1;
 // full month names
 Calendar._MN = new Array
 ("Janvier",
- "F&eacute;vrier",
+ "Février",
  "Mars",
  "Avril",
  "Mai",
@@ -62,12 +62,12 @@ Calendar._MN = new Array
  "Septembre",
  "Octobre",
  "Novembre",
- "D&eacute;cembre");
+ "Décembre");
 
 // short month names
 Calendar._SMN = new Array
 ("Jan",
- "F&eacute;",
+ "Fév",
  "Mar",
  "Avr",
  "Mai",
@@ -77,30 +77,30 @@ Calendar._SMN = new Array
  "Sep",
  "Oct",
  "Nov",
- "D&eacute;c");
+ "Déc");
 
 // tooltips
 Calendar._TT = {};
 Calendar._TT["INFO"] = "À propos du calendrier";
 
 Calendar._TT["ABOUT"] =
-"S&eacute;lecteur DHTML de date/heure\n" +
+"Sélecteur DHTML de date/heure\n" +
 "(c) dynarch.com 2002-2005 / Author: Mihai Bazon\n" + // don't translate this this ;-)
 "Pour la version actuelle, visitez: http://www.dynarch.com/projects/calendar/\n" +
-"Distribue sous licence GNU LGPL.  Voir http://gnu.org/licenses/lgpl.html pour les détails." + "\n(licence traduite en français: http://www.rodage.org/lgpl.fr.html)" +
+"Distribué sous licence GNU LGPL.  Voir http://gnu.org/licenses/lgpl.html pour les détails." + "\n(licence traduite en français: http://www.rodage.org/lgpl.fr.html)" +
 "\n\n" +
 "Sélection de la date:\n" +
-"- Utiliser les boutons \xab, \xbb pour s&eacute;lectionner l'ann&eacute;e\n" +
-"- Utiliser les boutons " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " pour s&eacute;lectionner le mois\n" +
-"- En conservant press&eacute; le bouton de la souris sur l'un de ces boutons, la s&eacute;lection devient plus rapide.";
+"- Utiliser les boutons \xab, \xbb pour sélectionner l'année\n" +
+"- Utiliser les boutons " + String.fromCharCode(0x2039) + ", " + String.fromCharCode(0x203a) + " pour sélectionner le mois\n" +
+"- En conservant pressé le bouton de la souris sur l'un de ces boutons, la sélection devient plus rapide.";
 Calendar._TT["ABOUT_TIME"] = "\n\n" +
 "Sélection de l\'heure:\n" +
 "- Cliquer sur l'une des parties du temps pour l'augmenter\n" +
 "- ou Maj-clic pour le diminuer\n" +
-"- ou faire un cliquer-d&eacute;placer horizontal pour une modification plus rapide.";
+"- ou faire un cliquer-déplacer horizontal pour une modification plus rapide.";
 
-Calendar._TT["PREV_YEAR"] = "Ann&eacute;e pr&eacute;c. (maintenir pour menu)";
-Calendar._TT["PREV_MONTH"] = "Mois pr&eacute;c. (maintenir pour menu)";
+Calendar._TT["PREV_YEAR"] = "Année préc. (maintenir pour afficher menu)";
+Calendar._TT["PREV_MONTH"] = "Mois préc. (maintenir pour afficher menu)";
 Calendar._TT["GO_TODAY"] = "Atteindre la date du jour";
 Calendar._TT["NEXT_MONTH"] = "Mois suiv. (maintenir pour afficher menu)";
 Calendar._TT["NEXT_YEAR"] = "Année suiv. (maintenir pour afficher menu)";
