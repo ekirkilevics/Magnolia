@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sv:node sv:name="params" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
+  <sv:property sv:name="jcr:primaryType" sv:type="Name">
+    <sv:value>mgnl:contentNode</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+    <sv:value>mix:lockable</sv:value>
+  </sv:property>
+  <sv:property sv:name="jcr:uuid" sv:type="String">
+    <sv:value>e43964a2-1285-436e-b6e0-689ddd77a76f</sv:value>
+  </sv:property>
+  <sv:property sv:name="dialog" sv:type="String">
+    <sv:value>plaintext-page-properties</sv:value>
+  </sv:property>
+  <sv:node sv:name="MetaData">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:metaData</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:authorid" sv:type="String">
+      <sv:value>superuser</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+      <sv:value>2008-09-23T19:35:38.566+02:00</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+      <sv:value>2008-09-23T19:35:51.620+02:00</sv:value>
+    </sv:property>
+  </sv:node>
+</sv:node>
