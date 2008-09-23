@@ -54,8 +54,10 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        // shunt log4j (Digester is chatty)
-        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);        
+        // shunt log4j
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
+        // shunt the chatty Digester log explicitely - possibly because of the commons-logging wrapping, shunting the root logger isn't enough
+        org.apache.log4j.Logger.getLogger(org.apache.commons.digester.Digester.class).setLevel(org.apache.log4j.Level.OFF);
     }
 
     public void testDisplayNameCanBeWrittenWithDashEventhoughThisIsDeprecated() throws Exception {
@@ -175,7 +177,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         try {
             new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithVersionElementMisplaced));
             fail("should have failed");
-        } catch (Exception e) {
+        } catch (ModuleManagementException e) {
             assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class?,versionHandler?,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
         }
     }
@@ -189,7 +191,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         try {
             new BetwixtModuleDefinitionReader().read(new StringReader(xmlWithWrongDtd));
             fail("should have failed");
-        } catch (Exception e) {
+        } catch (ModuleManagementException e) {
             assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class?,versionHandler?,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
         }
 
