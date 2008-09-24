@@ -40,6 +40,7 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.SaveHandler;
@@ -235,17 +236,20 @@ public class UserEditDialog extends ConfiguredDialog {
                 ((NodeData) existingNodes.next()).delete();
             }
             List values = getDialog().getSub(nodeName).getValues();
+            String path = null;
             for (int index = 0; index < values.size(); index++) {
-                String path = (String) values.get(index);
-                if (StringUtils.isNotEmpty(path)) {
-                    groupOrRoleNode.createNodeData(Integer.toString(index)).setValue(hm.getContent(path).getUUID());
+                try {
+                    path = (String) values.get(index);
+                    if (StringUtils.isNotEmpty(path)) {
+                        groupOrRoleNode.createNodeData(Integer.toString(index)).setValue(hm.getContent(path).getUUID());
+                    }
+                } catch(AccessDeniedException e) {
+                    String user = MgnlContext.getUser().getName();
+                    log.warn("User {} tried to assign {} {} to {} without having privileges to do so.", new Object[] {user, nodeName.substring(0, nodeName.length() - 1), path, (parentNode.getName() == user ? "self" : parentNode.getName())});
                 }
             }
-        }
-        catch (PathNotFoundException e) {
+        } catch (PathNotFoundException e) {
             // this might happen if all groups are deleted via dialog
         }
     }
-
-
 }
