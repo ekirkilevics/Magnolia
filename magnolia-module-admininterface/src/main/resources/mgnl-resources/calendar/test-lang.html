@@ -27,23 +27,7 @@ document.getElementById('f_trigger_b').click();
 
 <body onload="setup()" >
 
-<h1 id="languageTitle">no language</h1>
-
-<form action="#" method="get">
-<input type="text" name="date" id="f_date_b" />
-<button type="reset" id="f_trigger_b">...</button>
-</form>
-
-<script type="text/javascript">
-    Calendar.setup({
-        inputField     :    "f_date_b",      // id of the input field
-        ifFormat       :    "%m/%d/%Y %I:%M %p",       // format of the input field
-        showsTime      :    true,            // will display a time selector
-        button         :    "f_trigger_b",   // trigger for the calendar (button ID)
-        singleClick    :    false,           // double-click mode
-        step           :    1                // show all years in drop-down boxes (instead of every other year as default)
-    });
-</script>
+<h1 id="languageTitle">no language selected</h1>
 
 <a href="?lang=af">af</a> -
 <a href="?lang=al">al</a> -
@@ -92,3 +76,22 @@ document.getElementById('f_trigger_b').click();
 <a href="?lang=tr">tr</a> -
 <a href="?lang=zh">zh</a> -
 
+
+<form action="#" method="get">
+<input type="text" name="date" id="f_date_b" />
+<button type="reset" id="f_trigger_b">...</button>
+</form>
+
+<script type="text/javascript">
+    Calendar.setup({
+        inputField     :    "f_date_b",      // id of the input field
+        ifFormat       :    "%m/%d/%Y %I:%M %p",       // format of the input field
+        showsTime      :    true,            // will display a time selector
+        button         :    "f_trigger_b",   // trigger for the calendar (button ID)
+        singleClick    :    false,           // double-click mode
+        step           :    1                // show all years in drop-down boxes (instead of every other year as default)
+    });
+</script>
+
+</body>
+</html>
