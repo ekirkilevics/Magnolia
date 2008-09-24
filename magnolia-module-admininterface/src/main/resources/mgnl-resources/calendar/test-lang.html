@@ -17,16 +17,16 @@ e.src = 'lang/calendar-' + lang + '.js';
 e.type="text/javascript";
 document.getElementsByTagName("head")[0].appendChild(e);
 
-function setup() {
+function start() {
 document.getElementById('languageTitle').innerHTML="Language: " + lang;
-document.getElementById('f_trigger_b').click();
+document.getElementById('f_trigger').click();
 }
 </script>
 
   <script type="text/javascript" src="calendar-setup.js"></script>
 </head>
 
-<body onload="setup()" >
+<body onload="start();" >
 
 <h1 id="languageTitle">no language selected</h1>
 
@@ -79,16 +79,17 @@ document.getElementById('f_trigger_b').click();
 
 
 <form action="#" method="get">
-<input type="text" name="date" id="f_date_b" />
-<button type="reset" id="f_trigger_b">...</button>
+    <input type="text" name="date" id="f_date" />
+    <button type="reset" id="f_trigger">...</button>
 </form>
 
 <script type="text/javascript">
     Calendar.setup({
-        inputField     :    "f_date_b",      // id of the input field
+        inputField     :    "f_date",      // id of the input field
         ifFormat       :    "%m/%d/%Y %I:%M %p",       // format of the input field
+        button         :    "f_trigger",   // trigger for the calendar (button ID)
+        align          :    "Bl",           // alignment (defaults to "Bl")-->
         showsTime      :    true,            // will display a time selector
-        button         :    "f_trigger_b",   // trigger for the calendar (button ID)
         singleClick    :    false,           // double-click mode
         step           :    1                // show all years in drop-down boxes (instead of every other year as default)
     });
