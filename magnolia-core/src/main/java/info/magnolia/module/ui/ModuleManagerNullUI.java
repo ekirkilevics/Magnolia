@@ -58,11 +58,17 @@ public class ModuleManagerNullUI implements ModuleManagerUI {
     public void onStartup() throws ModuleManagementException {
         final ModuleManager.ModuleManagementState moduleMgtState = moduleManager.getStatus();
         if (moduleMgtState.needsUpdateOrInstall()) {
-            log.info("magnolia.update.auto is set to true, will start bootstrapping/update automatically");
+            log.info("\n" +
+                    "*********************************************************************************************************\n" +
+                    "*                                                                                                       *\n" +
+                    "* Magnolia needs module updates or installs, and the magnolia.update.auto property is set to true,      *\n" +
+                    "* so they will be applied automatically now.                                                            *\n" +
+                    "*                                                                                                       *\n" +
+                    "*********************************************************************************************************");
             moduleManager.performInstallOrUpdate();
             final InstallStatus status = moduleManager.getInstallContext().getStatus();
             if (!InstallStatus.installDone.equals(status)) {
-                log.info("Install could not be performed. Please check your logs and fix the appropriate issues before trying again.");
+                log.warn("Install could not be performed. Please check your logs and fix the appropriate issues before trying again.");
                 return;
             }
             moduleManager.startModules();
