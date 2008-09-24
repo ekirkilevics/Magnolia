@@ -1,0 +1,94 @@
+<html>
+<head>
+  <title>Quickly hacked page to test languages in calendars ... not sure it all works correctly...</title>
+  <link rel="stylesheet" type="text/css" media="all" href="calendar-win2k-cold-1.css" title="win2k-cold-1" />
+  <script type="text/javascript" src="calendar.js"></script>
+
+  <!-- language for the calendar -->
+  <!--script type="text/javascript" src="lang/calendar-fi.js"></script>-->
+<script type="text/javascript">
+
+var query = window.location.search;
+var lang = query.substring(query.lastIndexOf("=")+1, query.length);
+
+var e = document.createElement("script");
+e.src = 'lang/calendar-' + lang + '.js';
+e.type="text/javascript";
+document.getElementsByTagName("head")[0].appendChild(e);
+
+function setup() {
+document.getElementById('languageTitle').innerHTML="Language: " + lang;
+document.getElementById('f_trigger_b').click();
+}
+</script>
+
+  <script type="text/javascript" src="calendar-setup.js"></script>
+</head>
+
+<body onload="setup()" >
+
+<h1 id="languageTitle">no language</h1>
+
+<form action="#" method="get">
+<input type="text" name="date" id="f_date_b" />
+<button type="reset" id="f_trigger_b">...</button>
+</form>
+
+<script type="text/javascript">
+    Calendar.setup({
+        inputField     :    "f_date_b",      // id of the input field
+        ifFormat       :    "%m/%d/%Y %I:%M %p",       // format of the input field
+        showsTime      :    true,            // will display a time selector
+        button         :    "f_trigger_b",   // trigger for the calendar (button ID)
+        singleClick    :    false,           // double-click mode
+        step           :    1                // show all years in drop-down boxes (instead of every other year as default)
+    });
+</script>
+
+<a href="?lang=af">af</a> -
+<a href="?lang=al">al</a> -
+<a href="?lang=bg">bg</a> -
+<a href="?lang=big5-utf8">big5-utf8</a> -
+<a href="?lang=big5">big5</a> -
+<a href="?lang=br">br</a> -
+<a href="?lang=ca">ca</a> -
+<a href="?lang=cn-utf8">cn-utf8</a> -
+<a href="?lang=cs-utf8">cs-utf8</a> -
+<a href="?lang=cs-win">cs-win</a> -
+<a href="?lang=cs">cs</a> -
+<a href="?lang=da">da</a> -
+<a href="?lang=de">de</a> -
+<a href="?lang=du">du</a> -
+<a href="?lang=el">el</a> -
+<a href="?lang=en">en</a> -
+<a href="?lang=es">es</a> -
+<a href="?lang=eu">eu</a> -
+<a href="?lang=fi">fi</a> -
+<a href="?lang=fr">fr</a> -
+<a href="?lang=he-utf8">he-utf8</a> -
+<a href="?lang=hr-utf8">hr-utf8</a> -
+<a href="?lang=hu">hu</a> -
+<a href="?lang=it">it</a> -
+<a href="?lang=ja">ja</a> -
+<a href="?lang=jp">jp</a> -
+<a href="?lang=ko-utf8">ko-utf8</a> -
+<a href="?lang=ko">ko</a> -
+<a href="?lang=lt-utf8">lt-utf8</a> -
+<a href="?lang=lt">lt</a> -
+<a href="?lang=lv">lv</a> -
+<a href="?lang=nl">nl</a> -
+<a href="?lang=no">no</a> -
+<a href="?lang=pl-utf8">pl-utf8</a> -
+<a href="?lang=pl">pl</a> -
+<a href="?lang=pt">pt</a> -
+<a href="?lang=ro">ro</a> -
+<a href="?lang=ru-UTF">ru-UTF</a> -
+<a href="?lang=ru">ru</a> -
+<a href="?lang=ru_win_">ru_win_</a> -
+<a href="?lang=si">si</a> -
+<a href="?lang=sk">sk</a> -
+<a href="?lang=sp">sp</a> -
+<a href="?lang=sv">sv</a> -
+<a href="?lang=tr">tr</a> -
+<a href="?lang=zh">zh</a> -
+
