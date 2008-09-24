@@ -1,0 +1,2 @@
+Patches for languages have been applied from:
+  http://jira.magnolia.info/browse/MAGNOLIA-1172
