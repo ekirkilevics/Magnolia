@@ -63,7 +63,7 @@ public class PlainTextTemplateRenderer implements TemplateRenderer {
         final String contentType = content.getNodeData("contentType").getString();
 
         final PrintWriter out = response.getWriter();
-        if (!isAdmin) {
+        if (!isAdmin || isPreview) {
             response.setContentType(contentType);
             out.print(text);
         } else {
