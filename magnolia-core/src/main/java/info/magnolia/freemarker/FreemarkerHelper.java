@@ -37,6 +37,7 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
+import freemarker.cache.FileTemplateLoader;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.FreemarkerServlet;
 import freemarker.ext.servlet.HttpRequestHashModel;
@@ -58,6 +59,7 @@ import javax.servlet.ServletException;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.io.File;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -141,9 +143,12 @@ public class FreemarkerHelper {
     }
 
     protected void addDefaultData(Map data, Locale locale, String i18nBasename) {
+        if (MgnlContext.hasInstance()) {
+            data.put("ctx", MgnlContext.getInstance());
+        }
         final WebContext webCtx = getWebContextOrNull();
         if (webCtx != null) {
-            // @deprecated (-> update all templates)
+            // @deprecated (-> update all templates) - TODO see MAGNOLIA-1789
             data.put("contextPath", webCtx.getContextPath());
             AggregationState aggregationState = MgnlContext.getAggregationState(); 
             data.put("aggregationState", aggregationState);
@@ -189,9 +194,6 @@ public class FreemarkerHelper {
             
             data.put("Request", new HttpRequestHashModel(webCtx.getRequest(), wrapper));
         }
-        if (MgnlContext.hasInstance()) {
-            data.put("ctx", MgnlContext.getInstance());
-        }
 
         data.put("defaultBaseUrl", ServerConfiguration.getInstance().getDefaultBaseUrl());
 
@@ -207,7 +209,7 @@ public class FreemarkerHelper {
 //            }
     }
 
-    protected void checkTemplateLoader() {
+    protected void checkTemplateLoader() throws IOException {
         // adds a WebappTemplateLoader if needed
         final WebContext webCtx = getWebContextOrNull();
         if (webCtx != null) {
