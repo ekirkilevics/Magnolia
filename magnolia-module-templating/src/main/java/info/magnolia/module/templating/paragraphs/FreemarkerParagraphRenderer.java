@@ -70,8 +70,7 @@ public class FreemarkerParagraphRenderer extends ActionBasedParagraphRenderer im
         this.fmHelper = fmRenderer;
     }
 
-    protected void render(final String template, Content content, Paragraph paragraph, final ActionResult actionResult,
-        Writer out) throws IOException {
+    protected void render(final String templatePath, Content content, Paragraph paragraph, final ActionResult actionResult, Writer out) throws IOException {
         final Map freemarkerCtx = new HashMap();
         freemarkerCtx.put("content", content);
         freemarkerCtx.put("actpage", MgnlContext.getAggregationState().getMainContent());
@@ -84,7 +83,7 @@ public class FreemarkerParagraphRenderer extends ActionBasedParagraphRenderer im
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
-            fmHelper.render(template, locale, paragraph.getI18nBasename(), freemarkerCtx, out);
+            fmHelper.render(templatePath, locale, paragraph.getI18nBasename(), freemarkerCtx, out);
         } catch (TemplateException e) {
             throw new RuntimeException(e); // TODO
         }

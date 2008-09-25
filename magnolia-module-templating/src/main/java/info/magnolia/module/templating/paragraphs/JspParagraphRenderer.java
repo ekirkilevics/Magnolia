@@ -34,7 +34,6 @@
 package info.magnolia.module.templating.paragraphs;
 
 import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.NodeMapWrapper;
 import info.magnolia.context.Context;
@@ -59,7 +58,7 @@ public class JspParagraphRenderer extends ActionBasedParagraphRenderer {
      * and that's also how the included jsp will render it.
      * (this is subject to change in the future)
      */
-    protected void render(String template, Content content, Paragraph paragraph, ActionResult actionResult, Writer out) throws IOException{
+    protected void render(String templatePath, Content content, Paragraph paragraph, ActionResult actionResult, Writer out) throws IOException{
 
         try {
             final Context ctx = MgnlContext.getInstance();
@@ -73,7 +72,7 @@ public class JspParagraphRenderer extends ActionBasedParagraphRenderer {
                 ctx.setAttribute("result", actionResult.getResult(), Context.LOCAL_SCOPE);
                 ctx.setAttribute("action", actionResult.getActionBean(), Context.LOCAL_SCOPE);
             }
-            ((WebContext) ctx).include(template, out);
+            ((WebContext) ctx).include(templatePath, out);
             // restore back original value of the parameter
             ctx.setAttribute("content", attContent, Context.LOCAL_SCOPE);
             ctx.setAttribute("paragraphConfig", null, Context.LOCAL_SCOPE);

@@ -51,9 +51,12 @@ import info.magnolia.context.MgnlContext;
 
 
 /**
+ * Abstract paragraph which optionally supports the execution of an action
+ * class whose constructor can either be empty or take exactly one Content parameter and
+ * one ActionBasedParagraph parameter.
+ *
  * @author pbracher
  * @version $Id$
- *
  */
 public abstract class ActionBasedParagraphRenderer implements ParagraphRenderer {
 
@@ -98,7 +101,7 @@ public abstract class ActionBasedParagraphRenderer implements ParagraphRenderer 
         render(templatePath, content, paragraph, actionResult, out);
     }
 
-    abstract protected void render(String template, Content content, Paragraph paragraph, ActionResult actionResult, Writer out) throws IOException;
+    abstract protected void render(String templatePath, Content content, Paragraph paragraph, ActionResult actionResult, Writer out) throws IOException;
 
     protected ActionResult execute(Class actionClass, Content content, ActionBasedParagraph renderable, String[] allowedParametersList) {
         // see MVCServletHandlerImpl.init() if we need to populate the action bean
@@ -143,12 +146,5 @@ public abstract class ActionBasedParagraphRenderer implements ParagraphRenderer 
             }
             return actionClass.newInstance();
         }
-
-    /**
-     *
-     */
-    public ActionBasedParagraphRenderer() {
-        super();
-    }
 
 }
