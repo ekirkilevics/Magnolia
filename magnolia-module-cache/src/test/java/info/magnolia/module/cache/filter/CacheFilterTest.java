@@ -164,7 +164,8 @@ public class CacheFilterTest extends TestCase {
 
         response.addHeader("Vary", "Accept-Encoding");
         expect(response.containsHeader("Vary")).andReturn(true);
-
+        expect(response.isCommitted()).andReturn(false);
+        expect(request.getDateHeader("If-Modified-Since")).andReturn(new Long(-1));
         response.flushBuffer();
 
         expect(response.getContentType()).andReturn("some content type");
@@ -224,7 +225,8 @@ public class CacheFilterTest extends TestCase {
 
         response.addHeader("Vary", "Accept-Encoding");
         expect(response.containsHeader("Vary")).andReturn(true);
-
+        expect(response.isCommitted()).andReturn(false);
+        expect(request.getDateHeader("If-Modified-Since")).andReturn(new Long(-1));
         response.flushBuffer();
 
         expect(response.getContentType()).andReturn("text/html");
@@ -350,9 +352,57 @@ public class CacheFilterTest extends TestCase {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
         expect(request.getHeader("If-None-Match")).andReturn(null);
+        expect(response.isCommitted()).andReturn(false);
 
         response.setStatus(304);
         // since we don't expect response.getOuputStream(), we actually assert nothing is written to the body
+
+        executeFilterAndVerify();
+    }
+
+    public void testJustSends304WithNoBodyIfRequestHeadersAskForItEvenOnCommitedResponse() throws Exception {
+        long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
+
+        final byte[] gzipped = GZipUtil.gzip("dummy".getBytes());
+        final CachedPage cachedPage = new CachedPage("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
+        cachedPage.setPreCacheStatusCode(304);
+        expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
+        expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
+        expect(request.getHeader("If-None-Match")).andReturn(null);
+        // the main diff to the test above - response is already committed here and status (304) was set by another executed as indicated in preCacheStatusCode of the CachedPage 
+        expect(response.isCommitted()).andReturn(true);
+
+        response.setStatus(304);
+        // since the status is correct we don't expect response.getOuputStream(), we actually assert nothing is written to the body
+
+        executeFilterAndVerify();
+    }
+
+    public void testDontJustSends304WithNoBodyIfRequestHeadersAskForItButResponseIsCommitted() throws Exception {
+        long timeStampInSeconds = System.currentTimeMillis() / 1000 * 1000;
+
+        final CachedPage cachedPage = new CachedPage("dummy".getBytes(), "text/plain", "ASCII", 200, new MultiValueMap(), timeStampInSeconds);
+        final byte[] gzipped = GZipUtil.gzip("dummy".getBytes());
+        expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
+        expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
+        expect(request.getHeader("If-None-Match")).andReturn(null);
+        expect(response.isCommitted()).andReturn(true);
+        // we can't change status of the already committed response ... the only option left here is to proceed and send the data
+        
+        expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration("foo", "gzip", "bar"));
+        response.setStatus(200);
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("ASCII");
+        expect(response.isCommitted()).andReturn(false);
+        expect(response.containsHeader("Content-Encoding")).andReturn(false);
+        response.addHeader("Content-Encoding", "gzip");
+        expect(response.containsHeader("Content-Encoding")).andReturn(true);
+        response.addHeader("Vary", "Accept-Encoding");
+        expect(response.containsHeader("Vary")).andReturn(true);
+        response.setContentLength(gzipped.length);
+        final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
+        expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
+        response.flushBuffer();
 
         executeFilterAndVerify();
     }
@@ -402,6 +452,8 @@ public class CacheFilterTest extends TestCase {
         //expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.setDateHeader(eq("Last-Modified"), anyLong());
         response.sendRedirect(redirectLocation);
+        expect(response.isCommitted()).andReturn(false);
+        expect(request.getDateHeader("If-Modified-Since")).andReturn(new Long(-1));
         response.flushBuffer();
 
         cache.put(eq("/some-redirect"), isA(CachedRedirect.class));
@@ -443,6 +495,8 @@ public class CacheFilterTest extends TestCase {
         //expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.setDateHeader(eq("Last-Modified"), anyLong());
         response.sendError(404);
+        //after sending error, response is committed
+        expect(response.isCommitted()).andReturn(true);
         response.flushBuffer();
 
         cache.put(eq("/non-existing"), isA(CachedError.class));
@@ -508,7 +562,8 @@ public class CacheFilterTest extends TestCase {
 
         response.addHeader("Vary", "Accept-Encoding");
         expect(response.containsHeader("Vary")).andReturn(true);
-
+        expect(response.isCommitted()).andReturn(false);
+        expect(request.getDateHeader("If-Modified-Since")).andReturn(new Long(-1));
         response.flushBuffer();
 
         // when instanciating CachedPage:

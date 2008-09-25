@@ -73,8 +73,15 @@ public class UseCache extends AbstractExecutor {
         if (cached instanceof CachedPage) {
             final CachedPage page = (CachedPage) cached;
             if (!ifModifiedSince(request, page.getLastModificationTime())) {
-                response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-                return;
+                if (response.isCommitted() && page.getPreCacheStatusCode() != HttpServletResponse.SC_NOT_MODIFIED) {
+                    // this should not happen ... if it does, log it and _serve_the_data_ otherwise we will confuse client
+                    log.warn("Unable to change status on already commited response." + response.getClass().getName());
+                } else {
+                    // not newly cached anymore, reset the code ...
+                    page.setPreCacheStatusCode(0);
+                    response.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+                    return;
+                }
             }
 
             writePage(request, response, page);
@@ -86,7 +93,7 @@ public class UseCache extends AbstractExecutor {
             } else {
                 //this usually happens first time the error occurs and is put in cache - since setting page as error causes it to be committed
                 // TODO: is there a better work around to make sure we do not swallow some exception accidentally?
-                log.debug("Failed to serve cached error due to response already commited.");
+                log.debug("Failed to serve cached error due to response already committed.");
             }
         } else if (cached instanceof CachedRedirect) {
             final CachedRedirect redir = (CachedRedirect) cached;
@@ -101,29 +108,6 @@ public class UseCache extends AbstractExecutor {
         } else {
             throw new IllegalStateException("Unexpected CachedEntry type: " + cached);
         }
-    }
-
-    /**
-     * Check if server cache is newer then the client cache
-     * @param request The servlet request we are processing
-     * @return boolean true if the server resource is newer
-     */
-    protected boolean ifModifiedSince(HttpServletRequest request, long lastModified) {
-        try {
-            long headerValue = request.getDateHeader("If-Modified-Since");
-            if (headerValue != -1) {
-                // If an If-None-Match header has been specified, If-Modified-Since is ignored.
-                // The header defines only seconds, so we ignore the milliseconds.
-                final long lastModifiedRoundedToSeconds = lastModified - (lastModified % 1000);
-                if ((request.getHeader("If-None-Match") == null) && lastModified > 0 && (lastModifiedRoundedToSeconds >= headerValue)) {
-                    return false;
-                }
-            }
-        } catch (IllegalArgumentException e) {
-            // can happen per spec if the header value can't be converted to a date ...
-            return true;
-        }
-        return true;
     }
 
     protected void writePage(final HttpServletRequest request, final HttpServletResponse response, final CachedPage cachedEntry) throws IOException {

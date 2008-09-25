@@ -77,6 +77,8 @@ public class CachedPage implements CachedEntry, Serializable {
     private transient MultiMap headers;
     private Map serializableHeadersBackingList;
     private final long lastModificationTime;
+    // slightly fishy, but other executors needs to know if this is freshly created CachedPage and StatusCode have been manipulated or not.
+    private transient int preCacheStatusCode;
 
     /**
      * @deprecated not used, since 3.6.2, as it will compress all not gzipped content of every entry created using this constructor which is not desirable for already compressed content (e.g. jpg & tif images)
@@ -174,4 +176,17 @@ public class CachedPage implements CachedEntry, Serializable {
         }
         serializableHeadersBackingList = null;
    }
+    
+    public int getPreCacheStatusCode() {
+        // preCached is transient and will be 0 after deserialization (or after going through UseCache for that matter)
+        if (preCacheStatusCode == 0) {
+            return statusCode;
+        }
+        return preCacheStatusCode;
+    }
+
+    public void setPreCacheStatusCode(int preCacheStatusCode) {
+        this.preCacheStatusCode = preCacheStatusCode;
+    }
+
 }

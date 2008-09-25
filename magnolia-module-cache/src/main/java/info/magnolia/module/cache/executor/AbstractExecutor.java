@@ -33,6 +33,8 @@
  */
 package info.magnolia.module.cache.executor;
 
+import javax.servlet.http.HttpServletRequest;
+
 import info.magnolia.module.cache.CacheConfiguration;
 import info.magnolia.module.cache.CachePolicyExecutor;
 
@@ -40,7 +42,7 @@ import info.magnolia.module.cache.CachePolicyExecutor;
  * The cache configuration is passed to the executor.
  *
  * @author pbracher
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public abstract class AbstractExecutor implements CachePolicyExecutor {
 
@@ -52,6 +54,29 @@ public abstract class AbstractExecutor implements CachePolicyExecutor {
 
     public void setCacheConfiguration(CacheConfiguration cacheConfiguration) {
         this.cacheConfiguration = cacheConfiguration;
+    }
+
+    /**
+     * Check if server cache is newer then the client cache
+     * @param request The servlet request we are processing
+     * @return boolean true if the server resource is newer
+     */
+    protected boolean ifModifiedSince(HttpServletRequest request, long lastModified) {
+        try {
+            long headerValue = request.getDateHeader("If-Modified-Since");
+            if (headerValue != -1) {
+                // If an If-None-Match header has been specified, If-Modified-Since is ignored.
+                // The header defines only seconds, so we ignore the milliseconds.
+                final long lastModifiedRoundedToSeconds = lastModified - (lastModified % 1000);
+                if ((request.getHeader("If-None-Match") == null) && lastModified > 0 && (lastModifiedRoundedToSeconds >= headerValue)) {
+                    return false;
+                }
+            }
+        } catch (IllegalArgumentException e) {
+            // can happen per spec if the header value can't be converted to a date ...
+            return true;
+        }
+        return true;
     }
 
 }
