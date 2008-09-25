@@ -38,12 +38,15 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
 
 import java.io.IOException;
+import java.io.Writer;
+import java.io.BufferedWriter;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyTagSupport;
+import javax.servlet.jsp.JspWriter;
 
 /**
  * Delegates to an appropriate ParagraphRenderer, or include a JSP.
@@ -189,7 +192,11 @@ public class Include extends BodyTagSupport {
                 log.warn("You are using the deprecated path attribute of the include tag. Your jsp will be included for now, but you might want to update your code to avoid bad surprises in the future.");
                 pageContext.include(this.path);
             } else {
-                ParagraphRenderingFacade.getInstance().render(content, pageContext.getOut(), pageContext);
+                // MAGNOLIA-2395 : wrapping pageContext.getOut() to work around a freemarker issue - see TagTransformModel
+                final JspWriter out = pageContext.getOut();
+                final Writer wrappedOut = new BufferedWriter(out);
+                ParagraphRenderingFacade.getInstance().render(content, wrappedOut, pageContext);
+                out.flush();
             }
 
         } catch (IOException e) {
