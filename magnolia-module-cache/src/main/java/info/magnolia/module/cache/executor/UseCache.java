@@ -84,7 +84,8 @@ public class UseCache extends AbstractExecutor {
             if (!response.isCommitted()) {
                 response.sendError(error.getStatusCode());
             } else {
-                //TODO: why do we cache errors at all?
+                //this usually happens first time the error occurs and is put in cache - since setting page as error causes it to be committed
+                // TODO: is there a better work around to make sure we do not swallow some exception accidentally?
                 log.debug("Failed to serve cached error due to response already commited.");
             }
         } else if (cached instanceof CachedRedirect) {
