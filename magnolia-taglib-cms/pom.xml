@@ -15,15 +15,13 @@
       <version>3.7-SNAPSHOT</version>
     </dependency>
     <dependency>
-       <groupId>info.magnolia</groupId>
-       <artifactId>magnolia-core</artifactId>
-       <type>test-jar</type>
-       <version>3.7-SNAPSHOT</version>
-       <scope>test</scope>
+      <groupId>info.magnolia</groupId>
+      <artifactId>magnolia-gui</artifactId>
+      <version>3.7-SNAPSHOT</version>
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-gui</artifactId>
+      <artifactId>magnolia-module-templating</artifactId>
       <version>3.7-SNAPSHOT</version>
     </dependency>
     <dependency>
@@ -50,6 +48,13 @@
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+       <groupId>info.magnolia</groupId>
+       <artifactId>magnolia-core</artifactId>
+       <type>test-jar</type>
+       <version>3.7-SNAPSHOT</version>
+       <scope>test</scope>
     </dependency>
   </dependencies>
   <reporting>
