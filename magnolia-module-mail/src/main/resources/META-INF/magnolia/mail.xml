@@ -9,11 +9,11 @@
   <dependencies>
     <dependency>
       <name>adminInterface</name>
-      <version>3.6/*</version>
+      <version>3.7/*</version>
     </dependency>
     <dependency>
       <name>templating</name>
-      <version>3.6/*</version>
+      <version>3.7/*</version>
     </dependency>
   </dependencies>
   <servlets>
