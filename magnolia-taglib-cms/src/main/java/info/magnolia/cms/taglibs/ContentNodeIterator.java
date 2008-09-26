@@ -216,15 +216,7 @@ public class ContentNodeIterator extends BaseContentTag {
         super.setContentNodeName(name);
     }
 
-    /**
-     * @param request
-     * @return
-     * @throws PathNotFoundException
-     * @throws RepositoryException
-     * @throws AccessDeniedException
-     */
-    private Collection getCollection(HttpServletRequest request) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
+    private Collection getCollection() throws RepositoryException {
         if (this.items != null) {
             return this.items;
         }
@@ -292,7 +284,7 @@ public class ContentNodeIterator extends BaseContentTag {
 
         Collection children;
         try {
-            children = getCollection(request);
+            children = getCollection();
         }
         catch (PathNotFoundException e) {
             // ok, this is normal
