@@ -120,7 +120,8 @@ public class Transporter {
         try {
             tempFile = prepareTempFile(activationContent);
 
-            connection.setFixedLengthStreamingMode((int) tempFile.length());
+            // The only purpose of the method below is to disable buffering. This makes sense since we use IOUtils.copy to copy the content to the output stream, however method is not available in Java 1.4 and have to be commented out as long as we support it.
+            //connection.setFixedLengthStreamingMode((int) tempFile.length());
             connection.setDoOutput(true);
             connection.setDoInput(true);
             connection.setUseCaches(false);
