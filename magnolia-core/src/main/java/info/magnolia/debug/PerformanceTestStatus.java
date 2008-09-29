@@ -43,12 +43,13 @@ import org.apache.commons.collections.map.LinkedMap;
 import info.magnolia.context.MgnlContext;
 
 /**
- * Key based time messuring.
+ * Key based time measuring.
+ * 
  * @author philipp
  * @version $Id$
  *
  */
-public class PerformanceTestStatus{
+public class PerformanceTestStatus {
 
     private static final String ATTRIBUTE_NAME = PerformanceTestStatus.class.getName();
 
@@ -57,10 +58,10 @@ public class PerformanceTestStatus{
        long total;
     }
 
-    Map states = MapUtils.lazyMap(new LinkedMap(), new Factory(){
+    Map states = MapUtils.lazyMap(new LinkedMap(), new Factory() {
         public Object create() {
             return new TestStatus();
-        };
+        }
     });
 
     public void start(String key){
@@ -76,8 +77,8 @@ public class PerformanceTestStatus{
         status.total += System.currentTimeMillis() - status.start;
     }
 
-    public static PerformanceTestStatus getInstance(){
-        if(!MgnlContext.hasAttribute(ATTRIBUTE_NAME)){
+    public static PerformanceTestStatus getInstance() {
+        if(!MgnlContext.hasAttribute(ATTRIBUTE_NAME)) {
             MgnlContext.setAttribute(ATTRIBUTE_NAME, new PerformanceTestStatus());
         }
         return (PerformanceTestStatus) MgnlContext.getAttribute(ATTRIBUTE_NAME);
