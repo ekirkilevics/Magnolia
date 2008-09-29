@@ -140,8 +140,8 @@ public class FilterTest extends MgnlTestCase {
 
         HttpServletRequest request = createMock(HttpServletRequest.class);
         // log statement
-        expect(request.getRequestURI()).andReturn("blah");
-        expect(request.getPathInfo()).andReturn("bleh");
+        expect(request.getRequestURI()).andReturn("blah").anyTimes();
+        expect(request.getPathInfo()).andReturn("bleh").anyTimes();
 
         WebContext webCtx = createMock(WebContext.class);
         AggregationState aggState = createMock(AggregationState.class);
