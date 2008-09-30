@@ -52,15 +52,11 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
-import javax.servlet.ServletConfig;
+import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Enumeration;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
@@ -72,7 +68,6 @@ import java.util.Map;
  * @version $Revision: $ ($Author: $)
  */
 public class FreemarkerHelper {
-
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FreemarkerHelper.class);
 
     public static FreemarkerHelper getInstance() {
@@ -80,26 +75,19 @@ public class FreemarkerHelper {
     }
 
     private final Configuration cfg;
-    private final Map fMServletParams;
+
+    // taglib support stuff
+    private TaglibFactory taglibFactory;
+    private ServletContextHashModel servletContextHashModel;
 
     public FreemarkerHelper() {
         cfg = new Configuration();
         cfg.setObjectWrapper(new MagnoliaContentWrapper());
         cfg.setTemplateLoader(new ClassTemplateLoader(FreemarkerUtil.class, "/"));
         cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
-        String defaultEncoding = "UTF8"; 
-        cfg.setDefaultEncoding(defaultEncoding);
+        cfg.setDefaultEncoding("UTF8");
         // TODO : configure this (maybe based on the dev-mode system property)
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
-        
-        // setup FMServlet init params
-        fMServletParams = new HashMap();
-        fMServletParams.put("TemplatePath", "/");
-        fMServletParams.put("NoCache", "true");
-        fMServletParams.put("ContentType", "text/html");
-        fMServletParams.put("template_update_delay","0"); // TODO: 0 is for development only! Use higher value otherwise.
-        fMServletParams.put("default_encoding", defaultEncoding);
-        
     }
 
     /**
@@ -148,49 +136,10 @@ public class FreemarkerHelper {
         if (webCtx != null) {
             // @deprecated (-> update all templates) - TODO see MAGNOLIA-1789
             data.put("contextPath", webCtx.getContextPath());
-            AggregationState aggregationState = MgnlContext.getAggregationState(); 
+            AggregationState aggregationState = MgnlContext.getAggregationState();
             data.put("aggregationState", aggregationState);
-            final ServletContext sc = webCtx.getServletContext();
-            data.put("JspTaglibs", new TaglibFactory(sc));
-            MagnoliaContentWrapper wrapper = new MagnoliaContentWrapper();
-            FreemarkerServlet fs = new FreemarkerServlet();
-            try {
-                fs.init(new ServletConfig() {
 
-
-                    public String getInitParameter(String name) {
-                        return (String) fMServletParams.get(name);
-                    }
-
-                    public Enumeration getInitParameterNames() {
-                        return new Enumeration() {
-                            Iterator iter = fMServletParams.keySet().iterator();
-
-                            public boolean hasMoreElements() {
-                                return iter.hasNext();
-                            }
-
-                            public Object nextElement() {
-                                return iter.next();
-                            }};
-                    }
-
-                    public ServletContext getServletContext() {
-                        return sc;
-                    }
-
-                    public String getServletName() {
-                        return "FreemarkerServlet";
-                    }});
-            } catch (ServletException e) {
-                log.error(e.getMessage(), e);
-                if (e.getCause() != null) {
-                    log.error(e.getCause().getMessage(), e.getCause());
-                }
-            }
-            data.put("Application", new ServletContextHashModel(fs, wrapper));
-            
-            data.put("Request", new HttpRequestHashModel(webCtx.getRequest(), wrapper));
+            addTaglibSupportData(data, webCtx);
         }
 
         data.put("defaultBaseUrl", ServerConfiguration.getInstance().getDefaultBaseUrl());
@@ -219,6 +168,34 @@ public class FreemarkerHelper {
                         new WebappTemplateLoader(sc, "")}));
             }
         }
+    }
+
+    protected void addTaglibSupportData(Map data, WebContext webCtx) {
+        final ServletContext servletContext = webCtx.getServletContext();
+        try {
+            data.put(FreemarkerServlet.KEY_JSP_TAGLIBS, checkTaglibFactory(servletContext));
+            data.put(FreemarkerServlet.KEY_APPLICATION_PRIVATE, checkServletContextModel(servletContext));
+            data.put(FreemarkerServlet.KEY_REQUEST_PRIVATE, new HttpRequestHashModel(webCtx.getRequest(), cfg.getObjectWrapper()));
+        } catch (ServletException e) {
+            // this should be an IllegalStateException (i.e there's no reason we should end up here) but this constructor isn't available in 1.4
+            throw new RuntimeException("Can't initalize taglib support for freemarker: ", e);
+        }
+    }
+
+    protected TaglibFactory checkTaglibFactory(ServletContext servletContext) {
+        if (taglibFactory == null) {
+            taglibFactory = new TaglibFactory(servletContext);
+        }
+        return taglibFactory;
+    }
+
+    protected ServletContextHashModel checkServletContextModel(ServletContext servletContext) throws ServletException {
+        if (servletContextHashModel == null) {
+            // Freemarker needs an instance of a GenericServlet, but it doesn't have to do anything other than provide references to the ServletContext
+            final GenericServlet fs = new DoNothingServlet(servletContext);
+            servletContextHashModel = new ServletContextHashModel(fs, cfg.getObjectWrapper());
+        }
+        return servletContextHashModel;
     }
 
     protected Configuration getConfiguration() {
