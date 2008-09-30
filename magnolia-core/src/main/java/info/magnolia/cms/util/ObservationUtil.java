@@ -41,6 +41,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.context.LifeTimeJCRSessionUtil;
 
 import javax.jcr.RepositoryException;
+import javax.jcr.Workspace;
 import javax.jcr.observation.Event;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
@@ -125,6 +126,10 @@ public class ObservationUtil {
 
         try {
             ObservationManager observationManager = getObservationManager(repository);
+            if (observationManager == null) {
+                log.error("Unable to add event listeners for " + observationPath); //$NON-NLS-1$
+                throw new NullPointerException("Observation manager can't be obtained due to invalid session.");
+            }
 
             observationManager.addEventListener(listener, eventTypesMask, observationPath, includeSubnodes, null, nodeTypes, false);
         } catch (RepositoryException e) {
@@ -193,14 +198,20 @@ public class ObservationUtil {
 
     public static void unregisterChangeListener(String repository, EventListener listener) {
         try {
-            getObservationManager(repository).removeEventListener(listener);
+            ObservationManager om = getObservationManager(repository);
+            if (om == null) {
+                // session have been invalidated and Observation manager is disconnected. Nothing to unregister. Bail out.
+                return;
+            }
+            om.removeEventListener(listener);
         } catch (RepositoryException e) {
             log.error("Unable to remove event listener [" + listener + "] from repository " + repository, e);
         }
     }
 
     private static ObservationManager getObservationManager(String repository) throws RepositoryException {
-        return getHierarchyManager(repository).getWorkspace().getObservationManager();
+        Workspace wks = getHierarchyManager(repository).getWorkspace();
+        return wks.getSession().isLive() ? wks.getObservationManager() : null;
     }
 
     private static HierarchyManager getHierarchyManager(String repository) {
