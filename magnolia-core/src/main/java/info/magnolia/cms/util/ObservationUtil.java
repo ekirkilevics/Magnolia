@@ -128,7 +128,7 @@ public class ObservationUtil {
             ObservationManager observationManager = getObservationManager(repository);
             if (observationManager == null) {
                 log.error("Unable to add event listeners for " + observationPath); //$NON-NLS-1$
-                throw new NullPointerException("Observation manager can't be obtained due to invalid session.");
+                throw new IllegalStateException("Observation manager can't be obtained due to invalid session.");
             }
 
             observationManager.addEventListener(listener, eventTypesMask, observationPath, includeSubnodes, null, nodeTypes, false);

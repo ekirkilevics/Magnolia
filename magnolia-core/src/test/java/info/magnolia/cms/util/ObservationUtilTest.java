@@ -33,25 +33,10 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.URI2RepositoryManager;
-import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.i18n.DefaultI18nContentSupport;
-import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.link.LinkResolver;
-import info.magnolia.cms.link.LinkResolverImpl;
 import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.BinaryMockNodeData;
-import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockUtil;
-import info.magnolia.test.mock.MockHierarchyManager;
-import info.magnolia.context.SystemContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.context.MgnlContext;
 import static org.easymock.classextension.EasyMock.*;
-
-import java.text.MessageFormat;
 
 import javax.jcr.Session;
 import javax.jcr.Workspace;
@@ -60,8 +45,8 @@ import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
 
 /**
- * @author philipp
- * @version $Id: BaseLinkTest.java 16705 2008-07-10 21:41:08Z gjoseph $
+ * @author had
+ * @version $Id:$
  *
  */
 public class ObservationUtilTest extends MgnlTestCase {
@@ -86,7 +71,7 @@ public class ObservationUtilTest extends MgnlTestCase {
                 public void onEvent(EventIterator events) {
                     // do nothing
                 }});
-        } catch (NullPointerException e) {
+        } catch (IllegalStateException e) {
             assertEquals("Observation manager can't be obtained due to invalid session.", e.getMessage());
         }
         verify( hm, wks);
