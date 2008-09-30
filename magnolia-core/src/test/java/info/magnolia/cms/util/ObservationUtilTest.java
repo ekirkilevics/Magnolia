@@ -71,9 +71,11 @@ public class ObservationUtilTest extends MgnlTestCase {
                 public void onEvent(EventIterator events) {
                     // do nothing
                 }});
+            fail("Expected exception not thrown.");
         } catch (IllegalStateException e) {
             assertEquals("Observation manager can't be obtained due to invalid session.", e.getMessage());
         }
+        
         verify( hm, wks);
     }
 
