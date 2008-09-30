@@ -110,7 +110,7 @@ public class ObservationUtil {
     /**
      * Register a single event listener, bound to the given path. Be careful
      * that if you observe "/", events are going to be generated for jcr:system,
-     * which is "shared" accross all workspaces.
+     * which is "shared" across all workspaces.
      *
      * @param repository
      * @param observationPath repository path
