@@ -60,9 +60,9 @@ public class PerformanceTestFilter extends AbstractMgnlFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
         final PerformanceTestStatus test = PerformanceTestStatus.getInstance();
-        test.start("request");
+        test.start(getName());
         chain.doFilter(request, response);
-        test.stop("request");
-        log.info(request.getRequestURI() + " => " + test.toString());
+        test.stop(getName());
+        log.info("{} : {}", request.getRequestURI(), test.toString());
     }
 }

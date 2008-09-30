@@ -54,8 +54,8 @@ public class PerformanceTestStatus {
     private static final String ATTRIBUTE_NAME = PerformanceTestStatus.class.getName();
 
     class TestStatus{
-       long start;
-       long total;
+       long start = -1;
+       long total = -1;
     }
 
     Map states = MapUtils.lazyMap(new LinkedMap(), new Factory() {
@@ -86,12 +86,17 @@ public class PerformanceTestStatus {
 
     public String toString() {
         StringBuffer str = new StringBuffer();
-        for (Iterator iter = states.entrySet().iterator(); iter.hasNext();) {
-            Map.Entry entry = (Map.Entry)iter.next();
+        final Iterator it = states.entrySet().iterator();
+        while(it.hasNext()) {
+            Map.Entry entry = (Map.Entry) it.next();
+            final TestStatus testStatus = (TestStatus) entry.getValue();
+            final String value = testStatus.total >= 0 ? String.valueOf(testStatus.total) : "(not stopped yet)";
             str.append(entry.getKey());
             str.append(": ");
-            str.append(((TestStatus)entry.getValue()).total);
-            str.append(", ");
+            str.append(value);
+            if (it.hasNext()) {
+                str.append(", ");
+            }
         }
         return str.toString();
     }
