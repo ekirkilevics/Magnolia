@@ -56,6 +56,7 @@ import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import java.io.IOException;
+import java.io.Reader;
 import java.io.Writer;
 import java.util.Locale;
 import java.util.Map;
@@ -97,6 +98,11 @@ public class FreemarkerHelper {
         render(templatePath, null, null, root, out);
     }
 
+    //This is for rendering content directly, as our 'template' in the actual content
+    public void render(Reader reader, Object root, Writer out) throws TemplateException, IOException {
+        render(reader, null, null, root, out);
+    }
+
     /**
      * Renders the given template, using the given root object (can be a map, or any other type of object
      * handled by MagnoliaContentWrapper) to the given Writer.
@@ -108,15 +114,31 @@ public class FreemarkerHelper {
      * @see ServerConfiguration#getDefaultBaseUrl()
      */
     public void render(String templatePath, Locale locale, String i18nBasename, Object root, Writer out) throws TemplateException, IOException {
+
+        locale = prepareRendering(locale, i18nBasename, root);
+
+        final Template template = cfg.getTemplate(templatePath, locale);
+        template.process(root, out);
+    }
+
+    private Locale prepareRendering(Locale locale, String i18nBasename, Object root) throws IOException {
         locale = locale != null ? locale : determineLocale();
         if (root instanceof Map) {
             final Map data = (Map) root;
             addDefaultData(data, locale, i18nBasename);
         }
-
         checkTemplateLoader();
+        return locale;
+    }
 
-        final Template template = cfg.getTemplate(templatePath, locale);
+    /**
+     * Used to render content as the freemarker macros are in it
+     */
+    public void render(Reader reader, Locale locale, String i18nBasename, Object root, Writer out) throws TemplateException, IOException {
+
+        locale = prepareRendering(locale, i18nBasename, root);
+
+        Template template = new Template("contentRendering", reader, cfg);
         template.process(root, out);
     }
 
