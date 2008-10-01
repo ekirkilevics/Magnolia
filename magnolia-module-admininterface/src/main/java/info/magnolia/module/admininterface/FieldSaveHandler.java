@@ -33,8 +33,33 @@
  */
 package info.magnolia.module.admininterface;
 
+import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.security.AccessDeniedException;
+
+import javax.jcr.RepositoryException;
+
+
 /**
- * @deprecated since 3.6.2 - this interface was renamed to FieldSaveHandler.
+ * Custom save handler interface. You can associate a specific implementation to a single dialog field by specifying the
+ * full class name in a property named "saveHandler".
+ *
+ * @author molaschi
+ * @version $Id$
  */
-public interface CustomSaveHandler extends FieldSaveHandler {
+public interface FieldSaveHandler {
+
+    /**
+     * save a property
+     * @param parentNode in node
+     * @param configNode configuration
+     * @param name property name
+     * @param form form
+     * @param type type
+     * @param valueType value type
+     * @param isRichEditValue is rich edit?
+     * @param encoding encoding
+     */
+    void save(Content parentNode, Content configNode, String name, MultipartForm form, int type, int valueType,
+        int isRichEditValue, int encoding) throws RepositoryException, AccessDeniedException;
 }

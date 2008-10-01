@@ -300,12 +300,12 @@ public class SaveHandlerImpl implements SaveHandler {
         if (!StringUtils.isEmpty(customSaveHandler)) {
             try {
                 Class cshClazz = Class.forName(customSaveHandler);
-                if (!CustomSaveHandler.class.isAssignableFrom(cshClazz)) {
-                    log.error("Class {} must implement CustomSaveHandler interface", cshClazz);
-                    throw new ClassCastException("Class " + cshClazz + " must implement CustomSaveHandler interface");
+                if (!FieldSaveHandler.class.isAssignableFrom(cshClazz)) {
+                    log.error("Class {} must implement the FieldSaveHandler interface", cshClazz);
+                    throw new ClassCastException("Class " + cshClazz + " must implement the FieldSaveHandler interface");
                 }
                 else {
-                    CustomSaveHandler csh = (CustomSaveHandler) cshClazz.newInstance();
+                    FieldSaveHandler csh = (FieldSaveHandler) cshClazz.newInstance();
                     HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
                     String configPath = this.getForm().getParameter(name + "_configNode");
