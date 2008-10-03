@@ -65,7 +65,7 @@ public final class ItemType implements Serializable {
     /**
      * Node type: folder.
      */
-    public static final String NT_FOLDER = "nt:folder"; //$NON-NLS-1$
+    public static final String NT_FOLDER = "mgnl:folder"; //$NON-NLS-1$
 
     /**
      * Node type: base.
