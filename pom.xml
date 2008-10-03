@@ -162,44 +162,6 @@ for Java Content Repositories (JCR).
         </plugins>
       </build>
     </profile>
-    <profile>
-      <id>fullsite</id>
-      <!-- TODO:
-           This is commented out for now - once we're sure it's fine, we can remove it along with the clover configuration below.
-           See http://confluence.magnolia.info/display/DEVINT/Release+process#Releaseprocess-Sitegeneration
-      -->
-      <!--<distributionManagement>-->
-        <!--<site>-->
-          <!--<id>dev.magnolia.info</id>-->
-          <!--<name>dev.magnolia.info</name>-->
-          <!--<url>scp://dev.magnolia.info/sites/dev/ref/${project.version}</url>-->
-        <!--</site>-->
-      <!--</distributionManagement>-->
-      <build>
-        <plugins>
-          <!-- this needs some more memory than the defaults ... -->
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-clover-plugin</artifactId>
-            <version>2.4</version>
-            <configuration>
-              <targetPercentage>0%</targetPercentage>
-              <licenseLocation>${cloverLicense}</licenseLocation>
-            </configuration>
-            <executions>
-              <execution>
-                <phase>verify</phase>
-                <goals>
-                  <goal>instrument</goal>
-                  <goal>check</goal>
-                  <goal>aggregate</goal>
-                </goals>
-              </execution>
-            </executions>
-          </plugin>
-        </plugins>
-      </build>
-    </profile>
   </profiles>
   <build>
     <plugins>
@@ -548,12 +510,6 @@ for Java Content Repositories (JCR).
     </dependencies>
   </dependencyManagement>
   <distributionManagement>
-    <!-- TODO : the following note is outdated but left here for now, as we're not sure
-         this will work perfectly. We reconfigured the <goals> for the release plugin
-         so that it does not generate a site, specifically for this project.
-         See http://confluence.magnolia.info/display/DEVINT/Release+process#Releaseprocess-Sitegeneration
-         no <site> here, so that we don't generate a site with the release plugin.
-         use the fullsite profile to generate it -->
     <site>
       <id>dev.magnolia.info</id>
       <name>dev.magnolia.info</name>
