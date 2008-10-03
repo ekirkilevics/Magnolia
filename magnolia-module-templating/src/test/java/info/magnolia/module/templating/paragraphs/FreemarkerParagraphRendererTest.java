@@ -64,7 +64,7 @@ import java.util.Map;
  */
 public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     private StringTemplateLoader tplLoader;
-    private ActionBasedParagraphRenderer renderer;
+    private FreemarkerParagraphRenderer renderer;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -81,7 +81,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         state.setLocale(Locale.ENGLISH);
         expect(context.getAggregationState()).andStubReturn(state);
         expect(context.getLocale()).andReturn(Locale.ENGLISH);
-       
+
         MgnlContext.setInstance(context);
         replay(context);
     }
@@ -104,18 +104,6 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
                 "The value of the foo property is bar.", out.toString());
     }
 
-    public void testCantRenderWithActionParagraphIfActionClassNotSet() throws IOException {
-        final ActionBasedParagraph par = new ActionBasedParagraph();
-        par.setName("test-with-action");
-        par.setTemplatePath("test_action.ftl");
-        final MockContent c = new MockContent("plop");
-        try {
-            renderer.render(c, par, new StringWriter());
-        } catch (IllegalStateException e) {
-            assertEquals("Can't render paragraph test-with-action in page /plop: actionClass not set.", e.getMessage());
-        }
-    }
-
     public void testActionClassGetsExecutedAndIsPutOnContextAlongWithResultAndContent() throws IOException {
         tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${action.pouet} : ${result}");
         final ActionBasedParagraph par = new ActionBasedParagraph();
@@ -129,11 +117,10 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         assertEquals("yay : it works : success", out.toString());
     }
 
-    public void testActionGetsPopulatedWithAllowedFields() throws IOException {
+    public void testActionGetsPopulated() throws IOException {
         final WebContext context = createNiceMock(WebContext.class);
         Map<String,String> params=new HashMap<String,String>();
         params.put("blah", "tralala");
-        params.put("pouet", "oh oh this shouldn't have been set");
         params.put("foo", "bar");
         expect(context.getParameters()).andReturn(params);
         expect(context.getMessages("testmessages")).andReturn(new EmptyMessages());
@@ -151,7 +138,6 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         par.setI18nBasename("testmessages");
         par.setTemplatePath("test_action.ftl");
         par.setActionClass(SimpleTestAction.class);
-        par.setAllowedParameters("blah");
         final MockContent c = new MockContent("plop");
         c.addNodeData(new MockNodeData("boo", "yay"));
         final StringWriter out = new StringWriter();

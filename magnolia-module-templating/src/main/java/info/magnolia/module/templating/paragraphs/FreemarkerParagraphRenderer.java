@@ -35,8 +35,8 @@ package info.magnolia.module.templating.paragraphs;
 
 import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
-import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 
@@ -54,7 +54,7 @@ import java.util.Map;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class FreemarkerParagraphRenderer extends ActionBasedParagraphRenderer implements ParagraphRenderer {
+public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
 
     private final FreemarkerHelper fmHelper;
 
@@ -70,23 +70,18 @@ public class FreemarkerParagraphRenderer extends ActionBasedParagraphRenderer im
         this.fmHelper = fmRenderer;
     }
 
-    protected void render(final String templatePath, Content content, Paragraph paragraph, final ActionResult actionResult, Writer out) throws IOException {
-        final Map freemarkerCtx = new HashMap();
-        freemarkerCtx.put("content", content);
-        freemarkerCtx.put("actpage", MgnlContext.getAggregationState().getMainContent());
-        freemarkerCtx.put("paragraphConfig", paragraph);
-        if (actionResult != null) {
-            freemarkerCtx.put("result", actionResult.getResult());
-            freemarkerCtx.put("action", actionResult.getActionBean());
-        }
-
+    protected void callTemplate(String templatePath, Renderable renderable, final Map ctx, Writer out) throws IOException {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
-            fmHelper.render(templatePath, locale, paragraph.getI18nBasename(), freemarkerCtx, out);
+            fmHelper.render(templatePath, locale, ((Paragraph)renderable).getI18nBasename(), ctx, out);
         } catch (TemplateException e) {
             throw new RuntimeException(e); // TODO
         }
+    }
+
+    protected Map newContext() {
+        return new HashMap();
     }
 
 }

@@ -42,16 +42,15 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 /**
  * @author Sameer Charles
  */
-public class Paragraph {
+public class Paragraph implements Renderable {
     private String name;
     private String title;
     private String templatePath;
-    private String dialogPath;
     private String dialog;
     private String type;
     private String description;
     private String i18nBasename;
-    private Map params = new HashMap();
+    private Map parameters = new HashMap();
 
     public Paragraph() {
     }
@@ -68,17 +67,6 @@ public class Paragraph {
         return this.templatePath;
     }
 
-    public String getDialogPath() {
-        return this.dialogPath;
-    }
-
-    /**
-     * @deprecated use getType()
-     */
-    public String getTemplateType() {
-        return this.type;
-    }
-
     public String getType() {
         return type;
     }
@@ -91,23 +79,12 @@ public class Paragraph {
         this.description = description;
     }
 
-    public void setDialogPath(String dialogPath) {
-        this.dialogPath = dialogPath;
-    }
-
     public void setName(String name) {
         this.name = name;
     }
 
     public void setTemplatePath(String templatePath) {
         this.templatePath = templatePath;
-    }
-
-    /**
-     * @deprecated use setType()
-     */
-    public void setTemplateType(String templateType) {
-        this.type = templateType;
     }
 
     public void setType(String type) {
@@ -140,20 +117,18 @@ public class Paragraph {
             .append("type", this.type) //$NON-NLS-1$
             .append("description", this.description) //$NON-NLS-1$
             .append("dialog", this.dialog) //$NON-NLS-1$
-            .append("dialogPath", this.dialogPath) //$NON-NLS-1$
             .append("title", this.title) //$NON-NLS-1$
             .append("templatePath", this.templatePath) //$NON-NLS-1$
             .toString();
     }
 
 
-    public Map getParams() {
-        return this.params;
+    public Map getParameters() {
+        return this.parameters;
     }
 
-
-    public void setParams(Map params) {
-        this.params = params;
+    public void setParameters(Map params) {
+        this.parameters = params;
     }
 
 }

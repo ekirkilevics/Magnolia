@@ -124,11 +124,9 @@ public class DialogHandlerManager extends ObservedManager {
         Map paragraphs = ParagraphManager.getInstance().getParagraphs();
         for (Iterator iter = paragraphs.entrySet().iterator(); iter.hasNext();) {
             Paragraph paragraph = (Paragraph) ((Entry) iter.next()).getValue();
-            String paragraphDialogPath = paragraph.getDialogPath();
             String paragraphDialogName = paragraph.getDialog();
 
-            if (StringUtils.equals(paragraphDialogPath, dialogPath)
-                || StringUtils.equals(paragraphDialogName, dialogName)) {
+            if (StringUtils.equals(paragraphDialogName, dialogName)) {
                 Class handler = ParagraphEditDialog.class;
 
                 String className = dialog.getNodeData(CLASS).getString();

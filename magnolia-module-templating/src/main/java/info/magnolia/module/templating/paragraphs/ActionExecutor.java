@@ -44,9 +44,11 @@ import java.util.Map;
 import org.apache.commons.beanutils.BeanUtils;
 
 import info.magnolia.cms.beans.config.ActionBasedParagraph;
+import info.magnolia.cms.beans.config.ActionBasedRenderable;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 
 
@@ -58,15 +60,21 @@ import info.magnolia.context.MgnlContext;
  * @author pbracher
  * @version $Id$
  */
-public abstract class ActionBasedParagraphRenderer implements ParagraphRenderer {
+public class ActionExecutor {
+
+    public static ActionExecutor getInstace(){
+        return (ActionExecutor) FactoryUtil.getSingleton(ActionExecutor.class);
+    }
 
     protected static final class ActionResult {
         private final Object result;
         private final Object actionBean;
+        private final String templatePath;
 
-        public ActionResult(Object result, Object actionBean) {
+        public ActionResult(Object result, Object actionBean, String templatePath) {
             this.result = result;
             this.actionBean = actionBean;
+            this.templatePath = templatePath;
         }
 
         public Object getResult() {
@@ -76,34 +84,21 @@ public abstract class ActionBasedParagraphRenderer implements ParagraphRenderer 
         public Object getActionBean() {
             return actionBean;
         }
+
+        public String getTemplatePath() {
+            return this.templatePath;
+        }
     }
 
-    public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
-        String templatePath = paragraph.getTemplatePath();
-
-        if (templatePath == null) {
-            throw new IllegalStateException("Unable to render paragraph " + paragraph.getName() + " in page " + content.getHandle() + ": templatePath not set.");
+    public ActionResult execute(Content content, ActionBasedRenderable abp) throws IOException {
+        final Class actionClass = abp.getActionClass();
+        if (actionClass == null) {
+            return null;
         }
-
-        final ActionResult actionResult;
-        if (paragraph instanceof ActionBasedParagraph) {
-            ActionBasedParagraph abp = (ActionBasedParagraph) paragraph;
-            final Class actionClass = abp.getActionClass();
-            if (actionClass == null) {
-                throw new IllegalStateException("Can't render paragraph " + paragraph.getName() + " in page " + content.getHandle() + ": actionClass not set.");
-            }
-            actionResult = execute(actionClass, content, abp, abp.getAllowedParametersList());
-            templatePath = abp.determineTemplatePath(templatePath, actionResult.result, actionResult.actionBean);
-        } else {
-            actionResult = null;
-        }
-
-        render(templatePath, content, paragraph, actionResult, out);
+        return execute(actionClass, content, abp);
     }
 
-    abstract protected void render(String templatePath, Content content, Paragraph paragraph, ActionResult actionResult, Writer out) throws IOException;
-
-    protected ActionResult execute(Class actionClass, Content content, ActionBasedParagraph renderable, String[] allowedParametersList) {
+    protected ActionResult execute(Class actionClass, Content content, ActionBasedRenderable renderable) {
         // see MVCServletHandlerImpl.init() if we need to populate the action bean
 
         // TODO : refactoring w/ Pages ?
@@ -111,18 +106,14 @@ public abstract class ActionBasedParagraphRenderer implements ParagraphRenderer 
         try {
             final Object actionBean = instantiate(actionClass, content, renderable);
             final Map params = MgnlContext.getParameters();
-            if (params != null && allowedParametersList != null) {
-                final Map filteredParams = new HashMap();
-                for (int i = 0; i < allowedParametersList.length; i++) {
-                    final String param = allowedParametersList[i];
-                    filteredParams.put(param, params.get(param));
-                }
-                BeanUtils.populate(actionBean, filteredParams);
+            if (params != null) {
+                BeanUtils.populate(actionBean, params);
             }
 
             final Method method = actionClass.getMethod("execute", null);
             final Object result = method.invoke(actionBean, null);
-            return new ActionResult(result, actionBean);
+            String templatePath = renderable.determineTemplatePath(result, actionBean);
+            return new ActionResult(result, actionBean, templatePath);
         } catch (InstantiationException e) {
             throw new RuntimeException(e); // TODO
         } catch (IllegalAccessException e) {
@@ -134,14 +125,14 @@ public abstract class ActionBasedParagraphRenderer implements ParagraphRenderer 
         }
     }
 
-    protected Object instantiate(Class actionClass, Content content, ActionBasedParagraph paragraph) throws InstantiationException,
+    protected Object instantiate(Class actionClass, Content content, ActionBasedRenderable renderable) throws InstantiationException,
         IllegalAccessException, InvocationTargetException {
             final Constructor[] constructors = actionClass.getConstructors();
             for (int i = 0; i < constructors.length; i++) {
                 final Constructor c = constructors[i];
                 final Class[] params = c.getParameterTypes();
                 if (params.length == 2 && params[0].equals(Content.class) && params[1].equals(ActionBasedParagraph.class)) {
-                    return c.newInstance(new Object[]{content, paragraph});
+                    return c.newInstance(new Object[]{content, renderable});
                 }
             }
             return actionClass.newInstance();

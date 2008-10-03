@@ -53,26 +53,17 @@ import java.util.Map;
 /**
  * <p>
  * Simple freemarker template renderer, mapped to template type <code>freemarker</code>. The valid attributes of freemarker templates are
- * <code>path</code>, which specify the template to be processed and <code>actionClass</code> specifying executor for any necessary code 
+ * <code>path</code>, which specify the template to be processed and <code>actionClass</code> specifying executor for any necessary code
  * execution. Instance of this class is then available in the template as <code>templateAction</code> variable.
  * </p>
  *
  * @version $Revision: 14052 $ ($Author: gjoseph $)
  */
 public class FreemarkerTemplateRenderer implements TemplateRenderer {
-    
+
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FreemarkerTemplateRenderer.class);
-    
+
     private FreemarkerHelper fmHelper;
-
-    private String actionClass;
-    public String getActionClass() {
-        return actionClass;
-    }
-
-    public void setActionClass(String actionClass) {
-        this.actionClass = actionClass;
-    }
 
     /**
      * Constructs a FreemarkerTemplateRenderer that uses the default (singleton)
@@ -98,8 +89,8 @@ public class FreemarkerTemplateRenderer implements TemplateRenderer {
         log.debug("Processing request for [{}] - using template [{}]", request.getRequestURL(), templatePath);
 
         final Map freemarkerCtx = new HashMap();
-        freemarkerCtx.put("templateConfig", template);
-        freemarkerCtx.put("actpage", MgnlContext.getAggregationState().getMainContent());
+        freemarkerCtx.put("templateDef", template);
+        freemarkerCtx.put("page", MgnlContext.getAggregationState().getMainContent());
         freemarkerCtx.put("content", MgnlContext.getAggregationState().getMainContent());
         try {
             String actionClassName = template.getParameter("actionClass");

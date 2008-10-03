@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,32 +33,16 @@
  */
 package info.magnolia.cms.beans.config;
 
-import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
- * A paragraph that also defines an action class.
+ * @author pbracher
+ * @version $Id$
  *
- * @author gjoseph
- * @version $Revision$ ($Author$)
  */
-public class ActionBasedParagraph extends Paragraph implements ActionBasedRenderable {
-    private Class actionClass;
-
-    public ActionBasedParagraph() {
-    }
-
-    public Class getActionClass() {
-        return actionClass;
-    }
-
-    public void setActionClass(Class actionClass) {
-        this.actionClass = actionClass;
-    }
-
-    /**
-     * Override this method if you need specific templates depending on the action result.
-     */
-    public String determineTemplatePath(Object result, Object action) {
-        return getTemplatePath();
-    }
+public interface Renderable {
+    String getName();
+    String getTemplatePath();
 }

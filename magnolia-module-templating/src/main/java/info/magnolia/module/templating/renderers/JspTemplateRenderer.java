@@ -76,8 +76,9 @@ public class JspTemplateRenderer implements TemplateRenderer {
 
         Content page = MgnlContext.getAggregationState().getMainContent();
         request.setAttribute("content", new NodeMapWrapper(page, page.getHandle()));
+        // we can't use page as this is a reserved name in JSPs
         request.setAttribute("actpage", new NodeMapWrapper(page, page.getHandle()));
-        request.setAttribute("templateConfig", template);
+        request.setAttribute("templateDef", template);
         request.setAttribute("aggregationState", MgnlContext.getAggregationState());
         request.setAttribute("ctx", MgnlContext.getInstance());
         RequestDispatcher rd = request.getRequestDispatcher(jspPath);

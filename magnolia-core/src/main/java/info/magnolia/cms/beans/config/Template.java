@@ -33,9 +33,13 @@
  */
 package info.magnolia.cms.beans.config;
 
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.cms.security.AccessManager;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.context.MgnlContext;
 
 import java.io.Serializable;
 import java.util.HashMap;
@@ -56,6 +60,8 @@ public class Template implements Serializable {
      */
     private static final long serialVersionUID = 222L;
 
+    private Content content;
+
     private String name;
 
     private String path;
@@ -64,7 +70,7 @@ public class Template implements Serializable {
 
     private String title;
 
-    private String location;
+    //private String location;
 
     private String description;
 
@@ -74,7 +80,7 @@ public class Template implements Serializable {
 
     private String image;
 
-    private Map params = new HashMap();
+    private Map parameters = new HashMap();
 
     private Map subTemplates = new HashMap();
 
@@ -146,19 +152,8 @@ public class Template implements Serializable {
         return type;
     }
 
-    /**
-     * Getter for <code>location</code>.
-     * @return Returns the location.
-     */
-    public String getLocation() {
-        return location;
-    }
-
-    /**
-     * @deprecated since 3.7 use getParams().get(key)
-     */
     public String getParameter(String key) {
-        return (String) getParams().get(key);
+        return (String) getParameters().get(key);
     }
 
     /**
@@ -167,23 +162,6 @@ public class Template implements Serializable {
      */
     public boolean isVisible() {
         return this.visible;
-    }
-
-    /**
-     * @param extension
-     * @deprecated obtain the template using
-     * {@link TemplateManager#getInfo(String, String)} and then use
-     * {@link Template#getPath()}.
-     * @return template path for the specified extension
-     */
-    public String getPath(String extension) {
-        Template template = getSubTemplate(extension);
-
-        if (template != null) {
-            return template.getPath();
-        }
-
-        return path;
     }
 
     public Template getSubTemplate(String extension) {
@@ -202,12 +180,12 @@ public class Template implements Serializable {
         this.i18nBasename = basename;
     }
 
-    public Map getParams() {
-        return this.params;
+    public Map getParameters() {
+        return this.parameters;
     }
 
-    public void setParams(Map params) {
-        this.params = params;
+    public void setParameters(Map params) {
+        this.parameters = params;
     }
 
     public Map getSubTemplates() {
@@ -234,10 +212,6 @@ public class Template implements Serializable {
         this.title = title;
     }
 
-    public void setLocation(String location) {
-        this.location = location;
-    }
-
     public void setDescription(String description) {
         this.description = description;
     }
@@ -248,6 +222,20 @@ public class Template implements Serializable {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public boolean isAvailable(Content node) {
+        // TODO is called quite often and should be faster
+        AccessManager am = MgnlContext.getAccessManager(getContent().getHierarchyManager().getName());
+        return am.isGranted(getContent().getHandle(), Permission.READ);
+    }
+
+    public Content getContent() {
+        return this.content;
+    }
+
+    public void setContent(Content content) {
+        this.content = content;
     }
 
 }

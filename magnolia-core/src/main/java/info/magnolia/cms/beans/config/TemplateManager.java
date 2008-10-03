@@ -36,7 +36,6 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
@@ -48,6 +47,8 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import javax.jcr.RepositoryException;
 
 
 /**
@@ -199,20 +200,26 @@ public class TemplateManager extends ObservedManager {
         return children;
     }
 
-    /**
-     * Get templates collection after access control filter applied using specified AccessManager
-     * @return Collection list containing templates as Template objects
-     */
-    public Iterator getAvailableTemplates(AccessManager accessManager) {
+    public Iterator getAvailableTemplates(Content node) {
         List templateList = new ArrayList();
         Iterator it = visibleTemplates.iterator();
         while (it.hasNext()) {
             Template template = (Template) it.next();
-            if (accessManager.isGranted(template.getLocation(), Permission.READ)) {
+            if (template.isAvailable(node)) {
                 templateList.add(template);
             }
         }
         return templateList.iterator();
+    }
+
+
+    /**
+     * Get templates collection after access control filter applied using specified AccessManager
+     * @return Collection list containing templates as Template objects
+     * @deprecated
+     */
+    public Iterator getAvailableTemplates(AccessManager accessManager) {
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -221,6 +228,28 @@ public class TemplateManager extends ObservedManager {
      */
     public Iterator getAvailableTemplates() {
         return visibleTemplates.iterator();
+    }
+
+    public Template getDefaultTemplate(Content node) {
+        Template tmpl;
+        try {
+            // try to use the same as the parent
+            tmpl = this.getInfo(node.getParent().getTemplate());
+            if(tmpl != null && tmpl.isAvailable(node)){
+                return tmpl;
+            }
+            // otherwise use the first available template
+            else{
+                Iterator templates = getAvailableTemplates(node);
+                if (templates.hasNext()) {
+                    return (Template) templates.next();
+                }
+            }
+        }
+        catch (RepositoryException e) {
+            log.error("Can't resolve default template for node " + node.getHandle(), e);
+        }
+        return null;
     }
 
     /**

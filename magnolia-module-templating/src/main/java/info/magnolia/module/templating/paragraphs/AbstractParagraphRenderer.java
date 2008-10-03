@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,40 +33,48 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.Renderable;
-import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-
-import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.runtime.ParagraphRenderer;
+import info.magnolia.cms.core.Content;
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.module.templating.paragraphs.ActionExecutor.ActionResult;
+
+
 /**
- * A simple paragraph renderer which delegates to a jsp.
+ * @author pbracher
+ * @version $Id$
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
  */
-public class JspParagraphRenderer extends AbstractParagraphRenderer {
+public abstract class AbstractParagraphRenderer extends AbstractRenderer implements ParagraphRenderer{
 
-    protected void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws IOException {
-        try {
-            ((WebContext) ctx).include(templatePath, out);
-        } catch (ServletException e) {
-            throw new RuntimeException(e); // TODO
-        }
-
+    public AbstractParagraphRenderer() {
+        super();
     }
 
-    protected Map newContext() {
-        final Context ctx = MgnlContext.getInstance();
-        if (!(ctx instanceof WebContext)) {
-            throw new IllegalStateException("This paragraph renderer can only be used with a WebContext");
-        }
-        return ctx;
+    public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
+        render(content, (Renderable) paragraph, out);
+        out.flush();
     }
 
+    protected Map saveContextState(Map ctx) {
+        Map state = super.saveContextState(ctx);
+        saveAttribute(ctx, state, "paragraphDef");
+        return state;
+    }
+
+    protected void setupContext(Map ctx, Content content, Renderable renderable, ActionResult actionResult) throws IOException {
+        super.setupContext(ctx, content, renderable, actionResult);
+        setContextAttribute(ctx, "page", MgnlContext.getAggregationState().getMainContent());
+        setContextAttribute(ctx, "paragraphDef", renderable);
+
+    }
 }
