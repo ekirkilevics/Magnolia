@@ -75,7 +75,7 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
             if (this.getCreateItemType().equals(ItemType.CONTENT.getSystemName())) {
                 Content parentNode = this.getHierarchyManager().getContent(this.getPath());
                 Content newNode = parentNode.getContent(this.getNewNodeName());
-                Template newTemplate = getDefaultTemplate(parentNode);
+                Template newTemplate = getDefaultTemplate(newNode);
                 if (newTemplate != null) {
                     newNode.getMetaData().setTemplate(newTemplate.getName());
                     newNode.save();
@@ -88,21 +88,7 @@ public class WebsiteTreeHandler extends AdminTreeMVCHandler {
         return view;
     }
 
-    protected Template getDefaultTemplate(Content parentNode) {
-        // default to the template used by the parent node if the user can access it
-        final TemplateManager templateManager = TemplateManager.getInstance();
-        final AccessManager accessManager = MgnlContext.getAccessManager(ContentRepository.CONFIG);
-        final String newTemplateName = parentNode.getTemplate();
-        Template newTemplate = templateManager.getInfo(newTemplateName);
-        if (newTemplate == null || !accessManager.isGranted(newTemplate.getLocation(), Permission.READ)) {
-            // if that fails then first template of list is taken...
-            Iterator templates = templateManager.getAvailableTemplates(accessManager);
-            if (templates.hasNext()) {
-                newTemplate = (Template) templates.next();
-            } else {
-                newTemplate = null;
-            }
-        }
-        return newTemplate;
+    protected Template getDefaultTemplate(Content node) {
+        return TemplateManager.getInstance().getDefaultTemplate(node);
     }
 }
