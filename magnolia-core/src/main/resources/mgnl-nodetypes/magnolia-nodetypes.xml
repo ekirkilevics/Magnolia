@@ -111,6 +111,24 @@
         <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
         <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true"/>
     </nodeType>
+    <nodeType name="mgnl:folder" isMixin="false" hasOrderableChildNodes="true" primaryItemName="">
+        <supertypes>
+            <supertype>nt:folder</supertype>
+            <supertype>mix:referenceable</supertype>
+        </supertypes>
+        <childNodeDefinition name="MetaData" defaultPrimaryType="mgnl:metaData" autoCreated="true" mandatory="true" onParentVersion="COPY" protected="false" sameNameSiblings="false">
+            <requiredPrimaryTypes>
+                <requiredPrimaryType>mgnl:metaData</requiredPrimaryType>
+            </requiredPrimaryTypes>
+        </childNodeDefinition>
+        <childNodeDefinition name="*" defaultPrimaryType="" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" sameNameSiblings="true">
+            <requiredPrimaryTypes>
+                <requiredPrimaryType>nt:base</requiredPrimaryType>
+            </requiredPrimaryTypes>
+        </childNodeDefinition>
+        <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="false"/>
+        <propertyDefinition name="*" requiredType="undefined" autoCreated="false" mandatory="false" onParentVersion="COPY" protected="false" multiple="true"/>
+    </nodeType>
     <nodeType name="mgnl:resource" isMixin="false" hasOrderableChildNodes="false" primaryItemName="jcr:data">
         <supertypes>
             <supertype>nt:resource</supertype>
