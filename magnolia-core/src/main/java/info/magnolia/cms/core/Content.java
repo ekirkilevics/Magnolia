@@ -764,5 +764,5 @@ public interface Content extends Cloneable {
 
     }
 
-    HierarchyManager getHierarchyManager() throws RepositoryException;
+    HierarchyManager getHierarchyManager();
 }

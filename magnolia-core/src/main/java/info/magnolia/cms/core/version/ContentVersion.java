@@ -692,7 +692,7 @@ public class ContentVersion extends DefaultContent {
      * Get hierarchy manager if previously set for this object
      * @return HierarchyManager
      */
-    public HierarchyManager getHierarchyManager() throws RepositoryException {
+    public HierarchyManager getHierarchyManager() {
         return this.base.getHierarchyManager();
     }
 

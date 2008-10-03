@@ -403,7 +403,7 @@ public abstract class ContentWrapper implements Content{
         this.getWrappedContent().updateMetaData(request);
     }
 
-    public HierarchyManager getHierarchyManager() throws RepositoryException {
+    public HierarchyManager getHierarchyManager(){
         return this.getWrappedContent().getHierarchyManager();
     }
 

@@ -100,7 +100,7 @@ public abstract class ContentHandler implements Cloneable {
      * @return HierarchyManager
      * @throws RepositoryException
      */
-    public HierarchyManager getHierarchyManager() throws RepositoryException {
+    public HierarchyManager getHierarchyManager() {
         return hierarchyManager;
     }
 
