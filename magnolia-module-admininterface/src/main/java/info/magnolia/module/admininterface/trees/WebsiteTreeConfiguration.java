@@ -34,26 +34,19 @@
 package info.magnolia.module.admininterface.trees;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.Template;
-import info.magnolia.cms.beans.config.TemplateManager;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.ContextMenuItem;
 import info.magnolia.cms.gui.control.FunctionBarItem;
-import info.magnolia.cms.gui.control.Select;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AbstractTreeConfiguration;
 
-import java.util.Iterator;
 
 import javax.servlet.http.HttpServletRequest;
 
-import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Philipp Bracher
@@ -81,44 +74,7 @@ public class WebsiteTreeConfiguration extends AbstractTreeConfiguration {
         TreeColumn column1 = TreeColumn.createNodeDataColumn(tree, msgs.get("tree.web.title"), "title", true);
         column1.setWidth(2);
 
-        TreeColumn column2 = new TreeColumn(tree.getJavascriptTree(), request){
-            Select templateSelect;
-            {
-                templateSelect = new Select();
-                templateSelect.setName(tree.getJavascriptTree() + TreeColumn.EDIT_NAMEADDITION);
-                templateSelect.setSaveInfo(false);
-                templateSelect.setCssClass(TreeColumn.EDIT_CSSCLASS_SELECT);
-
-                // we must pass the displayValue to this function
-                // templateSelect.setEvent("onblur", tree.getJavascriptTree() + TreeColumn.EDIT_JSSAVE);
-                // templateSelect.setEvent("onchange", tree.getJavascriptTree() + TreeColumn.EDIT_JSSAVE);
-                templateSelect.setEvent("onblur", tree.getJavascriptTree() //$NON-NLS-1$
-                    + ".saveNodeData(this.value,this.options[this.selectedIndex].text)"); //$NON-NLS-1$
-                templateSelect.setEvent("onchange", tree.getJavascriptTree() //$NON-NLS-1$
-                    + ".saveNodeData(this.value,this.options[this.selectedIndex].text)"); //$NON-NLS-1$
-            }
-
-            public String getHtml() {
-                Content content = this.getWebsiteNode();
-                String templateName = content.getMetaData().getTemplate();
-                Template template = TemplateManager.getInstance().getInfo(templateName);
-                return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
-
-            };
-
-            public String getHtmlEdit() {
-                Iterator templates = TemplateManager.getInstance().getAvailableTemplates(this.getWebsiteNode());
-
-                templateSelect.getOptions().clear();
-
-                while (templates.hasNext()) {
-                    Template template = (Template) templates.next();
-                    String title = MessagesUtil.javaScriptString(template.getI18NTitle());
-                    templateSelect.setOptions(title, template.getName());
-                }
-                return templateSelect.getHtml();
-            }
-        };
+        TreeColumn column2 = new TemplateColumn(tree.getJavascriptTree(), request);
         column2.setName(MetaData.TEMPLATE);
         column2.setIsMeta(true);
         column2.setWidth(2);
