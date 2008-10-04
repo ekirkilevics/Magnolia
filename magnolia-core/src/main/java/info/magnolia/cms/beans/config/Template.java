@@ -53,7 +53,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class Template implements Serializable {
+public class Template implements Renderable, Serializable{
 
     /**
      * Stable serialVersionUID.
@@ -64,7 +64,7 @@ public class Template implements Serializable {
 
     private String name;
 
-    private String path;
+    private String templatePath;
 
     private String type;
 
@@ -110,9 +110,10 @@ public class Template implements Serializable {
     /**
      * Getter for <code>path</code>.
      * @return Returns the path.
+     * @deprecated since 3.7. use getTemplatePath() instead
      */
     public String getPath() {
-        return path;
+        return getTemplatePath();
     }
 
     /**
@@ -200,8 +201,11 @@ public class Template implements Serializable {
         this.name = name;
     }
 
+    /**
+     * @deprecated since 3.7 use {@link #setTemplatePath(String)}
+     */
     public void setPath(String path) {
-        this.path = path;
+        setTemplatePath(path);
     }
 
     public void setType(String type) {
@@ -236,6 +240,14 @@ public class Template implements Serializable {
 
     public void setContent(Content content) {
         this.content = content;
+    }
+
+    public String getTemplatePath() {
+        return templatePath;
+    }
+
+    public void setTemplatePath(String templatePath) {
+        this.templatePath = templatePath;
     }
 
 }

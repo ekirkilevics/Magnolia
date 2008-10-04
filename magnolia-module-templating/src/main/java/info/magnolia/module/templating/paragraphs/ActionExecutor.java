@@ -50,6 +50,7 @@ import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.templating.renderers.RenderException;
 
 
 /**
@@ -66,31 +67,7 @@ public class ActionExecutor {
         return (ActionExecutor) FactoryUtil.getSingleton(ActionExecutor.class);
     }
 
-    protected static final class ActionResult {
-        private final Object result;
-        private final Object actionBean;
-        private final String templatePath;
-
-        public ActionResult(Object result, Object actionBean, String templatePath) {
-            this.result = result;
-            this.actionBean = actionBean;
-            this.templatePath = templatePath;
-        }
-
-        public Object getResult() {
-            return result;
-        }
-
-        public Object getActionBean() {
-            return actionBean;
-        }
-
-        public String getTemplatePath() {
-            return this.templatePath;
-        }
-    }
-
-    public ActionResult execute(Content content, ActionBasedRenderable abp) throws IOException {
+    public ActionResult execute(Content content, ActionBasedRenderable abp) throws RenderException {
         final Class actionClass = abp.getActionClass();
         if (actionClass == null) {
             return null;
@@ -98,7 +75,7 @@ public class ActionExecutor {
         return execute(actionClass, content, abp);
     }
 
-    protected ActionResult execute(Class actionClass, Content content, ActionBasedRenderable renderable) {
+    protected ActionResult execute(Class actionClass, Content content, ActionBasedRenderable renderable) throws RenderException {
         // see MVCServletHandlerImpl.init() if we need to populate the action bean
 
         // TODO : refactoring w/ Pages ?
@@ -114,14 +91,8 @@ public class ActionExecutor {
             final Object result = method.invoke(actionBean, null);
             String templatePath = renderable.determineTemplatePath(result, actionBean);
             return new ActionResult(result, actionBean, templatePath);
-        } catch (InstantiationException e) {
-            throw new RuntimeException(e); // TODO
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e); // TODO
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e); // TODO
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e); // TODO
+        } catch (Exception e) {
+            throw new RenderException("Can't execute action " + actionClass.getName(), e);
         }
     }
 

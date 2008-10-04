@@ -31,22 +31,29 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.paragraphs;
+package info.magnolia.module.templating.renderers;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.Map;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Renderable;
-import info.magnolia.cms.beans.runtime.ParagraphRenderer;
+import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.renderers.RenderException;
+import info.magnolia.context.WebContext;
+import info.magnolia.module.templating.paragraphs.AbstractRenderer;
+import info.magnolia.module.templating.paragraphs.ActionResult;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -54,21 +61,27 @@ import info.magnolia.module.templating.renderers.RenderException;
  * @version $Id$
  *
  */
-public abstract class AbstractParagraphRenderer extends AbstractRenderer implements ParagraphRenderer{
+public abstract class AbstractTemplateRenderer extends AbstractRenderer implements TemplateRenderer {
 
-    private static Logger log = LoggerFactory.getLogger(AbstractParagraphRenderer.class);
+    private static Logger log = LoggerFactory.getLogger(AbstractTemplateRenderer.class);
 
-    public AbstractParagraphRenderer() {
-        super();
-    }
+    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        if (response.isCommitted()) {
+            log.warn("Including {} for request {}, but response is already committed.", template.getName(), request.getRequestURL());
+        }
 
-    public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
+        final Content content = MgnlContext.getAggregationState().getMainContent();
+        final PrintWriter out = response.getWriter();
+
+        // FIXME temp fix for MAGNOLIA-2387
+        MgnlContext.setAttribute("request", request);
+        MgnlContext.setAttribute("response", response);
+
         try {
-            render(content, (Renderable) paragraph, out);
+            render(content, (Renderable) template, out);
         }
         catch (RenderException e) {
-            log.error("", e);
-            throw new IOException(e.getMessage());
+            throw new ServletException(e);
         }
         finally{
             out.flush();
@@ -78,13 +91,13 @@ public abstract class AbstractParagraphRenderer extends AbstractRenderer impleme
     protected Map saveContextState(Map ctx) {
         Map state = super.saveContextState(ctx);
         saveAttribute(ctx, state, "page");
-        saveAttribute(ctx, state, "paragraphDef");
+        saveAttribute(ctx, state, "templateDef");
         return state;
     }
 
     protected void setupContext(Map ctx, Content content, Renderable renderable, ActionResult actionResult) {
         super.setupContext(ctx, content, renderable, actionResult);
         setContextAttribute(ctx, "page", MgnlContext.getAggregationState().getMainContent());
-        setContextAttribute(ctx, "paragraphDef", renderable);
+        setContextAttribute(ctx, "templateDef", renderable);
     }
 }

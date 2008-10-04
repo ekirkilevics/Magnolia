@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,43 +31,49 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.paragraphs;
+package info.magnolia.module.templating.renderers;
 
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.Renderable;
-import info.magnolia.context.Context;
-import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
-import info.magnolia.module.templating.renderers.RenderException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Map;
 
 /**
- * A simple paragraph renderer which delegates to a jsp.
+ * @author pbracher
+ * @version $Id$
  *
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
  */
-public class JspParagraphRenderer extends AbstractParagraphRenderer {
+public class RenderException extends Exception {
 
-    protected void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException {
-        try {
-            ((WebContext) ctx).include(templatePath, out);
-        } catch (Exception e) {
-            throw new RenderException("Can't render paragraph template " + templatePath, e);
-        }
+    /**
+     * Logger.
+     */
+    private static Logger log = LoggerFactory.getLogger(RenderException.class);
 
+    /**
+     *
+     */
+    public RenderException() {
     }
 
-    protected Map newContext() {
-        final Context ctx = MgnlContext.getInstance();
-        if (!(ctx instanceof WebContext)) {
-            throw new IllegalStateException("This paragraph renderer can only be used with a WebContext");
-        }
-        return ctx;
+    /**
+     * @param message
+     */
+    public RenderException(String message) {
+        super(message);
     }
 
+    /**
+     * @param cause
+     */
+    public RenderException(Throwable cause) {
+        super(cause);
+    }
+
+    /**
+     * @param message
+     * @param cause
+     */
+    public RenderException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

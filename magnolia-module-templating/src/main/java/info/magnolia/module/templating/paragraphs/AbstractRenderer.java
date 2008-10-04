@@ -48,7 +48,7 @@ import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.paragraphs.ActionExecutor.ActionResult;
+import info.magnolia.module.templating.renderers.RenderException;
 
 
 /**
@@ -62,11 +62,11 @@ public abstract class AbstractRenderer {
         super();
     }
 
-    protected void render(Content content, Renderable renderable, Writer out) throws IOException {
+    protected void render(Content content, Renderable renderable, Writer out) throws RenderException {
         final Map ctx = newContext();
         Map state = saveContextState(ctx);
 
-        ActionExecutor.ActionResult actionResult = executAction(content, renderable);
+        ActionResult actionResult = executAction(content, renderable);
 
         setupContext(ctx, content, renderable, actionResult);
 
@@ -84,8 +84,8 @@ public abstract class AbstractRenderer {
         restoreContext(ctx, state);
     }
 
-    protected ActionExecutor.ActionResult executAction(Content content, Renderable renderable) throws IOException {
-        ActionExecutor.ActionResult actionResult;
+    protected ActionResult executAction(Content content, Renderable renderable) throws RenderException {
+        ActionResult actionResult;
         if(renderable instanceof ActionBasedRenderable){
              actionResult = ActionExecutor.getInstace().execute(content, (ActionBasedRenderable)renderable);
         }
@@ -106,10 +106,7 @@ public abstract class AbstractRenderer {
     }
 
     protected void saveAttribute(final Map ctx, Map state, String name) {
-        final Object value = ctx.get(name);
-        if(value != null){
-            state.put(name, value);
-        }
+        state.put(name, ctx.get(name));
     }
 
     protected void restoreContext(final Map ctx, Map state) {
@@ -119,8 +116,10 @@ public abstract class AbstractRenderer {
         }
     }
 
-    protected void setupContext(final Map ctx, Content content, Renderable renderable, ActionResult actionResult) throws IOException {
+    protected void setupContext(final Map ctx, Content content, Renderable renderable, ActionResult actionResult){
         setContextAttribute(ctx, "content", content);
+        setContextAttribute(ctx, "aggregationState", MgnlContext.getAggregationState());
+
         if (actionResult != null) {
             setContextAttribute(ctx, "result", actionResult.getResult());
             setContextAttribute(ctx, "action", actionResult.getActionBean());
@@ -133,6 +132,6 @@ public abstract class AbstractRenderer {
 
     protected abstract Map newContext();
 
-    protected abstract void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws IOException;
+    protected abstract void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException;
 
 }

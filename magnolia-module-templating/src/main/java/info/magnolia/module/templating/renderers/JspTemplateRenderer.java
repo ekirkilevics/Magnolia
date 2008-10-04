@@ -33,11 +33,14 @@
  */
 package info.magnolia.module.templating.renderers;
 
+import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.NodeMapWrapper;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 
 import javax.servlet.RequestDispatcher;
@@ -46,6 +49,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * <p>
@@ -56,37 +61,33 @@ import java.io.IOException;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class JspTemplateRenderer implements TemplateRenderer {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JspTemplateRenderer.class);
+public class JspTemplateRenderer extends AbstractTemplateRenderer {
 
-    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        final String jspPath = template.getPath();
+    protected void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException {
 
-        if (jspPath == null) {
-            log.error("JSP path is missing for {}, returning a 404 error", request.getRequestURL()); //$NON-NLS-1$
-            response.sendError(404);
-            return;
-        }
+        // FIXME temp fix for MAGNOLIA-2387
 
-        log.debug("Dispatching request for [{}] - forward to [{1}]", request.getRequestURL(), jspPath);
+        HttpServletRequest request = (HttpServletRequest) MgnlContext.getAttribute("request");
+        HttpServletResponse response = (HttpServletResponse) MgnlContext.getAttribute("response");
+        RequestDispatcher rd = request.getRequestDispatcher(templatePath);
 
-        if (response.isCommitted()) {
-            log.warn("Including {} for request {}, but response is already committed.", jspPath, request.getRequestURL());
-        }
-
-        Content page = MgnlContext.getAggregationState().getMainContent();
-        request.setAttribute("content", new NodeMapWrapper(page, page.getHandle()));
-        // we can't use page as this is a reserved name in JSPs
-        request.setAttribute("actpage", new NodeMapWrapper(page, page.getHandle()));
-        request.setAttribute("templateDef", template);
-        request.setAttribute("aggregationState", MgnlContext.getAggregationState());
-        request.setAttribute("ctx", MgnlContext.getInstance());
-        RequestDispatcher rd = request.getRequestDispatcher(jspPath);
         // set this attribute to avoid a second dispatching of the filters
         request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
         // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
-        rd.forward(request, response);
-        // TODO: should we remove extra attributes again?
+        try {
+            rd.forward(request, response);
+        }
+        catch (Exception e) {
+            throw new RenderException("Can't render template " + templatePath, e);
+        }
+    }
+
+    protected Map newContext() {
+        final Context ctx = MgnlContext.getInstance();
+        if (!(ctx instanceof WebContext)) {
+            throw new IllegalStateException("This paragraph renderer can only be used with a WebContext");
+        }
+        return ctx;
     }
 
 }

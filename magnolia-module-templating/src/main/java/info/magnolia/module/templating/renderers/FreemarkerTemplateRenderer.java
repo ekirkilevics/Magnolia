@@ -34,6 +34,7 @@
 package info.magnolia.module.templating.renderers;
 
 import freemarker.template.TemplateException;
+import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.context.MgnlContext;
@@ -46,6 +47,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+import java.io.Writer;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -59,7 +61,7 @@ import java.util.Map;
  *
  * @version $Revision: 14052 $ ($Author: gjoseph $)
  */
-public class FreemarkerTemplateRenderer implements TemplateRenderer {
+public class FreemarkerTemplateRenderer extends AbstractTemplateRenderer {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FreemarkerTemplateRenderer.class);
 
@@ -77,38 +79,18 @@ public class FreemarkerTemplateRenderer implements TemplateRenderer {
         this.fmHelper = fmRenderer;
     }
 
-    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        final String templatePath = template.getPath();
-
-        if (templatePath == null) {
-            log.error("templatePath is missing for {}, returning a 404 error", request.getRequestURL()); //$NON-NLS-1$
-            response.sendError(404);
-            return;
-        }
-
-        log.debug("Processing request for [{}] - using template [{}]", request.getRequestURL(), templatePath);
-
-        final Map freemarkerCtx = new HashMap();
-        freemarkerCtx.put("templateDef", template);
-        freemarkerCtx.put("page", MgnlContext.getAggregationState().getMainContent());
-        freemarkerCtx.put("content", MgnlContext.getAggregationState().getMainContent());
-        try {
-            String actionClassName = template.getParameter("actionClass");
-            if (StringUtils.isNotEmpty(actionClassName)) {
-                freemarkerCtx.put("templateAction", Class.forName(actionClassName).newInstance());
-            }
-        } catch (Exception e) {
-            log.error("Failed to instantiate template action with " + e.getMessage(), e);
-            throw new ServletException(e);
-        }
-
+    protected void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
-            fmHelper.render(templatePath, locale, template.getI18NTitle(), freemarkerCtx, response.getWriter());
-        } catch (TemplateException e) {
+            fmHelper.render(templatePath, locale, ((Template)renderable).getI18NTitle(), ctx, out);
+        } catch (Exception e) {
             log.error("Failed to process Freemarker template with " + e.getMessage(), e);
-            throw new ServletException(e);
+            throw new RenderException("Can't render template " + templatePath , e);
         }
+    }
+
+    protected Map newContext() {
+        return new HashMap();
     }
 }

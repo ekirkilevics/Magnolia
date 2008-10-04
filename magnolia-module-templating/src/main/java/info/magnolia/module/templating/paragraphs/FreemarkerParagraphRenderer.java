@@ -39,6 +39,7 @@ import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
+import info.magnolia.module.templating.renderers.RenderException;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -70,13 +71,13 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
         this.fmHelper = fmRenderer;
     }
 
-    protected void callTemplate(String templatePath, Renderable renderable, final Map ctx, Writer out) throws IOException {
+    protected void callTemplate(String templatePath, Renderable renderable, final Map ctx, Writer out) throws RenderException {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
             fmHelper.render(templatePath, locale, ((Paragraph)renderable).getI18nBasename(), ctx, out);
-        } catch (TemplateException e) {
-            throw new RuntimeException(e); // TODO
+        } catch (Exception e) {
+            throw new RenderException("Can't render paragraph template " + templatePath, e);
         }
     }
 
