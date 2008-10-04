@@ -49,8 +49,6 @@ import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.module.templating.paragraphs.AbstractRenderer;
-import info.magnolia.module.templating.paragraphs.ActionResult;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

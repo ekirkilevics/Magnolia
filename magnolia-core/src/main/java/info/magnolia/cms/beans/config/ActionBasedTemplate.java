@@ -31,29 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.paragraphs;
+package info.magnolia.cms.beans.config;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
-public class ActionResult {
-    private final Object result;
-    private final Object actionBean;
-    private final String templatePath;
+/**
+ * @author pbracher
+ * @version $Id$
+ *
+ */
+public class ActionBasedTemplate extends Template implements ActionBasedRenderable {
 
-    public ActionResult(Object result, Object actionBean, String templatePath) {
-        this.result = result;
-        this.actionBean = actionBean;
-        this.templatePath = templatePath;
+    private Class actionClass;
+
+    public Class getActionClass() {
+        return actionClass;
     }
 
-    public Object getResult() {
-        return result;
+    public void setActionClass(Class actionClass) {
+        this.actionClass = actionClass;
     }
 
-    public Object getActionBean() {
-        return actionBean;
+    /**
+     * Override this method if you need specific templates depending on the action result.
+     */
+    public String determineTemplatePath(Object result, Object action) {
+        return getTemplatePath();
     }
 
-    public String getTemplatePath() {
-        return this.templatePath;
-    }
 }

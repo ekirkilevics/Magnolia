@@ -46,6 +46,8 @@ import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.templating.renderers.AbstractRenderer;
+import info.magnolia.module.templating.renderers.ActionResult;
 import info.magnolia.module.templating.renderers.RenderException;
 
 

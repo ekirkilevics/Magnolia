@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.paragraphs;
+package info.magnolia.module.templating.renderers;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -50,7 +50,6 @@ import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.renderers.RenderException;
 
 
 /**
