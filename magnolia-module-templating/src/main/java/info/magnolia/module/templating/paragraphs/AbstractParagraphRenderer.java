@@ -79,14 +79,12 @@ public abstract class AbstractParagraphRenderer extends AbstractRenderer impleme
 
     protected Map saveContextState(Map ctx) {
         Map state = super.saveContextState(ctx);
-        saveAttribute(ctx, state, "page");
         saveAttribute(ctx, state, "paragraphDef");
         return state;
     }
 
     protected void setupContext(Map ctx, Content content, Renderable renderable, ActionResult actionResult) {
         super.setupContext(ctx, content, renderable, actionResult);
-        setContextAttribute(ctx, "page", MgnlContext.getAggregationState().getMainContent());
         setContextAttribute(ctx, "paragraphDef", renderable);
     }
 }

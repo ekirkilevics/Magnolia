@@ -88,14 +88,12 @@ public abstract class AbstractTemplateRenderer extends AbstractRenderer implemen
 
     protected Map saveContextState(Map ctx) {
         Map state = super.saveContextState(ctx);
-        saveAttribute(ctx, state, "page");
         saveAttribute(ctx, state, "templateDef");
         return state;
     }
 
     protected void setupContext(Map ctx, Content content, Renderable renderable, ActionResult actionResult) {
         super.setupContext(ctx, content, renderable, actionResult);
-        setContextAttribute(ctx, "page", MgnlContext.getAggregationState().getMainContent());
         setContextAttribute(ctx, "templateDef", renderable);
     }
 }

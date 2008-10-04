@@ -100,7 +100,8 @@ public abstract class AbstractRenderer {
         saveAttribute(ctx, state, "content");
         saveAttribute(ctx, state, "result");
         saveAttribute(ctx, state, "action");
-
+        // TODO should be page in freemarker?
+        saveAttribute(ctx, state, "actpage");
         return state;
     }
 
@@ -118,6 +119,8 @@ public abstract class AbstractRenderer {
     protected void setupContext(final Map ctx, Content content, Renderable renderable, ActionResult actionResult){
         setContextAttribute(ctx, "content", content);
         setContextAttribute(ctx, "aggregationState", MgnlContext.getAggregationState());
+        // TODO should be page for freemarker?
+        setContextAttribute(ctx, "actpage", MgnlContext.getAggregationState().getMainContent());
 
         if (actionResult != null) {
             setContextAttribute(ctx, "result", actionResult.getResult());
