@@ -40,6 +40,7 @@ import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.commands.CommandsManager;
+import info.magnolia.freemarker.FreemarkerTemplateLoaderManager;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
@@ -58,6 +59,7 @@ public class CoreModule implements ModuleLifecycle {
         ctx.registerModuleObservingComponent("paragraph-renderers", ParagraphRendererManager.getInstance());
         ctx.registerModuleObservingComponent("commands", CommandsManager.getInstance());
         ctx.registerModuleObservingComponent("shutdown", ShutdownManager.getInstance());
+        ctx.registerModuleObservingComponent("freemarkerTemplateLoaders", FreemarkerTemplateLoaderManager.getInstance());
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {

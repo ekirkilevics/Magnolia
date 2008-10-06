@@ -58,6 +58,8 @@ import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.Writer;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -184,10 +186,13 @@ public class FreemarkerHelper {
         if (webCtx != null) {
             ServletContext sc = webCtx.getServletContext();
             if (sc != null && cfg.getTemplateLoader() instanceof ClassTemplateLoader) {
+                List templateLoaders = FreemarkerTemplateLoaderManager.getInstance().getTemplateLoaders();
+                List all = new ArrayList();
+                all.addAll(templateLoaders);
                 // allow loading templates from servlet resources too
-                cfg.setTemplateLoader(new MultiTemplateLoader(new TemplateLoader[]{
-                        cfg.getTemplateLoader(),
-                        new WebappTemplateLoader(sc, "")}));
+                all.add(cfg.getTemplateLoader());
+                all.add(new WebappTemplateLoader(sc, ""));               
+                cfg.setTemplateLoader(new MultiTemplateLoader((TemplateLoader[]) all.toArray(new TemplateLoader[all.size()])));
             }
         }
     }
