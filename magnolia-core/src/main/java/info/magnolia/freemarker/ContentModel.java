@@ -148,4 +148,8 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
     public String getNodeNamespace() throws TemplateModelException {
         return null; // non XML implementation
     }
+
+    public Content getAsContent() {
+        return content;
+    }
 }
