@@ -48,6 +48,7 @@ import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.freemarker.FreemarkerHelper;
+import info.magnolia.freemarker.FreemarkerTemplateLoaderManager;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
@@ -69,7 +70,9 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
-        final FreemarkerHelper freemarkerHelper = new TestFreemarkerHelper(tplLoader);
+        FreemarkerTemplateLoaderManager fmTplLoader = (FreemarkerTemplateLoaderManager) FactoryUtil.getSingleton(FreemarkerTemplateLoaderManager.class);
+        fmTplLoader.addLoader(tplLoader);
+        final FreemarkerHelper freemarkerHelper = new FreemarkerHelper();
         renderer = new FreemarkerParagraphRenderer(freemarkerHelper);
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
@@ -180,14 +183,6 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
 
         public void setBlah(String blah) {
             this.blah = blah;
-        }
-    }
-
-    private final static class TestFreemarkerHelper extends FreemarkerHelper {
-
-        public TestFreemarkerHelper(StringTemplateLoader stl) {
-            super();
-            getConfiguration().setTemplateLoader(stl);
         }
     }
 }
