@@ -76,13 +76,16 @@ import java.util.Map;
 public class FreemarkerHelperTest extends TestCase {
     private StringTemplateLoader tplLoader;
     private FreemarkerHelper fmHelper;
+    private FreemarkerTemplateLoaderManager fmTemplateLoader;
 
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
         fmHelper = new FreemarkerHelper();
+        fmTemplateLoader = (FreemarkerTemplateLoaderManager) FactoryUtil.getSingleton(FreemarkerTemplateLoaderManager.class);
+        fmTemplateLoader.addLoader(tplLoader);
         fmHelper.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        fmHelper.getConfiguration().setTemplateLoader(tplLoader);
+        //fmHelper.getConfiguration().setTemplateLoader(tplLoader);
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
@@ -352,7 +355,6 @@ public class FreemarkerHelperTest extends TestCase {
         expect(context.getAggregationState()).andReturn(new MockAggregationState());
         expect(context.getServletContext()).andReturn(null);
         expect(context.getRequest()).andReturn(null);
-        expect(context.getServletContext()).andReturn(null);
         replay(context);
         MgnlContext.setInstance(context);
         assertRendereredContentWithoutCheckingContext(":/tralala:", new HashMap(), "pouet");
@@ -387,7 +389,6 @@ public class FreemarkerHelperTest extends TestCase {
         expect(context.getAggregationState()).andReturn(new MockAggregationState());
         expect(context.getServletContext()).andReturn(null);
         expect(context.getRequest()).andReturn(null);
-        expect(context.getServletContext()).andReturn(null);
         expect(context.getContextPath()).andReturn("/tralala"); // actual call from the template
         replay(context);
         MgnlContext.setInstance(context);
@@ -458,7 +459,6 @@ public class FreemarkerHelperTest extends TestCase {
         agg.setMainContent(page);
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.CANADA);
-        expect(context.getServletContext()).andReturn(null);
         expect(context.getAggregationState()).andReturn(agg);
         expect(context.getHierarchyManager("website")).andReturn(hm);
 
@@ -473,7 +473,6 @@ public class FreemarkerHelperTest extends TestCase {
 
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.CANADA);
-        expect(context.getServletContext()).andReturn(null);
         expect(context.getAggregationState()).andReturn(new AggregationState());
         expect(context.getHierarchyManager("website")).andReturn(hm);
         expect(context.getContextPath()).andReturn("/some-context");
@@ -499,11 +498,6 @@ public class FreemarkerHelperTest extends TestCase {
             expect(sysMockCtx.getHierarchyManager("website")).andReturn(hm);
         }
         FactoryUtil.setInstance(SystemContext.class, sysMockCtx);
-//        FactoryUtil.setInstanceFactory(SystemContext.class, new FactoryUtil.InstanceFactory(){
-//            public Object newInstance() {
-//                return sysMockCtx;
-//            }
-//        });
         replay(sysMockCtx);
 
         FactoryUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);

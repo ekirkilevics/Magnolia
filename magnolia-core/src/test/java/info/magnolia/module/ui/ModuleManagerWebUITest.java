@@ -109,7 +109,6 @@ public class ModuleManagerWebUITest extends TestCase {
         final WebContext context = createStrictMock(WebContext.class);
         expect(context.getLocale()).andReturn(Locale.ENGLISH);
         expect(context.getContextPath()).andReturn("/bibabu");
-        expect(context.getServletContext()).andReturn(null);
         MgnlContext.setInstance(context);
 
         final ModuleDefinition mod1 = new ModuleDefinition("foo", "1.0", null, null);

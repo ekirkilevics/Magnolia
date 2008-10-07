@@ -39,6 +39,8 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 
 import info.magnolia.cms.beans.config.ObservedManager;
@@ -58,6 +60,13 @@ public class FreemarkerTemplateLoaderManager extends ObservedManager {
      * All cached data.
      */
     private final List cachedTemplateLoaders = new ArrayList();
+    private final ClassTemplateLoader classloaderTL = new ClassTemplateLoader(FreemarkerUtil.class, "/");
+    private MultiTemplateLoader templateLoaders;
+    
+    public FreemarkerTemplateLoaderManager() {
+        // add the default - make sure there is at least one loader no matter how screwed configuration is
+        cachedTemplateLoaders.add(classloaderTL);
+    }
 
     protected void onRegister(Content node) {
         try {
@@ -75,14 +84,22 @@ public class FreemarkerTemplateLoaderManager extends ObservedManager {
         catch (Exception e) {
             log.error("Config : Failed to load TemplateLoader - " + node.getHandle() + " - " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
         }
+        // move clTL to the end of the list
+        cachedTemplateLoaders.remove(classloaderTL);
+        cachedTemplateLoaders.add(classloaderTL);
     }
 
     protected void onClear() {
         this.cachedTemplateLoaders.clear();
+        cachedTemplateLoaders.add(classloaderTL);
+        templateLoaders = null;
     }
 
-    List getTemplateLoaders() {
-        return cachedTemplateLoaders;
+    TemplateLoader getMultiTemplateLoader() {
+        if (templateLoaders == null) {
+            templateLoaders = new MultiTemplateLoader((TemplateLoader[]) cachedTemplateLoaders.toArray(new TemplateLoader[cachedTemplateLoaders.size()]));
+        }
+        return templateLoaders;
     }
 
     /**
@@ -90,5 +107,11 @@ public class FreemarkerTemplateLoaderManager extends ObservedManager {
      */
     public static FreemarkerTemplateLoaderManager getInstance() {
         return (FreemarkerTemplateLoaderManager) FactoryUtil.getSingleton(FreemarkerTemplateLoaderManager.class);
+    }
+
+    public void addLoader(TemplateLoader loader) {
+        // keep clTL always last;
+        this.cachedTemplateLoaders.add(cachedTemplateLoaders.size() - 1, loader);
+        this.templateLoaders = null;
     }
 }

@@ -86,7 +86,9 @@ public class FreemarkerHelper {
     public FreemarkerHelper() {
         cfg = new Configuration();
         cfg.setObjectWrapper(new MagnoliaContentWrapper());
-        cfg.setTemplateLoader(new ClassTemplateLoader(FreemarkerUtil.class, "/"));
+        
+        // template loaders are set on the fly to make sure changing configuration is pickup up immediatelly
+
         cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
         cfg.setDefaultEncoding("UTF8");
         // TODO : configure this (maybe based on the dev-mode system property)
@@ -129,7 +131,8 @@ public class FreemarkerHelper {
             final Map data = (Map) root;
             addDefaultData(data, locale, i18nBasename);
         }
-        checkTemplateLoader();
+        // set all currently known loaders
+        cfg.setTemplateLoader(FreemarkerTemplateLoaderManager.getInstance().getMultiTemplateLoader());
         return locale;
     }
 
@@ -180,22 +183,15 @@ public class FreemarkerHelper {
 //            }
     }
 
-    protected void checkTemplateLoader() throws IOException {
-        // adds a WebappTemplateLoader if needed
-        final WebContext webCtx = getWebContextOrNull();
-        if (webCtx != null) {
-            ServletContext sc = webCtx.getServletContext();
-            if (sc != null && cfg.getTemplateLoader() instanceof ClassTemplateLoader) {
-                List templateLoaders = FreemarkerTemplateLoaderManager.getInstance().getTemplateLoaders();
-                List all = new ArrayList();
-                all.addAll(templateLoaders);
-                // allow loading templates from servlet resources too
-                all.add(cfg.getTemplateLoader());
-                all.add(new WebappTemplateLoader(sc, ""));               
-                cfg.setTemplateLoader(new MultiTemplateLoader((TemplateLoader[]) all.toArray(new TemplateLoader[all.size()])));
-            }
-        }
-    }
+//    protected void checkTemplateLoader() throws IOException {
+//        // adds a WebappTemplateLoader if needed
+//        final WebContext webCtx = getWebContextOrNull();
+//        if (webCtx != null) {
+//            ServletContext sc = webCtx.getServletContext();
+//            if (sc != null && cfg.getTemplateLoader() instanceof ClassTemplateLoader) {
+//            }
+//        }
+//    }
 
     protected void addTaglibSupportData(Map data, WebContext webCtx) {
         final ServletContext servletContext = webCtx.getServletContext();
