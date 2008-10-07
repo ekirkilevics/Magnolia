@@ -56,7 +56,7 @@ import java.util.Locale;
  * no encoding at all (as none is relevant) when the target resource uses a Writer. And we decode the OutputStream's
  * bytes using OUR tag's 'charEncoding' attribute, or ISO-8859-1 as the default. We thus ignore setLocale() and
  * setContentType() in this wrapper. In other words, the target's asserted encoding is used to convert from a Writer to
- * an OutputStream, which is typically the medium through with the target will communicate its ultimate response. Since
+ * an OutputStream, which is typically the medium through which the target will communicate its ultimate response. Since
  * we short-circuit that mechanism and read the target's characters directly if they're offered as such, we simply
  * ignore the target's encoding assertion.
  * @author philipp
