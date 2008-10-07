@@ -93,6 +93,7 @@ public class FreemarkerHelper {
         cfg.setDefaultEncoding("UTF8");
         // TODO : configure this (maybe based on the dev-mode system property)
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
+        //cfg.setTemplateUpdateDelay(10);
     }
 
     /**
@@ -132,7 +133,11 @@ public class FreemarkerHelper {
             addDefaultData(data, locale, i18nBasename);
         }
         // set all currently known loaders
-        cfg.setTemplateLoader(FreemarkerTemplateLoaderManager.getInstance().getMultiTemplateLoader());
+        TemplateLoader tl = FreemarkerTemplateLoaderManager.getInstance().getMultiTemplateLoader();
+        if (tl != cfg.getTemplateLoader()) {
+            // update only if loader instance changed in between
+            cfg.setTemplateLoader(tl);
+        }
         return locale;
     }
 
