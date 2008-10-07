@@ -62,7 +62,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * A single filter which in turn executes a chain of other filters not configured in web.xml. This filters delegates to
- * one single filter whih is either the filter chain configured in the config repository or the primitive system UI when
+ * one single filter which is either the filter chain configured in the config repository or the primitive system UI when
  * a system/module installation or update is needed.
  *
  * @author fgiust
