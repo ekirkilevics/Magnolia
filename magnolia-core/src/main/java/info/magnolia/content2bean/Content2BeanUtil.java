@@ -224,6 +224,8 @@ public class Content2BeanUtil {
             String exclude = excludes[i];
             properties.remove(exclude);
         }
+        
+        setNodeDatas(node, properties);
     }
 
     /**
