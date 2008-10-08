@@ -35,20 +35,17 @@ package info.magnolia.module.templating.renderers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.Map;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -76,7 +73,7 @@ public abstract class AbstractTemplateRenderer extends AbstractRenderer implemen
         MgnlContext.setAttribute("response", response);
 
         try {
-            render(content, (Renderable) template, out);
+            render(content, template, out);
         }
         catch (RenderException e) {
             throw new ServletException(e);
