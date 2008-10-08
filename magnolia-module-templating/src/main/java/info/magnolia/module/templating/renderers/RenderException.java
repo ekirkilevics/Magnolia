@@ -33,46 +33,24 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
+ * A generic exception used by subclasses of AbstractRenderer.
+ *
  * @author pbracher
  * @version $Id$
- *
  */
 public class RenderException extends Exception {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(RenderException.class);
-
-    /**
-     *
-     */
     public RenderException() {
     }
 
-    /**
-     * @param message
-     */
     public RenderException(String message) {
         super(message);
     }
 
-    /**
-     * @param cause
-     */
     public RenderException(Throwable cause) {
         super(cause);
     }
 
-    /**
-     * @param message
-     * @param cause
-     */
     public RenderException(String message, Throwable cause) {
         super(message, cause);
     }

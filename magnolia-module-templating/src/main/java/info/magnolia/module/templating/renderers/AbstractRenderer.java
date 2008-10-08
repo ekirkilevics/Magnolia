@@ -33,19 +33,13 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.magnolia.cms.beans.config.ActionBasedRenderable;
 import info.magnolia.cms.beans.config.Renderable;
-import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 
@@ -65,7 +59,7 @@ public abstract class AbstractRenderer {
         final Map ctx = newContext();
         Map state = saveContextState(ctx);
 
-        ActionResult actionResult = executAction(content, renderable);
+        ActionResult actionResult = executeAction(content, renderable);
 
         setupContext(ctx, content, renderable, actionResult);
 
@@ -75,7 +69,7 @@ public abstract class AbstractRenderer {
         }
 
         if (templatePath == null) {
-            throw new IllegalStateException("Unable to render paragraph " + renderable.getName() + " in page " + content.getHandle() + ": templatePath not set.");
+            throw new IllegalStateException("Unable to render " + renderable.getName() + " in page " + content.getHandle() + ": templatePath not set.");
         }
 
         callTemplate(templatePath, renderable, ctx, out);
@@ -83,7 +77,7 @@ public abstract class AbstractRenderer {
         restoreContext(ctx, state);
     }
 
-    protected ActionResult executAction(Content content, Renderable renderable) throws RenderException {
+    protected ActionResult executeAction(Content content, Renderable renderable) throws RenderException {
         ActionResult actionResult;
         if(renderable instanceof ActionBasedRenderable){
              actionResult = ActionExecutor.getInstace().execute(content, (ActionBasedRenderable)renderable);
