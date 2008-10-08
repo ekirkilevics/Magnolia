@@ -84,7 +84,6 @@ public class LazyFileTemplateLoader implements TemplateLoader {
         getDelegate().closeTemplateSource(templateSource);
     }
 
-    // TODO : synchronized block around the FileTemplateLoader initialization ?
     protected FileTemplateLoader getDelegate() {
         if (delegate == null) {
             try {
