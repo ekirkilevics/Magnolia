@@ -34,6 +34,7 @@
 package info.magnolia.cms.security.auth.login;
 
 import info.magnolia.cms.filters.AbstractMgnlFilter;
+import info.magnolia.cms.security.AuditTrail;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -46,14 +47,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * @author Sameer Charles
  * $Id$
  */
 public class LoginFilter extends AbstractMgnlFilter {
 
+    private static final Logger log = LoggerFactory.getLogger(LoginFilter.class);
+
     private Collection loginHandlers = new ArrayList();
-    
+
     /**
      * todo - temporary fix
      * */
@@ -71,6 +77,8 @@ public class LoginFilter extends AbstractMgnlFilter {
             } else if (loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED) {
                 MgnlContext.login(loginResult.getUser());
             }
+            AuditTrail.logUserAccess(log, loginResult, request );
+
         }
         // continue even if all login handlers failed
         chain.doFilter(request, response);
@@ -87,5 +95,7 @@ public class LoginFilter extends AbstractMgnlFilter {
     public void addLoginHandlers(LoginHandler handler) {
         this.loginHandlers.add(handler);
     }
+
+
 
 }

@@ -35,6 +35,9 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.filters.MgnlFilterChain;
 import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
+import info.magnolia.cms.security.auth.login.FormLogin;
+import info.magnolia.cms.security.auth.login.LoginFilter;
+import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.UserContext;
@@ -46,6 +49,10 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 
 /**
@@ -53,6 +60,8 @@ import java.io.IOException;
  * @author Fabrizio Giustina $Id$
  */
 public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
+    private static final Logger log = LoggerFactory.getLogger(LogoutFilter.class);
+
     public static final String PARAMETER_LOGOUT = "mgnlLogout";
 
     private ServletContext servletContext;
@@ -62,7 +71,7 @@ public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
     }
 
     /**
-     * Check if a request parameter PARAMETER_LOGOUT is set. If so logout user,  
+     * Check if a request parameter PARAMETER_LOGOUT is set. If so logout user,
      * unset the context and restart the filter chain.
      */
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -70,6 +79,7 @@ public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
             Context ctx = MgnlContext.getInstance();
             if (ctx instanceof UserContext) {
                 ((UserContext) ctx).logout();
+                AuditTrail.logUserAccess(log, (UserContext)ctx);
             }
             //MgnlContext.initAsAnonymousContext(request, response, servletContext);
 
@@ -80,4 +90,6 @@ public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
 
         chain.doFilter(request, response);
     }
+
+
 }
