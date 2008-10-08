@@ -36,6 +36,7 @@ package info.magnolia.cms.taglibs.util;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.taglibs.BaseContentTag;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
@@ -143,7 +144,8 @@ public class ImgTag extends BaseContentTag {
             return EVAL_PAGE;
         }
 
-        FileProperties props = new FileProperties(contentNode, this.getNodeDataName());
+        NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(contentNode, this.getNodeDataName());
+        FileProperties props = new FileProperties(contentNode, nodeData.getName());
         String imgSrc = props.getProperty(FileProperties.PATH);
 
         String altNodeDataNameDef = this.altNodeDataName;
