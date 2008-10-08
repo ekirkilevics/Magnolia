@@ -33,15 +33,12 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
-import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Renderable;
-import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.module.templating.renderers.RenderException;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Locale;
