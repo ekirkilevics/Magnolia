@@ -45,6 +45,11 @@ import javax.servlet.ServletContext;
 import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
 
+/**
+ * Wrapper for FM WebappTemplateLoader to allow configuration of the loader via c2b with real initialization at runtime (ServletContext needs to be provided).
+ * @author had
+ *
+ */
 public class LazyWebappTemplateLoader implements TemplateLoader {
     
     private WebappTemplateLoader loader;
