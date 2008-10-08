@@ -157,7 +157,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
             renderer.render(c, paragraph, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
-            assertEquals("Unable to render paragraph plop in page /pouet: templatePath not set.", e.getMessage());
+            assertEquals("Unable to render info.magnolia.cms.beans.config.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
         }
     }
 

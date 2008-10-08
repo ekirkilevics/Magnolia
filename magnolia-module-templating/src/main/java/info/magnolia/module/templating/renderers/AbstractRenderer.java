@@ -69,7 +69,7 @@ public abstract class AbstractRenderer {
         }
 
         if (templatePath == null) {
-            throw new IllegalStateException("Unable to render " + renderable.getName() + " in page " + content.getHandle() + ": templatePath not set.");
+            throw new IllegalStateException("Unable to render " + renderable.getClass().getName() + " " + renderable.getName() + " in page " + content.getHandle() + ": templatePath not set.");
         }
 
         callTemplate(templatePath, renderable, ctx, out);
