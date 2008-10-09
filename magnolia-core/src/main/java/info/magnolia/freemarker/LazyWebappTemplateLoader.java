@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.freemarker;
 
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -46,9 +46,10 @@ import freemarker.cache.TemplateLoader;
 import freemarker.cache.WebappTemplateLoader;
 
 /**
- * Wrapper for FM WebappTemplateLoader to allow configuration of the loader via c2b with real initialization at runtime (ServletContext needs to be provided).
+ * Wrapper for Freemarker WebappTemplateLoader to allow configuration of the loader via content2bean
+ * with lazy initialization at runtime (as soon as a ServletContext is available).
+ * 
  * @author had
- *
  */
 public class LazyWebappTemplateLoader implements TemplateLoader {
     

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.freemarker;
 
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
