@@ -55,11 +55,11 @@ import java.util.Iterator;
  * @version $Revision: $ ($Author: $)
  */
 public class BinaryNodeData implements TemplateHashModelEx, TemplateScalarModel {
-    private final NodeData data;
+    private final NodeData binaryNodeData;
     private final MagnoliaContentWrapper wrapper;
 
-    BinaryNodeData(NodeData data, MagnoliaContentWrapper wrapper) {
-        this.data = data;
+    BinaryNodeData(NodeData binaryNodeData, MagnoliaContentWrapper wrapper) {
+        this.binaryNodeData = binaryNodeData;
         this.wrapper = wrapper;
     }
 
@@ -67,7 +67,7 @@ public class BinaryNodeData implements TemplateHashModelEx, TemplateScalarModel 
         int result = 0;
 
         try {
-            result = data.getAttributeNames().size();
+            result = binaryNodeData.getAttributeNames().size();
         } catch (RepositoryException e) {
             // don't care
         }
@@ -78,7 +78,7 @@ public class BinaryNodeData implements TemplateHashModelEx, TemplateScalarModel 
     public TemplateCollectionModel keys() throws TemplateModelException {
         Iterator result = null;
         try {
-            result = data.getAttributeNames().iterator();
+            result = binaryNodeData.getAttributeNames().iterator();
         } catch (RepositoryException e) {
             // don't care
         }
@@ -88,7 +88,7 @@ public class BinaryNodeData implements TemplateHashModelEx, TemplateScalarModel 
     public TemplateCollectionModel values() throws TemplateModelException {
         ArrayList result = new ArrayList();
         try {
-            Iterator iter = data.getAttributeNames().iterator();
+            Iterator iter = binaryNodeData.getAttributeNames().iterator();
             while (iter.hasNext()) {
                 result.add(iter.next());
             }
@@ -103,27 +103,27 @@ public class BinaryNodeData implements TemplateHashModelEx, TemplateScalarModel 
 
         if (key.startsWith("@")) {
             if (key.equals("@handle")) {
-                result = data.getHandle();
+                result = binaryNodeData.getHandle();
             }
         } else if (key.equals(FileProperties.CONTENT_TYPE)) {
-            result = data.getAttribute(FileProperties.PROPERTY_CONTENTTYPE);
+            result = binaryNodeData.getAttribute(FileProperties.PROPERTY_CONTENTTYPE);
         } else if (key.equals(FileProperties.NAME)) {
-            String filename = data.getAttribute(FileProperties.PROPERTY_FILENAME);
-            String ext = data.getAttribute(FileProperties.PROPERTY_EXTENSION);
+            String filename = binaryNodeData.getAttribute(FileProperties.PROPERTY_FILENAME);
+            String ext = binaryNodeData.getAttribute(FileProperties.PROPERTY_EXTENSION);
             result = filename + ((StringUtils.isEmpty(ext)) ? "" : "." + ext);
         } else if (key.equals(FileProperties.PROPERTY_FILENAME)) {
-            result = data.getAttribute(FileProperties.PROPERTY_FILENAME);
+            result = binaryNodeData.getAttribute(FileProperties.PROPERTY_FILENAME);
         } else if (key.equals(FileProperties.PROPERTY_EXTENSION)) {
-            result = data.getAttribute(FileProperties.PROPERTY_EXTENSION);
+            result = binaryNodeData.getAttribute(FileProperties.PROPERTY_EXTENSION);
         } else if (key.equals(FileProperties.PROPERTY_LASTMODIFIED)) {
             try {
                 SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-                result = format.parse(data.getAttribute(FileProperties.PROPERTY_LASTMODIFIED));
+                result = format.parse(binaryNodeData.getAttribute(FileProperties.PROPERTY_LASTMODIFIED));
             } catch (ParseException e) {
                 // do nothing.
             }
         } else {
-            result = data.getAttribute(key);
+            result = binaryNodeData.getAttribute(key);
         }
         return wrapper.wrap(result);
     }
@@ -134,9 +134,9 @@ public class BinaryNodeData implements TemplateHashModelEx, TemplateScalarModel 
 
     // this reproduces the logic found in the cms out tag.
     public String getAsString() throws TemplateModelException {
-        String handle = data.getHandle();
-        String filename = data.getAttribute(FileProperties.PROPERTY_FILENAME);
-        String ext = data.getAttribute(FileProperties.PROPERTY_EXTENSION);
+        String handle = binaryNodeData.getHandle();
+        String filename = binaryNodeData.getAttribute(FileProperties.PROPERTY_FILENAME);
+        String ext = binaryNodeData.getAttribute(FileProperties.PROPERTY_EXTENSION);
         return handle + "/" + filename + ((StringUtils.isEmpty(ext)) ? "" : "." + ext);
     }
 
