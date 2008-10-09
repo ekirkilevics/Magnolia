@@ -54,11 +54,11 @@ import java.util.Iterator;
  * @author Chris Miner
  * @version $Revision: $ ($Author: $)
  */
-public class BinaryNodeData implements TemplateHashModelEx, TemplateScalarModel {
+public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarModel {
     private final NodeData binaryNodeData;
     private final MagnoliaContentWrapper wrapper;
 
-    BinaryNodeData(NodeData binaryNodeData, MagnoliaContentWrapper wrapper) {
+    BinaryNodeDataModel(NodeData binaryNodeData, MagnoliaContentWrapper wrapper) {
         this.binaryNodeData = binaryNodeData;
         this.wrapper = wrapper;
     }
@@ -140,4 +140,7 @@ public class BinaryNodeData implements TemplateHashModelEx, TemplateScalarModel 
         return handle + "/" + filename + ((StringUtils.isEmpty(ext)) ? "" : "." + ext);
     }
 
+    public NodeData asNodeData() {
+        return this.binaryNodeData;
+    }
 }

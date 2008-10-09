@@ -62,4 +62,8 @@ class UserModel extends BeanModel {
         }
         return new SimpleScalar(user.getProperty(key));
     }
+
+    public User asUser() {
+        return this.user;
+    }
 }

@@ -69,6 +69,22 @@ public class MagnoliaContentWrapper extends DefaultObjectWrapper {
         super();
     }
 
+    /**
+     * Unwraps our custom wrappers, let the default wrapper do the rest.
+     */
+    public Object unwrap(TemplateModel model, Class hint) throws TemplateModelException {
+        if (model instanceof ContentModel) {
+            return ((ContentModel) model).asContent();
+        }
+        if (model instanceof BinaryNodeDataModel) {
+            return ((BinaryNodeDataModel) model).asNodeData();
+        }
+        if (model instanceof UserModel) {
+            return ((UserModel) model).asUser();
+        }
+        return super.unwrap(model, hint);
+    }
+
     public TemplateModel wrap(Object obj) throws TemplateModelException {
         if (obj instanceof NodeData) {
             final NodeData nodeData = (NodeData) obj;
@@ -103,7 +119,7 @@ public class MagnoliaContentWrapper extends DefaultObjectWrapper {
                     return new SimpleScalar(transformedString);
 
                 case PropertyType.BINARY:
-                    return new BinaryNodeData(nodeData, this);
+                    return new BinaryNodeDataModel(nodeData, this);
 
                 case PropertyType.REFERENCE:
                     try {

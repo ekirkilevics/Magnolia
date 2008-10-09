@@ -149,7 +149,7 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
         return null; // non XML implementation
     }
 
-    public Content getAsContent() {
-        return content;
+    public Content asContent() {
+        return this.content;
     }
 }
