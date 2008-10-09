@@ -115,6 +115,7 @@ public abstract class AbstractRenderer {
         setContextAttribute(ctx, "aggregationState", MgnlContext.getAggregationState());
         // TODO should be page for freemarker?
         setContextAttribute(ctx, "actpage", MgnlContext.getAggregationState().getMainContent());
+        setContextAttribute(ctx, "mgnl", new MagnoliaTemplatingUtilities());
 
         if (actionResult != null) {
             setContextAttribute(ctx, "result", actionResult.getResult());
