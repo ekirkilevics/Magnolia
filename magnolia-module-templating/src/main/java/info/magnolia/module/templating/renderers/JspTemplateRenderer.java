@@ -38,6 +38,7 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
+import info.magnolia.module.templating.RenderException;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.http.HttpServletRequest;

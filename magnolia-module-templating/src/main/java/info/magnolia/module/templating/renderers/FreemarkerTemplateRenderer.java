@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
+import info.magnolia.module.templating.RenderException;
 
 import java.io.Writer;
 import java.util.HashMap;
