@@ -48,4 +48,8 @@ public class NodeTypeFilter implements ContentFilter {
     public boolean accept(Content content) {
         return content.isNodeType(systemName);
     }
+
+    public String toString() {
+        return "NodeTypeFilter for type " + systemName;
+    }
 }
