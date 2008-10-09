@@ -83,8 +83,18 @@ public class SiblingsHelper {
     public SiblingsHelper(Content node, Content.ContentFilter filter) throws RepositoryException {
         this.siblings = new ArrayList(node.getParent().getChildren(filter));
         this.lastIndex = siblings.size() - 1;
-        this.currentIndex = siblings.indexOf(node);
         this.current = node;
+        // can't use indexOf to determine current index, as getParent().getChildren() returns a different instance of the node
+        for (int i = 0; i <= lastIndex; i++) {
+            final Content c = (Content) siblings.get(i);
+            if (c.getUUID().equals(current.getUUID())) {
+                this.currentIndex = i;
+                break;
+            }
+        }
+        if (currentIndex < 0) {
+            throw new IllegalStateException("Given node not found in its own siblings.");
+        }
     }
 
     // next() and prev() are not called getNext() and getPrevious() because they change the state.
