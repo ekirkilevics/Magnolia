@@ -460,7 +460,7 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     <tag-class>info.magnolia.cms.taglibs.PublicOnly</tag-class>
     <body-content>JSP</body-content>
     <attribute>
-      <description>Also show content in preview mode. Default is true.</description>
+      <description>Also show content in preview mode. Default is false.</description>
       <name>showInPreview</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
