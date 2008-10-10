@@ -38,7 +38,7 @@ import info.magnolia.cms.core.ItemType;
 
 
 /**
- * This class handels the saving in the dialogs.
+ * This class handles the saving in the dialogs.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
