@@ -40,7 +40,10 @@ import info.magnolia.cms.gui.misc.CssConstants;
 import java.io.IOException;
 import java.io.Writer;
 
+import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -48,6 +51,8 @@ import org.apache.commons.lang.StringUtils;
  * @version 2.0
  */
 public class DialogPassword extends DialogBox {
+    
+    private static final Logger log = LoggerFactory.getLogger(DialogPassword.class);
 
     /**
      * @see info.magnolia.cms.gui.dialog.DialogControl#drawHtml(Writer)
@@ -67,8 +72,8 @@ public class DialogPassword extends DialogBox {
         out.write(control.getHtml());
         if (this.getConfigValue("verification", "true").equals("true")) { //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             Password control2 = new Password(this.getName() + "_verification", StringUtils.EMPTY); //$NON-NLS-1$
-            // Password control2=new Password(this.getName()+"_verifiaction",this.getValue());
-            // control2.setEncoding(ControlImpl.ENCODING_UNIX);
+//            Password control2=new Password(this.getName()+"_verification",control.getValue());
+//            control2.setEncoding(control.getEncoding());
             control2.setSaveInfo(false);
             control2.setCssClass(CssConstants.CSSCLASS_EDIT);
             control2.setCssStyles("width", //$NON-NLS-1$
@@ -85,4 +90,24 @@ public class DialogPassword extends DialogBox {
         }
         this.drawHtmlPost(out);
     }
+
+    public boolean validate() {
+        if (super.getConfigValue("verification", "true").equals("true")) {
+            String newP = super.getRequest().getParameter(getName());
+            String verP = super.getRequest().getParameter(getName() + "_verification");
+            String oriP = this.getStorageNode().getNodeData(getName()).getString();
+            if (Base64.isArrayByteBase64(oriP.getBytes())) {
+                oriP = new String(Base64.decodeBase64(oriP.getBytes()));
+            }
+            // we do not set passwords back and forth, we just send empty string of the same length of the original password. So in this case trimmed newP has to be 0 as well as verP
+            // in all other cases they have to match exactly.
+            if (!(newP.trim().length() == 0 && verP.length() == 0) && !newP.equals(verP)) {
+                setValidationMessage(getMessage("dialog.password.failed.js"));
+                return false;
+            }
+        }
+        return super.validate();
+    }
+    
+    
 }
