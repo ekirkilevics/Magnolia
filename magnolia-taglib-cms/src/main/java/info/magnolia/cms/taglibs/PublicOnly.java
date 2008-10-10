@@ -64,7 +64,7 @@ public class PublicOnly extends ConditionalTagSupport {
     private boolean showInPreview;
 
     /**
-     * Also show content in preview mode. Default is true.
+     * Also show content in preview mode. Default is false.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setShowInPreview(boolean showInPreview) {
