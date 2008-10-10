@@ -33,16 +33,20 @@
  */
 package info.magnolia.module.templating.renderers;
 
+import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.module.templating.RenderException;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * Simple freemarker template renderer, mapped to template type <code>freemarker</code>. The valid attributes of freemarker templates are
@@ -74,9 +78,13 @@ public class FreemarkerTemplateRenderer extends AbstractTemplateRenderer {
 
         try {
             fmHelper.render(templatePath, locale, ((Template)renderable).getI18NTitle(), ctx, out);
-        } catch (Exception e) {
-            log.error("Failed to process Freemarker template with " + e.getMessage(), e);
-            throw new RenderException("Can't render template " + templatePath , e);
+        }
+        catch (TemplateException e) {
+            // TODO should be thrown?
+        }
+        catch (Exception e) {
+            //log.error("Failed to process Freemarker template with " + e.getMessage(), e);
+            throw new RenderException("Can't render template " + templatePath + ": " + ExceptionUtils.getRootCauseMessage(e), e);
         }
     }
 

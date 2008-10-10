@@ -33,6 +33,7 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
+import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.context.MgnlContext;
@@ -43,6 +44,8 @@ import java.io.Writer;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+
+import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
  * Renders a paragraph using freemarker. Optionally supports the execution of an action
@@ -72,9 +75,12 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
-            fmHelper.render(templatePath, locale, ((Paragraph) renderable).getI18nBasename(), ctx, out);
-        } catch (Exception e) {
-            throw new RenderException("Can't render paragraph template " + templatePath, e);
+            fmHelper.render(templatePath, locale, ((Paragraph)renderable).getI18nBasename(), ctx, out);
+        } catch (TemplateException e) {
+            // TODO: handle exception
+            // exception is logged by freemarker and yellow message in the template inserted
+        }catch (Exception e) {
+            throw new RenderException("Can't render paragraph template " + templatePath + ": " + ExceptionUtils.getRootCauseMessage(e), e);
         }
     }
 
