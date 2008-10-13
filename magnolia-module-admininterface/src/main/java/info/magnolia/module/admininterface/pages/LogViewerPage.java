@@ -66,15 +66,15 @@ public class LogViewerPage extends TemplatedMVCHandler {
 
 	private Collection namesList = null;
 
-    private int maxNumLinesPerPage = 50;
+    private long maxNumLinesPerPage = 50;
 
-    private int pageNumber = 0;
+    private long pageNumber = 0;
 
-    private int totalPages = 0;
+    private long totalPages = 0;
 
-    private int currentPosition = 0;
+    private long currentPosition = 0;
 
-    private int fileSizeInLines = 0;
+    private long fileSizeInLines = 0;
 
 	/**
 	 * the content of the select
@@ -84,7 +84,7 @@ public class LogViewerPage extends TemplatedMVCHandler {
 
 		ArrayList urls = new ArrayList();
 
-		File logDir = new File(logsFolder);
+		File logDir = new File(this.logsFolder);
 		Collection files = null;
 		if (logDir.exists()) {
 			files = FileUtils.listFiles(logDir, new TrueFileFilter() {
@@ -107,25 +107,25 @@ public class LogViewerPage extends TemplatedMVCHandler {
 	}
 
 	public String previous() {
-	    if(currentPosition >= maxNumLinesPerPage*2 ) {
-	    currentPosition -= maxNumLinesPerPage*2;
+	    if(this.currentPosition >= this.maxNumLinesPerPage*2 ) {
+	        this.currentPosition -= this.maxNumLinesPerPage*2;
 	    } else {
-	        currentPosition = 0;
+	        this.currentPosition = 0;
 	    }
 	    displayFileContent();
 	    return VIEW_SHOW;
     }
 
 	public String begin() {
-	    currentPosition = 0;
+	    this.currentPosition = 0;
 	    displayFileContent();
         return VIEW_SHOW;
     }
 
 
 	public String end() {
-	    if(fileSizeInLines > maxNumLinesPerPage) {
-	        currentPosition = fileSizeInLines - maxNumLinesPerPage;
+	    if(this.fileSizeInLines > this.maxNumLinesPerPage) {
+	        this.currentPosition = this.fileSizeInLines - this.maxNumLinesPerPage;
 	        } else {
 	            currentPosition = 0;
 	        }
@@ -177,7 +177,7 @@ public class LogViewerPage extends TemplatedMVCHandler {
                 File file = getFile();
 
                 logFile = new FileReader(file);
-                fileSizeInLines = countLines(file);
+                this.fileSizeInLines = countLines(file);
                 PrintWriter writer = new PrintWriter(str);
 
                 input = new LineNumberReader(logFile);
@@ -186,13 +186,13 @@ public class LogViewerPage extends TemplatedMVCHandler {
                 int numLines = 0;
                 while ((line = input.readLine()) != null) {
 
-                    if (input.getLineNumber() >= currentPosition) {
+                    if (input.getLineNumber() >= this.currentPosition) {
                         writer.write(line);
                         writer.write("<br/>");
                         numLines++;
                     }
-                    if (numLines >= maxNumLinesPerPage) {
-                        currentPosition = input.getLineNumber() + 1;
+                    if (numLines >= this.maxNumLinesPerPage) {
+                        this.currentPosition = input.getLineNumber() + 1;
                         break;
                     }
                 }
@@ -217,24 +217,24 @@ public class LogViewerPage extends TemplatedMVCHandler {
 
     private File getFile() {
         if (this.fileName.length() > 0) {
-            File file = new File(logsFolder + "/" + this.fileName);
+            File file = new File(this.logsFolder + "/" + this.fileName);
             return file;
         }
         return null;
     }
 
     private void setFieldValues() {
-        pageNumber = currentPosition/maxNumLinesPerPage;
-        totalPages = fileSizeInLines/maxNumLinesPerPage;
-        if(pageNumber == 0 || totalPages == 0) {
-            pageNumber = 1;
-            totalPages = 1;
+        this.pageNumber = this.currentPosition/this.maxNumLinesPerPage;
+        this.totalPages = this.fileSizeInLines/this.maxNumLinesPerPage;
+        if(this.pageNumber == 0 || this.totalPages == 0) {
+            this.pageNumber = 1;
+            this.totalPages = 1;
         }
 
     }
 
     /* gets the number of lines for pagination*/
-    private int countLines(File file) {
+    private long countLines(File file) {
         int count = 0;
         FileReader fileReader = null;
         LineNumberReader lineReader = null;
@@ -270,7 +270,7 @@ public class LogViewerPage extends TemplatedMVCHandler {
     }
 
 	public String getFileName() {
-		return fileName;
+		return this.fileName;
 	}
 
 	public void setFileName(String fileName) {
@@ -278,42 +278,45 @@ public class LogViewerPage extends TemplatedMVCHandler {
 	}
 
 	public Collection getNamesList() {
-		if (namesList == null) {
-			namesList = getLogFiles();
+		if (this.namesList == null) {
+		    this.namesList = getLogFiles();
 		}
-		return namesList;
+		return this.namesList;
 	}
 
 	public String getText() {
-		return text;
+		return this.text;
 	}
 
-    public int getCurrentPosition() {
-        return currentPosition;
+    public long getCurrentPosition() {
+        return this.currentPosition;
     }
 
-    public void setCurrentPosition(int currentPosition) {
-        this.currentPosition = currentPosition;
+    public void setCurrentPosition(String currentPosition) {
+      //if number is too high does not work as expected
+        this.currentPosition = Long.parseLong(currentPosition);
     }
 
-    public int getFileSizeInLines() {
-        return fileSizeInLines;
+    public String getFileSizeInLines() {
+      //if number is too high does not work as expected
+        return Long.toString(this.fileSizeInLines);
     }
 
-    public void setFileSizeInLines(int fileSizeInLines) {
-        this.fileSizeInLines = fileSizeInLines;
+    public void setFileSizeInLines(String fileSizeInLines) {
+        //if number is too high does not work as expected
+        this.fileSizeInLines = Long.parseLong(fileSizeInLines);
     }
 
-    public int getPageNumber() {
-        return pageNumber;
+    public long getPageNumber() {
+        return this.pageNumber;
     }
 
-    public int getTotalPages() {
-        return totalPages;
+    public long getTotalPages() {
+        return this.totalPages;
     }
 
-    public int getMaxNumLinesPerPage() {
-        return maxNumLinesPerPage;
+    public long getMaxNumLinesPerPage() {
+        return this.maxNumLinesPerPage;
     }
 
 }
