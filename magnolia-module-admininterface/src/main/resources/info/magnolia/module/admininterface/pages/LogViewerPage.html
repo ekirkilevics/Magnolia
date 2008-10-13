@@ -58,9 +58,9 @@ function sendCommand(formName, commandName) {
      </td>
      <td align="left" width="20%">
      <form action="" id="pagination" style="padding: 0; margin: 0;">
-          <input type="hidden" name="currentPosition" value='${this.currentPosition}' />
+          <input type="hidden" name="currentPosition" value="${this.currentPosition?c}" />
           <input type="hidden" name="fileName"  value="${this.fileName}" />
-          <input type="hidden" name="fileSizeInLines"  value='${this.fileSizeInLines}' />
+          <input type="hidden" name="fileSizeInLines"  value="${this.fileSizeInLines?c}" />
           <input type="hidden" name="command" value="begin" />
           <input type="button" value="&lt;&lt;" onclick="sendCommand('pagination','begin');" class="mgnlControlButton" />
           <input type="button" value="&lt;" onclick="sendCommand('pagination','previous');" class="mgnlControlButton" />
