@@ -53,7 +53,9 @@ public class LogViewerPage extends TemplatedMVCHandler {
 		super(name, request, response);
 
 		//initialize the folder variable
-		logsFolder = Path.getAbsoluteFileSystemPath(SystemProperty.getProperty(LOGS_FOLDER));
+		String temp = SystemProperty.getProperty(LOGS_FOLDER);
+		if(temp != null )
+		  logsFolder = Path.getAbsoluteFileSystemPath(temp);
 	}
 
 	private String logsFolder = "";
