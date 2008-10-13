@@ -90,8 +90,12 @@ public class AuditTrail {
     }
 
     private static String getUser() {
-        if(MgnlContext.getInstance() != null && MgnlContext.getUser() != null) {
-            return MgnlContext.getUser().getName();
+        try {
+            if(MgnlContext.getInstance() != null && MgnlContext.getUser() != null) {
+                return MgnlContext.getUser().getName();
+            }
+        }catch (Exception e) {
+            return "system user";
         }
         return "user not set";
     }
