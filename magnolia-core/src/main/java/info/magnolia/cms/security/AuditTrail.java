@@ -37,6 +37,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import info.magnolia.cms.security.auth.login.FormLogin;
 import info.magnolia.cms.security.auth.login.LoginResult;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.context.UserContext;
 
 import org.slf4j.Logger;
@@ -47,6 +48,12 @@ import org.slf4j.Logger;
  *
  */
 public class AuditTrail {
+
+    public static final String ACTION_CREATED = "created";
+    public static final String ACTION_MODIFIED = "modified";
+    public static final String ACTION_DELETED = "deleted";
+    public static final String ACTION_COPIED = "copied";
+    public static final String ACTION_MOVED = "moved";
 
     public static void logUserAccess(final Logger log, final UserContext userContext) {
         //audit trail
@@ -69,6 +76,17 @@ public class AuditTrail {
             log.info(msg);
 
         }
+    }
+
+    public static void logEntry(final Logger log, final String action,
+            final String repositoryName, final String path) {
+        log.info(MgnlContext.getUser().getName() + ", " + action + ", " + repositoryName + ", " + path);
+    }
+
+    public static void logEntry(final Logger log, final String action,
+            final String repositoryName, final String source, final String destination) {
+        log.info(MgnlContext.getUser().getName() + ", " + action + ", " + repositoryName + ", " + source + ", " + destination);
+
     }
 
 }

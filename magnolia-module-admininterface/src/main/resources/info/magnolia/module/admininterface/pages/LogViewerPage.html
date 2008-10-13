@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+  <head>
+    <title>Log Viewer</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+<script type="text/javascript">
+function sendCommand(formName, commandName) {
+    var form=document.getElementById(formName);
+	form.command.value=commandName;
+    form.submit();
+}
+</script>
+  </head>
+  <body id="mgnl">
+  <a name="top" />
+      <table width="100%">
+      <tr><td valign="top">
+        <div class="pageframe" >
+        [#assign items = this.namesList]
+        [#if items?has_content]
+          <h3>Select a File</h3>
+          <form action="" id="main">
+          <input type="hidden" name="command" value="displayFileContent"/>
+            <div >
+            <select name="fileName">
+                [#list items as item]
+                <option [#if item == this.fileName]selected[/#if]>${item}</option>
+                [/#list]
+            </select>
+            </div>
+            <table> <tr> <td>
+            <input type="button" value="View" onclick="sendCommand('main','displayFileContent');" class="mgnlControlButton" />
+          </td><td>
+          <input type="button" value="Download" onclick="sendCommand('main','download');" class="mgnlControlButton" />
+          </td>
+          </tr>
+          </table>
+          </form>
+          [#else]
+           Folder is empty, check property magnolia.logs.dir is definded and points to the logs folder
+          [/#if]
+        </div>
+    </td>
+    </tr>
+    [#if this.fileSizeInLines > 0 && this.fileName?length > 0]
+    <tr >
+   <td  >
+   <table style="padding: 0; margin: 0;"> <tr> <td align="left" width="40%">
+     [#if this.fileSizeInLines > this.maxNumLinesPerPage ]
+        <a href="#bottom">bottom</a>
+     [/#if]
+</td>
+<form action="" id="pagination" style="padding: 0; margin: 0;">
+    <td align="left" width="40%">
+
+     Page ${this.pageNumber} of ${this.totalPages}
+     </td>
+     <td align="left" width="20%">
+          <input type="hidden" name="currentPosition" value="${this.currentPosition}" />
+          <input type="hidden" name="fileName"  value="${this.fileName}" />
+          <input type="hidden" name="fileSizeInLines"  value="${this.fileSizeInLines}" />
+          <input type="hidden" name="command" value="begin" />
+          <input type="button" value="&lt;&lt;" onclick="sendCommand('pagination','begin');" class="mgnlControlButton" />
+          <input type="button" value="&lt;" onclick="sendCommand('pagination','previous');" class="mgnlControlButton" />
+          <input type="button" value="&gt;" onclick="sendCommand('pagination','next');" class="mgnlControlButton" />
+          <input type="button" value="&gt;&gt;" onclick="sendCommand('pagination','end');" class="mgnlControlButton" />
+     </td>
+    </form>
+</tr> </table>
+        <div class="pageframe">
+
+          ${this.text}
+        </div>
+      [#if this.fileSizeInLines > this.maxNumLinesPerPage ]
+        <a name="bottom" href="#top">top</a>
+      [/#if]
+    </td>
+    </tr>
+    [/#if]
+      [#if this.fileSizeInLines == 0 && this.fileName?length > 0]
+    <tr>
+   <td valign="top">
+        <div class="pageframe">
+          File is Empty
+        </div>
+    </td>
+    </tr>
+    [/#if]
+    </table>
+  </body>
+</html>
