@@ -22,11 +22,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
-import java.io.InputStream;
 import java.io.LineNumberReader;
 import java.io.PrintWriter;
 import java.io.StringWriter;
-import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -43,28 +41,28 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class LogViewerPage extends TemplatedMVCHandler {
-	private static final Logger log = LoggerFactory
-			.getLogger(LogViewerPage.class);
+    private static final Logger log = LoggerFactory
+            .getLogger(LogViewerPage.class);
 
-	private final String LOGS_FOLDER = "magnolia.logs.dir";
+    private final String LOGS_FOLDER = "magnolia.logs.dir";
 
-	public LogViewerPage(String name, HttpServletRequest request,
-			HttpServletResponse response) {
-		super(name, request, response);
+    public LogViewerPage(String name, HttpServletRequest request,
+            HttpServletResponse response) {
+        super(name, request, response);
 
-		//initialize the folder variable
-		String temp = SystemProperty.getProperty(LOGS_FOLDER);
-		if(temp != null )
-		  logsFolder = Path.getAbsoluteFileSystemPath(temp);
-	}
+        // initialize the folder variable
+        String temp = SystemProperty.getProperty(LOGS_FOLDER);
+        if (temp != null)
+            logsFolder = Path.getAbsoluteFileSystemPath(temp);
+    }
 
-	private String logsFolder = "";
+    private String logsFolder = "";
 
-	private String fileName = "";
+    private String fileName = "";
 
-	private String text = "";
+    private String text = "";
 
-	private Collection namesList = null;
+    private Collection namesList = null;
 
     private long maxNumLinesPerPage = 50;
 
@@ -76,86 +74,87 @@ public class LogViewerPage extends TemplatedMVCHandler {
 
     private long fileSizeInLines = 0;
 
-	/**
-	 * the content of the select
-	 * @return
-	 */
+    /**
+     * the content of the select
+     *
+     * @return
+     */
     public Collection getLogFiles() {
 
-		ArrayList urls = new ArrayList();
+        ArrayList urls = new ArrayList();
 
-		File logDir = new File(this.logsFolder);
-		Collection files = null;
-		if (logDir.exists()) {
-			files = FileUtils.listFiles(logDir, new TrueFileFilter() {
-			}, new TrueFileFilter() {
-			});
+        File logDir = new File(this.logsFolder);
+        Collection files = null;
+        if (logDir.exists()) {
+            files = FileUtils.listFiles(logDir, new TrueFileFilter() {
+            }, new TrueFileFilter() {
+            });
 
-			Iterator filesIterator = files.iterator();
-			String name = "";
-			while (filesIterator.hasNext()) {
-				name = ((File) filesIterator.next()).getName();
-				urls.add(name);
-			}
-		}
-		return urls;
-	}
-
-	public String next() {
-	    displayFileContent();
-	    return VIEW_SHOW;
-	}
-
-	public String previous() {
-	    if(this.currentPosition >= this.maxNumLinesPerPage*2 ) {
-	        this.currentPosition -= this.maxNumLinesPerPage*2;
-	    } else {
-	        this.currentPosition = 0;
-	    }
-	    displayFileContent();
-	    return VIEW_SHOW;
+            Iterator filesIterator = files.iterator();
+            String name = "";
+            while (filesIterator.hasNext()) {
+                name = ((File) filesIterator.next()).getName();
+                urls.add(name);
+            }
+        }
+        return urls;
     }
 
-	public String begin() {
-	    this.currentPosition = 0;
-	    displayFileContent();
+    public String next() {
+        displayFileContent();
         return VIEW_SHOW;
     }
 
-
-	public String end() {
-	    if(this.fileSizeInLines > this.maxNumLinesPerPage) {
-	        this.currentPosition = this.fileSizeInLines - this.maxNumLinesPerPage;
-	        } else {
-	            currentPosition = 0;
-	        }
-	        displayFileContent();
-	        return VIEW_SHOW;
+    public String previous() {
+        if (this.currentPosition >= this.maxNumLinesPerPage * 2) {
+            this.currentPosition -= this.maxNumLinesPerPage * 2;
+        } else {
+            this.currentPosition = 0;
+        }
+        displayFileContent();
+        return VIEW_SHOW;
     }
 
-	public String download() throws FileNotFoundException {
-	 // set mime/type
-	    File file = getFile();
-	    this.getResponse().setContentType("html/text");
-        this.getResponse().setHeader("Content-Disposition", "attachment; filename=" + fileName);
+    public String begin() {
+        this.currentPosition = 0;
+        displayFileContent();
+        return VIEW_SHOW;
+    }
+
+    public String end() {
+        if (this.fileSizeInLines > this.maxNumLinesPerPage) {
+            this.currentPosition = this.fileSizeInLines
+                    - this.maxNumLinesPerPage;
+        } else {
+            currentPosition = 0;
+        }
+        displayFileContent();
+        return VIEW_SHOW;
+    }
+
+    public String download() throws FileNotFoundException {
+        // set mime/type
+        File file = getFile();
+        this.getResponse().setContentType("html/text");
+        this.getResponse().setHeader("Content-Disposition",
+                "attachment; filename=" + fileName);
 
         FileInputStream is = new FileInputStream(file);
         this.getResponse().setContentLength((int) file.length());
 
-        try{
+        try {
             sendUnCompressed(is, this.getResponse());
-        }
-        catch(Exception e){
+        } catch (Exception e) {
             log.info("File download failed [{}]: {}", fileName, e.getMessage());
-        }
-        finally{
+        } finally {
             IOUtils.closeQuietly(is);
         }
 
-	    return "";
-	}
+        return "";
+    }
 
-	private void sendUnCompressed(java.io.InputStream is, HttpServletResponse res) throws Exception {
+    private void sendUnCompressed(java.io.InputStream is,
+            HttpServletResponse res) throws Exception {
         ServletOutputStream os = res.getOutputStream();
         byte[] buffer = new byte[8192];
         int read = 0;
@@ -166,7 +165,7 @@ public class LogViewerPage extends TemplatedMVCHandler {
         os.close();
     }
 
-	public String displayFileContent() {
+    public String displayFileContent() {
 
         StringWriter str = new StringWriter();
         if (StringUtils.isNotEmpty(this.fileName)) {
@@ -224,16 +223,16 @@ public class LogViewerPage extends TemplatedMVCHandler {
     }
 
     private void setFieldValues() {
-        this.pageNumber = this.currentPosition/this.maxNumLinesPerPage;
-        this.totalPages = this.fileSizeInLines/this.maxNumLinesPerPage;
-        if(this.pageNumber == 0 || this.totalPages == 0) {
+        this.pageNumber = this.currentPosition / this.maxNumLinesPerPage;
+        this.totalPages = this.fileSizeInLines / this.maxNumLinesPerPage;
+        if (this.pageNumber == 0 || this.totalPages == 0) {
             this.pageNumber = 1;
             this.totalPages = 1;
         }
 
     }
 
-    /* gets the number of lines for pagination*/
+    /* gets the number of lines for pagination */
     private long countLines(File file) {
         int count = 0;
         FileReader fileReader = null;
@@ -269,42 +268,42 @@ public class LogViewerPage extends TemplatedMVCHandler {
         }
     }
 
-	public String getFileName() {
-		return this.fileName;
-	}
+    public String getFileName() {
+        return this.fileName;
+    }
 
-	public void setFileName(String fileName) {
-		this.fileName = fileName;
-	}
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
+    }
 
-	public Collection getNamesList() {
-		if (this.namesList == null) {
-		    this.namesList = getLogFiles();
-		}
-		return this.namesList;
-	}
+    public Collection getNamesList() {
+        if (this.namesList == null) {
+            this.namesList = getLogFiles();
+        }
+        return this.namesList;
+    }
 
-	public String getText() {
-		return this.text;
-	}
+    public String getText() {
+        return this.text;
+    }
 
     public long getCurrentPosition() {
         return this.currentPosition;
     }
 
-    public void setCurrentPosition(String currentPosition) {
-      //if number is too high does not work as expected
-        this.currentPosition = Long.parseLong(currentPosition);
+    public void setCurrentPosition(long currentPosition) {
+        // if number is too high does not work as expected
+        this.currentPosition = currentPosition;
     }
 
-    public String getFileSizeInLines() {
-      //if number is too high does not work as expected
-        return Long.toString(this.fileSizeInLines);
+    public long getFileSizeInLines() {
+        // if number is too high does not work as expected
+        return this.fileSizeInLines;
     }
 
-    public void setFileSizeInLines(String fileSizeInLines) {
-        //if number is too high does not work as expected
-        this.fileSizeInLines = Long.parseLong(fileSizeInLines);
+    public void setFileSizeInLines(long fileSizeInLines) {
+        // if number is too high does not work as expected
+        this.fileSizeInLines = fileSizeInLines;
     }
 
     public long getPageNumber() {
@@ -320,4 +319,3 @@ public class LogViewerPage extends TemplatedMVCHandler {
     }
 
 }
-

@@ -43,11 +43,11 @@ function sendCommand(formName, commandName) {
         </div>
     </td>
     </tr>
-    [#if this.fileSizeInLines?length > 0 && this.fileName?length > 0]
+    [#if this.fileSizeInLines > 0 && this.fileName?length > 0]
     <tr >
    <td  >
    <table style="padding: 0; margin: 0;"> <tr> <td align="left" width="40%">
-     [#if this.fileSizeInLines?length > this.maxNumLinesPerPage ]
+     [#if this.fileSizeInLines > this.maxNumLinesPerPage ]
         <a href="#bottom">bottom</a>
      [/#if]
 </td>
@@ -58,9 +58,9 @@ function sendCommand(formName, commandName) {
      </td>
      <td align="left" width="20%">
      <form action="" id="pagination" style="padding: 0; margin: 0;">
-          <input type="hidden" name="currentPosition" value="${this.currentPosition}" />
+          <input type="hidden" name="currentPosition" value='${this.currentPosition}' />
           <input type="hidden" name="fileName"  value="${this.fileName}" />
-          <input type="hidden" name="fileSizeInLines"  value="${this.fileSizeInLines}" />
+          <input type="hidden" name="fileSizeInLines"  value='${this.fileSizeInLines}' />
           <input type="hidden" name="command" value="begin" />
           <input type="button" value="&lt;&lt;" onclick="sendCommand('pagination','begin');" class="mgnlControlButton" />
           <input type="button" value="&lt;" onclick="sendCommand('pagination','previous');" class="mgnlControlButton" />
@@ -74,13 +74,13 @@ function sendCommand(formName, commandName) {
 
           ${this.text}
         </div>
-      [#if this.fileSizeInLines?length > this.maxNumLinesPerPage ]
+      [#if this.fileSizeInLines > this.maxNumLinesPerPage ]
         <a name="bottom" href="#top">top</a>
       [/#if]
     </td>
     </tr>
     [/#if]
-      [#if this.fileSizeInLines?length == 0 && this.fileName?length > 0]
+      [#if this.fileSizeInLines == 0 && this.fileName?length > 0]
     <tr>
    <td valign="top">
         <div class="pageframe">
