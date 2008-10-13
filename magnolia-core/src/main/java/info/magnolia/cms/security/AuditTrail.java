@@ -80,12 +80,14 @@ public class AuditTrail {
 
     public static void logEntry(final Logger log, final String action,
             final String repositoryName, final String path) {
-        log.info(MgnlContext.getUser().getName() + ", " + action + ", " + repositoryName + ", " + path);
+        String user = MgnlContext.getUser() != null?MgnlContext.getUser().getName():"user not set";
+        log.info(user + ", " + action + ", " + repositoryName + ", " + path);
     }
 
     public static void logEntry(final Logger log, final String action,
             final String repositoryName, final String source, final String destination) {
-        log.info(MgnlContext.getUser().getName() + ", " + action + ", " + repositoryName + ", " + source + ", " + destination);
+        String user = MgnlContext.getUser() != null?MgnlContext.getUser().getName():"user not set";
+        log.info(user + ", " + action + ", " + repositoryName + ", " + source + ", " + destination);
 
     }
 
