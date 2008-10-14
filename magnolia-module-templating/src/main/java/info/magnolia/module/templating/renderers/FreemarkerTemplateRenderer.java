@@ -76,7 +76,7 @@ public class FreemarkerTemplateRenderer extends AbstractTemplateRenderer {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
-            fmHelper.render(templatePath, locale, ((Template)renderable).getI18nBasename(), ctx, out);
+            fmHelper.render(templatePath, locale, renderable.getI18nBasename(), ctx, out);
         }
         catch (TemplateException e) {
             // TODO should be thrown?

@@ -33,10 +33,6 @@
  */
 package info.magnolia.cms.beans.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author pbracher
  * @version $Id$
@@ -45,4 +41,5 @@ import org.slf4j.LoggerFactory;
 public interface Renderable {
     String getName();
     String getTemplatePath();
+    String getI18nBasename();
 }

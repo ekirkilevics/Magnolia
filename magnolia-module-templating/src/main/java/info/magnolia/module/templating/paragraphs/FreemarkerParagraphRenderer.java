@@ -75,7 +75,7 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
-            fmHelper.render(templatePath, locale, ((Paragraph)renderable).getI18nBasename(), ctx, out);
+            fmHelper.render(templatePath, locale, renderable.getI18nBasename(), ctx, out);
         } catch (TemplateException e) {
             // TODO: handle exception
             // exception is logged by freemarker and yellow message in the template inserted
