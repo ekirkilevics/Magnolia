@@ -42,12 +42,15 @@ import info.magnolia.cms.gui.inline.BarEdit;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.io.IOException;
 
@@ -180,11 +183,17 @@ public class EditBar extends TagSupport {
 
                 Content localContentNode = Resource.getLocalContentNode();
 
-                if (this.paragraph == null) {
-                    Content contentParagraph = localContentNode;
-                    if (contentParagraph != null) {
-                        this.paragraph = contentParagraph.getMetaData().getTemplate();
+                if(localContentNode == null && StringUtils.isNotEmpty(this.nodeName)){
+                    try {
+                        localContentNode = Resource.getActivePage().getContent(this.nodeName);
                     }
+                    catch (Exception e) {
+                        // TODO: handle exception
+                    }
+                }
+
+                if (this.paragraph == null && localContentNode != null) {
+                    this.paragraph = localContentNode.getMetaData().getTemplate();
                 }
                 bar.setParagraph(this.paragraph);
 
@@ -204,9 +213,9 @@ public class EditBar extends TagSupport {
                 try {
                     String path;
                     if (localContentNode != null) {
-                        path = localContentNode.getHandle();
-                        if (path.endsWith(this.nodeCollectionName + "/" + this.nodeName)) {
-                            path = StringUtils.removeEnd(path, "/" + this.nodeCollectionName + "/" + this.nodeName);
+                        path = localContentNode.getParent().getHandle();
+                        if (StringUtils.isNotEmpty(this.nodeCollectionName) && path.endsWith("/" + this.nodeCollectionName)) {
+                            path = StringUtils.removeEnd(path, "/" + this.nodeCollectionName);
                         }
                     }
                     else {
