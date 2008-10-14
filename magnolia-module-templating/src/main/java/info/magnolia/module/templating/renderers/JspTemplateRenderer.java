@@ -34,6 +34,7 @@
 package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.Template;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -41,9 +42,11 @@ import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 import info.magnolia.module.templating.RenderException;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
@@ -56,12 +59,17 @@ import java.util.Map;
  */
 public class JspTemplateRenderer extends AbstractTemplateRenderer {
 
-    protected void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException {
-
+    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         // FIXME temp fix for MAGNOLIA-2387
+        MgnlContext.setAttribute(JspTemplateRenderer.class.getName() + ".request", request);
+        MgnlContext.setAttribute(JspTemplateRenderer.class.getName() + ".response", response);
+        super.renderTemplate(template, request, response);
+    }
 
-        HttpServletRequest request = (HttpServletRequest) MgnlContext.getAttribute("request");
-        HttpServletResponse response = (HttpServletResponse) MgnlContext.getAttribute("response");
+    protected void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException {
+        // FIXME temp fix for MAGNOLIA-2387
+        HttpServletRequest request = (HttpServletRequest) MgnlContext.getAttribute(JspTemplateRenderer.class.getName() + ".request");
+        HttpServletResponse response = (HttpServletResponse) MgnlContext.getAttribute(JspTemplateRenderer.class.getName() + ".response");
         RequestDispatcher rd = request.getRequestDispatcher(templatePath);
 
         // set this attribute to avoid a second dispatching of the filters
@@ -82,5 +90,10 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
         }
         return ctx;
     }
+
+    protected String gtePageAttributeName() {
+        return "actpage";
+    }
+
 
 }

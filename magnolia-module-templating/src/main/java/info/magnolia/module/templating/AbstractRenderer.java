@@ -94,8 +94,7 @@ public abstract class AbstractRenderer {
         saveAttribute(ctx, state, "content");
         saveAttribute(ctx, state, "result");
         saveAttribute(ctx, state, "action");
-        // TODO should be page in freemarker?
-        saveAttribute(ctx, state, "actpage");
+        saveAttribute(ctx, state, gtePageAttributeName());
         return state;
     }
 
@@ -113,8 +112,7 @@ public abstract class AbstractRenderer {
     protected void setupContext(final Map ctx, Content content, Renderable renderable, ActionResult actionResult){
         setContextAttribute(ctx, "content", content);
         setContextAttribute(ctx, "aggregationState", MgnlContext.getAggregationState());
-        // TODO should be page for freemarker?
-        setContextAttribute(ctx, "actpage", MgnlContext.getAggregationState().getMainContent());
+        setContextAttribute(ctx, gtePageAttributeName(), MgnlContext.getAggregationState().getMainContent());
         setContextAttribute(ctx, "mgnl", new MagnoliaTemplatingUtilities());
 
         if (actionResult != null) {
@@ -125,6 +123,10 @@ public abstract class AbstractRenderer {
 
     protected Object setContextAttribute(final Map ctx, final String name, Object value) {
         return ctx.put(name, value);
+    }
+
+    protected String gtePageAttributeName() {
+        return "page";
     }
 
     protected abstract Map newContext();

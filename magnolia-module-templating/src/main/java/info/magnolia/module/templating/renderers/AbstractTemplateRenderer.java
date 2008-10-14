@@ -71,10 +71,6 @@ public abstract class AbstractTemplateRenderer extends AbstractRenderer implemen
         final Content content = MgnlContext.getAggregationState().getMainContent();
         final PrintWriter out = response.getWriter();
 
-        // FIXME temp fix for MAGNOLIA-2387
-        MgnlContext.setAttribute("request", request);
-        MgnlContext.setAttribute("response", response);
-
         try {
             render(content, template, out);
         }
