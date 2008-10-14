@@ -107,7 +107,7 @@ public class Include extends BodyTagSupport {
 
     /**
      * @deprecated file to be included (e.g. "/templates/jsp/x.jsp").
-     * Just use basic jsp tags (i.e. <jsp:include/>) if you need to include a jsp in your templates. 
+     * Just use basic jsp tags (i.e. <jsp:include/>) if you need to include a jsp in your templates.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setPath(String path) {
@@ -154,8 +154,9 @@ public class Include extends BodyTagSupport {
      */
     public int doEndTag() {
         boolean localContentNodeSet = false;
-        try {
+        Content oldContentNode = Resource.getLocalContentNode();
 
+        try {
             // get content
             Content content = this.contentNode;
             if (content == null) {
@@ -182,7 +183,7 @@ public class Include extends BodyTagSupport {
                     throw new Exception("no content node found"); //$NON-NLS-1$
                 }
             }
-            
+
             if (content != Resource.getCurrentActivePage() && !localContentNodeSet && content != null) {
                 Resource.setLocalContentNode(content);
                 localContentNodeSet = true;
@@ -209,8 +210,12 @@ public class Include extends BodyTagSupport {
         finally {
             // if we set the local content node we have to reset it again else we keep the node
             if(localContentNodeSet){
-                Resource.removeLocalContentNode();
-
+                if(oldContentNode != null){
+                    Resource.setLocalContentNode(oldContentNode);
+                }
+                else{
+                    Resource.removeLocalContentNode();
+                }
             }
         }
 
