@@ -419,6 +419,9 @@ public class ContentNodeIterator extends BaseContentTag {
             this.outerLocalContentNode = Resource.getLocalContentNode();
             this.outerResCollName = Resource.getLocalContentNodeCollectionName();
         }
+        else{
+            this.outerLocalContentNode = Resource.getLocalContentNode();
+        }
 
     }
 
@@ -433,7 +436,12 @@ public class ContentNodeIterator extends BaseContentTag {
                 Resource.setLocalContentNodeCollectionName(req, this.outerResCollName);
             }
             else {
-                Resource.removeLocalContentNode();
+                if(outerLocalContentNode != null){
+                    Resource.setLocalContentNode(this.outerLocalContentNode);
+                }
+                else{
+                    Resource.removeLocalContentNode();
+                }
                 Resource.removeLocalContentNodeCollectionName();
                 pageContext.removeAttribute(ContentNodeIterator.CURRENT_INDEX);
                 pageContext.removeAttribute(ContentNodeIterator.SIZE);
