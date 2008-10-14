@@ -132,6 +132,12 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
+      <description>A single new paragraph will be stored as a node with this name.</description>
+      <name>contentNodeName</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
       <description>Comma separated list of allowed paragraph types.</description>
       <name>paragraph</name>
       <required>false</required>

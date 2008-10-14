@@ -97,6 +97,8 @@ public class NewBar extends TagSupport implements BarTag {
      */
     private List buttonRight;
 
+    private String contentNodeName = "mgnlNew";
+
     /**
      * Text of the button, defaults to "New".
      * @jsp.attribute required="false" rtexprvalue="true"
@@ -111,6 +113,16 @@ public class NewBar extends TagSupport implements BarTag {
      */
     public void setAdminOnly(boolean adminOnly) {
         this.adminOnly = adminOnly;
+    }
+
+    /**
+     * A single new paragraph will be stored as a node with this name.
+     * @param contentNodeName name of the node
+     * @jsp.attribute required="false" rtexprvalue="true"
+     * TODO : the doc used to say that this attribute was required, although the TLD declared the opposite - quid ?
+     */
+    public void setContentNodeName(String contentNodeName) {
+        this.contentNodeName = contentNodeName;
     }
 
     /**
@@ -197,7 +209,7 @@ public class NewBar extends TagSupport implements BarTag {
                 bar.setPath(this.getPath());
                 bar.setParagraph(StringUtils.deleteWhitespace(this.paragraph));
                 bar.setNodeCollectionName(this.contentNodeCollectionName);
-                bar.setNodeName("mgnlNew"); //$NON-NLS-1$
+                bar.setNodeName(contentNodeName); //$NON-NLS-1$
                 bar.setDefaultButtons();
                 if (this.getNewLabel() != null) {
                     if (StringUtils.isEmpty(this.getNewLabel())) {
@@ -233,6 +245,7 @@ public class NewBar extends TagSupport implements BarTag {
     public void release() {
         super.release();
         this.contentNodeCollectionName = null;
+        this.contentNodeName = null;
         this.paragraph = null;
         this.newLabel = null;
         this.buttonLeft = null;
