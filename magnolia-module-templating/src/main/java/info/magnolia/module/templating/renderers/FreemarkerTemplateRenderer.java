@@ -40,7 +40,6 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.module.templating.RenderException;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Locale;
@@ -77,7 +76,7 @@ public class FreemarkerTemplateRenderer extends AbstractTemplateRenderer {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
-            fmHelper.render(templatePath, locale, ((Template)renderable).getI18NTitle(), ctx, out);
+            fmHelper.render(templatePath, locale, ((Template)renderable).getI18nBasename(), ctx, out);
         }
         catch (TemplateException e) {
             // TODO should be thrown?
