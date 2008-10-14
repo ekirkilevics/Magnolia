@@ -91,7 +91,7 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
         return ctx;
     }
 
-    protected String gtePageAttributeName() {
+    protected String getPageAttributeName() {
         return "actpage";
     }
 

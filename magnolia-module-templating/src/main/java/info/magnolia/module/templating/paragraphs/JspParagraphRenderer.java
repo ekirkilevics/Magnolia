@@ -67,7 +67,7 @@ public class JspParagraphRenderer extends AbstractParagraphRenderer {
         return ctx;
     }
 
-    protected String gtePageAttributeName() {
+    protected String getPageAttributeName() {
         return "actpage";
     }
 
