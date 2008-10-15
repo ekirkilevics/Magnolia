@@ -41,6 +41,7 @@ import java.util.Map;
 import info.magnolia.cms.beans.config.ActionBasedRenderable;
 import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.I18nContentWrapper;
 import info.magnolia.context.MgnlContext;
 
 
@@ -110,9 +111,11 @@ public abstract class AbstractRenderer {
     }
 
     protected void setupContext(final Map ctx, Content content, Renderable renderable, ActionResult actionResult){
-        setContextAttribute(ctx, "content", content);
+        final Content page = MgnlContext.getAggregationState().getMainContent();
+
+        setContextAttribute(ctx, "content", new I18nContentWrapper(content));
         setContextAttribute(ctx, "aggregationState", MgnlContext.getAggregationState());
-        setContextAttribute(ctx, getPageAttributeName(), MgnlContext.getAggregationState().getMainContent());
+        setContextAttribute(ctx, getPageAttributeName(), new I18nContentWrapper(page));
         setContextAttribute(ctx, "mgnl", new MagnoliaTemplatingUtilities());
 
         if (actionResult != null) {

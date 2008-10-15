@@ -36,11 +36,14 @@ package info.magnolia.module.templating;
 import freemarker.core.Environment;
 import info.magnolia.cms.beans.config.ParagraphRenderingFacade;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.I18nContentWrapper;
+import info.magnolia.cms.util.InheritanceContentWrapper;
 import info.magnolia.cms.util.SiblingsHelper;
 
-import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.Writer;
+
+import javax.jcr.RepositoryException;
 
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in
@@ -63,4 +66,13 @@ public class MagnoliaTemplatingUtilities {
         final Writer out = env.getOut();
         ParagraphRenderingFacade.getInstance().render(paragraphNode, out);
     }
+
+    public Content inherit(Content node) {
+        return new InheritanceContentWrapper(node);
+    }
+
+    public Content i18n(Content node) {
+        return new I18nContentWrapper(node);
+    }
+
 }
