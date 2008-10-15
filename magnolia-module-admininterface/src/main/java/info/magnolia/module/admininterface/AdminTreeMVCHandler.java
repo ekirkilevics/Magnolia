@@ -146,6 +146,8 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
     protected String pathSelected;
 
+    protected String rootPath;
+
     /**
      * Used to pass the saved value to the view
      */
@@ -198,6 +200,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
         pathOpen = this.getRequest().getParameter("pathOpen"); //$NON-NLS-1$
         pathSelected = this.getRequest().getParameter("pathSelected"); //$NON-NLS-1$
+        this.getTree().setRootPath(this.getRootPath());
 
         this.setBrowseMode(StringUtils.equals(this.getRequest().getParameter("browseMode"), "true"));
     }
@@ -211,7 +214,6 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         if (StringUtils.isNotEmpty(super.getCommand())) {
             return super.getCommand();
         }
-
         // actions returned from the tree (pased through treeAction)
         if (StringUtils.isNotEmpty(this.getRequest().getParameter("treeAction"))) { //$NON-NLS-1$
             int treeAction = Integer.parseInt(this.getRequest().getParameter("treeAction")); //$NON-NLS-1$
@@ -919,5 +921,13 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
     public void setI18nBasename(String i18nBasename) {
         this.i18nBasename = i18nBasename;
+    }
+
+    public String getRootPath() {
+        return rootPath;
+    }
+
+    public void setRootPath(String rootPath) {
+        this.rootPath = rootPath;
     }
 }

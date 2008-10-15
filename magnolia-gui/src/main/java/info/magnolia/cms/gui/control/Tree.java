@@ -119,6 +119,8 @@ public class Tree extends ControlImpl {
 
     private String pathSelected;
 
+    private String rootPath;
+
     private int indentionWidth = 15;
 
     private List itemTypes = new ArrayList();
@@ -1063,7 +1065,7 @@ public class Tree extends ControlImpl {
     }
 
     protected int getPaddingLeft(Content parentNode) throws RepositoryException {
-        int left = parentNode.getLevel() * this.getIndentionWidth();
+        int left = (parentNode.getLevel() - StringUtils.countMatches(getRootPath(), "/")) * this.getIndentionWidth();
         int paddingLeft = left + 8;
         if (paddingLeft < 8) {
             paddingLeft = 8;
@@ -1185,6 +1187,14 @@ public class Tree extends ControlImpl {
 
     public void setSortComparator(Comparator sortComperator) {
         this.sortComparator = sortComperator;
+    }
+
+    public String getRootPath() {
+        return rootPath;
+    }
+
+    public void setRootPath(String rootPath) {
+        this.rootPath = rootPath;
     }
 
 
