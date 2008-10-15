@@ -79,6 +79,13 @@ public abstract class ContentWrapper implements Content{
         this.wrappedContent = wrappedContent;
     }
 
+    /**
+     * Override if a wrapper wants to wrap returned content objects as well (by getContent(), getParent(), ...
+     */
+    protected Content wrap(Content node) {
+        return node;
+    }
+
     public void addMixin(String type) throws RepositoryException {
         this.getWrappedContent().addMixin(type);
     }
@@ -196,7 +203,7 @@ public abstract class ContentWrapper implements Content{
     }
 
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return this.getWrappedContent().getContent(name);
+        return wrap(this.getWrappedContent().getContent(name));
     }
 
     public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
@@ -264,7 +271,7 @@ public abstract class ContentWrapper implements Content{
     }
 
     public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return this.getWrappedContent().getParent();
+        return wrap(this.getWrappedContent().getParent());
     }
 
     public String getTemplate() {
