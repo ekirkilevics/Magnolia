@@ -42,7 +42,7 @@ public class PacketIOException extends ExchangeException {
     /**
      * Stable serialVersionUID.
      */
-    private static final long serialVersionUID = 222L;
+    private static final long serialVersionUID = 1586601424312071168L;
 
     public PacketIOException() {
         super();

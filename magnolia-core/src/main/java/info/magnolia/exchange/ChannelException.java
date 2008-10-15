@@ -33,7 +33,7 @@
  */
 package info.magnolia.exchange;
 
-import info.magnolia.cms.core.BaseException;
+import info.magnolia.api.MgnlException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -42,12 +42,12 @@ import org.apache.commons.lang.StringUtils;
  * Date: May 4, 2004 Time: 5:31:19 PM
  * @author Sameer Charles
  */
-public class ChannelException extends BaseException {
+public class ChannelException extends MgnlException {
 
     /**
      * Stable serialVersionUID.
      */
-    private static final long serialVersionUID = 222L;
+    private static final long serialVersionUID = -1740690799486654218L;
 
     public ChannelException() {
         super(StringUtils.EMPTY);

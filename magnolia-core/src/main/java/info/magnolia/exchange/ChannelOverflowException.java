@@ -42,5 +42,5 @@ public class ChannelOverflowException extends ChannelException {
     /**
      * Stable serialVersionUID.
      */
-    private static final long serialVersionUID = 222L;
+    private static final long serialVersionUID = 6290727367460909082L;
 }

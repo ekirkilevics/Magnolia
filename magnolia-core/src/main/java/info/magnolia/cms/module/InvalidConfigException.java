@@ -33,19 +33,19 @@
  */
 package info.magnolia.cms.module;
 
-import info.magnolia.cms.core.BaseException;
+import info.magnolia.api.MgnlException;
 
 
 /**
  * @author Sameer Charles
  * @version 2.0
  */
-public class InvalidConfigException extends BaseException {
+public class InvalidConfigException extends MgnlException {
 
     /**
      * Stable serialVersionUID.
      */
-    private static final long serialVersionUID = 222L;
+    private static final long serialVersionUID = 8731158173656392127L;
 
     /**
      * @param message message

@@ -33,7 +33,7 @@
  */
 package info.magnolia.exchange;
 
-import info.magnolia.cms.core.BaseException;
+import info.magnolia.api.MgnlException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -41,12 +41,12 @@ import org.apache.commons.lang.StringUtils;
 /**
  * @author Sameer Charles
  */
-public class ExchangeException extends BaseException {
+public class ExchangeException extends MgnlException {
 
     /**
      * Stable serialVersionUID.
      */
-    private static final long serialVersionUID = 222L;
+    private static final long serialVersionUID = -5435143413403288385L;
 
     public ExchangeException() {
         super(StringUtils.EMPTY);
