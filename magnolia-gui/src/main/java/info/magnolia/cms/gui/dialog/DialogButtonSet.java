@@ -233,7 +233,8 @@ public class DialogButtonSet extends DialogBox {
         if (this.getConfigValue("saveInfo").equals("false")) { //$NON-NLS-1$ //$NON-NLS-2$
             control.setSaveInfo(false);
         }
-        control.setType(this.getConfigValue("type", PropertyType.TYPENAME_STRING)); //$NON-NLS-1$
+        final String type = this.getConfigValue("type", PropertyType.TYPENAME_STRING);
+        control.setType(type); //$NON-NLS-1$
         String width = this.getConfigValue("width", null); //$NON-NLS-1$
         control.setButtonHtmlPre("<tr><td class=\"" + CssConstants.CSSCLASS_BUTTONSETBUTTON + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
         control.setButtonHtmlInter("</td><td class=\"" + CssConstants.CSSCLASS_BUTTONSETLABEL + "\">"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -285,7 +286,10 @@ public class DialogButtonSet extends DialogBox {
                     value = "false"; //$NON-NLS-1$
                 }
             }
-            out.write(new Hidden(this.getName(), value).getHtml());
+            Hidden hiddenValueField = new Hidden(this.getName(), value);
+            hiddenValueField.setType(type);
+
+            out.write(hiddenValueField.getHtml());
         }
         this.drawHtmlPost(out);
     }
