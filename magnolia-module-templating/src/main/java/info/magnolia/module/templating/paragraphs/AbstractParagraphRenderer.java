@@ -42,11 +42,8 @@ import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Renderable;
-import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.AbstractRenderer;
 import info.magnolia.module.templating.ActionResult;
 import info.magnolia.module.templating.RenderException;
@@ -81,13 +78,11 @@ public abstract class AbstractParagraphRenderer extends AbstractRenderer impleme
     protected Map saveContextState(Map ctx) {
         Map state = super.saveContextState(ctx);
         saveAttribute(ctx, state, "paragraphDef");
-        saveAttribute(ctx, state, "templateDef");
         return state;
     }
 
     protected void setupContext(Map ctx, Content content, Renderable renderable, ActionResult actionResult) {
         super.setupContext(ctx, content, renderable, actionResult);
         setContextAttribute(ctx, "paragraphDef", renderable);
-        setContextAttribute(ctx, "templateDef", MgnlContext.getAggregationState().getTemplate());
     }
 }
