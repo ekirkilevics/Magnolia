@@ -55,6 +55,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -105,8 +106,8 @@ public class LogViewerPage extends TemplatedMVCHandler {
         File logDir = new File(this.logsFolder);
         Collection files = null;
         if (logDir.exists()) {
-            files = FileUtils.listFiles(logDir, new TrueFileFilter() {
-            }, new TrueFileFilter() {
+            files = FileUtils.listFiles(logDir, new WildcardFileFilter("*.log*")
+            , new TrueFileFilter() {
             });
 
             Iterator filesIterator = files.iterator();
