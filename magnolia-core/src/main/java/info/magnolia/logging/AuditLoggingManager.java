@@ -110,7 +110,7 @@ public class AuditLoggingManager {
             }
 
         } catch (Exception e) {
-            applog.info("Can't get log configuration");
+            applog.trace("Can't get log configuration");
         }
     }
 
