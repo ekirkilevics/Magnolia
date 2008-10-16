@@ -79,7 +79,7 @@
     <param name="MaxBackupIndex" value="5" />
     <param name="Append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss}, %m%n" />
+      <param name="ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss}%m%n" />
     </layout>
   </appender>
   <appender name="log-access" class="org.apache.log4j.AsyncAppender">
@@ -91,7 +91,7 @@
     <param name="MaxBackupIndex" value="5" />
     <param name="Append" value="true" />
     <layout class="org.apache.log4j.PatternLayout">
-      <param name="ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss}, %m%n" />
+      <param name="ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss}%m%n" />
     </layout>
   </appender>
   <appender name="log-audit" class="org.apache.log4j.AsyncAppender">
@@ -132,12 +132,7 @@
     <!--  debug  -->
     <appender-ref ref="console" />
   </category>
-  <category name="info.magnolia.cms.security.auth.login.LoginFilter" additivity="false">
-    <priority value="INFO" />
-    <appender-ref ref="log-access" />
-  </category>
-  <category name="info.magnolia.cms.security.LogoutFilter" additivity="false">
-    <priority value="INFO" />
+  <category name="log-access" additivity="false">
     <appender-ref ref="log-access" />
   </category>
   <category name="info.magnolia.cms.beans.config.Bootstrapper" additivity="false">
@@ -146,12 +141,7 @@
     <!--  debug  -->
     <appender-ref ref="console" />
   </category>
-  <category name="info.magnolia.cms.core.DefaultContent" additivity="false">
-    <priority value="INFO" />
-    <appender-ref ref="log-audit" />
-  </category>
-  <category name="info.magnolia.cms.core.DefaultHierarchyManager" additivity="false">
-    <priority value="INFO" />
+  <category name="log-audit" additivity="false">
     <appender-ref ref="log-audit" />
   </category>
   <root>

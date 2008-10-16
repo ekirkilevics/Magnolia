@@ -36,10 +36,10 @@ package info.magnolia.cms.core;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.AuditTrail;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.logging.AuditLoggingUtil;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -195,7 +195,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             ItemType.CONTENT.getSystemName(),
             this));
         this.setMetaData(newPage.getMetaData());
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_CREATED, repositoryName, newPage.getHandle());
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATED, repositoryName, newPage.getHandle());
         return newPage;
     }
 
@@ -213,7 +213,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         RepositoryException, AccessDeniedException {
         Content content = new DefaultContent(this.getRootNode(), this.getNodePath(path, label), contentType, this);
         setMetaData(content.getMetaData());
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_CREATED, workspaceName, content.getHandle());
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATED, workspaceName, content.getHandle());
         return content;
     }
 
@@ -261,6 +261,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     public void updateMetaData(MetaData md) throws RepositoryException, AccessDeniedException {
         md.setModificationDate();
         md.setAuthorId(this.userId);
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFIED, workspaceName, md.getHandle());
     }
 
     /**
@@ -309,7 +310,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
                 node = this.createContent(StringUtils.substringBeforeLast(path, "/"), StringUtils.substringAfterLast(
                     path,
                     "/"), type.toString());
-                AuditTrail.logEntry(auditLog, AuditTrail.ACTION_CREATED, workspaceName, node.getHandle());
+                AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATED, workspaceName, node.getHandle());
             }
             else {
                 throw e;
@@ -402,7 +403,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         else {
             this.getRootNode().getNode(makeRelative(path)).remove();
         }
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_DELETED, workspaceName, path);
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETED, workspaceName, path);
     }
 
     private String makeRelative(String path) {
@@ -541,7 +542,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         Access.isGranted(this.accessManager, source, Permission.REMOVE);
         Access.isGranted(this.accessManager, destination, Permission.WRITE);
         this.getWorkspace().move(source, destination);
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_MOVED, workspaceName, source, destination);
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MOVED, workspaceName, source, destination);
     }
 
     /**
@@ -556,7 +557,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         Access.isGranted(this.accessManager, source, Permission.READ);
         Access.isGranted(this.accessManager, destination, Permission.WRITE);
         this.getWorkspace().copy(source, destination);
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_COPIED, workspaceName, source, destination);
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_COPIED, workspaceName, source, destination);
     }
 
     /**

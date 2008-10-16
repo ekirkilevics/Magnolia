@@ -38,12 +38,12 @@ import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
-import info.magnolia.cms.security.AuditTrail;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.logging.AuditLoggingUtil;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -90,8 +90,6 @@ public class DefaultContent extends ContentHandler implements Content {
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(DefaultContent.class);
-
-    private static Logger auditLog = LoggerFactory.getLogger(DefaultContent.class);
 
     /**
      * Wrapped jcr node.
@@ -180,7 +178,7 @@ public class DefaultContent extends ContentHandler implements Content {
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518
         this.addMixin(ItemType.MIX_LOCKABLE);
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_CREATED, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATED, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
     }
 
     /**
@@ -440,13 +438,14 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
         Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_DELETED, hierarchyManager.getName(), Path.getAbsolutePath(this.node.getPath(), name) );
+        String nodePath = Path.getAbsolutePath(this.node.getPath(), name);
         if (this.node.hasNode(name)) {
             this.node.getNode(name).remove();
         }
         else {
             this.node.getProperty(name).remove();
         }
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETED, hierarchyManager.getName(), nodePath );
 
     }
 
@@ -454,14 +453,14 @@ public class DefaultContent extends ContentHandler implements Content {
         MetaData md = this.getMetaData();
         md.setModificationDate();
         md.setAuthorId(MgnlContext.getUser().getName());
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_MODIFIED, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFIED, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
     }
 
     public void updateMetaData(HttpServletRequest request) throws RepositoryException, AccessDeniedException {
         MetaData md = this.getMetaData();
         md.setModificationDate();
         md.setAuthorId(Authenticator.getUserId(request));
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_MODIFIED, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFIED, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
     }
 
     public Collection getChildren(ContentFilter filter) {
@@ -889,19 +888,21 @@ public class DefaultContent extends ContentHandler implements Content {
 
     public void delete() throws RepositoryException {
         Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_DELETED, hierarchyManager.getName(), Path.getAbsolutePath(this.node.getPath(), path) );
+        String nodePath = Path.getAbsolutePath(this.node.getPath(), path);
         this.node.remove();
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETED, hierarchyManager.getName(), nodePath );
     }
 
     public void delete(String path) throws RepositoryException {
         Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath(), path), Permission.REMOVE);
-        AuditTrail.logEntry(auditLog, AuditTrail.ACTION_DELETED, hierarchyManager.getName(), Path.getAbsolutePath(this.node.getPath(), path) );
+        String nodePath = Path.getAbsolutePath(this.node.getPath(), path);
         if (this.isNodeData(path)) {
             this.getNodeData(path).delete();
         }
         else {
             this.node.getNode(path).remove();
         }
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETED, hierarchyManager.getName(), nodePath );
     }
 
     public boolean isNodeData(String path) throws AccessDeniedException, RepositoryException {

@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.security;
+package info.magnolia.logging;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -40,53 +40,69 @@ import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.UserContext;
 
-import org.slf4j.Logger;
-
 /**
- * Audit user actions
+ * Should be used to log 'auditory actions'
  * @author tmiyar
  *
  */
-public class AuditTrail {
+public class AuditLoggingUtil {
 
     public static final String ACTION_CREATED = "created";
     public static final String ACTION_MODIFIED = "modified";
     public static final String ACTION_DELETED = "deleted";
     public static final String ACTION_COPIED = "copied";
     public static final String ACTION_MOVED = "moved";
+    public static final String ACTION_ACTIVATED = "activated";
+    public static final String ACTION_DEACTIVATED = "deactivated";
+    public static final String ACTION_LOGGEDIN = "loggedin";
+    public static final String ACTION_LOGGEDOUT = "loggedout";
 
-    public static void logUserAccess(final Logger log, final UserContext userContext) {
-        //audit trail
-        log.info(userContext.getUser().getName() + ", LOGOUT" );
+    /**
+     * log created, modified, deleted, activated, activated
+     */
+    public static void log(String action, String workspaceName, String nodePath) {
+        AuditLoggingUtil.log( action, workspaceName, nodePath, null );
     }
 
-    public static void logUserAccess(final Logger log, final LoginResult loginResult, final HttpServletRequest request ) {
-        //audit trail
+    /**
+     * log copied, moved
+     */
+    public static void log(String action, String workspaceName, String nodePathFrom, String nodePathTo ) {
+        AuditLoggingUtil.log(action, new String[]{AuditLoggingUtil.getUser(), workspaceName, nodePathFrom, nodePathTo});
+    }
+
+    /**
+     * log user logout
+     */
+    public static void log(final UserContext userContext ) {
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGGEDOUT, null, null, null);
+    }
+
+    /**
+     * log user login
+     */
+    public static void log(final LoginResult loginResult, final HttpServletRequest request ) {
+        String userid = "";
+        String result = "";
         if(loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED
                 || loginResult.getStatus() == LoginResult.STATUS_FAILED) {
             //need request as if the user is not logged yet, the id is not in the context
-            String msg = "" + request.getParameter(FormLogin.PARAMETER_USER_ID)
-            + ", LOGIN, ";
+            userid = request.getParameter(FormLogin.PARAMETER_USER_ID);
+
             if(loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED) {
-                msg += "Success";
+                result = "Success";
             } else {
-                msg += "Failure " + loginResult.getLoginException().getLocalizedMessage();
+                result = "Failure " + loginResult.getLoginException().getLocalizedMessage();
             }
-
-            log.info(msg);
-
         }
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGGEDIN, new String[]{userid, result});
     }
 
-    public static void logEntry(final Logger log, final String action,
-            final String repositoryName, final String path) {
-        log.info(getUser() + ", " + action + ", " + repositoryName + ", " + path);
-    }
-
-    public static void logEntry(final Logger log, final String action,
-            final String repositoryName, final String source, final String destination) {
-        log.info(getUser() + ", " + action + ", " + repositoryName + ", " + source + ", " + destination);
-
+    private static void log(String action, String[] data) {
+        AuditLoggingManager manager = AuditLoggingManager.getInstance();
+        if(manager != null) {
+            manager.log(action, data);
+        }
     }
 
     private static String getUser() {

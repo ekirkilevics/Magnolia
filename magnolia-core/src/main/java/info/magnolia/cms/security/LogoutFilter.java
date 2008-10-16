@@ -35,13 +35,10 @@ package info.magnolia.cms.security;
 
 import info.magnolia.cms.filters.MgnlFilterChain;
 import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
-import info.magnolia.cms.security.auth.login.FormLogin;
-import info.magnolia.cms.security.auth.login.LoginFilter;
-import info.magnolia.cms.security.auth.login.LoginResult;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.UserContext;
-import info.magnolia.context.WebContext;
+import info.magnolia.logging.AuditLoggingUtil;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -79,7 +76,7 @@ public class LogoutFilter extends OncePerRequestAbstractMgnlFilter {
             Context ctx = MgnlContext.getInstance();
             if (ctx instanceof UserContext) {
                 ((UserContext) ctx).logout();
-                AuditTrail.logUserAccess(log, (UserContext)ctx);
+                AuditLoggingUtil.log((UserContext)ctx);
             }
             //MgnlContext.initAsAnonymousContext(request, response, servletContext);
 

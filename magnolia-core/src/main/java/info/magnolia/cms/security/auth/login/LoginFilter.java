@@ -34,8 +34,8 @@
 package info.magnolia.cms.security.auth.login;
 
 import info.magnolia.cms.filters.AbstractMgnlFilter;
-import info.magnolia.cms.security.AuditTrail;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.logging.AuditLoggingUtil;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -77,7 +77,7 @@ public class LoginFilter extends AbstractMgnlFilter {
             } else if (loginResult.getStatus() == LoginResult.STATUS_SUCCEEDED) {
                 MgnlContext.login(loginResult.getUser());
             }
-            AuditTrail.logUserAccess(log, loginResult, request );
+            AuditLoggingUtil.log(loginResult, request );
 
         }
         // continue even if all login handlers failed
