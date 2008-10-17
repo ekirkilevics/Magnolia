@@ -119,7 +119,7 @@ public class ParagraphManager extends ObservedManager {
      */
     protected void addParagraphToCache(Content c) {
         try {
-            final Paragraph p = (Paragraph) Content2BeanUtil.toBean(c, Paragraph.class);
+            final Paragraph p = (Paragraph) Content2BeanUtil.toBean(c, true, Paragraph.class);
             addParagraphToCache(p);
         }
         catch (Content2BeanException e) {
