@@ -59,6 +59,7 @@ import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.logging.AuditLoggingUtil;
 import info.magnolia.module.exchangesimple.ActivationContent;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
@@ -289,6 +290,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
              }
              this.updateActivationDetails();
              log.info("Exchange: activation succeeded [{}]", content.getHandle());
+             AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATED, this.workspaceName, this.path );
          }
          catch (Exception e) {
              if (log.isDebugEnabled()) {
@@ -467,6 +469,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          Content page = getHierarchyManager().getContentByUUID(this.nodeUUID);
          updateMetaData(page, DEACTIVATE);
          page.save();
+         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DEACTIVATED, this.workspaceName, page.getHandle() );
      }
 
 

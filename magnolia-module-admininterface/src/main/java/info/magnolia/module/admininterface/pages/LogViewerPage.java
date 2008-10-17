@@ -243,12 +243,8 @@ public class LogViewerPage extends TemplatedMVCHandler {
     }
 
     private void setFieldValues() {
-        this.pageNumber = this.currentPosition / this.maxNumLinesPerPage;
-        this.totalPages = this.fileSizeInLines / this.maxNumLinesPerPage;
-        if (this.pageNumber == 0 || this.totalPages == 0) {
-            this.pageNumber = 1;
-            this.totalPages = 1;
-        }
+        this.pageNumber = (this.currentPosition / this.maxNumLinesPerPage) + 1;
+        this.totalPages = (this.fileSizeInLines / this.maxNumLinesPerPage) +1;
 
     }
 
@@ -261,8 +257,8 @@ public class LogViewerPage extends TemplatedMVCHandler {
             fileReader = new FileReader(file);
             lineReader = new LineNumberReader(fileReader);
 
-            lineReader.skip(file.length() - 1);
-            count = lineReader.getLineNumber() - 1;
+            lineReader.skip(file.length() );
+            count = lineReader.getLineNumber();
 
         } catch (Exception e) {
             count = 0;

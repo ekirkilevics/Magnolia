@@ -36,6 +36,8 @@ package info.magnolia.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.BootstrapConditionally;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -64,6 +66,8 @@ import java.util.List;
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     public static final String BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY = "magnolia.bootstrap.authorInstance";
 
+    final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.AuditLogging.xml");
+
     public CoreModuleVersionHandler() {
         super();
 
@@ -89,6 +93,10 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(new UpdateGroups())
                 .addTask(log4jServletMapping)
         );
+
+        register(DeltaBuilder.update("3.7", "")
+                .addTask(auditTrailManagerTask)
+        );
     }
 
     protected List getBasicInstallTasks(InstallContext ctx) {
@@ -96,6 +104,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         l.addAll(GenericTasks.genericTasksFor35());
         l.add(new CheckMagnoliaDevelopProperty());
         l.add(new CheckNodesForMixVersionable());
+        l.add(auditTrailManagerTask);
         return l;
     }
 

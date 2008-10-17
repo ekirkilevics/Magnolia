@@ -94,8 +94,9 @@ public class AuditLoggingUtil {
             } else {
                 result = "Failure " + loginResult.getLoginException().getLocalizedMessage();
             }
+            AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGGEDIN, new String[]{userid, result});
         }
-        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGGEDIN, new String[]{userid, result});
+
     }
 
     private static void log(String action, String[] data) {
