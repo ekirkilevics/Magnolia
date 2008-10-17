@@ -38,10 +38,11 @@
 
 .mgnlControlButton_PUSHED,.mgnlControlButtonSmall_PUSHED {
     background-color: #9DB517 !important;
-    border-top: 1px solid #B9C950;
-    border-left: 1px solid #B9C950;
-    border-bottom: 1px solid #8a2;
-    border-right: 1px solid #8a2;
+    border: 1px solid !important;
+    border-top: #B9C950 !important;
+    border-left: #B9C950 !important;
+    border-bottom: #8a2 !important;
+    border-right: #8a2 !important;
 }
 
 .mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
@@ -52,10 +53,11 @@
 .mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall
     {
     background-color: #5E9201 !important;
-    border-top: 1px solid #ADC97B;
-    border-left: 1px solid #ADC97B;
-    border-bottom: 1px solid #396101;
-    border-right: 1px solid #396101;
+    border: 1px solid !important;
+    border-top: #ADC97B !important;
+    border-left: #ADC97B !important;
+    border-bottom: #396101 !important;
+    border-right: #396101 !important;
 }
 
 table.mgnlControlBar, table.mgnlControlBarSmall {
@@ -70,30 +72,37 @@ table.mgnlControlBar, table.mgnlControlBarSmall {
 
 .mgnlControlBar,.mgnlControlBarSmall {
     background: url("../admin-images/mgnl-bar.png") transparent repeat !important;
-    border-top: 1px solid #ADC97B;
-    border-left: 1px solid #ADC97B;
-    border-bottom: 1px solid #396101;
-    border-right: 1px solid #396101;
+    border: 1px solid !important;
+    border-top: #ADC97B !important;
+    border-left: #ADC97B !important;
+    border-bottom: #396101 !important;
+    border-right: #396101 !important;
 }
 
 .mgnlControlBar *, .mgnlControlBarSmall * {
     background: url("../admin-images/mgnl-bar.png") transparent repeat !important;
 }
 
+.mgnlControlBar td, .mgnlControlBarSmall td {
+    padding: 0 2px !important;
+}
+
 .mgnlControlBar_PUSHED,.mgnlControlBarSmall_PUSHED {
     background-color: #9DB517 !important;
-    border-top: 1px solid #B9C950;
-    border-left: 1px solid #B9C950;
-    border-bottom: 1px solid #8a2;
-    border-right: 1px solid #8a2;
+    border: 1px solid !important;
+    border-top: #B9C950 !important;
+    border-left: #B9C950 !important;
+    border-bottom: #8a2 !important;
+    border-right: #8a2 !important;
 }
 
 .mgnlControlBar_MOUSEOVER,.mgnlControlBarSmall_MOUSEOVER {
     background-color: #8a3 !important;
-    border-left: 1px solid #ac6;
-    border-top: 1px solid #ac6;
-    border-right: 1px solid #680;
-    border-bottom: 1px solid #680;
+    border: 1px solid !important;
+    border-left: #ac6 !important;
+    border-top: #ac6 !important;
+    border-right: #680 !important;
+    border-bottom: #680 !important;
 }
 
 .mgnlControlBar,.mgnlControlBar_PUSHED,.mgnlControlBar_MOUSEOVER {
@@ -130,7 +139,7 @@ table.mgnlControlBar, table.mgnlControlBarSmall {
 
 .smothTextField {
     height: 18px;
-    border: 0px #dddddd solid;
+    border: none;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
     padding-top: 2px;
@@ -179,8 +188,8 @@ td.smothBarLabel {
     cursor: pointer;
     font: 11px verdana, arial, helvetica, sans-serif;
     background-color: #ffffff;
-    border-top: 1px #999999 solid;
-    border-bottom: 1px #CCCCCC solid;
+    border-top: 1px #999999 solid !important;
+    border-bottom: 1px #CCCCCC solid !important;
 }
 
 .smothDropdownBox {
@@ -198,8 +207,8 @@ td.smothBarLabel {
     padding: 0px;
     cursor: pointer;
     width: auto;
-    border-left: 1px #999999 solid;
-    border-right: 1px #CCCCCC solid;
+    border-left: 1px #999999 solid !important;
+    border-right: 1px #CCCCCC solid !important;
     padding-left: 6px;
     padding-right: 10px;
     padding-top: 2px;
@@ -212,8 +221,8 @@ td.smothBarLabel {
     cursor: pointer;
     background-color: #D9F1B3;
     width: auto;
-    border-left: 1px #999999 solid;
-    border-right: 1px #CCCCCC solid;
+    border-left: 1px #999999 solid !important;
+    border-right: 1px #CCCCCC solid !important;
     padding-left: 6px;
     padding-right: 10px;
     padding-top: 2px;
