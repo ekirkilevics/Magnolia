@@ -43,7 +43,9 @@ import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.EmptyMessages;
+import info.magnolia.cms.i18n.I18nContentSupport;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -78,6 +80,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
         FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+        FactoryUtil.setImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
 
         final WebContext context = createNiceMock(WebContext.class);
         AggregationState state = new AggregationState();
