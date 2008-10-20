@@ -13,7 +13,6 @@ function sendCommand(formName, commandName) {
 </script>
   </head>
   <body id="mgnl">
-  <a name="top" />
       <table width="100%">
       <tr><td valign="top">
         <div class="pageframe" >
@@ -43,21 +42,13 @@ function sendCommand(formName, commandName) {
         </div>
     </td>
     </tr>
-    [#if this.fileSizeInLines > 0 && this.fileName?length > 0]
+    [#if this.text?length > 0 && this.fileName?length > 0]
     <tr >
    <td  >
-   <table style="padding: 0; margin: 0;"> <tr> <td align="left" width="40%">
-     [#if this.fileSizeInLines > this.maxNumLinesPerPage ]
-        <a href="#bottom">bottom</a>
-     [/#if]
-</td>
+   <form action="" id="pagination" >
+   <div class="formelement" style="padding-left: 400px; margin: 0;position:absolute;">
+     Page ${this.pageNumber} of ${this.totalPages}&nbsp;&nbsp;&nbsp;&nbsp;
 
-    <td align="left" width="40%">
-
-     Page ${this.pageNumber} of ${this.totalPages}
-     </td>
-     <td align="left" width="20%">
-     <form action="" id="pagination" style="padding: 0; margin: 0;">
           <input type="hidden" name="currentPosition" value="${this.currentPosition?c}" />
           <input type="hidden" name="fileName"  value="${this.fileName}" />
           <input type="hidden" name="fileSizeInLines"  value="${this.fileSizeInLines?c}" />
@@ -66,21 +57,17 @@ function sendCommand(formName, commandName) {
           <input type="button" value="&lt;" onclick="sendCommand('pagination','previous');" class="mgnlControlButton" />
           <input type="button" value="&gt;" onclick="sendCommand('pagination','next');" class="mgnlControlButton" />
           <input type="button" value="&gt;&gt;" onclick="sendCommand('pagination','end');" class="mgnlControlButton" />
-          </form>
-     </td>
 
-</tr> </table>
+        </div>
+        </form>
         <div class="pageframe">
 
           ${this.text}
         </div>
-      [#if this.fileSizeInLines > this.maxNumLinesPerPage ]
-        <a name="bottom" href="#top">top</a>
-      [/#if]
     </td>
     </tr>
     [/#if]
-      [#if this.fileSizeInLines == 0 && this.fileName?length > 0]
+      [#if this.text?length == 0 && this.fileName?length > 0]
     <tr>
    <td valign="top">
         <div class="pageframe">
