@@ -15,6 +15,9 @@
   <sv:property sv:name="class" sv:type="String">
     <sv:value>info.magnolia.logging.AuditLoggingManager</sv:value>
   </sv:property>
+  <sv:property sv:name="defaultSeparator" sv:type="String">
+    <sv:value>, </sv:value>
+  </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
@@ -26,7 +29,7 @@
       <sv:value>2008-10-15T12:27:54.471+02:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2008-10-16T09:23:13.660+02:00</sv:value>
+      <sv:value>2008-10-21T12:07:46.661+02:00</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="logConfigurations">
@@ -53,7 +56,7 @@
         <sv:value>2008-10-16T09:08:06.433+02:00</sv:value>
       </sv:property>
     </sv:node>
-    <sv:node sv:name="deactivated">
+    <sv:node sv:name="deactivate">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -69,9 +72,6 @@
       <sv:property sv:name="logName" sv:type="String">
         <sv:value>log-audit</sv:value>
       </sv:property>
-      <sv:property sv:name="separator" sv:type="String">
-        <sv:value> , </sv:value>
-      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
@@ -86,11 +86,11 @@
           <sv:value>2008-10-15T12:29:20.914+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2008-10-17T10:36:47.693+02:00</sv:value>
+          <sv:value>2008-10-21T12:05:01.053+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="activated">
+    <sv:node sv:name="activate">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -106,9 +106,6 @@
       <sv:property sv:name="logName" sv:type="String">
         <sv:value>log-audit</sv:value>
       </sv:property>
-      <sv:property sv:name="separator" sv:type="String">
-        <sv:value> , </sv:value>
-      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
@@ -123,11 +120,11 @@
           <sv:value>2008-10-15T12:29:20.914+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2008-10-17T10:37:04.693+02:00</sv:value>
+          <sv:value>2008-10-21T12:05:06.078+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="copied">
+    <sv:node sv:name="copy">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -143,9 +140,6 @@
       <sv:property sv:name="logName" sv:type="String">
         <sv:value>log-audit</sv:value>
       </sv:property>
-      <sv:property sv:name="separator" sv:type="String">
-        <sv:value> , </sv:value>
-      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
@@ -160,11 +154,11 @@
           <sv:value>2008-10-15T12:29:20.914+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2008-10-17T10:37:20.531+02:00</sv:value>
+          <sv:value>2008-10-21T12:05:14.606+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="loggedin">
+    <sv:node sv:name="login">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -180,9 +174,6 @@
       <sv:property sv:name="logName" sv:type="String">
         <sv:value>log-access</sv:value>
       </sv:property>
-      <sv:property sv:name="separator" sv:type="String">
-        <sv:value> , </sv:value>
-      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
@@ -197,11 +188,11 @@
           <sv:value>2008-10-15T12:29:20.914+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2008-10-17T10:36:27.167+02:00</sv:value>
+          <sv:value>2008-10-21T12:05:25.452+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="loggedout">
+    <sv:node sv:name="logout">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -217,9 +208,6 @@
       <sv:property sv:name="logName" sv:type="String">
         <sv:value>log-access</sv:value>
       </sv:property>
-      <sv:property sv:name="separator" sv:type="String">
-        <sv:value> , </sv:value>
-      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
@@ -234,11 +222,11 @@
           <sv:value>2008-10-15T12:29:20.914+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2008-10-17T10:37:43.287+02:00</sv:value>
+          <sv:value>2008-10-21T12:05:31.179+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="moved">
+    <sv:node sv:name="move">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -254,9 +242,6 @@
       <sv:property sv:name="logName" sv:type="String">
         <sv:value>log-audit</sv:value>
       </sv:property>
-      <sv:property sv:name="separator" sv:type="String">
-        <sv:value> , </sv:value>
-      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
@@ -271,11 +256,11 @@
           <sv:value>2008-10-15T12:29:20.914+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2008-10-17T10:38:04.833+02:00</sv:value>
+          <sv:value>2008-10-21T12:05:34.803+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="modified">
+    <sv:node sv:name="modify">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -291,9 +276,6 @@
       <sv:property sv:name="logName" sv:type="String">
         <sv:value>log-audit</sv:value>
       </sv:property>
-      <sv:property sv:name="separator" sv:type="String">
-        <sv:value> , </sv:value>
-      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
@@ -308,11 +290,11 @@
           <sv:value>2008-10-15T12:29:20.914+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2008-10-17T10:38:25.537+02:00</sv:value>
+          <sv:value>2008-10-21T12:05:40.869+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>
-    <sv:node sv:name="created">
+    <sv:node sv:name="create">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
@@ -328,9 +310,6 @@
       <sv:property sv:name="logName" sv:type="String">
         <sv:value>log-audit</sv:value>
       </sv:property>
-      <sv:property sv:name="separator" sv:type="String">
-        <sv:value> , </sv:value>
-      </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
           <sv:value>mgnl:metaData</sv:value>
@@ -345,7 +324,7 @@
           <sv:value>2008-10-15T12:29:20.914+02:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2008-10-17T10:38:42.625+02:00</sv:value>
+          <sv:value>2008-10-21T12:05:46.550+02:00</sv:value>
         </sv:property>
       </sv:node>
     </sv:node>

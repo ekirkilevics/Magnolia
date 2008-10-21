@@ -290,7 +290,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
              }
              this.updateActivationDetails();
              log.info("Exchange: activation succeeded [{}]", content.getHandle());
-             AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATED, this.workspaceName, this.path );
+             AuditLoggingUtil.log(AuditLoggingUtil.ACTION_ACTIVATE, this.workspaceName, this.path );
          }
          catch (Exception e) {
              if (log.isDebugEnabled()) {
@@ -469,7 +469,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          Content page = getHierarchyManager().getContentByUUID(this.nodeUUID);
          updateMetaData(page, DEACTIVATE);
          page.save();
-         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DEACTIVATED, this.workspaceName, page.getHandle() );
+         AuditLoggingUtil.log(AuditLoggingUtil.ACTION_DEACTIVATE, this.workspaceName, page.getHandle() );
      }
 
 

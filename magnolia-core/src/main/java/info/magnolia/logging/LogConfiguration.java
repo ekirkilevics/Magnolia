@@ -44,7 +44,7 @@ public class LogConfiguration {
     private String name;
     private boolean active;
     private String logName;
-    private String separator = ",";
+    private String separator;
 
     public String getName() {
         return name;

@@ -178,7 +178,7 @@ public class DefaultContent extends ContentHandler implements Content {
         // for version 3.5 we cannot change node type definitions because of compatibility reasons
         // MAGNOLIA-1518
         this.addMixin(ItemType.MIX_LOCKABLE);
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATED, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
     }
 
     /**
@@ -445,7 +445,7 @@ public class DefaultContent extends ContentHandler implements Content {
         else {
             this.node.getProperty(name).remove();
         }
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETED, hierarchyManager.getName(), nodePath );
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodePath );
 
     }
 
@@ -453,14 +453,14 @@ public class DefaultContent extends ContentHandler implements Content {
         MetaData md = this.getMetaData();
         md.setModificationDate();
         md.setAuthorId(MgnlContext.getUser().getName());
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFIED, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
     }
 
     public void updateMetaData(HttpServletRequest request) throws RepositoryException, AccessDeniedException {
         MetaData md = this.getMetaData();
         md.setModificationDate();
         md.setAuthorId(Authenticator.getUserId(request));
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFIED, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
     }
 
     public Collection getChildren(ContentFilter filter) {
@@ -890,7 +890,7 @@ public class DefaultContent extends ContentHandler implements Content {
         Access.isGranted(this.hierarchyManager.getAccessManager(), Path.getAbsolutePath(this.node.getPath()), Permission.REMOVE);
         String nodePath = Path.getAbsolutePath(this.node.getPath(), path);
         this.node.remove();
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETED, hierarchyManager.getName(), nodePath );
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodePath );
     }
 
     public void delete(String path) throws RepositoryException {
@@ -902,7 +902,7 @@ public class DefaultContent extends ContentHandler implements Content {
         else {
             this.node.getNode(path).remove();
         }
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETED, hierarchyManager.getName(), nodePath );
+        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_DELETE, hierarchyManager.getName(), nodePath );
     }
 
     public boolean isNodeData(String path) throws AccessDeniedException, RepositoryException {

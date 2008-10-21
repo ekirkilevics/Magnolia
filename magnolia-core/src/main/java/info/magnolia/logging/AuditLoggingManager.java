@@ -52,6 +52,8 @@ public class AuditLoggingManager {
 
     private List logConfigurations = new ArrayList();
 
+    private String defaultSeparator = ", ";
+
     private static Logger applog = LoggerFactory.getLogger(AuditLoggingManager.class);
 
     public AuditLoggingManager() {
@@ -96,11 +98,15 @@ public class AuditLoggingManager {
         String message = "";
         try {
             LogConfiguration trail = this.getLogConfiguration(action);
-            message += trail.getSeparator() + action;
+            String separator = defaultSeparator;
+            if(!StringUtils.isEmpty(trail.getSeparator())) {
+                separator = trail.getSeparator();
+            }
+            message += separator + action;
             if (trail != null && trail.isActive()) {
                 for (int i = 0; i < data.length; i++) {
                     if (StringUtils.isNotEmpty(data[i])) {
-                      message += trail.getSeparator() + data[i];
+                      message += separator + data[i];
                     }
 
                 }
@@ -112,6 +118,14 @@ public class AuditLoggingManager {
         } catch (Exception e) {
             applog.trace("Can't get log configuration");
         }
+    }
+
+    public String getDefaultSeparator() {
+        return defaultSeparator;
+    }
+
+    public void setDefaultSeparator(String defaultSeparator) {
+        this.defaultSeparator = defaultSeparator;
     }
 
 }

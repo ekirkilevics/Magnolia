@@ -47,25 +47,25 @@ import info.magnolia.context.UserContext;
  */
 public class AuditLoggingUtil {
 
-    public static final String ACTION_CREATED = "created";
-    public static final String ACTION_MODIFIED = "modified";
-    public static final String ACTION_DELETED = "deleted";
-    public static final String ACTION_COPIED = "copied";
-    public static final String ACTION_MOVED = "moved";
-    public static final String ACTION_ACTIVATED = "activated";
-    public static final String ACTION_DEACTIVATED = "deactivated";
-    public static final String ACTION_LOGGEDIN = "loggedin";
-    public static final String ACTION_LOGGEDOUT = "loggedout";
+    public static final String ACTION_CREATE = "create";
+    public static final String ACTION_MODIFY = "modify";
+    public static final String ACTION_DELETE = "delete";
+    public static final String ACTION_COPY = "copy";
+    public static final String ACTION_MOVE = "move";
+    public static final String ACTION_ACTIVATE = "activate";
+    public static final String ACTION_DEACTIVATE = "deactivate";
+    public static final String ACTION_LOGIN = "login";
+    public static final String ACTION_LOGOUT = "logout";
 
     /**
-     * log created, modified, deleted, activated, activated
+     * log create, modify, delete, activate, deactivate
      */
     public static void log(String action, String workspaceName, String nodePath) {
         AuditLoggingUtil.log( action, workspaceName, nodePath, null );
     }
 
     /**
-     * log copied, moved
+     * log copy, move
      */
     public static void log(String action, String workspaceName, String nodePathFrom, String nodePathTo ) {
         AuditLoggingUtil.log(action, new String[]{AuditLoggingUtil.getUser(), workspaceName, nodePathFrom, nodePathTo});
@@ -75,7 +75,7 @@ public class AuditLoggingUtil {
      * log user logout
      */
     public static void log(final UserContext userContext ) {
-        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGGEDOUT, null, null, null);
+        AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGOUT, null, null, null);
     }
 
     /**
@@ -94,7 +94,7 @@ public class AuditLoggingUtil {
             } else {
                 result = "Failure " + loginResult.getLoginException().getLocalizedMessage();
             }
-            AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGGEDIN, new String[]{userid, request.getRemoteAddr(), result});
+            AuditLoggingUtil.log(AuditLoggingUtil.ACTION_LOGIN, new String[]{userid, request.getRemoteAddr(), result});
         }
 
     }
