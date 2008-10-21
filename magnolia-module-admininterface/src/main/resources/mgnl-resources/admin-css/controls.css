@@ -4,28 +4,28 @@
 }
 
 .mgnlBtnsLeft {
-    text-align: left;
+    text-align: left !important;
 }
 
 .mgnlBtnsRight {
-    text-align: right;
+    text-align: right !important;
 }
 
 .mgnlBtnsLeft, .mgnlBtnsRight {
     white-space: nowrap;
-    line-height: 14px;
+    line-height: 14px !important;
 }
 
 .mgnlControlButton,.mgnlControlButton_PUSHED {
     font-size: 11px;
     height: 15px;
-    padding: 1px 8px 1px 10px;
+    padding: 1px 8px 1px 10px !important;
 }
 
 .mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED {
     font-size: 9px;
     height: 5px;
-    padding: 0 3px 0 3px;
+    padding: 0 3px 0 3px !important;
 }
 
 .mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED
@@ -38,11 +38,10 @@
 
 .mgnlControlButton_PUSHED,.mgnlControlButtonSmall_PUSHED {
     background-color: #9DB517 !important;
-    border: 1px solid !important;
-    border-top: #B9C950 !important;
-    border-left: #B9C950 !important;
-    border-bottom: #8a2 !important;
-    border-right: #8a2 !important;
+    border-top: 1px solid #B9C950 !important;
+    border-left: 1px solid #B9C950 !important;
+    border-bottom: 1px solid #8a2 !important;
+    border-right: 1px solid #8a2 !important;
 }
 
 .mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
@@ -53,16 +52,16 @@
 .mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall
     {
     background-color: #5E9201 !important;
-    border: 1px solid !important;
-    border-top: #ADC97B !important;
-    border-left: #ADC97B !important;
-    border-bottom: #396101 !important;
-    border-right: #396101 !important;
+    border-top: 1px solid #ADC97B !important;
+    border-left: 1px solid #ADC97B !important;
+    border-bottom: 1px solid #396101 !important;
+    border-right: 1px solid #396101 !important;
 }
 
 table.mgnlControlBar, table.mgnlControlBarSmall {
     /* this is the default, but enforcing it seems to make safari happier when we embed another table in table-layout:fixed */
     table-layout: auto;
+    border-collapse: collapse !important;
 }
 
 .mgnlControlBarSmall,.mgnlControlBarSmall_PUSHED,.mgnlControlBarSmall_MOUSEOVER
@@ -71,38 +70,36 @@ table.mgnlControlBar, table.mgnlControlBarSmall {
 }
 
 .mgnlControlBar,.mgnlControlBarSmall {
-    background: url("../admin-images/mgnl-bar.png") transparent repeat !important;
-    border: 1px solid !important;
-    border-top: #ADC97B !important;
-    border-left: #ADC97B !important;
-    border-bottom: #396101 !important;
-    border-right: #396101 !important;
-}
-
-.mgnlControlBar *, .mgnlControlBarSmall * {
-    background: url("../admin-images/mgnl-bar.png") transparent repeat !important;
+    border-top: 1px solid #ADC97B !important;
+    border-left: 1px solid #ADC97B !important;
+    border-bottom: 1px solid #396101 !important;
+    border-right: 1px solid #396101 !important;
 }
 
 .mgnlControlBar td, .mgnlControlBarSmall td {
-    padding: 0 2px !important;
+    background-color: transparent !important;
+    background-repeat: repeat !important;
+    background-image: url("../admin-images/mgnl-bar.png") !important;
+}
+
+.mgnlControlBarSmall td {
+    padding: 1px 2px 2px 2px !important;
 }
 
 .mgnlControlBar_PUSHED,.mgnlControlBarSmall_PUSHED {
     background-color: #9DB517 !important;
-    border: 1px solid !important;
-    border-top: #B9C950 !important;
-    border-left: #B9C950 !important;
-    border-bottom: #8a2 !important;
-    border-right: #8a2 !important;
+    border-top: 1px solid #B9C950 !important;
+    border-left: 1px solid #B9C950 !important;
+    border-bottom: 1px solid #8a2 !important;
+    border-right: 1px solid #8a2 !important;
 }
 
 .mgnlControlBar_MOUSEOVER,.mgnlControlBarSmall_MOUSEOVER {
     background-color: #8a3 !important;
-    border: 1px solid !important;
-    border-left: #ac6 !important;
-    border-top: #ac6 !important;
-    border-right: #680 !important;
-    border-bottom: #680 !important;
+    border-left: 1px solid #ac6 !important;
+    border-top: 1px solid #ac6 !important;
+    border-right: 1px solid #680 !important;
+    border-bottom: 1px solid #680 !important;
 }
 
 .mgnlControlBar,.mgnlControlBar_PUSHED,.mgnlControlBar_MOUSEOVER {
@@ -139,7 +136,7 @@ table.mgnlControlBar, table.mgnlControlBarSmall {
 
 .smothTextField {
     height: 18px;
-    border: none;
+    border: 0px #dddddd solid;
     font-family: Arial, Helvetica, sans-serif;
     font-size: 11px;
     padding-top: 2px;
