@@ -33,7 +33,12 @@
  */
 package info.magnolia.module.cache.cachepolicy;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
@@ -50,6 +55,8 @@ import info.magnolia.voting.voters.VoterSet;
  */
 public class Default implements CachePolicy {
 
+    private static final Logger log = LoggerFactory.getLogger(Default.class);
+
     private VoterSet voters;
 
     public CachePolicyResult shouldCache(final Cache cache, final AggregationState aggregationState, final FlushPolicy flushPolicy) {
@@ -57,6 +64,11 @@ public class Default implements CachePolicy {
 
         if (shouldBypass(aggregationState, key)) {
             return new CachePolicyResult(CachePolicyResult.bypass, key, null);
+        }
+        
+        if (shouldRefresh(aggregationState, key)) {
+            log .error("Cache refresh requested for {}", key);
+            return new CachePolicyResult(CachePolicyResult.store, key, null);
         }
 
         // we need to synchronize on the cache instance, as multiple threads might be accessing this
@@ -70,6 +82,18 @@ public class Default implements CachePolicy {
                 return new CachePolicyResult(CachePolicyResult.store, key, null);
             }
         }
+    }
+
+    /**
+     * Checks whether reuqested content should be served from cache or refreshed instead.
+     * @param aggregationState
+     * @param key
+     * @return True if cache entry for the key should be recreated, false otherwise.
+     */
+    protected boolean shouldRefresh(AggregationState aggregationState, Object key) {
+        String cacheControl = ((WebContext) MgnlContext.getInstance()).getRequest().getHeader("Cache-Control");
+        // TODO: check for pragma as well?? RFC says "HTTP/1.1 caches SHOULD treat "Pragma: no-cache" as if the client had sent "Cache-Control: no-cache"
+        return cacheControl != null && cacheControl.equals("no-cache");
     }
 
     protected boolean shouldBypass(AggregationState aggregationState, Object key) {
