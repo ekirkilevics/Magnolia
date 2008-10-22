@@ -28,20 +28,11 @@
     padding: 0 3px 0 3px !important;
 }
 
-.mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED
-    {
+.mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED {
     font-family: Verdana, sans-serif;
     color: #F0F2E6;
     cursor: default;
     white-space: nowrap;
-}
-
-.mgnlControlButton_PUSHED,.mgnlControlButtonSmall_PUSHED {
-    background-color: #9DB517 !important;
-    border-top: 1px solid #B9C950 !important;
-    border-left: 1px solid #B9C950 !important;
-    border-bottom: 1px solid #8a2 !important;
-    border-right: 1px solid #8a2 !important;
 }
 
 .mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
@@ -49,13 +40,20 @@
     white-space: nowrap;
 }
 
-.mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall
-    {
-    background-color: #5E9201 !important;
-    border-top: 1px solid #ADC97B !important;
-    border-left: 1px solid #ADC97B !important;
-    border-bottom: 1px solid #396101 !important;
-    border-right: 1px solid #396101 !important;
+.mgnlControlButton,.mgnlControlButtonSmall,.mgnlControlButtonTransparent,.mgnlControlButtonTransparentSmall {
+    background-color: #5E9201;
+    border-top: 1px solid #ADC97B;
+    border-left: 1px solid #ADC97B;
+    border-bottom: 1px solid #396101;
+    border-right: 1px solid #396101;
+}
+
+.mgnlControlButton_PUSHED,.mgnlControlButtonSmall_PUSHED {
+    background-color: #9DB517 !important;
+    border-top: 1px solid #B9C950;
+    border-left: 1px solid #B9C950;
+    border-bottom: 1px solid #8a2;
+    border-right: 1px solid #8a2;
 }
 
 table.mgnlControlBar, table.mgnlControlBarSmall {
@@ -64,8 +62,7 @@ table.mgnlControlBar, table.mgnlControlBarSmall {
     border-collapse: collapse !important;
 }
 
-.mgnlControlBarSmall,.mgnlControlBarSmall_PUSHED,.mgnlControlBarSmall_MOUSEOVER
-    {
+.mgnlControlBarSmall,.mgnlControlBarSmall_PUSHED,.mgnlControlBarSmall_MOUSEOVER {
     width: 100%;
 }
 
