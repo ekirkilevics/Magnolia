@@ -66,7 +66,7 @@ import java.util.List;
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     public static final String BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY = "magnolia.bootstrap.authorInstance";
 
-    final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.AuditLogging.xml");
+    final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.auditLogging.xml");
 
     public CoreModuleVersionHandler() {
         super();
