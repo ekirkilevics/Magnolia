@@ -30,7 +30,7 @@
     </appender>
   -->
   <appender name="sync-log-debug" class="org.apache.log4j.RollingFileAppender">
-    <param name="File" value="${magnolia.app.rootdir}/logs/magnolia-debug.log" />
+    <param name="File" value="${magnolia.logs.dir}/magnolia-debug.log" />
     <param name="MaxFileSize" value="1MB" />
     <param name="Threshold" value="DEBUG" />
     <param name="MaxBackupIndex" value="5" />
@@ -43,7 +43,7 @@
     <appender-ref ref="sync-log-debug" />
   </appender>
   <appender name="sync-log-error" class="org.apache.log4j.RollingFileAppender">
-    <param name="File" value="${magnolia.app.rootdir}/logs/magnolia-error.log" />
+    <param name="File" value="${magnolia.logs.dir}/magnolia-error.log" />
     <param name="MaxFileSize" value="1MB" />
     <param name="Threshold" value="ERROR" />
     <param name="MaxBackupIndex" value="5" />
@@ -56,7 +56,7 @@
     <appender-ref ref="sync-log-error" />
   </appender>
   <appender name="sync-log-activation" class="org.apache.log4j.RollingFileAppender">
-    <param name="File" value="${magnolia.app.rootdir}/logs/magnolia-activation.log" />
+    <param name="File" value="${magnolia.logs.dir}/magnolia-activation.log" />
     <param name="MaxFileSize" value="1MB" />
     <param name="MaxBackupIndex" value="5" />
     <param name="Append" value="true" />
@@ -68,13 +68,13 @@
     <appender-ref ref="sync-log-activation" />
   </appender>
   <appender name="log-bootstrap" class="org.apache.log4j.FileAppender">
-    <param name="File" value="${magnolia.app.rootdir}/logs/bootstrap.log" />
+    <param name="File" value="${magnolia.logs.dir}/bootstrap.log" />
     <layout class="org.apache.log4j.PatternLayout">
       <param name="ConversionPattern" value="%-5p %d{dd.MM.yyyy HH:mm:ss}  %m%n" />
     </layout>
   </appender>
   <appender name="sync-log-access" class="org.apache.log4j.RollingFileAppender">
-    <param name="File" value="${magnolia.app.rootdir}/logs/magnolia-access.log" />
+    <param name="File" value="${magnolia.logs.dir}/magnolia-access.log" />
     <param name="MaxFileSize" value="1MB" />
     <param name="MaxBackupIndex" value="5" />
     <param name="Append" value="true" />
@@ -86,7 +86,7 @@
     <appender-ref ref="sync-log-access" />
   </appender>
   <appender name="sync-log-audit" class="org.apache.log4j.RollingFileAppender">
-    <param name="File" value="${magnolia.app.rootdir}/logs/magnolia-audit.log" />
+    <param name="File" value="${magnolia.logs.dir}/magnolia-audit.log" />
     <param name="MaxFileSize" value="1MB" />
     <param name="MaxBackupIndex" value="5" />
     <param name="Append" value="true" />

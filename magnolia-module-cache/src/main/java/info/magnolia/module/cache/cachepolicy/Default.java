@@ -65,9 +65,9 @@ public class Default implements CachePolicy {
         if (shouldBypass(aggregationState, key)) {
             return new CachePolicyResult(CachePolicyResult.bypass, key, null);
         }
-        
+
         if (shouldRefresh(aggregationState, key)) {
-            log .error("Cache refresh requested for {}", key);
+            log .debug("Cache refresh requested for {}", key);
             return new CachePolicyResult(CachePolicyResult.store, key, null);
         }
 
