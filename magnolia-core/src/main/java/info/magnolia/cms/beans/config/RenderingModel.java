@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,26 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.module.samples.freemarker;
+package info.magnolia.cms.beans.config;
 
-import java.util.Date;
+import info.magnolia.cms.core.Content;
+
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * A bean tying the current content and the rendering definition. Subclasses
+ * will provide helper methods to the template. The {@link #execute()} method is
+ * executed before the rendering starts. The model is available under the name
+ * <code>model</code>.
+ * @author pbracher
+ * @version $Id$
  */
-public class SampleAction {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SampleAction.class);
+public interface RenderingModel {
 
-    private Date executionTime;
+    /**
+     * The model of the parent paragraph or template.
+     */
+    public RenderingModel getParentModel();
 
-    public String execute() {
-        log.debug("Executing " + this.getClass().getName());
-        executionTime = new Date();
-        return "success";
-    }
+    /**
+     * The content tied to this model
+     */
+    public Content getContent();
 
-    public Date getExecutionTime() {
-        return executionTime;
-    }
+    /**
+     * The renderable (paragraph/template) tied to this model
+     */
+    public Renderable getRenderable();
+
+    /**
+     * Called after all properties were set. Can return a string which is passed
+     * to the method
+     * {@link Renderable#determineTemplatePath(String, RenderingModel)}
+     */
+    public String execute();
+
 }

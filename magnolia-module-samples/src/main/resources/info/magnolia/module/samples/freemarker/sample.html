@@ -4,5 +4,5 @@
     [#if content.title?has_content]<h2>${content.title}</h2>[/#if]
     <p>${content.text}</p>
     <p>result: ${result}</p>
-    <p>Action's execution time: ${action.executionTime?datetime}</p>
+    <p>Action's execution time: ${state.executionTime?datetime}</p>
 </div>

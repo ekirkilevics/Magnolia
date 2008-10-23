@@ -34,67 +34,72 @@
 package info.magnolia.module.templating;
 
 import java.io.Writer;
+import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import info.magnolia.cms.beans.config.ActionBasedRenderable;
 import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.I18nContentWrapper;
 import info.magnolia.context.MgnlContext;
 
 
 /**
+ * Abstract renderer which can be used to implement paragraph or template renderers. Sets up the context by providing the following objects: content, aggrigationState, page, model, actionResult, mgnl
  * @author pbracher
  * @version $Id$
  *
  */
 public abstract class AbstractRenderer {
 
+    private static final String MODEL_ATTRIBUTE = RenderingModel.class.getName();
+
     public AbstractRenderer() {
-        super();
     }
 
     protected void render(Content content, Renderable renderable, Writer out) throws RenderException {
-        final Map ctx = newContext();
-        Map state = saveContextState(ctx);
 
-        ActionResult actionResult = executeAction(content, renderable);
-
-        setupContext(ctx, content, renderable, actionResult);
-
-        String templatePath = renderable.getTemplatePath();
-        if(actionResult != null && actionResult.getTemplatePath() != null){
-            templatePath = actionResult.getTemplatePath();
+        final RenderingModel parentModel = (RenderingModel) MgnlContext.getAttribute(MODEL_ATTRIBUTE);
+        RenderingModel model;
+        try {
+            model = newModel(content, renderable, parentModel);
         }
+        catch (Exception e) {
+            throw new RenderException("Can't create rendering model", e);
+        }
+
+        final String actionResult = model.execute();
+        String templatePath = renderable.determineTemplatePath(actionResult, model);
 
         if (templatePath == null) {
             throw new IllegalStateException("Unable to render " + renderable.getClass().getName() + " " + renderable.getName() + " in page " + content.getHandle() + ": templatePath not set.");
         }
 
+        final Map ctx = newContext();
+        final Map savedContextState = saveContextState(ctx);
+        setupContext(ctx, content, renderable, model, actionResult);
+        MgnlContext.setAttribute(MODEL_ATTRIBUTE, model);
         callTemplate(templatePath, renderable, ctx, out);
+        MgnlContext.setAttribute(MODEL_ATTRIBUTE, parentModel);
 
-        restoreContext(ctx, state);
+        restoreContext(ctx, savedContextState);
     }
 
-    protected ActionResult executeAction(Content content, Renderable renderable) throws RenderException {
-        ActionResult actionResult;
-        if(renderable instanceof ActionBasedRenderable){
-             actionResult = ActionExecutor.getInstace().execute(content, (ActionBasedRenderable)renderable);
-        }
-        else{
-            actionResult = null;
-        }
-        return actionResult;
+    /**
+     * Creates the model for this rendering process. Will set the properties
+     */
+    protected RenderingModel newModel(Content content, Renderable renderable, RenderingModel parentModel) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        return renderable.newModel(content, renderable, parentModel);
     }
 
     protected Map saveContextState(final Map ctx) {
         Map state = new HashMap();
         // save former values
         saveAttribute(ctx, state, "content");
-        saveAttribute(ctx, state, "result");
-        saveAttribute(ctx, state, "action");
+        saveAttribute(ctx, state, "actionResult");
+        saveAttribute(ctx, state, "state");
         saveAttribute(ctx, state, getPageAttributeName());
         return state;
     }
@@ -110,30 +115,36 @@ public abstract class AbstractRenderer {
         }
     }
 
-    protected void setupContext(final Map ctx, Content content, Renderable renderable, ActionResult actionResult){
+    protected void setupContext(final Map ctx, Content content, Renderable renderable, RenderingModel model, Object actionResult){
         final Content page = MgnlContext.getAggregationState().getMainContent();
 
         setContextAttribute(ctx, "content", new I18nContentWrapper(content));
         setContextAttribute(ctx, "aggregationState", MgnlContext.getAggregationState());
         setContextAttribute(ctx, getPageAttributeName(), new I18nContentWrapper(page));
         setContextAttribute(ctx, "mgnl", new MagnoliaTemplatingUtilities());
-
-        if (actionResult != null) {
-            setContextAttribute(ctx, "result", actionResult.getResult());
-            setContextAttribute(ctx, "action", actionResult.getActionBean());
-        }
+        setContextAttribute(ctx, "model", model);
+        setContextAttribute(ctx, "actionResult", actionResult);
     }
 
     protected Object setContextAttribute(final Map ctx, final String name, Object value) {
         return ctx.put(name, value);
     }
 
+    /**
+     * Used to give JSP implementations to give the chance to use on other name than page which is a reserved name in JSPs.
+     */
     protected String getPageAttributeName() {
         return "page";
     }
 
+    /**
+     * Create a new context object which is a map.
+     */
     protected abstract Map newContext();
 
+    /**
+     * Finally execute the rendering.
+     */
     protected abstract void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException;
 
 }

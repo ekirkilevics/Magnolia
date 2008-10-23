@@ -3,7 +3,7 @@
 [#assign c=JspTaglibs["http://java.sun.com/jsp/jstl/core"]]
 [#assign cmsu=JspTaglibs["cms-util-taglib"]]
 [#assign fmt=JspTaglibs["http://java.sun.com/jsp/jstl/fmt"]]
-[#assign messages=templateAction.messages]
+[#assign messages=state.messages]
 <html>
 <head>
   [@cms.setNode var="pageProperties" /]
@@ -12,8 +12,8 @@
 
   <!--  add magnolia css and js links -->
   [@cms.links /]
-  
-  [#assign module=templateAction.moduleConfig]
+
+  [#assign module=state.moduleConfig]
 
   <!-- include css files that are configured in AdminCentral under config:/modules/samples/config/cssFiles -->
   [#list module.cssFiles as cssFile]
@@ -37,14 +37,14 @@
 <body>
   [@cms.mainBar dialog="${module.paragraphs.page}" /]
   <div id="contentDivMainColumnTotalWidth">
-  
+
   <!-- content title -->
   [@cms.out nodeDataName="title" var="title" /]
   [#if !title?has_content]
     [@cms.out nodeDataName="contentTitle" var="title" /]
   [/#if]
   <h1>${title}</h1>
-  
+
   [@cms.contentNodeIterator contentNodeCollectionName="mainColumnParagraphs"]
     [@cms.out nodeDataName="lineAbove" var="lineAbove" /]
     [@cms.out nodeDataName="spacer" var="spacer" /]

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008 Magnolia International
+ * This file Copyright (c) 2003-2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -31,29 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.module.templating;
+package info.magnolia.module.samples.freemarker;
 
+import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderingModel;
+import info.magnolia.cms.beans.config.RenderingModelImpl;
+import info.magnolia.cms.core.Content;
 
-public class ActionResult {
-    private final Object result;
-    private final Object actionBean;
-    private final String templatePath;
+import java.util.Date;
 
-    public ActionResult(Object result, Object actionBean, String templatePath) {
-        this.result = result;
-        this.actionBean = actionBean;
-        this.templatePath = templatePath;
+/**
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
+ */
+public class SampleModel extends RenderingModelImpl{
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SampleModel.class);
+
+    private Date executionTime;
+
+    public SampleModel(Content content, Renderable renderable, RenderingModel parent) {
+        super(content, renderable, parent);
     }
 
-    public Object getResult() {
-        return result;
+    public String execute() {
+        log.debug("Executing " + this.getClass().getName());
+        executionTime = new Date();
+        return "success";
     }
 
-    public Object getActionBean() {
-        return actionBean;
-    }
-
-    public String getTemplatePath() {
-        return this.templatePath;
+    public Date getExecutionTime() {
+        return executionTime;
     }
 }

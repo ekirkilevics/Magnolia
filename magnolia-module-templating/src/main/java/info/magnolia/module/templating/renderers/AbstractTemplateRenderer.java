@@ -42,11 +42,11 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.ActionResult;
 import info.magnolia.module.templating.AbstractRenderer;
 import info.magnolia.module.templating.RenderException;
 
@@ -88,8 +88,8 @@ public abstract class AbstractTemplateRenderer extends AbstractRenderer implemen
         return state;
     }
 
-    protected void setupContext(Map ctx, Content content, Renderable renderable, ActionResult actionResult) {
-        super.setupContext(ctx, content, renderable, actionResult);
+    protected void setupContext(Map ctx, Content content, Renderable renderable, RenderingModel state, Object actionResult) {
+        super.setupContext(ctx, content, renderable, state, actionResult);
         setContextAttribute(ctx, "templateDef", renderable);
     }
 }

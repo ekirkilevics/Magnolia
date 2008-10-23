@@ -33,13 +33,38 @@
  */
 package info.magnolia.cms.beans.config;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Map;
+
+import info.magnolia.cms.core.Content;
+
 /**
+ * Abstract rendering definition used for templates and paragraphs.
  * @author pbracher
  * @version $Id$
  *
  */
 public interface Renderable {
-    String getName();
-    String getTemplatePath();
-    String getI18nBasename();
+    public String getName();
+    public String getType();
+    public String getTitle();
+    public String getDescription();
+    public String getI18nBasename();
+    public String getTemplatePath();
+    public String getDialog();
+
+    /**
+     * An arbitary list of parameters. Used to omit subclass with getters and setters for each extra parameter.
+     */
+    public Map getParameters();
+
+    /**
+     * Create the model based on the current content.
+     */
+    public RenderingModel newModel(Content content, Renderable renderable, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+
+    /**
+     * The modules execute() method can return a string which is passed to this method to determine the template to use.
+     */
+    public String determineTemplatePath(String actionResult, RenderingModel model);
 }

@@ -33,6 +33,10 @@
  */
 package info.magnolia.module.samples.freemarker;
 
+import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderingModel;
+import info.magnolia.cms.beans.config.RenderingModelImpl;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.module.samples.jsp.SamplesModuleConfigHelper;
@@ -43,10 +47,15 @@ import java.util.Date;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class TemplateAction {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateAction.class);
+public class TemplateModel extends RenderingModelImpl{
+
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(TemplateModel.class);
 
     private Date executionTime;
+
+    public TemplateModel(Content content, Renderable renderable, RenderingModel parent) {
+        super(content, renderable, parent);
+    }
 
     public String execute() {
         log.debug("Executing " + this.getClass().getName());
@@ -57,11 +66,11 @@ public class TemplateAction {
     public Date getExecutionTime() {
         return executionTime;
     }
-    
+
     public SamplesModuleConfigHelper getModuleConfig() {
         return new SamplesModuleConfigHelper();
     }
-    
+
     public Messages getMessages() {
         return MessagesManager.getMessages("info.magnolia.module.admininterface.messages");
     }

@@ -33,8 +33,7 @@
  */
 package info.magnolia.cms.beans.config;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.cms.core.Content;
 
 
 /**
@@ -42,23 +41,32 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  *
  */
-public class ActionBasedTemplate extends Template implements ActionBasedRenderable {
+public class RenderingModelImpl implements RenderingModel {
 
-    private Class actionClass;
+    private RenderingModel parentModel;
+    private Content content;
+    private Renderable renderable;
 
-    public Class getActionClass() {
-        return actionClass;
+    public RenderingModelImpl(Content content, Renderable renderable, RenderingModel parent) {
+        this.content = content;
+        this.renderable = renderable;
+        this.parentModel = parent;
     }
 
-    public void setActionClass(Class actionClass) {
-        this.actionClass = actionClass;
+    public RenderingModel getParentModel() {
+        return this.parentModel;
     }
 
-    /**
-     * Override this method if you need specific templates depending on the action result.
-     */
-    public String determineTemplatePath(Object result, Object action) {
-        return getTemplatePath();
+    public Content getContent() {
+        return this.content;
+    }
+
+    public Renderable getRenderable() {
+        return this.renderable;
+    }
+
+    public String execute() {
+        return null;
     }
 
 }

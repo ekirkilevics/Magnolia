@@ -37,15 +37,16 @@ import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.templating.AbstractRenderer;
-import info.magnolia.module.templating.ActionResult;
 import info.magnolia.module.templating.RenderException;
 
 
@@ -67,8 +68,9 @@ public abstract class AbstractParagraphRenderer extends AbstractRenderer impleme
             render(content, (Renderable) paragraph, out);
         }
         catch (RenderException e) {
-            log.error("", e);
-            throw new IOException(e.getMessage());
+            // the IOException does not take an Exception as a parameter
+            log.error("Can't render paragraph", e);
+            throw new IOException(ExceptionUtils.getRootCauseMessage(e));
         }
         finally{
             out.flush();
@@ -81,8 +83,8 @@ public abstract class AbstractParagraphRenderer extends AbstractRenderer impleme
         return state;
     }
 
-    protected void setupContext(Map ctx, Content content, Renderable renderable, ActionResult actionResult) {
-        super.setupContext(ctx, content, renderable, actionResult);
+    protected void setupContext(Map ctx, Content content, Renderable renderable, RenderingModel state, Object actionResult) {
+        super.setupContext(ctx, content, renderable, state, actionResult);
         setContextAttribute(ctx, "paragraphDef", renderable);
     }
 }

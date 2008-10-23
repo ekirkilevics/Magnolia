@@ -35,7 +35,6 @@ package info.magnolia.module.templating.renderers;
 
 import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.Renderable;
-import info.magnolia.cms.beans.config.Template;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.module.templating.RenderException;
@@ -48,10 +47,6 @@ import java.util.Map;
 import org.apache.commons.lang.exception.ExceptionUtils;
 
 /**
- * Simple freemarker template renderer, mapped to template type <code>freemarker</code>. The valid attributes of freemarker templates are
- * <code>path</code>, which specify the template to be processed and <code>actionClass</code> specifying executor for any necessary code
- * execution. Instance of this class is then available in the template as <code>templateAction</code> variable.
- *
  * @version $Revision: 14052 $ ($Author: gjoseph $)
  */
 public class FreemarkerTemplateRenderer extends AbstractTemplateRenderer {

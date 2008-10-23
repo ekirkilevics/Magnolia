@@ -33,102 +33,12 @@
  */
 package info.magnolia.cms.beans.config;
 
-import java.util.HashMap;
-import java.util.Map;
 
-import org.apache.commons.lang.builder.ToStringBuilder;
 
 
 /**
  * @author Sameer Charles
  */
-public class Paragraph implements Renderable {
-    private String name;
-    private String title;
-    private String templatePath;
-    private String dialog;
-    private String type;
-    private String description;
-    private String i18nBasename;
-    private Map parameters = new HashMap();
-
-    public Paragraph() {
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public String getTemplatePath() {
-        return this.templatePath;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public void setTemplatePath(String templatePath) {
-        this.templatePath = templatePath;
-    }
-
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDialog() {
-        return this.dialog;
-    }
-
-    public void setDialog(String dialog) {
-        this.dialog = dialog;
-    }
-
-    public String getI18nBasename() {
-        return this.i18nBasename;
-    }
-
-    public void setI18nBasename(String basename) {
-        this.i18nBasename = basename;
-    }
-
-    public String toString() {
-        return new ToStringBuilder(this)
-            .append("name", this.name) //$NON-NLS-1$
-            .append("type", this.type) //$NON-NLS-1$
-            .append("description", this.description) //$NON-NLS-1$
-            .append("dialog", this.dialog) //$NON-NLS-1$
-            .append("title", this.title) //$NON-NLS-1$
-            .append("templatePath", this.templatePath) //$NON-NLS-1$
-            .toString();
-    }
-
-
-    public Map getParameters() {
-        return this.parameters;
-    }
-
-    public void setParameters(Map params) {
-        this.parameters = params;
-    }
+public class Paragraph extends AbstractRenderable {
 
 }

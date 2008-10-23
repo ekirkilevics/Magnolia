@@ -38,8 +38,10 @@ import static org.easymock.classextension.EasyMock.createNiceMock;
 import static org.easymock.classextension.EasyMock.replay;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.TemplateException;
-import info.magnolia.cms.beans.config.ActionBasedParagraph;
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderingModel;
+import info.magnolia.cms.beans.config.RenderingModelImpl;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -111,11 +113,11 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     }
 
     public void testActionClassGetsExecutedAndIsPutOnContextAlongWithResultAndContent() throws IOException {
-        tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${action.pouet} : ${result}");
-        final ActionBasedParagraph par = new ActionBasedParagraph();
+        tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${model.pouet} : ${actionResult}");
+        final Paragraph par = new Paragraph();
         par.setName("test-with-action");
         par.setTemplatePath("test_action.ftl");
-        par.setActionClass(SimpleTestAction.class);
+        par.setModelClass(SimpleTestState.class);
         final MockContent c = new MockContent("plop");
         c.addNodeData(new MockNodeData("boo", "yay"));
         final StringWriter out = new StringWriter();
@@ -138,12 +140,12 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         replay(context);
         MgnlContext.setInstance(context);
 
-        tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${action.pouet} : ${action.blah} : ${result}");
-        final ActionBasedParagraph par = new ActionBasedParagraph();
+        tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${model.pouet} : ${model.blah} : ${actionResult}");
+        final Paragraph par = new Paragraph();
         par.setName("test-with-action");
         par.setI18nBasename("testmessages");
         par.setTemplatePath("test_action.ftl");
-        par.setActionClass(SimpleTestAction.class);
+        par.setModelClass(SimpleTestState.class);
         final MockContent c = new MockContent("plop");
         c.addNodeData(new MockNodeData("boo", "yay"));
         final StringWriter out = new StringWriter();
@@ -164,7 +166,11 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         }
     }
 
-    public static final class SimpleTestAction {
+    public static final class SimpleTestState extends RenderingModelImpl{
+        public SimpleTestState(Content content, Renderable renderable, RenderingModel parent) {
+            super(content, renderable, parent);
+        }
+
         private String pouet = "it works";
         private String blah;
 

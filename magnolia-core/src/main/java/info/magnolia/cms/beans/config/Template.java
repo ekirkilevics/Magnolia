@@ -41,7 +41,6 @@ import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -53,7 +52,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class Template implements Renderable, Serializable{
+public class Template extends AbstractRenderable{
 
     /**
      * Stable serialVersionUID.
@@ -62,25 +61,7 @@ public class Template implements Renderable, Serializable{
 
     private Content content;
 
-    private String name;
-
-    private String templatePath;
-
-    private String type;
-
-    private String title;
-
-    //private String location;
-
-    private String description;
-
-    private String i18nBasename;
-
     private boolean visible;
-
-    private String image;
-
-    private Map parameters = new HashMap();
 
     private Map subTemplates = new HashMap();
 
@@ -92,22 +73,6 @@ public class Template implements Renderable, Serializable{
     }
 
     /**
-     * Getter for <code>description</code>.
-     * @return Returns the description.
-     */
-    public String getDescription() {
-        return description;
-    }
-
-    /**
-     * Getter for <code>name</code>.
-     * @return Returns the name.
-     */
-    public String getName() {
-        return name;
-    }
-
-    /**
      * Getter for <code>path</code>.
      * @return Returns the path.
      * @deprecated since 3.7. use getTemplatePath() instead
@@ -116,41 +81,18 @@ public class Template implements Renderable, Serializable{
         return getTemplatePath();
     }
 
-    /**
-     * Getter for <code>title</code>.
-     * @return Returns the title.
-     */
-    public String getTitle() {
-        return title;
-    }
 
     public String getI18NTitle() {
         Messages msgs;
 
-        if (StringUtils.isNotEmpty(i18nBasename)) {
-            msgs = MessagesManager.getMessages(i18nBasename);
+        if (StringUtils.isNotEmpty(getI18nBasename())) {
+            msgs = MessagesManager.getMessages(getI18nBasename());
         }
         else {
             msgs = TemplateMessagesUtil.getMessages();
         }
 
         return msgs.getWithDefault(getTitle(), getTitle());
-    }
-
-    /**
-     * Getter for <code>image</code>.
-     * @return Returns the image.
-     */
-    public String getImage() {
-        return image;
-    }
-
-    /**
-     * Getter for <code>type</code>.
-     * @return Returns the type.
-     */
-    public String getType() {
-        return type;
     }
 
     public String getParameter(String key) {
@@ -173,32 +115,12 @@ public class Template implements Renderable, Serializable{
         this.subTemplates.put(extension, subTemplate);
     }
 
-    public String getI18nBasename() {
-        return this.i18nBasename;
-    }
-
-    public void setI18nBasename(String basename) {
-        this.i18nBasename = basename;
-    }
-
-    public Map getParameters() {
-        return this.parameters;
-    }
-
-    public void setParameters(Map params) {
-        this.parameters = params;
-    }
-
     public Map getSubTemplates() {
         return this.subTemplates;
     }
 
     public void setSubTemplates(Map subTemplates) {
         this.subTemplates = subTemplates;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     /**
@@ -208,24 +130,8 @@ public class Template implements Renderable, Serializable{
         setTemplatePath(path);
     }
 
-    public void setType(String type) {
-        this.type = type;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public void setVisible(boolean visible) {
         this.visible = visible;
-    }
-
-    public void setImage(String image) {
-        this.image = image;
     }
 
     public boolean isAvailable(Content node) {
@@ -240,14 +146,6 @@ public class Template implements Renderable, Serializable{
 
     public void setContent(Content content) {
         this.content = content;
-    }
-
-    public String getTemplatePath() {
-        return templatePath;
-    }
-
-    public void setTemplatePath(String templatePath) {
-        this.templatePath = templatePath;
     }
 
 }
