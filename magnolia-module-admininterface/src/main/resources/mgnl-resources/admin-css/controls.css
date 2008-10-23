@@ -79,11 +79,7 @@ table.mgnlControlBar, table.mgnlControlBarSmall {
     background-image: url("../admin-images/mgnl-bar.png") !important;
 }
 
-.mgnlControlBarSmall td {
-    padding: 1px 2px 2px 2px !important;
-}
-
-.mgnlControlBar_PUSHED,.mgnlControlBarSmall_PUSHED {
+.mgnlControlBar_PUSHED td, .mgnlControlBarSmall_PUSHED td {
     background-color: #9DB517 !important;
     border-top: 1px solid #B9C950 !important;
     border-left: 1px solid #B9C950 !important;
@@ -91,7 +87,7 @@ table.mgnlControlBar, table.mgnlControlBarSmall {
     border-right: 1px solid #8a2 !important;
 }
 
-.mgnlControlBar_MOUSEOVER,.mgnlControlBarSmall_MOUSEOVER {
+.mgnlControlBar_MOUSEOVER td, .mgnlControlBarSmall_MOUSEOVER td {
     background-color: #8a3 !important;
     border-left: 1px solid #ac6 !important;
     border-top: 1px solid #ac6 !important;
@@ -99,13 +95,16 @@ table.mgnlControlBar, table.mgnlControlBarSmall {
     border-bottom: 1px solid #680 !important;
 }
 
+.mgnlControlBarSmall td, .mgnlControlBarSmall_PUSHED td, .mgnlControlBarSmall_MOUSEOVER td {
+    padding: 1px 2px 2px 2px !important;
+}
+
 .mgnlControlBar,.mgnlControlBar_PUSHED,.mgnlControlBar_MOUSEOVER {
     width: 100%;
 }
 
-.mgnlControlBar td,.mgnlControlBar_PUSHED td,.mgnlControlBar_MOUSEOVER td
-    {
-    padding: 4px 2px 4px 2px;
+.mgnlControlBar td,.mgnlControlBar_PUSHED td,.mgnlControlBar_MOUSEOVER td {
+    padding: 4px 2px 4px 2px !important;
 }
 
 #mgnlMoveDivShadow,#mgnlMoveDivDenied,#mgnlMoveDivAllowed {
