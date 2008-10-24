@@ -6,9 +6,6 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>db293ee8-db6d-484f-8142-be3b1442e065</sv:value>
   </sv:property>
-  <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.cms.beans.config.ActionBasedParagraph</sv:value>
-  </sv:property>
   <sv:property sv:name="type" sv:type="String">
     <sv:value>freemarker</sv:value>
   </sv:property>
