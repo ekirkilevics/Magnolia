@@ -43,9 +43,9 @@ import info.magnolia.cms.core.Content;
  */
 public class RenderingModelImpl implements RenderingModel {
 
-    private RenderingModel parentModel;
-    private Content content;
-    private Renderable renderable;
+    protected RenderingModel parentModel;
+    protected Content content;
+    protected Renderable renderable;
 
     public RenderingModelImpl(Content content, Renderable renderable, RenderingModel parent) {
         this.content = content;
