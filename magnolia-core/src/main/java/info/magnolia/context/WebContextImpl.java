@@ -38,6 +38,7 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Security;
+import info.magnolia.cms.util.RequestFormUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -145,7 +146,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * @return parameter value
      */
     public String getParameter(String name) {
-        return this.request.getParameter(name);
+        return (String) this.getParameters().get(name);
     }
 
     /**
@@ -154,13 +155,8 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * @return parameter values
      */
     public Map getParameters() {
-        Map map = new HashMap();
-        Enumeration paramEnum = this.request.getParameterNames();
-        while (paramEnum.hasMoreElements()) {
-            final String name = (String) paramEnum.nextElement();
-            map.put(name, this.request.getParameter(name));
-        }
-        return map;
+        // TODO drop the use of this util class
+        return RequestFormUtil.getParameters(request);
     }
 
     /**
@@ -188,7 +184,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
             final ServletRequest requestToUse = pageContext != null ? pageContext.getRequest() : this.getRequest();
             final HttpServletResponse responseToUse = (pageContext != null && pageContext.getResponse() instanceof HttpServletResponse) ? (HttpServletResponse) pageContext.getResponse() : response;
             final WriterResponseWrapper wrappedResponse = new WriterResponseWrapper(responseToUse, out);
-            
+
             requestToUse.getRequestDispatcher(path).include(requestToUse, wrappedResponse);
         }
         catch (ServletException e) {
