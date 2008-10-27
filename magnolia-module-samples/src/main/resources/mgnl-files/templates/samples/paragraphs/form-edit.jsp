@@ -18,7 +18,7 @@
         <br />
       </c:when>
       <c:otherwise>
-        <textarea name="field_${contentObj.name}" rows="${par.rows}"><!--  --></textarea>
+        <textarea name="field_${contentObj.name}" rows="${par.rows}"><jsp:text/></textarea>
       </c:otherwise>
     </c:choose>
   </div>
