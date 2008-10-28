@@ -35,9 +35,11 @@ package info.magnolia.module.templating;
 
 import freemarker.core.Environment;
 import info.magnolia.cms.beans.config.ParagraphRenderingFacade;
+import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.I18nContentWrapper;
 import info.magnolia.cms.util.InheritanceContentWrapper;
+import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.SiblingsHelper;
 
 import java.io.IOException;
@@ -73,6 +75,22 @@ public class MagnoliaTemplatingUtilities {
 
     public Content i18n(Content node) {
         return new I18nContentWrapper(node);
+    }
+
+    public boolean isEditMode(){
+        return isAuthorInstance() && !isPreviewMode();
+    }
+
+    public boolean isPreviewMode(){
+        return Resource.showPreview();
+    }
+
+    public boolean isAuthorInstance(){
+        return ServerConfiguration.getInstance().isAdmin();
+    }
+
+    public boolean isPublicInstance(){
+        return !isAuthorInstance();
     }
 
 }
