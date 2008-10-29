@@ -53,40 +53,38 @@ public class RequestAttributeStrategy implements AttributeStrategy {
 
     private HttpServletRequest request;
 
+    private WebContext ctx;
+
     public RequestAttributeStrategy() {
     }
 
-    public RequestAttributeStrategy(HttpServletRequest request) {
-        setRequest(request);
+    public RequestAttributeStrategy(WebContext ctx) {
+        this.ctx = ctx;
     }
 
     public HttpServletRequest getRequest() {
-        return request;
-    }
-
-    public void setRequest(HttpServletRequest request) {
-        this.request = request;
+        return ctx.getRequest();
     }
 
     public Object getAttribute(String name, int scope) {
         switch (scope) {
             case Context.LOCAL_SCOPE:
-                Object obj = this.request.getAttribute(name);
+                Object obj = getRequest().getAttribute(name);
                 if (obj == null) {
-                    obj = this.request.getParameter(name);
+                    obj = getRequest().getParameter(name);
                 }
                 if (obj == null) {
                     // we also expose some of the request properties as attributes
                     if (WebContext.ATTRIBUTE_REQUEST_CHARACTER_ENCODING.equals(name)) {
-                        obj = request.getCharacterEncoding();
+                        obj = getRequest().getCharacterEncoding();
                     }
                     else if (WebContext.ATTRIBUTE_REQUEST_URI.equals(name)) {
-                        obj = request.getRequestURI();
+                        obj = getRequest().getRequestURI();
                     }
                 }
                 return obj;
             case Context.SESSION_SCOPE:
-                HttpSession httpsession = request.getSession(false);
+                HttpSession httpsession = getRequest().getSession(false);
                 if (httpsession == null) {
                     return null;
                 }
@@ -105,13 +103,13 @@ public class RequestAttributeStrategy implements AttributeStrategy {
         switch (scope) {
             case Context.LOCAL_SCOPE:
                 // add parameters
-                Enumeration paramEnum = this.request.getParameterNames();
+                Enumeration paramEnum = getRequest().getParameterNames();
                 while (paramEnum.hasMoreElements()) {
                     final String name = (String) paramEnum.nextElement();
-                    map.put(name, this.request.getParameter(name));
+                    map.put(name, getRequest().getParameter(name));
                 }
                 // attributes have higher priority
-                keysEnum = this.request.getAttributeNames();
+                keysEnum = getRequest().getAttributeNames();
                 while (keysEnum.hasMoreElements()) {
                     String key = (String) keysEnum.nextElement();
                     Object value = getAttribute(key, scope);
@@ -119,7 +117,7 @@ public class RequestAttributeStrategy implements AttributeStrategy {
                 }
                 return map;
             case Context.SESSION_SCOPE:
-                HttpSession httpsession = request.getSession(false);
+                HttpSession httpsession = getRequest().getSession(false);
                 if (httpsession == null) {
                     return map;
                 }
@@ -141,10 +139,10 @@ public class RequestAttributeStrategy implements AttributeStrategy {
     public void removeAttribute(String name, int scope) {
         switch (scope) {
             case Context.LOCAL_SCOPE:
-                this.request.removeAttribute(name);
+                getRequest().removeAttribute(name);
                 break;
             case Context.SESSION_SCOPE:
-                HttpSession httpsession = request.getSession(false);
+                HttpSession httpsession = getRequest().getSession(false);
                 if (httpsession != null) {
                     httpsession.removeAttribute(name);
                 }
@@ -165,7 +163,7 @@ public class RequestAttributeStrategy implements AttributeStrategy {
 
         switch (scope) {
             case Context.LOCAL_SCOPE:
-                this.request.setAttribute(name, value);
+                getRequest().setAttribute(name, value);
                 break;
             case Context.SESSION_SCOPE:
                 if (!(value instanceof Serializable)) {
@@ -173,10 +171,10 @@ public class RequestAttributeStrategy implements AttributeStrategy {
                     return;
                 }
 
-                HttpSession httpsession = request.getSession(false);
+                HttpSession httpsession = getRequest().getSession(false);
                 if (httpsession == null) {
                     log.debug("Session initialized in order to set attribute '{}' to '{}'. You should avoid using session when possible!", name, value);
-                    httpsession = request.getSession(true);
+                    httpsession = getRequest().getSession(true);
                 }
 
                 httpsession.setAttribute(name, value);
@@ -185,7 +183,7 @@ public class RequestAttributeStrategy implements AttributeStrategy {
                 MgnlContext.getSystemContext().setAttribute(name, value, Context.APPLICATION_SCOPE);
                 break;
             default:
-                this.request.setAttribute(name, value);
+                getRequest().setAttribute(name, value);
                 log.debug("Undefined scope, setting attribute [{}] in request scope", name);
         }
     }

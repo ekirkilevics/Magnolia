@@ -33,6 +33,10 @@
  */
 package info.magnolia.cms.filters;
 
+import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
+
 import java.io.IOException;
 
 import javax.servlet.FilterChain;
@@ -40,6 +44,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * Handles the bypassing
@@ -61,16 +66,27 @@ public class MgnlFilterChain implements FilterChain {
     }
 
     public void doFilter(ServletRequest request, ServletResponse response) throws IOException, ServletException {
-        if (position == filters.length) {
-            originalChain.doFilter(request, response);
+        Context ctx = MgnlContext.hasInstance() ? MgnlContext.getInstance() : null;
+        boolean updateCtx = ctx instanceof WebContext && request instanceof HttpServletRequest && response instanceof HttpServletResponse;
+        if (updateCtx) {
+            ((WebContext) ctx).push((HttpServletRequest) request, (HttpServletResponse) response);
         }
-        else {
-            position++;
-            MgnlFilter filter = filters[position - 1];
-            if (!filter.bypasses((HttpServletRequest)request)) {
-                filter.doFilter(request, response, this);
-            } else {
-                doFilter(request, response);
+        try {
+            if (position == filters.length) {
+                originalChain.doFilter(request, response);
+            }
+            else {
+                position++;
+                MgnlFilter filter = filters[position - 1];
+                if (!filter.bypasses((HttpServletRequest)request)) {
+                    filter.doFilter(request, response, this);
+                } else {
+                    doFilter(request, response);
+                }
+            }
+        } finally {
+            if (updateCtx) {
+                ((WebContext) ctx).pop();
             }
         }
     }

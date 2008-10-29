@@ -42,9 +42,8 @@ import info.magnolia.cms.util.RequestFormUtil;
 
 import java.io.IOException;
 import java.io.Writer;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.Stack;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -81,6 +80,10 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
 
     protected AggregationState aggregationState;
 
+    private Stack responseStack = new Stack();
+
+    private Stack requestStack = new Stack();
+
     /**
      * Use init to initialize the object.
      */
@@ -100,7 +103,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         this.servletContext = servletContext;
         //reset();
         //setUser(getAnonymousUser());
-        setAttributeStrategy(new RequestAttributeStrategy(request));
+        setAttributeStrategy(new RequestAttributeStrategy(this));
         setRepositoryStrategy(new DefaultRepositoryStrategy(this));
     }
 
@@ -181,8 +184,8 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      */
     public void include(final String path, final Writer out) throws ServletException, IOException {
         try {
-            final ServletRequest requestToUse = pageContext != null ? pageContext.getRequest() : this.getRequest();
-            final HttpServletResponse responseToUse = (pageContext != null && pageContext.getResponse() instanceof HttpServletResponse) ? (HttpServletResponse) pageContext.getResponse() : response;
+            final ServletRequest requestToUse = /*pageContext != null ? pageContext.getRequest() :*/ this.getRequest();
+            final HttpServletResponse responseToUse = /*(pageContext != null && pageContext.getResponse() instanceof HttpServletResponse) ? (HttpServletResponse) pageContext.getResponse() :*/ response;
             final WriterResponseWrapper wrappedResponse = new WriterResponseWrapper(responseToUse, out);
 
             requestToUse.getRequestDispatcher(path).include(requestToUse, wrappedResponse);
@@ -245,5 +248,23 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
 
     protected void releaseJCRSessions() {
         getRepositoryStrategy().release();
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.context.WebContext#pop()
+     */
+    public void pop() {
+        request = (HttpServletRequest) requestStack.pop();
+        response = (HttpServletResponse) responseStack.pop();
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.context.WebContext#push(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     */
+    public void push(HttpServletRequest request, HttpServletResponse response) {
+        requestStack.push(this.request);
+        this.request = request;
+        responseStack.push(this.response);
+        this.response = response;
     }
 }

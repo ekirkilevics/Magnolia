@@ -144,6 +144,7 @@ public class FilterTest extends MgnlTestCase {
         expect(request.getPathInfo()).andReturn("bleh").anyTimes();
 
         WebContext webCtx = createMock(WebContext.class);
+        
         AggregationState aggState = createMock(AggregationState.class);
         expect(aggState.getCurrentURI()).andReturn(".magnolia/something.html");
         expect(webCtx.getAggregationState()).andStubReturn(aggState);
@@ -152,6 +153,11 @@ public class FilterTest extends MgnlTestCase {
 
         HttpServletResponse response = createMock(HttpServletResponse.class);
         FilterChain chain = createMock(FilterChain.class);
+
+        webCtx.push(request, response);
+        webCtx.pop();
+        webCtx.push(request, response);
+        webCtx.pop();
 
         replay(request, webCtx, aggState);
 

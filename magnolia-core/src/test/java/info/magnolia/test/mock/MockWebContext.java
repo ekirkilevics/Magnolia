@@ -196,4 +196,20 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
     public void setCurrentURI(String uri) {
         getAggregationState().setCurrentURI(uri);
     }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.context.WebContext#pop()
+     */
+    public void pop() {
+        // TODO Auto-generated method stub
+        
+    }
+
+    /* (non-Javadoc)
+     * @see info.magnolia.context.WebContext#push(javax.servlet.http.HttpServletRequest, javax.servlet.http.HttpServletResponse)
+     */
+    public void push(HttpServletRequest request, HttpServletResponse response) {
+        // TODO Auto-generated method stub
+        
+    }
 }

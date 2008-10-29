@@ -44,6 +44,9 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 /**
  * This class initializes the current context.
@@ -52,6 +55,7 @@ import javax.servlet.http.HttpServletResponse;
  */
 public class ContextFilter extends AbstractMgnlFilter {
 
+    public static Logger log = LoggerFactory.getLogger(ContextFilter.class);
     private ServletContext servletContext;
 
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -60,7 +64,6 @@ public class ContextFilter extends AbstractMgnlFilter {
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
         throws IOException, ServletException {
-
         // if the filter chain was reset, this filter could be called several time. Using this flag so that only the
         // first call will unset the context (which should be the last post-filters operation)
         boolean contextSet = false;
@@ -68,10 +71,18 @@ public class ContextFilter extends AbstractMgnlFilter {
             MgnlContext.initAsWebContext(request, response, servletContext);
             contextSet = true;
         }
+        if (!contextSet) {
+            // push req/res every time except the first time
+            MgnlContext.push(request, response, servletContext);
+        }
         try {
             chain.doFilter(request, response);
         }
         finally {
+            if (!contextSet) {
+                // pop req/res every time except the first time
+                MgnlContext.pop();
+            }
             if (contextSet) {
                 MgnlContext.release();
                 MgnlContext.setInstance(null);

@@ -165,4 +165,15 @@ public interface WebContext extends Context {
      */
     PageContext getPageContext();
 
+    /**
+     * @param request
+     * @param response
+     */
+    public void push(HttpServletRequest request, HttpServletResponse response);
+
+    /**
+     * 
+     */
+    public void pop();
+
 }

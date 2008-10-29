@@ -60,16 +60,12 @@ import java.util.Map;
 public class JspTemplateRenderer extends AbstractTemplateRenderer {
 
     public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        // FIXME temp fix for MAGNOLIA-2387
-        MgnlContext.setAttribute(JspTemplateRenderer.class.getName() + ".request", request);
-        MgnlContext.setAttribute(JspTemplateRenderer.class.getName() + ".response", response);
         super.renderTemplate(template, request, response);
     }
 
     protected void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException {
-        // FIXME temp fix for MAGNOLIA-2387
-        HttpServletRequest request = (HttpServletRequest) MgnlContext.getAttribute(JspTemplateRenderer.class.getName() + ".request");
-        HttpServletResponse response = (HttpServletResponse) MgnlContext.getAttribute(JspTemplateRenderer.class.getName() + ".response");
+        HttpServletRequest request = ((WebContext) MgnlContext.getInstance()).getRequest();
+        HttpServletResponse response = ((WebContext) MgnlContext.getInstance()).getResponse();
         RequestDispatcher rd = request.getRequestDispatcher(templatePath);
 
         // set this attribute to avoid a second dispatching of the filters
