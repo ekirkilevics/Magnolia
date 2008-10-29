@@ -35,6 +35,7 @@ package info.magnolia.setup.for3_5;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.core.ie.PropertiesImportExport;
 import info.magnolia.content2bean.Content2BeanProcessor;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.TransformationState;
@@ -154,7 +155,7 @@ public class UpdateI18nConfigurationTest extends TestCase {
         assertEquals("true", languagesNode.getContent("es").getNodeData("enabled").getString());
 
         // just a lazy assertion on the total number of properties after the task was executed
-        final Properties hmAsProps = MockUtil.toProperties(hm);
+        final Properties hmAsProps = PropertiesImportExport.toProperties(hm);
         assertEquals(25, hmAsProps.size());
         assertEquals(null, hmAsProps.get("/server/i18n.language"));
         assertEquals(null, hmAsProps.get("/server/i18n/availableLanguages"));

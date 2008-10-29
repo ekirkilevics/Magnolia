@@ -34,9 +34,9 @@
 package info.magnolia.setup.for3_5;
 
 import info.magnolia.module.InstallContext;
-import info.magnolia.setup.for3_5.IPConfigRulesUpdate;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.cms.core.ie.PropertiesImportExport;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -72,7 +72,7 @@ public class IPConfigRulesUpdateTest extends TestCase {
         task.execute(ctx);
         verify(ctx);
 
-        final Properties hmAsProps = MockUtil.toProperties(hm);
+        final Properties hmAsProps = PropertiesImportExport.toProperties(hm);
         assertEquals(7, hmAsProps.size());
         assertEquals("*", hmAsProps.get("/server/IPConfig/allow-all.IP"));
         assertEquals("192.168.0.1", hmAsProps.get("/server/IPConfig/someNewRule.IP"));

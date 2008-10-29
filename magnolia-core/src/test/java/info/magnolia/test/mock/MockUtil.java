@@ -41,22 +41,16 @@ import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.core.ie.PropertiesImportExport;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.LinkedHashMap;
 import java.util.Properties;
-import java.util.Set;
-import java.util.Collection;
-import java.util.Iterator;
 
 import javax.jcr.RepositoryException;
 import javax.jcr.UnsupportedRepositoryOperationException;
@@ -64,10 +58,8 @@ import javax.jcr.Workspace;
 import javax.jcr.observation.EventListener;
 import javax.jcr.observation.ObservationManager;
 
-import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.collections.OrderedMap;
 import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -84,44 +76,6 @@ public class MockUtil {
      * Logger.
      */
     private static Logger log = LoggerFactory.getLogger(MockContext.class);
-
-    /**
-     * Ordered properties. Uses to keep the order in the mocked content
-     * @author philipp
-     * @version $Id$
-     */
-    public static final class OrderedProperties extends Properties {
-
-        private final LinkedHashMap map = new LinkedHashMap();
-
-        public Object put(Object key, Object value) {
-            return map.put(key, value);
-        }
-
-        public Object get(Object key) {
-            return map.get(key);
-        }
-
-        public String getProperty(String key) {
-            return (String) get(key);
-        }
-
-        public synchronized Object setProperty(String key, String value) {
-            return this.map.put(key, value);
-        }
-
-        public Set entrySet() {
-            return this.map.entrySet();
-        }
-
-        public Set keySet() {
-            return this.map.keySet();
-        }
-
-        public int size() {
-            return this.map.size();
-        }
-    }
 
     /**
      * Mocks the current and system context
@@ -184,68 +138,16 @@ public class MockUtil {
     }
 
     public static void createContent(Content root, InputStream propertiesStream) throws IOException, RepositoryException {
-        Properties properties = new OrderedProperties();
-
-        properties.load(propertiesStream);
-
-        for (Object o : properties.keySet()) {
-            String orgKey = (String) o;
-            String valueStr = properties.getProperty(orgKey);
-
-            //if this is a node definition (no property)
-            String key = orgKey;
-            if(StringUtils.isEmpty(valueStr) && !key.contains(".") && !key.contains("@")){
-                key += "@type";
-                valueStr = "nt:base";
+        final PropertiesImportExport importer = new PropertiesImportExport() {
+            protected void populateContent(Content c, String name, String valueStr) throws RepositoryException {
+                if ("@uuid".equals(name)) {
+                    ((MockContent) c).setUUID(valueStr);
+                } else {
+                    super.populateContent(c, name, valueStr);
+                }
             }
-            key = StringUtils.replace(key, "/", ".");
-            key = StringUtils.removeStart(key, ".");
-            // guarantee a dot in front of @ to make it a property
-            key = StringUtils.replace(StringUtils.replace(key, "@", ".@"), "..@", ".@");
-
-            String name = StringUtils.substringAfterLast(key, ".");
-            String path = StringUtils.substringBeforeLast(key, ".");
-            path = StringUtils.replace(path, ".", "/");
-
-            MockContent c = (MockContent) ContentUtil.createPath(root, path, ItemType.CONTENTNODE);
-            populateContent(c, name, valueStr);
-        }
-    }
-
-    public static void populateContent(MockContent c, String name, String valueStr) {
-        if (StringUtils.isEmpty(name) && StringUtils.isEmpty(valueStr)) {
-            // happens if the input properties file just created a node with no properties
-            return;
-        }
-        if (name.equals("@type")) {
-            c.setNodeTypeName(valueStr);
-        }
-        else if (name.equals("@uuid")) {
-            c.setUUID(valueStr);
-        }
-        else {
-            Object valueObj = convertNodeDataStringToObject(valueStr);
-            c.addNodeData(new MockNodeData(name, valueObj));
-        }
-    }
-
-    public static Object convertNodeDataStringToObject(String valueStr) {
-        Object valueObj = valueStr;
-
-        if (valueStr.contains(":")) {
-            String type = StringUtils.substringBefore(valueStr, ":");
-            if (type.equals("int")) {
-                type = "integer";
-            }
-            String value = StringUtils.substringAfter(valueStr, ":");
-            try {
-                valueObj = ConvertUtils.convert(value, Class.forName("java.lang." + StringUtils.capitalize(type)));
-            }
-            catch (ClassNotFoundException e) {
-                throw new IllegalArgumentException("can't convert value [" + valueStr + "]", e);
-            }
-        }
-        return valueObj;
+        };
+        importer.createContent(root, propertiesStream);
     }
 
     public static Content createContent(final String name, Object[][] data, Content[] children) throws RepositoryException {
@@ -273,25 +175,11 @@ public class MockUtil {
         return nodeDatas;
     }
 
-    // TODO : does not take property type into account
+    /**
+     * @deprecated use PropertiesImportExport.toProperties(hm);
+     */
     public static Properties toProperties(HierarchyManager hm) throws Exception {
-        final Properties out = new OrderedProperties();
-        ContentUtil.visit(hm.getRoot(), new ContentUtil.Visitor(){
-            public void visit(Content node) throws Exception {
-                appendNodeProperties(node, out);
-            }
-        });
-        return out;
-    }
-
-    private static void appendNodeProperties(Content node, Properties out) {
-        final Collection props = node.getNodeDataCollection();
-        final Iterator it = props.iterator();
-        while (it.hasNext()) {
-            final NodeData prop = (NodeData) it.next();
-            final String path = node.getHandle() + "." + prop.getName();
-            out.setProperty(path, prop.getString());
-        }
+        return PropertiesImportExport.toProperties(hm);
     }
 
     public static void mockObservation(MockHierarchyManager hm) throws RepositoryException, UnsupportedRepositoryOperationException {

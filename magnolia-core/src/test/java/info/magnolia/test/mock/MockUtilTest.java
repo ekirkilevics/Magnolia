@@ -86,18 +86,6 @@ public class MockUtilTest extends TestCase {
         assertEquals("sub2value2", sub2.getNodeData("prop2").getString());
     }
 
-    public void testConvertingTypes() throws IOException, RepositoryException{
-        Object b1 = MockUtil.convertNodeDataStringToObject("boolean:true");
-        Object b2 = MockUtil.convertNodeDataStringToObject("boolean:false");
-
-        Object i = MockUtil.convertNodeDataStringToObject("int:5");
-        assertTrue(b1 instanceof Boolean);
-        assertTrue(i instanceof Integer);
-        assertEquals(true, ((Boolean)b1).booleanValue());
-        assertEquals(false, ((Boolean)b2).booleanValue());
-        assertEquals(5, ((Integer)i).intValue());
-    }
-
     public void testReadingBoolean() throws IOException, RepositoryException{
         HierarchyManager hm = initTestData();
 

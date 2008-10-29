@@ -42,6 +42,7 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ie.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
@@ -81,7 +82,7 @@ public class AddURIPermissionTaskTest extends MgnlTestCase {
         task.execute(ctx);
         verify(ctx);
         
-        final Properties result = MockUtil.toProperties(hm);
+        final Properties result = PropertiesImportExport.toProperties(hm);
         assertEquals("/someURI", result.get("/rolename/acl_uri/0.path"));
         return result;
     }

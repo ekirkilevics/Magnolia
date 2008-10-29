@@ -38,6 +38,7 @@ import static org.easymock.EasyMock.*;
 import java.util.Properties;
 
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ie.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.setup.AddFilterBypassTask;
 import info.magnolia.test.MgnlTestCase;
@@ -63,7 +64,7 @@ public class AddFilterBypassTaskTest extends MgnlTestCase {
         task.execute(ctx);
         verify(ctx);
         
-        final Properties hmProps = MockUtil.toProperties(hm);
+        final Properties hmProps = PropertiesImportExport.toProperties(hm);
         assertEquals(hmProps.get("/server/filter/someFilter.class"), "someFilterClass");
         assertEquals(hmProps.get("/server/filter/someFilter/bypasses/bypassDefinition.class"), URIStartsWithVoter.class.getName());
         assertEquals(hmProps.get("/server/filter/someFilter/bypasses/bypassDefinition.pattern"), "/anyPattern");

@@ -39,6 +39,7 @@ import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.voters.URIStartsWithVoter;
+import info.magnolia.cms.core.ie.PropertiesImportExport;
 
 import java.util.Properties;
 
@@ -133,7 +134,7 @@ public class CheckAndUpdateExistingFiltersTest extends MgnlTestCase {
         task.execute(ctx);
         verify(ctx);
         
-        final Properties hmProps = MockUtil.toProperties(hm);
+        final Properties hmProps = PropertiesImportExport.toProperties(hm);
         assertEquals(hmProps.get("/server/filters/cms/bypasses/dot.class"), URIStartsWithVoter.class.getName());
         assertEquals(hmProps.get("/server/filters/cms/bypasses/dot.pattern"), "/.");
         assertEquals(hmProps.get("/server/filters/cms/bypasses/myCustomization.class"), URIStartsWithVoter.class.getName());
