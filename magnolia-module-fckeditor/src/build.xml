@@ -1,47 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Magnolia Module FCKEditor">
 
-	<property name="svn" value="/usr/local/bin/svn"/>
-	<property name="current.home" value="main/resources/mgnl-resources/fckeditor"/>
-	<property name="newVersion.home" value="temp/fckeditor"/>
-	
+    <property name="current.home" value="main/resources/mgnl-resources/fckeditor"/>
+    <property name="newVersion.home" value="temp/fckeditor"/>
+    <!-- change the following property if the svn executable is not in your PATH -->
+    <property name="svn" value="svn"/>
+
     <!-- ================================= 
          Update FCKditor              
          ================================= -->
     <target name="update" depends="clean">
         <copy todir="${current.home}" verbose="true">
-        	<fileset dir="${newVersion.home}">
-        		<exclude name="**/_*/"/>
-        		<exclude name="**/.*"/>
-        		<exclude name="**/htaccess.txt"/>
-        		<exclude name="**/*.afp"/>
-        		<exclude name="**/*.asp"/>
-        		<exclude name="**/*.cfc"/>
-        		<exclude name="**/*.cfm"/>
-        		<exclude name="**/*.lasso"/>
-        		<exclude name="**/*.php"/>
-        		<exclude name="**/*.pl"/>
-        		<exclude name="**/*.py"/>
-        		<exclude name="**/editor/filemanager/browser/default/connectors/*/"/>
-        		<exclude name="**/editor/filemanager/upload/*/"/>
-        	</fileset>
+            <fileset dir="${newVersion.home}">
+                <exclude name="**/_*/"/>
+                <exclude name="**/.*"/>
+                <exclude name="**/htaccess.txt"/>
+                <exclude name="**/*.afp"/>
+                <exclude name="**/*.asp"/>
+                <exclude name="**/*.cfc"/>
+                <exclude name="**/*.cfm"/>
+                <exclude name="**/*.lasso"/>
+                <exclude name="**/*.php"/>
+                <exclude name="**/*.pl"/>
+                <exclude name="**/*.py"/>
+                <exclude name="**/editor/filemanager/connectors/*/"/>
+                <exclude name="**/editor/filemanager/browser/default/connectors/*/"/>
+                <exclude name="**/editor/filemanager/upload/*/"/>
+                <exclude name="**/editor/**/server-scripts/**/*.*"/>
+            </fileset>
         </copy>
-    	
-    	<exec executable="${svn}" dir="${current.home}" output="${newVersion.home}/../current.diff">
-    		<arg value="diff"/>
-    	</exec>
+
+        <exec executable="${svn}" dir="${current.home}" output="${newVersion.home}/../current.diff">
+            <arg value="diff"/>
+        </exec>
     </target>
 
     <!-- - - - - - - - - - - - - - - - - - 
          Clean current FCKEditor files                      
          - - - - - - - - - - - - - - - - - -->
     <target name="clean">
-    	<delete includeemptydirs="true" deleteonexit="true" verbose="true">
-    		<fileset dir="${current.home}" defaultexcludes="true">
-    			<exclude name="**/.**"/>
-    			<exclude name="custom/**"/>
-    		</fileset>
-    	</delete>
+        <delete includeemptydirs="true" deleteonexit="true" verbose="true">
+            <fileset dir="${current.home}" defaultexcludes="true">
+                <exclude name="**/.**"/>
+                <exclude name="custom/**"/>
+            </fileset>
+        </delete>
     </target>
 
 </project>
