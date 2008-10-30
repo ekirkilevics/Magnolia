@@ -36,6 +36,8 @@ package info.magnolia.module.templating.paragraphs;
 import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderingModel;
+import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.module.templating.RenderException;
@@ -92,8 +94,8 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
             }
             log.debug ("About to call FM renderer with {}wrapped writer: {}", wrap? "" : "un", out );
             fmHelper.render(templatePath, locale, renderable.getI18nBasename(), ctx, out);
-            
-            
+
+
         } catch (TemplateException e) {
             // TODO: handle exception
             // exception is logged by freemarker and yellow message in the template inserted
@@ -109,6 +111,17 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
                 }
             }
         }
+    }
+
+    protected Map saveContextState(Map ctx) {
+        Map state = super.saveContextState(ctx);
+        saveAttribute(ctx, state, "params");
+        return state;
+    }
+
+    protected void setupContext(Map ctx, Content content, Renderable renderable, RenderingModel state, Object actionResult) {
+        super.setupContext(ctx, content, renderable, state, actionResult);
+        setContextAttribute(ctx, "params", MgnlContext.getParameters());
     }
 
     protected Map newContext() {
