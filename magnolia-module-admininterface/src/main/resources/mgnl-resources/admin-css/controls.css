@@ -29,8 +29,8 @@
 }
 
 .mgnlControlButton,.mgnlControlButton_PUSHED,.mgnlControlButtonSmall,.mgnlControlButtonSmall_PUSHED {
-    font-family: Verdana, sans-serif;
-    color: #F0F2E6;
+    font-family: Verdana, sans-serif !important;
+    color: #F0F2E6 !important;
     cursor: default;
     white-space: nowrap;
     display: inline !important;
