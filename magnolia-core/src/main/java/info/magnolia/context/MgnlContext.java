@@ -470,31 +470,17 @@ public class MgnlContext {
         }
     }
 
-    /**
-     * @param request
-     * @param response
-     * @param servletContext 
-     */
     public static void push(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         if (getInstance() instanceof WebContext) {
-            log.error("Pushing context");
             WebContext wc = getWebContextIfExisting(getInstance());
             wc.push(request,response);
-        } else {
-            log.error("Pushed context is " + getInstance().getClass().getName());
         }
     }
 
-    /**
-     * 
-     */
     public static void pop() {
         if (getInstance() instanceof WebContext) {
-            log.error("Poping context");
             WebContext wc = getWebContextIfExisting(getInstance());
             wc.pop();
-        } else {
-            log.error("Poped context is " + getInstance().getClass().getName());
         }
     }
 }
