@@ -239,6 +239,15 @@ public class MgnlContext {
 
     }
 
+    public static String[] getParameterValues(String name) {
+        WebContext ctx = getWebContextIfExisting(getInstance());
+        if (ctx != null) {
+            return ctx.getParameterValues(name);
+        }
+        return null;
+
+    }
+
     /**
      * Get parameter value as string
      * @return parameter values

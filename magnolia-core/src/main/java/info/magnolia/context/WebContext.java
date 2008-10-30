@@ -172,8 +172,14 @@ public interface WebContext extends Context {
     public void push(HttpServletRequest request, HttpServletResponse response);
 
     /**
-     * 
+     *
      */
     public void pop();
+
+    /**
+     * Get parameter values as string[]
+     * @return parameter values
+     */
+    public String[] getParameterValues(String name);
 
 }

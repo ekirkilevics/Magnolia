@@ -151,7 +151,16 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * @return parameter value
      */
     public String getParameter(String name) {
-        return this.request.getParameter(name);
+        // TODO drop the use of this util class
+        return RequestFormUtil.getParameter(request, name);
+    }
+
+    /**
+     * Get parameter values as string[].
+     * @return parameter values
+     */
+    public String[] getParameterValues(String name) {
+        return RequestFormUtil.getParameterValues(request, name);
     }
 
     /**
@@ -161,10 +170,10 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      */
     public Map getParameters() {
         Map map = new HashMap();
-        Enumeration paramEnum = this.request.getParameterNames();
+        Enumeration paramEnum = RequestFormUtil.getParameterNames(this.request);
         while (paramEnum.hasMoreElements()) {
             final String name = (String) paramEnum.nextElement();
-            map.put(name, this.request.getParameter(name));
+            map.put(name, RequestFormUtil.getParameter(this.request, name));
         }
         return map;
     }
