@@ -202,7 +202,7 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
      */
     public void pop() {
         // TODO Auto-generated method stub
-        
+
     }
 
     /* (non-Javadoc)
@@ -210,6 +210,11 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
      */
     public void push(HttpServletRequest request, HttpServletResponse response) {
         // TODO Auto-generated method stub
-        
+
+    }
+
+    public String[] getParameterValues(String name) {
+        // TODO Auto-generated method stub
+        return null;
     }
 }
