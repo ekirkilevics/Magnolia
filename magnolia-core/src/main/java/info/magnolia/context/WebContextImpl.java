@@ -42,6 +42,8 @@ import info.magnolia.cms.util.RequestFormUtil;
 
 import java.io.IOException;
 import java.io.Writer;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
@@ -149,7 +151,7 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * @return parameter value
      */
     public String getParameter(String name) {
-        return (String) this.getParameters().get(name);
+        return this.request.getParameter(name);
     }
 
     /**
@@ -158,8 +160,13 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
      * @return parameter values
      */
     public Map getParameters() {
-        // TODO drop the use of this util class
-        return RequestFormUtil.getParameters(request);
+        Map map = new HashMap();
+        Enumeration paramEnum = this.request.getParameterNames();
+        while (paramEnum.hasMoreElements()) {
+            final String name = (String) paramEnum.nextElement();
+            map.put(name, this.request.getParameter(name));
+        }
+        return map;
     }
 
     /**
