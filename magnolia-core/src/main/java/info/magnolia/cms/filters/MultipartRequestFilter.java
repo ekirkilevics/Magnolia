@@ -35,6 +35,7 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Path;
+import info.magnolia.context.MgnlContext;
 
 import java.io.File;
 import java.io.IOException;
@@ -120,9 +121,13 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
             MultipartForm mpf = parseRequest(request);
 
             // wrap the request
+            MgnlContext.push(request, response, null);
             request = new MultipartRequestWrapper(request, mpf);
         }
         chain.doFilter(request, response);
+        if(isMultipartContent){
+            MgnlContext.pop();
+        }
     }
 
     /**

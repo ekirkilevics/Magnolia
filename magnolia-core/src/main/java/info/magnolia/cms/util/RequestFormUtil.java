@@ -38,7 +38,6 @@ import info.magnolia.cms.beans.runtime.MultipartForm;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -236,22 +235,5 @@ public class RequestFormUtil {
     public void removeParameter(String name) {
         form.removeParameter(name);
     }
-
-    public static Enumeration getParameterNames(HttpServletRequest request) {
-        MultipartForm form = Resource.getPostedForm();
-        if (form != null) {
-            return form.getParameterNames();
-        }
-        return request.getParameterNames();
-    }
-
-    public static String[] getParameterValues(HttpServletRequest request, String name) {
-        MultipartForm form = Resource.getPostedForm();
-        if (form != null) {
-            return form.getParameterValues(name);
-        }
-        return request.getParameterValues(name);
-    }
-
 
 }
