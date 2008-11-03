@@ -25,8 +25,8 @@
       <#if functionBar.searchable>
       <td style="width: 2%; padding-right: 10px; vertical-align: middle;">
         <script type="text/javascript">
-          var mgnlSearchTF = new MgnlTextField ('${functionBar.javascriptName}SearchField', '${functionBar.searchStr}', 200, contextPath + '/.resources/controls/search/lupe.gif', 29, {onKeyPress: "if (mgnlIsKeyEnter(event)) {(${functionBar.onSearchFunction})($('${functionBar.javascriptName}SearchField').value)}"});
-          document.write (mgnlSearchTF.render ());
+          var mgnlSearchTF = new MgnlTextField ('${functionBar.javascriptName}SearchField',"${functionBar.searchStr?html}" , 200, contextPath + '/.resources/controls/search/lupe.gif', 29, {onKeyPress: "if (mgnlIsKeyEnter(event)) {(${functionBar.onSearchFunction})($('${functionBar.javascriptName}SearchField').value)}"});
+          document.write (mgnlSearchTF.render());
         </script>
       </td>
       </#if>

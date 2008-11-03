@@ -13,7 +13,7 @@
  
 classDef("mgnl.controls.TextField", MgnlTextField);
  
-function MgnlTextField(name, value, width, imageLeft, imageLeftWidth, attributes){
+function MgnlTextField(name, value, width, imageLeft, imageLeftWidth, attributes) {
 	this.attributes = attributes!=null?attributes:{};
 
 	this.name = name;
@@ -48,7 +48,7 @@ MgnlTextField.prototype.render = function() {
 		var html = '<table border="0" cellspacing="0" cellpadding="0" style="width: ' + this.width + 'px;"><tr>';
 		html += '<td width="5"><img src="'+ this.imageLeft +'" width="'+ this.imageLeftWidth +'" border="0"></td>'
 		html += '<td width="100%" class="smothTextFieldTD" background="'+contextPath+'/.resources/controls/textfield/middle.gif">'
-		html += '<input class="smothTextField" style="width: ' + this.widthSearchField + 'px;" type="text" id="' + this.name + '" value="' + this.value + '" ' + attributes + '></td>';
+		html += '<input class="smothTextField" style="width: ' + this.widthSearchField + 'px;" type="text" id="' + this.name + '" value="' + this.value.replace('"','&quot;') + '" ' + attributes + '></td>';
 		html += '<td width="5"><img src="'+ contextPath +'/.resources/controls/textfield/right.gif" width="5" border="0"></td>';
 		html += '</tr></table>'
 	} else {
