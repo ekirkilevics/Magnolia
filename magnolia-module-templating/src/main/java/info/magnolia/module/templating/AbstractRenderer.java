@@ -47,7 +47,9 @@ import info.magnolia.context.MgnlContext;
 
 
 /**
- * Abstract renderer which can be used to implement paragraph or template renderers. Sets up the context by providing the following objects: content, aggrigationState, page, model, actionResult, mgnl
+ * Abstract renderer which can be used to implement paragraph or template renderers.
+ * Sets up the context by providing the following objects: content, aggregationState, page, model, actionResult, mgnl
+ *
  * @author pbracher
  * @version $Id$
  *
