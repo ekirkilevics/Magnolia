@@ -35,7 +35,11 @@ package info.magnolia.cms.mail.templates.impl;
 
 import info.magnolia.freemarker.FreemarkerHelper;
 
+import javax.mail.MessagingException;
 import javax.mail.Session;
+
+import java.io.Reader;
+import java.io.StringReader;
 import java.io.StringWriter;
 import java.util.Map;
 
@@ -45,14 +49,51 @@ import java.util.Map;
  */
 public class FreemarkerEmail extends HtmlEmail {
 
+    public void setFrom(String _from, Map parameters) throws Exception {
+        _from = proccesFreemarkerString(_from, parameters);
+        super.setFrom(_from);
+    }
+
+
+    public void setSubject(String subject, Map parameters) throws MessagingException {
+        try {
+            subject = proccesFreemarkerString(subject, parameters);
+            super.setSubject(subject);
+        } catch (Exception e) {
+            throw new MessagingException();
+        }
+
+    }
+
+    public void setToList(String list, Map parameters) throws Exception {
+        list = proccesFreemarkerString(list, parameters);
+        super.setToList(list);
+    }
+
     public FreemarkerEmail(Session _session) throws Exception {
         super(_session);
     }
+
+    public void setBody(String body, Map parameters) throws Exception {
+        body = proccesFreemarkerString(body, parameters);
+        super.setBody(body, parameters);
+    }
+
 
     public void setBodyFromResourceFile(String resourceFile, Map _map) throws Exception {
         final StringWriter writer = new StringWriter();
         FreemarkerHelper.getInstance().render(resourceFile, _map, writer);
         super.setBody(writer.toString(), _map);
     }
+
+    protected String proccesFreemarkerString(String text, Map parameters) throws Exception {
+
+        Reader reader = new StringReader(text);
+        final StringWriter writer = new StringWriter();
+        FreemarkerHelper.getInstance().render(reader, parameters, writer);
+        reader.close();
+        return writer.toString();
+    }
+
 
 }
