@@ -97,6 +97,18 @@
   <appender name="log-audit" class="org.apache.log4j.AsyncAppender">
     <appender-ref ref="sync-log-audit" />
   </appender>
+    <appender name="sync-log-form" class="org.apache.log4j.RollingFileAppender">
+    <param name="File" value="${magnolia.logs.dir}/magnolia-form.log" />
+    <param name="MaxFileSize" value="1MB" />
+    <param name="MaxBackupIndex" value="5" />
+    <param name="Append" value="true" />
+    <layout class="org.apache.log4j.PatternLayout">
+      <param name="ConversionPattern" value="%d{dd.MM.yyyy HH:mm:ss}%m%n" />
+    </layout>
+  </appender>
+  <appender name="log-form" class="org.apache.log4j.AsyncAppender">
+    <appender-ref ref="sync-log-form" />
+  </appender>
   <!-- log for external libraries is set to WARN -->
   <category name="org">
     <priority value="WARN" />
@@ -143,6 +155,9 @@
   </category>
   <category name="log-audit" additivity="false">
     <appender-ref ref="log-audit" />
+  </category>
+  <category name="log-form" additivity="false">
+    <appender-ref ref="log-form" />
   </category>
   <root>
     <priority value="ALL" />
