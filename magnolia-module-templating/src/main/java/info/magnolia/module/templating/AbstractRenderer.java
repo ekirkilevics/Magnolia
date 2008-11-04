@@ -42,6 +42,7 @@ import java.util.Map;
 import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18nContentWrapper;
 import info.magnolia.context.MgnlContext;
 
@@ -118,14 +119,26 @@ public abstract class AbstractRenderer {
     }
 
     protected void setupContext(final Map ctx, Content content, Renderable renderable, RenderingModel model, Object actionResult){
-        final Content page = MgnlContext.getAggregationState().getMainContent();
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        final Content page = aggregationState.getMainContent();
 
-        setContextAttribute(ctx, "content", new I18nContentWrapper(content));
-        setContextAttribute(ctx, "aggregationState", MgnlContext.getAggregationState());
-        setContextAttribute(ctx, getPageAttributeName(), new I18nContentWrapper(page));
+        setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(page, page));
+        setContextAttribute(ctx, "content", wrapNodeForTemplate(content, page));
+        setContextAttribute(ctx, "aggregationState", aggregationState);
         setContextAttribute(ctx, "mgnl", new MagnoliaTemplatingUtilities());
         setContextAttribute(ctx, "model", model);
         setContextAttribute(ctx, "actionResult", actionResult);
+    }
+
+    /**
+     * Wraps a node before exposing it to the template renderer.
+     * @param currentContent the actual content being exposed to the template
+     * @param mainContent the current "main content" or "page", which might be needed in certain wrapping situations
+     * @see info.magnolia.module.templating.paragraphs.JspParagraphRenderer
+     * TODO : return an Object instance instead - more flexibility for the template engine ?
+     */
+    protected Content wrapNodeForTemplate(Content currentContent, Content mainContent) {
+        return new I18nContentWrapper(currentContent);
     }
 
     protected Object setContextAttribute(final Map ctx, final String name, Object value) {

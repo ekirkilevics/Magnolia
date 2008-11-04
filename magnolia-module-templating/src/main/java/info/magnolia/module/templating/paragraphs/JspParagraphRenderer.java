@@ -34,6 +34,8 @@
 package info.magnolia.module.templating.paragraphs;
 
 import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.NodeMapWrapper;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -65,6 +67,14 @@ public class JspParagraphRenderer extends AbstractParagraphRenderer {
             throw new IllegalStateException("This paragraph renderer can only be used with a WebContext");
         }
         return ctx;
+    }
+
+    /**
+     * We expose nodes as Map instances in JSPs.
+     */
+    protected Content wrapNodeForTemplate(Content currentContent, Content mainContent) {
+        final Content wrapped = super.wrapNodeForTemplate(currentContent, mainContent);
+        return new NodeMapWrapper(wrapped, mainContent.getHandle());
     }
 
     protected String getPageAttributeName() {

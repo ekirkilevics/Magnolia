@@ -35,6 +35,8 @@ package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.beans.config.Renderable;
 import info.magnolia.cms.beans.config.Template;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.NodeMapWrapper;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -77,6 +79,14 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
         catch (Exception e) {
             throw new RenderException("Can't render template " + templatePath, e);
         }
+    }
+
+    /**
+     * We expose nodes as Map instances in JSPs.
+     */
+    protected Content wrapNodeForTemplate(Content currentContent, Content mainContent) {
+        final Content wrapped = super.wrapNodeForTemplate(currentContent, mainContent);
+        return new NodeMapWrapper(wrapped, mainContent.getHandle());
     }
 
     protected Map newContext() {
