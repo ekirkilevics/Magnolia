@@ -34,44 +34,61 @@
 package info.magnolia.module.templating.paragraphs;
 
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.NodeMapWrapper;
+import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
-import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.MockAggregationState;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class JspParagraphRendererTest extends MgnlTestCase {
+public class JspParagraphRendererTest extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
+
+        MgnlContext.setInstance(null);
+
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
-    public void testCantRenderWithoutParagraphPathCorrectlySet() throws IOException {
-        final Content c = new MockContent("pouet");
-        final Paragraph paragraph = new Paragraph();
-        paragraph.setName("plop");
-        final JspParagraphRenderer renderer = new JspParagraphRenderer();
-        try {
-            renderer.render(c, paragraph, new StringWriter());
-            fail("should have failed");
-        } catch (IllegalStateException e) {
-            assertEquals("Unable to render info.magnolia.cms.beans.config.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
-        }
+    public void testExposesNodesAsMaps() {
+        final WebContext magnoliaCtx = createStrictMock(WebContext.class);
+        MgnlContext.setInstance(magnoliaCtx);
+
+        final Content page = createStrictMock(Content.class);
+        // we have 2 different nodes when rendering a paragraph, but getHandle() is only called on the page node, when using NodeMapWrapper
+        expect(page.getHandle()).andReturn("/myPage").times(2);
+        final Content paragraph = createStrictMock(Content.class);
+
+        final AggregationState aggState = new AggregationState();
+        aggState.setMainContent(page);
+        expect(magnoliaCtx.getAggregationState()).andReturn(aggState);
+
+        replay(magnoliaCtx, page, paragraph);
+        final Map templateCtx = new HashMap();
+        new JspParagraphRenderer().setupContext(templateCtx, paragraph, null, null, null);
+
+        // other tests should verify the other objects !
+        assertEquals("Unexpected amount of objects in context", 7, templateCtx.size());
+        assertTrue(templateCtx.get("actpage") instanceof Map);
+        assertEquals(page, unwrap((Content) templateCtx.get("actpage")));
+        assertTrue(templateCtx.get("content") instanceof Map);
+        assertEquals(paragraph, unwrap((Content) templateCtx.get("content")));
+
+        verify(magnoliaCtx, page, paragraph);
     }
 
     /*
@@ -106,9 +123,25 @@ public class JspParagraphRendererTest extends MgnlTestCase {
     }
     */
 
-    public void testShouldFailIfContextIsNotWebContext() throws IOException {
-        MgnlContext.setInstance(null);
+    public void testCantRenderWithoutParagraphPathCorrectlySet() throws IOException {
+        final WebContext webContext = createNiceMock(WebContext.class);
+        MgnlContext.setInstance(webContext);
+        replay(webContext);
+        final Content c = new MockContent("pouet");
+        final Paragraph paragraph = new Paragraph();
+        paragraph.setName("plop");
+        final JspParagraphRenderer renderer = new JspParagraphRenderer();
+        try {
+            renderer.render(c, paragraph, new StringWriter());
+            fail("should have failed");
+        } catch (IllegalStateException e) {
+            assertEquals("Unable to render info.magnolia.cms.beans.config.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
+        }
+        verify(webContext);
+    }
 
+
+    public void testShouldFailIfNoContextIsSet() throws IOException {
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
             final Paragraph p = new Paragraph();
@@ -119,8 +152,11 @@ public class JspParagraphRendererTest extends MgnlTestCase {
         } catch (IllegalStateException e) {
             assertEquals("MgnlContext is not set for this thread", e.getMessage());
         }
+    }
 
+    public void testShouldFailIfContextIsNotWebContext() throws IOException {
         MgnlContext.setInstance(createStrictMock(Context.class));
+        final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
             final Paragraph p = new Paragraph();
             p.setName("plop");
@@ -130,5 +166,12 @@ public class JspParagraphRendererTest extends MgnlTestCase {
         } catch (IllegalStateException e) {
             assertEquals("This paragraph renderer can only be used with a WebContext", e.getMessage());
         }
+    }
+
+    private Content unwrap(Content c) {
+        if (c instanceof ContentWrapper) {
+            return unwrap(((ContentWrapper) c).getWrappedContent());
+        }
+        return c;
     }
 }
