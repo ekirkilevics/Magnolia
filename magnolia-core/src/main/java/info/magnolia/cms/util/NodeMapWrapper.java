@@ -57,16 +57,12 @@ import org.slf4j.LoggerFactory;
  * @version $Revision: 17383 $ ($Author: gjoseph $)
  */
 public class NodeMapWrapper extends ContentWrapper implements Map {
-
-    /**
-     * Logger.
-     */
     private static final Logger log = LoggerFactory.getLogger(NodeMapWrapper.class);
     
     /**
      * Handle used to construct links.
      */
-    private String handle;
+    private final String handle;
 
     /**
      * Instantiates a new NodeMapWrapper for the given node.
