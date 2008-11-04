@@ -445,7 +445,7 @@ public class ControlImpl implements Control {
             html.append("<input type=\"hidden\""); //$NON-NLS-1$
             html.append(" name=\"mgnlSaveInfo\""); //$NON-NLS-1$
             html.append(" value=\"" //$NON-NLS-1$
-                + this.getName()
+                + ControlImpl.escapeHTML(this.getName())
                 + "," //$NON-NLS-1$
                 + PropertyType.nameFromValue(this.getType())
                 + "," //$NON-NLS-1$

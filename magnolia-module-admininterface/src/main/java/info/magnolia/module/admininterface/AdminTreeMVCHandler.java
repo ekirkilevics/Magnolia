@@ -39,6 +39,7 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Syndicator;
+import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
@@ -730,7 +731,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
         // an alert can happen if there were deactivation problems during a renaming
         if (AlertUtil.isMessageSet()) {
             html.append("<input type=\"hidden\" id=\"mgnlMessage\" value=\"");
-            html.append(AlertUtil.getMessage());
+            html.append(ControlImpl.escapeHTML(AlertUtil.getMessage()));
             html.append("\" />");
         }
 

@@ -181,7 +181,7 @@ public class Button extends ControlImpl {
         }
         html.append("<input type=\"" + buttonType + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(" name=\"" + this.getName() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
-        html.append(" value=\"" + this.getValue() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
+        html.append(" value=\"" + ControlImpl.escapeHTML(this.getValue()) + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         html.append(" id=\"" + this.getId() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
         if (StringUtils.isNotEmpty(this.getOnclick())) {
             html.append(" onclick=\"" + this.getOnclick() + "\""); //$NON-NLS-1$ //$NON-NLS-2$
