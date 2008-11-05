@@ -91,10 +91,12 @@ public class MultipartRequestFilterTest extends TestCase {
     }
 
     public void testFilterCOS() throws Throwable {
+        webCtx.push(isA(CosMultipartRequestFilter.MultipartRequestWrapper.class), eq(res));
         doTest(new CosMultipartRequestFilter(), "text/xml");
     }
 
     public void testFilterCommonsFileUpload() throws Throwable {
+        webCtx.push(isA(MultipartRequestFilter.MultipartRequestWrapper.class), eq(res));
         doTest(new MultipartRequestFilter(), "text/xml; charset=UTF-8");
     }
 
@@ -110,7 +112,6 @@ public class MultipartRequestFilterTest extends TestCase {
             }
         };
 
-        webCtx.push(req, res);
         expect(req.getContentType()).andReturn(multipart.getContentType()).anyTimes();
         expect(req.getHeader("Content-Type")).andReturn(multipart.getContentType()).anyTimes();
         expect(req.getCharacterEncoding()).andReturn("UTF-8").anyTimes();

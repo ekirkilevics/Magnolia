@@ -120,8 +120,8 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
         if (isMultipartContent) {
             MultipartForm mpf = parseRequest(request);
             // wrap the request
-            MgnlContext.push(request, response);
             request = new MultipartRequestWrapper(request, mpf);
+            MgnlContext.push(request, response);
         }
         chain.doFilter(request, response);
         if(isMultipartContent){

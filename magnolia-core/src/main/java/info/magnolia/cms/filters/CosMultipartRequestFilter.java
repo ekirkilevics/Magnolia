@@ -81,8 +81,8 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
         boolean isMultipart = (type != null) && type.toLowerCase().startsWith("multipart/form-data"); 
         if (isMultipart) { 
             MultipartForm mpf = parseParameters(request);
-            MgnlContext.push(request, response);
             request = new MultipartRequestWrapper(request, mpf);
+            MgnlContext.push(request, response);
         }
         chain.doFilter(request, response);
         if (isMultipart) { 
