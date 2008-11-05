@@ -121,7 +121,7 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
             MultipartForm mpf = parseRequest(request);
 
             // wrap the request
-            MgnlContext.push(request, response, null);
+            MgnlContext.push(request, response);
             request = new MultipartRequestWrapper(request, mpf);
         }
         chain.doFilter(request, response);
