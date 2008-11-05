@@ -479,7 +479,7 @@ public class MgnlContext {
         }
     }
 
-    public static void push(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
+    public static void push(HttpServletRequest request, HttpServletResponse response) {
         if (getInstance() instanceof WebContext) {
             WebContext wc = getWebContextIfExisting(getInstance());
             wc.push(request,response);

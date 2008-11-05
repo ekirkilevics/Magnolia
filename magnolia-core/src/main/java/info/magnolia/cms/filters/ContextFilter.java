@@ -73,7 +73,7 @@ public class ContextFilter extends AbstractMgnlFilter {
         }
         if (!contextSet) {
             // push req/res every time except the first time
-            MgnlContext.push(request, response, servletContext);
+            MgnlContext.push(request, response);
         }
         try {
             chain.doFilter(request, response);
