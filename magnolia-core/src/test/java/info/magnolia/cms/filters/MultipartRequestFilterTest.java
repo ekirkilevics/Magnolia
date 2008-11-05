@@ -65,19 +65,29 @@ import java.io.InputStream;
  * @version $Id$
  */
 public class MultipartRequestFilterTest extends TestCase {
-    private static final File TESTFILE = new File("pom.xml");
+    private File testFile;
     private HttpServletRequest req;
     private HttpServletResponse res;
     private FilterChain filterChain;
+    private WebContext webCtx;
 
     protected void setUp() throws Exception {
         super.setUp();
 
         SystemProperty.setProperty(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR, System.getProperty("java.io.tmpdir"));
 
+        testFile = new File("pom.xml");
+        assertTrue(testFile.getAbsolutePath() + " can't be found.", testFile.exists());
         req = createMock(HttpServletRequest.class);
         res = createNiceMock(HttpServletResponse.class);
         filterChain = createNiceMock(FilterChain.class);
+        webCtx = createStrictMock(WebContext.class);
+        MgnlContext.setInstance(webCtx);
+    }
+
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     public void testFilterCOS() throws Throwable {
@@ -100,9 +110,6 @@ public class MultipartRequestFilterTest extends TestCase {
             }
         };
 
-        WebContext webCtx = createMock(WebContext.class);
-        MgnlContext.setInstance(webCtx);
-
         webCtx.push(req, res);
         expect(req.getContentType()).andReturn(multipart.getContentType()).anyTimes();
         expect(req.getHeader("Content-Type")).andReturn(multipart.getContentType()).anyTimes();
@@ -110,7 +117,6 @@ public class MultipartRequestFilterTest extends TestCase {
         expect(req.getQueryString()).andReturn("").anyTimes();
         expect(req.getContentLength()).andReturn(new Integer((int) multipart.getContentLength())).anyTimes();
         expect(req.getInputStream()).andReturn(servletInputStream);
-        webCtx.pop();
         req.setAttribute(eq(MultipartForm.REQUEST_ATTRIBUTE_NAME), isA(MultipartForm.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
@@ -119,6 +125,7 @@ public class MultipartRequestFilterTest extends TestCase {
                 return null;
             }
         });
+        webCtx.pop();
 
         replay(req, res, filterChain, webCtx);
         filter.doFilter(req, res, filterChain);
@@ -143,7 +150,7 @@ public class MultipartRequestFilterTest extends TestCase {
         assertEquals("xml", document.getExtension());
         assertEquals("pom", document.getFileName());
         assertEquals("pom.xml", document.getFileNameWithExtension());
-        assertEquals(TESTFILE.length(), document.getLength());
+        assertEquals(testFile.length(), document.getLength());
 
         assertEquals(expectedDocumentType, document.getType());
 
@@ -153,8 +160,8 @@ public class MultipartRequestFilterTest extends TestCase {
         assertTrue(file1.exists());
         assertTrue(file1.canRead());
         InputStream stream1 = document.getStream();
-        assertEquals(TESTFILE.length(), stream1.available());
-        assertEquals(TESTFILE.length(), stream1.skip(TESTFILE.length()));
+        assertEquals(testFile.length(), stream1.available());
+        assertEquals(testFile.length(), stream1.skip(testFile.length()));
         assertEquals(0, stream1.available());
     }
 
@@ -166,7 +173,7 @@ public class MultipartRequestFilterTest extends TestCase {
                 new StringPart("param2", "àèìòù", "UTF-8"),
                 new StringPart("param3", "value3a", "UTF-8"),
                 new StringPart("param3", "value3b", "UTF-8"),
-                new FilePart("document", TESTFILE, "text/xml", "UTF-8")};
+                new FilePart("document", testFile, "text/xml", "UTF-8")};
 
         return new MultipartRequestEntity(parts, method.getParams());
     }

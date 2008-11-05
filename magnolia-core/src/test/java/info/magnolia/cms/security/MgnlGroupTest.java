@@ -36,6 +36,7 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.context.MgnlContext;
 import junit.framework.TestCase;
 
 import java.util.Collection;
@@ -58,6 +59,11 @@ public class MgnlGroupTest extends TestCase {
         MockUtil.createAndSetHierarchyManager(ContentRepository.USER_GROUPS, getClass().getResourceAsStream("sample-usergroups.properties"));
         MockUtil.createAndSetHierarchyManager(ContentRepository.USER_ROLES, getClass().getResourceAsStream("sample-userroles.properties"));
         gman = new MgnlGroupManager();
+    }
+
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     public void testGetRoles() throws AccessDeniedException {
