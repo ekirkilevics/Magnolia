@@ -35,7 +35,6 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -46,7 +45,6 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import static org.easymock.EasyMock.*;
-import static org.easymock.classextension.EasyMock.createMock;
 
 import org.easymock.IAnswer;
 
