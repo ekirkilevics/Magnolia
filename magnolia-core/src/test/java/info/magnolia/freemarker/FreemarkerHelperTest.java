@@ -533,6 +533,18 @@ public class FreemarkerHelperTest extends TestCase {
         verify(user);
     }
 
+    public void testNodeNameCanBeRenderedImplicitely() throws Exception {
+        tplLoader.putTemplate("test.ftl", "This should output the node's name: ${content}");
+        final Map root = createSingleValueMap("content", new MockContent("myNode"));
+        assertRendereredContent("This should output the node's name: myNode", root, "test.ftl");
+    }
+
+    public void testNodeNameCanBeRenderedExplicitely() throws Exception {
+        tplLoader.putTemplate("test.ftl", "This should also output the node's name: ${content.@name}");
+        final Map root = createSingleValueMap("content", new MockContent("myOtherNode"));
+        assertRendereredContent("This should also output the node's name: myOtherNode", root, "test.ftl");
+    }
+
     public void testGivenLocaleTakesOverAnyContextLocale() throws IOException, TemplateException {
         tplLoader.putTemplate("test_en.ftl", "in english");
         tplLoader.putTemplate("test_de.ftl", "in deutscher Sprache");
@@ -613,6 +625,7 @@ public class FreemarkerHelperTest extends TestCase {
         return hm;
     }
 
+    // we use this method, since FreemarkerHelp needs to add objects to our root map, Collections.singletonMap won't do.
     private Map createSingleValueMap(Object key, Object value) {
         final HashMap map = new HashMap();
         map.put(key, value);
