@@ -35,6 +35,7 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Path;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.util.Enumeration;
@@ -77,11 +78,16 @@ public class CosMultipartRequestFilter extends AbstractMgnlFilter {
         else if (type1 != null) {
             type = (type1.length() > type2.length() ? type1 : type2);
         }
-        if ((type != null) && type.toLowerCase().startsWith("multipart/form-data")) { //$NON-NLS-1$
+        boolean isMultipart = (type != null) && type.toLowerCase().startsWith("multipart/form-data"); 
+        if (isMultipart) { 
             MultipartForm mpf = parseParameters(request);
+            MgnlContext.push(request, response);
             request = new MultipartRequestWrapper(request, mpf);
         }
         chain.doFilter(request, response);
+        if (isMultipart) { 
+            MgnlContext.pop();
+        }
     }
 
     /**

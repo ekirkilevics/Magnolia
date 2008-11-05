@@ -119,11 +119,14 @@ public class MultipartRequestFilter extends AbstractMgnlFilter {
         boolean isMultipartContent = FileUploadBase.isMultipartContent(new ServletRequestContext(request));
         if (isMultipartContent) {
             MultipartForm mpf = parseRequest(request);
-
+            // wrap the request
+            MgnlContext.push(request, response);
             request = new MultipartRequestWrapper(request, mpf);
         }
         chain.doFilter(request, response);
-
+        if(isMultipartContent){
+            MgnlContext.pop();
+        }
     }
 
     /**

@@ -35,7 +35,10 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import junit.framework.TestCase;
 import org.apache.commons.httpclient.methods.PostMethod;
 import org.apache.commons.httpclient.methods.multipart.FilePart;
@@ -43,6 +46,8 @@ import org.apache.commons.httpclient.methods.multipart.MultipartRequestEntity;
 import org.apache.commons.httpclient.methods.multipart.Part;
 import org.apache.commons.httpclient.methods.multipart.StringPart;
 import static org.easymock.EasyMock.*;
+import static org.easymock.classextension.EasyMock.createMock;
+
 import org.easymock.IAnswer;
 
 import javax.servlet.Filter;
@@ -97,12 +102,17 @@ public class MultipartRequestFilterTest extends TestCase {
             }
         };
 
+        WebContext webCtx = createMock(WebContext.class);
+        MgnlContext.setInstance(webCtx);
+
+        webCtx.push(req, res);
         expect(req.getContentType()).andReturn(multipart.getContentType()).anyTimes();
         expect(req.getHeader("Content-Type")).andReturn(multipart.getContentType()).anyTimes();
         expect(req.getCharacterEncoding()).andReturn("UTF-8").anyTimes();
         expect(req.getQueryString()).andReturn("").anyTimes();
         expect(req.getContentLength()).andReturn(new Integer((int) multipart.getContentLength())).anyTimes();
         expect(req.getInputStream()).andReturn(servletInputStream);
+        webCtx.pop();
         req.setAttribute(eq(MultipartForm.REQUEST_ATTRIBUTE_NAME), isA(MultipartForm.class));
         expectLastCall().andAnswer(new IAnswer<Object>() {
             public Object answer() throws Throwable {
@@ -112,9 +122,9 @@ public class MultipartRequestFilterTest extends TestCase {
             }
         });
 
-        replay(req, res, filterChain);
+        replay(req, res, filterChain, webCtx);
         filter.doFilter(req, res, filterChain);
-        verify(req, res, filterChain);
+        verify(req, res, filterChain, webCtx);
     }
 
     private void checkMultipartForm(MultipartForm form, String expectedDocumentType) throws IOException {
