@@ -58,6 +58,11 @@ import static org.easymock.EasyMock.*;
 public class ActivationCommandTest extends TestCase {
     private static final String PARENT_PATH = "/foo/bar";
 
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
     public void testActivateNonRecursiveNoSiblings() throws Exception {
         final ActivationCommand command = new ActivationCommand();
         command.setRepository("some-repo");

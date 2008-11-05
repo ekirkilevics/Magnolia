@@ -64,6 +64,11 @@ public class JspParagraphRendererTest extends TestCase {
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
     public void testExposesNodesAsMaps() {
         final WebContext magnoliaCtx = createStrictMock(WebContext.class);
         MgnlContext.setInstance(magnoliaCtx);

@@ -68,6 +68,7 @@ public class ModuleManagerWebUITest extends TestCase {
     }
 
     protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
         super.tearDown();
     }
 

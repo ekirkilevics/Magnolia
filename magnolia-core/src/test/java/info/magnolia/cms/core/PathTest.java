@@ -46,6 +46,11 @@ import java.io.File;
  */
 public class PathTest extends TestCase {
 
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
     /**
      * Test method for {@link info.magnolia.cms.core.Path#isAbsolute(java.lang.String)}.
      */

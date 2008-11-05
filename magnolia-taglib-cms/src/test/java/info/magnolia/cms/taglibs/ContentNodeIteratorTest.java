@@ -54,12 +54,9 @@ import com.mockrunner.mock.web.MockServletConfig;
 
 
 public class ContentNodeIteratorTest extends MgnlTestCase {
-
-    ContentNodeIterator cni;
-
-    MockPageContext pc;
-
-    ArrayList items;
+    private ContentNodeIterator cni;
+    private MockPageContext pc;
+    private ArrayList items;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -86,6 +83,12 @@ public class ContentNodeIteratorTest extends MgnlTestCase {
             items.add(new MockContent("mc" + i));
         }
         cni.setItems(items);
+    }
+
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        FactoryUtil.clear();
+        super.tearDown();
     }
 
     public void testDoStartTag() {

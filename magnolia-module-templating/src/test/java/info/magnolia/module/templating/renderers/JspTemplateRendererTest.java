@@ -50,6 +50,11 @@ import java.util.Map;
  */
 public class JspTemplateRendererTest extends TestCase {
 
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
     public void testExposesNodesAsMaps() {
         final WebContext magnoliaCtx = createStrictMock(WebContext.class);
         MgnlContext.setInstance(magnoliaCtx);

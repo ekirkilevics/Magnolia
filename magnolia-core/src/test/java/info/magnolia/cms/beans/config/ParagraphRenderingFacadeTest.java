@@ -59,6 +59,11 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
         super.setUp();
     }
 
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
     public void testRenderCallsTheAppropriateRenderer() throws IOException, RepositoryException {
         final ParagraphRendererManager prm = new ParagraphRendererManager();
         prm.onRegister(getNode(CONFIGNODE1_RENDERER, "/modules/test/paragraph-renderers"));

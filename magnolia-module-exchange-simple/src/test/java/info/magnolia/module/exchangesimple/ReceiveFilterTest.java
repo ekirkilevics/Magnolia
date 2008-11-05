@@ -81,6 +81,11 @@ public class ReceiveFilterTest extends TestCase {
 
         void saveSession(HierarchyManager hm) throws Exception;
     }
+    
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
 
     public void testActivateShouldCreateNewNodeIfItDoesNotExist() throws Exception {
         doTest("activate", "sa_success", "", new AbstractTestCallBack() {

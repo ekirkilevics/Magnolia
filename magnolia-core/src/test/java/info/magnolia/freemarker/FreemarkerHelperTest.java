@@ -98,8 +98,9 @@ public class FreemarkerHelperTest extends TestCase {
     }
 
     protected void tearDown() throws Exception {
-        super.tearDown();
         FactoryUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     private void assertRendereredContent(String expectedOutput, Object o, String templateName) throws TemplateException, IOException {
