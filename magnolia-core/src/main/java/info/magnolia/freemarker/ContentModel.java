@@ -86,7 +86,12 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
                 if (content.hasNodeData(key)) {
                     result = content.getNodeData(key);
                 } else {
-                    result = content.getChildByName(key);
+                    if(content.hasContent(key)){
+                        result = content.getContent(key);
+                    }
+                    else{
+                        result = null;
+                    }
                 }
             } catch (RepositoryException e) {
                 throw new TemplateModelException(e);

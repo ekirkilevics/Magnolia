@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.util;
 
+import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
@@ -40,6 +41,7 @@ import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.security.AccessDeniedException;
 
 
 /**
@@ -50,8 +52,46 @@ public class InheritanceContentWrapper extends ContentWrapper {
 
     private static Logger log = LoggerFactory.getLogger(InheritanceContentWrapper.class);
 
+    /**
+     * True if this node were achieved through inheritance
+     */
+    private boolean inherited;
+
+    public InheritanceContentWrapper(Content wrappedContent, boolean inherited) {
+        super(wrappedContent);
+        this.inherited = inherited;
+    }
+
     public InheritanceContentWrapper(Content node) {
-        super(node);
+        this(node, false);
+    }
+
+    public boolean hasContent(String name) throws RepositoryException {
+        return findContentByInheritance(name) != null;
+    }
+
+    public Content getContent(String name) throws RepositoryException {
+        Content found = findContentByInheritance(name);
+        if(found != null){
+            boolean inherited = !found.getHandle().startsWith(getWrappedContent().getHandle());
+            return new InheritanceContentWrapper(found, inherited);
+        }
+
+        throw new PathNotFoundException("Can't inherit a node [" + name + "] on node [" + getWrappedContent().getHandle() + "]");
+    }
+
+    /**
+     * This method returns null if no content has been found.
+     */
+    protected Content findContentByInheritance(String name) throws RepositoryException{
+        Content current = getWrappedContent();
+        while(current.getLevel()>0 && !current.hasContent(name)){
+            current = current.getParent();
+        }
+        if(current.hasContent(name)){
+            return current.getContent(name);
+        }
+        return null;
     }
 
     public boolean hasNodeData(String name) throws RepositoryException {
@@ -79,5 +119,10 @@ public class InheritanceContentWrapper extends ContentWrapper {
 
     protected Content wrap(Content node) {
         return new InheritanceContentWrapper(node);
+    }
+
+
+    public boolean isInherited() {
+        return this.inherited;
     }
 }
