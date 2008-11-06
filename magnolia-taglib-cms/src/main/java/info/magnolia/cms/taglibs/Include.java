@@ -36,6 +36,7 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.config.ParagraphRenderingFacade;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.module.templating.MagnoliaTemplatingUtilities;
 
 import java.io.BufferedWriter;
 import java.io.IOException;
@@ -90,6 +91,12 @@ public class Include extends BodyTagSupport {
     private String contentNodeName;
 
     /**
+     * Set to true if the content should not be rendered in edit mode (edit bars, ...)
+     * @jsp.attribute required="false" rtexprvalue="true" type="java.lang.Boolean"
+     */
+    private Boolean showPreview;
+
+    /**
      * @deprecated use the contentNode attribute instead
      * @see #setContentNode(Content)
      * @jsp.attribute required="false" rtexprvalue="true" type="info.magnolia.cms.core.Content"
@@ -133,6 +140,16 @@ public class Include extends BodyTagSupport {
         }
         Object[] attributesArray = new Object[]{name, value};
         attributes.add(attributesArray);
+    }
+
+
+    public Boolean getShowPreview() {
+        return this.showPreview;
+    }
+
+
+    public void setShowPreview(Boolean showPreview) {
+        this.showPreview = showPreview;
     }
 
     /**
@@ -190,11 +207,19 @@ public class Include extends BodyTagSupport {
                 localContentNodeSet = true;
             }
 
+            boolean orgShowPreview = Resource.showPreview();
+            if(showPreview != null){
+                Resource.setShowPreview(showPreview.booleanValue());
+            }
+
             if (this.path != null) { // TODO
                 log.warn("You are using the deprecated path attribute of the include tag. Your jsp will be included for now, but you might want to update your code to avoid bad surprises in the future.");
                 pageContext.include(this.path);
             } else {
                 ParagraphRenderingFacade.getInstance().render(content, pageContext.getOut(), pageContext);
+            }
+            if(showPreview != null){
+                Resource.setShowPreview(orgShowPreview);
             }
 
         } catch (IOException e) {

@@ -371,8 +371,12 @@ public final class Resource {
             return BooleanUtils.toBoolean(MgnlContext.getParameter(MGNL_PREVIEW_ATTRIBUTE));
         }
 
-        Boolean sessionValue = (Boolean) MgnlContext.getAttribute(MGNL_PREVIEW_ATTRIBUTE, Context.SESSION_SCOPE);
-        return BooleanUtils.toBoolean(sessionValue);
+        Boolean value = (Boolean) MgnlContext.getAttribute(MGNL_PREVIEW_ATTRIBUTE);
+        return BooleanUtils.toBoolean(value);
+    }
+
+    public static void setShowPreview(boolean showPreview){
+        MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.valueOf(showPreview));
     }
 
     /**
