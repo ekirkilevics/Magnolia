@@ -74,9 +74,9 @@ public class FreemarkerEmail extends HtmlEmail {
         super(_session);
     }
 
-    public void setBody(String body, Map parameters) throws Exception {
+    public void setBody(String body, Map parameters, Map attachments) throws Exception {
         body = proccesFreemarkerString(body, parameters);
-        super.setBody(body, parameters);
+        super.setBody(body, attachments);
     }
 
 
