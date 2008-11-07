@@ -170,7 +170,13 @@ public class MockContent extends DefaultContent {
     }
 
     public boolean hasContent(String name) throws RepositoryException {
-        return children.containsKey(name);
+        try {
+            getContent(name);
+        }
+        catch (PathNotFoundException e) {
+            return false;
+        }
+        return true;
     }
 
     public String getHandle() {
@@ -332,7 +338,7 @@ public class MockContent extends DefaultContent {
     }
 
     public String toString() {
-        return super.toString() + ": " + this.getHandle();
+        return super.toString();
     }
 
     public int getIndex() {
