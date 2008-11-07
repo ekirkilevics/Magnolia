@@ -33,15 +33,23 @@
  */
 package info.magnolia.cms.util;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.List;
+
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.AccessDeniedException;
 
 
 /**
@@ -66,8 +74,14 @@ public class InheritanceContentWrapper extends ContentWrapper {
         this(node, false);
     }
 
-    public boolean hasContent(String name) throws RepositoryException {
-        return findContentByInheritance(name) != null;
+    public boolean hasContent(String name) {
+        try {
+            getContent(name);
+        }
+        catch (RepositoryException e) {
+            return false;
+        }
+        return true;
     }
 
     public Content getContent(String name) throws RepositoryException {
@@ -80,18 +94,97 @@ public class InheritanceContentWrapper extends ContentWrapper {
         throw new PathNotFoundException("Can't inherit a node [" + name + "] on node [" + getWrappedContent().getHandle() + "]");
     }
 
+
+    public Collection getChildren() {
+        return getChildren(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER);
+    }
+
+    public Collection getChildren(ContentFilter filter) {
+        return getChildren(filter, null);
+    }
+
+    public Collection getChildren(ContentFilter filter, Comparator orderCriteria) {
+        List children = new ArrayList();
+        try {
+            collectInheritedChildren(filter, children);
+            for (Iterator iterator = getWrappedContent().getChildren(filter).iterator(); iterator.hasNext();) {
+                Content child = (Content) iterator.next();
+                children.add(wrap(child));
+            }
+        }
+        catch (RepositoryException e) {
+            log.error("Can't collect inherited nodes",e);
+            return Collections.EMPTY_LIST;
+        }
+        if(orderCriteria != null){
+            Collections.sort(children, orderCriteria);
+        }
+        return children;
+    }
+
+    protected void collectInheritedChildren(ContentFilter filter, List children) throws RepositoryException {
+        Content found = findContentByInheritance(findNextAnchor(), resolveInnerPath());
+        if(found != null){
+            for (Iterator iterator = found.getChildren(filter).iterator(); iterator.hasNext();) {
+                Content child = (Content) iterator.next();
+                children.add(new InheritanceContentWrapper(child, true));
+            }
+            ((InheritanceContentWrapper)wrap(found)).collectInheritedChildren(filter, children);
+        }
+    }
+
+
+
+    protected Content findContentByInheritance(String name) throws RepositoryException {
+        InheritanceContentWrapper anchor = findAnchor();
+        String path = resolveInnerPath() + "/" + name;
+        path = StringUtils.removeStart(path,"/");
+
+        Content found = findContentByInheritance(anchor, path);
+        return found;
+    }
+
+    protected String resolveInnerPath() throws RepositoryException {
+        String path = StringUtils.substringAfter(this.getHandle(), findAnchor().getHandle());
+        path =  StringUtils.removeStart(path,"/");
+        return path;
+    }
+
     /**
      * This method returns null if no content has been found.
      */
-    protected Content findContentByInheritance(String name) throws RepositoryException{
-        Content current = getWrappedContent();
-        while(current.getLevel()>0 && !current.hasContent(name)){
-            current = current.getParent();
+    protected Content findContentByInheritance(InheritanceContentWrapper anchor, String path) throws RepositoryException{
+        if(anchor ==null){
+            return null;
         }
-        if(current.hasContent(name)){
-            return current.getContent(name);
+        if(StringUtils.isEmpty(path)){
+            return anchor.getWrappedContent();
+        }
+        Content unwrapped = anchor.getWrappedContent();
+        if(unwrapped.hasContent(path)){
+            return unwrapped.getContent(path);
+        }
+        else{
+            return findContentByInheritance(anchor.findNextAnchor(), path);
+        }
+    }
+
+    protected InheritanceContentWrapper findNextAnchor() throws RepositoryException{
+        final InheritanceContentWrapper currentAnchor = findAnchor();
+        if(currentAnchor != null && getLevel() >0){
+            return ((InheritanceContentWrapper)currentAnchor.getParent()).findAnchor();
         }
         return null;
+    }
+
+    protected InheritanceContentWrapper findAnchor() throws RepositoryException{
+        if(getLevel() ==0){
+            return null;
+        }
+        if(isNodeType(ItemType.CONTENT.getSystemName())){
+            return this;
+        }
+        return ((InheritanceContentWrapper)getParent()).findAnchor();
     }
 
     public boolean hasNodeData(String name) throws RepositoryException {
@@ -104,9 +197,9 @@ public class InheritanceContentWrapper extends ContentWrapper {
                 return getWrappedContent().getNodeData(name);
             }
             else {
-                if(getLevel()>0){
-                    // continious inheritance
-                    return getParent().getNodeData(name);
+                Content found = findContentByInheritance(findNextAnchor(), resolveInnerPath());
+                if(found != null){
+                    return wrap(found).getNodeData(name);
                 }
             }
         }
@@ -120,7 +213,6 @@ public class InheritanceContentWrapper extends ContentWrapper {
     protected Content wrap(Content node) {
         return new InheritanceContentWrapper(node);
     }
-
 
     public boolean isInherited() {
         return this.inherited;
