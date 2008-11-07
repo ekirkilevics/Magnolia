@@ -60,6 +60,8 @@ import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.ClassUtils;
+
 public abstract class ContentWrapper implements Content{
 
     private Content wrappedContent;
@@ -415,7 +417,11 @@ public abstract class ContentWrapper implements Content{
     }
 
     public String toString() {
-        return this.getWrappedContent().toString();
+        final StringBuffer buffer = new StringBuffer();
+        buffer.append(ClassUtils.getShortClassName(getClass()));
+        buffer.append(" for ");
+        buffer.append(getWrappedContent().toString());
+        return buffer.toString();
     }
 
     /**
