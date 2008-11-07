@@ -1010,16 +1010,21 @@ public class DefaultContent extends ContentHandler implements Content {
         return false;
     }
 
-    /**
-     * @see java.lang.Object#toString()
-     */
     public String toString() {
-        StringBuffer buffer = new StringBuffer();
-        buffer.append(getClass().getName());
-        buffer.append("[");
-        if (this.node !=  null) {
-            buffer.append(getHandle());
+        if (this.node ==  null) {
+            return super.toString();
         }
+        StringBuffer buffer = new StringBuffer();
+        buffer.append(getHandle());
+        String type = "";
+        try {
+            type = getItemType().getSystemName();
+        }
+        catch (RepositoryException e) {
+            // ignore
+        }
+        buffer.append("[");
+        buffer.append(type);
         buffer.append("]");
 
         return buffer.toString();

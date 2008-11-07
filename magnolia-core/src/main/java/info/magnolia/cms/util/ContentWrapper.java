@@ -414,6 +414,10 @@ public abstract class ContentWrapper implements Content{
         return this.getWrappedContent().getHierarchyManager();
     }
 
+    public String toString() {
+        return this.getWrappedContent().toString();
+    }
+
     /**
      * @deprecated
      */
