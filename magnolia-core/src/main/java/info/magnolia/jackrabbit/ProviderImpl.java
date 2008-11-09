@@ -106,7 +106,7 @@ public class ProviderImpl implements Provider {
     private RepositoryMapping repositoryMapping;
 
     private Repository repository;
-    
+
     private ShutdownTask shutdownTask;
 
     private static final String REPO_HOME_PREFIX = "${repository.home}";
@@ -242,13 +242,13 @@ public class ProviderImpl implements Provider {
             });
         }
     }
-    
+
     public void shutdownRepository() {
         try {
             shutdownTask.execute(null);
         } catch (Exception e) {
-            log.error("Failed to shutdown repository", e);            
-        }        
+            log.error("Failed to shutdown repository", e);
+        }
     }
 
     /**
@@ -420,12 +420,20 @@ public class ProviderImpl implements Provider {
             && "org.apache.xalan.processor.TransformerFactoryImpl".equals(System
                 .getProperty("javax.xml.transform.TransformerFactory"))) {
 
-            log.info("Java 1.5 detected, setting system property \"javax.xml.transform.TransformerFactory\" to "
-                + "\"com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl\"");
+            String transformerClass = "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl";
 
-            System.setProperty(
-                "javax.xml.transform.TransformerFactory",
-                "com.sun.org.apache.xalan.internal.xsltc.trax.TransformerFactoryImpl");
+            try {
+                Class.forName(transformerClass);
+
+                System.setProperty("javax.xml.transform.TransformerFactory", transformerClass);
+
+                log.info(
+                    "Java 1.5 detected, setting system property \"javax.xml.transform.TransformerFactory\" to \"{}\"",
+                    transformerClass);
+            }
+            catch (Throwable e) {
+                // not in the classpath. We can't assume which one to use, so just go on
+            }
         }
     }
 
@@ -443,12 +451,12 @@ public class ProviderImpl implements Provider {
      * @see info.magnolia.repository.Provider#registerWorkspace(java.lang.String)
      */
     public boolean registerWorkspace(String workspaceName) throws RepositoryException {
-        // check if workspace already exists        
+        // check if workspace already exists
         SimpleCredentials credentials = new SimpleCredentials(
             ContentRepository.REPOSITORY_USER,
             ContentRepository.REPOSITORY_PSWD.toCharArray());
         Session jcrSession = this.repository.login(credentials);
-        
+
         try {
             WorkspaceImpl defaultWorkspace = (WorkspaceImpl) jcrSession.getWorkspace();
             String[] workspaceNames = defaultWorkspace.getAccessibleWorkspaceNames();
