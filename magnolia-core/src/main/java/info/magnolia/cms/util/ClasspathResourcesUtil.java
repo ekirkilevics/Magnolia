@@ -51,6 +51,7 @@ import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 
+import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang.StringUtils;
@@ -61,6 +62,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Util to find resources in the classpath (WEB-INF/lib and WEB-INF/classes).
  * @author Philipp Bracher
+ * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public class ClasspathResourcesUtil {
@@ -106,6 +108,30 @@ public class ClasspathResourcesUtil {
                 collectFiles(resources, tofile, filter);
             }
             return (String[]) resources.toArray(new String[resources.size()]);
+        }
+
+        try {
+            // be friendly to WAS developers too...
+            // in development mode under RAD 7.5 here we have an instance of com.ibm.ws.classloader.WsClassLoader
+            // and jars are NOT deployed to WEB-INF/lib by default, so they can't be found without this explicit check
+            //
+            // but since we don't want to depend on WAS stuff we just check if the cl exposes a "classPath" property
+            String classpath = BeanUtils.getProperty(cl, "classPath");
+
+            if (StringUtils.isNotEmpty(classpath)) {
+                String[] paths = classpath.split(File.pathSeparator);
+                for (int j = 0; j < paths.length; j++) {
+                    final File tofile = new File(paths[j]);
+                    // there can be several missing (optional?) paths here...
+                    if (tofile.exists()) {
+                        collectFiles(resources, tofile, filter);
+                    }
+                }
+                return (String[]) resources.toArray(new String[resources.size()]);
+            }
+        }
+        catch (Throwable e) {
+            // no, it's not a classloader we can handle in a special way
         }
 
         // no way, we have to assume a standard war structure and look in the WEB-INF/lib and WEB-INF/classes dirs
