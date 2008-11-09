@@ -76,6 +76,7 @@ public class ClasspathResourcesUtil {
      * @version $Revision$ ($Author$)
      */
     public static abstract class Filter {
+
         public abstract boolean accept(String name);
     }
 
@@ -87,9 +88,7 @@ public class ClasspathResourcesUtil {
     /**
      * Return a collection containing the resource names which passed the filter.
      * @param filter
-     * @return string array of found resources
-     *
-     * TODO : (lazy) cache ?
+     * @return string array of found resources TODO : (lazy) cache ?
      */
     public static String[] findResources(Filter filter) {
 
@@ -106,29 +105,29 @@ public class ClasspathResourcesUtil {
                 final File tofile = sanitizeToFile(urls[j]);
                 collectFiles(resources, tofile, filter);
             }
-        } else {
-            // no way, we have to assume a standard war structure and look in the WEB-INF/lib and WEB-INF/classes dirs
+            return (String[]) resources.toArray(new String[resources.size()]);
+        }
 
-            // read the jars in the lib dir
-            File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/lib")); //$NON-NLS-1$
-            if (dir.exists()) {
-                File[] files = dir.listFiles(new FilenameFilter() {
+        // no way, we have to assume a standard war structure and look in the WEB-INF/lib and WEB-INF/classes dirs
+        // read the jars in the lib dir
+        File dir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/lib")); //$NON-NLS-1$
+        if (dir.exists()) {
+            File[] files = dir.listFiles(new FilenameFilter() {
 
-                    public boolean accept(File file, String name) {
-                        return name.endsWith(".jar");
-                    }
-                });
-
-                for (int i = 0; i < files.length; i++) {
-                    collectFiles(resources, files[i], filter);
+                public boolean accept(File file, String name) {
+                    return name.endsWith(".jar");
                 }
-            }
+            });
 
-            // read files in WEB-INF/classes
-            File classFileDir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/classes"));
-            if (classFileDir.exists()) {
-                collectFiles(resources, classFileDir, filter);
+            for (int i = 0; i < files.length; i++) {
+                collectFiles(resources, files[i], filter);
             }
+        }
+
+        // read files in WEB-INF/classes
+        File classFileDir = new File(Path.getAbsoluteFileSystemPath("WEB-INF/classes"));
+        if (classFileDir.exists()) {
+            collectFiles(resources, classFileDir, filter);
         }
 
         return (String[]) resources.toArray(new String[resources.size()]);
@@ -139,11 +138,13 @@ public class ClasspathResourcesUtil {
             String fileUrl = url.getFile();
             // needed because somehow the URLClassLoader has encoded URLs, and getFile does not decode them.
             fileUrl = URLDecoder.decode(fileUrl, "UTF-8");
-            // needed for Resin - for some reason, its URLs are formed as jar:file:/absolutepath/foo/bar.jar instead of using the :///abs.. notation
+            // needed for Resin - for some reason, its URLs are formed as jar:file:/absolutepath/foo/bar.jar instead of
+            // using the :///abs.. notation
             fileUrl = StringUtils.removeStart(fileUrl, "file:");
             fileUrl = StringUtils.removeEnd(fileUrl, "!/");
             return new File(fileUrl);
-        } catch (UnsupportedEncodingException e) {
+        }
+        catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
     }
@@ -206,9 +207,10 @@ public class ClasspathResourcesUtil {
             }
             try {
                 jar.close();
-            } catch (IOException e) {
-                log.error("Failed to close jar file : "+e.getMessage());
-                log.debug("Failed to close jar file",e);
+            }
+            catch (IOException e) {
+                log.error("Failed to close jar file : " + e.getMessage());
+                log.debug("Failed to close jar file", e);
             }
         }
         else {
