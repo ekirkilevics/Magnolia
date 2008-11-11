@@ -36,19 +36,14 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.config.ParagraphRenderingFacade;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.Resource;
-import info.magnolia.module.templating.MagnoliaTemplatingUtilities;
 
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.BodyTagSupport;
-import javax.servlet.jsp.JspWriter;
 
 /**
  * Delegates to an appropriate ParagraphRenderer, or include a JSP.
