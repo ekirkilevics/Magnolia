@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.security.DummyUser;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContextImpl;
