@@ -138,12 +138,12 @@ public class Include extends BodyTagSupport {
     }
 
 
-    public Boolean getNoEditBars() {
+    public boolean getNoEditBars() {
         return this.noEditBars;
     }
 
 
-    public void setNoEditBars(Boolean showPreview) {
+    public void setNoEditBars(boolean showPreview) {
         this.noEditBars = showPreview;
     }
 
