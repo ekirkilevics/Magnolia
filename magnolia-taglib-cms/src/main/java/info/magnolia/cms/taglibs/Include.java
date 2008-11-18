@@ -89,7 +89,7 @@ public class Include extends BodyTagSupport {
      * Set to true if the content should not be rendered in edit mode (edit bars, ...)
      * @jsp.attribute required="false" rtexprvalue="true" type="java.lang.Boolean"
      */
-    private Boolean showPreview;
+    private boolean noEditBars = false;
 
     /**
      * @deprecated use the contentNode attribute instead
@@ -138,13 +138,13 @@ public class Include extends BodyTagSupport {
     }
 
 
-    public Boolean getShowPreview() {
-        return this.showPreview;
+    public Boolean getNoEditBars() {
+        return this.noEditBars;
     }
 
 
-    public void setShowPreview(Boolean showPreview) {
-        this.showPreview = showPreview;
+    public void setNoEditBars(Boolean showPreview) {
+        this.noEditBars = showPreview;
     }
 
     /**
@@ -203,8 +203,8 @@ public class Include extends BodyTagSupport {
             }
 
             boolean orgShowPreview = Resource.showPreview();
-            if(showPreview != null){
-                Resource.setShowPreview(showPreview.booleanValue());
+            if(noEditBars && !orgShowPreview){
+                Resource.setShowPreview(true);
             }
 
             if (this.path != null) { // TODO
@@ -213,7 +213,7 @@ public class Include extends BodyTagSupport {
             } else {
                 ParagraphRenderingFacade.getInstance().render(content, pageContext.getOut(), pageContext);
             }
-            if(showPreview != null){
+            if(noEditBars){
                 Resource.setShowPreview(orgShowPreview);
             }
 

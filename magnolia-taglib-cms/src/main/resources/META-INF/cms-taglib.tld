@@ -513,10 +513,10 @@ paragraph="samplesTextImage,samplesDownload,samplesLink"/>
     </attribute>
     <attribute>
       <description>Set to true if the included content should not be rendered in edit mode (no edit bars, ...)</description>
-      <name>showPreview</name>
+      <name>noEditBars</name>
       <required>false</required>
       <rtexprvalue>true</rtexprvalue>
-      <type>java.lang.Boolean</type>
+      <type>boolean</type>
     </attribute>
     <attribute>
       <description>@deprecated use the contentNode attribute instead</description>
