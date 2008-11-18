@@ -94,7 +94,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(log4jServletMapping)
         );
 
-        register(DeltaBuilder.update("3.7", "")
+        register(DeltaBuilder.update("4.0", "")
                 .addTask(auditTrailManagerTask)
         );
     }

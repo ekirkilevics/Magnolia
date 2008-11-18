@@ -62,7 +62,7 @@ public class BarEdit extends Bar {
     private Button buttonDelete = new Button();
 
     /**
-     * @deprecated since 3.7 - use the empty constructor.
+     * @deprecated since 4.0 - use the empty constructor.
      */
     public BarEdit(HttpServletRequest request) {
     }

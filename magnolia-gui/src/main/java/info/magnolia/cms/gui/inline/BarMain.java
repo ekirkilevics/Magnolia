@@ -77,13 +77,13 @@ public class BarMain extends Bar {
     private boolean adminButtonVisible = true;
 
     /**
-     * @deprecated since 3.7 - use the empty constructor.
+     * @deprecated since 4.0 - use the empty constructor.
      */
     public BarMain(HttpServletRequest request) {
     }
 
     /**
-     * @deprecated since 3.7
+     * @deprecated since 4.0
      */
     public BarMain(HttpServletRequest request, String path, String nodeCollectionName, String nodeName, String paragraph) {
         this(path, nodeCollectionName, nodeName, paragraph);

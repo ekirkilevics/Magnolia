@@ -75,7 +75,7 @@ public class Template extends AbstractRenderable{
     /**
      * Getter for <code>path</code>.
      * @return Returns the path.
-     * @deprecated since 3.7. use getTemplatePath() instead
+     * @deprecated since 4.0. use getTemplatePath() instead
      */
     public String getPath() {
         return getTemplatePath();
@@ -124,7 +124,7 @@ public class Template extends AbstractRenderable{
     }
 
     /**
-     * @deprecated since 3.7 use {@link #setTemplatePath(String)}
+     * @deprecated since 4.0 use {@link #setTemplatePath(String)}
      */
     public void setPath(String path) {
         setTemplatePath(path);

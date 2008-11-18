@@ -58,7 +58,7 @@ public class BarNew extends Bar {
     private Button buttonNew = new Button();
 
     /**
-     * @deprecated since 3.7 - use the empty constructor.
+     * @deprecated since 4.0 - use the empty constructor.
      */
     public BarNew(HttpServletRequest request) {
     }

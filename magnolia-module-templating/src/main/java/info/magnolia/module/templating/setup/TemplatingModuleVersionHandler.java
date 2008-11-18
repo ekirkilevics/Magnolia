@@ -70,7 +70,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(orderBackwardCompatibilityFilter)
         );
 
-        register(DeltaBuilder.update("3.7", "")
+        register(DeltaBuilder.update("4.0", "")
                 .addTask(new BootstrapSingleResource(
                 "Freemarker Template Renderer",
                 "Add freemarker template renderer configuration",

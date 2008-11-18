@@ -60,13 +60,13 @@ public class ButtonEdit extends Button {
     }
 
     /**
-     * @deprecated since 3.7 - use the empty constructor.
+     * @deprecated since 4.0 - use the empty constructor.
      */
     public ButtonEdit(HttpServletRequest request) {
     }
 
     /**
-     * @deprecated since 3.7 - do not pass an HttpServletRequest
+     * @deprecated since 4.0 - do not pass an HttpServletRequest
      */
     public ButtonEdit(HttpServletRequest request, String path, String nodeCollectionName, String nodeName, String paragraph) {
         this(path, nodeCollectionName, nodeName, paragraph);
@@ -80,7 +80,7 @@ public class ButtonEdit extends Button {
     }
 
     /**
-     * @deprecated since 3.7 - do not pass an HttpServletRequest
+     * @deprecated since 4.0 - do not pass an HttpServletRequest
      */
     public void setDefaultOnclick(HttpServletRequest request) {
         setDefaultOnclick();
