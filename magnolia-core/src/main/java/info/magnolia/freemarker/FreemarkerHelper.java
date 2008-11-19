@@ -43,7 +43,6 @@ import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
@@ -163,8 +162,7 @@ public class FreemarkerHelper {
         if (webCtx != null) {
             // @deprecated (-> update all templates) - TODO see MAGNOLIA-1789
             data.put("contextPath", webCtx.getContextPath());
-            AggregationState aggregationState = MgnlContext.getAggregationState();
-            data.put("aggregationState", aggregationState);
+            data.put("aggregationState", webCtx.getAggregationState());
 
             addTaglibSupportData(data, webCtx);
         }
