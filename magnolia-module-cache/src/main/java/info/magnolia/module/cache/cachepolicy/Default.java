@@ -33,9 +33,6 @@
  */
 package info.magnolia.module.cache.cachepolicy;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
@@ -44,6 +41,8 @@ import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.FlushPolicy;
 import info.magnolia.voting.voters.VoterSet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A basic CachePolicy which will drive the usage of the cache
@@ -67,7 +66,7 @@ public class Default implements CachePolicy {
         }
 
         if (shouldRefresh(aggregationState, key)) {
-            log .debug("Cache refresh requested for {}", key);
+            log.debug("Cache refresh requested for {}", key);
             return new CachePolicyResult(CachePolicyResult.store, key, null);
         }
 
