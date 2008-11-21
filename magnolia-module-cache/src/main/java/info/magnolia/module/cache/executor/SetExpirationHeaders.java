@@ -39,16 +39,11 @@ import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicyResult;
 
 import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.time.FastDateFormat;
 
 /**
  * TODO : avoid duplication with CacheHeadersFilter ???
@@ -57,7 +52,6 @@ import org.apache.commons.lang.time.FastDateFormat;
  * @version $Revision$ ($Author$)
  */
 public class SetExpirationHeaders extends AbstractExecutor {
-    private final FastDateFormat formatter = FastDateFormat.getInstance("EEE, d MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.ENGLISH);
 
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
@@ -68,15 +62,13 @@ public class SetExpirationHeaders extends AbstractExecutor {
 
         if (clientCacheResult == BrowserCachePolicyResult.NO_CACHE) {
             response.setHeader("Pragma", "No-cache");
-            response.setHeader("Cache-Control", "no-cache");
-            response.setDateHeader("Expires", 0);
-            response.setHeader("Expires", "Fri, 30 Oct 1998 14:19:41 GMT");
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+            response.setDateHeader("Expires", 0L);
         } else {
-            final long maxAgeSeconds = (clientCacheResult.getExpirationDate() - System.currentTimeMillis()) / 1000;
+            final long maxAgeSeconds = (clientCacheResult.getExpirationDate() - System.currentTimeMillis()) / 1000L;
             response.setHeader("Pragma", "");
             response.setHeader("Cache-Control", "max-age=" + maxAgeSeconds + ", public");
-            // TODO : use setDateHeader ?
-            response.setHeader("Expires", formatter.format(new Date(clientCacheResult.getExpirationDate())));
+            response.setDateHeader("Expires", clientCacheResult.getExpirationDate());
         }
     }
 }

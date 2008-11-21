@@ -34,16 +34,12 @@
 package info.magnolia.module.cache.filter;
 
 import info.magnolia.cms.filters.AbstractMgnlFilter;
-import org.apache.commons.lang.time.FastDateFormat;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
-import java.util.TimeZone;
 
 /**
  * <p>
@@ -94,8 +90,6 @@ public class CacheHeadersFilter extends AbstractMgnlFilter {
      */
     private boolean nocache;
 
-    private FastDateFormat formatter = FastDateFormat.getInstance("EEE, d MMM yyyy HH:mm:ss zzz", TimeZone.getTimeZone("GMT"), Locale.ENGLISH);
-
     /**
      * Sets the expirationMinutes.
      * @param expirationMinutes the expirationMinutes to set
@@ -115,15 +109,13 @@ public class CacheHeadersFilter extends AbstractMgnlFilter {
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         if (nocache) {
             response.setHeader("Pragma", "No-cache");
-            response.setHeader("Cache-Control", "no-cache");
-            response.setDateHeader("Expires", 0);
-            response.setHeader("Expires", "Fri, 30 Oct 1998 14:19:41 GMT");
+            response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
+            response.setDateHeader("Expires", 0L);
         } else {
             response.setHeader("Pragma", "");
             response.setHeader("Cache-Control", "max-age=" + expirationMinutes * 60 + ", public");
             final long expiration = System.currentTimeMillis() + expirationMinutes * 60000;
-            // TODO : use setDateHeader ?
-            response.setHeader("Expires", formatter.format(new Date(expiration)));
+            response.setDateHeader("Expires", expiration);
         }
 
         chain.doFilter(request, response);

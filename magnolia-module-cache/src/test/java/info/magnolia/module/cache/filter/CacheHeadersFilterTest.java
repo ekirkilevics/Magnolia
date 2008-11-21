@@ -31,62 +31,49 @@
  * intact.
  *
  */
-package info.magnolia.module.cache.executor;
+package info.magnolia.module.cache.filter;
 
-import info.magnolia.module.cache.Cache;
-import info.magnolia.module.cache.CacheConfiguration;
-import info.magnolia.module.cache.browsercachepolicy.FixedDuration;
-import info.magnolia.module.cache.browsercachepolicy.Never;
+import static org.easymock.EasyMock.*;
 
 import javax.servlet.FilterChain;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import static org.easymock.EasyMock.*;
-
 import junit.framework.TestCase;
 
-public class SetExpirationHeadersTest extends TestCase {
-    
-    public void testProcessCacheRequest() throws Exception {
+
+public class CacheHeadersFilterTest extends TestCase {
+
+    public void testFilterCacheRequest() throws Exception {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final FilterChain chain = createStrictMock(FilterChain.class);
-        final Cache cache = createStrictMock(Cache.class);
-        final CacheConfiguration cacheConfig = new CacheConfiguration();
-        final FixedDuration fixed = new FixedDuration();
-        fixed.setExpirationMinutes(30);
-        cacheConfig.setBrowserCachePolicy(fixed);
         
         response.setHeader("Pragma", "");
-        response.setHeader("Cache-Control", "max-age=1800, public");
+        response.setHeader("Cache-Control", "max-age=86400, public");
         response.setDateHeader(eq("Expires"), anyLong());
+        chain.doFilter(request, response);
         
-        replay(request, response, chain, cache);
-        SetExpirationHeaders executor = new SetExpirationHeaders();
-        executor.setCacheConfiguration(cacheConfig);
-        executor.processCacheRequest(request, response, chain, cache, null);
-        verify(request, response, chain, cache);
+        replay(request, response, chain);
+        CacheHeadersFilter filter = new CacheHeadersFilter();
+        filter.doFilter(request, response, chain);
+        verify(request, response, chain);
     }
 
-    public void testProcessNoCacheRequest() throws Exception {
+    public void testFilterNoCacheRequest() throws Exception {
         final HttpServletRequest request = createStrictMock(HttpServletRequest.class);
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final FilterChain chain = createStrictMock(FilterChain.class);
-        final Cache cache = createStrictMock(Cache.class);
-        final CacheConfiguration cacheConfig = new CacheConfiguration();
-        final Never fixed = new Never();
-        cacheConfig.setBrowserCachePolicy(fixed);
         
         response.setHeader("Pragma", "No-cache");
         response.setHeader("Cache-Control", "no-cache, no-store, must-revalidate, max-age=0");
         response.setDateHeader("Expires", 0L);
+        chain.doFilter(request, response);
         
-        replay(request, response, chain, cache);
-        SetExpirationHeaders executor = new SetExpirationHeaders();
-        executor.setCacheConfiguration(cacheConfig);
-        executor.processCacheRequest(request, response, chain, cache, null);
-        verify(request, response, chain, cache);
+        replay(request, response, chain);
+        CacheHeadersFilter filter = new CacheHeadersFilter();
+        filter.setNocache(true);
+        filter.doFilter(request, response, chain);
+        verify(request, response, chain);
     }
-
 }
