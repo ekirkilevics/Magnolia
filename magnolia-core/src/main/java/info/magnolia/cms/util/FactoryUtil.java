@@ -295,7 +295,7 @@ public class FactoryUtil {
         }
 
         protected void startObservation(String handle) {
-            ObservationUtil.registerDefferedChangeListener(ContentRepository.CONFIG, handle, this, 1000, 5000);
+            ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, handle, this, 1000, 5000);
         }
 
         public void onEvent(EventIterator events) {

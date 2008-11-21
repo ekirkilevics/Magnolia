@@ -211,7 +211,7 @@ public class CacheConfig {
         try {
             Node node = this.content.getJCRNode();
             EventListener listener = new CacheConfigListener(this.cacheManager, this);
-            ObservationUtil.registerDefferedChangeListener(ContentRepository.CONFIG, node.getPath(), listener, 5000, 30000);
+            ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, node.getPath(), listener, 5000, 30000);
         }
         catch (Exception e) {
             throw new ConfigurationException("Could not register JCR EventLister.");

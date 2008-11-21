@@ -95,7 +95,7 @@ public class SystemUserManager extends MgnlUserManager {
             "mgnl:group",
             anonymousListener);
 
-        ObservationUtil.registerDefferedChangeListener(
+        ObservationUtil.registerDeferredChangeListener(
             ContentRepository.USER_ROLES,
             "/",
             true,

@@ -180,7 +180,7 @@ public class DefaultCacheManager extends BaseCacheManager {
     protected void registerObservation(CacheConfig config) {
         for (Iterator iter = config.getRepositories().iterator(); iter.hasNext();) {
             String repository = (String) iter.next();
-            ObservationUtil.registerDefferedChangeListener(repository, "/", new EventListener() {
+            ObservationUtil.registerDeferredChangeListener(repository, "/", new EventListener() {
                 public void onEvent(EventIterator events) {
                     handleChangeEvents(events);
                 }

@@ -117,7 +117,7 @@ public class MgnlMainFilter implements Filter {
     }
 
     protected void startObservation() {
-        ObservationUtil.registerDefferedChangeListener(
+        ObservationUtil.registerDeferredChangeListener(
             ContentRepository.CONFIG,
             SERVER_FILTERS,
             filtersEventListener,
