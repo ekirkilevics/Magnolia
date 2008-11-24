@@ -34,22 +34,20 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.SystemContentWrapper;
-import info.magnolia.cms.util.ObservationUtil;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.cms.util.SystemContentWrapper;
+import info.magnolia.context.MgnlContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -79,7 +77,7 @@ public abstract class ObservedManager {
             return;
         }
 
-        ObservationUtil.registerDefferedChangeListener(ContentRepository.CONFIG, node.getHandle(), new EventListener() {
+        ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, node.getHandle(), new EventListener() {
 
             public void onEvent(EventIterator events) {
                 reload();
