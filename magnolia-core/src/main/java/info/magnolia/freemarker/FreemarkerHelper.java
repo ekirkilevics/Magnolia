@@ -79,7 +79,7 @@ public class FreemarkerHelper {
 
     public FreemarkerHelper() {
         cfg = new Configuration();
-        cfg.setObjectWrapper(new MagnoliaContentWrapper());
+        cfg.setObjectWrapper(new MagnoliaObjectWrapper());
         
         // template loaders are set on the fly to make sure changing configuration is pickup up immediatelly
 

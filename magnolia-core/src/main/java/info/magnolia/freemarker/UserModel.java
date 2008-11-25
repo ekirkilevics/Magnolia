@@ -50,7 +50,7 @@ import info.magnolia.cms.security.User;
 class UserModel extends BeanModel {
     private final User user;
 
-    UserModel(User user, MagnoliaContentWrapper wrapper) {
+    UserModel(User user, MagnoliaObjectWrapper wrapper) {
         super(user, wrapper);
         this.user = user;
     }

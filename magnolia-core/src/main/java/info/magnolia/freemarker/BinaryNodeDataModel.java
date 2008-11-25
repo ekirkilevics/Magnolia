@@ -38,8 +38,8 @@ import freemarker.template.TemplateHashModelEx;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import freemarker.template.TemplateScalarModel;
-import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.beans.runtime.FileProperties;
+import info.magnolia.cms.core.NodeData;
 import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
@@ -56,9 +56,9 @@ import java.util.Iterator;
  */
 public class BinaryNodeDataModel implements TemplateHashModelEx, TemplateScalarModel {
     private final NodeData binaryNodeData;
-    private final MagnoliaContentWrapper wrapper;
+    private final MagnoliaObjectWrapper wrapper;
 
-    BinaryNodeDataModel(NodeData binaryNodeData, MagnoliaContentWrapper wrapper) {
+    BinaryNodeDataModel(NodeData binaryNodeData, MagnoliaObjectWrapper wrapper) {
         this.binaryNodeData = binaryNodeData;
         this.wrapper = wrapper;
     }

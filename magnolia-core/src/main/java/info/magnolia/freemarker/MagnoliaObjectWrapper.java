@@ -59,13 +59,15 @@ import javax.jcr.RepositoryException;
 import java.util.Calendar;
 
 /**
+ * A Freemarker ObjectWrapper that knows about Magnolia specific objects.
+ *
  * @author Chris Miner
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class MagnoliaContentWrapper extends DefaultObjectWrapper {
+public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
-    MagnoliaContentWrapper() {
+    MagnoliaObjectWrapper() {
         super();
     }
 

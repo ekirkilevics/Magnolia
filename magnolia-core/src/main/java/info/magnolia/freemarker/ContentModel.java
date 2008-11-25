@@ -58,9 +58,9 @@ import java.util.Iterator;
  */
 public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, TemplateScalarModel {
     private final Content content;
-    private final MagnoliaContentWrapper wrapper;
+    private final MagnoliaObjectWrapper wrapper;
 
-    ContentModel(Content content, MagnoliaContentWrapper wrapper) {
+    ContentModel(Content content, MagnoliaObjectWrapper wrapper) {
         this.content = content;
         this.wrapper = wrapper;
     }
