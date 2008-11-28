@@ -36,6 +36,7 @@ package info.magnolia.cms.security.auth.callback;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.net.URLEncoder;
 import java.text.MessageFormat;
 
 /**
@@ -82,7 +83,8 @@ public class RedirectClientCallback implements HttpClientCallback {
 
         try {
             // formats the target location with the request url, to allow passing it has a parameter, for instance.
-            final String formattedTarget = MessageFormat.format(target, new String[]{request.getRequestURL().toString()});
+            final String encodedUrl = URLEncoder.encode(request.getRequestURL().toString(), "UTF-8");
+            final String formattedTarget = MessageFormat.format(target, new String[]{encodedUrl});
             response.sendRedirect(formattedTarget);
         } catch (IOException e) {
             throw new RuntimeException("Can't redirect to " + target + " : " + e.getMessage(), e);

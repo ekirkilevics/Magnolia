@@ -93,11 +93,11 @@ public class RedirectClientCallbackTest extends TestCase {
         // nothing happens - TODO - maybe this should throw an exception ?
     }
 
-    public void testTargetUrlIsFormattedWithRequestURL() throws Exception {
+    public void testTargetUrlIsFormattedWithEncodedRequestURL() throws Exception {
         callback.setLocation("http://sso.mycompany.com/login/?backto={0}");
         expect(request.getRequestURI()).andReturn("/foo/some/path");
         expect(request.getRequestURL()).andReturn(new StringBuffer("http://localhost/foo/some/path"));
 
-        response.sendRedirect("http://sso.mycompany.com/login/?backto=http://localhost/foo/some/path");
+        response.sendRedirect("http://sso.mycompany.com/login/?backto=http%3A%2F%2Flocalhost%2Ffoo%2Fsome%2Fpath");
     }
 }
