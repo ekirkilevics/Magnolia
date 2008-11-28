@@ -63,19 +63,25 @@ public class RedirectClientCallbackTest extends TestCase {
     public void testExternalUrlsArePassedAsIs() throws Exception {
         callback.setLocation("http://www.magnolia-cms.com");
         expect(request.getRequestURI()).andReturn("/really/does/not/matter");
+        expect(request.getRequestURL()).andReturn(new StringBuffer("http://localhost/really/does/not/matter"));
+
         response.sendRedirect("http://www.magnolia-cms.com");
     }
 
     public void testRelativeURLsAreSupported() /* although I hardly see how that could be any useful */ throws Exception {
         callback.setLocation("bar");
         expect(request.getRequestURI()).andReturn("/really/does/not/matter");
+        expect(request.getRequestURL()).andReturn(new StringBuffer("http://localhost/really/does/not/matter"));
+
         response.sendRedirect("bar");
     }
 
     public void testAbsoluteURLsArePrefixedWithContextPath() throws Exception {
         callback.setLocation("/bar");
         expect(request.getContextPath()).andReturn("/foo");
-        expect(request.getRequestURI()).andReturn("/really/does/not/matter");
+        expect(request.getRequestURI()).andReturn("/foo/does/not/matter");
+        expect(request.getRequestURL()).andReturn(new StringBuffer("http://localhost/foo/does/not/matter"));
+
         response.sendRedirect("/foo/bar");
     }
 
@@ -83,6 +89,15 @@ public class RedirectClientCallbackTest extends TestCase {
         callback.setLocation("/some/path");
         expect(request.getContextPath()).andReturn("/foo");
         expect(request.getRequestURI()).andReturn("/foo/some/path");
+
         // nothing happens - TODO - maybe this should throw an exception ?
+    }
+
+    public void testTargetUrlIsFormattedWithRequestURL() throws Exception {
+        callback.setLocation("http://sso.mycompany.com/login/?backto={0}");
+        expect(request.getRequestURI()).andReturn("/foo/some/path");
+        expect(request.getRequestURL()).andReturn(new StringBuffer("http://localhost/foo/some/path"));
+
+        response.sendRedirect("http://sso.mycompany.com/login/?backto=http://localhost/foo/some/path");
     }
 }
