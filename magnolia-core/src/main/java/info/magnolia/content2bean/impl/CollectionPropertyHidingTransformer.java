@@ -36,15 +36,20 @@ package info.magnolia.content2bean.impl;
 import info.magnolia.content2bean.PropertyTypeDescriptor;
 import info.magnolia.content2bean.TransformationState;
 import info.magnolia.content2bean.TypeDescriptor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Method;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
+/**
+ * A transformer which "hides" a collection node. Extend or pass the type and node name in the constructor.
+ *
+ * @author pbracher
+ * @version $Revision$ ($Author$)
+ */
 public class CollectionPropertyHidingTransformer extends Content2BeanTransformerImpl {
 
     private static Logger log = LoggerFactory.getLogger(CollectionPropertyHidingTransformer.class);
