@@ -109,7 +109,7 @@ public class MetaData {
      * Package private constructor
      * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
      */
-    MetaData(Node workingNode, AccessManager manager) {
+    protected MetaData(Node workingNode, AccessManager manager) {
         this.setMetaNode(workingNode, DEFAULT_META_NODE);
         this.setAccessManager(manager);
     }
