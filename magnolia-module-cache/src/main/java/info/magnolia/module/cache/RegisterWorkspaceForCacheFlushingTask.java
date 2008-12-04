@@ -59,7 +59,7 @@ public class RegisterWorkspaceForCacheFlushingTask extends AbstractTask implemen
     private String workspaceName;
 
     public RegisterWorkspaceForCacheFlushingTask(String workspaceName) {
-        super("Cache flushing", "Updates the cache flushing configuration to trigger cache flush when new or updated document is published.");
+        super("Cache flushing", "Updates the cache flushing configuration to trigger cache flush when new or updated content is published to " + workspaceName + " workspace.");
         this.workspaceName = workspaceName;
         if (workspaceName == null) {
             throw new InvalidParameterException("Workspace name can't be empty.");
@@ -70,11 +70,12 @@ public class RegisterWorkspaceForCacheFlushingTask extends AbstractTask implemen
         HierarchyManager hm = ctx.getConfigHierarchyManager();
         try {
             String nodePath = "/modules/cache/config/configurations/default/flushPolicy/repositories";
-            if (!hm.isExist(nodePath)) {
-                // cache is not installed - ignore
+            if (!ctx.getModulesNode().hasContent("cache") || !hm.isExist(nodePath)) {
+                // cache is not installed or other then default flush policy is used - ignore
                 return;
             }
             Content c = hm.getContent(nodePath);
+            // check if the workspace is not already registered manually by user. If so, just bail out, no need to punish users who registered workspaces previously themselves with the error message.
             Iterator iter = c.getNodeDataCollection().iterator();
             boolean found = false;
             while (iter.hasNext()) {
@@ -85,7 +86,6 @@ public class RegisterWorkspaceForCacheFlushingTask extends AbstractTask implemen
             }
             if (!found) {
                 c.createNodeData(Path.getUniqueLabel(c, "0"), this.workspaceName);
-                c.save();
             }
         } catch (RepositoryException e) {
             throw new TaskExecutionException(e.getMessage(), e);
