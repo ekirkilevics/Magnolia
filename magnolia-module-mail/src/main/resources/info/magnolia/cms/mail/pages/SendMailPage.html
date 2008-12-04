@@ -1,0 +1,184 @@
+ <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+  <head>
+    <title>${this.messages.get("page.title")}</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="${this.request.contextPath}/.magnolia/pages/javascript.js"><!-- --></script>
+    <script type="text/javascript" src="${this.request.contextPath}/.resources/admin-js/dialogs/dialogs.js"><!-- --></script>
+  </head>
+  <body id="mgnl">
+  [#if message?exists]
+      <pre><b>${message}</b></pre>
+      <hr />
+      [/#if]
+  <div class="pageframe" >
+  <form action="" method="post" enctype="multipart/form-data">
+    <input type="hidden" name="command" value="send" />
+    <table>
+        <tr><td valign="top">
+        <h3>${this.messages.get("page.form.text.message")}</h3>
+        <div class="formelement">
+          <label for="from">${this.messages.get("page.form.text.message.from")}</label>
+          <input type="text" name="from" />
+        </div>
+        <div class="formelement">
+          <label for="to">${this.messages.get("page.form.text.message.to")}</label>
+          <input type="text" name="to" />
+        </div>
+        <div class="formelement">
+          <label for="cc">${this.messages.get("page.form.text.message.cc")}</label>
+          <input type="text" name="cc" />
+        </div>
+        <div class="formelement">
+          <label for="subject">${this.messages.get("page.form.text.message.subject")}</label>
+          <input type="text" name="subject" />
+        </div>
+        <div class="formelement">
+          <label for="contentType">${this.messages.get("page.form.text.message.contenttype")}</label>
+          <select name="contentType" >
+            <option value="text">${this.messages.get("page.form.text.message.contenttype.text")}</option>
+            <option value="html">${this.messages.get("page.form.text.message.contenttype.html")}</option>
+          </select>
+        </div>
+        <div class="formelement">
+          <label for="attachment">${this.messages.get("page.form.text.message.attachment")}</label>
+          <input type="file" name="attachment" />
+        </div>
+        <input type="submit" value="${this.messages.get("page.form.submit")}" class="mgnlControlButton" />
+        </td>
+        <td style="width:30px">
+        &nbsp;
+        </td>
+        <td valign="top" >
+        <h3>${this.messages.get("page.form.text.message.text")}</h3>
+        <div class="formelement">
+          <label for="type">${this.messages.get("page.form.text.message.emailtype")}</label>
+          <select name="type" >
+            [#list this.types as item]
+              [#if !item?contains("magnolia")]
+              <option >${item}</option>
+              [/#if]
+            [/#list]
+          </select>
+        </div>
+        <div class="formelement" >
+          <label for="body">${this.messages.get("page.form.text.message.messagetext")}</label>
+          <textarea name="body" rows="8" style="width:380px;height:140px"></textarea>
+        </div>
+        </td>
+        </tr>
+        </table>
+        </form>
+        </div>
+  <div class="pageframe" >
+    <form action="" method="post" enctype="multipart/form-data" >
+    <input type="hidden" name="command" value="send" />
+    <table>
+    <tr><td valign="top">
+        <h3>${this.messages.get("page.form.template.message")}</h3>
+        <div class="formelement">
+          <label for="from">${this.messages.get("page.form.template.message.from")}</label>
+          <input type="text" name="from" />
+        </div>
+        <div class="formelement">
+          <label for="to">${this.messages.get("page.form.template.message.to")}</label>
+          <input type="text" name="to" />
+        </div>
+        <div class="formelement">
+          <label for="cc">${this.messages.get("page.form.template.message.cc")}</label>
+          <input type="text" name="cc" />
+        </div>
+        <div class="formelement">
+          <label for="subject">${this.messages.get("page.form.template.message.subject")}</label>
+          <input type="text" name="subject" />
+        </div>
+        <div class="formelement">
+          <label for="attachment">${this.messages.get("page.form.template.message.attachment")}</label>
+          <input type="file" name="attachment" />
+        </div>
+
+        <input type="submit" value="${this.messages.get("page.form.submit")}" class="mgnlControlButton" />
+        </td>
+        <td style="width:30px">
+        &nbsp;
+        </td>
+        <td valign="top">
+        <h3>${this.messages.get("page.form.template.message.template")}</h3>
+        <div class="formelement">
+          <label for="mailTemplate">${this.messages.get("page.form.template.message.selecttemplate")}</label>
+          <select name="mailTemplate">
+            <option value="" selected></option>
+            [#list this.templates as item]
+              <option >${item.name}</option>
+            [/#list]
+          </select>
+        </div>
+        <div class="formelement" >
+          <label for="parameters">${this.messages.get("page.form.template.message.parameters")}</label>
+          <textarea name="parameters" rows="6" style="width:380px;height:120px" ></textarea>
+        </div>
+        </td>
+        </tr>
+        </table>
+        </form>
+        </div>
+        <div class="pageframe" >
+    <form action="" method="post" enctype="multipart/form-data" >
+    <input type="hidden" name="command" value="send" />
+    <table>
+    <tr><td valign="top">
+        <h3>${this.messages.get("page.form.page.message")}</h3>
+        <div class="formelement">
+          <label for="from">${this.messages.get("page.form.page.message.from")}</label>
+          <input type="text" name="from" />
+        </div>
+        <div class="formelement">
+          <label for="to">${this.messages.get("page.form.page.message.to")}</label>
+          <input type="text" name="to" />
+        </div>
+        <div class="formelement">
+          <label for="cc">${this.messages.get("page.form.page.message.cc")}</label>
+          <input type="text" name="cc" />
+        </div>
+        <div class="formelement">
+          <label for="subject">${this.messages.get("page.form.page.message.subject")}</label>
+          <input type="text" name="subject" />
+        </div>
+        <div class="formelement">
+          <label for="contentType">${this.messages.get("page.form.page.message.contenttype")}</label>
+          <select name="contentType" >
+            <option value="text">${this.messages.get("page.form.page.message.contenttype.text")}</option>
+            <option value="html" selected >${this.messages.get("page.form.page.message.contenttype.html")}</option>
+          </select>
+        </div>
+        <div class="formelement">
+          <label for="attachment">${this.messages.get("page.form.page.message.attachment")}</label>
+          <input type="file" name="attachment" />
+        </div>
+        <input type="submit" value="${this.messages.get("page.form.submit")}" class="mgnlControlButton" />
+        </td>
+        <td style="width:30px">
+        &nbsp;
+        </td>
+        <td valign="top">
+        <h3>${this.messages.get("page.form.page.message.page")}</h3>
+        <p>${this.messages.get("page.form.page.message.note")}</p>
+        <div class="formelement">
+          <label for="page">Select Page</label>
+          <input type="text" name="templateFile" id="templateFile" />
+          <input type="hidden" name="type" value="magnolia" />
+          <input type="button" onclick="mgnlDialogLinkOpenBrowser('templateFile','website','');" value="${this.messages.get("page.form.page.message.link")}" />
+
+        </div>
+        <div class="formelement" >
+          <label for="parameters">${this.messages.get("page.form.page.message.parameters")}</label>
+          <textarea name="parameters" rows="6" style="width:380px;height:120px" ></textarea>
+        </div>
+        </td>
+        </tr>
+        </table>
+        </form>
+        </div>
+  </body>
+</html>

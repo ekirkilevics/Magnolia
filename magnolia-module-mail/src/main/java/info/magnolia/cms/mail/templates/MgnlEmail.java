@@ -34,6 +34,7 @@
 package info.magnolia.cms.mail.templates;
 
 import info.magnolia.cms.mail.MailException;
+import info.magnolia.cms.mail.MailTemplate;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -41,14 +42,12 @@ import java.io.FileReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import javax.mail.Address;
 import javax.mail.Message;
 import javax.mail.MessagingException;
-import javax.mail.Session;
 import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeBodyPart;
@@ -72,16 +71,25 @@ public abstract class MgnlEmail extends MimeMessage {
     protected static final String TEXT_HTML_UTF = "text/html; charset=UTF-8";
 
     protected static final String CHARSET_HEADER_STRING = "charset=";
-    
+
     protected static final Pattern EMAIL_WITH_PERSONAL_PATTERN = Pattern.compile("\"+(.*)\"+<(.*)>");
 
     public static Logger log = LoggerFactory.getLogger(MgnlEmail.class);
 
-    private String template;
-
-    private Map parameters;
+    private MailTemplate template;
 
     private boolean bodyNotSetFlag; // used for threads
+
+    public MgnlEmail(MailTemplate template) {
+        super(template.initSession());
+        this.template = template;
+    }
+
+    public abstract void setBody(String text) throws Exception;
+
+    public void setSubject(String arg0) throws MessagingException {
+        this.setSubject(arg0, "UTF-8");
+    }
 
     public boolean isBodyNotSetFlag() {
         return this.bodyNotSetFlag;
@@ -91,40 +99,17 @@ public abstract class MgnlEmail extends MimeMessage {
         this.bodyNotSetFlag = _bodyNotSetFlag;
     }
 
-    public MgnlEmail(Session _session) {
-        super(_session);
-    }
-
-    public abstract void setBody(String body, Map _parameters) throws Exception;
-    
-    public void setSubject(String arg0) throws MessagingException {
-        this.setSubject(arg0, "UTF-8");
-    }
-
-    public void setTemplate(String _template) {
-        this.template = _template;
-    }
-
-    public Map getParameters() {
-        return this.parameters;
-    }
-
-    public String getTemplate() {
-        return this.template;
-    }
-
-    public void setParameters(Map _parameters) {
-        this.parameters = _parameters;
-    }
-
-    public void addParameters(Map params) {
-        this.parameters.putAll(params);
-    }
-
-    public void setBody() throws Exception {
-        if (this.template != null) {
-            this.setBody(this.template, this.parameters);
+    public void setTemplate(MailTemplate template) {
+        this.template = template;
+        try {
+            setHeader(CONTENT_TYPE, getContentType());
+        } catch (MessagingException e) {
+            log.error("Couldn't set content type");
         }
+    }
+
+    public MailTemplate getTemplate() {
+        return this.template;
     }
 
     /**
@@ -173,7 +158,7 @@ public abstract class MgnlEmail extends MimeMessage {
     public void setBccList(String list) throws Exception {
         setRecipients(Message.RecipientType.BCC, createAdressList(list));
     }
-    
+
     public void setReplyToList(String list) throws Exception {
         setReplyTo(createAdressList(list));
     }
@@ -210,8 +195,9 @@ public abstract class MgnlEmail extends MimeMessage {
         throw new MailException("Cannot add attachment to this email. It is not a Multimime email");
     }
 
-    public void setBodyFromResourceFile(String resourceFile, Map map) throws Exception {
-        URL url = this.getClass().getResource("/" + resourceFile);
+    public void setBodyFromResourceFile() throws Exception {
+
+        URL url = this.getClass().getResource("/" + template.getTemplateFile());
         log.info("This is the url:" + url);
         BufferedReader br = new BufferedReader(new FileReader(url.getFile()));
         String line;
@@ -219,7 +205,25 @@ public abstract class MgnlEmail extends MimeMessage {
         while ((line = br.readLine()) != null) {
             buffer.append(line).append(File.separator);
         }
-        this.setBody(buffer.toString(), map);
+
+        this.setBody(buffer.toString());
+    }
+
+    public String getContentType() {
+        if (template == null || StringUtils.isEmpty(template.getContentType())
+                || StringUtils.equalsIgnoreCase(template.getContentType(), "HTML")) {
+            return TEXT_HTML_UTF;
+        } else {
+            return TEXT_PLAIN_UTF;
+        }
+    }
+
+    public void setBody() throws Exception {
+        if(this.getTemplate() != null && this.getTemplate().getText() != null) {
+            setBody(this.getTemplate().getText());
+        } else if(this.getContent() == null){
+            throw new Exception("no message set");
+        }
     }
 
 }

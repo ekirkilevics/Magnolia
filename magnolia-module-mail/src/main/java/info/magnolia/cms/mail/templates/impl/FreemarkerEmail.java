@@ -33,31 +33,38 @@
  */
 package info.magnolia.cms.mail.templates.impl;
 
+import info.magnolia.cms.mail.MailTemplate;
+import info.magnolia.cms.mail.templates.MgnlMultipartEmail;
 import info.magnolia.freemarker.FreemarkerHelper;
 
 import javax.mail.MessagingException;
-import javax.mail.Session;
 
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
-import java.util.Map;
 
 /**
  * Date: Apr 5, 2006 Time: 8:59:18 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
-public class FreemarkerEmail extends HtmlEmail {
+public class FreemarkerEmail extends MgnlMultipartEmail {
 
-    public void setFrom(String _from, Map parameters) throws Exception {
-        _from = proccesFreemarkerString(_from, parameters);
-        super.setFrom(_from);
+    public FreemarkerEmail(MailTemplate template) {
+        super(template);
     }
 
-
-    public void setSubject(String subject, Map parameters) throws MessagingException {
+    public void setFrom(String from) {
         try {
-            subject = proccesFreemarkerString(subject, parameters);
+            from = proccesFreemarkerString(from);
+        } catch (Exception e) {
+            log.error("Couldn't set from: " + from);
+        }
+        super.setFrom(from);
+    }
+
+    public void setSubject(String subject) throws MessagingException {
+        try {
+            subject = proccesFreemarkerString(subject);
             super.setSubject(subject);
         } catch (Exception e) {
             throw new MessagingException();
@@ -65,32 +72,28 @@ public class FreemarkerEmail extends HtmlEmail {
 
     }
 
-    public void setToList(String list, Map parameters) throws Exception {
-        list = proccesFreemarkerString(list, parameters);
+    public void setToList(String list) throws Exception {
+        list = proccesFreemarkerString(list);
         super.setToList(list);
     }
 
-    public FreemarkerEmail(Session _session) throws Exception {
-        super(_session);
-    }
-
-    public void setBody(String body, Map parameters, Map attachments) throws Exception {
-        body = proccesFreemarkerString(body, parameters);
-        super.setBody(body, attachments);
+    public void setBody(String body) throws Exception {
+        body = proccesFreemarkerString(body);
+        super.setBody(body);
     }
 
 
-    public void setBodyFromResourceFile(String resourceFile, Map _map) throws Exception {
+    public void setBodyFromResourceFile() throws Exception {
         final StringWriter writer = new StringWriter();
-        FreemarkerHelper.getInstance().render(resourceFile, _map, writer);
-        super.setBody(writer.toString(), _map);
+        FreemarkerHelper.getInstance().render(super.getTemplate().getTemplateFile(), super.getTemplate().getParameters(), writer);
+        super.setBody(writer.toString());
     }
 
-    protected String proccesFreemarkerString(String text, Map parameters) throws Exception {
+    protected String proccesFreemarkerString(String text) throws Exception {
 
         Reader reader = new StringReader(text);
         final StringWriter writer = new StringWriter();
-        FreemarkerHelper.getInstance().render(reader, parameters, writer);
+        FreemarkerHelper.getInstance().render(reader, super.getTemplate().getParameters(), writer);
         reader.close();
         return writer.toString();
     }

@@ -34,10 +34,13 @@
 package info.magnolia.cms.mail.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
+import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.delta.RemovePropertyTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 
 import java.util.ArrayList;
@@ -66,6 +69,30 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
 
         register(DeltaBuilder.update("3.6.2", "")
                 .addTask(mailServletMapping)
+        );
+
+        final RemoveNodeTask removeMailServletMapping = new RemoveNodeTask("New mail page", "Deletes old mail servlet",
+                ContentRepository.CONFIG,
+                "/server/filters/servlets/Mail"
+        );
+
+        final RemoveNodeTask removeConfigMenuMail = new RemoveNodeTask("New mail page", "Deletes old menu item mail",
+                ContentRepository.CONFIG,
+                "/modules/adminInterface/config/menu/tools/mails"
+        );
+
+        final CheckAndModifyPropertyValueTask changeTemplatesNodeType = new CheckAndModifyPropertyValueTask("Change templates type", "Templates node will become of type content",
+                ContentRepository.CONFIG,
+                "/modules/mail/config/templates",
+                "jcr:primaryType",
+                ItemType.CONTENTNODE.getSystemName(),
+                ItemType.CONTENT.getSystemName()
+        );
+
+        register(DeltaBuilder.update("4.0", "")
+                .addTask(removeMailServletMapping)
+                .addTask(removeConfigMenuMail)
+                .addTask(changeTemplatesNodeType)
         );
 
     }

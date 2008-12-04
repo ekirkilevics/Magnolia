@@ -33,14 +33,17 @@
  */
 package info.magnolia.cms.mail.commands;
 
-import info.magnolia.cms.mail.MailConstants;
+import info.magnolia.cms.mail.MailModule;
+import info.magnolia.cms.mail.MailTemplate;
 import info.magnolia.cms.mail.MgnlMailFactory;
-import info.magnolia.cms.mail.handlers.MgnlMailHandler;
-import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
+import info.magnolia.cms.mail.util.MailUtil;
+import info.magnolia.context.WebContext;
+import info.magnolia.cms.util.AlertUtil;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
@@ -56,7 +59,7 @@ import org.slf4j.LoggerFactory;
  */
 public class MailCommand implements Command {
 
-    static Logger log = LoggerFactory.getLogger(MailCommand.class);
+    public static Logger log = LoggerFactory.getLogger(MailCommand.class);
 
     public boolean execute(Context ctx) {
         if (log.isDebugEnabled()) {
@@ -64,59 +67,45 @@ public class MailCommand implements Command {
         }
 
         try {
-            MgnlMailFactory factory = MgnlMailFactory.getInstance();
-            MgnlMailHandler handler = factory.getEmailHandler();
-
+            MgnlMailFactory factory = MailModule.getInstance().getFactory();
+            MgnlEmail email;
             if (log.isDebugEnabled())
                 log.debug(Arrays.asList(ctx.entrySet().toArray()).toString());
 
-            String template = (String) ctx.get(MailConstants.ATTRIBUTE_TEMPLATE);
-            String to = (String) ctx.get(MailConstants.ATTRIBUTE_TO);
-            String cc = (String) ctx.get(MailConstants.ATTRIBUTE_CC);
+            String template = (String) ctx.get("mailTemplate");
+
+            //find attachments in parameters or form if we are using one
+            List attachments = MailUtil.createAttachmentList(((WebContext)ctx).getParameters());
 
             if (StringUtils.isNotEmpty(template)) {
-                log.info("Command using mail template: " + template);
-                MgnlEmail email = factory.getEmailFromTemplate(template, ctx);
-                email.setToList(factory.convertEmailList(to));
-                email.setCcList(factory.convertEmailList(cc));
-                handler.prepareAndSendMail(email);
+                log.debug("Command using mail template: " + template);
+                //get parameters
+                if(ctx.containsKey(MailTemplate.MAIL_PARAMETERS)) {
+                    Map temp = MailUtil.convertToMap((String)ctx.get(MailTemplate.MAIL_PARAMETERS));
+                    ctx.putAll(temp);
+                }
+                email = factory.getEmailFromTemplate(template, attachments, ctx);
+                email.setBodyFromResourceFile();
             }
             else {
-                log.info("command using static parameters");
-                String from = (String) ctx.get(MailConstants.ATTRIBUTE_FROM);
-                String type = (String) ctx.get(MailConstants.ATTRIBUTE_TYPE);
-                String subject = (String) ctx.get(MailConstants.ATTRIBUTE_SUBJECT);
-                String text = (String) ctx.get(MailConstants.ATTRIBUTE_TEXT);
+                log.debug("command using static parameters");
 
-                MgnlEmail email = factory.getEmailFromType(type);
-                email.setFrom(from);
-                email.setSubject(subject);
-                email.setToList(factory.convertEmailList(to));
-                email.setBody(text, ctx);
+                email = factory.getEmail(((WebContext)ctx).getParameters(), attachments);
+                email.setBody();
 
-                Object attachment = ctx.get(MailConstants.ATTRIBUTE_ATTACHMENT);
-
-                if (attachment != null) {
-                    if(attachment instanceof MailAttachment) {
-                        email.addAttachment((MailAttachment)attachment);
-                    }
-                    else if(attachment instanceof List) {
-                        email.setAttachments((List) attachment);
-                    }
-                }
-
-                email.setCcList(factory.convertEmailList(cc));
-                handler.prepareAndSendMail(email);
             }
+            factory.getEmailHandler().sendMail(email);
 
-            log.info("send mail successfully to:" + to);
+            log.info("send mail successfully to:" + ctx.get(MailTemplate.MAIL_TO));
         }
         catch (Exception e) {
             log.debug("Could not send email:" + e.getMessage(), e);
             log.error("Could not send email:" + e.getMessage());
+            AlertUtil.setMessage("Error: " + e.getMessage());
+            return false;
         }
 
-        return false;
+        return true;
     }
 
 }

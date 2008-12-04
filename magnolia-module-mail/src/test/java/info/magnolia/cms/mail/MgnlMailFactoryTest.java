@@ -37,7 +37,9 @@ package info.magnolia.cms.mail;
 import info.magnolia.cms.mail.templates.MgnlEmail;
 import org.subethamail.wiser.WiserMessage;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 /**
  *
@@ -48,18 +50,23 @@ import java.util.Iterator;
 public class MgnlMailFactoryTest extends AbstractMailTest {
 
     public void testSimpleMail() throws Exception {
-        MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_TEXT);
+
+        params.put(MailTemplate.MAIL_TYPE, MailConstants.MAIL_TEMPLATE_SIMPLE);
+        params.put(MailTemplate.MAIL_BODY, "test message");
+
+        MgnlEmail email = factory.getEmail(params);
         String subject = "Test simple";
-        email.setText("Hello bonjour");
         email.setSubject(subject);
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
+
         handler.prepareAndSendMail(email);
 
         assertTrue(wiser.getMessages().size() == 1);
         Iterator emailIter = wiser.getMessages().iterator();
         WiserMessage message = (WiserMessage) emailIter.next();
         assertTrue(message.getMimeMessage().getSubject().equals(subject));
+
     }
 
 }

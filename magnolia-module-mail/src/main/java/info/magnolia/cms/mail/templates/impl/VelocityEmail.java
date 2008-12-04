@@ -33,13 +33,13 @@
  */
 package info.magnolia.cms.mail.templates.impl;
 
+import info.magnolia.cms.mail.MailTemplate;
+import info.magnolia.cms.mail.templates.MgnlMultipartEmail;
+
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.StringWriter;
 import java.net.URL;
-import java.util.Map;
-
-import javax.mail.Session;
 
 import org.apache.velocity.VelocityContext;
 import org.apache.velocity.app.Velocity;
@@ -49,7 +49,7 @@ import org.apache.velocity.app.Velocity;
  * Date: Mar 30, 2006 Time: 1:13:33 PM
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
-public class VelocityEmail extends HtmlEmail {
+public class VelocityEmail extends MgnlMultipartEmail {
 
     static {
         try {
@@ -60,17 +60,18 @@ public class VelocityEmail extends HtmlEmail {
         }
     }
 
-    public VelocityEmail(Session _session) throws Exception {
-        super(_session);
+    public VelocityEmail(MailTemplate template) {
+        super(template);
     }
 
-    public void setBodyFromResourceFile(String resourceFile, Map _map) throws Exception {
-        VelocityContext context = new VelocityContext(_map);
+    public void setBodyFromResourceFile() throws Exception {
+        String resourceFile = this.getTemplate().getTemplateFile();
+        VelocityContext context = new VelocityContext(super.getTemplate().getParameters());
         URL url = this.getClass().getResource("/" + resourceFile);
         log.info("This is the url:" + url);
         BufferedReader br = new BufferedReader(new FileReader(url.getFile()));
         StringWriter w = new StringWriter();
         Velocity.evaluate(context, w, "email", br);
-        super.setBody(w.toString(), _map);
+        super.setBody(w.toString());
     }
 }

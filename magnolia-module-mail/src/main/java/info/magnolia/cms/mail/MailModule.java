@@ -33,11 +33,15 @@
  */
 package info.magnolia.cms.mail;
 
-import info.magnolia.cms.core.Content;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import info.magnolia.cms.mail.handlers.MgnlMailHandler;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
-
-import javax.jcr.RepositoryException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,35 +51,73 @@ import org.slf4j.LoggerFactory;
  * @author <a href="mailto:niko@macnica.com">Nicolas Modrzyk</a>
  */
 public class MailModule implements ModuleLifecycle {
+
     private static final Logger log = LoggerFactory.getLogger(MailModule.class);
 
-    public static final String SERVER_MAIL_CONFIG = "smtp";
+    private static MailModule instance;
 
-    public static final String MAIL_TEMPLATES_PATH = "templates";
+    private MgnlMailHandler handler;
 
-    private Content configNode;
+    private MgnlMailFactory factory;
 
-    public Content getConfigNode() {
-        return configNode;
+    private Map smtp = new HashMap();
+
+    private List templates = new ArrayList();
+
+
+    public MailModule() {
+        instance = this;
     }
 
-    public void setConfigNode(Content configNode) {
-        this.configNode = configNode;
+    public static MailModule getInstance() {
+        return instance;
+    }
+
+
+    public Map getSmtp() {
+        return smtp;
+    }
+
+    public void setSmtp(Map smtp) {
+        this.smtp = smtp;
     }
 
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
-        try {
-            Content smtpNode = configNode.getContent(SERVER_MAIL_CONFIG);
-            Content templateNode = configNode.getContent(MAIL_TEMPLATES_PATH);
-            log.info("Loading mail server settings");
-            MgnlMailFactory.getInstance().register(smtpNode);
-            log.info("Loading mail templates");
-            MgnlMailFactory.getInstance().register(templateNode);
-        } catch (RepositoryException e) {
-            log.error("Missing configuration for mail. Module is not properly initialized");
-        }
+
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+
     }
+
+    public List getTemplates() {
+        return templates;
+    }
+
+    public void setTemplates(List templates) {
+        this.templates = templates;
+    }
+
+    public void addTemplate(MailTemplate mailTemplate) {
+        this.templates.add(mailTemplate);
+    }
+
+    public MgnlMailHandler getHandler() {
+        return handler;
+    }
+
+    public void setHandler(MgnlMailHandler handler) {
+        this.handler = handler;
+    }
+
+    public MgnlMailFactory getFactory() {
+        return factory;
+    }
+
+    public void setFactory(MgnlMailFactory factory) {
+        this.factory = factory;
+    }
+
+
+
 }

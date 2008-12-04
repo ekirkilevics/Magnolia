@@ -35,6 +35,7 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.mail.MailConstants;
+import info.magnolia.cms.mail.MailModule;
 import info.magnolia.cms.mail.MgnlMailFactory;
 import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.cms.util.ExclusiveWrite;
@@ -72,6 +73,7 @@ import org.slf4j.LoggerFactory;
  *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
+ * @deprecated
  */
 public class SimpleMailTag extends TagSupport {
 
@@ -286,28 +288,29 @@ public class SimpleMailTag extends TagSupport {
 
         String mailType = type;
         if (StringUtils.isEmpty(mailType)) {
-            mailType = MailConstants.MAIL_TEMPLATE_TEXT;
+            mailType = MailConstants.MAIL_TEMPLATE_SIMPLE;
         }
 
         MgnlEmail email;
         try {
+            Map parameters = new HashMap(request.getParameterMap());
             // TODO: avoid those kinds of redundacies in the mail system
             if (StringUtils.isEmpty(template)) {
-                email = MgnlMailFactory.getInstance().getEmailFromType(mailType);
-                email.setBody(body.toString(), null);
+                email = MailModule.getInstance().getFactory().getEmail(parameters);
+                email.setBody();
             }
             else {
-                Map parameters = new HashMap(request.getParameterMap());
                 parameters.put("all", body.toString());
-                email = MgnlMailFactory.getInstance().getEmailFromTemplate(template, parameters);
+                email = MailModule.getInstance().getFactory().getEmailFromTemplate(template, parameters);
+                email.setBodyFromResourceFile();
             }
-            email.setToList(to);
+          /*  email.setToList(to);
             email.setCcList(cc);
             email.setBccList(bcc);
             email.setReplyToList(replyTo);
             email.setFrom(from);
-            email.setSubject(subject);
-            MgnlMailFactory.getInstance().getEmailHandler().prepareAndSendMail(email);
+            email.setSubject(subject);*/
+            MailModule.getInstance().getFactory().getEmailHandler().sendMail(email);
         }
         catch (Exception e) {
             // you may want to warn the user redirecting him to a different page...

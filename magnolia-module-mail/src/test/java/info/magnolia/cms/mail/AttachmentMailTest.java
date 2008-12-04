@@ -47,7 +47,7 @@ public class AttachmentMailTest extends AbstractMailTest {
     public void testAttachmentFile() throws Exception {
         String file = getResourcePath(TEST_FILE_PDF);
         MailAttachment att = new MailAttachment(new File(file).toURL(), "att");
-        URL url = att.getURL();
+        URL url = att.getUrl();
         File f = att.getFile();
         assertTrue(f.exists());
         assertEquals(f.getAbsolutePath(), file);

@@ -57,7 +57,7 @@ public class SimpleMailHandler implements MgnlMailHandler {
     private static Logger log = LoggerFactory.getLogger(SimpleMailHandler.class);
 
     public synchronized void prepareAndSendMail(MgnlEmail email) throws Exception {
-        email.setBody();
+        //email.setBody();
         sendMail(email);
     }
 

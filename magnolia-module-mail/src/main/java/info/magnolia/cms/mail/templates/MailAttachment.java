@@ -55,13 +55,17 @@ public class MailAttachment {
 
     private static final String FILE_URL_PREFIX = "file://";
 
-    String description;
+    private String description;
 
-    String disposition;
+    private String disposition;
 
-    String name;
+    private String name;
 
-    URL url;
+    private URL url;
+
+    public MailAttachment() {
+
+    }
 
     public MailAttachment(File file, String name, String description, String disposition) {
         this.setPath(file.getAbsolutePath());
@@ -103,8 +107,8 @@ public class MailAttachment {
         return this.url.getFile();
     }
 
-    public java.net.URL getURL() {
-        if (this.url.getProtocol().startsWith("file:")) {
+    public java.net.URL getUrl() {
+        if (this.url.getProtocol().startsWith("file")) {
             try {
                 return new URL("file://" + this.url.toExternalForm());
             }
@@ -143,7 +147,7 @@ public class MailAttachment {
         }
     }
 
-    public void setURL(java.net.URL aUrl) {
+    public void setUrl(java.net.URL aUrl) {
         this.url = aUrl;
     }
 

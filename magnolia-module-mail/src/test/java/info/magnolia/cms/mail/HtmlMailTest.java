@@ -35,7 +35,6 @@ package info.magnolia.cms.mail;
 
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.mail.templates.MgnlEmail;
-import info.magnolia.cms.mail.templates.impl.HtmlEmail;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -51,12 +50,13 @@ import org.subethamail.wiser.WiserMessage;
 public class HtmlMailTest extends AbstractMailTest {
 
     public void testHtmlMail() throws Exception {
-        MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_HTML);
+
+        MgnlEmail email = prepareTest();
         String subject = "test html email";
         email.setSubject(subject);
-        email.setBody("<h1>Helloniko</h1>", null);
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
+        email.setBody("<h1>Helloniko</h1>");
 
         handler.prepareAndSendMail(email);
 
@@ -64,12 +64,14 @@ public class HtmlMailTest extends AbstractMailTest {
         Iterator emailIter = wiser.getMessages().iterator();
         WiserMessage message = (WiserMessage) emailIter.next();
         assertTrue(message.getMimeMessage().getSubject().equals(subject));
+
     }
 
     public void testHtmlMailWithImageFile() throws Exception {
-        MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_HTML);
+
+        MgnlEmail email = prepareTest();
         email.addAttachment(new MailAttachment(new File(getResourcePath(TEST_FILE_JPG)).toURL(), "att"));
-        email.setBody("<h1>Helloniko</h1><img src=\"cid:att\"/>", null);
+        email.setBody("<h1>Helloniko</h1><img src=\"cid:att\"/>");
         String subject = "test html email";
         email.setSubject(subject);
         email.setToList(TEST_RECIPIENT);
@@ -81,18 +83,20 @@ public class HtmlMailTest extends AbstractMailTest {
         Iterator emailIter = wiser.getMessages().iterator();
         WiserMessage message = (WiserMessage) emailIter.next();
         assertTrue(message.getMimeMessage().getSubject().equals(subject));
+
     }
 
     public void testHtmlMailWithTwoEmbeddedContent() throws Exception {
-        MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_HTML);
+
+        MgnlEmail email = prepareTest();
         ArrayList attach = new ArrayList();
-        attach.add(new MailAttachment(new File(getResourcePath(TEST_FILE_JPG)).toURL(), "att1"));
-        attach.add(new MailAttachment(new File(getResourcePath(TEST_FILE_PDF)).toURL(), "att2"));
-        HashMap param = new HashMap(1);
-        param.put(HtmlEmail.MAIL_ATTACHMENT, attach);
+        email.addAttachment(new MailAttachment(new File(getResourcePath(TEST_FILE_JPG)).toURL(), "att1"));
+        email.addAttachment(new MailAttachment(new File(getResourcePath(TEST_FILE_PDF)).toURL(), "att2"));
+
         String subject = "test html email";
+
         email.setSubject(subject);
-        email.setBody("<h1>Helloniko</h1><img src=\"cid:att1\"/><img src=\"cid:att2\"/>", param);
+        email.setBody("<h1>Helloniko</h1><img src=\"cid:att1\"/><img src=\"cid:att2\"/>");
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
 
@@ -102,13 +106,14 @@ public class HtmlMailTest extends AbstractMailTest {
         Iterator emailIter = wiser.getMessages().iterator();
         WiserMessage message = (WiserMessage) emailIter.next();
         assertTrue(message.getMimeMessage().getSubject().equals(subject));
+
     }
 
     public void testHtmlMailWithPdf() throws Exception {
-        MgnlEmail email = factory.getEmailFromType(MailConstants.MAIL_TEMPLATE_HTML);
+        MgnlEmail email = prepareTest();
         String subject = "test html email";
         email.setSubject(subject);
-        email.setBody("<h1>Helloniko in pdf</h1>", new HashMap(0));
+        email.setBody("<h1>Helloniko in pdf</h1>");
         email.addAttachment(new MailAttachment(new File(getResourcePath(TEST_FILE_PDF)).toURL(), "att1"));
         email.setToList(TEST_RECIPIENT);
         email.setFrom(TEST_SENDER);
@@ -119,6 +124,14 @@ public class HtmlMailTest extends AbstractMailTest {
         Iterator emailIter = wiser.getMessages().iterator();
         WiserMessage message = (WiserMessage) emailIter.next();
         assertTrue(message.getMimeMessage().getSubject().equals(subject));
+
     }
 
+    public MgnlEmail prepareTest() {
+        params.put(MailTemplate.MAIL_TYPE, MailConstants.MAIL_TEMPLATE_SIMPLE);
+        params.put(MailTemplate.MAIL_CONTENT_TYPE, MailTemplate.MAIL_HTML);
+
+        return factory.getEmail(params);
+
+    }
 }

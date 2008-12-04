@@ -33,13 +33,19 @@
  */
 package info.magnolia.cms.mail;
 
-import info.magnolia.cms.mail.handlers.SimpleMailHandler;
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.mail.handlers.MgnlMailHandler;
+import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.content2bean.Content2BeanUtil;
+import info.magnolia.test.RepositoryTestCase;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import junit.framework.TestCase;
 
 import org.subethamail.wiser.Wiser;
 
@@ -49,7 +55,7 @@ import org.subethamail.wiser.Wiser;
  * @author fgiust
  * @version $Revision$ ($Author$)
  */
-public abstract class AbstractMailTest extends TestCase {
+public abstract class AbstractMailTest extends RepositoryTestCase {
     public final static String TEST_RECIPIENT = "recipient@example.com";
 
     public final static String TEST_SENDER = "sender@example.com";
@@ -62,7 +68,9 @@ public abstract class AbstractMailTest extends TestCase {
 
     protected MgnlMailFactory factory;
 
-    protected SimpleMailHandler handler;
+    protected MgnlMailHandler handler;
+
+    protected Map params = new HashMap();
 
     protected Wiser wiser = new Wiser();
 
@@ -77,12 +85,20 @@ public abstract class AbstractMailTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
 
-        handler = new SimpleMailHandler();
-        factory = MgnlMailFactory.getInstance();
-        factory.initParam(MgnlMailFactory.SMTP_SERVER, "localhost");
-        factory.initParam(MgnlMailFactory.SMTP_PORT, Integer.toString(SMTP_PORT));
+        FactoryUtil.setImplementation(ServerConfiguration.class, ServerConfiguration.class);
+        bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.xml");
 
-        wiser.setPort(SMTP_PORT);
+        Content content = ContentUtil.getContent("config", "/modules/mail/config");
+
+        MailModule mailModule = (MailModule) Content2BeanUtil.toBean(content, true, MailModule.class);
+        mailModule.start(null);
+        params.put(MailConstants.SMTP_SERVER, "localhost");
+        params.put(MailConstants.SMTP_PORT, "25025");
+
+        factory = mailModule.getFactory();
+        handler = mailModule.getHandler();
+        //wiser.setHostname((String) mailModule.getSmtp().get(MailConstants.SMTP_SERVER));
+        wiser.setPort( SMTP_PORT);
         wiser.start();
     }
 

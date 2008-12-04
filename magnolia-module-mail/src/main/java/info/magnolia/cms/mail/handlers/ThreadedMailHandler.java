@@ -122,7 +122,7 @@ public class ThreadedMailHandler implements MgnlMailHandler {
                     if (email != null) {
                         try {
                             if (email.isBodyNotSetFlag()) {
-                                email.setBody();
+                             //   email.setBody();
                             }
                             try {
                                 Transport.send(email);

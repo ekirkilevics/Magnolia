@@ -34,15 +34,16 @@
 package info.magnolia.cms.mail.templates;
 
 import info.magnolia.cms.mail.MailException;
+import info.magnolia.cms.mail.MailTemplate;
 
 import java.net.URL;
+import java.util.List;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.activation.URLDataSource;
-import javax.mail.MessagingException;
-import javax.mail.Session;
+import javax.mail.BodyPart;
 import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMultipart;
 
@@ -59,35 +60,30 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
 
     protected MimeMultipart multipart;
 
-    protected MgnlMultipartEmail(Session _session) {
-        super(_session);
-        // Create a related multi-part to combine the parts
-        this.multipart = new MimeMultipart(RELATED);
-    }
-
     public boolean isMultipart() {
-        try {
-            int count = this.multipart.getCount();
-            return (count > 0);
-        }
-        catch (MessagingException e) {
-            return false;
-        }
+        return (this.multipart != null);
     }
 
     public MimeMultipart getMailMultipart() {
         return this.multipart;
     }
 
+    public MgnlMultipartEmail(MailTemplate template) {
+        super(template);
+    }
+
     public MimeBodyPart addAttachment(MailAttachment attachment) throws MailException {
 
         try {
+            if (!isMultipart()) {
+                turnOnMultipart();
+            }
             MimeBodyPart messageBodyPart = new MimeBodyPart();
             String key = attachment.getName();
             log.info("Found new attachment with name :" + key);
 
             // get info on the attachment
-            URL url = attachment.getURL();
+            URL url = attachment.getUrl();
             String name = attachment.getFileName();
             String contentType = attachment.getContentType();
 
@@ -124,5 +120,37 @@ public abstract class MgnlMultipartEmail extends MgnlEmail {
         }
     }
 
-    // public abstract String getContentDescription();
+    private void turnOnMultipart() {
+
+        try {
+            if(this.multipart == null) {
+                this.multipart = new MimeMultipart(RELATED);
+            }
+            if(this.getContent() != null) {
+
+                Object o = this.getContent();
+                if (o instanceof String) {
+                    BodyPart messageBodyPart = new MimeBodyPart();
+                    messageBodyPart.setContent(o, getContentType());
+                    this.multipart.addBodyPart(messageBodyPart, 0);
+                    this.setContent(this.multipart);
+                }
+            }
+        }
+        catch (Exception e) {
+            log.info(e.getMessage());
+        }
+    }
+
+    public void setBody(String body) throws Exception {
+
+        this.setContent(body, getContentType());
+
+        // process the attachments
+        if (super.getTemplate().getAttachments() != null) {
+                setAttachments((List) super.getTemplate().getAttachments());
+
+        }
+    }
+
 }
