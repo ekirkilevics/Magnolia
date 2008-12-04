@@ -290,13 +290,13 @@ public class MgnlPageEmail extends FreemarkerEmail {
             url = getUrl(cssPath, url).replaceAll("\"", "");
             url = "\"" + url + "\"";
             if(!StringUtils.isEmpty(url) && !map.containsKey(url)) {
-                map.put(url, ++this.cid);
+                map.put(url, url);
 
             } else if (map.containsKey(url)) {
-                cid = (Integer) map.get(url);
+                url = (String) map.get(url);
 
             }
-            tmp += StringUtils.substring(responseBodyAsString, begin, urlIndex) + url; //CID + this.cid;
+            tmp += StringUtils.substring(responseBodyAsString, begin, urlIndex) + url;
             begin = closeIndex;
 
         }
