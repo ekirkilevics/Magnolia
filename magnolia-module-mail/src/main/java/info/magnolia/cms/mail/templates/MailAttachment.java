@@ -110,7 +110,7 @@ public class MailAttachment {
     public java.net.URL getUrl() {
         if (this.url.getProtocol().startsWith("file")) {
             try {
-                return new URL("file://" + this.url.toExternalForm());
+                return new URL( this.url.toExternalForm());
             }
             catch (Exception e) {
                 return null;

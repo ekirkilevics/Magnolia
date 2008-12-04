@@ -97,7 +97,6 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
 
         factory = mailModule.getFactory();
         handler = mailModule.getHandler();
-        //wiser.setHostname((String) mailModule.getSmtp().get(MailConstants.SMTP_SERVER));
         wiser.setPort( SMTP_PORT);
         wiser.start();
     }
