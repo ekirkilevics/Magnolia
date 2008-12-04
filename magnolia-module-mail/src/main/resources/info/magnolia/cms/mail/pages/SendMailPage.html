@@ -52,16 +52,7 @@
         </td>
         <td valign="top" >
         <h3>${this.messages.get("page.form.text.message.text")}</h3>
-        <div class="formelement">
-          <label for="type">${this.messages.get("page.form.text.message.emailtype")}</label>
-          <select name="type" >
-            [#list this.types as item]
-              [#if !item?contains("magnolia")]
-              <option >${item}</option>
-              [/#if]
-            [/#list]
-          </select>
-        </div>
+        <input type="hidden" name="type" value="simple" />
         <div class="formelement" >
           <label for="body">${this.messages.get("page.form.text.message.messagetext")}</label>
           <textarea name="body" rows="8" style="width:380px;height:140px"></textarea>
