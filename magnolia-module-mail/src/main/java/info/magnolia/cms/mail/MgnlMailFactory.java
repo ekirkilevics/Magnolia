@@ -181,7 +181,7 @@ public class MgnlMailFactory {
 
     protected MailTemplate getTemplate(String templateName) throws Exception {
 
-        Iterator iterator = MailModule.getInstance().getTemplates().iterator();
+        Iterator iterator = MailModule.getInstance().getTemplatesConfiguration().iterator();
         MailTemplate mailTemplate;
         while(iterator.hasNext()) {
             mailTemplate = (MailTemplate)iterator.next();

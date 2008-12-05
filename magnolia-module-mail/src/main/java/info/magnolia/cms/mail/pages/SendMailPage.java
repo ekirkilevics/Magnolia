@@ -73,7 +73,7 @@ public class SendMailPage extends TemplatedMVCHandler {
     }
 
     public Iterator getTemplates() {
-        return (Iterator) MailModule.getInstance().getTemplates().iterator();
+        return (Iterator) MailModule.getInstance().getTemplatesConfiguration().iterator();
     }
 
     public Iterator getTypes() {

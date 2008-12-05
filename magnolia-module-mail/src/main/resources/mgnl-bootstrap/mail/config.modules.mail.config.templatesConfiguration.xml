@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="templates" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
-  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
-  xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema"
-  xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
+<sv:node sv:name="templatesConfiguration" xmlns:jcr="http://www.jcp.org/jcr/1.0"
+  xmlns:mgnl="http://www.magnolia.info/jcr/mgnl" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal"
+  xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:fn="http://www.w3.org/2005/xpath-functions"
+  xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions"
+  xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:content</sv:value>
   </sv:property>
@@ -23,7 +24,7 @@
       <sv:value>2008-11-19T12:52:49.557+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2008-11-19T12:53:56.051+01:00</sv:value>
+      <sv:value>2008-12-05T10:08:46.109+01:00</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="workflowNotification">

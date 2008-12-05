@@ -62,7 +62,7 @@ public class MailModule implements ModuleLifecycle {
 
     private Map smtp = new HashMap();
 
-    private List templates = new ArrayList();
+    private List templatesConfiguration = new ArrayList();
 
 
     public MailModule() {
@@ -90,16 +90,16 @@ public class MailModule implements ModuleLifecycle {
 
     }
 
-    public List getTemplates() {
-        return templates;
+    public List getTemplatesConfiguration() {
+        return templatesConfiguration;
     }
 
-    public void setTemplates(List templates) {
-        this.templates = templates;
+    public void setTemplatesConfiguration(List templatesConfiguration) {
+        this.templatesConfiguration = templatesConfiguration;
     }
 
     public void addTemplate(MailTemplate mailTemplate) {
-        this.templates.add(mailTemplate);
+        this.templatesConfiguration.add(mailTemplate);
     }
 
     public MgnlMailHandler getHandler() {
