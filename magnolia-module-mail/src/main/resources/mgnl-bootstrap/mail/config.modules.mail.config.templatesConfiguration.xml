@@ -11,7 +11,7 @@
     <sv:value>mix:lockable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>29584e6e-2f09-4584-9bdb-a96e96f3f13f</sv:value>
+    <sv:value>29584e6e-2f09-4584-9bdb-a96e96f3f13e</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -35,7 +35,7 @@
       <sv:value>mix:lockable</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>edaa87aa-4b12-4712-b39a-0490d1781967</sv:value>
+      <sv:value>edaa87aa-4b12-4712-b39a-0490d1781968</sv:value>
     </sv:property>
     <sv:property sv:name="body" sv:type="String">
       <sv:value>workflowNotification.html</sv:value>
@@ -78,7 +78,7 @@
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>369009bb-115d-4882-80b0-40c00372babb</sv:value>
+      <sv:value>369009bb-115d-4882-80b0-40c00372babc</sv:value>
     </sv:property>
     <sv:property sv:name="body" sv:type="String">
       <sv:value>http://localhost:8080/magnoliaAuthor/mails/noparam.html</sv:value>
@@ -121,7 +121,7 @@
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>6aec29fe-806e-464f-8ae6-63a29c20d1d1</sv:value>
+      <sv:value>6aec29fe-806e-464f-8ae6-63a29c20d1d2</sv:value>
     </sv:property>
     <sv:property sv:name="body" sv:type="String">
       <sv:value>http://localhost:8080/magnoliaAuthor/mails/withparams.html</sv:value>
@@ -164,7 +164,7 @@
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>3af7b692-b76b-4da0-82a8-a106a8ccbbd7</sv:value>
+      <sv:value>3af7b692-b76b-4da0-82a8-a106a8ccbbd8</sv:value>
     </sv:property>
     <sv:property sv:name="body" sv:type="String">
       <sv:value>testVelocity.html</sv:value>
@@ -206,7 +206,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>3c542950-f334-4117-a559-b9473afb1a4c</sv:value>
+        <sv:value>3c542950-f334-4117-a559-b9473afb1a4d</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -236,7 +236,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>7ec4b811-4e36-402b-8531-3885c574c943</sv:value>
+          <sv:value>7ec4b811-4e36-402b-8531-3885c574c944</sv:value>
         </sv:property>
         <sv:property sv:name="cid" sv:type="String">
           <sv:value>img</sv:value>
@@ -275,7 +275,7 @@
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>e08e78d2-dffe-4832-b0e2-a5ecbc3a2d90</sv:value>
+      <sv:value>e08e78d2-dffe-4832-b0e2-a5ecbc3a2d91</sv:value>
     </sv:property>
     <sv:property sv:name="contentType" sv:type="String">
       <sv:value>html</sv:value>
@@ -320,7 +320,7 @@
         <sv:value>mgnl:contentNode</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>d967e985-30be-480e-98b2-fd207a2b484f</sv:value>
+        <sv:value>d967e985-30be-480e-98b2-fd207a2b484e</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -350,7 +350,7 @@
           <sv:value>mgnl:contentNode</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>06c14803-1f09-4461-93f1-edd2df7b3cef</sv:value>
+          <sv:value>06c14803-1f09-4461-93f1-edd2df7b3cee</sv:value>
         </sv:property>
         <sv:property sv:name="cid" sv:type="String">
           <sv:value>img</sv:value>
@@ -391,7 +391,7 @@
         <sv:value>mix:lockable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>574835c0-a253-4872-b11f-b7ce16d20179</sv:value>
+        <sv:value>574835c0-a253-4872-b11f-b7ce16d2017a</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">

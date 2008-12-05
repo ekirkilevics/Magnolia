@@ -36,11 +36,12 @@ package info.magnolia.cms.mail.setup;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
+import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.delta.ReplaceIfExistsTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 
 import java.util.ArrayList;
@@ -76,31 +77,28 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
                 "/server/filters/servlets/Mail"
         );
 
-        final RemoveNodeTask removeConfigMenuMail = new RemoveNodeTask("New mail page", "Deletes old menu item mail",
+        final ReplaceIfExistsTask replaceConfigMenuMail = new ReplaceIfExistsTask("New mail page", "Deletes old menu item mail",
+                null,
                 ContentRepository.CONFIG,
-                "/modules/adminInterface/config/menu/tools/mails"
+                "/modules/adminInterface/config/menu/tools/mails",
+                "config.modules.admininterface.config.menu.tools.sendMail.xml"
         );
 
-        final MoveNodeTask moveTemplates = new MoveNodeTask("Rename templates", "templates will be templatesConfiguration",
+        final MoveNodeContentTask moveTemplates = new MoveNodeContentTask("Rename templates", "templates will be templatesConfiguration",
                 ContentRepository.CONFIG,
                 "/modules/mail/config/templates",
                 "/modules/mail/config/templatesConfiguation",
+                ItemType.CONTENT,
                 false);
-
-
-        final CheckAndModifyPropertyValueTask changeTemplatesNodeType = new CheckAndModifyPropertyValueTask("Change templates type", "Templates node will become of type content",
-                ContentRepository.CONFIG,
-                "/modules/mail/config/templatesConfiguration",
-                "jcr:primaryType",
-                ItemType.CONTENTNODE.getSystemName(),
-                ItemType.CONTENT.getSystemName()
-        );
 
         register(DeltaBuilder.update("4.0", "")
                 .addTask(removeMailServletMapping)
-                .addTask(removeConfigMenuMail)
+                .addTask(replaceConfigMenuMail)
                 .addTask(moveTemplates)
-                .addTask(changeTemplatesNodeType)
+                .addTask(new BootstrapConditionally("handlers", "Installs mail handlers", "/mgnl-bootstrap/mail/config.modules.mail.config.handler.xml"))
+                .addTask(new BootstrapConditionally("page", "Installs mail page", "/mgnl-bootstrap/mail/config.modules.mail.pages.xml"))
+                .addTask(new BootstrapConditionally("factory", "Installs mail factories", "/mgnl-bootstrap/mail/config.modules.mail.config.factory.xml"))
+                .addTask(new BootstrapConditionally("menu", "Installs mail tools menu", "/mgnl-bootstrap/mail/config.modules.adminInterface.config.menu.tools.sendMail.xml"))
         );
 
     }
