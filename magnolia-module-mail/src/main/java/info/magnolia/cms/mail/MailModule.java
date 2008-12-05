@@ -98,7 +98,7 @@ public class MailModule implements ModuleLifecycle {
         this.templatesConfiguration = templatesConfiguration;
     }
 
-    public void addTemplate(MailTemplate mailTemplate) {
+    public void addTemplatesConfiguration(MailTemplate mailTemplate) {
         this.templatesConfiguration.add(mailTemplate);
     }
 

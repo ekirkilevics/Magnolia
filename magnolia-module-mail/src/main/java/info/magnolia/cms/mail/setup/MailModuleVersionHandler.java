@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.delta.BootstrapConditionally;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
@@ -77,17 +78,15 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
                 "/server/filters/servlets/Mail"
         );
 
-        final ReplaceIfExistsTask replaceConfigMenuMail = new ReplaceIfExistsTask("New mail page", "Deletes old menu item mail",
-                null,
+        final RemoveNodeTask replaceConfigMenuMail = new RemoveNodeTask("New mail page", "Deletes old mail servlet",
                 ContentRepository.CONFIG,
-                "/modules/adminInterface/config/menu/tools/mails",
-                "config.modules.admininterface.config.menu.tools.sendMail.xml"
+                "/modules/adminInterface/config/menu/tools/mails"
         );
 
         final MoveNodeContentTask moveTemplates = new MoveNodeContentTask("Rename templates", "templates will be templatesConfiguration",
                 ContentRepository.CONFIG,
                 "/modules/mail/config/templates",
-                "/modules/mail/config/templatesConfiguation",
+                "/modules/mail/config/templatesConfiguration",
                 ItemType.CONTENT,
                 false);
 
@@ -98,7 +97,7 @@ public class MailModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapConditionally("handlers", "Installs mail handlers", "/mgnl-bootstrap/mail/config.modules.mail.config.handler.xml"))
                 .addTask(new BootstrapConditionally("page", "Installs mail page", "/mgnl-bootstrap/mail/config.modules.mail.pages.xml"))
                 .addTask(new BootstrapConditionally("factory", "Installs mail factories", "/mgnl-bootstrap/mail/config.modules.mail.config.factory.xml"))
-                .addTask(new BootstrapConditionally("menu", "Installs mail tools menu", "/mgnl-bootstrap/mail/config.modules.adminInterface.config.menu.tools.sendMail.xml"))
+                .addTask(new BootstrapSingleResource("menu", "Installs mail tools menu", "/mgnl-bootstrap/mail/config.modules.adminInterface.config.menu.tools.sendMail.xml"))
         );
 
     }

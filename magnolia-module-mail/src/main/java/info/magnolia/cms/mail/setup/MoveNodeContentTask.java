@@ -86,6 +86,12 @@ public class MoveNodeContentTask extends AbstractRepositoryTask {
 
         while (iterator.hasNext()) {
             Content contentNode = (Content) iterator.next();
+            if(contentNode.hasNodeData("body")) {
+                contentNode.createNodeData("templateFile", contentNode.getNodeData("body").getValue().getString());
+                contentNode.deleteNodeData("body");
+                hm.save();
+            }
+            hm.save();
             hm.moveTo(contentNode.getHandle(), dest + "/" + StringUtils.substringAfterLast(contentNode.getHandle(), "/"));
 
         }
