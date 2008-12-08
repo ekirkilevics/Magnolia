@@ -39,6 +39,11 @@ import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.model.ModuleDefinition;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -52,15 +57,9 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 /**
  * @author pbracher
- * @Author fgiust
+ * @author fgiust
  */
 public class PropertiesInitializer {
     /**
