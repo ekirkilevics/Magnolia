@@ -16,14 +16,4 @@
       <version>4.0/*</version>
     </dependency>
   </dependencies>
-  <servlets>
-    <servlet>
-      <name>Mail</name>
-      <class>info.magnolia.cms.mail.servlets.MgnlMailServlet</class>
-      <comment>Servlet to send email using the email system.</comment>
-      <mappings>
-        <mapping>/.magnolia/mail</mapping>
-      </mappings>
-    </servlet>
-  </servlets>
 </module>
