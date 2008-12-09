@@ -3567,7 +3567,7 @@
       <sv:value>/.resources/file-icons/png.png</sv:value>
     </sv:property>
     <sv:property sv:name="mime-type" sv:type="String">
-      <sv:value>application/octet-stream</sv:value>
+      <sv:value>image/png</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -3586,7 +3586,7 @@
         <sv:value>2005-03-04T11:12:03.114+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="String">
-        <sv:value>2005-03-04T11:12:21.410+01:00</sv:value>
+        <sv:value>2008-12-09T22:27:21.410+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
