@@ -66,7 +66,7 @@ public class DeltaBuilder implements Delta {
 
     public static DeltaBuilder startup(ModuleDefinition moduleDef, List tasks) {
         final String description = "Tasks executed before starting up module " + moduleDef.getDescription();
-        return startup(moduleDef.getVersionDefinition(), description).addTasks(tasks);
+        return startup(moduleDef.getVersion(), description).addTasks(tasks);
     }
 
     /**

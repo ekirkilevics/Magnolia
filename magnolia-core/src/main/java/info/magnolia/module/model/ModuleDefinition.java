@@ -122,11 +122,6 @@ public class ModuleDefinition {
         return version;
     }
 
-    /** @deprecated use getVersion() */
-    public Version getVersionDefinition() {
-        return getVersion();
-    }
-
     public Collection getDependencies() {
         return this.dependencies;
     }

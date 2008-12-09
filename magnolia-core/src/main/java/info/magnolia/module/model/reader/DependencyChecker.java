@@ -88,7 +88,7 @@ public class DependencyChecker {
         }
 
         final VersionRange requiredRange = requiredDependency.getVersionRange();
-        final Version dependencyVersion = dependencyModuleDef.getVersionDefinition();
+        final Version dependencyVersion = dependencyModuleDef.getVersion();
 
         // TODO ignore ${project.version} ? or be smarter ?
 //        if (instVersion.equals("${project.version}")) {

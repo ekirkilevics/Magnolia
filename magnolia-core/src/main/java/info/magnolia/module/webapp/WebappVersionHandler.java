@@ -71,7 +71,7 @@ public class WebappVersionHandler implements ModuleVersionHandler {
 
     public List getDeltas(InstallContext ctx, Version from) {
         if (from == null) {
-            final Version version = ctx.getCurrentModuleDefinition().getVersionDefinition();
+            final Version version = ctx.getCurrentModuleDefinition().getVersion();
             return Collections.singletonList(new WebappDelta(version));
         } else if (!from.equals(Version.UNDEFINED_TO)) {
             throw new IllegalStateException("This is a dummy module. It should not get updated.");

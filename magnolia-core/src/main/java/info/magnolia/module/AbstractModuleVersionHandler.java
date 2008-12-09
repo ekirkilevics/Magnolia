@@ -131,7 +131,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         }
 
         // if there was no delta for the version being installed, we still need to add the default update tasks
-        final Version toVersion = installContext.getCurrentModuleDefinition().getVersionDefinition();
+        final Version toVersion = installContext.getCurrentModuleDefinition().getVersion();
         if (toVersion.isStrictlyAfter(from) && !allDeltas.containsKey(toVersion)) {
             deltas.add(getUpdate(installContext));
         }
@@ -150,7 +150,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
     }
 
     protected Delta getUpdate(InstallContext installContext) {
-        final Version toVersion = installContext.getCurrentModuleDefinition().getVersionDefinition();
+        final Version toVersion = installContext.getCurrentModuleDefinition().getVersion();
         final List defaultUpdateTasks = getDefaultUpdateTasks(toVersion);
         final List defaultUpdateConditions = getDefaultUpdateConditions(toVersion);
         return DeltaBuilder.update(toVersion, "").addTasks(defaultUpdateTasks).addConditions(defaultUpdateConditions);
@@ -167,7 +167,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         installTasks.addAll(getExtraInstallTasks(installContext));
         installTasks.add(new ModuleVersionToLatestTask());
         final List conditions = getInstallConditions();
-        final Version version = installContext.getCurrentModuleDefinition().getVersionDefinition();
+        final Version version = installContext.getCurrentModuleDefinition().getVersion();
         return DeltaBuilder.install(version, "").addTasks(installTasks).addConditions(conditions);
     }
 
@@ -218,7 +218,7 @@ public abstract class AbstractModuleVersionHandler implements ModuleVersionHandl
         }
 
         protected Version getVersion(InstallContext ctx) {
-            return ctx.getCurrentModuleDefinition().getVersionDefinition();
+            return ctx.getCurrentModuleDefinition().getVersion();
         }
     }
 

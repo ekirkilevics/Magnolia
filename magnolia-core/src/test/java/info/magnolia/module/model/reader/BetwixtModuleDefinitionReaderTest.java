@@ -116,7 +116,7 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
                 "</module>";
         final ModuleDefinition def = new BetwixtModuleDefinitionReader().read(new StringReader(xml));
 
-        final Version version = def.getVersionDefinition();
+        final Version version = def.getVersion();
         assertNotNull(version);
         assertEquals("1.2.3", version.toString());
         VersionTest.assertVersion(1, 2, 3, null, version);
