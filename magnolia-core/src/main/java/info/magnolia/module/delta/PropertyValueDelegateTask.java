@@ -49,6 +49,10 @@ public class PropertyValueDelegateTask extends NodeCheckDelegateTask {
     private final String expectedValue;
     private final boolean propertyMustExist;
 
+    public PropertyValueDelegateTask(String taskName, String taskDescription, String workspaceName, String nodePath, String propertyName, String expectedValue, boolean propertyMustExist, Task ifTrue) {
+        this(taskName, taskDescription, workspaceName, nodePath, propertyName, expectedValue, propertyMustExist, ifTrue, null);
+    }
+
     /**
      * @param propertyMustExist if false, the condition() method will evaluate to false even if the property does not exist. If true and the property does not exist, will throw a TaskExecutionException.
      * TODO : warning or exception ? consistency between this and other tasks for these kind of cases !

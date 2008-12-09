@@ -44,6 +44,10 @@ import info.magnolia.cms.beans.config.ContentRepository;
  */
 public class IsAuthorInstanceDelegateTask extends PropertyValueDelegateTask {
 
+    public IsAuthorInstanceDelegateTask(String taskName, String taskDescription, Task isAuthor) {
+        this(taskName, taskDescription, isAuthor, null);
+    }
+
     public IsAuthorInstanceDelegateTask(String taskName, String taskDescription, Task isAuthor, Task isPublic) {
         super(taskName, taskDescription, ContentRepository.CONFIG, "/server", "admin", "false", false, isPublic, isAuthor);
     }
