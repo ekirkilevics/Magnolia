@@ -4,7 +4,7 @@
  *
  *
  * This file is dual-licensed under both the Magnolia
- * Network Agreement and the GNU General Public License. 
+ * Network Agreement and the GNU General Public License.
  * You may elect to use one or the other of these licenses.
  *
  * This file is distributed in the hope that it will be
@@ -34,13 +34,12 @@
 package info.magnolia.module.delta;
 
 import info.magnolia.module.InstallContext;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * A Task which will bootstrap files if an optional module is installed or registered:
  * any resource directly under "/mgnl-bootstrap/moduleName/dependencyName"
  * (but not recursive into sub-directories)
- * 
+ *
  * @author vsteller
  * @version $Id$
  */
@@ -51,8 +50,8 @@ public class ModuleDependencyBootstrapTask extends IsModuleInstalledOrRegistered
 
             protected boolean acceptResource(InstallContext ctx, String name) {
                 final String moduleName = ctx.getCurrentModuleDefinition().getName();
-                final String resourceFilename = StringUtils.substringAfter(name, "/mgnl-bootstrap/" + moduleName + "/" + dependencyName + "/");
-                return !StringUtils.contains(resourceFilename, "/") && resourceFilename.endsWith(".xml");
+                final String path = "/info/magnolia/module/" + moduleName + "/setup/" + dependencyName + "/";
+                return name.startsWith(path) && name.endsWith(".xml");
             }
         });
     }

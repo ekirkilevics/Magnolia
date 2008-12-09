@@ -54,7 +54,7 @@ public class ModuleBootstrapTaskTest extends TestCase {
 
         final ModuleBootstrapTask task = new ModuleBootstrapTask();
         assertEquals(true, task.acceptResource(ctx, "/mgnl-bootstrap/test-module/foo.xml"));
-        assertEquals(false, task.acceptResource(ctx, "/mgnl-bootstrap/test-module/foo/bar.xml"));
+        assertEquals(true, task.acceptResource(ctx, "/mgnl-bootstrap/test-module/foo/bar.xml"));
         assertEquals(false, task.acceptResource(ctx, "/mgnl-bootstrap/test-module-foo.xml"));
         assertEquals(false, task.acceptResource(ctx, "/mgnl-bootstrap/test-module.xml"));
         assertEquals(false, task.acceptResource(ctx, "/mgnl-bootstrap/other-module/foo/bar.xml"));
@@ -64,4 +64,5 @@ public class ModuleBootstrapTaskTest extends TestCase {
         assertEquals(false, task.acceptResource(ctx, "/other-module/foo.xml"));
         verify(ctx);
     }
+
 }

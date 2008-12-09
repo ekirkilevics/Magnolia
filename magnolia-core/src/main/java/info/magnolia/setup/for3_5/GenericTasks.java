@@ -143,8 +143,8 @@ public class GenericTasks {
                         new AddURIPermissionsToAllRoles(false)),
 
                 new IsAuthorInstanceDelegateTask("Anonymous role", "Anonymous role must exist.",
-                        new BootstrapConditionally("", "Author permissions", "/mgnl-bootstrap/core/userroles.anonymous.xml"),
-                        new BootstrapConditionally("", "Public permissions", "/mgnl-bootstrap/core/public/userroles.anonymous.xml")),
+                        new BootstrapConditionally("", "Author permissions", "/info/magnolia/setup/author/userroles.anonymous.xml"),
+                        new BootstrapConditionally("", "Public permissions", "/info/magnolia/setup/public/userroles.anonymous.xml")),
 
                 new BootstrapConditionally("Superuser role", "Bootstraps the superuser role if needed.", "/mgnl-bootstrap/core/userroles.superuser.xml"),
 

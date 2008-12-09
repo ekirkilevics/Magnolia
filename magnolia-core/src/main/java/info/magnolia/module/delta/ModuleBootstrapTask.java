@@ -33,8 +33,6 @@
  */
 package info.magnolia.module.delta;
 
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.module.InstallContext;
 
 /**
@@ -44,17 +42,16 @@ import info.magnolia.module.InstallContext;
  * @version $Revision: $ ($Author: $)
  */
 public class ModuleBootstrapTask extends BootstrapResourcesTask {
+
     public ModuleBootstrapTask() {
         super("Bootstrap", "Bootstraps the necessary module repository content.");
     }
 
     /**
-     * Accepts any resource directly under "/mgnl-bootstrap/moduleName" but not recursive into sub-directories.
+     * Accepts any resource under "/mgnl-bootstrap/moduleName" including any subfolders.
      */
     protected boolean acceptResource(InstallContext ctx, String resourceName) {
         final String moduleName = ctx.getCurrentModuleDefinition().getName();
-        final String resourceFilename = StringUtils.substringAfter(resourceName, "/mgnl-bootstrap/" + moduleName + "/");
-        // resourceFilename will be empty if resourceName does not start with "/mgnl-bootstrap/" + moduleName + "/"
-        return !StringUtils.contains(resourceFilename, "/") && resourceFilename.endsWith(".xml");
+        return resourceName.startsWith("/mgnl-bootstrap/" + moduleName + "/") && resourceName.endsWith(".xml");
     }
 }
