@@ -36,6 +36,7 @@ package info.magnolia.module.model.reader;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.Version;
 import org.apache.commons.betwixt.io.BeanReader;
 import org.apache.commons.io.IOUtils;
 import org.jdom.DocType;
@@ -71,8 +72,12 @@ public class BetwixtModuleDefinitionReader implements ModuleDefinitionReader {
     private final BeanReader beanReader;
 
     public BetwixtModuleDefinitionReader() {
+        final BetwixtBindingStrategy bindingStrategy = new BetwixtBindingStrategy();
+        bindingStrategy.registerConverter(Version.class, new VersionConverter());
+
         beanReader = new BeanReader();
         try {
+            beanReader.getXMLIntrospector().getConfiguration().setTypeBindingStrategy(bindingStrategy);
             beanReader.setValidating(true);
             beanReader.setErrorHandler(new ErrorHandler());
             beanReader.registerBeanClass(ModuleDefinition.class);

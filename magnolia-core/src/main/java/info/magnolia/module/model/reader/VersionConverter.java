@@ -31,60 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.module.model;
+package info.magnolia.module.model.reader;
+
+import info.magnolia.module.model.Version;
+import org.apache.commons.beanutils.Converter;
 
 /**
+ * A beanutils converter for {@link Version}.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DependencyDefinition {
-    private String name;
-    private String version;
-
-    /**
-     * An optional dependency is not mandatory but still influences the order of modules loading.
-     */
-    private boolean optional;
-
-    public DependencyDefinition() {
-    }
-
-    public DependencyDefinition(String name, String version, boolean optional) {
-        this.name = name;
-        this.version = version;
-        this.optional = optional;
-    }
-
-    public VersionRange getVersionRange() {
-        return new VersionRange(version);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public boolean isOptional() {
-        return optional;
-    }
-
-    public void setOptional(boolean optional) {
-        this.optional = optional;
-    }
-
-    public String toString() {
-        return name + " version " + version;
+public class VersionConverter implements Converter {
+    public Object convert(Class type, Object value) {
+        return Version.parseVersion((String) value);
     }
 }

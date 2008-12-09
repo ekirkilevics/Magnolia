@@ -38,7 +38,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.module.AbstractModule;
 import info.magnolia.cms.module.InitializationException;
 import info.magnolia.cms.util.ContentUtil;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -46,7 +45,7 @@ import org.slf4j.LoggerFactory;
 /**
  * Default implementation. registers dialogs , paragraphs, ...
  * @author philipp
- * @deprecated see info.magnolia.module
+ * @deprecated since 3.5 see info.magnolia.module
  */
 public abstract class AbstractAdminModule extends AbstractModule {
 

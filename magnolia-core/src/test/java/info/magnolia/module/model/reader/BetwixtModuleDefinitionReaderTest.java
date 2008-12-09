@@ -46,7 +46,6 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
@@ -121,7 +120,6 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         assertNotNull(version);
         assertEquals("1.2.3", version.toString());
         VersionTest.assertVersion(1, 2, 3, null, version);
-        assertEquals("1.2.3", def.getVersion());
     }
 
     public void testDependenciesVersionAreProperlyRead() throws ModuleManagementException {
@@ -194,6 +192,6 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         } catch (ModuleManagementException e) {
             assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class?,versionHandler?,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
         }
-
     }
+
 }

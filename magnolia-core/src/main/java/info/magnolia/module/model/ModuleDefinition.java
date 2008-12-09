@@ -33,28 +33,87 @@
  */
 package info.magnolia.module.model;
 
-import java.io.File;
+import info.magnolia.cms.module.PropertyDefinition;
+import info.magnolia.cms.module.RepositoryDefinition;
+import info.magnolia.cms.module.ServletDefinition;
+import org.apache.commons.lang.StringUtils;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
+ * Describes a module. Bean representation of a module's xml descriptor.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition {
-    private final Collection dependencies = new ArrayList();
+public class ModuleDefinition {
+    private String name;
+    private String displayName;
+    private String description;
+    private String className;
     private Class versionHandler;
-    private Version versionDefinition;
-
+    private Version version;
+    private Collection dependencies = new ArrayList();
+    private Collection servlets = new ArrayList();
+    private Collection repositories = new ArrayList();
+    private Collection properties = new ArrayList();
 
     public ModuleDefinition() {
     }
 
-    public ModuleDefinition(String name, String version, String className, Class versionHandler) {
-        super(name, version, className);
+    public ModuleDefinition(String name, Version version, String className, Class versionHandler) {
+        this.name = name;
+        this.version = version;
+        this.className = className;
         this.versionHandler = versionHandler;
-        this.versionDefinition = Version.parseVersion(version);
+    }
+
+    /**
+     * @deprecated
+     */
+    public ModuleDefinition(String name, String version, String className, Class versionHandler) {
+        this(name,Version.parseVersion(version),className,versionHandler);
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
+     * @return the displayName. (or the name if displayName wasn't set)
+     */
+    public String getDisplayName() {
+        if (StringUtils.isEmpty(this.displayName)) {
+            return this.name;
+        }
+
+        return this.displayName;
+    }
+
+    public void setDisplayName(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public String getDescription() {
+        return this.description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getClassName() {
+        return this.className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
     }
 
     public Class getVersionHandler() {
@@ -65,48 +124,78 @@ public class ModuleDefinition extends info.magnolia.cms.module.ModuleDefinition 
         this.versionHandler = versionHandler;
     }
 
-    /**
-     * TODO : rename to getVersion once we got rid of info.magnolia.cms.module.ModuleDefinition
-     */
+    public void setVersion(Version version) {
+        this.version = version;
+    }
+
+    public Version getVersion() {
+        return version;
+    }
+
+    /** @deprecated use getVersion() */
     public Version getVersionDefinition() {
-        return versionDefinition;
+        return getVersion();
+    }
+
+    public Collection getDependencies() {
+        return this.dependencies;
     }
 
     public void addDependency(DependencyDefinition dep) {
         dependencies.add(dep);
     }
-
-    /**
-     * {@inheritDoc}
-     */
-    public void setVersion(String version) {
-        super.setVersion(version);
-        this.versionDefinition = Version.parseVersion(version);
-    }
-
+    
     /**
      * making sure betwixt adds the right type
      * @deprecated
      */
-    public void addDependency(info.magnolia.cms.module.DependencyDefinition dep) {
-        this.addDependency(new DependencyDefinition(dep.getName(), dep.getVersion(), dep.isOptional()));
+//    public void addDependency(info.magnolia.cms.module.DependencyDefinition dep) {
+//        this.addDependency(new DependencyDefinition(dep.getName(), dep.getVersion(), dep.isOptional()));
+//    }
+
+    public Collection getServlets() {
+        return this.servlets;
     }
 
-    public Collection getDependencies() {
-        return dependencies;
+    public void addServlet(ServletDefinition def) {
+        if (StringUtils.isEmpty(def.getComment())) {
+            def.setComment("a servlet used by the " + this.getName() + " module");
+        }
+        this.servlets.add(def);
     }
 
-    /** @deprecated should not be used */
-    public File getModuleRoot() {
-        return super.getModuleRoot();
+    public Collection getRepositories() {
+        return this.repositories;
     }
 
-    /** @deprecated should not be used */
-    public void setModuleRoot(File moduleRoot) {
-        super.setModuleRoot(moduleRoot);
+    public void addRepository(RepositoryDefinition repository) {
+        this.repositories.add(repository);
+    }
+
+    public Collection getProperties() {
+        return properties;
+    }
+
+    public void addProperty(PropertyDefinition property) {
+        properties.add(property);
+    }
+
+    /**
+     * Convenience method which returns the value of the given property,
+     * or null if it does not exist.
+     */
+    public String getProperty(String propertyName) {
+        final Iterator it = properties.iterator();
+        while (it.hasNext()) {
+            final PropertyDefinition p = (PropertyDefinition) it.next();
+            if (propertyName.equals(p.getName())) {
+                return p.getValue();
+            }
+        }
+        return null;
     }
 
     public String toString() {
-        return getDisplayName() + " (version " + versionDefinition + ")";
+        return getDisplayName() + " (version " + version + ")";
     }
 }

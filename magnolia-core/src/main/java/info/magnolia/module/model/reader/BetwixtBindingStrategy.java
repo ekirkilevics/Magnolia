@@ -31,60 +31,42 @@
  * intact.
  *
  */
-package info.magnolia.module.model;
+package info.magnolia.module.model.reader;
+
+import org.apache.commons.beanutils.ConvertUtils;
+import org.apache.commons.beanutils.Converter;
+import org.apache.commons.betwixt.strategy.TypeBindingStrategy;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
+ * A TypeBindingStrategy for Betwixt where we can register our own {@link Converter}s. When such a Converter
+ * is registered, betwixt will attempt to convert the xml element's value from String to object.
+ * <strong>Beware</strong>, these converters are registered globally, thanks to the singleton-esque nature
+ * of content2bean. If a cleaner solution is found, it will be much welcome.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class DependencyDefinition {
-    private String name;
-    private String version;
+class BetwixtBindingStrategy extends TypeBindingStrategy {
+    private final TypeBindingStrategy delegate = new TypeBindingStrategy.Default();
+    private final Set convertedClasses;
 
-    /**
-     * An optional dependency is not mandatory but still influences the order of modules loading.
-     */
-    private boolean optional;
-
-    public DependencyDefinition() {
+    BetwixtBindingStrategy() {
+        this.convertedClasses = new HashSet();
     }
 
-    public DependencyDefinition(String name, String version, boolean optional) {
-        this.name = name;
-        this.version = version;
-        this.optional = optional;
+    void registerConverter(Class clazz, Converter converter) {
+        convertedClasses.add(clazz);
+        // yuck, configuring the beanutils singleton - should be OK though, it's unlikely a 3rd party would use our model classes.
+        ConvertUtils.register(converter, clazz);
     }
 
-    public VersionRange getVersionRange() {
-        return new VersionRange(version);
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getVersion() {
-        return version;
-    }
-
-    public void setVersion(String version) {
-        this.version = version;
-    }
-
-    public boolean isOptional() {
-        return optional;
-    }
-
-    public void setOptional(boolean optional) {
-        this.optional = optional;
-    }
-
-    public String toString() {
-        return name + " version " + version;
+    public TypeBindingStrategy.BindingType bindingType(Class type) {
+        if (convertedClasses.contains(type)) {
+            return TypeBindingStrategy.BindingType.PRIMITIVE;
+        }
+        return delegate.bindingType(type);
     }
 }

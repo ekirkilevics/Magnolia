@@ -77,14 +77,14 @@ public interface Module {
      * @param registerState one of the REGISTER_STATE constants
      * @throws RegisterException no update
      */
-    void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException;
+    void register(info.magnolia.module.model.ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException;
 
     /**
      * Unregister a module. A module is responsible to undo all the steps done during the registration.
      * @param def the definition of this module
      * @param moduleNode the node in the config repository
      */
-    void unregister(ModuleDefinition def, Content moduleNode);
+    void unregister(info.magnolia.module.model.ModuleDefinition def, Content moduleNode);
 
     /**
      * At this point module is responsible to release all resources
@@ -112,6 +112,6 @@ public interface Module {
     /**
      * Get the description of this module
      */
-    ModuleDefinition getModuleDefinition();
+    info.magnolia.module.model.ModuleDefinition getModuleDefinition();
 
 }
