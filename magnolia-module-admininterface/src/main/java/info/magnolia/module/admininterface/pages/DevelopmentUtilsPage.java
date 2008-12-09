@@ -39,6 +39,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.ie.DataTransporter;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ContentUtil;
@@ -46,24 +47,22 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Iterator;
-import java.util.Set;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.util.Iterator;
+import java.util.Set;
 
 
 /**
@@ -334,6 +333,19 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     public Set getModules() {
         return ModuleRegistry.Factory.getInstance().getModuleNames();
+    }
+
+    public String reloadI18nMessages() {
+        try {
+            MessagesManager.reload();
+            AlertUtil.setMessage("Messages reloaded.");
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            AlertUtil.setMessage("Can't reload: " + e.getMessage(), e);
+        }
+
+        return this.show();
     }
 
     public String backup() {

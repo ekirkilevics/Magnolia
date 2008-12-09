@@ -6,15 +6,27 @@
     <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
   </head>
   <body id="mgnl">
+    [#if message?exists]
+      <pre>${message}</pre>
+      <hr />
+    [/#if]
+    <form act ion="" method="post">
+      <div class="pageframe">
+        <h3>Reload i18n properties files</h3>
+        <div class="formelement">
+          <input type="hidden" name="command" value="reloadI18nMessages"/>
+          <input type="submit" class="mgnlControlButton" value="reload"/>
+        </div>
+      </div>
+    </form>
     <form action="" method="post">
       <div class="pageframe">
+        <h3>Backup</h3>
         <div class="formelement">
           <label for="rootdir">Root dir, relative to webapp</label>
           <input type="text" name="rootdir" value="${this.rootdir}" class="text" />
           <input type="hidden" name="command" value="backup" />
         </div>
-      </div>
-      <div class="pageframe">
         <h3>Standard configuration</h3>
         <div class="formelement">
           <label for="website">Website</label>
@@ -90,9 +102,5 @@
           <input type="submit" value="backupChildren" class="mgnlControlButton" />
         </form>
       </div>
-      [#if message?exists]
-      <hr />
-      <pre>${message}</pre>
-      [/#if]
   </body>
 </html>
