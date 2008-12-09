@@ -36,6 +36,7 @@ package info.magnolia.module;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.Condition;
@@ -73,6 +74,7 @@ public class ModuleManagerImplTest extends TestCase {
     protected void tearDown() throws Exception {
         super.tearDown();
         FactoryUtil.clear();
+        MgnlContext.setInstance(null);
     }
 
     // TODO : assert saves after each module?
@@ -80,6 +82,8 @@ public class ModuleManagerImplTest extends TestCase {
 
     /**
      * TODO : should check that d1 is actually called before d2
+     *
+     * TODO : since ContentRepository.getAllRepositoryNames() returns an empty iterator, we don't actually check the save operations
      */
     public void testUpdateAppliesSuppliedDeltasAndTasks() throws Exception {
         final String newVersion = "2.3.4";
