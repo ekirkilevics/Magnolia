@@ -78,7 +78,7 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
             result = content.getUUID();
         } else if (key.equals("@name")) {
             result = content.getName();
-        } else if (key.equals("MetaData")) {
+        } else if (key.equalsIgnoreCase("metaData")) {
             result = content.getMetaData();
         } else {
             // try for node data or child node
