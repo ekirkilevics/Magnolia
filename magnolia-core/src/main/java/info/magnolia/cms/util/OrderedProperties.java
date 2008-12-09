@@ -43,7 +43,8 @@ import java.util.Set;
  *
  * <strong>Warning:</strong> only the java.util.Map interface methods have been
  * overloaded, so be weary when using java.util.Properties specific methods. (load, save,
- * getProperty and setProperty are working.)
+ * getProperty and setProperty are working.) (getProperty had to be explicitely overloaded
+ * too)
  *
  * @author philipp
  * @version $Id:  $
@@ -57,6 +58,10 @@ public class OrderedProperties extends Properties {
 
     public Object get(Object key) {
         return map.get(key);
+    }
+
+    public String getProperty(String key) {
+        return (String) get(key);
     }
 
     public boolean containsValue(Object value) {
