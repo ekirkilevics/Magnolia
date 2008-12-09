@@ -33,9 +33,6 @@
  */
 package info.magnolia.module.model;
 
-import info.magnolia.cms.module.PropertyDefinition;
-import info.magnolia.cms.module.RepositoryDefinition;
-import info.magnolia.cms.module.ServletDefinition;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -137,14 +134,6 @@ public class ModuleDefinition {
     public void addDependency(DependencyDefinition dep) {
         dependencies.add(dep);
     }
-    
-    /**
-     * making sure betwixt adds the right type
-     * @deprecated
-     */
-//    public void addDependency(info.magnolia.cms.module.DependencyDefinition dep) {
-//        this.addDependency(new DependencyDefinition(dep.getName(), dep.getVersion(), dep.isOptional()));
-//    }
 
     public Collection getServlets() {
         return this.servlets;

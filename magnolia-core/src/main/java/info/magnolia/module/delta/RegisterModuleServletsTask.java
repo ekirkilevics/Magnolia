@@ -33,9 +33,9 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.module.ServletDefinition;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.ServletDefinition;
 
 import java.util.Iterator;
 

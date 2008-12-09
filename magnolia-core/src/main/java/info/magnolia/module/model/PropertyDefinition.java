@@ -31,31 +31,30 @@
  * intact.
  *
  */
-package info.magnolia.cms.module;
-
-import info.magnolia.module.model.Version;
+package info.magnolia.module.model;
 
 /**
- * Defines a module to register. The definition is constructed by the modules xml definition (using betwixt).
+ * Property as defined in a module descriptor.
  *
- * @author Philipp Bracher
- * @version $Revision$ ($Author$)
- * @deprecated since 3.5 use info.magnolia.module.model.ModuleDefinition
+ * @see ModuleDefinition
  */
-public class ModuleDefinition extends info.magnolia.module.model.ModuleDefinition {
+public class PropertyDefinition {
+    private String name;
+    private String value;
 
-    /**
-     * Empty constructor used by betwixt
-     */
-    public ModuleDefinition() {
+    public String getName() {
+        return this.name;
     }
 
-    /**
-     * Minimal definition
-     */
-    public ModuleDefinition(String name, String version, String className) {
-        super(name, Version.parseVersion(version), className, null);
+    public void setName(String name) {
+        this.name = name;
     }
 
+    public String getValue() {
+        return this.value;
+    }
 
+    public void setValue(String value) {
+        this.value = value;
+    }
 }

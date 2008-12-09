@@ -50,7 +50,20 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.WebXmlUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.files.BasicFileExtractor;
+import info.magnolia.module.model.ServletDefinition;
+import info.magnolia.module.model.ServletParameterDefinition;
+import org.apache.commons.collections.map.ListOrderedMap;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.jdom.Document;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -65,19 +78,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.PathNotFoundException;
-import javax.jcr.RepositoryException;
-
-import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**

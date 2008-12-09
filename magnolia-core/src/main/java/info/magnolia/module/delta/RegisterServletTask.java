@@ -36,14 +36,13 @@ package info.magnolia.module.delta;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.module.ServletDefinition;
-import info.magnolia.cms.module.ServletParameterDefinition;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.module.InstallContext;
-
-import java.util.Iterator;
+import info.magnolia.module.model.ServletDefinition;
+import info.magnolia.module.model.ServletParameterDefinition;
 
 import javax.jcr.RepositoryException;
+import java.util.Iterator;
 
 
 /**

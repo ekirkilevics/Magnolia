@@ -39,6 +39,9 @@ import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 import info.magnolia.module.files.BasicFileExtractor;
 import info.magnolia.module.files.ModuleFileExtractorTransformer;
+import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.RepositoryDefinition;
+import info.magnolia.module.model.ServletDefinition;
 import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -61,7 +64,7 @@ public abstract class AbstractModule implements Module, ModuleLifecycle {
     /**
      * The modules definition built by the modules xml file
      */
-    protected info.magnolia.module.model.ModuleDefinition definition;
+    protected ModuleDefinition definition;
 
     /**
      * The node of this module
@@ -117,7 +120,7 @@ public abstract class AbstractModule implements Module, ModuleLifecycle {
     /**
      * Calles onRegister if not yet installed after it loaded the bootstrapfiles of this module
      */
-    public final void register(info.magnolia.module.model.ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
+    public final void register(ModuleDefinition def, Content moduleNode, int registerState) throws RegisterException {
         setDefinition(def);
         // will be reset by the ModuleManager before the init method is called
         setModuleNode(moduleNode);
@@ -134,10 +137,10 @@ public abstract class AbstractModule implements Module, ModuleLifecycle {
     }
 
     /**
-     * @see info.magnolia.cms.module.Module#unregister(info.magnolia.cms.module.ModuleDefinition,
+     * @see info.magnolia.cms.module.Module#unregister(ModuleDefinition,
      * info.magnolia.cms.core.Content)
      */
-    public void unregister(info.magnolia.module.model.ModuleDefinition def, Content moduleNode) {
+    public void unregister(ModuleDefinition def, Content moduleNode) {
         // TODO implement the unrigister
         onUnRegister();
         // now delete the jar if existing
@@ -175,21 +178,21 @@ public abstract class AbstractModule implements Module, ModuleLifecycle {
     /**
      * @return Returns the definition.
      */
-    public info.magnolia.module.model.ModuleDefinition getModuleDefinition() {
+    public ModuleDefinition getModuleDefinition() {
         return this.definition;
     }
 
     /**
      * @param definition The definition to set.
      */
-    protected void setDefinition(info.magnolia.module.model.ModuleDefinition definition) {
+    protected void setDefinition(ModuleDefinition definition) {
         this.definition = definition;
     }
 
     /**
      * Set by the ModuleManager
      */
-    public void setModuleDefinition(info.magnolia.module.model.ModuleDefinition md) {
+    public void setModuleDefinition(ModuleDefinition md) {
         setDefinition(md);
     }
 
@@ -258,7 +261,7 @@ public abstract class AbstractModule implements Module, ModuleLifecycle {
      * @throws RegisterException
      * @deprecated see info.magnolia.module.delta.RegisterRepositoriesAndWorkspacesTask
      */
-    protected void registerRepositories(info.magnolia.module.model.ModuleDefinition def) throws RegisterException {
+    protected void registerRepositories(ModuleDefinition def) throws RegisterException {
         boolean restartNeeded = false;
 
         // register repositories
@@ -293,7 +296,7 @@ public abstract class AbstractModule implements Module, ModuleLifecycle {
      * @throws IOException
      * @deprecated see info.magnolia.module.delta.RegisterModuleServletsTask
      */
-    protected void registerServlets(info.magnolia.module.model.ModuleDefinition def) throws JDOMException, IOException {
+    protected void registerServlets(ModuleDefinition def) throws JDOMException, IOException {
         boolean restartNeeded = false;
 
         // register servlets

@@ -34,11 +34,11 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.module.PropertyDefinition;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.PropertyDefinition;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.StringUtils;

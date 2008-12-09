@@ -36,12 +36,9 @@ package info.magnolia.module.delta;
 import info.magnolia.cms.beans.config.Bootstrapper;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.module.ModuleUtil;
-import info.magnolia.cms.module.RepositoryDefinition;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.Role;
-import info.magnolia.cms.security.Security;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.RepositoryDefinition;
 
 import java.util.Iterator;
 

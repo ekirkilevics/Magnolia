@@ -31,74 +31,34 @@
  * intact.
  *
  */
-package info.magnolia.cms.module;
-
-import java.util.ArrayList;
-import java.util.List;
-
+package info.magnolia.module.model;
 
 /**
+ * Servlet parameter as defined in a module descriptor.
+ *
+ * @see info.magnolia.module.model.ServletDefinition
+ * @see info.magnolia.module.model.ModuleDefinition
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
-public class RepositoryDefinition {
-
-    /**
-     * The name of the repository to register
-     */
+public class ServletParameterDefinition {
     private String name;
+    private String value;
 
-    /**
-     * The file containing the nodeTypes
-     */
-    private String nodeTypeFile;
-
-    /**
-     * workspaces
-     */
-    private List workspaces = new ArrayList();
-
-    /**
-     * @return Returns the name.
-     */
     public String getName() {
         return this.name;
     }
 
-    /**
-     * @param name The name to set.
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return Returns the nodeTypeFile.
-     */
-    public String getNodeTypeFile() {
-        return this.nodeTypeFile;
+    public String getValue() {
+        return this.value;
     }
 
-    /**
-     * @param nodeTypeFile The nodeTypeFile to set.
-     */
-    public void setNodeTypeFile(String nodeTypeFile) {
-        this.nodeTypeFile = nodeTypeFile;
+    public void setValue(String value) {
+        this.value = value;
     }
-
-    /**
-     * @return Returns the workspaces.
-     */
-    public List getWorkspaces() {
-        return this.workspaces;
-    }
-
-    /**
-     * Add a workspace to this repository
-     * @param workspace
-     */
-    public void addWorkspace(String workspace) {
-        this.workspaces.add(workspace);
-    }
-
 }

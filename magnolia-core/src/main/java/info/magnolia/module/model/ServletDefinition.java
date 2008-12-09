@@ -31,13 +31,17 @@
  * intact.
  *
  */
-package info.magnolia.cms.module;
+package info.magnolia.module.model;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
 
 /**
+ * Servlet as defined in a module descriptor.
+ *
+ * @see ModuleDefinition
+ * 
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -68,52 +72,30 @@ public class ServletDefinition {
      */
     private Collection params = new ArrayList();
 
-    /**
-     * @return Returns the className.
-     */
     public String getClassName() {
         return this.className;
     }
 
-    /**
-     * @param className The className to set.
-     */
     public void setClassName(String className) {
         this.className = className;
     }
 
-    /**
-     * @return Returns the name.
-     */
     public String getName() {
         return this.name;
     }
 
-    /**
-     * @param name The name to set.
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return Returns the mappings.
-     */
     public Collection getMappings() {
         return this.mappings;
     }
 
-    /**
-     * Add a mapping to the mappings list
-     * @param mapping
-     */
     public void addMapping(String mapping) {
         this.mappings.add(mapping);
     }
 
-    /**
-     * @return Returns the parameters.
-     */
     public Collection getParams() {
         return this.params;
     }
@@ -122,16 +104,10 @@ public class ServletDefinition {
         this.params.add(param);
     }
 
-    /**
-     * @return Returns the comment.
-     */
     public String getComment() {
         return comment;
     }
 
-    /**
-     * @param comment The comment to set.
-     */
     public void setComment(String comment) {
         this.comment = comment;
     }

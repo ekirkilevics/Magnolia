@@ -31,38 +31,59 @@
  * intact.
  *
  */
-package info.magnolia.cms.module;
+package info.magnolia.module.model;
 
-public class PropertyDefinition {
-    private String name;
+import java.util.ArrayList;
+import java.util.List;
 
-    private String value;
+
+/**
+ * Repository as defined in a module descriptor.
+ *
+ * @see ModuleDefinition
+ * 
+ * @author Philipp Bracher
+ * @version $Revision$ ($Author$)
+ */
+public class RepositoryDefinition {
 
     /**
-     * @return Returns the name.
+     * The name of the repository to register
      */
+    private String name;
+
+    /**
+     * The file containing the nodeTypes
+     */
+    private String nodeTypeFile;
+
+    /**
+     * workspaces
+     */
+    private List workspaces = new ArrayList();
+
     public String getName() {
         return this.name;
     }
 
-    /**
-     * @param name The name to set.
-     */
     public void setName(String name) {
         this.name = name;
     }
 
-    /**
-     * @return Returns the value.
-     */
-    public String getValue() {
-        return this.value;
+    public String getNodeTypeFile() {
+        return this.nodeTypeFile;
     }
 
-    /**
-     * @param value The value to set.
-     */
-    public void setValue(String value) {
-        this.value = value;
+    public void setNodeTypeFile(String nodeTypeFile) {
+        this.nodeTypeFile = nodeTypeFile;
     }
+
+    public List getWorkspaces() {
+        return this.workspaces;
+    }
+
+    public void addWorkspace(String workspace) {
+        this.workspaces.add(workspace);
+    }
+
 }
