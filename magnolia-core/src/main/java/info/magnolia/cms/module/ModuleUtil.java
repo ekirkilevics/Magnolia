@@ -134,8 +134,7 @@ public final class ModuleUtil {
         registerProperties(hm, map);
     }
 
-    public static void registerProperties(HierarchyManager hm, Map map) throws AccessDeniedException,
-        PathNotFoundException, RepositoryException {
+    public static void registerProperties(HierarchyManager hm, Map map) throws RepositoryException {
         for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
             String key = (String) iter.next();
             String value = (String) map.get(key);
@@ -151,15 +150,15 @@ public final class ModuleUtil {
      * Bootstraps the given resources and save.
      * @deprecated use bootstrap(String[] resourceNames, boolean saveAfterImport), saving explicitely.
      */
-    public static void bootstrap(String[] resourceNames) throws IOException, RegisterException {
+    public static void bootstrap(String[] resourceNames) throws IOException, RepositoryException {
         bootstrap(resourceNames, true);
     }
 
-    public static void bootstrap(String[] resourceNames, boolean saveAfterImport) throws IOException, RegisterException {
+    public static void bootstrap(String[] resourceNames, boolean saveAfterImport) throws IOException, RepositoryException {
         bootstrap(resourceNames, saveAfterImport, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
     }
 
-    public static void bootstrap(String[] resourceNames, boolean saveAfterImport, int importUUIDBehavior) throws IOException, RegisterException {
+    public static void bootstrap(String[] resourceNames, boolean saveAfterImport, int importUUIDBehavior) throws IOException, RepositoryException {
         // sort by length --> import parent node first
         List list = new ArrayList(Arrays.asList(resourceNames));
 
@@ -206,9 +205,8 @@ public final class ModuleUtil {
                     hm.delete(fullPath);
                     log.warn("already existing node [{}] deleted", fullPath);
                 }
-            }
-            catch (Exception e) {
-                throw new RegisterException("can't register bootstrap file: [" + name + "]", e);
+            } catch (RepositoryException e) {
+                throw new RepositoryException("can't register bootstrap file: [" + name + "]", e);
             }
 
             DataTransporter.importXmlStream(stream, repository, pathName, name, false,
@@ -300,7 +298,7 @@ public final class ModuleUtil {
         throw new IllegalStateException("This method should never have been public. Use one of the registerServlet methods if needed.");
     }
 
-    public static boolean registerRepository(String name) throws RegisterException {
+    public static boolean registerRepository(String name) throws RepositoryException {
         return registerRepository(name, null);
     }
 
@@ -309,11 +307,11 @@ public final class ModuleUtil {
      * @param repositoryName
      * @param nodeTypeFile
      * @return <code>true</code> if a repository is registered or <code>false</code> if it was already existing
-     * @throws RegisterException
+     * @throws RepositoryException
      * @deprecated repositories in modules are automatically loaded by ModuleManager
      */
     public static boolean registerRepository(final String repositoryName, final String nodeTypeFile)
-        throws RegisterException {
+        throws RepositoryException {
 
         log.warn("ModuleUtil.registerRepository will not perform any action: "
             + "repositories in modules are automatically loaded by ModuleManager");
@@ -323,7 +321,7 @@ public final class ModuleUtil {
     /**
      * @deprecated repositories in modules are automatically loaded by ModuleManager
      */
-    public static boolean registerNodetypes(String repositoryName, String customNodetypes) throws RegisterException {
+    public static boolean registerNodetypes(String repositoryName, String customNodetypes) throws RepositoryException {
 
         log.warn("ModuleUtil.registerNodetypes will not perform any action: "
             + "repositories in modules are automatically loaded by ModuleManager");
@@ -356,11 +354,11 @@ public final class ModuleUtil {
     /**
      * @param repositoryName
      * @param workspaceName
-     * @throws RegisterException if the workspace could not be register
+     * @throws RepositoryException if the workspace could not be register
      * @deprecated repositories in modules are automatically loaded by ModuleManager
      */
     public static boolean registerWorkspace(final String repositoryName, final String workspaceName)
-        throws RegisterException {
+        throws RepositoryException {
 
         log.warn("ModuleUtil.registerWorkspace will not perform any action: "
             + "repositories in modules are automatically loaded by ModuleManager");

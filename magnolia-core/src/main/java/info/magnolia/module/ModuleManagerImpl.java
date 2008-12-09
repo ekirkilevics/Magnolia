@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.module.Module;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
@@ -193,17 +192,8 @@ public class ModuleManagerImpl implements ModuleManager {
             if (versionHandlerClass != null) {
                 return (ModuleVersionHandler) versionHandlerClass.newInstance();
             } else {
-                final String moduleClassName = module.getClassName();
-                if (moduleClassName != null) {
-                    final Class moduleClass = ClassUtil.classForName(moduleClassName);
-                    if (ClassUtil.isSubClass(moduleClass, Module.class)) {
-                        return new LegacyModuleVersionHandler();
-                    }
-                }
                 return new DefaultModuleVersionHandler();
             }
-        } catch (ClassNotFoundException e) {
-            throw new RuntimeException(e); // TODO
         } catch (InstantiationException e) {
             throw new RuntimeException(e); // TODO
         } catch (IllegalAccessException e) {

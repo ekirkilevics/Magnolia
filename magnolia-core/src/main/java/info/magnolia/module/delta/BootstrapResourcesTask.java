@@ -34,13 +34,12 @@
 package info.magnolia.module.delta;
 
 import info.magnolia.cms.module.ModuleUtil;
-import info.magnolia.cms.module.RegisterException;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.module.InstallContext;
 
-import java.io.IOException;
-
 import javax.jcr.ImportUUIDBehavior;
+import javax.jcr.RepositoryException;
+import java.io.IOException;
 
 /**
  *
@@ -67,7 +66,7 @@ public abstract class BootstrapResourcesTask extends AbstractTask {
             ModuleUtil.bootstrap(resourcesToBootstrap, false, importUUIDBehavior);
         } catch (IOException e) {
             throw new TaskExecutionException("Could not bootstrap: " + e.getMessage(), e);
-        } catch (RegisterException e) {
+        } catch (RepositoryException e) {
             throw new TaskExecutionException("Could not bootstrap: " + e.getMessage(), e);
         }
     }
