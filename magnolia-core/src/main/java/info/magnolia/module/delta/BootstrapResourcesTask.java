@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
+import info.magnolia.importexport.BootstrapUtil;
 import info.magnolia.module.InstallContext;
 
 import javax.jcr.ImportUUIDBehavior;
@@ -63,7 +63,7 @@ public abstract class BootstrapResourcesTask extends AbstractTask {
     public void execute(final InstallContext installContext) throws TaskExecutionException {
         try {
             final String[] resourcesToBootstrap = getResourcesToBootstrap(installContext);
-            ModuleUtil.bootstrap(resourcesToBootstrap, false, importUUIDBehavior);
+            BootstrapUtil.bootstrap(resourcesToBootstrap, importUUIDBehavior);
         } catch (IOException e) {
             throw new TaskExecutionException("Could not bootstrap: " + e.getMessage(), e);
         } catch (RepositoryException e) {

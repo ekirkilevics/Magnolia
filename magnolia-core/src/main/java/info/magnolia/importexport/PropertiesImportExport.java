@@ -31,13 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.cms.core.ie;
+package info.magnolia.importexport;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.cms.util.OrderedProperties;
 import org.apache.commons.beanutils.ConvertUtils;
 import org.apache.commons.lang.StringUtils;
 
@@ -46,9 +47,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Collection;
 import java.util.Iterator;
-import java.util.LinkedHashMap;
 import java.util.Properties;
-import java.util.Set;
 
 /**
  * Utility class providing support for properties-like format to import/export jcr data. Useful when
@@ -68,7 +67,7 @@ public class PropertiesImportExport {
 
         final Iterator it = properties.keySet().iterator();
         while (it.hasNext()) {
-            final Object o =  it.next();
+            final Object o = it.next();
             String orgKey = (String) o;
             String valueStr = properties.getProperty(orgKey);
 
@@ -90,8 +89,8 @@ public class PropertiesImportExport {
             final String type;
             if (name.equals("@type")) {
                 type = valueStr;
-            } else if (properties.containsKey(orgKey+"@type")) {
-                type = properties.getProperty(orgKey+"@type");
+            } else if (properties.containsKey(orgKey + "@type")) {
+                type = properties.getProperty(orgKey + "@type");
             } else {
                 type = ItemType.CONTENTNODE.getSystemName();
             }
@@ -156,42 +155,4 @@ public class PropertiesImportExport {
         }
     }
 
-    /**
-     * Ordered properties. Uses to keep the order in the mocked content
-     *
-     * @author philipp
-     * @version $Id: MockUtil.java 16332 2008-06-30 18:29:11Z pbracher $
-     */
-    public static final class OrderedProperties extends Properties {
-
-        private final LinkedHashMap map = new LinkedHashMap();
-
-        public Object put(Object key, Object value) {
-            return map.put(key, value);
-        }
-
-        public Object get(Object key) {
-            return map.get(key);
-        }
-
-        public String getProperty(String key) {
-            return (String) get(key);
-        }
-
-        public synchronized Object setProperty(String key, String value) {
-            return this.map.put(key, value);
-        }
-
-        public Set entrySet() {
-            return this.map.entrySet();
-        }
-
-        public Set keySet() {
-            return this.map.keySet();
-        }
-
-        public int size() {
-            return this.map.size();
-        }
-    }
 }

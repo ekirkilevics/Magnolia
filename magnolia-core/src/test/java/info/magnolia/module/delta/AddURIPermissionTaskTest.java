@@ -33,19 +33,17 @@
  */
 package info.magnolia.module.delta;
 
-import static org.easymock.EasyMock.*;
-
-import java.io.IOException;
-import java.util.Properties;
-
-import javax.jcr.RepositoryException;
-
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ie.PropertiesImportExport;
+import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
+import static org.easymock.EasyMock.*;
+
+import javax.jcr.RepositoryException;
+import java.io.IOException;
+import java.util.Properties;
 
 
 /**

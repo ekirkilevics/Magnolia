@@ -31,10 +31,11 @@
  * intact.
  *
  */
-package info.magnolia.cms.module;
+package info.magnolia.importexport;
 
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ie.DataTransporter;
+import info.magnolia.cms.util.StringLengthComparator;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -46,40 +47,23 @@ import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
 
 /**
- * This is a util providing some methods for the registration process of a module.
+ *
  * @author philipp
  * @version $Revision$ ($Author$)
- * @deprecated most methods here should be replaced by implementations of info.magnolia.module.delta.Task
  */
-public final class ModuleUtil {
+public class BootstrapUtil {
+    private static final Logger log = LoggerFactory.getLogger(BootstrapUtil.class);
 
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(ModuleUtil.class);
-
-    /**
-     * Util has no public constructor
-     */
-    private ModuleUtil() {
-    }
-
-    public static void bootstrap(String[] resourceNames, boolean saveAfterImport, int importUUIDBehavior) throws IOException, RepositoryException {
+    public static void bootstrap(String[] resourceNames, int importUUIDBehavior) throws IOException, RepositoryException {
         // sort by length --> import parent node first
         List list = new ArrayList(Arrays.asList(resourceNames));
 
-        Collections.sort(list, new Comparator() {
-
-            public int compare(Object name1, Object name2) {
-                return ((String) name1).length() - ((String) name2).length();
-            }
-        });
+        Collections.sort(list, new StringLengthComparator());
 
         for (Iterator iter = list.iterator(); iter.hasNext();) {
             String resourceName = (String) iter.next();
@@ -103,7 +87,7 @@ public final class ModuleUtil {
             }
 
             log.debug("Will bootstrap {}", resourceName);
-            final InputStream stream = ModuleUtil.class.getResourceAsStream(resourceName);
+            final InputStream stream = BootstrapUtil.class.getResourceAsStream(resourceName);
             if (stream == null) {
                 throw new IOException("Can't find resource to bootstrap at " + resourceName);
             }
@@ -118,13 +102,10 @@ public final class ModuleUtil {
                     log.warn("already existing node [{}] deleted", fullPath);
                 }
             } catch (RepositoryException e) {
-                throw new RepositoryException("can't register bootstrap file: [" + name + "]", e);
+                throw new RepositoryException("Can't check existence of node for bootstrap file: [" + name + "]", e);
             }
 
-            DataTransporter.importXmlStream(stream, repository, pathName, name, false,
-                importUUIDBehavior,
-                saveAfterImport,
-                true);
+            DataTransporter.importXmlStream(stream, repository, pathName, name, false, importUUIDBehavior, false, true);
         }
     }
 

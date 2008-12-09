@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.importexport;
 
 import info.magnolia.cms.core.ie.DataTransporter;
 import org.apache.commons.lang.StringUtils;

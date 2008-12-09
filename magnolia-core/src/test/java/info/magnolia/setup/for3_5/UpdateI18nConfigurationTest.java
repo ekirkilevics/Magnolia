@@ -35,7 +35,6 @@ package info.magnolia.setup.for3_5;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.core.ie.PropertiesImportExport;
 import info.magnolia.content2bean.Content2BeanProcessor;
 import info.magnolia.content2bean.Content2BeanTransformer;
 import info.magnolia.content2bean.TransformationState;
@@ -46,6 +45,7 @@ import info.magnolia.content2bean.impl.TransformationStateImpl;
 import info.magnolia.content2bean.impl.TypeMappingImpl;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.test.mock.MockHierarchyManager;

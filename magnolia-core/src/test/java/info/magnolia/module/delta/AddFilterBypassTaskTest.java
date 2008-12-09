@@ -33,17 +33,16 @@
  */
 package info.magnolia.module.delta;
 
-import static org.easymock.EasyMock.*;
-
-import java.util.Properties;
-
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ie.PropertiesImportExport;
+import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.setup.AddFilterBypassTask;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.voting.voters.URIStartsWithVoter;
+import static org.easymock.EasyMock.*;
+
+import java.util.Properties;
 
 
 /**

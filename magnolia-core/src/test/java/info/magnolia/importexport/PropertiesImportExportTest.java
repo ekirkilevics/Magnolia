@@ -31,43 +31,32 @@
  * intact.
  *
  */
-package info.magnolia.module.delta;
+package info.magnolia.importexport;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ClasspathResourcesUtil;
-import info.magnolia.importexport.PropertiesImportExport;
-import info.magnolia.module.InstallContext;
+import junit.framework.TestCase;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
-import java.io.InputStream;
 
 /**
- * A Task which will import nodes and properties using a .properties file.
- * TODO : conflict behaviour
- *
- * @see PropertiesImportExport
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class PropertiesImportTask extends AbstractRepositoryTask {
-    private final String resource;
-    private final String workspace;
+public class PropertiesImportExportTest extends TestCase {
+    private final PropertiesImportExport pie = new PropertiesImportExport();
 
-    public PropertiesImportTask(String name, String description, String workspace, String resource) {
-        super(name, description);
-        this.resource = resource;
-        this.workspace = workspace;
+    public void testConvertsToStringByDefault() throws IOException, RepositoryException {
+        assertEquals("foo", pie.convertNodeDataStringToObject("foo"));
+        assertEquals("bar", pie.convertNodeDataStringToObject("string:bar"));
     }
 
-    protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        try {
-            final InputStream propsStream = ClasspathResourcesUtil.getStream(resource);
-            final Content root = installContext.getHierarchyManager(workspace).getRoot();
-            new PropertiesImportExport().createContent(root, propsStream);
-        } catch (IOException e) {
-            throw new TaskExecutionException("Could not load properties: " + e.getMessage(), e);
-        }
+    public void testConvertsToWrapperType() {
+        assertEquals(Boolean.TRUE, pie.convertNodeDataStringToObject("boolean:true"));
+        assertEquals(Boolean.FALSE, pie.convertNodeDataStringToObject("boolean:false"));
+        assertEquals(new Integer(5), pie.convertNodeDataStringToObject("integer:5"));
+    }
+
+    public void testCanUseIntShortcutForConvertingIntegers() {
+        assertEquals(new Integer(37), pie.convertNodeDataStringToObject("int:37"));
     }
 }

@@ -31,43 +31,19 @@
  * intact.
  *
  */
-package info.magnolia.module.delta;
+package info.magnolia.cms.util;
 
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.ClasspathResourcesUtil;
-import info.magnolia.importexport.PropertiesImportExport;
-import info.magnolia.module.InstallContext;
-
-import javax.jcr.RepositoryException;
-import java.io.IOException;
-import java.io.InputStream;
+import junit.framework.TestCase;
 
 /**
- * A Task which will import nodes and properties using a .properties file.
- * TODO : conflict behaviour
- *
- * @see PropertiesImportExport
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class PropertiesImportTask extends AbstractRepositoryTask {
-    private final String resource;
-    private final String workspace;
-
-    public PropertiesImportTask(String name, String description, String workspace, String resource) {
-        super(name, description);
-        this.resource = resource;
-        this.workspace = workspace;
+public class StringLengthComparatorTest extends TestCase {
+    public void testBasic() {
+        assertEquals(0, new StringLengthComparator().compare("abc", "www"));
+        assertTrue(new StringLengthComparator().compare("ac", "wwxxxw") < 0);
+        assertTrue(new StringLengthComparator().compare("awwwc", "ww") > 0);
     }
-
-    protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-        try {
-            final InputStream propsStream = ClasspathResourcesUtil.getStream(resource);
-            final Content root = installContext.getHierarchyManager(workspace).getRoot();
-            new PropertiesImportExport().createContent(root, propsStream);
-        } catch (IOException e) {
-            throw new TaskExecutionException("Could not load properties: " + e.getMessage(), e);
-        }
-    }
+    
 }

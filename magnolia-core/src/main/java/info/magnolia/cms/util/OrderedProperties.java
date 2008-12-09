@@ -31,32 +31,59 @@
  * intact.
  *
  */
-package info.magnolia.cms.core.ie;
+package info.magnolia.cms.util;
 
-import junit.framework.TestCase;
-
-import javax.jcr.RepositoryException;
-import java.io.IOException;
+import java.util.Collection;
+import java.util.LinkedHashMap;
+import java.util.Properties;
+import java.util.Set;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * Subclass of java.util.Properties which keeps the order in which properties were loaded.
+ *
+ * <strong>Warning:</strong> only the java.util.Map interface methods have been
+ * overloaded, so be weary when using java.util.Properties specific methods. (load, save,
+ * getProperty and setProperty are working.)
+ *
+ * @author philipp
+ * @version $Id:  $
  */
-public class PropertiesImportExportTest extends TestCase {
-    private final PropertiesImportExport pie = new PropertiesImportExport();
+public class OrderedProperties extends Properties {
+    private final LinkedHashMap map = new LinkedHashMap();
 
-    public void testConvertsToStringByDefault() throws IOException, RepositoryException {
-        assertEquals("foo", pie.convertNodeDataStringToObject("foo"));
-        assertEquals("bar", pie.convertNodeDataStringToObject("string:bar"));
+    public Object put(Object key, Object value) {
+        return map.put(key, value);
     }
 
-    public void testConvertsToWrapperType() {
-        assertEquals(Boolean.TRUE, pie.convertNodeDataStringToObject("boolean:true"));
-        assertEquals(Boolean.FALSE, pie.convertNodeDataStringToObject("boolean:false"));
-        assertEquals(new Integer(5), pie.convertNodeDataStringToObject("integer:5"));
+    public Object get(Object key) {
+        return map.get(key);
     }
 
-    public void testCanUseIntShortcutForConvertingIntegers() {
-        assertEquals(new Integer(37), pie.convertNodeDataStringToObject("int:37"));
+    public boolean containsValue(Object value) {
+        return this.map.containsValue(value);
+    }
+
+    public boolean containsKey(Object key) {
+        return this.map.containsKey(key);
+    }
+
+    public Set entrySet() {
+        return this.map.entrySet();
+    }
+
+    public Set keySet() {
+        return this.map.keySet();
+    }
+
+    public Collection values() {
+        return this.map.values();
+    }
+
+    public int size() {
+        return this.map.size();
+    }
+
+    public boolean isEmpty() {
+        return this.map.isEmpty();
     }
 }

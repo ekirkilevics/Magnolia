@@ -37,29 +37,23 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
-import info.magnolia.cms.module.ModuleUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.SystemRepositoryStrategy;
-import info.magnolia.repository.Provider;
+import info.magnolia.importexport.BootstrapUtil;
 import info.magnolia.test.mock.MockContext;
-
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashSet;
-import java.util.Iterator;
-
-import javax.jcr.ImportUUIDBehavior;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
+
+import javax.jcr.ImportUUIDBehavior;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  *
@@ -181,12 +175,12 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     }
 
     protected void bootstrapSingleResource(String resource) throws Exception{
-        ModuleUtil.bootstrap(new String[]{resource}, false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
+        BootstrapUtil.bootstrap(new String[]{resource}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
     }
 
     protected void bootstrap(ClasspathResourcesUtil.Filter filter) throws Exception{
         String[] resourcesToBootstrap = ClasspathResourcesUtil.findResources(filter);
-        ModuleUtil.bootstrap(resourcesToBootstrap, false, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
+        BootstrapUtil.bootstrap(resourcesToBootstrap, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
     }
 
     protected boolean isAutoStart() {
@@ -205,11 +199,9 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
         this.jackrabbitRepositoryConfigFileName = jackrabbitRepositoryConfigFileName;
     }
 
-
     protected boolean isQuiet() {
         return this.quiet;
     }
-
 
     protected void setQuiet(boolean quiet) {
         this.quiet = quiet;

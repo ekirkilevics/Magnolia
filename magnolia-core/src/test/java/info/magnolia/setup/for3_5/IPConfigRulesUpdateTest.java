@@ -33,10 +33,10 @@
  */
 package info.magnolia.setup.for3_5;
 
+import info.magnolia.importexport.PropertiesImportExport;
 import info.magnolia.module.InstallContext;
 import info.magnolia.test.mock.MockHierarchyManager;
 import info.magnolia.test.mock.MockUtil;
-import info.magnolia.cms.core.ie.PropertiesImportExport;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
