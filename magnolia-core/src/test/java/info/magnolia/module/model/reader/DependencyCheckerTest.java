@@ -35,6 +35,7 @@ package info.magnolia.module.model.reader;
 
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.Version;
 import junit.framework.TestCase;
 
 import java.util.HashMap;
@@ -127,16 +128,16 @@ public class DependencyCheckerTest extends TestCase {
 
     public void testModulesShouldBeSortedAccordingToDependencies() {
         final Map modules = new HashMap();
-        final ModuleDefinition module1 = new ModuleDefinition("module1", "3.0", null, null);
-        final ModuleDefinition module2 = new ModuleDefinition("module2", "3.0", null, null);
+        final ModuleDefinition module1 = new ModuleDefinition("module1", Version.parseVersion("3.0"), null, null);
+        final ModuleDefinition module2 = new ModuleDefinition("module2", Version.parseVersion("3.0"), null, null);
         module2.addDependency(new DependencyDefinition("module1", "3.0", false));
-        final ModuleDefinition module3 = new ModuleDefinition("module3", "3.0", null, null);
+        final ModuleDefinition module3 = new ModuleDefinition("module3", Version.parseVersion("3.0"), null, null);
         module3.addDependency(new DependencyDefinition("module1", "3.0", false));
         module3.addDependency(new DependencyDefinition("module2", "3.0", false));
-        final ModuleDefinition module4 = new ModuleDefinition("module4", "3.0", null, null);
+        final ModuleDefinition module4 = new ModuleDefinition("module4", Version.parseVersion("3.0"), null, null);
         module4.addDependency(new DependencyDefinition("module1", "3.0", false));
         module4.addDependency(new DependencyDefinition("module3", "3.0", false));
-        final ModuleDefinition module5 = new ModuleDefinition("module5", "3.0", null, null);
+        final ModuleDefinition module5 = new ModuleDefinition("module5", Version.parseVersion("3.0"), null, null);
         module5.addDependency(new DependencyDefinition("module2", "3.0", false));
         modules.put("module5", module5);
         modules.put("module4", module4);
@@ -155,10 +156,10 @@ public class DependencyCheckerTest extends TestCase {
 
     public void testCoreIsAlwaysSortedFirst() {
         final Map modules = new HashMap();
-        final ModuleDefinition core = new ModuleDefinition("core", "1.2.3", null, null);
-        final ModuleDefinition module1 = new ModuleDefinition("a_module1", "3.0", null, null);
-        final ModuleDefinition module2 = new ModuleDefinition("a_module2", "3.0", null, null);
-        final ModuleDefinition module3 = new ModuleDefinition("a_module3", "3.0", null, null);
+        final ModuleDefinition core = new ModuleDefinition("core", Version.parseVersion("1.2.3"), null, null);
+        final ModuleDefinition module1 = new ModuleDefinition("a_module1", Version.parseVersion("3.0"), null, null);
+        final ModuleDefinition module2 = new ModuleDefinition("a_module2", Version.parseVersion("3.0"), null, null);
+        final ModuleDefinition module3 = new ModuleDefinition("a_module3", Version.parseVersion("3.0"), null, null);
 
         module2.addDependency(new DependencyDefinition("a_module1", "3.0", false));
         module3.addDependency(new DependencyDefinition("core", "3.0", false));
@@ -179,11 +180,11 @@ public class DependencyCheckerTest extends TestCase {
 
     public void testWebappIsAlwaysSortedLast() {
         final Map modules = new HashMap();
-        final ModuleDefinition webapp = new ModuleDefinition("webapp", "1.2.3", null, null);
-        final ModuleDefinition core = new ModuleDefinition("core", "1.2.3", null, null);
-        final ModuleDefinition module1 = new ModuleDefinition("a_module1", "3.0", null, null);
-        final ModuleDefinition module2 = new ModuleDefinition("a_module2", "3.0", null, null);
-        final ModuleDefinition module3 = new ModuleDefinition("a_module3", "3.0", null, null);
+        final ModuleDefinition webapp = new ModuleDefinition("webapp", Version.parseVersion("1.2.3"), null, null);
+        final ModuleDefinition core = new ModuleDefinition("core", Version.parseVersion("1.2.3"), null, null);
+        final ModuleDefinition module1 = new ModuleDefinition("a_module1", Version.parseVersion("3.0"), null, null);
+        final ModuleDefinition module2 = new ModuleDefinition("a_module2", Version.parseVersion("3.0"), null, null);
+        final ModuleDefinition module3 = new ModuleDefinition("a_module3", Version.parseVersion("3.0"), null, null);
 
         module2.addDependency(new DependencyDefinition("a_module1", "3.0", false));
         module3.addDependency(new DependencyDefinition("core", "3.0", false));
@@ -206,8 +207,8 @@ public class DependencyCheckerTest extends TestCase {
 
     private Map buildModulesMapWithDependencyOn(String dependencyDefinitionVersion) {
         final Map modules = new HashMap();
-        modules.put("module1", new ModuleDefinition("module1", "3.0", null, null));
-        final ModuleDefinition module2 = new ModuleDefinition("module2", "1.2", null, null);
+        modules.put("module1", new ModuleDefinition("module1", Version.parseVersion("3.0"), null, null));
+        final ModuleDefinition module2 = new ModuleDefinition("module2", Version.parseVersion("1.2"), null, null);
         module2.addDependency(new DependencyDefinition("module1", dependencyDefinitionVersion, false));
         modules.put("module2", module2);
         return modules;

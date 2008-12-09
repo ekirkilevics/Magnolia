@@ -247,7 +247,7 @@ public class AbstractModuleVersionHandlerTest extends TestCase {
 
     private InstallContext makeInstallContext(String currentModuleCurrentVersion) {
         final InstallContextImpl ctx = new InstallContextImpl();
-        ModuleDefinition mod = new ModuleDefinition("test", currentModuleCurrentVersion, null, null);
+        ModuleDefinition mod = new ModuleDefinition("test", Version.parseVersion(currentModuleCurrentVersion), null, null);
         ctx.setCurrentModule(mod);
         return ctx;
     }

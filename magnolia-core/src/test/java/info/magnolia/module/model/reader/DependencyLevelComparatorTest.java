@@ -35,7 +35,7 @@ package info.magnolia.module.model.reader;
 
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
-import info.magnolia.module.model.reader.DependencyLevelComparator;
+import info.magnolia.module.model.Version;
 import junit.framework.TestCase;
 
 import java.util.HashMap;
@@ -49,9 +49,9 @@ import java.util.Map;
 public class DependencyLevelComparatorTest extends TestCase {
 
     public void testCalcDepencyLevelWithNonOptionalDependencies() {
-        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", "1", "fake.Module", null);
-        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", "1", "fake.Module", null);
-        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", "1", "fake.Module", null);
+        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
+        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
+        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
         final DependencyDefinition depOnA = new DependencyDefinition();
         depOnA.setName("mod-a");
         depOnA.setVersion("1");
@@ -74,8 +74,8 @@ public class DependencyLevelComparatorTest extends TestCase {
     }
 
     public void testCalcDepencyLevelIgnoresUnregisteredOptionalDependencies() {
-        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", "1", "fake.Module", null);
-        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", "1", "fake.Module", null);
+        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
+        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
         final DependencyDefinition depOnA = new DependencyDefinition();
         depOnA.setName("mod-a");
         depOnA.setVersion("1");
@@ -98,9 +98,9 @@ public class DependencyLevelComparatorTest extends TestCase {
     }
 
     public void testCalcDepencyLevelDoesNotIgnoreRegisteredOptionalDependencies() {
-        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", "1", "fake.Module", null);
-        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", "1", "fake.Module", null);
-        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", "1", "fake.Module", null);
+        final ModuleDefinition modDefA = new ModuleDefinition("mod-a", Version.parseVersion("1"), "fake.Module", null);
+        final ModuleDefinition modDefB = new ModuleDefinition("mod-b", Version.parseVersion("1"), "fake.Module", null);
+        final ModuleDefinition modDefC = new ModuleDefinition("mod-c", Version.parseVersion("1"), "fake.Module", null);
         final DependencyDefinition depOnA = new DependencyDefinition();
         depOnA.setName("mod-a");
         depOnA.setVersion("1");

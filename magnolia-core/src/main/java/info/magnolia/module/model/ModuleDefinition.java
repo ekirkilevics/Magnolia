@@ -70,13 +70,6 @@ public class ModuleDefinition {
         this.versionHandler = versionHandler;
     }
 
-    /**
-     * @deprecated
-     */
-    public ModuleDefinition(String name, String version, String className, Class versionHandler) {
-        this(name,Version.parseVersion(version),className,versionHandler);
-    }
-
     public String getName() {
         return this.name;
     }

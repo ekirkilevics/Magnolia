@@ -89,7 +89,7 @@ public class ModuleManagerImplTest extends TestCase {
         final String newVersion = "2.3.4";
 
         final InstallContextImpl ctx = createStrictMock(InstallContextImpl.class);
-        final ModuleDefinition mod = new ModuleDefinition("foo", newVersion, null, null);
+        final ModuleDefinition mod = new ModuleDefinition("foo", Version.parseVersion(newVersion), null, null);
         final Content allModulesNode = createStrictMock(Content.class);
         final Content moduleNode = createStrictMock(Content.class);
         final NodeData versionProp = createStrictMock(NodeData.class);
@@ -124,7 +124,7 @@ public class ModuleManagerImplTest extends TestCase {
     }
 
     public void testTaskExecutionExceptionInterruptsTasksAddsExplicitErrorMessage() throws TaskExecutionException {
-        final ModuleDefinition mod = new ModuleDefinition("foo", "2.3.4", null, null);
+        final ModuleDefinition mod = new ModuleDefinition("foo", Version.parseVersion("2.3.4"), null, null);
         final InstallContextImpl ctx = createStrictMock(InstallContextImpl.class);
         final Delta d1 = createStrictMock(Delta.class);
         final Task t1 = createStrictMock(Task.class);
@@ -157,8 +157,8 @@ public class ModuleManagerImplTest extends TestCase {
         final Condition c3 = createStrictMock(Condition.class);
         final Task t1 = createStrictMock(Task.class);
         final Task t2 = createStrictMock(Task.class);
-        final ModuleDefinition mod1 = new ModuleDefinition("abc", "2.3.4", null, null);
-        final ModuleDefinition mod2 = new ModuleDefinition("xyz", "2.3.4", null, null);
+        final ModuleDefinition mod1 = new ModuleDefinition("abc", Version.parseVersion("2.3.4"), null, null);
+        final ModuleDefinition mod2 = new ModuleDefinition("xyz", Version.parseVersion("2.3.4"), null, null);
         final Map modMap = new HashMap();
         modMap.put("abc", mod1);
         modMap.put("xyz", mod2);
@@ -232,8 +232,8 @@ public class ModuleManagerImplTest extends TestCase {
         final Delta d1 = DeltaBuilder.update(Version.parseVersion("1.0"), "", t1);
         final Delta d2 = DeltaBuilder.update(Version.parseVersion("2.0"), "", t2);
 
-        final ModuleDefinition mod1 = new ModuleDefinition("abc", "2.3.4", null, null);
-        final ModuleDefinition mod2 = new ModuleDefinition("xyz", "2.3.4", null, null);
+        final ModuleDefinition mod1 = new ModuleDefinition("abc", Version.parseVersion("2.3.4"), null, null);
+        final ModuleDefinition mod2 = new ModuleDefinition("xyz", Version.parseVersion("2.3.4"), null, null);
         final Map modMap = new HashMap();
         modMap.put("abc", mod1);
         modMap.put("xyz", mod2);

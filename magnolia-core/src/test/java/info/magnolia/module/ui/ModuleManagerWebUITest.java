@@ -33,15 +33,16 @@
  */
 package info.magnolia.module.ui;
 
+import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.module.InstallContext;
 import info.magnolia.module.InstallContextImpl;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
-import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
-import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.module.model.Version;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -112,8 +113,8 @@ public class ModuleManagerWebUITest extends TestCase {
         expect(context.getContextPath()).andReturn("/bibabu");
         MgnlContext.setInstance(context);
 
-        final ModuleDefinition mod1 = new ModuleDefinition("foo", "1.0", null, null);
-        final ModuleDefinition mod2 = new ModuleDefinition("bar", "2.0", null, null);
+        final ModuleDefinition mod1 = new ModuleDefinition("foo", Version.parseVersion("1.0"), null, null);
+        final ModuleDefinition mod2 = new ModuleDefinition("bar", Version.parseVersion("2.0"), null, null);
 
         final InstallContextImpl ctx = new InstallContextImpl();
         ctx.setCurrentModule(mod1);

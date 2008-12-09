@@ -35,6 +35,7 @@ package info.magnolia.module.delta;
 
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.Version;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -46,7 +47,7 @@ import static org.easymock.EasyMock.*;
 public class ModuleBootstrapTaskTest extends TestCase {
 
     public void testShouldOnlyBootstrapFilesFromThisModule() {
-        final ModuleDefinition modDef = new ModuleDefinition("test-module", "1.0", null, null);
+        final ModuleDefinition modDef = new ModuleDefinition("test-module", Version.parseVersion("1.0"), null, null);
         final InstallContext ctx = createStrictMock(InstallContext.class);
         expect(ctx.getCurrentModuleDefinition()).andReturn(modDef).anyTimes();
         replay(ctx);

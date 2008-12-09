@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.module;
 
+import info.magnolia.module.model.Version;
 
 /**
  * Defines a module to register. The definition is constructed by the modules xml definition (using betwixt).
@@ -53,7 +54,7 @@ public class ModuleDefinition extends info.magnolia.module.model.ModuleDefinitio
      * Minimal definition
      */
     public ModuleDefinition(String name, String version, String className) {
-        super(name, version, className, null);
+        super(name, Version.parseVersion(version), className, null);
     }
 
 
