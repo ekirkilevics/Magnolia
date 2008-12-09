@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.delta;
 
-import info.magnolia.cms.beans.config.Bootstrapper;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
@@ -44,6 +43,7 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.Role;
 import info.magnolia.cms.security.Security;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.importexport.Bootstrapper;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.RepositoryDefinition;
@@ -76,8 +76,8 @@ public class SetupModuleRepositoriesTask extends AbstractTask {
 
                     // bootstrap the workspace if empty
                     if (!ContentRepository.checkIfInitialized(workspace)) {
-                        Bootstrapper.bootstrapRepository(workspace, new Bootstrapper.BootstrapFilter() {
-
+                        final String[] bootstrapDirs = Bootstrapper.getBootstrapDirs();
+                        Bootstrapper.bootstrapRepository(bootstrapDirs, workspace, new Bootstrapper.BootstrapFilter() {
                             public boolean accept(String filename) {
                                 return filename.startsWith(workspace + ".");
                             }

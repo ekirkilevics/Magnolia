@@ -31,11 +31,18 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.importexport;
 
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.ie.DataTransporter;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.FileFilterUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,28 +52,19 @@ import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeSet;
 
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.filefilter.FileFilterUtils;
-import org.apache.commons.io.filefilter.IOFileFilter;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Bootstrapper: loads content from xml when a magnolia is started with an uninitialized repository.
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
 public final class Bootstrapper {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(Bootstrapper.class);
+    private static final Logger log = LoggerFactory.getLogger(Bootstrapper.class);
 
     /**
      * Used to process an additional filtering for the bootstrap files
+     *
      * @author philipp
      */
     public interface BootstrapFilter {
@@ -86,24 +84,22 @@ public final class Bootstrapper {
      * web.xml. Loops over all the repositories and try to load any xml file found in a subdirectory with the same name
      * of the repository. For example the <code>config</code> repository will be initialized using all the
      * <code>*.xml</code> files found in <code>"magnolia.bootstrap.dir</code><strong>/config</strong> directory.
+     *
      * @param bootdirs bootstrap dir
      */
     public static void bootstrapRepositories(String[] bootdirs, BootstrapFilter filter) {
-
-        if (log.isInfoEnabled()) {
-            log.info("-----------------------------------------------------------------"); //$NON-NLS-1$
-            log.info("Trying to initialize repositories from:");
-            for (int i = 0; i < bootdirs.length; i++) {
-                log.info(bootdirs[i]);
-            }
-            log.info("-----------------------------------------------------------------"); //$NON-NLS-1$
+        log.info("-----------------------------------------------------------------");
+        log.info("Trying to initialize repositories from: {}", StringUtils.join(bootdirs, ", "));
+        for (int i = 0; i < bootdirs.length; i++) {
+            log.info(bootdirs[i]);
         }
+        log.info("-----------------------------------------------------------------");
 
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
             String repositoryName = (String) repositoryNames.next();
 
-            if (!bootstrapRepository(repositoryName, filter, bootdirs)) {
+            if (!bootstrapRepository(bootdirs, repositoryName, filter)) {
                 // exeption was already logged
                 break;
             }
@@ -113,23 +109,9 @@ public final class Bootstrapper {
     }
 
     /**
-     * Bootstrap a repository using the default bootstrap directories
-     * @param repositoryName
-     * @param filter
-     * @return true if succeeded
+     * Bootstrap a specific repository.
      */
-    public static boolean bootstrapRepository(String repositoryName, BootstrapFilter filter) {
-        return bootstrapRepository(repositoryName, filter, getBootstrapDirs());
-    }
-
-    /**
-     * Bootstrap a specific repository
-     * @param repositoryName
-     * @param filter
-     * @param bootdirs
-     * @return
-     */
-    public static boolean bootstrapRepository(String repositoryName, BootstrapFilter filter, String[] bootdirs) {
+    public static boolean bootstrapRepository(String[] bootdirs, String repositoryName, BootstrapFilter filter) {
         Set xmlfileset = getBootstrapFiles(bootdirs, repositoryName, filter);
 
         if (xmlfileset.isEmpty()) {
@@ -140,33 +122,18 @@ public final class Bootstrapper {
         log.info("Trying to import content from {} files into repository [{}]", //$NON-NLS-1$
                 Integer.toString(xmlfileset.size()), repositoryName);
 
-        return bootstrapFiles(repositoryName, xmlfileset);
-    }
-
-    /**
-     * Bootstrap the passed set of files
-     * @param repositoryName
-     * @param filesSet
-     * @return
-     */
-    public static boolean bootstrapFiles(String repositoryName, Set filesSet) {
-        File[] files = (File[]) filesSet.toArray(new File[filesSet.size()]);
+        final File[] files = (File[]) xmlfileset.toArray(new File[xmlfileset.size()]);
         return bootstrapFiles(repositoryName, files);
     }
 
     /**
      * Bootstrap the array of files
-     * @param repositoryName
-     * @param files
-     * @return
      */
-    public static boolean bootstrapFiles(String repositoryName, File[] files) {
+    private static boolean bootstrapFiles(String repositoryName, File[] files) {
         try {
             for (int k = 0; k < files.length; k++) {
                 File xmlFile = files[k];
-                if(log.isDebugEnabled()){
-                    log.debug("execute importfile {}", xmlFile);
-                }
+                log.debug("execute importfile {}", xmlFile);
                 DataTransporter.executeBootstrapImport(xmlFile, repositoryName);
             }
         }
@@ -189,12 +156,10 @@ public final class Bootstrapper {
      * Get the files to bootstrap. The method garantees that only one file is imported if it occures twice in the
      * bootstrap dir. The set is returned sorted, so that the execution fo the import will import the upper most nodes
      * first. This is done using the filelength.
-     * @param bootdirs
-     * @param repositoryName
-     * @param filter
+     *
      * @return the sorted set
      */
-    public static SortedSet getBootstrapFiles(String[] bootdirs, final String repositoryName, final BootstrapFilter filter) {
+    private static SortedSet getBootstrapFiles(String[] bootdirs, final String repositoryName, final BootstrapFilter filter) {
         SortedSet xmlfileset = new TreeSet(new BootstrapFilesComparator());
 
         for (int j = 0; j < bootdirs.length; j++) {

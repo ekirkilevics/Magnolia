@@ -147,7 +147,7 @@
   <category name="log-access" additivity="false">
     <appender-ref ref="log-access" />
   </category>
-  <category name="info.magnolia.cms.beans.config.Bootstrapper" additivity="false">
+  <category name="info.magnolia.importexport.Bootstrapper" additivity="false">
     <priority value="INFO" />
     <appender-ref ref="log-bootstrap" />
     <!--  debug  -->

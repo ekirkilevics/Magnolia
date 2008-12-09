@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.webapp;
 
-import info.magnolia.cms.beans.config.Bootstrapper;
+import info.magnolia.importexport.Bootstrapper;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AbstractTask;
 import info.magnolia.module.delta.TaskExecutionException;
