@@ -35,11 +35,20 @@ package info.magnolia.module.delta;
 
 import info.magnolia.cms.beans.config.Bootstrapper;
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.module.ModuleUtil;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.exchange.ActivationManager;
+import info.magnolia.cms.exchange.ActivationManagerFactory;
+import info.magnolia.cms.exchange.Subscriber;
+import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.security.Role;
+import info.magnolia.cms.security.Security;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.RepositoryDefinition;
 
+import javax.jcr.RepositoryException;
 import java.util.Iterator;
 
 
@@ -75,9 +84,9 @@ public class SetupModuleRepositoriesTask extends AbstractTask {
                         });
                     }
 
-                    // TODO move the code to a better place
-                    ModuleUtil.grantRepositoryToSuperuser(workspace);
-                    ModuleUtil.subscribeRepository(workspace);
+                    // TODO : split these in separate tasks ?
+                    grantRepositoryToSuperuser(workspace);
+                    subscribeRepository(workspace);
                 }
             }
         }
@@ -85,5 +94,39 @@ public class SetupModuleRepositoriesTask extends AbstractTask {
             throw new TaskExecutionException("Could not bootstrap workspace: " + e.getMessage(), e);
         }
 
+    }
+
+    private void grantRepositoryToSuperuser(String workspace) {
+        // grant repository to superuser - TODO : maybe this shouldn't use the RoleManager, as we shouldn't assume it's ready yet.
+        final Role superuser = Security.getRoleManager().getRole("superuser");
+        superuser.addPermission(workspace, "/*", Permission.ALL);
+    }
+
+    /**
+     * Register the repository to get used for activation
+     * TODO - use an API for this? But same remark as above, the component might not be ready yet.
+     */
+    private void subscribeRepository(String repository) throws TaskExecutionException {
+        ActivationManager sManager = ActivationManagerFactory.getActivationManager();
+        Iterator subscribers = sManager.getSubscribers().iterator();
+        while (subscribers.hasNext()) {
+            Subscriber subscriber = (Subscriber) subscribers.next();
+            if (!subscriber.isSubscribed("/", repository)) {
+                Content subscriptionsNode = ContentUtil.getContent(ContentRepository.CONFIG, sManager.getConfigPath()
+                        + "/"
+                        + subscriber.getName()
+                        + "/subscriptions");
+                try {
+                    Content newSubscription = subscriptionsNode.createContent(repository, ItemType.CONTENTNODE);
+                    newSubscription.createNodeData("toURI").setValue("/");
+                    newSubscription.createNodeData("repository").setValue(repository);
+                    newSubscription.createNodeData("fromURI").setValue("/");
+                    // subscriptionsNode.save();
+                }
+                catch (RepositoryException re) {
+                    throw new TaskExecutionException("wasn't able to subscribe repository [" + repository + "]", re);
+                }
+            }
+        }
     }
 }

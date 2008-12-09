@@ -33,51 +33,22 @@
  */
 package info.magnolia.cms.module;
 
-import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.ie.DataTransporter;
-import info.magnolia.cms.exchange.ActivationManager;
-import info.magnolia.cms.exchange.ActivationManagerFactory;
-import info.magnolia.cms.exchange.Subscriber;
-import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.security.Role;
-import info.magnolia.cms.security.Security;
-import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.WebXmlUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.files.BasicFileExtractor;
-import info.magnolia.module.model.ServletDefinition;
-import info.magnolia.module.model.ServletParameterDefinition;
-import org.apache.commons.collections.map.ListOrderedMap;
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.ImportUUIDBehavior;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.LineNumberReader;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -91,71 +62,12 @@ public final class ModuleUtil {
     /**
      * Logger
      */
-
     private static Logger log = LoggerFactory.getLogger(ModuleUtil.class);
 
     /**
      * Util has no public constructor
      */
     private ModuleUtil() {
-    }
-
-    /**
-     * registers the properties in the repository
-     * @param hm
-     * @param name
-     * @throws IOException
-     * @throws RepositoryException
-     * @throws PathNotFoundException
-     * @throws AccessDeniedException
-     */
-    public static void registerProperties(HierarchyManager hm, String name) throws IOException, AccessDeniedException,
-        PathNotFoundException, RepositoryException {
-        Map map = new ListOrderedMap();
-
-        // not using properties since they are not ordered
-        // Properties props = new Properties();
-        // props.load(ModuleUtil.class.getResourceAsStream("/" + name.replace('.', '/') + ".properties"));
-        InputStream stream = ModuleUtil.class.getResourceAsStream("/" + name.replace('.', '/') + ".properties"); //$NON-NLS-1$ //$NON-NLS-2$
-        LineNumberReader lines = new LineNumberReader(new InputStreamReader(stream));
-
-        String line = lines.readLine();
-        while (line != null) {
-            line = line.trim();
-            if (line.length() > 0 && !line.startsWith("#")) { //$NON-NLS-1$
-                String key = StringUtils.substringBefore(line, "=").trim(); //$NON-NLS-1$
-                String value = StringUtils.substringAfter(line, "=").trim(); //$NON-NLS-1$
-                map.put(key, value);
-            }
-            line = lines.readLine();
-        }
-        IOUtils.closeQuietly(lines);
-        IOUtils.closeQuietly(stream);
-        registerProperties(hm, map);
-    }
-
-    public static void registerProperties(HierarchyManager hm, Map map) throws RepositoryException {
-        for (Iterator iter = map.keySet().iterator(); iter.hasNext();) {
-            String key = (String) iter.next();
-            String value = (String) map.get(key);
-
-            String name = StringUtils.substringAfterLast(key, "."); //$NON-NLS-1$
-            String path = StringUtils.substringBeforeLast(key, ".").replace('.', '/'); //$NON-NLS-1$
-            Content node = ContentUtil.createPath(hm, path, ItemType.CONTENT);
-            node.createNodeData(name).setValue(value);
-        }
-    }
-
-    /**
-     * Bootstraps the given resources and save.
-     * @deprecated use bootstrap(String[] resourceNames, boolean saveAfterImport), saving explicitely.
-     */
-    public static void bootstrap(String[] resourceNames) throws IOException, RepositoryException {
-        bootstrap(resourceNames, true);
-    }
-
-    public static void bootstrap(String[] resourceNames, boolean saveAfterImport) throws IOException, RepositoryException {
-        bootstrap(resourceNames, saveAfterImport, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
     }
 
     public static void bootstrap(String[] resourceNames, boolean saveAfterImport, int importUUIDBehavior) throws IOException, RepositoryException {
@@ -216,189 +128,5 @@ public final class ModuleUtil {
         }
     }
 
-    /**
-     * Extracts files of a jar and stores them in the magnolia file structure
-     * @param names a list of resource names
-     * @param prefix prefix which is not part of the magolia path (in common 'mgnl-files')
-     * @throws Exception io exception
-     * @deprecated
-     * @see info.magnolia.module.files.FileExtractor
-     */
-    public static void installFiles(String[] names, String prefix) throws Exception {
-        final BasicFileExtractor fileExtractor = new BasicFileExtractor();
-        fileExtractor.installFiles(names, prefix);
-    }
 
-    /**
-     * Create a minimal module configuration
-     * @param node the module node
-     * @param name module name
-     * @param className the class used
-     * @param version version number of the module
-     * @return the modified node (not yet stored)
-     * @throws AccessDeniedException exception
-     * @throws PathNotFoundException exception
-     * @throws RepositoryException exception
-     * @deprecated
-     */
-    public static Content createMinimalConfiguration(Content node, String name, String displayName, String className,
-        String version) throws AccessDeniedException, PathNotFoundException, RepositoryException {
-        node.createNodeData("version").setValue(version); //$NON-NLS-1$
-        node.createNodeData("name").setValue(name); //$NON-NLS-1$
-        node.createNodeData("displayName").setValue(displayName); //$NON-NLS-1$
-        node.createNodeData("class").setValue(className); //$NON-NLS-1$
-        node.createContent("config"); //$NON-NLS-1$
-        Content license = node.createContent("license", ItemType.CONTENTNODE); //$NON-NLS-1$
-        license.createNodeData("key"); //$NON-NLS-1$
-        license.createNodeData("owner"); //$NON-NLS-1$
-
-        return node;
-    }
-
-    /**
-     * Register a servlet based on the definition of the modules xml descriptor
-     * @deprecated since 3.5, servlets are wrapped and executed through ServletDispatchingFilter
-     * @see info.magnolia.cms.filters.ServletDispatchingFilter
-     */
-    public static boolean registerServlet(ServletDefinition servlet) throws JDOMException, IOException {
-        String[] urlPatterns = (String[]) servlet.getMappings().toArray(new String[servlet.getMappings().size()]);
-        Hashtable params = new Hashtable();
-        for (Iterator iter = servlet.getParams().iterator(); iter.hasNext();) {
-            ServletParameterDefinition param = (ServletParameterDefinition) iter.next();
-            params.put(param.getName(), param.getValue());
-        }
-        return registerServlet(servlet.getName(), servlet.getClassName(), urlPatterns, servlet.getComment(), params);
-    }
-
-    /**
-     * Register a servlet in the web.xml. The code checks if the servlet already exists
-     * @deprecated Use WebXmlUtil
-     */
-    public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment)
-        throws JDOMException, IOException {
-        return registerServlet(name, className, urlPatterns, comment, null);
-    }
-
-    /**
-     * Register a servlet in the web.xml including init parameters. The code checks if the servlet already exists
-     * @deprecated since 3.5, servlets are wrapped and executed through ServletDispatchingFilter
-     * @see WebXmlUtil
-     */
-    public static boolean registerServlet(String name, String className, String[] urlPatterns, String comment,
-            Hashtable initParams) throws JDOMException, IOException {
-        return new WebXmlUtil().registerServlet(name, className, urlPatterns, comment, initParams);
-    }
-
-    /**
-     * @deprecated Use WebXmlUtil
-     */
-    public static boolean registerServletMapping(Document doc, String name, String urlPattern, String comment)
-        throws JDOMException {
-
-        throw new IllegalStateException("This method should never have been public. Use one of the registerServlet methods if needed.");
-    }
-
-    public static boolean registerRepository(String name) throws RepositoryException {
-        return registerRepository(name, null);
-    }
-
-    /**
-     * Register a repository
-     * @param repositoryName
-     * @param nodeTypeFile
-     * @return <code>true</code> if a repository is registered or <code>false</code> if it was already existing
-     * @throws RepositoryException
-     * @deprecated repositories in modules are automatically loaded by ModuleManager
-     */
-    public static boolean registerRepository(final String repositoryName, final String nodeTypeFile)
-        throws RepositoryException {
-
-        log.warn("ModuleUtil.registerRepository will not perform any action: "
-            + "repositories in modules are automatically loaded by ModuleManager");
-        return false;
-    }
-
-    /**
-     * @deprecated repositories in modules are automatically loaded by ModuleManager
-     */
-    public static boolean registerNodetypes(String repositoryName, String customNodetypes) throws RepositoryException {
-
-        log.warn("ModuleUtil.registerNodetypes will not perform any action: "
-            + "repositories in modules are automatically loaded by ModuleManager");
-        return false;
-
-    }
-
-    /**
-     * Read the dom for the repositories.xml
-     */
-    public static Document getRepositoryDefinitionDocument() throws JDOMException, IOException {
-        File source = getRepositoryDefinitionFile();
-        SAXBuilder builder = new SAXBuilder();
-        return builder.build(source);
-    }
-
-    /**
-     * @return
-     * @throws FileNotFoundException
-     */
-    public static File getRepositoryDefinitionFile() throws FileNotFoundException {
-        File source = Path.getRepositoriesConfigFile();
-        if (!source.exists()) {
-            throw new FileNotFoundException("Failed to locate magnolia repositories config file at " //$NON-NLS-1$
-                + source.getAbsolutePath());
-        }
-        return source;
-    }
-
-    /**
-     * @param repositoryName
-     * @param workspaceName
-     * @throws RepositoryException if the workspace could not be register
-     * @deprecated repositories in modules are automatically loaded by ModuleManager
-     */
-    public static boolean registerWorkspace(final String repositoryName, final String workspaceName)
-        throws RepositoryException {
-
-        log.warn("ModuleUtil.registerWorkspace will not perform any action: "
-            + "repositories in modules are automatically loaded by ModuleManager");
-
-        return false;
-    }
-
-    /**
-     * Grant the superuser role by default
-     */
-    public static void grantRepositoryToSuperuser(String repository) {
-        Role superuser = Security.getRoleManager().getRole("superuser");
-        superuser.addPermission(repository, "/*", Permission.ALL);
-    }
-
-    /**
-     * Register the repository to get used for activation
-     * @param repository
-     */
-    public static void subscribeRepository(String repository) {
-        ActivationManager sManager = ActivationManagerFactory.getActivationManager();
-        Iterator subscribers = sManager.getSubscribers().iterator();
-        while (subscribers.hasNext()) {
-            Subscriber subscriber = (Subscriber) subscribers.next();
-            if (!subscriber.isSubscribed("/", repository)) {
-                Content subscriptionsNode = ContentUtil.getContent(ContentRepository.CONFIG, sManager.getConfigPath()
-                    + "/"
-                    + subscriber.getName()
-                    + "/subscriptions");
-                try {
-                    Content newSubscription = subscriptionsNode.createContent(repository, ItemType.CONTENTNODE);
-                    newSubscription.createNodeData("toURI").setValue("/");
-                    newSubscription.createNodeData("repository").setValue(repository);
-                    newSubscription.createNodeData("fromURI").setValue("/");
-                    subscriptionsNode.save();
-                }
-                catch (RepositoryException re) {
-                    log.error("wasn't able to subscribe repository [" + repository + "]", re);
-                }
-            }
-        }
-    }
 }
