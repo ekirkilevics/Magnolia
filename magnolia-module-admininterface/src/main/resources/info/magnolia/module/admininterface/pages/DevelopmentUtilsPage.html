@@ -11,21 +11,21 @@
       <hr />
     [/#if]
     <form action="" method="post">
+      <input type="hidden" name="command" value="reloadI18nMessages"/>
       <div class="pageframe">
         <h3>Reload i18n properties files</h3>
         <div class="formelement">
-          <input type="hidden" name="command" value="reloadI18nMessages"/>
           <input type="submit" class="mgnlControlButton" value="reload"/>
         </div>
       </div>
     </form>
     <form action="" method="post">
+      <input type="hidden" name="command" value="backup" />
       <div class="pageframe">
         <h3>Backup</h3>
         <div class="formelement">
           <label for="rootdir">Root dir, relative to webapp</label>
           <input type="text" name="rootdir" value="${this.rootdir}" class="text" />
-          <input type="hidden" name="command" value="backup" />
         </div>
         <h3>Standard configuration</h3>
         <div class="formelement">
@@ -77,10 +77,9 @@
       </div>
     </form>
     <form action="" method="post">
+      <input type="hidden" name="command" value="backupChildren" />
       <div class="pageframe">
         <h3>Backup subnodes to separate files</h3>
-        <form action="">
-          <input type="hidden" name="command" value="backupChildren" />
           <div class="formelement">
             <label for="repository">Repository</label>
             <select name="repository">
@@ -100,7 +99,7 @@
             <input type="text" name="rootdir" value="${this.rootdir}" class="text" />
           </div>
           <input type="submit" value="backupChildren" class="mgnlControlButton" />
-        </form>
-      </div>
+        </div>
+    </form>
   </body>
 </html>
