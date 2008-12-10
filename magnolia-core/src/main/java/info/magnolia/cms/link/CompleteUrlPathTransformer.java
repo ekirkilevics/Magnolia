@@ -38,7 +38,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 /**
  * Constructs URLs by prefixing the path with Server..getDefaultBaseUrl()
  *
- * @see info.magnolia.cms.beans.config.Server
+ * @see info.magnolia.cms.beans.config.ServerConfiguration
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
