@@ -34,13 +34,6 @@
 package info.magnolia.cms.license;
 
 import info.magnolia.cms.util.FactoryUtil;
-
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
@@ -49,6 +42,12 @@ import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * User: sameercharles Date: Nov 5, 2003 Time: 4:18:59 PM
@@ -56,6 +55,7 @@ import org.slf4j.LoggerFactory;
  * @version 1.1
  */
 public class LicenseFileExtractor {
+    private static final Logger log = LoggerFactory.getLogger(LicenseFileExtractor.class);
 
     public static final String VERSION_NUMBER = "VersionNumber"; //$NON-NLS-1$
 
@@ -79,9 +79,6 @@ public class LicenseFileExtractor {
 
     public static final String PRODUCT_DOMAIN = "ProductDomain"; //$NON-NLS-1$
 
-    /** @deprecated since 3.5, this element has been removed from the license.xml file */
-    public static final String VERSION_PAGE_HANDLE = "VersionPageHandle"; //$NON-NLS-1$
-
     private static final String LICENSE_FILE_PATH = "info/magnolia/cms/license/license.xml"; //$NON-NLS-1$
 
     private static final String ELEMENT_META = "Meta"; //$NON-NLS-1$
@@ -89,11 +86,6 @@ public class LicenseFileExtractor {
     private static final String NOT_DEFINED = "Not Defined"; //$NON-NLS-1$
 
     private static final String OS_NAME = "OSName"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(LicenseFileExtractor.class);
 
     private Map values;
 
@@ -182,6 +174,6 @@ public class LicenseFileExtractor {
         System.out.println("Version number : " + get(LicenseFileExtractor.VERSION_NUMBER)); //$NON-NLS-1$
         System.out.println("Build          : " + get(LicenseFileExtractor.BUILD_NUMBER)); //$NON-NLS-1$
         System.out.println("Edition        : " + get(LicenseFileExtractor.EDITION)); //$NON-NLS-1$
-        System.out.println("Provider       : " + get(LicenseFileExtractor.PROVIDER) + " (" + get(LicenseFileExtractor.PRIVIDER_EMAIL) + ")"); //$NON-NLS-1$ $NON-NLS-3$ $NON-NLS-5$
+        System.out.println("Provider       : " + get(LicenseFileExtractor.PROVIDER) + " (" + get(LicenseFileExtractor.PROVIDER_EMAIL) + ")"); //$NON-NLS-1$ $NON-NLS-3$ $NON-NLS-5$
     }
 }
