@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE module SYSTEM "module.dtd">
+<module>
+  <name>dummy</name>
+  <displayName>dummy module</displayName>
+  <description>a dummy module descriptor for tests</description>
+  <class>info.magnolia.module.model.reader.BetwixtModuleDefinitionReaderTest</class>
+  <versionHandler>info.magnolia.module.model.reader.DependencyCheckerTest</versionHandler>
+  <version>7.8.9</version>
+  <properties>
+    <property>
+      <name>foo</name>
+      <value>bar</value>
+    </property>
+    <property>
+      <name>lala</name>
+      <value>lolo</value>
+    </property>
+  </properties>
+  <dependencies>
+    <dependency>
+      <name>yoohoo</name>
+      <version>1.2/*</version>
+    </dependency>
+    <dependency>
+      <name>foobar</name>
+      <version>4.5/6.7.8</version>
+    </dependency>
+  </dependencies>
+  <servlets>
+    <servlet>
+      <name>AServlet</name>
+      <class>info.magnolia.module.model.reader.DependencyLevelComparatorTest</class>
+      <comment>lalala</comment>
+      <mappings>
+        <mapping>/foo/*</mapping>
+        <mapping>/bar</mapping>
+      </mappings>
+    </servlet>
+    <servlet>
+      <name>OtherServlet</name>
+      <class>info.magnolia.module.model.VersionComparatorTest</class>
+      <comment>blahblah</comment>
+      <mappings>
+        <mapping>/blah/*</mapping>
+      </mappings>
+    </servlet>
+  </servlets>
+  <repositories>
+    <repository>
+      <name>some-repo</name>
+      <workspaces>
+        <workspace>workspace-a</workspace>
+        <workspace>workspace-b</workspace>
+      </workspaces>
+    </repository>
+    <repository>
+      <name>other-repo</name>
+      <workspaces>
+        <workspace>bleh</workspace>
+      </workspaces>
+      <nodeTypeFile>/chalala/testNodeTypes.xml</nodeTypeFile>
+    </repository>
+  </repositories>
+</module>

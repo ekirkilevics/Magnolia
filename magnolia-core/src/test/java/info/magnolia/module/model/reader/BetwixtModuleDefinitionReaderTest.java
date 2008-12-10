@@ -36,6 +36,8 @@ package info.magnolia.module.model.reader;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
+import info.magnolia.module.model.RepositoryDefinition;
+import info.magnolia.module.model.ServletDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.VersionRange;
 import info.magnolia.module.model.VersionTest;
@@ -44,6 +46,7 @@ import junit.framework.TestCase;
 import java.io.StringReader;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author gjoseph
@@ -192,6 +195,67 @@ public class BetwixtModuleDefinitionReaderTest extends TestCase {
         } catch (ModuleManagementException e) {
             assertEquals("Invalid module definition file, error at line 6 column 10: The content of element type \"module\" must match \"(name,(displayName|display-name)?,description?,class?,versionHandler?,version,properties?,dependencies?,servlets?,repositories?)\".", e.getMessage());
         }
+    }
+
+    public void testReadCompleteDescriptorAndCheckAllPropertiesDamnYouBetwixt() throws Exception {
+        final BetwixtModuleDefinitionReader reader = new BetwixtModuleDefinitionReader();
+        final ModuleDefinition m = reader.readFromResource("/info/magnolia/module/model/reader/dummy-module.xml");
+        assertNotNull(m);
+        assertEquals("dummy", m.getName());
+        assertEquals("dummy module", m.getDisplayName());
+        assertEquals("a dummy module descriptor for tests", m.getDescription());
+        assertEquals(BetwixtModuleDefinitionReaderTest.class.getName(), m.getClassName());
+        assertEquals(DependencyCheckerTest.class, m.getVersionHandler());
+        assertEquals("7.8.9", m.getVersion().toString());
+        assertNotNull(m.getProperties());
+        assertEquals(2, m.getProperties().size());
+        assertEquals("bar", m.getProperty("foo"));
+        assertEquals("lolo", m.getProperty("lala"));
+
+        assertNotNull(m.getDependencies());
+        assertEquals(2, m.getDependencies().size());
+
+        assertNotNull(m.getServlets());
+        assertEquals(2, m.getServlets().size());
+        final ServletDefinition servlet1 = (ServletDefinition) fromList(m.getServlets(), 0);
+        assertNotNull(servlet1);
+        assertEquals("AServlet", servlet1.getName());
+        assertEquals(DependencyLevelComparatorTest.class.getName(), servlet1.getClassName());
+        assertEquals("lalala", servlet1.getComment());
+        assertEquals(2, servlet1.getMappings().size());
+        assertEquals("/foo/*", (String) fromList(servlet1.getMappings(), 0));
+        assertEquals("/bar", (String) fromList(servlet1.getMappings(), 1));
+        final ServletDefinition servlet2 = (ServletDefinition) fromList(m.getServlets(), 1);
+        assertNotNull(servlet2);
+        assertEquals("OtherServlet", servlet2.getName());
+        assertEquals(info.magnolia.module.model.VersionComparatorTest.class.getName(), servlet2.getClassName());
+        assertEquals("blahblah", servlet2.getComment());
+        assertEquals(1, servlet2.getMappings().size());
+        assertEquals("/blah/*", (String) fromList(servlet2.getMappings(), 0));
+
+        assertNotNull(m.getRepositories());
+        assertEquals(2, m.getRepositories().size());
+        final RepositoryDefinition repo1 = (RepositoryDefinition) fromList(m.getRepositories(), 0);
+        assertEquals("some-repo", repo1.getName());
+        assertEquals(2, repo1.getWorkspaces().size());
+        assertEquals("workspace-a", fromList(repo1.getWorkspaces(), 0));
+        assertEquals("workspace-b", fromList(repo1.getWorkspaces(), 1));
+        assertEquals(null, repo1.getNodeTypeFile());
+        final RepositoryDefinition repo2 = (RepositoryDefinition) fromList(m.getRepositories(), 1);
+        assertEquals("other-repo", repo2.getName());
+        assertEquals(1, repo2.getWorkspaces().size());
+        assertEquals("bleh", fromList(repo2.getWorkspaces(), 0));
+        assertEquals("/chalala/testNodeTypes.xml", repo2.getNodeTypeFile());
+    }
+
+    public void testSelf() {
+        // make sure these resources are available - ide might not have compiled them
+        assertNotNull(BetwixtModuleDefinitionReaderTest.class.getResourceAsStream("/info/magnolia/module/model/ModuleDefinition.betwixt"));
+        assertNotNull(BetwixtModuleDefinitionReaderTest.class.getResourceAsStream("/info/magnolia/module/model/ServletDefinition.betwixt"));
+    }
+
+    private Object fromList(Collection coll, int index) {
+        return ((List)coll).get(index);
     }
 
 }

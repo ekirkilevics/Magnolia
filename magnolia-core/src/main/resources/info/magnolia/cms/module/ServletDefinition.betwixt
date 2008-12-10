@@ -1,6 +1,0 @@
-<info>
-	<element name="servlet">
-		<element name="class" property="className"/> 
-		<addDefaults/>
-	</element>
-</info>
