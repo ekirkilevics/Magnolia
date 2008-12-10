@@ -33,11 +33,11 @@
  */
 package info.magnolia.cms.core;
 
-import java.util.Locale;
-
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.context.MgnlContext;
+
+import java.util.Locale;
 
 /**
  * @author gjoseph
@@ -89,8 +89,6 @@ public class AggregationState {
         return characterEncoding;
     }
 
-    // TODO : in the original Aggregator code, this actually gets the extension from the current URI, and
-    // if none, from the original URI. Here we just get what's been set.
     public String getExtension() {
         return extension;
     }
