@@ -34,6 +34,9 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.context.MgnlContext;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.time.DateFormatUtils;
+import org.apache.commons.lang.time.FastDateFormat;
 
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -42,10 +45,6 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.time.DateFormatUtils;
-import org.apache.commons.lang.time.FastDateFormat;
 
 
 /**
@@ -87,23 +86,6 @@ public class DateUtil {
      * This is a util
      */
     private DateUtil() {
-    }
-
-    /**
-     * @deprecated
-     */
-    public String getFormattedDate(Date date) {
-        return this.getFormattedDate(date, FORMAT_DEFAULTPATTERN);
-    }
-
-    /**
-     * @deprecated
-     */
-    public String getFormattedDate(Date date, String formatPattern) {
-        if (formatPattern == null) {
-            formatPattern = FORMAT_DEFAULTPATTERN;
-        }
-        return DateFormatUtils.format(date, formatPattern);
     }
 
     /**
