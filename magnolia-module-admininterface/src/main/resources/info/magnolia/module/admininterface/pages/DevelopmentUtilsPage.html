@@ -24,30 +24,30 @@
       <div class="pageframe">
         <h3>Backup</h3>
         <div class="formelement">
-          <label for="rootdir">Root dir, relative to webapp</label>
-          <input type="text" name="rootdir" value="${this.rootdir}" class="text" />
+          <label for="backup-rootdir">Root dir, relative to webapp</label>
+          <input type="text" name="rootdir" id="backup-rootdir" value="${this.rootdir}" class="text" />
         </div>
         <h3>Standard configuration</h3>
         <div class="formelement">
           <label for="website">Website</label>
-          <input type="checkbox" name="website" [#if this.website] checked="checked" [/#if] />
+          <input type="checkbox" name="website" id="website" [#if this.website] checked="checked" [/#if] />
         </div>
         <div class="formelement">
           <label for="users">Users</label>
-          <input type="checkbox" name="users" [#if this.users] checked="checked" [/#if] />
+          <input type="checkbox" name="users" id="users" [#if this.users] checked="checked" [/#if] />
         </div>
         <div class="formelement">
           <label for="groups">Groups</label>
-          <input type="checkbox" name="groups" [#if this.groups] checked="checked" [/#if] />
+          <input type="checkbox" name="groups" id="groups" [#if this.groups] checked="checked" [/#if] />
         </div>
         <div class="formelement">
           <label for="roles">Roles</label>
-          <input type="checkbox" name="roles" [#if this.roles] checked="checked" [/#if] />
+          <input type="checkbox" name="roles" id="roles" [#if this.roles] checked="checked" [/#if] />
         </div>
         <h3>Templating</h3>
         <div class="formelement">
-          <label for="repository">Module</label>
-          <select name="module">
+          <label for="backup-module">Module</label>
+          <select name="module" id="backup-module">
             [#list this.modules as item]
             <option [#if this.module=item] selected="selected" [/#if]>${item}</option>
             [/#list]
@@ -55,23 +55,23 @@
         </div>
         <div class="formelement">
           <label for="templates">Templates</label>
-          <input type="checkbox" name="templates" [#if this.templates] checked="checked" [/#if] />
+          <input type="checkbox" name="templates" id="templates" [#if this.templates] checked="checked" [/#if] />
         </div>
         <div class="formelement">
           <label for="paragraphs">Paragraphs</label>
-          <input type="checkbox" name="paragraphs" [#if this.paragraphs] checked="checked" [/#if] />
+          <input type="checkbox" name="paragraphs" id="paragraphs" [#if this.paragraphs] checked="checked" [/#if] />
         </div>
         <div class="formelement">
           <label for="dialogs">Dialogs</label>
-          <input type="checkbox" name="dialogs" [#if this.dialogs] checked="checked" [/#if] />
+          <input type="checkbox" name="dialogs" id="dialogs" [#if this.dialogs] checked="checked" [/#if] />
         </div>
         <div class="formelement">
           <label for="pages">Pages</label>
-          <input type="checkbox" name="pages" [#if this.pages] checked="checked" [/#if] />
+          <input type="checkbox" name="pages" id="pages" [#if this.pages] checked="checked" [/#if] />
         </div>
         <div class="formelement">
-          <label for="pages">Virual URIs</label>
-          <input type="checkbox" name="virtualURIs" [#if this.virtualURIs] checked="checked" [/#if] />
+          <label for="virtualURIs">Virual URIs</label>
+          <input type="checkbox" name="virtualURIs" id="virtualURIs" [#if this.virtualURIs] checked="checked" [/#if] />
         </div>
         <input type="submit" value="backup" class="mgnlControlButton" />
       </div>
@@ -82,7 +82,7 @@
         <h3>Backup subnodes to separate files</h3>
           <div class="formelement">
             <label for="repository">Repository</label>
-            <select name="repository">
+            <select name="repository" id="repository">
               [#list this.repositories as item]
               <option>${item}</option>
               [/#list]
@@ -92,14 +92,31 @@
             <label for="parentpath">
               Parent path
             </label>
-            <input type="text" name="parentpath" class="text" />
+            <input type="text" name="parentpath" id="parentpath" class="text" />
           </div>
           <div class="formelement">
-            <label for="rootdir">Root dir, relative to webapp</label>
-            <input type="text" name="rootdir" value="${this.rootdir}" class="text" />
+            <label for="backup-children-rootdir">Root dir, relative to webapp</label>
+            <input type="text" name="rootdir" id="backup-children-rootdir" value="${this.rootdir}" class="text" />
           </div>
           <input type="submit" value="backupChildren" class="mgnlControlButton" />
         </div>
+    </form>
+    <form action="" method="post">
+      <input type="hidden" name="command" value="extractModuleFiles"/>
+      <div class="pageframe">
+        <h3>Force re-extraction of a module's files</h3>
+        <div class="formelement">
+          <label for="file-extract-module">Module</label>
+          <select name="module" id="file-extract-module">
+            [#list this.modules as item]
+            <option [#if this.module=item] selected="selected" [/#if]>${item}</option>
+            [/#list]
+          </select>
+        </div>
+        <div class="formelement">
+          <input type="submit" class="mgnlControlButton" value="reload"/>
+        </div>
+      </div>
     </form>
   </body>
 </html>

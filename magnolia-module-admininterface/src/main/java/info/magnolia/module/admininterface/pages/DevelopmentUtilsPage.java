@@ -47,6 +47,9 @@ import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
+import info.magnolia.module.files.BasicFileExtractor;
+import info.magnolia.module.files.FileExtractor;
+import info.magnolia.module.files.ModuleFileExtractorTransformer;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -333,6 +336,19 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     public Set getModules() {
         return ModuleRegistry.Factory.getInstance().getModuleNames();
+    }
+
+    // ---- operations ----
+    public String extractModuleFiles() {
+        final FileExtractor extractor = new BasicFileExtractor();
+        try {
+            extractor.extractFiles(new ModuleFileExtractorTransformer(module));
+            AlertUtil.setMessage("Files extracted");
+        } catch (IOException e) {
+            AlertUtil.setMessage("Could not extract files for module " + module + ": " + e.getMessage(), e);
+        }
+
+        return this.show();
     }
 
     public String reloadI18nMessages() {
