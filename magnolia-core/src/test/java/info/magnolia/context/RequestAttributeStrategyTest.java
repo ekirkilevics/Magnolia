@@ -33,17 +33,13 @@
  */
 package info.magnolia.context;
 
-import static org.easymock.EasyMock.expect;
-import static org.easymock.classextension.EasyMock.createMock;
-import static org.easymock.classextension.EasyMock.replay;
-import static org.easymock.classextension.EasyMock.verify;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.test.mock.MockContext;
+import junit.framework.TestCase;
+import static org.easymock.EasyMock.expect;
+import static org.easymock.classextension.EasyMock.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
-
-import junit.framework.TestCase;
 
 /**
  *
@@ -51,6 +47,12 @@ import junit.framework.TestCase;
  * @version $Revision: $ ($Author: $)
  */
 public class RequestAttributeStrategyTest extends TestCase {
+    protected void tearDown() throws Exception {
+        FactoryUtil.clear();
+        MgnlContext.setInstance(null);
+        super.tearDown();
+    }
+
     public void testLocalAttributes() {
         HttpServletRequest request = createMock(HttpServletRequest.class);
         WebContext ctx = createMock(WebContext.class);
