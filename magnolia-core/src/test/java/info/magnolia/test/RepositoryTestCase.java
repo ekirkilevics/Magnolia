@@ -164,6 +164,7 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
         MgnlContext.getSystemContext().release();
         ShutdownManager.getInstance().execute();
         ShutdownManager.getInstance().clear();
+        ContentRepository.shutdown();
         if(cleanup){
             cleanUp();
         }

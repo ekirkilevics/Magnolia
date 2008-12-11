@@ -88,15 +88,17 @@ public class ConfigLoader {
                 log.info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
             }
         }
+    }
 
-        this.load(context);
+    public void unload(ServletContext servletContext) {
+        ContentRepository.shutdown();
     }
 
     /**
      * Load magnolia configuration from repositories.
-     * @param context ServletContext
+     * @param servletContext ServletContext
      */
-    protected void load(ServletContext context) {
+    public void load(ServletContext servletContext) {
         // first check for the license information, will fail if this class does not exist
         LicenseFileExtractor license = LicenseFileExtractor.getInstance();
         license.init();
@@ -124,7 +126,7 @@ public class ConfigLoader {
 
             // TODO make these regular ObservedManagers
             log.info("Init i18n"); //$NON-NLS-1$
-            MessagesManager.init(context); // TODO this was done before module init??
+            MessagesManager.init(servletContext); // TODO this was done before module init??
 
             MIMEMapping.init();
             VersionConfig.getInstance().init();

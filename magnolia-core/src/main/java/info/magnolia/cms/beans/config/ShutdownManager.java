@@ -36,20 +36,16 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.commands.MgnlRepositoryCatalog;
 import info.magnolia.context.MgnlContext;
-
-import java.text.MessageFormat;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-
 import org.apache.commons.chain.Catalog;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
 
 
 /**
@@ -57,24 +53,11 @@ import org.slf4j.LoggerFactory;
  * application.
  * @author Fabrizio Giustina
  * @version $Id$
+ *
+ * @deprecated since 4.0: usage removed (modules should handle their own lifecycles since 3.5).
  */
-public class ShutdownManager extends ObservedManager implements ServletContextListener {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ShutdownManager.class);
-
-    /**
-     * List of <code>ShutdownManager.ShutdownTask</code>s which will be executed when the web application is stopped.
-     */
-    private static List coreTasks = new ArrayList();
-
-    /**
-     * Other tasks that the shutdown manager will execute.
-     */
-    private static List customTasks = new ArrayList();
-
+public class ShutdownManager extends ObservedManager {
+    private static final Logger log = LoggerFactory.getLogger(ShutdownManager.class);
     private static ShutdownManager instance = new ShutdownManager();
 
     public static ShutdownManager getInstance() {
@@ -82,47 +65,20 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
     }
 
     /**
-     * Adds a new <code>ShutdownTask</code>. Most recently added task will be executed first
-     * @param task ShutdownTask implementation
+     * Tasks that the shutdown manager will execute.
      */
-    public static void addShutdownTask(ShutdownTask task) {
-        coreTasks.add(0, task);
-    }
+    private final List customTasks = new ArrayList();
 
     /**
      * List the shutdown task that the server will execute
      * @return <code>List</code> of
      */
-    public static List listShutdownTasks() {
-        List allTasks = new ArrayList();
-        allTasks.addAll(coreTasks);
-        allTasks.addAll(0, customTasks);
-        return allTasks;
+    public List listShutdownTasks() {
+        return Collections.unmodifiableList(customTasks);
     }
 
     /**
-     * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
-     * @deprecated (does nothing on initialization)
-     *
-     */
-    public void contextInitialized(ServletContextEvent sce) {
-        log.warn("\n***********\nThe use of ShutdownManager as ServletContextListener is deprecated in Magnolia 3.5, "
-            + "please update your web.xml and remove the listener but add a single listener with class name "
-            + "info.magnolia.cms.servlets.MgnlServletContextListener\n***********");
-
-        // nothing to do
-    }
-
-    /**
-     * @see javax.servlet.ServletContextListener#contextDestroyed(javax.servlet.ServletContextEvent)
-     * @deprecated use {@link #execute()} instead;
-     */
-    public void contextDestroyed(ServletContextEvent sce) {
-        execute();
-    }
-
-    /**
-     * Executes the registers shutdown tasks
+     * Executes the registered shutdown tasks.
      */
     public void execute() {
         log.info("Executing shutdown tasks");
@@ -134,10 +90,7 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
                 task.execute(c);
             }
             catch (Throwable e) {
-                log.warn(MessageFormat.format("Failed to execute shutdown task {0}: {1} {2}", new Object[]{
-                    task,
-                    e.getClass().getName(),
-                    e.getMessage()}));
+                log.warn("Failed to execute shutdown task {0}: {1} {2}", new Object[]{task, e.getClass().getName(), e.getMessage()});
             }
         }
     }
@@ -150,12 +103,6 @@ public class ShutdownManager extends ObservedManager implements ServletContextLi
             log.info("Adding shutdown task:" + element.toString());
             customTasks.add(0, mrc.getCommand((String) element)); // Last Registered First Executed
         }
-
-    }
-
-    public void clear() {
-        super.clear();
-        coreTasks.clear();
     }
 
     protected void onClear() {

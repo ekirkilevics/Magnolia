@@ -35,7 +35,6 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
@@ -47,23 +46,6 @@ import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNameMap;
 import info.magnolia.repository.RepositoryNotInitializedException;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Collection;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
-import javax.jcr.Repository;
-import javax.jcr.RepositoryException;
-import javax.jcr.Session;
-import javax.jcr.SimpleCredentials;
-
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 import org.jdom.Document;
@@ -72,12 +54,27 @@ import org.jdom.JDOMException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.jcr.Repository;
+import javax.jcr.RepositoryException;
+import javax.jcr.Session;
+import javax.jcr.SimpleCredentials;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Collection;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+
 
 /**
  * @author Sameer Charles
  * $Id$
+ *
+ * TODO needs serious refactoring and cleanup.
  */
 public final class ContentRepository {
+    private static final Logger log = LoggerFactory.getLogger(ContentRepository.class);
 
     /**
      * default repository ID's.
@@ -102,11 +99,6 @@ public final class ContentRepository {
     public static final String NAMESPACE_PREFIX = "mgnl"; //$NON-NLS-1$
 
     public static final String NAMESPACE_URI = "http://www.magnolia.info/jcr/mgnl"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ContentRepository.class);
 
     /**
      * repository element string.
@@ -202,6 +194,22 @@ public final class ContentRepository {
         catch (Exception e) {
             log.error(e.getMessage(), e);
         }
+    }
+
+    /**
+     * Shuts down all repositories (through Provider instances) and clears all mappings.
+     */
+    public static void shutdown() {
+        log.info("System: shutting down JCR");
+        final Iterator providers = repositoryProviders.values().iterator();
+        while (providers.hasNext()) {
+            final Provider provider = (Provider) providers.next();
+            provider.shutdownRepository();
+        }
+        repositoryProviders.clear();
+        repositoryMapping.clear();
+        repositoryNameMap.clear();
+        repositories.clear();
     }
 
     /**

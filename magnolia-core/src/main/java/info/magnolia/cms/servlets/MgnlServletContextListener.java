@@ -35,22 +35,19 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.PropertiesInitializer;
-import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.Log4jConfigurer;
 import info.magnolia.module.ModuleManager;
-
-import java.net.InetAddress;
-import java.net.UnknownHostException;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 /**
  * <p>
@@ -123,36 +120,37 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MgnlServletContextListener implements ServletContextListener {
-
-    /**
-     * Logger.
-     */
-    public static Logger log = LoggerFactory.getLogger(MgnlServletContextListener.class);
+    private static final Logger log = LoggerFactory.getLogger(MgnlServletContextListener.class);
 
     /**
      * Context parameter name.
      */
     public static final String MAGNOLIA_INITIALIZATION_FILE = "magnolia.initialization.file"; //$NON-NLS-1$
 
-    public void contextDestroyed(ServletContextEvent sce) {
+    private ConfigLoader loader;
+
+    public void contextDestroyed(final ServletContextEvent sce) {
         // avoid disturbing NPEs if the context has never been started (classpath problems, etc)
         ModuleManager mm = ModuleManager.Factory.getInstance();
         if (mm != null) {
             mm.stopModules();
         }
-        // TODO currently only used for shutting down the repository
-        ShutdownManager sm = ShutdownManager.getInstance();
-        if (sm != null) {
-            sm.execute();
-        }
-        Log4jConfigurer.shutdownLogging();
 
+        if (loader != null) {
+            MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
+                public void exec() {
+                    loader.unload(sce.getServletContext());
+                }
+            }, true);
+        }
+
+        Log4jConfigurer.shutdownLogging();
     }
 
     /**
      * @see javax.servlet.ServletContextListener#contextInitialized(javax.servlet.ServletContextEvent)
      */
-    public void contextInitialized(ServletContextEvent sce) {
+    public void contextInitialized(final ServletContextEvent sce) {
         final ServletContext context = sce.getServletContext();
 
         String servername = initServername();
@@ -169,13 +167,14 @@ public class MgnlServletContextListener implements ServletContextListener {
 
         Log4jConfigurer.initLogging();
 
+        this.loader = new ConfigLoader(context);
         startServer(context);
     }
 
     protected void startServer(final ServletContext context) {
         MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation(){
             public void exec() {
-                new ConfigLoader(context);
+                loader.load(context);
             }
         }, true);
     }

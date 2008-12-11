@@ -34,22 +34,23 @@
 package info.magnolia.jackrabbit;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ShutdownManager;
-import info.magnolia.cms.beans.config.ShutdownTask;
 import info.magnolia.cms.core.Path;
 import info.magnolia.repository.Provider;
 import info.magnolia.repository.RepositoryMapping;
 import info.magnolia.repository.RepositoryNotInitializedException;
-
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.text.MessageFormat;
-import java.util.Hashtable;
-import java.util.Iterator;
-import java.util.Map;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.SystemUtils;
+import org.apache.jackrabbit.core.WorkspaceImpl;
+import org.apache.jackrabbit.core.jndi.RegistryHelper;
+import org.apache.jackrabbit.core.nodetype.InvalidNodeTypeDefException;
+import org.apache.jackrabbit.core.nodetype.NodeTypeDef;
+import org.apache.jackrabbit.core.nodetype.NodeTypeManagerImpl;
+import org.apache.jackrabbit.core.nodetype.NodeTypeRegistry;
+import org.apache.jackrabbit.core.nodetype.xml.NodeTypeReader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.NamespaceException;
 import javax.jcr.Repository;
@@ -64,20 +65,14 @@ import javax.naming.InitialContext;
 import javax.naming.NameNotFoundException;
 import javax.naming.NamingException;
 import javax.xml.transform.TransformerFactoryConfigurationError;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.SystemUtils;
-import org.apache.jackrabbit.core.WorkspaceImpl;
-import org.apache.jackrabbit.core.jndi.RegistryHelper;
-import org.apache.jackrabbit.core.nodetype.InvalidNodeTypeDefException;
-import org.apache.jackrabbit.core.nodetype.NodeTypeDef;
-import org.apache.jackrabbit.core.nodetype.NodeTypeManagerImpl;
-import org.apache.jackrabbit.core.nodetype.NodeTypeRegistry;
-import org.apache.jackrabbit.core.nodetype.xml.NodeTypeReader;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Hashtable;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -107,7 +102,9 @@ public class ProviderImpl implements Provider {
 
     private Repository repository;
 
-    private ShutdownTask shutdownTask;
+    private String bindName;
+
+    private Hashtable jndiEnv;
 
     private static final String REPO_HOME_PREFIX = "${repository.home}";
 
@@ -172,32 +169,23 @@ public class ProviderImpl implements Provider {
             // should never happen and it's not a problem at this point, just pass it to jackrabbit and see
         }
 
-        if (log.isInfoEnabled()) {
-            log.info("Loading repository at {} (config file: {})", repositoryHome, configFile); //$NON-NLS-1$
-        }
-        String contextFactoryClass = (String) params.get(CONTEXT_FACTORY_CLASS_KEY);
-        String providerURL = (String) params.get(PROVIDER_URL_KEY);
-        boolean addShutdownTask = false;
-        final String bindName = (String) params.get(BIND_NAME_KEY);
-        final Hashtable env = new Hashtable();
-        env.put(Context.INITIAL_CONTEXT_FACTORY, contextFactoryClass);
-        env.put(Context.PROVIDER_URL, providerURL);
+        log.info("Loading repository at {} (config file: {})", repositoryHome, configFile); //$NON-NLS-1$
+
+        bindName = (String) params.get(BIND_NAME_KEY);
+        jndiEnv = new Hashtable();
+        jndiEnv.put(Context.INITIAL_CONTEXT_FACTORY, params.get(CONTEXT_FACTORY_CLASS_KEY));
+        jndiEnv.put(Context.PROVIDER_URL, params.get(PROVIDER_URL_KEY));
 
         try {
-            InitialContext ctx = new InitialContext(env);
+            InitialContext ctx = new InitialContext(jndiEnv);
             // first try to find the existing object if any
             try {
                 this.repository = (Repository) ctx.lookup(bindName);
             }
             catch (NameNotFoundException ne) {
-                if (log.isDebugEnabled()) {
-                    log.debug(
-                        "No JNDI bound Repository found with name {} , trying to initialize a new Repository",
-                        bindName);
-                }
+                log.debug("No JNDI bound Repository found with name {}, trying to initialize a new Repository", bindName);
                 RegistryHelper.registerRepository(ctx, bindName, configFile, repositoryHome, true);
                 this.repository = (Repository) ctx.lookup(bindName);
-                addShutdownTask = true;
             }
             this.validateWorkspaces();
         }
@@ -213,41 +201,18 @@ public class ProviderImpl implements Provider {
             log.error("Unable to initialize repository: " + e.getMessage(), e);
             throw new RepositoryNotInitializedException(e);
         }
-
-        if (addShutdownTask) {
-            //System.out.println("****** repository registered: " + bindName);
-            ShutdownManager.addShutdownTask(shutdownTask = new ShutdownTask() {
-
-                public boolean execute(info.magnolia.context.Context context) {
-                    log.info("Shutting down repository bound to '{}'", bindName);
-
-                    try {
-                        Context ctx = new InitialContext(env);
-                        RegistryHelper.unregisterRepository(ctx, bindName);
-                    }
-                    catch (NamingException ne) {
-                        log.warn(MessageFormat.format("Unable to shutdown repository {0}: {1} {2}", new Object[]{
-                            bindName,
-                            ne.getClass().getName(),
-                            ne.getMessage()}), ne);
-                    }
-                    catch (Throwable e) {
-                        log.warn(MessageFormat.format("Failed to shutdown repository {0}: {1} {2}", new Object[]{
-                            bindName,
-                            e.getClass().getName(),
-                            e.getMessage()}), e);
-                    }
-                    return true;
-                }
-            });
-        }
     }
 
     public void shutdownRepository() {
+        log.info("Shutting down repository bound to '{}'", bindName);
+
         try {
-            shutdownTask.execute(null);
-        } catch (Exception e) {
-            log.error("Failed to shutdown repository", e);
+            Context ctx = new InitialContext(jndiEnv);
+            RegistryHelper.unregisterRepository(ctx, bindName);
+        } catch (NamingException e) {
+            log.warn("Unable to shutdown repository " + bindName + ": " + e.getMessage(), e);
+        } catch (Throwable e) {
+            log.error("Failed to shutdown repository " + bindName + ": " + e.getMessage(), e);
         }
     }
 

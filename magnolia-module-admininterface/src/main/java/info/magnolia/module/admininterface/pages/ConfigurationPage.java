@@ -71,7 +71,7 @@ public class ConfigurationPage extends TemplatedMVCHandler {
     }
 
     public List getShutdownTasks() {
-        return ShutdownManager.listShutdownTasks();
+        return ShutdownManager.getInstance().listShutdownTasks();
     }
 
     public Map getSystemProperties() {
