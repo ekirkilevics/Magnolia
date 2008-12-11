@@ -31,14 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.core.ie;
-
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.FileReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.util.Iterator;
+package info.magnolia.importexport;
 
 import org.apache.commons.io.IOUtils;
 import org.custommonkey.xmlunit.DetailedDiff;
@@ -49,6 +42,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileReader;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.util.Iterator;
 
 
 /**
@@ -64,7 +64,7 @@ public class DataTransporterTest extends XMLTestCase {
 
     /**
      * Test method for
-     * {@link info.magnolia.cms.core.ie.DataTransporter#readFormatted(org.xml.sax.XMLReader, java.io.File, java.io.OutputStream)}.
+     * {@link info.magnolia.importexport.DataTransporter#readFormatted(org.xml.sax.XMLReader, java.io.File, java.io.OutputStream)}.
      */
     public void testParseAndFormat() throws Exception {
 

@@ -34,7 +34,6 @@
 package info.magnolia.importexport;
 
 import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.cms.core.ie.DataTransporter;
 import info.magnolia.cms.util.StringLengthComparator;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;

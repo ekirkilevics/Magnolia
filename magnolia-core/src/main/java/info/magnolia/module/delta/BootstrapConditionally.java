@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.delta;
 
+import info.magnolia.importexport.DataTransporter;
 import org.apache.commons.lang.StringUtils;
-import info.magnolia.cms.core.ie.DataTransporter;
 
 /**
  *
