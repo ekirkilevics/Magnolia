@@ -113,9 +113,7 @@ public class ConfigLoader {
             moduleManager.getUI().onStartup();
 
             // TODO make these regular ObservedManagers
-            log.info("Init i18n"); //$NON-NLS-1$
             MessagesManager.init(servletContext); // TODO this was done before module init??
-
             MIMEMapping.init();
             VersionConfig.getInstance().init();
 

@@ -33,16 +33,27 @@
  */
 package info.magnolia.cms.i18n;
 
-import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import org.apache.commons.collections.Transformer;
+import org.apache.commons.collections.map.LazyMap;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.jcr.observation.EventIterator;
+import javax.jcr.observation.EventListener;
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
+import javax.servlet.jsp.jstl.core.Config;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -51,19 +62,6 @@ import java.util.Iterator;
 import java.util.Locale;
 import java.util.Map;
 
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-import javax.servlet.jsp.jstl.core.Config;
-
-import org.apache.commons.collections.Transformer;
-import org.apache.commons.collections.map.LazyMap;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * From this class you get the i18n messages. You should pass a a request, but if you can't the getMessages method will
@@ -71,6 +69,7 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  */
 public final class MessagesManager {
+    private final static Logger log = LoggerFactory.getLogger(MessagesManager.class);
 
     /**
      * Use this locale if no other provided
@@ -81,11 +80,6 @@ public final class MessagesManager {
      * Use this basename if no other is provided
      */
     public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    protected static Logger log = LoggerFactory.getLogger(AbstractMessagesImpl.class);
 
     /**
      * The node name where the configuration for i18n is stored
