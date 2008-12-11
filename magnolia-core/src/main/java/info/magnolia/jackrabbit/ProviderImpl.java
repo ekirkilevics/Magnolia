@@ -217,9 +217,13 @@ public class ProviderImpl implements Provider {
     }
 
     /**
-     * @see info.magnolia.repository.Provider#getUnderlineRepository()
+     * @deprecated typo - use get #getUnderlyingRepository() - since 4.0
      */
     public Repository getUnderlineRepository() throws RepositoryNotInitializedException {
+        return getUnderlyingRepository();
+    }
+
+    public Repository getUnderlyingRepository() throws RepositoryNotInitializedException {
         if (this.repository == null) {
             throw new RepositoryNotInitializedException("Null repository"); //$NON-NLS-1$
         }

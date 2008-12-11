@@ -33,11 +33,10 @@
  */
 package info.magnolia.repository;
 
-import java.io.InputStream;
-
 import javax.jcr.Repository;
 import javax.jcr.RepositoryException;
 import javax.jcr.Workspace;
+import java.io.InputStream;
 
 
 /**
@@ -58,6 +57,11 @@ public interface Provider {
     /**
      * Gets the repository instance initialized on init() call.
      * @throws RepositoryNotInitializedException if init failed to get repository
+     */
+    Repository getUnderlyingRepository() throws RepositoryNotInitializedException;
+
+    /**
+     * @deprecated typo - use get #getUnderlyingRepository() - since 4.0
      */
     Repository getUnderlineRepository() throws RepositoryNotInitializedException;
 

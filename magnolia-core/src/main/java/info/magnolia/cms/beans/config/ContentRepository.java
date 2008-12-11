@@ -354,7 +354,7 @@ public final class ContentRepository {
         log.info("System : loading JCR {}", map.getName()); //$NON-NLS-1$
         Provider handlerClass = (Provider) ClassUtil.newInstance(map.getProvider());
         handlerClass.init(map);
-        Repository repository = handlerClass.getUnderlineRepository();
+        Repository repository = handlerClass.getUnderlyingRepository();
         ContentRepository.repositories.put(map.getName(), repository);
         ContentRepository.repositoryProviders.put(map.getName(), handlerClass);
         if (map.isLoadOnStartup()) {
