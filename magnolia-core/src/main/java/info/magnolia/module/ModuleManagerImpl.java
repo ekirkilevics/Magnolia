@@ -164,7 +164,7 @@ public class ModuleManagerImpl implements ModuleManager {
 
         // if we don't have to perform any update load repositories now
         if (!state.needsUpdateOrInstall()) {
-            loadRepositories();
+            loadModulesRepositories();
         }
 
         // TODO : check the force bootstrap properties
@@ -242,7 +242,7 @@ public class ModuleManagerImpl implements ModuleManager {
             return;
         }
 
-        loadRepositories();
+        loadModulesRepositories();
 
         MgnlContext.doInSystemContext(new MgnlContext.SystemContextOperation() {
             public void exec() {
@@ -486,10 +486,11 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     /**
+     * Initializes repositories and workspaces defined by modules.
      * Perform repository registration tasks (create repositories or workspace, setup nodetypes) that should be done
      * always before starting the new module.
      */
-    private void loadRepositories() {
+    private void loadModulesRepositories() {
 
         final Iterator it = orderedModuleDescriptors.iterator();
 
