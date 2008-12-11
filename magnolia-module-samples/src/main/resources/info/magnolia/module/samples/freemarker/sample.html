@@ -1,8 +1,0 @@
-<!-- This is a paragraph that was renderer using the freemarker-renderer, and execute a simple
-     action class: ${action} -->
-<div class="freemarker-sample-paragraph">
-    [#if content.title?has_content]<h2>${content.title}</h2>[/#if]
-    <p>${content.text}</p>
-    <p>result: ${result}</p>
-    <p>Action's execution time: ${state.executionTime?datetime}</p>
-</div>

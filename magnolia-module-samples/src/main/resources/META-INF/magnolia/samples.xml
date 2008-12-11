@@ -3,7 +3,7 @@
 <module>
   <name>samples</name>
   <displayName>Magnolia Samples Module</displayName>
-  <class>info.magnolia.module.samples.SamplesConfig</class>
+  <class>info.magnolia.module.samples.SamplesModule</class>
   <versionHandler>info.magnolia.module.samples.setup.SamplesVersionHandler</versionHandler>
   <version>${project.version}</version>
   <properties>
