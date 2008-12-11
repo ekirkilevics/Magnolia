@@ -37,11 +37,9 @@ import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.license.LicenseFileExtractor;
-import info.magnolia.cms.util.WorkspaceXmlUtil;
 import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Level;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -106,18 +104,8 @@ public class ConfigLoader {
 
         long millis = System.currentTimeMillis();
         log.info("Initializing content repositories"); //$NON-NLS-1$
-        //TODO: mute the log here
-        boolean oldIndexersFound = WorkspaceXmlUtil.getWorkspaceNamesWithIndexer().size() > 0;
 
-        org.apache.log4j.Logger jrLog = org.apache.log4j.Logger.getLogger("org.apache.jackrabbit.core.query.lucene.JackrabbitTextExtractor");
-        Level jrLevel = jrLog.getLevel();
-        if (oldIndexersFound) {
-            jrLog.setLevel(Level.ERROR);
-        }
         ContentRepository.init();
-        if (oldIndexersFound) {
-            jrLog.setLevel(jrLevel);
-        }
 
         try {
             final ModuleManager moduleManager = ModuleManager.Factory.getInstance();
