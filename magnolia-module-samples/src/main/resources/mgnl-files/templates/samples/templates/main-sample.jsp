@@ -13,8 +13,9 @@
             <div>
                 <cms:contentNodeIterator contentNodeCollectionName="main">
                     <cms:includeTemplate />
+
                 </cms:contentNodeIterator>
-                <cms.newBar contentNodeCollectionName="main" paragraph="main-sample" />
+                <cms:newBar contentNodeCollectionName="main" paragraph="main-sample-jsp" />
                 <c:import url="include/footer.jsp" />
             </div>
             <cmsu:simpleNavigation />

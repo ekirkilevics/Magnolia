@@ -13,7 +13,7 @@
         [@cms.contentNodeIterator contentNodeCollectionName="main"]
             [@cms.includeTemplate /]
         [/@cms.contentNodeIterator]
-        [@cms.newBar contentNodeCollectionName="main" paragraph="main-sample" /]
+        [@cms.newBar contentNodeCollectionName="main" paragraph="main-sample-freemarker" /]
 
         [#include "include/footer.ftl"]
     </div><!-- end main -->

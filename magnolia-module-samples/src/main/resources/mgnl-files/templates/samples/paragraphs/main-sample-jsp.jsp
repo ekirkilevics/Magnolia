@@ -4,8 +4,8 @@
 <cms:editBar editLabel="I want to edit my paragraph" moveLabel="" deleteLabel=""/>
 <h3><cms:out nodeDataName="title" /></h3>
 <div>
-
-Image: <img src="${pageContext.request.contextPath}<cms:out nodeDataName="image" />" />
+<cms:out nodeDataName="image" var="imageurl" />
+Image: <img src="${pageContext.request.contextPath}${imageurl}" />
 <br />
 Text: <cms:out nodeDataName="text" />
 <br />
