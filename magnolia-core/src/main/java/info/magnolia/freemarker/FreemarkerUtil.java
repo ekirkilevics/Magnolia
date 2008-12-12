@@ -33,27 +33,24 @@
  */
 package info.magnolia.freemarker;
 
-import freemarker.template.Configuration;
+import info.magnolia.cms.util.AlertUtil;
+import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.apache.commons.lang.StringUtils;
 
-import java.util.Map;
-import java.util.HashMap;
-import java.io.Writer;
-import java.io.StringWriter;
 import java.io.PrintWriter;
-
-import info.magnolia.cms.util.AlertUtil;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * A bunch of utility methods to render freemarker templates into Strings.
  *
- * @see info.magnolia.freemarker.FreemarkerHelper
- *
  * @author Philipp Bracher
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
+ * @see info.magnolia.freemarker.FreemarkerHelper
  */
 public class FreemarkerUtil {
     private static final Logger log = LoggerFactory.getLogger(FreemarkerUtil.class);
@@ -61,46 +58,30 @@ public class FreemarkerUtil {
     /**
      * Uses the class of the object to create the templates name, passes the object under the name 'this'
      * and returns the result in a String.
+     * Used only in DialogMultiSelect - VersionCommentPopup - Inbox - SubPagesControl
      */
     public static String process(Object thisObj) {
         return process(thisObj.getClass(), thisObj);
     }
 
+    // only used in DialogMultiSelect and ForumTree
     public static String process(Object thisObj, String classifier, String ext) {
-        return process(thisObj.getClass(), thisObj, classifier, ext);
+        final Map data = new HashMap();
+        data.put("this", thisObj);
+        String template = createTemplateName(thisObj.getClass(), classifier, ext);
+        return process(template, data);
     }
 
     /**
-     * Default extension is html
+     * Uses the class to create the templates name and passes the object under the name 'this'.
+     * Uses "html" as template filename extension.
+     * Only used in AbstractSimpleSearchList and VersionsList.
      */
     public static String process(Class klass, Object thisObj) {
-        return process(klass, thisObj, "html");
-    }
-
-    /**
-     * Uses the class to create the templates name and passes the object under the name 'this'
-     */
-    public static String process(Class klass, Object thisObj, String ext) {
         final Map data = new HashMap();
         data.put("this", thisObj);
-        String template = createTemplateName(klass, ext);
+        String template = createTemplateName(klass, "html");
         return process(template, data);
-    }
-
-    public static String process(Class klass, Object thisObj, String classifier, String ext) {
-        final Map data = new HashMap();
-        data.put("this", thisObj);
-        String template = createTemplateName(klass, classifier, ext);
-        return process(template, data);
-    }
-
-    /**
-     * Uses the class to create the templates name.
-     *
-     * @deprecated not used (only by this class)
-     */
-    public static String process(Class klass, Map data, String ext) {
-        return process(createTemplateName(klass, ext), data);
     }
 
     /**
@@ -131,18 +112,12 @@ public class FreemarkerUtil {
     }
 
     public static String createTemplateName(Class klass, String ext) {
-        return "/" + StringUtils.replace(klass.getName(), ".", "/") + "." + ext;
+        return createTemplateName(klass, null, ext);
     }
 
-    public static String createTemplateName(Class klass, String classifier , String ext) {
-        return "/" + StringUtils.replace(klass.getName(), ".", "/") + StringUtils.capitalize(classifier) + "." + ext;
+    public static String createTemplateName(Class klass, String classifier, String ext) {
+        classifier = (classifier != null) ? StringUtils.capitalize(classifier) : null;
+        return "/" + StringUtils.replace(klass.getName(), ".", "/") + classifier + "." + ext;
     }
 
-    /**
-     * @return get default static freemarker configuration
-     * @deprecated don't mess around, just use FreemarkerHelper
-     */
-    public static Configuration getDefaultConfiguration() {
-        return FreemarkerHelper.getInstance().getConfiguration();
-    }
 }

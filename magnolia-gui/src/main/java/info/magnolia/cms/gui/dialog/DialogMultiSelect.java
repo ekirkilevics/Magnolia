@@ -36,6 +36,8 @@ package info.magnolia.cms.gui.dialog;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.freemarker.FreemarkerUtil;
+import org.apache.commons.lang.BooleanUtils;
+import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -45,9 +47,6 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -92,6 +91,9 @@ public class DialogMultiSelect extends DialogBox {
      */
     public void drawHtml(Writer out) throws IOException {
         this.drawHtmlPre(out);
+        // this could be replaced by
+        //   out.write(FreemarkerUtil.process(this));
+        // except this could cause problems with subclasses
         out.write(FreemarkerUtil.process(DialogMultiSelect.class, this));
         this.drawHtmlPost(out);
     }
@@ -148,6 +150,9 @@ public class DialogMultiSelect extends DialogBox {
      * Called by the template. It renders the dynamic inner row using trimpaths templating mechanism.
      */
     public String getInnerHtml() {
+        // TODO - this could potentially be replaced by
+        //   return FreemarkerUtil.process(this, "Inner", "html");
+        // except this might cause problems with subclasses
         String name = "/" + StringUtils.replace(DialogMultiSelect.class.getName(), ".", "/") + "Inner.html";
         Map map = new HashMap();
         map.put("this", this);
