@@ -33,27 +33,25 @@
  */
 package info.magnolia.module.fckeditor.servlets;
 
+import info.magnolia.cms.beans.runtime.Document;
+import info.magnolia.cms.core.Path;
+import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
+import info.magnolia.cms.util.RequestFormUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.safehaus.uuid.UUIDGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Hashtable;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.io.FileUtils;
-import org.safehaus.uuid.UUIDGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import info.magnolia.cms.beans.runtime.Document;
-import info.magnolia.cms.core.Path;
-import info.magnolia.cms.gui.fckeditor.FCKEditorTmpFiles;
-import info.magnolia.cms.servlets.ContextSensitiveServlet;
-import info.magnolia.cms.util.RequestFormUtil;
 
 /**
  * Servlet to upload files. This is based on the SimpleUploaderServlet of the FCKeditor connector package.
@@ -62,7 +60,7 @@ import info.magnolia.cms.util.RequestFormUtil;
  * @author Simone Chiaretta (simo@users.sourceforge.net)
  * @author Philipp Bracher
  */
-public class FCKEditorSimpleUploadServlet extends ContextSensitiveServlet {
+public class FCKEditorSimpleUploadServlet extends HttpServlet {
 
     private static final long serialVersionUID = -8512828615271068088L;
     private static Logger log = LoggerFactory.getLogger(FCKEditorSimpleUploadServlet.class);
