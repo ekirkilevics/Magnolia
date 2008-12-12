@@ -34,27 +34,15 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.commands.MgnlRepositoryCatalog;
-import info.magnolia.context.MgnlContext;
-import org.apache.commons.chain.Catalog;
-import org.apache.commons.chain.Command;
-import org.apache.commons.chain.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
-
 
 /**
- * Handles shutdown coreTasks supplied by Providers. Can be used to cleanly shutdown repositories while stopping the web
- * application.
+ * @deprecated since 4.0: usage removed. Providers are now shutdown by the ConfigLoader. Modules should handle their own lifecycles since 3.5.
+ *
  * @author Fabrizio Giustina
  * @version $Id$
- *
- * @deprecated since 4.0: usage removed (modules should handle their own lifecycles since 3.5).
  */
 public class ShutdownManager extends ObservedManager {
     private static final Logger log = LoggerFactory.getLogger(ShutdownManager.class);
@@ -64,48 +52,10 @@ public class ShutdownManager extends ObservedManager {
         return instance;
     }
 
-    /**
-     * Tasks that the shutdown manager will execute.
-     */
-    private final List customTasks = new ArrayList();
-
-    /**
-     * List the shutdown task that the server will execute
-     * @return <code>List</code> of
-     */
-    public List listShutdownTasks() {
-        return Collections.unmodifiableList(customTasks);
-    }
-
-    /**
-     * Executes the registered shutdown tasks.
-     */
-    public void execute() {
-        log.info("Executing shutdown tasks");
-
-        for (Iterator iter = listShutdownTasks().iterator(); iter.hasNext();) {
-            Command task = (Command) iter.next();
-            Context c = MgnlContext.getSystemContext();
-            try {
-                task.execute(c);
-            }
-            catch (Throwable e) {
-                log.warn("Failed to execute shutdown task {0}: {1} {2}", new Object[]{task, e.getClass().getName(), e.getMessage()});
-            }
-        }
-    }
-
     protected void onRegister(Content node) {
-        Catalog mrc = new MgnlRepositoryCatalog(node);
-        Iterator iter = mrc.getNames();
-        while (iter.hasNext()) {
-            Object element = iter.next();
-            log.info("Adding shutdown task:" + element.toString());
-            customTasks.add(0, mrc.getCommand((String) element)); // Last Registered First Executed
-        }
+        log.warn("Shutdown tasks at {} will not be executed. Please use your module's ModuleLifecycle.", node.getHandle());
     }
 
     protected void onClear() {
-        customTasks.clear();
     }
 }

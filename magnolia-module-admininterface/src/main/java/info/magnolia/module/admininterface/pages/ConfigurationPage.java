@@ -34,7 +34,6 @@
 package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.module.admininterface.TemplatedMVCHandler;
@@ -42,7 +41,6 @@ import info.magnolia.module.admininterface.TemplatedMVCHandler;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Collection;
-import java.util.List;
 import java.util.Map;
 
 
@@ -68,10 +66,6 @@ public class ConfigurationPage extends TemplatedMVCHandler {
 
     public Collection getVirtualUriMappings() {
         return VirtualURIManager.getInstance().getURIMappings();
-    }
-
-    public List getShutdownTasks() {
-        return ShutdownManager.getInstance().listShutdownTasks();
     }
 
     public Map getSystemProperties() {

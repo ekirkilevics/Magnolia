@@ -35,7 +35,6 @@ package info.magnolia.cms.servlets;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.PropertiesInitializer;
-import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.Log4jConfigurer;
@@ -135,11 +134,6 @@ public class MgnlServletContextListener implements ServletContextListener {
         ModuleManager mm = ModuleManager.Factory.getInstance();
         if (mm != null) {
             mm.stopModules();
-        }
-
-        ShutdownManager sm = ShutdownManager.getInstance();
-        if (sm != null) {
-            sm.execute();
         }
 
         if (loader != null) {

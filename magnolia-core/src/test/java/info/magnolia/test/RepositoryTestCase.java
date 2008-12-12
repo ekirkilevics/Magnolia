@@ -34,7 +34,6 @@
 package info.magnolia.test;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.beans.config.ShutdownManager;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
@@ -162,8 +161,6 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
         }
         MgnlContext.release();
         MgnlContext.getSystemContext().release();
-        ShutdownManager.getInstance().execute();
-        ShutdownManager.getInstance().clear();
         ContentRepository.shutdown();
         if(cleanup){
             cleanUp();

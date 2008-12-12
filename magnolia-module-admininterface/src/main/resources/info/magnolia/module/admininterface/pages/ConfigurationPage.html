@@ -56,20 +56,5 @@
       </tr>
       [/#list]
     </table>
-    <h3>Shutdown tasks</h3>
-    <table summary="Shutdown tasks">
-      <thead>
-        <tr>
-          <th scope="col">Task number(Lowest executed first)</th>
-          <th scope="col">Java string description</th>
-        </tr>
-      </thead>
-      [#list this.shutdownTasks as item]
-      <tr>
-        <th scope="row">${item_index}</th>
-        <td>${item}</td>
-      </tr>
-      [/#list]
-    </table>
   </body>
 </html>
