@@ -94,6 +94,9 @@
     <sv:property sv:name="i18nBasename" sv:type="String">
       <sv:value>info.magnolia.module.samples.messages</sv:value>
     </sv:property>
+    <sv:property sv:name="modelClass" sv:type="String">
+      <sv:value>info.magnolia.module.samples.model.MainSampleParagraphModel</sv:value>
+    </sv:property>
     <sv:property sv:name="templatePath" sv:type="String">
       <sv:value>/templates/samples/paragraphs/main-sample-jsp.jsp</sv:value>
     </sv:property>
@@ -117,7 +120,7 @@
         <sv:value>2008-09-25T12:45:26.721+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-11T17:31:41.864+01:00</sv:value>
+        <sv:value>2008-12-12T11:39:19.743+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>

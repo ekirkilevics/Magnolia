@@ -31,33 +31,37 @@
  * intact.
  *
  */
-package info.magnolia.module.samples.model;
+package info.magnolia.module.samples.filters;
 
-import info.magnolia.cms.beans.config.Renderable;
-import info.magnolia.cms.beans.config.RenderingModel;
-import info.magnolia.cms.beans.config.RenderingModelImpl;
-import info.magnolia.cms.core.Content;
+import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.context.MgnlContext;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.FilterChain;
+import javax.servlet.ServletException;
+import java.io.IOException;
 /**
  *
  * @author tmiyar
  *
  */
-public class MainSampleParagraphModel extends RenderingModelImpl {
+public class SampleFilter extends AbstractMgnlFilter {
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MainSampleParagraphModel.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SampleFilter.class);
 
-    public MainSampleParagraphModel(Content content, Renderable renderable, RenderingModel parent) {
-        super(content, renderable, parent);
-        log.info("Running sample paragraph model");
 
+    public void doFilter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
+            throws IOException, ServletException {
+        try {
+            log.info("Running sample filter");
+            httpServletRequest.setAttribute("sampleFilter", "attribute set by sample filter");
+
+            filterChain.doFilter(httpServletRequest, httpServletResponse);
+
+        } catch (Throwable t) {
+
+        }
     }
-
-    public String getFilterAttribute() {
-        return (String) MgnlContext.getAttribute("sampleFilter");
-
-    }
-
 
 }

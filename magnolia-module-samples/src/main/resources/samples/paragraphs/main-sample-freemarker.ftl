@@ -11,5 +11,10 @@ Image: <img src="${ctx.contextPath}${content.image}" />
 Text: ${content.text!("no text")}
 <br />
 The date you spedified: ${content.date?string("dd.MM.yyyy")}
+<br />
+<ul>Parameter set by filter:
+<li>using model: ${model.filterAttribute!("non set")} </li>
+<li>get from request: ${ctx.getAttribute("sampleFilter")!("non set")}</li>
+</ul>
 </div>
 
