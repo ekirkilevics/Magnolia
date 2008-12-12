@@ -144,7 +144,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
             final User user = (User) obj;
             return new UserModel(user, this);
         } else if (obj instanceof Context) {
-            // by default, Context would be considering like a map and we would not be able to use its specific methods.
+            // by default, Context would be considered like a map and we would not be able to use its specific methods.
             return new BeanModel(obj, this);
         } else {
             return super.wrap(obj);
