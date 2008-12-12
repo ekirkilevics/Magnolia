@@ -55,6 +55,7 @@ import info.magnolia.module.workflow.setup.for3_5.AddUserToGroupTask;
 import info.magnolia.module.workflow.setup.for3_5.CheckAndUpdateDefaultWorkflowDefinition;
 import info.magnolia.module.workflow.setup.for3_5.RemoveMetadataFromExpressionsWorkspace;
 import info.magnolia.module.workflow.setup.for3_5.SetDefaultWorkflowForActivationFlowCommands;
+import info.magnolia.module.workflow.setup.for4_0.AddSystemUserToGroupTask;
 import info.magnolia.module.workflow.trees.WorkflowWebsiteTreeConfiguration;
 
 import java.util.ArrayList;
@@ -137,6 +138,10 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                         new AddUserToGroupTask("Sample user", "eve", "editors"),
                         new AddUserToGroupTask("Sample user", "patrick", "publishers"))
                 )));
+
+        register(DeltaBuilder.update("4.0", "")
+                .addTask(new AddSystemUserToGroupTask("Superuser", "publishers")
+                ));
     }
 
     protected List getExtraInstallTasks(InstallContext ctx) {
@@ -153,6 +158,7 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
             tasks.add(new AddUserToGroupTask("Sample user", "eve", "editors"));
             tasks.add(new AddUserToGroupTask("Sample user", "patrick", "publishers"));
         }
+        tasks.add(new AddSystemUserToGroupTask("Superuser", "publishers"));
 
         return tasks;
     }
