@@ -38,30 +38,42 @@ import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
+import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.CreateNodeTask;
+import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.MoveNodeTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
+import info.magnolia.module.fckeditor.dialogs.FckEditorDialog;
+import info.magnolia.module.fckeditor.servlets.FCKEditorSimpleUploadServlet;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author vsteller
- *
  */
 public class FCKEditorModuleVersionHandler extends DefaultModuleVersionHandler {
-    
+
+    public FCKEditorModuleVersionHandler() {
+        register(DeltaBuilder.update("4.0", "")
+                .addTask(new CheckAndModifyPropertyValueTask("Dialog", "Replaces the deprecated dialog class by a new one.", "config",
+                        "/modules/fckEditor/controls/fckEdit", "class", "info.magnolia.cms.gui.dialog.DialogFckEdit", FckEditorDialog.class.getName()))
+                .addTask(new CheckAndModifyPropertyValueTask("Servlet", "Replaces the deprecated servlet class by a new one.", "config",
+                "/server/filters/servlets/FCKEditorSimpleUploadServlet", "class", "info.magnolia.cms.gui.fckeditor.FCKEditorSimpleUploadServlet", FCKEditorSimpleUploadServlet.class.getName()))
+        );
+    }
+
     protected List getBasicInstallTasks(InstallContext installContext) {
         final List basicInstallTasks = new ArrayList();
         basicInstallTasks.add(new BootstrapSingleResource("New FCKEditor browser", "Bootstraps the new configuration for the browser page", "/mgnl-bootstrap/fckEditor/config.modules.fckEditor.pages.repositoryBrowser.xml"));
         basicInstallTasks.add(new BootstrapSingleResource("Browsable repositories", "Bootstraps the default configuration for the browsable repositories", "/mgnl-bootstrap/fckEditor/config.modules.fckEditor.config.browsableRepositories.xml"));
-        basicInstallTasks.add(new NodeExistsDelegateTask("Check for existing fckEdit control", "Check if fckEdit control is registered in adminInterface module", "config", "/modules/adminInterface/controls/fckEdit", 
-            new ArrayDelegateTask("Add fckEdit control",
-                new CreateNodeTask("Create controls node", "Add the controls node in the FCKEditor module", "config", "/modules/fckEditor", "controls", ItemType.CONTENT.getSystemName()), 
-                new MoveNodeTask("Move fckEdit control", "Move fckEdit control to FCKEditor module since it is a separate module now", "config", "/modules/adminInterface/controls/fckEdit", "/modules/fckEditor/controls/fckEdit", true)
-            ), 
-            new BootstrapSingleResource("Add fckEdit control", "Bootstraps the configuration of the fckEdit control", "/mgnl-bootstrap/fckEditor/config.modules.fckEditor.controls.fckEdit.xml")));
+        basicInstallTasks.add(new NodeExistsDelegateTask("Check for existing fckEdit control", "Check if fckEdit control is registered in adminInterface module", "config", "/modules/adminInterface/controls/fckEdit",
+                new ArrayDelegateTask("Add fckEdit control",
+                        new CreateNodeTask("Create controls node", "Add the controls node in the FCKEditor module", "config", "/modules/fckEditor", "controls", ItemType.CONTENT.getSystemName()),
+                        new MoveNodeTask("Move fckEdit control", "Move fckEdit control to FCKEditor module since it is a separate module now", "config", "/modules/adminInterface/controls/fckEdit", "/modules/fckEditor/controls/fckEdit", true)
+                ),
+                new BootstrapSingleResource("Add fckEdit control", "Bootstraps the configuration of the fckEdit control", "/mgnl-bootstrap/fckEditor/config.modules.fckEditor.controls.fckEdit.xml")));
         basicInstallTasks.add(new RegisterModuleServletsTask());
         return basicInstallTasks;
     }

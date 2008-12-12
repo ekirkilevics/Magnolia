@@ -36,23 +36,20 @@ package info.magnolia.module.fckeditor.dialogs;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.ControlImpl;
 import info.magnolia.cms.gui.dialog.DialogBox;
-import info.magnolia.cms.gui.dialog.DialogFckEdit;
-import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.link.LinkHelper;
+import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.context.MgnlContext;
-
-import java.io.IOException;
-import java.io.Writer;
-import java.util.regex.Matcher;
-
-import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Writer;
+import java.util.regex.Matcher;
 
 
 /**
@@ -137,11 +134,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class FckEditorDialog extends DialogBox {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(DialogFckEdit.class);
+    private static final Logger log = LoggerFactory.getLogger(FckEditorDialog.class);
 
     /**
      * The new .BasePath of the editor

@@ -17,7 +17,7 @@
   <servlets>
     <servlet>
       <name>FCKEditorSimpleUploadServlet</name>
-      <class>info.magnolia.cms.gui.fckeditor.FCKEditorSimpleUploadServlet</class>
+      <class>info.magnolia.module.fckeditor.servlets.FCKEditorSimpleUploadServlet</class>
       <comment>Used for fckeditor inline images and files</comment>
       <mappings>
         <mapping>/.magnolia/fckeditor/upload</mapping>
