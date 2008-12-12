@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.core.ie.filters;
+package info.magnolia.importexport.filters;
 
 import org.apache.commons.lang.ArrayUtils;
 import org.xml.sax.Attributes;

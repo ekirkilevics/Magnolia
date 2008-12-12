@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.core.ie.filters;
+package info.magnolia.importexport.filters;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;

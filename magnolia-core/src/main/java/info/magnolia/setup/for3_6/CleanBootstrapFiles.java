@@ -33,17 +33,7 @@
  */
 package info.magnolia.setup.for3_6;
 
-import info.magnolia.cms.core.ie.filters.RemoveMixversionableFilter;
-
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Iterator;
-
+import info.magnolia.importexport.filters.RemoveMixversionableFilter;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.filefilter.AbstractFileFilter;
@@ -55,6 +45,14 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Iterator;
+
 
 /**
  * @author philipp
@@ -63,7 +61,7 @@ import org.xml.sax.helpers.XMLReaderFactory;
  */
 public class CleanBootstrapFiles{
 
-    public static void main(String[] args) throws FileNotFoundException, SAXException, IOException{
+    public static void main(String[] args) throws SAXException, IOException{
         for (Iterator iter = findFiles(new File(".")); iter.hasNext();) {
             File file = (File) iter.next();
             System.out.println("Processing: " + file);
@@ -73,10 +71,10 @@ public class CleanBootstrapFiles{
             else{
                 System.out.println("Nothing to clean: " + file);
             }
-        };
+        }
     }
 
-    public static boolean cleanFile(File file) throws FileNotFoundException, IOException, SAXException {
+    public static boolean cleanFile(File file) throws IOException, SAXException {
         FileInputStream in = new FileInputStream(file);
         ByteArrayOutputStream buffer = new ByteArrayOutputStream();
         final boolean cleaned = clean(in, buffer);

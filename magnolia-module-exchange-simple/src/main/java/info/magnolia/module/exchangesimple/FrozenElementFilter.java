@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import info.magnolia.cms.core.ie.filters.VersionFilter;
-
+import info.magnolia.importexport.filters.VersionFilter;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
@@ -44,7 +43,7 @@ import org.xml.sax.helpers.AttributesImpl;
 /**
  * this filter converts frozen nodes to mimic actual state of a node, this is only meant to be used while activation
  * Taken from:
- * @see info.magnolia.cms.core.ie.filters.VersionFilter $Id$
+ * @see info.magnolia.importexport.filters.VersionFilter $Id$
  */
 class FrozenElementFilter extends VersionFilter {
 

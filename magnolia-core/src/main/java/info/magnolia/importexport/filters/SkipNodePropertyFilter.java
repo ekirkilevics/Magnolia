@@ -31,10 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.core.ie.filters;
-
-import java.util.ArrayList;
-import java.util.List;
+package info.magnolia.importexport.filters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,6 +40,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.AttributesImpl;
 import org.xml.sax.helpers.XMLFilterImpl;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
