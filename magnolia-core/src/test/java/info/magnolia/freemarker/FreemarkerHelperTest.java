@@ -94,7 +94,7 @@ public class FreemarkerHelperTest extends TestCase {
         // seems useless when running tests from maven (?), so we'll shunt log4j as well
         freemarker.log.Logger.selectLoggerLibrary(freemarker.log.Logger.LIBRARY_NONE);
         // shunt log4j
-        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);        
+        org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
     }
 
     protected void tearDown() throws Exception {
@@ -409,6 +409,21 @@ public class FreemarkerHelperTest extends TestCase {
         MgnlContext.setInstance(context);
         assertRendereredContentWithoutCheckingContext(":Hiro Nakamura:", new HashMap(), "pouet");
         verify(context, user);
+    }
+
+    public void testMagnoliaContextAttributesAreAvailableWithMapSyntax() throws IOException, TemplateException {
+        tplLoader.putTemplate("pouet", ":${ctx.foo}:${ctx['baz']}:");
+        final Context context = createStrictMock(Context.class);
+        expect(context.getLocale()).andReturn(Locale.US);
+
+        expect(context.get("foo")).andReturn("bar");
+        expect(context.get("baz")).andReturn("buzz");
+
+        replay(context);
+
+        MgnlContext.setInstance(context);
+        assertRendereredContentWithoutCheckingContext(":bar:buzz:", new HashMap(), "pouet");
+        verify(context);
     }
 
     public void testEvalCanEvaluateDynamicNodeProperties() throws IOException, TemplateException {

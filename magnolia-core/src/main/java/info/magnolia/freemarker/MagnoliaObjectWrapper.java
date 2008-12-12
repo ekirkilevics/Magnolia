@@ -33,7 +33,7 @@
  */
 package info.magnolia.freemarker;
 
-import freemarker.ext.beans.BeanModel;
+import freemarker.ext.beans.MapModel;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.SimpleDate;
 import freemarker.template.SimpleNumber;
@@ -57,6 +57,7 @@ import info.magnolia.context.WebContext;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
 import java.util.Calendar;
+import java.util.Map;
 
 /**
  * A Freemarker ObjectWrapper that knows about Magnolia specific objects.
@@ -144,8 +145,9 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
             final User user = (User) obj;
             return new UserModel(user, this);
         } else if (obj instanceof Context) {
-            // by default, Context would be considered like a map and we would not be able to use its specific methods.
-            return new BeanModel(obj, this);
+            // SimpleMapModel would prevent us from using Context's specific methods
+            // SimpleHash (which seems to be the default in 2.3.14) also prevents using specific methods
+            return new MapModel((Map) obj, this);
         } else {
             return super.wrap(obj);
         }
