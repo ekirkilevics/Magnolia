@@ -54,7 +54,7 @@ public class SampleFilter extends AbstractMgnlFilter {
     public void doFilter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
             throws IOException, ServletException {
         try {
-            log.info("Running sample filter");
+
             httpServletRequest.setAttribute("sampleFilter", "attribute set by sample filter");
 
             filterChain.doFilter(httpServletRequest, httpServletResponse);

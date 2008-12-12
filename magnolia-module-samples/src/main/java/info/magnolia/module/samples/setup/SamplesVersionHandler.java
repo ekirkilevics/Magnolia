@@ -37,7 +37,9 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
 import info.magnolia.module.admininterface.setup.SimpleContentVersionHandler;
+import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
 import info.magnolia.module.delta.IsInstallSamplesTask;
+import info.magnolia.module.delta.OrderNodeBeforeTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,7 +51,6 @@ import java.util.List;
  *
  */
 public class SamplesVersionHandler extends SimpleContentVersionHandler {
-    private final List installOrUpdateTasks = new ArrayList();
 
     private static final String I18N_BASENAME = "info.magnolia.module.samples.messages";
 
@@ -58,12 +59,17 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
-        final List installTasks = new ArrayList(installOrUpdateTasks);
+        final List installTasks = new ArrayList();
         // add the default uri task
         installTasks.add(new IsInstallSamplesTask("Default URI", "Sets a new default URI if samples are to be installed.", getSetDefaultPublicURITask(installContext)));
         installTasks.add(new AddMainMenuItemTask("samples", "samples.menu.label", I18N_BASENAME, "", "/.resources/icons/24/compass.gif", "security"));
 
         installTasks.add(submenu("config", "/modules/samples"));
+        installTasks.add(new BootstrapSingleResourceAndOrderBefore(
+                "Sample Filter",
+                "Adds a sample filter",
+                "/mgnl-bootstrap/samples/config.server.filters.sample.xml",
+                "cms"));
         return installTasks;
     }
 
