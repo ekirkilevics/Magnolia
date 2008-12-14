@@ -73,7 +73,6 @@ public abstract class MVCServlet extends HttpServlet {
      */
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException,
         IOException {
-        super.doPost(request, response);
 
         // http://issues.apache.org/bugzilla/show_bug.cgi?id=22666
         //
