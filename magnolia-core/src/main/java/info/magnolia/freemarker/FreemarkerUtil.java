@@ -116,7 +116,7 @@ public class FreemarkerUtil {
     }
 
     public static String createTemplateName(Class klass, String classifier, String ext) {
-        classifier = (classifier != null) ? StringUtils.capitalize(classifier) : null;
+        classifier = (classifier != null) ? StringUtils.capitalize(classifier) : "";
         return "/" + StringUtils.replace(klass.getName(), ".", "/") + classifier + "." + ext;
     }
 
