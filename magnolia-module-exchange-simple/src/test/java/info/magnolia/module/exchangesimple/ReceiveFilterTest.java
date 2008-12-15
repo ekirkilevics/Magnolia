@@ -338,7 +338,7 @@ public class ReceiveFilterTest extends TestCase {
         // checking parent node
         testCallBack.checkParent(hm);
 
-        expect(ctx.getAttribute("multipartform")).andReturn(form).anyTimes();
+        expect(ctx.getPostedForm()).andReturn(form).anyTimes();
 
         testCallBack.checkPermissions(hm);
         testCallBack.checkNode(hm);

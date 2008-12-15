@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import org.apache.commons.codec.binary.Base64;
 import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
@@ -52,12 +51,15 @@ import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Iterator;
-import java.util.List;
-import java.util.zip.GZIPInputStream;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.jdom.Element;
+import org.jdom.JDOMException;
+import org.jdom.input.SAXBuilder;
+import org.safehaus.uuid.UUIDGenerator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.ItemNotFoundException;
@@ -72,15 +74,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.jdom.Element;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
-import org.safehaus.uuid.UUIDGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Iterator;
+import java.util.List;
+import java.util.zip.GZIPInputStream;
 
 
 /**
@@ -183,7 +181,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @throws Exception if fails to update
       */
      protected synchronized String update(HttpServletRequest request) throws Exception {
-         MultipartForm data = Resource.getPostedForm();
+         MultipartForm data = MgnlContext.getPostedForm();
          String name = null;
          if (null != data) {
              String newParentPath = this.getParentPath(request);
