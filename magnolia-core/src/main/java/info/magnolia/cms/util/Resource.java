@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
@@ -93,16 +92,6 @@ public final class Resource {
 
     /**
      * <p>
-     * get file object associated with the requested atom
-     * </p>
-     * @return currently atom
-     */
-    public static File getFile() {
-        return MgnlContext.getAggregationState().getFile();
-    }
-
-    /**
-     * <p>
      * get ContentNode object as set by the "set" tag
      * </p>
      * @return ContentNode , global container specific to the current JSP/Servlet page
@@ -155,9 +144,10 @@ public final class Resource {
      * </p>
      * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      * @return selector String as requested from the URI
+     * @deprecated use {@link info.magnolia.cms.util.SelectorUtil#getSelector}
      */
     public static String getSelector() {
-        return MgnlContext.getAggregationState().getSelector();
+        return SelectorUtil.getSelector();
     }
 
     /**
@@ -165,13 +155,10 @@ public final class Resource {
      * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      * @param index
      * @return the selector value
+     * @deprecated use {@link info.magnolia.cms.util.SelectorUtil#getSelector}
      */
     public static String getSelector(int index) {
-        String[] selectors = StringUtils.split(getSelector(), ".");
-        if (selectors.length > index) {
-            return selectors[index];
-        }
-        return null;
+        return SelectorUtil.getSelector(index);
     }
 
     /**
