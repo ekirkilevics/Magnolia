@@ -39,6 +39,7 @@ import freemarker.ext.servlet.FreemarkerServlet;
 import freemarker.ext.servlet.HttpRequestHashModel;
 import freemarker.ext.servlet.ServletContextHashModel;
 import freemarker.template.Configuration;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
@@ -79,8 +80,8 @@ public class FreemarkerHelper {
 
     public FreemarkerHelper() {
         cfg = new Configuration();
-        cfg.setObjectWrapper(new MagnoliaObjectWrapper());
-        
+        cfg.setObjectWrapper(newObjectWrapper());
+
         // template loaders are set on the fly to make sure changing configuration is pickup up immediatelly
 
         cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
@@ -88,6 +89,10 @@ public class FreemarkerHelper {
         // TODO : configure this (maybe based on the dev-mode system property)
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
         //cfg.setTemplateUpdateDelay(10);
+    }
+
+    protected ObjectWrapper newObjectWrapper() {
+        return (ObjectWrapper)FactoryUtil.newInstance(MagnoliaObjectWrapper.class);
     }
 
     /**

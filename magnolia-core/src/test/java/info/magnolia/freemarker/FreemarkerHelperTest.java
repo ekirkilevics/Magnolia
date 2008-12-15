@@ -37,6 +37,7 @@ import freemarker.cache.StringTemplateLoader;
 import freemarker.core.InvalidReferenceException;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.core.AggregationState;
@@ -424,6 +425,24 @@ public class FreemarkerHelperTest extends TestCase {
         MgnlContext.setInstance(context);
         assertRendereredContentWithoutCheckingContext(":bar:buzz:", new HashMap(), "pouet");
         verify(context);
+    }
+
+    public void testRenderableDefinitionParametersAreAvailable() throws IOException, TemplateException {
+        tplLoader.putTemplate("mytemplate", ":${def.name!}:${def.foo!}:");
+
+        Map parameters = new HashMap();
+        parameters.put("foo", "bar");
+
+        RenderableDefinition def = createStrictMock(RenderableDefinition.class);
+        expect(def.getName()).andReturn("myname");
+        expect(def.getParameters()).andStubReturn(parameters);
+
+        replay(def);
+        Map ctx = new HashMap();
+        ctx.put("def", def);
+        ctx.put("params", parameters);
+
+        assertRendereredContentWithoutCheckingContext(":myname:bar:", ctx, "mytemplate");
     }
 
     public void testEvalCanEvaluateDynamicNodeProperties() throws IOException, TemplateException {

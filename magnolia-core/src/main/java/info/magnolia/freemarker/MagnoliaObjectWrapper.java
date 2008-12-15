@@ -33,15 +33,19 @@
  */
 package info.magnolia.freemarker;
 
+import freemarker.ext.beans.BeanModel;
+import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.MapModel;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.SimpleDate;
+import freemarker.template.SimpleHash;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateBooleanModel;
 import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
+import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.link.AbsolutePathTransformer;
@@ -68,7 +72,7 @@ import java.util.Map;
  */
 public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
-    MagnoliaObjectWrapper() {
+    public MagnoliaObjectWrapper() {
         super();
     }
 
@@ -148,6 +152,9 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
             // SimpleMapModel would prevent us from using Context's specific methods
             // SimpleHash (which seems to be the default in 2.3.14) also prevents using specific methods
             return new MapModel((Map) obj, this);
+        } else if (obj instanceof RenderableDefinition) {
+            // make parameters directly available (as if they were properties of the definition itself)
+            return new RenderableDefinitionModel((RenderableDefinition)obj, this);
         } else {
             return super.wrap(obj);
         }
@@ -155,6 +162,35 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
     protected SimpleDate handleCalendar(Calendar cal) {
         return new SimpleDate(cal.getTime(), TemplateDateModel.DATETIME);
+    }
+
+    /**
+     * Make parameters directly available (as if they were properties of the definition itself)
+     * @author pbracher
+     * @version $Id$
+     *
+     */
+    protected static class RenderableDefinitionModel extends BeanModel {
+        /**
+         * The hash model for the parameters
+         */
+        final SimpleHash paramHash;
+
+        protected RenderableDefinitionModel(RenderableDefinition definition, BeansWrapper wrapper) {
+            super(definition, wrapper);
+            paramHash = new SimpleHash(definition.getParameters(), wrapper);
+        }
+
+        /**
+         * Fall back on the parameters' hash model if no bean properry has been found
+         */
+        public TemplateModel get(String key) throws TemplateModelException {
+            TemplateModel templateModel = super.get(key);
+            if(templateModel == null){
+                templateModel = paramHash.get(key);
+            }
+            return templateModel;
+        }
     }
 
 }
