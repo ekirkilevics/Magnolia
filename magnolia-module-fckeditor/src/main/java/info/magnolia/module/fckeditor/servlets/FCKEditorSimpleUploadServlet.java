@@ -100,7 +100,6 @@ public class FCKEditorSimpleUploadServlet extends HttpServlet {
      * javascript command in it.
      */
     public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        super.doPost(request, response);
         response.setContentType("text/html; charset=UTF-8");
         response.setHeader("Cache-Control", "no-cache");
         PrintWriter out = response.getWriter();
