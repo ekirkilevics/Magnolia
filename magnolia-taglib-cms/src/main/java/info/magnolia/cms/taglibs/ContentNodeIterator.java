@@ -37,21 +37,19 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.Resource;
-
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.jstl.core.LoopTagStatus;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 
 
 /**
@@ -309,7 +307,7 @@ public class ContentNodeIterator extends BaseContentTag {
 
         pageContext.setAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME, getContentNodeCollectionName(), PageContext.REQUEST_SCOPE);
 
-        Resource.setLocalContentNodeCollectionName(request, getContentNodeCollectionName());
+        Resource.setLocalContentNodeCollectionName(getContentNodeCollectionName());
 
         this.contentNodeIterator = children.iterator();
         for (int i = 0; i < begin; i++) {
@@ -433,7 +431,7 @@ public class ContentNodeIterator extends BaseContentTag {
                 pageContext.setAttribute(ContentNodeIterator.CURRENT_INDEX, this.outerCurrIdx);
                 pageContext.setAttribute(ContentNodeIterator.CONTENT_NODE_COLLECTION_NAME, this.outerCollName);
                 Resource.setLocalContentNode(this.outerLocalContentNode);
-                Resource.setLocalContentNodeCollectionName(req, this.outerResCollName);
+                Resource.setLocalContentNodeCollectionName(this.outerResCollName);
             }
             else {
                 if(outerLocalContentNode != null){

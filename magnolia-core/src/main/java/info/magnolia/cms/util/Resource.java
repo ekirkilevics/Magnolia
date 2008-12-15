@@ -40,8 +40,6 @@ import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 
-import javax.servlet.http.HttpServletRequest;
-
 
 /**
  * @author Sameer Charles
@@ -231,10 +229,6 @@ public final class Resource {
      */
     public static void setLocalContentNode(Content node) {
         MgnlContext.setAttribute(Resource.LOCAL_CONTENT_NODE, node);
-    }
-
-    public static void setLocalContentNodeCollectionName(HttpServletRequest req, String name) {
-        setLocalContentNodeCollectionName(name);
     }
 
     /**
