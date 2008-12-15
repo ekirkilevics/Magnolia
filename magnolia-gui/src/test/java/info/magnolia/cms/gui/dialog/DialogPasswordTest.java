@@ -33,9 +33,6 @@
  */
 package info.magnolia.cms.gui.dialog;
 
-import java.util.Iterator;
-import java.util.Locale;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
@@ -43,23 +40,36 @@ import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
+import junit.framework.TestCase;
+import org.apache.commons.codec.binary.Base64;
+import org.apache.commons.collections.CollectionUtils;
+import static org.easymock.EasyMock.*;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.codec.binary.Base64;
-import org.apache.commons.collections.CollectionUtils;
-
-import junit.framework.TestCase;
-import static org.easymock.EasyMock.*;
+import java.util.Iterator;
+import java.util.Locale;
 
 /**
- * @author had
  *
+ * @author had
+ * TODO: this test should NOT use SystemContext (or not *only*)
  */
 public class DialogPasswordTest extends TestCase {
 
-    
+    public void setUp() throws Exception {
+        super.setUp();
+        //MessagesManager.setDefaultLocale("en");
+    }
+
+    public void tearDown() throws Exception {
+        MgnlContext.release();
+        // reset manually since we used system context.
+        MgnlContext.setInstance(null);
+        FactoryUtil.clear();
+        super.tearDown();
+    }
+
     public void testValidateChangePwd() throws Exception {
         DialogPassword dp = new DialogPassword();
         HttpServletRequest request = createStrictMock(HttpServletRequest.class);
@@ -179,7 +189,7 @@ public class DialogPasswordTest extends TestCase {
 
         expect(storageNode.hasNodeData("pswd")).andReturn(Boolean.TRUE);
         expect(storageNode.getNodeData("pswd")).andReturn(pswd);
-        expect(ctx.getAttribute("multipartform")).andReturn(null);
+        // expect(ctx.getAttribute("multipartform")).andReturn(null);
         expect(request.getMethod()).andReturn("POST");
         expect(request.getParameter("pswd")).andReturn("blah");
         expect(request.getMethod()).andReturn("POST");
@@ -223,7 +233,7 @@ public class DialogPasswordTest extends TestCase {
 
         expect(storageNode.hasNodeData("pswd")).andReturn(Boolean.TRUE);
         expect(storageNode.getNodeData("pswd")).andReturn(pswd);
-        expect(ctx.getAttribute("multipartform")).andReturn(null);
+        // expect(ctx.getAttribute("multipartform")).andReturn(null);
         expect(request.getMethod()).andReturn("POST");
         expect(request.getParameter("pswd")).andReturn("blah");
         expect(request.getMethod()).andReturn("POST");
@@ -237,17 +247,5 @@ public class DialogPasswordTest extends TestCase {
         assertFalse(dp.validate());
         verify(mocks);
     }
-    
-    public void tearDown() throws Exception {
-        MgnlContext.release();
-        // reset manually since we used system context.
-        MgnlContext.setInstance(null);
-        FactoryUtil.clear();
-        super.tearDown();
-    }
-    
-    public void setUp() throws Exception {
-        super.setUp();
-        //MessagesManager.setDefaultLocale("en");
-    }
+
 }
