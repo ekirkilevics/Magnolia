@@ -33,12 +33,9 @@
  */
 package info.magnolia.freemarker;
 
-import freemarker.ext.beans.BeanModel;
-import freemarker.ext.beans.BeansWrapper;
 import freemarker.ext.beans.MapModel;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.SimpleDate;
-import freemarker.template.SimpleHash;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateBooleanModel;
@@ -162,35 +159,6 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
     protected SimpleDate handleCalendar(Calendar cal) {
         return new SimpleDate(cal.getTime(), TemplateDateModel.DATETIME);
-    }
-
-    /**
-     * Make parameters directly available (as if they were properties of the definition itself)
-     * @author pbracher
-     * @version $Id$
-     *
-     */
-    protected static class RenderableDefinitionModel extends BeanModel {
-        /**
-         * The hash model for the parameters
-         */
-        final SimpleHash paramHash;
-
-        protected RenderableDefinitionModel(RenderableDefinition definition, BeansWrapper wrapper) {
-            super(definition, wrapper);
-            paramHash = new SimpleHash(definition.getParameters(), wrapper);
-        }
-
-        /**
-         * Fall back on the parameters' hash model if no bean properry has been found
-         */
-        public TemplateModel get(String key) throws TemplateModelException {
-            TemplateModel templateModel = super.get(key);
-            if(templateModel == null){
-                templateModel = paramHash.get(key);
-            }
-            return templateModel;
-        }
     }
 
 }

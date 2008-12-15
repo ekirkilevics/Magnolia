@@ -427,8 +427,8 @@ public class FreemarkerHelperTest extends TestCase {
         verify(context);
     }
 
-    public void testRenderableDefinitionParametersAreAvailable() throws IOException, TemplateException {
-        tplLoader.putTemplate("mytemplate", ":${def.name!}:${def.foo!}:");
+    public void testRenderableDefinitionParametersAreAvailableAsTopLevelProperties() throws IOException, TemplateException {
+        tplLoader.putTemplate("mytemplate", ":${def.name}:${def.foo}:");
 
         Map parameters = new HashMap();
         parameters.put("foo", "bar");
@@ -440,9 +440,47 @@ public class FreemarkerHelperTest extends TestCase {
         replay(def);
         Map ctx = new HashMap();
         ctx.put("def", def);
-        ctx.put("params", parameters);
 
         assertRendereredContentWithoutCheckingContext(":myname:bar:", ctx, "mytemplate");
+        verify(def);
+    }
+
+    public void testRenderableDefinitionPropertiesHaveHigherPriorityThanParameters() throws IOException, TemplateException {
+        tplLoader.putTemplate("mytemplate", ":${def.name}:${def.foo}:");
+
+        Map parameters = new HashMap();
+        parameters.put("foo", "bar");
+        parameters.put("name", "should not appear");
+
+        RenderableDefinition def = createStrictMock(RenderableDefinition.class);
+        expect(def.getName()).andReturn("real name");
+        expect(def.getParameters()).andStubReturn(parameters);
+
+        replay(def);
+        Map ctx = new HashMap();
+        ctx.put("def", def);
+
+        assertRendereredContentWithoutCheckingContext(":real name:bar:", ctx, "mytemplate");
+        verify(def);
+    }
+
+    public void testRenderableDefinitionPropertiesAreStillAvailableIfReallyNeeded() throws IOException, TemplateException {
+        tplLoader.putTemplate("mytemplate", ":${def.name}:${def.parameters.name}:");
+
+        Map parameters = new HashMap();
+        parameters.put("foo", "bar");
+        parameters.put("name", "other name");
+
+        RenderableDefinition def = createStrictMock(RenderableDefinition.class);
+        expect(def.getName()).andReturn("real name");
+        expect(def.getParameters()).andStubReturn(parameters);
+
+        replay(def);
+        Map ctx = new HashMap();
+        ctx.put("def", def);
+
+        assertRendereredContentWithoutCheckingContext(":real name:other name:", ctx, "mytemplate");
+        verify(def);
     }
 
     public void testEvalCanEvaluateDynamicNodeProperties() throws IOException, TemplateException {
