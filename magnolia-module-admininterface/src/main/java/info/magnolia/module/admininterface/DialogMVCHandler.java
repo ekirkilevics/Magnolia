@@ -51,7 +51,6 @@ import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.RequestFormUtil;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -144,7 +143,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     public DialogMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
 
-        form = Resource.getPostedForm();
+        form = MgnlContext.getPostedForm();
         params = new RequestFormUtil(request, form);
 
         path = params.getParameter("mgnlPath"); //$NON-NLS-1$

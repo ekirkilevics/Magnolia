@@ -35,6 +35,7 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
+import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
@@ -57,7 +58,7 @@ public class RequestFormUtil {
     private HttpServletRequest request;
 
     public RequestFormUtil(HttpServletRequest request) {
-        this(request, Resource.getPostedForm());
+        this(request, MgnlContext.getPostedForm());
     }
 
     public RequestFormUtil(HttpServletRequest request, MultipartForm form) {
@@ -76,7 +77,7 @@ public class RequestFormUtil {
     }
 
     public static String getParameter(HttpServletRequest request, String name) {
-        return getParameter(request, Resource.getPostedForm(), name);
+        return getParameter(request, MgnlContext.getPostedForm(), name);
     }
 
     /**
@@ -108,7 +109,7 @@ public class RequestFormUtil {
     }
 
     public static String getParameter(HttpServletRequest request, String name, String defaultValue) {
-        return getParameter(request, Resource.getPostedForm(), name, defaultValue);
+        return getParameter(request, MgnlContext.getPostedForm(), name, defaultValue);
     }
 
     /**
@@ -205,7 +206,7 @@ public class RequestFormUtil {
     }
 
     public static Map getParameters(HttpServletRequest request) {
-        MultipartForm form = Resource.getPostedForm();
+        MultipartForm form = MgnlContext.getPostedForm();
         if (form == null) {
             // if get use UTF8 decoding
             if (request.getMethod() == "GET") {

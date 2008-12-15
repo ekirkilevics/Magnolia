@@ -47,7 +47,6 @@ import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.cms.util.RuleBasedContentFilter;
 import info.magnolia.context.MgnlContext;
@@ -488,7 +487,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       */
      protected void cleanUp(HttpServletRequest request) {
          if (BaseSyndicatorImpl.ACTIVATE.equalsIgnoreCase(request.getHeader(BaseSyndicatorImpl.ACTION))) {
-             MultipartForm data = Resource.getPostedForm();
+             MultipartForm data = MgnlContext.getPostedForm();
              if (null != data) {
                  Iterator keys = data.getDocuments().keySet().iterator();
                  while (keys.hasNext()) {
