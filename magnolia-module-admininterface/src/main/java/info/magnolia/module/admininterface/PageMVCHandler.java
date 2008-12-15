@@ -39,13 +39,12 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.servlets.CommandBasedMVCServletHandler;
 import info.magnolia.cms.util.RequestFormUtil;
 import info.magnolia.cms.util.Resource;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
@@ -99,7 +98,7 @@ public abstract class PageMVCHandler extends CommandBasedMVCServletHandler {
     public PageMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
 
-        setForm(Resource.getPostedForm(request));
+        setForm(Resource.getPostedForm());
         setParams(new RequestFormUtil(request, getForm()));
     }
 

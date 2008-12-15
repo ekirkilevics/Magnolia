@@ -46,20 +46,23 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.servlets.MVCServletHandlerImpl;
-import info.magnolia.cms.util.*;
+import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.cms.util.ExclusiveWrite;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.cms.util.RequestFormUtil;
+import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
-
-import java.io.IOException;
-import java.io.PrintWriter;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 
 /**
@@ -141,7 +144,7 @@ public class DialogMVCHandler extends MVCServletHandlerImpl {
     public DialogMVCHandler(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
 
-        form = Resource.getPostedForm(request);
+        form = Resource.getPostedForm();
         params = new RequestFormUtil(request, form);
 
         path = params.getParameter("mgnlPath"); //$NON-NLS-1$

@@ -33,23 +33,21 @@
  */
 package info.magnolia.cms.util;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-
-import javax.servlet.http.HttpServletRequest;
-
 import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
+
+import javax.servlet.http.HttpServletRequest;
 
 
 /**
  * @author Sameer Charles
  * @version 1.1
+ *
+ * @deprecated formally since 4.0, but really should have stopped using this class for a long time
  */
 public final class Resource {
 
@@ -82,13 +80,6 @@ public final class Resource {
     }
 
     /**
-     * @deprecated Use {@link #getActivePage()} instead
-     */
-    public static Content getActivePage(HttpServletRequest req) {
-        return getActivePage();
-    }
-
-    /**
      * <p>
      * get Content object as requested from the URI
      * </p>
@@ -103,13 +94,6 @@ public final class Resource {
     }
 
     /**
-     * @deprecated Use {@link #getCurrentActivePage()} instead
-     */
-    public static Content getCurrentActivePage(HttpServletRequest req) {
-        return getCurrentActivePage();
-    }
-
-    /**
      * <p>
      * get file object associated with the requested atom
      * </p>
@@ -117,13 +101,6 @@ public final class Resource {
      */
     public static File getFile() {
         return MgnlContext.getAggregationState().getFile();
-    }
-
-    /**
-     * @deprecated Use {@link #getFile()} instead
-     */
-    public static File getFile(HttpServletRequest req) {
-        return getFile();
     }
 
     /**
@@ -142,24 +119,6 @@ public final class Resource {
     }
 
     /**
-     * @deprecated Use {@link #getGlobalContentNode()} instead
-     */
-    public static Content getGlobalContentNode(HttpServletRequest req) {
-        return getGlobalContentNode();
-    }
-
-    /**
-     * Get HierarchyManager object from the request OR from the user session this hierarchy manager points to website
-     * repository, in order to swith between user and website repositories, use method (changeContext) on this object.
-     * @param req HttpServletRequest as received in JSP or servlet
-     * @return hierarchy manager, for the website repository
-     * @deprecated as of magnolia 3.0, use MglnContext instead
-     */
-    public static HierarchyManager getHierarchyManager(HttpServletRequest req) {
-        return MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
-    }
-
-    /**
      * <p>
      * get ContentNode object as passed to the include tag
      * </p>
@@ -167,14 +126,6 @@ public final class Resource {
      */
     public static Content getLocalContentNode() {
         return (Content) MgnlContext.getAttribute(Resource.LOCAL_CONTENT_NODE);
-    }
-
-    /**
-     * @deprecated don't pass the request
-     * @deprecated Use {@link #getLocalContentNode()} instead
-     */
-    public static Content getLocalContentNode(HttpServletRequest req) {
-        return getLocalContentNode();
     }
 
     /**
@@ -190,13 +141,6 @@ public final class Resource {
     }
 
     /**
-     * @deprecated Use {@link #getLocalContentNodeCollectionName()} instead
-     */
-    public static String getLocalContentNodeCollectionName(HttpServletRequest req) {
-        return getLocalContentNodeCollectionName();
-    }
-
-    /**
      * <p>
      * this only works for forms which uses enctype=multipart/form-data
      * </p>
@@ -204,13 +148,6 @@ public final class Resource {
      */
     public static MultipartForm getPostedForm() {
         return (MultipartForm) MgnlContext.getAttribute("multipartform"); //$NON-NLS-1$
-    }
-
-    /**
-     * @deprecated don't pass the request
-     */
-    public static MultipartForm getPostedForm(HttpServletRequest req) {
-        return getPostedForm();
     }
 
     /**
@@ -223,14 +160,6 @@ public final class Resource {
      */
     public static String getSelector() {
         return MgnlContext.getAggregationState().getSelector();
-    }
-
-    /**
-     * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
-     * @deprecated don't pass the request
-     */
-    public static String getSelector(HttpServletRequest req) {
-        return getSelector();
     }
 
     /**
@@ -256,22 +185,11 @@ public final class Resource {
         MgnlContext.removeAttribute(Resource.GLOBAL_CONTENT_NODE);
     }
 
-    public static void removeGlobalContentNode(HttpServletRequest req) {
-        removeGlobalContentNode();
-    }
-
     /**
      * removes ContentNode object in resources , scope:TAG
      */
     public static void removeLocalContentNode() {
         MgnlContext.removeAttribute(Resource.LOCAL_CONTENT_NODE);
-    }
-
-    /**
-     * @deprecated Use {@link #removeLocalContentNode()} instead
-     */
-    public static void removeLocalContentNode(HttpServletRequest req) {
-        removeLocalContentNode();
     }
 
     /**
@@ -282,13 +200,6 @@ public final class Resource {
     }
 
     /**
-     * @deprecated Use {@link #removeLocalContentNodeCollectionName()} instead
-     */
-    public static void removeLocalContentNodeCollectionName(HttpServletRequest req) {
-        removeLocalContentNodeCollectionName();
-    }
-
-    /**
      * Restores the request's original <code>actpage</code> attribute (i.e. the one specified by the request URI).
      */
     public static void restoreCurrentActivePage() {
@@ -296,24 +207,10 @@ public final class Resource {
     }
 
     /**
-     * @deprecated Use {@link #restoreCurrentActivePage()} instead
-     */
-    public static void restoreCurrentActivePage(HttpServletRequest request) {
-        restoreCurrentActivePage();
-    }
-
-    /**
      * Set the request's <code>actpage</code> attribute to <code>page</code>
      */
     public static void setCurrentActivePage(Content page) {
         MgnlContext.getAggregationState().setCurrentContent(page);
-    }
-
-    /**
-     * @deprecated do not pass the request
-     */
-    public static void setCurrentActivePage(HttpServletRequest request, Content page) {
-        setCurrentActivePage(page);
     }
 
     /**
@@ -327,13 +224,6 @@ public final class Resource {
     }
 
     /**
-     * @deprecated Use {@link #setGlobalContentNode(Content)} instead
-     */
-    public static void setGlobalContentNode(HttpServletRequest req, Content node) {
-        setGlobalContentNode(node);
-    }
-
-    /**
      * <p>
      * set ContentNode object in resources , scope:TAG
      * </p>
@@ -341,13 +231,6 @@ public final class Resource {
      */
     public static void setLocalContentNode(Content node) {
         MgnlContext.setAttribute(Resource.LOCAL_CONTENT_NODE, node);
-    }
-
-    /**
-     * @deprecated Use {@link #setLocalContentNode(Content)} instead
-     */
-    public static void setLocalContentNode(HttpServletRequest req, Content node) {
-        setLocalContentNode(node);
     }
 
     public static void setLocalContentNodeCollectionName(HttpServletRequest req, String name) {
@@ -377,13 +260,6 @@ public final class Resource {
 
     public static void setShowPreview(boolean showPreview){
         MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.valueOf(showPreview));
-    }
-
-    /**
-     * @deprecated Use {@link #showPreview()} instead
-     */
-    public static boolean showPreview(HttpServletRequest req) {
-        return showPreview();
     }
 
 }
