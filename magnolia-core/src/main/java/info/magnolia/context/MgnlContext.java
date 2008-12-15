@@ -35,23 +35,21 @@ package info.magnolia.context;
 
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.AggregationState;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.User;
-import info.magnolia.cms.core.HierarchyManager;
-
-import java.util.Locale;
-import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Locale;
+import java.util.Map;
 
 
 /**
@@ -215,7 +213,7 @@ public class MgnlContext {
     /**
      * Get form object assembled by <code>MultipartRequestFilter</code>
      * @return multipart form object
-     * @deprecated use getAggregationState() TODO ?
+     * TODO - move to getAggregationState() ?
      */
     public static MultipartForm getPostedForm() {
         WebContext ctx = getWebContextIfExisting(getInstance());

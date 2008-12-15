@@ -33,12 +33,12 @@
  */
 package info.magnolia.cms.beans.runtime;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.io.File;
 import java.util.Enumeration;
 import java.util.Hashtable;
 import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -64,18 +64,30 @@ public class MultipartForm {
         this.parameterList = new Hashtable();
     }
 
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
     public void addParameter(String name, Object value) {
         this.parameters.put(name, value);
     }
 
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
     public void removeParameter(String name) {
         this.parameters.remove(name);
     }
 
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
     public Map getParameters() {
         return this.parameters;
     }
 
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
     public String getParameter(String name) {
         try {
             return (String) this.parameters.get(name);
@@ -85,6 +97,9 @@ public class MultipartForm {
         }
     }
 
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
     public String[] getParameterValues(String name) {
         try {
             return ((String[]) this.parameterList.get(name));
@@ -94,6 +109,9 @@ public class MultipartForm {
         }
     }
 
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
     public void addparameterValues(String name, String[] values) {
         this.parameterList.put(name, values);
     }
@@ -125,6 +143,9 @@ public class MultipartForm {
         return this.documents;
     }
 
+    /**
+     * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
+     */
     public Enumeration getParameterNames() {
         return ((Hashtable) this.parameters).keys();
     }

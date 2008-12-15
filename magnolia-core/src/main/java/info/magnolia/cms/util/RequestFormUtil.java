@@ -48,6 +48,7 @@ import java.util.Map;
  * Sometimes one get the parameters via form (multipart-post) and via request (get, normal post). Using this Util you
  * have not to care.
  * @author philipp
+ * @deprecated since 4.0 - should not be needed anymore since MAGNOLIA-2449 - request parameters should be correctly wrapped.
  */
 public class RequestFormUtil {
 
