@@ -39,14 +39,12 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
-
-import java.io.IOException;
-import java.io.Writer;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
-
-import org.apache.commons.lang.StringUtils;
+import java.io.IOException;
+import java.io.Writer;
 
 
 /**
@@ -152,7 +150,7 @@ public class BarNew extends Bar {
      * </p>
      */
     public void drawHtml(Writer out) throws IOException {
-        boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
+        boolean isGranted = MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET);
         if (!Resource.showPreview() && isGranted) {
             this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);"); //$NON-NLS-1$ //$NON-NLS-2$

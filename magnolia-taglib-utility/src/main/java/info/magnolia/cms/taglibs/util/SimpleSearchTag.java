@@ -38,20 +38,17 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.search.Query;
 import info.magnolia.cms.core.search.QueryResult;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
-
-import java.text.MessageFormat;
+import org.apache.commons.lang.ArrayUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.apache.commons.lang.ArrayUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.text.MessageFormat;
 
 
 /**
@@ -208,7 +205,7 @@ public class SimpleSearchTag extends TagSupport {
         // search only in a specific subtree
         if (this.startLevel != 0) {
             try {
-                Content activePage = Resource.getActivePage();
+                Content activePage = MgnlContext.getAggregationState().getMainContent();
                 if (activePage != null) {
                     startPath = StringUtils.strip(activePage.getAncestor(this.startLevel).getHandle(), "/"); //$NON-NLS-1$
                 }

@@ -38,14 +38,12 @@ import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
-
-import java.io.IOException;
-import java.io.Writer;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
-
-import org.apache.commons.lang.StringUtils;
+import java.io.IOException;
+import java.io.Writer;
 
 
 /**
@@ -130,7 +128,7 @@ public class ButtonEdit extends Button {
      */
     public void drawHtml(Writer out) throws IOException {
         if (this.getRequest() != null) {
-            boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
+            boolean isGranted = MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET);
             if (!Resource.showPreview() && isGranted) {
                 println(out, this.getHtml());
             }

@@ -39,14 +39,14 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.ButtonEdit;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.context.MgnlContext;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.tagext.TagSupport;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -96,7 +96,7 @@ public class EditButton extends TagSupport {
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() {
-        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && Resource.getActivePage().isGranted(Permission.SET)) {
+        if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET)) {
 
             try {
                 if (this.getNodeCollectionName() != null && this.getNodeName() == null) {

@@ -44,7 +44,7 @@ import org.apache.commons.lang.StringUtils;
  * @author Sameer Charles
  * @version 1.1
  *
- * @deprecated formally since 4.0, but really should have stopped using this class for a long time
+ * @deprecated since 4.0
  */
 public final class Resource {
 
@@ -71,6 +71,8 @@ public final class Resource {
      * get Content object as requested from the URI
      * </p>
      * @return currently active page, as requested from the URI
+     *
+     * @deprecated use AggregationState
      */
     public static Content getActivePage() {
         return MgnlContext.getAggregationState().getMainContent();
@@ -165,6 +167,8 @@ public final class Resource {
      * <p>
      * removes ContentNode object in resources , scope:page
      * </p>
+     *
+     * not used
      */
     public static void removeGlobalContentNode() {
         MgnlContext.removeAttribute(Resource.GLOBAL_CONTENT_NODE);
@@ -188,11 +192,12 @@ public final class Resource {
      * Restores the request's original <code>actpage</code> attribute (i.e. the one specified by the request URI).
      */
     public static void restoreCurrentActivePage() {
-        setCurrentActivePage(getActivePage());
+        setCurrentActivePage(MgnlContext.getAggregationState().getMainContent());
     }
 
     /**
      * Set the request's <code>actpage</code> attribute to <code>page</code>
+     * @deprecated since 4.0 - use AggregationState.
      */
     public static void setCurrentActivePage(Content page) {
         MgnlContext.getAggregationState().setCurrentContent(page);

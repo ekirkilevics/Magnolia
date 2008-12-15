@@ -39,16 +39,15 @@ import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.jsp.tagext.TagSupport;
-
+import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.jsp.tagext.TagSupport;
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -163,7 +162,7 @@ public class MainBar extends TagSupport implements BarTag {
     public int doEndTag() {
 
         HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
-        Content activePage = Resource.getActivePage();
+        Content activePage = MgnlContext.getAggregationState().getMainContent();
         if (ServerConfiguration.getInstance().isAdmin() && activePage != null && activePage.isGranted(Permission.SET)) {
             try {
                 BarMain bar = new BarMain(request);

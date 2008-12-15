@@ -35,7 +35,7 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.gui.control.Button;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.context.MgnlContext;
 
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.TagSupport;
@@ -107,7 +107,7 @@ public class ButtonTag extends TagSupport {
         Button button = new Button();
         button.setLabel(label);
         button.setOnclick("mgnlOpenDialog('"
-            + Resource.getActivePage().getHandle()
+            + MgnlContext.getAggregationState().getMainContent().getHandle()
             + "','','','"
             + dialogName
             + "','"

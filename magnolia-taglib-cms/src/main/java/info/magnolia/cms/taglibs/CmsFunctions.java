@@ -40,14 +40,12 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
-
-import java.util.Properties;
-import java.util.Collection;
-
-import javax.jcr.RepositoryException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.jcr.RepositoryException;
+import java.util.Collection;
+import java.util.Properties;
 
 
 /**
@@ -125,7 +123,7 @@ public class CmsFunctions {
      * @return true if the current user can edit the active page.
      */
     public static boolean canEdit() {
-        return Resource.getActivePage().isGranted(Permission.SET);
+        return MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET);
     }
 
     /**
@@ -134,7 +132,7 @@ public class CmsFunctions {
      * @return true if the page is open in edit mode and user has permissions to edit
      */
     public static boolean isEditMode() {
-        Content activePage = Resource.getActivePage();
+        Content activePage = MgnlContext.getAggregationState().getMainContent();
         return ServerConfiguration.getInstance().isAdmin()
             && !Resource.showPreview()
             && activePage != null

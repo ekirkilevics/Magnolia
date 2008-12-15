@@ -34,8 +34,7 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.Resource;
-
+import info.magnolia.context.MgnlContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -133,7 +132,7 @@ public class SetNode extends BaseContentTag {
 
         // set attribute
         if (contentNode != null) {
-            pageContext.setAttribute(this.var, new NodeMapWrapper(contentNode, Resource.getActivePage()), this.scope);
+            pageContext.setAttribute(this.var, new NodeMapWrapper(contentNode, MgnlContext.getAggregationState().getMainContent()), this.scope);
         }
         else {
             pageContext.removeAttribute(this.var);

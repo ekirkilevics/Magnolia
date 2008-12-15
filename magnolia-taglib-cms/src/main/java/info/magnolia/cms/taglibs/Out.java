@@ -42,20 +42,17 @@ import info.magnolia.cms.link.LinkHelper;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.DateUtil;
 import info.magnolia.cms.util.LinkUtil;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
-
-import java.io.IOException;
-import java.util.Date;
-import java.util.Locale;
+import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.lang.StringUtils;
+import org.apache.commons.lang.exception.NestableRuntimeException;
 
 import javax.jcr.PropertyType;
 import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
-
-import org.apache.commons.lang.StringUtils;
-import org.apache.commons.lang.StringEscapeUtils;
-import org.apache.commons.lang.exception.NestableRuntimeException;
+import java.io.IOException;
+import java.util.Date;
+import java.util.Locale;
 
 
 /**
@@ -371,7 +368,7 @@ public class Out extends BaseContentTag {
                     // replace internal links that use the special magnolia link format (looks like ${link: {uuid: ... etc) -
                     // ( - see info.magnolia.cms.link.UUIDLink for an example of the special format that this next line
                     //    handles )
-                    value = LinkUtil.convertUUIDsToBrowserLinks(value, Resource.getActivePage().getHandle()); // static actpage
+                    value = LinkUtil.convertUUIDsToBrowserLinks(value, MgnlContext.getAggregationState().getMainContent().getHandle()); // static actpage
 
                     if(!StringUtils.equalsIgnoreCase(getUuidToLink(), LINK_RESOLVING_NONE)){
                         // if the uuidToLink type has been explicitly set, reset the output value

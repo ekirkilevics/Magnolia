@@ -37,19 +37,18 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
-
-import java.io.IOException;
-import java.util.Iterator;
+import info.magnolia.context.MgnlContext;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.tagext.BodyTagSupport;
 import javax.servlet.jsp.tagext.Tag;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
+import java.util.Iterator;
 
 
 /**
@@ -124,7 +123,7 @@ public class RedirectTag extends BodyTagSupport {
         HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         String location = getRedirectLocation(request);
 
-        Content activePage = Resource.getActivePage();
+        Content activePage = MgnlContext.getAggregationState().getMainContent();
 
         // on public servers, during preview or when the user can't edit the page, just send the redirect
         if (!ServerConfiguration.getInstance().isAdmin() || Resource.showPreview() || !activePage.isGranted(Permission.SET)) {
@@ -158,7 +157,7 @@ public class RedirectTag extends BodyTagSupport {
      * @return A URI if a child page is available, or null.
      */
     private String getRedirectLocation(HttpServletRequest request) {
-        Content page = Resource.getActivePage();
+        Content page = MgnlContext.getAggregationState().getMainContent();
         Iterator it = page.getChildren().iterator();
         if (it.hasNext()) {
             Content c = (Content) it.next();

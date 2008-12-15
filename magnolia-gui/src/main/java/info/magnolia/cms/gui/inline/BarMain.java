@@ -42,11 +42,10 @@ import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
-import java.io.IOException;
-import java.io.Writer;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspWriter;
+import java.io.IOException;
+import java.io.Writer;
 
 
 /**
@@ -272,7 +271,7 @@ public class BarMain extends Bar {
     public void drawHtml(Writer out) throws IOException {
         if (ServerConfiguration.getInstance().isAdmin()) {
 
-            boolean isGranted = Resource.getActivePage().isGranted(Permission.SET);
+            boolean isGranted = MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET);
             if (isGranted) {
 
                 // check if links have already been added.
