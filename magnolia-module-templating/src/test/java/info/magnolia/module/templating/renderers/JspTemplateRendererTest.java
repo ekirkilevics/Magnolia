@@ -33,14 +33,19 @@
  */
 package info.magnolia.module.templating.renderers;
 
+import info.magnolia.cms.beans.config.RenderableDefinition;
+import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.module.templating.AbstractRenderer;
+import info.magnolia.module.templating.paragraphs.JspParagraphRenderer;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -55,7 +60,7 @@ public class JspTemplateRendererTest extends TestCase {
         super.tearDown();
     }
 
-    public void testExposesNodesAsMaps() {
+    public void testExposesNodesAsMaps() throws Exception {
         final WebContext magnoliaCtx = createStrictMock(WebContext.class);
         MgnlContext.setInstance(magnoliaCtx);
         // the page node is exposed twice, once as "actpage", once as "content"
@@ -68,7 +73,12 @@ public class JspTemplateRendererTest extends TestCase {
 
         replay(magnoliaCtx, page);
         final Map templateCtx = new HashMap();
-        new JspTemplateRenderer().setupContext(templateCtx, page, null, null, null);
+        final JspParagraphRenderer renderer = new JspParagraphRenderer();
+
+        // ugly hack to exexute renderer.setupContext()
+        Method setupContextMethod = AbstractRenderer.class.getDeclaredMethod("setupContext", new Class[]{Map.class, Content.class, RenderableDefinition.class, RenderingModel.class, Object.class});
+        setupContextMethod.setAccessible(true);
+        setupContextMethod.invoke(renderer, new Object[]{templateCtx, page, null, null, null});
 
         // other tests should verify the other objects !
         assertEquals("Unexpected amount of objects in context", 7, templateCtx.size());

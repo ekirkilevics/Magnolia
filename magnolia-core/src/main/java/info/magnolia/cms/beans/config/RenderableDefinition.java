@@ -44,7 +44,7 @@ import info.magnolia.cms.core.Content;
  * @version $Id$
  *
  */
-public interface Renderable {
+public interface RenderableDefinition {
     public String getName();
     public String getType();
     public String getTitle();
@@ -61,7 +61,7 @@ public interface Renderable {
     /**
      * Create the model based on the current content.
      */
-    public RenderingModel newModel(Content content, Renderable renderable, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
+    public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException;
 
     /**
      * The modules execute() method can return a string which is passed to this method to determine the template to use.

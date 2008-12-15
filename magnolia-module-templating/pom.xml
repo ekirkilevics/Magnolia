@@ -17,7 +17,7 @@
     </dependency>
     <dependency>
       <groupId>info.magnolia</groupId>
-      <artifactId>magnolia-module-admininterface</artifactId>
+      <artifactId>magnolia-gui</artifactId>
       <version>4.0-SNAPSHOT</version>
     </dependency>
     <dependency>

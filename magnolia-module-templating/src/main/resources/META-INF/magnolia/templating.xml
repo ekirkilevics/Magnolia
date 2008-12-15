@@ -7,7 +7,7 @@
   <version>${project.version}</version>
   <dependencies>
     <dependency>
-      <name>adminInterface</name>
+      <name>core</name>
       <version>4.0/*</version>
     </dependency>
   </dependencies>

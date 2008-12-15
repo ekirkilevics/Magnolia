@@ -34,18 +34,23 @@
 package info.magnolia.module.templating.paragraphs;
 
 import info.magnolia.cms.beans.config.Paragraph;
+import info.magnolia.cms.beans.config.RenderableDefinition;
+import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentWrapper;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.module.templating.AbstractRenderer;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
 import java.io.IOException;
 import java.io.StringWriter;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -69,7 +74,7 @@ public class JspParagraphRendererTest extends TestCase {
         super.tearDown();
     }
 
-    public void testExposesNodesAsMaps() {
+    public void testExposesNodesAsMaps() throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
         final WebContext magnoliaCtx = createStrictMock(WebContext.class);
         MgnlContext.setInstance(magnoliaCtx);
 
@@ -84,7 +89,13 @@ public class JspParagraphRendererTest extends TestCase {
 
         replay(magnoliaCtx, page, paragraph);
         final Map templateCtx = new HashMap();
-        new JspParagraphRenderer().setupContext(templateCtx, paragraph, null, null, null);
+
+        final JspParagraphRenderer renderer = new JspParagraphRenderer();
+
+        // ugly hack to exexute renderer.setupContext()
+        Method setupContextMethod = AbstractRenderer.class.getDeclaredMethod("setupContext", new Class[]{Map.class, Content.class, RenderableDefinition.class, RenderingModel.class, Object.class});
+        setupContextMethod.setAccessible(true);
+        setupContextMethod.invoke(renderer, new Object[]{templateCtx, paragraph, null, null, null});
 
         // other tests should verify the other objects !
         assertEquals("Unexpected amount of objects in context", 7, templateCtx.size());

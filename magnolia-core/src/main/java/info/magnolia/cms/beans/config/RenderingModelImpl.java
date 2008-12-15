@@ -44,11 +44,11 @@ import info.magnolia.cms.core.Content;
 public class RenderingModelImpl implements RenderingModel {
     protected final RenderingModel parentModel;
     protected final Content content;
-    protected final Renderable renderable;
+    protected final RenderableDefinition definition;
 
-    public RenderingModelImpl(Content content, Renderable renderable, RenderingModel parent) {
+    public RenderingModelImpl(Content content, RenderableDefinition definition, RenderingModel parent) {
         this.content = content;
-        this.renderable = renderable;
+        this.definition = definition;
         this.parentModel = parent;
     }
 
@@ -60,8 +60,15 @@ public class RenderingModelImpl implements RenderingModel {
         return this.content;
     }
 
-    public Renderable getRenderable() {
-        return this.renderable;
+    /**
+     * Shortname for templates: model.def
+     */
+    public RenderableDefinition getDef() {
+        return getDefinition();
+    }
+
+    public RenderableDefinition getDefinition() {
+        return this.definition;
     }
 
     public String execute() {

@@ -59,12 +59,12 @@ public interface RenderingModel {
     /**
      * The renderable (paragraph/template) tied to this model
      */
-    public Renderable getRenderable();
+    public RenderableDefinition getDefinition();
 
     /**
      * Called after all properties were set. Can return a string which is passed
      * to the method
-     * {@link Renderable#determineTemplatePath(String, RenderingModel)}
+     * {@link RenderableDefinition#determineTemplatePath(String, RenderingModel)}
      */
     public String execute();
 

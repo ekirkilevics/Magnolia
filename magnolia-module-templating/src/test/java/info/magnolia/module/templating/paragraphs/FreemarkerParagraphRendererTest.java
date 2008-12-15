@@ -39,7 +39,7 @@ import static org.easymock.classextension.EasyMock.replay;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.beans.config.RenderingModelImpl;
 import info.magnolia.cms.beans.config.ServerConfiguration;
@@ -167,8 +167,8 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     }
 
     public static final class SimpleTestState extends RenderingModelImpl{
-        public SimpleTestState(Content content, Renderable renderable, RenderingModel parent) {
-            super(content, renderable, parent);
+        public SimpleTestState(Content content, RenderableDefinition definition, RenderingModel parent) {
+            super(content, definition, parent);
         }
 
         private String pouet = "it works";

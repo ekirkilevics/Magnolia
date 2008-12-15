@@ -50,11 +50,11 @@ import info.magnolia.context.MgnlContext;
 /**
  * Base implementation for paragraph and template definitions. Provides the
  * {@link #modelClass} property which is used in the method
- * {@link #newModel(Content, Renderable, RenderingModel)}
+ * {@link #newModel(Content, RenderableDefinition, RenderingModel)}
  * @author pbracher
  * @version $Id$
  */
-public class AbstractRenderable implements Renderable {
+public class AbstractRenderable implements RenderableDefinition {
     private String name;
     private String title;
     private String templatePath;
@@ -73,15 +73,15 @@ public class AbstractRenderable implements Renderable {
     }
 
     /**
-     * Instantiates the model based on the class defined by the {@link #modelClass} property. The class must provide a constructor similar to {@link RenderingModelImpl#RenderingModelImpl(Content, Renderable, RenderingModel)}. All the request parameters are then mapped to the models properties.
+     * Instantiates the model based on the class defined by the {@link #modelClass} property. The class must provide a constructor similar to {@link RenderingModelImpl#RenderingModelImpl(Content, RenderableDefinition, RenderingModel)}. All the request parameters are then mapped to the models properties.
      */
-    public RenderingModel newModel(Content content, Renderable renderable, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
-        final Class[] constructorTypes = new Class[]{Content.class, Renderable.class, RenderingModel.class};
+    public RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws IllegalArgumentException, InstantiationException, IllegalAccessException, InvocationTargetException {
+        final Class[] constructorTypes = new Class[]{Content.class, RenderableDefinition.class, RenderingModel.class};
         Constructor constr = ConstructorUtils.getAccessibleConstructor(getModelClass(), constructorTypes);
         if(constr == null){
             throw new IllegalArgumentException("A model class must define a constructor with types: " + ArrayUtils.toString(constructorTypes));
         }
-        RenderingModel model = (RenderingModel) constr.newInstance(new Object[]{content, renderable, parentModel});
+        RenderingModel model = (RenderingModel) constr.newInstance(new Object[]{content, definition, parentModel});
         final Map params = MgnlContext.getParameters();
         if (params != null) {
             BeanUtils.populate(model, params);

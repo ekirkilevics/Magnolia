@@ -42,7 +42,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
@@ -65,7 +65,7 @@ public abstract class AbstractParagraphRenderer extends AbstractRenderer impleme
 
     public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
         try {
-            render(content, (Renderable) paragraph, out);
+            render(content, (RenderableDefinition) paragraph, out);
         }
         catch (RenderException e) {
             // the IOException does not take an Exception as a parameter
@@ -77,14 +77,4 @@ public abstract class AbstractParagraphRenderer extends AbstractRenderer impleme
         }
     }
 
-    protected Map saveContextState(Map ctx) {
-        Map state = super.saveContextState(ctx);
-        saveAttribute(ctx, state, "paragraphDef");
-        return state;
-    }
-
-    protected void setupContext(Map ctx, Content content, Renderable renderable, RenderingModel state, Object actionResult) {
-        super.setupContext(ctx, content, renderable, state, actionResult);
-        setContextAttribute(ctx, "paragraphDef", renderable);
-    }
 }

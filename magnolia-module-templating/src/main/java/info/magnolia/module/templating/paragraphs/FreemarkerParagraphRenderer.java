@@ -35,7 +35,7 @@ package info.magnolia.module.templating.paragraphs;
 
 import freemarker.template.TemplateException;
 import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
@@ -82,7 +82,7 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
         this.fmHelper = fmRenderer;
     }
 
-    protected void callTemplate(String templatePath, Renderable renderable, final Map ctx, Writer out) throws RenderException {
+    protected void callTemplate(String templatePath, RenderableDefinition definition, final Map ctx, Writer out) throws RenderException {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         boolean wrap = false;
@@ -93,7 +93,7 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
                 out = new PrintWriter(out);
             }
             log.debug ("About to call FM renderer with {}wrapped writer: {}", wrap? "" : "un", out );
-            fmHelper.render(templatePath, locale, renderable.getI18nBasename(), ctx, out);
+            fmHelper.render(templatePath, locale, definition.getI18nBasename(), ctx, out);
 
 
         } catch (TemplateException e) {
@@ -119,8 +119,8 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
         return state;
     }
 
-    protected void setupContext(Map ctx, Content content, Renderable renderable, RenderingModel state, Object actionResult) {
-        super.setupContext(ctx, content, renderable, state, actionResult);
+    protected void setupContext(Map ctx, Content content, RenderableDefinition definition, RenderingModel state, Object actionResult) {
+        super.setupContext(ctx, content, definition, state, actionResult);
         setContextAttribute(ctx, "params", MgnlContext.getParameters());
     }
 

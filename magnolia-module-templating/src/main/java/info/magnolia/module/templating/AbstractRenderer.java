@@ -39,7 +39,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
-import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.AggregationState;
@@ -62,29 +62,29 @@ public abstract class AbstractRenderer {
     public AbstractRenderer() {
     }
 
-    protected void render(Content content, Renderable renderable, Writer out) throws RenderException {
+    protected void render(Content content, RenderableDefinition definition, Writer out) throws RenderException {
 
         final RenderingModel parentModel = (RenderingModel) MgnlContext.getAttribute(MODEL_ATTRIBUTE);
         RenderingModel model;
         try {
-            model = newModel(content, renderable, parentModel);
+            model = newModel(content, definition, parentModel);
         }
         catch (Exception e) {
             throw new RenderException("Can't create rendering model", e);
         }
 
         final String actionResult = model.execute();
-        String templatePath = renderable.determineTemplatePath(actionResult, model);
+        String templatePath = definition.determineTemplatePath(actionResult, model);
 
         if (templatePath == null) {
-            throw new IllegalStateException("Unable to render " + renderable.getClass().getName() + " " + renderable.getName() + " in page " + content.getHandle() + ": templatePath not set.");
+            throw new IllegalStateException("Unable to render " + definition.getClass().getName() + " " + definition.getName() + " in page " + content.getHandle() + ": templatePath not set.");
         }
 
         final Map ctx = newContext();
         final Map savedContextState = saveContextState(ctx);
-        setupContext(ctx, content, renderable, model, actionResult);
+        setupContext(ctx, content, definition, model, actionResult);
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, model);
-        callTemplate(templatePath, renderable, ctx, out);
+        callTemplate(templatePath, definition, ctx, out);
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, parentModel);
 
         restoreContext(ctx, savedContextState);
@@ -93,8 +93,8 @@ public abstract class AbstractRenderer {
     /**
      * Creates the model for this rendering process. Will set the properties
      */
-    protected RenderingModel newModel(Content content, Renderable renderable, RenderingModel parentModel) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        return renderable.newModel(content, renderable, parentModel);
+    protected RenderingModel newModel(Content content, RenderableDefinition definition, RenderingModel parentModel) throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        return definition.newModel(content, definition, parentModel);
     }
 
     protected Map saveContextState(final Map ctx) {
@@ -103,6 +103,8 @@ public abstract class AbstractRenderer {
         saveAttribute(ctx, state, "content");
         saveAttribute(ctx, state, "actionResult");
         saveAttribute(ctx, state, "state");
+        saveAttribute(ctx, state, "def");
+
         saveAttribute(ctx, state, getPageAttributeName());
         return state;
     }
@@ -118,13 +120,14 @@ public abstract class AbstractRenderer {
         }
     }
 
-    protected void setupContext(final Map ctx, Content content, Renderable renderable, RenderingModel model, Object actionResult){
+    protected void setupContext(final Map ctx, Content content, RenderableDefinition definition, RenderingModel model, Object actionResult){
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final Content page = aggregationState.getMainContent();
 
         setContextAttribute(ctx, getPageAttributeName(), wrapNodeForTemplate(page, page));
         setContextAttribute(ctx, "content", wrapNodeForTemplate(content, page));
-        setContextAttribute(ctx, "aggregationState", aggregationState);
+        setContextAttribute(ctx, "def", definition);
+        setContextAttribute(ctx, "state", aggregationState);
         setContextAttribute(ctx, "mgnl", new MagnoliaTemplatingUtilities());
         setContextAttribute(ctx, "model", model);
         setContextAttribute(ctx, "actionResult", actionResult);
@@ -160,6 +163,6 @@ public abstract class AbstractRenderer {
     /**
      * Finally execute the rendering.
      */
-    protected abstract void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException;
+    protected abstract void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException;
 
 }

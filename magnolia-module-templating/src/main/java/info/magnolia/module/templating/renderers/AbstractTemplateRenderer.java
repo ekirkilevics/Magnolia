@@ -41,7 +41,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
@@ -80,16 +80,5 @@ public abstract class AbstractTemplateRenderer extends AbstractRenderer implemen
         finally{
             out.flush();
         }
-    }
-
-    protected Map saveContextState(Map ctx) {
-        Map state = super.saveContextState(ctx);
-        saveAttribute(ctx, state, "templateDef");
-        return state;
-    }
-
-    protected void setupContext(Map ctx, Content content, Renderable renderable, RenderingModel state, Object actionResult) {
-        super.setupContext(ctx, content, renderable, state, actionResult);
-        setContextAttribute(ctx, "templateDef", renderable);
     }
 }

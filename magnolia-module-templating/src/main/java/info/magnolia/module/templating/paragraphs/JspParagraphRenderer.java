@@ -33,7 +33,8 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
-import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderableDefinition;
+import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.NodeMapWrapper;
 import info.magnolia.context.Context;
@@ -52,7 +53,7 @@ import java.util.Map;
  */
 public class JspParagraphRenderer extends AbstractParagraphRenderer {
 
-    protected void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException {
+    protected void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException {
         try {
             ((WebContext) ctx).include(templatePath, out);
         } catch (Exception e) {

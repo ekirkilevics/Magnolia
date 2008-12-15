@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.NodeMapWrapper;
@@ -65,7 +65,7 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
         super.renderTemplate(template, request, response);
     }
 
-    protected void callTemplate(String templatePath, Renderable renderable, Map ctx, Writer out) throws RenderException {
+    protected void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException {
         HttpServletRequest request = ((WebContext) MgnlContext.getInstance()).getRequest();
         HttpServletResponse response = ((WebContext) MgnlContext.getInstance()).getResponse();
         RequestDispatcher rd = request.getRequestDispatcher(templatePath);

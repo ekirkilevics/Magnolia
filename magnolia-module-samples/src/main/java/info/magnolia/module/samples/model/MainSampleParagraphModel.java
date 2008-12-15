@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.samples.model;
 
-import info.magnolia.cms.beans.config.Renderable;
+import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.beans.config.RenderingModelImpl;
 import info.magnolia.cms.core.Content;
@@ -48,8 +48,8 @@ public class MainSampleParagraphModel extends RenderingModelImpl {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MainSampleParagraphModel.class);
 
-    public MainSampleParagraphModel(Content content, Renderable renderable, RenderingModel parent) {
-        super(content, renderable, parent);
+    public MainSampleParagraphModel(Content content, RenderableDefinition definition, RenderingModel parent) {
+        super(content, definition, parent);
         log.info("Running sample paragraph model");
 
     }
