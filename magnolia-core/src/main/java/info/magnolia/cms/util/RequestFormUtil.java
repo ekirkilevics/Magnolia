@@ -35,15 +35,13 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
+import org.apache.commons.lang.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
 import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
 
 
 /**
@@ -73,11 +71,11 @@ public class RequestFormUtil {
      */
 
     public String getParameter(String name) {
-        return RequestFormUtil.getParameter(this.request, this.form, name);
+        return getParameter(this.request, this.form, name);
     }
 
     public static String getParameter(HttpServletRequest request, String name) {
-        return RequestFormUtil.getParameter(request, Resource.getPostedForm(), name);
+        return getParameter(request, Resource.getPostedForm(), name);
     }
 
     /**
@@ -105,11 +103,11 @@ public class RequestFormUtil {
     }
 
     public String getParameter(String name, String defaultValue) {
-        return RequestFormUtil.getParameter(this.request, this.form, name, defaultValue);
+        return getParameter(this.request, this.form, name, defaultValue);
     }
 
     public static String getParameter(HttpServletRequest request, String name, String defaultValue) {
-        return RequestFormUtil.getParameter(request, Resource.getPostedForm(), name, defaultValue);
+        return getParameter(request, Resource.getPostedForm(), name, defaultValue);
     }
 
     /**

@@ -134,9 +134,10 @@ public final class Resource {
      * this only works for forms which uses enctype=multipart/form-data
      * </p>
      * @return initialised multipart form object with the posted data
+     * @deprecated since 4.0 - use WebContext.getPostedForm()
      */
     public static MultipartForm getPostedForm() {
-        return (MultipartForm) MgnlContext.getAttribute("multipartform"); //$NON-NLS-1$
+        return MgnlContext.getPostedForm();
     }
 
     /**
