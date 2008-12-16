@@ -38,8 +38,10 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.SocketException;
+import java.net.URL;
 
 import info.magnolia.cms.core.Path;
+import info.magnolia.cms.util.ClasspathResourcesUtil;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -76,34 +78,6 @@ public class DisplaySamplesSourcesServlet extends HttpServlet {
         }
     }
 
-
-    private void handleResourceRequest(HttpServletRequest req, HttpServletResponse res, String fileName) throws Exception {
-
-        File file = new File(fileName);
-        InputStream is = new FileInputStream(file);
-        if (is == null) {
-            res.sendError(HttpServletResponse.SC_NOT_FOUND);
-            return;
-        }
-
-        // set mime/type
-        res.setContentType("txt");
-        res.setHeader("Content-Disposition", "attachment; filename=");
-
-        res.setContentLength((int) file.length());
-
-        // todo always send as is, find better way to discover if resource could be compressed
-        try{
-            sendUnCompressed(is, res);
-        }
-        catch(SocketException e){
-            log.info("Document download stopped by the client [{}]: {}", file.getName(), e.getMessage());
-        }
-        finally{
-            IOUtils.closeQuietly(is);
-        }
-    }
-
     private void sendUnCompressed(java.io.InputStream is, HttpServletResponse res) throws Exception {
         ServletOutputStream os = res.getOutputStream();
         byte[] buffer = new byte[8192];
@@ -117,11 +91,18 @@ public class DisplaySamplesSourcesServlet extends HttpServlet {
 
     public void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
 
-        String file = StringUtils.substringAfter(request.getRequestURI(), request.getContextPath());
+        String file = StringUtils.substringAfter(request.getRequestURI(), "/.sources/");
 
-        file = Path.getAbsolutePath(file);
+       InputStream stream = null;
 
-        handleResourceRequest(request, response, file);
+        if(file.endsWith(".jsp")) {
+            stream = ClasspathResourcesUtil.getStream("/mgnl-files/templates/samples/" + file);
+        } else if(file.endsWith(".ftl")) {
+            stream = ClasspathResourcesUtil.getStream("/samples/" + file);
+        }
+
+        response.setContentType("text/plain; charset=UTF-8");
+        sendUnCompressed(stream, response);
     }
 
 }

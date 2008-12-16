@@ -14,11 +14,8 @@
           <c:forEach var="node" items="${results}">
             <div class="searchresult">
               <h4>${node.title}</h4>
-              <p>
-                <cmsu:searchResultSnippet query="${param.query}" page="${node}" />
-              </p>
               <a href="${pageContext.request.contextPath}${node.handle}.html">
-                ${pageContext.request.contextPath}${node.handle}.html
+                ${node.title}
               </a>
 
             </div>

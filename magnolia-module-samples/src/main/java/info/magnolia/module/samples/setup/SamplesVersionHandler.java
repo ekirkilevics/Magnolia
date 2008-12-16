@@ -86,7 +86,8 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
         installTasks.add(new AddMainMenuItemTask("samples", "samples.menu.label", I18N_BASENAME, "", "/.resources/icons/24/compass.gif", "security"));
 
         installTasks.add(submenu("config", "/modules/samples"));
-        installTasks.add(submenu("config", "/server/filters/sample"));
+        installTasks.add(submenu("filter", "/server/filters/sample"));
+        installTasks.add(submenu("servlet", "/server/filters/servlets/DisplaySamplesSourcesServlet"));
 
         installTasks.add(new BootstrapSingleResourceAndOrderBefore(
                 "Sample Filter",

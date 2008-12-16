@@ -33,11 +33,16 @@
  */
 package info.magnolia.module.samples.model;
 
+import java.io.IOException;
+
+import org.apache.commons.lang.StringUtils;
+
 import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.beans.config.RenderingModelImpl;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 
 /**
  *
@@ -57,6 +62,22 @@ public class MainSampleParagraphModel extends RenderingModelImpl {
     public String getFilterAttribute() {
         return (String) MgnlContext.getAttribute("sampleFilter");
 
+    }
+
+    public String execute() {
+        String url = "";
+        String query = MgnlContext.getParameter("query");
+
+        if(!StringUtils.isEmpty(query) ) {
+            url = MgnlContext.getContextPath() +"/" + MgnlContext.getParameter("resultPage")
+               + ".html?query=" + query;
+            try {
+                ((WebContext)MgnlContext.getInstance()).getResponse().sendRedirect(url);
+            } catch (IOException e) {
+                log.error("error running query");
+            }
+        }
+        return "success";
     }
 
 
