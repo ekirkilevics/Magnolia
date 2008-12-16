@@ -16,8 +16,8 @@ The date you spedified: ${content.date?string("dd.MM.yyyy")}
 </div>
 <div>
 <ul>Parameter set by filter:
-<li>using model: ${model.filterAttribute!("non set")} </li>
-<li>get from request: ${ctx.getAttribute("sampleFilter")!("non set")}</li>
+<li>using model: ${model.filterAttribute!("not set")} </li>
+<li>get from request: ${ctx.sampleFilter!("not set")}</li>
 </ul>
 </div>
 <div id="search" >

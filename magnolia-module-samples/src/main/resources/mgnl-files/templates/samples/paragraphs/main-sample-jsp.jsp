@@ -13,7 +13,7 @@ The date you spedified: <cms:out nodeDataName="date" datePattern="EEEE, d. MMMM 
 <br />
 <ul>Parameter set by filter:
 <li>using model: ${model.filterAttribute} </li>
-<li>get from request: <jsp:scriptlet>out.print(MgnlContext.getAttribute("sampleFilter"));</jsp:scriptlet></li>
+<li>get from request: ${sampleFilter}</li>
 
 </ul>
 </div>
@@ -28,8 +28,8 @@ The date you spedified: <cms:out nodeDataName="date" datePattern="EEEE, d. MMMM 
 <h3>Display Sources</h3>
 <ul>
 <li><a href="${pageContext.request.contextPath}/.sources/templates/main-sample.jsp">Main template</a></li>
-<li><a href="${pageContext.request.contextPath}/.sources/templates/paragraphs/main-sample-jsp.jsp">Main paragraph</a></li>
-<li><a href="${pageContext.request.contextPath}/.sources/templates/paragraphs/search-jsp.jsp">Search paragraph</a></li>
+<li><a href="${pageContext.request.contextPath}/.sources/paragraphs/main-sample-jsp.jsp">Main paragraph</a></li>
+<li><a href="${pageContext.request.contextPath}/.sources/paragraphs/search-jsp.jsp">Search paragraph</a></li>
 <li><a href="${pageContext.request.contextPath}/.sources/templates/include/footer.jsp">Footer</a></li>
 <li><a href="${pageContext.request.contextPath}/.sources/templates/include/header.jsp">Header</a></li>
 </ul>
