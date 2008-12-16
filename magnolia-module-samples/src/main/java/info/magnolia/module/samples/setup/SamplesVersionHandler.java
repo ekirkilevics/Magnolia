@@ -96,7 +96,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
         commonTasks.add(submenu("filter", "/server/filters/sample"));
         commonTasks.add(submenu("servlet", "/server/filters/servlets/DisplaySamplesSourcesServlet"));
 
-        commonTasks.add(new FilterOrderingTask("sample", new String[]{"cms"}));
+        commonTasks.add(new FilterOrderingTask("sample", new String[]{"servlets"}));
 
         return commonTasks;
     }
