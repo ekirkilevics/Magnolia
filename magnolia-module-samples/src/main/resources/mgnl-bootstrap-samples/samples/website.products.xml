@@ -26,10 +26,10 @@
       <sv:value>2008-12-11T17:34:02.822+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2008-12-11T17:35:11.738+01:00</sv:value>
+      <sv:value>2008-12-16T17:37:10.910+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:template" sv:type="String">
-      <sv:value>sample-freemarker-virtualURI</sv:value>
+      <sv:value>sampleFreemarkerVirtualURI</sv:value>
     </sv:property>
   </sv:node>
 </sv:node>

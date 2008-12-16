@@ -36,6 +36,9 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>b66e973a-181b-4f7b-86f4-6b0fa53a5120</sv:value>
     </sv:property>
+    <sv:property sv:name="i18nBasename" sv:type="String">
+      <sv:value>info.magnolia.module.samples.messages</sv:value>
+    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
@@ -50,7 +53,7 @@
         <sv:value>2008-12-08T13:02:41.952+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-16T14:44:57.654+01:00</sv:value>
+        <sv:value>2008-12-16T17:34:40.330+01:00</sv:value>
       </sv:property>
     </sv:node>
     <sv:node sv:name="tabMain">
@@ -249,6 +252,9 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>d5d724d3-5dac-41e1-8b35-a9eadbb23327</sv:value>
     </sv:property>
+    <sv:property sv:name="i18nBasename" sv:type="String">
+      <sv:value>info.magnolia.module.samples.messages</sv:value>
+    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
@@ -263,7 +269,7 @@
         <sv:value>2008-12-08T13:02:41.952+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-12T15:43:04.316+01:00</sv:value>
+        <sv:value>2008-12-16T17:39:13.458+01:00</sv:value>
       </sv:property>
     </sv:node>
     <sv:node sv:name="tabMain">
@@ -385,6 +391,9 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>5be930e1-fb6a-4846-8c4b-37429175d20c</sv:value>
     </sv:property>
+    <sv:property sv:name="i18nBasename" sv:type="String">
+      <sv:value>info.magnolia.module.samples.messages</sv:value>
+    </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
@@ -399,7 +408,7 @@
         <sv:value>2008-12-08T13:02:41.952+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-15T09:58:08.120+01:00</sv:value>
+        <sv:value>2008-12-16T17:39:28.957+01:00</sv:value>
       </sv:property>
     </sv:node>
     <sv:node sv:name="tabMain">
