@@ -26,7 +26,7 @@
       <sv:value>2008-12-08T16:27:43.952+01:00</sv:value>
     </sv:property>
   </sv:node>
-  <sv:node sv:name="sample-jsp">
+  <sv:node sv:name="sampleJSP">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
@@ -43,7 +43,10 @@
       <sv:value>/templates/samples/templates/main-sample.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
-      <sv:value>sample-jsp</sv:value>
+      <sv:value>sampleJSP</sv:value>
+    </sv:property>
+    <sv:property sv:name="titleSize" sv:type="String">
+      <sv:value>1</sv:value>
     </sv:property>
     <sv:property sv:name="type" sv:type="String">
       <sv:value>jsp</sv:value>
@@ -65,11 +68,11 @@
         <sv:value>2008-09-23T16:56:46.344+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-10T09:21:22.541+01:00</sv:value>
+        <sv:value>2008-12-12T15:48:55.256+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="sample-freemarker">
+  <sv:node sv:name="sampleFreemarker">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
@@ -79,6 +82,9 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>4cfb2737-e5b7-46db-9565-959e1e5f6b59</sv:value>
     </sv:property>
+    <sv:property sv:name="class" sv:type="String">
+      <sv:value>info.magnolia.module.samples.templates.MainTemplate</sv:value>
+    </sv:property>
     <sv:property sv:name="i18nBasename" sv:type="String">
       <sv:value>info.magnolia.module.samples.messages</sv:value>
     </sv:property>
@@ -86,7 +92,10 @@
       <sv:value>samples/templates/main-sample.ftl</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
-      <sv:value>sample-freemarker</sv:value>
+      <sv:value>sampleFreemarker</sv:value>
+    </sv:property>
+    <sv:property sv:name="titleSize" sv:type="String">
+      <sv:value>1</sv:value>
     </sv:property>
     <sv:property sv:name="type" sv:type="String">
       <sv:value>freemarker</sv:value>
@@ -108,11 +117,11 @@
         <sv:value>2008-09-23T16:56:46.344+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-10T09:18:53.202+01:00</sv:value>
+        <sv:value>2008-12-12T16:39:19.490+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
-  <sv:node sv:name="sample-freemarker-virtualURI">
+  <sv:node sv:name="sampleFreemarkerVirtualURI">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:contentNode</sv:value>
     </sv:property>
@@ -129,7 +138,7 @@
       <sv:value>samples/templates/virtualURI-sample.ftl</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
-      <sv:value>sample-freemarker-virtualURI</sv:value>
+      <sv:value>sampleFreemarkerVirtualURI</sv:value>
     </sv:property>
     <sv:property sv:name="type" sv:type="String">
       <sv:value>freemarker</sv:value>
@@ -151,7 +160,7 @@
         <sv:value>2008-09-23T16:56:46.344+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-11T15:46:09.100+01:00</sv:value>
+        <sv:value>2008-12-12T15:31:39.691+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
