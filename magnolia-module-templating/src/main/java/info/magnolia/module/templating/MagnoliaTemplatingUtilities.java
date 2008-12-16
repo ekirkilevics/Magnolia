@@ -42,10 +42,9 @@ import info.magnolia.cms.util.InheritanceContentWrapper;
 import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.SiblingsHelper;
 
+import javax.jcr.RepositoryException;
 import java.io.IOException;
 import java.io.Writer;
-
-import javax.jcr.RepositoryException;
 
 /**
  * This is an object exposing a couple of methods useful for templates; it's exposed in
@@ -63,9 +62,13 @@ public class MagnoliaTemplatingUtilities {
         return SiblingsHelper.of(node);
     }
 
+    /**
+     * FreeMarker only.
+     */
     public void renderParagraph(Content paragraphNode) throws IOException {
         final Environment env = Environment.getCurrentEnvironment();
         final Writer out = env.getOut();
+        // TODO - set and unset AggState.currentContent
         ParagraphRenderingFacade.getInstance().render(paragraphNode, out);
     }
 
