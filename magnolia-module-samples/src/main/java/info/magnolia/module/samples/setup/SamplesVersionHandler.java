@@ -33,14 +33,14 @@
  */
 package info.magnolia.module.samples.setup;
 
+import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
-import info.magnolia.module.admininterface.setup.SimpleContentVersionHandler;
 import info.magnolia.module.delta.BackupTask;
-import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.DeltaBuilder;
-import info.magnolia.module.delta.IsInstallSamplesTask;
+import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.RegisterModuleServletsTask;
 import info.magnolia.module.delta.ReplaceIfExistsTask;
 
@@ -53,11 +53,14 @@ import java.util.List;
  * @version $Id$
  *
  */
-public class SamplesVersionHandler extends SimpleContentVersionHandler {
+public class SamplesVersionHandler extends DefaultModuleVersionHandler {
 
     private static final String I18N_BASENAME = "info.magnolia.module.samples.messages";
 
+    final List commonTasks = new ArrayList();
     public SamplesVersionHandler() {
+
+        getCommonTasks();
 
         register(DeltaBuilder.update("4.0", "New samples module, replaces the old one.")
                 .addTask(new BackupTask("config", "/modules/samples", true))
@@ -73,32 +76,37 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
                 .addTask(new ReplaceIfExistsTask("Paragraphs","Replace paragraphs.",
                         "Samples paragraphs don't exist", "config",
                         "/modules/samples/paragraphs", "config.modules.samples.paragraphs.xml"))
+                .addTask(new BootstrapSingleResource(
+                        "Sample Filter",
+                        "Adds a sample filter",
+                        "/mgnl-bootstrap/samples/config.server.filters.sample.xml"))
                 .addTask(new RegisterModuleServletsTask())
+                .addTasks(commonTasks)
 
         );
 
     }
 
-    protected List getExtraInstallTasks(InstallContext installContext) {
-        final List installTasks = new ArrayList();
+    protected List getCommonTasks() {
+
         // add the default uri task
-        installTasks.add(new IsInstallSamplesTask("Default URI", "Sets a new default URI if samples are to be installed.", getSetDefaultPublicURITask(installContext)));
-        installTasks.add(new AddMainMenuItemTask("samples", "samples.menu.label", I18N_BASENAME, "", "/.resources/icons/24/compass.gif", "security"));
+        commonTasks.add(new AddMainMenuItemTask("samples", "samples.menu.label", I18N_BASENAME, "", "/.resources/icons/24/compass.gif", "security"));
 
-        installTasks.add(submenu("config", "/modules/samples"));
-        installTasks.add(submenu("filter", "/server/filters/sample"));
-        installTasks.add(submenu("servlet", "/server/filters/servlets/DisplaySamplesSourcesServlet"));
+        commonTasks.add(submenu("config", "/modules/samples"));
+        commonTasks.add(submenu("filter", "/server/filters/sample"));
+        commonTasks.add(submenu("servlet", "/server/filters/servlets/DisplaySamplesSourcesServlet"));
 
-        installTasks.add(new BootstrapSingleResourceAndOrderBefore(
-                "Sample Filter",
-                "Adds a sample filter",
-                "/mgnl-bootstrap/samples/config.server.filters.sample.xml",
-                "cms"));
-        return installTasks;
+        commonTasks.add(new FilterOrderingTask("sample", new String[]{"cms"}));
+
+        return commonTasks;
     }
 
     private AddSubMenuItemTask submenu(String name, String path) {
         return new AddSubMenuItemTask("samples", name, "samples." + name + ".menu.label", I18N_BASENAME, "MgnlAdminCentral.showTree('config', '" + path + "')", "/.resources/icons/16/gears.gif");
+    }
+
+    protected List getExtraInstallTasks(InstallContext installContext) {
+        return commonTasks;
     }
 
 }
