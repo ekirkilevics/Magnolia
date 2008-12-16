@@ -37,9 +37,12 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
 import info.magnolia.module.admininterface.setup.SimpleContentVersionHandler;
+import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
+import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.IsInstallSamplesTask;
-import info.magnolia.module.delta.OrderNodeBeforeTask;
+import info.magnolia.module.delta.RegisterModuleServletsTask;
+import info.magnolia.module.delta.ReplaceIfExistsTask;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,6 +59,24 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
 
     public SamplesVersionHandler() {
 
+        register(DeltaBuilder.update("4.0", "New samples module, replaces the old one.")
+                .addTask(new BackupTask("config", "/modules/samples", true))
+                .addTask(new ReplaceIfExistsTask("Configuration","Replace configuration.",
+                        "Samples configuration doesn't exist", "config",
+                        "/modules/samples/config", "config.modules.samples.config.xml"))
+                .addTask(new ReplaceIfExistsTask("Dialogs","Replace dialogs.",
+                        "Samples dialogs don't exist", "config",
+                        "/modules/samples/dialogs", "config.modules.samples.dialogs.xml"))
+                .addTask(new ReplaceIfExistsTask("Templates","Replace templates.",
+                        "Samples templates don't exist", "config",
+                        "/modules/samples/templates", "config.modules.samples.templates.xml"))
+                .addTask(new ReplaceIfExistsTask("Paragraphs","Replace paragraphs.",
+                        "Samples paragraphs don't exist", "config",
+                        "/modules/samples/paragraphs", "config.modules.samples.paragraphs.xml"))
+                .addTask(new RegisterModuleServletsTask())
+
+        );
+
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
@@ -65,6 +86,8 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
         installTasks.add(new AddMainMenuItemTask("samples", "samples.menu.label", I18N_BASENAME, "", "/.resources/icons/24/compass.gif", "security"));
 
         installTasks.add(submenu("config", "/modules/samples"));
+        installTasks.add(submenu("config", "/server/filters/sample"));
+
         installTasks.add(new BootstrapSingleResourceAndOrderBefore(
                 "Sample Filter",
                 "Adds a sample filter",

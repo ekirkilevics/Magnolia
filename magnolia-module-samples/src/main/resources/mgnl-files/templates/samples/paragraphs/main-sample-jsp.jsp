@@ -1,7 +1,7 @@
 <%@ taglib prefix="cms" uri="cms-taglib" %>
 <%@ taglib prefix="cmsu" uri="cms-util-taglib" %>
 <jsp:directive.page import="info.magnolia.context.MgnlContext" />
-<cms:editBar editLabel="I want to edit my paragraph" moveLabel="" deleteLabel=""/>
+<cms:editBar />
 <h3><cms:out nodeDataName="title" /></h3>
 <div>
 <cms:out nodeDataName="image" var="imageurl" />

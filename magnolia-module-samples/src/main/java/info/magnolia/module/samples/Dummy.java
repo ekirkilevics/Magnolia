@@ -31,38 +31,57 @@
  * intact.
  *
  */
-package info.magnolia.module.samples.filters;
+package info.magnolia.module.samples;
 
-import info.magnolia.cms.filters.AbstractMgnlFilter;
-import info.magnolia.context.MgnlContext;
+import java.util.HashMap;
+import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
-import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 /**
  *
  * @author tmiyar
  *
  */
-public class SampleFilter extends AbstractMgnlFilter {
+public class Dummy {
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SampleFilter.class);
+    final private static Logger log = LoggerFactory.getLogger(Dummy.class);
 
+    private String name;
 
-    public void doFilter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
-        try {
-            log.info("Executing sample filter but bypass ./admin urls");
+    private boolean active;
 
-            httpServletRequest.setAttribute("sampleFilter", "attribute set by sample filter");
+    private Map parameters = new HashMap();
 
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
-
-        } catch (Throwable t) {
-
-        }
+    public String getName() {
+        log.info("No need to define name node data, will take the name of the node for this property: " + name);
+        return name;
     }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isActive() {
+        log.info("Need to define active node data: " + active);
+        return active;
+    }
+
+    public void setActive(boolean active) {
+        this.active = active;
+    }
+
+    public Map getParameters() {
+        log.info("Need to define parameters node data: " + parameters);
+        return parameters;
+    }
+
+    public void setParameters(Map parameters) {
+        this.parameters = parameters;
+    }
+
+
 
 }

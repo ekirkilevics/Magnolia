@@ -3,8 +3,7 @@
 [#assign cmsu=JspTaglibs["cms-util-taglib"]]
 
 <div id="footer">
-<p>&copy; 2008 Samples, All Rights Reserved
-    This page was last edited by <b>${content.metaData.authorId}</b>
+<p>This page was last edited by <b>${content.metaData.authorId}</b>
     on <b>${content.metaData.modificationDate}</b>
-    [@cmsu.poweredBy /]</p>
+    </p>
 </div>

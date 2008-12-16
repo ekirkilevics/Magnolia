@@ -23,4 +23,14 @@
       <optional>true</optional>
     </dependency>
   </dependencies>
+  <servlets>
+    <servlet>
+      <name>DisplaySamplesSourcesServlet</name>
+      <class>info.magnolia.module.samples.DisplaySamplesSourcesServlet</class>
+      <comment>Used to display the samples sources</comment>
+      <mappings>
+        <mapping>/.sources/*</mapping>
+      </mappings>
+    </servlet>
+  </servlets>
 </module>

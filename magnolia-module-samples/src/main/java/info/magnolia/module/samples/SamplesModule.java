@@ -51,41 +51,40 @@ import info.magnolia.module.ModuleLifecycleContext;
  */
 public class SamplesModule implements ModuleLifecycle {
 
-    private static Logger log = LoggerFactory.getLogger(SamplesModule.class);
+    final private static Logger log = LoggerFactory.getLogger(SamplesModule.class);
 
-    private List sampleList = new ArrayList();
+    private List items = new ArrayList();
 
     private Map sampleMap = new HashMap();
 
     private String sampleProperty;
 
-
     public void start(ModuleLifecycleContext moduleLifecycleContext) {
-        log.info("module extra initializations");
+        log.info("Samples module is starting");
 
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
-        log.info("module extra module cleanup");
+        log.info("Samples module is stopping");
 
     }
 
-    public List getSampleList() {
+    public List getItems() {
         log.info("this is a node of type content");
-        return sampleList;
+        return items;
     }
 
-    public void setSampleList(List sampleList) {
-        this.sampleList = sampleList;
+    public void setItems(List items) {
+        this.items = items;
     }
 
-    public void addSampleList(SampleConfigurations sampleConfigurations) {
-        log.info("adds the items to the list, a 'SampleConfigurations' class:" + sampleConfigurations.getName());
-        this.sampleList.add(sampleConfigurations);
+    public void addItem(Dummy dummy) {
+        log.info("Adds the items to the list, a 'Dummy' class:" + dummy.getName());
+        this.items.add(dummy);
     }
 
     public Map getSampleMap() {
-        log.info("this is a node of type content node");
+        log.info("This is a node of type content node");
         return sampleMap;
     }
 
@@ -94,7 +93,7 @@ public class SamplesModule implements ModuleLifecycle {
     }
 
     public String getSampleProperty() {
-        log.info("this is a node of type node data: " + sampleProperty);
+        log.info("This is a node of type node data: " + sampleProperty);
         return sampleProperty;
     }
 

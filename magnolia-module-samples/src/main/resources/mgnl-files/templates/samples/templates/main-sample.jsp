@@ -9,15 +9,24 @@
             <c:import url="include/header.jsp" />
         </head>
         <body>
+        <cms:mainBar dialog="sampleProperties" />
             <h1>Add a template</h1>
             <div>
                 <cms:contentNodeIterator contentNodeCollectionName="main">
                     <cms:includeTemplate />
 
                 </cms:contentNodeIterator>
-                <cms:newBar contentNodeCollectionName="main" paragraph="main-sample-jsp" />
+                <cms:newBar contentNodeCollectionName="main" paragraph="sampleJSP, sampleJSPSearch" />
                 <c:import url="include/footer.jsp" />
             </div>
+
+            <div id="search" >
+        <form name="mgnlsearch" action="#" method="post">
+        <input type="hidden" id="resultPage" name="resultPage" value="searchResultJSP" />
+          <input id="query" name="query" value="${query}" />
+          <input type="submit" name="search" value="search" />
+        </form>
+    </div><!-- end search -->
             <cmsu:simpleNavigation />
         </body>
     </html>

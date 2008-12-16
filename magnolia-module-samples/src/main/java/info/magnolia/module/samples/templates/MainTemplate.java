@@ -31,10 +31,9 @@
  * intact.
  *
  */
-package info.magnolia.module.samples;
+package info.magnolia.module.samples.templates;
 
-import java.util.HashMap;
-import java.util.Map;
+import info.magnolia.cms.beans.config.Template;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -45,43 +44,19 @@ import org.slf4j.LoggerFactory;
  * @author tmiyar
  *
  */
-public class SampleConfigurations {
+public class MainTemplate extends Template {
 
-    private static Logger log = LoggerFactory.getLogger(SampleConfigurations.class);
+    static Logger log = LoggerFactory.getLogger(MainTemplate.class);
 
-    private String name;
+    private String titleSize;
 
-    private boolean active;
-
-    private Map parameters = new HashMap();
-
-    public String getName() {
-        log.info("no need to define name node data, will take the name of the node for this property: " + name);
-        return name;
+    public String getTitleSize() {
+        return titleSize;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setTitleSize(String titleSize) {
+        this.titleSize = titleSize;
     }
-
-    public boolean isActive() {
-        log.info("need to define active node data: " + active);
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-    }
-
-    public Map getParameters() {
-        log.info("need to define parameters node data: " + parameters);
-        return parameters;
-    }
-
-    public void setParameters(Map parameters) {
-        this.parameters = parameters;
-    }
-
 
 
 }

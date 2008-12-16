@@ -2,7 +2,7 @@
 [#assign cms=JspTaglibs["cms-taglib"]]
 [#assign cmsu=JspTaglibs["cms-util-taglib"]]
 
-[@cms.editBar editLabel="I want to edit my paragraph" moveLabel="" deleteLabel=""/]
+[@cms.editBar /]
 <h3>${content.title!("no title")}</h3>
 <div>
 
