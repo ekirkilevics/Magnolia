@@ -48,11 +48,11 @@ public class AggregationState {
     private String originalURI;
     private String originalURL;
     private String currentURI;
-    private Content currentContent;
     private String extension;
     private File file;
     private String handle;
     private Content mainContent;
+    private Content currentContent;
     private String repository;
     private String selector;
     private Template template;
@@ -106,14 +106,6 @@ public class AggregationState {
         this.characterEncoding = characterEncoding;
     }
 
-    public Content getCurrentContent() {
-        return currentContent;
-    }
-
-    public void setCurrentContent(Content currentContent) {
-        this.currentContent = currentContent;
-    }
-
     public void setExtension(String extension) {
         this.extension = extension;
     }
@@ -140,6 +132,14 @@ public class AggregationState {
 
     public void setMainContent(Content mainContent) {
         this.mainContent = mainContent;
+    }
+
+    public Content getCurrentContent() {
+        return currentContent;
+    }
+
+    public void setCurrentContent(Content currentContent) {
+        this.currentContent = currentContent;
     }
 
     public String getRepository() {
