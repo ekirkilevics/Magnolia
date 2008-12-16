@@ -37,7 +37,7 @@
       <sv:value>47098875-36b5-4ae6-80f6-9e6e5fde0adc</sv:value>
     </sv:property>
     <sv:property sv:name="description" sv:type="String">
-      <sv:value>Basic paragraph that demonstrates jsp usage</sv:value>
+      <sv:value>paragraphs.sampleJSPControlsShowRoom.description</sv:value>
     </sv:property>
     <sv:property sv:name="dialog" sv:type="String">
       <sv:value>sampleControlsShowRoom</sv:value>
@@ -52,7 +52,7 @@
       <sv:value>/templates/samples/paragraphs/controls-jsp-sample.ftl</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
-      <sv:value>Controls sample jsp paragraph</sv:value>
+      <sv:value>paragraphs.sampleJSPControlsShowRoom.title</sv:value>
     </sv:property>
     <sv:property sv:name="type" sv:type="String">
       <sv:value>jsp</sv:value>
@@ -71,7 +71,7 @@
         <sv:value>2008-09-25T12:45:26.721+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-16T14:38:32.826+01:00</sv:value>
+        <sv:value>2008-12-16T15:58:29.637+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -135,7 +135,7 @@
       <sv:value>92da3005-aa22-48e8-8130-3fad8e5aec4b</sv:value>
     </sv:property>
     <sv:property sv:name="description" sv:type="String">
-      <sv:value>Basic paragraph that demonstrates freemarker usage</sv:value>
+      <sv:value>paragraphs.sampleFreemarker.description</sv:value>
     </sv:property>
     <sv:property sv:name="dialog" sv:type="String">
       <sv:value>sampleMain</sv:value>
@@ -150,7 +150,7 @@
       <sv:value>samples/paragraphs/main-sample-freemarker.ftl</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
-      <sv:value>Main sample freemarker paragraph</sv:value>
+      <sv:value>paragraphs.sampleFreemarker.title</sv:value>
     </sv:property>
     <sv:property sv:name="type" sv:type="String">
       <sv:value>freemarker</sv:value>
@@ -169,7 +169,7 @@
         <sv:value>2008-09-25T12:45:26.721+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-12T15:43:23.669+01:00</sv:value>
+        <sv:value>2008-12-16T16:02:22.131+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -184,7 +184,7 @@
       <sv:value>2f084917-60a3-4868-b07d-fcb052476edc</sv:value>
     </sv:property>
     <sv:property sv:name="description" sv:type="String">
-      <sv:value>Basic paragraph that demonstrates jsp usage</sv:value>
+      <sv:value>paragraphs.sampleJSP.description</sv:value>
     </sv:property>
     <sv:property sv:name="dialog" sv:type="String">
       <sv:value>sampleMain</sv:value>
@@ -199,7 +199,7 @@
       <sv:value>/templates/samples/paragraphs/main-sample-jsp.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
-      <sv:value>Main sample jsp paragraph</sv:value>
+      <sv:value>paragraphs.sampleJSP.title</sv:value>
     </sv:property>
     <sv:property sv:name="type" sv:type="String">
       <sv:value>jsp</sv:value>
@@ -218,7 +218,7 @@
         <sv:value>2008-09-25T12:45:26.721+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-15T11:19:50.143+01:00</sv:value>
+        <sv:value>2008-12-16T16:03:07.074+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -233,7 +233,7 @@
       <sv:value>d3c199a9-9d37-4cda-a177-920b3652656c</sv:value>
     </sv:property>
     <sv:property sv:name="description" sv:type="String">
-      <sv:value>Basic paragraph that demonstrates freemarker search usage</sv:value>
+      <sv:value>paragraphs.sampleFreemarkerSearch.description</sv:value>
     </sv:property>
     <sv:property sv:name="dialog" sv:type="String">
       <sv:value>sampleSearch</sv:value>
@@ -248,7 +248,7 @@
       <sv:value>samples/paragraphs/search-freemarker.ftl</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
-      <sv:value>Search sample freemarker paragraph</sv:value>
+      <sv:value>paragraphs.sampleFreemarkerSearch.title</sv:value>
     </sv:property>
     <sv:property sv:name="type" sv:type="String">
       <sv:value>freemarker</sv:value>
@@ -267,7 +267,7 @@
         <sv:value>2008-09-25T12:45:26.721+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-15T10:25:27.478+01:00</sv:value>
+        <sv:value>2008-12-16T16:04:50.067+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -282,7 +282,7 @@
       <sv:value>422124d4-7226-40c5-9f76-c39b0243888e</sv:value>
     </sv:property>
     <sv:property sv:name="description" sv:type="String">
-      <sv:value>Basic paragraph that demonstrates jsp search usage</sv:value>
+      <sv:value>paragraphs.sampleJSPSearch.description</sv:value>
     </sv:property>
     <sv:property sv:name="dialog" sv:type="String">
       <sv:value>sampleSearch</sv:value>
@@ -297,7 +297,7 @@
       <sv:value>/templates/samples/paragraphs/search-jsp.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
-      <sv:value>Search sample jsp paragraph</sv:value>
+      <sv:value>paragraphs.sampleJSPSearch.title</sv:value>
     </sv:property>
     <sv:property sv:name="type" sv:type="String">
       <sv:value>jsp</sv:value>
@@ -316,7 +316,7 @@
         <sv:value>2008-09-25T12:45:26.721+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2008-12-15T11:29:32.159+01:00</sv:value>
+        <sv:value>2008-12-16T16:05:40.771+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
