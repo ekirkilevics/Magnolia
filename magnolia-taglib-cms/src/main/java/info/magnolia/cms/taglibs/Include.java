@@ -35,7 +35,9 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ParagraphRenderingFacade;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.util.Resource;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -202,9 +204,10 @@ public class Include extends BodyTagSupport {
                 localContentNodeSet = true;
             }
 
-            boolean orgShowPreview = Resource.showPreview();
+            final AggregationState aggregationState = MgnlContext.getAggregationState();
+            boolean orgShowPreview = aggregationState.isPreviewMode();
             if(noEditBars && !orgShowPreview){
-                Resource.setShowPreview(true);
+                aggregationState.setPreviewMode(true);
             }
 
             if (this.path != null) { // TODO
@@ -214,7 +217,7 @@ public class Include extends BodyTagSupport {
                 ParagraphRenderingFacade.getInstance().render(content, pageContext.getOut(), pageContext);
             }
             if(noEditBars){
-                Resource.setShowPreview(orgShowPreview);
+                aggregationState.setPreviewMode(orgShowPreview);
             }
 
         } catch (IOException e) {

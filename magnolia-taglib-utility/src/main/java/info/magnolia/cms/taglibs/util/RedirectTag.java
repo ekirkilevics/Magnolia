@@ -126,7 +126,7 @@ public class RedirectTag extends BodyTagSupport {
         Content activePage = MgnlContext.getAggregationState().getMainContent();
 
         // on public servers, during preview or when the user can't edit the page, just send the redirect
-        if (!ServerConfiguration.getInstance().isAdmin() || Resource.showPreview() || !activePage.isGranted(Permission.SET)) {
+        if (!ServerConfiguration.getInstance().isAdmin() || MgnlContext.getAggregationState().isPreviewMode() || !activePage.isGranted(Permission.SET)) {
             if (location != null) {
                 try {
                     ((HttpServletResponse) pageContext.getResponse()).sendRedirect(request.getContextPath() + location);

@@ -34,7 +34,7 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.context.MgnlContext;
 
 import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 
@@ -75,7 +75,7 @@ public class PublicOnly extends ConditionalTagSupport {
      * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
      */
     protected boolean condition() {
-        if (!ServerConfiguration.getInstance().isAdmin() || (showInPreview && Resource.showPreview())) {
+        if (!ServerConfiguration.getInstance().isAdmin() || (showInPreview && MgnlContext.getAggregationState().isPreviewMode())) {
             return true;
         }
         return false;

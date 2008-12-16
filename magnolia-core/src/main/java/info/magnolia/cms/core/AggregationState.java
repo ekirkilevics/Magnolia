@@ -57,6 +57,7 @@ public class AggregationState {
     private String selector;
     private Template template;
     private Locale locale;
+    private boolean isPreviewMode;
 
     public void setOriginalURI(String originalURI) {
 
@@ -200,4 +201,11 @@ public class AggregationState {
         this.locale = locale;
     }
 
+    public boolean isPreviewMode() {
+        return isPreviewMode;
+    }
+
+    public void setPreviewMode(boolean previewMode) {
+        isPreviewMode = previewMode;
+    }
 }

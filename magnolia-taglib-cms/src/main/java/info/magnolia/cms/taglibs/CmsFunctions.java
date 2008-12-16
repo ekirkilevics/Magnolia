@@ -36,6 +36,7 @@ package info.magnolia.cms.taglibs;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SecurityUtil;
 import info.magnolia.cms.util.Resource;
@@ -132,9 +133,10 @@ public class CmsFunctions {
      * @return true if the page is open in edit mode and user has permissions to edit
      */
     public static boolean isEditMode() {
-        Content activePage = MgnlContext.getAggregationState().getMainContent();
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        Content activePage = aggregationState.getMainContent();
         return ServerConfiguration.getInstance().isAdmin()
-            && !Resource.showPreview()
+            && !aggregationState.isPreviewMode()
             && activePage != null
             && activePage.isGranted(Permission.SET);
     }

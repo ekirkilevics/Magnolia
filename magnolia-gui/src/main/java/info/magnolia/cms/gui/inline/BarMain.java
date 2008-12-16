@@ -39,7 +39,7 @@ import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.misc.Sources;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 
 import javax.servlet.http.HttpServletRequest;
@@ -271,7 +271,8 @@ public class BarMain extends Bar {
     public void drawHtml(Writer out) throws IOException {
         if (ServerConfiguration.getInstance().isAdmin()) {
 
-            boolean isGranted = MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET);
+            final AggregationState aggregationState = MgnlContext.getAggregationState();
+            boolean isGranted = aggregationState.getMainContent().isGranted(Permission.SET);
             if (isGranted) {
 
                 // check if links have already been added.
@@ -283,7 +284,7 @@ public class BarMain extends Bar {
                 int top = this.getTop();
                 int left = this.getLeft();
 
-                if (!Resource.showPreview()) {
+                if (!aggregationState.isPreviewMode()) {
                     // is edit mode
                     this.setSmall(false);
                     if (this.getOverlay()) {

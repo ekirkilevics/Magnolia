@@ -35,8 +35,8 @@ package info.magnolia.cms.util;
 
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.filters.InterceptFilter;
 import info.magnolia.context.MgnlContext;
-import org.apache.commons.lang.BooleanUtils;
 import org.apache.commons.lang.StringUtils;
 
 
@@ -49,9 +49,9 @@ import org.apache.commons.lang.StringUtils;
 public final class Resource {
 
     /**
-     * Attribute used for enabling the preview mode.
+     * @deprecated since 4.0 - use {@link InterceptFilter#MGNL_PREVIEW_ATTRIBUTE} or rather, use the methods on AggregationState.
      */
-    public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview"; //$NON-NLS-1$
+    public static final String MGNL_PREVIEW_ATTRIBUTE = InterceptFilter.MGNL_PREVIEW_ATTRIBUTE;
 
     private static final String GLOBAL_CONTENT_NODE = "contentObjGlobal"; //$NON-NLS-1$
 
@@ -147,7 +147,7 @@ public final class Resource {
      * </p>
      * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      * @return selector String as requested from the URI
-     * @deprecated use {@link info.magnolia.cms.util.SelectorUtil#getSelector}
+     * @deprecated since 4.0 - use {@link info.magnolia.cms.util.SelectorUtil#getSelector}
      */
     public static String getSelector() {
         return SelectorUtil.getSelector();
@@ -158,7 +158,7 @@ public final class Resource {
      * <strong>Warning - this might change in the future - see MAGNOLIA-2343 for details.</strong>
      * @param index
      * @return the selector value
-     * @deprecated use {@link info.magnolia.cms.util.SelectorUtil#getSelector}
+     * @deprecated since 4.0 - use {@link info.magnolia.cms.util.SelectorUtil#getSelector}
      */
     public static String getSelector(int index) {
         return SelectorUtil.getSelector(index);
@@ -169,7 +169,7 @@ public final class Resource {
      * removes ContentNode object in resources , scope:page
      * </p>
      *
-     * not used
+     * @deprecated not used
      */
     public static void removeGlobalContentNode() {
         MgnlContext.removeAttribute(Resource.GLOBAL_CONTENT_NODE);
@@ -234,19 +234,17 @@ public final class Resource {
     /**
      * Check for preview mode.
      * @return boolean , true if preview is enabled
+     * @deprecated use {@link info.magnolia.cms.core.AggregationState#isPreviewMode}
      */
     public static boolean showPreview() {
-        // first check if its set in request scope
-        if (MgnlContext.getParameter(MGNL_PREVIEW_ATTRIBUTE) != null) {
-            return BooleanUtils.toBoolean(MgnlContext.getParameter(MGNL_PREVIEW_ATTRIBUTE));
-        }
-
-        Boolean value = (Boolean) MgnlContext.getAttribute(MGNL_PREVIEW_ATTRIBUTE);
-        return BooleanUtils.toBoolean(value);
+        return MgnlContext.getAggregationState().isPreviewMode();
     }
 
+    /**
+     * @deprecated use AggregationState
+     */
     public static void setShowPreview(boolean showPreview){
-        MgnlContext.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.valueOf(showPreview));
+        MgnlContext.getAggregationState().setPreviewMode(showPreview);
     }
 
 }

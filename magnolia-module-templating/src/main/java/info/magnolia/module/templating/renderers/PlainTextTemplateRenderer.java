@@ -39,7 +39,6 @@ import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
 import javax.servlet.ServletException;
@@ -56,7 +55,7 @@ public class PlainTextTemplateRenderer implements TemplateRenderer {
 
     public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         final boolean isAdmin = ServerConfiguration.getInstance().isAdmin();
-        final boolean isPreview = Resource.showPreview();
+        final boolean isPreview = MgnlContext.getAggregationState().isPreviewMode();
 
         final Content content = MgnlContext.getAggregationState().getMainContent();
         final String text = content.getNodeData("text").getString();

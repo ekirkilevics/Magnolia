@@ -38,7 +38,6 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
@@ -62,6 +61,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class InterceptFilter extends AbstractMgnlFilter {
+    private static final Logger log = LoggerFactory.getLogger(InterceptFilter.class);
 
     /**
      * Request parameter: the INTERCEPT holds the name of an administrative action to perform.
@@ -104,9 +104,10 @@ public class InterceptFilter extends AbstractMgnlFilter {
     private static final String PARAM_PATH_SELECTED = "mgnlPathSelected"; //$NON-NLS-1$
 
     /**
-     * Logger.
+     * Attribute used for enabling the preview mode.
+     * @deprecated added in 4.0 for retro-compatibility but should not be public.
      */
-    private static Logger log = LoggerFactory.getLogger(InterceptFilter.class);
+    public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview"; //$NON-NLS-1$
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
 
@@ -114,7 +115,21 @@ public class InterceptFilter extends AbstractMgnlFilter {
             this.intercept(request, response);
         }
 
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        aggregationState.setPreviewMode(previewMode());
+
         chain.doFilter(request, response);
+    }
+
+    protected boolean previewMode() {
+        // first check if its passed as a request parameter
+        if (MgnlContext.getParameter(MGNL_PREVIEW_ATTRIBUTE) != null) {
+            return BooleanUtils.toBoolean(MgnlContext.getParameter(MGNL_PREVIEW_ATTRIBUTE));
+        }
+
+        // then in attributes, i.e the session
+        final Boolean value = (Boolean) MgnlContext.getAttribute(MGNL_PREVIEW_ATTRIBUTE);
+        return BooleanUtils.toBoolean(value);
     }
 
 
@@ -141,16 +156,17 @@ public class InterceptFilter extends AbstractMgnlFilter {
         synchronized (ExclusiveWrite.getInstance()) {
             if (action.equals(ACTION_PREVIEW)) {
                 // preview mode (button in main bar)
-                String preview = request.getParameter(Resource.MGNL_PREVIEW_ATTRIBUTE);
+                String preview = request.getParameter(MGNL_PREVIEW_ATTRIBUTE);
                 if (preview != null) {
 
                     // @todo IMPORTANT remove use of http session
                     HttpSession httpsession = request.getSession(true);
+                    // TODO this can be replaced by Boolean.parse with java 1.5
                     if (BooleanUtils.toBoolean(preview)) {
-                        httpsession.setAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
+                        httpsession.setAttribute(MGNL_PREVIEW_ATTRIBUTE, Boolean.TRUE);
                     }
                     else {
-                        httpsession.removeAttribute(Resource.MGNL_PREVIEW_ATTRIBUTE);
+                        httpsession.removeAttribute(MGNL_PREVIEW_ATTRIBUTE);
                     }
                 }
             }

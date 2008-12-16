@@ -38,7 +38,7 @@ import info.magnolia.cms.gui.control.Bar;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 
@@ -192,8 +192,9 @@ public class BarEdit extends Bar {
      * Draws the main bar (incl. all magnolia specific js and css sources).
      */
     public void drawHtml(Writer out) throws IOException {
-        boolean isGranted = MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET);
-        if (!Resource.showPreview() && isGranted && ServerConfiguration.getInstance().isAdmin()) {
+        final AggregationState aggregationState = MgnlContext.getAggregationState();
+        boolean isGranted = aggregationState.getMainContent().isGranted(Permission.SET);
+        if (!aggregationState.isPreviewMode() && isGranted && ServerConfiguration.getInstance().isAdmin()) {
             this.setEvent("onmousedown", "mgnlMoveNodeEnd(this,'" + this.getPath() + "');"); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
             this.setEvent("onmouseover", "mgnlMoveNodeHigh(this);"); //$NON-NLS-1$ //$NON-NLS-2$
             this.setEvent("onmouseout", "mgnlMoveNodeReset(this);"); //$NON-NLS-1$ //$NON-NLS-2$

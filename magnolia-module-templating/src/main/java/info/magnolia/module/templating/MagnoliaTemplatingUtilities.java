@@ -39,8 +39,8 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.I18nContentWrapper;
 import info.magnolia.cms.util.InheritanceContentWrapper;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.cms.util.SiblingsHelper;
+import info.magnolia.context.MgnlContext;
 
 import javax.jcr.RepositoryException;
 import java.io.IOException;
@@ -81,11 +81,12 @@ public class MagnoliaTemplatingUtilities {
     }
 
     public boolean isEditMode(){
+        // TODO : see CmsFunctions.isEditMode, which checks a couple of other properties.
         return isAuthorInstance() && !isPreviewMode();
     }
 
     public boolean isPreviewMode(){
-        return Resource.showPreview();
+        return MgnlContext.getAggregationState().isPreviewMode();
     }
 
     public boolean isAuthorInstance(){

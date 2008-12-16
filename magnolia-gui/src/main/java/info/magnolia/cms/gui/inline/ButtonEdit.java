@@ -36,7 +36,7 @@ package info.magnolia.cms.gui.inline;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 
@@ -128,8 +128,9 @@ public class ButtonEdit extends Button {
      */
     public void drawHtml(Writer out) throws IOException {
         if (this.getRequest() != null) {
-            boolean isGranted = MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET);
-            if (!Resource.showPreview() && isGranted) {
+            final AggregationState aggregationState = MgnlContext.getAggregationState();
+            boolean isGranted = aggregationState.getMainContent().isGranted(Permission.SET);
+            if (!aggregationState.isPreviewMode() && isGranted) {
                 println(out, this.getHtml());
             }
         }
