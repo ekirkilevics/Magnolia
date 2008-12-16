@@ -89,9 +89,6 @@ public class AggregationState {
         return characterEncoding;
     }
 
-    public String getExtension() {
-        return extension;
-    }
 
     // -- just plain getters and setters below:
     /**
@@ -102,8 +99,20 @@ public class AggregationState {
         return originalURI;
     }
 
+    public String getOriginalURL() {
+        return originalURL;
+    }
+
+    public void setOriginalURL(String originalURL) {
+        this.originalURL = originalURL;
+    }
+
     public void setCharacterEncoding(String characterEncoding) {
         this.characterEncoding = characterEncoding;
+    }
+
+    public String getExtension() {
+        return extension;
     }
 
     public void setExtension(String extension) {
@@ -191,11 +200,4 @@ public class AggregationState {
         this.locale = locale;
     }
 
-    public String getOriginalURL() {
-        return originalURL;
-    }
-
-    public void setOriginalURL(String originalURL) {
-        this.originalURL = originalURL;
-    }
 }
