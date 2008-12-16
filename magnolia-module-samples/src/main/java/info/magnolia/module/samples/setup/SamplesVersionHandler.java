@@ -98,7 +98,7 @@ public class SamplesVersionHandler extends SimpleContentVersionHandler {
     }
 
     private AddSubMenuItemTask submenu(String name, String path) {
-        return new AddSubMenuItemTask("samples", name, "samples." + name + ".menu.label", I18N_BASENAME, "MgnlAdminCentral.showTree('" + name + "', '" + path + "')", "/.resources/icons/16/gears.gif");
+        return new AddSubMenuItemTask("samples", name, "samples." + name + ".menu.label", I18N_BASENAME, "MgnlAdminCentral.showTree('config', '" + path + "')", "/.resources/icons/16/gears.gif");
     }
 
 }
