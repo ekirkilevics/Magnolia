@@ -36,7 +36,8 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.core.Content;
 
 /**
- *
+ * Compares 2 nodes by their name.
+ * 
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */

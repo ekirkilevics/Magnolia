@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import java.util.Date;
 
 /**
+ * Compares the creation date of 2 nodes. (using {@link info.magnolia.cms.core.MetaData})
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)

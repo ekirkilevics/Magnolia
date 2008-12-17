@@ -36,6 +36,7 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.core.Content;
 
 /**
+ * Compares 2 nodes property of type String.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -43,6 +44,10 @@ import info.magnolia.cms.core.Content;
 public class NodeDataStringComparator extends AbstractContentComparator {
     private final String nodeDataName;
 
+    /**
+     *
+     * @param nodeDataName the property to compare.
+     */
     public NodeDataStringComparator(String nodeDataName) {
         this.nodeDataName = nodeDataName;
     }

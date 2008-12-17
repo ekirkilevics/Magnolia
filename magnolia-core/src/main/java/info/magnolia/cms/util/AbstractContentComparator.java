@@ -38,6 +38,7 @@ import info.magnolia.cms.core.Content;
 import java.util.Comparator;
 
 /**
+ * Abstract Comparator use to compares nodes (for sorting etc.)
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
