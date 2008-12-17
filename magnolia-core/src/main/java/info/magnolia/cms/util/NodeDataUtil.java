@@ -391,6 +391,19 @@ public class NodeDataUtil {
         return defaultValue;
     }
 
+    public static Calendar getDate(Content node, String name, Calendar defaultValue) {
+        try {
+            if(node.hasNodeData(name)){
+                return node.getNodeData(name).getDate();
+            }
+        }
+        // should not happen
+        catch (RepositoryException e) {
+            log.error("can't read value will return default value", e);
+        }
+        return defaultValue;
+    }
+
     public static boolean getBoolean(Content node, String name, boolean defaultValue) {
         try {
             if(node.hasNodeData(name)){
