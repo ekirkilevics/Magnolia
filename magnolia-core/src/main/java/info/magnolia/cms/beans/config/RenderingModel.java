@@ -49,7 +49,7 @@ public interface RenderingModel {
     /**
      * The model of the parent paragraph or template.
      */
-    public RenderingModel getParentModel();
+    public RenderingModel getParent();
 
     /**
      * The content tied to this model

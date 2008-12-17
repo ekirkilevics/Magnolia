@@ -52,8 +52,16 @@ public class RenderingModelImpl implements RenderingModel {
         this.parentModel = parent;
     }
 
-    public RenderingModel getParentModel() {
+    public RenderingModel getParent() {
         return this.parentModel;
+    }
+
+    public RenderingModel getRoot(){
+        RenderingModel model = this;
+        while(model.getParent() != null){
+            model = model.getParent();
+        }
+        return model;
     }
 
     public Content getContent() {
