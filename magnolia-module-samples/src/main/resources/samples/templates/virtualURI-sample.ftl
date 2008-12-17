@@ -3,21 +3,20 @@
 [#assign cmsu=JspTaglibs["cms-util-taglib"]]
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
-[#include "include/header.ftl"]
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title>${content.title}</title>
+    <link rel="stylesheet" type="text/css" href="${contextPath}/docroot/samples/samples.css"/>
+    [@cms.links /]
 </head>
 
-<body >
+<body>
 
-    <div >
-    <p>
-    Select a product:
+<p>Select a product:
+    <a href="${ctx.contextPath}${content.@handle}/product1">Product 1</a>
+    <a href="${ctx.contextPath}${content.@handle}/product2">Product 2</a>
+    <a href="${ctx.contextPath}${content.@handle}/product3">Product 3</a>
+</p>
+<p>You selected: ${ctx.parameters.product!"none yet"}</p>
 
-        <a href="${ctx.contextPath}${content.@handle}/product1">Product 1</a>
-        <a href="${ctx.contextPath}${content.@handle}/product2">Product 2</a>
-        <a href="${ctx.contextPath}${content.@handle}/product3">Product 3</a>
-    </p>
-    </div><!-- end div -->
-
-    You selected: ${ctx.parameters.product!"none yet"}
 </body>
 </html>
