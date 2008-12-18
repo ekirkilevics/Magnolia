@@ -35,7 +35,6 @@ package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.util.Resource;
 
 import java.util.Collection;
 import java.util.Iterator;

@@ -38,7 +38,7 @@ import info.magnolia.cms.mail.MailConstants;
 import info.magnolia.cms.mail.MailModule;
 import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.taglibs.Resource;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;

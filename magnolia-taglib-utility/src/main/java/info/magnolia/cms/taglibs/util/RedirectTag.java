@@ -36,7 +36,6 @@ package info.magnolia.cms.taglibs.util;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

@@ -39,7 +39,6 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.security.SecurityUtil;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

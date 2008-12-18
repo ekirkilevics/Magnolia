@@ -38,7 +38,7 @@ import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.taglibs.Resource;
 
 import java.io.IOException;
 import java.util.ArrayList;

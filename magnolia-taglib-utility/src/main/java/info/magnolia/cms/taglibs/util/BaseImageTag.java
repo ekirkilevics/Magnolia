@@ -39,7 +39,7 @@ import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.taglibs.Resource;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;

@@ -34,7 +34,6 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.test.MgnlTestCase;

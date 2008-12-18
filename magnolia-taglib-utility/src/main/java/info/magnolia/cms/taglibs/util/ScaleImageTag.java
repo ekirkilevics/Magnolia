@@ -38,7 +38,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.taglibs.Resource;
 import info.magnolia.context.MgnlContext;
 
 import java.awt.Graphics2D;

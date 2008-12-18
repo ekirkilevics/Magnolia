@@ -43,7 +43,6 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;

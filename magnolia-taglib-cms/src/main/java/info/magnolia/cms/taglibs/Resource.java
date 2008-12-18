@@ -31,11 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.filters.InterceptFilter;
+import info.magnolia.cms.util.SelectorUtil;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 
@@ -44,9 +45,9 @@ import org.apache.commons.lang.StringUtils;
  * @author Sameer Charles
  * @version 1.1
  *
- * @deprecated since 4.0
+ * @deprecated since 4.0 - should not be used. AggregationState should be useable as a replacement in most cases.
  */
-public final class Resource {
+public class Resource {
 
     /**
      * @deprecated since 4.0 - use {@link InterceptFilter#MGNL_PREVIEW_ATTRIBUTE} or rather, use the methods on AggregationState.
@@ -62,7 +63,7 @@ public final class Resource {
     /**
      * Utility class, don't instantiate.
      */
-    private Resource() {
+    protected Resource() {
         // unused
     }
 

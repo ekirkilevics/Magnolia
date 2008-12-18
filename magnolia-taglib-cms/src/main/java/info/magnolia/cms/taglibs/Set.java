@@ -34,7 +34,6 @@
 package info.magnolia.cms.taglibs;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.Resource;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

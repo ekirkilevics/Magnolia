@@ -36,7 +36,7 @@ package info.magnolia.cms.taglibs.util;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.util.Resource;
+import info.magnolia.cms.taglibs.Resource;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;

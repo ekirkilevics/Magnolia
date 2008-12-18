@@ -38,7 +38,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;

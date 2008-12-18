@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.util.ContentUtil;
-import info.magnolia.cms.util.Resource;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.tagext.TagSupport;
