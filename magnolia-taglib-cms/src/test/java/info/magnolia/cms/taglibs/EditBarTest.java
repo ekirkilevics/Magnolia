@@ -41,7 +41,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.cms.util.Resource;
 import info.magnolia.test.MgnlTagTestCase;
 import static org.easymock.EasyMock.*;
 
