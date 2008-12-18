@@ -35,6 +35,7 @@ package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.taglibs.Resource;
 
 import java.text.SimpleDateFormat;
 import java.util.Locale;
