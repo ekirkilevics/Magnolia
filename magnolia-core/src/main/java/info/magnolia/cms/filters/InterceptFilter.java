@@ -105,7 +105,7 @@ public class InterceptFilter extends AbstractMgnlFilter {
 
     /**
      * Attribute used for enabling the preview mode.
-     * @deprecated added in 4.0 for retro-compatibility but should not be public.
+     * @deprecated added in 4.0 for backward compatibility but should not be public.
      */
     public static final String MGNL_PREVIEW_ATTRIBUTE = "mgnlPreview"; //$NON-NLS-1$
 
