@@ -38,7 +38,7 @@ import org.apache.commons.lang.StringUtils;
 import info.magnolia.cms.core.SystemProperty;
 
 /**
- * Check a manglia system property
+ * Check a magnolia system property
  * @author pbracher
  *
  */
