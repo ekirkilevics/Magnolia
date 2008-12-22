@@ -118,7 +118,7 @@ public class ModuleManagerImpl implements ModuleManager {
         }
 
         final Map moduleDefinitions = moduleDefinitionReader.readAll();
-        log.debug("loaded definitions: {}", moduleDefinitions);
+        log.debug("Loaded definitions: {}", moduleDefinitions);
 
         final DependencyChecker dependencyChecker = new DependencyChecker();
         dependencyChecker.checkDependencies(moduleDefinitions);
@@ -142,7 +142,7 @@ public class ModuleManagerImpl implements ModuleManager {
         final Iterator it = orderedModuleDescriptors.iterator();
         while (it.hasNext()) {
             final ModuleDefinition module = (ModuleDefinition) it.next();
-            log.debug("checking for installation or update [{}]", module);
+            log.debug("Checking for installation or update [{}]", module);
             final ModuleVersionHandler versionHandler = newVersionHandler(module);
             registry.registerModuleVersionHandler(module.getName(), versionHandler);
             installContext.setCurrentModule(module);
@@ -369,7 +369,7 @@ public class ModuleManagerImpl implements ModuleManager {
     protected void startModule(Object moduleInstance, final ModuleDefinition moduleDefinition, final ModuleLifecycleContextImpl lifecycleContext) {
         if (moduleInstance instanceof ModuleLifecycle) {
             lifecycleContext.setCurrentModuleDefinition(moduleDefinition);
-            log.info("starting module {}", moduleDefinition.getName());
+            log.info("Starting module {}", moduleDefinition.getName());
             ((ModuleLifecycle) moduleInstance).start(lifecycleContext);
         }
     }
@@ -377,7 +377,7 @@ public class ModuleManagerImpl implements ModuleManager {
     protected void stopModule(Object moduleInstance, final ModuleDefinition moduleDefinition, final ModuleLifecycleContextImpl lifecycleContext) {
         if (moduleInstance instanceof ModuleLifecycle) {
             lifecycleContext.setCurrentModuleDefinition(moduleDefinition);
-            log.info("stopping module {}", moduleDefinition.getName());
+            log.info("Stopping module {}", moduleDefinition.getName());
             ((ModuleLifecycle) moduleInstance).stop(lifecycleContext);
         }
     }
@@ -386,8 +386,8 @@ public class ModuleManagerImpl implements ModuleManager {
         try {
             BeanUtils.populate(moduleInstance, moduleProperties);
         }
-        catch (Exception e) {
-            log.error("can't set default properties", e);
+        catch (Throwable e) {
+            log.error("Can't set default properties", e);
         }
 
         if (moduleProperties.get("configNode") != null) {
@@ -395,7 +395,7 @@ public class ModuleManagerImpl implements ModuleManager {
                 Content2BeanUtil.setProperties(moduleInstance, (Content) moduleProperties.get("configNode"), true);
             }
             catch (Content2BeanException e) {
-                log.error("wasn't able to configure module", e);
+                log.error("Wasn't able to configure module", e);
             }
         }
     }
@@ -422,9 +422,9 @@ public class ModuleManagerImpl implements ModuleManager {
         final ModuleDefinition moduleDef = moduleAndDeltas.getModule();
         final List deltas = moduleAndDeltas.getDeltas();
         ctx.setCurrentModule(moduleDef);
-        log.debug("install/update for {} is starting", moduleDef);
+        log.debug("Install/update for {} is starting", moduleDef);
         applyDeltas(moduleDef, deltas, ctx);
-        log.debug("install/update for {} has finished", moduleDef);
+        log.debug("Install/update for {} has finished", moduleDef);
     }
 
     /**
