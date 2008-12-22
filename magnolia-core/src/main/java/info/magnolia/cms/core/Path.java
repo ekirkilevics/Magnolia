@@ -49,18 +49,10 @@ import org.slf4j.LoggerFactory;
  * @version 2.0 $Id$
  */
 public final class Path {
-
-    public static Logger log = LoggerFactory.getLogger(Path.class);
-
     /**
      * New unlabeled nodes default name
      */
     private static final String DEFAULT_UNTITLED_NODE_NAME = "untitled";
-
-    /**
-     * Default encoding is UTF-8
-     */
-    private static final String ENCODING_DEFAULT = "UTF-8"; //$NON-NLS-1$
 
     /**
      * Utility class, don't instantiate.
