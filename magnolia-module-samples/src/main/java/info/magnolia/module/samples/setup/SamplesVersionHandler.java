@@ -54,14 +54,9 @@ import java.util.List;
  *
  */
 public class SamplesVersionHandler extends DefaultModuleVersionHandler {
-
     private static final String I18N_BASENAME = "info.magnolia.module.samples.messages";
 
-    final List commonTasks = new ArrayList();
     public SamplesVersionHandler() {
-
-        getCommonTasks();
-
         register(DeltaBuilder.update("4.0", "New samples module, replaces the old one.")
                 .addTask(new BackupTask("config", "/modules/samples", true))
                 .addTask(new ReplaceIfExistsTask("Configuration","Replace configuration.",
@@ -76,19 +71,15 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new ReplaceIfExistsTask("Paragraphs","Replace paragraphs.",
                         "Samples paragraphs don't exist", "config",
                         "/modules/samples/paragraphs", "config.modules.samples.paragraphs.xml"))
-                .addTask(new BootstrapSingleResource(
-                        "Sample Filter",
-                        "Adds a sample filter",
+                .addTask(new BootstrapSingleResource("Sample Filter", "Adds a sample filter",
                         "/mgnl-bootstrap/samples/config.server.filters.sample.xml"))
                 .addTask(new RegisterModuleServletsTask())
-                .addTasks(commonTasks)
-
+                .addTasks(getCommonTasks())
         );
-
     }
 
     protected List getCommonTasks() {
-
+        final List commonTasks = new ArrayList();
         // add the default uri task
         commonTasks.add(new AddMainMenuItemTask("samples", "samples.menu.label", I18N_BASENAME, "", "/.resources/icons/24/compass.gif", "security"));
 
@@ -106,7 +97,7 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
-        return commonTasks;
+        return getCommonTasks();
     }
 
 }
