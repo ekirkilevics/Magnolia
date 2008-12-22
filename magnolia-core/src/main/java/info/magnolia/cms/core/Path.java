@@ -40,8 +40,6 @@ import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 import org.safehaus.uuid.UUIDGenerator;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
