@@ -34,30 +34,40 @@
 package info.magnolia.cms.core;
 
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import junit.framework.TestCase;
-
-import java.io.File;
+import static org.easymock.EasyMock.*;
 
 /**
- * @author fgiust
- * @version $Revision$ ($Author$)
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class PathTest extends TestCase {
+public class AggregationStateTest extends TestCase {
+    private WebContext webCtx;
+
+    protected void setUp() throws Exception {
+        super.setUp();
+        webCtx = createMock(WebContext.class);
+        expect(webCtx.getContextPath()).andReturn("/foo");
+        MgnlContext.setInstance(webCtx);
+        replay(webCtx);
+    }
 
     protected void tearDown() throws Exception {
+        verify(webCtx);
+
         MgnlContext.setInstance(null);
         super.tearDown();
     }
 
-    /**
-     * Test method for {@link info.magnolia.cms.core.Path#isAbsolute(java.lang.String)}.
-     */
-    public void testIsAbsolute() {
-        assertTrue(Path.isAbsolute("/test"));
-        assertTrue(Path.isAbsolute("d:/test"));
-        assertTrue(Path.isAbsolute(File.separator + "test"));
-        assertFalse(Path.isAbsolute("test"));
+    public void testUriDecodingShouldStripCtxPath() {
+        final AggregationState aggState = new AggregationState();
+        assertEquals("/pouet", aggState.decodeURI("/foo/pouet", "UTF-8"));
     }
 
+    public void testUriDecodingShouldReturnPassedURIDoesntContainCtxPath() {
+        final AggregationState aggState = new AggregationState();
+        assertEquals("/pouet", aggState.decodeURI("/pouet", "UTF-8"));
+    }
 
 }

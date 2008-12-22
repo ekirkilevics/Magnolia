@@ -38,6 +38,10 @@ import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.context.MgnlContext;
 
 import java.util.Locale;
+import java.net.URLDecoder;
+import java.io.UnsupportedEncodingException;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author gjoseph
@@ -60,8 +64,7 @@ public class AggregationState {
     private boolean isPreviewMode;
 
     public void setOriginalURI(String originalURI) {
-
-        String decodedURI = Path.decodedURI(originalURI, getCharacterEncoding());
+        final String decodedURI = decodeURI(originalURI);
         if (this.originalURI != null && !this.originalURI.equals(decodedURI)) {
             throw new IllegalStateException("Original URI can only be set once ! Existing value is \"" + this.originalURI + "\", tried to replace it with \"" + decodedURI + "\"");
         }
@@ -69,7 +72,7 @@ public class AggregationState {
     }
 
     public void setCurrentURI(String currentURI) {
-        this.currentURI = Path.decodedURI(currentURI, getCharacterEncoding());
+        this.currentURI = decodeURI(currentURI);
     }
 
     /**
@@ -207,5 +210,28 @@ public class AggregationState {
 
     public void setPreviewMode(boolean previewMode) {
         isPreviewMode = previewMode;
+    }
+
+    /**
+     * Decodes the URI with the passed encoding and removes the context path.
+     * WARNING: If passing URI without context path but it starts with same text as the context path it will be stripped off as well!!!
+     * @return URI without servlet context
+     * @deprecated needs a review - see MAGNOLIA-2524
+     */
+    protected String decodeURI(String uri) {
+        String decodedURL;
+        try {
+            decodedURL = URLDecoder.decode(uri, getCharacterEncoding());
+        }
+        catch (UnsupportedEncodingException e) {
+            decodedURL = uri;
+        }
+        // MAGNOLIA-2064 & others ... remove context path only when it is actually present not when page name starts with context path
+        String contextPath = MgnlContext.getContextPath();
+        if (decodedURL != null && decodedURL.startsWith(contextPath + "/")) {
+            return StringUtils.removeStart(decodedURL, contextPath);
+        } else {
+            return decodedURL;
+        }
     }
 }

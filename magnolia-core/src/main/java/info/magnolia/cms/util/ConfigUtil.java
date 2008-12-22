@@ -34,6 +34,7 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.SystemProperty;
+import info.magnolia.cms.core.Path;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -111,7 +112,7 @@ public class ConfigUtil {
      * @return the input stream
      */
     public static InputStream getConfigFile(String fileName) {
-        File file = new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR), fileName);
+        File file = new File(Path.getAppRootDir(), fileName);
         InputStream stream;
         // relative to webapp root
         if (file.exists()) {

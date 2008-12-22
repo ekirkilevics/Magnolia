@@ -33,14 +33,10 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.context.MgnlContext;
-
 import java.io.File;
-import java.io.UnsupportedEncodingException;
-import java.net.URLDecoder;
+import java.io.IOException;
 
 import javax.jcr.RepositoryException;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.safehaus.uuid.UUIDGenerator;
@@ -55,28 +51,6 @@ import org.slf4j.LoggerFactory;
 public final class Path {
 
     public static Logger log = LoggerFactory.getLogger(Path.class);
-
-    /**
-     * @deprecated not used anymore
-     */
-    public static final String JAVAX_FORWARD_SERVLET_PATH = "javax.servlet.forward.servlet_path"; //$NON-NLS-1$
-
-    /**
-     * The current set URI. This is the URI after the virtual uri mapping
-     * @deprecated use AggregationState.getCurrentURI()
-     */
-    public static final String MGNL_REQUEST_URI_CURRENT = "mgnl.request.uri.current"; //$NON-NLS-1$
-
-    /**
-     * @deprecated use MGNL_REQUEST_URI_CURRENT
-     */
-    public static final String MGNL_REQUEST_URI_DECODED = MGNL_REQUEST_URI_CURRENT; //$NON-NLS-1$
-
-    /**
-     * The original request URI. Once set never overwritten
-     * @deprecated use AggregationState.getOriginalURI()
-     */
-    public static final String MGNL_REQUEST_URI_ORIGINAL = "mgnl.request.uri.original"; //$NON-NLS-1$
 
     /**
      * New unlabeled nodes default name
@@ -159,6 +133,25 @@ public final class Path {
         return new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR));
     }
 
+    // TODO : this should probably be in Path.getAppRootDir()
+    private void checkAppRootDir() throws IOException {
+        String root = null;
+        // Try to get root
+        try {
+            File f = getAppRootDir();
+            if (f.isDirectory()) {
+                root = f.getAbsolutePath();
+            }
+        }
+        catch (Exception e) {
+            // nothing
+        }
+
+        if (root == null) {
+            throw new IOException("Invalid magnolia " + SystemProperty.MAGNOLIA_APP_ROOTDIR + " path"); //$NON-NLS-1$ //$NON-NLS-2$
+        }
+    }
+
     /**
      * Gets absolute filesystem path, adds application root if path is not absolute
      */
@@ -168,132 +161,6 @@ public final class Path {
         }
         // using the file() constructor will allow relative paths in the form ../../apps
         return new File(Path.getAppRootDir(), path).getAbsolutePath();
-    }
-
-    /**
-     * @deprecated do not pass the request
-     */
-    public static String getURI(HttpServletRequest req) {
-        return getURI();
-    }
-
-    /**
-     * Returns the URI of the current request, without the context path.
-     * This is the URI after the virtual uri mapping.
-     * @return request URI without servlet context
-     * @deprecated use AggregationState.getCurrentURI()
-     */
-    public static String getURI() {
-        return MgnlContext.getAggregationState().getCurrentURI();
-    }
-
-    /**
-     * @deprecated do not pass the request
-     */
-    public static void setURI(String uri, HttpServletRequest req) {
-        setURI(uri);
-    }
-
-    /**
-     * Set the current URI. If the original URI was not set, this URI is set as the original URI too.
-     * @param uri
-     * @deprecated use AggregationState
-     */
-    public static void setURI(String uri) {
-        MgnlContext.getAggregationState().setCurrentURI(uri);
-    }
-
-    /**
-     * @deprecated do not pass the request
-     */
-    public static String getHandle(HttpServletRequest req) {
-        return MgnlContext.getAggregationState().getHandle();
-    }
-
-    /**
-     * Returns the URI of the current request, but uses the uri to repository mapping to remove any prefix.
-     * @return request URI without servlet context and without repository mapping prefix
-     * @deprecated Use {@link info.magnolia.cms.core.AggregationState#getHandle()} instead
-     */
-    public static String getHandle() {
-        return MgnlContext.getAggregationState().getHandle();
-    }
-
-    /**
-     * @deprecated do not pass the request
-     */
-    public static String getExtension(HttpServletRequest req) {
-        return getExtension();
-    }
-
-    /**
-     * Get the current extesion of the request
-     * @return
-     * @deprecated Use {@link info.magnolia.cms.core.AggregationState#getExtension()} instead
-     */
-    public static String getExtension() {
-        return MgnlContext.getAggregationState().getExtension();
-    }
-
-    /**
-     * @deprecated do not pass the request
-     */
-    public static String getOriginalURI(HttpServletRequest req) {
-        return getOriginalURI();
-    }
-
-    /**
-     * This is the URI (without context) when the request started.
-     * @deprecated use AggregationState.getOriginalURI()
-     */
-    public static String getOriginalURI() {
-        return MgnlContext.getAggregationState().getOriginalURI();
-    }
-
-    /**
-     * URI is only set if there was no original uri set
-     * @param uri
-     *
-     *
-     * @deprecated use AggregationState
-     */
-    public static void setOriginalURI(String uri) {
-        MgnlContext.getAggregationState().setOriginalURI(uri);
-    }
-
-    /**
-     * Decodes the URI with the passed encoding and removes the context path.
-     * WARNING: If passing URI without context path but it starts with same text as the context path it will be stripped off as well!!!
-     * @return URI without servlet context
-     * TODO : move to AggregationState ?
-     */
-    public static String decodedURI(String uri, String encoding) {
-        String decodedURL = null;
-        try {
-            decodedURL = URLDecoder.decode(uri, encoding);
-        }
-        catch (UnsupportedEncodingException e) {
-            decodedURL = uri;
-        }
-        // MAGNOLIA-2064 & others ... remove context path only when it is actually present not when page name starts with context path
-        String contextPath = MgnlContext.getContextPath();
-        if (decodedURL != null && decodedURL.startsWith(contextPath + "/")) {
-            return StringUtils.removeStart(decodedURL, contextPath);
-        } else {
-            return decodedURL;
-        }
-    }
-
-    /**
-     * Use the requests encoding
-     * @param uri
-     * @return
-     *
-     * @deprecated pass an encoding
-     */
-    public static String decodedURI(String uri) {
-        String encoding = StringUtils.defaultString(MgnlContext.getAggregationState().getCharacterEncoding(), ENCODING_DEFAULT);
-        return decodedURI(uri, encoding);
     }
 
     public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent, String label) {
@@ -416,6 +283,9 @@ public final class Path {
         return path;
     }
 
+    /**
+     * @deprecated untested and unused
+     */
     public static String getNodePath(String path, String label) {
         if (StringUtils.isEmpty(path) || (path.equals("/"))) { //$NON-NLS-1$
             return label;
@@ -423,6 +293,9 @@ public final class Path {
         return getNodePath(path + "/" + label); //$NON-NLS-1$
     }
 
+    /**
+     * @deprecated untested and unused
+     */
     public static String getNodePath(String path) {
         if (path.startsWith("/")) { //$NON-NLS-1$
             return path.replaceFirst("/", StringUtils.EMPTY); //$NON-NLS-1$
@@ -430,6 +303,9 @@ public final class Path {
         return path;
     }
 
+    /**
+     * @deprecated untested and unused
+     */
     public static String getParentPath(String path) {
         int lastIndexOfSlash = path.lastIndexOf("/"); //$NON-NLS-1$
         if (lastIndexOfSlash > 0) {
