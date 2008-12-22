@@ -33,12 +33,8 @@
  */
 package info.magnolia.module.files;
 
-import info.magnolia.cms.core.Path;
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
-import org.apache.commons.lang.StringUtils;
 
-import java.io.File;
 import java.io.IOException;
 
 /**
@@ -73,53 +69,6 @@ public class BasicFileExtractor implements FileExtractor {
     protected String[] collectResources(Transformer transformer) {
         final ClasspathResourcesFilterAdapter filter = new ClasspathResourcesFilterAdapter(transformer);
         return ClasspathResourcesUtil.findResources(filter);
-    }
-
-    /**
-     * @deprecated should not be used directly. Use FileExtractor with a ModuleFileExtractorTransformer instead
-     */
-    public void installFiles(String[] names, String prefix) throws IOException {
-
-        checkRoot();
-
-        final StringBuffer error = new StringBuffer();
-        for (int j = 0; j < names.length; j++) {
-            final String resourcePath = names[j];
-
-
-            final String relTargetPath = StringUtils.removeStart(resourcePath, prefix);
-            final String absTargetPath = Path.getAbsoluteFileSystemPath(relTargetPath);
-
-            try {
-                extractFile(resourcePath, absTargetPath);
-            } catch (IOException e) {
-                error.append(e.getMessage()).append("\n");
-            }
-        }
-
-        if (error.length() > 0) {
-            throw new IOException("Errors while installing files: " + error.toString());
-        }
-
-    }
-
-    // TODO : this should probably be in Path.getAppRootDir()
-    private void checkRoot() throws IOException {
-        String root = null;
-        // Try to get root
-        try {
-            File f = new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR));
-            if (f.isDirectory()) {
-                root = f.getAbsolutePath();
-            }
-        }
-        catch (Exception e) {
-            // nothing
-        }
-
-        if (root == null) {
-            throw new IOException("Invalid magnolia " + SystemProperty.MAGNOLIA_APP_ROOTDIR + " path"); //$NON-NLS-1$ //$NON-NLS-2$
-        }
     }
 
 }
