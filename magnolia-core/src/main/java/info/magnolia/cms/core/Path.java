@@ -69,7 +69,7 @@ public final class Path {
 
     public static File getCacheDirectory() {
         String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_CACHE_STARTDIR);
-        File dir = isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
+        File dir = isAbsolute(path) ? new File(path) : new File(getAppRootDir(), path);
         dir.mkdirs();
         return dir;
     }
@@ -84,7 +84,7 @@ public final class Path {
 
     public static File getTempDirectory() {
         String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_UPLOAD_TMPDIR);
-        File dir = isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
+        File dir = isAbsolute(path) ? new File(path) : new File(getAppRootDir(), path);
         dir.mkdirs();
         return dir;
     }
@@ -99,7 +99,7 @@ public final class Path {
 
     public static File getHistoryFile() {
         String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_EXCHANGE_HISTORY);
-        return isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
+        return isAbsolute(path) ? new File(path) : new File(getAppRootDir(), path);
     }
 
     /**
@@ -112,7 +112,7 @@ public final class Path {
 
     public static File getRepositoriesConfigFile() {
         String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_REPOSITORIES_CONFIG);
-        return isAbsolute(path) ? new File(path) : new File(Path.getAppRootDir(), path);
+        return isAbsolute(path) ? new File(path) : new File(getAppRootDir(), path);
     }
 
     /**
@@ -123,7 +123,7 @@ public final class Path {
         return new File(SystemProperty.getProperty(SystemProperty.MAGNOLIA_APP_ROOTDIR));
     }
 
-    // TODO : this should probably be in Path.getAppRootDir()
+    // TODO : this should probably be in getAppRootDir()
     private void checkAppRootDir() throws IOException {
         String root = null;
         // Try to get root
@@ -146,11 +146,11 @@ public final class Path {
      * Gets absolute filesystem path, adds application root if path is not absolute
      */
     public static String getAbsoluteFileSystemPath(String path) {
-        if (Path.isAbsolute(path)) {
+        if (isAbsolute(path)) {
             return path;
         }
         // using the file() constructor will allow relative paths in the form ../../apps
-        return new File(Path.getAppRootDir(), path).getAbsolutePath();
+        return new File(getAppRootDir(), path).getAbsolutePath();
     }
 
     public static String getUniqueLabel(HierarchyManager hierarchyManager, String parent, String label) {
