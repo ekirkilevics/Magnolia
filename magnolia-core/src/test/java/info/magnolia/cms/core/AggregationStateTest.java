@@ -44,9 +44,13 @@ import static org.easymock.EasyMock.*;
  */
 public class AggregationStateTest extends TestCase {
     private WebContext webCtx;
+    private AggregationState aggState;
 
     protected void setUp() throws Exception {
         super.setUp();
+        aggState = new AggregationState();
+        aggState.setCharacterEncoding("UTF-8");
+
         webCtx = createMock(WebContext.class);
         expect(webCtx.getContextPath()).andReturn("/foo");
         MgnlContext.setInstance(webCtx);
@@ -61,13 +65,11 @@ public class AggregationStateTest extends TestCase {
     }
 
     public void testUriDecodingShouldStripCtxPath() {
-        final AggregationState aggState = new AggregationState();
-        assertEquals("/pouet", aggState.decodeURI("/foo/pouet", "UTF-8"));
+        assertEquals("/pouet", aggState.decodeURI("/foo/pouet"));
     }
 
     public void testUriDecodingShouldReturnPassedURIDoesntContainCtxPath() {
-        final AggregationState aggState = new AggregationState();
-        assertEquals("/pouet", aggState.decodeURI("/pouet", "UTF-8"));
+        assertEquals("/pouet", aggState.decodeURI("/pouet"));
     }
 
 }
