@@ -97,7 +97,7 @@ public class ModuleManagerImpl implements ModuleManager {
     // here we use the implementation, since it has extra methods that should not be exposed to Task methods.
     private final InstallContextImpl installContext;
 
-    private ModuleRegistry registry = ModuleRegistry.Factory.getInstance();
+    private final ModuleRegistry registry;
     private final ModuleDefinitionReader moduleDefinitionReader;
 
     public ModuleManagerImpl() {
@@ -109,6 +109,7 @@ public class ModuleManagerImpl implements ModuleManager {
     protected ModuleManagerImpl(InstallContextImpl installContext, ModuleDefinitionReader moduleDefinitionReader) {
         this.installContext = installContext;
         this.moduleDefinitionReader = moduleDefinitionReader;
+        this.registry = ModuleRegistry.Factory.getInstance();
     }
 
     public List loadDefinitions() throws ModuleManagementException {
