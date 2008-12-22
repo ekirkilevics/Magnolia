@@ -279,13 +279,14 @@ public class ModuleManagerImpl implements ModuleManager {
             final Iterator it = orderedModuleDescriptors.iterator();
 
             while (it.hasNext()) {
+                final ModuleDefinition moduleDefinition = (ModuleDefinition) it.next();
+                final String moduleClassName = moduleDefinition.getClassName();
+                final String moduleName = moduleDefinition.getName();
+                log.debug("Initializing module {}", moduleName);
 
-                ModuleDefinition moduleDefinition = (ModuleDefinition) it.next();
-                String moduleClassName = moduleDefinition.getClassName();
-
+                // TODO - isn't all this code only there to support "old style" modules ?
                 final Map moduleProperties = new HashMap();
                 moduleProperties.put("moduleDefinition", moduleDefinition);
-                final String moduleName = moduleDefinition.getName();
                 moduleProperties.put("name", moduleName);
 
                 if (modulesParentNode.hasContent(moduleName)) {
@@ -383,11 +384,12 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     protected void populateModuleInstance(Object moduleInstance, Map moduleProperties) {
+        // TODO - isn't all this code only there to support "old style" modules ? 
         try {
             BeanUtils.populate(moduleInstance, moduleProperties);
         }
         catch (Throwable e) {
-            log.error("Can't set default properties", e);
+            log.error("Can't initialize module " + moduleInstance + ": " + e.getMessage(), e);
         }
 
         if (moduleProperties.get("configNode") != null) {
@@ -395,7 +397,7 @@ public class ModuleManagerImpl implements ModuleManager {
                 Content2BeanUtil.setProperties(moduleInstance, (Content) moduleProperties.get("configNode"), true);
             }
             catch (Content2BeanException e) {
-                log.error("Wasn't able to configure module", e);
+                log.error("Wasn't able to configure module " + moduleInstance + ": " + e.getMessage(), e);
             }
         }
     }
