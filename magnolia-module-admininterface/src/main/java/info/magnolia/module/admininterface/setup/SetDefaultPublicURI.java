@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2007-2008 Magnolia International
+ * This file Copyright (c) 2003-2008 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -33,20 +33,32 @@
  */
 package info.magnolia.module.admininterface.setup;
 
-import info.magnolia.module.DefaultModuleVersionHandler;
+import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.InstallContext;
-
-import java.util.Collections;
-import java.util.List;
+import info.magnolia.module.delta.AbstractTask;
+import info.magnolia.module.delta.IsAuthorInstanceDelegateTask;
+import info.magnolia.module.delta.SetPropertyTask;
+import info.magnolia.module.delta.TaskExecutionException;
 
 /**
- * @author philipp
- * @version $Id$
+ * Sets the default virtual URI on public instances.
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class SimpleContentVersionHandler extends DefaultModuleVersionHandler {
+public class SetDefaultPublicURI extends AbstractTask {
+    private static final String DEFAULT_URI_NODEPATH = "/modules/adminInterface/virtualURIMapping/default";
+    private final String moduleDescriptorPropertyName;
 
-    protected List getExtraInstallTasks(InstallContext installContext) {
-        return Collections.singletonList(new SetDefaultPublicURI("defaultPublicURI"));
+    public SetDefaultPublicURI(final String moduleDescriptorPropertyName) {
+        super("Default URI", "Sets the default virtual URI on public instances.");
+        this.moduleDescriptorPropertyName = moduleDescriptorPropertyName;
     }
 
+    public void execute(InstallContext ctx) throws TaskExecutionException {
+        final String defaultURI = ctx.getCurrentModuleDefinition().getProperty(moduleDescriptorPropertyName);
+        final SetPropertyTask setPropertyTask = new SetPropertyTask(ContentRepository.CONFIG, DEFAULT_URI_NODEPATH, "toURI", defaultURI);
+        final IsAuthorInstanceDelegateTask task = new IsAuthorInstanceDelegateTask(null, null, null, setPropertyTask);
+        task.execute(ctx);
+    }
 }

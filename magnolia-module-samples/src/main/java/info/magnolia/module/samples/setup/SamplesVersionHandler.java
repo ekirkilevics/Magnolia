@@ -37,6 +37,7 @@ import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.admininterface.setup.AddMainMenuItemTask;
 import info.magnolia.module.admininterface.setup.AddSubMenuItemTask;
+import info.magnolia.module.admininterface.setup.SetDefaultPublicURI;
 import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.DeltaBuilder;
@@ -88,6 +89,8 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
         commonTasks.add(submenu("servlet", "/server/filters/servlets/DisplaySamplesSourcesServlet"));
 
         commonTasks.add(new FilterOrderingTask("sample", new String[]{"servlets"}));
+
+        commonTasks.add(new SetDefaultPublicURI("defaultPublicURI"));
 
         return commonTasks;
     }
