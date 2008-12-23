@@ -51,7 +51,6 @@ import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Comparator;
 
@@ -280,15 +279,6 @@ public interface Content extends Cloneable {
      * @throws RepositoryException if an error occurs
      */
     void updateMetaData() throws RepositoryException, AccessDeniedException;
-
-    /**
-     * you could call this method anytime to update working page properties - Modification date & Author ID
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
-     * @throws RepositoryException if an error occurs
-     * @deprecated use the the method without a request object passed
-     */
-    void updateMetaData(HttpServletRequest request) throws RepositoryException, AccessDeniedException;
 
     /**
      * Get a collection containing child nodes which satisfies the given filter

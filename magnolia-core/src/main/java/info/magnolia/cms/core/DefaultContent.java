@@ -70,7 +70,6 @@ import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -446,13 +445,6 @@ public class DefaultContent extends ContentHandler implements Content {
         MetaData md = this.getMetaData();
         md.setModificationDate();
         md.setAuthorId(MgnlContext.getUser().getName());
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
-    }
-
-    public void updateMetaData(HttpServletRequest request) throws RepositoryException, AccessDeniedException {
-        MetaData md = this.getMetaData();
-        md.setModificationDate();
-        md.setAuthorId(Authenticator.getUserId(request));
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, hierarchyManager.getName(),Path.getAbsolutePath(node.getPath()));
     }
 

@@ -58,11 +58,10 @@ import javax.jcr.version.Version;
 import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.ClassUtils;
 
-public abstract class ContentWrapper implements Content{
+public abstract class ContentWrapper implements Content {
 
     private Content wrappedContent;
 
@@ -406,10 +405,6 @@ public abstract class ContentWrapper implements Content{
 
     public void updateMetaData() throws RepositoryException, AccessDeniedException {
         this.getWrappedContent().updateMetaData();
-    }
-
-    public void updateMetaData(HttpServletRequest request) throws RepositoryException, AccessDeniedException {
-        this.getWrappedContent().updateMetaData(request);
     }
 
     public HierarchyManager getHierarchyManager(){
