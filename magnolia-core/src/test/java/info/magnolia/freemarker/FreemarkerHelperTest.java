@@ -693,7 +693,7 @@ public class FreemarkerHelperTest extends TestCase {
         root.addContent(bar);
         bar.addContent(page);
         final MockHierarchyManager hm = new MockHierarchyManager();
-        hm.setRoot(root);
+        hm.getRoot().addContent(root);
         return hm;
     }
 

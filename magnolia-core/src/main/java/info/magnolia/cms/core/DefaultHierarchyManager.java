@@ -59,7 +59,7 @@ import org.slf4j.LoggerFactory;
  */
 public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
-    private static final long serialVersionUID = 222L;
+    private static final long serialVersionUID = 223L;
 
     /**
      * instead of defining each field transient, we explicitly says what needs to be
@@ -72,9 +72,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             new ObjectStreamField("accessManager", AccessManager.class)
     };
 
-    private static Logger log = LoggerFactory.getLogger(DefaultHierarchyManager.class);
-
-    private static Logger auditLog = LoggerFactory.getLogger(DefaultHierarchyManager.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultHierarchyManager.class);
 
     private Node rootNode;
 
@@ -95,7 +93,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     private AccessManager accessManager;
 
-    public DefaultHierarchyManager() {}
+    protected DefaultHierarchyManager() {}
 
     public DefaultHierarchyManager(String userId,
                                    Session jcrSession,
@@ -116,8 +114,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
     private void reInitialize() {
         WorkspaceAccessUtil util = WorkspaceAccessUtil.getInstance();
         try {
-            this.jcrSession =
-                    util.createRepositorySession(util.getDefaultCredentials(), this.repositoryName, this.workspaceName);
+            this.jcrSession = util.createRepositorySession(util.getDefaultCredentials(), this.repositoryName, this.workspaceName);
             this.queryManager = util.createQueryManager(this.jcrSession, this);
             this.rootNode = this.jcrSession.getRootNode();
             this.workspace = this.jcrSession.getWorkspace();
@@ -290,6 +287,8 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @return first Content hierarchy node that has the specified template name assigned
      * @throws javax.jcr.PathNotFoundException
      * @throws javax.jcr.RepositoryException
+     *
+     * @deprecated since 4.0 - only used by taglibs - should go/move.
      */
     public Content getPage(String path, String templateName) throws PathNotFoundException, RepositoryException,
         AccessDeniedException {
@@ -356,6 +355,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @param path of the requested content
      * @return boolean true is the requested content is a Hierarchy Node todo remove this method, instead use
      * (getContent(PATH) is NodeType)
+     * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
      */
     public boolean isPage(String path) throws AccessDeniedException {
         Access.isGranted(this.accessManager, path, Permission.READ);
@@ -399,6 +399,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     /**
      * Evaluate primary node type of the node at the given path.
+     * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
      */
     public boolean isNodeType(String path, String type) {
         try {
@@ -414,6 +415,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
 
     /**
      * Evaluate primary node type of the node at the given path.
+     * @deprecated since 4.0 - use getContent().isNodeType() instead. (not used currently)
      */
     public boolean isNodeType(String path, ItemType type) {
         return isNodeType(path, type.getSystemName());

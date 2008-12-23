@@ -33,7 +33,6 @@
  */
 package info.magnolia.test.mock;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.DefaultHierarchyManager;
 import info.magnolia.cms.core.ItemType;
@@ -61,25 +60,24 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class MockHierarchyManager extends DefaultHierarchyManager {
+    private static final Logger log = LoggerFactory.getLogger(MockHierarchyManager.class);
 
-    private static Logger log = LoggerFactory.getLogger(MockHierarchyManager.class);
+    private final Map nodes = new HashMap();
 
-    private Map nodes = new HashMap();
+    private final MockContent root ;
 
-    private MockContent root ;
+    private final MockSession session;
 
-    private MockSession session;
-
-    private String name;
+    private final String name;
 
     public MockHierarchyManager() {
-        this(ContentRepository.CONFIG);
+        this("TestMockHierarchyManager");
     }
 
     public MockHierarchyManager(String name) {
         this.name = name;
-        session = new MockSession(this);
-        root = new MockContent("jcr:root");
+        this.session = new MockSession(this);
+        this.root = new MockContent("jcr:root");
         root.setUUID("jcr:root");
         root.setHierarchyManager(this);
     }
@@ -88,12 +86,12 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         Content c = (Content) nodes.get(path);
         if( c == null){
             c = root.getContent(StringUtils.removeStart(path, "/"));
-            addContent(c);
+            cacheContent(c);
         }
         return c;
     }
 
-    public void addContent(Content node){
+    protected void cacheContent(Content node){
         nodes.put(node.getHandle(), node);
         ((MockContent)node).setHierarchyManager(this);
     }
@@ -138,11 +136,6 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         return this.root;
     }
 
-
-    public void setRoot(MockContent root) {
-        this.root = root;
-    }
-
     public boolean isExist(String path) {
         try {
             this.getContent(path);
@@ -172,8 +165,6 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         Content node = getContent(StringUtils.substringBeforeLast(path, "/"));
         return node.getNodeData(StringUtils.substringAfterLast(path, "/"));
     }
-
-
 
     public String toString() {
         final StringBuffer str = new StringBuffer();
@@ -212,24 +203,12 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
         this.session.setWorkspace(workspace);
     }
 
-
     public String getName() {
         return this.name;
     }
 
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-
     public MockSession getSession() {
         return this.session;
-    }
-
-
-    public void setSession(MockSession session) {
-        this.session = session;
     }
 
 }
