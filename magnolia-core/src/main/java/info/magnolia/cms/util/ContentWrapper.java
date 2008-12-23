@@ -39,23 +39,18 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.core.version.ContentVersion;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.AccessManager;
 
 import java.util.Collection;
 import java.util.Comparator;
 
 import javax.jcr.Node;
-import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
 import javax.jcr.Workspace;
 import javax.jcr.lock.Lock;
-import javax.jcr.lock.LockException;
 import javax.jcr.nodetype.NodeType;
 import javax.jcr.version.Version;
-import javax.jcr.version.VersionException;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
 
@@ -91,31 +86,27 @@ public abstract class ContentWrapper implements Content {
         this.getWrappedContent().addMixin(type);
     }
 
-    public Version addVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
+    public Version addVersion() throws RepositoryException {
         return this.getWrappedContent().addVersion();
     }
 
-    public Version addVersion(Rule rule) throws UnsupportedRepositoryOperationException, RepositoryException {
+    public Version addVersion(Rule rule) throws RepositoryException {
         return this.getWrappedContent().addVersion(rule);
     }
 
-    public Content createContent(String name, ItemType contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public Content createContent(String name, ItemType contentType) throws RepositoryException {
         return this.getWrappedContent().createContent(name, contentType);
     }
 
-    public Content createContent(String name, String contentType) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public Content createContent(String name, String contentType) throws RepositoryException {
         return this.getWrappedContent().createContent(name, contentType);
     }
 
-    public Content createContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public Content createContent(String name) throws RepositoryException {
         return this.getWrappedContent().createContent(name);
     }
 
-    public Content createContentNode(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return this.getWrappedContent().createContentNode(name);
-    }
-
-    public NodeData createNodeData(String name, int type) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public NodeData createNodeData(String name, int type) throws RepositoryException {
         return this.getWrappedContent().createNodeData(name, type);
     }
 
@@ -123,15 +114,15 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().createNodeData(name, obj);
     }
 
-    public NodeData createNodeData(String name, Value value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public NodeData createNodeData(String name, Value value) throws RepositoryException {
         return this.getWrappedContent().createNodeData(name, value);
     }
 
-    public NodeData createNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public NodeData createNodeData(String name, Value[] value) throws RepositoryException {
         return this.getWrappedContent().createNodeData(name, value);
     }
 
-    public NodeData createNodeData(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public NodeData createNodeData(String name) throws RepositoryException {
         return this.getWrappedContent().createNodeData(name);
     }
 
@@ -143,23 +134,23 @@ public abstract class ContentWrapper implements Content {
         this.getWrappedContent().delete(path);
     }
 
-    public void deleteNodeData(String name) throws PathNotFoundException, RepositoryException {
+    public void deleteNodeData(String name) throws RepositoryException {
         this.getWrappedContent().deleteNodeData(name);
     }
 
-    public VersionIterator getAllVersions() throws UnsupportedRepositoryOperationException, RepositoryException {
+    public VersionIterator getAllVersions() throws RepositoryException {
         return this.getWrappedContent().getAllVersions();
     }
 
-    public Content getAncestor(int digree) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public Content getAncestor(int digree) throws RepositoryException {
         return this.getWrappedContent().getAncestor(digree);
     }
 
-    public Collection getAncestors() throws PathNotFoundException, RepositoryException {
+    public Collection getAncestors() throws RepositoryException {
         return this.getWrappedContent().getAncestors();
     }
 
-    public ContentVersion getBaseVersion() throws UnsupportedRepositoryOperationException, RepositoryException {
+    public ContentVersion getBaseVersion() throws RepositoryException {
         return this.getWrappedContent().getBaseVersion();
     }
 
@@ -179,16 +170,8 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().getChildren(filter);
     }
 
-    public Collection getChildren(ItemType contentType, int sortCriteria) {
-        return this.getWrappedContent().getChildren(contentType, sortCriteria);
-    }
-
     public Collection getChildren(ItemType contentType) {
         return this.getWrappedContent().getChildren(contentType);
-    }
-
-    public Collection getChildren(String contentType, int sortCriteria) {
-        return this.getWrappedContent().getChildren(contentType, sortCriteria);
     }
 
     public Collection getChildren(String contentType, String namePattern) {
@@ -199,16 +182,8 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().getChildren(contentType);
     }
 
-    public Content getContent(String name, boolean create, ItemType contentType) throws AccessDeniedException, RepositoryException {
-        return this.getWrappedContent().getContent(name, create, contentType);
-    }
-
-    public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public Content getContent(String name) throws RepositoryException {
         return wrap(this.getWrappedContent().getContent(name));
-    }
-
-    public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return this.getWrappedContent().getContentNode(path);
     }
 
     public String getHandle() {
@@ -227,11 +202,11 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().getJCRNode();
     }
 
-    public int getLevel() throws PathNotFoundException, RepositoryException {
+    public int getLevel() throws RepositoryException {
         return this.getWrappedContent().getLevel();
     }
 
-    public Lock getLock() throws LockException, RepositoryException {
+    public Lock getLock() throws RepositoryException {
         return this.getWrappedContent().getLock();
     }
 
@@ -245,10 +220,6 @@ public abstract class ContentWrapper implements Content {
 
     public String getName() {
         return this.getWrappedContent().getName();
-    }
-
-    public NodeData getNodeData(String name, boolean create) {
-        return this.getWrappedContent().getNodeData(name, create);
     }
 
     public NodeData getNodeData(String name) {
@@ -271,7 +242,7 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().getNodeTypeName();
     }
 
-    public Content getParent() throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public Content getParent() throws RepositoryException {
         return wrap(this.getWrappedContent().getParent());
     }
 
@@ -295,7 +266,7 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().getVersionedContent(version);
     }
 
-    public VersionHistory getVersionHistory() throws UnsupportedRepositoryOperationException, RepositoryException {
+    public VersionHistory getVersionHistory() throws RepositoryException {
         return this.getWrappedContent().getVersionHistory();
     }
 
@@ -339,7 +310,7 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().isModified();
     }
 
-    public boolean isNodeData(String path) throws AccessDeniedException, RepositoryException {
+    public boolean isNodeData(String path) throws RepositoryException {
         return this.getWrappedContent().isNodeData(path);
     }
 
@@ -347,11 +318,11 @@ public abstract class ContentWrapper implements Content {
         return this.getWrappedContent().isNodeType(type);
     }
 
-    public Lock lock(boolean isDeep, boolean isSessionScoped, long yieldFor) throws LockException, RepositoryException {
+    public Lock lock(boolean isDeep, boolean isSessionScoped, long yieldFor) throws RepositoryException {
         return this.getWrappedContent().lock(isDeep, isSessionScoped, yieldFor);
     }
 
-    public Lock lock(boolean isDeep, boolean isSessionScoped) throws LockException, RepositoryException {
+    public Lock lock(boolean isDeep, boolean isSessionScoped) throws RepositoryException {
         return this.getWrappedContent().lock(isDeep, isSessionScoped);
     }
 
@@ -367,23 +338,23 @@ public abstract class ContentWrapper implements Content {
         this.getWrappedContent().removeMixin(type);
     }
 
-    public void removeVersionHistory() throws AccessDeniedException, RepositoryException {
+    public void removeVersionHistory() throws RepositoryException {
         this.getWrappedContent().removeVersionHistory();
     }
 
-    public void restore(String versionName, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+    public void restore(String versionName, boolean removeExisting) throws RepositoryException {
         this.getWrappedContent().restore(versionName, removeExisting);
     }
 
-    public void restore(Version version, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+    public void restore(Version version, boolean removeExisting) throws RepositoryException {
         this.getWrappedContent().restore(version, removeExisting);
     }
 
-    public void restore(Version version, String relPath, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+    public void restore(Version version, String relPath, boolean removeExisting) throws RepositoryException {
         this.getWrappedContent().restore(version, relPath, removeExisting);
     }
 
-    public void restoreByLabel(String versionLabel, boolean removeExisting) throws VersionException, UnsupportedRepositoryOperationException, RepositoryException {
+    public void restoreByLabel(String versionLabel, boolean removeExisting) throws RepositoryException {
         this.getWrappedContent().restoreByLabel(versionLabel, removeExisting);
     }
 
@@ -391,20 +362,27 @@ public abstract class ContentWrapper implements Content {
         this.getWrappedContent().save();
     }
 
-    public NodeData setNodeData(String name, Value value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public NodeData setNodeData(String name, Value value) throws RepositoryException {
         return this.getWrappedContent().setNodeData(name, value);
     }
 
-    public NodeData setNodeData(String name, Value[] value) throws PathNotFoundException, RepositoryException, AccessDeniedException {
+    public NodeData setNodeData(String name, Value[] value) throws RepositoryException {
         return this.getWrappedContent().setNodeData(name, value);
     }
 
-    public void unlock() throws LockException, RepositoryException {
+    public void unlock() throws RepositoryException {
         this.getWrappedContent().unlock();
     }
 
-    public void updateMetaData() throws RepositoryException, AccessDeniedException {
+    public void updateMetaData() throws RepositoryException {
         this.getWrappedContent().updateMetaData();
+    }
+
+    /**
+     * @deprecated since 4.0 - use getHierarchyManager instead.
+     */
+    public AccessManager getAccessManager() {
+        return this.getWrappedContent().getAccessManager();
     }
 
     public HierarchyManager getHierarchyManager(){
@@ -419,10 +397,4 @@ public abstract class ContentWrapper implements Content {
         return buffer.toString();
     }
 
-    /**
-     * @deprecated
-     */
-    public AccessManager getAccessManager() {
-        return this.getWrappedContent().getAccessManager();
-    }
 }

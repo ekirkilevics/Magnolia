@@ -60,29 +60,6 @@ import java.util.Comparator;
  * @version $Revision: $ ($Author: $)
  */
 public interface Content extends Cloneable {
-    /**
-     * get ContentNode node of the current node with the specified name
-     * @param path of the node acting as <code>ContentNode</code>
-     * @return ContentNode
-     * @throws PathNotFoundException if the node at <code>path</code> does not exist
-     * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
-     * @deprecated use getContent(String name) instead
-     */
-    Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException;
-
-    /**
-     * create ContentNode node under the current node with the specified name
-     * @param name of the node to be created as <code>ContentNode</code>
-     * @return newly created <node>ContentNode </node>
-     * @throws PathNotFoundException
-     * @throws RepositoryException if an error occurs
-     * @throws AccessDeniedException if the current session does not have sufficient access rights to complete the
-     * operation
-     * @deprecated use createContent(String name, String contentType) instead
-     */
-    Content createContentNode(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException;
 
     /**
      * get Content node of the current node with the specified name
@@ -94,19 +71,6 @@ public interface Content extends Cloneable {
      * operation
      */
     Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException;
-
-    /**
-     * Like getContent but creates the node if not existing.
-     * @param name
-     * @param create true if the node is created
-     * @param contentType the type of the created node
-     * @return
-     * @throws AccessDeniedException
-     * @throws RepositoryException
-     * @deprecated use the ContentUtil instead
-     */
-    Content getContent(String name, boolean create, ItemType contentType) throws AccessDeniedException,
-            RepositoryException;
 
     /**
      * create Content node under the current node with the specified name
@@ -169,13 +133,6 @@ public interface Content extends Cloneable {
     NodeData getNodeData(String name);
 
     /**
-     * @param name
-     * @param create
-     * @deprecated use NodeDataUtil.getOrCreate(name)
-     */
-    NodeData getNodeData(String name, boolean create);
-
-    /**
      * get node name
      * @return String name of the current <code>Node</code>
      */
@@ -222,7 +179,7 @@ public interface Content extends Cloneable {
     /**
      * Create NodeData with the given value and type.
      * @param name to be created
-     * @param value[] to be set initially
+     * @param value to be set initially
      * @return NodeData requested <code>NodeData</code> object
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
@@ -255,7 +212,7 @@ public interface Content extends Cloneable {
     /**
      * Set NodeData value.
      * @param name to be created
-     * @param value[] to be set initially
+     * @param value to be set initially
      * @return NodeData requested <code>NodeData</code> object
      * @throws PathNotFoundException
      * @throws RepositoryException if an error occurs
@@ -302,22 +259,6 @@ public interface Content extends Cloneable {
      * @return Collection of content objects
      */
     Collection getChildren();
-
-    /**
-     * @param contentType
-     * @param sortCriteria
-     * @return Collection of content nodes
-     * @deprecated use JCR ordering
-     */
-    Collection getChildren(String contentType, int sortCriteria);
-
-    /**
-     * @param contentType
-     * @param sortCriteria
-     * @return Collection of content nodes
-     * @deprecated use JCR ordering
-     */
-    Collection getChildren(ItemType contentType, int sortCriteria);
 
     /**
      * Get collection of specified content type
@@ -729,10 +670,11 @@ public interface Content extends Cloneable {
 
     /**
      * @return the underlying AccessManager
-     * TODO : this should probably not be exposed, but was used by some code ...
-     * @deprecated use getHierarchyManager instead
+     * @deprecated since 4.0 - use getHierarchyManager instead
      */
     AccessManager getAccessManager();
+
+    HierarchyManager getHierarchyManager();
 
     /**
      * checks if this node has a sub node with name MetaData
@@ -753,6 +695,4 @@ public interface Content extends Cloneable {
         public boolean accept(Content content);
 
     }
-
-    HierarchyManager getHierarchyManager();
 }

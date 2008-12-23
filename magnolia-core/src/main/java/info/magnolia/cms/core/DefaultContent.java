@@ -37,7 +37,6 @@ import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Rule;
 import info.magnolia.context.MgnlContext;
@@ -194,34 +193,8 @@ public class DefaultContent extends ContentHandler implements Content {
         this.path = path;
     }
 
-    public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return new DefaultContent(this.node, path, this.hierarchyManager);
-    }
-
-    public Content createContentNode(String name) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        return this.createContent(name, ItemType.CONTENTNODE);
-    }
-
     public Content getContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
         return (new DefaultContent(this.node, name, this.hierarchyManager));
-    }
-
-    public Content getContent(String name, boolean create, ItemType contentType) throws AccessDeniedException,
-        RepositoryException {
-        Content node;
-        try {
-            node = this.getContent(name);
-        }
-        catch (PathNotFoundException e) {
-            if (create) {
-                node = this.createContent(name, contentType);
-            }
-            else {
-                throw e;
-            }
-        }
-        return node;
     }
 
     public Content createContent(String name) throws PathNotFoundException, RepositoryException, AccessDeniedException {
@@ -303,47 +276,6 @@ public class DefaultContent extends ContentHandler implements Content {
         }
 
         return (nodeData != null) ? nodeData : new DefaultNodeData();
-    }
-
-    public NodeData getNodeData(String name, boolean create) {
-        try {
-            return (new DefaultNodeData(this.node, name, this.hierarchyManager, this));
-        }
-        catch (PathNotFoundException e) {
-            if (create) {
-                try {
-                    return this.createNodeData(name);
-                }
-                catch (Exception e1) {
-                    log.error("can't create property [" + name + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-                }
-            }
-            if (log.isDebugEnabled()) {
-                String nodepath = null;
-                try {
-                    nodepath = this.node.getPath();
-                }
-                catch (RepositoryException e1) {
-                    // ignore, debug only
-                }
-                if (log.isDebugEnabled()) {
-                    log.debug("Path not found for property [" + name + "] in node " + nodepath); //$NON-NLS-1$ //$NON-NLS-2$
-                }
-            }
-
-            return (new DefaultNodeData());
-        }
-        catch (RepositoryException re) {
-            String nodepath = null;
-            try {
-                nodepath = this.node.getPath();
-            }
-            catch (RepositoryException e1) {
-                // ignore, debug only
-            }
-            log.warn("Repository exception while trying to read property [" + name + "] for node " + nodepath, re); //$NON-NLS-1$ //$NON-NLS-2$
-            return (new DefaultNodeData());
-        }
     }
 
     public String getName() {
@@ -502,14 +434,6 @@ public class DefaultContent extends ContentHandler implements Content {
         }
         // --------------------------------------------------
         return this.getChildren(type);
-    }
-
-    public Collection getChildren(String contentType, int sortCriteria) {
-        return this.getChildren(contentType);
-    }
-
-    public Collection getChildren(ItemType contentType, int sortCriteria) {
-        return this.getChildren(contentType);
     }
 
     public Collection getChildren(String contentType) {

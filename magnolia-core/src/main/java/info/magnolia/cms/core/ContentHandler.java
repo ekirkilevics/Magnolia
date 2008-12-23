@@ -75,7 +75,7 @@ public abstract class ContentHandler implements Cloneable {
     /**
      * Get access manager if previously set for this object
      * @return AccessManager
-     * @deprecated use getHierarchyManager instead
+     * @deprecated since 4.0 - use getHierarchyManager instead
      */
     public AccessManager getAccessManager() {
         return this.accessManager;
