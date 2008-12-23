@@ -37,11 +37,9 @@ import info.magnolia.cms.core.version.ContentVersion;
 import info.magnolia.cms.core.version.VersionManager;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Authenticator;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.cms.util.Rule;
-import info.magnolia.context.LifeTimeJCRSessionUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.logging.AuditLoggingUtil;
 
@@ -61,7 +59,6 @@ import javax.jcr.Property;
 import javax.jcr.PropertyIterator;
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
-import javax.jcr.Session;
 import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.Value;
 import javax.jcr.ValueFactory;
@@ -85,11 +82,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision:2719 $ ($Author:scharles $)
  */
 public class DefaultContent extends ContentHandler implements Content {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(DefaultContent.class);
+    private static final Logger log = LoggerFactory.getLogger(DefaultContent.class);
 
     /**
      * Wrapped jcr node.
