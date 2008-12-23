@@ -41,7 +41,7 @@ import info.magnolia.module.cache.CachePolicyResult;
  * Uses a fix expiration time (in minutes).
  *
  * @author pbracher
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class FixedDuration implements BrowserCachePolicy {
 
