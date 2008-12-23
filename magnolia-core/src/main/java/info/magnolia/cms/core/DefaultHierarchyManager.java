@@ -130,7 +130,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * Set access manager for this hierarchy
      * @param accessManager
      */
-    public void setAccessManager(AccessManager accessManager) {
+    protected void setAccessManager(AccessManager accessManager) {
         this.accessManager = accessManager;
     }
 
@@ -146,7 +146,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * Set query manager for this hierarchy
      * @param queryManager
      */
-    public void setQueryManager(QueryManager queryManager) {
+    protected void setQueryManager(QueryManager queryManager) {
         this.queryManager = queryManager;
     }
 
@@ -174,29 +174,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             reInitialize();
         }
         return this.jcrSession;
-    }
-
-    /**
-     * creates a new content page
-     * @param path parent handle under which new page has to be created
-     * @param label page name to be created
-     * @return Content newly created hierarchy node
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     *
-     * @deprecated use createContent(String path, String label, String contentType)
-     */
-    public Content createPage(String path, String label) throws PathNotFoundException, RepositoryException,
-        AccessDeniedException {
-        log.warn("Deprecated: Use createContent(String path, String label, String contentType)");
-        Content newPage = (new DefaultContent(
-            this.getRootNode(),
-            this.getNodePath(path, label),
-            ItemType.CONTENT.getSystemName(),
-            this));
-        this.setMetaData(newPage.getMetaData());
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, repositoryName, newPage.getHandle());
-        return newPage;
     }
 
     /**
@@ -238,42 +215,11 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * Helper method to set page properties, create page calls this method. you could call this method anytime to create
      * working page properties
      */
-    public void setMetaData(MetaData md, String template) throws RepositoryException, AccessDeniedException {
-        md.setTemplate(template);
-        setMetaData(md);
-    }
-
-    /**
-     * Helper method to set page properties, create page calls this method. you could call this method anytime to create
-     * working page properties
-     */
-    public void setMetaData(MetaData md) throws RepositoryException, AccessDeniedException {
+    protected void setMetaData(MetaData md) throws RepositoryException, AccessDeniedException {
         md.setCreationDate();
         md.setModificationDate();
         md.setAuthorId(this.userId);
         md.setTitle(StringUtils.EMPTY);
-    }
-
-    /**
-     * Helper method to set page properties, get page calls this method. you could call this method anytime to update
-     * working page properties
-     */
-    public void updateMetaData(MetaData md) throws RepositoryException, AccessDeniedException {
-        md.setModificationDate();
-        md.setAuthorId(this.userId);
-        AuditLoggingUtil.log( AuditLoggingUtil.ACTION_MODIFY, workspaceName, md.getHandle());
-    }
-
-    /**
-     * returns the page specified by path in the parameter
-     * @param path handle of the page to be initialized
-     * @return Content hierarchy node
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @deprecated use getContent(String path) instead
-     */
-    public Content getPage(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return this.getContent(path);
     }
 
     /**
@@ -319,17 +265,6 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
         return node;
     }
 
-    /**
-     * get content node object of the requested URI
-     * @param path of the content (container / containerlist) to be initialized
-     * @return ContentNode
-     * @throws javax.jcr.PathNotFoundException
-     * @throws javax.jcr.RepositoryException
-     * @deprecated use getContent(String path) instead
-     */
-    public Content getContentNode(String path) throws PathNotFoundException, RepositoryException, AccessDeniedException {
-        return new DefaultContent(this.getRootNode(), getNodePath(path), this);
-    }
 
     /**
      * get NodeData object of the requested URI
@@ -382,8 +317,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
             }
         }
         catch (Exception e) {
-            log.error("Failed to get - " + path); //$NON-NLS-1$
-            log.error(e.getMessage(), e);
+            log.error("Failed to get - " + path + " : " + e.getMessage(), e);
         }
         return pageToBeFound;
     }

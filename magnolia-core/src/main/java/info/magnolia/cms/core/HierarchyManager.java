@@ -46,49 +46,15 @@ import javax.jcr.Workspace;
  */
 public interface HierarchyManager {
 
-    void setAccessManager(AccessManager accessManager);
-
     AccessManager getAccessManager();
-
-    void setQueryManager(QueryManager queryManager);
 
     QueryManager getQueryManager();
 
-    /**
-     * @deprecated use createContent(String path, String label, String contentType)
-     */
-    Content createPage(String path, String label) throws RepositoryException;
-
     Content createContent(String path, String label, String contentType) throws RepositoryException;
-
-    /**
-     * @deprecated since 3.6 - not used
-     */
-    void setMetaData(MetaData md, String template) throws RepositoryException;
-
-    /**
-     * @deprecated since 3.6 - only used in implementation, should not be exposed in interface
-     */
-    void setMetaData(MetaData md) throws RepositoryException;
-
-    /**
-     * @deprecated since 3.6 - not used
-     */
-    void updateMetaData(MetaData md) throws RepositoryException;
-
-    /**
-     * @deprecated use getContent(String path) instead
-     */
-    Content getPage(String path) throws RepositoryException;
 
     Content getContent(String path) throws RepositoryException;
 
     Content getContent(String path, boolean create, ItemType type) throws RepositoryException;
-
-    /**
-     * @deprecated use getContent(String path) instead
-     */
-    Content getContentNode(String path) throws RepositoryException;
 
     NodeData getNodeData(String path) throws RepositoryException;
 

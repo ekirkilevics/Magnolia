@@ -59,7 +59,7 @@ public class I18nMenuPoint extends PropertyValuesTask {
             ctx.warn("Inbox menu does not exist at " + MENU_PATH);
         }
         try {
-            final Content menu = hm.getContentNode(MENU_PATH);
+            final Content menu = hm.getContent(MENU_PATH);
             checkAndModifyPropertyValue(ctx, menu, "label", "Inbox", "menu.inbox");
             newProperty(ctx, menu, "i18nBasename", "info.magnolia.module.workflow.messages");
         } catch (RepositoryException e) {
