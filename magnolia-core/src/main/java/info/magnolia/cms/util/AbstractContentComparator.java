@@ -46,8 +46,8 @@ import java.util.Comparator;
 public abstract class AbstractContentComparator implements Comparator {
 
     public int compare(Object o1, Object o2) throws ClassCastException {
-        final Content c1 = ((Content) o1);
-        final Content c2 = ((Content) o2);
+        final Content c1 = (Content) o1;
+        final Content c2 = (Content) o2;
         return compare(c1, c2);
     }
 
