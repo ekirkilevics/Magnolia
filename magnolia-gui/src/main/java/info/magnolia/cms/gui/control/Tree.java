@@ -538,13 +538,13 @@ public class Tree extends ControlImpl {
                 }
                 content.updateMetaData();
                 content.save();
-                returnValue = new NodeDataUtil(node).getValueString();
+                returnValue = NodeDataUtil.getValueString(node);
             }
             else {
                 content.getMetaData().setProperty(nodeDataName, value);
                 content.updateMetaData();
                 content.save();
-                returnValue = new MetaDataUtil(content).getPropertyValueString(nodeDataName);
+                returnValue = MetaDataUtil.getPropertyValueString(content, nodeDataName);
             }
         }
         catch (Exception e) {

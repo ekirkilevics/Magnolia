@@ -51,7 +51,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String html;
         if (treeColumn.getIsMeta()) {
-            html = new MetaDataUtil(content).getPropertyValueString(treeColumn.getName(), treeColumn.getDateFormat());
+            html = MetaDataUtil.getPropertyValueString(content, treeColumn.getName(), treeColumn.getDateFormat());
         }
         else if (treeColumn.getIsLabel()) {
             html = content.getName();
@@ -61,7 +61,7 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
         }
         else {
             NodeData data = content.getNodeData(treeColumn.getName());
-            html = new NodeDataUtil(data).getValueString(treeColumn.getDateFormat());
+            html = NodeDataUtil.getValueString(data, treeColumn.getDateFormat());
         }
         // @todo (value is not shown after saving ...)
         if (treeColumn.getKeyValue().size() != 0) {
@@ -84,14 +84,14 @@ public class TreeColumnHtmlRendererImpl implements TreeColumnHtmlRenderer {
         StringBuffer html = new StringBuffer();
         if (treeColumn.getIconsActivation()) {
             String imgSrc = Tree.ICONDOCROOT + MetaDataUtil.getActivationStatusIcon(content);
-            html.append("<img src=\"" + MgnlContext.getContextPath() + imgSrc + "\" />"); //$NON-NLS-1$ //$NON-NLS-2$
+            html.append("<img src=\"").append(MgnlContext.getContextPath()).append(imgSrc).append("\" />"); //$NON-NLS-1$ //$NON-NLS-2$
         }
         if (treeColumn.getIconsPermission()) {
             if (!content.isGranted(info.magnolia.cms.security.Permission.WRITE)) {
-                html.append("<img src=\"" //$NON-NLS-1$
-                    + treeColumn.getRequest().getContextPath()
-                    + Tree.ICONDOCROOT
-                    + "pen_blue_canceled.gif\" />"); //$NON-NLS-1$
+                html.append("<img src=\"") //$NON-NLS-1$
+                    .append(treeColumn.getRequest().getContextPath())
+                    .append(Tree.ICONDOCROOT)
+                    .append("pen_blue_canceled.gif\" />"); //$NON-NLS-1$
             }
         }
         return html.toString();

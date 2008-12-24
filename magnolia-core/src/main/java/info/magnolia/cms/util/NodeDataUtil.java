@@ -68,68 +68,10 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class NodeDataUtil {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(NodeDataUtil.class);
-
-    NodeData nodeData;
-
-    /**
-     * @deprecated You should not instantiate this util
-     */
-    public NodeDataUtil(NodeData nodeData) {
-        this.setNodeData(nodeData);
-    }
-
-    /**
-     * @deprecated You should not instantiate this util
-     */
-    public void setNodeData(NodeData nodeData) {
-        this.nodeData = nodeData;
-    }
-
-    /**
-     * @deprecated You should not instantiate this util
-     */
-    public NodeData getNodeData() {
-        return this.nodeData;
-    }
-
-    /**
-     * <p/> Returns the representation of the value as a String:
-     * </p>
-     * @deprecated You should not instantiate this util
-     * @return String
-     */
-    public String getValueString() {
-        return getValueString((String) null);
-    }
-
-    /**
-     * <p/> Returns the representation of the value as a String:
-     * </p>
-     * @deprecated You should not instantiate this util
-     * @return String
-     */
-    public String getValueString(String dateFormat) {
-        try {
-            NodeData nodeData = this.getNodeData();
-            return getValueString(nodeData, dateFormat);
-        }
-        catch (Exception e) {
-            if (log.isDebugEnabled()) {
-                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-            }
-        }
-        return StringUtils.EMPTY;
-    }
+    private static final Logger log = LoggerFactory.getLogger(NodeDataUtil.class);
 
     /**
      * Same as getValueString(nd, dateFormat) but using the users short date format
-     * @param nodeData
-     * @return
      */
     public static String getValueString(NodeData nodeData) {
         String dateFormat = null;
@@ -486,10 +428,7 @@ public class NodeDataUtil {
     }
 
     /**
-     * Uses the i18n mechanism to translate the message if the resulting string is a key
-     * @param node
-     * @param string
-     * @return the i18n string
+     * Uses the i18n mechanism to translate the message if the resulting string is a key.
      */
     public static String getI18NString(Content node, String str) {
         Messages msgs = MessagesManager.getMessages();

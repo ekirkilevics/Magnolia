@@ -48,59 +48,14 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class MetaDataUtil {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MetaDataUtil.class);
-
-    /**
-     * @deprecated this is a util
-     */
-    private Content content;
-
-    /**
-     * @deprecated this is a util
-     */
-    public MetaDataUtil(Content c) {
-        this.setContent(c);
-    }
-
-    /**
-     * @deprecated this is a util
-     */
-    public void setContent(Content c) {
-        this.content = c;
-    }
-
-    /**
-     * @deprecated this is a util
-     */
-    public Content getContent() {
-        return this.content;
-    }
-
-    /**
-     * @deprecated this is a util
-     */
-    public String getPropertyValueString(String propertyName) {
-        return getPropertyValueString(content, propertyName, null);
-    }
+    private static final Logger log = LoggerFactory.getLogger(MetaDataUtil.class);
 
     public static String getPropertyValueString(Content content, String propertyName) {
         return getPropertyValueString(content, propertyName, null);
     }
 
     /**
-     * @deprecated this is a util
-     */
-    public String getPropertyValueString(String propertyName, String dateFormat) {
-        return getPropertyValueString(content, propertyName, dateFormat);
-    }
-
-    /**
-     * <p/> Returns the representation of the value as a String:
-     * </p>
+     * Returns the representation of the value as a String.
      * @return String
      */
     public static String getPropertyValueString(Content content, String propertyName, String dateFormat) {

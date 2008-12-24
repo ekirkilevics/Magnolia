@@ -37,9 +37,9 @@ import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
-import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
+import info.magnolia.content2bean.Content2BeanUtil;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
@@ -101,7 +101,7 @@ public class TreeHandlerManager extends ObservedManager {
                 name,
                 request,
                 response});
-            ContentUtil.setProperties(newInstance, th.getTreeDefinition());
+            Content2BeanUtil.setProperties(newInstance, th.getTreeDefinition());
             return newInstance;
         }
         catch (Exception e) {

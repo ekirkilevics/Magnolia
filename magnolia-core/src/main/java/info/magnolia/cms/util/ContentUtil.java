@@ -38,8 +38,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.content2bean.Content2BeanException;
-import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
@@ -47,7 +45,6 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
@@ -61,9 +58,7 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  */
 public class ContentUtil {
-
-
-    static Logger log = LoggerFactory.getLogger(ContentUtil.class);
+    private final static Logger log = LoggerFactory.getLogger(ContentUtil.class);
 
     /**
      * Content filter accepting everything
@@ -405,76 +400,6 @@ public class ContentUtil {
             }
         }
         return parent;
-    }
-
-    /**
-     * Transforms the nodes data into a map containting the names and values.
-     * @param node
-     * @return a flat map
-     * @deprecated Use Content2BeanUtil instead
-     */
-    public static Map toMap(Content node) {
-        try {
-            return Content2BeanUtil.toMap(node);
-        }
-        // we ignore it to not change the method signatur
-        catch (Content2BeanException e) {
-            log.error("exception catched in deprecated method", e);
-        }
-        return null;
-    }
-
-    /**
-     * Takes a nodes data and and sets the beans properties which follow the naming of the nodes nodedatas.
-     * @param bean the bean you like to populate
-     * @param node the node containing the data
-     * @return the bean
-     * @deprecated Use Use Content2BeanUtil instead
-     */
-    public static Object setProperties(Object bean, Content node) {
-        try {
-            return Content2BeanUtil.setProperties(bean, node);
-        }
-        catch (Content2BeanException e) {
-            log.error("can't set properties", e);
-        }
-        return null;
-    }
-
-    /**
-     * @deprecated Use Use Content2BeanUtil instead
-     */
-    public static void setNodeDatas(Content node, Object obj) throws RepositoryException {
-        try {
-            Content2BeanUtil.setNodeDatas(node, obj);
-        }
-        catch (Content2BeanException e) {
-            log.error("can't set node datas", e);
-        }
-    }
-
-    /**
-     * @deprecated Use Content2BeanUtil instead
-     */
-    public static void setNodeDatas(Content node, Map map) throws RepositoryException {
-        try {
-            Content2BeanUtil.setNodeDatas(node, map);
-        }
-        catch (Content2BeanException e) {
-            log.error("can't set node datas", e);
-        }
-    }
-
-    /**
-     * @deprecated Use Use Content2BeanUtil instead
-     */
-    public static void setNodeDatas(Content node, Object bean, String[] excludes) throws RepositoryException {
-        try {
-            Content2BeanUtil.setNodeDatas(node, bean, excludes);
-        }
-        catch (Content2BeanException e) {
-            log.error("can't set node datas", e);
-        }
     }
 
     public static String uuid2path(String repository, String uuid){
