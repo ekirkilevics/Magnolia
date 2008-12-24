@@ -46,6 +46,7 @@ import javax.jcr.Node;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyIterator;
 import javax.jcr.RepositoryException;
+import javax.jcr.Property;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.TimeZone;
@@ -55,6 +56,7 @@ import java.util.TimeZone;
  * $Id$
  */
 public class MetaData {
+    private static final Logger log = LoggerFactory.getLogger(MetaData.class);
 
     /**
      * Top level atoms viewed as metadata of the specified content these must be set by the authoring system itself, but
@@ -78,11 +80,6 @@ public class MetaData {
 
     public static final String ACTIVATED = "activated"; //$NON-NLS-1$
 
-    /**
-     * @deprecated we use jcr ordering instead
-     */
-    public static final String SEQUENCE_POS = "sequenceposition"; //$NON-NLS-1$
-
     public static final String DEFAULT_META_NODE = "MetaData"; //$NON-NLS-1$
 
     public static final int ACTIVATION_STATUS_NOT_ACTIVATED = 0;
@@ -90,13 +87,6 @@ public class MetaData {
     public static final int ACTIVATION_STATUS_MODIFIED = 1;
 
     public static final int ACTIVATION_STATUS_ACTIVATED = 2;
-
-    /**
-     * @deprecated unused
-     */
-    public static final long SEQUENCE_POS_COEFFICIENT = 1000;
-
-    private static final Logger log = LoggerFactory.getLogger(MetaData.class);
 
     /**
      * meta data node
@@ -110,8 +100,18 @@ public class MetaData {
      * @param workingNode current <code>Node</code> on which <code>MetaData</code> is requested
      */
     protected MetaData(Node workingNode, AccessManager manager) {
-        this.setMetaNode(workingNode, DEFAULT_META_NODE);
-        this.setAccessManager(manager);
+        try {
+            this.node = workingNode.getNode(DEFAULT_META_NODE);
+        } catch (PathNotFoundException e) {
+            try {
+                log.debug("{} does not support MetaData, check node type definition of {}", workingNode.getPath(), workingNode.getPrimaryNodeType().getName());
+            } catch (RepositoryException re) {
+                    // should never come here
+            }
+        } catch (RepositoryException re) {
+            log.error(re.getMessage(), re);
+        }
+        this.accessManager = manager;
     }
 
     protected MetaData() {
@@ -119,10 +119,6 @@ public class MetaData {
 
     public String getHandle() throws RepositoryException {
         return this.node.getPath();
-    }
-
-    public void setAccessManager(AccessManager manager) {
-        this.accessManager = manager;
     }
 
     private void allowUpdate() throws AccessDeniedException {
@@ -140,33 +136,9 @@ public class MetaData {
     }
 
     /**
-     * MetaData should be created by the repository implementation based on the node type definition
-     * @param workingNode
-     * @param name
-     */
-    private void setMetaNode(Node workingNode, String name) {
-        try {
-            this.node = workingNode.getNode(name);
-        }
-        catch (PathNotFoundException e) {
-            if (log.isDebugEnabled()) {
-                try {
-                    log.debug(workingNode.getPath() + " does not support MetaData");
-                    log.debug("check node type definition of " + workingNode.getPrimaryNodeType().getName());
-                }
-                catch (RepositoryException re) {
-                    // should never come here
-                }
-            }
-        }
-        catch (RepositoryException re) {
-            log.error(re.getMessage(), re);
-        }
-    }
-
-    /**
      * Get all meta data properties
      * @return property iterator
+     * @deprecated since 4.0 - not used.
      */
     public PropertyIterator getProperties() {
         if (node == null) {
@@ -378,6 +350,7 @@ public class MetaData {
     /**
      * Part of metadata, template type : JSP - Servlet - _xxx_
      * @param value
+     * @deprecated since 4.0 - not used - template type is determined by template definition
      */
     public void setTemplateType(String value) throws AccessDeniedException {
         allowUpdate();
@@ -406,10 +379,7 @@ public class MetaData {
             throw new AccessDeniedException(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot set property - " + name); //$NON-NLS-1$
-            }
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
         }
     }
 
@@ -526,10 +496,7 @@ public class MetaData {
             throw new AccessDeniedException(re.getMessage());
         }
         catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot set property - " + name); //$NON-NLS-1$
-            }
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
         }
     }
 
@@ -539,21 +506,17 @@ public class MetaData {
     public Calendar getDateProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
-            return this.node.getProperty(name).getDate();
+            final Property property = this.node.getProperty(name);
+            return property.getDate();
         }
         catch (PathNotFoundException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("PathNotFoundException for property [" + name + "] in node " + this.node); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot get property - " + name); //$NON-NLS-1$
-            }
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
         }
         return null;
     }
@@ -564,21 +527,17 @@ public class MetaData {
     public boolean getBooleanProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
-            return this.node.getProperty(name).getBoolean();
+            final Property property = this.node.getProperty(name);
+            return property.getBoolean();
         }
         catch (PathNotFoundException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("PathNotFoundException for property [" + name + "] in node " + this.node); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot get property - " + name); //$NON-NLS-1$
-            }
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
         }
         return false;
     }
@@ -589,21 +548,17 @@ public class MetaData {
     public double getDoubleProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
-            return this.node.getProperty(name).getDouble();
+            final Property property = this.node.getProperty(name);
+            return property.getDouble();
         }
         catch (PathNotFoundException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("PathNotFoundException for property [" + name + "] in node " + this.node); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot get property - " + name); //$NON-NLS-1$
-            }
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
         }
         return 0d;
     }
@@ -614,21 +569,17 @@ public class MetaData {
     public long getLongProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
-            return this.node.getProperty(name).getLong();
+            final Property property = this.node.getProperty(name);
+            return property.getLong();
         }
         catch (PathNotFoundException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("PathNotFoundException for property [" + name + "] in node " + this.node); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot get property - " + name); //$NON-NLS-1$
-            }
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
         }
         return 0L;
     }
@@ -641,21 +592,17 @@ public class MetaData {
     public String getStringProperty(String name) {
         name = this.getInternalPropertyName(name);
         try {
-            return this.node.getProperty(name).getString();
+            final Property property = this.node.getProperty(name);
+            return property.getString();
         }
         catch (PathNotFoundException re) {
-            if (log.isDebugEnabled()) {
-                log.debug("PathNotFoundException for property [" + name + "] in node " + this.node); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+            log.debug("PathNotFoundException for property [{}] in node {}", name, this.node); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (RepositoryException re) {
             log.error(re.getMessage(), re);
         }
         catch (NullPointerException e) {
-            if (log.isDebugEnabled()) {
-                log.debug("MetaData has not been created or this node does not support MetaData"); //$NON-NLS-1$
-                log.debug("cannot get property - " + name); //$NON-NLS-1$
-            }
+            log.debug("MetaData has not been created or this node does not support MetaData. Cannot set property {}", name);
         }
         return StringUtils.EMPTY;
     }
@@ -674,6 +621,8 @@ public class MetaData {
      * check if property exist
      * @param name
      * @return true if the specified property exist
+     *
+     * @deprecated since 4.0 - not used
      */
     public boolean hasProperty(String name) {
         try {
