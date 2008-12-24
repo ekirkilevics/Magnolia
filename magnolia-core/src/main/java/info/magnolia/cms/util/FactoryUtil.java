@@ -62,25 +62,21 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class FactoryUtil {
+    private final static Logger log = LoggerFactory.getLogger(FactoryUtil.class);
 
     public interface InstanceFactory {
         public Object newInstance();
     }
 
     /**
-     * Logger.
-     */
-    protected static Logger log = LoggerFactory.getLogger(FactoryUtil.class);
-
-    /**
      * Registered singleton instances
      */
-    protected static Map instances = new HashMap();
+    private final static Map instances = new HashMap();
 
     /**
      * Registered Prototypes used for new Instance
      */
-    protected static Map factories = new HashMap();
+    private final static Map factories = new HashMap();
 
     private FactoryUtil() {
 
@@ -146,13 +142,6 @@ public class FactoryUtil {
     }
 
     /**
-     * @deprecated use newInstance
-     */
-    public static Object getInstanceWithoutDiscovery(String className, Object[] args) {
-        return newInstanceWithoutDiscovery(className, args);
-    }
-
-    /**
      * This method does not use discovery! It is a util method for easy instantiating. In any case of an exception null is returned.
      *
      * @param className
@@ -179,13 +168,6 @@ public class FactoryUtil {
             log.error("can't instantiate: " + className, e);
         }
         return null;
-    }
-
-    /**
-     * @deprecated use newInstance
-     */
-    public static Object getInstanceWithoutDiscovery(String className) {
-        return newInstanceWithoutDiscovery(className);
     }
 
     public static Object newInstanceWithoutDiscovery(String className) {
