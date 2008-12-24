@@ -48,7 +48,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * In case you do not have to customize the transformation you should use one of this methods
+ * In case you do not have to customize the transformation, you should use one of these methods
  * <ul>
  * <li><code>toMap</code> is used to build a map from a node
  * <li><code>toBean<code> transforms the nodes to beans
@@ -59,8 +59,7 @@ import org.slf4j.LoggerFactory;
  * @version $Id$
  */
 public class Content2BeanUtil {
-
-    private static Logger log = LoggerFactory.getLogger(Content2BeanUtil.class);
+    private static final Logger log = LoggerFactory.getLogger(Content2BeanUtil.class);
 
     /**
      * Transforms all nodes to a map
@@ -154,7 +153,6 @@ public class Content2BeanUtil {
 
     /**
      * Transforms the nodes data into a map containting the names and values.
-     * @param node
      * @return a flat map
      */
     public static Map toMap(Content node) throws Content2BeanException {
@@ -224,7 +222,7 @@ public class Content2BeanUtil {
             String exclude = excludes[i];
             properties.remove(exclude);
         }
-        
+
         setNodeDatas(node, properties);
     }
 

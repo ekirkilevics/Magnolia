@@ -38,7 +38,6 @@ import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.MockUtil;
 
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 
 import javax.jcr.RepositoryException;

@@ -105,9 +105,12 @@ public class QueryUtil {
         return Collections.EMPTY_LIST;
     }
 
-    public static String createDateExpression(int year, int month, int date) {
+    /**
+     * @param month 1-12 (as opposed to java.util.Calendar 0-11 notation)
+     */
+    public static String createDateExpression(int year, int month, int day) {
         Calendar cal = Calendar.getInstance();
-        cal.set(year, month - 1, date);
+        cal.set(year, month - 1, day);
         return createDateExpression(cal);
     }
 
@@ -118,9 +121,12 @@ public class QueryUtil {
         return "DATE '" + DateFormatUtils.format(calendar.getTimeInMillis(), "yyyy-MM-dd", calendar.getTimeZone()) + "'";
     }
 
-    public static String createDateTimeExpression(int year, int month, int date, int hour, int minutes, int seconds) {
+    /**
+     * @param month 1-12 (as opposed to java.util.Calendar 0-11 notation)
+     */
+    public static String createDateTimeExpression(int year, int month, int day, int hour, int minutes, int seconds) {
         Calendar cal = Calendar.getInstance();
-        cal.set(year, month - 1, date, hour, minutes, seconds);
+        cal.set(year, month - 1, day, hour, minutes, seconds);
         return createDateTimeExpression(cal);
     }
 
@@ -136,9 +142,12 @@ public class QueryUtil {
         return str.toString();
     }
 
-    public static String createDateTimeExpressionIgnoreTimeZone(int year, int month, int date, int hour, int minutes, int seconds) {
+    /**
+     * @param month 1-12 (as opposed to java.util.Calendar 0-11 notation)
+     */
+    public static String createDateTimeExpressionIgnoreTimeZone(int year, int month, int day, int hour, int minutes, int seconds) {
         Calendar cal = Calendar.getInstance(DateUtils.UTC_TIME_ZONE);
-        cal.set(year, month - 1, date, hour, minutes, seconds);
+        cal.set(year, month - 1, day, hour, minutes, seconds);
         return createDateTimeExpression(cal);
     }
     
