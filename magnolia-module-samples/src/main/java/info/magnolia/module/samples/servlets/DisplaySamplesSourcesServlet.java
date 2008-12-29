@@ -34,9 +34,7 @@
 package info.magnolia.module.samples.servlets;
 
 import info.magnolia.cms.util.ClasspathResourcesUtil;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.commons.io.IOUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.ServletOutputStream;
@@ -49,52 +47,39 @@ import java.io.InputStream;
 /**
  *
  * @author tmiyar
- *
  */
 public class DisplaySamplesSourcesServlet extends HttpServlet {
-
-    private static final long serialVersionUID = 1L;
-
-    private static final Logger log = LoggerFactory.getLogger(DisplaySamplesSourcesServlet.class);
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);
     }
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            process(request, response);
-        }
-        catch (Exception e) {
-            log.error("error during download", e);
-        }
-    }
-
-    private void sendUnCompressed(java.io.InputStream is, HttpServletResponse res) throws Exception {
-        ServletOutputStream os = res.getOutputStream();
-        byte[] buffer = new byte[8192];
-        int read = 0;
-        while ((read = is.read(buffer)) > 0) {
-            os.write(buffer, 0, read);
-        }
-        os.flush();
-        os.close();
-    }
-
-    public void process(HttpServletRequest request, HttpServletResponse response) throws Exception {
-
-        String file = StringUtils.substringAfter(request.getRequestURI(), "/.sources/");
-
-       InputStream stream = null;
-
-        if(file.endsWith(".jsp")) {
-            stream = ClasspathResourcesUtil.getStream("/mgnl-files/templates/samples/" + file);
-        } else if(file.endsWith(".ftl")) {
-            stream = ClasspathResourcesUtil.getStream("/samples/" + file);
-        }
-
         response.setContentType("text/plain; charset=UTF-8");
-        sendUnCompressed(stream, response);
-    }
 
+        final String path = request.getPathInfo();
+        final String resourcePath;
+        if (path.endsWith(".jsp")) {
+            resourcePath = "/mgnl-files/templates/samples" + path;
+        } else if (path.endsWith(".ftl")) {
+            resourcePath = "/samples" + path;
+        } else {
+            throw new IllegalArgumentException("Filetype not handled: " + path);
+        }
+
+        final InputStream stream = ClasspathResourcesUtil.getStream(resourcePath);
+        if (stream == null) {
+            throw new IllegalArgumentException("Can't find resource: " + resourcePath);
+        }
+
+        final ServletOutputStream out = response.getOutputStream();
+
+        try {
+            IOUtils.copy(stream, out);
+        } finally {
+            stream.close();
+            out.flush();
+            out.close();
+        }
+    }
 }
