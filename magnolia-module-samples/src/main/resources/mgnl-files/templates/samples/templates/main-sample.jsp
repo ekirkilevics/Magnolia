@@ -21,7 +21,7 @@
 
 <div id="main">
     <h2>${content.title}</h2>
-    <p>${content.text!""}</p>
+    <p>${content.text}</p>
 
     <cms:contentNodeIterator contentNodeCollectionName="main">
         <cms:includeTemplate/>
