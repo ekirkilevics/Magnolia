@@ -72,9 +72,6 @@ public class LicenseFileExtractor {
 
     public static final String PROVIDER_EMAIL = "ProviderEmail"; //$NON-NLS-1$
 
-    /** @deprecated since 3.6.2, use the correctly typed PROVIDER_EMAIL constant */
-    public static final String PRIVIDER_EMAIL = PROVIDER_EMAIL;
-
     public static final String EDITION = "Edition"; //$NON-NLS-1$
 
     public static final String PRODUCT_DOMAIN = "ProductDomain"; //$NON-NLS-1$
