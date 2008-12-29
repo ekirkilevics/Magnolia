@@ -39,7 +39,6 @@ import org.apache.commons.lang.builder.ToStringBuilder;
 import org.apache.commons.lang.builder.ToStringStyle;
 
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.Map;
 
 

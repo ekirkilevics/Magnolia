@@ -34,12 +34,11 @@
 package info.magnolia.module.samples.filters;
 
 import info.magnolia.cms.filters.AbstractMgnlFilter;
-import info.magnolia.context.MgnlContext;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 /**
  *
