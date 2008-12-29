@@ -40,6 +40,7 @@ import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import info.magnolia.context.MgnlContext;
 
 
 /**
@@ -83,7 +84,7 @@ public final class Lock {
      */
     public static void setSessionLock(HttpServletRequest request) {
         log.info("Session lock enabled for user ( " //$NON-NLS-1$
-            + Authenticator.getUserId(request)
+            + MgnlContext.getUser().getName()
             + " ) on " //$NON-NLS-1$
             + (new Date()).toString());
         // @todo IMPORTANT remove use of http session
