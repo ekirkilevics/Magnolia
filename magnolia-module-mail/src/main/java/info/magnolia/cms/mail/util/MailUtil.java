@@ -217,7 +217,7 @@ public class MailUtil {
      * @throws RepositoryException
      */
     protected static Collection getAllUserNodes() throws RepositoryException {
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.USERS);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.USERS);
         Collection users = hm.getContent(Realm.REALM_ADMIN).getChildren(ItemType.USER);
         users.addAll(hm.getContent(Realm.REALM_SYSTEM).getChildren(ItemType.USER));
         return users;

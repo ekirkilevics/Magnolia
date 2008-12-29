@@ -42,6 +42,7 @@ import info.magnolia.module.workflow.WorkflowUtil;
 import info.magnolia.module.workflow.flows.FlowDefinitionException;
 import info.magnolia.module.workflow.flows.FlowDefinitionManager;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.sql.Date;
@@ -58,8 +59,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Servlet implementation class for Servlet: FlowDef This servlet is mainly for testing (add flow def, list flow xml
- * ...)
+ *
  */
 public class WorkflowUtilPage extends TemplatedMVCHandler {
 
@@ -285,7 +285,7 @@ public class WorkflowUtilPage extends TemplatedMVCHandler {
 
     private String setDate(String pathSelected, String start, String stop) throws Exception {
         // add start date and end date
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.WEBSITE);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.WEBSITE);
         Content ct;
         try {
             ct = hm.getContent(pathSelected);

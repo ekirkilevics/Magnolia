@@ -273,7 +273,7 @@ public class ModuleManagerImpl implements ModuleManager {
             // here we use the implementation, since it has extra methods that should not be exposed to ModuleLifecycle methods.
             final ModuleLifecycleContextImpl lifecycleContext = new ModuleLifecycleContextImpl();
             lifecycleContext.setPhase(ModuleLifecycleContext.PHASE_SYSTEM_STARTUP);
-            final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
             final Content modulesParentNode = hm.getContent(MODULES_NODE);
             final Collection moduleNodes = new ArrayList();
             final Iterator it = orderedModuleDescriptors.iterator();

@@ -37,7 +37,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ConfigUtil;
 import info.magnolia.cms.util.WorkspaceAccessUtil;
@@ -240,7 +239,7 @@ public final class ContentRepository {
         if (log.isDebugEnabled()) {
             log.debug("Checking [" + repository + "] repository."); //$NON-NLS-1$ //$NON-NLS-2$
         }
-        HierarchyManager hm = getHierarchyManager(repository);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(repository);
 
         if (hm == null) {
             throw new RuntimeException("Repository [" + repository + "] not loaded"); //$NON-NLS-1$ //$NON-NLS-2$
@@ -404,15 +403,6 @@ public final class ContentRepository {
     }
 
     /**
-     * Configures and returns a AccessManager with system permissions
-     * @return The system AccessManager
-     * @deprecated uses MglnContext.getSystemContext()
-     */
-    public static AccessManager getAccessManager() {
-        return MgnlContext.getSystemContext().getAccessManager(CONFIG);
-    }
-
-    /**
      * Builds JDOM document.
      * @return document
      * @throws IOException
@@ -501,24 +491,6 @@ public final class ContentRepository {
             return repositoryId;
         }
         return DEFAULT_WORKSPACE;
-    }
-
-    /**
-     * Hierarchy manager as created on startup. Note: this hierarchyManager is created with system rights and has full
-     * access on the specified repository.
-     * @deprecated uses MglnContext.getSystemContext.getHierarchyManager()
-     */
-    public static HierarchyManager getHierarchyManager(String repositoryID) {
-        return getHierarchyManager(repositoryID, getDefaultWorkspace(repositoryID));
-    }
-
-    /**
-     * Hierarchy manager as created on startup. Note: this hierarchyManager is created with system rights and has full
-     * access on the specified repository.
-     * @deprecated uses MglnContext.getSystemContext.getHierarchyManager()
-     */
-    public static HierarchyManager getHierarchyManager(String repositoryID, String workspaceID) {
-        return MgnlContext.getSystemContext().getHierarchyManager(repositoryID, workspaceID);
     }
 
     /**

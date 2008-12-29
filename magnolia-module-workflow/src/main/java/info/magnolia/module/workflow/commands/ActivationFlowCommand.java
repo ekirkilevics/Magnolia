@@ -33,14 +33,11 @@
  */
 package info.magnolia.module.workflow.commands;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.i18n.Messages;
-import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.DateUtil;
 import info.magnolia.context.Context;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.workflow.WorkflowConstants;
-import info.magnolia.module.workflow.WorkflowModule;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
@@ -71,7 +68,7 @@ public class ActivationFlowCommand extends PathMappedFlowCommand {
         super.prepareLaunchItem(context, launchItem);
 
         try {
-            Content node = ContentRepository.getHierarchyManager(getRepository()).getContent(getPath());
+            Content node = MgnlContext.getSystemContext().getHierarchyManager(getRepository()).getContent(getPath());
             updateDateAttribute(node, launchItem, WorkflowConstants.ATTRIBUTE_START_DATE);
             updateDateAttribute(node, launchItem, WorkflowConstants.ATTRIBUTE_END_DATE);
         }

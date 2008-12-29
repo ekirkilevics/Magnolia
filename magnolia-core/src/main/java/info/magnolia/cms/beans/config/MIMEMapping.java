@@ -102,7 +102,7 @@ public class MIMEMapping {
         MIMEMapping.cachedContent.clear();
         try {
             log.info("Config : loading MIMEMapping"); //$NON-NLS-1$
-            final HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
             Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
             MIMEMapping.cacheContent(mimeList);

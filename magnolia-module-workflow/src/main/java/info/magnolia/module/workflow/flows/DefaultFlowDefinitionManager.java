@@ -145,7 +145,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
         }
 
         try {
-            HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+            HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
             Content root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);
 
             // check if the node already exist, and if it does update the value of the the NodeData FLOW_VALUE with the
@@ -178,7 +178,7 @@ public class DefaultFlowDefinitionManager implements FlowDefinitionManager {
     public List getDefinitionNames(){
         ArrayList list = new ArrayList();
 
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
         Content root;
         try {
             root = hm.getContent(WorkflowConstants.ROOT_PATH_FOR_FLOW);

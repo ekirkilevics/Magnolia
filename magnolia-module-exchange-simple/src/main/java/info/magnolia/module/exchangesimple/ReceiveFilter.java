@@ -477,7 +477,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              return MgnlContext.getHierarchyManager(repositoryName, workspaceName);
          }
 
-         return ContentRepository.getHierarchyManager(repositoryName, workspaceName);
+         return MgnlContext.getSystemContext().getHierarchyManager(repositoryName, workspaceName);
 
      }
 

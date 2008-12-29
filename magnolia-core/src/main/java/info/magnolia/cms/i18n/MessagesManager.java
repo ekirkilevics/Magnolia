@@ -178,7 +178,7 @@ public final class MessagesManager {
     public static void load() {
 
         // reading the configuration from the repository, no need for context
-        HierarchyManager hm = ContentRepository.getHierarchyManager(ContentRepository.CONFIG);
+        HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
         try {
             log.info("Config : loading i18n configuration - " + I18N_CONFIG_PATH); //$NON-NLS-1$
