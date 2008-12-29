@@ -37,9 +37,6 @@ import javax.jcr.RepositoryException;
 
 import info.magnolia.cms.security.AccessManager;
 
-import org.apache.commons.lang.exception.NestableRuntimeException;
-
-
 /**
  * @author Sameer Charles
  * @version $Revision $ ($Author $) $Id$
@@ -48,7 +45,7 @@ public abstract class ContentHandler implements Cloneable {
 
     /**
      * AccessManager instance.
-     * @deprecated
+     * @deprecated since 4.0 - use hierarchyManager instead.
      */
     protected AccessManager accessManager;
 
@@ -91,7 +88,7 @@ public abstract class ContentHandler implements Cloneable {
         }
         catch (CloneNotSupportedException e) {
             // should never happen
-            throw new NestableRuntimeException(e);
+            throw new RuntimeException(e);
         }
     }
 
