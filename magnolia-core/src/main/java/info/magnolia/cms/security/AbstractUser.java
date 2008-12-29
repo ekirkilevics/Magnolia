@@ -33,8 +33,6 @@
  */
 package info.magnolia.cms.security;
 
-import java.util.Collection;
-
 import javax.security.auth.Subject;
 
 import org.slf4j.Logger;

@@ -35,17 +35,11 @@ package info.magnolia.content2bean.impl;
 
 import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ClassUtil;
-import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.content2bean.Content2BeanTransformer;
-import info.magnolia.content2bean.TypeDescriptor;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.lang.reflect.Constructor;
 import java.util.Iterator;
 import java.util.Properties;
 
-import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

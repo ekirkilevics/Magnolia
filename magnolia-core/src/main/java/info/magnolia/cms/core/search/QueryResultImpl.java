@@ -39,7 +39,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.Path;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
-import info.magnolia.context.MgnlContext;
 
 import java.util.ArrayList;
 import java.util.Collection;

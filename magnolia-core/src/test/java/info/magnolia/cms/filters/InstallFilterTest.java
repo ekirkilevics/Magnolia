@@ -36,7 +36,6 @@ package info.magnolia.cms.filters;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.ui.ModuleManagerUI;
 import info.magnolia.test.MgnlTestCase;
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
 import javax.servlet.FilterChain;

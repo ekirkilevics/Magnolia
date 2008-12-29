@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;

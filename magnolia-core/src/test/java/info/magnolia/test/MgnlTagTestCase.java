@@ -49,7 +49,11 @@ import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
 
-import com.mockrunner.mock.web.*;
+import com.mockrunner.mock.web.MockPageContext;
+import com.mockrunner.mock.web.MockServletConfig;
+import com.mockrunner.mock.web.MockHttpServletRequest;
+import com.mockrunner.mock.web.MockHttpServletResponse;
+import com.mockrunner.mock.web.MockJspWriter;
 
 /**
  * A base class to simplify the testing of tag library output.

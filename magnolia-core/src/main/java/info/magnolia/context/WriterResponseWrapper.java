@@ -39,7 +39,6 @@ import javax.servlet.http.HttpServletResponseWrapper;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
-import java.util.Locale;
 
 /**
  * Wraps an HttpServletResponse and redirects both outputs (getWriter() and getOutputStream())

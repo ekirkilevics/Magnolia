@@ -33,9 +33,7 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.AggregationState;
 
 import java.util.Map;

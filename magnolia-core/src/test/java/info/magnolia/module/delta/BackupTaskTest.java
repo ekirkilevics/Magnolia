@@ -33,14 +33,7 @@
  */
 package info.magnolia.module.delta;
 
-import static org.easymock.EasyMock.*;
-import info.magnolia.cms.core.HierarchyManager;
-import info.magnolia.module.InstallContext;
 import info.magnolia.test.MgnlTestCase;
-import info.magnolia.test.mock.MockUtil;
-
-import java.util.Properties;
-
 
 /**
  * @author vsteller

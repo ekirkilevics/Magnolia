@@ -33,8 +33,6 @@
  */
 package info.magnolia.cms.core.search;
 
-import info.magnolia.cms.core.HierarchyManager;
-
 import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.query.InvalidQueryException;

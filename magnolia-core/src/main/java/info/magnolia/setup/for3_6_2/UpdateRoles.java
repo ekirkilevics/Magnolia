@@ -43,7 +43,6 @@ import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.AllChildrenNodesOperation;
 import info.magnolia.module.delta.TaskExecutionException;
 
-import java.util.Collection;
 import java.util.Iterator;
 
 import javax.jcr.RepositoryException;

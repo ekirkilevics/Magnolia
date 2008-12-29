@@ -38,7 +38,6 @@ import info.magnolia.voting.Voter;
 import info.magnolia.voting.Voting;
 
 import java.io.IOException;
-import java.util.Enumeration;
 
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;

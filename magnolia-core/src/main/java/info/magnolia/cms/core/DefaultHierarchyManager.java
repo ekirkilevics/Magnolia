@@ -46,7 +46,12 @@ import java.util.Iterator;
 import java.io.ObjectStreamField;
 import java.io.Serializable;
 
-import javax.jcr.*;
+import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
+import javax.jcr.Node;
+import javax.jcr.Session;
+import javax.jcr.Workspace;
+import javax.jcr.ItemNotFoundException;
 
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
@@ -184,7 +189,7 @@ public class DefaultHierarchyManager implements HierarchyManager, Serializable {
      * @throws AccessDeniedException
      */
     public Content createContent(String path, String label, String contentType) throws PathNotFoundException,
-        RepositoryException, AccessDeniedException {
+            RepositoryException, AccessDeniedException {
         Content content = new DefaultContent(this.getRootNode(), this.getNodePath(path, label), contentType, this);
         setMetaData(content.getMetaData());
         AuditLoggingUtil.log( AuditLoggingUtil.ACTION_CREATE, workspaceName, content.getHandle());

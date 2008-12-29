@@ -43,7 +43,6 @@ import info.magnolia.voting.voters.URIStartsWithVoter;
 import java.io.IOException;
 
 import javax.jcr.RepositoryException;
-import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;

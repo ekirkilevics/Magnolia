@@ -45,7 +45,6 @@ import freemarker.cache.TemplateLoader;
 
 import info.magnolia.cms.beans.config.ObservedManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.filters.VirtualUriFilter;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.content2bean.TransformationState;
