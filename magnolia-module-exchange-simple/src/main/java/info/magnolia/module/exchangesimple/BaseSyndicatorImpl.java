@@ -60,7 +60,6 @@ import info.magnolia.cms.exchange.Syndicator;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.logging.AuditLoggingUtil;
-import info.magnolia.module.exchangesimple.ActivationContent;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.context.MgnlContext;
 
@@ -68,7 +67,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import java.util.List;
 import java.util.Iterator;
-import java.util.Map;
 import java.util.zip.GZIPOutputStream;
 import java.net.URLConnection;
 import java.io.IOException;
