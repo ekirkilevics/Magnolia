@@ -33,10 +33,8 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.search.QueryManager;
 import info.magnolia.cms.i18n.Messages;
@@ -64,11 +62,7 @@ import java.util.Map;
  */
 
 public class MgnlContext {
-
-    /**
-     * Logger
-     */
-    public static Logger log = LoggerFactory.getLogger(MgnlContext.class);
+    private static final Logger log = LoggerFactory.getLogger(MgnlContext.class);
 
     /**
      * The thread local variable holding the current context
@@ -91,7 +85,6 @@ public class MgnlContext {
 
     /**
      * Set the locale for the current context.
-     * @param locale
      */
     public static void setLocale(Locale locale) {
         getInstance().setLocale(locale);
@@ -113,101 +106,50 @@ public class MgnlContext {
         return getInstance().getMessages(basename);
     }
 
-    /**
-     * Set current user
-     * @param user
-     * @deprecated use login insttead
-     */
-    public static void setUser(User user) {
-        login(user);
-    }
-
     public static void login(User user) {
         ((UserContext)getInstance()).login(user);
     }
 
     /**
-     * Get hierarchy manager initialized for this user
-     * @param repositoryId
-     * @return hierarchy manager
+     * Get hierarchy manager initialized for this user.
      */
     public static HierarchyManager getHierarchyManager(String repositoryId) {
         return getInstance().getHierarchyManager(repositoryId);
     }
 
     /**
-     * Get hierarchy manager initialized for this user
-     * @param repositoryId
-     * @param workspaceId
-     * @return hierarchy manager
+     * Get hierarchy manager initialized for this user.
      */
     public static HierarchyManager getHierarchyManager(String repositoryId, String workspaceId) {
         return getInstance().getHierarchyManager(repositoryId, workspaceId);
     }
 
     /**
-     * Get access manager for the specified repository on default workspace
-     * @param repositoryId
-     * @return access manager
+     * Get access manager for the specified repository on default workspace.
      */
     public static AccessManager getAccessManager(String repositoryId) {
         return getInstance().getAccessManager(repositoryId);
     }
 
     /**
-     * Get access manager for the specified repository on the specified workspace
-     * @param repositoryId
-     * @param workspaceId
-     * @return access manager
+     * Get access manager for the specified repository on the specified workspace.
      */
     public static AccessManager getAccessManager(String repositoryId, String workspaceId) {
         return getInstance().getAccessManager(repositoryId, workspaceId);
     }
 
     /**
-     * Get QueryManager created for this user on the specified repository
-     * @param repositoryId
-     * @return query manager
+     * Get QueryManager created for this user on the specified repository.
      */
     public static QueryManager getQueryManager(String repositoryId) {
         return getInstance().getQueryManager(repositoryId);
     }
 
     /**
-     * Get QueryManager created for this user on the specified repository and workspace
-     * @param repositoryId
-     * @param workspaceId
-     * @return query manager
+     * Get QueryManager created for this user on the specified repository and workspace.
      */
     public static QueryManager getQueryManager(String repositoryId, String workspaceId) {
         return getInstance().getQueryManager(repositoryId, workspaceId);
-    }
-
-    /**
-     * Get currently active page
-     * @return content object
-     * @deprecated use getAggregationState()
-     */
-    public static Content getActivePage() {
-
-        WebContext ctx = getWebContextIfExisting(getInstance());
-        if (ctx != null) {
-            return ctx.getActivePage();
-        }
-        return null;
-    }
-
-    /**
-     * Get aggregated file, its used from image templates to manipulate
-     * @return file object
-     * @deprecated use getAggregationState()
-     */
-    public static File getFile() {
-        WebContext ctx = getWebContextIfExisting(getInstance());
-        if (ctx != null) {
-            return ctx.getFile();
-        }
-        return null;
     }
 
     /**
@@ -224,9 +166,7 @@ public class MgnlContext {
     }
 
     /**
-     * Get parameter value as string
-     * @param name
-     * @return parameter value
+     * Get parameter value as string.
      */
     public static String getParameter(String name) {
         WebContext ctx = getWebContextIfExisting(getInstance());
@@ -247,8 +187,7 @@ public class MgnlContext {
     }
 
     /**
-     * Get parameter value as string
-     * @return parameter values
+     * Get parameter value as string.
      */
     public static Map getParameters() {
         WebContext ctx = getWebContextIfExisting(getInstance());
@@ -259,7 +198,7 @@ public class MgnlContext {
     }
 
     /**
-     * @return the context path
+     * @return the context path.
      */
     public static String getContextPath() {
         WebContext ctx = getWebContextIfExisting(getInstance());
@@ -297,72 +236,57 @@ public class MgnlContext {
     }
 
     /**
-     * Set attribute value, scope of the attribute is defined
-     * @param name is used as a key
-     * @param value
+     * Set attribute value, scope of the attribute is defined.
      */
     public static void setAttribute(String name, Object value) {
         getInstance().setAttribute(name, value, Context.LOCAL_SCOPE);
     }
 
     /**
-     * Set attribute value, scope of the attribute is defined
-     * @param name is used as a key
-     * @param value
-     * @param scope , highest level of scope from which this attribute is visible
+     * Set attribute value, scope of the attribute is defined.
+     * @param scope , highest level of scope from which this attribute is visible.
      */
     public static void setAttribute(String name, Object value, int scope) {
         getInstance().setAttribute(name, value, scope);
     }
 
     /**
-     * Get attribute value
-     * @param name to which value is associated to
-     * @return attribute value
+     * Get attribute value.
      */
     public static Object getAttribute(String name) {
         return getInstance().getAttribute(name);
     }
 
     /**
-     * Get the attribute from the specified scope
-     * @param name
-     * @param scope
-     * @return the value
+     * Get the attribute from the specified scope.
      */
     public static Object getAttribute(String name, int scope) {
         return getInstance().getAttribute(name, scope);
     }
 
     /**
-     * Check if this attribute exists in the local scope
-     * @param name
-     * @return
+     * Check if this attribute exists in the local scope.
      */
     public static boolean hasAttribute(String name){
         return getInstance().getAttribute(name, Context.LOCAL_SCOPE) != null;
     }
 
     /**
-     * Remove an attribute in the local scope
-     * @param name
-     * @return
+     * Remove an attribute in the local scope.
      */
     public static void removeAttribute(String name){
         getInstance().removeAttribute(name, Context.LOCAL_SCOPE);
     }
 
     /**
-     * Set context implementation instance
-     * @param context
+     * Set context implementation instance.
      */
     public static void setInstance(Context context) {
         localContext.set(context);
     }
 
     /**
-     * Get the current context of this thread
-     * @return the context
+     * Get the current context of this thread.
      */
     public static Context getInstance() {
         Context context = (Context) localContext.get();
@@ -378,7 +302,7 @@ public class MgnlContext {
 
     /**
      * Used to check if an instance is already set since getInstance() will always return a context.
-     * @return true if an instance was set
+     * @return true if an instance was set.
      */
     public static boolean hasInstance() {
         return localContext.get() != null;
@@ -389,8 +313,7 @@ public class MgnlContext {
     }
 
     /**
-     * Get magnolia system context, Note : this context have full rights over all repositories/ workspaces
-     * @return system context
+     * Get Magnolia system context. This context has full permissions over all repositories/ workspaces.
      */
     public static Context getSystemContext() {
         return ContextFactory.getInstance().getSystemContext();
@@ -398,7 +321,7 @@ public class MgnlContext {
 
     /**
      * Executes the given operation in the system context and sets it back to the original once done
-     * (also if an exception is thrown). Also works if there was no context upon calling (sets it back
+     * (also if an exception is thrown). Also works if there was no context upon calling. (sets it back
      * to null in this case)
      */
     public static void doInSystemContext(SystemContextOperation op) {
@@ -430,15 +353,6 @@ public class MgnlContext {
 
     /**
      * Sets this context as a web context.
-     * @param request
-     * @deprecated Use {@link #initAsWebContext(HttpServletRequest,HttpServletResponse,ServletContext)} instead
-     */
-    public static void initAsWebContext(HttpServletRequest request, HttpServletResponse response) {
-        initAsWebContext(request, response, null);
-    }
-
-    /**
-     * Sets this context as a web context.
      * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @param servletContext ServletContext instance
@@ -450,7 +364,6 @@ public class MgnlContext {
 
     /**
      * Returns the web context, also if eventually wrapped in a ContextDecorator.
-     * @param ctx
      * @return WebContext instance or null if no web context is set
      */
     private static WebContext getWebContextIfExisting(Context ctx) {
