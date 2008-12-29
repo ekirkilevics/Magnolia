@@ -34,8 +34,8 @@
 package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
@@ -43,11 +43,10 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.jcr.RepositoryException;
 import javax.jcr.PathNotFoundException;
+import javax.jcr.RepositoryException;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -170,26 +169,9 @@ public class MIMEMapping {
             return ((MIMEMappingItem) MIMEMapping.cachedContent.get(loweredKey)).mime;
         }
 
-        // this is expected by the caller getMIMEType(HttpServletRequest)
+        // this is expected by the caller
         return null;
 
-    }
-
-    /**
-     * @deprecated do not pass the request
-     */
-    public static String getMIMEType(HttpServletRequest request) {
-        return getMIMEType();
-    }
-
-    /**
-     * Get MIME type String.
-     * @return MIME type of the current context
-     * @deprecated use getMIMEType(String s) or getMIMETypeOrDefault(String s)
-     */
-    public static String getMIMEType() {
-        final String extension = MgnlContext.getAggregationState().getExtension();
-        return getMIMETypeOrDefault(extension);
     }
 
     /**
@@ -208,15 +190,6 @@ public class MIMEMapping {
 
         final String defaultExtension = ServerConfiguration.getInstance().getDefaultExtension();
         return getMIMEType(defaultExtension);
-    }
-
-    /**
-     * @param request
-     * @deprecated not used
-     */
-    public static String getContentEncoding(HttpServletRequest request) {
-        final String contentType = MIMEMapping.getMIMEType(request);
-        return getContentEncoding(contentType);
     }
 
     public static String getContentEncoding(String contentType) {
@@ -243,7 +216,6 @@ public class MIMEMapping {
 
     /**
      * Returns the icon used for rendering this type
-     * @param extension
      * @return the icon name
      */
     public static String getMIMETypeIcon(String extension) {
