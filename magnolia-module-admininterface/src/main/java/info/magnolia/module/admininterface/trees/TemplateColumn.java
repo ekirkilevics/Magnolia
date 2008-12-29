@@ -37,15 +37,12 @@ import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Select;
-import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.MessagesUtil;
-
-import java.util.Iterator;
+import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.lang.StringUtils;
+import java.util.Iterator;
 
 /**
  * @author pbracher

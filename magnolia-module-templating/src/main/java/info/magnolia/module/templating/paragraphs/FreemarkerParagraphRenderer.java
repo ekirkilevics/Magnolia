@@ -34,27 +34,23 @@
 package info.magnolia.module.templating.paragraphs;
 
 import freemarker.template.TemplateException;
-import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.module.templating.RenderException;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.servlet.jsp.JspWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.servlet.jsp.JspWriter;
-import javax.servlet.jsp.tagext.BodyContent;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * Renders a paragraph using freemarker. Optionally supports the execution of an action

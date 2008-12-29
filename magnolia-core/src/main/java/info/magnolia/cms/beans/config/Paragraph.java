@@ -33,9 +33,6 @@
  */
 package info.magnolia.cms.beans.config;
 
-
-
-
 /**
  * @author Sameer Charles
  */

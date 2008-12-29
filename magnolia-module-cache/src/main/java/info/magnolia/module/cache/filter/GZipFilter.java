@@ -37,14 +37,12 @@ import info.magnolia.cms.filters.OncePerRequestAbstractMgnlFilter;
 import info.magnolia.cms.util.RequestHeaderUtil;
 import info.magnolia.module.cache.util.GZipUtil;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.util.zip.GZIPOutputStream;
-
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 
 /**
  * This GZipFilter does not take care of the Accept-Encoding request header. The CacheFilter will

@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.MetaData;
 import info.magnolia.cms.gui.control.ContextMenuItem;
@@ -41,9 +40,7 @@ import info.magnolia.cms.gui.control.FunctionBarItem;
 import info.magnolia.cms.gui.control.Tree;
 import info.magnolia.cms.gui.control.TreeColumn;
 import info.magnolia.cms.i18n.Messages;
-import info.magnolia.context.MgnlContext;
 import info.magnolia.module.admininterface.AbstractTreeConfiguration;
-
 
 import javax.servlet.http.HttpServletRequest;
 

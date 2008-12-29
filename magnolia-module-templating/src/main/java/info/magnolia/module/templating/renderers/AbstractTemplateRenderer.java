@@ -33,25 +33,20 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.util.Map;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import info.magnolia.cms.beans.config.RenderableDefinition;
-import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.AbstractRenderer;
 import info.magnolia.module.templating.RenderException;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.PrintWriter;
 
 
 /**

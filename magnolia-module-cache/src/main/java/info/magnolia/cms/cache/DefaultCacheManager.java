@@ -33,24 +33,21 @@
  */
 package info.magnolia.cms.cache;
 
-import java.util.Iterator;
-
 import info.magnolia.cms.beans.config.ConfigurationException;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.cache.noop.NoOpCache;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.voting.Voting;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.util.Iterator;
 
 
 /**

@@ -39,21 +39,6 @@ import info.magnolia.cms.mail.MailTemplate;
 import info.magnolia.cms.mail.templates.MailAttachment;
 import info.magnolia.cms.security.User;
 import info.magnolia.context.MgnlContext;
-
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.StringReader;
-import java.io.StringWriter;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
-
 import org.apache.commons.httpclient.HttpClient;
 import org.apache.commons.httpclient.NameValuePair;
 import org.apache.commons.httpclient.cookie.CookiePolicy;
@@ -70,6 +55,20 @@ import org.jdom.output.XMLOutputter;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
+
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.StringReader;
+import java.io.StringWriter;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 
 /**
@@ -154,6 +153,7 @@ public class MgnlPageEmail extends FreemarkerEmail {
         super.setBody(tmp);
     }
 
+    // TODO : this is not used !
     public void setBodyFromTemplate(Template template, Map _map) throws Exception {
         final StringWriter writer = new StringWriter();
         template.process(_map, writer);

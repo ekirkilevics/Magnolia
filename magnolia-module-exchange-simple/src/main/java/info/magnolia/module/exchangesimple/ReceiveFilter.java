@@ -34,7 +34,6 @@
 package info.magnolia.module.exchangesimple;
 
 import info.magnolia.cms.beans.config.ConfigLoader;
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Access;

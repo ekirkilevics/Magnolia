@@ -33,14 +33,17 @@
  */
 package info.magnolia.cms.cache.simple;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.cache.Cache;
 import info.magnolia.cms.cache.CacheConfig;
-import info.magnolia.cms.cache.CacheManagerFactory;
 import info.magnolia.cms.cache.CacheableEntry;
 import info.magnolia.cms.core.Path;
-import info.magnolia.cms.util.ObservationUtil;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -49,16 +52,6 @@ import java.io.OutputStream;
 import java.util.Hashtable;
 import java.util.Map;
 import java.util.zip.GZIPOutputStream;
-
-import javax.jcr.observation.EventIterator;
-import javax.jcr.observation.EventListener;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.FileUtils;
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**

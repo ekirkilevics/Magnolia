@@ -33,12 +33,15 @@
  */
 package info.magnolia.module.admininterface.pages;
 
-import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.module.admininterface.PageMVCHandler;
+import org.apache.commons.io.IOUtils;
+import org.apache.commons.lang.StringUtils;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
@@ -49,13 +52,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.io.IOUtils;
-import org.apache.commons.lang.BooleanUtils;
-import org.apache.commons.lang.StringUtils;
 
 
 /**

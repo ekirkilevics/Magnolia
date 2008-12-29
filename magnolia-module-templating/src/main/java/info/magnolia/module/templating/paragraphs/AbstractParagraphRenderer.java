@@ -33,21 +33,18 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
-import java.io.IOException;
-import java.io.Writer;
-import java.util.Map;
-
-import org.apache.commons.lang.exception.ExceptionUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.RenderableDefinition;
-import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.templating.AbstractRenderer;
 import info.magnolia.module.templating.RenderException;
+import org.apache.commons.lang.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.IOException;
+import java.io.Writer;
 
 
 /**
