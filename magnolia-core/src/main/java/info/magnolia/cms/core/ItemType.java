@@ -53,11 +53,6 @@ public final class ItemType implements Serializable {
     public static final String NT_UNSTRUCTURED = "nt:unstructured"; //$NON-NLS-1$
 
     /**
-     * @deprecated typo in the name
-     */
-    public static final String NT_UNSTRUCTRUED = NT_UNSTRUCTURED;
-
-    /**
      * Node type: hierarchyNode.
      */
     public static final String NT_HIERARCHY = "nt:hierarchyNode"; //$NON-NLS-1$
@@ -130,11 +125,6 @@ public final class ItemType implements Serializable {
      * @deprecated use ItemType.CONTENTNODE
      */
     public static final String NT_CONTENTNODE = "mgnl:contentNode"; //$NON-NLS-1$
-
-    /**
-     * @deprecated
-     */
-    public static final String NT_NODEDATA = "mgnl:nodeData"; //$NON-NLS-1$
 
     public static final ItemType CONTENT = new ItemType("mgnl:content"); //$NON-NLS-1$
 
