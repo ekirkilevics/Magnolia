@@ -40,7 +40,6 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.collections.Transformer;
 import org.apache.commons.collections.map.LazyMap;
@@ -51,8 +50,6 @@ import org.slf4j.LoggerFactory;
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 import javax.servlet.jsp.jstl.core.Config;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -315,20 +312,6 @@ public final class MessagesManager {
     }
 
     /**
-     * Deprectated! Use MgnlContext
-     * @return Returns the current locale for the current user
-     * @deprecated
-     */
-    public static Locale getCurrentLocale(HttpServletRequest request) {
-        try {
-            return MgnlContext.getLocale();
-        }
-        catch (Exception e) {
-            return getDefaultLocale();
-        }
-    }
-
-    /**
      * @param defaultLocale The defaultLocale to set.
      */
     public static void setDefaultLocale(String defaultLocale) {
@@ -345,16 +328,6 @@ public final class MessagesManager {
      */
     public static Collection getAvailableLocales() {
         return availableLocales;
-    }
-
-    /**
-     * Set the user language in the session
-     * @param language lagnguage to ste
-     * @param session current session
-     * @deprecated since 3.5, use MgnlContext instead (this is not used - can be safely removed)
-     */
-    public static void setUserLanguage(String language, HttpSession session) {
-        MgnlContext.setAttribute(Config.FMT_LOCALE + ".session", language, Context.SESSION_SCOPE); //$NON-NLS-1$
     }
 
     public static void reloadBundles() throws Exception {
