@@ -33,10 +33,8 @@
  */
 package info.magnolia.context;
 
-import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.security.Security;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -89,13 +87,6 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
     public WebContextImpl() {
     }
 
-    /**
-     * @deprecated Use {@link #init(HttpServletRequest,HttpServletResponse,ServletContext)} instead
-     */
-    public void init(HttpServletRequest request, HttpServletResponse response) {
-        init(request, response, null);
-    }
-
     public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
         this.request = request;
         this.response = response;
@@ -104,24 +95,6 @@ public class WebContextImpl extends UserContextImpl implements WebContext {
         //setUser(getAnonymousUser());
         setAttributeStrategy(new RequestAttributeStrategy(this));
         setRepositoryStrategy(new DefaultRepositoryStrategy(this));
-    }
-
-    /**
-     * Get currently active page
-     * @return content object
-     * @deprecated use getAggregationState().getMainContent();
-     */
-    public Content getActivePage() {
-        return getAggregationState().getMainContent();
-    }
-
-    /**
-     * Get aggregated file, its used from image templates to manipulate
-     * @return file object
-     * @deprecated use getAggregationState().getFile();
-     */
-    public File getFile() {
-        return getAggregationState().getFile();
     }
 
     public AggregationState getAggregationState() {

@@ -68,15 +68,7 @@ public interface WebContext extends Context {
     public static final String ATTRIBUTE_REQUEST_URI = "requestURI";
 
     /**
-     * Method used to initialize the context
-     * @deprecated Use {@link #init(HttpServletRequest,HttpServletResponse,ServletContext)} instead
-     */
-    public void init(HttpServletRequest request, HttpServletResponse response);
-
-    /**
-     * Method used to initialize the context
-     * @param servletContext
-     * @todo
+     * Method used to initialize the context.
      */
     public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext);
 
@@ -90,20 +82,6 @@ public interface WebContext extends Context {
      * Resets the current aggregator instance.
      */
     void resetAggregationState();
-
-    /**
-     * Get currently active page
-     * @return content object
-     * @deprecated use getAggregator().getMainContent()
-     */
-    public Content getActivePage();
-
-    /**
-     * Get aggregated file, its used from image templates to manipulate
-     * @return file object
-     * @deprecated use getAggregator().getFile()
-     */
-    public File getFile();
 
     /**
      * Get form object assembled by <code>MultipartRequestFilter</code>

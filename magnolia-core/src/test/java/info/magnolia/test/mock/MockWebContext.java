@@ -43,7 +43,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.jsp.PageContext;
 
-import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -67,7 +66,6 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
     private ServletContext servletContext;
     private PageContext pageContext;
     private MultipartForm postedForm;
-    private File file;
 
     public MockWebContext() {
     }
@@ -95,11 +93,7 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
             IOException {
     }
 
-    public void init(HttpServletRequest request, HttpServletResponse response) {
-    }
-
-    public void init(HttpServletRequest request, HttpServletResponse response,
-            ServletContext servletContext) {
+    public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext) {
     }
 
     public void resetAggregationState() {
@@ -183,14 +177,6 @@ public class MockWebContext extends MockContext implements WebContext, UserConte
 
     public PageContext getPageContext() {
         return pageContext;
-    }
-
-    public File getFile() {
-        return file;
-    }
-
-    public void setFile(File file) {
-        this.file = file;
     }
 
     public void setCurrentURI(String uri) {
