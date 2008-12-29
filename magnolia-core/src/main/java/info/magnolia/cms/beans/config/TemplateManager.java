@@ -35,11 +35,11 @@ package info.magnolia.cms.beans.config;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
-import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanException;
 import info.magnolia.content2bean.Content2BeanUtil;
 
+import javax.jcr.RepositoryException;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -47,8 +47,6 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-
-import javax.jcr.RepositoryException;
 
 
 /**
@@ -210,16 +208,6 @@ public class TemplateManager extends ObservedManager {
             }
         }
         return templateList.iterator();
-    }
-
-
-    /**
-     * Get templates collection after access control filter applied using specified AccessManager
-     * @return Collection list containing templates as Template objects
-     * @deprecated
-     */
-    public Iterator getAvailableTemplates(AccessManager accessManager) {
-        throw new UnsupportedOperationException();
     }
 
     /**
