@@ -50,14 +50,13 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * This class wraps a user content object to provide some nice methods
+ *
  * @author philipp
  * @author Sameer Charles
  * @version $Revision:2558 $ ($Author:scharles $)
  */
 public class ExternalUser extends AbstractUser implements Serializable {
-
-    public static Logger log = LoggerFactory.getLogger(ExternalUser.class);
+    private static final Logger log = LoggerFactory.getLogger(ExternalUser.class);
 
     /**
      * user properties
