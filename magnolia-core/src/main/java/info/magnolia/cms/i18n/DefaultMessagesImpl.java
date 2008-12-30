@@ -87,38 +87,26 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
             InputStream stream = null;
             try {
                 // TODO : isnt this what ResourceBundle does? except maybe for some ClasspathResourcesUtil magic ? 
-                stream = ClasspathResourcesUtil.getStream("/"
-                    + StringUtils.replace(basename, ".", "/")
-                    + "_"
-                    + getLocale().getLanguage()
-                    + "_"
-                    + getLocale().getCountry()
-                    + ".properties", false);
+                final String path = "/" + StringUtils.replace(basename, ".", "/");
+                final Locale locale = getLocale();
+                final Locale defaultLocale = MessagesManager.getInstance().getDefaultLocale();
+
+                stream = ClasspathResourcesUtil.getStream(path + "_" + locale.getLanguage() + "_" + locale.getCountry() + ".properties", false);
                 if (stream == null) {
-                    stream = ClasspathResourcesUtil.getStream("/"
-                        + StringUtils.replace(basename, ".", "/")
-                        + "_"
-                        + getLocale().getLanguage()
-                        + ".properties", false);
+                    stream = ClasspathResourcesUtil.getStream(path + "_" + locale.getLanguage() + ".properties", false);
                 }
                 if (stream == null) {
-                    stream = ClasspathResourcesUtil.getStream("/"
-                        + StringUtils.replace(basename, ".", "/")
-                        + "_"
-                        + MessagesManager.getInstance().getDefaultLocale().getLanguage()
-                        + ".properties", false);
+                    stream = ClasspathResourcesUtil.getStream(path + "_" + defaultLocale.getLanguage() + ".properties", false);
                 }
                 if (stream == null) {
-                    stream = ClasspathResourcesUtil.getStream("/"
-                        + StringUtils.replace(basename, ".", "/")
-                        + ".properties", false);
+                    stream = ClasspathResourcesUtil.getStream(path + ".properties", false);
                 }
 
                 if (stream != null) {
                     bundle = new PropertyResourceBundle(stream);
                 }
                 else {
-                    bundle = ResourceBundle.getBundle(getBasename(), getLocale());
+                    bundle = ResourceBundle.getBundle(getBasename(), locale);
                 }
             }
             catch (IOException e) {
