@@ -585,7 +585,7 @@
                 mgnlAlert(mgnlMessages.get('tree.pastenode.itself.js'));
             }
             else{
-                if (!this.getNode(this.clipboardNode.id).isActivated || this.clipboardMethod==1) {
+                //if (!this.getNode(this.clipboardNode.id).isActivated || this.clipboardMethod==1) {
                     if (lineDivId){
                         //for last line on root level
                         var lineDiv=document.getElementById(lineDivId);
@@ -639,7 +639,7 @@
                     params.pasteType=pasteType;
 
                     nodeToReload.expand(params);
-                }
+                //}
             }
             this.clipboardNode=null;
             this.clipboardMethod=null;
