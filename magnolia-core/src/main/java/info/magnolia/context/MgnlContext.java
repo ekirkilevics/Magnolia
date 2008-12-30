@@ -315,7 +315,7 @@ public class MgnlContext {
     /**
      * Get Magnolia system context. This context has full permissions over all repositories/ workspaces.
      */
-    public static Context getSystemContext() {
+    public static SystemContext getSystemContext() {
         return ContextFactory.getInstance().getSystemContext();
     }
 
