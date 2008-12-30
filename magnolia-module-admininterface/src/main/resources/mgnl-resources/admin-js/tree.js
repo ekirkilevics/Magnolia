@@ -585,12 +585,7 @@
                 mgnlAlert(mgnlMessages.get('tree.pastenode.itself.js'));
             }
             else{
-                // confirm deactivation
-
-                var text=mgnlMessages.get('tree.movenode.confirm.text.js', null, [this.clipboardNode.id]);
-                var title=mgnlMessages.get('tree.movenode.confirm.title.js');
-
-                if (!this.getNode(this.clipboardNode.id).isActivated || this.clipboardMethod==1 || mgnlConfirm(text,title)){
+                if (!this.getNode(this.clipboardNode.id).isActivated || this.clipboardMethod==1) {
                     if (lineDivId){
                         //for last line on root level
                         var lineDiv=document.getElementById(lineDivId);
