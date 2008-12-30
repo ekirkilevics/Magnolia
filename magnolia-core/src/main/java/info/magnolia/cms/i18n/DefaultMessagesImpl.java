@@ -86,6 +86,7 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
         if (bundle == null) {
             InputStream stream = null;
             try {
+                // TODO : isnt this what ResourceBundle does? except maybe for some ClasspathResourcesUtil magic ? 
                 stream = ClasspathResourcesUtil.getStream("/"
                     + StringUtils.replace(basename, ".", "/")
                     + "_"
@@ -104,7 +105,7 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
                     stream = ClasspathResourcesUtil.getStream("/"
                         + StringUtils.replace(basename, ".", "/")
                         + "_"
-                        + MessagesManager.getDefaultLocale().getLanguage()
+                        + MessagesManager.getInstance().getDefaultLocale().getLanguage()
                         + ".properties", false);
                 }
                 if (stream == null) {

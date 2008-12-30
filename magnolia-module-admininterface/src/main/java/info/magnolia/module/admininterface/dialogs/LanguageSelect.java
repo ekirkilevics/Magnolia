@@ -71,7 +71,7 @@ public class LanguageSelect extends DialogSelect {
 
         List options = new ArrayList();
 
-        Collection col = MessagesManager.getAvailableLocales();
+        Collection col = MessagesManager.getInstance().getAvailableLocales();
 
         for (Iterator iter = col.iterator(); iter.hasNext();) {
             Locale locale = (Locale) iter.next();
@@ -101,6 +101,6 @@ public class LanguageSelect extends DialogSelect {
 
         this.setOptions(options);
 
-        this.setConfig(DEFAULT_VALUE_PROPERTY, MessagesManager.getDefaultLocale().toString());
+        this.setConfig(DEFAULT_VALUE_PROPERTY, MessagesManager.getInstance().getDefaultLocale().toString());
     }
 }

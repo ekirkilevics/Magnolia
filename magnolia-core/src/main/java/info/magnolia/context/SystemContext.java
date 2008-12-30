@@ -33,6 +33,8 @@
  */
 package info.magnolia.context;
 
+import java.util.Locale;
+
 /**
  * This context is a systemwide context with full access. Since no new method is added this is simple an interface to
  * mark the system context.
@@ -40,5 +42,8 @@ package info.magnolia.context;
  * @version $Revision$ ($Author$)
  */
 public interface SystemContext extends Context {
-
+    /**
+     * @deprecated since 4.0 - this method should not be exposed on SystemContext.
+     */
+    void setLocale(Locale locale);
 }

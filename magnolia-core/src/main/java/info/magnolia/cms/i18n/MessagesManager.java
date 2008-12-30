@@ -39,6 +39,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.collections.Transformer;
@@ -93,35 +94,34 @@ public final class MessagesManager {
      */
     private static final String LANGUAGES_NODE_NAME = "languages"; //$NON-NLS-1$
 
+
+    public static MessagesManager getInstance() {
+        return (MessagesManager) FactoryUtil.getSingleton(MessagesManager.class);
+    }
+
     /**
      * The current locale of the application
      */
-    private static Locale applicationLocale;
+    private Locale applicationLocale;
 
     /**
      * List of the available locales
      */
-    private static Collection availableLocales = new ArrayList();
+    private final Collection availableLocales = new ArrayList();
 
     /**
      * The context used for the messages
      */
-    private static ServletContext context;
+    private ServletContext context;
 
     /**
      * LRU Map for the messages
      */
-    private static Map messages;
+    private Map messages;
 
-    /**
-     * Util has no public constructor
-     */
-    private MessagesManager() {
-    }
-
-    static{
+    public MessagesManager() {
         // setting default language (en)
-        MessagesManager.setDefaultLocale(FALLBACK_LOCALE);
+        setDefaultLocale(FALLBACK_LOCALE);
 
         initLRUMap();
     }
@@ -130,15 +130,15 @@ public final class MessagesManager {
      * Called through the initialization process (startup of the container)
      * @param context servlet context
      */
-    public static void init(ServletContext context) {
-        MessagesManager.context = context;
+    public void init(ServletContext context) {
+        this.context = context;
 
         // setting fallback
         context.setAttribute(Config.FMT_FALLBACK_LOCALE + ".application", FALLBACK_LOCALE); //$NON-NLS-1$
         // setting basename
-        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".application", MessagesManager.DEFAULT_BASENAME); //$NON-NLS-1$
+        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".application", DEFAULT_BASENAME); //$NON-NLS-1$
         // for Resin and other J2EE Containers
-        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT, MessagesManager.DEFAULT_BASENAME);
+        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT, DEFAULT_BASENAME);
 
         load();
         registerEventListener();
@@ -147,7 +147,7 @@ public final class MessagesManager {
     /**
      * The lazzy LRU Map creates messages objects with a faul back to the default locale.
      */
-    private static void initLRUMap() {
+    private void initLRUMap() {
         // FIXME use LRU
         // Map map = new LRUMap(20);
         Map map = new HashMap();
@@ -160,8 +160,8 @@ public final class MessagesManager {
                 // so that it fallsback to default locale if string is not found instead of displaying broken
                 // ???LABELS???
                 Messages msgs = new DefaultMessagesImpl(id.basename, id.locale);
-                if(!MessagesManager.getDefaultLocale().equals(id.locale)){
-                    msgs = new MessagesChain(msgs).chain(MessagesManager.getMessages(id.basename, MessagesManager.getDefaultLocale()));
+                if(!getDefaultLocale().equals(id.locale)){
+                    msgs = new MessagesChain(msgs).chain(getMessages(id.basename, getDefaultLocale()));
                 }
                 return msgs;
             }
@@ -172,7 +172,7 @@ public final class MessagesManager {
     /**
      * Load i18n configuration.
      */
-    public static void load() {
+    private void load() {
 
         // reading the configuration from the repository, no need for context
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
@@ -189,7 +189,7 @@ public final class MessagesManager {
 
             final Content configNode = hm.getContent(I18N_CONFIG_PATH); //$NON-NLS-1$
 
-            MessagesManager.setDefaultLocale(NodeDataUtil.getString(configNode, FALLBACK_NODEDATA, FALLBACK_LOCALE));
+            setDefaultLocale(NodeDataUtil.getString(configNode, FALLBACK_NODEDATA, FALLBACK_LOCALE));
 
             // get the available languages - creates it if it does not exist - necessary to update to 3.5
             final Content languagesNode;
@@ -202,7 +202,7 @@ public final class MessagesManager {
             Map languageDefinitions = Content2BeanUtil.toMap(languagesNode, true, LocaleDefinition.class);
 
             // clear collection for reload
-            MessagesManager.availableLocales.clear();
+            availableLocales.clear();
 
             for (Iterator iter = languageDefinitions.values().iterator(); iter.hasNext();) {
                 LocaleDefinition ld = (LocaleDefinition) iter.next();
@@ -219,14 +219,12 @@ public final class MessagesManager {
     /**
      * Register an event listener: reload configuration when something changes.
      */
-    private static void registerEventListener() {
-
+    private void registerEventListener() {
         log.info("Registering event listener for i18n"); //$NON-NLS-1$
         ObservationUtil.registerChangeListener(
             ContentRepository.CONFIG,
             I18N_CONFIG_PATH,
             new EventListener() {
-
                 public void onEvent(EventIterator iterator) {
                     // reload everything
                     reload();
@@ -237,9 +235,13 @@ public final class MessagesManager {
     /**
      * Reload i18n configuration.
      */
-    public static void reload() {
+    public void reload() {
         try {
-            reloadBundles();
+            // reload all present
+            for (Iterator iter = messages.values().iterator(); iter.hasNext();) {
+                Messages msgs = (Messages) iter.next();
+                msgs.reload();
+            }
         }
         catch (Exception e) {
             log.error("can't reload i18n messages", e);
@@ -248,27 +250,31 @@ public final class MessagesManager {
         load();
     }
 
-    public static Messages getMessages() {
-        return getMessages(MessagesManager.DEFAULT_BASENAME, MgnlContext.getLocale());
-    }
-
-    public static Messages getMessages(String basename) {
-        return getMessages(basename, MgnlContext.getLocale());
-    }
-    
-    public static Messages getMessages(Locale locale) {
-        return getMessages(MessagesManager.DEFAULT_BASENAME, locale);
-    }
-
-    public static Messages getMessages(String basename, Locale locale) {
+    private Messages getMessagesInternal(String basename, Locale locale) {
         if (StringUtils.isEmpty(basename)) {
-            basename = MessagesManager.DEFAULT_BASENAME;
+            basename = DEFAULT_BASENAME;
         }
         return (Messages) messages.get(new MessagesID(basename, locale));
     }
 
+    public static Messages getMessages() {
+        return getMessages(DEFAULT_BASENAME, getCurrentLocale());
+    }
+
+    public static Messages getMessages(String basename) {
+        return getMessages(basename, getCurrentLocale());
+    }
+    
+    public static Messages getMessages(Locale locale) {
+        return getMessages(DEFAULT_BASENAME, locale);
+    }
+
+    public static Messages getMessages(String basename, Locale locale) {
+        return getInstance().getMessagesInternal(basename, locale);
+    }
+
     public static String get(String key) {
-        return MgnlContext.getMessages().get(key);
+        return getMessages().get(key);
     }
 
     /**
@@ -277,9 +283,8 @@ public final class MessagesManager {
      * @param args replacement strings
      * @return message
      */
-
     public static String get(String key, Object[] args) {
-        return MgnlContext.getMessages().get(key, args);
+        return getMessages().get(key, args);
     }
 
     /**
@@ -288,9 +293,8 @@ public final class MessagesManager {
      * @param defaultMsg default message
      * @return message
      */
-
     public static String getWithDefault(String key, String defaultMsg) {
-        return MgnlContext.getMessages().getWithDefault(key, defaultMsg);
+        return getMessages().getWithDefault(key, defaultMsg);
     }
 
     /**
@@ -301,22 +305,29 @@ public final class MessagesManager {
      * @return message
      */
     public static String getWithDefault(String key, Object[] args, String defaultMsg) {
-        return MgnlContext.getMessages().getWithDefault(key, args, defaultMsg);
+        return getMessages().getWithDefault(key, args, defaultMsg);
+    }
+
+    private static Locale getCurrentLocale() {
+        return MgnlContext.getInstance().getLocale();
     }
 
     /**
      * @return Returns the defaultLocale.
      */
-    public static Locale getDefaultLocale() {
+    public Locale getDefaultLocale() {
         return applicationLocale;
     }
 
     /**
      * @param defaultLocale The defaultLocale to set.
+     * @deprecated since 4.0 - not used and should not be. Use setLocale() on the SystemContext instead.
+     * --note: do not remove the method, make it private. applicationLocale field is still needed.
+     * --and/or remove duplication with SystemContext.locale
      */
-    public static void setDefaultLocale(String defaultLocale) {
-        MessagesManager.applicationLocale = new Locale(defaultLocale);
-        MgnlContext.getSystemContext().setLocale(applicationLocale);
+    public void setDefaultLocale(String defaultLocale) {
+        this.applicationLocale = new Locale(defaultLocale);
+        //MgnlContext.getSystemContext().setLocale(applicationLocale);
 
         if(context != null){
             context.setAttribute(Config.FMT_LOCALE + ".application", defaultLocale); //$NON-NLS-1$
@@ -326,24 +337,8 @@ public final class MessagesManager {
     /**
      * @return Returns the availableLocals.
      */
-    public static Collection getAvailableLocales() {
+    public Collection getAvailableLocales() {
         return availableLocales;
-    }
-
-    public static void reloadBundles() throws Exception {
-        // reload all present
-        for (Iterator iter = messages.values().iterator(); iter.hasNext();) {
-            Messages msgs = (Messages) iter.next();
-            msgs.reload();
-        }
-    }
-
-    /**
-     * Getter for <code>context</code>.
-     * @return Returns the context.
-     */
-    public static ServletContext getContext() {
-        return context;
     }
 
     /**
@@ -352,10 +347,8 @@ public final class MessagesManager {
      * @version $Revision$ ($Author$)
      */
     static private class MessagesID {
-
-        String basename;
-
-        Locale locale;
+        private final String basename;
+        private final Locale locale;
 
         public MessagesID(String basename, Locale locale) {
             this.basename = basename;

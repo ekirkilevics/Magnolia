@@ -128,19 +128,21 @@ public class FreemarkerHelperTest extends TestCase {
     }
 
     private void assertRendereredContentWithSpecifiedLocale(String expectedOutput, Locale l, Object o, String templateName) throws TemplateException, IOException {
+        // FreemarkerHelper currently doesn't use the SystemContext locale. Only the current context's locale, and falls back to Locale.getDefault()
         final SystemContext sysMockCtx = createStrictMock(SystemContext.class);
-        sysMockCtx.setLocale(Locale.ENGLISH);
-        expectLastCall().anyTimes();
-        expect(sysMockCtx.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
         FactoryUtil.setInstance(SystemContext.class, sysMockCtx);
 
-        replay(sysMockCtx);
+        final Context context = createStrictMock(Context.class);
+        expect(context.getLocale()).andReturn(new Locale("es")).anyTimes();
+        MgnlContext.setInstance(context);
+
+        replay(sysMockCtx, context);
 
         final StringWriter out = new StringWriter();
         fmHelper.render(templateName, l, "info.magnolia.freemarker.test", o, out);
 
         assertEquals(expectedOutput, out.toString());
-        verify(sysMockCtx);
+        verify(sysMockCtx, context);
     }
 
     public void testWeCanUseAnyObjectTypeAsOurRoot() throws IOException, TemplateException {
@@ -621,6 +623,7 @@ public class FreemarkerHelperTest extends TestCase {
         tplLoader.putTemplate("test_en.ftl", "in english");
         tplLoader.putTemplate("test_de.ftl", "in deutscher Sprache");
         tplLoader.putTemplate("test_fr.ftl", "en francais");
+        tplLoader.putTemplate("test.ftl", "fallback template - no specific language");
 
         assertRendereredContentWithSpecifiedLocale("en francais", Locale.FRENCH, new HashMap(), "test.ftl");
     }

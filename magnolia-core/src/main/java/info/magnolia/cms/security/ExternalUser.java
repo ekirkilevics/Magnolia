@@ -36,7 +36,7 @@ package info.magnolia.cms.security;
 import info.magnolia.cms.security.auth.Entity;
 import info.magnolia.cms.security.auth.GroupList;
 import info.magnolia.cms.security.auth.RoleList;
-import info.magnolia.cms.i18n.MessagesManager;
+import info.magnolia.context.MgnlContext;
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -104,7 +104,6 @@ public class ExternalUser extends AbstractUser implements Serializable {
 
     /**
      * Is this user in a specified group?
-     * @param groupName
      * @return true if in group
      */
     public boolean inGroup(String groupName) {
@@ -113,7 +112,6 @@ public class ExternalUser extends AbstractUser implements Serializable {
 
     /**
      * Remove a group. Implementation is optional
-     * @param groupName
      */
     public void removeGroup(String groupName) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
@@ -121,7 +119,6 @@ public class ExternalUser extends AbstractUser implements Serializable {
 
     /**
      * Adds this user to a group. Implementation is optional
-     * @param groupName
      */
     public void addGroup(String groupName) throws UnsupportedOperationException {
         throw new UnsupportedOperationException("not implemented for this ExternalUser");
@@ -137,7 +134,7 @@ public class ExternalUser extends AbstractUser implements Serializable {
     public String getLanguage() {
         String language = (String) this.userDetails.getProperty(Entity.LANGUAGE);
         if (null == language) {
-              language = MessagesManager.getDefaultLocale().getLanguage();
+            language = MgnlContext.getSystemContext().getLocale().getLanguage();
         }
         return language;
     }

@@ -353,7 +353,7 @@ public class DevelopmentUtilsPage extends TemplatedMVCHandler {
 
     public String reloadI18nMessages() {
         try {
-            MessagesManager.reload();
+            MessagesManager.getInstance().reload();
             AlertUtil.setMessage("Messages reloaded.");
         }
         catch (Exception e) {

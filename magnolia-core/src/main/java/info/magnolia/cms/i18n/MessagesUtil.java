@@ -34,6 +34,9 @@
 package info.magnolia.cms.i18n;
 
 import java.util.Iterator;
+import java.io.Writer;
+import java.io.StringWriter;
+import java.io.IOException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -46,22 +49,34 @@ import org.apache.commons.lang.StringUtils;
 public class MessagesUtil {
 
     /**
+     * @deprecated since 4.0, use generateJavaScript(Writer out, Messages messages) instead.
+     */
+    public static String generateJavaScript(Messages messages) {
+        final StringWriter out = new StringWriter();
+        try {
+            generateJavaScript(out, messages);
+            return out.toString();
+        } catch (IOException e) {
+            // can't happen with a StringWriter
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
      * Adds Variables to a JS witch can be used with the getMessage(key) method
      * @return Javascript-Construct of this textes
      */
-    public static String generateJavaScript(Messages messages) {
-        StringBuffer str = new StringBuffer();
-
-        str.append("/* ###################################\n"); //$NON-NLS-1$
-        str.append("### Generated AbstractMessagesImpl\n"); //$NON-NLS-1$
-        str.append("################################### */\n\n"); //$NON-NLS-1$
+    public static void generateJavaScript(Writer out, Messages messages) throws IOException {
+        out.write("/* ###################################\n"); //$NON-NLS-1$
+        out.write("### Generated AbstractMessagesImpl\n"); //$NON-NLS-1$
+        out.write("################################### */\n\n"); //$NON-NLS-1$
 
         for (Iterator iter = messages.keys(); iter.hasNext();) {
             String key = (String) iter.next();
 
             if (key.endsWith(".js")) { //$NON-NLS-1$
                 String msg = javaScriptString(messages.get(key));
-                str.append(AbstractMessagesImpl.JS_OBJECTNAME
+                out.write(AbstractMessagesImpl.JS_OBJECTNAME
                     + ".add('"
                     + key
                     + "','"
@@ -69,10 +84,9 @@ public class MessagesUtil {
                     + "','"
                     + messages.getBasename()
                     + "');");
-                str.append("\n"); //$NON-NLS-1$
+                out.write("\n"); //$NON-NLS-1$
             }
         }
-        return str.toString();
     }
 
     /**

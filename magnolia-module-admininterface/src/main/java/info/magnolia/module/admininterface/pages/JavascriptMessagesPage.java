@@ -49,22 +49,20 @@ import org.apache.commons.lang.LocaleUtils;
 /**
  *
  * @author pbracher
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class JavascriptMessagesPage extends JavascriptIncludePage {
 
-    private String localeStr = MessagesManager.getDefaultLocale().toString();
+    private String localeStr = MessagesManager.getInstance().getDefaultLocale().toString();
 
-    public JavascriptMessagesPage(String name, HttpServletRequest request,
-            HttpServletResponse response) {
+    public JavascriptMessagesPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
 
     public void renderHtml(String view) throws IOException {
         final Locale locale = LocaleUtils.toLocale(localeStr);
         final Messages messages = MessagesManager.getMessages(locale);
-        final String messagesStr = MessagesUtil.generateJavaScript(messages);
-        response.getWriter().println(messagesStr);
+        MessagesUtil.generateJavaScript(response.getWriter(), messages);
     }
 
     public String getLocale() {

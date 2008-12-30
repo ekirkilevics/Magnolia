@@ -37,6 +37,7 @@ import java.util.Locale;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import info.magnolia.cms.i18n.MessagesManager;
 
 
 /**
@@ -45,11 +46,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public abstract class AbstractSystemContext extends AbstractContext implements SystemContext {
-
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(AbstractSystemContext.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractSystemContext.class);
 
     /**
      * Stable serialVersionUID.
@@ -79,11 +76,15 @@ public abstract class AbstractSystemContext extends AbstractContext implements S
         super.removeAttribute(name, scope);
     }
 
+    /**
+     * @deprecated since 4.0 - this shouldn't be exposed in the SystemContext interface. Prevent calls by
+     * throwing an UnsupportedOperationException.
+     */
+    public void setLocale(Locale locale) {
+        throw new UnsupportedOperationException("setLocale() should not be called on SystemContext - system default locale is handled by MessagesManager");
+    }
+
     public Locale getLocale() {
-        if (locale != null) {
-            return locale;
-        } else {
-            return Locale.getDefault();
-        }
+        return MessagesManager.getInstance().getDefaultLocale();
     }
 }

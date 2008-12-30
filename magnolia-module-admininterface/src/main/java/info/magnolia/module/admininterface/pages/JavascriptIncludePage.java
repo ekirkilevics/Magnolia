@@ -35,6 +35,7 @@ package info.magnolia.module.admininterface.pages;
 
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.i18n.MessagesUtil;
+import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.util.ClasspathResourcesUtil;
 import info.magnolia.module.admininterface.PageMVCHandler;
 import org.apache.commons.io.IOUtils;
@@ -50,6 +51,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -168,7 +170,9 @@ public class JavascriptIncludePage extends PageMVCHandler {
         InputStream in = ClasspathResourcesUtil.getStream("/mgnl-resources/admin-js/i18n.js");
         IOUtils.copy(in, out);
         // put the default messages into the main file if one misses the messages.js file
-        out.println(MessagesUtil.generateJavaScript(MessagesManager.getMessages(MessagesManager.getDefaultLocale())));
+        final Locale defaultLocale = MessagesManager.getInstance().getDefaultLocale();
+        final Messages messages = MessagesManager.getMessages(defaultLocale);
+        MessagesUtil.generateJavaScript(out, messages);
         in.close();
     }
 

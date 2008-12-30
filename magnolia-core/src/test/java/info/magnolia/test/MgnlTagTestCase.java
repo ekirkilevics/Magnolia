@@ -43,17 +43,20 @@ import info.magnolia.cms.link.LinkResolver;
 import info.magnolia.cms.link.LinkResolverImpl;
 import info.magnolia.test.mock.MockWebContext;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.context.SystemContext;
 
 
 import javax.jcr.RepositoryException;
 import javax.servlet.jsp.JspException;
 import java.io.IOException;
+import java.util.Locale;
 
 import com.mockrunner.mock.web.MockPageContext;
 import com.mockrunner.mock.web.MockServletConfig;
 import com.mockrunner.mock.web.MockHttpServletRequest;
 import com.mockrunner.mock.web.MockHttpServletResponse;
 import com.mockrunner.mock.web.MockJspWriter;
+import static org.easymock.EasyMock.*;
 
 /**
  * A base class to simplify the testing of tag library output.
@@ -63,6 +66,7 @@ import com.mockrunner.mock.web.MockJspWriter;
 public abstract class MgnlTagTestCase extends MgnlTestCase  {
     protected MockWebContext webContext;
     protected MockPageContext pageContext;
+    private SystemContext sysContext;
 
     protected void setUp() throws Exception {
         super.setUp();
@@ -73,15 +77,17 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
 
         MgnlContext.setInstance(webContext);
 
+        sysContext = createMock(SystemContext.class);
+        expect(sysContext.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
+        replay(sysContext);
+        FactoryUtil.setInstance(SystemContext.class, sysContext);
+
         // set up necessary items not configured in the repository
         FactoryUtil.setImplementation(URI2RepositoryManager.class, URI2RepositoryManager.class);
-
         FactoryUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
-
         FactoryUtil.setInstance(LinkResolver.class, new LinkResolverImpl());
 
         setupPageContext();
-
     }
 
     protected void setupPageContext() {
@@ -90,6 +96,9 @@ public abstract class MgnlTagTestCase extends MgnlTestCase  {
     }
 
     protected void tearDown() throws Exception {
+        verify(sysContext);
+        MgnlContext.setInstance(null);
+        FactoryUtil.clear();
         super.tearDown();
     }
 

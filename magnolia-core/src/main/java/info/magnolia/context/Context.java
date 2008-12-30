@@ -191,12 +191,14 @@ public interface Context extends org.apache.commons.chain.Context {
 
     /**
      * Get the default messages. It uses the locale set on this context
+     * TODO: This duplicates methods from MessagesManager : remove either
      */
     public Messages getMessages();
 
     /**
      * Get the messages of the named bundle. It uses the locale set on this context
      * @param basename name of the bundle
+     * TODO: This duplicates methods from MessagesManager : remove either
      */
     public Messages getMessages(String basename);
 

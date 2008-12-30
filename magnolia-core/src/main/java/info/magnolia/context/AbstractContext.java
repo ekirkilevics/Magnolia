@@ -165,10 +165,16 @@ public abstract class AbstractContext implements Context, Serializable {
         this.locale = locale;
     }
 
+    /**
+     * TODO: This duplicates methods from MessagesManager : remove either
+     */
     public Messages getMessages() {
         return getMessages(MessagesManager.DEFAULT_BASENAME);
     }
 
+    /**
+     * TODO: This duplicates methods from MessagesManager : remove either
+     */
     public Messages getMessages(String basename) {
         return MessagesManager.getMessages(basename, getLocale());
     }
