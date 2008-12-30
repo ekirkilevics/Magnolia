@@ -77,13 +77,12 @@ import java.util.Map;
 public class FreemarkerHelperTest extends TestCase {
     private StringTemplateLoader tplLoader;
     private FreemarkerHelper fmHelper;
-    private FreemarkerTemplateLoaderManager fmTemplateLoader;
 
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
         fmHelper = new FreemarkerHelper();
-        fmTemplateLoader = (FreemarkerTemplateLoaderManager) FactoryUtil.getSingleton(FreemarkerTemplateLoaderManager.class);
+        final FreemarkerTemplateLoaderManager fmTemplateLoader = (FreemarkerTemplateLoaderManager) FactoryUtil.getSingleton(FreemarkerTemplateLoaderManager.class);
         fmTemplateLoader.addLoader(tplLoader);
         fmHelper.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         //fmHelper.getConfiguration().setTemplateLoader(tplLoader);
