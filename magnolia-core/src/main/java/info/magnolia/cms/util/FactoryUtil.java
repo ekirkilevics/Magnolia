@@ -245,28 +245,24 @@ public class FactoryUtil {
      *
      */
     public static class ObservedObjectFactory implements EventListener{
+        private static final Logger log = LoggerFactory.getLogger(ObservedObjectFactory.class);
 
         /**
          * Path to the node in the config repository
          */
-        private String path;
+        private final String path;
 
         /**
          * Repository name used
          */
-        private String repository;
+        private final String repository;
 
-        /**
-         * Logger.
-         */
-        private static Logger log = LoggerFactory.getLogger(ObservedObjectFactory.class);
+        protected final Class interf;
 
         /**
          * The object delivered by this factory
          */
         protected Object observedObject;
-
-        protected Class interf;
 
         public ObservedObjectFactory(String repository, String path, Class interf) {
             this.path = path;
