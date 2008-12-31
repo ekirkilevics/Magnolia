@@ -91,6 +91,10 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
         mappings = new LinkedList();
     }
 
+    public String getName() {
+        return "Wrapper for " + servletName + " servlet";
+    }
+
     /**
      * Initializes the servlet and its mappings. ServletConfig is wrapped to take init parameters into account.
      */
@@ -154,10 +158,8 @@ public class ServletDispatchingFilter extends AbstractMgnlFilter {
      * Dispatches the request to the servlet if not already bypassed. The request is wrapped for properly setting the
      * pathInfo.
      */
-    public void doFilter(final HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
-
-        log.debug("Dispatching to servlet " + getServletClass());
+    public void doFilter(final HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+        log.debug("Dispatching to servlet {}", getServletClass());
         final Matcher matcher = findMatcher(request);
         servlet.service(new WrappedRequest(request, matcher), response);
     }
