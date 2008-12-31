@@ -57,21 +57,21 @@ import org.apache.commons.chain.Chain;
 import org.apache.commons.chain.Command;
 import org.apache.commons.chain.impl.ChainBase;
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
  * Manages the Commands and Catalogs.
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
 public class CommandsManager extends ObservedManager {
-    private static final Logger log = LoggerFactory.getLogger(CommandsManager.class);
 
     public static final String DEFAULT_CATALOG = "default";
 
     public static final String COMMAND_DELIM = "-";
+
+    protected static Content2BeanTransformer COMMAND_TRANSFORMER = new CommandTransformer();
 
     /**
      * Register this catalogue
@@ -93,12 +93,10 @@ public class CommandsManager extends ObservedManager {
             MgnlCatalog catalog = (MgnlCatalog) Content2BeanUtil.toBean(node, true, COMMAND_TRANSFORMER);
             CatalogFactory.getInstance().addCatalog(catalog.getName(), catalog);
 
-            if(log.isDebugEnabled()){
-                log.debug("catalog {} registered: {}", new Object[]{catalog.getName(), catalog});
-            }
+            log.debug("Catalog {} registered: {}", new Object[]{catalog.getName(), catalog});
         }
         catch (Content2BeanException e) {
-            log.error("can't create catalog [" + node  + "]", e);
+            log.error("Can't create catalog [" + node  + "]", e);
         }
     }
 
@@ -150,7 +148,8 @@ public class CommandsManager extends ObservedManager {
         return (CommandsManager) FactoryUtil.getSingleton(CommandsManager.class);
     }
 
-    protected static Content2BeanTransformer COMMAND_TRANSFORMER = new Content2BeanTransformerImpl() {
+    private static class CommandTransformer extends Content2BeanTransformerImpl {
+        private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(CommandTransformer.class);
 
         private static final String DEPRECATED_CATALOG_NAME_NODE_DATA = "catalogName";
 
@@ -169,7 +168,7 @@ public class CommandsManager extends ObservedManager {
                 Content node = state.getCurrentContent();
                 try {
                     if(node.hasNodeData(DEPRECATED_IMPL_NODE_DATA)){
-                        log.warn("rename  '" + DEPRECATED_IMPL_NODE_DATA + "' to 'class' [" + node + "]!");
+                        log.warn("Rename  '" + DEPRECATED_IMPL_NODE_DATA + "' to 'class' [" + node + "]!");
                         try {
                             klass = ClassUtil.classForName(node.getNodeData(DEPRECATED_IMPL_NODE_DATA).getString());
                         }
@@ -193,7 +192,7 @@ public class CommandsManager extends ObservedManager {
                     }
                 }
                 catch (RepositoryException e) {
-                    log.error("can't check " + DEPRECATED_IMPL_NODE_DATA + " nodedata [" + node + "]", e);
+                    log.error("Can't check " + DEPRECATED_IMPL_NODE_DATA + " nodedata [" + node + "]", e);
                 }
             }
             if(klass != null){
@@ -247,7 +246,7 @@ public class CommandsManager extends ObservedManager {
             if(bean instanceof MgnlCatalog){
                 MgnlCatalog catalog = (MgnlCatalog) bean;
                 if(values.containsKey(DEPRECATED_CATALOG_NAME_NODE_DATA)){
-                    log.warn("rename the 'catalogName' nodedata to 'name' [" + state.getCurrentContent() + "]");
+                    log.warn("Rename the 'catalogName' nodedata to 'name' [" + state.getCurrentContent() + "]");
                     catalog.setName((String)values.get(DEPRECATED_CATALOG_NAME_NODE_DATA));
                 }
 
@@ -256,13 +255,12 @@ public class CommandsManager extends ObservedManager {
                         catalog.setName(state.getCurrentContent().getParent().getName());
                     }
                     catch (RepositoryException e) {
-                        log.error("can't resolve catalog name by using parent node [" + state.getCurrentContent() + "]", e);
+                        log.error("Can't resolve catalog name by using parent node [" + state.getCurrentContent() + "]", e);
                     }
                 }
             }
 
             super.setProperty(state, descriptor, values);
         }
-    };
-
+    }
 }

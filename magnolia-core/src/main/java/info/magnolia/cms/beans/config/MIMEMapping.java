@@ -100,22 +100,21 @@ public class MIMEMapping {
     public static void load() {
         MIMEMapping.cachedContent.clear();
         try {
-            log.info("Config : loading MIMEMapping"); //$NON-NLS-1$
+            log.info("Loading MIMEMapping from {}", NODEPATH); //$NON-NLS-1$
             final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
             Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
             MIMEMapping.cacheContent(mimeList);
-            log.info("Config : MIMEMapping loaded"); //$NON-NLS-1$
+            log.debug("MIMEMapping loaded from {}", NODEPATH); //$NON-NLS-1$
         } catch (PathNotFoundException e) {
-            log.warn("Config : no MIMEMapping info configured at " + NODEPATH); //$NON-NLS-1$
-        }catch (RepositoryException re) {
-            log.error("Config : Failed to load MIMEMapping"); //$NON-NLS-1$
-            log.error(re.getMessage(), re);
+            log.warn("No MIMEMapping info configured at {}", NODEPATH); //$NON-NLS-1$
+        }catch (RepositoryException e) {
+            log.error("Failed to load MIMEMapping: " + e.getMessage(), e);
         }
     }
 
     public static void reload() {
-        log.info("Config : re-loading MIMEMapping"); //$NON-NLS-1$
+        log.info("Reloading MIMEMapping"); //$NON-NLS-1$
         MIMEMapping.load();
     }
 

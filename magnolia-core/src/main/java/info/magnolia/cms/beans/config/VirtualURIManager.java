@@ -46,9 +46,6 @@ import java.util.Iterator;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 /**
  * Store for all virtual URI to template/page mapping.
@@ -56,7 +53,6 @@ import org.slf4j.LoggerFactory;
  * @version 2.0
  */
 public final class VirtualURIManager extends ObservedManager {
-    private static final Logger log = LoggerFactory.getLogger(VirtualURIManager.class);
 
     public static final String FROM_URI_NODEDATANAME = "fromURI";
 
@@ -95,7 +91,7 @@ public final class VirtualURIManager extends ObservedManager {
 
     protected void onRegister(Content node) {
         try {
-            log.info("Config : Loading VirtualMap - " + node.getHandle()); //$NON-NLS-1$
+            log.info("Loading VirtualURIMapping from {}", node.getHandle()); //$NON-NLS-1$
             Content2BeanUtil.setProperties(this.cachedURImapping, node, true, new Content2BeanTransformerImpl(){
                 protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
                     if(state.getLevel()==2 && resolvedType == null){
@@ -104,10 +100,10 @@ public final class VirtualURIManager extends ObservedManager {
                     return resolvedType;
                 }
             });
-            log.info("Config : VirtualMap loaded - " + node.getHandle()); //$NON-NLS-1$
+            log.debug("VirtualURIMapping loaded from {}", node.getHandle()); //$NON-NLS-1$
         }
         catch (Exception e) {
-            log.error("Config : Failed to load VirtualMap - " + node.getHandle() + " - " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+            log.error("Failed to load VirtualURIMapping from " + node.getHandle() + " - " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
         }
     }
 

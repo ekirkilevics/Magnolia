@@ -70,7 +70,7 @@ public class TemplateManager extends ObservedManager {
      */
     protected void onRegister(Content node) {
         try {
-            log.info("Config : loading Template info - " + node.getHandle()); //$NON-NLS-1$
+            log.info("Loading Template info from {}", node.getHandle()); //$NON-NLS-1$
 
             // It makes possibly to use templates defined within subfolders of /module/templating/Templates
             Collection children = collectChildren(node);
@@ -80,11 +80,10 @@ public class TemplateManager extends ObservedManager {
                 cacheContent(templates);
             }
 
-            log.info("Config : Template info loaded - " + node.getHandle()); //$NON-NLS-1$
+            log.debug("Template info loaded from {}", node.getHandle()); //$NON-NLS-1$
         }
         catch (Exception re) {
-            log.error("Config : Failed to load Template info - " + node.getHandle()); //$NON-NLS-1$
-            log.error(re.getMessage(), re);
+            log.error("Failed to load Template info from " + node.getHandle() + ": " + re.getMessage(), re);
         }
 
     }

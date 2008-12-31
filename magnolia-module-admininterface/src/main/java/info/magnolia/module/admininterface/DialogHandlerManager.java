@@ -56,8 +56,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -72,11 +70,6 @@ public class DialogHandlerManager extends ObservedManager {
     private static final String CLASS = "class";
 
     private static final String ND_NAME = "name";
-
-    /**
-     * Logger
-     */
-    private Logger log = LoggerFactory.getLogger(DialogHandlerManager.class);
 
     /**
      * All handlers are registered here
@@ -104,7 +97,7 @@ public class DialogHandlerManager extends ObservedManager {
                 registerDialogHandler(name, ClassUtil.classForName(className), dialog);
             }
             catch (ClassNotFoundException e) {
-                log.warn("can't find dialog handler class " + className, e); //$NON-NLS-1$
+                log.warn("Can't find dialog handler class " + className, e); //$NON-NLS-1$
             }
         }
     }
@@ -150,9 +143,8 @@ public class DialogHandlerManager extends ObservedManager {
     }
 
     protected void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
-        if (log.isDebugEnabled()) {
-            log.debug("Registering dialog handler [{}]", name); //$NON-NLS-1$
-        }
+        log.debug("Registering dialog handler [{}]", name); //$NON-NLS-1$
+
         // remember the uuid for a reload
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
     }

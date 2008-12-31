@@ -52,7 +52,6 @@ import info.magnolia.content2bean.TypeDescriptor;
 import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
 public class FreemarkerTemplateLoaderManager extends ObservedManager {
-
     private static final Logger log = LoggerFactory.getLogger(FreemarkerTemplateLoaderManager.class);
 
     /**
@@ -69,7 +68,7 @@ public class FreemarkerTemplateLoaderManager extends ObservedManager {
 
     protected void onRegister(Content node) {
         try {
-            log.info("Config : Loading TemplateLoaders - " + node.getHandle()); //$NON-NLS-1$
+            log.info("Loading TemplateLoaders from {} ", node.getHandle());
             Content2BeanUtil.setProperties(this.cachedTemplateLoaders, node, true, new Content2BeanTransformerImpl(){
                 protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
                     if(state.getLevel()==2 && resolvedType == null){
@@ -78,10 +77,10 @@ public class FreemarkerTemplateLoaderManager extends ObservedManager {
                     return resolvedType;
                 }
             });
-            log.info("Config : TemplateLoaders loaded - " + node.getHandle()); //$NON-NLS-1$
+            log.debug("TemplateLoaders loaded from {}", node.getHandle());
         }
         catch (Exception e) {
-            log.error("Config : Failed to load TemplateLoader - " + node.getHandle() + " - " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+            log.error("Failed to load TemplateLoader from " + node.getHandle() + " - " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
         }
         // move clTL to the end of the list
         cachedTemplateLoaders.remove(classloaderTL);

@@ -51,7 +51,6 @@ import java.util.Map;
  * @version $Revision: $ ($Author: $)
  */
 public class ParagraphRendererManager extends ObservedManager {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ParagraphRendererManager.class);
 
     public static ParagraphRendererManager getInstance() {
         return (ParagraphRendererManager) FactoryUtil.getSingleton(ParagraphRendererManager.class);
@@ -96,7 +95,7 @@ public class ParagraphRendererManager extends ObservedManager {
             try {
                 final ParagraphRenderer renderer = (ParagraphRenderer) ClassUtil.newInstance(clazz);
                 registererParagraphRenderer(name, renderer);
-                log.debug("Registered template render [{}] with name {}", clazz, name);
+                log.debug("Registered template render [{}] with name {}.", clazz, name);
             } catch (InstantiationException e) {
                 throw newInstanciationException(name, clazz, e);
             } catch (IllegalAccessException e) {

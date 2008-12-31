@@ -69,7 +69,6 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class MgnlMainFilter implements Filter {
-
     private static final Logger log = LoggerFactory.getLogger(MgnlMainFilter.class);
 
     private static MgnlMainFilter instance;
@@ -131,20 +130,18 @@ public class MgnlMainFilter implements Filter {
         }
         else {
             try {
-                final HierarchyManager hm = MgnlContext
-                    .getSystemContext()
-                    .getHierarchyManager(ContentRepository.CONFIG);
+                final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
                 final Content node = hm.getContent(SERVER_FILTERS);
                 rootFilter = (MgnlFilter) Content2BeanUtil.toBean(node, true, MgnlFilter.class);
             }
             catch (PathNotFoundException e) {
-                log.warn("Config : no filters configured at " + SERVER_FILTERS); //$NON-NLS-1$
+                log.warn("No filters configured at {}", SERVER_FILTERS); //$NON-NLS-1$
             }
             catch (RepositoryException e) {
-                log.error("can't read filter definitions", e);
+                log.error("Can't read filter definitions", e);
             }
             catch (Content2BeanException e) {
-                log.error("can't create filter objects", e);
+                log.error("Can't create filter objects", e);
             }
         }
     }
@@ -156,14 +153,16 @@ public class MgnlMainFilter implements Filter {
     protected MgnlFilter createSystemUIFilter() {
         final CompositeFilter systemUIFilter = new CompositeFilter();
         final ServletDispatchingFilter classpathSpoolFilter = new ServletDispatchingFilter();
-
+        classpathSpoolFilter.setName("resources");
         classpathSpoolFilter.setServletName("ClasspathSpool Servlet");
         classpathSpoolFilter.setServletClass(info.magnolia.cms.servlets.ClasspathSpool.class.getName());
         classpathSpoolFilter.addMapping("/.resources/*");
         classpathSpoolFilter.setEnabled(true);
-
         systemUIFilter.addFilter(classpathSpoolFilter);
-        systemUIFilter.addFilter(new InstallFilter(ModuleManager.Factory.getInstance(), this));
+
+        final InstallFilter installFilter = new InstallFilter(ModuleManager.Factory.getInstance(), this);
+        installFilter.setName("install");
+        systemUIFilter.addFilter(installFilter);
         return systemUIFilter;
     }
 

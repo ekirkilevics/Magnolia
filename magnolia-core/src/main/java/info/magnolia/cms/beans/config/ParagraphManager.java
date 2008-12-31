@@ -45,8 +45,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -54,8 +52,6 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  */
 public class ParagraphManager extends ObservedManager {
-
-    private static final Logger log = LoggerFactory.getLogger(Paragraph.class);
 
     private static final String DEFAULT_PARA_TYPE = "jsp";
 
@@ -137,7 +133,7 @@ public class ParagraphManager extends ObservedManager {
         if (StringUtils.isEmpty(paragraph.getDialog())) {
             paragraph.setDialog(paragraph.getName());
         }
-        log.debug("Registering pi [{}] of type [{}]", paragraph.getName(), paragraph.getType()); //$NON-NLS-1$
+        log.debug("Registering paragraph [{}] of type [{}]", paragraph.getName(), paragraph.getType()); //$NON-NLS-1$
         paragraphs.put(paragraph.getName(), paragraph);
     }
 

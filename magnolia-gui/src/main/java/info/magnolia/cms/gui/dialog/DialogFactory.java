@@ -55,16 +55,12 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public final class DialogFactory {
+    private static final Logger log = LoggerFactory.getLogger(DialogFactory.class);
 
     /**
      * Registered controls.
      */
     private static Map controls = new HashMap();
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(DialogFactory.class);
 
     /**
      * Utility class, don't instantiate.
@@ -83,9 +79,7 @@ public final class DialogFactory {
         // @todo check if dialogClass is a valid dialog
         // @todo synchronize
 
-        if (log.isDebugEnabled()) {
-            log.debug("Registering control [{}]", name); //$NON-NLS-1$ 
-        }
+        log.debug("Registering control [{}]", name); //$NON-NLS-1$
 
         controls.put(name, dialogClass);
     }

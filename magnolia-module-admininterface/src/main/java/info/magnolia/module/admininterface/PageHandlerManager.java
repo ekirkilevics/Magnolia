@@ -54,8 +54,6 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.beanutils.ConstructorUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -63,11 +61,6 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  */
 public class PageHandlerManager extends ObservedManager {
-
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(PageHandlerManager.class);
 
     /**
      * The handlers
@@ -143,6 +136,7 @@ public class PageHandlerManager extends ObservedManager {
      * @version $Id$
      */
     public static class BasePageDefinition implements PageDefinition {
+        private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(BasePageDefinition.class);
 
         private Map defaultProperties = new HashMap();
 
@@ -189,7 +183,7 @@ public class PageHandlerManager extends ObservedManager {
                 return page;
             }
             catch (Exception e) {
-                log.error("can't instantiate page [" + name + "]", e);
+                log.error("Can't instantiate page [" + name + "]", e);
                 throw new InvalidDialogPageHandlerException(name, e);
             }
 

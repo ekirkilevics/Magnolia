@@ -52,9 +52,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 
 public class TreeHandlerManager extends ObservedManager {
 
@@ -63,11 +60,6 @@ public class TreeHandlerManager extends ObservedManager {
     private static final String ND_REPOSITORY = "repository";
 
     private static final String ND_NAME = "name";
-
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(TreeHandlerManager.class);
 
     /**
      * Map with repository name/handler class for admin tree. When this servlet will receive a call with a parameter
@@ -140,12 +132,13 @@ public class TreeHandlerManager extends ObservedManager {
 
             // register commands if defined
             try {
+                // TODO - this should go - maybe still needs an update task
                 if (tree.hasContent("commands")) {
-                    log.error("the definition of commands at the tree level is not longer supported. Move them to the modules commands node! [" + tree.getHandle() + "]");
+                    log.error("The definition of commands at the tree level is no longer supported. Move them to the modules commands node! [" + tree.getHandle() + "]");
                 }
             }
             catch (RepositoryException e) {
-                log.error("can't check commands node of the tree node [" + tree.getHandle() + "]", e);
+                log.error("Can't check commands node of the tree node [" + tree.getHandle() + "]", e);
             }
         }
     }

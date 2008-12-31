@@ -51,16 +51,12 @@ import java.util.Set;
 
 
 /**
- * A lot of manager are observed. Will mean that they reload the registered content after the content was changed. To
+ * A lot of "manager" objects are observed. Will mean that they reload the registered content after the content was changed. To
  * centralize this code we use this abstract manager. A subclass will implement onRegister and onClear.
  * @author philipp
  */
 public abstract class ObservedManager {
-
-    /**
-     * Logger
-     */
-    protected Logger log = LoggerFactory.getLogger(getClass());
+    protected final Logger log = LoggerFactory.getLogger(getClass());
 
     /**
      * UUIDs of the registered main nodes. They will get registered again after a change.
@@ -73,7 +69,7 @@ public abstract class ObservedManager {
      */
     public synchronized void register(Content node) {
         if (node == null) {
-            log.warn("tried to register a not existing node!");
+            log.warn("Tried to register a non-existing node!");
             return;
         }
 
@@ -113,7 +109,7 @@ public abstract class ObservedManager {
             }
             catch (Exception e) {
                 registeredUUIDs.remove(uuid);
-                log.warn("can't reload the the node [" + uuid + "]");
+                log.warn("Can't reload the the node [" + uuid + "]");
             }
         }
         return;

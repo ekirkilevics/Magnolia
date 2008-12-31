@@ -42,8 +42,6 @@ import info.magnolia.cms.util.FactoryUtil;
 import java.util.Iterator;
 
 import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 
 /**
@@ -51,11 +49,6 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public final class ControlsManager extends ObservedManager {
-
-    /**
-     * Logger
-     */
-    private static Logger log = LoggerFactory.getLogger(ControlsManager.class);
 
     /**
      * Node data name for control class.
@@ -71,16 +64,14 @@ public final class ControlsManager extends ObservedManager {
      * Registers dialog controls.
      */
     protected void onRegister(Content configNode) {
-        log.info("Config : loading dialog controls configuration"); //$NON-NLS-1$
+        log.info("Loading dialog controls configuration from {}", configNode.getHandle()); //$NON-NLS-1$
 
         Iterator iterator = configNode.getChildren(ItemType.CONTENTNODE).iterator();
 
         while (iterator.hasNext()) {
             Content controlNode = (Content) iterator.next();
 
-            if (log.isDebugEnabled()) {
-                log.debug("Initializing control [{}]", controlNode); //$NON-NLS-1$ 
-            }
+            log.debug("Initializing control [{}]", controlNode); //$NON-NLS-1$
 
             String classNodeData = controlNode.getNodeData(DATA_CONTROL_CLASS).getString();
             String nameNodeData = controlNode.getNodeData(DATA_CONTROL_NAME).getString();
@@ -90,8 +81,7 @@ public final class ControlsManager extends ObservedManager {
             }
 
             if (StringUtils.isEmpty(classNodeData) || StringUtils.isEmpty(nameNodeData)) {
-                log.warn("Config : Can't add custom control with name [{}] and class [{}] specified in node [{}]", //$NON-NLS-1$
-                    new Object[]{nameNodeData, classNodeData, controlNode.getName()});
+                log.warn("Can't add custom control with name [{}] and class [{}] specified in node [{}]", new Object[]{nameNodeData, classNodeData, controlNode.getName()});
                 continue;
             }
             Class controlClass = null;
@@ -100,13 +90,12 @@ public final class ControlsManager extends ObservedManager {
                 controlClass = ClassUtil.classForName(classNodeData);
             }
             catch (ClassNotFoundException e) {
-                log.error("Config : Failed to load dialog control with class [" + classNodeData + "]", e); //$NON-NLS-1$
+                log.error("Failed to load dialog control with class [" + classNodeData + "]", e); //$NON-NLS-1$
                 continue;
             }
 
             if (!DialogControl.class.isAssignableFrom(controlClass)) {
-                log.error("Config : Invalid class specified for control [{}]: does not implement DialogControl", //$NON-NLS-1$
-                    nameNodeData);
+                log.error("Invalid class specified for control [{}]: does not implement DialogControl", nameNodeData);
                 continue;
             }
 

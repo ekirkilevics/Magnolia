@@ -81,10 +81,7 @@ public class TemplateRendererManager extends ObservedManager {
             }
 
             if (StringUtils.isBlank(type) || StringUtils.isBlank(rendererClass)) {
-                log.warn("Can't register template render at {}, type=\"{}\" renderer=\"{}\"", new Object[]{
-                    tr.getHandle(),
-                    type,
-                    rendererClass});
+                log.warn("Can't register template render at {}, type=\"{}\" renderer=\"{}\"", new Object[]{tr.getHandle(), type, rendererClass});
                 continue;
             }
 
@@ -94,15 +91,11 @@ public class TemplateRendererManager extends ObservedManager {
                 renderer = (TemplateRenderer) ClassUtil.newInstance(rendererClass);
             }
             catch (Exception e) {
-                log.warn(
-                    "Can't register template render at {}, type=\"{}\" renderer=\"{}\" due to a {} exception: {}",
-                    new Object[]{tr.getHandle(), type, rendererClass, e.getClass().getName(), e.getMessage()}, e);
+                log.warn("Can't register template render at {}, type=\"{}\" renderer=\"{}\" due to a {} exception: {}", new Object[]{tr.getHandle(), type, rendererClass, e.getClass().getName(), e.getMessage()}, e);
                 continue;
             }
 
-            if (log.isDebugEnabled()) {
-                log.debug("Registering template render [{}] for type {}", rendererClass, type);
-            }
+            log.debug("Registering template render [{}] for type {}", rendererClass, type);
             registerTemplateRenderer(type, renderer);
         }
 
