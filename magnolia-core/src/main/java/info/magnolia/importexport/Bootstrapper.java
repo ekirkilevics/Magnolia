@@ -87,12 +87,7 @@ public final class Bootstrapper {
      * @param bootdirs bootstrap dir
      */
     public static void bootstrapRepositories(String[] bootdirs, BootstrapFilter filter) {
-        log.info("-----------------------------------------------------------------");
-        log.info("Trying to initialize repositories from: {}", StringUtils.join(bootdirs, ", "));
-        for (int i = 0; i < bootdirs.length; i++) {
-            log.info(bootdirs[i]);
-        }
-        log.info("-----------------------------------------------------------------");
+        log.info("Trying to initialize repositories from: \n    {}", StringUtils.join(bootdirs, "\n    "));
 
         Iterator repositoryNames = ContentRepository.getAllRepositoryNames();
         while (repositoryNames.hasNext()) {
@@ -118,8 +113,7 @@ public final class Bootstrapper {
             return true;
         }
 
-        log.info("Trying to import content from {} files into repository [{}]", //$NON-NLS-1$
-                Integer.toString(xmlfileset.size()), repositoryName);
+        log.info("Trying to import content from {} files into repository [{}]", Integer.toString(xmlfileset.size()), repositoryName);
 
         final File[] files = (File[]) xmlfileset.toArray(new File[xmlfileset.size()]);
         return bootstrapFiles(repositoryName, files);
@@ -132,7 +126,7 @@ public final class Bootstrapper {
         try {
             for (int k = 0; k < files.length; k++) {
                 File xmlFile = files[k];
-                log.debug("execute importfile {}", xmlFile);
+                log.debug("Importing {}", xmlFile);
                 DataTransporter.executeBootstrapImport(xmlFile, repositoryName);
             }
         }
@@ -144,7 +138,7 @@ public final class Bootstrapper {
             int needed = Math.max(256, maxMem + 128);
             log.error("Unable to complete bootstrapping: out of memory.\n" //$NON-NLS-1$
                     + "{} MB were not enough, try to increase the amount of memory available by adding the -Xmx{}m parameter to the server startup script.\n" //$NON-NLS-1$
-                    + "You will need to completely remove the magnolia webapp before trying again", //$NON-NLS-1$
+                    + "You will need to completely remove the Magnolia webapp before trying again", //$NON-NLS-1$
                     Integer.toString(maxMem), Integer.toString(needed));
             return false;
         }

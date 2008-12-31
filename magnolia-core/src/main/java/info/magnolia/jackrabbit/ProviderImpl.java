@@ -81,8 +81,7 @@ import java.util.Map;
  * @version $Id$
  */
 public class ProviderImpl implements Provider {
-
-    protected static Logger log = LoggerFactory.getLogger(ProviderImpl.class);
+    private static final Logger log = LoggerFactory.getLogger(ProviderImpl.class);
 
     private static final String CONFIG_FILENAME_KEY = "configFile"; //$NON-NLS-1$
 
@@ -241,7 +240,7 @@ public class ProviderImpl implements Provider {
             if (log.isDebugEnabled()) {
                 log.debug(e.getMessage());
             }
-            log.info("registering prefix [{}] with uri {}", namespacePrefix, uri); //$NON-NLS-1$
+            log.info("Registering prefix [{}] with URI {}", namespacePrefix, uri); //$NON-NLS-1$
             workspace.getNamespaceRegistry().registerNamespace(namespacePrefix, uri);
         }
     }
@@ -308,7 +307,7 @@ public class ProviderImpl implements Provider {
         } catch (ClassCastException e) {
             // this could happen if the repository provider does not have proper Shared API for the
             // application server like at the moment in Jackrabbit
-            log.debug("Failed to get  NodeTypeRegistry",e);
+            log.debug("Failed to get NodeTypeRegistry: ",e);
             return;
         }
 
@@ -319,7 +318,7 @@ public class ProviderImpl implements Provider {
                 ntReg.getNodeTypeDef(def.getName());
             }
             catch (NoSuchNodeTypeException nsne) {
-                log.info("registering nodetype {}", def.getName()); //$NON-NLS-1$
+                log.info("Registering nodetype {}", def.getName()); //$NON-NLS-1$
 
                 try {
                     ntReg.registerNodeType(def);
@@ -365,10 +364,7 @@ public class ProviderImpl implements Provider {
             }
 
             // 3: defaults to standard nodetypes
-            log.error(
-                "Unable to find node type definition: {} for repository {}",
-                configuration,
-                this.repositoryMapping.getName());
+            log.error("Unable to find node type definition: {} for repository {}", configuration, this.repositoryMapping.getName());
         }
 
         // initialize default magnolia nodetypes
@@ -396,9 +392,7 @@ public class ProviderImpl implements Provider {
 
                 System.setProperty("javax.xml.transform.TransformerFactory", transformerClass);
 
-                log.info(
-                    "Java 1.5 detected, setting system property \"javax.xml.transform.TransformerFactory\" to \"{}\"",
-                    transformerClass);
+                log.info("Java 1.5 detected, setting system property \"javax.xml.transform.TransformerFactory\" to \"{}\"", transformerClass);
             }
             catch (Throwable e) {
                 // not in the classpath. We can't assume which one to use, so just go on

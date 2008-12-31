@@ -98,7 +98,7 @@ public class BootstrapUtil {
                 // hm can be null if module is not properly registered and the repository has not been created
                 if (hm != null && hm.isExist(fullPath)) {
                     hm.delete(fullPath);
-                    log.warn("already existing node [{}] deleted", fullPath);
+                    log.warn("Deleted already existing node for bootstrapping: {}", fullPath);
                 }
             } catch (RepositoryException e) {
                 throw new RepositoryException("Can't check existence of node for bootstrap file: [" + name + "]", e);

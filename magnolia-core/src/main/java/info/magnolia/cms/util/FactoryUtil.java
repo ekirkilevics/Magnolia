@@ -122,7 +122,7 @@ public class FactoryUtil {
         }
         catch (Exception e) {
             // TODO throw exception ! the system can't work !!!!
-            log.error("can't instantiate an implementation of this class [" + interf.getName() + "]", e);
+            log.error("Can't instantiate an implementation of this class [" + interf.getName() + "]", e);
         }
         return null;
     }
@@ -158,14 +158,14 @@ public class FactoryUtil {
             clazz = ClassUtil.classForName(className);
         }
         catch (ClassNotFoundException e) {
-            log.error("can't find class: " + className, e);
+            log.error("Can't find class: " + className, e);
             return null;
         }
         try {
             return ConstructorUtils.invokeConstructor(clazz, args);
         }
         catch (Exception e) {
-            log.error("can't instantiate: " + className, e);
+            log.error("Can't instantiate: " + className, e);
         }
         return null;
     }
@@ -293,11 +293,11 @@ public class FactoryUtil {
                     onRegister(node);
                 }
                 catch (RepositoryException e) {
-                    log.error("can't read configuration for object " + interf + " from [" + repository + ":" + path + "]", e);
+                    log.error("Can't read configuration for object " + interf + " from [" + repository + ":" + path + "]", e);
                 }
             }
             else{
-                log.warn("can't read configuration for object " + interf + " from [" + repository + ":" + path + "]");
+                log.warn("Can't read configuration for object " + interf + " from [" + repository + ":" + path + "]");
             }
         }
 
@@ -306,12 +306,12 @@ public class FactoryUtil {
                 Object instance = transformNode(node);
 
                 if(this.observedObject != null){
-                    log.info(this.interf.getName()+" reloaded [ "+node.getHandle()+" ]");
+                    log.info("Loaded {} from {}", interf.getName(), node.getHandle());
                 }
                 this.observedObject = instance;
             }
             catch (Exception e) {
-                log.error("can't instantiate object [" + repository + ":" + path + "]", e);
+                log.error("Can't instantiate object from [" + repository + ":" + path + "]", e);
             }
         }
 

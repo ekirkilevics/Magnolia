@@ -178,7 +178,7 @@ public final class MessagesManager {
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
         try {
-            log.info("Config : loading i18n configuration - " + I18N_CONFIG_PATH); //$NON-NLS-1$
+            log.info("Loading i18n configuration - " + I18N_CONFIG_PATH); //$NON-NLS-1$
 
             // checks if node exists
             if (!hm.isExist(I18N_CONFIG_PATH)) {
@@ -212,7 +212,7 @@ public final class MessagesManager {
             }
         }
         catch (Exception e) {
-            log.error("Config : Failed to load i18n configuration - " + I18N_CONFIG_PATH, e); //$NON-NLS-1$
+            log.error("Failed to load i18n configuration - " + I18N_CONFIG_PATH, e); //$NON-NLS-1$
         }
     }
 
@@ -244,7 +244,7 @@ public final class MessagesManager {
             }
         }
         catch (Exception e) {
-            log.error("can't reload i18n messages", e);
+            log.error("Can't reload i18n messages", e);
         }
         initLRUMap();
         load();

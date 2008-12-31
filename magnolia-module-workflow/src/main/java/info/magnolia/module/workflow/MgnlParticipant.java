@@ -91,15 +91,15 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
     public void consume(WorkItem wi) throws Exception {
 
         // get participant name
-        log.debug("enter consume()..");
+        log.debug("Enter consume()..");
 
         if (wi == null) {
-            log.error("work item is null");
+            log.error("Work item is null");
             return;
         }
         String parName = ((InFlowWorkItem) (wi)).getParticipantName();
 
-        log.debug("participant name = {}", parName);
+        log.debug("Participant name = {}", parName);
 
         Context originalContext = null;
         if (MgnlContext.hasInstance()) {
@@ -108,13 +108,13 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
         try{
 
             if (parName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND)){
-                log.info("consume command {}...", parName);
+                log.debug("Consuming command {}...", parName);
 
                 try {
                     String name = StringUtils.removeStart(parName, WorkflowConstants.PARTICIPANT_PREFIX_COMMAND);
                     Command c = CommandsManager.getInstance().getCommand(name);
                     if (c != null) {
-                        log.info("Command has been found through the magnolia catalog: {}", c.getClass().getName());
+                        log.debug("Command has been found through the magnolia catalog: {}", c.getClass().getName());
 
                         // set parameters in the context
                         // precise what we're talking about here: this is forced to be a System Context :
@@ -135,10 +135,10 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
                         log.error("No command has been found through the magnolia catalog for name: {}", parName);
                     }
 
-                    log.info("consume command {} end", parName);
+                    log.debug("Consumed command {}.", parName);
                 }
                 catch (Exception e) {
-                    log.error("consume command failed", e);
+                    log.error("Couldn't consume command " + parName, e);
                 }
             }
             else {
@@ -151,7 +151,7 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             MgnlContext.setInstance(originalContext);
         }
 
-        log.debug("leave consume()..");
+        log.debug("Finished consume()..");
 
     }
 }
