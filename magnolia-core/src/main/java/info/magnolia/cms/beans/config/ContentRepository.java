@@ -184,11 +184,11 @@ public final class ContentRepository {
      *</pre>
      */
     public static void init() {
-        log.info("System : loading JCR"); //$NON-NLS-1$
+        log.info("Loading JCR"); //$NON-NLS-1$
         repositories.clear();
         try {
             loadRepositories();
-            log.info("System : JCR loaded"); //$NON-NLS-1$
+            log.debug("JCR loaded"); //$NON-NLS-1$
         }
         catch (Exception e) {
             log.error(e.getMessage(), e);
@@ -199,7 +199,7 @@ public final class ContentRepository {
      * Shuts down all repositories (through Provider instances) and clears all mappings.
      */
     public static void shutdown() {
-        log.info("System: shutting down JCR");
+        log.info("Shutting down JCR");
         final Iterator providers = repositoryProviders.values().iterator();
         while (providers.hasNext()) {
             final Provider provider = (Provider) providers.next();
@@ -236,9 +236,7 @@ public final class ContentRepository {
      * @throws AccessDeniedException
      */
     public static boolean checkIfInitialized(String repository) throws RepositoryException, AccessDeniedException {
-        if (log.isDebugEnabled()) {
-            log.debug("Checking [" + repository + "] repository."); //$NON-NLS-1$ //$NON-NLS-2$
-        }
+        log.debug("Checking [{}] repository.", repository);
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(repository);
 
         if (hm == null) {
@@ -255,9 +253,7 @@ public final class ContentRepository {
         });
 
         if (!children.isEmpty()) {
-            if (log.isDebugEnabled()) {
-                log.debug("Content found in [" + repository + "]."); //$NON-NLS-1$ //$NON-NLS-2$
-            }
+            log.debug("Content found in [{}].", repository);
             return true;
         }
         return false;
@@ -268,7 +264,7 @@ public final class ContentRepository {
      * @see #init()
      */
     public static void reload() {
-        log.info("System : reloading JCR"); //$NON-NLS-1$
+        log.info("Reloading JCR"); //$NON-NLS-1$
         ContentRepository.init();
     }
 
@@ -319,7 +315,7 @@ public final class ContentRepository {
                 loadRepository(map);
             }
             catch (Exception e) {
-                log.error("System : Failed to load JCR \"" + map.getName() + "\" " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
+                log.error("Failed to load JCR \"" + map.getName() + "\" " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
         }
     }
@@ -350,7 +346,7 @@ public final class ContentRepository {
      */
     public static void loadRepository(RepositoryMapping map) throws RepositoryNotInitializedException,
         InstantiationException, IllegalAccessException, ClassNotFoundException {
-        log.info("System : loading JCR {}", map.getName()); //$NON-NLS-1$
+        log.info("Loading JCR {}", map.getName()); //$NON-NLS-1$
         Provider handlerClass = (Provider) ClassUtil.newInstance(map.getProvider());
         handlerClass.init(map);
         Repository repository = handlerClass.getUnderlyingRepository();
@@ -372,7 +368,7 @@ public final class ContentRepository {
      * @throws RepositoryException
      * */
     public static void loadWorkspace(String repositoryId, String workspaceId) throws RepositoryException {
-        log.info("System : loading workspace {}", workspaceId); //$NON-NLS-1$
+        log.info("Loading workspace {}", workspaceId); //$NON-NLS-1$
         if(!repositoryNameMap.containsKey(workspaceId)){
             addMappedRepositoryName(workspaceId, repositoryId, workspaceId);
         }
@@ -396,9 +392,8 @@ public final class ContentRepository {
             provider.registerNamespace(NAMESPACE_PREFIX, NAMESPACE_URI, session.getWorkspace());
             provider.registerNodeTypes();
         }
-        catch (RepositoryException re) {
-            log.error("System : Failed to initialize hierarchy manager for JCR {}", map.getName()); //$NON-NLS-1$
-            log.error(re.getMessage(), re);
+        catch (RepositoryException e) {
+            log.error("Failed to initialize hierarchy manager for JCR " + map.getName(), e);
         }
     }
 
@@ -537,7 +532,7 @@ public final class ContentRepository {
         if (name != null && ContentRepository.repositoryMapping.containsKey(name)) {
             return (RepositoryMapping) ContentRepository.repositoryMapping.get(getMappedRepositoryName(repositoryID));
         }
-        log.debug("no mapping for the repository {}", repositoryID);
+        log.debug("No mapping for the repository {}", repositoryID);
         return null;
     }
 
