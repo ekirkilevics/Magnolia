@@ -90,6 +90,7 @@ public class MIMEMapping {
      * Reads all configured mime mapping (config/server/MIMEMapping).
      */
     public static void init() {
+        log.info("Initializing MIMEMapping from {}", NODEPATH);
         load();
         registerEventListener();
     }
@@ -100,7 +101,6 @@ public class MIMEMapping {
     public static void load() {
         MIMEMapping.cachedContent.clear();
         try {
-            log.info("Loading MIMEMapping from {}", NODEPATH); //$NON-NLS-1$
             final HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
 
             Collection mimeList = hm.getContent(NODEPATH).getChildren(ItemType.CONTENTNODE); //$NON-NLS-1$
@@ -114,7 +114,7 @@ public class MIMEMapping {
     }
 
     public static void reload() {
-        log.info("Reloading MIMEMapping"); //$NON-NLS-1$
+        log.info("Reloading MIMEMapping from {}", NODEPATH);
         MIMEMapping.load();
     }
 
