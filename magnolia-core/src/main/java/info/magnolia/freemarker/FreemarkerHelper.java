@@ -59,14 +59,13 @@ import java.util.Locale;
 import java.util.Map;
 
 /**
- * A generic helper to render Content instances with freemarker templates.
+ * A generic helper to render Content instances with Freemarker templates.
  * Is used to render both paragraphs and templates.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class FreemarkerHelper {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FreemarkerHelper.class);
 
     public static FreemarkerHelper getInstance() {
         return (FreemarkerHelper) FactoryUtil.getSingleton(FreemarkerHelper.class);
@@ -102,11 +101,6 @@ public class FreemarkerHelper {
         render(templatePath, null, null, root, out);
     }
 
-    //This is for rendering content directly, as our 'template' in the actual content
-    public void render(Reader reader, Object root, Writer out) throws TemplateException, IOException {
-        render(reader, null, null, root, out);
-    }
-
     /**
      * Renders the given template, using the given root object (can be a map, or any other type of object
      * handled by MagnoliaContentWrapper) to the given Writer.
@@ -118,18 +112,35 @@ public class FreemarkerHelper {
      * @see ServerConfiguration#getDefaultBaseUrl()
      */
     public void render(String templatePath, Locale locale, String i18nBasename, Object root, Writer out) throws TemplateException, IOException {
+        final Locale localeToUse = prepareRendering(locale, i18nBasename, root);
 
-        locale = prepareRendering(locale, i18nBasename, root);
-
-        final Template template = cfg.getTemplate(templatePath, locale);
+        final Template template = cfg.getTemplate(templatePath, localeToUse);
         template.process(root, out);
     }
 
+    /**
+     * Renders the template read by the given Reader instance. It should be noted that this method completely bypasses
+     * Freemarker's caching mechanism. The template will be parsed everytime, which might have a performance impact.
+     *
+     * @see #render(String, java.util.Locale, String, Object, java.io.Writer)
+     */
+    public void render(Reader template, Object root, Writer out) throws TemplateException, IOException {
+        render(template, null, null, root, out);
+    }
+
+    protected void render(Reader template, Locale locale, String i18nBasename, Object root, Writer out) throws TemplateException, IOException {
+        final Locale localeToUse = prepareRendering(locale, i18nBasename, root);
+
+        final Template t = new Template("inlinetemplate", template, cfg);
+        t.setLocale(localeToUse);
+        t.process(root, out);
+    }
+
     private Locale prepareRendering(Locale locale, String i18nBasename, Object root) throws IOException {
-        locale = locale != null ? locale : determineLocale();
+        final Locale localeToUse = checkLocale(locale);
         if (root instanceof Map) {
             final Map data = (Map) root;
-            addDefaultData(data, locale, i18nBasename);
+            addDefaultData(data, localeToUse, i18nBasename);
         }
         // set all currently known loaders
         TemplateLoader tl = FreemarkerTemplateLoaderManager.getInstance().getMultiTemplateLoader();
@@ -137,22 +148,13 @@ public class FreemarkerHelper {
             // update only if loader instance changed in between
             cfg.setTemplateLoader(tl);
         }
-        return locale;
+        return localeToUse;
     }
 
-    /**
-     * Used to render content as the freemarker macros are in it
-     */
-    public void render(Reader reader, Locale locale, String i18nBasename, Object root, Writer out) throws TemplateException, IOException {
-
-        locale = prepareRendering(locale, i18nBasename, root);
-
-        Template template = new Template("contentRendering", reader, cfg);
-        template.process(root, out);
-    }
-
-    protected Locale determineLocale() {
-        if (MgnlContext.hasInstance()) {
+    protected Locale checkLocale(Locale locale) {
+        if (locale != null) {
+            return locale;
+        } if (MgnlContext.hasInstance()) {
             return MgnlContext.getLocale();
         } else {
             return Locale.getDefault();
@@ -179,7 +181,7 @@ public class FreemarkerHelper {
         }
 
         // TODO : this is currently still in FreemarkerUtil. If we add it here,
-        // the attribute "message" we put in the freemarker context should have a less generic name
+        // the attribute "message" we put in the Freemarker context should have a less generic name
         // (-> update all templates)
 //            if (AlertUtil.isMessageSet(mgnlCtx)) {
 //                data.put("message", AlertUtil.getMessage(mgnlCtx));
@@ -204,7 +206,7 @@ public class FreemarkerHelper {
             data.put(FreemarkerServlet.KEY_REQUEST_PRIVATE, new HttpRequestHashModel(webCtx.getRequest(), cfg.getObjectWrapper()));
         } catch (ServletException e) {
             // this should be an IllegalStateException (i.e there's no reason we should end up here) but this constructor isn't available in 1.4
-            throw new RuntimeException("Can't initalize taglib support for freemarker: ", e);
+            throw new RuntimeException("Can't initalize taglib support for Freemarker: ", e);
         }
     }
 
