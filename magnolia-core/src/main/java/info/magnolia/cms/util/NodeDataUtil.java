@@ -204,14 +204,6 @@ public class NodeDataUtil {
     }
 
     /**
-     * @deprecated renamed to getValueObject
-     * @return the object representing the value
-     */
-    public static Object getValue(NodeData nd) {
-       return getValueObject(nd);
-    }
-
-    /**
      * Returns the value as an Object.
      * @return Object
      */
@@ -241,18 +233,6 @@ public class NodeDataUtil {
         }
         return null;
     }
-
-    /**
-     * String representation of the jcr property type
-     * @param type
-     * @return
-     *
-     * @deprecated do not instanciate NodeDataUtil
-     */
-    public String getTypeName(int type) {
-        return PropertyType.nameFromValue(type);
-    }
-
 
     /**
      * String representation of the jcr property type
@@ -457,13 +437,6 @@ public class NodeDataUtil {
     }
 
     /**
-     * @deprecated use createValue
-     */
-    public static Value getValue(String valueStr, int type) throws RepositoryException {
-        return createValue(valueStr, type);
-    }
-
-    /**
      * Uses the default value factory
      * @param valueStr
      * @param type
@@ -495,13 +468,6 @@ public class NodeDataUtil {
             default:
                 return (obj != null ? valueFactory.createValue(obj.toString()) : valueFactory.createValue(StringUtils.EMPTY));
         }
-    }
-
-    /**
-     * @deprecated use createValue
-     */
-    public static Value getValue(String valueStr, int type, ValueFactory valueFactory) {
-        return createValue(valueStr, type, valueFactory);
     }
 
     /**
