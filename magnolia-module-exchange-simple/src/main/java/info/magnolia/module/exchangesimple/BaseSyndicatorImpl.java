@@ -201,8 +201,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
     /**
-      * <p/> this will activate specifies page (sub pages) to all configured subscribers
-      * </p>
+      * This will activate specifies page (sub pages) to all configured subscribers.
+     *
       * @param parent parent under which this page will be activated
       * @param content to be activated
       * @throws javax.jcr.RepositoryException
@@ -213,9 +213,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      }
 
      /**
-      * <p/>
-      * this will activate specified node to all configured subscribers
-      * </p>
+      * This will activate specified node to all configured subscribers.
       *
       * @param parent parent under which this page will be activated
       * @param content to be activated
@@ -224,29 +222,25 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws info.magnolia.cms.exchange.ExchangeException
       *
       */
-     public void activate(String parent, Content content, List orderBefore)
-             throws ExchangeException, RepositoryException {
+     public void activate(String parent, Content content, List orderBefore) throws ExchangeException, RepositoryException {
          this.activate(null, parent, content, orderBefore);
      }
 
      /**
-      * <p/> this will activate specifies page (sub pages) to the specified subscribers
-      * </p>
+      * This will activate specifies page (sub pages) to the specified subscriber.
+      *
       * @param subscriber
       * @param parent parent under which this page will be activated
       * @param content to be activated
       * @throws javax.jcr.RepositoryException
       * @throws info.magnolia.cms.exchange.ExchangeException
       */
-     public void activate(Subscriber subscriber, String parent, Content content)
-             throws ExchangeException, RepositoryException {
+     public void activate(Subscriber subscriber, String parent, Content content) throws ExchangeException, RepositoryException {
          this.activate(subscriber, parent, content, null);
      }
 
      /**
-      * <p/>
-      * this will activate specifies node to the specified subscribers
-      * </p>
+      * This will activate specifies node to the specified subscriber.
       *
       * @param subscriber
       * @param parent      parent under which this page will be activated
@@ -254,10 +248,8 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @param orderBefore List of UUID to be used by the subscriber to order this node after activation
       * @throws javax.jcr.RepositoryException
       * @throws info.magnolia.cms.exchange.ExchangeException
-      *
       */
-     public void activate(Subscriber subscriber, String parent, Content content, List orderBefore)
-             throws ExchangeException, RepositoryException {
+     public void activate(Subscriber subscriber, String parent, Content content, List orderBefore) throws ExchangeException, RepositoryException {
          this.parent = parent;
          this.path = content.getHandle();
          ActivationContent activationContent = null;
@@ -307,8 +299,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @param activationContent
       * @throws ExchangeException
       */
-     public abstract String activate(Subscriber subscriber, ActivationContent activationContent)
-         throws ExchangeException;
+     public abstract String activate(Subscriber subscriber, ActivationContent activationContent) throws ExchangeException;
 
      /**
       * cleans temporary store
@@ -357,8 +348,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
      * @throws RepositoryException
      * @throws ExchangeException
      */
-    public synchronized void deactivate(Subscriber subscriber, Content node) throws ExchangeException,
-        RepositoryException {
+    public synchronized void deactivate(Subscriber subscriber, Content node) throws ExchangeException, RepositoryException {
         this.nodeUUID = node.getUUID();
         this.path = node.getHandle();
         this.doDeactivate(subscriber);
@@ -544,9 +534,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @throws IOException
       * @throws RepositoryException
       */
-     protected void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter,
-                               ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
-
+     protected void addResources(Element resourceElement, Session session, Content content, Content.ContentFilter filter, ActivationContent activationContent) throws IOException, RepositoryException, SAXException, Exception {
          File file = File.createTempFile("exchange_" + content.getName(), ".xml.gz", Path.getTempDirectory());
          GZIPOutputStream gzipOutputStream = new GZIPOutputStream(new FileOutputStream(file));
 
@@ -595,11 +583,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       * @param os
       * @param noRecurse
       * */
-     protected void exportAndParse(Session session,
-                                 Content content,
-                                 XMLReader elementfilter,
-                                 OutputStream os,
-                                 boolean noRecurse) throws Exception {
+     protected void exportAndParse(Session session, Content content, XMLReader elementfilter, OutputStream os, boolean noRecurse) throws Exception {
          File tempFile = File.createTempFile("Frozen_"+content.getName(), ".xml"); //$NON-NLS-1$ //$NON-NLS-2$
          OutputStream tmpFileOutStream = null;
          FileInputStream tmpFileInStream = null;

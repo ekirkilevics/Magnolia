@@ -131,13 +131,12 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     }
 
     /**
-     * Send activation request if subscribed to the activated URI
+     * Send activation request if subscribed to the activated URI.
      * @param subscriber
      * @param activationContent
      * @throws ExchangeException
      */
-    public String activate(Subscriber subscriber, ActivationContent activationContent)
-            throws ExchangeException {
+    public String activate(Subscriber subscriber, ActivationContent activationContent) throws ExchangeException {
         log.debug("activate");
         if (null == subscriber) {
             throw new ExchangeException("Null Subscriber");

@@ -81,7 +81,7 @@ public interface Syndicator {
             throws ExchangeException, RepositoryException;
 
     /**
-     * This will activate the specified node to the specified subscribers.
+     * This will activate the specified node to the specified subscriber.
      *
      * @param subscriber
      * @param parent parent under which this page will be activated
@@ -93,7 +93,7 @@ public interface Syndicator {
             throws ExchangeException, RepositoryException;
 
     /**
-     * This will activate the specified node to the specified subscribers.
+     * This will activate the specified node to the specified subscriber.
      *
      * @param subscriber
      * @param parent parent under which this page will be activated
