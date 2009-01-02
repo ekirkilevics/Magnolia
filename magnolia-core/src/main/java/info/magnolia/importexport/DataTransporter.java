@@ -183,7 +183,7 @@ public class DataTransporter {
      * Overwrite or set single values
      * @param properties
      * @param repositoryName
-     * @deprecated use the PropertiesImportExport class instead.
+     * @deprecated since 4.0 - use the PropertiesImportExport class instead.
      */
     public static void importProperties(Properties properties, String repositoryName) {
         for (Iterator iter = properties.keySet().iterator(); iter.hasNext();) {
