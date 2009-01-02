@@ -80,7 +80,6 @@ import java.io.FileInputStream;
  * $Id$
  */
 public abstract class BaseSyndicatorImpl implements Syndicator {
-
      private static final Logger log = LoggerFactory.getLogger(BaseSyndicatorImpl.class);
 
     /**
@@ -280,9 +279,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
              throw new ExchangeException(e);
          }
          finally {
-             if (log.isDebugEnabled()) {
-                 log.debug("Cleaning temporary files");
-             }
+             log.debug("Cleaning temporary files");
              cleanTemporaryStore(activationContent);
          }
      }
@@ -307,17 +304,13 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
       */
      protected void cleanTemporaryStore(ActivationContent activationContent) {
          if (activationContent == null) {
-             if (log.isDebugEnabled()) {
-                 log.debug("Clean temporary store - nothing to do");
-             }
+             log.debug("Clean temporary store - nothing to do");
              return;
          }
          Iterator keys = activationContent.getFiles().keySet().iterator();
          while (keys.hasNext()) {
              String key = (String) keys.next();
-             if (log.isDebugEnabled()) {
-                 log.debug("Removing temporary file {}", key);
-             }
+             log.debug("Removing temporary file {}", key);
              activationContent.getFile(key).delete();
          }
      }

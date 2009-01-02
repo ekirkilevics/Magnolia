@@ -100,17 +100,16 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         String uuid = activationContent.getproperty(NODE_UUID);
         // collect all the errors and send them back.
         if (!errors.isEmpty()) {
-        Exception e = null;
-            StringBuffer msg = new StringBuffer(errors.size() + " error").append(
-            errors.size() > 1 ? "s" : "").append(" detected: ");
-        Iterator iter = errors.entrySet().iterator();
-        while (iter.hasNext()) {
-            Entry entry = (Entry) iter.next();
-            e = (Exception) entry.getValue();
-            Subscriber subscriber = (Subscriber) entry.getKey();
-            msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
-            log.error(e.getMessage(), e);
-        }
+            Exception e = null;
+            StringBuffer msg = new StringBuffer(errors.size() + " error").append(errors.size() > 1 ? "s" : "").append(" detected: ");
+            Iterator iter = errors.entrySet().iterator();
+            while (iter.hasNext()) {
+                Entry entry = (Entry) iter.next();
+                e = (Exception) entry.getValue();
+                Subscriber subscriber = (Subscriber) entry.getKey();
+                msg.append("\n").append(e.getMessage()).append(" on ").append(subscriber.getName());
+                log.error(e.getMessage(), e);
+            }
 
             throw new ExchangeException(msg.toString(), e);
         }
@@ -150,15 +149,10 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             // unfortunately activationContent is not thread safe and is used by multiple threads in case of multiple subscribers so we can't use it as a vessel for transfer of parentPath value
             parentPath = this.getMappedPath(this.parent, subscription);
         } else {
-            if (log.isDebugEnabled()) {
-                log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), this.path);
-            }
+            log.debug("Exchange : subscriber [{}] is not subscribed to {}", subscriber.getName(), this.path);
             return null;
         }
-        if (log.isDebugEnabled()) {
-            log.debug("Exchange : sending activation request to {}", subscriber.getName()); //$NON-NLS-1$
-            log.debug("Exchange : user [{}]", this.user.getName()); //$NON-NLS-1$
-        }
+        log.debug("Exchange : sending activation request to {} with user {}", subscriber.getName(), this.user.getName()); //$NON-NLS-1$
 
         URLConnection urlConnection = null;
         try {
