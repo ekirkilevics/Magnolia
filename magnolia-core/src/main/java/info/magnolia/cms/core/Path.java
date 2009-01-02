@@ -274,7 +274,7 @@ public final class Path {
     }
 
     /**
-     * @deprecated untested and unused
+     * @deprecated since 4.0 - untested and unused
      */
     public static String getNodePath(String path, String label) {
         if (StringUtils.isEmpty(path) || (path.equals("/"))) { //$NON-NLS-1$
@@ -284,7 +284,7 @@ public final class Path {
     }
 
     /**
-     * @deprecated untested and unused
+     * @deprecated since 4.0 - untested and unused
      */
     public static String getNodePath(String path) {
         if (path.startsWith("/")) { //$NON-NLS-1$
@@ -294,7 +294,7 @@ public final class Path {
     }
 
     /**
-     * @deprecated untested and unused
+     * @deprecated since 4.0 - untested and unused
      */
     public static String getParentPath(String path) {
         int lastIndexOfSlash = path.lastIndexOf("/"); //$NON-NLS-1$
