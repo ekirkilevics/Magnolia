@@ -84,13 +84,6 @@ public class FactoryUtil {
 
     }
 
-    /**
-     * @deprecated use newInstance
-     */
-    public static Object getInstance(Class interf) {
-        return newInstance(interf);
-    }
-
     public static Object newInstance(Class interf) {
         if(interf == null){
             log.error("interf can't be null", new Throwable());
