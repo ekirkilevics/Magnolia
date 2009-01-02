@@ -95,8 +95,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 }
                 // don't reset any existing status code, see MAGNOLIA-2005
                 // response.setStatus(HttpServletResponse.SC_OK);
-                Context ctx = MgnlContext.getInstance();
-                if (ctx instanceof WebContext && response != ((WebContext) ctx).getResponse()) {
+                if (response != MgnlContext.getWebContext().getResponse()) {
                     log.warn("Context response not synced. This may lead to discrepancies in rendering.");
                 }
                 renderer.renderTemplate(template, request, response);

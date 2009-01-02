@@ -90,8 +90,8 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
     }
 
     protected Map newContext() {
-        final Context ctx = MgnlContext.getInstance();
-        if (!(ctx instanceof WebContext)) {
+        final Context ctx = MgnlContext.getWebContextOrNull();
+        if (ctx == null) {
             throw new IllegalStateException("This template renderer can only be used with a WebContext");
         }
         return ctx;

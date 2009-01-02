@@ -37,7 +37,6 @@ import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -117,8 +116,8 @@ public class ParagraphRenderingFacade {
     }
 
     private void setPageContext(PageContext pageContext) {
-        if (pageContext != null && MgnlContext.getInstance() instanceof WebContext) {
-            ((WebContext) MgnlContext.getInstance()).setPageContext(pageContext);
+        if (pageContext != null && MgnlContext.isWebContext()) {
+            MgnlContext.getWebContext().setPageContext(pageContext);
         }
     }
 

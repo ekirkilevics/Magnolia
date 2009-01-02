@@ -33,9 +33,7 @@
  */
 package info.magnolia.voting.voters;
 
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -54,9 +52,8 @@ public class RequestHasParametersVoter extends AbstractBoolVoter {
             request = (HttpServletRequest) value;
         }
         else{
-            Context ctx = MgnlContext.getInstance();
-            if(ctx instanceof WebContext){
-                request = ((WebContext)ctx).getRequest();
+            if(MgnlContext.isWebContext()) {
+                request = MgnlContext.getWebContext().getRequest();
             }
             else{
                 return false;

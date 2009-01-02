@@ -158,7 +158,7 @@ public class MgnlContext {
      * TODO - move to getAggregationState() ?
      */
     public static MultipartForm getPostedForm() {
-        WebContext ctx = getWebContextIfExisting(getInstance());
+        WebContext ctx = getWebContextOrNull();
         if (ctx != null) {
             return ctx.getPostedForm();
         }
@@ -169,7 +169,7 @@ public class MgnlContext {
      * Get parameter value as string.
      */
     public static String getParameter(String name) {
-        WebContext ctx = getWebContextIfExisting(getInstance());
+        WebContext ctx = getWebContextOrNull();
         if (ctx != null) {
             return ctx.getParameter(name);
         }
@@ -178,7 +178,7 @@ public class MgnlContext {
     }
 
     public static String[] getParameterValues(String name) {
-        WebContext ctx = getWebContextIfExisting(getInstance());
+        WebContext ctx = getWebContextOrNull();
         if (ctx != null) {
             return ctx.getParameterValues(name);
         }
@@ -190,7 +190,7 @@ public class MgnlContext {
      * Get parameter value as string.
      */
     public static Map getParameters() {
-        WebContext ctx = getWebContextIfExisting(getInstance());
+        WebContext ctx = getWebContextOrNull();
         if (ctx != null) {
             return ctx.getParameters();
         }
@@ -201,7 +201,7 @@ public class MgnlContext {
      * @return the context path.
      */
     public static String getContextPath() {
-        WebContext ctx = getWebContextIfExisting(getInstance());
+        WebContext ctx = getWebContextOrNull();
         if (ctx != null) {
             return ctx.getContextPath();
         } else {
@@ -214,7 +214,7 @@ public class MgnlContext {
      * IllegalStateException otherwise.
      */
     public static AggregationState getAggregationState() {
-        final WebContext ctx = getWebContextIfExisting(getInstance());
+        final WebContext ctx = getWebContextOrNull();
         if (ctx != null) {
             return ctx.getAggregationState();
         } else {
@@ -226,7 +226,7 @@ public class MgnlContext {
      * Resets the current aggregator instance if we're in a WebContext, throws an IllegalStateException otherwise.
      */
     public static void resetAggregationState() {
-        final WebContext ctx = getWebContextIfExisting(getInstance());
+        final WebContext ctx = getWebContextOrNull();
         if (ctx != null) {
             ctx.resetAggregationState();
         }
@@ -301,6 +301,25 @@ public class MgnlContext {
     }
 
     /**
+     * Throws an IllegalStateException if the current context is not set, or if it is not an instance of WebContext.
+     */
+    public static WebContext getWebContext() {
+        final WebContext wc = getWebContextIfExisting(getInstance());
+        if (wc == null) {
+            throw new IllegalStateException("The current context is not an instance of WebContext (" + localContext.get() + ")");
+        }
+        return wc;
+    }
+
+    /**
+     * Returns the current context if it is set and is an instance of WebContext, returns null otherwise.
+     * @return
+     */
+    public static WebContext getWebContextOrNull() {
+        return hasInstance() ? getWebContextIfExisting(getInstance()) : null;
+    }
+
+    /**
      * Used to check if an instance is already set since getInstance() will always return a context.
      * @return true if an instance was set.
      */
@@ -309,7 +328,14 @@ public class MgnlContext {
     }
 
     public static boolean isSystemInstance() {
-        return (localContext.get() instanceof SystemContext);
+        return localContext.get() instanceof SystemContext;
+    }
+
+    /**
+     * Returns true if the current context is set and is an instance of WebContext. (it might be wrapped in a ContextDecorator)
+     */
+    public static boolean isWebContext() {
+        return hasInstance() && getWebContextIfExisting(getInstance()) != null;
     }
 
     /**
@@ -391,15 +417,15 @@ public class MgnlContext {
     }
 
     public static void push(HttpServletRequest request, HttpServletResponse response) {
-        if (getInstance() instanceof WebContext) {
-            WebContext wc = getWebContextIfExisting(getInstance());
+        if (isWebContext()) {
+            WebContext wc = getWebContext();
             wc.push(request,response);
         }
     }
 
     public static void pop() {
-        if (getInstance() instanceof WebContext) {
-            WebContext wc = getWebContextIfExisting(getInstance());
+        if (isWebContext()) {
+            WebContext wc = getWebContext();
             wc.pop();
         }
     }

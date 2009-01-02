@@ -62,8 +62,8 @@ public class JspParagraphRenderer extends AbstractParagraphRenderer {
     }
 
     protected Map newContext() {
-        final Context ctx = MgnlContext.getInstance();
-        if (!(ctx instanceof WebContext)) {
+        final Context ctx = MgnlContext.getWebContextOrNull();
+        if (ctx == null) {
             throw new IllegalStateException("This paragraph renderer can only be used with a WebContext");
         }
         return ctx;

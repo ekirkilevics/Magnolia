@@ -53,7 +53,6 @@ import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -109,7 +108,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
                     final String s = nodeData.getString();
                     final PathToLinkTransformer t;
                     // TODO : maybe this could be moved to LinkUtil
-                    if (MgnlContext.getInstance() instanceof WebContext) {
+                    if (MgnlContext.isWebContext()) {
                         final Content page = MgnlContext.getAggregationState().getMainContent();
                         if (page != null) {
                             t = new RelativePathTransformer(page, true, true);

@@ -33,9 +33,7 @@
  */
 package info.magnolia.voting.voters;
 
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 import org.apache.commons.lang.StringUtils;
 
 import javax.servlet.http.HttpServletResponse;
@@ -76,9 +74,8 @@ public class ResponseContentTypeVoter extends AbstractBoolVoter {
         if (value instanceof HttpServletResponse) {
             response = (HttpServletResponse) value;
         } else {
-            final Context ctx = MgnlContext.getInstance();
-            if (ctx instanceof WebContext) {
-                response = ((WebContext) ctx).getResponse();
+            if (MgnlContext.isWebContext()) {
+                response = MgnlContext.getWebContext().getResponse();
             } else {
                 return false;
             }

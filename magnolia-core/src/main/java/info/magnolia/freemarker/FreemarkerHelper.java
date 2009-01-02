@@ -46,7 +46,6 @@ import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
@@ -182,8 +181,8 @@ public class FreemarkerHelper {
         if (MgnlContext.hasInstance()) {
             data.put("ctx", MgnlContext.getInstance());
         }
-        final WebContext webCtx = getWebContextOrNull();
-        if (webCtx != null) {
+        if (MgnlContext.isWebContext()) {
+            final WebContext webCtx = MgnlContext.getWebContext();
             // @deprecated (-> update all templates) - TODO see MAGNOLIA-1789
             data.put("contextPath", webCtx.getContextPath());
             data.put("aggregationState", webCtx.getAggregationState());
@@ -235,15 +234,5 @@ public class FreemarkerHelper {
 
     protected Configuration getConfiguration() {
         return cfg;
-    }
-
-    private WebContext getWebContextOrNull() {
-        if (MgnlContext.hasInstance()) {
-            final Context mgnlCtx = MgnlContext.getInstance();
-            if (mgnlCtx instanceof WebContext) {
-                return (WebContext) mgnlCtx;
-            }
-        }
-        return null;
     }
 }
