@@ -48,7 +48,8 @@ import java.util.List;
 public interface Syndicator {
 
     /**
-     * Set up the syndicator
+     * Sets up the syndicator.
+     *
      * @param user the user to use for the conection to the subscriber
      * @param repositoryName the repository to transmit
      * @param workspaceName the workspace to transmit
@@ -57,23 +58,8 @@ public interface Syndicator {
     public void init(User user, String repositoryName, String workspaceName, Rule rule);
 
     /**
-     * <p>
-     * this will activate specifies page (sub pages) to all configured subscribers
-     * </p>
-     * @param parent parent under which this page will be activated
-     * @param path page to be activated
-     * @throws RepositoryException
-     * @throws ExchangeException
-     * @deprecated use Syndicator.activate(String parent, Content content)
-     * @see Syndicator#activate(String, info.magnolia.cms.core.Content)
-     */
-    public void activate(String parent, String path)
-            throws ExchangeException, RepositoryException;
-
-    /**
-     * <p>
-     * this will activate specified node to all configured subscribers
-     * </p>
+     * This will activate the specified node to all configured subscribers.
+     *
      * @param parent parent under which this page will be activated
      * @param content to be activated
      * @throws RepositoryException
@@ -83,9 +69,8 @@ public interface Syndicator {
             throws ExchangeException, RepositoryException;
 
     /**
-     * <p>
-     * this will activate specified node to all configured subscribers
-     * </p>
+     * This will activate the specified node to all configured subscribers.
+     *
      * @param parent parent under which this page will be activated
      * @param content to be activated
      * @param orderBefore List of UUID to be used by the implementation to order this node after activation
@@ -96,9 +81,8 @@ public interface Syndicator {
             throws ExchangeException, RepositoryException;
 
     /**
-     * <p>
-     * this will activate specifies node to the specified subscribers
-     * </p>
+     * This will activate the specified node to the specified subscribers.
+     *
      * @param subscriber
      * @param parent parent under which this page will be activated
      * @param content to be activated
@@ -109,9 +93,8 @@ public interface Syndicator {
             throws ExchangeException, RepositoryException;
 
     /**
-     * <p>
-     * this will activate specifies node to the specified subscribers
-     * </p>
+     * This will activate the specified node to the specified subscribers.
+     *
      * @param subscriber
      * @param parent parent under which this page will be activated
      * @param content to be activated
@@ -123,26 +106,7 @@ public interface Syndicator {
             throws ExchangeException, RepositoryException;
 
     /**
-     * @param path , to deactivate
-     * @throws RepositoryException
-     * @throws ExchangeException
-     * @deprecated Use deactivate(Content node)
-     */
-    public void deactivate(String path)
-            throws ExchangeException, RepositoryException;
-
-    /**
-     * @param path , to deactivate
-     * @param subscriber
-     * @throws RepositoryException
-     * @throws ExchangeException
-     * @deprecated Use (Subscriber subscriber, Content node)
-     */
-    public void deactivate(Subscriber subscriber, String path)
-            throws ExchangeException, RepositoryException;
-
-    /**
-     * @param node , to deactivate
+     * @param node to deactivate
      * @throws RepositoryException
      * @throws ExchangeException
      */
@@ -150,34 +114,13 @@ public interface Syndicator {
             throws ExchangeException, RepositoryException;
 
     /**
-     * @param node , to deactivate
+     * @param node to deactivate
      * @param subscriber
      * @throws RepositoryException
      * @throws ExchangeException
      */
     public void deactivate(Subscriber subscriber, Content node)
             throws ExchangeException, RepositoryException;
-
-    // -- deprecated deactivation methods, spelled with capital A
-    /**
-     * @deprecated since 3.5, use deactivate(Content node)
-     */
-    public void deActivate(String path) throws ExchangeException, RepositoryException;
-
-    /**
-     * @deprecated since 3.5, use deactivate(Subscriber subscriber, Content node)
-     */
-    public void deActivate(Subscriber subscriber, String path) throws ExchangeException, RepositoryException;
-
-    /**
-     * @deprecated since 3.5, use deactivate(Content node)
-     */
-    public void deActivate(Content node) throws ExchangeException, RepositoryException;
-
-    /**
-     * @deprecated since 3.5, use deactivate(Subscriber subscriber, Content node)
-     */
-    public void deActivate(Subscriber subscriber, Content node) throws ExchangeException, RepositoryException;
 
 
 }

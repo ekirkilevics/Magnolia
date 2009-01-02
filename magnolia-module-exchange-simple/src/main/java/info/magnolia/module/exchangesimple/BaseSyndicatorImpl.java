@@ -146,11 +146,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
      public static final String ROLLBACK = "rollback";
 
-     /**
-     * @deprecated since 3.5, use DEACTIVATE
-     */
-     public static final String DE_ACTIVATE = DEACTIVATE;
-
      public static final String AUTHORIZATION = "Authorization";
 
      public static final String AUTH_CREDENTIALS= "mgnlUserPSWD";
@@ -205,20 +200,7 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          this.workspaceName = workspaceName;
      }
 
-     /**
-      * <p/> this will activate specifies page (sub pages) to all configured subscribers
-      * </p>
-      * @param parent parent under which this page will be activated
-      * @param path page to be activated
-      * @throws javax.jcr.RepositoryException
-      * @throws info.magnolia.cms.exchange.ExchangeException
-      */
-     public synchronized void activate(String parent, String path) throws ExchangeException, RepositoryException {
-         HierarchyManager hm = MgnlContext.getHierarchyManager(this.repositoryName, this.workspaceName);
-         this.activate(parent, hm.getContent(path));
-     }
-
-     /**
+    /**
       * <p/> this will activate specifies page (sub pages) to all configured subscribers
       * </p>
       * @param parent parent under which this page will be activated
@@ -354,15 +336,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          this.nodeUUID = node.getUUID();
          this.path = node.getHandle();
          this.doDeactivate();
-         updateDeactivationDetails();
-     }
-
-     public synchronized void deactivate(Subscriber subscriber, String path) throws ExchangeException,
-         RepositoryException {
-         Content node = getHierarchyManager().getContent(path);
-         this.nodeUUID = node.getUUID();
-         this.path = node.getHandle();
-         this.doDeactivate(subscriber);
          updateDeactivationDetails();
      }
 
@@ -653,34 +626,5 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
          }
      }
 
-
-    // -- deprecated deactivation methods, spelled with capital A
-    /**
-     * @deprecated Use deactivate(Content node)
-     */
-    public void deActivate(String path) throws ExchangeException, RepositoryException{
-        deactivate(path);
-    }
-
-    /**
-     * @deprecated Use deactivate(Subscriber subscriber, Content node)
-     */
-    public void deActivate(Subscriber subscriber, String path) throws ExchangeException, RepositoryException {
-        deactivate(subscriber, path);
-    }
-
-    /**
-     * @deprecated Use deactivate(Content node)
-     */
-    public void deActivate(Content node) throws ExchangeException, RepositoryException {
-        deactivate(node);
-    }
-
-    /**
-     * @deprecated Use deactivate(Subscriber subscriber, Content node)
-     */
-    public void deActivate(Subscriber subscriber, Content node) throws ExchangeException, RepositoryException {
-        deactivate(subscriber, node);
-    }
 
 }
