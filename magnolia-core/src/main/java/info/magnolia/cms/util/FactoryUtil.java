@@ -58,6 +58,8 @@ import org.slf4j.LoggerFactory;
 
 
 /**
+ * Central factory instanciating most Magnolia beans, managers, observers and so on.
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -69,12 +71,12 @@ public class FactoryUtil {
     }
 
     /**
-     * Registered singleton instances
+     * Registered singleton instances.
      */
     private final static Map instances = new HashMap();
 
     /**
-     * Registered Prototypes used for new Instance
+     * Registered Prototypes used for new Instance.
      */
     private final static Map factories = new HashMap();
 
@@ -143,9 +145,6 @@ public class FactoryUtil {
 
     /**
      * This method does not use discovery! It is a util method for easy instantiating. In any case of an exception null is returned.
-     *
-     * @param className
-     * @return
      */
     public static Object newInstanceWithoutDiscovery(String className, Object[] args) {
 
@@ -190,10 +189,6 @@ public class FactoryUtil {
         setDefaultImplementation(interf, impl.getName());
     }
 
-    /**
-     * @param interf
-     * @param impl
-     */
     public static void setDefaultImplementation(Class interf, String impl) {
         if(!SystemProperty.getProperties().containsKey(interf.getName())){
             setImplementation(interf, impl);
@@ -204,30 +199,20 @@ public class FactoryUtil {
         setImplementation(interf, impl.getName());
     }
 
-    /**
-     * @param interf
-     * @param impl
-     */
     public static void setImplementation(Class interf, String impl) {
         SystemProperty.getProperties().setProperty(interf.getName(), impl);
     }
 
 
     /**
-     * Register an instance which will be returned by getSingleton()
-     *
-     * @param interf
-     * @param instance
+     * Register an instance which will be returned by getSingleton().
      */
     public static void setInstance(Class interf, Object instance) {
         instances.put(interf, instance);
     }
 
     /**
-     * newInstance will use this prototype for cloning a new object
-     *
-     * @param interf
-     * @param factory
+     * newInstance will use this prototype for cloning a new object.
      */
     public static void setInstanceFactory(Class interf, InstanceFactory factory) {
         factories.put(interf, factory);
@@ -247,20 +232,23 @@ public class FactoryUtil {
     public static class ObservedObjectFactory implements EventListener{
         private static final Logger log = LoggerFactory.getLogger(ObservedObjectFactory.class);
 
+        private static final int DEFAULT_MAX_DELAY = 5000;
+        private static final int DEFAULT_DELAY = 1000;
+
         /**
-         * Path to the node in the config repository
+         * Path to the node in the config repository.
          */
         private final String path;
 
         /**
-         * Repository name used
+         * Repository name used.
          */
         private final String repository;
 
         protected final Class interf;
 
         /**
-         * The object delivered by this factory
+         * The object delivered by this factory.
          */
         protected Object observedObject;
 
@@ -273,7 +261,7 @@ public class FactoryUtil {
         }
 
         protected void startObservation(String handle) {
-            ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, handle, this, 1000, 5000);
+            ObservationUtil.registerDeferredChangeListener(ContentRepository.CONFIG, handle, this, DEFAULT_DELAY, DEFAULT_MAX_DELAY);
         }
 
         public void onEvent(EventIterator events) {
@@ -332,7 +320,7 @@ public class FactoryUtil {
         }
 
         /**
-         * Is not synchronized!
+         * Returns the object observed by this factory. Not synchronized.
          */
         public Object getObservedObject() {
             return this.observedObject;
