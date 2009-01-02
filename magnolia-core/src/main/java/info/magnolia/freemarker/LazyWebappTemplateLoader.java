@@ -33,59 +33,26 @@
  */
 package info.magnolia.freemarker;
 
-import info.magnolia.context.Context;
+import freemarker.cache.TemplateLoader;
+import freemarker.cache.WebappTemplateLoader;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 
-import java.io.IOException;
-import java.io.Reader;
-
 import javax.servlet.ServletContext;
-
-import freemarker.cache.TemplateLoader;
-import freemarker.cache.WebappTemplateLoader;
 
 /**
  * Wrapper for Freemarker WebappTemplateLoader to allow configuration of the loader via content2bean
  * with lazy initialization at runtime (as soon as a ServletContext is available).
- * 
+ *
  * @author had
  */
-public class LazyWebappTemplateLoader implements TemplateLoader {
-    
-    private WebappTemplateLoader loader;
-
-    public void closeTemplateSource(Object templateSource) throws IOException {
-        if (loader != null) {
-            loader.closeTemplateSource(templateSource);
-        }
-    }
-
-    public Object findTemplateSource(String name) throws IOException {
-        final WebContext webCtx = getWebContextOrNull();
+public class LazyWebappTemplateLoader extends AbstractDelegatingTemplateLoader {
+    protected TemplateLoader newDelegate() {
+        final WebContext webCtx = MgnlContext.getWebContextOrNull();
         if (webCtx != null) {
-            ServletContext sc = webCtx.getServletContext();
+            final ServletContext sc = webCtx.getServletContext();
             if (sc != null) {
-                loader = new WebappTemplateLoader(sc, "");               
-            }
-        }
-        return loader == null ? null : loader.findTemplateSource(name);
-    }
-
-    public long getLastModified(Object templateSource) {
-        return loader == null ? 0 : loader.getLastModified(templateSource);
-    }
-
-    public Reader getReader(Object templateSource, String encoding)
-            throws IOException {
-        return loader == null ? null : loader.getReader(templateSource, encoding);
-    }
-
-    private WebContext getWebContextOrNull() {
-        if (MgnlContext.hasInstance()) {
-            final Context mgnlCtx = MgnlContext.getInstance();
-            if (mgnlCtx instanceof WebContext) {
-                return (WebContext) mgnlCtx;
+                return new WebappTemplateLoader(sc, "");
             }
         }
         return null;

@@ -36,9 +36,8 @@ package info.magnolia.freemarker;
 import freemarker.cache.FileTemplateLoader;
 import freemarker.cache.TemplateLoader;
 
-import java.io.IOException;
-import java.io.Reader;
 import java.io.File;
+import java.io.IOException;
 
 /**
  * A TemplateLoader wrapping freemarker's FileTemplateLoader, initializing it
@@ -47,10 +46,9 @@ import java.io.File;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class LazyFileTemplateLoader implements TemplateLoader {
+public class LazyFileTemplateLoader extends AbstractDelegatingTemplateLoader {
     private String basePath;
     private boolean allowLinking;
-    private FileTemplateLoader delegate;
 
     public String getBasePath() {
         return basePath;
@@ -68,30 +66,11 @@ public class LazyFileTemplateLoader implements TemplateLoader {
         this.allowLinking = allowLinking;
     }
 
-    public Object findTemplateSource(String name) throws IOException {
-        return getDelegate().findTemplateSource(name);
-    }
-
-    public long getLastModified(Object templateSource) {
-        return getDelegate().getLastModified(templateSource);
-    }
-
-    public Reader getReader(Object templateSource, String encoding) throws IOException {
-        return getDelegate().getReader(templateSource, encoding);
-    }
-
-    public void closeTemplateSource(Object templateSource) {
-        getDelegate().closeTemplateSource(templateSource);
-    }
-
-    protected FileTemplateLoader getDelegate() {
-        if (delegate == null) {
-            try {
-                delegate = new FileTemplateLoader(new File(basePath), allowLinking);
-            } catch (IOException e) {
-                throw new IllegalArgumentException("Can't initialize FileTemplateLoader: " + e.getMessage());
-            }
+    protected TemplateLoader newDelegate() {
+        try {
+            return new FileTemplateLoader(new File(basePath), allowLinking);
+        } catch (IOException e) {
+            throw new IllegalArgumentException("Can't initialize FileTemplateLoader: " + e.getMessage(), e);
         }
-        return delegate;
     }
 }
