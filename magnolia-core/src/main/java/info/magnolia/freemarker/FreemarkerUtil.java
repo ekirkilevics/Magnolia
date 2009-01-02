@@ -107,7 +107,7 @@ public class FreemarkerUtil {
         }
         catch (Exception e) {
             e.printStackTrace(new PrintWriter(writer));
-            log.error("exception in template", e);
+            log.error("Exception while processing template " + name, e);
         }
     }
 
