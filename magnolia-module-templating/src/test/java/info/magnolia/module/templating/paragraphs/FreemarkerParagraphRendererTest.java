@@ -74,8 +74,10 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
     protected void setUp() throws Exception {
         super.setUp();
         tplLoader = new StringTemplateLoader();
-        FreemarkerTemplateLoaderManager fmTplLoader = (FreemarkerTemplateLoaderManager) FactoryUtil.getSingleton(FreemarkerTemplateLoaderManager.class);
-        fmTplLoader.addLoader(tplLoader);
+        final FreemarkerTemplateLoaderManager fmTemplateLoader = new FreemarkerTemplateLoaderManager();
+        fmTemplateLoader.addTemplateLoader(tplLoader);
+        FactoryUtil.setInstance(FreemarkerTemplateLoaderManager.class, fmTemplateLoader);
+
         final FreemarkerHelper freemarkerHelper = new FreemarkerHelper();
         renderer = new FreemarkerParagraphRenderer(freemarkerHelper);
 
