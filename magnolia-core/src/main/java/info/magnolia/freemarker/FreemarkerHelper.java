@@ -101,7 +101,7 @@ public class FreemarkerHelper {
     }
 
     /**
-     * @see #render(String, java.util.Locale, String, Object, java.io.Writer)
+     * @see #render(String, Locale, String, Object, java.io.Writer)
      */
     public void render(String templatePath, Object root, Writer out) throws TemplateException, IOException {
         render(templatePath, null, null, root, out);
@@ -118,7 +118,8 @@ public class FreemarkerHelper {
      * @see ServerConfiguration#getDefaultBaseUrl()
      */
     public void render(String templatePath, Locale locale, String i18nBasename, Object root, Writer out) throws TemplateException, IOException {
-        final Locale localeToUse = prepareRendering(locale, i18nBasename, root);
+        final Locale localeToUse = checkLocale(locale);
+        prepareRendering(localeToUse, i18nBasename, root);
 
         final Template template = cfg.getTemplate(templatePath, localeToUse);
         template.process(root, out);
@@ -128,26 +129,31 @@ public class FreemarkerHelper {
      * Renders the template read by the given Reader instance. It should be noted that this method completely bypasses
      * Freemarker's caching mechanism. The template will be parsed everytime, which might have a performance impact.
      *
-     * @see #render(String, java.util.Locale, String, Object, java.io.Writer)
+     * @see #render(Reader, Locale, String, Object, Writer)
      */
     public void render(Reader template, Object root, Writer out) throws TemplateException, IOException {
         render(template, null, null, root, out);
     }
 
     protected void render(Reader template, Locale locale, String i18nBasename, Object root, Writer out) throws TemplateException, IOException {
-        final Locale localeToUse = prepareRendering(locale, i18nBasename, root);
+        final Locale localeToUse = checkLocale(locale);
+        prepareRendering(localeToUse, i18nBasename, root);
 
         final Template t = new Template("inlinetemplate", template, cfg);
         t.setLocale(localeToUse);
         t.process(root, out);
     }
 
-    private Locale prepareRendering(Locale locale, String i18nBasename, Object root) throws IOException {
-        final Locale localeToUse = checkLocale(locale);
+    /**
+     * Call checkLocale() before calling this method, to ensure it is not null.
+     */
+    protected void prepareRendering(Locale checkedLocale, String i18nBasename, Object root) throws IOException {
         if (root instanceof Map) {
             final Map data = (Map) root;
-            addDefaultData(data, localeToUse, i18nBasename);
+            addDefaultData(data, checkedLocale, i18nBasename);
         }
+
+        // TODO - we could have a LazyMultiTemplateLoader, much like our other Lazy*TemplateImplementations
         // set all currently known loaders
         final FreemarkerTemplateLoaderManager loaderManager = FreemarkerTemplateLoaderManager.getInstance();
         if (loaderManager != null) {
@@ -160,7 +166,6 @@ public class FreemarkerHelper {
             // TODO - this should not be necessary - see MAGNOLIA-2533
             log.warn("FreemarkerTemplateLoaderManager is not ready yet.");
         }
-        return localeToUse;
     }
 
     protected Locale checkLocale(Locale locale) {
