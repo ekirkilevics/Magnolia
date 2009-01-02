@@ -34,6 +34,7 @@
 package info.magnolia.freemarker;
 
 import freemarker.cache.TemplateLoader;
+import freemarker.cache.ClassTemplateLoader;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.FreemarkerServlet;
 import freemarker.ext.servlet.HttpRequestHashModel;
@@ -62,10 +63,13 @@ import java.util.Map;
  * A generic helper to render Content instances with Freemarker templates.
  * Is used to render both paragraphs and templates.
  *
+ * TODO : expose Configuration#clearTemplateCache()
+ *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class FreemarkerHelper {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FreemarkerHelper.class);
 
     public static FreemarkerHelper getInstance() {
         return (FreemarkerHelper) FactoryUtil.getSingleton(FreemarkerHelper.class);
@@ -81,7 +85,9 @@ public class FreemarkerHelper {
         cfg = new Configuration();
         cfg.setObjectWrapper(newObjectWrapper());
 
-        // template loaders are set on the fly to make sure changing configuration is pickup up immediatelly
+        // template loaders will be set later on - to make sure changes to the configuration are picked up immediately
+        // default template loader until FreemarkerTemplateLoaderManager is ready:
+        cfg.setTemplateLoader(new ClassTemplateLoader(FreemarkerUtil.class, "/"));
 
         cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
         cfg.setDefaultEncoding("UTF8");
@@ -143,10 +149,16 @@ public class FreemarkerHelper {
             addDefaultData(data, localeToUse, i18nBasename);
         }
         // set all currently known loaders
-        TemplateLoader tl = FreemarkerTemplateLoaderManager.getInstance().getMultiTemplateLoader();
-        if (tl != cfg.getTemplateLoader()) {
-            // update only if loader instance changed in between
-            cfg.setTemplateLoader(tl);
+        final FreemarkerTemplateLoaderManager loaderManager = FreemarkerTemplateLoaderManager.getInstance();
+        if (loaderManager != null) {
+            final TemplateLoader tl = loaderManager.getMultiTemplateLoader();
+            if (tl != cfg.getTemplateLoader()) {
+                // update only if loader instance changed in between
+                cfg.setTemplateLoader(tl);
+            }
+        } else {
+            // TODO - this should not be necessary - see MAGNOLIA-2533
+            log.warn("FreemarkerTemplateLoaderManager is not ready yet.");
         }
         return localeToUse;
     }
@@ -187,16 +199,6 @@ public class FreemarkerHelper {
 //                data.put("message", AlertUtil.getMessage(mgnlCtx));
 //            }
     }
-
-//    protected void checkTemplateLoader() throws IOException {
-//        // adds a WebappTemplateLoader if needed
-//        final WebContext webCtx = getWebContextOrNull();
-//        if (webCtx != null) {
-//            ServletContext sc = webCtx.getServletContext();
-//            if (sc != null && cfg.getTemplateLoader() instanceof ClassTemplateLoader) {
-//            }
-//        }
-//    }
 
     protected void addTaglibSupportData(Map data, WebContext webCtx) {
         final ServletContext servletContext = webCtx.getServletContext();

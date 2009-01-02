@@ -43,6 +43,7 @@ import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
+import info.magnolia.freemarker.FreemarkerTemplateLoaderManager;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -62,10 +63,11 @@ public class ModuleManagerWebUITest extends TestCase {
         // shunt log4j
         org.apache.log4j.Logger.getRootLogger().setLevel(org.apache.log4j.Level.OFF);
         
-
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
         FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+
+        FactoryUtil.setInstance(FreemarkerTemplateLoaderManager.class, new FreemarkerTemplateLoaderManager());
     }
 
     protected void tearDown() throws Exception {

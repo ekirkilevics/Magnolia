@@ -33,83 +33,51 @@
  */
 package info.magnolia.freemarker;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
-
-import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.content2bean.Content2BeanUtil;
-import info.magnolia.content2bean.TransformationState;
-import info.magnolia.content2bean.TypeDescriptor;
-import info.magnolia.content2bean.impl.Content2BeanTransformerImpl;
 
-public class FreemarkerTemplateLoaderManager extends ObservedManager {
-    private static final Logger log = LoggerFactory.getLogger(FreemarkerTemplateLoaderManager.class);
+import java.util.ArrayList;
+import java.util.List;
 
-    /**
-     * All cached data.
-     */
-    private final List cachedTemplateLoaders = new ArrayList();
-    private final ClassTemplateLoader classloaderTL = new ClassTemplateLoader(FreemarkerUtil.class, "/");
-    private MultiTemplateLoader templateLoaders;
-    
-    public FreemarkerTemplateLoaderManager() {
-        // add the default - make sure there is at least one loader no matter how screwed configuration is
-        cachedTemplateLoaders.add(classloaderTL);
-    }
-
-    protected void onRegister(Content node) {
-        try {
-            log.info("Loading TemplateLoaders from {} ", node.getHandle());
-            Content2BeanUtil.setProperties(this.cachedTemplateLoaders, node, true, new Content2BeanTransformerImpl(){
-                protected TypeDescriptor onResolveType(TransformationState state, TypeDescriptor resolvedType) {
-                    if(state.getLevel()==2 && resolvedType == null){
-                        return this.getTypeMapping().getTypeDescriptor(TemplateLoader.class);
-                    }
-                    return resolvedType;
-                }
-            });
-            log.debug("TemplateLoaders loaded from {}", node.getHandle());
-        }
-        catch (Exception e) {
-            log.error("Failed to load TemplateLoader from " + node.getHandle() + " - " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
-        }
-        // move clTL to the end of the list
-        cachedTemplateLoaders.remove(classloaderTL);
-        cachedTemplateLoaders.add(classloaderTL);
-    }
-
-    protected void onClear() {
-        this.cachedTemplateLoaders.clear();
-        cachedTemplateLoaders.add(classloaderTL);
-        templateLoaders = null;
-    }
-
-    TemplateLoader getMultiTemplateLoader() {
-        if (templateLoaders == null) {
-            templateLoaders = new MultiTemplateLoader((TemplateLoader[]) cachedTemplateLoaders.toArray(new TemplateLoader[cachedTemplateLoaders.size()]));
-        }
-        return templateLoaders;
-    }
-
-    /**
-     * @return Returns the instance.
-     */
+/**
+ * Observed manager handling Freemarker template loaders.
+ * 
+ */
+public class FreemarkerTemplateLoaderManager {
     public static FreemarkerTemplateLoaderManager getInstance() {
         return (FreemarkerTemplateLoaderManager) FactoryUtil.getSingleton(FreemarkerTemplateLoaderManager.class);
     }
 
-    public void addLoader(TemplateLoader loader) {
-        // keep clTL always last;
-        this.cachedTemplateLoaders.add(cachedTemplateLoaders.size() - 1, loader);
-        this.templateLoaders = null;
+    private MultiTemplateLoader multiTL;
+    private List templateLoaders;
+
+    public FreemarkerTemplateLoaderManager() {
+        templateLoaders = new ArrayList();
     }
+
+    TemplateLoader getMultiTemplateLoader() {
+        if (multiTL == null) {
+            // add a ClassTemplateLoader as our last loader
+            final int s = templateLoaders.size();
+            final TemplateLoader[] tl = (TemplateLoader[]) templateLoaders.toArray(new TemplateLoader[s + 1]);
+            tl[s] = new ClassTemplateLoader(getClass(), "/");
+            multiTL = new MultiTemplateLoader(tl);
+        }
+        return multiTL;
+    }
+
+    public List getTemplateLoaders() {
+        return templateLoaders;
+    }
+
+    public void setTemplateLoaders(List templateLoaders) {
+        this.templateLoaders = templateLoaders;
+    }
+
+    public void addTemplateLoader(TemplateLoader templateLoader) {
+        this.templateLoaders.add(templateLoader);
+    }
+
 }

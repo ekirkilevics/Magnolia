@@ -37,6 +37,7 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.module.AbstractModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.BootstrapConditionally;
+import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -95,6 +96,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
         register(DeltaBuilder.update("4.0", "")
                 .addTask(auditTrailManagerTask)
+                .addTask(new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration",
+                "/mgnl-bootstrap/core/config.server.freemarker.xml"))
         );
     }
 

@@ -59,7 +59,6 @@ public class CoreModule implements ModuleLifecycle {
         ctx.registerModuleObservingComponent("paragraph-renderers", ParagraphRendererManager.getInstance());
         ctx.registerModuleObservingComponent("commands", CommandsManager.getInstance());
         ctx.registerModuleObservingComponent("shutdown", ShutdownManager.getInstance());
-        ctx.registerModuleObservingComponent("freemarkerTemplateLoaders", FreemarkerTemplateLoaderManager.getInstance());
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
