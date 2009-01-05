@@ -94,8 +94,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      */
     private static final String SIBLING_UUID_3_0 = "UUID";
 
-    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws IOException, ServletException {
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
         String statusMessage = "";
         String status = "";
         String result = null;
@@ -130,14 +129,13 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         }
     }
 
-    protected void setResponseHeaders(HttpServletResponse response,
-            String statusMessage, String status, String result) {
+    protected void setResponseHeaders(HttpServletResponse response, String statusMessage, String status, String result) {
         response.setHeader(BaseSyndicatorImpl.ACTIVATION_ATTRIBUTE_STATUS, status);
         response.setHeader(BaseSyndicatorImpl.ACTIVATION_ATTRIBUTE_MESSAGE, statusMessage);
     }
 
     /**
-      * handle activate or deactivate request
+      * handle activate or deactivate request.
       * @param request
       * @throws Exception if fails to update
       */
@@ -164,8 +162,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      }
 
     protected String getWebappName() {
-        String webapp = SystemProperty.getProperty(SystemProperty.MAGNOLIA_WEBAPP);
-        return webapp;
+        return SystemProperty.getProperty(SystemProperty.MAGNOLIA_WEBAPP);
     }
 
     protected String getUser(HttpServletRequest request) {
@@ -181,7 +178,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
     }
 
      /**
-      * handle update (activate) request
+      * handle update (activate) request.
       * @param request
       * @throws Exception if fails to update
       */
@@ -213,15 +210,13 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          return name;
      }
 
-    protected Element getImportedContentRoot(MultipartForm data,
-            String resourceFileName) throws JDOMException, IOException {
+    protected Element getImportedContentRoot(MultipartForm data, String resourceFileName) throws JDOMException, IOException {
         Document resourceDocument = data.getDocument(resourceFileName);
-         SAXBuilder builder = new SAXBuilder();
-         InputStream documentInputStream = resourceDocument.getStream();
-         org.jdom.Document jdomDocument = builder.build(documentInputStream);
-         IOUtils.closeQuietly(documentInputStream);
-         Element rootElement = jdomDocument.getRootElement();
-        return rootElement;
+        SAXBuilder builder = new SAXBuilder();
+        InputStream documentInputStream = resourceDocument.getStream();
+        org.jdom.Document jdomDocument = builder.build(documentInputStream);
+        IOUtils.closeQuietly(documentInputStream);
+        return jdomDocument.getRootElement();
     }
 
     protected void handleChildren(HttpServletRequest request, Content content) {
@@ -251,37 +246,34 @@ public class ReceiveFilter extends AbstractMgnlFilter {
         return newParentPath;
     }
 
-    protected String orderImportedNode(String newParentPath, HierarchyManager hm,
-            Element rootElement, Element topContentElement)
-            throws RepositoryException {
+    protected String orderImportedNode(String newParentPath, HierarchyManager hm, Element rootElement, Element topContentElement) throws RepositoryException {
         String name;
         // order imported node
-         name = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
-         Content parent = hm.getContent(newParentPath);
-         List siblings = rootElement.getChild(BaseSyndicatorImpl.SIBLINGS_ROOT_ELEMENT)
-                 .getChildren(BaseSyndicatorImpl.SIBLINGS_ELEMENT);
-         Iterator siblingsIterator = siblings.iterator();
-         while (siblingsIterator.hasNext()) {
-             Element sibling = (Element) siblingsIterator.next();
-             // check for existence and order
-             try {
-                 String siblingUUID = sibling.getAttributeValue(BaseSyndicatorImpl.SIBLING_UUID);
-                 // be compatible with 3.0 (MAGNOLIA-2016)
-                 if (StringUtils.isEmpty(siblingUUID)) {
-                     log.debug("Activating from a Magnolia 3.0 instance");
-                     siblingUUID = sibling.getAttributeValue(SIBLING_UUID_3_0);
-                 }
-                 Content beforeContent = hm.getContentByUUID(siblingUUID);
-                 parent.orderBefore(name, beforeContent.getName());
-                 parent.save();
-                 break;
-             } catch (ItemNotFoundException e) {
-                 // ignore
-             } catch (RepositoryException re) {
-                 log.warn("Failed to order node");
-                 log.debug("Failed to order node", re);
-             }
-         }
+        name = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_NAME_ATTRIBUTE);
+        Content parent = hm.getContent(newParentPath);
+        List siblings = rootElement.getChild(BaseSyndicatorImpl.SIBLINGS_ROOT_ELEMENT).getChildren(BaseSyndicatorImpl.SIBLINGS_ELEMENT);
+        Iterator siblingsIterator = siblings.iterator();
+        while (siblingsIterator.hasNext()) {
+            Element sibling = (Element) siblingsIterator.next();
+            // check for existence and order
+            try {
+                String siblingUUID = sibling.getAttributeValue(BaseSyndicatorImpl.SIBLING_UUID);
+                // be compatible with 3.0 (MAGNOLIA-2016)
+                if (StringUtils.isEmpty(siblingUUID)) {
+                    log.debug("Activating from a Magnolia 3.0 instance");
+                    siblingUUID = sibling.getAttributeValue(SIBLING_UUID_3_0);
+                }
+                Content beforeContent = hm.getContentByUUID(siblingUUID);
+                parent.orderBefore(name, beforeContent.getName());
+                parent.save();
+                break;
+            } catch (ItemNotFoundException e) {
+                // ignore
+            } catch (RepositoryException re) {
+                log.warn("Failed to order node");
+                log.debug("Failed to order node", re);
+            }
+        }
         return name;
     }
 
@@ -314,8 +306,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                      destinationNode.setProperty(nodeData.getName(), property.getValues());
                  }
                  else {
-                     throw new AccessDeniedException(
-                         "User not allowed to " + Permission.PERMISSION_NAME_WRITE + " at [" + nodeData.getHandle() + "]"); //$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
+                     throw new AccessDeniedException("User not allowed to " + Permission.PERMISSION_NAME_WRITE + " at [" + nodeData.getHandle() + "]"); //$NON-NLS-1$ $NON-NLS-2$ $NON-NLS-3$
                  }
              }
              else {
@@ -325,7 +316,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      }
 
      /**
-      * remove children
+      * remove children.
       * @param content whose children to be deleted
       * @param filter content filter
       */
@@ -345,7 +336,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      }
 
      /**
-      * import on non existing tree
+      * import on non existing tree.
       * @param topContentElement
       * @param data
       * @param hierarchyManager
@@ -353,8 +344,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @throws ExchangeException
       * @throws RepositoryException
       */
-     protected synchronized void importFresh(Element topContentElement, MultipartForm data,
-         HierarchyManager hierarchyManager, String parentPath) throws ExchangeException, RepositoryException {
+     protected synchronized void importFresh(Element topContentElement, MultipartForm data, HierarchyManager hierarchyManager, String parentPath) throws ExchangeException, RepositoryException {
          try {
              importResource(data, topContentElement, hierarchyManager, parentPath);
              hierarchyManager.save();
@@ -367,7 +357,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      }
 
      /**
-      * import on existing content, making sure that content which is not sent stays as is
+      * import on existing content, making sure that content which is not sent stays as is.
       * @param topContentElement
       * @param data
       * @param hierarchyManager
@@ -377,9 +367,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       */
      protected synchronized void importOnExisting(Element topContentElement, MultipartForm data,
          HierarchyManager hierarchyManager, Content existingContent) throws ExchangeException, RepositoryException {
-         Iterator fileListIterator = topContentElement
-             .getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT)
-             .iterator();
+         Iterator fileListIterator = topContentElement.getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
          String uuid = UUIDGenerator.getInstance().generateTimeBasedUUID().toString();
          String transientStore = existingContent.getHandle() + "/" + uuid;
          try {
@@ -391,10 +379,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              existingContent.createContent(uuid, ItemType.CONTENTNODE.toString());
              String fileName = topContentElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
              GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
-             hierarchyManager.getWorkspace().getSession().importXML(
-                 transientStore,
-                 inputStream,
-                 ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+             hierarchyManager.getWorkspace().getSession().importXML(transientStore, inputStream, ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
              IOUtils.closeQuietly(inputStream);
              StringBuffer newPath = new StringBuffer();
              newPath.append(transientStore);
@@ -407,20 +392,19 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          } catch (Exception e) {
              hierarchyManager.refresh(false); // revert all transient changes made in this session till now.
              log.error("Exception caught", e);
-             throw new ExchangeException("Activation failed | " + e.getMessage());
+             throw new ExchangeException("Activation failed : " + e.getMessage());
          }
      }
 
      /**
-      * import documents
+      * import documents.
       * @param data as sent
       * @param resourceElement parent file element
       * @param hm
       * @param parentPath
       * @throws Exception
       */
-     protected synchronized void importResource(MultipartForm data, Element resourceElement, HierarchyManager hm,
-         String parentPath) throws Exception {
+     protected synchronized void importResource(MultipartForm data, Element resourceElement, HierarchyManager hm, String parentPath) throws Exception {
 
          // throws an exception in case you don't have the permission
          Access.isGranted(hm.getAccessManager(), parentPath, Permission.WRITE);
@@ -429,14 +413,9 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          String fileName = resourceElement.getAttributeValue(BaseSyndicatorImpl.RESOURCE_MAPPING_ID_ATTRIBUTE);
          // do actual import
          GZIPInputStream inputStream = new GZIPInputStream(data.getDocument(fileName).getStream());
-         hm.getWorkspace().getSession().importXML(
-             parentPath,
-             inputStream,
-             ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
+         hm.getWorkspace().getSession().importXML(parentPath, inputStream, ImportUUIDBehavior.IMPORT_UUID_COLLISION_REMOVE_EXISTING);
          IOUtils.closeQuietly(inputStream);
-         Iterator fileListIterator = resourceElement
-             .getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT)
-             .iterator();
+         Iterator fileListIterator = resourceElement.getChildren(BaseSyndicatorImpl.RESOURCE_MAPPING_FILE_ELEMENT).iterator();
          // parent path
          if (parentPath.equals("/")) {
              parentPath = ""; // remove / if its a root
@@ -462,15 +441,13 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              hm.delete(handle);
              hm.save();
          } catch (ItemNotFoundException e) {
-             if (log.isDebugEnabled()) {
-                 log.debug("Unable to delete node", e);
-             }
+             log.debug("Unable to delete node", e);
          }
          return handle;
      }
 
      /**
-      * get hierarchy manager
+      * get hierarchy manager.
       * @param request
       * @throws ExchangeException
       */
@@ -491,7 +468,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      }
 
      /**
-      * cleans temporary store and removes any locks set
+      * cleans temporary store and removes any locks set.
       * @param request
       */
      protected void cleanUp(HttpServletRequest request) {
@@ -511,9 +488,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
                  }
              } catch (LockException le) {
                  // either repository does not support locking OR this node never locked
-                 if (log.isDebugEnabled()) {
-                     log.debug(le.getMessage());
-                 }
+                 log.debug(le.getMessage());
              } catch (RepositoryException re) {
                  // should never come here
                  log.warn("Exception caught", re);
@@ -534,7 +509,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
      }
 
      /**
-      * apply lock
+      * apply lock.
       * @param request
       */
      protected void applyLock(HttpServletRequest request) throws ExchangeException {
@@ -547,17 +522,14 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              content.lock(true, true);
          } catch (LockException le) {
              // either repository does not support locking OR this node never locked
-             if (log.isDebugEnabled()) {
-                 log.debug(le.getMessage());
-             }
+             log.debug(le.getMessage());
          } catch (RepositoryException re) {
              // should never come here ... but does when creating new piece of content on the author and mgnl tries to deactivate it on public automatically ...
              log.warn("Exception caught", re);
          }
      }
 
-     protected Content getNode(HttpServletRequest request)
-             throws ExchangeException, RepositoryException {
+     protected Content getNode(HttpServletRequest request) throws ExchangeException, RepositoryException {
          String action = request.getHeader(BaseSyndicatorImpl.ACTION);
          if (request.getHeader(BaseSyndicatorImpl.PARENT_PATH) != null) {
              log.debug("parent path:" + this.getParentPath(request));
@@ -568,7 +540,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          }
          // 3.0 protocol
          else {
-             log.debug("path:" + request.getHeader(BaseSyndicatorImpl.PATH));
+             log.debug("path: {}", request.getHeader(BaseSyndicatorImpl.PATH));
              return this.getHierarchyManager(request).getContent(request.getHeader(BaseSyndicatorImpl.PATH));
          }
      }
