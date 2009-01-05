@@ -73,18 +73,15 @@ public class ConfigLoader {
                 System.setProperty(JAAS_PROPERTYNAME, Path.getAbsoluteFileSystemPath("WEB-INF/config/jaas.config"));
             }
             catch (SecurityException se) {
-                log.error("Failed to set " + JAAS_PROPERTYNAME + ", check application server settings");
+                log.error("Failed to set {}, check application server settings", JAAS_PROPERTYNAME );
                 log.error(se.getMessage(), se);
                 log.info("Aborting startup");
                 return;
             }
-        }
-        else {
-            if (log.isInfoEnabled()) {
+        } else {
                 log.info("JAAS config file set by parent container or some other application"); //$NON-NLS-1$
-                log.info("Config in use " + System.getProperty(JAAS_PROPERTYNAME)); //$NON-NLS-1$ //$NON-NLS-2$
+                log.info("Config in use {}", System.getProperty(JAAS_PROPERTYNAME)); //$NON-NLS-1$ //$NON-NLS-2$
                 log.info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
-            }
         }
     }
 
@@ -102,7 +99,7 @@ public class ConfigLoader {
         license.init();
         license.printVersionInfo();
 
-        long millis = System.currentTimeMillis();
+        final long millis = System.currentTimeMillis();
         log.info("Initializing content repositories"); //$NON-NLS-1$
 
         ContentRepository.init();
@@ -119,7 +116,7 @@ public class ConfigLoader {
 
             // finished
             setConfigured(true);
-            log.info("Configuration loaded (took " + ((System.currentTimeMillis() - millis) / 1000) + " seconds)"); //$NON-NLS-1$
+            log.info("Configuration loaded (took {} seconds)", Long.toString((System.currentTimeMillis() - millis) / 1000)); //$NON-NLS-1$
 
         } catch (ModuleManagementException e) {
             log.error("An error occurred during initialization", e); //$NON-NLS-1$
