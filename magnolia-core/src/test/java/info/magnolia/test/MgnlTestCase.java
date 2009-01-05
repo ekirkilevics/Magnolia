@@ -65,6 +65,7 @@ public abstract class MgnlTestCase extends TestCase {
     private static Logger log = LoggerFactory.getLogger(MgnlTestCase.class);
 
     protected void setUp() throws Exception {
+        super.setUp();
         // ignore mapping warnings
         org.apache.log4j.Logger.getLogger(ContentRepository.class).setLevel(Level.ERROR);
 
@@ -79,9 +80,9 @@ public abstract class MgnlTestCase extends TestCase {
     }
 
     protected void tearDown() throws Exception {
-        super.tearDown();
         FactoryUtil.clear();
         MgnlContext.setInstance(null);
+        super.tearDown();
     }
 
     protected void setMagnoliaProperties() throws Exception {

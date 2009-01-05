@@ -145,12 +145,11 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     }
 
     protected void tearDown() throws Exception {
-        super.tearDown();
-
         if(isAutoStart()){
             shutdownRepository(true);
         }
         SystemProperty.getProperties().clear();
+        super.tearDown();
     }
 
     protected void shutdownRepository(boolean cleanup) throws IOException {

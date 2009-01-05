@@ -43,21 +43,11 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.test.RepositoryTestCase;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author philipp
  * @version $Id$
- *
  */
 public class BaseVersionManagerTest extends RepositoryTestCase {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(BaseVersionManagerTest.class);
 
     public void testCreateAndRestoreVersion() throws RepositoryException{
         HierarchyManager hm = MgnlContext.getHierarchyManager(ContentRepository.WEBSITE);
