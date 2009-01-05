@@ -306,7 +306,7 @@ public class ReceiveFilterTest extends TestCase {
         final HttpServletResponse response = createStrictMock(HttpServletResponse.class);
         final FilterChain filterChain = createStrictMock(FilterChain.class);
         final SystemContext sysCtx = createStrictMock(SystemContext.class);
-        final WebContext ctx = createStrictMock(WebContext.class);
+        final WebContext ctx = createMock(WebContext.class);
         final HierarchyManager hm = createMock(HierarchyManager.class);
         final Workspace workspace = createStrictMock(Workspace.class);
         final Session session = createStrictMock(Session.class);
@@ -333,11 +333,11 @@ public class ReceiveFilterTest extends TestCase {
         expect(request.getHeader("mgnlExchangeFilterRule")).andReturn("mgnl:contentNode,mgnl:metaData,mgnl:resource,").anyTimes(); // this is hardcoded to resources.xml in BaseSyndicatorImpl
         expect(request.getHeader("Authorization")).andReturn(null).anyTimes();
         expect(request.getParameter("mgnlUserId")).andReturn("testuser").anyTimes();
-        expect(sysCtx.getHierarchyManager("some-repo", "some-workspace")).andReturn(hm).anyTimes();
 
         // checking parent node
         testCallBack.checkParent(hm);
 
+        expect(ctx.getHierarchyManager("some-repo", "some-workspace")).andReturn(hm).anyTimes();
         expect(ctx.getPostedForm()).andReturn(form).anyTimes();
 
         testCallBack.checkPermissions(hm);
