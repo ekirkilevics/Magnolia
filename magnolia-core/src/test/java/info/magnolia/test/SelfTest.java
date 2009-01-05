@@ -34,13 +34,13 @@
 package info.magnolia.test;
 
 import junit.framework.TestCase;
-import org.apache.jackrabbit.api.JackrabbitRepository;
 import org.apache.jackrabbit.core.jndi.RegistryHelper;
 import org.apache.jackrabbit.core.jndi.provider.DummyInitialContextFactory;
 
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.jcr.SimpleCredentials;
+import javax.jcr.Repository;
 import java.util.Hashtable;
 
 /**
@@ -55,7 +55,7 @@ public class SelfTest extends TestCase {
      * Jackrabbit keeps a cache of jndi references since 1.4.6
      * See https://issues.apache.org/jira/browse/JCR-1778
      */
-    public void testJackrabbitUnregistersPropertly() throws Exception {
+    public void testJackrabbitUnregistersProperly() throws Exception {
         Hashtable environment = new Hashtable();
         environment.put(Context.INITIAL_CONTEXT_FACTORY, DummyInitialContextFactory.class.getName());
         environment.put(Context.PROVIDER_URL, "http://jackrabbit.apache.org/");
@@ -68,7 +68,7 @@ public class SelfTest extends TestCase {
         // Create first repository
         {
             RegistryHelper.registerRepository(context, key, xml, dir, true);
-            final JackrabbitRepository repository = (JackrabbitRepository) context.lookup(key);
+            final Repository repository = (Repository) context.lookup(key);
             repository.login(new SimpleCredentials("admin", "admin".toCharArray())).logout(); // throws an IllegalStateException!
             RegistryHelper.unregisterRepository(context, key);
         }
@@ -77,7 +77,7 @@ public class SelfTest extends TestCase {
         // Create second repository with the same configuration
         {
             RegistryHelper.registerRepository(context, key, xml, dir, true);
-            final JackrabbitRepository repository = (JackrabbitRepository) context.lookup(key);
+            final Repository repository = (Repository) context.lookup(key);
             repository.login().logout(); // throws an IllegalStateException!
             RegistryHelper.unregisterRepository(context, key);
         }
