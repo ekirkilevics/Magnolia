@@ -39,9 +39,7 @@ import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -71,8 +69,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public class RenderingFilter extends AbstractMgnlFilter {
-
-    private static Logger log = LoggerFactory.getLogger(RenderingFilter.class);
+    private static final Logger log = LoggerFactory.getLogger(RenderingFilter.class);
 
     /**
      * All HTTP/s requests are handled here.
@@ -106,9 +103,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 catch (IOException e) {
                     // don't log at error level since tomcat typically throws a
                     // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
-                    if (log.isDebugEnabled()) {
-                        log.debug("Exception flushing response " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
-                    }
+                    log.debug("Exception flushing response " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
                 }
 
             }
@@ -169,9 +164,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
             catch (IOException e) {
                 // don't log at error level since tomcat tipically throws a
                 // org.apache.catalina.connector.ClientAbortException if the user stops loading the page
-                if (log.isDebugEnabled()) {
-                    log.debug("Exception while dispatching resource " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
-                }
+                log.debug("Exception while dispatching resource " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
             }
             catch (Exception e) {
                 log.error("Exception while dispatching resource  " + e.getClass().getName() + ": " + e.getMessage(), e); //$NON-NLS-1$ //$NON-NLS-2$
@@ -180,9 +173,7 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 IOUtils.closeQuietly(is);
             }
         }
-        if (log.isDebugEnabled()) {
-            log.debug("Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI()); //$NON-NLS-1$
-        }
+        log.debug("Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI()); //$NON-NLS-1$
 
         if (!response.isCommitted()) {
             response.sendError(HttpServletResponse.SC_NOT_FOUND);
