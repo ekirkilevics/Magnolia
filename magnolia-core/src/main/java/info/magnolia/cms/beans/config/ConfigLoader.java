@@ -56,11 +56,6 @@ public class ConfigLoader {
     private static final String JAAS_PROPERTYNAME = "java.security.auth.login.config";
 
     /**
-     * Is this magnolia istance configured?
-     */
-    private static boolean configured;
-
-    /**
      * Initialize a ConfigLoader instance. All the supplied parameters will be set in
      * <code>info.magnolia.cms.beans.runtime.SystemProperty</code>
      * @param context ServletContext
@@ -115,48 +110,13 @@ public class ConfigLoader {
             VersionConfig.getInstance().init();
 
             // finished
-            setConfigured(true);
             log.info("Configuration loaded (took {} seconds)", Long.toString((System.currentTimeMillis() - millis) / 1000)); //$NON-NLS-1$
 
         } catch (ModuleManagementException e) {
             log.error("An error occurred during initialization", e); //$NON-NLS-1$
-            enterListeningMode();
         } catch (ConfigurationException e) {
             log.error("An error occurred during initialization", e); //$NON-NLS-1$
-            enterListeningMode();
         }
 
     }
-
-    /**
-     * Returns true is magnolia is running with all basic configuration.
-     * @return <code>true</code> if Magnolia is configured
-     *
-     * @deprecated this is very dubious - single use is probably useless.
-     */
-    public static boolean isConfigured() {
-        return configured;
-    }
-
-    /**
-     * Set the current state of Magnolia.
-     * @param cfg <code>true</code> if Magnolia is configured
-     *
-     * @deprecated this is very dubious - single use is probably useless.
-     */
-    private static void setConfigured(boolean cfg) {
-        configured = cfg;
-    }
-
-    /**
-     * Set the configured propery to false and print out an informative message to System.out.
-     */
-    private void enterListeningMode() {
-        System.out.println("\n-----------------------------------------------------------------"); //$NON-NLS-1$
-        System.out.println("Server not configured, entering in listening mode for activation."); //$NON-NLS-1$
-        System.out.println("You can now activate content from an existing magnolia instance."); //$NON-NLS-1$
-        System.out.println("-----------------------------------------------------------------\n"); //$NON-NLS-1$
-        setConfigured(false);
-    }
-
 }

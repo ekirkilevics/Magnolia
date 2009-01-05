@@ -459,12 +459,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              throw new ExchangeException("Repository or workspace name not sent, unable to activate.");
          }
 
-         if (ConfigLoader.isConfigured()) {
-             return MgnlContext.getHierarchyManager(repositoryName, workspaceName);
-         }
-
-         return MgnlContext.getSystemContext().getHierarchyManager(repositoryName, workspaceName);
-
+         return MgnlContext.getHierarchyManager(repositoryName, workspaceName);
      }
 
      /**
