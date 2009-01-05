@@ -119,11 +119,18 @@ public final class MessagesManager {
      */
     private Map messages;
 
+    private String defaultBasename = DEFAULT_BASENAME;
+
     public MessagesManager() {
         // setting default language (en)
         setDefaultLocale(FALLBACK_LOCALE);
 
         initLRUMap();
+    }
+
+    // for tests
+    void setDefaultBasename(String defaultBasename) {
+        this.defaultBasename = defaultBasename;
     }
 
     /**
@@ -136,9 +143,9 @@ public final class MessagesManager {
         // setting fallback
         context.setAttribute(Config.FMT_FALLBACK_LOCALE + ".application", FALLBACK_LOCALE); //$NON-NLS-1$
         // setting basename
-        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".application", DEFAULT_BASENAME); //$NON-NLS-1$
+        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".application", defaultBasename); //$NON-NLS-1$
         // for Resin and other J2EE Containers
-        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT, DEFAULT_BASENAME);
+        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT, defaultBasename);
 
         load();
         registerEventListener();
@@ -252,13 +259,13 @@ public final class MessagesManager {
 
     private Messages getMessagesInternal(String basename, Locale locale) {
         if (StringUtils.isEmpty(basename)) {
-            basename = DEFAULT_BASENAME;
+            basename = defaultBasename;
         }
         return (Messages) messages.get(new MessagesID(basename, locale));
     }
 
     public static Messages getMessages() {
-        return getMessages(DEFAULT_BASENAME, getCurrentLocale());
+        return getMessages(null, getCurrentLocale());
     }
 
     public static Messages getMessages(String basename) {
@@ -266,7 +273,7 @@ public final class MessagesManager {
     }
     
     public static Messages getMessages(Locale locale) {
-        return getMessages(DEFAULT_BASENAME, locale);
+        return getMessages(null, locale);
     }
 
     public static Messages getMessages(String basename, Locale locale) {

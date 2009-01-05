@@ -63,7 +63,8 @@ public class MessagesManagerTest extends TestCase {
 
         replay(ctx, sysCtx);
 
-        // MessagesManager.getInstance().setDefaultLocale("en");
+        // Replace the default bundle (adminterface) by a fake one - see MAGNOLIA-2528
+        MessagesManager.getInstance().setDefaultBasename("info.magnolia.cms.i18n.fakedefault");
     }
 
     protected void tearDown() throws Exception {
