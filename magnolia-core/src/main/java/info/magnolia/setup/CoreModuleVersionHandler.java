@@ -66,7 +66,9 @@ import java.util.List;
 public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     public static final String BOOTSTRAP_AUTHOR_INSTANCE_PROPERTY = "magnolia.bootstrap.authorInstance";
 
-    final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.auditLogging.xml");
+    // TODO : why is this a BootstrapConditionally and not a BootstrapSingleResource ?
+    private final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.auditLogging.xml");
+    private final BootstrapSingleResource bootstrapFreemarker = new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration", "/mgnl-bootstrap/core/config.server.freemarker.xml");
 
     public CoreModuleVersionHandler() {
         super();
@@ -96,8 +98,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
 
         register(DeltaBuilder.update("4.0", "")
                 .addTask(auditTrailManagerTask)
-                .addTask(new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration",
-                "/mgnl-bootstrap/core/config.server.freemarker.xml"))
+                .addTask(bootstrapFreemarker)
         );
     }
 
@@ -107,6 +108,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         l.add(new CheckMagnoliaDevelopProperty());
         l.add(new CheckNodesForMixVersionable());
         l.add(auditTrailManagerTask);
+        l.add(bootstrapFreemarker);
         return l;
     }
 
