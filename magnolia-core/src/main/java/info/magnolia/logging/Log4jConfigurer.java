@@ -37,7 +37,6 @@ import info.magnolia.cms.core.SystemProperty;
 import info.magnolia.cms.util.ConfigUtil;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Map;
 import java.util.Properties;
 import java.util.Collections;
@@ -102,12 +101,10 @@ public abstract class Log4jConfigurer {
             boolean isXml = log4jFileName.toLowerCase().endsWith(".xml"); //$NON-NLS-1$
 
             log("Initializing Log4J from [" + log4jFileName + "]"); //$NON-NLS-1$ //$NON-NLS-2$
-            
-            InputStream stream = ConfigUtil.getConfigFile(log4jFileName);
-            
-            String config;
+
+            final String config;
             try {
-                config = ConfigUtil.replaceTokens(stream);
+                config = ConfigUtil.getTokenizedConfigFile(log4jFileName);
             }
             catch (IOException e) {
                 log("Unable to initialize Log4J from [" + log4jFileName + "], got a IOException " + e.getMessage());

@@ -58,7 +58,6 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.SimpleCredentials;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.Collection;
 import java.util.Hashtable;
 import java.util.Iterator;
@@ -405,8 +404,8 @@ public final class ContentRepository {
      */
     private static Document buildDocument() throws JDOMException, IOException {
         String path = SystemProperty.getProperty(SystemProperty.MAGNOLIA_REPOSITORIES_CONFIG);
-        InputStream stream = ConfigUtil.getConfigFile(path);
-        return ConfigUtil.string2JDOM(ConfigUtil.replaceTokens(stream));
+        final String tokenizedConfig = ConfigUtil.getTokenizedConfigFile(path);
+        return ConfigUtil.string2JDOM(tokenizedConfig);
     }
 
     /**

@@ -106,10 +106,19 @@ public class ConfigUtil {
         }
     }
 
+    public static String getTokenizedConfigFile(String fileName) throws IOException {
+        final InputStream stream = getConfigFile(fileName);
+        if (stream == null) {
+            throw new IOException("Can't load file: " + fileName);
+        }
+        return replaceTokens(stream);
+    }
+
     /**
      * Try to get the file. Get it first in the file system, then from the resources
      * @param fileName
      * @return the input stream
+     * @deprecated since 4.0 - use getTokenizedConfigFile
      */
     public static InputStream getConfigFile(String fileName) {
         File file = new File(Path.getAppRootDir(), fileName);
@@ -158,9 +167,7 @@ public class ConfigUtil {
 
     /**
      * Read the stream and replace tokens.
-     * @param stream
-     * @return the string with replaced tokens
-     * @throws IOException
+     * @deprecated since 4.0 - use getTokenizedConfigFile
      */
     public static String replaceTokens(InputStream stream) throws IOException {
         final String config = IOUtils.toString(stream);
