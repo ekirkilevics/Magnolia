@@ -74,7 +74,7 @@ public class VersionTest extends TestCase {
             Version.parseVersion("3.0.0-/slash+plus");
             fail("should have failed");
         } catch (RuntimeException e) {
-            assertEquals("Invalid classifier: /slash+plus", e.getMessage());
+            assertEquals("Invalid classifier: \"/slash+plus\" in version \"3.0.0-/slash+plus\"", e.getMessage());
         }
     }
 
@@ -92,19 +92,19 @@ public class VersionTest extends TestCase {
     }
 
     public void testShouldRejectInvalidInput() {
-        assertInvalidVersion("Invalid major revision: ", ".4");
-        assertInvalidVersion("Invalid major revision: ", ".4.2");
-        assertInvalidVersion("Invalid major revision: ", ".4.2.3");
-        assertInvalidVersion("Invalid major revision: ", ".4.2.3-foo");
-        assertInvalidVersion("Invalid major revision: X", "X");
-        assertInvalidVersion("Invalid major revision: X", "X.3.2");
-        assertInvalidVersion("Invalid major revision: X", "X.3.2-SNAPSHOT");
-        assertInvalidVersion("Invalid minor revision: ", "3..");
-        assertInvalidVersion("Invalid minor revision: Y", "3.Y");
-        assertInvalidVersion("Invalid patch revision: Z", "3.4.Z");
-        assertInvalidVersion("Invalid patch revision: Z3", "3.4.Z3");
-        assertInvalidVersion("Invalid classifier: ", "3.4.3-");
-        assertInvalidVersion("Invalid classifier: ?=)", "3.4.3-?=)");
+        assertInvalidVersion("Invalid major revision: \"\" in version \".4\"", ".4");
+        assertInvalidVersion("Invalid major revision: \"\" in version \".4.2\"", ".4.2");
+        assertInvalidVersion("Invalid major revision: \"\" in version \".4.2.3\"", ".4.2.3");
+        assertInvalidVersion("Invalid major revision: \"\" in version \".4.2.3-foo\"", ".4.2.3-foo");
+        assertInvalidVersion("Invalid major revision: \"X\" in version \"X\"", "X");
+        assertInvalidVersion("Invalid major revision: \"X\" in version \"X.3.2\"", "X.3.2");
+        assertInvalidVersion("Invalid major revision: \"X\" in version \"X.3.2-SNAPSHOT\"", "X.3.2-SNAPSHOT");
+        assertInvalidVersion("Invalid minor revision: \"\" in version \"3..\"", "3..");
+        assertInvalidVersion("Invalid minor revision: \"Y\" in version \"3.Y\"", "3.Y");
+        assertInvalidVersion("Invalid patch revision: \"Z\" in version \"3.4.Z\"", "3.4.Z");
+        assertInvalidVersion("Invalid patch revision: \"Z3\" in version \"3.4.Z3\"", "3.4.Z3");
+        assertInvalidVersion("Invalid classifier: \"\" in version \"3.4.3-\"", "3.4.3-");
+        assertInvalidVersion("Invalid classifier: \"?=)\" in version \"3.4.3-?=)\"", "3.4.3-?=)");
     }
 
     public void test3and300shouldBeEquivalent() {

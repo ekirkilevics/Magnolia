@@ -46,8 +46,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision: $ ($Author: $)
  */
 public class Version {
-
-    public static final Logger log = LoggerFactory.getLogger(Version.class);
+    private static final Logger log = LoggerFactory.getLogger(Version.class);
 
     public static final Version UNDEFINED_FROM = new UndefinedEarlierVersion();
     public static final Version UNDEFINED_TO = new UndefinedLaterVersion();
@@ -70,37 +69,39 @@ public class Version {
     }
 
     private Version(String versionStr) {
+        final String numbers;
         final int classifierIdx = versionStr.indexOf('-');
         if (classifierIdx > 0) {
             classifier = versionStr.substring(classifierIdx + 1);
             if (!classifierValidation.matcher(classifier).matches()) {
-                throw new RuntimeException("Invalid classifier: " + classifier);
+                throw new IllegalArgumentException("Invalid classifier: \"" + classifier + "\" in version \"" + versionStr + "\"");
             }
-            versionStr = versionStr.substring(0, classifierIdx);
+            numbers = versionStr.substring(0, classifierIdx);
         } else {
             classifier = null;
+            numbers = versionStr;
         }
 
-        final String[] strings = versionStr.split("\\.", -1);
+        final String[] strings = numbers.split("\\.", -1);
         if (strings.length > 0) {
-            major = getShortFor("major revision", strings[0]);
+            major = getShortFor("major revision", versionStr, strings[0]);
         } else {
-            major = getShortFor("major revision", versionStr);
+            major = getShortFor("major revision", versionStr, versionStr);
         }
         if (strings.length > 1) {
-            minor = getShortFor("minor revision", strings[1]);
+            minor = getShortFor("minor revision", versionStr, strings[1]);
         } else {
             minor = 0;
         }
         if (strings.length > 2) {
-            patch = getShortFor("patch revision", strings[2]);
+            patch = getShortFor("patch revision", versionStr, strings[2]);
         } else {
             patch = 0;
         }
     }
 
     /**
-     * Factory method that will parse a version string and return the correct Version implementation,
+     * Factory method that will parse a version string and return the correct Version implementation.
      * @param versionStr version as string, for example <code>1.2.3-test</code>. The String
      * <code>${project.version}</code> is interpreted as an undefined version during development ant it will always
      * match version ranges
@@ -177,11 +178,11 @@ public class Version {
         return major + "." + minor + "." + patch + (classifier != null ? "-" + classifier : "");
     }
 
-    private short getShortFor(String message, String input) {
+    private short getShortFor(String message, String versionStr, String input) {
         try {
             return Short.parseShort(input);
         } catch (NumberFormatException e) {
-            throw new RuntimeException("Invalid " + message + ": " + input);
+            throw new RuntimeException("Invalid " + message + ": \"" + input + "\" in version \"" + versionStr + "\"");
         }
     }
 
