@@ -5,9 +5,7 @@
   repositories are in memory only and any change is lost upon restart
 -->
 <Repository>
-  <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem">
-    <param name="path" value="${rep.home}/repository" />
-  </FileSystem>
+  <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem" />
   <Security appName="Jackrabbit">
     <AccessManager class="org.apache.jackrabbit.core.security.SimpleAccessManager"></AccessManager>
     <LoginModule class="org.apache.jackrabbit.core.security.SimpleLoginModule">
@@ -16,9 +14,7 @@
   </Security>
   <Workspaces rootPath="${rep.home}/workspaces" defaultWorkspace="default" />
   <Workspace name="default">
-    <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem">
-      <param name="path" value="${wsp.home}/default" />
-    </FileSystem>
+    <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem" />
     <PersistenceManager class="org.apache.jackrabbit.core.state.mem.InMemPersistenceManager">
       <param name="initialCapacity" value="100000" />
       <param name="loadFactor" value="0.3" />
@@ -46,9 +42,7 @@
     </SearchIndex>
   </Workspace>
   <Versioning rootPath="${rep.home}/version">
-    <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem">
-      <param name="path" value="${rep.home}/workspaces/version" />
-    </FileSystem>
+    <FileSystem class="org.apache.jackrabbit.core.fs.mem.MemoryFileSystem" />
     <PersistenceManager class="org.apache.jackrabbit.core.state.mem.InMemPersistenceManager">
       <param name="initialCapacity" value="100000" />
       <param name="loadFactor" value="0.3" />

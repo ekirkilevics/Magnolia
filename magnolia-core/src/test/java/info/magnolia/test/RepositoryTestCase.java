@@ -45,6 +45,7 @@ import info.magnolia.test.mock.MockContext;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.core.jndi.BindableRepositoryFactory;
 import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
@@ -53,9 +54,10 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Field;
+import java.util.Map;
 
 /**
- *
  * @author ashapochka
  * @version $Revision: $ ($Author: $)
  */
@@ -76,10 +78,24 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        if(isAutoStart()){
+
+        workaroundJCR1778();
+
+        if (isAutoStart()) {
             cleanUp();
             startRepository();
         }
+    }
+
+    /**
+     * @deprecated - workaround until JCR-1778 is fixed
+     * @see <a href="https://issues.apache.org/jira/browse/JCR-1778">JCR-1778</a>
+     */
+    static void workaroundJCR1778() throws NoSuchFieldException, IllegalAccessException {
+        final Field cacheField = BindableRepositoryFactory.class.getDeclaredField("cache");
+        cacheField.setAccessible(true);
+        final Map cache = (Map) cacheField.get(null);
+        cache.clear();
     }
 
     protected void modifyContextesToUseRealRepository() {
@@ -88,14 +104,14 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
         SystemRepositoryStrategy repositoryStrategy = new SystemRepositoryStrategy(systemContext);
 
         //update the mock context
-        ((MockContext)systemContext).setRepositoryStrategy(repositoryStrategy);
-        ((MockContext)MgnlContext.getInstance()).setRepositoryStrategy(repositoryStrategy);
+        ((MockContext) systemContext).setRepositoryStrategy(repositoryStrategy);
+        ((MockContext) MgnlContext.getInstance()).setRepositoryStrategy(repositoryStrategy);
     }
 
     protected void startRepository() throws Exception {
         final Logger logger = Logger.getLogger("info.magnolia");
         final Level originalLogLevel = logger.getLevel();
-        if(this.isQuiet()){
+        if (this.isQuiet()) {
             logger.setLevel(Level.WARN);
         }
         ContentRepository.REPOSITORY_USER = SystemProperty.getProperty("magnolia.connection.jcr.userId");
@@ -122,30 +138,30 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
 
     protected InputStream getRepositoryConfigFileStream() throws Exception {
         String configFile = getRepositoryConfigFileName();
-       return ClasspathResourcesUtil.getResource(configFile).openStream();
+        return ClasspathResourcesUtil.getResource(configFile).openStream();
     }
 
     protected InputStream getJackrabbitRepositoryConfigFileStream() throws Exception {
         String configFile = getJackrabbitRepositoryConfigFileName();
-       return ClasspathResourcesUtil.getResource(configFile).openStream();
+        return ClasspathResourcesUtil.getResource(configFile).openStream();
     }
 
     protected String getRepositoryConfigFileName() {
-        if(StringUtils.isEmpty(repositoryConfigFileName)){
+        if (StringUtils.isEmpty(repositoryConfigFileName)) {
             repositoryConfigFileName = SystemProperty.getProperty(REPO_CONF_PROPERTY);
         }
         return repositoryConfigFileName;
     }
 
     protected String getJackrabbitRepositoryConfigFileName() {
-        if(StringUtils.isEmpty(jackrabbitRepositoryConfigFileName)){
+        if (StringUtils.isEmpty(jackrabbitRepositoryConfigFileName)) {
             jackrabbitRepositoryConfigFileName = SystemProperty.getProperty(JACKRABBIT_REPO_CONF_PROPERTY);
         }
         return jackrabbitRepositoryConfigFileName;
     }
 
     protected void tearDown() throws Exception {
-        if(isAutoStart()){
+        if (isAutoStart()) {
             shutdownRepository(true);
         }
         SystemProperty.getProperties().clear();
@@ -155,13 +171,13 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
     protected void shutdownRepository(boolean cleanup) throws IOException {
         final Logger logger = Logger.getLogger("info.magnolia");
         final Level originalLogLevel = logger.getLevel();
-        if(this.isQuiet()){
+        if (this.isQuiet()) {
             logger.setLevel(Level.WARN);
         }
         MgnlContext.release();
         MgnlContext.getSystemContext().release();
         ContentRepository.shutdown();
-        if(cleanup){
+        if (cleanup) {
             cleanUp();
         }
         logger.setLevel(originalLogLevel);
@@ -171,11 +187,11 @@ public abstract class RepositoryTestCase extends MgnlTestCase {
         FileUtils.deleteDirectory(new File(SystemProperty.getProperty("magnolia.repositories.home")));
     }
 
-    protected void bootstrapSingleResource(String resource) throws Exception{
+    protected void bootstrapSingleResource(String resource) throws Exception {
         BootstrapUtil.bootstrap(new String[]{resource}, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
     }
 
-    protected void bootstrap(ClasspathResourcesUtil.Filter filter) throws Exception{
+    protected void bootstrap(ClasspathResourcesUtil.Filter filter) throws Exception {
         String[] resourcesToBootstrap = ClasspathResourcesUtil.findResources(filter);
         BootstrapUtil.bootstrap(resourcesToBootstrap, ImportUUIDBehavior.IMPORT_UUID_COLLISION_THROW);
     }

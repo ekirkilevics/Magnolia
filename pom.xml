@@ -186,7 +186,7 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-core</artifactId>
-        <version>1.4.5</version>
+        <version>1.5.0</version>
         <exclusions>
           <exclusion>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -197,7 +197,13 @@ for Java Content Repositories (JCR).
       <dependency>
         <groupId>org.apache.jackrabbit</groupId>
         <artifactId>jackrabbit-text-extractors</artifactId>
-        <version>1.4</version>
+        <version>1.5.0</version>
+        <exclusions>
+          <exclusion>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+          </exclusion>          
+        </exclusions>
       </dependency>
       <dependency>
         <groupId>org.apache.derby</groupId>

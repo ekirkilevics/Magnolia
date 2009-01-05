@@ -98,7 +98,7 @@
     <dependency>
       <!-- required by commons-httpclient, commons-betwixt, commons-discovery, commons-chain in replacement of commons-logging-->
       <groupId>org.slf4j</groupId>
-      <artifactId>jcl104-over-slf4j</artifactId>
+      <artifactId>jcl-over-slf4j</artifactId>
     </dependency>
     <dependency>
       <groupId>xerces</groupId>
