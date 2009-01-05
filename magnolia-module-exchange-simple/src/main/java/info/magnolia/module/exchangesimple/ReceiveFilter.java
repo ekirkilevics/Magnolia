@@ -80,12 +80,19 @@ import java.util.zip.GZIPInputStream;
 
 
 /**
+ * This filter receives activation requests from another instance and applies them.
+ * 
  * @author Sameer Charles
  * $Id$
  */
 public class ReceiveFilter extends AbstractMgnlFilter {
 
     private static final Logger log = LoggerFactory.getLogger(ReceiveFilter.class);
+
+    /**
+     * @deprecated since 3.5. This is the attribute name that was used in 3.0, so we keep to be able to activate from 3.0.
+     */
+    private static final String SIBLING_UUID_3_0 = "UUID";
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -260,7 +267,10 @@ public class ReceiveFilter extends AbstractMgnlFilter {
              try {
                  String siblingUUID = sibling.getAttributeValue(BaseSyndicatorImpl.SIBLING_UUID);
                  // be compatible with 3.0 (MAGNOLIA-2016)
-                 siblingUUID = StringUtils.defaultIfEmpty(siblingUUID, sibling.getAttributeValue(BaseSyndicatorImpl.DEPRECATED_SIBLING_UUID));
+                 if (StringUtils.isEmpty(siblingUUID)) {
+                     log.debug("Activating from a Magnolia 3.0 instance");
+                     siblingUUID = sibling.getAttributeValue(SIBLING_UUID_3_0);
+                 }
                  Content beforeContent = hm.getContentByUUID(siblingUUID);
                  parent.orderBefore(name, beforeContent.getName());
                  parent.save();

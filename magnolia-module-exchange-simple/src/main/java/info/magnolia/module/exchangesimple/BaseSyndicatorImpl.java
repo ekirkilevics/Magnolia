@@ -118,11 +118,6 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
      public static final String SIBLINGS_ELEMENT = "sibling";
 
-     /**
-      * @deprecated since 3.5. In 3.0 the sibling list was using the attribute name UUID where 3.5 uses siblingUUID
-      */
-     public static final String DEPRECATED_SIBLING_UUID = "UUID";
-
      public static final String SIBLING_UUID = "siblingUUID";
 
      public static final String RESOURCE_MAPPING_FILE_ELEMENT = "File";
