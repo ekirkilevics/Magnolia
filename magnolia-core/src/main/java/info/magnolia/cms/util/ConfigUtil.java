@@ -63,7 +63,7 @@ import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * Util used to process config files
+ * Util used to process config files.
  * @author Philipp Bracher
  * @version $Id$
  *
@@ -121,20 +121,14 @@ public class ConfigUtil {
                 url = new URL("file:" + file.getAbsolutePath()); //$NON-NLS-1$
             }
             catch (MalformedURLException e) {
-                log.error("Unable to read config file from [" //$NON-NLS-1$
-                    + fileName
-                    + "], got a MalformedURLException: " //$NON-NLS-1$
-                    , e);
+                log.error("Unable to read config file from [" + fileName + "], got a MalformedURLException: ", e);
                 return null;
             }
             try {
                 stream = url.openStream();
             }
             catch (IOException e) {
-                log.error("Unable to read config file from [" //$NON-NLS-1$
-                    + fileName
-                    + "], got a IOException " //$NON-NLS-1$
-                    ,e);
+                log.error("Unable to read config file from [" + fileName + "], got a IOException ", e);
                 return null;
             }
             return stream;
@@ -147,10 +141,7 @@ public class ConfigUtil {
                 stream = new FileInputStream(file);
             }
             catch (FileNotFoundException e) {
-                log.error("Unable to read config file from [" //$NON-NLS-1$
-                    + fileName
-                    + "], got a FileNotFoundException " //$NON-NLS-1$
-                    , e);
+                log.error("Unable to read config file from [" + fileName + "], got a FileNotFoundException ", e);
                 return null;
             }
             return stream;
@@ -159,30 +150,26 @@ public class ConfigUtil {
         try {
             return ClasspathResourcesUtil.getStream(fileName);
         } catch (IOException e) {
-            log.error("Unable to read config file from the resources [" //$NON-NLS-1$
-                    + fileName
-                    + "]" //$NON-NLS-1$
-                    , e);
+            log.error("Unable to read config file from the resources [" + fileName + "]", e);
         }
 
         return null;
     }
 
     /**
-     * Read the stream and replace tokens
+     * Read the stream and replace tokens.
      * @param stream
      * @return the string with replaced tokens
      * @throws IOException
      */
     public static String replaceTokens(InputStream stream) throws IOException {
-        String config;
-        config = IOUtils.toString(stream);
+        final String config = IOUtils.toString(stream);
         IOUtils.closeQuietly(stream);
         return replaceTokens(config);
     }
 
     /**
-     * Replace tokens in a string
+     * Replace tokens in a string.
      * @param config
      * @return
      * @throws IOException
@@ -196,35 +183,23 @@ public class ConfigUtil {
     }
 
     /**
-     * Convert the string to an DOM Document
-     * @param xml
-     * @return
-     * @throws ParserConfigurationException
-     * @throws SAXException
-     * @throws IOException
+     * Convert the string to an DOM Document.
+     * @deprecated since 4.0 - not used
      */
     public static Document string2DOM(String xml) throws ParserConfigurationException, SAXException, IOException {
         return string2DOM(xml, Collections.EMPTY_MAP);
     }
 
     /**
-     * Convert the string to a JDOM Document
-     * @param xml
-     * @return
-     * @throws JDOMException
-     * @throws IOException
+     * Convert the string to a JDOM Document.
      */
     public static org.jdom.Document string2JDOM(String xml) throws JDOMException, IOException{
         return string2JDOM(xml, Collections.EMPTY_MAP);
     }
 
     /**
-     * Uses a map to find the dtds in the resources
-     * @param xml
-     * @param dtds
-     * @return
-     * @throws JDOMException
-     * @throws IOException
+     * Uses a map to find the dtds in the resources.
+     * @deprecated since 4.0 - not used
      */
     public static org.jdom.Document string2JDOM(String xml, final Map dtds) throws JDOMException, IOException{
         SAXBuilder builder = new SAXBuilder();
@@ -233,7 +208,7 @@ public class ConfigUtil {
     }
 
     /**
-     * Uses a map to find dtds in the resources
+     * Uses a map to find dtds in the resources.
      * @param xml
      * @param dtds
      * @return

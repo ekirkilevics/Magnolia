@@ -38,9 +38,9 @@ import info.magnolia.cms.util.ConfigUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Collections;
 
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
@@ -78,7 +78,7 @@ import org.w3c.dom.Document;
 public abstract class Log4jConfigurer {
 
     /**
-     * Init parameter specifying the location of the Log4J config file
+     * Init parameter specifying the location of the Log4J config file.
      */
     public static final String LOG4J_CONFIG = "log4j.config"; //$NON-NLS-1$
 
@@ -116,28 +116,21 @@ public abstract class Log4jConfigurer {
 
             // classpath?
             if (isXml) {
-                Document document;
                 try {
-                    Map dtds = new HashMap();
-                    dtds.put("log4j.dtd", "/org/apache/log4j/xml/log4j.dtd");
-                    document = ConfigUtil.string2DOM(config, dtds);
-                }
-                catch (Exception e) {
+                    final Map dtds = Collections.singletonMap("log4j.dtd", "/org/apache/log4j/xml/log4j.dtd");
+                    final Document document = ConfigUtil.string2DOM(config, dtds);
+                    DOMConfigurator.configure(document.getDocumentElement());
+                } catch (Exception e) {
                     log("Unable to initialize Log4J from [" + log4jFileName + "], got an Exception during reading the xml file : " + e.getMessage());
-                    return;
                 }
-                DOMConfigurator.configure(document.getDocumentElement());
-            }
-            else {
-                Properties properties = new Properties();
+            } else {
                 try {
+                    final Properties properties = new Properties();
                     properties.load(IOUtils.toInputStream(config));
-                }
-                catch (IOException e) {
+                    PropertyConfigurator.configure(properties);
+                } catch (IOException e) {
                     log("Unable to initialize Log4J from ["+ log4jFileName+ "], got an Exception during reading the properties file : " + e.getMessage());
-                    return;
                 }
-                PropertyConfigurator.configure(properties);
             }
 
         }
