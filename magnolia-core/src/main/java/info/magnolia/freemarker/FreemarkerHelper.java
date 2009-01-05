@@ -163,7 +163,7 @@ public class FreemarkerHelper {
             }
         } else {
             // TODO - this should not be necessary - see MAGNOLIA-2533
-            log.warn("FreemarkerTemplateLoaderManager is not ready yet.");
+            log.debug("FreemarkerTemplateLoaderManager is not ready yet.");
         }
     }
 
