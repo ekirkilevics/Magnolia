@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008 Magnolia International
+ * This file Copyright (c) 2008-2009 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -39,7 +39,7 @@ import info.magnolia.content2bean.impl.CollectionPropertyHidingTransformer;
  * Omit the executors subnode.
  *
  * @author pbracher
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class CompositeExecutorTransformer extends CollectionPropertyHidingTransformer {
     public CompositeExecutorTransformer() {

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008 Magnolia International
+ * This file Copyright (c) 2008-2009 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -51,7 +51,7 @@ import org.apache.commons.lang.ArrayUtils;
  * A list of executors (for combining and ordering them).
  *
  * @author pbracher
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class CompositeExecutor implements CachePolicyExecutor {
 

@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008 Magnolia International
+ * This file Copyright (c) 2008-2009 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -41,7 +41,7 @@ import info.magnolia.module.cache.CachePolicyResult;
  * The pages are sent by using no cache headers.
  *
  * @author pbracher
- * @version $Revision: $ ($Author: $)
+ * @version $Revision$ ($Author$)
  */
 public class Never implements BrowserCachePolicy {
 

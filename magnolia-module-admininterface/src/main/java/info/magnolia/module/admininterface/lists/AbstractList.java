@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2003-2009 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -90,9 +90,6 @@ public abstract class AbstractList extends TemplatedMVCHandler {
         return FreemarkerUtil.createTemplateName(AbstractList.class, "html");
     }
 
-    /**
-     * @see com.obinary.magnolia.professional.PageMVCHandler#show()
-     */
     public String show() {
         String view = super.show();
         ListControl list = this.getList();

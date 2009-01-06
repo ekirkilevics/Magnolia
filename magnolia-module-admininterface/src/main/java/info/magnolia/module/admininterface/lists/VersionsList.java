@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2008 Magnolia International
+ * This file Copyright (c) 2003-2009 Magnolia International
  * Ltd.  (http://www.magnolia.info). All rights reserved.
  *
  *
@@ -217,9 +217,6 @@ public abstract class VersionsList extends AbstractList {
         this.repository = repository;
     }
 
-    /**
-     * @see com.obinary.magnolia.professional.lists.AbstractAdvancedSearchList#onRender()
-     */
     public String onRender() {
         return FreemarkerUtil.process(VersionsList.class, this);
     }
