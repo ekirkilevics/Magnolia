@@ -43,7 +43,7 @@
       <sv:value>25</sv:value>
     </sv:property>
     <sv:property sv:name="smtpServer" sv:type="String">
-      <sv:value>mail.obinary.com</sv:value>
+      <sv:value>localhost</sv:value>
     </sv:property>
     <sv:property sv:name="smtpUser" sv:type="String">
       <sv:value/>
