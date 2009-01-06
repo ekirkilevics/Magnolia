@@ -35,8 +35,11 @@ package info.magnolia.module.cache.executor;
 
 import javax.servlet.http.HttpServletRequest;
 
+import info.magnolia.module.ModuleRegistry;
 import info.magnolia.module.cache.CacheConfiguration;
+import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicyExecutor;
+import info.magnolia.voting.Voter;
 
 /**
  * The cache configuration is passed to the executor.
@@ -77,6 +80,19 @@ public abstract class AbstractExecutor implements CachePolicyExecutor {
             return true;
         }
         return true;
+    }
+
+    protected int getCompressionVote(final Object param, Class voter) {
+        CacheModule module = (CacheModule) ModuleRegistry.Factory.getInstance().getModuleInstance("cache");
+        Voter[] voters = module.getCompression().getVoters().getVoters();
+        int vote = 0;
+        for (int i = 0; i < voters.length; i++) {
+            if (voter.equals(voters[i].getClass())) {
+                vote = voters[i].vote(param);
+                break;
+            }
+        }
+        return vote;
     }
 
 }

@@ -45,12 +45,18 @@ import info.magnolia.module.cache.CacheFactory;
 import info.magnolia.module.cache.CacheModule;
 import info.magnolia.module.cache.CachePolicy;
 import info.magnolia.module.cache.CachePolicyResult;
+import info.magnolia.module.cache.ContentCompression;
 import info.magnolia.module.cache.FlushPolicy;
 import info.magnolia.module.cache.executor.Bypass;
 import info.magnolia.module.cache.executor.Store;
 import info.magnolia.module.cache.executor.UseCache;
 import info.magnolia.module.cache.util.GZipUtil;
 import info.magnolia.test.mock.MockUtil;
+import info.magnolia.voting.DefaultVoting;
+import info.magnolia.voting.Voting;
+import info.magnolia.voting.voters.ResponseContentTypeVoter;
+import info.magnolia.voting.voters.UserAgentVoter;
+import info.magnolia.voting.voters.VoterSet;
 import static info.magnolia.test.TestUtil.enumeration;
 import junit.framework.TestCase;
 import org.apache.commons.collections.map.MultiValueMap;
@@ -67,6 +73,8 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Set;
 import java.util.Calendar;
 import java.util.Date;
@@ -87,6 +95,8 @@ public class CacheFilterTest extends TestCase {
     private HttpServletRequest request;
     private HttpServletResponse response;
     private FilterChain filterChain;
+//    private HierarchyManager configHm;
+
 
     public void testFilterUsesGivenConfigAndCacheName() throws Exception {
         final ModuleRegistry moduleRegistry = new ModuleRegistryImpl();
@@ -166,8 +176,9 @@ public class CacheFilterTest extends TestCase {
         expect(response.isCommitted()).andReturn(false);
         expect(request.getDateHeader("If-Modified-Since")).andReturn(new Long(-1));
         response.flushBuffer();
-
-        expect(response.getContentType()).andReturn("some content type");
+        
+        // by default unknown content types are not compresible
+        expect(response.getContentType()).andReturn("some content type").times(2);
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
 
         cache.put(eq("/test-page"), isA(CachedPage.class));
@@ -175,6 +186,7 @@ public class CacheFilterTest extends TestCase {
             public Object answer() throws Throwable {
                 final Object[] args = getCurrentArguments();
                 final CachedPage cachedEntry = ((CachedPage) args[1]);
+                // default should be unzipped for unknown content types!!!
                 assertEquals("hello", new String(cachedEntry.getDefaultContent()));
                 assertEquals("some content type", cachedEntry.getContentType());
                 assertEquals("UTF-8", cachedEntry.getCharacterEncoding());
@@ -228,7 +240,7 @@ public class CacheFilterTest extends TestCase {
         expect(request.getDateHeader("If-Modified-Since")).andReturn(new Long(-1));
         response.flushBuffer();
 
-        expect(response.getContentType()).andReturn("text/html");
+        expect(response.getContentType()).andReturn("text/html").times(2);
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
 
         cache.put(eq("/test-page"), isA(CachedPage.class));
@@ -259,6 +271,7 @@ public class CacheFilterTest extends TestCase {
         final CachedPage cachedPage = new CachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
+        expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 7.0; Windows NT 5.1)").anyTimes();
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration("foo", "gzip", "bar"));
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(123);
@@ -278,10 +291,43 @@ public class CacheFilterTest extends TestCase {
         response.setContentLength(GZipUtil.gzip(dummyContent.getBytes()).length);
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
-
+        
+//        replay(configHm);
         executeFilterAndVerify();
 
         assertTrue(Arrays.equals(GZipUtil.gzip(dummyContent.getBytes()), fakedOut.toByteArray()));
+    }
+
+    public void testIgnoreEncodingAndServeContentFlatWhenUserAgentIsIE6() throws Exception {
+        final String dummyContent = "hello i'm a page that was cached";
+
+        final MultiValueMap headers = new MultiValueMap();
+        headers.put("Last-Modified", 2000l);
+        headers.put("Dummy", "dummy");
+        headers.put("Dummy", "dummy2");
+
+        final CachedPage cachedPage = new CachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 123, headers, System.currentTimeMillis());
+        expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
+        expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
+        expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 6.0; Windows NT 5.1)").anyTimes();
+//        expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration("foo", "gzip", "bar"));
+        final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
+        response.setStatus(123);
+        expect(response.containsHeader("Last-Modified")).andReturn(false);
+        response.addDateHeader("Last-Modified", 2000);
+        expect(response.containsHeader("Dummy")).andReturn(false);
+        response.addHeader("Dummy", "dummy");
+        response.addHeader("Dummy", "dummy2");
+        response.setContentType("text/plain");
+        response.setCharacterEncoding("ASCII");
+        response.setContentLength(32);
+        expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
+        response.flushBuffer();
+        
+//        replay(configHm);
+        executeFilterAndVerify();
+
+        assertTrue(Arrays.equals(dummyContent.getBytes(), fakedOut.toByteArray()));
     }
 
     public void testServesUnzippedContentAndRemovesGzipHeadersIfClientDoesNotAcceptGZipEncoding() throws Exception {
@@ -295,6 +341,7 @@ public class CacheFilterTest extends TestCase {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
 
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
+        expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 7.0; Windows NT 5.1)").anyTimes();
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration());
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(123);
@@ -306,6 +353,7 @@ public class CacheFilterTest extends TestCase {
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
 
+//        replay(configHm);
         executeFilterAndVerify();
 
         assertEquals(dummyContent, fakedOut.toString());
@@ -316,6 +364,7 @@ public class CacheFilterTest extends TestCase {
         final CachedPage cachedPage = new CachedPage(dummyContent.getBytes(), "text/plain", "ASCII", 123, new MultiValueMap(), System.currentTimeMillis(), true);
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(-1l);
+        expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 7.0; Windows NT 5.1)").anyTimes();
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration("foo", "gzip", "bar"));
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
         response.setStatus(123);
@@ -332,6 +381,7 @@ public class CacheFilterTest extends TestCase {
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
 
+//        replay(configHm);
         executeFilterAndVerify();
 
         assertTrue(Arrays.equals(gzipped, fakedOut.toByteArray()));
@@ -385,6 +435,7 @@ public class CacheFilterTest extends TestCase {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(timeStampInSeconds); // use some date in the future, so we're ahead of what cachedPage will say
         expect(request.getHeader("If-None-Match")).andReturn(null);
+        expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 7.0; Windows NT 5.1)").anyTimes();
         expect(response.isCommitted()).andReturn(true);
         // we can't change status of the already committed response ... the only option left here is to proceed and send the data
         
@@ -403,6 +454,7 @@ public class CacheFilterTest extends TestCase {
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
 
+//        replay(configHm);
         executeFilterAndVerify();
     }
 
@@ -413,6 +465,7 @@ public class CacheFilterTest extends TestCase {
         expect(cachePolicy.shouldCache(cache, aggregationState, flushPolicy)).andReturn(new CachePolicyResult(CachePolicyResult.useCache, "/test-page", cachedPage));
         expect(request.getDateHeader("If-Modified-Since")).andReturn(System.currentTimeMillis() + 1000); // use some date in the future, so we're ahead of what cachedPage will say
         expect(request.getHeader("If-None-Match")).andReturn("Some value");
+        expect(request.getHeader("User-Agent")).andReturn("Mozilla/4.0 (MSIE 7.0; Windows NT 5.1)").anyTimes();
         expect(request.getHeaders("Accept-Encoding")).andReturn(enumeration("foo", "gzip", "bar"));
 
         final ByteArrayOutputStream fakedOut = new ByteArrayOutputStream();
@@ -429,6 +482,7 @@ public class CacheFilterTest extends TestCase {
         expect(response.getOutputStream()).andReturn(new SimpleServletOutputStream(fakedOut));
         response.flushBuffer();
 
+//        replay(configHm);
         executeFilterAndVerify();
 
         assertTrue(Arrays.equals(gzipped, fakedOut.toByteArray()));
@@ -565,8 +619,8 @@ public class CacheFilterTest extends TestCase {
         expect(request.getDateHeader("If-Modified-Since")).andReturn(new Long(-1));
         response.flushBuffer();
 
-        // when instanciating CachedPage:
-        expect(response.getContentType()).andReturn("some content type");
+        // when setting response headers and when instanciating CachedPage:
+        expect(response.getContentType()).andReturn("some content type").times(2);
         expect(response.getCharacterEncoding()).andReturn("UTF-8");
 
         cache.put(eq("/dummy"), isA(CachedPage.class));
@@ -617,9 +671,10 @@ public class CacheFilterTest extends TestCase {
         final Set listeners = (Set) field.get(module);
         assertEquals(1, listeners.size());
         assertEquals(filter, listeners.iterator().next());
+        
 
         // and now get down to the real business
-        replay(cache, cachePolicy, request, response, filterChain);
+        replay(webContext, cache, cachePolicy, request, response, filterChain);
         filter.doFilter(request, response, filterChain);
 
         verify(cache, cacheFactory, cachePolicy, webContext, request, response, filterChain);
@@ -641,6 +696,7 @@ public class CacheFilterTest extends TestCase {
         request = createStrictMock(HttpServletRequest.class);
         response = createStrictMock(HttpServletResponse.class);
         filterChain = createStrictMock(FilterChain.class);
+//        configHm = createStrictMock(HierarchyManager.class);
 
         final CacheModule cacheModule = new CacheModule();
         final ModuleRegistry moduleRegistry = new ModuleRegistryImpl();
@@ -653,13 +709,28 @@ public class CacheFilterTest extends TestCase {
         cfg.addExecutor(CachePolicyResult.bypass.getName(), new Bypass());
         cfg.addExecutor(CachePolicyResult.useCache.getName(), new UseCache());
         final Store store = new Store();
+        FactoryUtil.setInstance(Voting.class, new DefaultVoting());
         final java.util.Map compressibleTypes = new java.util.HashMap();
         compressibleTypes.put("1", "text/html");
-        store.setCompressible(compressibleTypes);
         cfg.addExecutor(CachePolicyResult.store.getName(), store);
 
         cacheModule.addConfiguration("my-config", cfg);
         cacheModule.setCacheFactory(cacheFactory);
+
+        HashMap map = new HashMap();
+        ContentCompression compression = new ContentCompression();
+        cacheModule.setCompression(compression);
+        UserAgentVoter voter = new UserAgentVoter();
+        voter.addRejected(".*MSIE 6.*");
+        voter.setNot(true);
+        ResponseContentTypeVoter voter2 = new ResponseContentTypeVoter();
+        voter2.addAllowed("text/html");
+        voter2.addAllowed("application/x-javascript");
+        voter2.addAllowed("text/css");
+        voter2.setNot(true);
+        compression.setVoters(new VoterSet());
+        compression.getVoters().addVoter(voter);
+        compression.getVoters().addVoter(voter2);
 
         expect(cacheFactory.getCache("my-config")).andReturn(cache);
         replay(cacheFactory);
@@ -672,7 +743,6 @@ public class CacheFilterTest extends TestCase {
 
         webContext = createStrictMock(WebContext.class);
         expect(webContext.getAggregationState()).andReturn(aggregationState);
-        replay(webContext);
         MgnlContext.setInstance(webContext);
     }
 }

@@ -34,22 +34,34 @@
 package info.magnolia.module.cache.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.NodeData;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.AbstractRepositoryTask;
 import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BackupTask;
 import info.magnolia.module.delta.BootstrapResourcesTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
+import info.magnolia.module.delta.ConditionalDelegateTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
+import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
 
 /**
  * @author fgiust
@@ -64,8 +76,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         final WebXmlConditionsUtil u = new WebXmlConditionsUtil(conditions);
         u.servletIsRemoved("CacheServlet");
         u.servletIsRemoved("CacheGeneratorServlet");
-        register(DeltaBuilder.update("3.5.0", "")
-                .addConditions(conditions)
+        register(DeltaBuilder.update("3.5.0", "").addConditions(conditions)
                 // bootstrap file removed - and not needed even if we're upgrading from 3.0
                 // .addTask(new BootstrapSingleResource("Configured Observation", "Adds the repositories to be observed.", "/mgnl-bootstrap/cache/config.modules.cache.config.repositories.xml"))
         );
@@ -111,6 +122,79 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                     }
                 })
                 .addTask(new FilterOrderingTask("cache", "The gzip filter should now be placed before the cache filter.", new String[]{"gzip"}))
+        );
+
+        register(DeltaBuilder.update("4.0", "Update gzip and cache compression configuration.")
+                .addTask(new BootstrapResourcesTask("Updated configuration", "Bootstraps cache compression configuration.") {
+                    protected String[] getResourcesToBootstrap(final InstallContext installContext) {
+                        return new String[]{
+                                "/mgnl-bootstrap/cache/config.modules.cache.config.compression.xml"
+                        };
+                    }
+                })
+                .addTask(
+                        new ConditionalDelegateTask(
+                                "Cache cleanup", 
+                                "Removes obsolete cache compression list in favor of new global configuration.", 
+                                new RemoveNodeTask(
+                                        "Remove obsolete compression list configuration.", 
+                                        "Removes cache executor specific compression list configuration in favor of using one global list for both cache and gzip.", 
+                                        ContentRepository.CONFIG, 
+                                        "/modules/cache/config/configurations/default/executors/store/cacheContent/compressible"), 
+                                new WarnTask("Warning", "The compression list configuration have been relocated to /modules/cache/compression/voters/contentType, since you have modified the default configuration, please make sure your customization is applied also to new configuration.")
+                        ) {
+                            protected boolean condition(InstallContext installContext) throws TaskExecutionException {
+                                
+                                try {
+                                    List vals = new ArrayList();
+                                    Collection compressionList = installContext.getConfigHierarchyManager().getContent("/modules/cache/config/configurations/default/executors/store/cacheContent/compressible").getNodeDataCollection();
+                                    for (Iterator iterator = compressionList.iterator(); iterator.hasNext();) {
+                                        NodeData data = (NodeData) iterator.next();
+                                        vals.add(data.getString());
+                                    }
+                                    return vals.remove("text/html") && vals.remove("text/css") && vals.remove("application/x-javascript") && vals.isEmpty();
+                                    
+                                } catch (RepositoryException e) {
+                                    log.error(e.getMessage(), e);
+                                }
+                                return false;
+                            }}
+                )
+                .addTask(
+                        new ConditionalDelegateTask(
+                                "GZip cleanup", 
+                                "Removes obsolete gzip bypass in favor of new global configuration.", 
+                                new RemoveNodeTask(
+                                        "Remove obsolete bypass.", 
+                                        "Removes content type bypass from gzip filter.", 
+                                        ContentRepository.CONFIG, 
+                                        "/server/filters/gzip/bypasses/contentType"), 
+                                new WarnTask("Warning", "The list of compressible types have been relocated to /modules/cache/compression/voters/contentType, since you have modified the default configuration, please make sure your customization is applied also to new configuration.")
+                        ) {
+                            protected boolean condition(InstallContext installContext) throws TaskExecutionException {
+                                
+                                try {
+                                    List vals = new ArrayList();
+                                    Collection compressionList = installContext.getConfigHierarchyManager().getContent("/server/filters/gzip/bypasses/contentType/allowed").getNodeDataCollection();
+                                    for (Iterator iterator = compressionList.iterator(); iterator.hasNext();) {
+                                        NodeData data = (NodeData) iterator.next();
+                                        vals.add(data.getString());
+                                    }
+                                    return vals.remove("text/html") && vals.remove("text/css") && vals.remove("application/x-javascript") && vals.isEmpty();
+                                    
+                                } catch (RepositoryException e) {
+                                    log.error(e.getMessage(), e);
+                                }
+                                return false;
+                            }}
+                ).addTask(new AbstractRepositoryTask("Add bypass", "Adds new bypass for GZip filter using global configuration.") {
+                    protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
+                        final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
+                        Content content = hm.createContent("/server/filters/gzip/bypasses", "deletageBypass", ItemType.CONTENTNODE.getSystemName());
+                        content.createNodeData("class","info.magnolia.voting.voters.VoterSet");
+                        content.createNodeData("delegatePath","/modules/cache/config/compression/voters");
+                    }
+                })
         );
 
 

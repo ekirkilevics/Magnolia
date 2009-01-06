@@ -34,6 +34,8 @@
 package info.magnolia.module.cache.executor;
 
 import info.magnolia.cms.util.RequestHeaderUtil;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.context.WebContext;
 import info.magnolia.module.cache.Cache;
 import info.magnolia.module.cache.CachePolicyResult;
 import info.magnolia.module.cache.filter.CacheResponseWrapper;
@@ -42,6 +44,8 @@ import info.magnolia.module.cache.filter.CachedError;
 import info.magnolia.module.cache.filter.CachedPage;
 import info.magnolia.module.cache.filter.CachedRedirect;
 import info.magnolia.module.cache.filter.SimpleServletOutputStream;
+import info.magnolia.voting.voters.ResponseContentTypeVoter;
+import info.magnolia.voting.voters.UserAgentVoter;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -61,8 +65,6 @@ import javax.servlet.http.HttpServletResponse;
 public class Store extends AbstractExecutor {
 
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Store.class);
-    private Map compressible;
-
 
     public void processCacheRequest(HttpServletRequest request,
             HttpServletResponse response, FilterChain chain, Cache cache,
@@ -86,7 +88,8 @@ public class Store extends AbstractExecutor {
 
             if ((responseWrapper.getStatus() != HttpServletResponse.SC_MOVED_TEMPORARILY) && (responseWrapper.getStatus() != HttpServletResponse.SC_NOT_MODIFIED) && !responseWrapper.isError()) {
                 //handle gzip headers (have to be written BEFORE committing the response
-                final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request) && compressible != null && compressible.values().contains(response.getContentType());
+                int vote = getCompressionVote(responseWrapper, ResponseContentTypeVoter.class);
+                final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request) && vote == 0;
                 if (acceptsGzipEncoding) {
                     RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Content-Encoding", "gzip");
                     RequestHeaderUtil.addAndVerifyHeader(responseWrapper, "Vary", "Accept-Encoding"); // needed for proxies
@@ -157,12 +160,14 @@ public class Store extends AbstractExecutor {
 
         final long modificationDate = cacheResponse.getLastModified();
         final String contentType = cacheResponse.getContentType();
+        
+        int vote = getCompressionVote(cacheResponse, ResponseContentTypeVoter.class);
         CachedPage page = new CachedPage(aboutToBeCached,
                 contentType,
                 cacheResponse.getCharacterEncoding(),
                 status,
                 cacheResponse.getHeaders(),
-                modificationDate, compressible != null && compressible.values().contains(contentType));
+                modificationDate, vote == 0);
         if (status != cacheResponse.getStatus()) {
             // since we have manipulated the status here, we need to provide original value to other executors not to confuse them
             page.setPreCacheStatusCode(cacheResponse.getStatus());
@@ -176,13 +181,5 @@ public class Store extends AbstractExecutor {
      */
     protected CachedEntry makeCachedEntry(CacheResponseWrapper cacheResponse, ByteArrayOutputStream cachingStream, long modificationDate) throws IOException {
         return makeCachedEntry(cacheResponse, cachingStream);
-    }
-
-    public Map getCompressible() {
-        return compressible;
-    }
-
-    public void setCompressible(Map compressible) {
-        this.compressible = compressible;
     }
 }

@@ -59,6 +59,7 @@ public class CacheModule implements ModuleLifecycle {
     private final Set listeners = new HashSet();
     private CacheFactory cacheFactory;
     private Map configurations = new HashMap();
+    private ContentCompression compression;
 
     public CacheFactory getCacheFactory() {
         return cacheFactory;
@@ -82,6 +83,14 @@ public class CacheModule implements ModuleLifecycle {
 
     public CacheConfiguration getConfiguration(String name) {
         return (CacheConfiguration) configurations.get(name);
+    }
+
+    public void setCompression(ContentCompression compression) {
+        this.compression = compression;
+    }
+
+    public ContentCompression getCompression() {
+        return compression;
     }
 
     public void register(CacheModuleLifecycleListener listener) {

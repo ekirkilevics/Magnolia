@@ -40,6 +40,7 @@ import info.magnolia.module.cache.filter.CachedEntry;
 import info.magnolia.module.cache.filter.CachedError;
 import info.magnolia.module.cache.filter.CachedPage;
 import info.magnolia.module.cache.filter.CachedRedirect;
+import info.magnolia.voting.voters.UserAgentVoter;
 
 import java.io.IOException;
 import java.util.Collection;
@@ -75,7 +76,7 @@ public class UseCache extends AbstractExecutor {
             if (!ifModifiedSince(request, page.getLastModificationTime())) {
                 if (response.isCommitted() && page.getPreCacheStatusCode() != HttpServletResponse.SC_NOT_MODIFIED) {
                     // this should not happen ... if it does, log it and _serve_the_data_ otherwise we will confuse client
-                    log.warn("Unable to change status on already commited response." + response.getClass().getName());
+                    log.warn("Unable to change status on already commited response {}.", response.getClass().getName());
                 } else {
                     // not newly cached anymore, reset the code ...
                     page.setPreCacheStatusCode(0);
@@ -111,8 +112,10 @@ public class UseCache extends AbstractExecutor {
     }
 
     protected void writePage(final HttpServletRequest request, final HttpServletResponse response, final CachedPage cachedEntry) throws IOException {
-        // write gzip header only if accepts zgip and we have compressed and uncompressed entries
-        final boolean acceptsGzipEncoding = RequestHeaderUtil.acceptsGzipEncoding(request) && cachedEntry.getUngzippedContent() != null;
+        int vote = getCompressionVote(request, UserAgentVoter.class);
+        log.debug("On user agent {} voted {} ", request.getHeader("User-Agent"), "" + vote);
+        // write gzip header only if accepts gzip and we have compressed and uncompressed entries
+        final boolean acceptsGzipEncoding = vote == 0 && RequestHeaderUtil.acceptsGzipEncoding(request) && cachedEntry.getUngzippedContent() != null;
         log.debug("Accepts gzip encoding: {}", "" + acceptsGzipEncoding);
 
         response.setStatus(cachedEntry.getStatusCode());

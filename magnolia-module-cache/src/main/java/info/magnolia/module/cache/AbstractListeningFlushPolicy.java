@@ -44,12 +44,18 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
+    
+    private static final Logger log = LoggerFactory.getLogger(AbstractListeningFlushPolicy.class);
+    
     private List repositories = new ArrayList();
     private Map registeredListeners = new HashMap();
 
@@ -74,7 +80,12 @@ public abstract class AbstractListeningFlushPolicy implements FlushPolicy {
             final String repository = (String) iter.next();
             final CacheCleaner cacheCleaner = new CacheCleaner(cache, repository);
             final EventListener listener = ObservationUtil.instanciateDeferredEventListener(cacheCleaner, 5000, 30000);
-            ObservationUtil.registerChangeListener(repository, "/", listener);
+            try {
+                ObservationUtil.registerChangeListener(repository, "/", listener);
+            } catch (Exception e) {
+                log.warn("Failed to register cache flushing observation for repository {} due to {}", repository, e.getMessage());
+                log.warn("Publishing any content to {} will not result in update of the cache. Please flush the cache manually.");
+            }
             registeredListeners.put(repository, listener);
         }
     }
