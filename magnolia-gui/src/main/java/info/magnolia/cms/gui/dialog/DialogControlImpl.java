@@ -39,7 +39,7 @@ import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesUtil;
-import info.magnolia.cms.i18n.TemplateMessagesUtil;
+import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.util.AlertUtil;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.NodeDataUtil;
@@ -552,7 +552,7 @@ public abstract class DialogControlImpl implements DialogControl {
         if (messages == null) {
             // if this is the root
             if (this.getParent() == null) {
-                messages = TemplateMessagesUtil.getMessages();
+                messages = MessagesManager.getMessages();
             }
             else {
                 // try to get it from the control nearest to the root

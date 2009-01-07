@@ -37,24 +37,25 @@ package info.magnolia.cms.i18n;
  * This class helps to get the messages used in templates (paragraphs, dialogs, ..). First it make a lookup in
  * messages_templating_custom and then in messages_templating..<br>
  * If a string is not found it returns directly the key without ?
- * <p>
- * This class is depricated use the fallBackMessages property of the Message class to make chains.
+ *
+ * This class is deprecated use the fallBackMessages property of the Message class to make chains.
  * @author philipp
+ * @deprecated officially since 4.0 - informally since 3.0
  */
 public final class TemplateMessagesUtil {
 
     /**
-     * Use this basename if the string is not found in the custom basename
+     * Use this basename if the string is not found in the custom basename.
      */
     public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages_templating"; //$NON-NLS-1$
 
     /**
-     * Name of the custom basename
+     * Name of the custom basename.
      */
     public static final String CUSTOM_BASENAME = "info.magnolia.module.admininterface.messages_templating_custom"; //$NON-NLS-1$
 
     /**
-     * Util has no public constructor
+     * Util has no public constructor.
      */
     private TemplateMessagesUtil() {
     }

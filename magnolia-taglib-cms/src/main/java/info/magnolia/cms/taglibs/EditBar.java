@@ -41,7 +41,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarEdit;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringUtils;
@@ -254,11 +253,8 @@ public class EditBar extends TagSupport {
                 bar.placeDefaultButtons();
 
                 if (isShowParagraphName()) {
-                    Messages msgs = TemplateMessagesUtil.getMessages();
                     final Paragraph paragraphInfo = ParagraphManager.getInstance().getInfo(paragraph);
-                    if (StringUtils.isNotEmpty(paragraphInfo.getI18nBasename())) {
-                        msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
-                    }
+                    final Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
                     final String label = msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle());
                     bar.setLabel(label);
                 }

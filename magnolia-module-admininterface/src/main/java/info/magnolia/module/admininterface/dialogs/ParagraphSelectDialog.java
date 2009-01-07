@@ -47,7 +47,6 @@ import info.magnolia.cms.gui.dialog.DialogStatic;
 import info.magnolia.cms.gui.dialog.DialogTab;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.module.admininterface.DialogMVCHandler;
 
 import java.io.IOException;
@@ -126,10 +125,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
                 Button button = new Button(c1.getName(), paragraphInfo.getName());
                 StringBuffer label = new StringBuffer();
 
-                Messages msgs = TemplateMessagesUtil.getMessages();
-                if (StringUtils.isNotEmpty(paragraphInfo.getI18nBasename())) {
-                    msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
-                }
+                Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
 
                 label.append("<strong>" //$NON-NLS-1$
                     + msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle())

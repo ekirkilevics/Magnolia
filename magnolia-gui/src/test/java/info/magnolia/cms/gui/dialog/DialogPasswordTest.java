@@ -185,7 +185,7 @@ public class DialogPasswordTest extends TestCase {
         expect(pswd.getString()).andReturn("oldBlah").times(2);
         
         //ctx.setLocale(Locale.ENGLISH);
-        expect(ctx.getLocale()).andReturn(Locale.ENGLISH).times(3);
+        expect(ctx.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
 
         expect(storageNode.hasNodeData("pswd")).andReturn(Boolean.TRUE);
         expect(storageNode.getNodeData("pswd")).andReturn(pswd);
@@ -229,7 +229,7 @@ public class DialogPasswordTest extends TestCase {
         expect(pswd.getString()).andReturn("oldBlah").times(2);
         
         //ctx.setLocale(Locale.ENGLISH);
-        expect(ctx.getLocale()).andReturn(Locale.ENGLISH).times(3);
+        expect(ctx.getLocale()).andReturn(Locale.ENGLISH).anyTimes();
 
         expect(storageNode.hasNodeData("pswd")).andReturn(Boolean.TRUE);
         expect(storageNode.getNodeData("pswd")).andReturn(pswd);

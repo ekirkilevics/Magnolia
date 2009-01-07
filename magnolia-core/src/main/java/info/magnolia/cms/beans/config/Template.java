@@ -36,7 +36,6 @@ package info.magnolia.cms.beans.config;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
-import info.magnolia.cms.i18n.TemplateMessagesUtil;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
@@ -83,14 +82,7 @@ public class Template extends AbstractRenderable{
 
 
     public String getI18NTitle() {
-        Messages msgs;
-
-        if (StringUtils.isNotEmpty(getI18nBasename())) {
-            msgs = MessagesManager.getMessages(getI18nBasename());
-        }
-        else {
-            msgs = TemplateMessagesUtil.getMessages();
-        }
+        Messages msgs = MessagesManager.getMessages(getI18nBasename());
 
         return msgs.getWithDefault(getTitle(), getTitle());
     }
