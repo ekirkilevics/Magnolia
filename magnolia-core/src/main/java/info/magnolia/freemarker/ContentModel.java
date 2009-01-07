@@ -52,6 +52,10 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
+ * A wrapper for Content nodes - exposes properties using an HashModel (.property, ?size, ...)
+ * a hierarchy (TemplateNodeModel: ?children, ?parent, ...)
+ * and as a scalar (returns the node name)
+ * 
  * @author Chris Miner
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -133,7 +137,7 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
     }
 
     /**
-     * This returns all children, except nodes or jcr: types and mgnl:metaData
+     * This returns all children, except nodes or jcr: types and mgnl:metaData.
      */
     public TemplateSequenceModel getChildNodes() throws TemplateModelException {
         final Collection children = ContentUtil.getAllChildren(content);
