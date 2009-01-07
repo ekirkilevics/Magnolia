@@ -351,12 +351,23 @@ public final class MessagesManager {
             this.locale = locale;
         }
 
-        public int hashCode() {
-            return basename.hashCode();
+        // generated equals and hashcode methods
+        public boolean equals(Object o) {
+            if (this == o) return true;
+            if (o == null || getClass() != o.getClass()) return false;
+
+            MessagesID that = (MessagesID) o;
+
+            if (basename != null ? !basename.equals(that.basename) : that.basename != null) return false;
+            if (locale != null ? !locale.equals(that.locale) : that.locale != null) return false;
+
+            return true;
         }
 
-        public boolean equals(Object id) {
-            return ((MessagesID) id).basename.equals(basename) && ((MessagesID) id).locale.equals(locale);
+        public int hashCode() {
+            int result = basename != null ? basename.hashCode() : 0;
+            result = 31 * result + (locale != null ? locale.hashCode() : 0);
+            return result;
         }
     }
 }
