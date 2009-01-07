@@ -50,11 +50,13 @@ import java.util.Locale;
 public class MessagesManagerTest extends TestCase {
     private SystemContext sysCtx;
     private Context ctx;
+    private static final String DUMMY_BUNDLE = "info.magnolia.cms.i18n.dummy";
 
     protected void setUp() throws Exception {
         super.setUp();
         
         ctx = createMock(Context.class);
+        // current context locale
         expect(ctx.getLocale()).andReturn(new Locale("en")).anyTimes();
         MgnlContext.setInstance(ctx);
 
@@ -81,15 +83,26 @@ public class MessagesManagerTest extends TestCase {
     }
 
     public void testGetsMessagesFromSpecifiedBundle() {
-        final Messages messages = MessagesManager.getMessages("info.magnolia.cms.i18n.dummy");
+        final Messages messages = MessagesManager.getMessages(DUMMY_BUNDLE);
         assertEquals("Bar", messages.get("foo"));
     }
 
-    public void testGetsMessagesFromSpecifiedBundleInPriority() {
-        final Messages messages = MessagesManager.getMessages("info.magnolia.cms.i18n.dummy");
+    public void testGetsMessagesFromSpecifiedBundleInPriorityEvenIfItExistsInDefaultBundle() {
+        final Messages messages = MessagesManager.getMessages(DUMMY_BUNDLE);
         assertEquals("This is a test", messages.get("about.title"));
     }
 
-    // TODO : tests with different locales
+    public void testFallsBackToDefaultLocaleIfCurrentLocaleDoesntSpecifyThisMessage() {
+        final Messages messages = MessagesManager.getMessages(DUMMY_BUNDLE, Locale.FRENCH);
+        assertEquals("Ceci n'est pas un test", messages.get("about.title"));
+        assertEquals("Only in English", messages.get("only.en"));
+    }
+
+    public void testFallsBackToDefaultLocaleAlsoWithDefaultBundle() {
+        final Messages messages = MessagesManager.getMessages(Locale.FRENCH);
+        assertEquals("Autre message seulement defini dans le bundle de base", messages.get("other"));
+        assertEquals("Another key only defined in english default bundle", messages.get("another.key"));
+    }
+
 
 }

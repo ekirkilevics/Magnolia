@@ -115,7 +115,7 @@ public final class MessagesManager {
     private ServletContext context;
 
     /**
-     * LRU Map for the messages.
+     * Map for the messages.
      */
     private Map messages;
 
@@ -125,7 +125,7 @@ public final class MessagesManager {
         // setting default language (en)
         setDefaultLocale(FALLBACK_LOCALE);
 
-        initLRUMap();
+        initMap();
     }
 
     // for tests
@@ -152,20 +152,15 @@ public final class MessagesManager {
     }
 
     /**
-     * The lazzy LRU Map creates messages objects with a faul back to the default locale.
+     * The lazy Map creates messages objects with a fall back to the default locale.
      */
-    private void initLRUMap() {
-        // FIXME use LRU
-        // Map map = new LRUMap(20);
-        Map map = new HashMap();
-        map = LazyMap.decorate(map, new Transformer() {
-
+    private void initMap() {
+        // FIXME use LRU: new LRUMap(20);
+        // LazyMap will instanciate bundles on demand.
+        final Map map = LazyMap.decorate(new HashMap(), new Transformer() {
+            // this transformer will wrap the Messages in a MessagesChain which will fall back to a Messages instance for the same bundle with default locale.
             public Object transform(Object input) {
-                MessagesID id = (MessagesID) input;
-                // check http://jira.magnolia.info/browse/MAGNOLIA-1060
-                // We are now chaining current user (LOCALE) messages with system default messages
-                // so that it fallsback to default locale if string is not found instead of displaying broken
-                // ???LABELS???
+                final MessagesID id = (MessagesID) input;
                 Messages msgs = new DefaultMessagesImpl(id.basename, id.locale);
                 if(!getDefaultLocale().equals(id.locale)){
                     msgs = new MessagesChain(msgs).chain(getMessages(id.basename, getDefaultLocale()));
@@ -253,7 +248,7 @@ public final class MessagesManager {
         catch (Exception e) {
             log.error("Can't reload i18n messages", e);
         }
-        initLRUMap();
+        initMap();
         load();
     }
 
@@ -343,7 +338,7 @@ public final class MessagesManager {
     }
 
     /**
-     * Used as the key in the LRUMap.
+     * Used as the key in the Map.
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
