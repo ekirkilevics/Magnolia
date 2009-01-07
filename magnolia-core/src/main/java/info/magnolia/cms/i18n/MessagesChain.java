@@ -52,7 +52,7 @@ public class MessagesChain extends AbstractMessagesImpl {
     /**
      * The chain.
      */
-    private List chain = new ArrayList();
+    private final List chain = new ArrayList();
 
     /**
      * Create a chain passing the wrapped head of the chain.
@@ -64,10 +64,9 @@ public class MessagesChain extends AbstractMessagesImpl {
 
     /**
      * Append messages to the chain.
-     * @param messages
      * @return the chain itself
      */
-    public Messages chain(Messages messages) {
+    public MessagesChain chain(Messages messages) {
         chain.add(messages);
         return this;
     }
