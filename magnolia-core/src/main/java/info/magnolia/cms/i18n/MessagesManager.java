@@ -70,22 +70,22 @@ public final class MessagesManager {
     private final static Logger log = LoggerFactory.getLogger(MessagesManager.class);
 
     /**
-     * Use this locale if no other provided
+     * Use this locale if no other provided.
      */
     public static final String FALLBACK_LOCALE = "en"; //$NON-NLS-1$
 
     /**
-     * Use this basename if no other is provided
+     * Use this basename if no other is provided.
      */
     public static final String DEFAULT_BASENAME = "info.magnolia.module.admininterface.messages"; //$NON-NLS-1$
 
     /**
-     * The node name where the configuration for i18n is stored
+     * The node name where the configuration for i18n is stored.
      */
     private static final String I18N_CONFIG_PATH = "/server/i18n/system"; //$NON-NLS-1$
 
     /**
-     * The name of the property to store the current system language
+     * The name of the property to store the current system language.
      */
     private static final String FALLBACK_NODEDATA = "fallbackLanguage"; //$NON-NLS-1$
 
@@ -100,22 +100,22 @@ public final class MessagesManager {
     }
 
     /**
-     * The current locale of the application
+     * The current locale of the application.
      */
     private Locale applicationLocale;
 
     /**
-     * List of the available locales
+     * List of the available locales.
      */
     private final Collection availableLocales = new ArrayList();
 
     /**
-     * The context used for the messages
+     * The context used for the messages.
      */
     private ServletContext context;
 
     /**
-     * LRU Map for the messages
+     * LRU Map for the messages.
      */
     private Map messages;
 
@@ -134,7 +134,7 @@ public final class MessagesManager {
     }
 
     /**
-     * Called through the initialization process (startup of the container)
+     * Called through the initialization process. (startup of the container)
      * @param context servlet context
      */
     public void init(ServletContext context) {
@@ -285,7 +285,7 @@ public final class MessagesManager {
     }
 
     /**
-     * Get a message with parameters inside: the value {0} must be a number
+     * Get a message with parameters inside: the value {0} must be a number.
      * @param key key to find
      * @param args replacement strings
      * @return message
@@ -319,9 +319,6 @@ public final class MessagesManager {
         return MgnlContext.getInstance().getLocale();
     }
 
-    /**
-     * @return Returns the defaultLocale.
-     */
     public Locale getDefaultLocale() {
         return applicationLocale;
     }
@@ -341,15 +338,12 @@ public final class MessagesManager {
         }
      }
 
-    /**
-     * @return Returns the availableLocals.
-     */
     public Collection getAvailableLocales() {
         return availableLocales;
     }
 
     /**
-     * Used as the key in the LRUMap
+     * Used as the key in the LRUMap.
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
