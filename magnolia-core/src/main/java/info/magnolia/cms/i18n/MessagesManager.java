@@ -50,8 +50,6 @@ import org.slf4j.LoggerFactory;
 
 import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
-import javax.servlet.ServletContext;
-import javax.servlet.jsp.jstl.core.Config;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -110,11 +108,6 @@ public final class MessagesManager {
     private final Collection availableLocales = new ArrayList();
 
     /**
-     * The context used for the messages.
-     */
-    private ServletContext context;
-
-    /**
      * Map for the messages.
      */
     private Map messages;
@@ -135,18 +128,8 @@ public final class MessagesManager {
 
     /**
      * Called through the initialization process. (startup of the container)
-     * @param context servlet context
      */
-    public void init(ServletContext context) {
-        this.context = context;
-
-        // setting fallback
-        context.setAttribute(Config.FMT_FALLBACK_LOCALE + ".application", FALLBACK_LOCALE); //$NON-NLS-1$
-        // setting basename
-        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT + ".application", defaultBasename); //$NON-NLS-1$
-        // for Resin and other J2EE Containers
-        context.setAttribute(Config.FMT_LOCALIZATION_CONTEXT, defaultBasename);
-
+    public void init() {
         load();
         registerEventListener();
     }
@@ -327,10 +310,6 @@ public final class MessagesManager {
     public void setDefaultLocale(String defaultLocale) {
         this.applicationLocale = new Locale(defaultLocale);
         //MgnlContext.getSystemContext().setLocale(applicationLocale);
-
-        if(context != null){
-            context.setAttribute(Config.FMT_LOCALE + ".application", defaultLocale); //$NON-NLS-1$
-        }
      }
 
     public Collection getAvailableLocales() {

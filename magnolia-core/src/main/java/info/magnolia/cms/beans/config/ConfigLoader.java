@@ -108,7 +108,7 @@ public class ConfigLoader {
             moduleManager.getUI().onStartup();
 
             // TODO make these regular ObservedManagers
-            MessagesManager.getInstance().init(servletContext); // TODO this was done before module init??
+            MessagesManager.getInstance().init(); // TODO this was done before module init??
             MIMEMapping.init();
             VersionConfig.getInstance().init();
 
