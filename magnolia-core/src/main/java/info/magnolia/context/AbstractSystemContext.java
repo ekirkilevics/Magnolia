@@ -84,6 +84,7 @@ public abstract class AbstractSystemContext extends AbstractContext implements S
         throw new UnsupportedOperationException("setLocale() should not be called on SystemContext - system default locale is handled by MessagesManager");
     }
 
+    // TODO - See MAGNOLIA-2531
     public Locale getLocale() {
         return MessagesManager.getInstance().getDefaultLocale();
     }
