@@ -49,28 +49,26 @@ public interface Messages {
     public Locale getLocale();
 
     /**
-     * If no basename is provided this method returns DEFAULT_BASENAME
+     * If no basename is provided this method returns DEFAULT_BASENAME.
      * @return current basename
      */
     public String getBasename();
 
     /**
-     * Get the message from the bundle
+     * Get the message from the bundle.
      * @param key the key
      * @return message
      */
     public String get(String key);
 
     /**
-     * Replace the parameters in the string: the entered text {0} is not a valid email
-     * @param key the key
-     * @param args the replacement strings
-     * @return message
+     * Replace the {n} parameters in the string.
+     * @see java.text.MessageFormat#format(String, Object[])
      */
     public String get(String key, Object[] args);
 
     /**
-     * You can provide a default value if the key is not found
+     * You can provide a default value if the key is not found.
      * @param key key
      * @param defaultMsg the default message
      * @return the message

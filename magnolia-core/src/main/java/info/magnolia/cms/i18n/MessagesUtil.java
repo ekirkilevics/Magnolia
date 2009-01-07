@@ -42,7 +42,8 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Util for handle messages. Allows easy use of chains and provides methods for rendering the javascript messages
+ * Util for handle messages. Allows easy use of chains and provides methods for rendering the javascript messages.
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
@@ -63,7 +64,7 @@ public class MessagesUtil {
     }
 
     /**
-     * Adds Variables to a JS witch can be used with the getMessage(key) method
+     * Adds Variables to a JS witch can be used with the getMessage(key) method.
      * @return Javascript-Construct of this textes
      */
     public static void generateJavaScript(Writer out, Messages messages) throws IOException {
@@ -89,10 +90,6 @@ public class MessagesUtil {
         }
     }
 
-    /**
-     * @param msgs
-     * @param messages
-     */
     public static Messages chain(Messages msgs1, Messages msgs2) {
         MessagesChain msgs = new MessagesChain(msgs1);
         msgs.chain(msgs2);
@@ -111,40 +108,22 @@ public class MessagesUtil {
         return chain;
     }
 
-    /**
-     * @param messages
-     * @param basename
-     * @return
-     */
     public static Messages chain(Messages msgs1, String basename) {
         Messages msgs2 = MessagesManager.getMessages(basename);
         return chain(msgs1, msgs2);
     }
 
-    /**
-     * @param messages
-     * @param basename
-     * @return
-     */
     public static Messages chain(String basename, Messages msgs2) {
         Messages msgs1 = MessagesManager.getMessages(basename);
         return chain(msgs1, msgs2);
     }
 
-    /**
-     * @param string
-     * @return
-     */
     public static Messages chainWithDefault(String basename) {
         Messages msgs1 = MessagesManager.getMessages(basename);
         Messages msgs2 = MessagesManager.getMessages();
         return chain(msgs1, msgs2);
     }
 
-    /**
-     * @param title
-     * @return
-     */
     public static String javaScriptString(String msg) {
         return StringUtils.replace(StringUtils.replace(msg, "'", "\\'"), "\n", "\\n");
     }

@@ -49,7 +49,7 @@ import javax.jcr.RepositoryException;
 public interface I18nContentSupport {
 
     /**
-     * Get the current locale used for rendering content
+     * Get the current locale used for rendering content.
      */
     public Locale getLocale();
 
@@ -73,7 +73,7 @@ public interface I18nContentSupport {
     public String toRawURI(String i18nURI);
 
     /**
-     * This method uses the current agregation state to set the locale used for the rendering process 
+     * This method uses the current agregation state to set the locale used for the rendering process .
      */
     public Locale determineLocale();
 

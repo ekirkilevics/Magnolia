@@ -43,19 +43,19 @@ import org.apache.commons.collections.IteratorUtils;
 
 
 /**
- * Chains messages
+ * Chains messages.
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
 public class MessagesChain extends AbstractMessagesImpl {
 
     /**
-     * The chain
+     * The chain.
      */
     private List chain = new ArrayList();
 
     /**
-     * Create a chain passing the wrapped head of the chain
+     * Create a chain passing the wrapped head of the chain.
      */
     public MessagesChain(Messages head) {
         super(head.getBasename(), head.getLocale());
@@ -63,7 +63,7 @@ public class MessagesChain extends AbstractMessagesImpl {
     }
 
     /**
-     * Append messages to the chain
+     * Append messages to the chain.
      * @param messages
      * @return the chain itself
      */
@@ -73,7 +73,7 @@ public class MessagesChain extends AbstractMessagesImpl {
     }
 
     /**
-     * Get the string searching in the chain
+     * Get the string searching in the chain.
      */
     public String get(String key) {
         for (Iterator iter = chain.iterator(); iter.hasNext();) {
@@ -87,7 +87,7 @@ public class MessagesChain extends AbstractMessagesImpl {
     }
 
     /**
-     * Return all keys contained in this chain
+     * Return all keys contained in this chain.
      */
     public Iterator keys() {
         Set keys = new HashSet();
@@ -100,7 +100,7 @@ public class MessagesChain extends AbstractMessagesImpl {
     }
 
     /**
-     * Reload the chain
+     * Reload the chain.
      */
     public void reload() throws Exception {
         for (Iterator iter = chain.iterator(); iter.hasNext();) {

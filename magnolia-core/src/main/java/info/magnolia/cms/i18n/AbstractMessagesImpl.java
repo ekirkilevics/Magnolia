@@ -54,43 +54,39 @@ public abstract class AbstractMessagesImpl implements Messages {
     protected Logger log = LoggerFactory.getLogger(AbstractMessagesImpl.class);
 
     /**
-     * Name of the javascript object used to make the messages public to the javascripts
+     * Name of the javascript object used to make the messages public to the javascripts.
      */
     public static final String JS_OBJECTNAME = "mgnlMessages"; //$NON-NLS-1$
 
     /**
-     * The name of the bundle
+     * The name of the bundle.
      */
     protected String basename = MessagesManager.DEFAULT_BASENAME;
 
     /**
-     * The current locale
+     * The current locale.
      */
     protected Locale locale;
 
     /**
-     * The current bundle. Subclasses will overwrite getBundle()
+     * The current bundle. Subclasses will overwrite getBundle().
      */
     protected ResourceBundle bundle;
 
-    /**
-     * @param basename name of the bundle
-     * @param locale the locale
-     */
     protected AbstractMessagesImpl(String basename, Locale locale) {
         this.locale = locale;
         this.basename = basename;
     }
 
     /**
-     * @return current locale
+     * Returns the current locale.
      */
     public Locale getLocale() {
         return locale;
     }
 
     /**
-     * If no basename is provided this method returns DEFAULT_BASENAME
+     * If no basename is provided this method returns DEFAULT_BASENAME.
      * @return current basename
      */
     public String getBasename() {
@@ -98,17 +94,15 @@ public abstract class AbstractMessagesImpl implements Messages {
     }
 
     /**
-     * Replace the parameters in the string: the entered text {0} is not a valid email
-     * @param key the key
-     * @param args the replacement strings
-     * @return message
+     * Replace the {n} parameters in the string.
+     * @see java.text.MessageFormat#format(String, Object[])
      */
     public String get(String key, Object[] args) {
         return MessageFormat.format(get(key), args);
     }
 
     /**
-     * You can provide a default value if the key is not found
+     * You can provide a default value if the key is not found.
      * @param key key
      * @param defaultMsg the default message
      * @return the message
@@ -122,7 +116,7 @@ public abstract class AbstractMessagesImpl implements Messages {
     }
 
     /**
-     * With default value and replacement strings
+     * With default value and replacement strings.
      * @param key key
      * @param args replacement strings
      * @param defaultMsg default message
@@ -133,7 +127,7 @@ public abstract class AbstractMessagesImpl implements Messages {
     }
 
     /**
-     * True if the basename and the locale are the same
+     * True if the basename and the locale are the same.
      */
     public boolean equals(Object arg0) {
         return StringUtils.equals(((AbstractMessagesImpl) arg0).basename, this.basename)
@@ -141,7 +135,7 @@ public abstract class AbstractMessagesImpl implements Messages {
     }
 
     /**
-     * Nice string
+     * Nice string.
      */
     public String toString() {
         return this.basename + "(" + this.locale + ")";

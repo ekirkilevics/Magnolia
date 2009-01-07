@@ -39,9 +39,12 @@ import info.magnolia.cms.util.ContentWrapper;
 
 
 /**
+ * A ContentWrapper implementation which knows about I18nContentSupport.
+ * @see I18nContentSupport
+ * @see info.magnolia.cms.util.ContentWrapper
+ * 
  * @author pbracher
  * @version $Id$
- *
  */
 public class I18nContentWrapper extends ContentWrapper {
 

@@ -58,17 +58,17 @@ import org.slf4j.LoggerFactory;
  */
 public abstract class AbstractI18nContentSupport implements I18nContentSupport {
 
-    private static Logger log = LoggerFactory.getLogger(AbstractI18nContentSupport.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractI18nContentSupport.class);
 
     /**
-     * English is the default fallback language
+     * English is the default fallback language.
      */
     private Locale fallbackLocale = new Locale("en");
 
     private boolean enabled = false;
 
     /**
-     * The active locales
+     * The active locales.
      */
     private Map locales = new HashMap();
 
@@ -108,7 +108,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     }
 
     /**
-     * Extracts the language from the uri
+     * Extracts the language from the uri.
      */
     public Locale determineLocale() {
         Locale locale;
@@ -139,7 +139,6 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
         return null;
     }
 
-
     public String toI18NURI(String uri) {
         if (!isEnabled()) {
             return uri;
@@ -154,7 +153,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     protected abstract String toI18NURI(String uri, Locale locale);
 
     /**
-     * Removes the prefix
+     * Removes the prefix.
      */
     public String toRawURI(String i18nURI) {
         if (!isEnabled()) {
@@ -179,7 +178,8 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     }
 
     /**
-     * Returns the nodedata with the name &lt;name&gt;_&lt;current language&gt; or &lt;name&gt;_&lt;fallback language&gt otherwise returns &lt;name&gt;.
+     * Returns the nodedata with the name &lt;name&gt;_&lt;current language&gt; or &lt;name&gt;_&lt;fallback language&gt
+     * otherwise returns &lt;name&gt;.
      */
     public NodeData getNodeData(Content node, String name) {
         NodeData nd = null;
@@ -233,7 +233,7 @@ public abstract class AbstractI18nContentSupport implements I18nContentSupport {
     }
 
     /**
-     * Checks if the nodedata field is empty
+     * Checks if the nodedata field is empty.
      */
     protected boolean isEmpty(NodeData nd) {
         if (nd != null && nd.isExist()) {

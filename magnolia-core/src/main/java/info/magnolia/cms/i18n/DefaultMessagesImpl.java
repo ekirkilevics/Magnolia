@@ -54,16 +54,12 @@ import org.apache.commons.io.IOUtils;
  */
 public class DefaultMessagesImpl extends AbstractMessagesImpl {
 
-    /**
-     * @param basename
-     * @param locale
-     */
     protected DefaultMessagesImpl(String basename, Locale locale) {
         super(basename, locale);
     }
 
     /**
-     * Get the message from the bundle
+     * Get the message from the bundle.
      * @param key the key
      * @return message
      */
@@ -80,7 +76,7 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
     }
 
     /**
-     * @return Returns the bundle for the current basename
+     * Returns the bundle for the current basename.
      */
     protected ResourceBundle getBundle() {
         if (bundle == null) {
@@ -123,7 +119,7 @@ public class DefaultMessagesImpl extends AbstractMessagesImpl {
     }
 
     /**
-     * Iterate over the keys
+     * Iterate over the keys.
      */
     public Iterator keys() {
         return IteratorUtils.asIterator(this.getBundle().getKeys());

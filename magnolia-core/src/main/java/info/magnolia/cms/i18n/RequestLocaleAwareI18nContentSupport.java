@@ -40,10 +40,10 @@ import java.util.Locale;
 
 
 /**
- * Reads the local from the request. Attention this implementation does not render language specific URLs
+ * Reads the local from the request. Attention this implementation does not render language specific URLs.
+ * 
  * @author philipp
  * @version $Id$
- *
  */
 public class RequestLocaleAwareI18nContentSupport extends AbstractI18nContentSupport {
 
