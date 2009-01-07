@@ -48,6 +48,7 @@ import javax.servlet.ServletContext;
 
 /**
  * This class is an entry point to all config.
+ *
  * @author Sameer Charles
  * @version 1.1
  */
@@ -58,6 +59,7 @@ public class ConfigLoader {
     /**
      * Initialize a ConfigLoader instance. All the supplied parameters will be set in
      * <code>info.magnolia.cms.beans.runtime.SystemProperty</code>
+     *
      * @param context ServletContext
      * @see SystemProperty
      */
@@ -68,15 +70,15 @@ public class ConfigLoader {
                 System.setProperty(JAAS_PROPERTYNAME, Path.getAbsoluteFileSystemPath("WEB-INF/config/jaas.config"));
             }
             catch (SecurityException se) {
-                log.error("Failed to set {}, check application server settings", JAAS_PROPERTYNAME );
+                log.error("Failed to set {}, check application server settings", JAAS_PROPERTYNAME);
                 log.error(se.getMessage(), se);
                 log.info("Aborting startup");
                 return;
             }
         } else {
-                log.info("JAAS config file set by parent container or some other application"); //$NON-NLS-1$
-                log.info("Config in use {}", System.getProperty(JAAS_PROPERTYNAME)); //$NON-NLS-1$ //$NON-NLS-2$
-                log.info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
+            log.info("JAAS config file set by parent container or some other application"); //$NON-NLS-1$
+            log.info("Config in use {}", System.getProperty(JAAS_PROPERTYNAME)); //$NON-NLS-1$ //$NON-NLS-2$
+            log.info("Please make sure JAAS config has all necessary modules (refer config/jaas.config) configured"); //$NON-NLS-1$
         }
     }
 
@@ -86,6 +88,7 @@ public class ConfigLoader {
 
     /**
      * Load magnolia configuration from repositories.
+     *
      * @param servletContext ServletContext
      */
     public void load(ServletContext servletContext) {
