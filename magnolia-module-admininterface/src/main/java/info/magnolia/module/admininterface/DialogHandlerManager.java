@@ -72,13 +72,12 @@ public class DialogHandlerManager extends ObservedManager {
     private static final String ND_NAME = "name";
 
     /**
-     * All handlers are registered here
+     * All handlers are registered here.
      */
     private final Map dialogHandlers = new HashMap();
 
     /**
-     * register the dialogs from the config
-     * @param node
+     * register the dialogs from the config.
      */
     protected void onRegister(Content node) {
         List dialogs = ContentUtil.collectAllChildren(node, ItemType.CONTENT);
@@ -104,7 +103,6 @@ public class DialogHandlerManager extends ObservedManager {
 
     /**
      * Check if this dialog is used by a paragraph. If so register it under the paragraphs name.
-     * @param dialog
      */
     private void registerAsParagraphDialog(String basePath, Content dialog) {
 

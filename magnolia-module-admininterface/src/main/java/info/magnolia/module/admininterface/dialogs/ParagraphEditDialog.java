@@ -42,20 +42,18 @@ import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
 /**
- * Editing paragraph data
+ * Editing paragraph data.
  * @author philipp
  */
 public class ParagraphEditDialog extends ConfiguredDialog {
+    private static final Logger log = LoggerFactory.getLogger(ParagraphEditDialog.class);
 
-    private static Logger log = LoggerFactory.getLogger(ParagraphEditDialog.class);
-
-    private String paragraph = StringUtils.EMPTY;
+    private final String paragraph;
 
     public ParagraphEditDialog(String name, HttpServletRequest request, HttpServletResponse response, Content configNode) {
         super(name, request, response, configNode);
@@ -75,6 +73,7 @@ public class ParagraphEditDialog extends ConfiguredDialog {
 
     /**
      * Get the configuration of the dialog from the paragraph
+     * @deprecated since 4.0 - this is not used
      */
     public static Content getConfigNode(HttpServletRequest request, String paragraph) {
         Paragraph para = ParagraphManager.getInstance().getInfo(paragraph);
@@ -91,6 +90,7 @@ public class ParagraphEditDialog extends ConfiguredDialog {
 
     /**
      * @return Returns the paragraph.
+     * @deprecated since 4.0 - this is not used
      */
     public String getParagraph() {
         return paragraph;
