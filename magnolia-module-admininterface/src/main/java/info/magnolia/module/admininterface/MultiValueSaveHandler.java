@@ -49,12 +49,12 @@ import org.apache.commons.lang.StringUtils;
 
 /**
  * Stores NodeData as jcr multi-value property
- * can be used together with DialogMultiSelect
+ * can be used together with DialogMultiSelect.
  *
  * @author tmiyar
  *
  */
-public class MultiValueSaveHandler extends SaveHandlerImpl implements CustomSaveHandler {
+public class MultiValueSaveHandler extends SaveHandlerImpl implements FieldSaveHandler {
 
     protected void processMultiple(Content node, String name, int type, String[] values) throws RepositoryException,
         PathNotFoundException, AccessDeniedException {
@@ -79,9 +79,6 @@ public class MultiValueSaveHandler extends SaveHandlerImpl implements CustomSave
         }
     }
 
-    /**
-     * @see info.magnolia.module.admininterface.CustomSaveHandler#save(Content, Content, String, MultipartForm, int, int, int, int)
-     */
     public void save(Content parentNode, Content configNode, String name,
             MultipartForm form, int type, int valueType, int isRichEditValue,
             int encoding) throws RepositoryException, AccessDeniedException {
