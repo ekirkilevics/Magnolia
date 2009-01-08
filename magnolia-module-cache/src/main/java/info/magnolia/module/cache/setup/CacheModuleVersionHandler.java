@@ -124,7 +124,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new FilterOrderingTask("cache", "The gzip filter should now be placed before the cache filter.", new String[]{"gzip"}))
         );
 
-        register(DeltaBuilder.update("4.0", "Update gzip and cache compression configuration.")
+        register(DeltaBuilder.update("3.6.4", "Update gzip and cache compression configuration.")
                 .addTask(new BootstrapResourcesTask("Updated configuration", "Bootstraps cache compression configuration.") {
                     protected String[] getResourcesToBootstrap(final InstallContext installContext) {
                         return new String[]{
