@@ -13,7 +13,7 @@
     <sv:value>4e0f69b2-f9f1-40c9-b31b-cc68594b1014</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
-    <sv:value>Search results sample</sv:value>
+    <sv:value>Search results freemarker sample</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -26,7 +26,7 @@
       <sv:value>2008-12-15T09:28:36.818+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2008-12-16T09:11:26.290+01:00</sv:value>
+      <sv:value>2009-01-09T14:33:20.143+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:template" sv:type="String">
       <sv:value>sampleFreemarker</sv:value>

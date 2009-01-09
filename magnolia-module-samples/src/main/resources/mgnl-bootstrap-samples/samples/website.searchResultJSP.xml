@@ -12,6 +12,9 @@
   <sv:property sv:name="jcr:uuid" sv:type="String">
     <sv:value>4ffa2443-bcc2-42cd-b0e3-2b08769823ae</sv:value>
   </sv:property>
+  <sv:property sv:name="title" sv:type="String">
+    <sv:value>Search results jsp sample</sv:value>
+  </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
@@ -23,7 +26,7 @@
       <sv:value>2008-12-15T11:03:10.742+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2008-12-15T11:27:33.810+01:00</sv:value>
+      <sv:value>2009-01-09T14:33:12.509+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:template" sv:type="String">
       <sv:value>sampleJSP</sv:value>
@@ -105,6 +108,25 @@
           </sv:property>
         </sv:node>
       </sv:node>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="text_files">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:mixinTypes" sv:type="Name">
+      <sv:value>mix:lockable</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>2f8960ea-d1a5-4ead-a693-774ea9f5f0e1</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="Date">
+        <sv:value>2009-01-09T14:16:40.613+01:00</sv:value>
+      </sv:property>
     </sv:node>
   </sv:node>
 </sv:node>
