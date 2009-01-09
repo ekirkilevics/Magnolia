@@ -52,6 +52,7 @@ import info.magnolia.module.delta.FilterOrderingTask;
 import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.NodeExistsDelegateTask;
 import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
 import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
@@ -124,80 +125,41 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new FilterOrderingTask("cache", "The gzip filter should now be placed before the cache filter.", new String[]{"gzip"}))
         );
 
-        register(DeltaBuilder.update("3.6.4", "Update gzip and cache compression configuration.")
-                .addTask(new BootstrapResourcesTask("Updated configuration", "Bootstraps cache compression configuration.") {
-                    protected String[] getResourcesToBootstrap(final InstallContext installContext) {
-                        return new String[]{
-                                "/mgnl-bootstrap/cache/config.modules.cache.config.compression.xml"
-                        };
-                    }
-                })
-                .addTask(
-                        new ConditionalDelegateTask(
-                                "Cache cleanup", 
-                                "Removes obsolete cache compression list in favor of new global configuration.", 
-                                new RemoveNodeTask(
-                                        "Remove obsolete compression list configuration.", 
-                                        "Removes cache executor specific compression list configuration in favor of using one global list for both cache and gzip.", 
-                                        ContentRepository.CONFIG, 
-                                        "/modules/cache/config/configurations/default/executors/store/cacheContent/compressible"), 
-                                new WarnTask("Warning", "The compression list configuration have been relocated to /modules/cache/compression/voters/contentType, since you have modified the default configuration, please make sure your customization is applied also to new configuration.")
-                        ) {
-                            protected boolean condition(InstallContext installContext) throws TaskExecutionException {
-                                
-                                try {
-                                    List vals = new ArrayList();
-                                    Collection compressionList = installContext.getConfigHierarchyManager().getContent("/modules/cache/config/configurations/default/executors/store/cacheContent/compressible").getNodeDataCollection();
-                                    for (Iterator iterator = compressionList.iterator(); iterator.hasNext();) {
-                                        NodeData data = (NodeData) iterator.next();
-                                        vals.add(data.getString());
-                                    }
-                                    return vals.remove("text/html") && vals.remove("text/css") && vals.remove("application/x-javascript") && vals.isEmpty();
-                                    
-                                } catch (RepositoryException e) {
-                                    log.error(e.getMessage(), e);
-                                }
-                                return false;
-                            }}
-                )
-                .addTask(
-                        new ConditionalDelegateTask(
-                                "GZip cleanup", 
-                                "Removes obsolete gzip bypass in favor of new global configuration.", 
-                                new RemoveNodeTask(
-                                        "Remove obsolete bypass.", 
-                                        "Removes content type bypass from gzip filter.", 
-                                        ContentRepository.CONFIG, 
-                                        "/server/filters/gzip/bypasses/contentType"), 
-                                new WarnTask("Warning", "The list of compressible types have been relocated to /modules/cache/compression/voters/contentType, since you have modified the default configuration, please make sure your customization is applied also to new configuration.")
-                        ) {
-                            protected boolean condition(InstallContext installContext) throws TaskExecutionException {
-                                
-                                try {
-                                    List vals = new ArrayList();
-                                    Collection compressionList = installContext.getConfigHierarchyManager().getContent("/server/filters/gzip/bypasses/contentType/allowed").getNodeDataCollection();
-                                    for (Iterator iterator = compressionList.iterator(); iterator.hasNext();) {
-                                        NodeData data = (NodeData) iterator.next();
-                                        vals.add(data.getString());
-                                    }
-                                    return vals.remove("text/html") && vals.remove("text/css") && vals.remove("application/x-javascript") && vals.isEmpty();
-                                    
-                                } catch (RepositoryException e) {
-                                    log.error(e.getMessage(), e);
-                                }
-                                return false;
-                            }}
-                ).addTask(new AbstractRepositoryTask("Add bypass", "Adds new bypass for GZip filter using global configuration.") {
-                    protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
-                        final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
-                        Content content = hm.createContent("/server/filters/gzip/bypasses", "deletageBypass", ItemType.CONTENTNODE.getSystemName());
-                        content.createNodeData("class","info.magnolia.voting.voters.VoterSet");
-                        content.createNodeData("delegatePath","/modules/cache/config/compression/voters");
-                    }
-                })
-        );
+        register(DeltaBuilder.update("3.6.4", "Update gzip and cache compression configuration.").addTasks(getTasksFor364()));
 
 
+    }
+
+    private List getTasksFor364() {
+        List list = new ArrayList();
+        // Add new compression types and user agents configuration
+        list.add(new BootstrapResourcesTask("Updated configuration", "Bootstraps cache compression configuration.") {
+            protected String[] getResourcesToBootstrap(final InstallContext installContext) {
+                return new String[]{"/mgnl-bootstrap/cache/config.modules.cache.config.compression.xml"};
+            }
+        });
+        // remove previously used compressible content types configuration 
+        list.add(
+                new DefaultCompressibleContentTypesCondition("Cache cleanup", "Removes obsolete cache compression list in favor of new global configuration.", 
+                        new RemoveNodeTask("Remove obsolete compression list configuration.", "Removes cache executor specific compression list configuration in favor of using one global list for both cache and gzip.", ContentRepository.CONFIG, "/modules/cache/config/configurations/default/executors/store/cacheContent/compressible"), 
+                        new WarnTask("Warning", "The compression list configuration have been relocated to /modules/cache/compression/voters/contentType, since you have modified the default configuration, please make sure your customization is applied also to new configuration."),
+                        "/modules/cache/config/configurations/default/executors/store/cacheContent/compressible"));
+        // remove bypass for compressible content types from gzip filter
+        list.add(new DefaultCompressibleContentTypesCondition("GZip cleanup", "Removes obsolete gzip bypass in favor of new global configuration.", 
+                        new RemoveNodeTask("Remove obsolete bypass.", "Removes content type bypass from gzip filter.", ContentRepository.CONFIG, "/server/filters/gzip/bypasses/contentType"), 
+                        new WarnTask("Warning", "The list of compressible types have been relocated to /modules/cache/compression/voters/contentType, since you have modified the default configuration, please make sure your customization is applied also to new configuration."),
+                        "/server/filters/gzip/bypasses/contentType/allowed"));
+
+        // add new bypass to GzipFilter that executes voters from new compression configuration in /modules/cache/config
+        list.add(new AbstractRepositoryTask("Add bypass", "Adds new bypass for GZip filter using global configuration.") {
+            protected void doExecute(InstallContext installContext) throws RepositoryException, TaskExecutionException {
+                final HierarchyManager hm = installContext.getHierarchyManager(ContentRepository.CONFIG);
+                Content content = hm.createContent("/server/filters/gzip/bypasses", "deletageBypass", ItemType.CONTENTNODE.getSystemName());
+                content.createNodeData("class","info.magnolia.voting.voters.VoterSet");
+                content.createNodeData("delegatePath","/modules/cache/config/compression/voters");
+            }
+        });
+        return list;
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
@@ -206,6 +168,7 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(new FilterOrderingTask("cache", new String[]{"gzip"}));
         return tasks;
     }
+    
 
     /* TODO : if we keep this, they should move to cacheStrategy now
     public List getStartupTasks(InstallContext installContext) {
@@ -241,4 +204,35 @@ public class CacheModuleVersionHandler extends DefaultModuleVersionHandler {
     }
     */
 
+    class DefaultCompressibleContentTypesCondition extends ConditionalDelegateTask {
+
+        private String checkedNodeName;
+
+        public DefaultCompressibleContentTypesCondition(String taskName, String taskDescription, Task ifTrue, Task ifFalse, String checkedNodeName) {
+            super(taskName, taskDescription, ifTrue, ifFalse);
+            this.checkedNodeName = checkedNodeName;
+        }
+        
+        protected boolean condition(InstallContext installContext) throws TaskExecutionException {
+            try {
+                List vals = new ArrayList();
+                HierarchyManager hm = installContext.getConfigHierarchyManager();
+                if (!hm.isExist(checkedNodeName)) {
+                    // compression configuration doesn't exist, just return false
+                    return false;
+                }
+                Collection compressionList = hm.getContent(checkedNodeName).getNodeDataCollection();
+                for (Iterator iterator = compressionList.iterator(); iterator.hasNext();) {
+                    NodeData data = (NodeData) iterator.next();
+                    vals.add(data.getString());
+                }
+                return vals.remove("text/html") && vals.remove("text/css") && vals.remove("application/x-javascript") && vals.isEmpty();
+                
+            } catch (RepositoryException e) {
+                log.error(e.getMessage(), e);
+            }
+            // the node doesn't have any children or their values can't be retried. Return false so the warning will be displayed.
+            return false;
+        }
+    }
 }
