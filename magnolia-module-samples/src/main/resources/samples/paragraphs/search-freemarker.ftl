@@ -1,8 +1,8 @@
 [#assign cms=JspTaglibs["cms-taglib"]]
 [#assign cmsu=JspTaglibs["cms-util-taglib"]]
 <div id="search-results" >
-    <p>Query Results for <b>${ctx.query}</b></p>
-    [#if ctx.parameters.query?exists]
+    <p>Query Results for <b>${ctx.query!}</b></p>
+    [#if ctx.query?exists]
         [@cmsu.simpleSearch query="${ctx.query}" var="results" scope="request" /]
 
         [#if ctx.results?size = 0]
