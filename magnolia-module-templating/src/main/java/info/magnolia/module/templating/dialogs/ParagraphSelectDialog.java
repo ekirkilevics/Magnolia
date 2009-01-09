@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.admininterface.dialogs;
+package info.magnolia.module.templating.dialogs;
 
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ParagraphManager;
@@ -66,22 +66,17 @@ import org.slf4j.LoggerFactory;
  * @author philipp
  */
 public class ParagraphSelectDialog extends DialogMVCHandler {
+    private static final Logger log = LoggerFactory.getLogger(ParagraphSelectDialog.class);
+    private static final String EDIT_PARAGRAPH_DIALOGNAME = "editParagraph";
+    public static final String EDITPARAGRAPH_DIALOG_URL = ".magnolia/dialogs/" + EDIT_PARAGRAPH_DIALOGNAME + ".html";
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ParagraphSelectDialog.class);
-
-    private String paragraph = StringUtils.EMPTY;
+    private final String paragraph;
 
     public ParagraphSelectDialog(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
         paragraph = params.getParameter("mgnlParagraph"); //$NON-NLS-1$
     }
 
-    /**
-     * @see .DialogMVCHandler#createDialog(Content, Content)
-     */
     protected Dialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
         Dialog dialog = DialogFactory.getDialogInstance(request, response, null, null);
 
@@ -151,26 +146,17 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         return dialog;
     }
 
-    /**
-     * @see info.magnolia.module.admininterface.DialogMVCHandler#getWesiteNode()
-     */
     public Content getStorageNode() {
         return null;
     }
 
-    /**
-     * @see info.magnolia.module.admininterface.DialogMVCHandler#getConfigNode()
-     */
     public Content getConfigNode() {
         return null;
     }
 
-    /**
-     * @see info.magnolia.module.admininterface.DialogMVCHandler#save()
-     */
     public String save() {
         try {
-            // copy all parameters exept mgnlDialog
+            // copy all parameters except mgnlDialog (which we switch to "editParagraph")
             StringBuffer query = new StringBuffer();
             for (Iterator iter = form.getParameters().keySet().iterator(); iter.hasNext();) {
                 String key = (String) iter.next();
@@ -184,7 +170,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
                 }
 
             }
-            response.sendRedirect(request.getContextPath() + "/.magnolia/dialogs/" + this.paragraph + ".html?" + query); //$NON-NLS-1$ //$NON-NLS-2$
+            response.sendRedirect(request.getContextPath() + "/" + EDITPARAGRAPH_DIALOG_URL + "?" + query); //$NON-NLS-1$ //$NON-NLS-2$
         }
         catch (IOException e) {
             log.error("can't redirect to the paragraph-dialog", e); //$NON-NLS-1$

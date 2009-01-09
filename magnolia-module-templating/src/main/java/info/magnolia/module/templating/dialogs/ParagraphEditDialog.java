@@ -31,23 +31,24 @@
  * intact.
  *
  */
-package info.magnolia.module.admininterface.dialogs;
+package info.magnolia.module.templating.dialogs;
 
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.Dialog;
+import info.magnolia.module.admininterface.DialogHandlerManager;
+import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * Editing paragraph data.
+ *
  * @author philipp
  */
 public class ParagraphEditDialog extends ConfiguredDialog {
@@ -66,7 +67,19 @@ public class ParagraphEditDialog extends ConfiguredDialog {
      * info.magnolia.cms.core.Content)
      */
     protected Dialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
-        Dialog dialog = super.createDialog(configNode, websiteNode);
+        final Paragraph para = ParagraphManager.getInstance().getInfo(paragraph);
+        if (para == null) {
+            throw new IllegalStateException("No paragraph registered with name " + paragraph);
+        }
+        final String dialogName;
+        if (para.getDialog() != null) {
+            dialogName = para.getDialog();
+        } else {
+            dialogName = para.getName();
+        }
+
+        final Content dialogConfigNode = DialogHandlerManager.getInstance().getDialogConfigNode(dialogName);
+        Dialog dialog = super.createDialog(dialogConfigNode, websiteNode);
         dialog.setConfig("paragraph", paragraph); //$NON-NLS-1$
         return dialog;
     }

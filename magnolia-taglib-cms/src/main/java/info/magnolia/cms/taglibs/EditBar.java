@@ -43,6 +43,7 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.templating.dialogs.ParagraphSelectDialog;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
@@ -223,7 +224,10 @@ public class EditBar extends TagSupport {
                 }
 
                 bar.setDefaultButtons();
-
+                // yes this is ugly - TODO MAGNOLIA-2370/MAGNOLIA-1941 : we should in fact open the correct dialog immediately
+                bar.getButtonEdit().setDialogPath(ParagraphSelectDialog.EDITPARAGRAPH_DIALOG_URL);
+                bar.getButtonEdit().setDefaultOnclick(); // re-set the onclick after having set the dialog path.
+                
                 if (this.editLabel != null) {
                     if (StringUtils.isEmpty(this.editLabel)) {
                         bar.setButtonEdit(null);

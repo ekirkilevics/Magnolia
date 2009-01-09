@@ -51,8 +51,8 @@ import java.io.Writer;
  * @version 2.0
  */
 public class ButtonEdit extends Button {
-
-    String label = "buttons.edit"; //$NON-NLS-1$
+    private String label = "buttons.edit"; //$NON-NLS-1$
+    private String dialogPath;
 
     public ButtonEdit() {
     }
@@ -105,7 +105,9 @@ public class ButtonEdit extends Button {
             + this.getParagraph()
             + "','" //$NON-NLS-1$
             + repository
-            + "');"); //$NON-NLS-1$
+            + "'"
+            + (dialogPath != null ? ",'" + dialogPath + "'" : "")
+            +");");
     }
 
     public String getLabel() {
@@ -114,6 +116,10 @@ public class ButtonEdit extends Button {
 
     public void setLabel(String s) {
         this.label = s;
+    }
+
+    public void setDialogPath(String dialogPath) {
+        this.dialogPath = dialogPath;
     }
 
     /**

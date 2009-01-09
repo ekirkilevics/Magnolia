@@ -54,7 +54,7 @@ import java.io.Writer;
  */
 public class BarEdit extends Bar {
 
-    private Button buttonEdit = new ButtonEdit();
+    private ButtonEdit buttonEdit = new ButtonEdit();
 
     private Button buttonMove = new Button();
 
@@ -98,11 +98,11 @@ public class BarEdit extends Bar {
         }
     }
 
-    public Button getButtonEdit() {
+    public ButtonEdit getButtonEdit() {
         return this.buttonEdit;
     }
 
-    public void setButtonEdit(Button b) {
+    public void setButtonEdit(ButtonEdit b) {
         this.buttonEdit = b;
     }
 

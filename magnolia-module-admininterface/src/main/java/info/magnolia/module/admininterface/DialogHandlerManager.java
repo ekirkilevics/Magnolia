@@ -34,8 +34,6 @@
 package info.magnolia.module.admininterface;
 
 import info.magnolia.cms.beans.config.ObservedManager;
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
@@ -43,14 +41,12 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.cms.util.NodeDataUtil;
-import info.magnolia.module.admininterface.dialogs.ParagraphEditDialog;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -59,13 +55,11 @@ import org.apache.commons.lang.StringUtils;
 
 
 /**
- * Manages all the dialog handlers
- * @todo The paragraph dialogs should not differ from the other ones.
+ * Manages all the dialog handlers.
+ *
  * @author philipp
  */
 public class DialogHandlerManager extends ObservedManager {
-
-    private static final String PARAGRAPH_EDIT_DIALOG = "info.magnolia.module.admininterface.dialogs.ParagraphEditDialog";
 
     private static final String CLASS = "class";
 
@@ -83,17 +77,22 @@ public class DialogHandlerManager extends ObservedManager {
         List dialogs = ContentUtil.collectAllChildren(node, ItemType.CONTENT);
         for (Iterator iter = dialogs.iterator(); iter.hasNext();) {
             Content dialog = new SystemContentWrapper((Content) iter.next());
-            // if this paragraph is used from a dialog register it under the name of the paragraph too
-            registerAsParagraphDialog(node.getHandle(), dialog);
 
             String name = dialog.getNodeData(ND_NAME).getString();
             if (StringUtils.isEmpty(name)) {
                 name = dialog.getName();
             }
-            String className = NodeDataUtil.getString(dialog, CLASS, PARAGRAPH_EDIT_DIALOG);
+            String className = NodeDataUtil.getString(dialog, CLASS);
+
             try {
-                // there are paragraphs dialogs without a name!
-                registerDialogHandler(name, ClassUtil.classForName(className), dialog);
+                // dialog class is not mandatory
+                Class dialogClass;
+                if (StringUtils.isNotEmpty(className)) {
+                    dialogClass = ClassUtil.classForName(className);
+                } else {
+                    dialogClass = null;
+                }
+                registerDialogHandler(name, dialogClass, dialog);
             }
             catch (ClassNotFoundException e) {
                 log.warn("Can't find dialog handler class " + className, e); //$NON-NLS-1$
@@ -101,72 +100,31 @@ public class DialogHandlerManager extends ObservedManager {
         }
     }
 
-    /**
-     * Check if this dialog is used by a paragraph. If so register it under the paragraphs name.
-     */
-    private void registerAsParagraphDialog(String basePath, Content dialog) {
-
-        String dialogPath = StringUtils.removeStart(dialog.getHandle(), basePath + "/");
-        String dialogName = dialog.getNodeData(ND_NAME).getString();
-        if (StringUtils.isEmpty(dialogName)) {
-            dialogName = dialog.getName();
-        }
-
-        Map paragraphs = ParagraphManager.getInstance().getParagraphs();
-        for (Iterator iter = paragraphs.entrySet().iterator(); iter.hasNext();) {
-            Paragraph paragraph = (Paragraph) ((Entry) iter.next()).getValue();
-            String paragraphDialogName = paragraph.getDialog();
-
-            if (StringUtils.equals(paragraphDialogName, dialogName)) {
-                Class handler = ParagraphEditDialog.class;
-
-                String className = dialog.getNodeData(CLASS).getString();
-                if (StringUtils.isNotEmpty(className)) {
-                    try {
-                        handler = ClassUtil.classForName(className);
-                    }
-                    catch (ClassNotFoundException e) {
-                        log.error("Registering paragraph: class [" + className + "] not found", e); //$NON-NLS-1$ //$NON-NLS-2$
-                    }
-                }
-
-                registerDialogHandler(paragraph.getName(), handler, dialog);
-            }
-        }
-
-    }
-
     protected void onClear() {
         this.dialogHandlers.clear();
     }
 
     protected void registerDialogHandler(String name, Class dialogHandler, Content configNode) {
-        log.debug("Registering dialog handler [{}]", name); //$NON-NLS-1$
+        log.debug("Registering dialog handler [{}] from {}", name, configNode.getHandle()); //$NON-NLS-1$
 
         // remember the uuid for a reload
         dialogHandlers.put(name, new Object[]{dialogHandler, configNode});
+    }
+
+    public Content getDialogConfigNode(String dialogName) {
+        Object[] handlerConfig = (Object[]) dialogHandlers.get(dialogName);
+        return (Content) handlerConfig[1];
     }
 
     public DialogMVCHandler getDialogHandler(String name, HttpServletRequest request, HttpServletResponse response) {
 
         Object[] handlerConfig = (Object[]) dialogHandlers.get(name);
 
-        // fix for MAGNOLIA-1394 : try to see if the given name is a paragraph name, then use that paragraph's dialog instead.
-        if (handlerConfig == null) {
-            final Paragraph para = ParagraphManager.getInstance().getInfo(name);
-            // it's not mandatory that a paragraph references this dialog :
-            if (para != null) {
-                final String dialogName = para.getDialog();
-                handlerConfig = (Object[]) dialogHandlers.get(dialogName);
-            }
-        }
-
         if (handlerConfig == null) {
             throw new InvalidDialogHandlerException(name);
         }
 
         return instantiateHandler(name, request, response, handlerConfig);
-
     }
 
     protected DialogMVCHandler instantiateHandler(String name, HttpServletRequest request,

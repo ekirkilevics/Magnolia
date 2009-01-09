@@ -34,12 +34,18 @@
 package info.magnolia.module.templating.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
+import info.magnolia.module.delta.ArrayDelegateTask;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
+import info.magnolia.module.delta.CreateNodeTask;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.NewPropertyTask;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
+import info.magnolia.module.delta.RemoveNodeTask;
+import info.magnolia.module.templating.dialogs.ParagraphSelectDialog;
 import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
 
 import java.util.Collections;
@@ -71,10 +77,12 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         );
 
         register(DeltaBuilder.update("4.0", "")
-                .addTask(new BootstrapSingleResource(
-                "Freemarker Template Renderer",
-                "Add freemarker template renderer configuration",
-                "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"))
+                .addTask(new BootstrapSingleResource("Freemarker Template Renderer", "Add Freemarker template renderer configuration", "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"))
+                .addTask(new ArrayDelegateTask("Paragraph selection dialog", "The paragraph selection dialog is now part of the Templating module.",
+                        new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/dialogs/selectParagraph"),
+                        new CreateNodeTask(null, null, ContentRepository.CONFIG, "/modules/templating/dialogs", "selectParagraph", ItemType.CONTENT.getSystemName()),
+                        new NewPropertyTask(null, null, ContentRepository.CONFIG, "/modules/templating/dialogs/selectParagraph", "class", ParagraphSelectDialog.class.getName())))
+                .addTask(new BootstrapSingleResource("Paragraph edit dialog", "The paragraph edition dialog is now a regular dialog.", "/mgnl-bootstrap/templating/config.modules.templating.dialogs.editParagraph.xml"))
         );
     }
 
