@@ -71,7 +71,7 @@ public class BarMain extends Bar {
     private boolean overlay = true;
 
     /**
-     * true if the AdminCentral button is visible
+     * True if the AdminCentral button is visible.
      */
     private boolean adminButtonVisible = true;
 
@@ -99,9 +99,7 @@ public class BarMain extends Bar {
     }
 
     /**
-     * <p>
-     * sets the default buttons
-     * </p>
+     * Sets the default buttons.
      */
     public void setDefaultButtons() {
         this.setButtonEditView();
@@ -111,9 +109,7 @@ public class BarMain extends Bar {
     }
 
     /**
-     * <p>
-     * places the default buttons to the very right/left position
-     * </p>
+     * Places the default buttons to the very right/left position.
      */
     public void placeDefaultButtons() {
         if (this.isAdminButtonVisible()) {
@@ -138,18 +134,17 @@ public class BarMain extends Bar {
     }
 
     /**
-     * <p>
-     * sets the default page properties button
-     * </p>
+     * Sets the default page properties button.
+     *
      * @param path , path of the current page
      * @param paragraph , paragraph type
      */
     public void setButtonProperties(String path, String paragraph) {
-        ButtonEdit b = new ButtonEdit(this.getRequest());
+        ButtonEdit b = new ButtonEdit();
         b.setLabel(MessagesManager.get("buttons.properties")); //$NON-NLS-1$
         b.setPath(path);
         b.setParagraph(paragraph);
-        b.setDefaultOnclick(this.getRequest());
+        b.setDefaultOnclick();
         this.setButtonProperties(b);
     }
 
@@ -162,9 +157,7 @@ public class BarMain extends Bar {
     }
 
     /**
-     * <p>
-     * sets the default preview button (to switch from edit to preview mode)
-     * </p>
+     * Sets the default preview button (to switch from edit to preview mode).
      */
     public void setButtonPreview() {
         Button b = new Button();
@@ -183,9 +176,7 @@ public class BarMain extends Bar {
     }
 
     /**
-     * <p>
-     * sets the default edit view button (to switch form preview to edit view mode)
-     * </p>
+     * Sets the default edit view button (to switch form preview to edit view mode).
      */
     public void setButtonEditView() {
         Button b = new Button();
@@ -208,9 +199,7 @@ public class BarMain extends Bar {
     }
 
     /**
-     * <p>
-     * sets the default site admin button
-     * </p>
+     * Sets the default site admin button.
      * @param path , path of the current page (will show up in site admin)
      */
     public void setButtonSiteAdmin(String path) {
@@ -246,9 +235,7 @@ public class BarMain extends Bar {
     }
 
     /**
-     * <p>
-     * sets if the main bar overlays the content (true, default) or if it is moving it downward (false)
-     * </p>
+     * Sets if the main bar overlays the content (true, default) or if it is moving it downward (false).
      */
     public void setOverlay(boolean b) {
         this.overlay = b;
@@ -312,6 +299,7 @@ public class BarMain extends Bar {
             }
         }
     }
+
     /**
      * @deprecated use drawHtmlLinks(Writer out) instead.
      */
