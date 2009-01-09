@@ -51,17 +51,12 @@ import javax.servlet.jsp.tagext.TagSupport;
 public class UserTag extends TagSupport {
 
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
      * Name of the pagecontext variable where the user will be set.
      */
     private String var;
 
     /**
-     * Returns also anonymous users?
+     * Determines if anonymous users should be taken into account.
      */
     private boolean anonymous;
 
@@ -81,9 +76,6 @@ public class UserTag extends TagSupport {
         this.var = var;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#doEndTag()
-     */
     public int doEndTag() throws JspException {
 
         User user = MgnlContext.getUser();
@@ -97,9 +89,6 @@ public class UserTag extends TagSupport {
         return super.doEndTag();
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
     public void release() {
         super.release();
         this.var = null;

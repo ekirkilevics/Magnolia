@@ -53,18 +53,10 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class PageIterator extends TagSupport {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
     private Iterator contentIterator;
 
     private String hiddenAttribute = "hidden";
 
-    /**
-     * s{@inheritDoc}
-     */
     public int doAfterBody() throws JspException {
         boolean hasNext = nextContent();
 
@@ -75,17 +67,11 @@ public class PageIterator extends TagSupport {
         return SKIP_BODY;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public int doEndTag() throws JspException {
         Resource.restoreCurrentActivePage();
         return EVAL_PAGE;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public int doStartTag() throws JspException {
         initContentIterator();
 
@@ -97,9 +83,6 @@ public class PageIterator extends TagSupport {
         return SKIP_BODY;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void release() {
         this.contentIterator = null;
         hiddenAttribute = "hidden";
@@ -131,7 +114,7 @@ public class PageIterator extends TagSupport {
     }
 
     /**
-     * @return <code>true</code> if the next page was activated, <code>false</code> if there are no pages left
+     * Returns <code>true</code> if the next page was activated, <code>false</code> if there are no pages left.
      */
     private boolean nextContent() {
         if (this.contentIterator.hasNext()) {

@@ -58,17 +58,6 @@ public class Set extends BaseContentTag {
 
     public static final String SCOPE_PAGE = "page";
 
-    
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(Set.class);
-
     private String scope = SCOPE_GLOBAL;
     
     /**
@@ -77,7 +66,7 @@ public class Set extends BaseContentTag {
     private boolean forBodyOnly = false;
 
     /**
-     * If forBodyOnly is true we have to reset the former status
+     * If forBodyOnly is true we have to reset the former status.
      */
     private Content previousNode;
     
@@ -104,9 +93,6 @@ public class Set extends BaseContentTag {
         throw new UnsupportedOperationException("nodeDataName not supported in this tag");
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
     public int doStartTag() {
         Content node = getFirstMatchingNode();
 
@@ -143,9 +129,6 @@ public class Set extends BaseContentTag {
         }
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() {
         if(isForBodyOnly()){
             setNode(previousNode);
@@ -153,9 +136,6 @@ public class Set extends BaseContentTag {
         return EVAL_PAGE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#release()
-     */
     public void release() {
         super.release();
         this.scope = SCOPE_GLOBAL;

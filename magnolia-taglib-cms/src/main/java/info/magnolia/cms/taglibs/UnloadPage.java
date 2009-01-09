@@ -51,14 +51,6 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  */
 public class UnloadPage extends BodyTagSupport {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
     public int doStartTag() {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final Content mainContent = aggregationState.getMainContent();

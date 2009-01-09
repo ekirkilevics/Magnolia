@@ -59,11 +59,6 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 public class QueryTag extends TagSupport {
 
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
      * The query result will be set in the pageContext using this name.
      */
     private String var;
@@ -128,9 +123,6 @@ public class QueryTag extends TagSupport {
         this.nodeType = nodeType;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#doEndTag()
-     */
     public int doEndTag() throws JspException {
 
         Query q;
@@ -157,9 +149,6 @@ public class QueryTag extends TagSupport {
         return EVAL_PAGE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
     public void release() {
         super.release();
         this.var = null;

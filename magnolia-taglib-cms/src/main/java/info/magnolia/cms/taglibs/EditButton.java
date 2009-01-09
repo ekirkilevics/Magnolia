@@ -58,16 +58,7 @@ import javax.servlet.jsp.tagext.TagSupport;
  * @version $Revision $ ($Author $)
  */
 public class EditButton extends TagSupport {
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(EditButton.class);
+    private static final Logger log = LoggerFactory.getLogger(EditButton.class);
 
     private String nodeName;
 
@@ -83,17 +74,11 @@ public class EditButton extends TagSupport {
 
     private boolean adminOnly = true;
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
     public int doStartTag() {
         this.displayHandler = StringUtils.EMPTY;
         return EVAL_BODY_INCLUDE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() {
         if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET)) {
 
@@ -108,7 +93,7 @@ public class EditButton extends TagSupport {
                 button.setParagraph(this.getParagraph());
                 button.setNodeCollectionName(this.getNodeCollectionName());
                 button.setNodeName(this.getNodeName());
-                button.setDefaultOnclick((HttpServletRequest) this.pageContext.getRequest());
+                button.setDefaultOnclick();
                 if (this.getLabel() != null) {
                     button.setLabel(this.getLabel());
                 }
@@ -132,9 +117,6 @@ public class EditButton extends TagSupport {
         this.nodeName = name;
     }
 
-    /**
-     *
-     */
     private String getNodeName() {
         if (this.nodeName == null) {
             if (Resource.getLocalContentNode() == null) {
@@ -267,9 +249,6 @@ public class EditButton extends TagSupport {
         this.small = small;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
     public void release() {
         this.nodeName = null;
         this.nodeCollectionName = null;

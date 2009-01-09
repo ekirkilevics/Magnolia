@@ -59,16 +59,6 @@ import javax.servlet.jsp.PageContext;
 public class SetNode extends BaseContentTag {
 
     /**
-     * Logger.
-     */
-    protected static final Logger log = LoggerFactory.getLogger(SetNode.class);
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
      * Tag attribute. Variable name: the content node will be added to the pagecontext with this name.
      */
     private String var;
@@ -141,9 +131,6 @@ public class SetNode extends BaseContentTag {
         return EVAL_PAGE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#release()
-     */
     public void release() {
         super.release();
         this.var = null;

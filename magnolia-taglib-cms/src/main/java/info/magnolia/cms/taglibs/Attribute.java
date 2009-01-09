@@ -47,12 +47,7 @@ import javax.servlet.jsp.tagext.TagSupport;
 public class Attribute extends TagSupport {
 
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * Value of the attribute
+     * Value of the attribute.
      */
     private Object value;
 
@@ -77,9 +72,6 @@ public class Attribute extends TagSupport {
         this.value = value;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() throws JspException {
         Include parent = (Include) findAncestorWithClass(this, Include.class);
         if (parent == null) {
@@ -89,9 +81,6 @@ public class Attribute extends TagSupport {
         return EVAL_PAGE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
     public void release() {
         this.name = null;
         this.value = null;

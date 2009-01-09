@@ -54,11 +54,7 @@ import java.util.Properties;
  * @version $Revision: $ ($Author: $)
  */
 public class CmsFunctions {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(CmsFunctions.class);
+    private static final Logger log = LoggerFactory.getLogger(CmsFunctions.class);
 
     /**
      * Returns the current active page (can be set using the loadPage tag).
@@ -85,7 +81,7 @@ public class CmsFunctions {
     }
 
     /**
-     * Output a full url given a content handle (usually a page)
+     * Output a full url given a content handle (usually a page).
      * @param handle page handle
      * @return url formed using context path + handle + default extension
      */
@@ -94,7 +90,7 @@ public class CmsFunctions {
     }
 
     /**
-     * Returns the value of a system property
+     * Returns the value of a system property.
      * @param key property key
      * @return property value
      */
@@ -103,7 +99,7 @@ public class CmsFunctions {
     }
 
     /**
-     * Returns the system properties
+     * Returns the system properties.
      * @return Property instance
      */
     public static Properties systemProperties() {
@@ -111,7 +107,7 @@ public class CmsFunctions {
     }
 
     /**
-     * Check if a user is currently logged in (not anonymous)
+     * Check if a user is currently logged in (not anonymous).
      * @return true if a user is currently logged in.
      */
     public static boolean isLoggedIn() {
@@ -119,7 +115,7 @@ public class CmsFunctions {
     }
 
     /**
-     * Check if the current user can edit the active page
+     * Check if the current user can edit the active page.
      * @return true if the current user can edit the active page.
      */
     public static boolean canEdit() {

@@ -43,7 +43,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,18 +60,9 @@ import java.util.List;
  * @version $Revision$ ($Author$)
  */
 public class NewBar extends TagSupport implements BarTag {
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
+    private static final Logger log = LoggerFactory.getLogger(NewBar.class);
 
     private static final String DEFAULT_NEW_LABEL = "buttons.new"; //$NON-NLS-1$
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(NewBar.class);
 
     private String contentNodeCollectionName;
 
@@ -188,22 +178,15 @@ public class NewBar extends TagSupport implements BarTag {
         }
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
     public int doStartTag() {
         return EVAL_BODY_INCLUDE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() {
 
         if ((!adminOnly || ServerConfiguration.getInstance().isAdmin()) && MgnlContext.getAggregationState().getMainContent().isGranted(Permission.SET)) {
-            HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
             try {
-                BarNew bar = new BarNew(request);
+                BarNew bar = new BarNew();
                 bar.setPath(this.getPath());
                 bar.setParagraph(StringUtils.deleteWhitespace(this.paragraph));
                 bar.setNodeCollectionName(this.contentNodeCollectionName);
@@ -237,9 +220,6 @@ public class NewBar extends TagSupport implements BarTag {
         return EVAL_PAGE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
     public void release() {
         super.release();
         this.contentNodeCollectionName = null;

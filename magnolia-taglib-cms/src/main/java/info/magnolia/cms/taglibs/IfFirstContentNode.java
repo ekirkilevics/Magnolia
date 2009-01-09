@@ -47,14 +47,6 @@ import javax.servlet.jsp.tagext.TagSupport;
  */
 public class IfFirstContentNode extends TagSupport {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
     public int doStartTag() {
         int currentIndex = ((Integer) pageContext.getAttribute(
             ContentNodeIterator.CURRENT_INDEX,
@@ -62,9 +54,6 @@ public class IfFirstContentNode extends TagSupport {
         return (currentIndex == 0) ? EVAL_BODY_INCLUDE : SKIP_BODY;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() {
         return EVAL_PAGE;
     }

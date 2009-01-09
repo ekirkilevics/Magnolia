@@ -46,14 +46,6 @@ import javax.servlet.jsp.tagext.BodyTagSupport;
  */
 public class LoadPagePath extends BodyTagSupport {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() throws JspException {
         LoadPage parent = (LoadPage) findAncestorWithClass(this, LoadPage.class);
         if (parent == null) {

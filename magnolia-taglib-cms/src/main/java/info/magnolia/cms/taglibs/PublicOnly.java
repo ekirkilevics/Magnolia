@@ -54,12 +54,7 @@ import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
 public class PublicOnly extends ConditionalTagSupport {
 
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * Show in preview mode?
+     * Determines if the content should be displayed in preview mode.
      */
     private boolean showInPreview;
 
@@ -71,9 +66,6 @@ public class PublicOnly extends ConditionalTagSupport {
         this.showInPreview = showInPreview;
     }
 
-    /**
-     * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
-     */
     protected boolean condition() {
         if (!ServerConfiguration.getInstance().isAdmin() || (showInPreview && MgnlContext.getAggregationState().isPreviewMode())) {
             return true;
@@ -81,9 +73,6 @@ public class PublicOnly extends ConditionalTagSupport {
         return false;
     }
 
-    /**
-     * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#release()
-     */
     public void release() {
         super.release();
         this.showInPreview = false;

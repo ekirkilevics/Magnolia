@@ -51,12 +51,6 @@ import org.slf4j.LoggerFactory;
  * @version $Revision$ ($Author$)
  */
 public abstract class BaseContentTag extends TagSupport {
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
     private final static Logger log = LoggerFactory.getLogger(BaseContentTag.class);
 
     private String nodeDataName;
@@ -124,7 +118,7 @@ public abstract class BaseContentTag extends TagSupport {
     }
 
     /**
-     * Get the first matching node containing a NodeData named <code>nodeDataName</code>
+     * Get the first matching node containing a NodeData named <code>nodeDataName</code>.
      * @return the active node, or the first matching one if nodedata is null and inherit is set.
      */
     protected Content getFirstMatchingNode() {
@@ -246,9 +240,6 @@ public abstract class BaseContentTag extends TagSupport {
         return null;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
     public void release() {
         super.release();
 

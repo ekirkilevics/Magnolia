@@ -51,16 +51,7 @@ import org.slf4j.LoggerFactory;
  * @version $Revision $ ($Author $)
  */
 public class IfEmpty extends BaseConditionalContentTag {
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(IfEmpty.class);
+    private static final Logger log = LoggerFactory.getLogger(IfEmpty.class);
 
     private String nodeDataName = StringUtils.EMPTY;
 
@@ -96,9 +87,6 @@ public class IfEmpty extends BaseConditionalContentTag {
         this.setContentNodeCollectionName(name);
     }
 
-    /**
-     * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
-     */
     protected boolean condition() {
         Content node = this.getFirstMatchingNode();
 

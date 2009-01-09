@@ -42,14 +42,6 @@ package info.magnolia.cms.taglibs;
  */
 public class IfNotEmpty extends IfEmpty {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * @see info.magnolia.cms.taglibs.IfEmpty#condition()
-     */
     protected boolean condition() {
         return !super.condition();
     }

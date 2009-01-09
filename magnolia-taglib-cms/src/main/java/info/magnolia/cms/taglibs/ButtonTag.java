@@ -51,11 +51,6 @@ import javax.servlet.jsp.tagext.TagSupport;
 public class ButtonTag extends TagSupport {
 
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
      * Dialog name.
      */
     private String dialogName = "xxx";
@@ -66,7 +61,7 @@ public class ButtonTag extends TagSupport {
     private String label;
 
     /**
-     * position (<code>left|right</code>)
+     * position (<code>left|right</code>).
      */
     private String position;
 
@@ -94,9 +89,6 @@ public class ButtonTag extends TagSupport {
         this.position = position;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#doEndTag()
-     */
     public int doEndTag() throws JspException {
 
         BarTag bartag = (BarTag) findAncestorWithClass(this, BarTag.class);
@@ -124,9 +116,6 @@ public class ButtonTag extends TagSupport {
         return EVAL_PAGE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
     public void release() {
         super.release();
         this.dialogName = null;

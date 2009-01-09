@@ -53,14 +53,8 @@ import javax.servlet.jsp.jstl.core.ConditionalTagSupport;
  * @version $Revision $ ($Author $)
  */
 public class AdminOnly extends ConditionalTagSupport {
-
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * Show in preview mode?
+     * Determines if the content should be displayed in preview mode.
      */
     private boolean showInPreview;
 
@@ -72,9 +66,6 @@ public class AdminOnly extends ConditionalTagSupport {
         this.showInPreview = showInPreview;
     }
 
-    /**
-     * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#condition()
-     */
     protected boolean condition() {
         if (ServerConfiguration.getInstance().isAdmin() && (!MgnlContext.getAggregationState().isPreviewMode() || showInPreview)) {
             return true;
@@ -82,9 +73,6 @@ public class AdminOnly extends ConditionalTagSupport {
         return false;
     }
 
-    /**
-     * @see javax.servlet.jsp.jstl.core.ConditionalTagSupport#release()
-     */
     public void release() {
         this.showInPreview = false;
         super.release();

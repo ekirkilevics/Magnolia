@@ -72,6 +72,7 @@ import java.util.Iterator;
  * @version $Revision$ ($Author$)
  */
 public class ContentNodeIterator extends BaseContentTag {
+    private static final Logger log = LoggerFactory.getLogger(ContentNodeIterator.class);
 
     /**
      * @deprecated
@@ -89,16 +90,6 @@ public class ContentNodeIterator extends BaseContentTag {
      * <code>javax.servlet.jsp.jstl.core.LoopTagStatus</code> instance.
      */
     protected static final String SIZE = "size"; //$NON-NLS-1$
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ContentNodeIterator.class);
 
     /**
      * Tag attribute.
@@ -142,7 +133,7 @@ public class ContentNodeIterator extends BaseContentTag {
     /** Current index the outer node iterator is at. */
     private Integer outerCurrIdx = null;
 
-    /** Collection iterated over by the outer node iterator */
+    /** Collection iterated over by the outer node iterator. */
     private String outerCollName = null;
 
     /** Resource.getLocalContentNodeCollectionName() value set by outer node iterator. */
@@ -226,11 +217,6 @@ public class ContentNodeIterator extends BaseContentTag {
 
         class Status implements LoopTagStatus, Serializable {
 
-            /**
-             * Stable serialVersionUID.
-             */
-            private static final long serialVersionUID = 222L;
-
             public Object getCurrent() {
                 return current;
             }
@@ -272,11 +258,7 @@ public class ContentNodeIterator extends BaseContentTag {
         return status;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
     public int doStartTag() {
-        HttpServletRequest request = (HttpServletRequest) pageContext.getRequest();
         index += begin;
 
         Collection children;
@@ -318,16 +300,10 @@ public class ContentNodeIterator extends BaseContentTag {
         return doIteration() ? EVAL_BODY_INCLUDE : SKIP_BODY;
     }
 
-    /**
-     * @return int
-     */
     public int doAfterBody() {
         return doIteration() ? EVAL_BODY_AGAIN : SKIP_BODY;
     }
 
-    /**
-     * @return
-     */
     private boolean doIteration() {
         if (this.contentNodeIterator.hasNext()) {
 
@@ -356,9 +332,6 @@ public class ContentNodeIterator extends BaseContentTag {
         return false;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() {
 
         this.restorePrevState();
@@ -376,9 +349,6 @@ public class ContentNodeIterator extends BaseContentTag {
         return EVAL_PAGE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
     public void reset() {
         setContentNodeCollectionName(null); // TODO : is this correct - here ?
         this.contentNodeIterator = null;

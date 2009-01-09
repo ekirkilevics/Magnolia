@@ -58,18 +58,10 @@ import org.apache.commons.lang.exception.NestableRuntimeException;
 public class LinksTag extends TagSupport {
 
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
      * Show links only in admin instance, default to <code>true</code>.
      */
     private boolean adminOnly = true;
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
     public int doStartTag() throws JspException {
         if (!adminOnly || ServerConfiguration.getInstance().isAdmin()) {
 
@@ -105,9 +97,6 @@ public class LinksTag extends TagSupport {
         this.adminOnly = adminOnly;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#release()
-     */
     public void release() {
         this.adminOnly = true;
         super.release();

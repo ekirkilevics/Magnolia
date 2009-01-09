@@ -62,11 +62,6 @@ import java.io.IOException;
  */
 public class EditBar extends TagSupport {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
     private String nodeName;
 
     private String nodeCollectionName;

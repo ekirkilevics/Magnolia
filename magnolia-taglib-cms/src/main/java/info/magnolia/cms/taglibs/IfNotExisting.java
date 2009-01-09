@@ -43,14 +43,6 @@ package info.magnolia.cms.taglibs;
  */
 public class IfNotExisting extends IfExisting {
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * @see info.magnolia.cms.taglibs.IfEmpty#condition()
-     */
     protected boolean condition() {
         return !super.condition();
     }

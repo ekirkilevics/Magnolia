@@ -298,13 +298,9 @@ public class Out extends BaseContentTag {
     protected String getFilePropertyValue(Content contentNode) {
         NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(contentNode, this.getNodeDataName());
         FileProperties props = new FileProperties(contentNode, nodeData.getName());
-        String value = props.getProperty(this.fileProperty);
-        return value;
+        return props.getProperty(this.fileProperty);
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() {
         // don't reset any value set using a tag attribute here, or it will break any container that does tag pooling!
 
@@ -416,9 +412,6 @@ public class Out extends BaseContentTag {
         return EVAL_PAGE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
     public void release() {
         super.release();
 

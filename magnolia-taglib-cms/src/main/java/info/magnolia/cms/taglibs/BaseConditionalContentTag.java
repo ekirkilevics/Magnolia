@@ -47,11 +47,6 @@ import org.slf4j.LoggerFactory;
 public abstract class BaseConditionalContentTag extends BaseContentTag {
 
     /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(BaseConditionalContentTag.class);
-
-    /**
      * <p>Subclasses implement this method to compute the boolean result
      * of the conditional action. This method is invoked once per tag invocation
      * by <tt>doStartTag()</tt>.

@@ -61,11 +61,6 @@ public class Include extends BodyTagSupport {
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(Include.class);
 
     /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
      * File to be included (e.g. /templates/jsp/x.jsp).
      * @deprecated
      */
@@ -148,9 +143,6 @@ public class Include extends BodyTagSupport {
         this.noEditBars = showPreview;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.IterationTag#doAfterBody()
-     */
     public int doAfterBody() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         if ((attributes != null) && (attributes.size() > 0)) {
@@ -163,9 +155,6 @@ public class Include extends BodyTagSupport {
         return SKIP_BODY;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() {
         boolean localContentNodeSet = false;
         Content oldContentNode = Resource.getLocalContentNode();
@@ -242,9 +231,6 @@ public class Include extends BodyTagSupport {
         return EVAL_PAGE;
     }
 
-    /**
-     *
-     */
     private void removeAttributes() {
         HttpServletRequest req = (HttpServletRequest) pageContext.getRequest();
         if ((attributes != null) && (attributes.size() > 0)) {
@@ -257,9 +243,6 @@ public class Include extends BodyTagSupport {
         attributes = null;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.BodyTagSupport#release()
-     */
     public void release() {
         this.path = null;
         this.attributes = null;
