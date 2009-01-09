@@ -41,6 +41,7 @@ import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.SystemContentWrapper;
 import info.magnolia.cms.util.NodeDataUtil;
+import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
 
 import java.lang.reflect.Constructor;
 import java.util.HashMap;
@@ -112,7 +113,10 @@ public class DialogHandlerManager extends ObservedManager {
     }
 
     public Content getDialogConfigNode(String dialogName) {
-        Object[] handlerConfig = (Object[]) dialogHandlers.get(dialogName);
+        final Object[] handlerConfig = (Object[]) dialogHandlers.get(dialogName);
+        if (handlerConfig == null) {
+            throw new InvalidDialogHandlerException(dialogName);
+        }
         return (Content) handlerConfig[1];
     }
 
@@ -131,8 +135,10 @@ public class DialogHandlerManager extends ObservedManager {
         HttpServletResponse response, Object[] handlerConfig) {
 
         try {
-
             Class dialogHandlerClass = (Class) handlerConfig[0];
+            if (dialogHandlerClass == null) {
+                dialogHandlerClass = ConfiguredDialog.class;
+            }
             Content configNode = (Content) handlerConfig[1];
             if (configNode != null) {
                 try {
