@@ -43,7 +43,6 @@ import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.tagext.TagSupport;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,16 +60,7 @@ import java.util.List;
  * @version $Revision$ ($Author$)
  */
 public class MainBar extends TagSupport implements BarTag {
-
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(MainBar.class);
+    private static final Logger log = LoggerFactory.getLogger(MainBar.class);
 
     private String dialog;
 
@@ -92,7 +82,7 @@ public class MainBar extends TagSupport implements BarTag {
     private List buttonRight;
 
     /**
-     * Label for the page properties button
+     * Label for the page properties button.
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setLabel(String label) {
@@ -109,7 +99,7 @@ public class MainBar extends TagSupport implements BarTag {
     }
 
     /**
-     * Name of the dialog for the page properties (as defined in config)
+     * Name of the dialog for the page properties. (as defined in config)
      * @jsp.attribute required="false" rtexprvalue="true"
      */
     public void setDialog(String dialog) {
@@ -117,16 +107,13 @@ public class MainBar extends TagSupport implements BarTag {
     }
 
     /**
-     * Set this to false if you don't want to show the AdminCentral button
+     * Set this to false if you don't want to show the AdminCentral button.
      * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
      */
     public void setAdminButtonVisible(boolean adminButtonVisible) {
         this.adminButtonVisible = adminButtonVisible;
     }
 
-    /**
-     * @see info.magnolia.cms.taglibs.BarTag#addButtonLeft(info.magnolia.cms.gui.control.Button)
-     */
     public void addButtonLeft(Button button) {
         if (buttonLeft == null) {
             buttonLeft = new ArrayList();
@@ -134,9 +121,6 @@ public class MainBar extends TagSupport implements BarTag {
         buttonLeft.add(button);
     }
 
-    /**
-     * @see info.magnolia.cms.taglibs.BarTag#addButtonRight(info.magnolia.cms.gui.control.Button)
-     */
     public void addButtonRight(Button button) {
         if (buttonRight == null) {
             buttonRight = new ArrayList();
@@ -144,9 +128,6 @@ public class MainBar extends TagSupport implements BarTag {
         buttonRight.add(button);
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doStartTag()
-     */
     public int doStartTag() {
 
         if (ServerConfiguration.getInstance().isAdmin()) {
@@ -155,16 +136,11 @@ public class MainBar extends TagSupport implements BarTag {
         return SKIP_BODY;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() {
-
-        HttpServletRequest request = (HttpServletRequest) this.pageContext.getRequest();
         Content activePage = MgnlContext.getAggregationState().getMainContent();
         if (ServerConfiguration.getInstance().isAdmin() && activePage != null && activePage.isGranted(Permission.SET)) {
             try {
-                BarMain bar = new BarMain(request);
+                BarMain bar = new BarMain();
                 bar.setPath(this.getPath());
                 bar.setParagraph(this.dialog);
                 bar.setAdminButtonVisible(this.adminButtonVisible);
@@ -196,7 +172,7 @@ public class MainBar extends TagSupport implements BarTag {
     }
 
     /**
-     * Get the content path (Page or Node)
+     * Get the content path. (Page or Node)
      * @return String path
      */
     private String getPath() {
@@ -208,9 +184,6 @@ public class MainBar extends TagSupport implements BarTag {
         }
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.TagSupport#release()
-     */
     public void release() {
         super.release();
         this.dialog = null;
