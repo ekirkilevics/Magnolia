@@ -37,48 +37,28 @@ import info.magnolia.cms.beans.config.ConfigurationException;
 import info.magnolia.cms.servlets.MVCServlet;
 import info.magnolia.cms.servlets.MVCServletHandler;
 import info.magnolia.cms.util.RequestFormUtil;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
 
 /**
+ * A servlet which delegates to a DialogMVCHandler retrieved through DialogHandlerManager.
+ *
+ * @see DialogMVCHandler
+ * @see DialogHandlerManager
+ * 
  * @author Philipp Bracher
  * @version $Id$
  */
 public class DialogMVCServlet extends MVCServlet {
+    private static final Logger log = LoggerFactory.getLogger(DialogMVCServlet.class);
 
-    /**
-     * Stable serialVersionUID.
-     */
-    private static final long serialVersionUID = 222L;
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(DialogMVCServlet.class);
-
-    /**
-     *
-     */
     protected MVCServletHandler getHandler(HttpServletRequest request, HttpServletResponse response) {
-        String dialogName = RequestFormUtil.getParameter(request, "mgnlDialog"); //$NON-NLS-1$
-
-        if (StringUtils.isEmpty(dialogName)) {
-            dialogName = (String) request.getAttribute("javax.servlet.include.request_uri"); //$NON-NLS-1$
-            if (StringUtils.isEmpty(dialogName)) {
-                dialogName = (String) request.getAttribute("javax.servlet.forward.servlet_path"); //$NON-NLS-1$
-            }
-            if (StringUtils.isEmpty(dialogName)) {
-                dialogName = request.getRequestURI();
-            }
-            dialogName = StringUtils.replaceOnce(StringUtils.substringAfterLast(dialogName, "/dialogs/"), ".html", //$NON-NLS-1$ //$NON-NLS-2$
-                StringUtils.EMPTY);
-        }
+        final String dialogName = getDialogName(request);
 
         DialogMVCHandler handler = null;
 
@@ -98,6 +78,18 @@ public class DialogMVCServlet extends MVCServlet {
         }
 
         return handler;
+    }
+
+    protected String getDialogName(HttpServletRequest request) {
+        String dialogName = RequestFormUtil.getParameter(request, "mgnlDialog"); //$NON-NLS-1$
+
+        // /.magnolia/dialogs/dialogName.html?foo=bar
+        if (StringUtils.isEmpty(dialogName)) {
+            final String pathInfo = request.getPathInfo();
+            final int extensionIdx = pathInfo.lastIndexOf('.') >= 0 ? pathInfo.lastIndexOf('.') : pathInfo.length();
+            dialogName = pathInfo.substring(1, extensionIdx);
+        }
+        return dialogName;
     }
 
 }
