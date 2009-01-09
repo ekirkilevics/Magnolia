@@ -108,33 +108,27 @@ public class BarNew extends Bar {
         String repository = MgnlContext.getAggregationState().getRepository();
         // if there are multiple paragraphs show the selectParagraph dialog
         if (StringUtils.contains(paragraph, ',')) {
-            b.setOnclick("mgnlOpenDialog('" // //$NON-NLS-1$
-                + path
-                + "','" //$NON-NLS-1$
-                + nodeCollectionName
-                + "','" // //$NON-NLS-1$
-                + nodeName
-                + "','" // //$NON-NLS-1$
-                + paragraph // this is a list
-                + "','" // //$NON-NLS-1$
-                + repository
-                + "','.magnolia/dialogs/selectParagraph.html');"); //$NON-NLS-1$
+            b.setOnclick(onClickForNewButton(path, nodeCollectionName, nodeName, paragraph, repository, "selectParagraph"));
         }
         // there is only one paragraph
         else {
-            b.setOnclick("mgnlOpenDialog('" //$NON-NLS-1$
-                + path
-                + "','" //$NON-NLS-1$
-                + nodeCollectionName
-                + "','" //$NON-NLS-1$
-                + nodeName
-                + "','" //$NON-NLS-1$
-                + paragraph
-                + "','" //$NON-NLS-1$
-                + repository
-                + "');"); //$NON-NLS-1$
+            b.setOnclick(onClickForNewButton(path, nodeCollectionName, nodeName, paragraph, repository, "editParagraph"));
         }
         this.setButtonNew(b);
+    }
+
+    protected String onClickForNewButton(String path, String nodeCollectionName, String nodeName, String paragraph, String repository, String dialogName) {
+        return "mgnlOpenDialog('"
+                + path
+                + "','"
+                + nodeCollectionName
+                + "','"
+                + nodeName
+                + "','"
+                + paragraph
+                + "','"
+                + repository
+                + "','.magnolia/dialogs/" + dialogName + ".html');";
     }
 
     /**
@@ -145,9 +139,7 @@ public class BarNew extends Bar {
     }
     
     /**
-     * <p>
-     * draws the main bar (incl. all magnolia specific js and css sources)
-     * </p>
+     * Draws the main bar (incl. all magnolia specific js and css sources).
      */
     public void drawHtml(Writer out) throws IOException {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
