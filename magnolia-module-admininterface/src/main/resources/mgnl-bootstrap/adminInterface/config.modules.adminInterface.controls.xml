@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl" xmlns:rep="internal" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0" xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0" sv:name="controls">
+<sv:node sv:name="controls" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+  xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:rep="internal" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
+  xmlns:fn="http://www.w3.org/2005/xpath-functions" xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions" xmlns:sv="http://www.jcp.org/jcr/sv/1.0" xmlns:jcrfn="http://www.jcp.org/jcr/xpath-functions/1.0">
   <sv:property sv:name="jcr:primaryType" sv:type="Name">
     <sv:value>mgnl:content</sv:value>
   </sv:property>
@@ -10,11 +13,14 @@
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
       <sv:value>mgnl:metaData</sv:value>
     </sv:property>
+    <sv:property sv:name="mgnl:Data" sv:type="String">
+      <sv:value>MetaData</sv:value>
+    </sv:property>
+    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+      <sv:value>false</sv:value>
+    </sv:property>
     <sv:property sv:name="mgnl:authorid" sv:type="String">
       <sv:value>superuser</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:title" sv:type="String">
-      <sv:value />
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="String">
       <sv:value>2005-04-30T14:46:43.261+02:00</sv:value>
@@ -22,11 +28,8 @@
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
       <sv:value>2006-03-12T17:20:22.650+01:00</sv:value>
     </sv:property>
-    <sv:property sv:name="mgnl:Data" sv:type="String">
-      <sv:value>MetaData</sv:value>
-    </sv:property>
-    <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-      <sv:value>false</sv:value>
+    <sv:property sv:name="mgnl:title" sv:type="String">
+      <sv:value/>
     </sv:property>
   </sv:node>
   <sv:node sv:name="edit">
@@ -43,17 +46,48 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2005-06-08T17:05:48.349+02:00</sv:value>
+      </sv:property>
+    </sv:node>
+  </sv:node>
+  <sv:node sv:name="editCode">
+    <sv:property sv:name="jcr:primaryType" sv:type="Name">
+      <sv:value>mgnl:contentNode</sv:value>
+    </sv:property>
+    <sv:property sv:name="jcr:uuid" sv:type="String">
+      <sv:value>1dd71600-a5c5-4d63-8804-1a808812bcb7</sv:value>
+    </sv:property>
+    <sv:property sv:name="class" sv:type="String">
+      <sv:value>info.magnolia.cms.gui.dialog.DialogEditCode</sv:value>
+    </sv:property>
+    <sv:node sv:name="MetaData">
+      <sv:property sv:name="jcr:primaryType" sv:type="Name">
+        <sv:value>mgnl:metaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2005-06-08T17:05:48.349+02:00</sv:value>
+        <sv:value>2009-01-09T16:16:41.448+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -71,14 +105,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:06:39.756+02:00</sv:value>
@@ -99,14 +133,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:07:04.765+02:00</sv:value>
@@ -127,14 +161,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:07:15.366+02:00</sv:value>
@@ -155,14 +189,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:07:42.568+02:00</sv:value>
@@ -183,14 +217,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:07:51.968+02:00</sv:value>
@@ -211,14 +245,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:08:03.974+02:00</sv:value>
@@ -239,14 +273,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:08:16.772+02:00</sv:value>
@@ -267,14 +301,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:08:37.775+02:00</sv:value>
@@ -295,14 +329,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:08:49.177+02:00</sv:value>
@@ -323,14 +357,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:09:05.980+02:00</sv:value>
@@ -351,14 +385,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:09:21.582+02:00</sv:value>
@@ -379,14 +413,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:09:36.388+02:00</sv:value>
@@ -407,14 +441,14 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="String">
         <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2005-06-08T17:09:48.192+02:00</sv:value>
@@ -454,6 +488,15 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
@@ -465,15 +508,6 @@
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2006-05-28T11:06:30.917+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:activatorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-        <sv:value>false</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -491,6 +525,15 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:Data" sv:type="String">
+        <sv:value>MetaData</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
+        <sv:value>false</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
       <sv:property sv:name="mgnl:authorid" sv:type="String">
         <sv:value>superuser</sv:value>
       </sv:property>
@@ -502,15 +545,6 @@
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
         <sv:value>2006-08-02T13:39:11.625+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:activatorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:Data" sv:type="String">
-        <sv:value>MetaData</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:activated" sv:type="Boolean">
-        <sv:value>false</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -528,28 +562,27 @@
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
-      <sv:property sv:name="mgnl:authorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
-        <sv:value>2007-08-06T20:40:32.948+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:creationdate" sv:type="String">
-        <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2007-08-06T20:41:18.869+01:00</sv:value>
-      </sv:property>
-      <sv:property sv:name="mgnl:activatorid" sv:type="String">
-        <sv:value>superuser</sv:value>
-      </sv:property>
       <sv:property sv:name="mgnl:Data" sv:type="String">
         <sv:value>MetaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:activated" sv:type="Boolean">
         <sv:value>false</sv:value>
       </sv:property>
+      <sv:property sv:name="mgnl:activatorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:authorid" sv:type="String">
+        <sv:value>superuser</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:creationdate" sv:type="String">
+        <sv:value>2005-04-30T14:46:54.316+02:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastaction" sv:type="Date">
+        <sv:value>2007-08-06T20:40:32.948+01:00</sv:value>
+      </sv:property>
+      <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
+        <sv:value>2007-08-06T20:41:18.869+01:00</sv:value>
+      </sv:property>
     </sv:node>
   </sv:node>
 </sv:node>
-
