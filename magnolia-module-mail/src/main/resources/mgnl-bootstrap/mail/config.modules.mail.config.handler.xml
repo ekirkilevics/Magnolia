@@ -13,7 +13,7 @@
     <sv:value>45ee7809-4703-48a8-b5d9-77ff54892ad5</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.mail.handlers.MgnlMailHandler</sv:value>
+    <sv:value>info.magnolia.module.mail.handlers.SimpleMailHandler</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

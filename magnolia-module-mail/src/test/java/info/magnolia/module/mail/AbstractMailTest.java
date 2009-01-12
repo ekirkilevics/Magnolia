@@ -67,7 +67,7 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
 
     public static final String TEST_FILE_PDF = "magnolia.pdf";
 
-    public static int SMTP_PORT = 25025;
+    public static int SMTP_PORT = 25013;
 
     protected MgnlMailFactory factory;
 
@@ -89,14 +89,17 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
         super.setUp();
 
         FactoryUtil.setImplementation(ServerConfiguration.class, ServerConfiguration.class);
-        bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.xml");
+        bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.factory.xml");
+        bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.handler.xml");
+        bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.smtp.xml");
+        bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.templatesConfiguration.xml");
 
         Content content = ContentUtil.getContent("config", "/modules/mail/config");
 
         MailModule mailModule = (MailModule) Content2BeanUtil.toBean(content, true, MailModule.class);
         mailModule.start(null);
         params.put(MailConstants.SMTP_SERVER, "localhost");
-        params.put(MailConstants.SMTP_PORT, "25025");
+        params.put(MailConstants.SMTP_PORT, "" + SMTP_PORT);
 
         factory = mailModule.getFactory();
         handler = mailModule.getHandler();
@@ -109,6 +112,8 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
      */
     public void tearDown() throws Exception {
         wiser.stop();
+        // prevent random failure of the build in ubuntu due to not releasing socket fast enough.
+        Thread.sleep(1000);
         super.tearDown();
     }
 
