@@ -33,7 +33,7 @@
  */
 package info.magnolia.module.fckeditor.dialogs;
 
-import info.magnolia.cms.util.BaseLinkTest;
+import info.magnolia.link.BaseLinkTest;
 import info.magnolia.cms.gui.dialog.DialogControlImpl;
 import static org.easymock.EasyMock.*;
 
