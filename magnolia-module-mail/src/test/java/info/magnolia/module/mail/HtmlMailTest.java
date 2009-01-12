@@ -40,7 +40,6 @@ import info.magnolia.module.mail.templates.MgnlEmail;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import org.subethamail.wiser.WiserMessage;
