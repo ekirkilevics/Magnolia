@@ -65,13 +65,10 @@ import org.slf4j.LoggerFactory;
  *
  */
 public class AggregatorFilter extends AbstractMgnlFilter{
+    private static final Logger log = LoggerFactory.getLogger(AggregatorFilter.class);
 
     private final String VERSION_NUMBER = "mgnlVersion"; //$NON-NLS-1$
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(AggregatorFilter.class);
 
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
 
@@ -93,17 +90,13 @@ public class AggregatorFilter extends AbstractMgnlFilter{
         }
 
         if (!success) {
-            if (log.isDebugEnabled()) {
-                log.debug(
-                    "Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI()); //$NON-NLS-1$
-            }
+            log.debug("Resource not found, redirecting request for [{}] to 404 URI", request.getRequestURI());
 
             if (!response.isCommitted()) {
                 response.sendError(HttpServletResponse.SC_NOT_FOUND);
             }
             else {
-                log.info("Unable to redirect to 404 page, response is already committed. URI was {}", //$NON-NLS-1$
-                    request.getRequestURI());
+                log.info("Unable to redirect to 404 page, response is already committed. URI was {}", request.getRequestURI());
             }
             // stop the chain
             return;
@@ -118,11 +111,11 @@ public class AggregatorFilter extends AbstractMgnlFilter{
      */
     protected boolean collect() throws RepositoryException {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        String handle = aggregationState.getHandle();
-        String extension = aggregationState.getExtension();
-        String repository = aggregationState.getRepository();
+        final String handle = aggregationState.getHandle();
+        final String extension = aggregationState.getExtension();
+        final String repository = aggregationState.getRepository();
 
-        HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(repository);
+        final HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(repository);
 
         Content requestedPage = null;
         NodeData requestedData = null;
@@ -165,11 +158,11 @@ public class AggregatorFilter extends AbstractMgnlFilter{
 
                 if (lastIndexOfSlash > 0) {
 
-                    handle = StringUtils.substringBeforeLast(handle, "/"); //$NON-NLS-1$
+                    final String handleToUse = StringUtils.substringBeforeLast(handle, "/"); //$NON-NLS-1$
 
                     try {
-                        requestedData = hierarchyManager.getNodeData(handle);
-                        aggregationState.setHandle(handle);
+                        requestedData = hierarchyManager.getNodeData(handleToUse);
+                        aggregationState.setHandle(handleToUse);
 
                         // this is needed for binary nodedata, e.g. images are found using the path:
                         // /features/integration/headerImage instead of /features/integration/headerImage/header30_2
