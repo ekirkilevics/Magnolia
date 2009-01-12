@@ -103,7 +103,7 @@ public class GenericTasks {
                 new UpdateI18nConfiguration(),
 
                 new BootstrapSingleResource("New security configuration", "Install new configuration for security managers.", "/mgnl-bootstrap/core/config.server.security.xml"),
-                new BootstrapSingleResource("New rendering strategy for links", "Install new configuration for link resolving.", "/mgnl-bootstrap/core/config.server.rendering.linkResolver.xml"),
+                new BootstrapSingleResource("New rendering strategy for links", "Install new configuration for link resolving.", "/mgnl-bootstrap/core/config.server.rendering.linkManagement.xml"),
 
                 new BootstrapConditionally("MIME mappings", "Adds MIMEMappings to server config, if not already present.", "/mgnl-bootstrap/core/config.server.MIMEMapping.xml"),
                 new BootstrapConditionally("URI2Repository mappings", "Installs new configuration of URI2Repository mappings.", "/mgnl-bootstrap/core/config.server.URI2RepositoryMapping.xml", new UpdateURI2RepositoryMappings()),
