@@ -34,7 +34,7 @@
 package info.magnolia.module.templating.paragraphs;
 
 import info.magnolia.context.MgnlContext;
-import info.magnolia.cms.util.LinkUtil;
+import info.magnolia.link.LinkUtil;
 import net.sf.json.JSONObject;
 import org.apache.commons.lang.StringUtils;
 
