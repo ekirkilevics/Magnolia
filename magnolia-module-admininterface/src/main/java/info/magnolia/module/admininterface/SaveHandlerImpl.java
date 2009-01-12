@@ -87,7 +87,7 @@ import org.slf4j.LoggerFactory;
 
 /**
  * <p>
- * This class handels the saving in the dialogs. It uses the mgnlSaveInfo parameters sendend from the browser to store
+ * This class handles the saving in the dialogs. It uses the mgnlSaveInfo parameters sent from the browser to store
  * the data in the node.The structure of the parameter is the following: <br>
  * <code>name, type, valueType, isRichEditValue, encoding</code>
  * </p>
@@ -259,7 +259,7 @@ public class SaveHandlerImpl implements SaveHandler {
     }
 
     /**
-     * This method cears about one mgnlSaveInfo. It adds the value to the node
+     * This method cares about one mgnlSaveInfo. It adds the value to the node
      * @param node node to add data
      * @param saveInfo <code>name, type, valueType, isRichEditValue, encoding</code>
      * @throws PathNotFoundException exception
