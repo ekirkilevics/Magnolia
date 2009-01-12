@@ -71,9 +71,7 @@ public class BarEdit extends Bar {
     }
 
     /**
-     * <p>
-     * sets the default buttons
-     * </p>
+     * Sets the default buttons.
      */
     public void setDefaultButtons() {
         this.setButtonEdit();
@@ -82,9 +80,7 @@ public class BarEdit extends Bar {
     }
 
     /**
-     * <p>
-     * places the default buttons to the very right/left position
-     * </p>
+     * Places the default buttons to the very right/left position.
      */
     public void placeDefaultButtons() {
         if (this.getButtonMove() != null) {
@@ -107,14 +103,12 @@ public class BarEdit extends Bar {
     }
 
     public void setButtonEdit() {
-        this.setButtonEdit(this.getPath(), this.getNodeCollectionName(StringUtils.EMPTY), this
-            .getNodeName(StringUtils.EMPTY), this.getParagraph());
+        this.setButtonEdit(this.getPath(), this.getNodeCollectionName(StringUtils.EMPTY), this.getNodeName(StringUtils.EMPTY), this.getParagraph());
     }
 
     /**
-     * <p>
-     * sets the default edit button
-     * </p>
+     * Sets the default edit button.
+     *
      * @param path , path of the current page
      * @param nodeCollectionName , i.e. 'MainParagarphs'
      * @param nodeName , i.e. '01'
@@ -139,9 +133,8 @@ public class BarEdit extends Bar {
     }
 
     /**
-     * <p>
-     * sets the default move button
-     * </p>
+     * Sets the default move button.
+     *
      * @param nodeCollectionName , i.e. 'MainParagarphs'
      * @param nodeName , i.e. '01'
      */
@@ -167,9 +160,8 @@ public class BarEdit extends Bar {
     }
 
     /**
-     * <p>
-     * sets the default delete button
-     * </p>
+     * Sets the default delete button.
+     *
      * @param path , path of the current page
      * @param nodeCollectionName , i.e. 'MainColumnParagraphs'
      * @param nodeName , i.e. '01'
