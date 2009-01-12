@@ -34,8 +34,6 @@
 package info.magnolia.freemarker;
 
 import freemarker.ext.beans.MapModel;
-import freemarker.ext.beans.ResourceBundleModel;
-import freemarker.ext.util.ModelFactory;
 import freemarker.template.DefaultObjectWrapper;
 import freemarker.template.SimpleDate;
 import freemarker.template.SimpleNumber;
@@ -88,16 +86,7 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
         return super.unwrap(model, hint);
     }
 
-    // let modules plug in their own ModelFactories
-    protected ModelFactory getModelFactory(Class clazz) {
-         // TODO
-        return super.getModelFactory(clazz);
-    }
-
     public TemplateModel wrap(Object obj) throws TemplateModelException {
-        if(obj instanceof XYZ)
-            return getModelFactory(obj, XYZ.FACTORY);
-
         if (obj instanceof NodeData) {
             final NodeData nodeData = (NodeData) obj;
             switch (nodeData.getType()) {
