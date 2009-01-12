@@ -40,7 +40,6 @@ import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.commands.CommandsManager;
-import info.magnolia.freemarker.FreemarkerTemplateLoaderManager;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
