@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import info.magnolia.cms.beans.config.ConfigLoader;
 import info.magnolia.cms.beans.runtime.Document;
 import info.magnolia.cms.beans.runtime.MultipartForm;
 import info.magnolia.cms.core.Access;
@@ -77,7 +76,6 @@ import java.io.InputStream;
 import java.util.Iterator;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
-
 
 /**
  * This filter receives activation requests from another instance and applies them.
@@ -456,7 +454,7 @@ public class ReceiveFilter extends AbstractMgnlFilter {
          String workspaceName = request.getHeader(BaseSyndicatorImpl.WORKSPACE_NAME);
 
          if (StringUtils.isEmpty(repositoryName) || StringUtils.isEmpty(workspaceName)) {
-             throw new ExchangeException("Repository or workspace name not sent, unable to activate.");
+             throw new ExchangeException("Repository or workspace name not sent, unable to activate. Repository: " + repositoryName + ", workspace: " + workspaceName) ;
          }
 
          return MgnlContext.getHierarchyManager(repositoryName, workspaceName);
