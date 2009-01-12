@@ -6,6 +6,24 @@
   <class>info.magnolia.module.templating.TemplatingModule</class>
   <versionHandler>info.magnolia.module.templating.setup.TemplatingModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
+  <properties>
+    <property>
+      <name>info.magnolia.cms.beans.config.ParagraphManager</name>
+      <value>info.magnolia.cms.beans.config.ParagraphManager</value>
+    </property>
+    <property>
+      <name>info.magnolia.cms.beans.config.TemplateManager</name>
+      <value>info.magnolia.cms.beans.config.TemplateManager</value>
+    </property>
+    <property>
+      <name>info.magnolia.cms.beans.config.ParagraphRendererManager</name>
+      <value>info.magnolia.cms.beans.config.ParagraphRendererManager</value>
+    </property>
+    <property>
+      <name>info.magnolia.cms.beans.config.TemplateRendererManager</name>
+      <value>info.magnolia.cms.beans.config.TemplateRendererManager</value>
+    </property>
+  </properties>
   <dependencies>
     <dependency>
       <name>core</name>
