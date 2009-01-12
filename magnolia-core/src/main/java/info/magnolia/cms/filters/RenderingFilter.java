@@ -35,6 +35,7 @@ package info.magnolia.cms.filters;
 
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
+import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.HierarchyManager;
@@ -80,7 +81,9 @@ public class RenderingFilter extends AbstractMgnlFilter {
      */
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
         final AggregationState aggregationState = MgnlContext.getAggregationState();
-        final Template template = aggregationState.getTemplate();
+        final String extension = aggregationState.getExtension();
+        final String templateName = aggregationState.getTemplateName();
+        final Template template = TemplateManager.getInstance().getInfo(templateName, extension);
 
         if (template != null) {
             try {

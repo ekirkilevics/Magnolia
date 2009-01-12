@@ -33,8 +33,6 @@
  */
 package info.magnolia.cms.filters;
 
-import info.magnolia.cms.beans.config.Template;
-import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.AggregationState;
@@ -79,8 +77,9 @@ public class AggregatorFilter extends AbstractMgnlFilter{
         catch (AccessDeniedException e) {
             // don't throw further, simply return error and break filter chain
             log.debug(e.getMessage(), e);
-            if (!response.isCommitted())
+            if (!response.isCommitted()) {
                 response.sendError(HttpServletResponse.SC_FORBIDDEN);
+            }
             // stop the chain
             return;
         }
@@ -112,14 +111,13 @@ public class AggregatorFilter extends AbstractMgnlFilter{
     protected boolean collect() throws RepositoryException {
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final String handle = aggregationState.getHandle();
-        final String extension = aggregationState.getExtension();
         final String repository = aggregationState.getRepository();
 
         final HierarchyManager hierarchyManager = MgnlContext.getHierarchyManager(repository);
 
         Content requestedPage = null;
         NodeData requestedData = null;
-        Template template = null;
+        final String templateName;
 
         if (hierarchyManager.isPage(handle)) {
             requestedPage = hierarchyManager.getContent(handle);
@@ -136,16 +134,10 @@ public class AggregatorFilter extends AbstractMgnlFilter{
                 }
             }
 
-            String templateName = requestedPage.getMetaData().getTemplate();
+            templateName = requestedPage.getMetaData().getTemplate();
 
             if (StringUtils.isBlank(templateName)) {
                 log.error("No template configured for page [{}].", requestedPage.getHandle()); //$NON-NLS-1$
-            }
-
-            template = TemplateManager.getInstance().getInfo(templateName, extension);
-
-            if (template == null) {
-                log.error("Template [{}] for page [{}] not found.", templateName, requestedPage.getHandle());
             }
         }
         else {
@@ -180,11 +172,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
             }
 
             if (requestedData != null) {
-                String templateName = requestedData.getAttribute(FileProperties.PROPERTY_TEMPLATE);
-
-                if (!StringUtils.isEmpty(templateName)) {
-                    template = TemplateManager.getInstance().getInfo(templateName, extension);
-                }
+                templateName = requestedData.getAttribute(FileProperties.PROPERTY_TEMPLATE);
             }
             else {
                 return false;
@@ -201,7 +189,7 @@ public class AggregatorFilter extends AbstractMgnlFilter{
             aggregationState.setFile(file);
         }
 
-        aggregationState.setTemplate(template);
+        aggregationState.setTemplateName(templateName);
 
         return true;
     }

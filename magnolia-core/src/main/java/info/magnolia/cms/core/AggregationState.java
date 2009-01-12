@@ -33,7 +33,6 @@
  */
 package info.magnolia.cms.core;
 
-import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.runtime.File;
 import info.magnolia.context.MgnlContext;
 
@@ -59,7 +58,7 @@ public class AggregationState {
     private Content currentContent;
     private String repository;
     private String selector;
-    private Template template;
+    private String templateName;
     private Locale locale;
     private boolean isPreviewMode;
 
@@ -177,12 +176,12 @@ public class AggregationState {
         this.selector = selector;
     }
 
-    public Template getTemplate() {
-        return template;
+    public String getTemplateName() {
+        return templateName;
     }
 
-    public void setTemplate(Template template) {
-        this.template = template;
+    public void setTemplateName(String templateName) {
+        this.templateName = templateName;
     }
 
     /**
