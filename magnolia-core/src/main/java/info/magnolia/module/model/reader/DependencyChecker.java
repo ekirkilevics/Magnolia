@@ -33,7 +33,6 @@
  */
 package info.magnolia.module.model.reader;
 
-import info.magnolia.cms.beans.config.MissingDependencyException;
 import info.magnolia.module.model.DependencyDefinition;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;

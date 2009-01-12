@@ -31,23 +31,18 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.module.model.reader;
+
+import info.magnolia.cms.beans.config.ConfigurationException;
 
 /**
- * Thrown if a modules dependency is missed
+ * Thrown if a modules dependency is missing.
+ *
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
 public class MissingDependencyException extends ConfigurationException {
 
-    /**
-     * 
-     */
-    private static final long serialVersionUID = -6219251347722905053L;
-
-    /**
-     * @param msg
-     */
     public MissingDependencyException(String msg) {
         super(msg);
     }
