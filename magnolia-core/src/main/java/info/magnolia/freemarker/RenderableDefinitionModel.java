@@ -48,9 +48,9 @@ import info.magnolia.cms.beans.config.RenderableDefinition;
  */
 class RenderableDefinitionModel extends BeanModel {
     /**
-     * The hash model for the parameters
+     * The hash model for the parameters.
      */
-    final SimpleHash paramHash;
+    private final SimpleHash paramHash;
 
     RenderableDefinitionModel(RenderableDefinition definition, BeansWrapper wrapper) {
         super(definition, wrapper);
@@ -58,7 +58,7 @@ class RenderableDefinitionModel extends BeanModel {
     }
 
     /**
-     * Fall back on the parameters' hash model if no bean properry has been found
+     * Fall back on the parameters' hash model if no bean properry has been found.
      */
     public TemplateModel get(String key) throws TemplateModelException {
         TemplateModel templateModel = super.get(key);
