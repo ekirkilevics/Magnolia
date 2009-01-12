@@ -44,13 +44,5 @@ public class ModuleDependencyException extends ModuleManagementException {
 
     ModuleDependencyException(String message) {
         super(message);
-        //TODO
-
-    }
-
-    ModuleDependencyException(String message, Throwable cause) {
-        super(message, cause);
-        //TODO
-
     }
 }
