@@ -54,7 +54,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * @author philipp
  * @version $Id$
  */
@@ -62,13 +61,6 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     private final AddSubMenuItemTask sysUsersSubMenu = new AddSubMenuItemTask("security", "usersSystem", "menu.security.usersSystem", null, "MgnlAdminCentral.showTree('users', '/system', true)", "/.resources/icons/16/pawn_glass_red.gif", "groups");
     private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", null, "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif", "groups");
     private final AddSubMenuItemTask subscribersMenu = new AddSubMenuItemTask("config", "subscribers", "menu.config.subscribers", "info.magnolia.module.admininterface.messages", "MgnlAdminCentral.showTree('config','/server/activation/subscribers')", "/.resources/icons/16/dot.gif", "cache");
-
-    private Task changeWebsiteTreeConfigurationTask = new SetPropertyTask(
-        ContentRepository.CONFIG,
-        "/modules/adminInterface/trees/website",
-        "class",
-        WebsiteTreeHandler.class.getName());
-
 
     public AdminModuleVersionHandler() {
         final String pathToRestartPage = "/modules/adminInterface/pages/restart";
@@ -97,9 +89,9 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         );
 
         register(DeltaBuilder.update("3.6", "")
-            .addTask(changeWebsiteTreeConfigurationTask)
-            .addTask(new BootstrapSingleResource("Javascript messages","Adds dynamic virtual url.","/mgnl-bootstrap/adminInterface/config.modules.adminInterface.virtualURIMapping.messages.xml"))
-            .addTask(new BootstrapSingleResource("Javascript messages","Adds page to provide i18n messages in javascript.","/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.messages.xml"))
+                .addTask(new SetPropertyTask(ContentRepository.CONFIG, "/modules/adminInterface/trees/website", "class", WebsiteTreeHandler.class.getName()))
+                .addTask(new BootstrapSingleResource("Javascript messages", "Adds dynamic virtual url.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.virtualURIMapping.messages.xml"))
+                .addTask(new BootstrapSingleResource("Javascript messages", "Adds page to provide i18n messages in javascript.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.messages.xml"))
         );
 
         final String pathToDeploymentUtilsPage = "/modules/adminInterface/pages/deploymentUtils";
