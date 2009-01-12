@@ -3,15 +3,12 @@
 <module>
   <name>templating</name>
   <displayName>Magnolia Templating Module</displayName>
+  <class>info.magnolia.module.templating.TemplatingModule</class>
   <versionHandler>info.magnolia.module.templating.setup.TemplatingModuleVersionHandler</versionHandler>
   <version>${project.version}</version>
   <dependencies>
     <dependency>
       <name>core</name>
-      <version>4.0/*</version>
-    </dependency>
-    <dependency>
-      <name>adminInterface</name>
       <version>4.0/*</version>
     </dependency>
   </dependencies>

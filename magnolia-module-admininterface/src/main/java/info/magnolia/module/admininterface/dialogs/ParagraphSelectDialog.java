@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.dialogs;
+package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ParagraphManager;

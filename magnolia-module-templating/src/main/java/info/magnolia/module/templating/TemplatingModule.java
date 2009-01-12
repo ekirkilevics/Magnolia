@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,32 +31,25 @@
  * intact.
  *
  */
-package info.magnolia.setup;
+package info.magnolia.module.templating;
 
-import info.magnolia.cms.beans.config.ShutdownManager;
-import info.magnolia.cms.beans.config.TemplateManager;
-import info.magnolia.cms.beans.config.TemplateRendererManager;
-import info.magnolia.cms.beans.config.VirtualURIManager;
-import info.magnolia.commands.CommandsManager;
+import info.magnolia.cms.beans.config.ParagraphManager;
+import info.magnolia.cms.beans.config.ParagraphRendererManager;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
 /**
- *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class CoreModule implements ModuleLifecycle {
-
+public class TemplatingModule implements ModuleLifecycle {
+    
     public void start(ModuleLifecycleContext ctx) {
-        ctx.registerModuleObservingComponent("virtualURIMapping", VirtualURIManager.getInstance());
-        ctx.registerModuleObservingComponent("templates", TemplateManager.getInstance());
-        ctx.registerModuleObservingComponent("template-renderers", TemplateRendererManager.getInstance());
-        ctx.registerModuleObservingComponent("commands", CommandsManager.getInstance());
-        ctx.registerModuleObservingComponent("shutdown", ShutdownManager.getInstance());
+        ctx.registerModuleObservingComponent("paragraphs", ParagraphManager.getInstance());
+        ctx.registerModuleObservingComponent("paragraph-renderers", ParagraphRendererManager.getInstance());
     }
 
     public void stop(ModuleLifecycleContext moduleLifecycleContext) {
+
     }
 }
-

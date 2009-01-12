@@ -13,7 +13,7 @@
     <sv:value>960dfee9-6abe-42d9-9d72-92b2d0baa69b</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.module.templating.dialogs.ParagraphEditDialog</sv:value>
+    <sv:value>info.magnolia.module.admininterface.dialogs.ParagraphEditDialog</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

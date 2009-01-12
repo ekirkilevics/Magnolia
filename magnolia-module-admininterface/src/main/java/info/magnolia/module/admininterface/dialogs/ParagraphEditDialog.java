@@ -31,14 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.module.templating.dialogs;
+package info.magnolia.module.admininterface.dialogs;
 
 import info.magnolia.cms.beans.config.Paragraph;
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.module.admininterface.DialogHandlerManager;
-import info.magnolia.module.admininterface.dialogs.ConfiguredDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

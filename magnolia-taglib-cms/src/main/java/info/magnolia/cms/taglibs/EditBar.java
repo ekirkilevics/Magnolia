@@ -43,7 +43,7 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.dialogs.ParagraphSelectDialog;
+import info.magnolia.module.admininterface.dialogs.ParagraphSelectDialog;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 
