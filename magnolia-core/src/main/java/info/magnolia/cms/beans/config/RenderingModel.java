@@ -52,18 +52,18 @@ public interface RenderingModel {
     public RenderingModel getParent();
 
     /**
-     * The content tied to this model
+     * The content tied to this model.
      */
     public Content getContent();
 
     /**
-     * The renderable (paragraph/template) tied to this model
+     * The renderable (paragraph/template) tied to this model.
      */
     public RenderableDefinition getDefinition();
 
     /**
      * Called after all properties were set. Can return a string which is passed
-     * to the method
+     * to the method.
      * {@link RenderableDefinition#determineTemplatePath(String, RenderingModel)}
      */
     public String execute();
