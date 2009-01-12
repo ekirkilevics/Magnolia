@@ -34,12 +34,13 @@
 package info.magnolia.cms.taglibs.util;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.mail.MailConstants;
-import info.magnolia.cms.mail.MailModule;
-import info.magnolia.cms.mail.templates.MgnlEmail;
 import info.magnolia.cms.util.ExclusiveWrite;
 import info.magnolia.cms.taglibs.Resource;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.mail.MailConstants;
+import info.magnolia.module.mail.MailModule;
+import info.magnolia.module.mail.templates.MgnlEmail;
+
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
 import org.slf4j.Logger;

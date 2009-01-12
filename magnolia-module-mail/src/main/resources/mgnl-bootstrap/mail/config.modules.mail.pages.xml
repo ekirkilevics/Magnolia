@@ -37,7 +37,7 @@
       <sv:value>51e61c44-0274-418c-a9ee-489c5b0b5195</sv:value>
     </sv:property>
     <sv:property sv:name="class" sv:type="String">
-      <sv:value>info.magnolia.cms.mail.pages.SendMailPage</sv:value>
+      <sv:value>info.magnolia.module.mail.pages.SendMailPage</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
