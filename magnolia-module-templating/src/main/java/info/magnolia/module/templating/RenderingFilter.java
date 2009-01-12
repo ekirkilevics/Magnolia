@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.filters;
+package info.magnolia.module.templating;
 
 import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.beans.config.TemplateRendererManager;
@@ -40,6 +40,7 @@ import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.filters.AbstractMgnlFilter;
 import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;

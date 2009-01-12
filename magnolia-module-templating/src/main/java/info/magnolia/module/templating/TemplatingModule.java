@@ -35,6 +35,8 @@ package info.magnolia.module.templating;
 
 import info.magnolia.cms.beans.config.ParagraphManager;
 import info.magnolia.cms.beans.config.ParagraphRendererManager;
+import info.magnolia.cms.beans.config.TemplateRendererManager;
+import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
@@ -45,6 +47,8 @@ import info.magnolia.module.ModuleLifecycleContext;
 public class TemplatingModule implements ModuleLifecycle {
     
     public void start(ModuleLifecycleContext ctx) {
+        ctx.registerModuleObservingComponent("templates", TemplateManager.getInstance());
+        ctx.registerModuleObservingComponent("template-renderers", TemplateRendererManager.getInstance());
         ctx.registerModuleObservingComponent("paragraphs", ParagraphManager.getInstance());
         ctx.registerModuleObservingComponent("paragraph-renderers", ParagraphRendererManager.getInstance());
     }

@@ -34,8 +34,6 @@
 package info.magnolia.setup;
 
 import info.magnolia.cms.beans.config.ShutdownManager;
-import info.magnolia.cms.beans.config.TemplateManager;
-import info.magnolia.cms.beans.config.TemplateRendererManager;
 import info.magnolia.cms.beans.config.VirtualURIManager;
 import info.magnolia.commands.CommandsManager;
 import info.magnolia.module.ModuleLifecycle;
@@ -50,8 +48,6 @@ public class CoreModule implements ModuleLifecycle {
 
     public void start(ModuleLifecycleContext ctx) {
         ctx.registerModuleObservingComponent("virtualURIMapping", VirtualURIManager.getInstance());
-        ctx.registerModuleObservingComponent("templates", TemplateManager.getInstance());
-        ctx.registerModuleObservingComponent("template-renderers", TemplateRendererManager.getInstance());
         ctx.registerModuleObservingComponent("commands", CommandsManager.getInstance());
         ctx.registerModuleObservingComponent("shutdown", ShutdownManager.getInstance());
     }

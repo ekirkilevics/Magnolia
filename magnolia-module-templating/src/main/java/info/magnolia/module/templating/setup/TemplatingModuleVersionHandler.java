@@ -38,11 +38,12 @@ import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.BootstrapSingleResourceAndOrderBefore;
+import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -72,6 +73,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
 
         register(DeltaBuilder.update("4.0", "")
                 .addTask(new BootstrapSingleResource("Freemarker Template Renderer", "Add Freemarker template renderer configuration", "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"))
+                .addTask(new CheckAndModifyPropertyValueTask("Rendering filter", "The rendering filter is now part of the templating module.", ContentRepository.CONFIG, "/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter", "info.magnolia.module.templating.RenderingFilter"))
         );
 
         // TODO 4.1
@@ -84,7 +86,10 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
     }
 
     protected List getExtraInstallTasks(InstallContext installContext) {
-        return Collections.singletonList(orderBackwardCompatibilityFilter);
+        final ArrayList tasks = new ArrayList();
+        tasks.add(orderBackwardCompatibilityFilter);
+        // TODO : make sure the RenderingFilter is the last one ?
+        return tasks;
     }
 
 }
