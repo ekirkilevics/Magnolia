@@ -80,7 +80,7 @@ public class DependencyChecker {
         return modules;
     }
 
-    protected void checkSpecificDependency(ModuleDefinition checkedModule, DependencyDefinition requiredDependency, Map moduleDefinitions) throws MissingDependencyException, ModuleDependencyException {
+    protected void checkSpecificDependency(ModuleDefinition checkedModule, DependencyDefinition requiredDependency, Map moduleDefinitions) throws ModuleDependencyException {
         final ModuleDefinition dependencyModuleDef = (ModuleDefinition) moduleDefinitions.get(requiredDependency.getName());
         if (dependencyModuleDef == null) {
             throw new ModuleDependencyException("Module " + checkedModule + " is dependent on " + requiredDependency + ", which was not found.");
