@@ -33,7 +33,13 @@
  */
 package info.magnolia.cms.link;
 
+import info.magnolia.link.LinkTransformer;
 
-public interface PathToLinkTransformer {
-    String transform(UUIDLink link);
+
+/**
+ * 
+ * @author had
+ * @deprecated use {@link LinkTransformer} instead. 
+ */
+public interface PathToLinkTransformer extends LinkTransformer {
 }

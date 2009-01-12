@@ -31,13 +31,36 @@
  * intact.
  *
  */
-package info.magnolia.cms.link;
+package info.magnolia.link;
+
+import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
 
 /**
- * @author philipp
- * @version $Id$
- * @deprecated use {@link info.magnolia.link.UUIDLink} instead
+ * @author had
+ * @version $Id:$
  */
-public class UUIDLink extends info.magnolia.link.UUIDLink {
-}
+public class RelativePathTransformer extends AbsolutePathTransformer {
+    
+    protected String absolutePath;
 
+    public RelativePathTransformer(Content page, boolean useURI2RepositoryMapping, boolean useI18N) {
+        super(false, useURI2RepositoryMapping, useI18N);
+        UUIDLink link = new UUIDLink();
+        link.setNode(page);
+        link.setRepository(ContentRepository.WEBSITE);
+        link.setExtension("html");
+        absolutePath = super.transform(link);
+    }
+
+    public RelativePathTransformer(String absolutePath, boolean useURI2RepositoryMapping, boolean useI18N) {
+        super(false, useURI2RepositoryMapping, useI18N);
+        this.absolutePath = absolutePath;
+    }
+
+
+    public String transform(UUIDLink uuidLink) {
+        String link = super.transform(uuidLink);
+        return LinkUtil.makePathRelative(absolutePath, link);
+    }
+}

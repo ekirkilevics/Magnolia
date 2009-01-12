@@ -33,8 +33,8 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.link.UUIDLink;
-import info.magnolia.cms.link.UUIDLinkException;
+import info.magnolia.link.UUIDLink;
+import info.magnolia.link.UUIDLinkException;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.util.Collection;
@@ -48,7 +48,7 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- * Mapps uri prefixes to repositories
+ * Maps uri prefixes to repositories
  * @author Philipp Bracher
  * @version $Id$
  */

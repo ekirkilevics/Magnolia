@@ -38,10 +38,9 @@ import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
-import info.magnolia.cms.link.LinkHelper;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.DateUtil;
-import info.magnolia.cms.util.LinkUtil;
+import info.magnolia.link.LinkUtil;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
@@ -362,9 +361,9 @@ public class Out extends BaseContentTag {
                     value = StringUtils.isEmpty(this.lineBreak) ? nodeData.getString() : nodeData.getString(this.lineBreak);
 
                     // replace internal links that use the special magnolia link format (looks like ${link: {uuid: ... etc) -
-                    // ( - see info.magnolia.cms.link.UUIDLink for an example of the special format that this next line
+                    // ( - see info.magnolia.link.UUIDLink for an example of the special format that this next line
                     //    handles )
-                    value = LinkUtil.convertUUIDsToBrowserLinks(value, MgnlContext.getAggregationState().getMainContent().getHandle()); // static actpage
+                    value = LinkUtil.convertToBrowserLinks(value, MgnlContext.getAggregationState().getMainContent().getHandle()); // static actpage
 
                     if(!StringUtils.equalsIgnoreCase(getUuidToLink(), LINK_RESOLVING_NONE)){
                         // if the uuidToLink type has been explicitly set, reset the output value
@@ -374,10 +373,10 @@ public class Out extends BaseContentTag {
                             value = ContentUtil.uuid2path(this.getUuidToLinkRepository(), value);
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_ABSOLUTE)){
-                            value = LinkHelper.convertUUIDtoURI(value, this.getUuidToLinkRepository());
+                            value = LinkUtil.convertUUIDtoURI(value, this.getUuidToLinkRepository());
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_RELATIVE)){
-                            value = LinkUtil.makeRelativePath(LinkHelper.convertUUIDtoHandle(value, this.getUuidToLinkRepository()), MgnlContext.getAggregationState().getMainContent().getHandle());
+                            value = LinkUtil.makePathRelative(MgnlContext.getAggregationState().getMainContent().getHandle(), LinkUtil.convertUUIDtoHandle(value, this.getUuidToLinkRepository()));
                         }
                         else{
                             throw new IllegalArgumentException("not supported value for uuidToLink");

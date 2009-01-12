@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,21 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
-
-import info.magnolia.cms.beans.config.ContentRepository;
-
-import javax.jcr.RepositoryException;
-import java.io.IOException;
+package info.magnolia.link;
 
 /**
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @author had
+ *
  */
-public class LinkUtilTest extends BaseLinkTest {
+public class UUIDLinkException extends Exception {
 
-    public void testMakeUUIDFromAbsolutePath() throws IOException, RepositoryException {
-        String uuid = LinkUtil.makeUUIDFromAbsolutePath("/parent/sub", ContentRepository.WEBSITE);
-        assertEquals("2", uuid);
+    private static final long serialVersionUID = 8583028261528429020L;
+
+    /**
+     * 
+     */
+    public UUIDLinkException() {
+    }
+
+    /**
+     * @param arg0
+     */
+    public UUIDLinkException(String arg0) {
+        super(arg0);
+    }
+
+    /**
+     * @param arg0
+     */
+    public UUIDLinkException(Throwable arg0) {
+        super(arg0);
+    }
+
+    /**
+     * @param arg0
+     * @param arg1
+     */
+    public UUIDLinkException(String arg0, Throwable arg1) {
+        super(arg0, arg1);
     }
 }

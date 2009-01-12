@@ -33,47 +33,10 @@
  */
 package info.magnolia.cms.link;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-
 /**
  * @author philipp
  * @version $Id$
- *
+ * @deprecated use {@link info.magnolia.link.UUIDLinkException} instead
  */
-public class UUIDLinkException extends Exception {
-
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(UUIDLinkException.class);
-
-    /**
-     * 
-     */
-    public UUIDLinkException() {
-    }
-
-    /**
-     * @param arg0
-     */
-    public UUIDLinkException(String arg0) {
-        super(arg0);
-    }
-
-    /**
-     * @param arg0
-     */
-    public UUIDLinkException(Throwable arg0) {
-        super(arg0);
-    }
-
-    /**
-     * @param arg0
-     * @param arg1
-     */
-    public UUIDLinkException(String arg0, Throwable arg1) {
-        super(arg0, arg1);
-    }
+public class UUIDLinkException extends info.magnolia.link.UUIDLinkException {
 }

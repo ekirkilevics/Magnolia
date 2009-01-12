@@ -10,7 +10,7 @@
     <sv:value>dbb973c0-99b7-4f9d-9aa4-b492c691fdde</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.cms.link.LinkResolverImpl</sv:value>
+    <sv:value>info.magnolia.link.LinkUtil</sv:value>
   </sv:property>
   <sv:property sv:name="makeBrowserLinksRelative" sv:type="Boolean">
     <sv:value>false</sv:value>

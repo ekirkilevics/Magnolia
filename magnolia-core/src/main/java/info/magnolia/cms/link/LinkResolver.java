@@ -50,11 +50,12 @@ import info.magnolia.cms.util.FactoryUtil;
  * The uuid pattern stores all the needed information like repository, uuid, path, filename (for binaries), ...
  * </p>
  * <p>
- * The absolute links are the links used for the request including all tranformations like adding context, i18n content support, repository to uri mapping, ...
+ * The absolute links are the links used for the request including all transformations like adding context, i18n content support, repository to uri mapping, ...
  * </p>
  *
  * @author philipp
  * @version $Id$
+ * @deprecated use {@link LinkHelper} instead
  *
  */
 public interface LinkResolver {

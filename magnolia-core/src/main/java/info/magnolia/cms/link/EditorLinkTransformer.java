@@ -37,21 +37,7 @@ package info.magnolia.cms.link;
  * Add the context path only to the binaries.
  * @author philipp
  * @version $Id$
+ * @deprecated use {@link info.magnolia.link.EditorLinkTransformer} instead
  */
-public class EditorLinkTransformer implements PathToLinkTransformer {
-
-    protected PathToLinkTransformer binaryTransformer = new AbsolutePathTransformer(true,true,false);
-
-    protected PathToLinkTransformer linkTransformer = new AbsolutePathTransformer(false,true,false);
-
-    public String transform(UUIDLink uuidLink) {
-        // TODO use a better way to determine if this is a binary
-        // this should actually not even be here because totaly related to the fck editor
-        if(uuidLink.getNodeData()!=null){
-            return binaryTransformer.transform(uuidLink);
-        }
-        else{
-            return linkTransformer.transform(uuidLink);
-        }
-    }
+public class EditorLinkTransformer extends info.magnolia.link.EditorLinkTransformer {
 }

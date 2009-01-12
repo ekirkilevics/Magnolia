@@ -31,13 +31,28 @@
  * intact.
  *
  */
-package info.magnolia.cms.link;
+package info.magnolia.link;
 
 /**
- * @author philipp
- * @version $Id$
- * @deprecated use {@link info.magnolia.link.UUIDLink} instead
+ * Add the context path only to the binaries.
+ * @author had
+ * @version $Id: EditorLinkTransformer.java 21024 2009-01-06 20:58:05Z gjoseph $
  */
-public class UUIDLink extends info.magnolia.link.UUIDLink {
+public class EditorLinkTransformer implements LinkTransformer {
+
+    protected LinkTransformer binaryTransformer = new AbsolutePathTransformer(true,true,false);
+
+    protected LinkTransformer linkTransformer = new AbsolutePathTransformer(false,true,false);
+
+    public String transform(UUIDLink uuidLink) {
+        // TODO use a better way to determine if this is a binary
+        // this should actually not even be here because totally related to the fck editor
+        if(uuidLink.getNodeData()!=null){
+            return binaryTransformer.transform(uuidLink);
+        }
+        else{
+            return linkTransformer.transform(uuidLink);
+        }
+    }
 }
 

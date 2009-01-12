@@ -31,13 +31,25 @@
  * intact.
  *
  */
-package info.magnolia.cms.link;
+package info.magnolia.link;
+
+import info.magnolia.cms.beans.config.ServerConfiguration;
 
 /**
- * @author philipp
- * @version $Id$
- * @deprecated use {@link info.magnolia.link.UUIDLink} instead
+ * Constructs URLs by prefixing the path with Server..getDefaultBaseUrl()
+ *
+ * @see info.magnolia.cms.beans.config.ServerConfiguration
+ *
+ * @author had
+ * @version $Id:$
  */
-public class UUIDLink extends info.magnolia.link.UUIDLink {
-}
+public class CompleteUrlPathTransformer extends AbsolutePathTransformer {
 
+    public CompleteUrlPathTransformer(boolean useURI2RepositoryMapping, boolean useI18N) {
+        super(true, useURI2RepositoryMapping, useI18N);
+    }
+
+    protected String prefixLink(String linkStr) {
+        return ServerConfiguration.getInstance().getDefaultBaseUrl() + linkStr;
+    }
+}

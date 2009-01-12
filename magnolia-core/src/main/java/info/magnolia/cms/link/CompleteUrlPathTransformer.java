@@ -33,8 +33,6 @@
  */
 package info.magnolia.cms.link;
 
-import info.magnolia.cms.beans.config.ServerConfiguration;
-
 /**
  * Constructs URLs by prefixing the path with Server..getDefaultBaseUrl()
  *
@@ -42,14 +40,11 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
+ * @deprecated use {@link info.magnolia.link.CompleteUrlPathTransformer} instead
  */
-public class CompleteUrlPathTransformer extends AbsolutePathTransformer {
+public class CompleteUrlPathTransformer extends info.magnolia.link.CompleteUrlPathTransformer {
 
     public CompleteUrlPathTransformer(boolean useURI2RepositoryMapping, boolean useI18N) {
-        super(true, useURI2RepositoryMapping, useI18N);
-    }
-
-    protected String prefixLink(String linkStr) {
-        return ServerConfiguration.getInstance().getDefaultBaseUrl() + linkStr;
+        super(useURI2RepositoryMapping, useI18N);
     }
 }

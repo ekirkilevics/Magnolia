@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,37 +31,41 @@
  * intact.
  *
  */
-package info.magnolia.cms.link;
+package info.magnolia.link;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.FactoryUtil;
 
 /**
- * @deprecated use {@link info.magnolia.link.RelativePathTransformer} instead
  * @author had
- * @version $Id:$
+ *
  */
-public class RelativePathTransformer extends AbsolutePathTransformer{
+public class LinkTransformerManager {
+
+    /**
+     * Gets the current singleton instance.
+     */
+    public static LinkTransformerManager getInstance() {
+        return (LinkTransformerManager) FactoryUtil.getSingleton(LinkTransformerManager.class);
+    }
     
-    protected String absolutePath;
-
-    public RelativePathTransformer(Content page, boolean useURI2RepositoryMapping, boolean useI18N) {
-        super(false, useURI2RepositoryMapping, useI18N);
-        UUIDLink link = new UUIDLink();
-        link.setNode(page);
-        link.setRepository(ContentRepository.WEBSITE);
-        link.setExtension("html");
-        absolutePath = super.transform(link);
+    public AbsolutePathTransformer getAbsolute(boolean addContextPath, boolean useURI2RepositoryMapping, boolean useI18N) {
+        return new AbsolutePathTransformer(addContextPath, useURI2RepositoryMapping, useI18N);
+    }
+    
+    public RelativePathTransformer getRelative(Content page, boolean useURI2RepositoryMapping, boolean useI18N) {
+        return new RelativePathTransformer(page, useURI2RepositoryMapping, useI18N);
     }
 
-    public RelativePathTransformer(String absolutePath, boolean useURI2RepositoryMapping, boolean useI18N) {
-        super(false, useURI2RepositoryMapping, useI18N);
-        this.absolutePath = absolutePath;
+    public RelativePathTransformer getRelative(String absolutePath, boolean useURI2RepositoryMapping, boolean useI18N) {
+        return new RelativePathTransformer(absolutePath, useURI2RepositoryMapping, useI18N);
     }
-
-
-    public String transform(UUIDLink uuidLink) {
-        String link = super.transform(uuidLink);
-        return LinkHelper.makePathRelative(absolutePath, link);
+    
+    public CompleteUrlPathTransformer getCompleteUrl(boolean useURI2RepositoryMapping, boolean useI18N) {
+        return new CompleteUrlPathTransformer(useURI2RepositoryMapping, useI18N);
+    }
+    
+    public EditorLinkTransformer getEditorLink() {
+        return new EditorLinkTransformer();
     }
 }

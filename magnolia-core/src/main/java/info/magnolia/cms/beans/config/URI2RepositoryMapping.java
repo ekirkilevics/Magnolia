@@ -33,8 +33,8 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.link.UUIDLink;
-import info.magnolia.cms.link.UUIDLinkException;
+import info.magnolia.link.UUIDLink;
+import info.magnolia.link.UUIDLinkException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -115,7 +115,9 @@ public class URI2RepositoryMapping {
         if (!handle.startsWith("/")) {
             handle = "/" + handle;
         }
-        handle = StringUtils.replace(handle, "//", "/");
+        while (handle.indexOf("//") != -1) {
+            handle = StringUtils.replace(handle, "//", "/");
+        }
         return handle;
     }
 

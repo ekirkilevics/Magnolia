@@ -45,14 +45,12 @@ import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.link.AbsolutePathTransformer;
-import info.magnolia.cms.link.CompleteUrlPathTransformer;
-import info.magnolia.cms.link.PathToLinkTransformer;
-import info.magnolia.cms.link.RelativePathTransformer;
 import info.magnolia.cms.security.User;
 import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.link.LinkTransformer;
+import info.magnolia.link.LinkTransformerManager;
 
 import javax.jcr.PropertyType;
 import javax.jcr.RepositoryException;
@@ -106,17 +104,17 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
                 case PropertyType.STRING:
                     final String s = nodeData.getString();
-                    final PathToLinkTransformer t;
+                    final LinkTransformer t;
                     // TODO : maybe this could be moved to LinkUtil
                     if (MgnlContext.isWebContext()) {
                         final Content page = MgnlContext.getAggregationState().getMainContent();
                         if (page != null) {
-                            t = new RelativePathTransformer(page, true, true);
+                            t = LinkTransformerManager.getInstance().getRelative(page, true, true);
                         } else {
-                            t = new AbsolutePathTransformer(true, true, true);
+                            t = LinkTransformerManager.getInstance().getAbsolute(true, true, true);
                         }
                     } else {
-                        t = new CompleteUrlPathTransformer(true, true);
+                        t = LinkTransformerManager.getInstance().getCompleteUrl(true, true);
                     }
                     final String transformedString = LinkUtil.convertUUIDsToLinks(s, t);
                     return new SimpleScalar(transformedString);

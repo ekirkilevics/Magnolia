@@ -33,9 +33,9 @@
  */
 package info.magnolia.cms.link;
 
-import java.util.regex.Matcher;
+import info.magnolia.link.LinkTransformerManager;
+import info.magnolia.link.LinkUtil;
 
-import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,7 +43,7 @@ import org.slf4j.LoggerFactory;
 /**
  * @author philipp
  * @version $Id$
- *
+ * @deprecated use {@link LinkUtil} instead
  */
 public class LinkResolverImpl implements LinkResolver {
 
@@ -52,36 +52,13 @@ public class LinkResolverImpl implements LinkResolver {
     private boolean makeBrowserLinksRelative = false;
 
     private boolean addContextPathToBrowserLinks = false;
-
+    
     public String parseLinks(String str) {
-        // get all link tags
-        Matcher matcher = LinkHelper.LINK_OR_IMAGE_PATTERN.matcher(str);
-        StringBuffer res = new StringBuffer();
-        while (matcher.find()) {
-            final String href = matcher.group(4);
-            if (!LinkHelper.isExternalLinkOrAnchor(href)) {
-                UUIDLink link = new UUIDLink();
-                try {
-                    link.parseLink(href);
-                    matcher.appendReplacement(res, "$1" + StringUtils.replace(link.toPattern(), "$", "\\$") + "$5");
-                }
-                catch (UUIDLinkException e) {
-                    // this is expected if the link is an ablsolute path to something else
-                    // than content stored in the repository
-                    matcher.appendReplacement(res, "$0");
-                    log.debug("can't parse link", e);
-                }
-            }
-            else{
-                matcher.appendReplacement(res, "$0");
-            }
-        }
-        matcher.appendTail(res);
-        return res.toString();
+        return LinkUtil.convertAbsoluteLinksToUUIDs(str);
     }
 
     public String convertToEditorLinks(String str) {
-        return LinkHelper.convertUsingLinkTransformer(str, new EditorLinkTransformer());
+        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getEditorLink());
     }
 
     public String convertToBrowserLinks(String str, String currentPath) {
@@ -94,15 +71,15 @@ public class LinkResolverImpl implements LinkResolver {
     }
 
     public String convertToAbsoluteLinks(String str, boolean addContextPath) {
-        return LinkHelper.convertUsingLinkTransformer(str, new AbsolutePathTransformer(addContextPath, true, true));
+        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getAbsolute(addContextPath, true, true));
     }
 
     public String convertToRelativeLinks(String str, String currentPath) {
-        return LinkHelper.convertUsingLinkTransformer(str, new RelativePathTransformer(currentPath, true, true));
+        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(currentPath, true, true));
     }
 
     public String convertToExternalLinks(String str) {
-        return LinkHelper.convertUsingLinkTransformer(str, new CompleteUrlPathTransformer(true, true));
+        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getCompleteUrl(true, true));
     }
 
     public boolean isAddContextPathToBrowserLinks() {

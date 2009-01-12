@@ -50,9 +50,9 @@ import info.magnolia.cms.security.Digester;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.DateUtil;
 import info.magnolia.cms.util.ExclusiveWrite;
-import info.magnolia.cms.util.LinkUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.link.LinkUtil;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;

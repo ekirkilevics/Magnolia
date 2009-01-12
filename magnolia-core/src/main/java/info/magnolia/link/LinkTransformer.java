@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -31,13 +31,12 @@
  * intact.
  *
  */
-package info.magnolia.cms.link;
+package info.magnolia.link;
 
 /**
- * @author philipp
- * @version $Id$
- * @deprecated use {@link info.magnolia.link.UUIDLink} instead
+ * @author had
+ *
  */
-public class UUIDLink extends info.magnolia.link.UUIDLink {
+public interface LinkTransformer {
+    String transform(UUIDLink link);
 }
-

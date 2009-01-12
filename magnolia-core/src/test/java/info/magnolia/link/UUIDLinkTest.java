@@ -31,11 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.cms.link;
+package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.ContentRepository;
-import info.magnolia.cms.util.BaseLinkTest;
+import info.magnolia.link.AbsolutePathTransformer;
+import info.magnolia.link.UUIDLink;
 import info.magnolia.cms.util.ContentUtil;
+import info.magnolia.link.LinkTransformer;
 import info.magnolia.test.mock.MockContent;
 
 import java.text.MessageFormat;
@@ -58,7 +60,7 @@ public class UUIDLinkTest extends BaseLinkTest {
     protected static final String UUID_PATTERN_SIMPLE_OLD_FORMAT = MessageFormat.format(UUID_PATTERN_OLD_FORMAT, new String[]{"2", ContentRepository.WEBSITE, "/parent/sub"});
 
 
-    protected static final PathToLinkTransformer NOP_TRANSFORMER = new AbsolutePathTransformer(false, false, false);
+    protected static final LinkTransformer NOP_TRANSFORMER = new AbsolutePathTransformer(false, false, false);
 
     public void testParseFromUUIDPattern() throws Exception {
         UUIDLink link = new UUIDLink().parseUUIDLink(UUID_PATTERN_SIMPLE);
@@ -104,7 +106,7 @@ public class UUIDLinkTest extends BaseLinkTest {
         UUIDLink link = new UUIDLink().parseUUIDLink(UUID_PATTERN_SIMPLE);
         assertEquals("/parent/subRenamed.html", NOP_TRANSFORMER.transform(link));
     }
-
+    
     public void doTestParsingInternalLinksToBinaries() throws Exception {
         UUIDLink link = new UUIDLink().parseLink(HREF_BINARY);
         assertEquals(UUID_PATTERN_BINARY, link.toPattern());

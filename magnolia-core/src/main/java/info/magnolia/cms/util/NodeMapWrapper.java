@@ -141,7 +141,7 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
             value = props.getProperty(FileProperties.PATH);
         }
         else {
-            value = LinkUtil.convertUUIDsToBrowserLinks(nodeData.getString(), handle);
+            value = info.magnolia.link.LinkUtil.convertToBrowserLinks(nodeData.getString(), handle);
         }
         return value;
     }

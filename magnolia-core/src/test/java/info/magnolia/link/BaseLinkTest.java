@@ -31,15 +31,14 @@
  * intact.
  *
  */
-package info.magnolia.cms.util;
+package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.i18n.DefaultI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupport;
-import info.magnolia.cms.link.LinkResolver;
-import info.magnolia.cms.link.LinkResolverImpl;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.test.MgnlTestCase;
 import info.magnolia.test.mock.BinaryMockNodeData;
 import info.magnolia.test.mock.MockContent;
@@ -94,7 +93,7 @@ public abstract class BaseLinkTest extends MgnlTestCase {
 
         FactoryUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
 
-        FactoryUtil.setInstance(LinkResolver.class, new LinkResolverImpl());
+        FactoryUtil.setInstance(LinkUtil.class, new LinkUtil());
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
