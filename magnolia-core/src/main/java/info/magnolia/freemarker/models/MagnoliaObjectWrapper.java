@@ -33,15 +33,15 @@
  */
 package info.magnolia.freemarker.models;
 
-import freemarker.ext.beans.MapModel;
 import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.beans.MapModel;
 import freemarker.ext.util.ModelFactory;
 import freemarker.template.DefaultObjectWrapper;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleDate;
 import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import freemarker.template.ObjectWrapper;
 import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
@@ -49,7 +49,10 @@ import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
 
 import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A Freemarker ObjectWrapper that knows about Magnolia specific objects.
@@ -73,8 +76,29 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
         }
     };
 
+    /**
+     * The ModelFactory implementations explicitely registered by modules, as well as the default ones.
+     */
+    private final Map registeredModelFactories;
+
+    /**
+     * The ModelFactory implementations as they have been used.
+     *
+     * @see #getModelFactory(Class clazz)
+     */
+    private final Map cachedModelFactories;
+
     public MagnoliaObjectWrapper() {
         super();
+        this.cachedModelFactories = new HashMap();
+        this.registeredModelFactories = new HashMap();
+        // default ModelFactories
+        registeredModelFactories.put(NodeData.class, NodeDataModelFactory.INSTANCE);
+        registeredModelFactories.put(Content.class, ContentModel.FACTORY);
+        registeredModelFactories.put(Calendar.class, calendarFactory);
+        registeredModelFactories.put(User.class, UserModel.FACTORY);
+        registeredModelFactories.put(Context.class, contextModelFactory);
+        registeredModelFactories.put(RenderableDefinition.class, RenderableDefinitionModel.FACTORY);
     }
 
     /**
@@ -103,19 +127,20 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
     // TODO let modules plug in their own ModelFactories
     protected ModelFactory getModelFactory(Class clazz) {
-        if (NodeData.class.isAssignableFrom(clazz)) {
-            return NodeDataModelFactory.INSTANCE;
-        } else if (Content.class.isAssignableFrom(clazz)) {
-            return ContentModel.FACTORY;
-        } else if (Calendar.class.isAssignableFrom(clazz)) { // this is needed ie. for MetaData dates
-            return calendarFactory;
-        } else if (User.class.isAssignableFrom(clazz)) {
-            return UserModel.FACTORY;
-        } else if (Context.class.isAssignableFrom(clazz)) {
-            return contextModelFactory;
-        } else if (RenderableDefinition.class.isAssignableFrom(clazz)) {
-            return RenderableDefinitionModel.FACTORY;
+        if (cachedModelFactories.containsKey(clazz)) {
+            return (ModelFactory) cachedModelFactories.get(clazz);
         } else {
+            final Set classes = registeredModelFactories.keySet();
+            final Iterator it = classes.iterator();
+            while (it.hasNext()) {
+                final Class classHandledByFactory = (Class) it.next();
+                if (classHandledByFactory.isAssignableFrom(clazz)) {
+                    final ModelFactory modelFactory = (ModelFactory) registeredModelFactories.get(classHandledByFactory);
+                    cachedModelFactories.put(clazz, modelFactory);
+                    return modelFactory;
+                }
+            }
+
             return super.getModelFactory(clazz);
         }
     }
