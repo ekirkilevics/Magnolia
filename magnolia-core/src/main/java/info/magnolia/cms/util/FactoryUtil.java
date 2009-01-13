@@ -84,6 +84,10 @@ public class FactoryUtil {
 
     }
 
+    /**
+     * Creates a new instance of the passed interface / class by using the registered implementation. If this fails a {@link IllegalStateException} is thrown.
+     * @throws IllegalStateException
+     */
     public static Object newInstance(Class interf) {
         if(interf == null){
             log.error("interf can't be null", new Throwable());
@@ -116,10 +120,8 @@ public class FactoryUtil {
             }
         }
         catch (Exception e) {
-            // TODO throw exception ! the system can't work !!!!
-            log.error("Can't instantiate an implementation of this class [" + interf.getName() + "]", e);
+            throw new IllegalStateException("Can't instantiate an implementation of this class [" + interf.getName() + "]", e);
         }
-        return null;
     }
 
     private static boolean isInRepositoryDefinition(String className) {
