@@ -33,6 +33,8 @@
  */
 package info.magnolia.freemarker;
 
+import freemarker.ext.util.ModelFactory;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleCollection;
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;
@@ -52,15 +54,21 @@ import java.util.Collection;
 import java.util.Iterator;
 
 /**
- * A wrapper for Content nodes - exposes properties using an HashModel (.property, ?size, ...)
+ * A wrapper for Content nodes. Exposes properties using an HashModel (.property, ?size, ...)
  * a hierarchy (TemplateNodeModel: ?children, ?parent, ...)
  * and as a scalar (returns the node name)
- * 
+ *
  * @author Chris Miner
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
 public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, TemplateScalarModel {
+    static final ModelFactory FACTORY = new ModelFactory() {
+        public TemplateModel create(Object object, ObjectWrapper wrapper) {
+            return new ContentModel((Content) object, (MagnoliaObjectWrapper) wrapper);
+        }
+    };
+
     private final Content content;
     private final MagnoliaObjectWrapper wrapper;
 
@@ -90,10 +98,9 @@ public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, Tem
                 if (content.hasNodeData(key)) {
                     result = content.getNodeData(key);
                 } else {
-                    if(content.hasContent(key)){
+                    if (content.hasContent(key)) {
                         result = content.getContent(key);
-                    }
-                    else{
+                    } else {
                         result = null;
                     }
                 }

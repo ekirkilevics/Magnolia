@@ -35,6 +35,8 @@ package info.magnolia.freemarker;
 
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.util.ModelFactory;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -47,6 +49,12 @@ import info.magnolia.cms.beans.config.RenderableDefinition;
  * @version $Id$
  */
 class RenderableDefinitionModel extends BeanModel {
+    static final ModelFactory FACTORY = new ModelFactory() {
+        public TemplateModel create(Object object, ObjectWrapper wrapper) {
+            // make parameters directly available (as if they were properties of the definition itself)
+            return new RenderableDefinitionModel((RenderableDefinition) object, (BeansWrapper) wrapper);
+        }
+    };
     /**
      * The hash model for the parameters.
      */

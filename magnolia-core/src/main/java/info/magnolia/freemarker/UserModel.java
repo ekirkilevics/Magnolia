@@ -34,6 +34,8 @@
 package info.magnolia.freemarker;
 
 import freemarker.ext.beans.BeanModel;
+import freemarker.ext.util.ModelFactory;
+import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
@@ -48,6 +50,13 @@ import info.magnolia.cms.security.User;
  * @version $Revision: $ ($Author: $)
  */
 class UserModel extends BeanModel {
+    static final ModelFactory FACTORY = new ModelFactory() {
+        public TemplateModel create(Object object, ObjectWrapper wrapper) {
+            final User user = (User) object;
+            return new UserModel(user, (MagnoliaObjectWrapper) wrapper);
+        }
+    };
+    
     private final User user;
 
     UserModel(User user, MagnoliaObjectWrapper wrapper) {
