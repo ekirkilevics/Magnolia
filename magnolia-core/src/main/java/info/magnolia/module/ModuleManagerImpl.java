@@ -384,7 +384,7 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     protected void populateModuleInstance(Object moduleInstance, Map moduleProperties) {
-        // TODO - isn't all this code only there to support "old style" modules ? 
+        // TODO - isn't all this code only there to support "old style" modules ?
         try {
             BeanUtils.populate(moduleInstance, moduleProperties);
         }
@@ -424,9 +424,9 @@ public class ModuleManagerImpl implements ModuleManager {
         final ModuleDefinition moduleDef = moduleAndDeltas.getModule();
         final List deltas = moduleAndDeltas.getDeltas();
         ctx.setCurrentModule(moduleDef);
-        log.debug("Install/update for {} is starting", moduleDef);
+        log.info("Install/update for {} is starting", moduleDef);
         applyDeltas(moduleDef, deltas, ctx);
-        log.debug("Install/update for {} has finished", moduleDef);
+        log.info("Install/update for {} has finished", moduleDef);
     }
 
     /**
