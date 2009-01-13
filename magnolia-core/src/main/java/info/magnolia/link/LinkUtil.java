@@ -47,6 +47,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * Utility methods fro harious operations necessary for link transformations and handling.
  * @author had
  *
  */
@@ -62,7 +63,7 @@ public class LinkUtil {
     public static final String DEFAULT_REPOSITORY = ContentRepository.WEBSITE;
 
     /**
-     * Pattern to find a link
+     * Pattern to find a link.
      */
     public static final Pattern LINK_OR_IMAGE_PATTERN = Pattern.compile(
         "(<(a|img|embed) " + // start <a or <img
@@ -172,12 +173,18 @@ public class LinkUtil {
     }
 
     //-- conversions from UUID - bulk
+    /**
+     * Converts links in provided html from Magnolia UUID pattern links to links suitable for editor.
+     * @param str provided html
+     * @return converted html
+     * @see EditorLinkTransformer
+     */
     public static String convertToEditorLinks(String str) {
         return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getEditorLink());
     }
 
     /**
-     * Convert all links in provided html from the UUID format to absolute paths
+     * Convert all links in provided html from the UUID format to absolute paths.
      * @param html html with UUIDs
      * @return html with absolute links
      */
@@ -202,7 +209,7 @@ public class LinkUtil {
 
     /**
      * Converts all links in provided html to either relative or absolute links with or without context path from the UUID patterns.
-     * The outputted html will contain relative or absolute links based on the settings in /server/rendering/linkTranslation
+     * The outputted html will contain relative or absolute links based on the settings in /server/rendering/linkManagement
      * @param html html with links in UUID format
      * @param currentPath path to make links relative to. If {@code makeBrowserLinksRelative} is set to false, this value can be null.
      * @return html with translated links.
@@ -219,6 +226,13 @@ public class LinkUtil {
         }
     }
 
+    /**
+     * Converts provided html with links in UUID pattern format to any other kind of links based on provided link transformer.
+     * @param str Html with UUID links
+     * @param transformer Link transformer
+     * @return converted html with links as created by provided transformer.
+     * @see LinkTransformerManager
+     */
     public static String convertLinksFromUUIDPattern(String str, LinkTransformer transformer) {
         Matcher matcher = UUIDLink.UUID_PATTERN.matcher(str);
         StringBuffer res = new StringBuffer();

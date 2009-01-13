@@ -34,7 +34,12 @@
 package info.magnolia.link;
 
 /**
- * Add the context path only to the binaries.
+ * Modifies links to the format suitable for the Editor. <br/>
+ * <ul>
+ * <li>Applies URI2Repository mappings to any passed link.</li>
+ * <li>Adds the context path only to the binaries.</li>
+ * <li>Doesn't do any i18n translation of the links</li>
+ * </ul>
  * @author had
  * @version $Id: EditorLinkTransformer.java 21024 2009-01-06 20:58:05Z gjoseph $
  */

@@ -34,6 +34,7 @@
 package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.i18n.AbstractI18nContentSupport;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.link.LinkTransformer;
@@ -41,6 +42,9 @@ import info.magnolia.link.LinkTransformer;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * Creates links with the absolute path. Alternatively can prefix links with the webapp context path as well. 
+ * Transformer is also capable of applying URI2Repository mapping and i18n (mapping links to different path 
+ * based on the current locale value). See {@link AbstractI18nContentSupport} for details.
  * @author had
  * @version $Id:$
  */
@@ -52,12 +56,21 @@ public class AbsolutePathTransformer implements LinkTransformer {
 
     boolean useI18N = true;
 
+    /**
+     * Creates new transformer.
+     * @param addContextPath Flag to specify whether or not to prepend context path to created links.
+     * @param useURI2RepositoryMapping Flag specifying whether or not to apply any URI2Repository mapping.
+     * @param useI18N Flag specifying whether or not to translate link path based on current locale value.
+     */
     public AbsolutePathTransformer(boolean addContextPath, boolean useURI2RepositoryMapping, boolean useI18N) {
         this.addContextPath = addContextPath;
         this.useURI2RepositoryMapping = useURI2RepositoryMapping;
         this.useI18N = useI18N;
     }
 
+    /**
+     * {@inheritDoc}
+     */
     public String transform(UUIDLink uuidLink) {
         String linkStr;
         if(useURI2RepositoryMapping){

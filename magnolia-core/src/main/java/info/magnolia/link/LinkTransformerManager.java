@@ -37,6 +37,7 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
 
 /**
+ * Single point of access for all Link Transformers.
  * @author had
  *
  */
