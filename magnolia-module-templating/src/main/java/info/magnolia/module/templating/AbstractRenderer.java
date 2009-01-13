@@ -39,6 +39,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import org.apache.commons.lang.exception.ExceptionUtils;
+
 import info.magnolia.cms.beans.config.RenderableDefinition;
 import info.magnolia.cms.beans.config.RenderingModel;
 import info.magnolia.cms.core.Content;
@@ -70,7 +72,7 @@ public abstract class AbstractRenderer {
             model = newModel(content, definition, parentModel);
         }
         catch (Exception e) {
-            throw new RenderException("Can't create rendering model", e);
+            throw new RenderException("Can't create rendering model: " + ExceptionUtils.getRootCauseMessage(e), e);
         }
 
         final String actionResult = model.execute();
