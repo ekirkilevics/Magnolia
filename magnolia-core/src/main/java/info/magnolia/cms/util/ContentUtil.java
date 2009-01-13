@@ -34,21 +34,29 @@
 package info.magnolia.cms.util;
 
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.core.Path;
 import info.magnolia.cms.core.Content.ContentFilter;
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.jcr.ImportUUIDBehavior;
 import javax.jcr.PathNotFoundException;
 import javax.jcr.RepositoryException;
+import javax.jcr.Session;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -119,6 +127,7 @@ public class ContentUtil {
     public static interface PostVisitor extends Visitor {
         void postVisit(Content node) throws Exception;
     }
+
 
     /**
      * Returns a Content object of the named repository or null if not existing.
@@ -446,6 +455,43 @@ public class ContentUtil {
         node.delete();
         if(parent != null && parent.getLevel()>level && parent.getChildren(ContentUtil.EXCLUDE_META_DATA_CONTENT_FILTER).size()==0){
             deleteAndRemoveEmptyParents(parent, level);
+        }
+    }
+
+    /**
+     * Session based copy operation. As JCR only supports workspace based copies this operation is performed
+     * by using export import operations.
+     */
+    public static void copyInSession(Content src, String dest) throws RepositoryException {
+        final String destParentPath = StringUtils.defaultIfEmpty(StringUtils.substringBeforeLast(dest, "/"), "/");
+        final String destNodeName = StringUtils.substringAfterLast(dest, "/");
+        final Session session = src.getWorkspace().getSession();
+        try{
+            final File file = File.createTempFile("mgnl", null, Path.getTempDirectory());
+            final FileOutputStream outStream = new FileOutputStream(file);
+            session.exportSystemView(src.getHandle(), outStream, false, false);
+            outStream.flush();
+            IOUtils.closeQuietly(outStream);
+            FileInputStream inStream = new FileInputStream(file);
+            session.importXML(
+                destParentPath,
+                inStream,
+                ImportUUIDBehavior.IMPORT_UUID_CREATE_NEW);
+            IOUtils.closeQuietly(inStream);
+            file.delete();
+            if(!StringUtils.equals(src.getName(), destNodeName)){
+                String currentPath;
+                if(destParentPath.equals("/")){
+                    currentPath = "/" + src.getName();
+                }
+                else{
+                    currentPath = destParentPath + "/" + src.getName();
+                }
+                session.move(currentPath, dest);
+            }
+        }
+        catch (IOException e) {
+            throw new RepositoryException("Can't copy node " + src + " to " + dest, e);
         }
     }
 

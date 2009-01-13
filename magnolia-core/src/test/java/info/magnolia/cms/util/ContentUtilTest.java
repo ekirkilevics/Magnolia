@@ -36,9 +36,10 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.context.MgnlContext;
+import info.magnolia.test.RepositoryTestCase;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockUtil;
-import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
 import javax.jcr.RepositoryException;
@@ -52,7 +53,7 @@ import java.util.List;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ContentUtilTest extends TestCase {
+public class ContentUtilTest extends RepositoryTestCase {
 
     public void testVisitShouldPassFilterAlong() throws Exception {
         final ItemType foo = new ItemType("foo");
@@ -128,6 +129,15 @@ public class ContentUtilTest extends TestCase {
 
     }
 
+    public void testSessionBasedCopy() throws RepositoryException{
+        HierarchyManager hm = MgnlContext.getHierarchyManager("config");
+        Content src = hm.getRoot().createContent("test");
+        src.createContent("subnode");
+        ContentUtil.copyInSession(src, "/gugu");
+        assertTrue(hm.isExist("/gugu"));
+        assertTrue(hm.isExist("/gugu/subnode"));
+    }
+
     private final static class ContentTypeRejector implements Content.ContentFilter {
         private final List<String> rejectedTypes;
 
@@ -143,6 +153,8 @@ public class ContentUtilTest extends TestCase {
             }
         }
     }
+
+
 
 
 
