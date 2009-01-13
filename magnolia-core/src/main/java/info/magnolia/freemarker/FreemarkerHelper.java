@@ -86,7 +86,7 @@ public class FreemarkerHelper {
         cfg.setObjectWrapper(newObjectWrapper());
 
         // template loaders will be set later on - to make sure changes to the configuration are picked up immediately
-        // default template loader until FreemarkerTemplateLoaderManager is ready:
+        // default template loader until FreemarkerConfig is ready:
         cfg.setTemplateLoader(new ClassTemplateLoader(FreemarkerUtil.class, "/"));
 
         cfg.setTagSyntax(Configuration.AUTO_DETECT_TAG_SYNTAX);
@@ -155,7 +155,7 @@ public class FreemarkerHelper {
 
         // TODO - we could have a LazyMultiTemplateLoader, much like our other Lazy*TemplateImplementations
         // set all currently known loaders
-        final FreemarkerTemplateLoaderManager loaderManager = FreemarkerTemplateLoaderManager.getInstance();
+        final FreemarkerConfig loaderManager = FreemarkerConfig.getInstance();
         if (loaderManager != null) {
             final TemplateLoader tl = loaderManager.getMultiTemplateLoader();
             if (tl != cfg.getTemplateLoader()) {
@@ -164,7 +164,7 @@ public class FreemarkerHelper {
             }
         } else {
             // TODO - this should not be necessary - see MAGNOLIA-2533
-            log.debug("FreemarkerTemplateLoaderManager is not ready yet.");
+            log.debug("FreemarkerConfig is not ready yet.");
         }
     }
 

@@ -13,7 +13,7 @@
     <sv:value>374d2462-1114-4817-97e8-0f23239eb784</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.freemarker.FreemarkerTemplateLoaderManager</sv:value>
+    <sv:value>info.magnolia.freemarker.FreemarkerConfig</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">

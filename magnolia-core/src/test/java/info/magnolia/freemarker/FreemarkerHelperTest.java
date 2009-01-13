@@ -82,9 +82,9 @@ public class FreemarkerHelperTest extends TestCase {
         super.setUp();
         tplLoader = new StringTemplateLoader();
         fmHelper = new FreemarkerHelper();
-        final FreemarkerTemplateLoaderManager fmTemplateLoader = new FreemarkerTemplateLoaderManager();
+        final FreemarkerConfig fmTemplateLoader = new FreemarkerConfig();
         fmTemplateLoader.addTemplateLoader(tplLoader);
-        FactoryUtil.setInstance(FreemarkerTemplateLoaderManager.class, fmTemplateLoader);
+        FactoryUtil.setInstance(FreemarkerConfig.class, fmTemplateLoader);
         fmHelper.getConfiguration().setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
         //fmHelper.getConfiguration().setTemplateLoader(tplLoader);
 

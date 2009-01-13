@@ -43,7 +43,7 @@ import info.magnolia.module.ModuleManagementException;
 import info.magnolia.module.ModuleManager;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
-import info.magnolia.freemarker.FreemarkerTemplateLoaderManager;
+import info.magnolia.freemarker.FreemarkerConfig;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -67,7 +67,7 @@ public class ModuleManagerWebUITest extends TestCase {
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
         FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
 
-        FactoryUtil.setInstance(FreemarkerTemplateLoaderManager.class, new FreemarkerTemplateLoaderManager());
+        FactoryUtil.setInstance(FreemarkerConfig.class, new FreemarkerConfig());
     }
 
     protected void tearDown() throws Exception {

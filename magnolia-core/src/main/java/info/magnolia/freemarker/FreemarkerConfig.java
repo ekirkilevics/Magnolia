@@ -42,18 +42,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Observed manager handling Freemarker template loaders.
+ * Observed bean holding Freemarker configuration. Not to be confused with
+ * Freemarker's own freemarker.template.Configuration. This only exposes the few
+ * properties that Magnolia allows to configure and is able to handle properly.
+ * It also provides a few additional methods used internally.
  * 
+ * @see info.magnolia.freemarker.FreemarkerHelper
+ * @see info.magnolia.freemarker.models.MagnoliaObjectWrapper
  */
-public class FreemarkerTemplateLoaderManager {
-    public static FreemarkerTemplateLoaderManager getInstance() {
-        return (FreemarkerTemplateLoaderManager) FactoryUtil.getSingleton(FreemarkerTemplateLoaderManager.class);
+public class FreemarkerConfig {
+    public static FreemarkerConfig getInstance() {
+        return (FreemarkerConfig) FactoryUtil.getSingleton(FreemarkerConfig.class);
     }
 
     private MultiTemplateLoader multiTL;
     private List templateLoaders;
 
-    public FreemarkerTemplateLoaderManager() {
+    public FreemarkerConfig() {
         templateLoaders = new ArrayList();
     }
 
