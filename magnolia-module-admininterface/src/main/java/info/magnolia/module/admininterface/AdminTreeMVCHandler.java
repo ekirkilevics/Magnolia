@@ -196,12 +196,16 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
 
         path = this.getRequest().getParameter("path"); //$NON-NLS-1$
         if (StringUtils.isEmpty(path)) {
-            path = "/"; //$NON-NLS-1$
+            if(StringUtils.isNotEmpty(this.getRootPath())){
+                path = this.getRootPath();
+            }
+            else{
+                path = "/"; //$NON-NLS-1$
+            }
         }
 
         pathOpen = this.getRequest().getParameter("pathOpen"); //$NON-NLS-1$
         pathSelected = this.getRequest().getParameter("pathSelected"); //$NON-NLS-1$
-        this.getTree().setRootPath(this.getRootPath());
 
         this.setBrowseMode(StringUtils.equals(this.getRequest().getParameter("browseMode"), "true"));
     }
@@ -832,6 +836,7 @@ public class AdminTreeMVCHandler extends CommandBasedMVCServletHandler {
                 getRepository(),
                 getRequest()});
             }
+            tree.setRootPath(this.getRootPath());
         }
         return tree;
     }
