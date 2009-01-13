@@ -62,7 +62,7 @@ public class FreemarkerConfig {
         templateLoaders = new ArrayList();
     }
 
-    TemplateLoader getMultiTemplateLoader() {
+    protected TemplateLoader getMultiTemplateLoader() {
         if (multiTL == null) {
             // add a ClassTemplateLoader as our last loader
             final int s = templateLoaders.size();

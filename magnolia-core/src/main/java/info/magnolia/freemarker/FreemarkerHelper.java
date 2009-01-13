@@ -33,8 +33,8 @@
  */
 package info.magnolia.freemarker;
 
-import freemarker.cache.TemplateLoader;
 import freemarker.cache.ClassTemplateLoader;
+import freemarker.cache.TemplateLoader;
 import freemarker.ext.jsp.TaglibFactory;
 import freemarker.ext.servlet.FreemarkerServlet;
 import freemarker.ext.servlet.HttpRequestHashModel;
@@ -97,7 +97,7 @@ public class FreemarkerHelper {
     }
 
     protected ObjectWrapper newObjectWrapper() {
-        return (ObjectWrapper)FactoryUtil.newInstance(MagnoliaObjectWrapper.class);
+        return (ObjectWrapper) FactoryUtil.newInstance(MagnoliaObjectWrapper.class);
     }
 
     /**
@@ -171,7 +171,7 @@ public class FreemarkerHelper {
     protected Locale checkLocale(Locale locale) {
         if (locale != null) {
             return locale;
-        } if (MgnlContext.hasInstance()) {
+        } else if (MgnlContext.hasInstance()) {
             return MgnlContext.getLocale();
         } else {
             return Locale.getDefault();
