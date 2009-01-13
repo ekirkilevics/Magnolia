@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,95 +33,11 @@
  */
 package info.magnolia.freemarker;
 
-import freemarker.ext.beans.MapModel;
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.util.ModelFactory;
-import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.SimpleDate;
-import freemarker.template.TemplateDateModel;
-import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import freemarker.template.ObjectWrapper;
-import info.magnolia.cms.beans.config.RenderableDefinition;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.User;
-import info.magnolia.context.Context;
-
-import java.util.Calendar;
-import java.util.Map;
-
 /**
- * A Freemarker ObjectWrapper that knows about Magnolia specific objects.
- *
- * @author Chris Miner
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
+ *
+ * @deprecated since 4.0 Moved to info.magnolia.freemarker.models.MagnoliaObjectWrapper
  */
-public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
-    private final ModelFactory contextModelFactory = new ModelFactory() {
-        public TemplateModel create(Object object, ObjectWrapper wrapper) {
-            // SimpleMapModel would prevent us from using Context's specific methods
-            // SimpleHash (which seems to be the default in 2.3.14) also prevents using specific methods
-            return new MapModel((Map) object, (BeansWrapper) wrapper);
-        }
-    };
-
-    private final ModelFactory calendarFactory = new ModelFactory() {
-        public TemplateModel create(Object object, ObjectWrapper wrapper) {
-            return handleCalendar((Calendar) object);
-        }
-    };
-
-    public MagnoliaObjectWrapper() {
-        super();
-    }
-
-    /**
-     * Unwraps our custom wrappers, let the default wrapper do the rest.
-     */
-    public Object unwrap(TemplateModel model, Class hint) throws TemplateModelException {
-        if (model instanceof ContentModel) {
-            return ((ContentModel) model).asContent();
-        }
-        if (model instanceof BinaryNodeDataModel) {
-            return ((BinaryNodeDataModel) model).asNodeData();
-        }
-        if (model instanceof UserModel) {
-            return ((UserModel) model).asUser();
-        }
-        return super.unwrap(model, hint);
-    }
-
-    public TemplateModel wrap(Object obj) throws TemplateModelException {
-        if (obj instanceof Context) {
-            // bypass the default SimpleHash wrapping, we need a MapModel, see contextModelFactory
-            return handleUnknownType(obj);
-        }
-        return super.wrap(obj);
-    }
-
-    // TODO let modules plug in their own ModelFactories
-    protected ModelFactory getModelFactory(Class clazz) {
-        if (NodeData.class.isAssignableFrom(clazz)) {
-            return NodeDataModelFactory.INSTANCE;
-        } else if (Content.class.isAssignableFrom(clazz)) {
-            return ContentModel.FACTORY;
-        } else if (Calendar.class.isAssignableFrom(clazz)) { // this is needed ie. for MetaData dates
-            return calendarFactory;
-        } else if (User.class.isAssignableFrom(clazz)) {
-            return UserModel.FACTORY;
-        } else if (Context.class.isAssignableFrom(clazz)) {
-            return contextModelFactory;
-        } else if (RenderableDefinition.class.isAssignableFrom(clazz)) {
-            return RenderableDefinitionModel.FACTORY;
-        } else {
-            return super.getModelFactory(clazz);
-        }
-    }
-
-    protected SimpleDate handleCalendar(Calendar cal) {
-        return new SimpleDate(cal.getTime(), TemplateDateModel.DATETIME);
-    }
-
+public class MagnoliaObjectWrapper extends info.magnolia.freemarker.models.MagnoliaObjectWrapper {
 }

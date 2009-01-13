@@ -48,6 +48,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
 
 import javax.servlet.GenericServlet;
 import javax.servlet.ServletContext;

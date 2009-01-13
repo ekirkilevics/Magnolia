@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.freemarker;
+package info.magnolia.freemarker.models;
 
 import freemarker.template.TemplateCollectionModel;
 import freemarker.template.TemplateHashModelEx;

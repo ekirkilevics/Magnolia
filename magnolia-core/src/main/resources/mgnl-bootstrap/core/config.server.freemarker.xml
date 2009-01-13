@@ -64,7 +64,7 @@
         <sv:value>b1868a96-4e38-4bb9-8bc5-e68517f49aa4</sv:value>
       </sv:property>
       <sv:property sv:name="class" sv:type="String">
-        <sv:value>info.magnolia.freemarker.LazyWebappTemplateLoader</sv:value>
+        <sv:value>info.magnolia.freemarker.loaders.LazyWebappTemplateLoader</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
