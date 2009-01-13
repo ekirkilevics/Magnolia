@@ -14,19 +14,19 @@
       <value>info.magnolia.module.admininterface.DialogHandlerManager</value>
     </property>
     <property>
-      <name>magnolia.module.admininterface.ParagraphDialogHandlerManager</name>
+      <name>info.magnolia.module.admininterface.ParagraphDialogHandlerManager</name>
       <value>info.magnolia.module.admininterface.ParagraphDialogHandlerManager</value>
     </property>
     <property>
-      <name>magnolia.module.admininterface.PageHandlerManager</name>
+      <name>info.magnolia.module.admininterface.PageHandlerManager</name>
       <value>info.magnolia.module.admininterface.PageHandlerManager</value>
     </property>
     <property>
-      <name>magnolia.module.admininterface.TreeHandlerManager</name>
+      <name>info.magnolia.module.admininterface.TreeHandlerManager</name>
       <value>info.magnolia.module.admininterface.TreeHandlerManager</value>
     </property>
     <property>
-      <name>magnolia.module.admininterface.SaveHandler</name>
+      <name>info.magnolia.module.admininterface.SaveHandler</name>
       <value>info.magnolia.module.admininterface.UUIDSaveHandler</value>
     </property>
   </properties>
