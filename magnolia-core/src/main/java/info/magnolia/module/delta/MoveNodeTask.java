@@ -34,6 +34,7 @@
 package info.magnolia.module.delta;
 
 import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.module.InstallContext;
 
 import javax.jcr.RepositoryException;
@@ -67,8 +68,7 @@ public class MoveNodeTask extends AbstractRepositoryTask {
                 return;
             }
         }
-        // FIXME we should not use the jcr session
-        hm.getWorkspace().getSession().move(src, dest);
+        ContentUtil.moveInSession(hm.getContent(src), dest);
     }
 
 }

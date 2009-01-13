@@ -495,4 +495,11 @@ public class ContentUtil {
         }
     }
 
+    /**
+     * Magnolia uses by default workspace move operation to move nodes. This is a util method to move a node inside a session.
+     */
+    public static void moveInSession(Content src, String dest) throws RepositoryException {
+        src.getWorkspace().getSession().move(src.getHandle(), dest);
+    }
+
 }
