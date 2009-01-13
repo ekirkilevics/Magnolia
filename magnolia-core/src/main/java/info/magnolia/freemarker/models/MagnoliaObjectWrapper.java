@@ -81,16 +81,8 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
      */
     private final Map registeredModelFactories;
 
-    /**
-     * The ModelFactory implementations as they have been used.
-     *
-     * @see #getModelFactory(Class clazz)
-     */
-    private final Map cachedModelFactories;
-
     public MagnoliaObjectWrapper() {
         super();
-        this.cachedModelFactories = new HashMap();
         this.registeredModelFactories = new HashMap();
         // default ModelFactories
         registeredModelFactories.put(NodeData.class, NodeDataModelFactory.INSTANCE);
@@ -127,22 +119,16 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
 
     // TODO let modules plug in their own ModelFactories
     protected ModelFactory getModelFactory(Class clazz) {
-        if (cachedModelFactories.containsKey(clazz)) {
-            return (ModelFactory) cachedModelFactories.get(clazz);
-        } else {
-            final Set classes = registeredModelFactories.keySet();
-            final Iterator it = classes.iterator();
-            while (it.hasNext()) {
-                final Class classHandledByFactory = (Class) it.next();
-                if (classHandledByFactory.isAssignableFrom(clazz)) {
-                    final ModelFactory modelFactory = (ModelFactory) registeredModelFactories.get(classHandledByFactory);
-                    cachedModelFactories.put(clazz, modelFactory);
-                    return modelFactory;
-                }
+        final Set classes = registeredModelFactories.keySet();
+        final Iterator it = classes.iterator();
+        while (it.hasNext()) {
+            final Class classHandledByFactory = (Class) it.next();
+            if (classHandledByFactory.isAssignableFrom(clazz)) {
+                return (ModelFactory) registeredModelFactories.get(classHandledByFactory);
             }
-
-            return super.getModelFactory(clazz);
         }
+
+        return super.getModelFactory(clazz);
     }
 
     protected SimpleDate handleCalendar(Calendar cal) {
