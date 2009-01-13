@@ -33,26 +33,19 @@
  */
 package info.magnolia.freemarker.models;
 
-import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.beans.MapModel;
 import freemarker.ext.util.ModelFactory;
 import freemarker.template.DefaultObjectWrapper;
-import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleDate;
 import freemarker.template.TemplateDateModel;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.cms.beans.config.RenderableDefinition;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.core.NodeData;
-import info.magnolia.cms.security.User;
 import info.magnolia.context.Context;
+import info.magnolia.freemarker.FreemarkerConfig;
 
+import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.List;
 
 /**
  * A Freemarker ObjectWrapper that knows about Magnolia specific objects.
@@ -62,35 +55,22 @@ import java.util.Set;
  * @version $Revision: $ ($Author: $)
  */
 public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
-    private final ModelFactory contextModelFactory = new ModelFactory() {
-        public TemplateModel create(Object object, ObjectWrapper wrapper) {
-            // SimpleMapModel would prevent us from using Context's specific methods
-            // SimpleHash (which seems to be the default in 2.3.14) also prevents using specific methods
-            return new MapModel((Map) object, (BeansWrapper) wrapper);
-        }
-    };
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MagnoliaObjectWrapper.class);
 
-    private final ModelFactory calendarFactory = new ModelFactory() {
-        public TemplateModel create(Object object, ObjectWrapper wrapper) {
-            return handleCalendar((Calendar) object);
-        }
-    };
+    private static final MagnoliaModelFactory calendarFactory = new CalendarModelFactory();
 
-    /**
-     * The ModelFactory implementations explicitely registered by modules, as well as the default ones.
-     */
-    private final Map registeredModelFactories;
+    // List<MagnoliaModelFactory>
+    private final static List DEFAULT_MODEL_FACTORIES = new ArrayList() {{
+        add(NodeDataModelFactory.INSTANCE);
+        add(ContentModel.FACTORY);
+        add(calendarFactory);
+        add(UserModel.FACTORY);
+        add(ContextModelFactory.INSTANCE);
+        // put(RenderableDefinition.class, RenderableDefinitionModel.FACTORY);
+    }};
 
     public MagnoliaObjectWrapper() {
         super();
-        this.registeredModelFactories = new HashMap();
-        // default ModelFactories
-        registeredModelFactories.put(NodeData.class, NodeDataModelFactory.INSTANCE);
-        registeredModelFactories.put(Content.class, ContentModel.FACTORY);
-        registeredModelFactories.put(Calendar.class, calendarFactory);
-        registeredModelFactories.put(User.class, UserModel.FACTORY);
-        registeredModelFactories.put(Context.class, contextModelFactory);
-        registeredModelFactories.put(RenderableDefinition.class, RenderableDefinitionModel.FACTORY);
     }
 
     /**
@@ -117,20 +97,49 @@ public class MagnoliaObjectWrapper extends DefaultObjectWrapper {
         return super.wrap(obj);
     }
 
-    // TODO let modules plug in their own ModelFactories
+    /**
+     * Checks the ModelFactory instances registered in FreemarkerConfig, then
+     * the default ones. If no appropriate ModelFactory was found, delegates to
+     * Freemarker's implementation. These factories are cached by Freemarker,
+     * so this method only gets called once per type of object.
+     *
+     * @see #DEFAULT_MODEL_FACTORIES
+     * @see info.magnolia.freemarker.FreemarkerConfig
+     */
     protected ModelFactory getModelFactory(Class clazz) {
-        final Set classes = registeredModelFactories.keySet();
-        final Iterator it = classes.iterator();
-        while (it.hasNext()) {
-            final Class classHandledByFactory = (Class) it.next();
-            if (classHandledByFactory.isAssignableFrom(clazz)) {
-                return (ModelFactory) registeredModelFactories.get(classHandledByFactory);
-            }
-        }
+        ModelFactory modelFactory = null;
 
-        return super.getModelFactory(clazz);
+        final FreemarkerConfig freemarkerConfig = FreemarkerConfig.getInstance();
+        if (freemarkerConfig != null) {
+            final List registeredModelFactories = freemarkerConfig.getModelFactories();
+            modelFactory = getModelFactory(clazz, registeredModelFactories);
+        } else {
+            // TODO - this should not be necessary - see MAGNOLIA-2533
+            log.debug("FreemarkerConfig is not ready yet.");
+        }
+        if (modelFactory == null) {
+            modelFactory = getModelFactory(clazz, DEFAULT_MODEL_FACTORIES);
+        }
+        if (modelFactory == null) {
+            modelFactory = super.getModelFactory(clazz);
+        }
+        return modelFactory;
     }
 
+    private ModelFactory getModelFactory(Class clazz, List factories) {
+        final Iterator it = factories.iterator();
+        while (it.hasNext()) {
+            final MagnoliaModelFactory factory = (MagnoliaModelFactory) it.next();
+            if (factory.factoryFor().isAssignableFrom(clazz)) {
+                return factory;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Exposes a Calendar as a SimpleDate.
+     */
     protected SimpleDate handleCalendar(Calendar cal) {
         return new SimpleDate(cal.getTime(), TemplateDateModel.DATETIME);
     }

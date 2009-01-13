@@ -35,7 +35,6 @@ package info.magnolia.freemarker.models;
 
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
-import freemarker.ext.util.ModelFactory;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
@@ -44,17 +43,24 @@ import info.magnolia.cms.beans.config.RenderableDefinition;
 
 /**
  * Make parameters directly available (as if they were properties of the definition itself).
+ * i.e, if the RenderableDefinitionModel doesn't have a 'foo' bean-property, one can still do
+ * ${def.foo} or ${def['foo']}, which would be the equivalent of ${def.parameters.foo}
  *
  * @author pbracher
  * @version $Id$
  */
-class RenderableDefinitionModel extends BeanModel {
-    static final ModelFactory FACTORY = new ModelFactory() {
+public class RenderableDefinitionModel extends BeanModel {
+    public static final class Factory implements MagnoliaModelFactory {
+        public Class factoryFor() {
+            return RenderableDefinition.class;
+        }
+
         public TemplateModel create(Object object, ObjectWrapper wrapper) {
             // make parameters directly available (as if they were properties of the definition itself)
             return new RenderableDefinitionModel((RenderableDefinition) object, (BeansWrapper) wrapper);
         }
-    };
+    }
+
     /**
      * The hash model for the parameters.
      */

@@ -63,7 +63,11 @@ import java.util.Iterator;
  * @version $Revision: $ ($Author: $)
  */
 public class ContentModel implements TemplateHashModelEx, TemplateNodeModel, TemplateScalarModel {
-    static final ModelFactory FACTORY = new ModelFactory() {
+    static final MagnoliaModelFactory FACTORY = new MagnoliaModelFactory() {
+        public Class factoryFor() {
+            return Content.class;
+        }
+
         public TemplateModel create(Object object, ObjectWrapper wrapper) {
             return new ContentModel((Content) object, (MagnoliaObjectWrapper) wrapper);
         }

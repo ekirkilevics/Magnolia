@@ -83,7 +83,7 @@ public class FreemarkerHelper {
 
     public FreemarkerHelper() {
         cfg = new Configuration();
-        cfg.setObjectWrapper(newObjectWrapper());
+        resetObjectWrapper();
 
         // template loaders will be set later on - to make sure changes to the configuration are picked up immediately
         // default template loader until FreemarkerConfig is ready:
@@ -94,6 +94,10 @@ public class FreemarkerHelper {
         // TODO : configure this (maybe based on the dev-mode system property)
         cfg.setTemplateExceptionHandler(TemplateExceptionHandler.HTML_DEBUG_HANDLER);
         //cfg.setTemplateUpdateDelay(10);
+    }
+
+    public void resetObjectWrapper() {
+        cfg.setObjectWrapper(newObjectWrapper());
     }
 
     protected ObjectWrapper newObjectWrapper() {

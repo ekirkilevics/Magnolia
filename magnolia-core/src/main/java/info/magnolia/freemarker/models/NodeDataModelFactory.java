@@ -33,7 +33,6 @@
  */
 package info.magnolia.freemarker.models;
 
-import freemarker.ext.util.ModelFactory;
 import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleNumber;
 import freemarker.template.SimpleScalar;
@@ -55,8 +54,12 @@ import javax.jcr.RepositoryException;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-class NodeDataModelFactory implements ModelFactory {
+class NodeDataModelFactory implements MagnoliaModelFactory {
     static final NodeDataModelFactory INSTANCE = new NodeDataModelFactory();
+
+    public Class factoryFor() {
+        return NodeData.class;
+    }
 
     public TemplateModel create(final Object object, final ObjectWrapper wrapper) {
         final MagnoliaObjectWrapper magnoliaWrapper = (MagnoliaObjectWrapper) wrapper;
@@ -66,7 +69,7 @@ class NodeDataModelFactory implements ModelFactory {
                 return nodeData.getBoolean() ? TemplateBooleanModel.TRUE : TemplateBooleanModel.FALSE;
 
             case PropertyType.DATE:
-                return magnoliaWrapper.handleCalendar(nodeData.getDate());
+                return ((MagnoliaObjectWrapper)wrapper).handleCalendar(nodeData.getDate());
 
             case PropertyType.DOUBLE:
                 return new SimpleNumber(nodeData.getDouble());

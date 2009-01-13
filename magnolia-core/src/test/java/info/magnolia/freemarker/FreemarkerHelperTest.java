@@ -57,6 +57,7 @@ import info.magnolia.test.mock.MockNodeData;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.model.Color;
 import info.magnolia.test.model.Pair;
+import info.magnolia.freemarker.models.RenderableDefinitionModel;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
@@ -430,6 +431,7 @@ public class FreemarkerHelperTest extends TestCase {
     }
 
     public void testRenderableDefinitionParametersAreAvailableAsTopLevelProperties() throws IOException, TemplateException {
+        FreemarkerConfig.getInstance().addModelFactory(new RenderableDefinitionModel.Factory());
         tplLoader.putTemplate("mytemplate", ":${def.name}:${def.foo}:");
 
         Map parameters = new HashMap();
@@ -448,6 +450,7 @@ public class FreemarkerHelperTest extends TestCase {
     }
 
     public void testRenderableDefinitionPropertiesHaveHigherPriorityThanParameters() throws IOException, TemplateException {
+        FreemarkerConfig.getInstance().addModelFactory(new RenderableDefinitionModel.Factory());
         tplLoader.putTemplate("mytemplate", ":${def.name}:${def.foo}:");
 
         Map parameters = new HashMap();

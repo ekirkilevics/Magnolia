@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,49 +33,30 @@
  */
 package info.magnolia.freemarker.models;
 
-import freemarker.ext.beans.BeanModel;
+import freemarker.ext.beans.BeansWrapper;
+import freemarker.ext.beans.MapModel;
 import freemarker.template.ObjectWrapper;
-import freemarker.template.SimpleScalar;
 import freemarker.template.TemplateModel;
-import freemarker.template.TemplateModelException;
-import info.magnolia.cms.security.User;
+import info.magnolia.context.Context;
+
+import java.util.Map;
 
 /**
- * Exposes User instances to freemarker in such a way that getter methods are tried first,
- * then getProperty() is used. ie ${user.name} internally calls the getName() method,
- * and ${user.fooBar} will eventually return the value of user.getProperty("fooBar").
+ * Exposes Context instances as MapModels:
+ * SimpleMapModel would prevent us from using Context's specific methods
+ * SimpleHash (which seems to be the default in 2.3.14) also prevents using specific methods.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-class UserModel extends BeanModel {
-    static final MagnoliaModelFactory FACTORY = new MagnoliaModelFactory() {
-        public Class factoryFor() {
-            return User.class;
-        }
+class ContextModelFactory implements MagnoliaModelFactory {
+    static final ContextModelFactory INSTANCE = new ContextModelFactory();
 
-        public TemplateModel create(Object object, ObjectWrapper wrapper) {
-            final User user = (User) object;
-            return new UserModel(user, (MagnoliaObjectWrapper) wrapper);
-        }
-    };
-    
-    private final User user;
-
-    UserModel(User user, MagnoliaObjectWrapper wrapper) {
-        super(user, wrapper);
-        this.user = user;
+    public Class factoryFor() {
+        return Context.class;
     }
 
-    public TemplateModel get(String key) throws TemplateModelException {
-        final TemplateModel result = super.get(key);
-        if (result != null) {
-            return result;
-        }
-        return new SimpleScalar(user.getProperty(key));
-    }
-
-    public User asUser() {
-        return this.user;
+    public TemplateModel create(Object object, ObjectWrapper wrapper) {
+        return new MapModel((Map) object, (BeansWrapper) wrapper);
     }
 }

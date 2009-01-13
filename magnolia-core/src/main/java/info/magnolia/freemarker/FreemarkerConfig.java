@@ -37,6 +37,7 @@ import freemarker.cache.ClassTemplateLoader;
 import freemarker.cache.MultiTemplateLoader;
 import freemarker.cache.TemplateLoader;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.freemarker.models.MagnoliaModelFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,18 +50,34 @@ import java.util.List;
  * 
  * @see info.magnolia.freemarker.FreemarkerHelper
  * @see info.magnolia.freemarker.models.MagnoliaObjectWrapper
+ * @see info.magnolia.freemarker.models.MagnoliaModelFactory
  */
 public class FreemarkerConfig {
     public static FreemarkerConfig getInstance() {
         return (FreemarkerConfig) FactoryUtil.getSingleton(FreemarkerConfig.class);
     }
 
-    private MultiTemplateLoader multiTL;
+    /**
+     * The MagnoliaModelFactory implementations explicitely registered by modules.
+     */
+    private  List registeredModelFactories;
+
     private List templateLoaders;
+    private MultiTemplateLoader multiTL;
 
     public FreemarkerConfig() {
-        templateLoaders = new ArrayList();
+        this.registeredModelFactories = new ArrayList();
+        this.templateLoaders = new ArrayList();
+
+        // There is a bit of a messy dependency here: 
+        // Ultimately, FreemarkerHelper and FreemarkerConfig could be merged,
+        // but since FreemarkerHelper could be kept around, we'll first need
+        // to implement FactoryUtil so that the observed components are wrapped
+        // by a proxy.
+        FreemarkerHelper.getInstance().resetObjectWrapper();
     }
+
+    // public init() { would be called by content2bean if needed. }
 
     protected TemplateLoader getMultiTemplateLoader() {
         if (multiTL == null) {
@@ -71,6 +88,18 @@ public class FreemarkerConfig {
             multiTL = new MultiTemplateLoader(tl);
         }
         return multiTL;
+    }
+
+    public void setModelFactories(List registeredModelFactories) {
+        this.registeredModelFactories = registeredModelFactories;
+    }
+
+    public List getModelFactories() {
+        return registeredModelFactories;
+    }
+
+    public void addModelFactory(MagnoliaModelFactory modelFactory) {
+        this.registeredModelFactories.add(modelFactory);
     }
 
     public List getTemplateLoaders() {
