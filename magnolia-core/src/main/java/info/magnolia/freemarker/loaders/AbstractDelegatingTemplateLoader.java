@@ -40,7 +40,9 @@ import java.io.Reader;
 
 /**
  * An abstract TemplateLoader that will attempt to initialize its delegate TemplateLoader
- * and use a nullobject implementation until it succeeds.
+ * and use a nullobject implementation until it succeeds. This allows us to wrap existing,
+ * constructor-configured TemplateLoader implementations, into content2bean-able beans,
+ * thus making them configurable in Magnolia's config repository.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
