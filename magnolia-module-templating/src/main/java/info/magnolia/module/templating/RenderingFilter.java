@@ -69,13 +69,6 @@ import org.slf4j.LoggerFactory;
 public class RenderingFilter extends AbstractMgnlFilter {
     private static final Logger log = LoggerFactory.getLogger(RenderingFilter.class);
 
-    /**
-     * All HTTP/s requests are handled here.
-     * @param request HttpServletRequest
-     * @param response HttpServletResponse
-     * @throws IOException can be thrown when the servlet is unable to write to the response stream
-     * @throws ServletException
-     */
     public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException{
         final AggregationState aggregationState = MgnlContext.getAggregationState();
         final String extension = aggregationState.getExtension();
