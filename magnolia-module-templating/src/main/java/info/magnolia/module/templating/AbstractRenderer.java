@@ -41,8 +41,8 @@ import java.util.Map;
 
 import org.apache.commons.lang.exception.ExceptionUtils;
 
-import info.magnolia.cms.beans.config.RenderableDefinition;
-import info.magnolia.cms.beans.config.RenderingModel;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.RenderingModel;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.i18n.I18nContentWrapper;

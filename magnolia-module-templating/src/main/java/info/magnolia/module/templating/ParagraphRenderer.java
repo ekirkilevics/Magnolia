@@ -31,29 +31,25 @@
  * intact.
  *
  */
-package info.magnolia.module.admininterface.trees;
+package info.magnolia.module.templating;
 
-import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.control.TreeColumn;
-import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
 
+import java.io.IOException;
+import java.io.Writer;
 
 /**
- * @author philipp
+ * An interface to render paragraphs of content.
+ *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
+public interface ParagraphRenderer {
 
     /**
-     * @see info.magnolia.cms.gui.control.TreeColumnHtmlRenderer#renderHtml(TreeColumn, Content)
+     * @param content the content to render (usually passed to the appropriate templating engine)
+     * @param paragraph information about the rendering (template to use etc)
+     * @param out where the renderering happens
      */
-    public String renderHtml(TreeColumn treeColumn, Content content) {
-        String templateName = content.getMetaData().getTemplate();
-        Template template = TemplateManager.getInstance().getInfo(templateName);
-        return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
-    }
-
+    void render(Content content, Paragraph paragraph, Writer out) throws IOException;
 }

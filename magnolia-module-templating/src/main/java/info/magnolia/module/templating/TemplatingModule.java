@@ -33,10 +33,6 @@
  */
 package info.magnolia.module.templating;
 
-import info.magnolia.cms.beans.config.ParagraphManager;
-import info.magnolia.cms.beans.config.ParagraphRendererManager;
-import info.magnolia.cms.beans.config.TemplateRendererManager;
-import info.magnolia.cms.beans.config.TemplateManager;
 import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 

@@ -33,10 +33,10 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.ParagraphRenderingFacade;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.templating.ParagraphRenderingFacade;
 
 import java.io.IOException;
 import java.util.ArrayList;

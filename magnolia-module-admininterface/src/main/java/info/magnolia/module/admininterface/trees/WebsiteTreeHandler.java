@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.admininterface.trees;
 
-import info.magnolia.cms.beans.config.Template;
-import info.magnolia.cms.beans.config.TemplateManager;
+import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.admininterface.AdminTreeMVCHandler;

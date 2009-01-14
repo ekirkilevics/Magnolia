@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.module.templating;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -44,13 +44,16 @@ import org.apache.commons.lang.ArrayUtils;
 import org.apache.commons.lang.builder.ToStringBuilder;
 
 import info.magnolia.cms.core.Content;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.RenderingModelImpl;
+import info.magnolia.module.templating.RenderingModel;
 import info.magnolia.context.MgnlContext;
 
 
 /**
  * Base implementation for paragraph and template definitions. Provides the
  * {@link #modelClass} property which is used in the method
- * {@link #newModel(Content, RenderableDefinition, RenderingModel)}
+ * {@link #newModel(Content, RenderableDefinition , RenderingModel)}
  * @author pbracher
  * @version $Id$
  */

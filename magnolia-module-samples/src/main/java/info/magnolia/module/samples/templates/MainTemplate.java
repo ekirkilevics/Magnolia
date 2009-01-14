@@ -33,20 +33,13 @@
  */
 package info.magnolia.module.samples.templates;
 
-import info.magnolia.cms.beans.config.Template;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import info.magnolia.module.templating.Template;
 
 
 /**
- *
  * @author tmiyar
- *
  */
 public class MainTemplate extends Template {
-
-    static Logger log = LoggerFactory.getLogger(MainTemplate.class);
 
     private String titleSize;
 

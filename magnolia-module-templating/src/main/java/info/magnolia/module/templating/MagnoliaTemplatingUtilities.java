@@ -34,7 +34,6 @@
 package info.magnolia.module.templating;
 
 import freemarker.core.Environment;
-import info.magnolia.cms.beans.config.ParagraphRenderingFacade;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.i18n.I18nContentWrapper;

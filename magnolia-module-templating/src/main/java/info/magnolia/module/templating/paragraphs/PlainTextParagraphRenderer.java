@@ -33,9 +33,9 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
+import info.magnolia.module.templating.ParagraphRenderer;
+import info.magnolia.module.templating.Paragraph;
 
 import java.io.IOException;
 import java.io.Writer;

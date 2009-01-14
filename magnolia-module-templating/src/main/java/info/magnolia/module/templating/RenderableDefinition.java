@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.module.templating;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.Map;

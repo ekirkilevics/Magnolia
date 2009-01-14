@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import info.magnolia.cms.beans.config.Template;
-import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.AbstractRenderer;
 import info.magnolia.module.templating.RenderException;
+import info.magnolia.module.templating.TemplateRenderer;
+import info.magnolia.module.templating.Template;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,8 +55,7 @@ import java.io.PrintWriter;
  *
  */
 public abstract class AbstractTemplateRenderer extends AbstractRenderer implements TemplateRenderer {
-
-    private static Logger log = LoggerFactory.getLogger(AbstractTemplateRenderer.class);
+    private static final Logger log = LoggerFactory.getLogger(AbstractTemplateRenderer.class);
 
     public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         if (response.isCommitted()) {

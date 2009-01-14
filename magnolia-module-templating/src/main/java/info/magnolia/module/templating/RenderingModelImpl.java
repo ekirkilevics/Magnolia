@@ -31,41 +31,56 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
 
 
 /**
- * A bean tying the current content and the rendering definition. Subclasses
- * will provide helper methods to the template. The {@link #execute()} method is
- * executed before the rendering starts. The model is available under the name
- * <code>model</code>.
  * @author pbracher
  * @version $Id$
+ *
  */
-public interface RenderingModel {
+public class RenderingModelImpl implements RenderingModel {
+    protected final RenderingModel parentModel;
+    protected final Content content;
+    protected final RenderableDefinition definition;
+
+    public RenderingModelImpl(Content content, RenderableDefinition definition, RenderingModel parent) {
+        this.content = content;
+        this.definition = definition;
+        this.parentModel = parent;
+    }
+
+    public RenderingModel getParent() {
+        return this.parentModel;
+    }
+
+    public RenderingModel getRoot(){
+        RenderingModel model = this;
+        while(model.getParent() != null){
+            model = model.getParent();
+        }
+        return model;
+    }
+
+    public Content getContent() {
+        return this.content;
+    }
 
     /**
-     * The model of the parent paragraph or template.
+     * Shortname for templates: model.def
      */
-    public RenderingModel getParent();
+    public RenderableDefinition getDef() {
+        return getDefinition();
+    }
 
-    /**
-     * The content tied to this model.
-     */
-    public Content getContent();
+    public RenderableDefinition getDefinition() {
+        return this.definition;
+    }
 
-    /**
-     * The renderable (paragraph/template) tied to this model.
-     */
-    public RenderableDefinition getDefinition();
-
-    /**
-     * Called after all properties were set. Can return a string which is passed
-     * to the method.
-     * {@link RenderableDefinition#determineTemplatePath(String, RenderingModel)}
-     */
-    public String execute();
+    public String execute() {
+        return null;
+    }
 
 }

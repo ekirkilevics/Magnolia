@@ -33,92 +33,9 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.cms.beans.runtime.ParagraphRenderer;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.util.FactoryUtil;
-import info.magnolia.context.MgnlContext;
-
-import java.io.IOException;
-import java.io.Writer;
-
-import javax.servlet.jsp.PageContext;
-
-
 /**
- * The central component to call when rendering paragraphs.
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @deprecated since 4.0 - moved to info.magnolia.module.templating.ParagraphRenderingFacade
  */
-public class ParagraphRenderingFacade {
-
-    private final ParagraphRendererManager rendererManager;
-
-    private final ParagraphManager paragraphManager;
-
-    public static ParagraphRenderingFacade getInstance() {
-        return (ParagraphRenderingFacade) FactoryUtil.getSingleton(ParagraphRenderingFacade.class);
-    }
-
-    public ParagraphRenderingFacade() {
-        this(ParagraphRendererManager.getInstance(), ParagraphManager.getInstance());
-    }
-
-    // currently only used for tests, but one day, we'll go IOC instead of using singletons !
-    ParagraphRenderingFacade(ParagraphRendererManager rendererManager, ParagraphManager paragraphManager) {
-        this.rendererManager = rendererManager;
-        this.paragraphManager = paragraphManager;
-    }
-
-    /**
-     * Renders the given node to the given Writer, using the appropriate Paragraph (and the appropriate ParagraphRender
-     * as mandated by this Paragraph).
-     */
-    public void render(Content content, Writer out) throws IOException {
-        render(content, out, null);
-    }
-
-    /**
-     * Renders the given node to the given Writer, using the appropriate Paragraph (and the appropriate ParagraphRender
-     * as mandated by this Paragraph).
-     */
-    public void render(Content content, Writer out, PageContext pageContext) throws IOException {
-        final String paragraphName = content.getMetaData().getTemplate();
-        final Paragraph paragraph = paragraphManager.getInfo(paragraphName);
-        if (paragraph == null) {
-            throw new IllegalStateException("Paragraph " + paragraphName + " not found for page " + content.getHandle());
-        }
-        render(content, paragraph, out, pageContext);
-    }
-
-    /**
-     * Renders the given node to the given Writer, using the given Paragraph (and the appropriate ParagraphRender as
-     * mandated by this Paragraph). Use with care.
-     */
-    public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
-        render(content, paragraph, out, null);
-    }
-
-    /**
-     * Renders the given node to the given Writer, using the given Paragraph (and the appropriate ParagraphRender as
-     * mandated by this Paragraph). Use with care.
-     */
-    public void render(Content content, Paragraph paragraph, Writer out, PageContext pageContext) throws IOException {
-        setPageContext(pageContext);
-        final String paragraphType = paragraph.getType();
-
-        try {
-            final ParagraphRenderer renderer = rendererManager.getRenderer(paragraphType);
-            renderer.render(content, paragraph, out);
-        } finally {
-            setPageContext(null);
-        }
-
-    }
-
-    private void setPageContext(PageContext pageContext) {
-        if (pageContext != null && MgnlContext.isWebContext()) {
-            MgnlContext.getWebContext().setPageContext(pageContext);
-        }
-    }
+public class ParagraphRenderingFacade extends info.magnolia.module.templating.ParagraphRenderingFacade {
 
 }

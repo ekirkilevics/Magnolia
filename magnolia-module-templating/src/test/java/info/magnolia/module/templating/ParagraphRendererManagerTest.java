@@ -31,9 +31,8 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.module.templating;
 
-import info.magnolia.cms.beans.runtime.ParagraphRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.test.mock.MockUtil;
 import junit.framework.TestCase;
@@ -163,26 +162,26 @@ public class ParagraphRendererManagerTest extends TestCase {
     private static final String CONFIGNODE1 = "" +
             "modules.test.paragraph-renderers.foo.@type=mgnl:contentNode\n" +
             "modules.test.paragraph-renderers.foo.name=foo\n" +
-            "modules.test.paragraph-renderers.foo.class=info.magnolia.cms.beans.config.ParagraphRendererManagerTest$DummyParagraphRenderer\n" +
+            "modules.test.paragraph-renderers.foo.class=info.magnolia.module.templating.ParagraphRendererManagerTest$DummyParagraphRenderer\n" +
             "modules.test.paragraph-renderers.bar.@type=mgnl:contentNode\n" +
             "modules.test.paragraph-renderers.bar.name=bar\n" +
-            "modules.test.paragraph-renderers.bar.class=info.magnolia.cms.beans.config.ParagraphRendererManagerTest$OtherDummyParagraphRenderer";
+            "modules.test.paragraph-renderers.bar.class=info.magnolia.module.templating.ParagraphRendererManagerTest$OtherDummyParagraphRenderer";
 
     private static final String CONFIGNODE2 = "" +
             "modules.test2.paragraph-renderers.baz.@type=mgnl:contentNode\n" +
             "modules.test2.paragraph-renderers.baz.name=baz\n" +
-            "modules.test2.paragraph-renderers.baz.class=info.magnolia.cms.beans.config.ParagraphRendererManagerTest$DummyParagraphRenderer\n" +
+            "modules.test2.paragraph-renderers.baz.class=info.magnolia.module.templating.ParagraphRendererManagerTest$DummyParagraphRenderer\n" +
             "modules.test2.paragraph-renderers.gazonk.@type=mgnl:contentNode\n" +
             // not specifying the name property should mean usage of the node's name "modules.test2.paragraph-renderers.gazonk.name=gazonk\n" +
-            "modules.test2.paragraph-renderers.gazonk.class=info.magnolia.cms.beans.config.ParagraphRendererManagerTest$DummyParagraphRenderer";
+            "modules.test2.paragraph-renderers.gazonk.class=info.magnolia.module.templating.ParagraphRendererManagerTest$DummyParagraphRenderer";
 
     private static final String CONFIGNODE3 = "" +
             "modules.test3.paragraph-renderers.foo-node.@type=mgnl:contentNode\n" +
             "modules.test3.paragraph-renderers.foo-node.name=foo\n" +
-            "modules.test3.paragraph-renderers.foo-node.class=info.magnolia.cms.beans.config.ParagraphRendererManagerTest$DummyParagraphRenderer\n" +
+            "modules.test3.paragraph-renderers.foo-node.class=info.magnolia.module.templating.ParagraphRendererManagerTest$DummyParagraphRenderer\n" +
             "modules.test3.paragraph-renderers.bar.@type=mgnl:contentNode\n" +
             "modules.test3.paragraph-renderers.bar.name=bar\n" +
-            "modules.test3.paragraph-renderers.bar.class=info.magnolia.cms.beans.config.ParagraphRendererManagerTest$DummyParagraphRenderer";
+            "modules.test3.paragraph-renderers.bar.class=info.magnolia.module.templating.ParagraphRendererManagerTest$DummyParagraphRenderer";
 
     private static final String CONFIGNODE4 = "" +
             "modules.test4.paragraph-renderers.foo.@type=mgnl:contentNode\n" +

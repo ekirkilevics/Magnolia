@@ -33,10 +33,6 @@
  */
 package info.magnolia.module.templating;
 
-import info.magnolia.cms.beans.config.Template;
-import info.magnolia.cms.beans.config.TemplateRendererManager;
-import info.magnolia.cms.beans.config.TemplateManager;
-import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;

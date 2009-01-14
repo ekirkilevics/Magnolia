@@ -33,12 +33,12 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.RenderableDefinition;
-import info.magnolia.cms.beans.runtime.ParagraphRenderer;
+import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.cms.core.Content;
 import info.magnolia.module.templating.AbstractRenderer;
 import info.magnolia.module.templating.RenderException;
+import info.magnolia.module.templating.ParagraphRenderer;
+import info.magnolia.module.templating.Paragraph;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -52,7 +52,7 @@ import java.io.Writer;
  * @version $Id$
  *
  */
-public abstract class AbstractParagraphRenderer extends AbstractRenderer implements ParagraphRenderer{
+public abstract class AbstractParagraphRenderer extends AbstractRenderer implements ParagraphRenderer {
 
     private static Logger log = LoggerFactory.getLogger(AbstractParagraphRenderer.class);
 

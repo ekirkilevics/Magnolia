@@ -31,13 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.module.templating;
 
-import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.ItemType;
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.cms.beans.config.ObservedManager;
 
 import java.util.Collection;
 import java.util.HashMap;

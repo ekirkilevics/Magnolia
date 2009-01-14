@@ -34,7 +34,7 @@
 package info.magnolia.module.templating.renderers;
 
 import freemarker.template.TemplateException;
-import info.magnolia.cms.beans.config.RenderableDefinition;
+import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.module.templating.RenderException;

@@ -33,7 +33,7 @@
  */
 package info.magnolia.cms.taglibs;
 
-import info.magnolia.cms.beans.config.ParagraphManager;
+import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.ButtonEdit;

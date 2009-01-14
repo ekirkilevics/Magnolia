@@ -38,10 +38,10 @@ import static org.easymock.classextension.EasyMock.createNiceMock;
 import static org.easymock.classextension.EasyMock.replay;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.TemplateException;
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.RenderableDefinition;
-import info.magnolia.cms.beans.config.RenderingModel;
-import info.magnolia.cms.beans.config.RenderingModelImpl;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.RenderingModel;
+import info.magnolia.module.templating.RenderingModelImpl;
+import info.magnolia.module.templating.Paragraph;
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
@@ -164,7 +164,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
             renderer.render(c, paragraph, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
-            assertEquals("Unable to render info.magnolia.cms.beans.config.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
+            assertEquals("Unable to render info.magnolia.module.templating.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
         }
     }
 

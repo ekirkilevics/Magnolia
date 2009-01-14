@@ -37,9 +37,9 @@ import freemarker.ext.util.ModelFactory;
 import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
-import info.magnolia.cms.beans.config.AbstractRenderable;
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.RenderableDefinition;
+import info.magnolia.module.templating.AbstractRenderable;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.Paragraph;
 import info.magnolia.freemarker.models.MagnoliaObjectWrapper;
 import junit.framework.TestCase;
 

@@ -8,20 +8,20 @@
   <version>${project.version}</version>
   <properties>
     <property>
-      <name>info.magnolia.cms.beans.config.ParagraphManager</name>
-      <value>info.magnolia.cms.beans.config.ParagraphManager</value>
+      <name>info.magnolia.module.templating.ParagraphManager</name>
+      <value>info.magnolia.module.templating.ParagraphManager</value>
     </property>
     <property>
-      <name>info.magnolia.cms.beans.config.TemplateManager</name>
-      <value>info.magnolia.cms.beans.config.TemplateManager</value>
+      <name>info.magnolia.module.templating.TemplateManager</name>
+      <value>info.magnolia.module.templating.TemplateManager</value>
     </property>
     <property>
-      <name>info.magnolia.cms.beans.config.ParagraphRendererManager</name>
-      <value>info.magnolia.cms.beans.config.ParagraphRendererManager</value>
+      <name>info.magnolia.module.templating.ParagraphRendererManager</name>
+      <value>info.magnolia.module.templating.ParagraphRendererManager</value>
     </property>
     <property>
-      <name>info.magnolia.cms.beans.config.TemplateRendererManager</name>
-      <value>info.magnolia.cms.beans.config.TemplateRendererManager</value>
+      <name>info.magnolia.module.templating.TemplateRendererManager</name>
+      <value>info.magnolia.module.templating.TemplateRendererManager</value>
     </property>
   </properties>
   <dependencies>

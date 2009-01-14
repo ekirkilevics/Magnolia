@@ -31,29 +31,13 @@
  * intact.
  *
  */
-package info.magnolia.module.admininterface.trees;
+package info.magnolia.module.templating;
 
-import org.apache.commons.lang.StringUtils;
-
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.control.TreeColumn;
-import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
-
+import info.magnolia.module.templating.AbstractRenderable;
 
 /**
- * @author philipp
+ * @author Sameer Charles
  */
-public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
-
-    /**
-     * @see info.magnolia.cms.gui.control.TreeColumnHtmlRenderer#renderHtml(TreeColumn, Content)
-     */
-    public String renderHtml(TreeColumn treeColumn, Content content) {
-        String templateName = content.getMetaData().getTemplate();
-        Template template = TemplateManager.getInstance().getInfo(templateName);
-        return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
-    }
+public class Paragraph extends AbstractRenderable {
 
 }

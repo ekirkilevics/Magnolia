@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.test.MgnlTestCase;

@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.admininterface.dialogs;
 
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.ParagraphManager;
+import info.magnolia.module.templating.Paragraph;
+import info.magnolia.module.templating.ParagraphManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.control.Button;
 import info.magnolia.cms.gui.control.ControlImpl;

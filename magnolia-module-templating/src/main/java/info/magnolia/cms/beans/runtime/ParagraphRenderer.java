@@ -33,24 +33,8 @@
  */
 package info.magnolia.cms.beans.runtime;
 
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.core.Content;
-
-import java.io.IOException;
-import java.io.Writer;
-
 /**
- * An interface to render paragraphs of content.
- * 
- * @author gjoseph
- * @version $Revision: $ ($Author: $)
+ * @deprecated since 4.0 - moved to info.magnolia.module.templating.ParagraphRenderer
  */
-public interface ParagraphRenderer {
-
-    /**
-     * @param content the content to render (usually passed to the appropriate templating engine)
-     * @param paragraph information about the rendering (template to use etc)
-     * @param out where the renderering happens
-     */
-    void render(Content content, Paragraph paragraph, Writer out) throws IOException;
+public interface ParagraphRenderer extends info.magnolia.module.templating.ParagraphRenderer {
 }

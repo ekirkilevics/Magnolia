@@ -39,7 +39,7 @@ import freemarker.template.ObjectWrapper;
 import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
-import info.magnolia.cms.beans.config.RenderableDefinition;
+import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.freemarker.models.MagnoliaModelFactory;
 
 /**

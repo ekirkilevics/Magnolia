@@ -31,29 +31,33 @@
  * intact.
  *
  */
-package info.magnolia.module.admininterface.trees;
+package info.magnolia.module.templating;
 
-import org.apache.commons.lang.StringUtils;
+import java.io.IOException;
 
-import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateManager;
-import info.magnolia.cms.core.Content;
-import info.magnolia.cms.gui.control.TreeColumn;
-import info.magnolia.cms.gui.control.TreeColumnHtmlRenderer;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * @author philipp
+ * A TemplateRenderer implementation is responsible for generating the actual response from request data and a
+ * template. A typical jsp implementation will simply forward the request to the jsp through request dispatcher, but
+ * anybody is free to bind a specific implementation to a template type.
+ *
+ * @author Fabrizio Giustina
+ * @version $Revision$ ($Author$)
  */
-public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
+public interface TemplateRenderer {
 
     /**
-     * @see info.magnolia.cms.gui.control.TreeColumnHtmlRenderer#renderHtml(TreeColumn, Content)
+     * Generates the actual output using the selected template
+     * @param template template to be rendered
+     * @param request HttpServletRequest
+     * @param response HttpServletResponse
+     * @throws java.io.IOException exception occurred while writing to the output stream
+     * @throws javax.servlet.ServletException generic servlet exception
      */
-    public String renderHtml(TreeColumn treeColumn, Content content) {
-        String templateName = content.getMetaData().getTemplate();
-        Template template = TemplateManager.getInstance().getInfo(templateName);
-        return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
-    }
-
+    void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response)
+        throws IOException, ServletException;
 }

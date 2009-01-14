@@ -33,9 +33,8 @@
  */
 package info.magnolia.module.templating.paragraphs;
 
-import info.magnolia.cms.beans.config.Paragraph;
-import info.magnolia.cms.beans.config.RenderableDefinition;
-import info.magnolia.cms.beans.config.RenderingModel;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.RenderingModel;
 import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.ContentWrapper;
@@ -43,6 +42,7 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templating.AbstractRenderer;
+import info.magnolia.module.templating.Paragraph;
 import info.magnolia.test.mock.MockContent;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
@@ -151,7 +151,7 @@ public class JspParagraphRendererTest extends TestCase {
             renderer.render(c, paragraph, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
-            assertEquals("Unable to render info.magnolia.cms.beans.config.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
+            assertEquals("Unable to render info.magnolia.module.templating.Paragraph plop in page /pouet: templatePath not set.", e.getMessage());
         }
         verify(webContext);
     }

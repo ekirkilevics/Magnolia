@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.cms.beans.config;
+package info.magnolia.module.templating;
 
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
@@ -134,10 +134,10 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
     private static final String CONFIGNODE1_RENDERER = ""
         + "modules.test.paragraph-renderers.foo.@type=mgnl:contentNode\n"
         + "modules.test.paragraph-renderers.foo.name=foo\n"
-        + "modules.test.paragraph-renderers.foo.class=info.magnolia.cms.beans.config.ParagraphRendererManagerTest$DummyParagraphRenderer\n"
+        + "modules.test.paragraph-renderers.foo.class=info.magnolia.module.templating.ParagraphRendererManagerTest$DummyParagraphRenderer\n"
         + "modules.test.paragraph-renderers.bar.@type=mgnl:contentNode\n"
         + "modules.test.paragraph-renderers.bar.name=bar\n"
-        + "modules.test.paragraph-renderers.bar.class=info.magnolia.cms.beans.config.ParagraphRendererManagerTest$OtherDummyParagraphRenderer";
+        + "modules.test.paragraph-renderers.bar.class=info.magnolia.module.templating.ParagraphRendererManagerTest$OtherDummyParagraphRenderer";
 
     private static final String CONFIG_PARAGRAPH1 = ""
         + "modules.test.paragraph.para1.@type=mgnl:contentNode\n"

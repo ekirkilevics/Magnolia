@@ -33,8 +33,8 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import info.magnolia.cms.beans.config.Template;
 import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.module.templating.Template;
 
 import java.io.IOException;
 

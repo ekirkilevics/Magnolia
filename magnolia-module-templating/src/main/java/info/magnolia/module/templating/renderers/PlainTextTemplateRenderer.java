@@ -34,12 +34,12 @@
 package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
-import info.magnolia.cms.beans.config.Template;
-import info.magnolia.cms.beans.runtime.TemplateRenderer;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.module.templating.TemplateRenderer;
+import info.magnolia.module.templating.Template;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;

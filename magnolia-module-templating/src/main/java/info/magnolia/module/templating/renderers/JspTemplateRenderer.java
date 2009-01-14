@@ -33,8 +33,7 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import info.magnolia.cms.beans.config.RenderableDefinition;
-import info.magnolia.cms.beans.config.Template;
+import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.NodeMapWrapper;
 import info.magnolia.context.Context;
@@ -42,6 +41,7 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 import info.magnolia.module.templating.RenderException;
+import info.magnolia.module.templating.Template;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
