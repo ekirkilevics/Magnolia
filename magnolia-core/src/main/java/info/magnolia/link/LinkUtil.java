@@ -35,19 +35,28 @@ package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
+import info.magnolia.cms.core.Content;
+import info.magnolia.cms.core.HierarchyManager;
+import info.magnolia.cms.core.NodeData;
+import info.magnolia.cms.i18n.AbstractI18nContentSupport;
+import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.context.MgnlContext;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import javax.jcr.ItemNotFoundException;
+import javax.jcr.RepositoryException;
+
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * Utility methods fro harious operations necessary for link transformations and handling.
+ * Utility methods for various operations necessary for link transformations and handling.
  * @author had
  *
  */
@@ -203,6 +212,13 @@ public class LinkUtil {
         return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(currentPath, true, true));
     }
 
+    /**
+     * Transforms all links in provided html to external links so the Magnolia content linked in the html can be accessed even if 
+     * generated content is displayed on systems others then Magnolia itself.
+     * @param str html
+     * @return converted html with complete universally accessible links.
+     * @see CompleteUrlPathTransformer
+     */
     public static String convertToExternalLinks(String str) {
         return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getCompleteUrl(true, true));
     }
@@ -300,9 +316,9 @@ public class LinkUtil {
     }
 
     /**
-     * Maps a path to a repository. The URI2RepositoryManager is used.
-     * @param path
-     * @return
+     * Maps a path to a repository.
+     * @param path URI
+     * @return repository denoted by the provided URI.
      */
     public static String mapPathToRepository(String path) {
         String repository = URI2RepositoryManager.getInstance().getRepository(path);
@@ -330,4 +346,55 @@ public class LinkUtil {
             throw new RuntimeException("It seems your system does not support UTF-8 !?", e);
         }
     }
+    
+    /**
+     * Creates absolute link including context path for provided node data.
+     * @param nodedata Node data to create link for.
+     * @param i18n Flag denoting whether or not to add i18n info to the link based on current locale.
+     * @return Absolute link to the provided node data.
+     * @see AbstractI18nContentSupport
+     */
+    public static String createAbsoluteLink(NodeData nodedata, boolean i18n) throws AccessDeniedException, ItemNotFoundException, RepositoryException {
+        if(nodedata == null || !nodedata.isExist()){
+            return null;
+        }
+        UUIDLink link = new UUIDLink();
+        link.setNode(nodedata.getParent());
+        link.setRepository(nodedata.getHierarchyManager().getName());
+        link.setNodeData(nodedata);
+        link.setNodeDataName(nodedata.getName());
+        return LinkTransformerManager.getInstance().getAbsolute(true, true, i18n).transform(link);
+    }
+
+    /**
+     * Creates absolute link including context path to the content denoted by repository and uuid. 
+     * @param repositoryId Parent repository of the content of interest.
+     * @param uuid UUID of the content to create link to.
+     * @param i18n Flag denoting whether or not to add i18n info to the link based on current locale.
+     * @return Absolute link to the content with provided UUID.
+     * @see AbstractI18nContentSupport
+     */
+    public static String createLink(String repositoryId, String uuid, boolean i18n) throws RepositoryException {
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryId);
+        Content node = hm.getContentByUUID(uuid);
+        return createAbsoluteLink(node, i18n);
+    }
+
+    /**
+     * Creates absolute link including context path to the provided content. 
+     * @param content content to create link to.
+     * @param i18n Flag denoting whether or not to add i18n info to the link based on current locale.
+     * @return Absolute link to the provided content.
+     * @see AbstractI18nContentSupport
+     */
+    public static String createAbsoluteLink(Content content, boolean i18n) {
+        if(content == null){
+            return null;
+        }
+        UUIDLink link = new UUIDLink();
+        link.setNode(content);
+        link.setRepository(content.getHierarchyManager().getName());
+        return LinkTransformerManager.getInstance().getAbsolute(true, true, i18n).transform(link);
+    }
+
 }
