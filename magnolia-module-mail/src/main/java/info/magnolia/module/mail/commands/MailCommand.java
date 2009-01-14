@@ -91,7 +91,11 @@ public class MailCommand implements Command {
                 log.debug("command using static parameters");
 
                 email = factory.getEmail(((WebContext)ctx).getParameters(), attachments);
-                email.setBody();
+                if(StringUtils.isEmpty(email.getTemplate().getTemplateFile())) {
+                    email.setBody();
+                } else {
+                    email.setBodyFromResourceFile();
+                }
 
             }
             factory.getEmailHandler().sendMail(email);

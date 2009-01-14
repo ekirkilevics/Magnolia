@@ -212,10 +212,8 @@ public class MgnlPageEmail extends FreemarkerEmail {
                 el.removeAttribute(REL);
                 GetMethod streamCss = new GetMethod(url);
                 getHttpClient(url).executeMethod(streamCss);
-                //el.addContent( new CDATA(streamCss.getResponseBodyAsString()) );
                 String tmp = streamCss.getResponseBodyAsString();
                 tmp = processUrls(tmp, url);
-                //String tmp = streamCss.getResponseBodyAsString();
                 el.setText(tmp);
                 toremove.add(elem);
                 toadd.add(el);
