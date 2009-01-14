@@ -40,28 +40,19 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+
 /**
  *
  * @author tmiyar
  *
  */
 public class SampleFilter extends AbstractMgnlFilter {
-
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SampleFilter.class);
 
-
-    public void doFilter(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, FilterChain filterChain)
-            throws IOException, ServletException {
-        try {
-            log.info("Executing sample filter but bypass ./admin urls");
-
-            httpServletRequest.setAttribute("sampleFilter", "attribute set by sample filter");
-
-            filterChain.doFilter(httpServletRequest, httpServletResponse);
-
-        } catch (Throwable t) {
-
-        }
+    public void doFilter(HttpServletRequest req, HttpServletResponse res, FilterChain chain)  throws IOException, ServletException {
+        log.info("Executing sample filter");
+        req.setAttribute("sampleFilter", "attribute set by sample filter");
+        chain.doFilter(req, res);
     }
 
 }
