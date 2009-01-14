@@ -68,6 +68,8 @@ public class EditBar extends TagSupport {
 
     private String paragraph;
 
+    private String dialog;
+
     private String editLabel;
 
     private String deleteLabel;
@@ -107,6 +109,16 @@ public class EditBar extends TagSupport {
      */
     public void setParagraph(String paragraph) {
         this.paragraph = paragraph;
+    }
+
+    /**
+     * Name of the dialog to open. If specified, overrides
+     * the paragraph attribute, or the dialog name determined
+     * by the current paragraph if any.
+     * @jsp.attribute required="false" rtexprvalue="true"
+     */
+    public void setDialog(String dialog) {
+        this.dialog = dialog;
     }
 
     /**
@@ -183,14 +195,18 @@ public class EditBar extends TagSupport {
                     }
                 }
 
+                final String paragraphToUse;
                 if (this.paragraph == null && localContentNode != null) {
-                    this.paragraph = localContentNode.getMetaData().getTemplate();
+                    paragraphToUse = localContentNode.getMetaData().getTemplate();
+                } else  if (this.dialog != null) {
+                    paragraphToUse = this.dialog;
+                } else {
+                    paragraphToUse = this.paragraph;
                 }
-                bar.setParagraph(this.paragraph);
+                bar.setParagraph(paragraphToUse);
 
                 if (this.nodeCollectionName == null) {
-                    this.nodeCollectionName = StringUtils.defaultString(Resource
-                        .getLocalContentNodeCollectionName());
+                    this.nodeCollectionName = StringUtils.defaultString(Resource.getLocalContentNodeCollectionName());
                 }
                 bar.setNodeCollectionName(this.nodeCollectionName);
 
@@ -219,10 +235,12 @@ public class EditBar extends TagSupport {
                 }
 
                 bar.setDefaultButtons();
-                // yes this is ugly - TODO MAGNOLIA-2370/MAGNOLIA-1941 : we should in fact open the correct dialog immediately
-                bar.getButtonEdit().setDialogPath(ParagraphSelectDialog.EDITPARAGRAPH_DIALOG_URL);
-                bar.getButtonEdit().setDefaultOnclick(); // re-set the onclick after having set the dialog path.
-                
+                // TODO - yes this is a bit ugly - 1) we should in fact open the correct dialog immediately instead of faking the paragraph parameter - 2) the gui elements should not have defaults nor know anything about urls and onclick functions
+                if (this.dialog == null) {
+                    bar.getButtonEdit().setDialogPath(ParagraphSelectDialog.EDITPARAGRAPH_DIALOG_URL);
+                    bar.getButtonEdit().setDefaultOnclick(); // re-set the onclick after having set the dialog path.
+                }
+
                 if (this.editLabel != null) {
                     if (StringUtils.isEmpty(this.editLabel)) {
                         bar.setButtonEdit(null);
@@ -251,8 +269,8 @@ public class EditBar extends TagSupport {
                 }
                 bar.placeDefaultButtons();
 
-                if (isShowParagraphName()) {
-                    final Paragraph paragraphInfo = ParagraphManager.getInstance().getInfo(paragraph);
+                if (isShowParagraphName() && this.dialog == null) {
+                    final Paragraph paragraphInfo = ParagraphManager.getInstance().getInfo(paragraphToUse);
                     final Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
                     final String label = msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle());
                     bar.setLabel(label);
@@ -273,6 +291,7 @@ public class EditBar extends TagSupport {
         this.nodeName = null;
         this.nodeCollectionName = null;
         this.paragraph = null;
+        this.dialog = null;
         this.editLabel = null;
         this.deleteLabel = null;
         this.moveLabel = null;

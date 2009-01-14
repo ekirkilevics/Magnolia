@@ -87,6 +87,12 @@
       <rtexprvalue>true</rtexprvalue>
     </attribute>
     <attribute>
+      <description>Name of the dialog to open. If specified, overrides the paragraph attribute, or the dialog name determined by the current paragraph if any.</description>
+      <name>dialog</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+    </attribute>
+    <attribute>
       <description>The text of the edit button, defaults to "Edit".</description>
       <name>editLabel</name>
       <required>false</required>
