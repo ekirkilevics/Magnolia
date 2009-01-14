@@ -61,10 +61,6 @@ import java.util.Map;
  */
 public class JspTemplateRenderer extends AbstractTemplateRenderer {
 
-    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        super.renderTemplate(template, request, response);
-    }
-
     protected void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException {
         HttpServletRequest request = ((WebContext) MgnlContext.getInstance()).getRequest();
         HttpServletResponse response = ((WebContext) MgnlContext.getInstance()).getResponse();

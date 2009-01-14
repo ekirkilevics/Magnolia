@@ -92,6 +92,7 @@ public class ParagraphRenderingFacade {
     /**
      * Renders the given node to the given Writer, using the given Paragraph (and the appropriate ParagraphRender as
      * mandated by this Paragraph). Use with care.
+     * @deprecated since 4.0 - not used
      */
     public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
         render(content, paragraph, out, null);
@@ -100,6 +101,7 @@ public class ParagraphRenderingFacade {
     /**
      * Renders the given node to the given Writer, using the given Paragraph (and the appropriate ParagraphRender as
      * mandated by this Paragraph). Use with care.
+     * TODO only used locally, should be protected ?
      */
     public void render(Content content, Paragraph paragraph, Writer out, PageContext pageContext) throws IOException {
         setPageContext(pageContext);

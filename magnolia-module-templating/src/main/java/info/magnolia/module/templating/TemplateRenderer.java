@@ -51,7 +51,8 @@ import javax.servlet.http.HttpServletResponse;
 public interface TemplateRenderer {
 
     /**
-     * Generates the actual output using the selected template
+     * Generates the actual output using the selected template.
+     * 
      * @param template template to be rendered
      * @param request HttpServletRequest
      * @param response HttpServletResponse
