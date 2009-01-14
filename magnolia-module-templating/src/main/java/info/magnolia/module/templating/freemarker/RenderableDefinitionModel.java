@@ -31,7 +31,7 @@
  * intact.
  *
  */
-package info.magnolia.freemarker.models;
+package info.magnolia.module.templating.freemarker;
 
 import freemarker.ext.beans.BeanModel;
 import freemarker.ext.beans.BeansWrapper;
@@ -40,6 +40,7 @@ import freemarker.template.SimpleHash;
 import freemarker.template.TemplateModel;
 import freemarker.template.TemplateModelException;
 import info.magnolia.cms.beans.config.RenderableDefinition;
+import info.magnolia.freemarker.models.MagnoliaModelFactory;
 
 /**
  * Make parameters directly available (as if they were properties of the definition itself).

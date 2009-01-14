@@ -60,7 +60,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new IntroduceParagraphRenderers())
                 .addTask(new BootstrapSingleResourceAndOrderBefore(
                 "Compatibility Filter",
-                "${actpage} is deprecated. Adds a compatibility filter still supporting it but writing warn messages to the log",
+                "${actpage} is deprecated. Adds a compatibility filter still supporting it but writing warn messages to the log.",
                 "/mgnl-bootstrap/templating/config.server.filters.cms.backwardCompatibility.xml",
                 "rendering"))
         );
@@ -72,8 +72,9 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         );
 
         register(DeltaBuilder.update("4.0", "")
-                .addTask(new BootstrapSingleResource("Freemarker Template Renderer", "Add Freemarker template renderer configuration", "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"))
+                .addTask(new BootstrapSingleResource("Freemarker Template Renderer", "Adds Freemarker template renderer configuration.", "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"))
                 .addTask(new CheckAndModifyPropertyValueTask("Rendering filter", "The rendering filter is now part of the templating module.", ContentRepository.CONFIG, "/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter", "info.magnolia.module.templating.RenderingFilter"))
+                .addTask(new BootstrapSingleResource("Freemarker Model for RenderableDefinition", "Plugs in a specific Freemarker model for RenderableDefinition implementations.", "/mgnl-bootstrap/templating/config.server.rendering.freemarker.modelFactories.renderable.xml"))
         );
 
         // TODO 4.1

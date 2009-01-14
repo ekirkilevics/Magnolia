@@ -13,7 +13,7 @@
     <sv:value>461b473a-5781-448d-a7e6-475f9eaff4eb</sv:value>
   </sv:property>
   <sv:property sv:name="class" sv:type="String">
-    <sv:value>info.magnolia.freemarker.models.RenderableDefinitionModel$Factory</sv:value>
+    <sv:value>info.magnolia.module.templating.freemarker.RenderableDefinitionModel$Factory</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
