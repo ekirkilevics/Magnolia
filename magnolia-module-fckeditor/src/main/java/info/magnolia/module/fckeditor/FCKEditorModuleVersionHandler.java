@@ -60,7 +60,7 @@ public class FCKEditorModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new CheckAndModifyPropertyValueTask("Dialog", "Replaces the deprecated dialog class by a new one.", "config",
                         "/modules/fckEditor/controls/fckEdit", "class", "info.magnolia.cms.gui.dialog.DialogFckEdit", FckEditorDialog.class.getName()))
                 .addTask(new CheckAndModifyPropertyValueTask("Servlet", "Replaces the deprecated servlet class by a new one.", "config",
-                "/server/filters/servlets/FCKEditorSimpleUploadServlet", "class", "info.magnolia.cms.gui.fckeditor.FCKEditorSimpleUploadServlet", FCKEditorSimpleUploadServlet.class.getName()))
+                "/server/filters/servlets/FCKEditorSimpleUploadServlet", "servletClass", "info.magnolia.cms.gui.fckeditor.FCKEditorSimpleUploadServlet", FCKEditorSimpleUploadServlet.class.getName()))
         );
     }
 
