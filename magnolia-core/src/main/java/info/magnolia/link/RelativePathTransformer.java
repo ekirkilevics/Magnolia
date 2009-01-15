@@ -33,7 +33,6 @@
  */
 package info.magnolia.link;
 
-import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 
 /**
@@ -41,26 +40,27 @@ import info.magnolia.cms.core.Content;
  * @version $Id:$
  */
 public class RelativePathTransformer extends AbsolutePathTransformer {
-    
-    protected String absolutePath;
 
-    public RelativePathTransformer(Content page, boolean useURI2RepositoryMapping, boolean useI18N) {
+    protected String absolutSourcePath;
+
+    public RelativePathTransformer(Content sourcePage, boolean useURI2RepositoryMapping, boolean useI18N) {
         super(false, useURI2RepositoryMapping, useI18N);
         UUIDLink link = new UUIDLink();
-        link.setNode(page);
-        link.setRepository(ContentRepository.WEBSITE);
+        link.setNode(sourcePage);
+        // TODO, this should be passed to a constructor
+        link.setRepository(sourcePage.getHierarchyManager().getName());
         link.setExtension("html");
-        absolutePath = super.transform(link);
+        absolutSourcePath = super.transform(link);
     }
 
-    public RelativePathTransformer(String absolutePath, boolean useURI2RepositoryMapping, boolean useI18N) {
+    public RelativePathTransformer(String absoluteSourcePath, boolean useURI2RepositoryMapping, boolean useI18N) {
         super(false, useURI2RepositoryMapping, useI18N);
-        this.absolutePath = absolutePath;
+        this.absolutSourcePath = absoluteSourcePath;
     }
 
 
-    public String transform(UUIDLink uuidLink) {
-        String link = super.transform(uuidLink);
-        return LinkUtil.makePathRelative(absolutePath, link);
+    public String transform(UUIDLink target) {
+        String link = super.transform(target);
+        return LinkUtil.makePathRelative(absolutSourcePath, link);
     }
 }
