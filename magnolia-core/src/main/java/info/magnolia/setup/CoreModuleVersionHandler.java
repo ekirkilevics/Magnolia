@@ -40,6 +40,10 @@ import info.magnolia.module.delta.BootstrapConditionally;
 import info.magnolia.module.delta.BootstrapSingleResource;
 import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
+import info.magnolia.module.delta.MoveAndRenamePropertyTask;
+import info.magnolia.module.delta.MoveNodeTask;
+import info.magnolia.module.delta.PropertyValueDelegateTask;
+import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.WebXmlConditionsUtil;
 import info.magnolia.module.delta.WorkspaceXmlConditionsUtil;
 import info.magnolia.setup.for3_5.GenericTasks;
@@ -70,6 +74,9 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.auditLogging.xml");
     private final BootstrapSingleResource bootstrapFreemarker = new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration", "/mgnl-bootstrap/core/config.server.rendering.freemarker.xml");
 
+    private final Task updateLinkResolverClass = new CheckAndModifyPropertyValueTask("Link rendering", "Update link rendering implementation class",ContentRepository.CONFIG, "/server/rendering/linkResolver","class", "info.magnolia.cms.link.LinkResolverImpl","info.magnolia.link.LinkUtil");
+    private final Task renameLinkResolver = new MoveNodeTask("Link management configuration", "Updates rendering configuration to new link management.", ContentRepository.CONFIG, "/server/rendering/linkResolver", "/server/rendering/linkManagement", true);
+
     public CoreModuleVersionHandler() {
         super();
 
@@ -99,6 +106,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
         register(DeltaBuilder.update("4.0", "")
                 .addTask(auditTrailManagerTask)
                 .addTask(bootstrapFreemarker)
+                .addTask(updateLinkResolverClass )
+                .addTask(renameLinkResolver )
         );
     }
 
