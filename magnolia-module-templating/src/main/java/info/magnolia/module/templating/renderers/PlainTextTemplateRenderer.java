@@ -38,45 +38,39 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.gui.inline.BarMain;
 import info.magnolia.cms.security.Permission;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.TemplateRenderer;
 import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.RenderException;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.io.PrintWriter;
+import java.io.Writer;
+import java.util.Map;
 
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class PlainTextTemplateRenderer implements TemplateRenderer {
-    /**
-     * @deprecated since 4.0
-     */
-    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        renderTemplate(template, response);
-    }
+public class PlainTextTemplateRenderer extends AbstractTemplateRenderer {
 
-    public void renderTemplate(Template template, HttpServletResponse response) throws IOException, ServletException {
+    public void renderTemplate(Content content, Template template, Writer out) throws IOException {
+        final HttpServletResponse response = MgnlContext.getWebContext().getResponse();
+
         final boolean isAdmin = ServerConfiguration.getInstance().isAdmin();
         final boolean isPreview = MgnlContext.getAggregationState().isPreviewMode();
 
-        final Content content = MgnlContext.getAggregationState().getMainContent();
         final String text = content.getNodeData("text").getString();
         final String contentType = content.getNodeData("contentType").getString();
 
-        final PrintWriter out = response.getWriter();
         if (!isAdmin || isPreview) {
             response.setContentType(contentType);
-            out.print(text);
+            out.write(text);
         } else {
             final String dialogName = template.getParameter("dialog");
             response.setContentType("text/html");
             // delegate to jsp ?
-            out.println("<html>");
-            out.println("<body>");
+            out.write("<html>\n");
+            out.write("<body>\n");
 
             if (content.isGranted(Permission.SET)) {
                 BarMain bar = new BarMain();
@@ -88,17 +82,24 @@ public class PlainTextTemplateRenderer implements TemplateRenderer {
                 bar.drawHtml(out);
             }
 
-            out.print("<h2 style=\"padding-top: 30px;\">");
-            out.print(content.getHandle());
-            out.print(" : ");
-            out.print(contentType);
-            out.println("</h2>");
-            out.println("<pre>");
-            out.print(text);
-            out.println("</pre>");
-            out.println("</body>");
-            out.println("</html>");
+            out.write("<h2 style=\"padding-top: 30px;\">");
+            out.write(content.getHandle());
+            out.write(" : ");
+            out.write(contentType);
+            out.write("</h2>");
+            out.write("<pre>\n");
+            out.write(text);
+            out.write("</pre>\n");
+            out.write("</body>\n");
+            out.write("</html>\n");
         }
+    }
 
+    protected Map newContext() {
+        throw new IllegalStateException();
+    }
+
+    protected void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException {
+        throw new IllegalStateException();
     }
 }

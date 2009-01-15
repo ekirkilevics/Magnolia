@@ -47,6 +47,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 
 
 /**
@@ -61,20 +62,19 @@ public abstract class AbstractTemplateRenderer extends AbstractRenderer implemen
      * @deprecated since 4.0
      */
     public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        renderTemplate(template, response);
-    }
-
-    public void renderTemplate(Template template, HttpServletResponse response) throws IOException, ServletException {
         final Content content = MgnlContext.getAggregationState().getMainContent();
         final PrintWriter out = response.getWriter();
-
         try {
-            render(content, template, out);
-        }
-        catch (RenderException e) {
+            renderTemplate(content, template, out);
+        } catch (RenderException e) {
             throw new ServletException(e);
         }
-        finally{
+    }
+
+    public void renderTemplate(Content content, Template template, Writer out) throws RenderException, IOException {
+        try {
+            render(content, template, out);
+        } finally{
             out.flush();
         }
     }

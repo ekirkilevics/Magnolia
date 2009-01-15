@@ -33,7 +33,10 @@
  */
 package info.magnolia.module.templating;
 
+import info.magnolia.cms.core.Content;
+
 import java.io.IOException;
+import java.io.Writer;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
@@ -52,17 +55,12 @@ public interface TemplateRenderer {
 
     /**
      * Generates the actual output using the selected template.
-     * 
-     * @param template template to be rendered
-     * @param response HttpServletResponse
-     * @throws java.io.IOException exception occurred while writing to the output stream
-     * @throws javax.servlet.ServletException generic servlet exception
      */
-    void renderTemplate(Template template, HttpServletResponse response) throws IOException, ServletException;
+    void renderTemplate(Content content, Template template, Writer out) throws RenderException, IOException;
 
     /**
      * @deprecated since 4.0
-     * @see #renderTemplate(Template, javax.servlet.http.HttpServletResponse)
+     * @see #renderTemplate(info.magnolia.cms.core.Content, Template, java.io.Writer)  
      */
     void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
 }

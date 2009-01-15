@@ -34,6 +34,7 @@
 package info.magnolia.module.templating;
 
 import java.io.Writer;
+import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -58,10 +59,11 @@ import info.magnolia.context.MgnlContext;
  *
  */
 public abstract class AbstractRenderer {
-
     private static final String MODEL_ATTRIBUTE = RenderingModel.class.getName();
+    private final String lineSeparator;
 
     public AbstractRenderer() {
+	lineSeparator = System.getProperty("line.separator");
     }
 
     protected void render(Content content, RenderableDefinition definition, Writer out) throws RenderException {
@@ -166,5 +168,9 @@ public abstract class AbstractRenderer {
      * Finally execute the rendering.
      */
     protected abstract void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException;
+
+    protected void newLine(Writer out) throws IOException {
+	out.write(lineSeparator);
+    }
 
 }

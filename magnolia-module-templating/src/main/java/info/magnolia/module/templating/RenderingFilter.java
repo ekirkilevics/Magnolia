@@ -41,6 +41,7 @@ import info.magnolia.context.MgnlContext;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.Writer;
 
 import javax.jcr.PathNotFoundException;
 import javax.jcr.PropertyType;
@@ -88,7 +89,8 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 if (response != MgnlContext.getWebContext().getResponse()) {
                     log.warn("Context response not synced. This may lead to discrepancies in rendering.");
                 }
-                renderer.renderTemplate(template, request, response);
+                final Writer out = response.getWriter();
+                renderer.renderTemplate(aggregationState.getMainContent(), template, out);
 
                 try {
                     response.flushBuffer();
@@ -104,9 +106,9 @@ public class RenderingFilter extends AbstractMgnlFilter {
                 log.error(e.getMessage(), e);
                 throw e;
             }
-            catch (ServletException e) {
+            catch (RenderException e) {
                 log.error(e.getMessage(), e);
-                throw e;
+                throw new ServletException(e);
             }
             catch (Exception e) {
                 // @todo better handling of rendering exception

@@ -40,6 +40,8 @@ import info.magnolia.module.templating.TemplateRenderer;
 import junit.framework.TestCase;
 import static org.easymock.EasyMock.*;
 
+import java.io.StringWriter;
+
 /**
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -57,7 +59,7 @@ public class ServletTemplateRendererTest extends TestCase {
         MgnlContext.setInstance(ctx);
         final TemplateRenderer renderer = new ServletTemplateRenderer();
         try {
-            renderer.renderTemplate(null, null);
+            renderer.renderTemplate(null, null, new StringWriter());
             fail("should have failed");
         } catch (Throwable t) {
             assertTrue(t.getMessage().startsWith("ServletTemplateRenderer can only be used with a WebContext"));

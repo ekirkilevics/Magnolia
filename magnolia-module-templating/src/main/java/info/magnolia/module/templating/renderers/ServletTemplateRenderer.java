@@ -34,9 +34,11 @@
 package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.Template;
-import info.magnolia.module.templating.TemplateRenderer;
+import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.module.templating.RenderException;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 import org.apache.commons.lang.StringUtils;
 
@@ -46,6 +48,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.Writer;
+import java.util.Map;
 
 
 /**
@@ -63,14 +67,10 @@ import java.io.IOException;
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class ServletTemplateRenderer implements TemplateRenderer {
+public class ServletTemplateRenderer extends AbstractTemplateRenderer {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ServletTemplateRenderer.class);
 
-    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        renderTemplate(template, response);
-    }
-
-    public void renderTemplate(Template template, HttpServletResponse res) throws IOException, ServletException {
+    public void renderTemplate(Content content, Template template, Writer out) throws IOException, RenderException {
         final HttpServletRequest request = MgnlContext.getWebContext("ServletTemplateRenderer can only be used with a WebContext").getRequest();
         final HttpServletResponse response = MgnlContext.getWebContext().getResponse();
         final String className = template.getParameter("className");
@@ -90,22 +90,34 @@ public class ServletTemplateRenderer implements TemplateRenderer {
             // set this attribute to avoid a second dispatching of the filters
             request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
             // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
-            rd.forward(request, response);
+            try {
+                rd.forward(request, response);
+            } catch (ServletException e) {
+                throw new RenderException(e);
+            }
         } else {
             // use className
             try {
                 final HttpServlet servlet = (HttpServlet) ClassUtil.newInstance(className);
                 servlet.service(request, response);
+            } catch (ServletException e) {
+                throw new RenderException(e);
             } catch (IllegalAccessException e) {
-                throw new ServletException(e);
+                throw new RenderException(e);
             } catch (ClassNotFoundException e) {
-                throw new ServletException(e);
+                throw new RenderException(e);
             } catch (InstantiationException e) {
-                throw new ServletException(e);
+                throw new RenderException(e);
             }
         }
+    }
 
+    protected Map newContext() {
+        throw new IllegalStateException();
+    }
 
+    protected void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException {
+        throw new IllegalStateException();
     }
 
 }
