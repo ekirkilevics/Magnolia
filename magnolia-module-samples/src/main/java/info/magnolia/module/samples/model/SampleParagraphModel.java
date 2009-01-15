@@ -33,27 +33,28 @@
  */
 package info.magnolia.module.samples.model;
 
-import java.io.IOException;
-
-import org.apache.commons.lang.StringUtils;
-
 import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.context.WebContext;
 import info.magnolia.module.templating.RenderingModelImpl;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.RenderingModel;
 
 /**
+ * This model class is defined in the paragraph definition in the configuration
+ * (modules/samples/paragraphs/name-of-paragraph/modelClass)
+ * To be accessed in the template file by def.method-name
  *
+ * paragraph models can also be defined in the paragraph definitions
  * @author tmiyar
  *
  */
-public class MainSampleParagraphModel extends RenderingModelImpl {
+public class SampleParagraphModel extends RenderingModelImpl {
 
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MainSampleParagraphModel.class);
+    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(SampleParagraphModel.class);
 
-    public MainSampleParagraphModel(Content content, RenderableDefinition definition, RenderingModel parent) {
+    private String query;
+
+    public SampleParagraphModel(Content content, RenderableDefinition definition, RenderingModel parent) {
         super(content, definition, parent);
         log.info("Running sample paragraph model");
 
@@ -64,21 +65,15 @@ public class MainSampleParagraphModel extends RenderingModelImpl {
 
     }
 
-    public String execute() {
-        String url = "";
-        String query = MgnlContext.getParameter("query");
-
-        if(!StringUtils.isEmpty(query) ) {
-            url = MgnlContext.getContextPath() +"/" + MgnlContext.getParameter("resultPage")
-               + ".html?query=" + query;
-            try {
-                ((WebContext)MgnlContext.getInstance()).getResponse().sendRedirect(url);
-            } catch (IOException e) {
-                log.error("error running query");
-            }
-        }
-        return "success";
+    public String getQuery() {
+        return query;
     }
+
+    public void setQuery(String query) {
+        this.query = query;
+    }
+
+
 
 
 }

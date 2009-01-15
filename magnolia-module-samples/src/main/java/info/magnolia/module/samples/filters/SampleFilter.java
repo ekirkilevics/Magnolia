@@ -42,7 +42,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- *
+ * This is a very simple filter bootstrapped at setup using the file mgnl-bootstrap/samples/config.server.filters.sample.xml
+ * (server/filters/sample)
+ * it defines bypass /.magnolia/ meaning the filter will only be executed for non admin pages
  * @author tmiyar
  *
  */

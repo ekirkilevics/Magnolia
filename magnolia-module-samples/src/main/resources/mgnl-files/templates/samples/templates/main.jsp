@@ -20,6 +20,7 @@
 <div id="navigation"><cmsu:simpleNavigation/></div>
 
 <div id="main">
+    <cms:ifEmpty></cms:ifEmpty>
     <h2>${content.title}</h2>
     <p>${content.text}</p>
 
@@ -27,7 +28,7 @@
         <cms:includeTemplate/>
     </cms:contentNodeIterator>
 
-    <cms:newBar contentNodeCollectionName="main" paragraph="sampleJSP, sampleJSPSearch, sampleJSPControlsShowRoom"/>
+    <cms:newBar contentNodeCollectionName="main" paragraph="samplesHowToJSP, samplesHowToFTL, samplesControlsShowRoom, samplesSearchResult"/>
 
 </div>
 

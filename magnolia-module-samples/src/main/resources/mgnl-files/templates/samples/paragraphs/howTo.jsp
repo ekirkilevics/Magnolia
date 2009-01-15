@@ -17,20 +17,15 @@ The date you spedified: <cms:out nodeDataName="date" datePattern="EEEE, d. MMMM 
 </ul>
 </div>
 <div id="search" >
-    <form name="mgnlsearch" action="" method="post">
-      <input type="hidden" id="resultPage" name="resultPage" value="searchResultJSP" />
+    <form name="mgnlsearch" action="${ctx.contextPath}/SearchResult.html" method="post">
       <input id="query" name="query" value="${query}" />
       <input type="submit" name="search" value="search" />
     </form>
 </div><!-- end search -->
 <div>
-<h3>Display Sources</h3>
+<h3>Display Paragraph Sources</h3>
 <ul>
-<li><a href="${pageContext.request.contextPath}/.sources/templates/main-sample.jsp">Main template</a></li>
-<li><a href="${pageContext.request.contextPath}/.sources/paragraphs/main-sample-jsp.jsp">Main paragraph</a></li>
-<li><a href="${pageContext.request.contextPath}/.sources/paragraphs/search-jsp.jsp">Search paragraph</a></li>
-<li><a href="${pageContext.request.contextPath}/.sources/templates/include/footer.jsp">Footer</a></li>
-<li><a href="${pageContext.request.contextPath}/.sources/templates/include/header.jsp">Header</a></li>
+<li><a href="${pageContext.request.contextPath}/.sources/paragraphs/sample.jsp">Sample paragraph</a></li>
 </ul>
 </div>
 

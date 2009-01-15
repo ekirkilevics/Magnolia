@@ -45,10 +45,16 @@ import java.io.IOException;
 import java.io.InputStream;
 
 /**
- *
+ * This servlet is used to download the sources of the files used for the samples module,
+ * classes and templates.
  * @author tmiyar
  */
 public class DisplaySamplesSourcesServlet extends HttpServlet {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 1L;
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doGet(request, response);

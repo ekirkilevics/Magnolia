@@ -41,7 +41,11 @@ import org.slf4j.LoggerFactory;
 
 
 /**
- *
+ * This is a dummy class loaded from the module configuration, it defines 2 properties
+ * (modules/samples/config/sampleList/sampleClass/)
+ * name will be taken from the name of the node
+ * active can be set by user is a boolean defined as boolean in the configuration
+ * The parameter map gets loaded from the values set in the configuration (modules/samples/config/sampleList/sampleClass/parameters)
  * @author tmiyar
  *
  */

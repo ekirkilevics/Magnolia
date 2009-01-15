@@ -45,6 +45,16 @@ import info.magnolia.module.ModuleLifecycle;
 import info.magnolia.module.ModuleLifecycleContext;
 
 /**
+ * This is the configuration class of the samples module, it can implement ModuleLifecycle it there
+ * are some tasks to perform when starting/stopping the module.
+ * This class is loaded with what you have defined in the configuration in modules/samples/config
+ * nodedata get loaded into class variables (modules/samples/config/propertySample)
+ * content into list object (modules/samples/config/sampleList)
+ * contentnode into map object (modules/samples/config/sampleMap)
+ *
+ * by using nodedata 'class' you can specify the class it will turn into (see in this
+ * sample the list of dummy clases we have created: modules/samples/config/sampleList/ each item is an instance
+ * of Dummy class)
  *
  * @author tmiyar
  *

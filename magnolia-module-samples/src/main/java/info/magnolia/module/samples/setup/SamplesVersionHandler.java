@@ -50,6 +50,9 @@ import java.util.List;
 
 
 /**
+ * Used to update previous version of samples module to the new one, as the module has major changes
+ * there are some tasks to perform.
+ *
  * @author philipp
  * @version $Id$
  *
@@ -57,6 +60,10 @@ import java.util.List;
 public class SamplesVersionHandler extends DefaultModuleVersionHandler {
     private static final String I18N_BASENAME = "info.magnolia.module.samples.messages";
 
+    /**
+     * First thing is to back up the old module, configuration and templates.
+     * Then the new content is bootstraped.
+     */
     public SamplesVersionHandler() {
         register(DeltaBuilder.update("4.0", "New samples module, replaces the old one.")
                 .addTask(new BackupTask("config", "/modules/samples", true))
@@ -79,6 +86,14 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
         );
     }
 
+    /**
+     * There are some tasks common to the update process and the new installation process
+     * that are not automatically bootstraped.
+     * Add new menu item, and three sub menu items and then set the new menu item in the proper place
+     * And then sets the default virtual URI on public instances
+     *
+     * @return
+     */
     protected List getCommonTasks() {
         final List commonTasks = new ArrayList();
         // add the default uri task
@@ -99,6 +114,10 @@ public class SamplesVersionHandler extends DefaultModuleVersionHandler {
         return new AddSubMenuItemTask("samples", name, "samples." + name + ".menu.label", I18N_BASENAME, "MgnlAdminCentral.showTree('config', '" + path + "')", "/.resources/icons/16/gears.gif");
     }
 
+    /**
+     * Installation process will boostrap everything in the bootstrap folder, then
+     * we have to add some extra tasks.
+     */
     protected List getExtraInstallTasks(InstallContext installContext) {
         return getCommonTasks();
     }

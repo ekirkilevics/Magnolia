@@ -37,9 +37,15 @@ import info.magnolia.module.templating.Template;
 
 
 /**
+ * Demonstrates ho to extend the default template to add some custom parameters,
+ * you can also add parameters without having to create a custom template by
+ * creating a content node 'parameters' in the template definition
+ * (modules/samples/templates/mysample/parameters) then you will be able to access it from
+ * the template definition like def.nameofparam
+ *
  * @author tmiyar
  */
-public class MainTemplate extends Template {
+public class SampleTemplate extends Template {
 
     private String titleSize;
 
