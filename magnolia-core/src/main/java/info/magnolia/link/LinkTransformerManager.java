@@ -84,4 +84,11 @@ public class LinkTransformerManager {
     public EditorLinkTransformer getEditorLink() {
         return new EditorLinkTransformer();
     }
+    
+    public BrowserLinkTransformer getBrowserLink(String currentPath) {
+        // need to instantiate using factory to use settings from /server/renderer/linkManagement
+        BrowserLinkTransformer tfmr = (BrowserLinkTransformer) FactoryUtil.newInstance(BrowserLinkTransformer.class);
+        tfmr.setCurrentPath(currentPath);
+        return tfmr;
+    }
 }

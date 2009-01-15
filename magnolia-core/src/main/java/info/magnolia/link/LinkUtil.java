@@ -40,7 +40,6 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.AbstractI18nContentSupport;
 import info.magnolia.cms.security.AccessDeniedException;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.io.UnsupportedEncodingException;
@@ -88,26 +87,6 @@ public class LinkUtil {
      */
     private static final Logger log = LoggerFactory.getLogger(LinkUtil.class);
 
-
-    private boolean makeBrowserLinksRelative = false;
-
-    private boolean addContextPathToBrowserLinks = false;
-    
-    public boolean isAddContextPathToBrowserLinks() {
-        return this.addContextPathToBrowserLinks;
-    }
-
-    public void setAddContextPathToBrowserLinks(boolean addContextPathToBrowserLinks) {
-        this.addContextPathToBrowserLinks = addContextPathToBrowserLinks;
-    }
-
-    public boolean isMakeBrowserLinksRelative() {
-        return this.makeBrowserLinksRelative;
-    }
-
-    public void setMakeBrowserLinksRelative(boolean makeBrowserLinksRelative) {
-        this.makeBrowserLinksRelative = makeBrowserLinksRelative;
-    }
 
     //-- conversions to UUID - singles
     /**
@@ -233,13 +212,8 @@ public class LinkUtil {
      * @see #convertToAbsoluteLinks(String, boolean)
      */
     public static String convertToBrowserLinks(String html, String currentPath) {
-        LinkUtil inst = getInstance();
-        if(inst.isMakeBrowserLinksRelative()){
-            return convertToRelativeLinks(html, currentPath);
-        }
-        else{
-            return convertToAbsoluteLinks(html, inst.isAddContextPathToBrowserLinks());
-        }
+        return convertLinksFromUUIDPattern(html, LinkTransformerManager.getInstance().getBrowserLink(currentPath));
+
     }
 
     /**
@@ -262,10 +236,6 @@ public class LinkUtil {
         }
         matcher.appendTail(res);
         return res.toString();
-    }
-
-    public static LinkUtil getInstance() {
-        return (LinkUtil) FactoryUtil.getSingleton(LinkUtil.class);
     }
 
     /**
