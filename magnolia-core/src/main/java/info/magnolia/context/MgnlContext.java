@@ -293,8 +293,7 @@ public class MgnlContext {
         // It should never fall back, We need to fix all false callers instead
         if (context == null) {
             IllegalStateException ise = new IllegalStateException("MgnlContext is not set for this thread");
-            log.error("MgnlContext is not initialized, This could happen if the request does not go through magnolia "
-                + "default filters.", ise);
+            log.error("MgnlContext is not initialized. This could happen if the request does not go through the Magnolia default filters.", ise);
             throw ise;
         }
         return context;
