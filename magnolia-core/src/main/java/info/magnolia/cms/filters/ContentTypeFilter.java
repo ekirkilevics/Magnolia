@@ -48,6 +48,10 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.commons.lang.StringUtils;
 
 /**
+ * TODO : rename this filter. What it really does is initialize and setup the basic,
+ * non-content related attributes of the AggregationState. ContentType could become an
+ * attribute of the AggregationState too and could be set later.
+ *
  * @author Sameer Charles
  * @author Fabrizio Giustina
  * @author gjoseph
