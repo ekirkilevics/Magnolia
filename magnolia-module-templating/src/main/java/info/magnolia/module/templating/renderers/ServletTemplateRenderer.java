@@ -35,17 +35,16 @@ package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.util.ClassUtil;
 import info.magnolia.module.templating.Template;
+import info.magnolia.module.templating.TemplateRenderer;
+import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
+import org.apache.commons.lang.StringUtils;
 
-import java.io.IOException;
-
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import org.apache.commons.lang.exception.NestableRuntimeException;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.IOException;
 
 
 /**
@@ -59,41 +58,51 @@ import org.slf4j.LoggerFactory;
  * servlet will not properly be loaded by the container in this case, so don't rely on other methods except for
  * doGet()/doPost() being called).
  * </p>
+ *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
  */
-public class ServletTemplateRenderer extends JspTemplateRenderer {
+public class ServletTemplateRenderer implements TemplateRenderer {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ServletTemplateRenderer.class);
 
-    /**
-     * Logger.
-     */
-    private static Logger log = LoggerFactory.getLogger(ServletTemplateRenderer.class);
+    public void renderTemplate(Template template, HttpServletResponse response) throws IOException, ServletException {
+        throw new UnsupportedOperationException("ServletTemplateRenderer only supports calls with an HttpServletRequest/HttpServletResponse.");
+    }
 
-    /**
-     * @see JspTemplateRenderer#renderTemplate(Template, HttpServletRequest, HttpServletResponse)
-     */
-    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException {
+    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
 
-        String className = template.getParameter("className");
+        final String className = template.getParameter("className");
 
-        if (className == null) {
+        if (StringUtils.isEmpty(className)) {
             // className not set, simply use path and forward this request
-            super.renderTemplate(template, request, response);
-            return;
+            final String path = template.getTemplatePath();
+            if (StringUtils.isEmpty(path)) {
+                throw new IllegalStateException("path or className is missing for servlet template " + template.getName() + ", returning a 404 error");
+            }
+
+            if (response.isCommitted()) {
+                log.warn("Including {} for request {}, but response is already committed.", path, request.getRequestURL());
+            }
+
+            RequestDispatcher rd = request.getRequestDispatcher(path);
+            // set this attribute to avoid a second dispatching of the filters
+            request.setAttribute(DontDispatchOnForwardAttributeVoter.DONT_DISPATCH_ON_FORWARD_ATTRIBUTE, Boolean.TRUE);
+            // we can't do an include() because the called template might want to set cookies or call response.sendRedirect()
+            rd.forward(request, response);
+        } else {
+            // use className
+            try {
+                final HttpServlet servlet = (HttpServlet) ClassUtil.newInstance(className);
+                servlet.service(request, response);
+            } catch (IllegalAccessException e) {
+                throw new ServletException(e);
+            } catch (ClassNotFoundException e) {
+                throw new ServletException(e);
+            } catch (InstantiationException e) {
+                throw new ServletException(e);
+            }
         }
 
-        // use className
-        HttpServlet servlet;
-        try {
-            servlet = (HttpServlet) ClassUtil.newInstance(className);
-        }
-        catch (Exception e) {
-            // simply retrow to the client for now...
-            throw new NestableRuntimeException(e);
-        }
-
-        servlet.service(request, response);
 
     }
 

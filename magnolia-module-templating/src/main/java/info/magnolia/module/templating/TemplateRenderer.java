@@ -54,11 +54,15 @@ public interface TemplateRenderer {
      * Generates the actual output using the selected template.
      * 
      * @param template template to be rendered
-     * @param request HttpServletRequest
      * @param response HttpServletResponse
      * @throws java.io.IOException exception occurred while writing to the output stream
      * @throws javax.servlet.ServletException generic servlet exception
      */
-    void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response)
-        throws IOException, ServletException;
+    void renderTemplate(Template template, HttpServletResponse response) throws IOException, ServletException;
+
+    /**
+     * @deprecated since 4.0
+     * @see #renderTemplate(Template, javax.servlet.http.HttpServletResponse)
+     */
+    void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException;
 }

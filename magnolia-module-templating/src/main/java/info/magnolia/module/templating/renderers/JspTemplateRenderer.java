@@ -41,14 +41,11 @@ import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
 import info.magnolia.module.templating.RenderException;
-import info.magnolia.module.templating.Template;
 
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
 

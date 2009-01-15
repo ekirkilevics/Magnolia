@@ -50,7 +50,6 @@ import org.apache.commons.lang.exception.ExceptionUtils;
  * @version $Revision: 14052 $ ($Author: gjoseph $)
  */
 public class FreemarkerTemplateRenderer extends AbstractTemplateRenderer {
-
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(FreemarkerTemplateRenderer.class);
 
     private final FreemarkerHelper fmHelper;

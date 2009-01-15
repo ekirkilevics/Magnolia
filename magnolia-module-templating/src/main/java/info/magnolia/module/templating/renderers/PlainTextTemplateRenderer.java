@@ -52,8 +52,14 @@ import java.io.PrintWriter;
  * @version $Revision: $ ($Author: $)
  */
 public class PlainTextTemplateRenderer implements TemplateRenderer {
-
+    /**
+     * @deprecated since 4.0
+     */
     public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        renderTemplate(template, response);
+    }
+
+    public void renderTemplate(Template template, HttpServletResponse response) throws IOException, ServletException {
         final boolean isAdmin = ServerConfiguration.getInstance().isAdmin();
         final boolean isPreview = MgnlContext.getAggregationState().isPreviewMode();
 

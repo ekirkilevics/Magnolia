@@ -57,9 +57,17 @@ import java.io.PrintWriter;
 public abstract class AbstractTemplateRenderer extends AbstractRenderer implements TemplateRenderer {
     private static final Logger log = LoggerFactory.getLogger(AbstractTemplateRenderer.class);
 
+    /**
+     * @deprecated since 4.0
+     */
     public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        renderTemplate(template, response);
+    }
+
+    public void renderTemplate(Template template, HttpServletResponse response) throws IOException, ServletException {
         if (response.isCommitted()) {
-            log.warn("Including {} for request {}, but response is already committed.", template.getName(), request.getRequestURL());
+            // TODO : this was using request.getRequestURL - the whole block should pbly move to RenderingFilter
+            log.warn("Attempting to include template {}, but response is already committed.", template.getName());
         }
 
         final Content content = MgnlContext.getAggregationState().getMainContent();
