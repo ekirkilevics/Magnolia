@@ -48,13 +48,15 @@ import javax.servlet.ServletException;
 
 
 /**
+ * Context interface specialized for servlet requests; knows about HttpServletRequest/HttpServletResponse.
+ * 
  * @author Philipp Bracher
  * @version $Revision$ ($Author$)
  */
 public interface WebContext extends Context {
 
     /**
-     * Attribute name to get the requests character encoding
+     * Attribute name to get the requests character encoding.
      * @deprecated use AggregationState
      */
     public static final String ATTRIBUTE_REQUEST_CHARACTER_ENCODING = "characterEncoding";
@@ -71,8 +73,7 @@ public interface WebContext extends Context {
     public void init(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext);
 
     /**
-     * Retrieves the Aggregator instance, which gathers all info regarding the current request (paths, etc)
-     * @return
+     * Retrieves the Aggregator instance, which gathers all info regarding the current request (paths, etc).
      */
     public AggregationState getAggregationState();
 
@@ -82,19 +83,19 @@ public interface WebContext extends Context {
     void resetAggregationState();
 
     /**
-     * Get form object assembled by <code>MultipartRequestFilter</code>
+     * Get form object assembled by <code>MultipartRequestFilter</code>.
      * @return multipart form object
      */
     public MultipartForm getPostedForm();
 
     /**
-     * Get parameter value as string
+     * Get parameter value as string.
      * @return parameter value
      */
     public String getParameter(String name);
 
     /**
-     * Get parameter value as a Map<String, String>
+     * Get parameter value as a Map<String, String>.
      * @return parameter values
      */
     public Map getParameters();
@@ -124,6 +125,7 @@ public interface WebContext extends Context {
     /**
      * Includes/render the given path into the given Writer, by wrapping it in the current HttpServletResponse.
      * @see javax.servlet.ServletRequest#getRequestDispatcher(String)
+     * @see javax.servlet.RequestDispatcher#include(javax.servlet.ServletRequest, javax.servlet.ServletResponse) 
      */
     void include(final String path, final Writer out) throws ServletException, IOException;
 
@@ -136,7 +138,7 @@ public interface WebContext extends Context {
     void setPageContext(PageContext pageContext);
 
     /**
-     * Returns the current jsp page context, <strong>if any</strong>
+     * Returns the current jsp page context, <strong>if any</strong>.
      * @return jsp page context or null if it has not been populated by calling setPageContext
      */
     PageContext getPageContext();
@@ -153,7 +155,7 @@ public interface WebContext extends Context {
     public void pop();
 
     /**
-     * Get parameter values as string[]
+     * Get parameter values as string[].
      * @return parameter values
      */
     public String[] getParameterValues(String name);
