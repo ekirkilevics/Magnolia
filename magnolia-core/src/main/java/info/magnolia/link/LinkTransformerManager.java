@@ -50,22 +50,37 @@ public class LinkTransformerManager {
         return (LinkTransformerManager) FactoryUtil.getSingleton(LinkTransformerManager.class);
     }
     
+    /**
+     * @see AbsolutePathTransformer
+     */
     public AbsolutePathTransformer getAbsolute(boolean addContextPath, boolean useURI2RepositoryMapping, boolean useI18N) {
         return new AbsolutePathTransformer(addContextPath, useURI2RepositoryMapping, useI18N);
     }
     
+    /**
+     * @see RelativePathTransformer
+     */
     public RelativePathTransformer getRelative(Content page, boolean useURI2RepositoryMapping, boolean useI18N) {
         return new RelativePathTransformer(page, useURI2RepositoryMapping, useI18N);
     }
 
+    /**
+     * @see RelativePathTransformer
+     */
     public RelativePathTransformer getRelative(String absolutePath, boolean useURI2RepositoryMapping, boolean useI18N) {
         return new RelativePathTransformer(absolutePath, useURI2RepositoryMapping, useI18N);
     }
     
+    /**
+     * @see CompleteUrlPathTransformer
+     */
     public CompleteUrlPathTransformer getCompleteUrl(boolean useURI2RepositoryMapping, boolean useI18N) {
         return new CompleteUrlPathTransformer(useURI2RepositoryMapping, useI18N);
     }
     
+    /**
+     * @see EditorLinkTransformer
+     */
     public EditorLinkTransformer getEditorLink() {
         return new EditorLinkTransformer();
     }
