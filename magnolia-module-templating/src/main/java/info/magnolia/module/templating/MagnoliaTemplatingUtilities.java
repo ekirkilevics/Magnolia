@@ -64,7 +64,7 @@ public class MagnoliaTemplatingUtilities {
     /**
      * FreeMarker only.
      */
-    public void renderParagraph(Content paragraphNode) throws IOException {
+    public void renderParagraph(Content paragraphNode) throws RenderException, IOException {
         final Environment env = Environment.getCurrentEnvironment();
         final Writer out = env.getOut();
         // TODO - set and unset AggState.currentContent

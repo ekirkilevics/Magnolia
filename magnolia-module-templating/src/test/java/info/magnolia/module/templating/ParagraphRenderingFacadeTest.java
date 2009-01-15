@@ -64,7 +64,7 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
         super.tearDown();
     }
 
-    public void testRenderCallsTheAppropriateRenderer() throws IOException, RepositoryException {
+    public void testRenderCallsTheAppropriateRenderer() throws Exception {
         final ParagraphRendererManager prm = new ParagraphRendererManager();
         prm.onRegister(getNode(CONFIGNODE1_RENDERER, "/modules/test/paragraph-renderers"));
         final ParagraphRenderingFacade prf = new ParagraphRenderingFacade(prm, null);
@@ -84,7 +84,7 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
         assertEquals("trululu:para-two", res2.toString());
     }
 
-    public void testSetsJspPageContext() throws IOException, RepositoryException {
+    public void testSetsJspPageContext() throws Exception {
         final ParagraphRendererManager prm = new ParagraphRendererManager();
         prm.onRegister(getNode(CONFIGNODE1_RENDERER, "/modules/test/paragraph-renderers"));
         final ParagraphRenderingFacade prf = new ParagraphRenderingFacade(prm, null);
@@ -107,7 +107,7 @@ public class ParagraphRenderingFacadeTest extends MgnlTestCase {
         assertEquals("tralala:para-one", res.toString());
     }
 
-    public void testUsesTheAppropriateParagraphWhenNotExplicitelyPassed() throws IOException, RepositoryException {
+    public void testUsesTheAppropriateParagraphWhenNotExplicitelyPassed() throws Exception {
         final ParagraphRendererManager prm = new ParagraphRendererManager();
         final ParagraphManager pm = new ParagraphManager();
         final ParagraphRenderingFacade prf = new ParagraphRenderingFacade(prm, pm);

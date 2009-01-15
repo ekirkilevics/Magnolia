@@ -72,7 +72,7 @@ public class ParagraphRenderingFacade {
      * Renders the given node to the given Writer, using the appropriate Paragraph (and the appropriate ParagraphRender
      * as mandated by this Paragraph).
      */
-    public void render(Content content, Writer out) throws IOException {
+    public void render(Content content, Writer out) throws RenderException, IOException {
         render(content, out, null);
     }
 
@@ -80,7 +80,7 @@ public class ParagraphRenderingFacade {
      * Renders the given node to the given Writer, using the appropriate Paragraph (and the appropriate ParagraphRender
      * as mandated by this Paragraph).
      */
-    public void render(Content content, Writer out, PageContext pageContext) throws IOException {
+    public void render(Content content, Writer out, PageContext pageContext) throws RenderException, IOException {
         final String paragraphName = content.getMetaData().getTemplate();
         final Paragraph paragraph = paragraphManager.getInfo(paragraphName);
         if (paragraph == null) {
@@ -94,7 +94,7 @@ public class ParagraphRenderingFacade {
      * mandated by this Paragraph). Use with care.
      * @deprecated since 4.0 - not used
      */
-    public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
+    public void render(Content content, Paragraph paragraph, Writer out) throws RenderException, IOException {
         render(content, paragraph, out, null);
     }
 
@@ -103,7 +103,7 @@ public class ParagraphRenderingFacade {
      * mandated by this Paragraph). Use with care.
      * TODO only used locally, should be protected ?
      */
-    public void render(Content content, Paragraph paragraph, Writer out, PageContext pageContext) throws IOException {
+    public void render(Content content, Paragraph paragraph, Writer out, PageContext pageContext) throws RenderException, IOException{
         setPageContext(pageContext);
         final String paragraphType = paragraph.getType();
 

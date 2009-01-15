@@ -139,7 +139,7 @@ public class JspParagraphRendererTest extends TestCase {
     }
     */
 
-    public void testCantRenderWithoutParagraphPathCorrectlySet() throws IOException {
+    public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
         final WebContext webContext = createNiceMock(WebContext.class);
         MgnlContext.setInstance(webContext);
         replay(webContext);
@@ -157,7 +157,7 @@ public class JspParagraphRendererTest extends TestCase {
     }
 
 
-    public void testShouldFailIfNoContextIsSet() throws IOException {
+    public void testShouldFailIfNoContextIsSet() throws Exception {
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {
             final Paragraph p = new Paragraph();
@@ -170,7 +170,7 @@ public class JspParagraphRendererTest extends TestCase {
         }
     }
 
-    public void testShouldFailIfContextIsNotWebContext() throws IOException {
+    public void testShouldFailIfContextIsNotWebContext() throws Exception {
         MgnlContext.setInstance(createStrictMock(Context.class));
         final JspParagraphRenderer renderer = new JspParagraphRenderer();
         try {

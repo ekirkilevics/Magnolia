@@ -39,7 +39,6 @@ import info.magnolia.module.templating.AbstractRenderer;
 import info.magnolia.module.templating.RenderException;
 import info.magnolia.module.templating.ParagraphRenderer;
 import info.magnolia.module.templating.Paragraph;
-import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -60,16 +59,10 @@ public abstract class AbstractParagraphRenderer extends AbstractRenderer impleme
         super();
     }
 
-    public void render(Content content, Paragraph paragraph, Writer out) throws IOException {
+    public void render(Content content, Paragraph paragraph, Writer out) throws RenderException, IOException {
         try {
             render(content, (RenderableDefinition) paragraph, out);
-        }
-        catch (RenderException e) {
-            // the IOException does not take an Exception as a parameter
-            log.error("Can't render paragraph", e);
-            throw new IOException(ExceptionUtils.getRootCauseMessage(e));
-        }
-        finally{
+        } finally{
             out.flush();
         }
     }

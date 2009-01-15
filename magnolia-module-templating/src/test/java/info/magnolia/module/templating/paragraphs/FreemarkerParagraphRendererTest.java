@@ -96,7 +96,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         replay(context);
     }
 
-    public void testWorksWithNonActionParagraphAndContentIsExposedToFreemarker() throws TemplateException, IOException {
+    public void testWorksWithNonActionParagraphAndContentIsExposedToFreemarker() throws Exception {
         tplLoader.putTemplate("test_noclass.ftl", "This is a test template, rendering the content node under ${content.@handle} with UUID ${content.@uuid}.\n" +
                 "The value of the foo property is ${content.foo}.");
 
@@ -114,7 +114,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
                 "The value of the foo property is bar.", out.toString());
     }
 
-    public void testActionClassGetsExecutedAndIsPutOnContextAlongWithResultAndContent() throws IOException {
+    public void testActionClassGetsExecutedAndIsPutOnContextAlongWithResultAndContent() throws Exception {
         tplLoader.putTemplate("test_action.ftl", "${content.boo} : ${model.pouet} : ${actionResult}");
         final Paragraph par = new Paragraph();
         par.setName("test-with-action");
@@ -127,7 +127,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         assertEquals("yay : it works : success", out.toString());
     }
 
-    public void testActionGetsPopulated() throws IOException {
+    public void testActionGetsPopulated() throws Exception {
         final WebContext context = createNiceMock(WebContext.class);
         Map<String,String> params=new HashMap<String,String>();
         params.put("blah", "tralala");
@@ -155,7 +155,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         assertEquals("yay : it works : tralala : success", out.toString());
     }
 
-    public void testCantRenderWithoutParagraphPathCorrectlySet() throws IOException {
+    public void testCantRenderWithoutParagraphPathCorrectlySet() throws Exception {
         tplLoader.putTemplate("foo", "");
         final Content c = new MockContent("pouet");
         final Paragraph paragraph = new Paragraph();

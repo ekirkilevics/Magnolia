@@ -51,5 +51,5 @@ public interface ParagraphRenderer {
      * @param paragraph information about the rendering (template to use etc)
      * @param out where the renderering happens
      */
-    void render(Content content, Paragraph paragraph, Writer out) throws IOException;
+    void render(Content content, Paragraph paragraph, Writer out) throws RenderException, IOException;
 }
