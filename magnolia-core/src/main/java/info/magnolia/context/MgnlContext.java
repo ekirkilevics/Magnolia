@@ -301,11 +301,22 @@ public class MgnlContext {
 
     /**
      * Throws an IllegalStateException if the current context is not set, or if it is not an instance of WebContext.
+     * @see #getWebContext(String) 
      */
     public static WebContext getWebContext() {
+        return getWebContext(null);
+    }
+
+    /**
+     * Throws an IllegalStateException if the current context is not set, or if it is not an instance of WebContext.
+     * Yes, you can specify the exception message if you want. This is useful if you're calling this from a component
+     * which only supports WebContext and still care enough to actually throw an exception with a meaningful message.
+     * @see #getWebContext()
+     */
+    public static WebContext getWebContext(String exceptionMessage) {
         final WebContext wc = getWebContextIfExisting(getInstance());
         if (wc == null) {
-            throw new IllegalStateException("The current context is not an instance of WebContext (" + localContext.get() + ")");
+            throw new IllegalStateException(exceptionMessage == null ? "The current context is not an instance of WebContext (" + localContext.get() + ")" : exceptionMessage);
         }
         return wc;
     }

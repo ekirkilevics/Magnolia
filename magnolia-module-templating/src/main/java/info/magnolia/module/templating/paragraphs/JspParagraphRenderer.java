@@ -36,7 +36,6 @@ package info.magnolia.module.templating.paragraphs;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.NodeMapWrapper;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.module.templating.RenderException;
@@ -62,11 +61,7 @@ public class JspParagraphRenderer extends AbstractParagraphRenderer {
     }
 
     protected Map newContext() {
-        final Context ctx = MgnlContext.getWebContextOrNull();
-        if (ctx == null) {
-            throw new IllegalStateException("This paragraph renderer can only be used with a WebContext");
-        }
-        return ctx;
+        return MgnlContext.getWebContext("JspParagraphRenderer can only be used with a WebContext");
     }
 
     /**

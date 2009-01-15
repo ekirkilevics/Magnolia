@@ -180,7 +180,7 @@ public class JspParagraphRendererTest extends TestCase {
             renderer.render(null, p, new StringWriter());
             fail("should have failed");
         } catch (IllegalStateException e) {
-            assertEquals("This paragraph renderer can only be used with a WebContext", e.getMessage());
+            assertEquals("JspParagraphRenderer can only be used with a WebContext", e.getMessage());
         }
     }
 

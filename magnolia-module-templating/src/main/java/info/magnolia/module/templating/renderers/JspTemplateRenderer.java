@@ -36,7 +36,6 @@ package info.magnolia.module.templating.renderers;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.NodeMapWrapper;
-import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.WebContext;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
@@ -57,10 +56,14 @@ import java.util.Map;
  * @version $Revision$ ($Author$)
  */
 public class JspTemplateRenderer extends AbstractTemplateRenderer {
+    private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JspTemplateRenderer.class);
 
     protected void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException {
         HttpServletRequest request = ((WebContext) MgnlContext.getInstance()).getRequest();
         HttpServletResponse response = ((WebContext) MgnlContext.getInstance()).getResponse();
+        if (response.isCommitted()) {
+            log.warn("Attempting to forward to {}, but response is already committed.", templatePath);
+        }
         RequestDispatcher rd = request.getRequestDispatcher(templatePath);
 
         // set this attribute to avoid a second dispatching of the filters
@@ -83,11 +86,7 @@ public class JspTemplateRenderer extends AbstractTemplateRenderer {
     }
 
     protected Map newContext() {
-        final Context ctx = MgnlContext.getWebContextOrNull();
-        if (ctx == null) {
-            throw new IllegalStateException("This template renderer can only be used with a WebContext");
-        }
-        return ctx;
+        return MgnlContext.getWebContext("JspTemplateRenderer can only be used with a WebContext");
     }
 
     protected String getPageAttributeName() {

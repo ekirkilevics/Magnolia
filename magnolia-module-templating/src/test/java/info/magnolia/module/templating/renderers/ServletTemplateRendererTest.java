@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2008-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -33,49 +33,36 @@
  */
 package info.magnolia.module.templating.renderers;
 
-import info.magnolia.cms.core.Content;
+import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.module.templating.AbstractRenderer;
-import info.magnolia.module.templating.RenderException;
 import info.magnolia.module.templating.TemplateRenderer;
-import info.magnolia.module.templating.Template;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-
+import junit.framework.TestCase;
+import static org.easymock.EasyMock.*;
 
 /**
- * @author pbracher
- * @version $Id$
- *
+ * @author gjoseph
+ * @version $Revision: $ ($Author: $)
  */
-public abstract class AbstractTemplateRenderer extends AbstractRenderer implements TemplateRenderer {
-    private static final Logger log = LoggerFactory.getLogger(AbstractTemplateRenderer.class);
-
-    /**
-     * @deprecated since 4.0
-     */
-    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-        renderTemplate(template, response);
+public class ServletTemplateRendererTest extends TestCase {
+    protected void tearDown() throws Exception {
+        MgnlContext.setInstance(null);
+        FactoryUtil.clear();
+        super.tearDown();
     }
 
-    public void renderTemplate(Template template, HttpServletResponse response) throws IOException, ServletException {
-        final Content content = MgnlContext.getAggregationState().getMainContent();
-        final PrintWriter out = response.getWriter();
-
+    public void testServletTemplateRendererOnlyWorksInWebContextAndIsPoliteEnoughToGiveAnExplicitExceptionMessageAboutIt() throws Exception {
+        final Context ctx = createStrictMock(Context.class);
+        replay(ctx);
+        MgnlContext.setInstance(ctx);
+        final TemplateRenderer renderer = new ServletTemplateRenderer();
         try {
-            render(content, template, out);
-        }
-        catch (RenderException e) {
-            throw new ServletException(e);
-        }
-        finally{
-            out.flush();
+            renderer.renderTemplate(null, null);
+            fail("should have failed");
+        } catch (Throwable t) {
+            assertTrue(t.getMessage().startsWith("ServletTemplateRenderer can only be used with a WebContext"));
+        } finally {
+            verify(ctx);
         }
     }
 }

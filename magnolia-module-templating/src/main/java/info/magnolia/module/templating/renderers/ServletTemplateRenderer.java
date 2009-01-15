@@ -34,6 +34,7 @@
 package info.magnolia.module.templating.renderers;
 
 import info.magnolia.cms.util.ClassUtil;
+import info.magnolia.context.MgnlContext;
 import info.magnolia.module.templating.Template;
 import info.magnolia.module.templating.TemplateRenderer;
 import info.magnolia.voting.voters.DontDispatchOnForwardAttributeVoter;
@@ -65,12 +66,13 @@ import java.io.IOException;
 public class ServletTemplateRenderer implements TemplateRenderer {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ServletTemplateRenderer.class);
 
-    public void renderTemplate(Template template, HttpServletResponse response) throws IOException, ServletException {
-        throw new UnsupportedOperationException("ServletTemplateRenderer only supports calls with an HttpServletRequest/HttpServletResponse.");
+    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        renderTemplate(template, response);
     }
 
-    public void renderTemplate(Template template, HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
-
+    public void renderTemplate(Template template, HttpServletResponse res) throws IOException, ServletException {
+        final HttpServletRequest request = MgnlContext.getWebContext("ServletTemplateRenderer can only be used with a WebContext").getRequest();
+        final HttpServletResponse response = MgnlContext.getWebContext().getResponse();
         final String className = template.getParameter("className");
 
         if (StringUtils.isEmpty(className)) {
@@ -81,7 +83,7 @@ public class ServletTemplateRenderer implements TemplateRenderer {
             }
 
             if (response.isCommitted()) {
-                log.warn("Including {} for request {}, but response is already committed.", path, request.getRequestURL());
+                log.warn("Forwarding to {} for request {}, but response is already committed.", path, request.getRequestURL());
             }
 
             RequestDispatcher rd = request.getRequestDispatcher(path);
