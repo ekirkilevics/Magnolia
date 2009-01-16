@@ -149,9 +149,22 @@ public class FreemarkerHelper {
     }
 
     /**
+     * Returns the passed Locale if non-null, otherwise attempts to get the Locale from the current context.
+     */
+    protected Locale checkLocale(Locale locale) {
+        if (locale != null) {
+            return locale;
+        } else if (MgnlContext.hasInstance()) {
+            return MgnlContext.getLocale();
+        } else {
+            return Locale.getDefault();
+        }
+    }
+
+    /**
      * Call checkLocale() before calling this method, to ensure it is not null.
      */
-    protected void prepareRendering(Locale checkedLocale, String i18nBasename, Object root) throws IOException {
+    protected void prepareRendering(Locale checkedLocale, String i18nBasename, Object root) {
         if (root instanceof Map) {
             final Map data = (Map) root;
             addDefaultData(data, checkedLocale, i18nBasename);
@@ -169,16 +182,6 @@ public class FreemarkerHelper {
         } else {
             // TODO - this should not be necessary - see MAGNOLIA-2533
             log.debug("FreemarkerConfig is not ready yet.");
-        }
-    }
-
-    protected Locale checkLocale(Locale locale) {
-        if (locale != null) {
-            return locale;
-        } else if (MgnlContext.hasInstance()) {
-            return MgnlContext.getLocale();
-        } else {
-            return Locale.getDefault();
         }
     }
 
