@@ -34,7 +34,7 @@
 </div><!-- end search -->
 
 <div>
-    <h3>Display Sources</h3><br />
+    <h3>Display Paragraph Sources</h3><br />
     <ul>
         <li><a href="${ctx.contextPath}/.sources/paragraphs/howTo.ftl">HowTo paragraph</a></li>
     </ul>
