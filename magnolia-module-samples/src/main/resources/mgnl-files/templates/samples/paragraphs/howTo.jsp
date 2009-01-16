@@ -30,6 +30,6 @@
 <div>
   <h3>Display Paragraph Sources</h3>
   <ul>
-     <li><a href="${pageContext.request.contextPath}/.sources/paragraphs/howTo.jsp">SearchResult paragraph</a></li>
+     <li><a href="${pageContext.request.contextPath}/.sources/paragraphs/howTo.jsp">HowTo paragraph</a></li>
   </ul>
 </div><br />
