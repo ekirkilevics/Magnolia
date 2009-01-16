@@ -49,6 +49,6 @@
 <div>
   <h3>Display Paragraph Sources</h3>
   <ul>
-     <li><a href="${pageContext.request.contextPath}/.sources/paragraphs/searchResult.jsp">HowTo paragraph</a></li>
+     <li><a href="${pageContext.request.contextPath}/.sources/paragraphs/searchResult.jsp">SearchResult paragraph</a></li>
   </ul>
 </div><br />
