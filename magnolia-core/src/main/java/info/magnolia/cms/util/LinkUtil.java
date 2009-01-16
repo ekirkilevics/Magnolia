@@ -33,7 +33,9 @@
  */
 package info.magnolia.cms.util;
 
+import info.magnolia.cms.link.LinkResolverImpl;
 import info.magnolia.link.LinkTransformer;
+import info.magnolia.link.LinkTransformerManager;
 
 /**
  * Utility class to store links in a format so that one can make relative paths on the public site. Later we will store the
@@ -63,7 +65,7 @@ public final class LinkUtil extends info.magnolia.link.LinkUtil {
      * @deprecated use {@link info.magnolia.link.LinkUtil#convertToAbsoluteLinks(String, boolean)} instead
      */
     public static String convertUUIDsToAbsoluteLinks(String str, boolean addContextPath) {
-        return convertToAbsoluteLinks(str, addContextPath);
+        return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getAbsolute(addContextPath));
     }
 
     /**
@@ -84,7 +86,7 @@ public final class LinkUtil extends info.magnolia.link.LinkUtil {
      * @deprecated use {@link info.magnolia.link.LinkUtil#convertToEditorLinks(String, String)} instead
      */
     public static String convertUUIDsToEditorLinks(String str) {
-        return convertToEditorLinks(str);
+        return new LinkResolverImpl().convertToEditorLinks(str);
     }
 
 }

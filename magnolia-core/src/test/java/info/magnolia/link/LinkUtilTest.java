@@ -94,12 +94,12 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     public void testUUIDToAbsoluteLinks() throws IOException, RepositoryException {
-        String res = LinkUtil.convertToAbsoluteLinks(HTML_WITH_UUIDS, false);
+        String res = LinkUtil.convertLinksFromUUIDPattern(HTML_WITH_UUIDS, LinkTransformerManager.getInstance().getAbsolute(false));
         assertEquals(HTML_WITH_ABSOLUTE_LINK, res);
     }
 
     public void testUUIDToInternalLinks() throws IOException, RepositoryException {
-        String res = LinkUtil.convertToEditorLinks(HTML_WITH_UUIDS);
+        String res = LinkUtil.convertLinksFromUUIDPattern(HTML_WITH_UUIDS, LinkTransformerManager.getInstance().getEditorLink());
         assertEquals(HTML_WITH_ABSOLUTE_LINK, res);
     }
 
@@ -112,7 +112,7 @@ public class LinkUtilTest extends BaseLinkTest {
         String htmlAbsoluteWithDollar = "this is a <a href=\"" + HREF_ABSOLUTE_LINK + "?var=${some_var}\">test</a>";       
         String htmlUuidWithDollar = "this is a <a href=\"" + UUID_PATTERN_SIMPLE + "?var=${some_var}\">test</a>";
 
-        String res = LinkUtil.convertToAbsoluteLinks(htmlUuidWithDollar, false);
+        String res = LinkUtil.convertLinksFromUUIDPattern(htmlUuidWithDollar, LinkTransformerManager.getInstance().getAbsolute(false));
         assertEquals(htmlAbsoluteWithDollar, res);
     }
 

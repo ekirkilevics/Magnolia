@@ -33,6 +33,7 @@
  */
 package info.magnolia.cms.link;
 
+import info.magnolia.link.AbsolutePathTransformer;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.link.LinkUtil;
 
@@ -71,15 +72,15 @@ public class LinkResolverImpl implements LinkResolver {
     }
 
     public String convertToAbsoluteLinks(String str, boolean addContextPath) {
-        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getAbsolute(addContextPath, true, true));
+        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getAbsolute(addContextPath));
     }
 
     public String convertToRelativeLinks(String str, String currentPath) {
-        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(currentPath, true, true));
+        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(currentPath));
     }
 
     public String convertToExternalLinks(String str) {
-        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getCompleteUrl(true, true));
+        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getCompleteUrl());
     }
 
     public boolean isAddContextPathToBrowserLinks() {

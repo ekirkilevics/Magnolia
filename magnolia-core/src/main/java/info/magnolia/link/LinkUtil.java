@@ -124,7 +124,7 @@ public class LinkUtil {
         UUIDLink link = new UUIDLink();
         link.setRepository(repository);
         link.setUUID(uuid);
-        return LinkTransformerManager.getInstance().getAbsolute(false, true, true).transform(link);
+        return LinkTransformerManager.getInstance().getAbsolute(false).transform(link);
     }
 
     //-- conversions to UUID - bulk 
@@ -162,22 +162,12 @@ public class LinkUtil {
 
     //-- conversions from UUID - bulk
     /**
-     * Converts links in provided html from Magnolia UUID pattern links to links suitable for editor.
-     * @param str provided html
-     * @return converted html
-     * @see EditorLinkTransformer
-     */
-    public static String convertToEditorLinks(String str) {
-        return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getEditorLink());
-    }
-
-    /**
-     * Convert all links in provided html from the UUID format to absolute paths.
+     * Convert all links in provided html from the UUID format to absolute URI including the context path.
      * @param html html with UUIDs
      * @return html with absolute links
      */
-    public static String convertToAbsoluteLinks(String html, boolean addContextPath) {
-        return convertLinksFromUUIDPattern(html, LinkTransformerManager.getInstance().getAbsolute(addContextPath, true, true));
+    public static String convertToAbsoluteLinks(String html) {
+        return convertLinksFromUUIDPattern(html, LinkTransformerManager.getInstance().getAbsolute());
     }
 
     /**
@@ -188,7 +178,7 @@ public class LinkUtil {
      * @return html with transformed links
      */
     public static String convertToRelativeLinks(String str, String currentPath) {
-        return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(currentPath, true, true));
+        return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(currentPath));
     }
 
     /**
@@ -199,7 +189,7 @@ public class LinkUtil {
      * @see CompleteUrlPathTransformer
      */
     public static String convertToExternalLinks(String str) {
-        return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getCompleteUrl(true, true));
+        return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getCompleteUrl());
     }
 
     /**
@@ -320,11 +310,10 @@ public class LinkUtil {
     /**
      * Creates absolute link including context path for provided node data.
      * @param nodedata Node data to create link for.
-     * @param i18n Flag denoting whether or not to add i18n info to the link based on current locale.
      * @return Absolute link to the provided node data.
      * @see AbstractI18nContentSupport
      */
-    public static String createAbsoluteLink(NodeData nodedata, boolean i18n) throws AccessDeniedException, ItemNotFoundException, RepositoryException {
+    public static String createAbsoluteLink(NodeData nodedata) throws AccessDeniedException, ItemNotFoundException, RepositoryException {
         if(nodedata == null || !nodedata.isExist()){
             return null;
         }
@@ -333,7 +322,7 @@ public class LinkUtil {
         link.setRepository(nodedata.getHierarchyManager().getName());
         link.setNodeData(nodedata);
         link.setNodeDataName(nodedata.getName());
-        return LinkTransformerManager.getInstance().getAbsolute(true, true, i18n).transform(link);
+        return LinkTransformerManager.getInstance().getAbsolute().transform(link);
     }
 
     /**
@@ -344,10 +333,10 @@ public class LinkUtil {
      * @return Absolute link to the content with provided UUID.
      * @see AbstractI18nContentSupport
      */
-    public static String createLink(String repositoryId, String uuid, boolean i18n) throws RepositoryException {
+    public static String createLink(String repositoryId, String uuid) throws RepositoryException {
         HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryId);
         Content node = hm.getContentByUUID(uuid);
-        return createAbsoluteLink(node, i18n);
+        return createAbsoluteLink(node);
     }
 
     /**
@@ -357,14 +346,14 @@ public class LinkUtil {
      * @return Absolute link to the provided content.
      * @see AbstractI18nContentSupport
      */
-    public static String createAbsoluteLink(Content content, boolean i18n) {
+    public static String createAbsoluteLink(Content content) {
         if(content == null){
             return null;
         }
         UUIDLink link = new UUIDLink();
         link.setNode(content);
         link.setRepository(content.getHierarchyManager().getName());
-        return LinkTransformerManager.getInstance().getAbsolute(true, true, i18n).transform(link);
+        return LinkTransformerManager.getInstance().getAbsolute().transform(link);
     }
 
 }

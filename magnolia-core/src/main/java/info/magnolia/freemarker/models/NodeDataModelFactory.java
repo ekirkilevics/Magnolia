@@ -84,12 +84,12 @@ class NodeDataModelFactory implements MagnoliaModelFactory {
                 if (MgnlContext.isWebContext()) {
                     final Content page = MgnlContext.getAggregationState().getMainContent();
                     if (page != null) {
-                        t = LinkTransformerManager.getInstance().getRelative(page, true, true);
+                        t = LinkTransformerManager.getInstance().getRelative(page);
                     } else {
-                        t = LinkTransformerManager.getInstance().getAbsolute(true, true, true);
+                        t = LinkTransformerManager.getInstance().getAbsolute();
                     }
                 } else {
-                    t = LinkTransformerManager.getInstance().getCompleteUrl(true, true);
+                    t = LinkTransformerManager.getInstance().getCompleteUrl();
                 }
                 final String transformedString = LinkUtil.convertUUIDsToLinks(s, t);
                 return new SimpleScalar(transformedString);

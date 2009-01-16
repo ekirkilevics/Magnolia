@@ -51,31 +51,38 @@ public class LinkTransformerManager {
     }
     
     /**
-     * @see AbsolutePathTransformer
+     * Creates instance of absolute link transformer that will prepend the context path, will use URI2Repository mapping while constructing links and will localize the link if localization is set up. 
      */
-    public AbsolutePathTransformer getAbsolute(boolean addContextPath, boolean useURI2RepositoryMapping, boolean useI18N) {
-        return new AbsolutePathTransformer(addContextPath, useURI2RepositoryMapping, useI18N);
+    public AbsolutePathTransformer getAbsolute() {
+        return new AbsolutePathTransformer(true, true, true);
     }
     
     /**
-     * @see RelativePathTransformer
+     * Creates instance of absolute link transformer that will optionally prepend the context path, but will always use URI2Repository mapping while constructing links and will localize the link if localization is set up. 
      */
-    public RelativePathTransformer getRelative(Content page, boolean useURI2RepositoryMapping, boolean useI18N) {
-        return new RelativePathTransformer(page, useURI2RepositoryMapping, useI18N);
+    public AbsolutePathTransformer getAbsolute(boolean addContextPath) {
+        return new AbsolutePathTransformer(addContextPath, true, true);
+    }
+    
+    /**
+     * Creates instance of Relative link transformer that will translate path to the provided UUIDLink relative to the content provided here. During the translation all valid URI2repository mappings and i18n will be applied.
+     */
+    public RelativePathTransformer getRelative(Content page) {
+        return new RelativePathTransformer(page, true, true);
     }
 
     /**
-     * @see RelativePathTransformer
+     * Creates instance of Relative link transformer that will translate path to the provided UUIDLink relative to path provided here. During the translation all valid URI2repository mappings and i18n will be applied.
      */
-    public RelativePathTransformer getRelative(String absolutePath, boolean useURI2RepositoryMapping, boolean useI18N) {
-        return new RelativePathTransformer(absolutePath, useURI2RepositoryMapping, useI18N);
+    public RelativePathTransformer getRelative(String absolutePath) {
+        return new RelativePathTransformer(absolutePath, true, true);
     }
     
     /**
-     * @see CompleteUrlPathTransformer
+     * Creates instance of Complete URL link transformer that will create fully qualified and localized link to content denoted by UUIDLink provided to its transform method. 
      */
-    public CompleteUrlPathTransformer getCompleteUrl(boolean useURI2RepositoryMapping, boolean useI18N) {
-        return new CompleteUrlPathTransformer(useURI2RepositoryMapping, useI18N);
+    public CompleteUrlPathTransformer getCompleteUrl() {
+        return new CompleteUrlPathTransformer(true, true);
     }
     
     /**
@@ -85,6 +92,11 @@ public class LinkTransformerManager {
         return new EditorLinkTransformer();
     }
     
+    /**
+     * Creates instance of browser link transformer that will transfrom any provided links to either absolute or relative path based on the current server configuration.
+     * @param currentPath Path to make links relative to, if relative path translation is configured on the server.
+     * @return
+     */
     public BrowserLinkTransformer getBrowserLink(String currentPath) {
         // need to instantiate using factory to use settings from /server/renderer/linkManagement
         BrowserLinkTransformer tfmr = (BrowserLinkTransformer) FactoryUtil.newInstance(BrowserLinkTransformer.class);

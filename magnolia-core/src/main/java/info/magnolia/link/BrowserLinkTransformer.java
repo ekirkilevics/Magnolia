@@ -41,7 +41,7 @@ package info.magnolia.link;
 public class BrowserLinkTransformer implements LinkTransformer {
 
     private LinkTransformer relative; 
-    private LinkTransformer absolute = LinkTransformerManager.getInstance().getAbsolute(false, true, true);;
+    private LinkTransformer absolute = LinkTransformerManager.getInstance().getAbsolute();
     private boolean makeBrowserLinksRelative = false;
     private boolean addContextPathToBrowserLinks = false;
     
@@ -51,7 +51,7 @@ public class BrowserLinkTransformer implements LinkTransformer {
 
     public void setAddContextPathToBrowserLinks(boolean addContextPathToBrowserLinks) {
         this.addContextPathToBrowserLinks = addContextPathToBrowserLinks;
-        absolute = LinkTransformerManager.getInstance().getAbsolute(addContextPathToBrowserLinks, true, true);
+        absolute = LinkTransformerManager.getInstance().getAbsolute(addContextPathToBrowserLinks);
     }
 
     public boolean isMakeBrowserLinksRelative() {
@@ -77,7 +77,7 @@ public class BrowserLinkTransformer implements LinkTransformer {
      * 
      */
     public void setCurrentPath(String currentPath) {
-        relative = LinkTransformerManager.getInstance().getRelative(currentPath, true, true);
+        relative = LinkTransformerManager.getInstance().getRelative(currentPath);
     }
 
 }
