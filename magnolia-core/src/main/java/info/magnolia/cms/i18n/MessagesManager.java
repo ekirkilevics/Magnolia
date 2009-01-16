@@ -37,9 +37,9 @@ import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.ItemType;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.NodeDataUtil;
 import info.magnolia.cms.util.ObservationUtil;
-import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.collections.Transformer;
@@ -62,6 +62,7 @@ import java.util.Map;
 /**
  * From this class you get the i18n messages. You should pass a a request, but if you can't the getMessages method will
  * handle it properly. The get() methods are easy to use.
+ *
  * @author philipp
  */
 public final class MessagesManager {
@@ -137,27 +138,35 @@ public final class MessagesManager {
     /**
      * The lazy Map creates messages objects with a fall back to the default locale.
      */
-    private void initMap() {
+    protected void initMap() {
         // FIXME use LRU: new LRUMap(20);
         // LazyMap will instanciate bundles on demand.
         final Map map = LazyMap.decorate(new HashMap(), new Transformer() {
             // this transformer will wrap the Messages in a MessagesChain which will fall back to a Messages instance for the same bundle with default locale.
             public Object transform(Object input) {
                 final MessagesID id = (MessagesID) input;
-                Messages msgs = new DefaultMessagesImpl(id.basename, id.locale);
-                if(!getDefaultLocale().equals(id.locale)){
-                    msgs = new MessagesChain(msgs).chain(getMessages(id.basename, getDefaultLocale()));
-                }
-                return msgs;
+                return newMessages(id);
             }
         });
         messages = Collections.synchronizedMap(map);
     }
 
     /**
+     * Initializes a new Messages instances for the given MessagesID.
+     * By default, we chain to the same bundle with the default Locale. (so untranslated messages show up in the default language)
+     */
+    protected Messages newMessages(MessagesID messagesID) {
+        Messages msgs = new DefaultMessagesImpl(messagesID.basename, messagesID.locale);
+        if (!getDefaultLocale().equals(messagesID.locale)) {
+            msgs = new MessagesChain(msgs).chain(getMessages(messagesID.basename, getDefaultLocale()));
+        }
+        return msgs;
+    }
+
+    /**
      * Load i18n configuration.
      */
-    private void load() {
+    protected void load() {
 
         // reading the configuration from the repository, no need for context
         HierarchyManager hm = MgnlContext.getSystemContext().getHierarchyManager(ContentRepository.CONFIG);
@@ -183,7 +192,7 @@ public final class MessagesManager {
             } else {
                 languagesNode = configNode.createContent(LANGUAGES_NODE_NAME, ItemType.CONTENT);
             }
-            
+
             Map languageDefinitions = Content2BeanUtil.toMap(languagesNode, true, LocaleDefinition.class);
 
             // clear collection for reload
@@ -191,7 +200,7 @@ public final class MessagesManager {
 
             for (Iterator iter = languageDefinitions.values().iterator(); iter.hasNext();) {
                 LocaleDefinition ld = (LocaleDefinition) iter.next();
-                if(ld.isEnabled()){
+                if (ld.isEnabled()) {
                     availableLocales.add(ld.getLocale());
                 }
             }
@@ -206,15 +215,12 @@ public final class MessagesManager {
      */
     private void registerEventListener() {
         log.info("Registering event listener for i18n"); //$NON-NLS-1$
-        ObservationUtil.registerChangeListener(
-            ContentRepository.CONFIG,
-            I18N_CONFIG_PATH,
-            new EventListener() {
-                public void onEvent(EventIterator iterator) {
-                    // reload everything
-                    reload();
-                }
-            });
+        ObservationUtil.registerChangeListener(ContentRepository.CONFIG, I18N_CONFIG_PATH, new EventListener() {
+            public void onEvent(EventIterator iterator) {
+                // reload everything
+                reload();
+            }
+        });
     }
 
     /**
@@ -249,7 +255,7 @@ public final class MessagesManager {
     public static Messages getMessages(String basename) {
         return getMessages(basename, getCurrentLocale());
     }
-    
+
     public static Messages getMessages(Locale locale) {
         return getMessages(null, locale);
     }
@@ -310,7 +316,7 @@ public final class MessagesManager {
     public void setDefaultLocale(String defaultLocale) {
         this.applicationLocale = new Locale(defaultLocale);
         //MgnlContext.getSystemContext().setLocale(applicationLocale);
-     }
+    }
 
     public Collection getAvailableLocales() {
         return availableLocales;
