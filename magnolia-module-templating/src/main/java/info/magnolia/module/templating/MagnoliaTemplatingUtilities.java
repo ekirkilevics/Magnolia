@@ -66,46 +66,46 @@ public class MagnoliaTemplatingUtilities {
     /**
      * Returns an instance of SiblingsHelper for the given node.
      */
-    public static SiblingsHelper siblings(Content node) throws RepositoryException {
+    public SiblingsHelper siblings(Content node) throws RepositoryException {
         return SiblingsHelper.of(node);
     }
 
     /**
      * FreeMarker only.
      */
-    public static void renderParagraph(Content paragraphNode) throws RenderException, IOException {
+    public void renderParagraph(Content paragraphNode) throws RenderException, IOException {
         final Environment env = Environment.getCurrentEnvironment();
         final Writer out = env.getOut();
         // TODO - set and unset AggState.currentContent
         ParagraphRenderingFacade.getInstance().render(paragraphNode, out);
     }
 
-    public static Content inherit(Content node) {
+    public Content inherit(Content node) {
         return new InheritanceContentWrapper(node);
     }
 
-    public static Content i18n(Content node) {
+    public Content i18n(Content node) {
         return new I18nContentWrapper(node);
     }
 
-    public static boolean isEditMode(){
+    public boolean isEditMode(){
         // TODO : see CmsFunctions.isEditMode, which checks a couple of other properties.
         return isAuthorInstance() && !isPreviewMode();
     }
 
-    public static boolean isPreviewMode(){
+    public boolean isPreviewMode(){
         return MgnlContext.getAggregationState().isPreviewMode();
     }
 
-    public static boolean isAuthorInstance(){
+    public boolean isAuthorInstance(){
         return ServerConfiguration.getInstance().isAdmin();
     }
 
-    public static boolean isPublicInstance(){
+    public boolean isPublicInstance(){
         return !isAuthorInstance();
     }
 
-    public static String createLink(NodeData nd) {
+    public String createLink(NodeData nd) {
         try {
             return LinkUtil.createAbsoluteLink(nd);
         } catch (RepositoryException e) {
@@ -114,7 +114,7 @@ public class MagnoliaTemplatingUtilities {
         }
     }
 
-    public static String createLink(String repositoryId, String uuid) {
+    public String createLink(String repositoryId, String uuid) {
         try {
             return LinkUtil.createLink(repositoryId, uuid);
         } catch (RepositoryException e) {
@@ -123,7 +123,7 @@ public class MagnoliaTemplatingUtilities {
         }
     }
 
-    public static String createLink(Content node) {
+    public String createLink(Content node) {
         return LinkUtil.createAbsoluteLink(node);
     }
 
