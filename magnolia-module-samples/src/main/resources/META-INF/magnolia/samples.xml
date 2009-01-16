@@ -9,7 +9,7 @@
   <properties>
     <property>
       <name>defaultPublicURI</name>
-      <value>redirect:/sample-freemarker.html</value>
+      <value>redirect:/freemarker.html</value>
     </property>
   </properties>
   <dependencies>

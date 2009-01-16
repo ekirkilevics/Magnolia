@@ -47,7 +47,7 @@ import info.magnolia.module.templating.Template;
  */
 public class SampleTemplate extends Template {
 
-    private String titleSize;
+    private String titleSize = "1";
 
     public String getTitleSize() {
         return titleSize;

@@ -145,7 +145,7 @@
       <sv:value>info.magnolia.module.samples.model.SampleParagraphModel</sv:value>
     </sv:property>
     <sv:property sv:name="templatePath" sv:type="String">
-      <sv:value>/templates/samples/paragraphs/main.jsp</sv:value>
+      <sv:value>/templates/samples/paragraphs/howTo.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
       <sv:value>paragraphs.samplesHowToJSP.title</sv:value>
@@ -167,7 +167,7 @@
         <sv:value>2008-09-25T12:45:26.721+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2009-01-15T14:05:13.259+01:00</sv:value>
+        <sv:value>2009-01-16T10:15:22.573+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -185,10 +185,13 @@
       <sv:value>paragraphs.samplesSearchResult.description</sv:value>
     </sv:property>
     <sv:property sv:name="dialog" sv:type="String">
-      <sv:value>searchResult</sv:value>
+      <sv:value>mainProperties</sv:value>
     </sv:property>
     <sv:property sv:name="i18nBasename" sv:type="String">
       <sv:value>info.magnolia.module.samples.messages</sv:value>
+    </sv:property>
+    <sv:property sv:name="modelClass" sv:type="String">
+      <sv:value>info.magnolia.module.samples.model.SampleParagraphModel</sv:value>
     </sv:property>
     <sv:property sv:name="templatePath" sv:type="String">
       <sv:value>/templates/samples/paragraphs/searchResult.jsp</sv:value>
@@ -213,7 +216,7 @@
         <sv:value>2008-09-25T12:45:26.721+02:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2009-01-15T16:47:37.901+01:00</sv:value>
+        <sv:value>2009-01-16T10:52:31.342+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
