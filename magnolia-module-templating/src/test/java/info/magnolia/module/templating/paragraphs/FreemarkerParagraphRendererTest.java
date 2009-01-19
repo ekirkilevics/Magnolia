@@ -38,6 +38,7 @@ import static org.easymock.classextension.EasyMock.createNiceMock;
 import static org.easymock.classextension.EasyMock.replay;
 import freemarker.cache.StringTemplateLoader;
 import freemarker.template.TemplateException;
+import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.module.templating.RenderableDefinition;
 import info.magnolia.module.templating.RenderingModel;
 import info.magnolia.module.templating.RenderingModelImpl;
@@ -84,6 +85,7 @@ public class FreemarkerParagraphRendererTest extends MgnlTestCase {
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
         FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+        FactoryUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
         FactoryUtil.setImplementation(I18nContentSupport.class, DefaultI18nContentSupport.class);
 
         final WebContext context = createNiceMock(WebContext.class);

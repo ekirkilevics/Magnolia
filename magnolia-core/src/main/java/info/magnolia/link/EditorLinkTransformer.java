@@ -49,7 +49,7 @@ public class EditorLinkTransformer implements LinkTransformer {
 
     protected LinkTransformer linkTransformer = new AbsolutePathTransformer(false,true,false);
 
-    public String transform(UUIDLink uuidLink) {
+    public String transform(Link uuidLink) {
         // TODO use a better way to determine if this is a binary
         // this should actually not even be here because totally related to the fck editor
         if(uuidLink.getNodeData()!=null){

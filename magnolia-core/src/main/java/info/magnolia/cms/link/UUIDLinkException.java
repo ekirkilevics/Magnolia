@@ -36,7 +36,24 @@ package info.magnolia.cms.link;
 /**
  * @author philipp
  * @version $Id$
- * @deprecated use {@link info.magnolia.link.UUIDLinkException} instead
+ * @deprecated use {@link info.magnolia.link.LinkException} instead
  */
-public class UUIDLinkException extends info.magnolia.link.UUIDLinkException {
+public class UUIDLinkException extends info.magnolia.link.LinkException {
+
+    public UUIDLinkException() {
+        super();
+    }
+
+    public UUIDLinkException(String arg0, Throwable arg1) {
+        super(arg0, arg1);
+    }
+
+    public UUIDLinkException(String arg0) {
+        super(arg0);
+    }
+
+    public UUIDLinkException(Throwable arg0) {
+        super(arg0);
+    }
+    
 }

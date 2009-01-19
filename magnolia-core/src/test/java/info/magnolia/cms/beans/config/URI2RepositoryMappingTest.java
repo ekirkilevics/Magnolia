@@ -73,9 +73,10 @@ public class URI2RepositoryMappingTest extends TestCase {
         expect(hm.isNodeData("/Test/image")).andReturn(Boolean.TRUE);
         expect(hm.getContent("/Test")).andReturn(cnt);
         expect(cnt.getNodeData("image")).andReturn(docu);
-        //expect(context.getHierarchyManager("dummy-repo")).andReturn(hm);
-        //expect(hm.getContent("/Test")).andReturn(cnt);
+        expect(hm.getName()).andReturn("dummy-repo");
+        expect(cnt.getHierarchyManager()).andReturn(hm);
         expect(cnt.getUUID()).andReturn("uu-something-real");
+
         expect(docu.getType()).andReturn(PropertyType.BINARY);
         expect(docu.getAttribute("nodeDataTemplate")).andReturn("");
         expect(docu.getAttribute("extension")).andReturn("jpg");

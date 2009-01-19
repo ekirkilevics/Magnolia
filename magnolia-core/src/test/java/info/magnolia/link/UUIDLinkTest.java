@@ -35,7 +35,7 @@ package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.link.AbsolutePathTransformer;
-import info.magnolia.link.UUIDLink;
+import info.magnolia.link.Link;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.link.LinkTransformer;
 import info.magnolia.test.mock.MockContent;
@@ -63,57 +63,57 @@ public class UUIDLinkTest extends BaseLinkTest {
     protected static final LinkTransformer NOP_TRANSFORMER = new AbsolutePathTransformer(false, false, false);
 
     public void testParseFromUUIDPattern() throws Exception {
-        UUIDLink link = new UUIDLink().parseUUIDLink(UUID_PATTERN_SIMPLE);
+        Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE);
 
         assertEquals(HREF_ABSOLUTE_LINK, NOP_TRANSFORMER.transform(link));
-        assertEquals(UUID_PATTERN_SIMPLE, link.toPattern());
+        assertEquals(UUID_PATTERN_SIMPLE, LinkFactory.toPattern(link));
     }
 
     public void testParseLink() throws Exception {
-        UUIDLink link = new UUIDLink().parseLink(HREF_ABSOLUTE_LINK);
+        Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK);
 
         assertEquals(ContentRepository.WEBSITE, link.getRepository());
         assertEquals(HANDLE_PARENT_SUB, link.getHandle());
-        assertEquals(UUID_PATTERN_SIMPLE, link.toPattern());
+        assertEquals(UUID_PATTERN_SIMPLE, LinkFactory.toPattern(link));
     }
 
     public void testParseFromBrowserLink() throws Exception {
-        UUIDLink link = new UUIDLink().parseLink(HREF_ABSOLUTE_LINK);
+        Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK);
 
         assertEquals(HREF_ABSOLUTE_LINK, NOP_TRANSFORMER.transform(link));
 
-        assertEquals(UUID_PATTERN_SIMPLE, link.toPattern());
+        assertEquals(UUID_PATTERN_SIMPLE, LinkFactory.toPattern(link));
     }
 
     public void testLinkWithAnchor() throws Exception{
-        UUIDLink link = new UUIDLink().parseLink(HREF_ABSOLUTE_LINK + "#bar");
-        assertEquals(UUID_PATTERN_SIMPLE + "#bar", link.toPattern());
+        Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK + "#bar");
+        assertEquals(UUID_PATTERN_SIMPLE + "#bar", LinkFactory.toPattern(link));
 
-        link = new UUIDLink().parseUUIDLink(UUID_PATTERN_SIMPLE + "#bar");
+        link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE + "#bar");
         assertEquals(HREF_ABSOLUTE_LINK + "#bar", NOP_TRANSFORMER.transform(link));
     }
 
     public void testLinkWithParameters() throws Exception {
-        UUIDLink link = new UUIDLink().parseLink(HREF_ABSOLUTE_LINK + "?bar=test");
-        assertEquals(UUID_PATTERN_SIMPLE + "?bar=test", link.toPattern());
+        Link link = LinkFactory.parseLink(HREF_ABSOLUTE_LINK + "?bar=test");
+        assertEquals(UUID_PATTERN_SIMPLE + "?bar=test", LinkFactory.toPattern(link));
 
-        link = new UUIDLink().parseUUIDLink(UUID_PATTERN_SIMPLE + "?bar=test");
+        link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE + "?bar=test");
         assertEquals(HREF_ABSOLUTE_LINK + "?bar=test", NOP_TRANSFORMER.transform(link));
     }
 
     public void testUUIDToAbsoluteLinksAfterRenaming() throws Exception{
         ((MockContent)ContentUtil.getContent(ContentRepository.WEBSITE, "/parent/sub")).setName("subRenamed");
-        UUIDLink link = new UUIDLink().parseUUIDLink(UUID_PATTERN_SIMPLE);
+        Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_SIMPLE);
         assertEquals("/parent/subRenamed.html", NOP_TRANSFORMER.transform(link));
     }
     
     public void doTestParsingInternalLinksToBinaries() throws Exception {
-        UUIDLink link = new UUIDLink().parseLink(HREF_BINARY);
-        assertEquals(UUID_PATTERN_BINARY, link.toPattern());
+        Link link = LinkFactory.parseLink(HREF_BINARY);
+        assertEquals(UUID_PATTERN_BINARY, LinkFactory.toPattern(link));
     }
 
     public void testUUIDToBinary() throws Exception {
-        UUIDLink link = new UUIDLink().parseUUIDLink(UUID_PATTERN_BINARY);
+        Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_BINARY);
         assertEquals(HREF_BINARY, NOP_TRANSFORMER.transform(link));
     }
 
@@ -121,7 +121,7 @@ public class UUIDLinkTest extends BaseLinkTest {
         // now rename the the page
         ((MockContent)ContentUtil.getContent(ContentRepository.WEBSITE, "/parent/sub")).setName("subRenamed");
 
-        UUIDLink link = new UUIDLink().parseUUIDLink(UUID_PATTERN_BINARY);
+        Link link = LinkFactory.parseUUIDLink(UUID_PATTERN_BINARY);
         assertEquals(StringUtils.replace(HREF_BINARY, "sub", "subRenamed"), NOP_TRANSFORMER.transform(link));
     }
 

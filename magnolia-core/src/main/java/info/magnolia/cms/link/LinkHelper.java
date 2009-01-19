@@ -33,9 +33,9 @@
  */
 package info.magnolia.cms.link;
 
+import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkUtil;
-import info.magnolia.link.UUIDLink;
-import info.magnolia.link.UUIDLinkException;
+import info.magnolia.link.LinkException;
 
 /**
  * @author philipp
@@ -45,7 +45,7 @@ import info.magnolia.link.UUIDLinkException;
 public class LinkHelper extends LinkUtil {
 
 
-    public static UUIDLink convertURIToUUIDLink(String uri) throws UUIDLinkException {
+    public static UUIDLink convertURIToUUIDLink(String uri) throws LinkException {
         return new UUIDLink().parseLink(uri);
     }
 
@@ -53,10 +53,10 @@ public class LinkHelper extends LinkUtil {
      * Converts provided path to an uuid.
      * @param path path to the page
      * @return the uuid 
-     * @throws UUIDLinkException When node described by provided path doesn't exists or can't be retrieved.
-     * @deprecated use {@link #convertAbsolutePathToUUID(String, String) instead
+     * @throws LinkException When node described by provided path doesn't exists or can't be retrieved.
+     * @deprecated use {@link LinkFactory#parseLink(String)}.getUUID() instead
      */
-    public static String convertAbsolutePathToUUID(String path) throws UUIDLinkException {
+    public static String convertAbsolutePathToUUID(String path) throws LinkException {
         return new UUIDLink().parseLink(path).getUUID();
     }
 

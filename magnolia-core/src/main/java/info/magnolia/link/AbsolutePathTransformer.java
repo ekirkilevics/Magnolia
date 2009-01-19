@@ -71,7 +71,7 @@ public class AbsolutePathTransformer implements LinkTransformer {
     /**
      * {@inheritDoc}
      */
-    public String transform(UUIDLink uuidLink) {
+    public String transform(Link uuidLink) {
         String linkStr;
         if(useURI2RepositoryMapping){
             linkStr = getURI2RepositoryManager().getURI(uuidLink);
@@ -101,7 +101,7 @@ public class AbsolutePathTransformer implements LinkTransformer {
     /**
      * URI after the path
      */
-    public String getURISuffix(UUIDLink uuidLink) {
+    public String getURISuffix(Link uuidLink) {
         String anchor = uuidLink.getAnchor();
         String parameters = uuidLink.getParameters();
 

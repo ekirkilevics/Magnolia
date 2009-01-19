@@ -36,6 +36,7 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.link.LinkResolverImpl;
 import info.magnolia.link.LinkTransformer;
 import info.magnolia.link.LinkTransformerManager;
+import info.magnolia.link.LinkException;
 
 /**
  * Utility class to store links in a format so that one can make relative paths on the public site. Later we will store the
@@ -58,28 +59,44 @@ public final class LinkUtil extends info.magnolia.link.LinkUtil {
      * @deprecated use {@link info.magnolia.link.LinkUtil#convertLinksFromUUIDPattern(String, LinkTransformer)} instead
      */
     public static String convertUUIDsToLinks(String str, LinkTransformer transformer) {
-        return convertLinksFromUUIDPattern(str, transformer);
+        try {
+            return convertLinksFromUUIDPattern(str, transformer);
+        } catch (LinkException e) {
+            return null;
+        }
     }
 
     /**
      * @deprecated use {@link info.magnolia.link.LinkUtil#convertToAbsoluteLinks(String, boolean)} instead
      */
     public static String convertUUIDsToAbsoluteLinks(String str, boolean addContextPath) {
-        return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getAbsolute(addContextPath));
+        try {
+            return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getAbsolute(addContextPath));
+        } catch (LinkException e) {
+            return null;
+        }
     }
 
     /**
      * @deprecated use {@link info.magnolia.link.LinkUtil#convertToRelativeLinks(String, String)} instead
      */
     public static String convertUUIDsToRelativeLinks(String str, String url) {
-        return convertToRelativeLinks(str, url);
+        try {
+            return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(url));
+        } catch (LinkException e) {
+            return null;
+        }
     }
 
     /**
-     * @deprecated use {@link info.magnolia.link.LinkUtil#convertToBrowserLinks(String, String)} instead
+     * @deprecated use {@link info.magnolia.link.LinkUtil#convertLinksFromUUIDPattern(String, LinkTransformer)} instead using BrowserLinkTransformer
      */
     public static String convertUUIDsToBrowserLinks(String str, String url) {
-        return convertToBrowserLinks(str, url);
+        try {
+            return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getBrowserLink(url));
+        } catch (LinkException e) {
+            return null;
+        }
     }
 
     /**

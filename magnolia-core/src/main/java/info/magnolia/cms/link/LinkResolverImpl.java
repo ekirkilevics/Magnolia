@@ -36,6 +36,7 @@ package info.magnolia.cms.link;
 import info.magnolia.link.AbsolutePathTransformer;
 import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.link.LinkUtil;
+import info.magnolia.link.LinkException;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -59,7 +60,11 @@ public class LinkResolverImpl implements LinkResolver {
     }
 
     public String convertToEditorLinks(String str) {
-        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getEditorLink());
+        try {
+            return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getEditorLink());
+        } catch (LinkException e) {
+            return null;
+        }
     }
 
     public String convertToBrowserLinks(String str, String currentPath) {
@@ -72,15 +77,27 @@ public class LinkResolverImpl implements LinkResolver {
     }
 
     public String convertToAbsoluteLinks(String str, boolean addContextPath) {
-        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getAbsolute(addContextPath));
+        try {
+            return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getAbsolute(addContextPath));
+        } catch (LinkException e) {
+            return null;
+        }
     }
 
     public String convertToRelativeLinks(String str, String currentPath) {
-        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(currentPath));
+        try {
+            return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(currentPath));
+        } catch (LinkException e) {
+            return null;
+        }
     }
 
     public String convertToExternalLinks(String str) {
-        return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getCompleteUrl());
+        try {
+            return LinkUtil.convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getCompleteUrl());
+        } catch (LinkException e) {
+            return null;
+        }
     }
 
     public boolean isAddContextPathToBrowserLinks() {

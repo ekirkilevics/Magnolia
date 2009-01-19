@@ -43,6 +43,25 @@ import info.magnolia.cms.util.FactoryUtil;
  */
 public class LinkTransformerManager {
 
+    private boolean makeBrowserLinksRelative = false;
+    private boolean addContextPathToBrowserLinks = false;
+    
+    public boolean isAddContextPathToBrowserLinks() {
+        return this.addContextPathToBrowserLinks;
+    }
+
+    public void setAddContextPathToBrowserLinks(boolean addContextPathToBrowserLinks) {
+        this.addContextPathToBrowserLinks = addContextPathToBrowserLinks;
+    }
+
+    public boolean isMakeBrowserLinksRelative() {
+        return this.makeBrowserLinksRelative;
+    }
+
+    public void setMakeBrowserLinksRelative(boolean makeBrowserLinksRelative) {
+        this.makeBrowserLinksRelative = makeBrowserLinksRelative;
+    }
+
     /**
      * Gets the current singleton instance.
      */
@@ -65,21 +84,21 @@ public class LinkTransformerManager {
     }
     
     /**
-     * Creates instance of Relative link transformer that will translate path to the provided UUIDLink relative to the content provided here. During the translation all valid URI2repository mappings and i18n will be applied.
+     * Creates instance of Relative link transformer that will translate path to the provided Link relative to the content provided here. During the translation all valid URI2repository mappings and i18n will be applied.
      */
     public RelativePathTransformer getRelative(Content page) {
         return new RelativePathTransformer(page, true, true);
     }
 
     /**
-     * Creates instance of Relative link transformer that will translate path to the provided UUIDLink relative to path provided here. During the translation all valid URI2repository mappings and i18n will be applied.
+     * Creates instance of Relative link transformer that will translate path to the provided Link relative to path provided here. During the translation all valid URI2repository mappings and i18n will be applied.
      */
     public RelativePathTransformer getRelative(String absolutePath) {
         return new RelativePathTransformer(absolutePath, true, true);
     }
     
     /**
-     * Creates instance of Complete URL link transformer that will create fully qualified and localized link to content denoted by UUIDLink provided to its transform method. 
+     * Creates instance of Complete URL link transformer that will create fully qualified and localized link to content denoted by Link provided to its transform method. 
      */
     public CompleteUrlPathTransformer getCompleteUrl() {
         return new CompleteUrlPathTransformer(true, true);
@@ -93,14 +112,15 @@ public class LinkTransformerManager {
     }
     
     /**
-     * Creates instance of browser link transformer that will transfrom any provided links to either absolute or relative path based on the current server configuration.
+     * Creates instance of link transformer that will transfrom any provided links to either absolute or relative path based on the current server configuration.
      * @param currentPath Path to make links relative to, if relative path translation is configured on the server.
      * @return
      */
-    public BrowserLinkTransformer getBrowserLink(String currentPath) {
-        // need to instantiate using factory to use settings from /server/renderer/linkManagement
-        BrowserLinkTransformer tfmr = (BrowserLinkTransformer) FactoryUtil.newInstance(BrowserLinkTransformer.class);
-        tfmr.setCurrentPath(currentPath);
-        return tfmr;
+    public LinkTransformer getBrowserLink(String currentPath) {
+        if (isMakeBrowserLinksRelative() ) {
+            return getRelative(currentPath); 
+        } else {
+            return getAbsolute(addContextPathToBrowserLinks);
+        }
     }
 }

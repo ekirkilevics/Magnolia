@@ -41,7 +41,9 @@ import info.magnolia.cms.i18n.I18nContentWrapper;
 import info.magnolia.cms.util.InheritanceContentWrapper;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
+import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkUtil;
+import info.magnolia.link.LinkException;
 
 import javax.jcr.RepositoryException;
 
@@ -108,7 +110,7 @@ public class MagnoliaTemplatingUtilities {
     public String createLink(NodeData nd) {
         try {
             return LinkUtil.createAbsoluteLink(nd);
-        } catch (RepositoryException e) {
+        } catch (LinkException e) {
             log.error("Can't resolve link defined in node {} because of {}.", nd.getHandle(), ExceptionUtils.getRootCauseMessage(e));
             return null;
         }
@@ -116,7 +118,7 @@ public class MagnoliaTemplatingUtilities {
 
     public String createLink(String repositoryId, String uuid) {
         try {
-            return LinkUtil.createLink(repositoryId, uuid);
+            return LinkUtil.createAbsoluteLink(repositoryId, uuid);
         } catch (RepositoryException e) {
             log.error("Can't resolve link with UUID {} because of {}.", uuid , ExceptionUtils.getRootCauseMessage(e));
             return null;

@@ -45,8 +45,7 @@ public class RelativePathTransformer extends AbsolutePathTransformer {
 
     public RelativePathTransformer(Content sourcePage, boolean useURI2RepositoryMapping, boolean useI18N) {
         super(false, useURI2RepositoryMapping, useI18N);
-        UUIDLink link = new UUIDLink();
-        link.setNode(sourcePage);
+        Link link = new Link(sourcePage);
         // TODO, this should be passed to a constructor
         link.setRepository(sourcePage.getHierarchyManager().getName());
         link.setExtension("html");
@@ -59,7 +58,7 @@ public class RelativePathTransformer extends AbsolutePathTransformer {
     }
 
 
-    public String transform(UUIDLink target) {
+    public String transform(Link target) {
         String link = super.transform(target);
         return LinkUtil.makePathRelative(absolutSourcePath, link);
     }

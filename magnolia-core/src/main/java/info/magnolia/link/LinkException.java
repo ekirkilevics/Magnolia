@@ -33,51 +33,39 @@
  */
 package info.magnolia.link;
 
-
 /**
  * @author had
- * @version $Id:$
+ *
  */
-public class BrowserLinkTransformer implements LinkTransformer {
+public class LinkException extends Exception {
 
-    private LinkTransformer relative; 
-    private LinkTransformer absolute = LinkTransformerManager.getInstance().getAbsolute();
-    private boolean makeBrowserLinksRelative = false;
-    private boolean addContextPathToBrowserLinks = false;
-    
-    public boolean isAddContextPathToBrowserLinks() {
-        return this.addContextPathToBrowserLinks;
-    }
-
-    public void setAddContextPathToBrowserLinks(boolean addContextPathToBrowserLinks) {
-        this.addContextPathToBrowserLinks = addContextPathToBrowserLinks;
-        absolute = LinkTransformerManager.getInstance().getAbsolute(addContextPathToBrowserLinks);
-    }
-
-    public boolean isMakeBrowserLinksRelative() {
-        return this.makeBrowserLinksRelative;
-    }
-
-    public void setMakeBrowserLinksRelative(boolean makeBrowserLinksRelative) {
-        this.makeBrowserLinksRelative = makeBrowserLinksRelative;
-    }
-
-    /* (non-Javadoc)
-     * @see info.magnolia.link.LinkTransformer#transform(info.magnolia.link.UUIDLink)
-     */
-    public String transform(UUIDLink link) {
-        if (isMakeBrowserLinksRelative() && relative != null) {
-            return relative.transform(link); 
-        } else {
-            return absolute.transform(link);
-        }
-    }
+    private static final long serialVersionUID = 8583028261528429020L;
 
     /**
      * 
      */
-    public void setCurrentPath(String currentPath) {
-        relative = LinkTransformerManager.getInstance().getRelative(currentPath);
+    public LinkException() {
     }
 
+    /**
+     * @param arg0
+     */
+    public LinkException(String arg0) {
+        super(arg0);
+    }
+
+    /**
+     * @param arg0
+     */
+    public LinkException(Throwable arg0) {
+        super(arg0);
+    }
+
+    /**
+     * @param arg0
+     * @param arg1
+     */
+    public LinkException(String arg0, Throwable arg1) {
+        super(arg0, arg1);
+    }
 }

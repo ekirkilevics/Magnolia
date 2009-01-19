@@ -77,6 +77,7 @@ public abstract class BaseLinkTest extends MgnlTestCase {
             "/parent/sub2@uuid=3";
 
         MockHierarchyManager hm = MockUtil.createHierarchyManager(website);
+        hm.setName(ContentRepository.WEBSITE);
         webContext = createMock(WebContext.class);
         expect(webContext.getHierarchyManager(ContentRepository.WEBSITE)).andReturn(hm).anyTimes();
         expect(webContext.getContextPath()).andReturn(SOME_CONTEXT).anyTimes();
@@ -93,7 +94,7 @@ public abstract class BaseLinkTest extends MgnlTestCase {
 
         FactoryUtil.setInstance(I18nContentSupport.class, new DefaultI18nContentSupport());
 
-        FactoryUtil.setInstance(LinkUtil.class, new LinkUtil());
+        FactoryUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
 
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");

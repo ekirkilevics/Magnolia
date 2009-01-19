@@ -39,9 +39,9 @@ import info.magnolia.cms.core.Content;
 /**
  * @deprecated use {@link info.magnolia.link.RelativePathTransformer} instead
  * @author had
- * @version $Id:$
+ * @version $Id$
  */
-public class RelativePathTransformer extends AbsolutePathTransformer{
+public class RelativePathTransformer extends AbsolutePathTransformer {
     
     protected String absolutePath;
 

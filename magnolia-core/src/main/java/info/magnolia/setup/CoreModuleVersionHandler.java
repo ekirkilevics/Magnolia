@@ -72,7 +72,7 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
     private final BootstrapConditionally auditTrailManagerTask = new BootstrapConditionally("New auditory log configuration", "Install new configuration for auditory log manager.", "/mgnl-bootstrap/core/config.server.auditLogging.xml");
     private final BootstrapSingleResource bootstrapFreemarker = new BootstrapSingleResource("Freemarker configuration", "Freemarker template loaders can now be configured in Magnolia. Adds default configuration", "/mgnl-bootstrap/core/config.server.rendering.freemarker.xml");
 
-    private final Task updateLinkResolverClass = new CheckAndModifyPropertyValueTask("Link rendering", "Update link rendering implementation class",ContentRepository.CONFIG, "/server/rendering/linkResolver","class", "info.magnolia.cms.link.LinkResolverImpl","info.magnolia.link.BrowserLinkTransformer");
+    private final Task updateLinkResolverClass = new CheckAndModifyPropertyValueTask("Link rendering", "Update link rendering implementation class",ContentRepository.CONFIG, "/server/rendering/linkResolver","class", "info.magnolia.cms.link.LinkResolverImpl","info.magnolia.link.LinkTransformerManager");
     private final Task renameLinkResolver = new MoveNodeTask("Link management configuration", "Updates rendering configuration to new link management.", ContentRepository.CONFIG, "/server/rendering/linkResolver", "/server/rendering/linkManagement", true);
 
     public CoreModuleVersionHandler() {

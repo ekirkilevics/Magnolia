@@ -33,8 +33,9 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.link.UUIDLink;
-import info.magnolia.link.UUIDLinkException;
+import info.magnolia.link.Link;
+import info.magnolia.link.LinkFactory;
+import info.magnolia.link.LinkException;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -99,7 +100,7 @@ public class URI2RepositoryMapping {
             StringUtils.removeStart(handle, "/");
             handle = this.handlePrefix + "/" + handle;
         }
-        //remove extension (ignore . anywere else in the uri)
+        //remove extension (ignore . anywhere else in the uri)
         String fileName = StringUtils.substringAfterLast(handle, "/");
         String extension = StringUtils.substringAfterLast(fileName, ".");
         handle = StringUtils.removeEnd(handle, extension);
@@ -107,7 +108,7 @@ public class URI2RepositoryMapping {
     }
 
     /**
-     * Clean a handle. Remove double / and add allways a leading /
+     * Clean a handle. Remove double / and add always a leading /
      * @param handle
      * @return
      */
@@ -128,14 +129,14 @@ public class URI2RepositoryMapping {
      */
     public String getURI(String handle) {
         try {
-            return getURI(new UUIDLink().initWithHandle(this.getRepository(), handle));
+            return getURI(LinkFactory.createLink(this.getRepository(), handle, null, null, null));
         }
-        catch (UUIDLinkException e) {
+        catch (LinkException e) {
             return handle;
         }
     }
 
-    public String getURI(UUIDLink uuidLink){
+    public String getURI(Link uuidLink){
         String uri = uuidLink.getHandle();
         if (StringUtils.isNotEmpty(this.handlePrefix)) {
             uri = StringUtils.removeStart(uri, this.handlePrefix);

@@ -36,6 +36,8 @@ package info.magnolia.cms.util;
 import info.magnolia.cms.beans.runtime.FileProperties;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
+import info.magnolia.link.LinkTransformerManager;
+import info.magnolia.link.LinkException;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -141,7 +143,12 @@ public class NodeMapWrapper extends ContentWrapper implements Map {
             value = props.getProperty(FileProperties.PATH);
         }
         else {
-            value = info.magnolia.link.LinkUtil.convertToBrowserLinks(nodeData.getString(), handle);
+            try {
+                value = info.magnolia.link.LinkUtil.convertLinksFromUUIDPattern(nodeData.getString(), LinkTransformerManager.getInstance().getBrowserLink(handle));
+            } catch (LinkException e) {
+                log.warn("Failed to parse links with from " + nodeData.getName(), e);
+                value = nodeData.getString();
+            }
         }
         return value;
     }

@@ -68,7 +68,7 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
 
     private final MockSession session;
 
-    private final String name;
+    private String name;
 
     public MockHierarchyManager() {
         this("TestMockHierarchyManager");
@@ -209,6 +209,13 @@ public class MockHierarchyManager extends DefaultHierarchyManager {
 
     public MockSession getSession() {
         return this.session;
+    }
+
+    /**
+     * @param website
+     */
+    public void setName(String name) {
+        this.name = name;
     }
 
 }

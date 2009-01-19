@@ -33,8 +33,9 @@
  */
 package info.magnolia.cms.beans.config;
 
-import info.magnolia.link.UUIDLink;
-import info.magnolia.link.UUIDLinkException;
+import info.magnolia.link.Link;
+import info.magnolia.link.LinkFactory;
+import info.magnolia.link.LinkException;
 import info.magnolia.cms.util.FactoryUtil;
 
 import java.util.Collection;
@@ -114,15 +115,15 @@ public class URI2RepositoryManager {
      */
     public String getURI(String repository, String handle) {
         try {
-            return getURI(new UUIDLink().initWithHandle(repository, handle));
+            return getURI(LinkFactory.createLink(repository, handle, null, null, null));
         }
-        catch (UUIDLinkException e) {
+        catch (LinkException e) {
             log.error("can't map [" + handle + "] to a uri", e);
         }
         return handle;
     }
 
-    public String getURI(UUIDLink uuidLink) {
+    public String getURI(Link uuidLink) {
         for (Iterator iter = mappings.iterator(); iter.hasNext();) {
             URI2RepositoryMapping mapping = (URI2RepositoryMapping) iter.next();
             if (StringUtils.equals(mapping.getRepository(), uuidLink.getRepository()) && uuidLink.getHandle().startsWith(mapping.getHandlePrefix())) {

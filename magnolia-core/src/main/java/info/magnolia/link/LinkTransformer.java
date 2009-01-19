@@ -42,9 +42,9 @@ package info.magnolia.link;
 public interface LinkTransformer {
     
     /**
-     * Transforms UUIDLink into desired output.
+     * Transforms Link into desired output.
      * @param link Link to repository content be transformed.
      * @return Transformed link.
      */
-    String transform(UUIDLink link);
+    String transform(Link link);
 }

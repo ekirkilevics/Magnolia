@@ -39,7 +39,6 @@ import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.AbstractI18nContentSupport;
-import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.context.MgnlContext;
 
 import java.io.UnsupportedEncodingException;
@@ -47,7 +46,6 @@ import java.net.URLEncoder;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import javax.jcr.ItemNotFoundException;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
@@ -88,43 +86,21 @@ public class LinkUtil {
     private static final Logger log = LoggerFactory.getLogger(LinkUtil.class);
 
 
-    //-- conversions to UUID - singles
-    /**
-     * Converts provided path to an uuid.
-     * @param path path to the page
-     * @param repoName Repository in which to look for given path
-     * @return the uuid 
-     * @throws UUIDLinkException When node described by provided path doesn't exists or can't be retrieved.
-     */
-    public static String convertAbsolutePathToUUID(String path, String repoName) throws UUIDLinkException {
-        UUIDLink link = new UUIDLink();
-        link.setRepository(repoName);
-        return link.parseLink(path).getUUID();
-    }
-
     //-- conversions from UUID - singles
     /**
      * Transforms a uuid to a handle beginning with a /. This path is used to get the page from the repository.
-     * The editor needs this kind of links
-     * @param uuid uuid
-     * @return path
+     * The editor needs this kind of links.
      */
-    public static String convertUUIDtoHandle(String uuid, String repository) {
-        UUIDLink link = new UUIDLink();
-        link.setRepository(repository);
-        link.setUUID(uuid);
-        return link.getHandle();
+    public static String convertUUIDtoHandle(String uuid, String repository) throws LinkException {
+        return LinkFactory.createLink(repository, uuid).getHandle();
     }
 
     /**
-     * Transforms a uuid to an uri. It does not add the context path. In difference from {@link #convertUUIDtoHandle(String, String)}, 
+     * Transforms a uuid to an uri. It does not add the context path. In difference from {@link Link#getHandle()}, 
      * this method will apply all uri to repository mappings as well as i18n.
      */
-    public static String convertUUIDtoURI(String uuid, String repository) {
-        UUIDLink link = new UUIDLink();
-        link.setRepository(repository);
-        link.setUUID(uuid);
-        return LinkTransformerManager.getInstance().getAbsolute(false).transform(link);
+    public static String convertUUIDtoURI(String uuid, String repository) throws LinkException {
+        return LinkTransformerManager.getInstance().getAbsolute(false).transform(LinkFactory.createLink(repository, uuid));
     }
 
     //-- conversions to UUID - bulk 
@@ -140,12 +116,11 @@ public class LinkUtil {
         while (matcher.find()) {
             final String href = matcher.group(4);
             if (!isExternalLinkOrAnchor(href)) {
-                UUIDLink link = new UUIDLink();
                 try {
-                    link.parseLink(href);
-                    matcher.appendReplacement(res, "$1" + StringUtils.replace(link.toPattern(), "$", "\\$") + "$5");
+                    Link link = LinkFactory.parseLink(href);
+                    matcher.appendReplacement(res, "$1" + StringUtils.replace(LinkFactory.toPattern(link), "$", "\\$") + "$5");
                 }
-                catch (info.magnolia.link.UUIDLinkException e) {
+                catch (info.magnolia.link.LinkException e) {
                     // this is expected if the link is an absolute path to something else
                     // than content stored in the repository
                     matcher.appendReplacement(res, "$0");
@@ -161,50 +136,6 @@ public class LinkUtil {
     }
 
     //-- conversions from UUID - bulk
-    /**
-     * Convert all links in provided html from the UUID format to absolute URI including the context path.
-     * @param html html with UUIDs
-     * @return html with absolute links
-     */
-    public static String convertToAbsoluteLinks(String html) {
-        return convertLinksFromUUIDPattern(html, LinkTransformerManager.getInstance().getAbsolute());
-    }
-
-    /**
-     * Transforms all links in provided html from UUID format to relative links. Links will be made relative to the path provided 
-     * in the {@code currentPath} attribute. This method is used to convert stored html to form suitable for display in the browser.
-     * @param str html
-     * @param currentPath url/path to make links relative to
-     * @return html with transformed links
-     */
-    public static String convertToRelativeLinks(String str, String currentPath) {
-        return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getRelative(currentPath));
-    }
-
-    /**
-     * Transforms all links in provided html to external links so the Magnolia content linked in the html can be accessed even if 
-     * generated content is displayed on systems others then Magnolia itself.
-     * @param str html
-     * @return converted html with complete universally accessible links.
-     * @see CompleteUrlPathTransformer
-     */
-    public static String convertToExternalLinks(String str) {
-        return convertLinksFromUUIDPattern(str, LinkTransformerManager.getInstance().getCompleteUrl());
-    }
-
-    /**
-     * Converts all links in provided html to either relative or absolute links with or without context path from the UUID patterns.
-     * The outputted html will contain relative or absolute links based on the settings in /server/rendering/linkManagement
-     * @param html html with links in UUID format
-     * @param currentPath path to make links relative to. If {@code makeBrowserLinksRelative} is set to false, this value can be null.
-     * @return html with translated links.
-     * @see #convertToRelativeLinks(String, String)
-     * @see #convertToAbsoluteLinks(String, boolean)
-     */
-    public static String convertToBrowserLinks(String html, String currentPath) {
-        return convertLinksFromUUIDPattern(html, LinkTransformerManager.getInstance().getBrowserLink(currentPath));
-
-    }
 
     /**
      * Converts provided html with links in UUID pattern format to any other kind of links based on provided link transformer.
@@ -213,11 +144,11 @@ public class LinkUtil {
      * @return converted html with links as created by provided transformer.
      * @see LinkTransformerManager
      */
-    public static String convertLinksFromUUIDPattern(String str, LinkTransformer transformer) {
-        Matcher matcher = UUIDLink.UUID_PATTERN.matcher(str);
+    public static String convertLinksFromUUIDPattern(String str, LinkTransformer transformer) throws LinkException {
+        Matcher matcher = LinkFactory.UUID_PATTERN.matcher(str);
         StringBuffer res = new StringBuffer();
         while (matcher.find()) {
-            UUIDLink link = new UUIDLink().initByUUIDPatternMatcher(matcher);
+            Link link = LinkFactory.createLink(matcher.group(1), matcher.group(2), matcher.group(5), matcher.group(7), matcher.group(8), matcher.group(10), matcher.group(12));
             String replacement = transformer.transform(link);
             // Replace "\" with "\\" and "$" with "\$" since Matcher.appendReplacement treats these characters specially
             replacement = StringUtils.replace(replacement, "\\", "\\\\");
@@ -313,36 +244,29 @@ public class LinkUtil {
      * @return Absolute link to the provided node data.
      * @see AbstractI18nContentSupport
      */
-    public static String createAbsoluteLink(NodeData nodedata) throws AccessDeniedException, ItemNotFoundException, RepositoryException {
+    public static String createAbsoluteLink(NodeData nodedata) throws LinkException {
         if(nodedata == null || !nodedata.isExist()){
             return null;
         }
-        UUIDLink link = new UUIDLink();
-        link.setNode(nodedata.getParent());
-        link.setRepository(nodedata.getHierarchyManager().getName());
-        link.setNodeData(nodedata);
-        link.setNodeDataName(nodedata.getName());
-        return LinkTransformerManager.getInstance().getAbsolute().transform(link);
+        return LinkTransformerManager.getInstance().getAbsolute().transform(LinkFactory.createLink(nodedata));
     }
 
     /**
-     * Creates absolute link including context path to the content denoted by repository and uuid. 
-     * @param repositoryId Parent repository of the content of interest.
-     * @param uuid UUID of the content to create link to.
-     * @param i18n Flag denoting whether or not to add i18n info to the link based on current locale.
-     * @return Absolute link to the content with provided UUID.
+     * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales. 
+     * @param uuid UUID of content to create link to.
+     * @param repository Name of the repository where content is located.
+     * @return Absolute link to the provided content.
      * @see AbstractI18nContentSupport
      */
-    public static String createLink(String repositoryId, String uuid) throws RepositoryException {
-        HierarchyManager hm = MgnlContext.getHierarchyManager(repositoryId);
+    public static String createAbsoluteLink(String repository, String uuid) throws RepositoryException {
+        HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
         Content node = hm.getContentByUUID(uuid);
         return createAbsoluteLink(node);
     }
 
     /**
-     * Creates absolute link including context path to the provided content. 
+     * Creates absolute link including context path to the provided content and performing all URI2Repository mappings and applying locales. 
      * @param content content to create link to.
-     * @param i18n Flag denoting whether or not to add i18n info to the link based on current locale.
      * @return Absolute link to the provided content.
      * @see AbstractI18nContentSupport
      */
@@ -350,10 +274,6 @@ public class LinkUtil {
         if(content == null){
             return null;
         }
-        UUIDLink link = new UUIDLink();
-        link.setNode(content);
-        link.setRepository(content.getHierarchyManager().getName());
-        return LinkTransformerManager.getInstance().getAbsolute().transform(link);
+        return LinkTransformerManager.getInstance().getAbsolute().transform(LinkFactory.createLink(content));
     }
-
 }
