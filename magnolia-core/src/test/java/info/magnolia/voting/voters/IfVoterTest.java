@@ -60,6 +60,14 @@ public class IfVoterTest extends TestCase {
         assertEquals(4, v.vote(null));
     }
 
+    public void testReturns0IfConditionIsFalseAndOtherwiseIsntSet() {
+        final IfVoter v = new IfVoter();
+        // condition's return value is ignored.
+        v.setCondition(fakeVoter(false, -7, 7));
+        v.setThen(fakeVoter(true, -2, 2));
+        assertEquals(0, v.vote(null));
+    }
+
     private Voter fakeVoter(boolean bool, int falseValue, int trueValue) {
         final AbstractBoolVoter voter = bool ? new TrueVoter() : new FalseVoter();
         voter.setFalseValue(falseValue);
