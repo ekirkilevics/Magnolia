@@ -33,38 +33,33 @@
  */
 package info.magnolia.voting.voters;
 
+import info.magnolia.voting.Voter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import info.magnolia.voting.Voter;
-
 /**
- * Conditional voter. Use the condition, then and otherwise voter.
- * @author pbracher
+ * Conditional voter. If the "condition" voter is positive, returns the "then" voter's value,
+ * otherwise returns the "otherwise" voter's value.
  *
+ * @author pbracher
  */
 public class IfVoter extends BaseVoterImpl {
-
-    private static Logger log = LoggerFactory.getLogger(IfVoter.class);
+    private static final Logger log = LoggerFactory.getLogger(IfVoter.class);
 
     private Voter condition;
 
     private Voter then;
 
-    private Voter otherwise;
+    private Voter otherwise = new NullVoter();
 
     public int vote(Object value) {
-        boolean isTrue = condition.vote(value)>0;
+        final boolean isTrue = condition.vote(value) > 0;
         log.debug("test of {} was {}", this.condition, Boolean.valueOf(isTrue));
         int outcome;
-        if(isTrue){
+        if (isTrue) {
             outcome = then.vote(value);
-        }
-        else{
-            if(otherwise != null){
-                outcome = otherwise.vote(value);
-            }
-            outcome = 0 ;
+        } else {
+            outcome = otherwise.vote(value);
         }
         log.debug("result is {}", Integer.toString(outcome));
         return outcome;
