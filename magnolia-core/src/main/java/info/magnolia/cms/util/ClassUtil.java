@@ -97,6 +97,7 @@ public final class ClassUtil {
      * Checks if this class is a subclass
      */
     public static boolean isSubClass(Class subClass, Class parentClass) {
+        // TODO replace this with class.asSubclass as soon we compile with 1.5
         if(subClass.equals(parentClass)){
             return true;
         }
