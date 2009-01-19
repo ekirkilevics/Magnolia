@@ -48,6 +48,7 @@ import info.magnolia.context.Context;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.context.SystemContext;
 import info.magnolia.context.WebContext;
+import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.mock.MockAggregationState;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockHierarchyManager;
@@ -90,6 +91,7 @@ public class FreemarkerHelperTest extends TestCase {
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultBaseUrl("http://myTests:1234/yay");
         FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+        FactoryUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
 
         // seems useless when running tests from maven (?), so we'll shunt log4j as well
         freemarker.log.Logger.selectLoggerLibrary(freemarker.log.Logger.LIBRARY_NONE);
