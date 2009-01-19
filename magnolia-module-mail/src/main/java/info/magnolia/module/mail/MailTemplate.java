@@ -281,7 +281,7 @@ public class MailTemplate {
         final String starttls = MailUtil.getParameter(smtp,
                 MailConstants.SMTP_STARTTLS, (String) smtp.get(MailConstants.SMTP_STARTTLS));
 
-        if (!StringUtils.isEmpty(starttls) && Boolean.valueOf(starttls)) {
+        if (!StringUtils.isEmpty(starttls) && StringUtils.equals(starttls, "true")) {
             //MAGNOLIA-2420
             props.put("mail.smtp.starttls.enable", starttls);
             props.put("mail.smtp.socketFactory.port", MailUtil.getParameter(getParameters(),
