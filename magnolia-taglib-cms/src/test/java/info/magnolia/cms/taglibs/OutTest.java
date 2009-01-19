@@ -38,6 +38,7 @@ import info.magnolia.cms.core.AggregationState;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.ServerConfiguration;
+import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.test.mock.MockUtil;
 import info.magnolia.test.mock.MockContent;
 import info.magnolia.test.mock.MockNodeData;
@@ -63,6 +64,7 @@ public class OutTest extends MgnlTagTestCase {
         final ServerConfiguration serverConfiguration = new ServerConfiguration();
         serverConfiguration.setDefaultExtension("html");
         FactoryUtil.setInstance(ServerConfiguration.class, serverConfiguration);
+        FactoryUtil.setInstance(LinkTransformerManager.class, new LinkTransformerManager());
     }
 
     // UUID - related output tests

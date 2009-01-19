@@ -40,11 +40,16 @@ import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentSupportFactory;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.DateUtil;
+import info.magnolia.link.LinkFactory;
+import info.magnolia.link.LinkTransformerManager;
 import info.magnolia.link.LinkUtil;
+import info.magnolia.link.LinkException;
 import info.magnolia.context.MgnlContext;
 import org.apache.commons.lang.StringEscapeUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.NestableRuntimeException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.jcr.PropertyType;
 import javax.servlet.jsp.JspWriter;
@@ -91,6 +96,8 @@ import java.util.Locale;
  * @version $Revision$ ($Author$)
  */
 public class Out extends BaseContentTag {
+
+    private static final Logger log = LoggerFactory.getLogger(Out.class);
 
     /**
      * Fake nodeDataName returning the node's name.
@@ -361,9 +368,14 @@ public class Out extends BaseContentTag {
                     value = StringUtils.isEmpty(this.lineBreak) ? nodeData.getString() : nodeData.getString(this.lineBreak);
 
                     // replace internal links that use the special magnolia link format (looks like ${link: {uuid: ... etc) -
-                    // ( - see info.magnolia.link.UUIDLink for an example of the special format that this next line
+                    // ( - see info.magnolia.link.Link for an example of the special format that this next line
                     //    handles )
-                    value = LinkUtil.convertToBrowserLinks(value, MgnlContext.getAggregationState().getMainContent().getHandle()); // static actpage
+                    try {
+                        value = LinkUtil.convertLinksFromUUIDPattern(value, LinkTransformerManager.getInstance().getBrowserLink(MgnlContext.getAggregationState().getMainContent().getHandle())); // static actpage
+                    } catch (LinkException e) {
+                        log.warn("Failed to parse links with from " + nodeData.getName(), e);
+                    }
+                        
 
                     if(!StringUtils.equalsIgnoreCase(getUuidToLink(), LINK_RESOLVING_NONE)){
                         // if the uuidToLink type has been explicitly set, reset the output value
@@ -373,10 +385,18 @@ public class Out extends BaseContentTag {
                             value = ContentUtil.uuid2path(this.getUuidToLinkRepository(), value);
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_ABSOLUTE)){
-                            value = LinkUtil.convertUUIDtoURI(value, this.getUuidToLinkRepository());
+                            try {
+                                value = LinkUtil.convertUUIDtoURI(value, this.getUuidToLinkRepository());
+                            } catch (LinkException e) {
+                                log.warn("Failed to parse links with from " + nodeData.getName(), e);
+                            }
                         }
                         else if(StringUtils.equals(this.getUuidToLink(), LINK_RESOLVING_RELATIVE)){
-                            value = LinkUtil.makePathRelative(MgnlContext.getAggregationState().getMainContent().getHandle(), LinkUtil.convertUUIDtoHandle(value, this.getUuidToLinkRepository()));
+                            try {
+                                value = LinkUtil.makePathRelative(MgnlContext.getAggregationState().getMainContent().getHandle(), LinkFactory.createLink(this.getUuidToLinkRepository(), value).getHandle());
+                            } catch (LinkException e) {
+                                log.warn("Failed to parse links with from " + nodeData.getName(), e);
+                            }
                         }
                         else{
                             throw new IllegalArgumentException("not supported value for uuidToLink");
