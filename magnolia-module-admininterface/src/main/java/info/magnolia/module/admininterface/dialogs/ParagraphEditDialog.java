@@ -40,6 +40,7 @@ import info.magnolia.cms.gui.dialog.Dialog;
 import info.magnolia.module.admininterface.DialogHandlerManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.apache.commons.lang.StringUtils;
 
 import javax.jcr.RepositoryException;
 import javax.servlet.http.HttpServletRequest;
@@ -66,6 +67,9 @@ public class ParagraphEditDialog extends ConfiguredDialog {
      * info.magnolia.cms.core.Content)
      */
     protected Dialog createDialog(Content configNode, Content websiteNode) throws RepositoryException {
+        if (StringUtils.isEmpty(this.paragraph)) {
+            throw new IllegalStateException("No paragraph selected.");
+        }
         final Paragraph para = ParagraphManager.getInstance().getInfo(paragraph);
         if (para == null) {
             throw new IllegalStateException("No paragraph registered with name " + paragraph);

@@ -103,15 +103,14 @@ public class BarNew extends Bar {
      */
     public void setButtonNew(String path, String nodeCollectionName, String nodeName, String paragraph) {
         Button b = new Button();
-        b.setLabel(MessagesManager.getMessages().get("buttons.new")); //$NON-NLS-1$
-
+        final String labelKey = StringUtils.isBlank(paragraph) ? "buttons.noparagraph" : "buttons.new";
+        b.setLabel(MessagesManager.getMessages().get(labelKey)); //$NON-NLS-1$
         String repository = MgnlContext.getAggregationState().getRepository();
         // if there are multiple paragraphs show the selectParagraph dialog
         if (StringUtils.contains(paragraph, ',')) {
             b.setOnclick(onClickForNewButton(path, nodeCollectionName, nodeName, paragraph, repository, "selectParagraph"));
-        }
-        // there is only one paragraph
-        else {
+        } else if (StringUtils.isNotBlank(paragraph)) {
+            // there is only one paragraph
             b.setOnclick(onClickForNewButton(path, nodeCollectionName, nodeName, paragraph, repository, "editParagraph"));
         }
         this.setButtonNew(b);

@@ -189,6 +189,9 @@ public class NewBar extends TagSupport implements BarTag {
                 BarNew bar = new BarNew();
                 bar.setPath(this.getPath());
                 bar.setParagraph(StringUtils.deleteWhitespace(this.paragraph));
+                if (StringUtils.isBlank(this.paragraph)) {
+                    log.warn("No paragraph selected for new bar in {}", pageContext.getPage());
+                }
                 bar.setNodeCollectionName(this.contentNodeCollectionName);
                 bar.setNodeName(contentNodeName); //$NON-NLS-1$
                 bar.setDefaultButtons();
@@ -196,7 +199,8 @@ public class NewBar extends TagSupport implements BarTag {
                     if (StringUtils.isEmpty(this.getNewLabel())) {
                         bar.setButtonNew(null);
                     }
-                    else {
+                    else if (StringUtils.isNotBlank(paragraph)){
+                        // don't set new button's label if there's no selectable paragraph
                         bar.getButtonNew().setLabel(this.getNewLabel());
                     }
                 }
@@ -212,9 +216,7 @@ public class NewBar extends TagSupport implements BarTag {
                 bar.drawHtml(pageContext.getOut());
             }
             catch (Exception e) {
-                if (log.isDebugEnabled()) {
-                    log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
-                }
+                log.debug("Exception caught: " + e.getMessage(), e); //$NON-NLS-1$
             }
         }
         return EVAL_PAGE;
