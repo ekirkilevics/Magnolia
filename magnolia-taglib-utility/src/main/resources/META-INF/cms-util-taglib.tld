@@ -326,6 +326,13 @@
       <rtexprvalue>true</rtexprvalue>
       <type>boolean</type>
     </attribute>
+    <attribute>
+      <description>If set to true, the first and last element of each level will be marked with the css classes "first" and "last"</description>
+      <name>markFirstAndLastElement</name>
+      <required>false</required>
+      <rtexprvalue>true</rtexprvalue>
+      <type>boolean</type>
+    </attribute>
     <example>
       <![CDATA[
             <cmsu:simpleNavigation startLevel="3" style="mystyle"/>

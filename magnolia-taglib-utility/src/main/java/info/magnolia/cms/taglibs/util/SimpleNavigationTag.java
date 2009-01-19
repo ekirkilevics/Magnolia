@@ -117,6 +117,16 @@ public class SimpleNavigationTag extends TagSupport {
     private static final String CSS_LI_OPEN = "open"; //$NON-NLS-1$
 
     /**
+     * Css class added to first li in ul.
+     */
+    private static final String CSS_LI_FIRST = "first"; //$NON-NLS-1$
+
+    /**
+     * Css class added to last li in ul.
+     */
+    private static final String CSS_LI_LAST = "last"; //$NON-NLS-1$
+
+    /**
      * Page property: navigation title.
      */
     private static final String NODEDATA_NAVIGATIONTITLE = "navTitle"; //$NON-NLS-1$
@@ -222,6 +232,11 @@ public class SimpleNavigationTag extends TagSupport {
     private String contentFilter = "";
 
     /**
+     * Flag to set if the first and last li in each ul should be marked with a special css class
+     */
+    private boolean markFirstAndLastElement = false;
+
+    /**
      * The start level for navigation, defaults to 0.
      * @jsp.attribute required="false" rtexprvalue="true" type="int"
      */
@@ -323,6 +338,15 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
+     * If set to true, a "first" or "last" css class will be added to the list of css classes of the 
+     * first and the last li in each ul.
+     * @jsp.attribute required="false" rtexprvalue="true" type="boolean"
+     */
+    public void setMarkFirstAndLastElement(boolean flag) {
+        markFirstAndLastElement = flag;
+    }
+
+    /**
      * @see javax.servlet.jsp.tagext.Tag#doEndTag()
      */
     public int doEndTag() throws JspException {
@@ -386,6 +410,7 @@ public class SimpleNavigationTag extends TagSupport {
         this.contentFilter = "";
         this.filter = null;
         this.nofollow = null;
+        this.markFirstAndLastElement = false;
         super.release();
     }
 
@@ -413,6 +438,7 @@ public class SimpleNavigationTag extends TagSupport {
         }
         out.print("\">"); //$NON-NLS-1$
 
+        ArrayList visibleChildren = new ArrayList(children);
         Iterator it = children.iterator();
         while (it.hasNext()) {
             Content child = (Content) it.next();
@@ -421,18 +447,25 @@ public class SimpleNavigationTag extends TagSupport {
                 if (child
                     .getNodeData(StringUtils.defaultString(this.hideInNav, DEFAULT_HIDEINNAV_NODEDATA))
                     .getBoolean()) {
+                    visibleChildren.remove(child);
                     continue;
                 }
                 // use a filter
                 if (filter != null) {
                     if (!filter.accept(child)) {
+                        visibleChildren.remove(child);
                         continue;
                     }
                 }
 
             }
+        }
 
-            List cssClasses = new ArrayList(3);
+        Iterator visibleIt = visibleChildren.iterator();
+        boolean isFirst = true;
+        while (visibleIt.hasNext()) {
+            Content child = (Content) visibleIt.next();
+            List cssClasses = new ArrayList(4);
 
             NodeData nodeData = I18nContentSupportFactory.getI18nSupport().getNodeData(child, NODEDATA_NAVIGATIONTITLE);
             String title = nodeData.getString(StringUtils.EMPTY);
@@ -484,6 +517,15 @@ public class SimpleNavigationTag extends TagSupport {
 
             if (StringUtils.isNotEmpty(classProperty) && child.hasNodeData(classProperty)) {
                 cssClasses.add(child.getNodeData(classProperty).getString(StringUtils.EMPTY));
+            }
+
+            if (markFirstAndLastElement && isFirst) {
+                cssClasses.add(CSS_LI_FIRST);
+                isFirst = false;
+            }
+
+            if (markFirstAndLastElement && !visibleIt.hasNext()) {
+                cssClasses.add(CSS_LI_LAST);
             }
 
             StringBuffer css = new StringBuffer(cssClasses.size() * 10);
