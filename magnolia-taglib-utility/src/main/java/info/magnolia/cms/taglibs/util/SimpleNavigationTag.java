@@ -84,7 +84,7 @@ import org.slf4j.LoggerFactory;
  *     </li>
  *     <li><a href="...">page 4 name </a></li>
  * </ul>
-
+ *
  *
  * @author Fabrizio Giustina
  * @version $Revision$ ($Author$)
@@ -152,17 +152,17 @@ public class SimpleNavigationTag extends TagSupport {
     public static final String DEFAULT_WRAPPERELEMENT_NODEDATA = ""; //$NON-NLS-1$
 
     /**
-     * Expand all expand all the nodes
+     * Expand all expand all the nodes.
      */
     public static final String EXPAND_ALL = "all";
 
     /**
-     * Expand all expand only page that should be displayed in navigation
+     * Expand all expand only page that should be displayed in navigation.
      */
     public static final String EXPAND_SHOW = "show";
 
     /**
-     * Do not use expand functions
+     * Do not use expand functions.
      */
     public static final String EXPAND_NONE = "none";
 
@@ -182,7 +182,7 @@ public class SimpleNavigationTag extends TagSupport {
     private int startLevel;
 
     /**
-     * End level
+     * End level.
      */
     private int endLevel;
 
@@ -197,7 +197,7 @@ public class SimpleNavigationTag extends TagSupport {
     private String openMenu;
 
     /**
-     * Style to apply to the menu
+     * Style to apply to the menu.
      */
     private String style;
 
@@ -207,7 +207,7 @@ public class SimpleNavigationTag extends TagSupport {
     public String wrapperElement;
 
     /**
-     * Expand all the nodes (sitemap mode)
+     * Expand all the nodes. (sitemap mode)
      */
     private String expandAll = EXPAND_NONE;
 
@@ -225,14 +225,14 @@ public class SimpleNavigationTag extends TagSupport {
 
 
     /**
-     * Content Filter to use to evaluate if a page should be drawn
+     * Content Filter to use to evaluate if a page should be drawn.
      */
     private ContentFilter filter;
 
     private String contentFilter = "";
 
     /**
-     * Flag to set if the first and last li in each ul should be marked with a special css class
+     * Flag to set if the first and last li in each ul should be marked with a special css class.
      */
     private boolean markFirstAndLastElement = false;
 
@@ -329,7 +329,7 @@ public class SimpleNavigationTag extends TagSupport {
     }
 
     /**
-     * When specified, all links will have the anchortext wrapped in the supplied element (such as "span")
+     * When specified, all links will have the anchortext wrapped in the supplied element. (such as "span")
      * @param wrapperElement name of an html element that will be included in the anchor, wrapping the anchortext
      * @jsp.attribute required="false" rtexprvalue="true"
      */
@@ -346,9 +346,6 @@ public class SimpleNavigationTag extends TagSupport {
         markFirstAndLastElement = flag;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#doEndTag()
-     */
     public int doEndTag() throws JspException {
         Content activePage = Resource.getCurrentActivePage();
         JspWriter out = this.pageContext.getOut();
@@ -394,9 +391,6 @@ public class SimpleNavigationTag extends TagSupport {
         return EVAL_PAGE;
     }
 
-    /**
-     * @see javax.servlet.jsp.tagext.Tag#release()
-     */
     public void release() {
         this.startLevel = 0;
         this.endLevel = 0;
