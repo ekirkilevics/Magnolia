@@ -37,6 +37,8 @@ package info.magnolia.cms.security.auth.callback;
 /**
  * @author Sameer Charles
  * $Id$
+ *
+ * @deprecated since 4.0 - this was never used
  */
 public interface ClientCallback {
 
