@@ -41,7 +41,6 @@ import info.magnolia.cms.i18n.I18nContentWrapper;
 import info.magnolia.cms.util.InheritanceContentWrapper;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
-import info.magnolia.link.LinkFactory;
 import info.magnolia.link.LinkUtil;
 import info.magnolia.link.LinkException;
 
@@ -72,14 +71,37 @@ public class MagnoliaTemplatingUtilities {
         return SiblingsHelper.of(node);
     }
 
-    /**
-     * FreeMarker only.
-     */
+    public void renderTemplate(Content content) throws RenderException, IOException {
+        renderTemplate(content, getWriter());
+    }
+
+    public void renderTemplate(Content content, Writer out) throws RenderException, IOException {
+        final Content backup = MgnlContext.getAggregationState().getMainContent();
+        MgnlContext.getAggregationState().setMainContent(content);
+
+        final Template template = TemplateManager.getInstance().getInfo(content.getMetaData().getTemplate());
+        final TemplateRenderer renderer = TemplateRendererManager.getInstance().getRenderer(template.getType());
+        renderer.renderTemplate(content, template, out);
+        MgnlContext.getAggregationState().setMainContent(backup);
+    }
+
     public void renderParagraph(Content paragraphNode) throws RenderException, IOException {
-        final Environment env = Environment.getCurrentEnvironment();
-        final Writer out = env.getOut();
-        // TODO - set and unset AggState.currentContent
+        renderParagraph(paragraphNode, getWriter());
+    }
+
+    public void renderParagraph(Content paragraphNode, Writer out) throws RenderException, IOException {
+        final Content backup = MgnlContext.getAggregationState().getCurrentContent();
+        MgnlContext.getAggregationState().setCurrentContent(paragraphNode);
         ParagraphRenderingFacade.getInstance().render(paragraphNode, out);
+        MgnlContext.getAggregationState().setCurrentContent(backup);
+    }
+
+    /**
+     * TODO each renderer should provide its own subclass
+     */
+    protected Writer getWriter() {
+        final Environment env = Environment.getCurrentEnvironment();
+        return env.getOut();
     }
 
     public Content inherit(Content node) {
@@ -107,6 +129,10 @@ public class MagnoliaTemplatingUtilities {
         return !isAuthorInstance();
     }
 
+    public String createLink(Content node) {
+        return LinkUtil.createAbsoluteLink(node);
+    }
+
     public String createLink(NodeData nd) {
         try {
             return LinkUtil.createAbsoluteLink(nd);
@@ -125,8 +151,5 @@ public class MagnoliaTemplatingUtilities {
         }
     }
 
-    public String createLink(Content node) {
-        return LinkUtil.createAbsoluteLink(node);
-    }
 
 }

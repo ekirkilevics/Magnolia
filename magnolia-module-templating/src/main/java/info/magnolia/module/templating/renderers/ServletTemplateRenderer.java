@@ -116,7 +116,7 @@ public class ServletTemplateRenderer extends AbstractTemplateRenderer {
         throw new IllegalStateException();
     }
 
-    protected void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException {
+    protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         throw new IllegalStateException();
     }
 

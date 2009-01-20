@@ -51,7 +51,7 @@ import java.util.Map;
  */
 public class JspParagraphRenderer extends AbstractParagraphRenderer {
 
-    protected void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException {
+    protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         try {
             ((WebContext) ctx).include(templatePath, out);
         } catch (Exception e) {

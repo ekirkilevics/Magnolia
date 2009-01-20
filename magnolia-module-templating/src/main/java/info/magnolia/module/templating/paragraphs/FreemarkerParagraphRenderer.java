@@ -78,7 +78,7 @@ public class FreemarkerParagraphRenderer extends AbstractParagraphRenderer {
         this.fmHelper = fmRenderer;
     }
 
-    protected void callTemplate(String templatePath, RenderableDefinition definition, final Map ctx, Writer out) throws RenderException {
+    protected void onRender(Content content, RenderableDefinition definition, Writer out, final Map ctx, String templatePath) throws RenderException {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         boolean wrap = false;

@@ -74,20 +74,25 @@ public abstract class AbstractRenderer {
         }
 
         final String actionResult = model.execute();
-        String templatePath = definition.determineTemplatePath(actionResult, model);
-
-        if (templatePath == null) {
-            throw new IllegalStateException("Unable to render " + definition.getClass().getName() + " " + definition.getName() + " in page " + content.getHandle() + ": templatePath not set.");
-        }
+        String templatePath = determineTemplatePath(content, definition, model, actionResult);
 
         final Map ctx = newContext();
         final Map savedContextState = saveContextState(ctx);
         setupContext(ctx, content, definition, model, actionResult);
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, model);
-        callTemplate(templatePath, definition, ctx, out);
+        onRender(content, definition, out, ctx, templatePath);
         MgnlContext.setAttribute(MODEL_ATTRIBUTE, parentModel);
 
         restoreContext(ctx, savedContextState);
+    }
+
+    protected String determineTemplatePath(Content content, RenderableDefinition definition, RenderingModel model, final String actionResult) {
+        String templatePath = definition.determineTemplatePath(actionResult, model);
+
+        if (templatePath == null) {
+            throw new IllegalStateException("Unable to render " + definition.getClass().getName() + " " + definition.getName() + " in page " + content.getHandle() + ": templatePath not set.");
+        }
+        return templatePath;
     }
 
     /**
@@ -128,9 +133,13 @@ public abstract class AbstractRenderer {
         setContextAttribute(ctx, "content", wrapNodeForTemplate(content, page));
         setContextAttribute(ctx, "def", definition);
         setContextAttribute(ctx, "state", aggregationState);
-        setContextAttribute(ctx, "mgnl", new MagnoliaTemplatingUtilities());
+        setContextAttribute(ctx, "mgnl", getMagnoliaTemplatingUtilities());
         setContextAttribute(ctx, "model", model);
         setContextAttribute(ctx, "actionResult", actionResult);
+    }
+
+    protected MagnoliaTemplatingUtilities getMagnoliaTemplatingUtilities() {
+        return new MagnoliaTemplatingUtilities();
     }
 
     /**
@@ -162,7 +171,8 @@ public abstract class AbstractRenderer {
 
     /**
      * Finally execute the rendering.
+     * @param content TODO
      */
-    protected abstract void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException;
+    protected abstract void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException;
 
 }

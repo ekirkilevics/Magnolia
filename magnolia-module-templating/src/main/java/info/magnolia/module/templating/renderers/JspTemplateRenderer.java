@@ -58,7 +58,7 @@ import java.util.Map;
 public class JspTemplateRenderer extends AbstractTemplateRenderer {
     private final static org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(JspTemplateRenderer.class);
 
-    protected void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException {
+    protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         HttpServletRequest request = ((WebContext) MgnlContext.getInstance()).getRequest();
         HttpServletResponse response = ((WebContext) MgnlContext.getInstance()).getResponse();
         if (response.isCommitted()) {

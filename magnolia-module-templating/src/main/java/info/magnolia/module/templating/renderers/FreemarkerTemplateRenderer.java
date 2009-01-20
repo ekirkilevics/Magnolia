@@ -35,6 +35,7 @@ package info.magnolia.module.templating.renderers;
 
 import freemarker.template.TemplateException;
 import info.magnolia.module.templating.RenderableDefinition;
+import info.magnolia.cms.core.Content;
 import info.magnolia.context.MgnlContext;
 import info.magnolia.freemarker.FreemarkerHelper;
 import info.magnolia.module.templating.RenderException;
@@ -66,7 +67,7 @@ public class FreemarkerTemplateRenderer extends AbstractTemplateRenderer {
         this.fmHelper = fmRenderer;
     }
 
-    protected void callTemplate(String templatePath, RenderableDefinition definition, Map ctx, Writer out) throws RenderException {
+    protected void onRender(Content content, RenderableDefinition definition, Writer out, Map ctx, String templatePath) throws RenderException {
         final Locale locale = MgnlContext.getAggregationState().getLocale();
 
         try {
