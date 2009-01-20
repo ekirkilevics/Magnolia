@@ -110,7 +110,7 @@ public class ParagraphSelectDialog extends DialogMVCHandler {
         String[] pars = paragraph.split(","); //$NON-NLS-1$
         for (int i = 0; i < pars.length; i++) {
             try {
-                Paragraph paragraphInfo = ParagraphManager.getInstance().getInfo(pars[i]);
+                Paragraph paragraphInfo = ParagraphManager.getInstance().getParagraphDefinition(pars[i]);
 
                 // prevent NPEs
                 if (paragraphInfo == null) {

@@ -70,7 +70,7 @@ public class ParagraphEditDialog extends ConfiguredDialog {
         if (StringUtils.isEmpty(this.paragraph)) {
             throw new IllegalStateException("No paragraph selected.");
         }
-        final Paragraph para = ParagraphManager.getInstance().getInfo(paragraph);
+        final Paragraph para = ParagraphManager.getInstance().getParagraphDefinition(paragraph);
         if (para == null) {
             throw new IllegalStateException("No paragraph registered with name " + paragraph);
         }
@@ -92,7 +92,7 @@ public class ParagraphEditDialog extends ConfiguredDialog {
      * @deprecated since 4.0 - this is not used
      */
     public static Content getConfigNode(HttpServletRequest request, String paragraph) {
-        Paragraph para = ParagraphManager.getInstance().getInfo(paragraph);
+        Paragraph para = ParagraphManager.getInstance().getParagraphDefinition(paragraph);
 
         if (para == null) {
             // out.println(msgs.get("dialog.paragraph.paragraphNotAvailable", new String[]{paragraph}));

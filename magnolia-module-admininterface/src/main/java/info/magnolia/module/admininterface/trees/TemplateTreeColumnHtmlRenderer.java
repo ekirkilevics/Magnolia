@@ -52,7 +52,7 @@ public class TemplateTreeColumnHtmlRenderer implements TreeColumnHtmlRenderer {
      */
     public String renderHtml(TreeColumn treeColumn, Content content) {
         String templateName = content.getMetaData().getTemplate();
-        Template template = TemplateManager.getInstance().getInfo(templateName);
+        Template template = TemplateManager.getInstance().getTemplateDefinition(templateName);
         return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
     }
 

@@ -73,7 +73,7 @@ public class TemplateColumn extends TreeColumn {
     public String getHtml() {
         Content content = this.getWebsiteNode();
         String templateName = content.getMetaData().getTemplate();
-        Template template = TemplateManager.getInstance().getInfo(templateName);
+        Template template = TemplateManager.getInstance().getTemplateDefinition(templateName);
         return template != null ? template.getI18NTitle() : StringUtils.defaultString(templateName);
 
     }

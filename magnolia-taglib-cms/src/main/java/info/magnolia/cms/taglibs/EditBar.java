@@ -270,7 +270,7 @@ public class EditBar extends TagSupport {
                 bar.placeDefaultButtons();
 
                 if (isShowParagraphName() && this.dialog == null) {
-                    final Paragraph paragraphInfo = ParagraphManager.getInstance().getInfo(paragraphToUse);
+                    final Paragraph paragraphInfo = ParagraphManager.getInstance().getParagraphDefinition(paragraphToUse);
                     final Messages msgs = MessagesManager.getMessages(paragraphInfo.getI18nBasename());
                     final String label = msgs.getWithDefault(paragraphInfo.getTitle(), paragraphInfo.getTitle());
                     bar.setLabel(label);

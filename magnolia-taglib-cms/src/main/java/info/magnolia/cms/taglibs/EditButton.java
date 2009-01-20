@@ -200,7 +200,7 @@ public class EditButton extends TagSupport {
         if (this.displayHandler == null) {
             Content localContainer = Resource.getLocalContentNode();
             String templateName = localContainer.getNodeData("paragraph").getString(); //$NON-NLS-1$
-            return ParagraphManager.getInstance().getInfo(templateName).getTemplatePath();
+            return ParagraphManager.getInstance().getParagraphDefinition(templateName).getTemplatePath();
         }
         return this.displayHandler;
     }
