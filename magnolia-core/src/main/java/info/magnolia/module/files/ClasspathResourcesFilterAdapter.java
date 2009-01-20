@@ -41,7 +41,7 @@ import info.magnolia.cms.util.ClasspathResourcesUtil;
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class ClasspathResourcesFilterAdapter extends ClasspathResourcesUtil.Filter {
+public class ClasspathResourcesFilterAdapter implements ClasspathResourcesUtil.Filter {
     private final FileExtractor.Transformer transformer;
 
     public ClasspathResourcesFilterAdapter(FileExtractor.Transformer transformer) {

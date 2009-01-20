@@ -50,6 +50,7 @@ import java.util.Enumeration;
 import java.util.Iterator;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
+import java.util.regex.Pattern;
 
 import org.apache.commons.beanutils.BeanUtils;
 import org.apache.commons.io.FileUtils;
@@ -77,14 +78,30 @@ public class ClasspathResourcesUtil {
      * @author Philipp Bracher
      * @version $Revision$ ($Author$)
      */
-    public static abstract class Filter {
+    public static interface Filter {
+        public boolean accept(String name);
+    }
 
-        public abstract boolean accept(String name);
+    public static class PatternFilter implements Filter{
+
+        private Pattern pattern;
+
+        public PatternFilter(String pattern) {
+            this.pattern = Pattern.compile(pattern);
+        }
+
+        public boolean accept(String name) {
+            return pattern.matcher(name).matches();
+        }
     }
 
     private static boolean isCache() {
         final String devMode = SystemProperty.getProperty("magnolia.develop");
         return !"true".equalsIgnoreCase(devMode);
+    }
+
+    public static String[] findResources(String pattern) {
+        return findResources(new PatternFilter(pattern));
     }
 
     /**
