@@ -138,17 +138,17 @@ public class ReceiveFilter extends AbstractMgnlFilter {
       * @throws Exception if fails to update
       */
      protected synchronized String receive(HttpServletRequest request) throws Exception {
-         String action = request.getHeader(SimpleSyndicator.ACTION);
+         String action = request.getHeader(BaseSyndicatorImpl.ACTION);
          log.debug("action: " + action);
          String authorization = getUser(request);
          String webapp = getWebappName();
 
-         if (action.equalsIgnoreCase(SimpleSyndicator.ACTIVATE)) {
+         if (action.equalsIgnoreCase(BaseSyndicatorImpl.ACTIVATE)) {
              String name = update(request);
              // Everything went well
              log.info("User {} successfuly activated {} on {}.", new Object[]{authorization, name, webapp});
          }
-         else if (action.equalsIgnoreCase(SimpleSyndicator.DEACTIVATE)) {
+         else if (action.equalsIgnoreCase(BaseSyndicatorImpl.DEACTIVATE)) {
              String name = remove(request);
              // Everything went well
              log.info("User {} succeessfuly deactivated {} on {}.", new Object[] {authorization, name, webapp});

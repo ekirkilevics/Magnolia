@@ -46,6 +46,8 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.InputSource;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import EDU.oswego.cs.dl.util.concurrent.Sync;
 import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.MetaData;
@@ -158,7 +160,47 @@ public abstract class BaseSyndicatorImpl implements Syndicator {
 
      public static final String ACTIVATION_ATTRIBUTE_VERSION = "sa_attribute_version"; //$NON-NLS-1$
 
-     protected String repositoryName;
+     /**
+     * Runs a given job in the thread pool.
+     * 
+     * @param job the job to run
+     * @throws ExchangeException if the job could not be put in the pool
+     */
+    protected static void executeInPool(Runnable job) throws ExchangeException {
+        try {
+            ThreadPool.getInstance().execute(job);
+        } catch (InterruptedException e) {
+            // this is kind of a problem, we could not add the job to the pool
+            // retrying might or might not work now that the interruption
+            // status is cleared but there is not much we can do so throwing
+            // an ExchangeException seems like the least bad choice
+            String message = "could not execute job in pool";
+            log.error(message, e);
+            throw new ExchangeException(message, e);
+        }
+    }
+
+    /**
+     * Acquires a {@link Sync} ignoring any interruptions. Should any
+     * interruption occur the interruption status will be set. Might
+     * potentially block/wait forever.
+     * 
+     * @see Sync#acquire()
+     * 
+     * @param latch the latch on which to wait
+     */
+    protected static void acquireIgnoringInterruption(Sync latch) {
+        try {
+            latch.acquire();
+        } catch (InterruptedException e) {
+            // waked up externally - ignore try again
+            acquireIgnoringInterruption(latch);
+            // be a good citizen and set back the interruption status
+            Thread.currentThread().interrupt();
+        }
+    }
+
+    protected String repositoryName;
 
      protected String workspaceName;
 

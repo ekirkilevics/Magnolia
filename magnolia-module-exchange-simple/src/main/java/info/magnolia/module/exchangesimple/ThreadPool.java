@@ -33,93 +33,45 @@
  */
 package info.magnolia.module.exchangesimple;
 
-import java.util.Vector;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import EDU.oswego.cs.dl.util.concurrent.Executor;
+import EDU.oswego.cs.dl.util.concurrent.LinkedQueue;
+import EDU.oswego.cs.dl.util.concurrent.PooledExecutor;
 
 /**
  * Simple thread pool used to speed up activation to multiple subscribers.
  * @author had
  *
  */
-public class ThreadPool {
-
-    private static final Logger log = LoggerFactory.getLogger(ThreadPool.class);
-
-    private ThreadGroup group = new ThreadGroup("PooledActivators");
+final class ThreadPool {
     
-    private Vector runnables = new Vector();
-    
-    private static ThreadPool instance = new ThreadPool();
-
     /**
-     * Creates new pool of threads and starts them. 
+     * Private constructor to prevent accidental instantiation.
      */
     private ThreadPool() {
-        for (int i = 0; i < 10; i++) {
-            PooledThread pt = new PooledThread(group, "" + i);
-            pt.start();
-            
-        }
+        throw new AssertionError("not instantiable");
     }
+
+    /**
+     * The fixes number of threads to use in the pool.
+     */
+    private static final int NUM_THREADS = 10;
     
+    private static final PooledExecutor instance;
+    
+    static {
+        // possibly have an infinite number of jobs
+        instance = new PooledExecutor(new LinkedQueue());
+        // always have NUM_THREADS running
+        instance.setMinimumPoolSize(NUM_THREADS);
+        instance.setMaximumPoolSize(NUM_THREADS);
+    }
+
     /**
      * Gets single instance of the thread pool.
      * @return Single instance of pool per VM/classloader.
      */
-    public static ThreadPool getInstance() {
+    public static Executor getInstance() {
         return instance;
     }
     
-    /**
-     * Schedules task for execution. Method returns immediatelly even when all worker threads are busy at the moment.
-     * @param r Runnable task.
-     */
-    public void run(Runnable r) {
-        runnables .add(r);
-        synchronized (this) {
-            notifyAll();
-        }
-    }
-    
-    /**
-     * Thread instance with infinite loop in run method to ensure periodic execution.
-     * @author had
-     *
-     */
-    class PooledThread extends Thread {
-        
-        public PooledThread(ThreadGroup group, String name) {
-            super(group, name);
-            // make sure those threads don't stop VM from exiting.
-            setDaemon(true);
-        }
-        
-        public void run() {
-            while (true ) {
-                try {
-                    Runnable r = null;
-                    try {
-                        r = (Runnable) runnables.remove(0);
-                    } catch (IndexOutOfBoundsException e) {
-                        // no item found sleep and retry
-                        try {
-                            // sleep for while
-                            Thread.sleep(5000);
-                        } catch (InterruptedException e1) {
-                           // waked up from outside ... ignore
-                        }
-                        continue;
-                    }
-                    if (r != null) {
-                        r.run();
-                    }
-                } catch (Throwable t) {
-                    log.error("Activation error detected.", t);
-                }
-            }
-        }
-        
-    }
 }

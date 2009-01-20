@@ -37,19 +37,25 @@ import info.magnolia.cms.exchange.ActivationManagerFactory;
 import info.magnolia.cms.exchange.ExchangeException;
 import info.magnolia.cms.exchange.Subscriber;
 import info.magnolia.cms.exchange.Subscription;
-import org.apache.commons.lang.StringUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
-import java.util.Hashtable;
+import java.util.Collection;
 import java.util.Iterator;
-import java.util.Vector;
+import java.util.Map;
 import java.util.Map.Entry;
+
+import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import EDU.oswego.cs.dl.util.concurrent.ConcurrentHashMap;
+import EDU.oswego.cs.dl.util.concurrent.CountDown;
+import EDU.oswego.cs.dl.util.concurrent.Sync;
+
 
 /**
  *
@@ -62,40 +68,23 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     }
 
     public void activate(final ActivationContent activationContent) throws ExchangeException {
-        Iterator subscribers = ActivationManagerFactory.getActivationManager().getSubscribers().iterator();
-        final Vector batch = new Vector();
-        final Hashtable errors = new Hashtable();
-        while (subscribers.hasNext()) {
-            final Subscriber subscriber = (Subscriber) subscribers.next();
+        Collection subscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
+        Iterator subscriberIterator = subscribers.iterator();
+        final Sync done = new CountDown(subscribers.size());
+        final Map errors = new ConcurrentHashMap(subscribers.size());
+        while (subscriberIterator.hasNext()) {
+            final Subscriber subscriber = (Subscriber) subscriberIterator.next();
             if (subscriber.isActive()) {
-                // Create runnable task for each subscriber.
-                Runnable r = new Runnable() {
-                    public void run() {
-                        try {
-                            activate(subscriber, activationContent);
-                        } catch (ExchangeException e) {
-                            log.error("Failed to activate content.", e);
-                            errors.put(subscriber,e);
-                        } finally {
-                            batch.remove(this);
-                        }
-                    }
-                };
-                batch.add(r);
-                // execute task.
-                ThreadPool.getInstance().run(r);
+                // Create runnable task for each subscriber execute
+                executeInPool(getActivateTask(activationContent, done, errors, subscriber));
+            } else {
+                // count down directly
+                done.release();
             }
         } //end of subscriber loop
 
         // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
-        while (!batch.isEmpty()) {
-            log.debug("Waiting for {} tasks to finish.", new Integer(batch.size()));
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                // waked up externally - ignore
-            }
-        }
+        acquireIgnoringInterruption(done);
 
         String uuid = activationContent.getproperty(NODE_UUID);
         // collect all the errors and send them back.
@@ -114,19 +103,27 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             throw new ExchangeException(msg.toString(), e);
         }
 
-        ThreadPool.getInstance().run(new Runnable() {
+        executeInPool(new Runnable() {
             public void run() {
-                while (!batch.isEmpty()) {
-                    try {
-                        Thread.sleep(10000);
-                    } catch (InterruptedException e) {
-                        // waked up from outside ... ignore
-                    }
-                }
                 cleanTemporaryStore(activationContent);
             }
-
         });
+    }
+
+    private Runnable getActivateTask(final ActivationContent activationContent, final Sync done, final Map errors, final Subscriber subscriber) {
+        Runnable r = new Runnable() {
+            public void run() {
+                try {
+                    activate(subscriber, activationContent);
+                } catch (ExchangeException e) {
+                    log.error("Failed to activate content.", e);
+                    errors.put(subscriber,e);
+                } finally {
+                    done.release();
+                }
+            }
+        };
+        return r;
     }
 
     /**
@@ -190,7 +187,6 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
 
         String handle = getActivationURL(subscriber);
 
-        String versionName = null;
         try {
             // authentication headers
             if (subscriber.getAuthenticationMethod() != null && "form".equalsIgnoreCase(subscriber.getAuthenticationMethod())) {
@@ -217,40 +213,20 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
     }
 
     public void doDeactivate() throws ExchangeException {
-        Iterator subscribers = ActivationManagerFactory.getActivationManager().getSubscribers().iterator();
-        final Vector batch = new Vector();
-        final Hashtable errors = new Hashtable();
-        while (subscribers.hasNext()) {
-            final Subscriber subscriber = (Subscriber) subscribers.next();
+        Collection subscribers = ActivationManagerFactory.getActivationManager().getSubscribers();
+        Iterator subscriberIterator = subscribers.iterator();
+        final Sync done = new CountDown(subscribers.size());
+        final Map errors = new ConcurrentHashMap();
+        while (subscriberIterator.hasNext()) {
+            final Subscriber subscriber = (Subscriber) subscriberIterator.next();
             if (subscriber.isActive()) {
                 // Create runnable task for each subscriber.
-                Runnable r = new Runnable() {
-                    public void run() {
-                        try {
-                            doDeactivate(subscriber);
-                        } catch (ExchangeException e) {
-                            log.error("Failed to deactivate content.", e);
-                            errors.put(subscriber,e);
-                        } finally {
-                            batch.remove(this);
-                        }
-                    }
-                };
-                batch.add(r);
-                // execute task.
-                ThreadPool.getInstance().run(r);
+                executeInPool(getDeactivateTask(done, errors, subscriber));
             }
         } //end of subscriber loop
 
         // wait until all tasks are executed before returning back to user to make sure errors can be propagated back to the user.
-        while (!batch.isEmpty()) {
-            log.debug("Waiting for {} tasks to finish.", new Integer(batch.size()));
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                // waked up externally - ignore
-            }
-        }
+        acquireIgnoringInterruption(done);
 
         // collect all the errors and send them back.
         if (!errors.isEmpty()) {
@@ -270,8 +246,24 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
         }
     }
 
+    private Runnable getDeactivateTask(final Sync done, final Map errors, final Subscriber subscriber) {
+        Runnable r = new Runnable() {
+            public void run() {
+                try {
+                    doDeactivate(subscriber);
+                } catch (ExchangeException e) {
+                    log.error("Failed to deactivate content.", e);
+                    errors.put(subscriber,e);
+                } finally {
+                    done.release();
+                }
+            }
+        };
+        return r;
+    }
+
     /**
-     * deactivate from a specified subscriber
+     * Deactivate from a specified subscriber.
      * @param subscriber
      * @throws ExchangeException
      */
