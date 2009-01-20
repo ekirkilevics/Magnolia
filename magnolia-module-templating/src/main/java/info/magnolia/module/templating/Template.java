@@ -76,6 +76,7 @@ public class Template extends AbstractRenderable{
      * @deprecated since 4.0. use getTemplatePath() instead
      */
     public String getPath() {
+        DeprecationUtil.isDeprecated("path property is deprecated use the templatePath property instead");
         return getTemplatePath();
     }
 
