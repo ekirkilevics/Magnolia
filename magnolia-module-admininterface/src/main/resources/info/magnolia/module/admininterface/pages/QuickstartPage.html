@@ -4,6 +4,7 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
     <link href="${this.request.contextPath}/.resources/admin-css/quickstart.css" type="text/css" rel="stylesheet" />
+    <script type="text/javascript" src="${this.request.contextPath}/.magnolia/pages/javascript.js"><!-- --></script>
     <title>Magnolia</title>
 </head>
 <body>
@@ -20,7 +21,7 @@
     </div>
     <div id="content">
       <p>
-        You don not have any templates yet, to start working with Magnolia you need to select one of the following options:
+        You do not have any visible templates yet, to start working with Magnolia you need to select one of the following options:
       </p>
 
       <table class="options">
@@ -47,20 +48,24 @@
               The <em>Magnolia authoring instance</em> is used for editing content. Administrators and editors have to login to this instance's <em>Admin Central</em> for configuring Magnolia and for adding or modifying pages.
             </p>
             <ul class="links">
+            [#if this.isAdmin()?contains("true")]
+              <li><a href="javascript:MgnlAdminCentral.showTree('config');">Go to configuration tree</a></li>
+            [#else]
               <li><a href="/magnoliaAuthor/.magnolia/pages/adminCentral.html">Login to the Admin Central</a><span class="note">*</span> (<a href="/magnoliaAuthor/.magnolia/pages/adminCentral.html" target="_blank">open in new window</a>)</li>
+            [/#if]
             </ul>
-            <p class="note">Note: the default username/password is superuser/superuser.</p>
+            <p class="note">Note: you can also get Magnolia Enterprise Edition <a href="http://www.magnolia-cms.com/home/products/enterprise.html" target="_blank">here.</a></p>
             </div>
           </td>
         </tr>
       </table>
-      <p>For more information, please see the <a href="http://documentation.magnolia.info/">Magnolia documentation</a>. (<a href="http://documentation.magnolia.info/" target="_blank">open in new window</a>)</p>
+      <p>For more information, please see the <a href="http://documentation.magnolia-cms.com/">Magnolia documentation</a>. (<a href="http://documentation.magnolia-cms.com/" target="_blank">open in new window</a>)</p>
 
     </div>
 </div>
 
 <div id="footer">
-    <a target="_blank" href="http://www.magnolia.info">Magnolia</a>&trade; Simple Open Source Content Management.
+    <a target="_blank" href="http://www.magnolia-cms.com">Magnolia</a>&trade; Simple Open Source Content Management.
 </div>
 
 </body>
