@@ -9,13 +9,13 @@
 </head>
 <body>
 
-[#if this.isAdmin()?contains("false")]
-    <img src="${this.request.contextPath}/.resources/admin-images/magnoliaLogo.gif"/>
+[#if !this.admin]
+    <img src="${contextPath}/.resources/admin-images/magnoliaLogo.gif"/>
 [/#if]
 
 <div class="page">
     <div id="header">
-        <img src="${this.request.contextPath}/.resources/admin-images/signpost.gif" id="signpost"/>
+        <img src="${contextPath}/.resources/admin-images/signpost.gif" id="signpost"/>
 
         <h1>Welcome to Magnolia</h1>
     </div>
@@ -28,7 +28,7 @@
         <tr >
           <td>
           <div class="option">
-            <img src="${this.request.contextPath}/.resources/icons/32/box_software.gif" class="instanceLogo"/>
+            <img src="${contextPath}/.resources/icons/32/box_software.gif" class="instanceLogo"/>
             <h3>Install Standard Templating Kit Module</h3>
             <p>
               The <em>Magnolia authoring instance</em> is used for editing content. Administrators and editors have to login to this instance's <em>Admin Central</em> for configuring Magnolia and for adding or modifying pages.
@@ -48,7 +48,7 @@
               The <em>Magnolia authoring instance</em> is used for editing content. Administrators and editors have to login to this instance's <em>Admin Central</em> for configuring Magnolia and for adding or modifying pages.
             </p>
             <ul class="links">
-            [#if this.isAdmin()?contains("true")]
+            [#if this.admin]
               <li><a href="javascript:MgnlAdminCentral.showTree('config');">Go to configuration tree</a></li>
             [#else]
               <li><a href="/magnoliaAuthor/.magnolia/pages/adminCentral.html">Login to the Admin Central</a><span class="note">*</span> (<a href="/magnoliaAuthor/.magnolia/pages/adminCentral.html" target="_blank">open in new window</a>)</li>

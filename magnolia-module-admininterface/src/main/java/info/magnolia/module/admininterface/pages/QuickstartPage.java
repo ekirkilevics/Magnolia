@@ -56,8 +56,8 @@ public class QuickstartPage extends TemplatedMVCHandler {
     public QuickstartPage(String name, HttpServletRequest request, HttpServletResponse response) {
         super(name, request, response);
     }
-    public String isAdmin() {
-        return String.valueOf(ServerConfiguration.getInstance().isAdmin());
+    public boolean isAdmin() {
+        return ServerConfiguration.getInstance().isAdmin();
     }
 
 
