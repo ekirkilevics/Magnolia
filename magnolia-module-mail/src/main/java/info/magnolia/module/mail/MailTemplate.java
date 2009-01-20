@@ -272,30 +272,22 @@ public class MailTemplate {
         Map smtp = MailModule.getInstance().getSmtp();
         Properties props = new Properties(); // System.getProperties(); should I try to use the system properties ?
 
-        props.put("mail.smtp.host", MailUtil.getParameter(getParameters(),
-                MailConstants.SMTP_SERVER, (String)smtp.get(MailConstants.SMTP_SERVER)));
+        props.put("mail.smtp.host", MailUtil.getParameter(getParameters(), MailConstants.SMTP_SERVER, (String)smtp.get(MailConstants.SMTP_SERVER)));
+        props.put("mail.smtp.port", MailUtil.getParameter(getParameters(), MailConstants.SMTP_PORT, (String)smtp.get(MailConstants.SMTP_PORT)));
 
-        props.put("mail.smtp.port", MailUtil.getParameter(getParameters(),
-                MailConstants.SMTP_PORT, (String)smtp.get(MailConstants.SMTP_PORT)));
-
-        final String starttls = MailUtil.getParameter(smtp,
-                MailConstants.SMTP_STARTTLS, (String) smtp.get(MailConstants.SMTP_STARTTLS));
-
-        if (!StringUtils.isEmpty(starttls) && StringUtils.equals(starttls, "true")) {
+        final String starttls = MailUtil.getParameter(smtp, MailConstants.SMTP_STARTTLS, (String) smtp.get(MailConstants.SMTP_STARTTLS));
+        if ("true".equals(starttls)) {
             //MAGNOLIA-2420
             props.put("mail.smtp.starttls.enable", starttls);
-            props.put("mail.smtp.socketFactory.port", MailUtil.getParameter(getParameters(),
-                        MailConstants.SMTP_PORT, (String)smtp.get(MailConstants.SMTP_PORT)));
+            props.put("mail.smtp.socketFactory.port", MailUtil.getParameter(getParameters(), MailConstants.SMTP_PORT, (String)smtp.get(MailConstants.SMTP_PORT)));
             props.put("mail.smtp.socketFactory.class", "javax.net.ssl.SSLSocketFactory");
             props.put("mail.smtp.socketFactory.fallback", "false");
 
         }
 
         Authenticator auth = null;
-        final String smtpUser = MailUtil.getParameter(getParameters(),
-                MailConstants.SMTP_USER, (String) smtp.get(MailConstants.SMTP_USER));
-        final String smtpPassword = MailUtil.getParameter(getParameters(),
-                MailConstants.SMTP_PASSWORD, (String) smtp.get(MailConstants.SMTP_PASSWORD));
+        final String smtpUser = MailUtil.getParameter(getParameters(), MailConstants.SMTP_USER, (String) smtp.get(MailConstants.SMTP_USER));
+        final String smtpPassword = MailUtil.getParameter(getParameters(), MailConstants.SMTP_PASSWORD, (String) smtp.get(MailConstants.SMTP_PASSWORD));
         if (StringUtils.isNotBlank(smtpUser)) {
             props.put("mail.smtp.auth", "true");
             props.put("mail.smtp.user", smtpUser);
