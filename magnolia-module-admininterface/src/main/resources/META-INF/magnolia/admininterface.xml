@@ -29,6 +29,10 @@
       <name>info.magnolia.module.admininterface.SaveHandler</name>
       <value>info.magnolia.module.admininterface.UUIDSaveHandler</value>
     </property>
+    <property>
+      <name>defaultPublicURI</name>
+      <value>redirect:/.magnolia/pages/quickstart.html</value>
+    </property>
   </properties>
 
   <dependencies>

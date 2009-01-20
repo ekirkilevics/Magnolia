@@ -61,6 +61,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
     private final AddSubMenuItemTask sysUsersSubMenu = new AddSubMenuItemTask("security", "usersSystem", "menu.security.usersSystem", null, "MgnlAdminCentral.showTree('users', '/system', true)", "/.resources/icons/16/pawn_glass_red.gif", "groups");
     private final AddSubMenuItemTask adminUsersSubMenu = new AddSubMenuItemTask("security", "usersAdmin", "menu.security.usersAdmin", null, "MgnlAdminCentral.showTree('users', '/admin', true)", "/.resources/icons/16/pawn_glass_yellow.gif", "groups");
     private final AddSubMenuItemTask subscribersMenu = new AddSubMenuItemTask("config", "subscribers", "menu.config.subscribers", "info.magnolia.module.admininterface.messages", "MgnlAdminCentral.showTree('config','/server/activation/subscribers')", "/.resources/icons/16/dot.gif", "cache");
+    private final SetDefaultPublicURI setDefaultPublicURI = new SetDefaultPublicURI("defaultPublicURI");
 
     public AdminModuleVersionHandler() {
         final String pathToRestartPage = "/modules/adminInterface/pages/restart";
@@ -104,6 +105,8 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                         new RemoveNodeTask(null, null, ContentRepository.CONFIG, "/modules/adminInterface/config/menu/tools/deployment"))))
 
                 .addTask(new BootstrapSingleResource("Paragraph edit dialog", "The paragraph edition dialog is now a regular dialog.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.editParagraph.xml"))
+                .addTask(new BootstrapSingleResource("Quickstart page", "The to be displayed as default in case there are no templates defined yet.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.quickstart.xml"))
+                .addTask(setDefaultPublicURI)
 
         );
     }
@@ -116,6 +119,7 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
         tasks.add(adminUsersSubMenu);
         tasks.add(sysUsersSubMenu);
         tasks.add(subscribersMenu);
+        tasks.add(setDefaultPublicURI);
 
         return tasks;
     }

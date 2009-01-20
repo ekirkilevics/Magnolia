@@ -1,0 +1,133 @@
+html {
+    background: #FAFBF4;
+}
+
+body {
+    background: #FAFBF4;
+    color: #000;
+    font-family: Georgia, "Times New Roman", Times, serif;
+    margin: 0 10%;
+    padding: 20px;
+    font-size: 9pt;
+}
+
+a {
+    color: #669900;
+}
+
+h2 {
+    padding: 0;
+    margin: 0;
+    font-weight: normal;
+    color: #669900;
+    font-size: 14pt;
+}
+
+li {
+    list-style-type: none;
+    list-style-position: outside;
+    list-style-image: url(images/listItem.gif);
+    margin: 0 0 5px 0;
+    padding-left: 0;
+    font-size: 9pt;
+}
+
+.page {
+    margin-top: 15px;
+    border: 1px solid #adbc61;
+    background: white;
+}
+
+#header {
+    margin: 0;
+    padding: 20px;
+    height: 40px;
+    background: white url(images/backgroundBar.gif) repeat-x;
+}
+
+#footer {
+    margin: 0;
+    padding: 0;
+}
+
+#signpost {
+    float: left;
+    margin-right: 20px;
+}
+
+#header h1 {
+    margin: 3px 0 0 0;
+    padding: 0;
+    font-size: 26pt;
+    font-weight: normal;
+    color: #4d4d4d;
+}
+
+#footer, #footer a {
+    margin-top: 3px;
+    text-align: center;
+    font-size: 9px;
+    font-family: Verdana;
+    color: #aaa;
+}
+
+#content {
+    padding: 20px 20px 20px 20px;
+    margin: 0;
+    font-weight: normal;
+}
+
+div.options {
+    margin: 10px 0 15px 35px;
+    padding: 0;
+}
+
+div.option {
+    background-color: #F6F6F6;
+    padding: 10px;
+    width: 380px;
+    height: 160px;
+    margin-bottom: 20px;
+}
+
+div#kkinstallstk {
+    float: left;
+}
+
+div#installDevSamples {
+
+    margin-right: 10px;
+}
+
+div.option h3 {
+    margin: 10px 0 10px 0;
+}
+
+ul.links {
+    margin: 10px 0pt 10px 50px;
+}
+
+.instanceLogo {
+    float: left;
+    margin-right: 20px;
+    margin-bottom: 100px;
+}
+
+p.note {
+     font-size: 0.95em;
+     line-height: 1.3em;
+     color: grey;
+}
+
+p.note span {
+    margin-left: -10px;
+}
+
+span.note {
+     color: grey;
+     margin-left: 1px;
+}
+
+#installationNote {
+    margin: -10px 0 25px 12px;
+}

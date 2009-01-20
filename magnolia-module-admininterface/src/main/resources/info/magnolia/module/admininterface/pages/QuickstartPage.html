@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link href="${this.request.contextPath}/.resources/admin-css/admin-all.css" type="text/css" rel="stylesheet" />
+    <link href="${this.request.contextPath}/.resources/admin-css/quickstart.css" type="text/css" rel="stylesheet" />
+    <title>Magnolia</title>
+</head>
+<body>
+
+[#if this.isAdmin()?contains("false")]
+    <img src="${this.request.contextPath}/.resources/admin-images/magnoliaLogo.gif"/>
+[/#if]
+
+<div class="page">
+    <div id="header">
+        <img src="${this.request.contextPath}/.resources/admin-images/signpost.gif" id="signpost"/>
+
+        <h1>Welcome to Magnolia</h1>
+    </div>
+    <div id="content">
+      <p>
+        You don not have any templates yet, to start working with Magnolia you need to select one of the following options:
+      </p>
+
+      <table class="options">
+        <tr >
+          <td>
+          <div class="option">
+            <img src="${this.request.contextPath}/.resources/icons/32/box_software.gif" class="instanceLogo"/>
+            <h3>Install Standard Templating Kit Module</h3>
+            <p>
+              The <em>Magnolia authoring instance</em> is used for editing content. Administrators and editors have to login to this instance's <em>Admin Central</em> for configuring Magnolia and for adding or modifying pages.
+            </p>
+            <ul class="links">
+              <li><a href="/magnoliaAuthor/.magnolia/pages/adminCentral.html">Login to the Admin Central</a><span class="note">*</span> (<a href="/magnoliaAuthor/.magnolia/pages/adminCentral.html" target="_blank">open in new window</a>)</li>
+            </ul>
+            <p class="note">Note: the default username/password is superuser/superuser.</p>
+            </div>
+          </td>
+
+          <td >
+          <div class="option">
+            <img src="${this.request.contextPath}/.resources/icons/32/folder_add.gif" class="instanceLogo"/>
+            <h3>Start templating</h3>
+            <p>
+              The <em>Magnolia authoring instance</em> is used for editing content. Administrators and editors have to login to this instance's <em>Admin Central</em> for configuring Magnolia and for adding or modifying pages.
+            </p>
+            <ul class="links">
+              <li><a href="/magnoliaAuthor/.magnolia/pages/adminCentral.html">Login to the Admin Central</a><span class="note">*</span> (<a href="/magnoliaAuthor/.magnolia/pages/adminCentral.html" target="_blank">open in new window</a>)</li>
+            </ul>
+            <p class="note">Note: the default username/password is superuser/superuser.</p>
+            </div>
+          </td>
+        </tr>
+      </table>
+      <p>For more information, please see the <a href="http://documentation.magnolia.info/">Magnolia documentation</a>. (<a href="http://documentation.magnolia.info/" target="_blank">open in new window</a>)</p>
+
+    </div>
+</div>
+
+<div id="footer">
+    <a target="_blank" href="http://www.magnolia.info">Magnolia</a>&trade; Simple Open Source Content Management.
+</div>
+
+</body>
+</html>
