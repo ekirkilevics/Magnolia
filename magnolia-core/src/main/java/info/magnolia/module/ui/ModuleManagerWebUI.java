@@ -121,6 +121,11 @@ public class ModuleManagerWebUI implements ModuleManagerUI {
                 try {
                     moduleManager.performInstallOrUpdate();
                 } catch (Throwable e) {
+//                    final InstallContext installContext = moduleManager.getInstallContext();
+//                    final ModuleDefinition currentModule = installContext.getCurrentModuleDefinition();
+//                    final String message = "Could not perform installation" + (currentModule != null ? " of " + currentModule.getName() : "") + ": " + e.getMessage();
+//                    log.error(message, e);
+//                    installContext.error(message, e);
                     log.error("Could not perform installation: " + e.getMessage(), e);
                     moduleManager.getInstallContext().error("Could not perform installation: " + e.getMessage(), e);
                     // TODO set status ? here the status page continues on reloading itself ...

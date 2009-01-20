@@ -44,6 +44,7 @@ import info.magnolia.module.delta.Delta;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.Task;
 import info.magnolia.module.delta.TaskExecutionException;
+import info.magnolia.module.delta.WarnTask;
 import info.magnolia.module.model.ModuleDefinition;
 import info.magnolia.module.model.Version;
 import info.magnolia.module.model.reader.ModuleDefinitionReader;
@@ -75,6 +76,21 @@ public class ModuleManagerImplTest extends TestCase {
         super.tearDown();
         FactoryUtil.clear();
         MgnlContext.setInstance(null);
+    }
+
+    public void testCheckModuleAndDeltasToStringForUpdate() {
+        final ModuleDefinition mod = new ModuleDefinition("foo", Version.parseVersion("2.3.4"), null, null);
+        final Delta d1 = DeltaBuilder.update("1.1", "New version").addTask(new WarnTask("t1", "test 1")).addTask(new WarnTask("t2", "test 2"));
+        final Delta d2 = DeltaBuilder.update("2.0", "New version 2").addTask(new WarnTask("t3", "test 3")).addTask(new WarnTask("t3", "test 4"));
+        ModuleManager.ModuleAndDeltas mad = new ModuleManager.ModuleAndDeltas(mod, Version.parseVersion("1.0"), Arrays.asList(d1, d2));
+        assertEquals("ModuleAndDeltas for foo: current version is 1.0.0, updating to 2.3.4 with 2 deltas.", mad.toString());
+    }
+    
+    public void testCheckModuleAndDeltasToStringForInstall() {
+        final ModuleDefinition mod = new ModuleDefinition("foo", Version.parseVersion("2.3.4"), null, null);
+        final Delta d1 = DeltaBuilder.update("1.1", "New version").addTask(new WarnTask("t1", "test 1")).addTask(new WarnTask("t2", "test 2"));
+        ModuleManager.ModuleAndDeltas mad = new ModuleManager.ModuleAndDeltas(mod, null, Arrays.asList(d1));
+        assertEquals("ModuleAndDeltas for foo: installing version 2.3.4 with 1 deltas.", mad.toString());
     }
 
     // TODO : assert saves after each module?
@@ -134,7 +150,7 @@ public class ModuleManagerImplTest extends TestCase {
         expect(d1.getTasks()).andReturn(Arrays.asList(t1, t2));
         t1.execute(ctx);
         expectLastCall().andThrow(new TaskExecutionException("boo"));
-        ctx.error(eq("Could not install or update module. (boo)"), isA(TaskExecutionException.class));
+        ctx.error(eq("Could not install or update foo module. (boo)"), isA(TaskExecutionException.class));
         ctx.setCurrentModule(null);
 
         replay(ctx, d1, t1, t2);

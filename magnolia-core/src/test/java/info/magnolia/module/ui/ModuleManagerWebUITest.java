@@ -97,6 +97,33 @@ public class ModuleManagerWebUITest extends TestCase {
         assertEquals(InstallContext.MessagePriority.error, msg.getPriority());
     }
 
+    /*
+    public void testModuleManagementExceptionsArePropagatedEvenThoughTheUpdateIsRunningInASeparateThreadAndTheExceptionMessageMentionsTheCurrentModule() throws ModuleManagementException, InterruptedException {
+        final InstallContextImpl ctx = new InstallContextImpl();
+        final ModuleDefinition testmodule = new ModuleDefinition("testmodule", Version.parseVersion("1.0"), null, null);
+        ctx.setCurrentModule(testmodule);
+        final ModuleManager moduleManager = createStrictMock(ModuleManager.class);
+        moduleManager.performInstallOrUpdate();
+        expectLastCall().andThrow(new IllegalStateException("boo!"));
+        expect(moduleManager.getInstallContext()).andReturn(ctx);
+
+        replay(moduleManager);
+        final ModuleManagerWebUI ui = new ModuleManagerWebUI(moduleManager);
+        ui.performInstallOrUpdate();
+        Thread.sleep(1000);
+        verify(moduleManager);
+
+        assertEquals(1, ctx.getMessages().size());
+        // "General messages" is the key used when adding message without a current module being set in the context
+        assertEquals(null, ctx.getMessages().get("General messages"));
+        final List messagesForTestModule = ((List) ctx.getMessages().get(testmodule.toString()));
+        assertEquals(1, messagesForTestModule.size());
+        final InstallContext.Message msg = (InstallContext.Message) (messagesForTestModule).get(0);
+        assertEquals("Could not perform installation of testmodule: boo!", msg.getMessage());
+        assertEquals(InstallContext.MessagePriority.error, msg.getPriority());
+    }
+    */
+
     public void testListTasksTemplate() throws ModuleManagementException {
         doTestTemplate("listTasks");
     }

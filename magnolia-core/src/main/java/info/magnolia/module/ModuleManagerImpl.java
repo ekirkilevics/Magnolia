@@ -428,9 +428,9 @@ public class ModuleManagerImpl implements ModuleManager {
         final ModuleDefinition moduleDef = moduleAndDeltas.getModule();
         final List deltas = moduleAndDeltas.getDeltas();
         ctx.setCurrentModule(moduleDef);
-        log.info("Install/update for {} is starting", moduleDef);
+        log.debug("Install/update for {} is starting: {}", moduleDef, moduleAndDeltas);
         applyDeltas(moduleDef, deltas, ctx);
-        log.info("Install/update for {} has finished", moduleDef);
+        log.debug("Install/update for {} has finished", moduleDef, moduleAndDeltas);
     }
 
     /**
@@ -454,8 +454,11 @@ public class ModuleManagerImpl implements ModuleManager {
                 }
             }
         } catch (TaskExecutionException e) {
-            ctx.error("Could not install or update module. (" + e.getMessage() + ")", e);
+            ctx.error("Could not install or update " + moduleDef.getName() + " module. (" + e.getMessage() + ")", e);
             success = false;
+        } catch (RuntimeException e) {
+            ctx.error("Error while installing or updating " + moduleDef.getName() + " module. (" + e.getMessage() + ")", e);
+            throw e;
         } finally {
             // TODO : ctx.info("Successful installation/update."); after save ?
             ctx.setCurrentModule(null);

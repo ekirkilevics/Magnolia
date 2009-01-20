@@ -134,7 +134,23 @@ public interface ModuleManager {
         public List getDeltas() {
             return deltas;
         }
-    }
 
+        public String toString() {
+            final StringBuffer sb = new StringBuffer("ModuleAndDeltas for ");
+            sb.append(module.getName());
+            if (currentVersion != null) {
+                sb.append(": current version is ");
+                sb.append(currentVersion);
+                sb.append(", updating to ");
+            } else {
+                sb.append(": installing version ");
+            }
+            sb.append(module.getVersion());
+            sb.append(" with ");
+            sb.append(deltas.size());
+            sb.append(" deltas.");
+            return sb.toString();
+        }
+    }
 
 }
