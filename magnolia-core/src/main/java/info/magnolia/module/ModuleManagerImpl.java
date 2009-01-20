@@ -83,6 +83,9 @@ public class ModuleManagerImpl implements ModuleManager {
 
     private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(ModuleManagerImpl.class);
 
+    private static final int DEFAULT_MODULE_OBSERVATION_DELAY = 5000;
+    private static final int DEFAULT_MODULE_OBSERVATION_MAX_DELAY = 30000;
+
     // TODO : expose a method to retrieve a given module's node ?
     // TODO : see InstallContextImpl.getOrCreateCurrentModuleConfigNode()
     static final String MODULES_NODE = "modules";
@@ -131,7 +134,8 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     /**
-     * In difference to the contract specified by interface - checking for install or updates this method also loads repositories when there are no pending install or update tasks !!!
+     * In addition to checking for install or updates, this method also loads
+     * repositories when there are no pending install or update tasks.
      *
      * @see info.magnolia.module.ModuleManager#checkForInstallOrUpdates()
      */
@@ -329,7 +333,7 @@ public class ModuleManagerImpl implements ModuleManager {
                                 }
                             }, true);
                         }
-                    },5000, 30000);
+                    }, DEFAULT_MODULE_OBSERVATION_DELAY, DEFAULT_MODULE_OBSERVATION_MAX_DELAY);
                 }
             }
             lifecycleContext.start(moduleNodes);
@@ -461,8 +465,8 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     /**
-     * Save changes to jcr, or revert them if something went wrong (set persist=false)
-     * @param persist if <code>false</code> changes will be reverted
+     * Save changes to jcr, or revert them if something went wrong.
+     * @param persist if <code>true</code>, all workspaces are save; if <code>false</code> changes will be reverted.
      */
     private void saveChanges(boolean persist) {
         // save all repositories once a module was properly installed/updated, or rollback changes.
@@ -515,7 +519,7 @@ public class ModuleManagerImpl implements ModuleManager {
     }
 
     /**
-     * Loads a single repository plus its workspaces, register nodetypes and grant permissions to superuser
+     * Loads a single repository plus its workspaces, register nodetypes and grant permissions to superuser.
      */
     private void loadRepository(String repositoryName, String nodeTypeFile, String[] workspaces) {
 
@@ -523,8 +527,8 @@ public class ModuleManagerImpl implements ModuleManager {
 
         if (rm == null) {
 
-            RepositoryMapping defaultRepositoryMapping = ContentRepository.getRepositoryMapping("magnolia");
-            Map defaultParamenters = defaultRepositoryMapping.getParameters();
+            final RepositoryMapping defaultRepositoryMapping = ContentRepository.getRepositoryMapping("magnolia");
+            final Map defaultParameters = defaultRepositoryMapping.getParameters();
 
             rm = new RepositoryMapping();
             rm.setName(repositoryName);
@@ -532,13 +536,12 @@ public class ModuleManagerImpl implements ModuleManager {
             rm.setProvider(defaultRepositoryMapping.getProvider());
             rm.setLoadOnStartup(true);
 
-            Map parameters = new HashMap();
-            parameters.putAll(defaultParamenters);
+            final Map parameters = new HashMap();
+            parameters.putAll(defaultParameters);
 
             // override changed parameters
-            String bindName = repositoryName
-                + StringUtils.replace((String) defaultParamenters.get("bindName"), "magnolia", "");
-            String repositoryHome = StringUtils.substringBeforeLast((String) defaultParamenters.get("configFile"), "/")
+            final String bindName = repositoryName + StringUtils.replace((String) defaultParameters.get("bindName"), "magnolia", "");
+            final String repositoryHome = StringUtils.substringBeforeLast((String) defaultParameters.get("configFile"), "/")
                 + "/"
                 + repositoryName;
 
@@ -550,8 +553,7 @@ public class ModuleManagerImpl implements ModuleManager {
 
             try {
                 ContentRepository.loadRepository(rm);
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 log.error(e.getMessage(), e);
             }
         }
