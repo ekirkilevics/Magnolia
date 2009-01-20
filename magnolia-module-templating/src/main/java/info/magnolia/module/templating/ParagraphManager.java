@@ -77,8 +77,23 @@ public class ParagraphManager extends ObservedManager {
      * <li>description - description of a template</li>
      * </ol>
      * @return a Paragraph instance
+     * @deprecated since 4.0 Use {@link #getParagraphDefinition(String)} instead
      */
     public Paragraph getInfo(String key) {
+        return getParagraphDefinition(key);
+    }
+
+    /**
+     * Returns the cached content of the requested template. TemplateInfo properties :
+     * <ol>
+     * <li>title - title describing template</li>
+     * <li>type - jsp / servlet</li>
+     * <li>path - jsp / servlet path</li>
+     * <li>description - description of a template</li>
+     * </ol>
+     * @return a Paragraph instance
+     */
+    public Paragraph getParagraphDefinition(String key) {
         return (Paragraph) paragraphs.get(key);
     }
 

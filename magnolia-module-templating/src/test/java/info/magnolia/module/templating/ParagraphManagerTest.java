@@ -49,7 +49,7 @@ public class ParagraphManagerTest extends MgnlTestCase {
         final Content paraNode = MockUtil.createHierarchyManager(PARA_NOTYPE).getContent("/modules/test/paragraph/foo");
         final ParagraphManager pm = new ParagraphManager();
         pm.addParagraphToCache(paraNode);
-        final Paragraph p = pm.getInfo("foo");
+        final Paragraph p = pm.getParagraphDefinition("foo");
         assertEquals("jsp", p.getType());
         assertEquals("foo", p.getName());
     }
@@ -74,7 +74,7 @@ public class ParagraphManagerTest extends MgnlTestCase {
         final Content paraNode = MockUtil.createHierarchyManager(PARA_NONAME).getContent("/modules/test/paragraph/noname");
         final ParagraphManager pm = new ParagraphManager();
         pm.addParagraphToCache(paraNode);
-        final Paragraph p = pm.getInfo("noname");
+        final Paragraph p = pm.getParagraphDefinition("noname");
         assertEquals("noname", p.getName());
         assertEquals("jsp", p.getType());
     }
@@ -83,10 +83,10 @@ public class ParagraphManagerTest extends MgnlTestCase {
         final Content n = MockUtil.createHierarchyManager(PARA_TEST).getContent("/modules/test/paragraph");
         final ParagraphManager pm = new ParagraphManager();
         pm.onRegister(n);
-        Paragraph baz = pm.getInfo("baz");
+        Paragraph baz = pm.getParagraphDefinition("baz");
         assertEquals("baz", baz.getName());
-        assertEquals(null, pm.getInfo("bar"));
-        Paragraph foo = pm.getInfo("foo");
+        assertEquals(null, pm.getParagraphDefinition("bar"));
+        Paragraph foo = pm.getParagraphDefinition("foo");
         assertEquals("foo", foo.getName());
     }
 
@@ -97,15 +97,15 @@ public class ParagraphManagerTest extends MgnlTestCase {
         pm.onRegister(n);
         pm.onRegister(c2);
 
-        final Paragraph baz = pm.getInfo("foo");
+        final Paragraph baz = pm.getParagraphDefinition("foo");
         assertEquals("foo", baz.getName());
         assertEquals("fooDialog", baz.getDialog());
 
-        final Paragraph bar = pm.getInfo("baz");
+        final Paragraph bar = pm.getParagraphDefinition("baz");
         assertEquals("baz", bar.getName());
         assertEquals("baz", bar.getDialog());
 
-        final Paragraph noname = pm.getInfo("noname");
+        final Paragraph noname = pm.getParagraphDefinition("noname");
         assertEquals("noname", noname.getName());
         assertEquals("noname", noname.getDialog());
     }

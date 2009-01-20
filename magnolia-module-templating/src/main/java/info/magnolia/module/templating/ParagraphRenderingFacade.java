@@ -82,7 +82,7 @@ public class ParagraphRenderingFacade {
      */
     public void render(Content content, Writer out, PageContext pageContext) throws RenderException, IOException {
         final String paragraphName = content.getMetaData().getTemplate();
-        final Paragraph paragraph = paragraphManager.getInfo(paragraphName);
+        final Paragraph paragraph = paragraphManager.getParagraphDefinition(paragraphName);
         if (paragraph == null) {
             throw new IllegalStateException("Paragraph " + paragraphName + " not found for page " + content.getHandle());
         }
@@ -92,7 +92,6 @@ public class ParagraphRenderingFacade {
     /**
      * Renders the given node to the given Writer, using the given Paragraph (and the appropriate ParagraphRender as
      * mandated by this Paragraph). Use with care.
-     * @deprecated since 4.0 - not used
      */
     public void render(Content content, Paragraph paragraph, Writer out) throws RenderException, IOException {
         render(content, paragraph, out, null);

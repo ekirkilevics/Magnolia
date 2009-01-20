@@ -38,6 +38,7 @@ import info.magnolia.cms.i18n.Messages;
 import info.magnolia.cms.i18n.MessagesManager;
 import info.magnolia.cms.security.AccessManager;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.cms.util.DeprecationUtil;
 import info.magnolia.context.MgnlContext;
 
 import java.util.HashMap;
@@ -117,6 +118,7 @@ public class Template extends AbstractRenderable{
      * @deprecated since 4.0 use {@link #setTemplatePath(String)}
      */
     public void setPath(String path) {
+        DeprecationUtil.isDeprecated("path property is deprecated use the templatePath property instead");
         setTemplatePath(path);
     }
 
