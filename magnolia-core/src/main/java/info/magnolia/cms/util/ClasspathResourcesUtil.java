@@ -100,8 +100,13 @@ public class ClasspathResourcesUtil {
         return !"true".equalsIgnoreCase(devMode);
     }
 
-    public static String[] findResources(String pattern) {
-        return findResources(new PatternFilter(pattern));
+    /**
+     * Return a collection containing the resource names which match the regular expression.
+     * @param filter
+     * @return string array of found resources TODO : (lazy) cache ?
+     */
+    public static String[] findResources(String regex) {
+        return findResources(new PatternFilter(regex));
     }
 
     /**
