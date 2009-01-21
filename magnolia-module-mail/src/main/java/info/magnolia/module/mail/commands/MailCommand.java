@@ -105,7 +105,7 @@ public class MailCommand implements Command {
             }
             factory.getEmailHandler().sendMail(email);
 
-            log.info("send mail successfully to:" + ctx.get(MailTemplate.MAIL_TO));
+            log.info("send mail successfully to:" + email.getTemplate().getTo());
         }
         catch (Exception e) {
             log.debug("Could not send email:" + e.getMessage(), e);
