@@ -35,6 +35,7 @@ package info.magnolia.module.mail.templates;
 
 import info.magnolia.module.mail.MailException;
 import info.magnolia.module.mail.MailTemplate;
+import info.magnolia.module.mail.util.MailUtil;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -148,7 +149,7 @@ public abstract class MgnlEmail extends MimeMessage {
     }
 
     public void setToList(String list) throws Exception {
-        setRecipients(Message.RecipientType.TO, createAdressList(list));
+        setRecipients(Message.RecipientType.TO, createAdressList(MailUtil.convertEmailList(list)));
     }
 
     public void setCcList(String list) throws Exception {
