@@ -35,6 +35,9 @@ package info.magnolia.module.mail;
 
 import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
+import info.magnolia.cms.security.Security;
+import info.magnolia.cms.security.SecuritySupport;
+import info.magnolia.cms.security.SecuritySupportImpl;
 import info.magnolia.cms.util.ContentUtil;
 import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.content2bean.Content2BeanUtil;
@@ -89,6 +92,8 @@ public abstract class AbstractMailTest extends RepositoryTestCase {
         super.setUp();
 
         FactoryUtil.setImplementation(ServerConfiguration.class, ServerConfiguration.class);
+        FactoryUtil.setImplementation(SecuritySupport.class, SecuritySupportImpl.class);
+
         bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.factory.xml");
         bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.handler.xml");
         bootstrapSingleResource("/mgnl-bootstrap/mail/config.modules.mail.config.smtp.xml");
