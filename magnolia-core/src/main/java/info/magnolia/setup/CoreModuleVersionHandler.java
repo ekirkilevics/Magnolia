@@ -106,6 +106,8 @@ public class CoreModuleVersionHandler extends AbstractModuleVersionHandler {
                 .addTask(bootstrapFreemarker)
                 .addTask(updateLinkResolverClass )
                 .addTask(renameLinkResolver )
+                .addTask(new CheckAndModifyPropertyValueTask("PNG MIME mapping", "Checks and updates PNG MIME mapping if not correct.", ContentRepository.CONFIG, "/server/MIMEMapping/png", "mime-type", "application/octet-stream", "image/png;"))
+                .addTask(new CheckAndModifyPropertyValueTask("SWF MIME mapping", "Checks and updates SWF MIME mapping if not correct.", ContentRepository.CONFIG, "/server/MIMEMapping/swf", "mime-type", "application/octet-stream", "application/x-shockwave-flash;"))
         );
     }
 

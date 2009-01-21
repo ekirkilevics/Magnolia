@@ -4408,7 +4408,7 @@
       <sv:value>/.resources/file-icons/swf.png</sv:value>
     </sv:property>
     <sv:property sv:name="mime-type" sv:type="String">
-      <sv:value>application/octet-stream</sv:value>
+      <sv:value>application/x-shockwave-flash</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
