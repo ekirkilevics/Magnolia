@@ -61,6 +61,8 @@ public interface MailConstants {
 
     public static final String MAIL_TEMPLATE_SIMPLE = "simple";
 
-    public static final String SMTP_STARTTLS = "starttls";
+    public static final String SMTP_TLS = "tls";
+
+    public static final String SMTP_SSL = "ssl";
 
 }
