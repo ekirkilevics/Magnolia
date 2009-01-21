@@ -61,6 +61,8 @@ public class FileProperties {
 
     public static final String PROPERTY_EXTENSION = "extension"; //$NON-NLS-1$
 
+    public static final String PROPERTY_MIMETYPE = "mimeType";
+
     public static final String PROPERTY_FILENAME = "fileName"; //$NON-NLS-1$
 
     public static final String PROPERTY_ICON = "icon"; //$NON-NLS-1$
