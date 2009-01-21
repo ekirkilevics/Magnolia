@@ -222,6 +222,9 @@ public class SimpleSyndicator extends BaseSyndicatorImpl {
             if (subscriber.isActive()) {
                 // Create runnable task for each subscriber.
                 executeInPool(getDeactivateTask(done, errors, subscriber));
+            } else {
+                // count down directly
+                done.release();
             }
         } //end of subscriber loop
 
