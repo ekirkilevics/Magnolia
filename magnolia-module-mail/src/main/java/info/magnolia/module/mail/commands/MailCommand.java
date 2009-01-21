@@ -73,24 +73,29 @@ public class MailCommand implements Command {
                 log.debug(Arrays.asList(ctx.entrySet().toArray()).toString());
 
             String template = (String) ctx.get("mailTemplate");
+            //get parameters from mail page parameter text area
+            if(ctx.containsKey(MailTemplate.MAIL_PARAMETERS)) {
+                Map temp = MailUtil.convertToMap((String)ctx.get(MailTemplate.MAIL_PARAMETERS));
+                ctx.putAll(temp);
+            }
 
             //find attachments in parameters or form if we are using one
-            List attachments = MailUtil.createAttachmentList(((WebContext)ctx).getParameters());
+            List attachments = null;
+
+            if(ctx instanceof WebContext) {
+                attachments = MailUtil.createAttachmentList(((WebContext)ctx).getParameters());
+            }
 
             if (StringUtils.isNotEmpty(template)) {
                 log.debug("Command using mail template: " + template);
-                //get parameters
-                if(ctx.containsKey(MailTemplate.MAIL_PARAMETERS)) {
-                    Map temp = MailUtil.convertToMap((String)ctx.get(MailTemplate.MAIL_PARAMETERS));
-                    ctx.putAll(temp);
-                }
+
                 email = factory.getEmailFromTemplate(template, attachments, ctx);
                 email.setBodyFromResourceFile();
             }
             else {
                 log.debug("command using static parameters");
 
-                email = factory.getEmail(((WebContext)ctx).getParameters(), attachments);
+                email = factory.getEmail(ctx, attachments);
                 if(StringUtils.isEmpty(email.getTemplate().getTemplateFile())) {
                     email.setBody();
                 } else {

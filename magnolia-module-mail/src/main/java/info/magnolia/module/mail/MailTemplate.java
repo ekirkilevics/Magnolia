@@ -59,6 +59,8 @@ public class MailTemplate {
 
     public static String MAIL_TO = "to";
 
+    public static String MAIL_TO_WORKFLOW = "mailTo";
+
     public static String MAIL_CC = "cc";
 
     public static String MAIL_TYPE = "type";
@@ -214,6 +216,9 @@ public class MailTemplate {
 
         if(params.containsKey(MAIL_TO)) {
             this.to = (String) params.get(MAIL_TO);
+        }
+        if(params.containsKey(MailTemplate.MAIL_TO_WORKFLOW)) {
+            this.to = (String)params.get(MailTemplate.MAIL_TO_WORKFLOW);
         }
 
         if(params.containsKey(MAIL_CC)) {

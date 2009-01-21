@@ -37,7 +37,7 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>edaa87aa-4b12-4712-b39a-0490d1781968</sv:value>
     </sv:property>
-    <sv:property sv:name="body" sv:type="String">
+    <sv:property sv:name="templateFile" sv:type="String">
       <sv:value>workflowNotification.html</sv:value>
     </sv:property>
     <sv:property sv:name="from" sv:type="String">
@@ -80,7 +80,7 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>369009bb-115d-4882-80b0-40c00372babc</sv:value>
     </sv:property>
-    <sv:property sv:name="body" sv:type="String">
+    <sv:property sv:name="templateFile" sv:type="String">
       <sv:value>http://localhost:8080/magnoliaAuthor/mails/noparam.html</sv:value>
     </sv:property>
     <sv:property sv:name="from" sv:type="String">
@@ -123,7 +123,7 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>6aec29fe-806e-464f-8ae6-63a29c20d1d2</sv:value>
     </sv:property>
-    <sv:property sv:name="body" sv:type="String">
+    <sv:property sv:name="templateFile" sv:type="String">
       <sv:value>http://localhost:8080/magnoliaAuthor/mails/withparams.html</sv:value>
     </sv:property>
     <sv:property sv:name="from" sv:type="String">
@@ -166,7 +166,7 @@
     <sv:property sv:name="jcr:uuid" sv:type="String">
       <sv:value>3af7b692-b76b-4da0-82a8-a106a8ccbbd8</sv:value>
     </sv:property>
-    <sv:property sv:name="body" sv:type="String">
+    <sv:property sv:name="templateFile" sv:type="String">
       <sv:value>testVelocity.html</sv:value>
     </sv:property>
     <sv:property sv:name="from" sv:type="String">
