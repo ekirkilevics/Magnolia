@@ -65,12 +65,12 @@ import java.security.NoSuchAlgorithmException;
  * @version $Revision: $ ($Author: $)
  */
 class MDChecking5FileExtractorOperation extends BasicFileExtractorOperation {
-    private static final org.slf4j.Logger log = org.slf4j.LoggerFactory.getLogger(MDChecking5FileExtractorOperation.class);
-
+    private final FileExtractionLogger log;
     private final HierarchyManager hm;
 
-    MDChecking5FileExtractorOperation(HierarchyManager hm, String resourcePath, String absoluteTargetPath) {
+    MDChecking5FileExtractorOperation(FileExtractionLogger log, HierarchyManager hm, String resourcePath, String absoluteTargetPath) {
         super(resourcePath, absoluteTargetPath);
+        this.log = log;
         this.hm = hm;
     }
 
@@ -95,7 +95,7 @@ class MDChecking5FileExtractorOperation extends BasicFileExtractorOperation {
                     // resourcePath was found, with correct md5 in repo : repoMD5
                     return out;
                 } else {
-                    log.warn("Can't extract " + resourcePath + " as this file was probably modified locally: expected MD5 [" + repoMD5 + "] but current MD5 is [" + existingFileMD5 + "].");
+                    log.error("Can't extract " + resourcePath + " as this file was probably modified locally: expected MD5 [" + repoMD5 + "] but current MD5 is [" + existingFileMD5 + "].");
                     return null;
                 }
             }

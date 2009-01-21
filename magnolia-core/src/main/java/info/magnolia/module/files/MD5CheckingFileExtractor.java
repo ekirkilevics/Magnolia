@@ -41,13 +41,15 @@ import info.magnolia.cms.core.HierarchyManager;
  * @version $Revision: $ ($Author: $)
  */
 public class MD5CheckingFileExtractor extends BasicFileExtractor {
+    private final FileExtractionLogger log;
     private final HierarchyManager hm;
 
-    public MD5CheckingFileExtractor(HierarchyManager hm) {
+    public MD5CheckingFileExtractor(FileExtractionLogger log, HierarchyManager hm) {
+        this.log = log;
         this.hm = hm;
     }
 
     protected FileExtractorOperation newOperation(String resourcePath, String absTargetPath) {
-        return new MDChecking5FileExtractorOperation(hm, resourcePath, absTargetPath);
+        return new MDChecking5FileExtractorOperation(log, hm, resourcePath, absTargetPath);
     }
 }

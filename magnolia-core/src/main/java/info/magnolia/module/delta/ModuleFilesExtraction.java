@@ -37,6 +37,7 @@ import info.magnolia.cms.core.HierarchyManager;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.files.MD5CheckingFileExtractor;
 import info.magnolia.module.files.ModuleFileExtractorTransformer;
+import info.magnolia.module.files.FileExtractionLogger;
 
 import java.io.IOException;
 
@@ -52,15 +53,27 @@ public class ModuleFilesExtraction extends AbstractTask {
         super("Files extraction", "Extracts module files.");
     }
 
-    public void execute(InstallContext ctx) throws TaskExecutionException {
+    public void execute(final InstallContext ctx) throws TaskExecutionException {
         final String moduleName = ctx.getCurrentModuleDefinition().getName();
         // TODO use a separate workspace, or a different storage root, ... ?
         final HierarchyManager hm = ctx.getConfigHierarchyManager();
-        final MD5CheckingFileExtractor extractor = new MD5CheckingFileExtractor(hm);
+        final MD5CheckingFileExtractor extractor = new MD5CheckingFileExtractor(new InstallContextLogger(ctx), hm);
         try {
             extractor.extractFiles(new ModuleFileExtractorTransformer(moduleName));
         } catch (IOException e) {
             throw new TaskExecutionException("Could not extract files for module " + ctx.getCurrentModuleDefinition() + ": " + e.getMessage(), e);
+        }
+    }
+
+    private static class InstallContextLogger implements FileExtractionLogger {
+        private final InstallContext ctx;
+
+        public InstallContextLogger(InstallContext ctx) {
+            this.ctx = ctx;
+        }
+
+        public void error(String message) {
+            ctx.warn(message);
         }
     }
 }
