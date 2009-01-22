@@ -90,21 +90,12 @@ div.option {
     margin-bottom: 20px;
 }
 
-div#kkinstallstk {
-    float: left;
-}
-
-div#installDevSamples {
-
-    margin-right: 10px;
-}
-
 div.option h3 {
     margin: 10px 0 10px 0;
 }
 
 ul.links {
-    margin: 10px 0pt 10px 50px;
+    margin: 10px 0pt 10px 20px;
 }
 
 .instanceLogo {
