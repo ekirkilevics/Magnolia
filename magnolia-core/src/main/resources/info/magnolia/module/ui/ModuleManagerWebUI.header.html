@@ -1,9 +1,9 @@
+[#macro progress]
+<p id="progress"><span class="executedTaskCount">${context.executedTaskCount}</span> tasks have been executed, for a total of <span class="executedTaskCount">${context.totalTaskCount}</span> tasks.</p>
+[/#macro]
 
 [#macro contextMessages]
-<p id="progress"><span class="executedTaskCount">${context.executedTaskCount}</span> tasks have been executed, for a total of <span class="executedTaskCount">${context.totalTaskCount}</span> tasks.</p>
-
 <h2>Messages</h2>
-
 [#list context.messages?keys as module]
 <div class="module">
 <h3>${module}</h3>

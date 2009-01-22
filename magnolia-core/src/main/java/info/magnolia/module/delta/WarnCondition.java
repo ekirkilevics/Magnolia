@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -36,21 +36,30 @@ package info.magnolia.module.delta;
 import info.magnolia.module.InstallContext;
 
 /**
- * A Condition which always return false. Just a convenient implementation when we already know
- * at instanciation time that the condition won't be met.
- * 
- * @see info.magnolia.module.delta.TrueCondition
+ * Similar to the WarnTask, WarnCondition will always pass (return true) but will log a warning
+ * message in the InstallContext.
  *
+ * @see info.magnolia.module.delta.WarnTask
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class FalseCondition extends AbstractCondition {
+public class WarnCondition extends AbstractCondition {
+    private final String message;
 
-    public FalseCondition(String name, String description) {
+    public WarnCondition(String name, String description, String message) {
         super(name, description);
+        this.message = message;
+    }
+
+    /**
+     * Uses the description as the warning message.
+     */
+    public WarnCondition(String name, String description) {
+        this(name, description, description);
     }
 
     public boolean check(InstallContext installContext) {
-        return false;
+        installContext.warn(message);
+        return true;
     }
 }

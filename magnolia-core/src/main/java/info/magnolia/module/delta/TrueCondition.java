@@ -1,5 +1,5 @@
 /**
- * This file Copyright (c) 2003-2009 Magnolia International
+ * This file Copyright (c) 2009 Magnolia International
  * Ltd.  (http://www.magnolia-cms.com). All rights reserved.
  *
  *
@@ -36,21 +36,20 @@ package info.magnolia.module.delta;
 import info.magnolia.module.InstallContext;
 
 /**
- * A Condition which always return false. Just a convenient implementation when we already know
+ * A Condition which always return true. Just a convenient implementation when we already know
  * at instanciation time that the condition won't be met.
- * 
- * @see info.magnolia.module.delta.TrueCondition
+ *
+ * @see info.magnolia.module.delta.FalseCondition
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
  */
-public class FalseCondition extends AbstractCondition {
-
-    public FalseCondition(String name, String description) {
+public class TrueCondition extends AbstractCondition {
+    public TrueCondition(String name, String description) {
         super(name, description);
     }
 
     public boolean check(InstallContext installContext) {
-        return false;
+        return true;
     }
 }

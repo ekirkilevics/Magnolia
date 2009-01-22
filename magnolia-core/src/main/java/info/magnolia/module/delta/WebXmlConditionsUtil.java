@@ -47,10 +47,15 @@ import java.util.List;
  * @version $Revision: $ ($Author: $)
  */
 public class WebXmlConditionsUtil {
-    private final WebXmlUtil webXmlUtil = new WebXmlUtil();
+    private final WebXmlUtil webXmlUtil;
     private final List conditions;
 
     public WebXmlConditionsUtil(List conditions) {
+        this(new WebXmlUtil(), conditions);
+    }
+
+    WebXmlConditionsUtil(WebXmlUtil webXmlUtil, List conditions) {
+        this.webXmlUtil = webXmlUtil;
         this.conditions = conditions;
     }
 
@@ -79,12 +84,25 @@ public class WebXmlConditionsUtil {
     }
 
     public void filterMustBeRegisteredWithCorrectDispatchers(final String filterClass) {
-        if (!webXmlUtil.isFilterRegistered(filterClass) || !webXmlUtil.areFilterDispatchersConfiguredProperly(filterClass, Arrays.asList(new String[]{"REQUEST", "FORWARD"}), Collections.singletonList("ERROR"))) {
-            conditions.add(new FalseCondition("web.xml updates",
-                    "Since Magnolia 3.5, the main Magnolia filter is " + filterClass + ", and it must be mapped with dispatchers REQUEST, FORWARD and, optionally, ERROR. "
-                            + " Please add <dispatcher>REQUEST</dispatcher>"
-                            + " <dispatcher>FORWARD</dispatcher>"
-                            + " <dispatcher>ERROR</dispatcher> to the filter-mapping element in your web.xml file."));
+        final String conditionName = "web.xml updates";
+        final String message = "Since Magnolia 3.5, the main Magnolia filter is " + filterClass + ", and it must be mapped with dispatchers REQUEST, FORWARD and, optionally, ERROR. The INCLUDE dispatcher is not supported.";
+        final String additionalMessage = " Please add \n"
+                + " <dispatcher>REQUEST</dispatcher>\n"
+                + " <dispatcher>FORWARD</dispatcher>\n"
+                + " <dispatcher>ERROR</dispatcher>\n"
+                + " to the filter-mapping element in your web.xml file.";
+
+        if (!webXmlUtil.isFilterRegistered(filterClass)) {
+            conditions.add(new FalseCondition(conditionName, message));
+        } else {
+            final int result = webXmlUtil.areFilterDispatchersConfiguredProperly(filterClass, Arrays.asList(new String[]{"REQUEST", "FORWARD"}), Collections.singletonList("ERROR"));
+            if (result > 0) {
+                conditions.add(new TrueCondition(conditionName, message));
+            } else if (result == 0) {
+                conditions.add(new WarnCondition(conditionName, message));
+            } else if (result < 0) {
+                conditions.add(new FalseCondition(conditionName + additionalMessage, message));
+            }
         }
     }
 

@@ -78,7 +78,7 @@ public class WebXmlUtil {
     /**
      * Test-friendly constructor.
      */
-    WebXmlUtil(InputStream inputStream) {
+    public WebXmlUtil(InputStream inputStream) {
         final SAXBuilder builder = new SAXBuilder();
         try {
             doc = builder.build(inputStream);
@@ -123,23 +123,35 @@ public class WebXmlUtil {
         return getFilterElement(filterClass) != null;
     }
 
-    public boolean areFilterDispatchersConfiguredProperly(String filterClass, List mandatoryDispatchers, List optionalDispatchers) {
+    /**
+     * Returns:
+     * +1 if all mandatory dispatchers are present and no additional unsupported dispatcher is present, or this filter class isn't registered.
+     * 0  if all mandatory dispatchers are present but additional unsupported dispatchers are present.
+     * -1  if not all mandatory dispatchers are present.
+     */
+    public int areFilterDispatchersConfiguredProperly(String filterClass, List mandatoryDispatchers, List optionalDispatchers) {
         final Element filterEl = getFilterElement(filterClass);
         if (filterEl != null) {
             final String filterName = filterEl.getTextNormalize();
             final String filterMappingXPathExpr = "/webxml:web-app/webxml:filter-mapping[webxml:filter-name='" + filterName + "']/webxml:dispatcher";
             final List dispatchersEl = getElementsFromXPath(filterMappingXPathExpr);
-            final List dispatchers = new ArrayList();
+            final List registeredDispatchers = new ArrayList();
             final Iterator it = dispatchersEl.iterator();
             while (it.hasNext()) {
                 final Element dispatcherEl = (Element) it.next();
-                dispatchers.add(dispatcherEl.getTextNormalize());
+                registeredDispatchers.add(dispatcherEl.getTextNormalize());
             }
-            dispatchers.removeAll(optionalDispatchers);
-            return CollectionUtils.isEqualCollection(dispatchers, mandatoryDispatchers);
+            registeredDispatchers.removeAll(optionalDispatchers);
+            if (CollectionUtils.isEqualCollection(mandatoryDispatchers, registeredDispatchers)) {
+                return 1;
+            } else if (CollectionUtils.isSubCollection(mandatoryDispatchers, registeredDispatchers)) {
+                return 0;
+            } else {
+                return -1;
+            }
 
         }
-        return true;
+        return 1;
     }
 
     public boolean isListenerRegistered(String deprecatedListenerClass) {

@@ -37,42 +37,49 @@ import info.magnolia.cms.filters.MgnlMainFilter;
 import junit.framework.TestCase;
 
 import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author fgiust
  * @version $Revision: $ ($Author: $)
  */
 public class WebXmlUtilTest extends TestCase {
+    private static final List<String> MANDATORY_DISPATCHERS = Arrays.asList("REQUEST", "FORWARD");
+    private static final List<String> OPTIONAL_DISPATCHERS = Arrays.asList("ERROR");
 
     public void testFilterDispatcherChecksShouldNotFailWithCorrectConfiguration() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterok.xml"));
-        assertTrue(util.areFilterDispatchersConfiguredProperly(MgnlMainFilter.class.getName(), Arrays.asList("REQUEST", "FORWARD"), Arrays.asList("ERROR")));
+        assertEquals(1, util.areFilterDispatchersConfiguredProperly(MgnlMainFilter.class.getName(), MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
     public void testFilterDispatcherChecksShouldFailIfDispatcherNotSet() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filternodispatcher.xml"));
-        assertFalse(util.areFilterDispatchersConfiguredProperly(MgnlMainFilter.class.getName(), Arrays.asList("REQUEST", "FORWARD"), Arrays.asList("ERROR")));
+        assertEquals(-1, util.areFilterDispatchersConfiguredProperly(MgnlMainFilter.class.getName(), MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
     public void testFilterDispatcherChecksShouldNotFailIfFilterNotRegistered() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_nofilter.xml"));
-        assertTrue(util.areFilterDispatchersConfiguredProperly(MgnlMainFilter.class.getName(), Arrays.asList("REQUEST", "FORWARD"), Arrays.asList("ERROR")));
+        assertEquals(1, util.areFilterDispatchersConfiguredProperly(MgnlMainFilter.class.getName(), MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
-    public void testFilterDispatcherChecksShouldFailIfWrongDispatchersAreUsed() {
+    public void testFilterDispatcherChecksShouldFailIfMandatoryDispatchersIsNotUsed() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
-        assertEquals(false, util.areFilterDispatchersConfiguredProperly("webxmltest.WithMissingForward", Arrays.asList("REQUEST", "FORWARD"), Arrays.asList("ERROR")));
-        assertEquals(false, util.areFilterDispatchersConfiguredProperly("webxmltest.WithInclude", Arrays.asList("REQUEST", "FORWARD"), Arrays.asList("ERROR")));
+        assertEquals(-1, util.areFilterDispatchersConfiguredProperly("webxmltest.WithMissingForward", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
+    }
+
+    public void testFilterDispatcherChecksShouldReturnZeroIfUnsupportedDispatchersAreUsed() {
+        WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
+        assertEquals(0, util.areFilterDispatchersConfiguredProperly("webxmltest.WithInclude", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
     public void testFilterDispatcherErrorIsNotMandatory() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
-        assertEquals(true, util.areFilterDispatchersConfiguredProperly("webxmltest.ErrorIsNotMandatory", Arrays.asList("REQUEST", "FORWARD"), Arrays.asList("ERROR")));
+        assertEquals(1, util.areFilterDispatchersConfiguredProperly("webxmltest.ErrorIsNotMandatory", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
     public void testFilterDispatcherOrderIsIrrelevant() {
         WebXmlUtil util = new WebXmlUtil(getClass().getResourceAsStream("web_filterwrongdispatchers.xml"));
-        assertEquals(true, util.areFilterDispatchersConfiguredProperly("webxmltest.OrderIsIrrelevant", Arrays.asList("REQUEST", "FORWARD"), Arrays.asList("ERROR")));
+        assertEquals(1, util.areFilterDispatchersConfiguredProperly("webxmltest.OrderIsIrrelevant", MANDATORY_DISPATCHERS, OPTIONAL_DISPATCHERS));
     }
 
     public void testCanDetectFilterRegistration() {
