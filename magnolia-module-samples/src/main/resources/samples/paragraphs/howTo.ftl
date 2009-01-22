@@ -26,7 +26,7 @@
     </ul>
 </div>
 <div id="search" >
-    <form name="mgnlsearch" action="${ctx.contextPath}/SearchResult.html" method="post">
+    <form name="mgnlsearch" action="${ctx.contextPath}/searchResult.html" method="post">
       <input id="query" name="query" value="${query!}" />
       <input type="submit" name="search" value="search" />
     </form>
