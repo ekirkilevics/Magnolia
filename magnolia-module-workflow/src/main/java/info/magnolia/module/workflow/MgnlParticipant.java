@@ -76,13 +76,22 @@ public class MgnlParticipant extends AbstractEmbeddedParticipant {
             }
 
         }
-        String parName = cancelItem.getParticipantName();
-        if (!parName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND)) {
-            //
-            // remove workitem from inbox
-            WorkflowUtil.getWorkItemStore().removeWorkItem(cancelItem.getId());
+        Context originalContext = null;
+        if (MgnlContext.hasInstance()) {
+            originalContext = MgnlContext.getInstance();
         }
-        MgnlContext.release();
+        try {
+            String parName = cancelItem.getParticipantName();
+            if (!parName.startsWith(WorkflowConstants.PARTICIPANT_PREFIX_COMMAND)) {
+                //
+                // remove workitem from inbox
+                MgnlContext.setInstance(MgnlContext.getSystemContext());
+                WorkflowUtil.getWorkItemStore().removeWorkItem(cancelItem.getId());
+            }
+        } finally {
+            MgnlContext.release();
+            MgnlContext.setInstance(originalContext);
+        }
     }
 
     /**
