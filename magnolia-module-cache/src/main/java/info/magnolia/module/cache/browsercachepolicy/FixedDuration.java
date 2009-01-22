@@ -44,11 +44,12 @@ import info.magnolia.module.cache.CachePolicyResult;
  * @version $Revision$ ($Author$)
  */
 public class FixedDuration implements BrowserCachePolicy {
+    private static final int MINUTE_IN_MILLIS = 60 * 1000;
 
     private int expirationMinutes = 30;
 
     public BrowserCachePolicyResult canCacheOnClient(CachePolicyResult cachePolicyResult) {
-        return new BrowserCachePolicyResult(System.currentTimeMillis() + this.getExpirationMinutes() * 60 * 1000);
+        return new BrowserCachePolicyResult(System.currentTimeMillis() + this.getExpirationMinutes() * MINUTE_IN_MILLIS);
     }
 
     public int getExpirationMinutes() {
