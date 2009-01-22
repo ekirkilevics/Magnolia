@@ -46,6 +46,7 @@ import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
 import info.magnolia.module.templating.setup.for4_0.DeprecateDialogPathAllModules;
 import info.magnolia.module.templating.setup.for4_0.RenamePropertyAllModulesNodeTask;
 import info.magnolia.module.templating.setup.for4_0.NestPropertiesAllModulesNodeTask;
+import org.apache.commons.collections.CollectionUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -82,7 +83,7 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new BootstrapSingleResource("Freemarker Model for RenderableDefinition", "Plugs in a specific Freemarker model for RenderableDefinition implementations.", "/mgnl-bootstrap/templating/config.server.rendering.freemarker.modelFactories.renderable.xml"))
                 .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates", "path", "templatePath"))
                 .addTask(new NestPropertiesAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates",
-                                Arrays.asList("name", "type", "path", "title", "description", "i18nBasename", "visible", "class"), "parameters", ItemType.CONTENTNODE.getSystemName()))
+                        getExcludedList() , "parameters", ItemType.CONTENTNODE.getSystemName()))
                 .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "Property templateType is no type.", "paragraphs", "templateType", "type"))
                 .addTask(new DeprecateDialogPathAllModules("Paragraphs configuration", "Property dialogPath changed to dialog."))
         );
@@ -101,6 +102,12 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
         tasks.add(orderBackwardCompatibilityFilter);
         // TODO : make sure the RenderingFilter is the last one ?
         return tasks;
+    }
+
+    protected List getExcludedList() {
+        List excluded = new ArrayList();
+        CollectionUtils.addAll(excluded, new String[]{"name", "type", "path", "title", "description", "i18nBasename", "visible", "class"});
+        return excluded;
     }
 
 }
