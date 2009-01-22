@@ -82,8 +82,8 @@ public class Store extends AbstractExecutor {
             };
 
             // setting Last-Modified to when this resource was stored in the cache. This value might get overriden by further filters or servlets.
-            final long modificationDate = System.currentTimeMillis();
-            responseWrapper.setDateHeader("Last-Modified", modificationDate);
+            final long cacheStorageDate = System.currentTimeMillis();
+            responseWrapper.setDateHeader("Last-Modified", cacheStorageDate);
             chain.doFilter(request, responseWrapper);
 
             if ((responseWrapper.getStatus() != HttpServletResponse.SC_MOVED_TEMPORARILY) && (responseWrapper.getStatus() != HttpServletResponse.SC_NOT_MODIFIED) && !responseWrapper.isError()) {
@@ -97,7 +97,7 @@ public class Store extends AbstractExecutor {
             }
 
             // change the status (if appropriate) before flushing the buffer.
-            if (!response.isCommitted() && !ifModifiedSince(request, modificationDate)) {
+            if (!response.isCommitted() && !ifModifiedSince(request, cacheStorageDate)) {
                 responseWrapper.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
                 
             }
