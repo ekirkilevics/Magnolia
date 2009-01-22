@@ -35,6 +35,7 @@ package info.magnolia.cms.core;
 
 import info.magnolia.cms.security.AccessDeniedException;
 import info.magnolia.cms.security.Permission;
+import info.magnolia.context.MgnlContext;
 
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -367,35 +368,41 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
         }
     }
 
+    public Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException {
+        if(this.getHierarchyManager().getName().equals(repositoryId)){
+            return getReferencedContent();
+        }
+        return getReferencedContent(MgnlContext.getHierarchyManager(repositoryId));
+    }
+
     public Content getReferencedContent() throws PathNotFoundException, RepositoryException  {
+        return getReferencedContent(this.getHierarchyManager());
+    }
+
+    protected Content getReferencedContent(HierarchyManager hm) throws PathNotFoundException, RepositoryException {
         // node containing this property
-        Node node = property.getParent();
-        Node refNode = null;
+        Content node = getParent();
+        Content refNode = null;
 
         if (property.getType() == PropertyType.REFERENCE) {
-            refNode = property.getNode();
+            refNode = hm.getContent(property.getNode().getPath());
         }
 
         else if (property.getType() == PropertyType.PATH || property.getType() == PropertyType.STRING) {
-            String path = this.getString();
+            String pathOrUUID = this.getString();
+            String path = pathOrUUID;
             // is this relative path?
-            if (path.startsWith("/")) {
-                Node root = node.getSession().getRootNode();
-                path = StringUtils.removeStart(path, "/");
-                if(root.hasNode(path)){
-                    refNode = root.getNode(path);
-                }
+            if (!path.startsWith("/")) {
+                path = node.getHandle() + "/" + path;
             }
-            else{
-                if(node.hasNode(path)){
-                    refNode = node.getNode(path);
-                }
+            if(hm.isExist(path)){
+                refNode = hm.getContent(path);
             }
 
             // we support uuids as strings
-            if (refNode == null && property.getType() == PropertyType.STRING && !StringUtils.contains(path, "/")) {
+            if (refNode == null && property.getType() == PropertyType.STRING && !StringUtils.contains(pathOrUUID, "/")) {
                 try {
-                    refNode = node.getSession().getNodeByUUID(path);
+                    refNode = hm.getContentByUUID(pathOrUUID);
                 }
                 catch (ItemNotFoundException e) {
                     // this is not an uuid
@@ -407,7 +414,7 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
             throw new ItemNotFoundException("can't find referenced node for value [" + getString() + "]");
         }
 
-        return new DefaultContent(refNode, getHierarchyManager());
+        return refNode;
     }
 
     public int getType() {
@@ -625,5 +632,4 @@ public class DefaultNodeData extends ContentHandler implements NodeData {
     public void setParent(Content parent) {
         this.parent = parent;
     }
-
 }

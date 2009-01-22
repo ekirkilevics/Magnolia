@@ -125,6 +125,11 @@ public interface NodeData extends Cloneable {
     Content getReferencedContent() throws RepositoryException, PathNotFoundException, RepositoryException;
 
     /**
+     * Same as {@link #getReferencedContent()} but achieves the referenced node from a different workspace
+     */
+    Content getReferencedContent(String repositoryId) throws PathNotFoundException, RepositoryException;
+
+    /**
      * Returns the <code>type</code> of this <code>NodeData</code>. One of:
      * <ul>
      * <li><code>PropertyType.STRING</code></li>
@@ -310,4 +315,5 @@ public interface NodeData extends Cloneable {
     Content getParent() throws AccessDeniedException, ItemNotFoundException, javax.jcr.AccessDeniedException, RepositoryException;
 
     HierarchyManager getHierarchyManager() throws RepositoryException;
+
 }
