@@ -39,6 +39,8 @@ import java.util.regex.Pattern;
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
+import org.apache.jackrabbit.spi.commons.conversion.MalformedPathException;
+import org.apache.jackrabbit.spi.commons.conversion.PathParser;
 
 import info.magnolia.cms.beans.config.ContentRepository;
 import info.magnolia.cms.beans.config.URI2RepositoryManager;
@@ -108,7 +110,15 @@ public class LinkFactory {
         NodeData nodeData = null;
         try {
             HierarchyManager hm = MgnlContext.getHierarchyManager(repository);
-            if (hm.isExist(path) && !hm.isNodeData(path)) {
+            boolean exists = false;
+            try {
+                PathParser.checkFormat(path);
+                exists = hm.isExist(path) && !hm.isNodeData(path);
+            } catch (MalformedPathException e) {
+                // we first check for path incl. the file name. While file name might not be necessarily part of the path, it might contain also non ascii chars. If that is the case, parsing exception will occur so we know that path with filename can't exist.
+                exists = false;
+            }
+            if (exists) {
                 node = hm.getContent(path);
             }
             if (node == null) {
