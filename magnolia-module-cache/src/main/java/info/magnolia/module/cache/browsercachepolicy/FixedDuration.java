@@ -38,7 +38,7 @@ import info.magnolia.module.cache.BrowserCachePolicyResult;
 import info.magnolia.module.cache.CachePolicyResult;
 
 /**
- * Uses a fix expiration time (in minutes).
+ * Uses a fix expiration time (in minutes). Default to 30 minutes.
  *
  * @author pbracher
  * @version $Revision$ ($Author$)
