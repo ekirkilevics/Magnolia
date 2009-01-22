@@ -34,6 +34,7 @@
 package info.magnolia.module.templating.setup;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.ItemType;
 import info.magnolia.module.DefaultModuleVersionHandler;
 import info.magnolia.module.InstallContext;
 import info.magnolia.module.delta.BootstrapSingleResource;
@@ -42,8 +43,12 @@ import info.magnolia.module.delta.CheckAndModifyPropertyValueTask;
 import info.magnolia.module.delta.DeltaBuilder;
 import info.magnolia.module.delta.OrderNodeBeforeTask;
 import info.magnolia.module.templating.setup.for3_5.IntroduceParagraphRenderers;
+import info.magnolia.module.templating.setup.for4_0.DeprecateDialogPathAllModules;
+import info.magnolia.module.templating.setup.for4_0.RenamePropertyAllModulesNodeTask;
+import info.magnolia.module.templating.setup.for4_0.NestPropertiesAllModulesNodeTask;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 
@@ -75,6 +80,11 @@ public class TemplatingModuleVersionHandler extends DefaultModuleVersionHandler 
                 .addTask(new BootstrapSingleResource("Freemarker Template Renderer", "Adds Freemarker template renderer configuration.", "/mgnl-bootstrap/templating/config.modules.templating.template-renderers.freemarker.xml"))
                 .addTask(new CheckAndModifyPropertyValueTask("Rendering filter", "The rendering filter is now part of the templating module.", ContentRepository.CONFIG, "/server/filters/cms/rendering", "class", "info.magnolia.cms.filters.RenderingFilter", "info.magnolia.module.templating.RenderingFilter"))
                 .addTask(new BootstrapSingleResource("Freemarker Model for RenderableDefinition", "Plugs in a specific Freemarker model for RenderableDefinition implementations.", "/mgnl-bootstrap/templating/config.server.rendering.freemarker.modelFactories.renderable.xml"))
+                .addTask(new RenamePropertyAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates", "path", "templatePath"))
+                .addTask(new NestPropertiesAllModulesNodeTask("Templates configuration", "Property path is now templatePath.", "templates",
+                                Arrays.asList("name", "type", "path", "title", "description", "i18nBasename", "visible", "class"), "parameters", ItemType.CONTENTNODE.getSystemName()))
+                .addTask(new RenamePropertyAllModulesNodeTask("Paragraphs configuration", "Property templateType is no type.", "paragraphs", "templateType", "type"))
+                .addTask(new DeprecateDialogPathAllModules("Paragraphs configuration", "Property dialogPath changed to dialog."))
         );
 
         // TODO 4.1
