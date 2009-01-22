@@ -69,13 +69,9 @@ public abstract class AbstractExecutor implements CachePolicyExecutor {
             long headerValue = request.getDateHeader("If-Modified-Since");
             if (headerValue != -1) {
                 // If an If-None-Match header has been specified, If-Modified-Since is ignored.
-                if (request.getHeader("If-None-Match") == null) {
-                    return true;
-                }
-
                 // The header defines only seconds, so we ignore the milliseconds.
                 final long cacheStorageTimestampSeconds = cacheStorageTimestamp - (cacheStorageTimestamp % 1000);
-                if (cacheStorageTimestamp > 0 && (cacheStorageTimestampSeconds <= headerValue)) {
+                if (request.getHeader("If-None-Match") == null && cacheStorageTimestamp > 0 && (cacheStorageTimestampSeconds <= headerValue)) {
                     return false;
                 }
             }
