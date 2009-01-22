@@ -124,12 +124,19 @@ public class WebXmlUtil {
     }
 
     /**
+     * @deprecated since 3.6.4, use checkFilterDispatchersConfiguration()
+     */
+    public boolean areFilterDispatchersConfiguredProperly(String filterClass, List mandatoryDispatchers, List optionalDispatchers) {
+        return checkFilterDispatchersConfiguration(filterClass, mandatoryDispatchers, optionalDispatchers) >= 0;
+    }
+
+    /**
      * Returns:
      * +1 if all mandatory dispatchers are present and no additional unsupported dispatcher is present, or this filter class isn't registered.
      * 0  if all mandatory dispatchers are present but additional unsupported dispatchers are present.
      * -1  if not all mandatory dispatchers are present.
      */
-    public int areFilterDispatchersConfiguredProperly(String filterClass, List mandatoryDispatchers, List optionalDispatchers) {
+    public int checkFilterDispatchersConfiguration(String filterClass, List mandatoryDispatchers, List optionalDispatchers) {
         final Element filterEl = getFilterElement(filterClass);
         if (filterEl != null) {
             final String filterName = filterEl.getTextNormalize();

@@ -95,7 +95,7 @@ public class WebXmlConditionsUtil {
         if (!webXmlUtil.isFilterRegistered(filterClass)) {
             conditions.add(new FalseCondition(conditionName, message));
         } else {
-            final int result = webXmlUtil.areFilterDispatchersConfiguredProperly(filterClass, Arrays.asList(new String[]{"REQUEST", "FORWARD"}), Collections.singletonList("ERROR"));
+            final int result = webXmlUtil.checkFilterDispatchersConfiguration(filterClass, Arrays.asList(new String[]{"REQUEST", "FORWARD"}), Collections.singletonList("ERROR"));
             if (result > 0) {
                 conditions.add(new TrueCondition(conditionName, message));
             } else if (result == 0) {
