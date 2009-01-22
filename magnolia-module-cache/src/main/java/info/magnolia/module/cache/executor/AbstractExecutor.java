@@ -64,14 +64,19 @@ public abstract class AbstractExecutor implements CachePolicyExecutor {
      * @param request The servlet request we are processing
      * @return boolean true if the server resource is newer
      */
-    protected boolean ifModifiedSince(HttpServletRequest request, long lastModified) {
+    protected boolean ifModifiedSince(HttpServletRequest request, long cacheStorageTimestamp) {
         try {
             long headerValue = request.getDateHeader("If-Modified-Since");
             if (headerValue != -1) {
                 // If an If-None-Match header has been specified, If-Modified-Since is ignored.
                 // The header defines only seconds, so we ignore the milliseconds.
-                final long lastModifiedRoundedToSeconds = lastModified - (lastModified % 1000);
-                if ((request.getHeader("If-None-Match") == null) && lastModified > 0 && (lastModifiedRoundedToSeconds >= headerValue)) {
+                final long cacheStorageTimestampSeconds = cacheStorageTimestamp - (cacheStorageTimestamp % 1000);
+
+                if (request.getHeader("If-None-Match") == null) {
+                    return true;
+                }
+
+                if (cacheStorageTimestamp > 0 && (cacheStorageTimestampSeconds <= headerValue)) {
                     return false;
                 }
             }
