@@ -39,7 +39,7 @@
 <br />
 <h4>New Search</h4>
 <div id="search" >
-    <form name="mgnlsearch" action="${pageContext.request.contextPath}/SearchResult.html" method="post">
+    <form name="mgnlsearch" action="${pageContext.request.contextPath}/searchResult.html" method="post">
       <input id="query" name="query" value="${query}" />
       <input type="submit" name="search" value="search" />
     </form>
