@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="products" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+<sv:node sv:name="products-freemarker" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:rep="internal" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fn="http://www.w3.org/2005/xpath-functions"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions"
@@ -11,7 +11,7 @@
     <sv:value>mix:lockable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>c6dd1d78-26de-42d2-9931-1943ae5c4945</sv:value>
+    <sv:value>c6dd1d78-26de-42d2-9931-1943ae5c4946</sv:value>
   </sv:property>
   <sv:property sv:name="text" sv:type="String">
     <sv:value>&lt;p&gt;&lt;em&gt;This sample demonstrates the use of VirtualURI definition. When you select a product, the same page is reloaded with your selection.&lt;/em&gt;&lt;/p&gt;</sv:value>
@@ -44,7 +44,7 @@
       <sv:value>mix:lockable</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>6e66fa63-e6d6-4fa8-8404-19e78c0069f6</sv:value>
+      <sv:value>6e66fa63-e6d6-4fa8-8404-19e78c0069f7</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">

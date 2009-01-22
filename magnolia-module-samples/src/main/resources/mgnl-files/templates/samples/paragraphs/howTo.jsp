@@ -21,7 +21,7 @@
   </ul>
 </div>
 <div id="search" >
-    <form name="mgnlsearch" action="${pageContext.request.contextPath}/searchResult.html" method="post">
+    <form name="mgnlsearch" action="${pageContext.request.contextPath}/searchResult-jsp.html" method="post">
       <input id="query" name="query" value="${query}" />
       <input type="submit" name="search" value="search" />
     </form>

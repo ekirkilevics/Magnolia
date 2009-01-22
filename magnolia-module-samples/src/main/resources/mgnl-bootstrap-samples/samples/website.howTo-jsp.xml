@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<sv:node sv:name="freemarker" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
+<sv:node sv:name="howTo-jsp" xmlns:jcr="http://www.jcp.org/jcr/1.0" xmlns:mgnl="http://www.magnolia.info/jcr/mgnl"
   xmlns:rep="internal" xmlns:mix="http://www.jcp.org/jcr/mix/1.0" xmlns:nt="http://www.jcp.org/jcr/nt/1.0"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:fn="http://www.w3.org/2005/xpath-functions"
   xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:fn_old="http://www.w3.org/2004/10/xpath-functions"
@@ -11,13 +11,13 @@
     <sv:value>mix:lockable</sv:value>
   </sv:property>
   <sv:property sv:name="jcr:uuid" sv:type="String">
-    <sv:value>4b900937-09ac-411c-ad69-7f28592b4af8</sv:value>
+    <sv:value>a970b6d3-00ff-427a-82c1-a897b174b110</sv:value>
   </sv:property>
   <sv:property sv:name="text" sv:type="String">
-    <sv:value>&lt;p&gt;This sample shows how to use freemarker template, how you can extend the Template class and add your own variables and how to define parameters that you can then use as request parameters.&lt;/p&gt;</sv:value>
+    <sv:value>&lt;p&gt;This sample shows how to use jsp template, how you can extend the Template class and add your own variables and how to define parameters that you can then use as request parameters.&lt;/p&gt;</sv:value>
   </sv:property>
   <sv:property sv:name="title" sv:type="String">
-    <sv:value>Sample using freemarker template</sv:value>
+    <sv:value>Sample using jsp template</sv:value>
   </sv:property>
   <sv:node sv:name="MetaData">
     <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -27,13 +27,13 @@
       <sv:value>superuser</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-      <sv:value>2009-01-15T13:53:01.698+01:00</sv:value>
+      <sv:value>2009-01-16T09:26:04.050+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-      <sv:value>2009-01-15T15:08:34.238+01:00</sv:value>
+      <sv:value>2009-01-16T10:21:43.131+01:00</sv:value>
     </sv:property>
     <sv:property sv:name="mgnl:template" sv:type="String">
-      <sv:value>samplesMainFTL</sv:value>
+      <sv:value>samplesMainJSP</sv:value>
     </sv:property>
   </sv:node>
   <sv:node sv:name="text_files">
@@ -44,14 +44,14 @@
       <sv:value>mix:lockable</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>a7cc7b5b-8b0a-4672-89f1-e6c85a369be2</sv:value>
+      <sv:value>d6fcdd77-9f8a-40ea-a018-56194f731993</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
         <sv:value>mgnl:metaData</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2009-01-15T13:56:35.229+01:00</sv:value>
+        <sv:value>2009-01-16T09:56:40.411+01:00</sv:value>
       </sv:property>
     </sv:node>
   </sv:node>
@@ -63,7 +63,7 @@
       <sv:value>mix:lockable</sv:value>
     </sv:property>
     <sv:property sv:name="jcr:uuid" sv:type="String">
-      <sv:value>c1485a83-f77d-418c-8dee-6eda85267b1d</sv:value>
+      <sv:value>89b3ccd9-a8f9-405d-ad6b-29ecd4b98301</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -73,10 +73,10 @@
         <sv:value>superuser</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-        <sv:value>2009-01-15T14:06:56.371+01:00</sv:value>
+        <sv:value>2009-01-16T10:14:19.199+01:00</sv:value>
       </sv:property>
       <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-        <sv:value>2009-01-15T15:08:34.238+01:00</sv:value>
+        <sv:value>2009-01-16T10:21:43.130+01:00</sv:value>
       </sv:property>
     </sv:node>
     <sv:node sv:name="0">
@@ -87,7 +87,7 @@
         <sv:value>mix:lockable</sv:value>
       </sv:property>
       <sv:property sv:name="jcr:uuid" sv:type="String">
-        <sv:value>4bd1cf15-feb4-4d54-b9fd-a1357ac409d8</sv:value>
+        <sv:value>14f7acde-bf26-4fc6-9169-474f53258096</sv:value>
       </sv:property>
       <sv:property sv:name="date" sv:type="Date">
         <sv:value>2009-01-03T23:00:00.000Z</sv:value>
@@ -96,7 +96,7 @@
         <sv:value>&lt;p&gt;&lt;strong&gt;Some&lt;/strong&gt; &lt;em&gt;formatted&lt;/em&gt; text.&lt;/p&gt;</sv:value>
       </sv:property>
       <sv:property sv:name="title" sv:type="String">
-        <sv:value>Sample using freemarker paragraph</sv:value>
+        <sv:value>Sample using jsp paragraph</sv:value>
       </sv:property>
       <sv:node sv:name="MetaData">
         <sv:property sv:name="jcr:primaryType" sv:type="Name">
@@ -106,13 +106,13 @@
           <sv:value>superuser</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-          <sv:value>2009-01-15T14:06:56.371+01:00</sv:value>
+          <sv:value>2009-01-16T10:14:19.201+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:lastmodified" sv:type="Date">
-          <sv:value>2009-01-15T15:08:34.194+01:00</sv:value>
+          <sv:value>2009-01-16T10:21:43.125+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="mgnl:template" sv:type="String">
-          <sv:value>samplesHowToFTL</sv:value>
+          <sv:value>samplesHowToJSP</sv:value>
         </sv:property>
       </sv:node>
       <sv:node sv:name="text_files">
@@ -123,14 +123,14 @@
           <sv:value>mix:lockable</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>2011b8f0-4ed0-4de6-aac2-1e2f885bb22a</sv:value>
+          <sv:value>43c9270e-0403-4194-af3e-f65adbcb2a23</sv:value>
         </sv:property>
         <sv:node sv:name="MetaData">
           <sv:property sv:name="jcr:primaryType" sv:type="Name">
             <sv:value>mgnl:metaData</sv:value>
           </sv:property>
           <sv:property sv:name="mgnl:creationdate" sv:type="Date">
-            <sv:value>2009-01-15T14:06:56.372+01:00</sv:value>
+            <sv:value>2009-01-16T10:14:19.202+01:00</sv:value>
           </sv:property>
         </sv:node>
       </sv:node>
@@ -139,22 +139,22 @@
           <sv:value>mgnl:resource</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:uuid" sv:type="String">
-          <sv:value>534d4573-c9ee-4504-afb5-c54e1291b74f</sv:value>
+          <sv:value>8a2288ac-5715-4f1f-b65a-11c04b538be1</sv:value>
         </sv:property>
         <sv:property sv:name="extension" sv:type="String">
           <sv:value>gif</sv:value>
         </sv:property>
         <sv:property sv:name="fileName" sv:type="String">
-          <sv:value>African Daisy</sv:value>
+          <sv:value>Spiked</sv:value>
         </sv:property>
         <sv:property sv:name="height" sv:type="String">
           <sv:value>48</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:data" sv:type="Binary">
-          <sv:value>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</sv:value>
+          <sv:value>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</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:lastModified" sv:type="Date">
-          <sv:value>2009-01-15T15:08:34.190+01:00</sv:value>
+          <sv:value>2009-01-16T10:14:19.213+01:00</sv:value>
         </sv:property>
         <sv:property sv:name="jcr:mimeType" sv:type="String">
           <sv:value>image/gif</sv:value>
@@ -163,7 +163,7 @@
           <sv:value/>
         </sv:property>
         <sv:property sv:name="size" sv:type="String">
-          <sv:value>2624</sv:value>
+          <sv:value>2863</sv:value>
         </sv:property>
         <sv:property sv:name="width" sv:type="String">
           <sv:value>48</sv:value>

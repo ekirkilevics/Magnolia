@@ -41,10 +41,10 @@
       <sv:value>info.magnolia.cms.beans.config.RegexpVirtualURIMapping</sv:value>
     </sv:property>
     <sv:property sv:name="fromURI" sv:type="String">
-      <sv:value>^/products/(.*)$</sv:value>
+      <sv:value>^/products-freemarker/(.*)$</sv:value>
     </sv:property>
     <sv:property sv:name="toURI" sv:type="String">
-      <sv:value>forward:/products.html?product=$1</sv:value>
+      <sv:value>forward:/products-freemarker.html?product=$1</sv:value>
     </sv:property>
     <sv:node sv:name="MetaData">
       <sv:property sv:name="jcr:primaryType" sv:type="Name">
