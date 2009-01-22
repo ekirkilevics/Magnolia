@@ -46,6 +46,7 @@ import info.magnolia.link.LinkException;
 
 import javax.jcr.RepositoryException;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -157,6 +158,17 @@ public class MagnoliaTemplatingUtilities {
             log.error("Can't resolve link with UUID {} because of {}.", uuid , ExceptionUtils.getRootCauseMessage(e));
             return null;
         }
+    }
+
+    /**
+     * Util method to create html attributes <code>name="value"</code>. If the value is empty an empty string will be returned.
+     * This is mainlly helpful to avoid empty attributes.
+     */
+    public String createAttribute(String name, String value){
+        if(StringUtils.isNotEmpty(value)){
+            return new StringBuffer().append(name).append("=\"").append(value).append("\"").toString();
+        }
+        return StringUtils.EMPTY;
     }
 
 
