@@ -92,7 +92,7 @@ public class CheckNodeTypesDefinition extends AbstractCondition {
                     Element supertypeElement = (Element) iterator2.next();
                     String supertype = supertypeElement.getText();
                     if(supertype.equals(ItemType.MIX_VERSIONABLE)){
-                        String msg = "Found mix:versionable as a supertype in the custom_nodetypes.xml. Please replace this with mix:referenceable and restart the server. Refer to Magnolia Documentation at  http://documentation.magnolia.info/releases/3-6.html for details.";
+                        String msg = "Found mix:versionable as a supertype in the custom_nodetypes.xml. Please replace this with mix:referenceable and restart the server. Refer to Magnolia Documentation at  http://documentation.magnolia-cms.com/releases/3-6.html for details.";
                         installContext.error(msg, new Exception(msg));
                         return false;
                     }

@@ -404,7 +404,7 @@ public class CacheImpl implements Cache {
     }
 
     /**
-     * override File.mkdir to solve race condition check http://jira.magnolia.info/browse/MAGNOLIA-1446
+     * override File.mkdir to solve race condition check http://jira.magnolia-cms.com/browse/MAGNOLIA-1446
      */
     private boolean mkdirs(File file) {
         if (file.exists()) {

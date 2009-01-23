@@ -7,8 +7,8 @@
   </bannerLeft>
   <body>
     <links>
-      <item name="magnolia.info" href="http://www.magnolia.info" />
-      <item name="wiki" href="http://wiki.magnolia.info" />
+      <item name="magnolia-cms.com" href="http://www.magnolia-cms.com" />
+      <item name="wiki" href="http://wiki.magnolia-cms.com" />
     </links>
     <menu name="Documentation">
       <item name="Home" href="index.html" />

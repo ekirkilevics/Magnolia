@@ -70,7 +70,7 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     public void testParsingLinksDoesNotTryToConvertExternalLinks() {
-        doTestParsingLinksShouldNotParse("http://www.magnolia.info");
+        doTestParsingLinksShouldNotParse("http://www.magnolia-cms.com");
         doTestParsingLinksShouldNotParse("http://foo.bar.org/File%20Box/Quick%20Reference%20Guides/EMR/upgrade_brief_2007.pdf");
         doTestParsingLinksShouldNotParse("http://foo.bar.org/File Box/Quick Reference Guides/EMR/upgrade_brief_2007.pdf");
     }
@@ -81,13 +81,13 @@ public class LinkUtilTest extends BaseLinkTest {
     }
 
     public void testParsingLinksShouldPreserverParameters() throws IOException, RepositoryException {
-        doTestParsingLinks("http://www.magnolia.info/foo?bar=baz", "http://www.magnolia.info/foo?bar=baz");
+        doTestParsingLinks("http://www.magnolia-cms.com/foo?bar=baz", "http://www.magnolia-cms.com/foo?bar=baz");
         doTestParsingLinks(UUID_PATTERN_SIMPLE + "?bar=baz", HREF_ABSOLUTE_LINK + "?bar=baz");
     }
 
     public void testParsingLinksShouldPreserveAnchors() throws IOException, RepositoryException {
         doTestParsingLinks(UUID_PATTERN_SIMPLE + "#bar", HREF_ABSOLUTE_LINK + "#bar");
-        doTestParsingLinks("http://www.magnolia.info/foo#bar", "http://www.magnolia.info/foo#bar");
+        doTestParsingLinks("http://www.magnolia-cms.com/foo#bar", "http://www.magnolia-cms.com/foo#bar");
     }
 
     private void doTestParsingLinksShouldNotParse(String href) {

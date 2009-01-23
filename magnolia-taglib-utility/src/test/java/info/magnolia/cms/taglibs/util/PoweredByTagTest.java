@@ -55,10 +55,10 @@ public class PoweredByTagTest extends MgnlTagTestCase {
         expect(licenseExtractor.get(LicenseFileExtractor.EDITION)).andReturn("Test Edition");
         expect(licenseExtractor.get(LicenseFileExtractor.VERSION_NUMBER)).andReturn("7.5.3");
         expect(licenseExtractor.get(LicenseFileExtractor.BUILD_NUMBER)).andReturn("30. July 2008");
-        expect(licenseExtractor.get(LicenseFileExtractor.PRODUCT_DOMAIN)).andReturn("www.magnolia.info");
+        expect(licenseExtractor.get(LicenseFileExtractor.PRODUCT_DOMAIN)).andReturn("www.magnolia-cms.com");
         expect(licenseExtractor.get(LicenseFileExtractor.PROVIDER)).andReturn("Magnolia International");
         expect(licenseExtractor.get(LicenseFileExtractor.PROVIDER_ADDRESS)).andReturn("Maiengasse 30 - 4054 Basel - Switzerland");
-        expect(licenseExtractor.get(LicenseFileExtractor.PROVIDER_EMAIL)).andReturn("info@magnolia.info");
+        expect(licenseExtractor.get(LicenseFileExtractor.PROVIDER_EMAIL)).andReturn("info@magnolia-cms.com");
         replay(licenseExtractor);
 
         FactoryUtil.setInstance(LicenseFileExtractor.class, licenseExtractor);
@@ -69,7 +69,7 @@ public class PoweredByTagTest extends MgnlTagTestCase {
         tag.setJspContext(pageContext);
         tag.doTag();
 
-        assertJspContent("Powered by <a href=\"http://www.magnolia.info\">Magnolia</a> Test Edition 7.5.3.");
+        assertJspContent("Powered by <a href=\"http://www.magnolia-cms.com\">Magnolia</a> Test Edition 7.5.3.");
     }
 
     public void testCanUseACustomPatternWithDifferentParameters() throws Exception {
@@ -78,7 +78,7 @@ public class PoweredByTagTest extends MgnlTagTestCase {
         tag.setJspContext(pageContext);
         tag.doTag();
 
-        assertJspContent("I'm using version 7.5.3 of the Test Edition of Magnolia which was built on 30. July 2008 by Magnolia International. These guys have their offices at Maiengasse 30 - 4054 Basel - Switzerland, and can be reached by email at info@magnolia.info. Their wonderful website is at http://www.magnolia.info !");
+        assertJspContent("I'm using version 7.5.3 of the Test Edition of Magnolia which was built on 30. July 2008 by Magnolia International. These guys have their offices at Maiengasse 30 - 4054 Basel - Switzerland, and can be reached by email at info@magnolia-cms.com. Their wonderful website is at http://www.magnolia-cms.com !");
     }
 
     protected HierarchyManager initWebsiteData() throws IOException, RepositoryException {

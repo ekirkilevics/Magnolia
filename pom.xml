@@ -16,15 +16,15 @@ Content Management System developed by
 Magnolia International, based on the standard API
 for Java Content Repositories (JCR).
   </description>
-  <url>http://www.magnolia.info</url>
+  <url>http://www.magnolia-cms.com</url>
   <properties>
     <magnoliaEdition>Community Edition</magnoliaEdition>
     <magnoliaLicenseStyle>dual</magnoliaLicenseStyle>
-    <documentationURL>http://documentation.magnolia.info/release/3-6-2.html</documentationURL>
+    <documentationURL>http://documentation.magnolia-cms.com/release/4-0.html</documentationURL>
   </properties>
   <issueManagement>
     <system>Jira</system>
-    <url>http://jira.magnolia.info/browse/MAGNOLIA</url>
+    <url>http://jira.magnolia-cms.com/browse/MAGNOLIA</url>
   </issueManagement>
   <licenses>
     <license>
@@ -39,7 +39,7 @@ for Java Content Repositories (JCR).
   <ciManagement>
     <notifiers>
       <notifier>
-        <address>dev-list@magnolia.info</address>
+        <address>dev-list@magnolia-cms</address>
       </notifier>
     </notifiers>
   </ciManagement>
@@ -47,43 +47,43 @@ for Java Content Repositories (JCR).
   <mailingLists>
     <mailingList>
       <name>Magnolia developer List</name>
-      <subscribe>dev-list-subscribe@magnolia.info</subscribe>
-      <unsubscribe>dev-list-off@magnolia.info</unsubscribe>
-      <archive>http://webmail.magnolia.info/Lists/dev-list/List.html</archive>
+      <subscribe>dev-list-subscribe@magnolia-cms.com</subscribe>
+      <unsubscribe>dev-list-unsubscribe@magnolia-cms.com</unsubscribe>
+      <archive>http://www.nabble.com/Magnolia---Dev-f650.html</archive>
     </mailingList>
     <mailingList>
       <name>Magnolia user List</name>
-      <subscribe>user-list-subscribe@magnolia.info</subscribe>
-      <unsubscribe>user-list-off@magnolia.info</unsubscribe>
-      <archive>http://webmail.magnolia.info/Lists/user-list/List.html</archive>
+      <subscribe>user-list-subscribe@magnolia-cms.com</subscribe>
+      <unsubscribe>user-list-unsubscribe@magnolia-cms.com</unsubscribe>
+      <archive>http://www.nabble.com/Magnolia---User-f646.html</archive>
     </mailingList>
   </mailingLists>
   <developers>
     <developer>
       <id>philipp</id>
       <name>Philipp Bracher</name>
-      <email>philipp.bracher(at)magnolia.info</email>
+      <email>philipp.bracher(at)magnolia-cms.com</email>
       <organization>Magnolia Intl</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
       <id>gjoseph</id>
       <name>Grégory Joseph</name>
-      <email>gregory.joseph(at)magnolia.info</email>
+      <email>gregory.joseph(at)magnolia-cms.com</email>
       <organization>Magnolia Intl</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
       <id>had</id>
       <name>Jan Haderka</name>
-      <email>jan.haderka(at)magnolia.info</email>
+      <email>jan.haderka(at)magnolia-cms.com</email>
       <organization>Magnolia Intl</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
       <id>scharles</id>
       <name>Sameer Charles</name>
-      <email>sameer.charles(at)magnolia.info</email>
+      <email>sameer.charles(at)magnolia-cms.com</email>
       <organization>Magnolia Intl</organization>
       <timezone>+1</timezone>
     </developer>
@@ -97,21 +97,21 @@ for Java Content Repositories (JCR).
     <developer>
       <id>vsteller</id>
       <name>Vivian Steller</name>
-      <email>vivian.steller(at)magnolia.info</email>
+      <email>vivian.steller(at)magnolia-cms.com</email>
       <organization>Magnolia Intl</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
       <id>bkraft</id>
       <name>Boris Kraft</name>
-      <email>boris.kraft(at)magnolia.info</email>
+      <email>boris.kraft(at)magnolia-cms.com</email>
       <organization>Magnolia Intl</organization>
       <timezone>+1</timezone>
     </developer>
     <developer>
       <id>pmangold</id>
       <name>Pascal Mangold</name>
-      <email>pascal.mangold(at)magnolia.info</email>
+      <email>pascal.mangold(at)magnolia-cms.com</email>
       <organization>Magnolia Intl</organization>
       <timezone>+1</timezone>
     </developer>
@@ -119,15 +119,15 @@ for Java Content Repositories (JCR).
   <contributors>
     <contributor>
       <name>Vinzenz Wyser</name>
-      <email>vinzenz.wyser(at)magnolia.info</email>
+      <email>vinzenz.wyser(at)magnolia-cms.com</email>
       <organization>Magnolia Intl</organization>
       <timezone>+1</timezone>
     </contributor>
   </contributors>
   <scm>
-    <connection>scm:svn:http://svn.magnolia.info/svn/community/magnolia/trunk</connection>
-    <developerConnection>scm:svn:http://svn.magnolia.info/svn/community/magnolia/trunk</developerConnection>
-    <url>http://svn.magnolia.info/view/community/magnolia/trunk</url>
+    <connection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/trunk</connection>
+    <developerConnection>scm:svn:http://svn.magnolia-cms.com/svn/community/magnolia/trunk</developerConnection>
+    <url>http://svn.magnolia-cms.com/view/community/magnolia/trunk</url>
   </scm>
   <profiles>
     <profile>
@@ -515,9 +515,9 @@ for Java Content Repositories (JCR).
   </dependencyManagement>
   <distributionManagement>
     <site>
-      <id>dev.magnolia.info</id>
-      <name>dev.magnolia.info</name>
-      <url>scp://dev.magnolia.info/sites/dev/ref/${project.version}</url>
+      <id>dev.magnolia-cms.com</id>
+      <name>dev.magnolia-cms.com</name>
+      <url>scp://dev.magnolia-cms.com/sites/dev/ref/${project.version}</url>
     </site>
     <downloadUrl>http://prdownloads.sourceforge.net/magnolia</downloadUrl>
   </distributionManagement>
@@ -525,7 +525,7 @@ for Java Content Repositories (JCR).
     <!-- just a little trick for folks who don't have our parent pom in their local repo yet -->
     <repository>
       <id>magnolia</id>
-      <url>http://repo.magnolia.info/m2</url>
+      <url>http://repo.magnolia-cms.com/m2</url>
       <snapshots>
         <enabled>false</enabled>
       </snapshots>

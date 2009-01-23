@@ -212,7 +212,7 @@ public class CmsFunctions {
 
     /**
      * Function to iterate over a node Data that has "checkbox" as control type, for example.
-     * See http://jira.magnolia.info/browse/MAGNOLIA-1969
+     * See http://jira.magnolia-cms.com/browse/MAGNOLIA-1969
      */
     public static Collection nodeDataIterator(Content c, String collection) {
         try {

@@ -31,7 +31,7 @@ Installing eclipse and required plugins
 
 Checkout magnolia from subversion and create eclipse projects
 
-   * You need to checkout the whole http://svn.magnolia.info/svn/community/magnolia/trunk directory from outside eclipse (you can't
+   * You need to checkout the whole http://svn.magnolia-cms.com/svn/community/magnolia/trunk directory from outside eclipse (you can't
      use the SVN repository exploring perspective since you are not checking out single eclipse projects, sorry) and
      place it outside the eclipse workspace (important)
 

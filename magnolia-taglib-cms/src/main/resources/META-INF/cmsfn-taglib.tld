@@ -5,7 +5,7 @@
   <display-name>cms functions</display-name>
   <tlib-version>3.5</tlib-version>
   <short-name>cmsfn</short-name>
-  <uri>http://www.magnolia.info/tlds/cmsfn-taglib.tld</uri>
+  <uri>http://www.magnolia-cms.com/tlds/cmsfn-taglib.tld</uri>
   <function>
     <description>Returns the current active page (can be set using the loadPage tag).</description>
     <name>currentPage</name>
@@ -109,7 +109,7 @@
   <function>
     <description>
       Function to iterate over a node Data that has "checkbox" as control type, for example.
-      See http://jira.magnolia.info/browse/MAGNOLIA-1969
+      See http://jira.magnolia-cms.com/browse/MAGNOLIA-1969
     </description>
     <name>nodeDataIterator</name>
     <function-class>info.magnolia.cms.taglibs.CmsFunctions</function-class>

@@ -83,7 +83,7 @@ public class CheckNodesForMixVersionable extends AbstractTask {
                 NodeType[] nt = ((Content) iter.next()).getMixinNodeTypes();
                 for (int i = 0; i < nt.length; i++) {
                     if ("mix:versionable".equals(nt[i].getName())) {
-                        installContext.warn("There are nodes in your repository that contain unnecessary mix:versionable. Please replace all mix:versionable with mix:referenceable supertype to achieve optimal repository performance. Refer to Magnolia Documentation at http://documentation.magnolia.info/releases/3-6.html for details. An executable is provided for Enterprise Customers.");
+                        installContext.warn("There are nodes in your repository that contain unnecessary mix:versionable. Please replace all mix:versionable with mix:referenceable supertype to achieve optimal repository performance. Refer to Magnolia Documentation at http://documentation.magnolia-cms.com/releases/3-6.html for details. An executable is provided for Enterprise Customers.");
                         return;
                     }
                 }
