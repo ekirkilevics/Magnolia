@@ -139,11 +139,13 @@ public class WorkflowModuleVersionHandler extends DefaultModuleVersionHandler {
                         new AddUserToGroupTask("Sample user", "patrick", "publishers"))
                 )));
 
-        register(DeltaBuilder.update("4.0", "")
-                .addTask(new AddSystemUserToGroupTask("Superuser", "publishers"))
+        register(DeltaBuilder.update("3.6.4", "")
                 .addTask(new ArrayDelegateTask("Update tree configuration",
                         new BootstrapSingleResource("Update tree configuration", "Adds Store workspace tree configuration.", "/mgnl-bootstrap/workflow/config.modules.adminInterface.trees.Store.xml"),
                         new BootstrapSingleResource("Update tree configuration", "Adds Expressions workspace tree configuration.", "/mgnl-bootstrap/workflow/config.modules.adminInterface.trees.Expressions.xml")))
+                );
+        register(DeltaBuilder.update("4.0", "")
+                .addTask(new AddSystemUserToGroupTask("Superuser", "publishers"))
                 );
     }
 
