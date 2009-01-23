@@ -70,7 +70,7 @@ public class Template extends AbstractRenderable {
      * @deprecated since 4.0. use getTemplatePath() instead
      */
     public String getPath() {
-        DeprecationUtil.isDeprecated("The 'path' property is deprecated: use the templatePath property instead. (set to value: " + getTemplatePath() + ")");
+        DeprecationUtil.isDeprecated("The 'path' property is deprecated: use the templatePath property instead. (current value: " + getTemplatePath() + ")");
         return getTemplatePath();
     }
 
@@ -114,7 +114,7 @@ public class Template extends AbstractRenderable {
      */
     public void setPath(String path) {
         // log message can only output the templatePath, as there is not guarantee the name or content name have been set already
-        DeprecationUtil.isDeprecated("The 'path' property is deprecated: use the templatePath property instead. (" + path + ")");
+        DeprecationUtil.isDeprecated("The 'path' property is deprecated: use the templatePath property instead. (setting to value: " + path + ")");
         setTemplatePath(path);
     }
 
