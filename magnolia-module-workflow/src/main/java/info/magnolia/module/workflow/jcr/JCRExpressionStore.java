@@ -121,7 +121,6 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             log.error("storeExpression() store exception failed", e);
             try {
                 if (hm.hasPendingChanges()) {
-                    log.error("GOTCHA GOTCHA GOTCHA!!!!", e);
                     hm.refresh(true);
                 }
             } catch (RepositoryException e1) {
