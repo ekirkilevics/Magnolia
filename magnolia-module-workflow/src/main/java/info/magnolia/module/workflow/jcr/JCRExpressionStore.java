@@ -100,9 +100,10 @@ public class JCRExpressionStore extends AbstractExpressionStore {
      */
     public synchronized void storeExpression(final FlowExpression fe) throws PoolException {
         boolean release = !useLifeTimeJCRSession && !MgnlContext.hasInstance();
+        HierarchyManager hm = null;
         try {
-            HierarchyManager hm = getHierarchyManager();
-            final Content cExpression = findExpression(fe, hm);
+            hm = getHierarchyManager();
+            final Content cExpression = findOrCreateExpression(fe, hm);
 
             log.debug("storeExpression() handle is " + cExpression.getHandle());
 
@@ -118,6 +119,14 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             hm.save();
         } catch (Exception e) {
             log.error("storeExpression() store exception failed", e);
+            try {
+                if (hm.hasPendingChanges()) {
+                    log.error("GOTCHA GOTCHA GOTCHA!!!!", e);
+                    hm.refresh(true);
+                }
+            } catch (RepositoryException e1) {
+                log.error("Corrupted HM during WKF access", e);
+            }
             throw new PoolException("storeExpression() store exception failed", e);
         } finally {
             if (release) {
@@ -133,7 +142,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         boolean release = !useLifeTimeJCRSession && !MgnlContext.hasInstance();
         try {
             final HierarchyManager hm = getHierarchyManager();
-            final Content cExpression = findExpression(fe, hm);
+            final Content cExpression = findOrCreateExpression(fe, hm);
 
             if (cExpression != null) {
                 if (cleanUp) {
@@ -180,16 +189,19 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
             if (cExpression != null) {
                 final FlowExpression expression = deserializeExpressionAsXml(cExpression);
-                expression.setApplicationContext(getContext());
-                return expression;
+                if (expression != null) {
+                    expression.setApplicationContext(getContext());
+                    return expression;
+                }
             }
         } catch (final Exception e) {
-            log.debug("loadExpression() failed for " + fei.asStringId(), e);
+            log.error("loadExpression() failed for " + fei.asStringId(), e);
 
             throw new PoolException("loadExpression() failed for " + fei.asStringId(), e);
         }
 
-        log.error("loadExpression() " + "didn't find expression " + fei.asStringId() + " in the repository");
+        // this is normal after clean installation or manual cleanup of the expressions workspace
+        log.info("Expected expression " + fei.asStringId() + " was not found in the repository.");
 
         throw new PoolException("loadExpression() " + "didn't find expression " + fei.asStringId() + " in the repository");
     }
@@ -243,8 +255,12 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         return buffer.toString();
     }
 
-    private Content findExpression(final FlowExpression fe, HierarchyManager hm) throws Exception {
-        return findExpression(fe.getId(), hm);
+    private Content findOrCreateExpression(final FlowExpression fe, HierarchyManager hm) throws Exception {
+        Content content = findExpression(fe.getId(), hm);
+        if (content == null) {
+            content = ContentUtil.createPath(hm, toXPathFriendlyString(fe.getId()), ItemType.EXPRESSION);
+        }
+        return content;
     }
 
     private Content findExpression(final FlowExpressionId fei, HierarchyManager hm) throws Exception {
@@ -257,7 +273,7 @@ public class JCRExpressionStore extends AbstractExpressionStore {
         if (hm.isExist(path)) {
             return hm.getContent(path);
         } else {
-            return ContentUtil.createPath(hm, path, ItemType.EXPRESSION);
+            return null;
         }
     }
 
@@ -285,7 +301,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
                 // If this happens it might be related to MAGNOLIA-2172
                 // the methods of the expression store are synchronized so this
                 // should not happen!
-                log.warn("The workflow expression session has pending changes. Will clean the session", new Exception());
+                log.warn("The workflow expression session has pending changes while " + (useLifeTimeJCRSession ? "" : "not ") + "using Life Time session. Will clean the session",
+                        new Exception());
                 hm.refresh(true);
             }
         } catch (RepositoryException e) {
