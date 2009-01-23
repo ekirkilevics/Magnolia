@@ -96,6 +96,12 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapSingleResource("Javascript messages", "Adds page to provide i18n messages in javascript.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.messages.xml"))
         );
 
+        register(DeltaBuilder.update("3.6.4", "")
+                .addTask(new ArrayDelegateTask("Update groups tree",new MoveNodeTask("Update groups tree", "Updates incorrectly named usergroup tree",ContentRepository.CONFIG, "/modules/adminInterface/trees/groups", "/modules/adminInterface/trees/usergroups", false),
+                new CheckAndModifyPropertyValueTask("Update Group tree reference", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/config/menu/security/groups", "onclick", "MgnlAdminCentral.showTree('groups')", "MgnlAdminCentral.showTree('usergroups')"),
+                new CheckAndModifyPropertyValueTask("Update User dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/useredit/tabUser/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');"),
+                new CheckAndModifyPropertyValueTask("Update Group dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/groupedit/tabGroup/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');")))
+        );
         final String pathToDeploymentUtilsPage = "/modules/adminInterface/pages/deploymentUtils";
         register(DeltaBuilder.update("4.0", "")
                 .addTask(new PropertyValueDelegateTask("Unused page", "Removes the now unused \"deployment\" page.", ContentRepository.CONFIG,
@@ -108,10 +114,6 @@ public class AdminModuleVersionHandler extends DefaultModuleVersionHandler {
                 .addTask(new BootstrapSingleResource("Paragraph edit dialog", "The paragraph edition dialog is now a regular dialog.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.dialogs.editParagraph.xml"))
                 .addTask(new BootstrapSingleResource("Quickstart page", "The to be displayed as default in case there are no templates defined yet.", "/mgnl-bootstrap/adminInterface/config.modules.adminInterface.pages.quickstart.xml"))
                 .addTask(setDefaultPublicURI)
-                .addTask(new ArrayDelegateTask("Update groups tree",new MoveNodeTask("Update groups tree", "Updates incorrectly named usergroup tree",ContentRepository.CONFIG, "/modules/adminInterface/trees/groups", "/modules/adminInterface/trees/usergroups", false),
-                new CheckAndModifyPropertyValueTask("Update Group tree reference", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/config/menu/security/groups", "onclick", "MgnlAdminCentral.showTree('groups')", "MgnlAdminCentral.showTree('usergroups')"),
-                new CheckAndModifyPropertyValueTask("Update User dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/useredit/tabUser/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');"),
-                new CheckAndModifyPropertyValueTask("Update Group dialog", "Updates reference to new usergroups tree name.", ContentRepository.CONFIG, "/modules/adminInterface/dialogs/groupedit/tabGroup/groups", "chooseOnclick", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'groups');", "mgnlOpenTreeBrowserWithControl($('${prefix}'), 'usergroups');")))
         );
     }
 
