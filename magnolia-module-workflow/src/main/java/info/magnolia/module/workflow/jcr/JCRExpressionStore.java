@@ -68,10 +68,9 @@ import org.jdom.input.SAXBuilder;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
 /**
  * The JCR implementation of the expression store.
- *
+ * 
  * @author Jackie Ju
  * @author Nicolas Modrzyk
  * @author John Mettraux
@@ -113,17 +112,15 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
             cExpression.createNodeData(WorkflowConstants.NODEDATA_ID, vf.createValue(value));
 
-            //serializeExpressionWithBeanCoder(ct, fe);
+            // serializeExpressionWithBeanCoder(ct, fe);
             serializeExpressionAsXml(cExpression, fe);
 
             hm.save();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("storeExpression() store exception failed", e);
             throw new PoolException("storeExpression() store exception failed", e);
-        }
-        finally{
-            if(release){
+        } finally {
+            if (release) {
                 MgnlContext.release();
             }
         }
@@ -139,23 +136,20 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             final Content cExpression = findExpression(fe, hm);
 
             if (cExpression != null) {
-                if(cleanUp){
-                    ContentUtil.deleteAndRemoveEmptyParents(cExpression,1);
-                }
-                else{
+                if (cleanUp) {
+                    ContentUtil.deleteAndRemoveEmptyParents(cExpression, 1);
+                } else {
                     cExpression.delete();
                 }
                 hm.save();
             } else {
                 log.info("unstoreExpression() " + "didn't find content node for fe " + fe.getId().toParseableString());
             }
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             log.error("unstoreExpression() unstore exception failed", e);
             throw new PoolException("unstoreExpression() unstore exception failed", e);
-        }
-        finally{
-            if(release){
+        } finally {
+            if (release) {
                 MgnlContext.release();
             }
         }
@@ -171,8 +165,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             log.error("contentIterator() failed to set up an iterator", t);
         }
 
-        // TODO : does this need Iterator need to be modifiable? otherwise just return Collections.emptyList()
-        //return null;
+        // TODO : does this need Iterator need to be modifiable? otherwise just
+        // return Collections.emptyList()
+        // return null;
         return new ArrayList(0).iterator();
     }
 
@@ -280,34 +275,32 @@ public class JCRExpressionStore extends AbstractExpressionStore {
 
     protected HierarchyManager getHierarchyManager() {
         HierarchyManager hm;
-        if(useLifeTimeJCRSession){
+        if (useLifeTimeJCRSession) {
             hm = LifeTimeJCRSessionUtil.getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
-        }
-        else{
-            hm =  MgnlContext.getSystemContext().getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
+        } else {
+            hm = MgnlContext.getSystemContext().getHierarchyManager(WorkflowConstants.WORKSPACE_EXPRESSION);
         }
         try {
-            if(hm.hasPendingChanges()){
+            if (hm.hasPendingChanges()) {
                 // If this happens it might be related to MAGNOLIA-2172
-                // the methods of the expression store are synchronized so this should not happen!
+                // the methods of the expression store are synchronized so this
+                // should not happen!
                 log.warn("The workflow expression session has pending changes. Will clean the session", new Exception());
                 hm.refresh(true);
             }
-        }
-        catch (RepositoryException e) {
+        } catch (RepositoryException e) {
             // should really not happen
-            log.error("Can't check/refresh worflow expression session.",e);
+            log.error("Can't check/refresh worflow expression session.", e);
         }
         return hm;
     }
 
     /**
-     * 'lightweight' storeIterator. The previous version were stuffing all
-     * the expression within a collection and
-     * returning an iterator on it.
+     * 'lightweight' storeIterator. The previous version were stuffing all the
+     * expression within a collection and returning an iterator on it.
      * <p>
-     * The remaining question is : what's behind
-     * Magnolia's Content.iterator() method ?
+     * The remaining question is : what's behind Magnolia's Content.iterator()
+     * method ?
      */
     protected final class StoreIterator implements Iterator {
         private final Class assignClass;
@@ -384,7 +377,8 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             throw new UnsupportedOperationException();
         }
 
-        // TODO : this was copied from ExpoolUtils, adding a fix for MAGNOLIA-1131
+        // TODO : this was copied from ExpoolUtils, adding a fix for
+        // MAGNOLIA-1131
         private boolean isAssignableFromClass(final FlowExpression fe, final Class expClass) {
             if (expClass == null) {
                 return true;
@@ -395,7 +389,9 @@ public class JCRExpressionStore extends AbstractExpressionStore {
             if (fe instanceof RawExpression) {
                 c = fe.getExpressionClass();
                 if (c == null) {
-                    // TODO : fe.getDefinitionName() does not return the xml's root name as I expected ... (but its name attribute instead)
+                    // TODO : fe.getDefinitionName() does not return the xml's
+                    // root name as I expected ... (but its name attribute
+                    // instead)
                     log.warn("Skipping expression " + fe.getId() + " (" + ((RawExpression) fe).getDefinitionName() + ")");
                     return false;
                 }
