@@ -119,7 +119,6 @@ public class LinkUtil {
                 try {
                     Link link = LinkFactory.parseLink(href);
                     String linkStr = LinkFactory.toPattern(link);
-                    System.out.println(linkStr);
                     linkStr = StringUtils.replace(linkStr, "\\", "\\\\");
                     linkStr = StringUtils.replace(linkStr, "$", "\\$");
                     matcher.appendReplacement(res, "$1" + linkStr + "$5");
