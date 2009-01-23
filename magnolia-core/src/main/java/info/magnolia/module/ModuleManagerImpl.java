@@ -74,7 +74,7 @@ import java.util.Map;
 
 /**
  * TODO where do we setup ModuleRegistry ?
- * TODO : factor out into simpler units
+ * TODO : factor out into simpler units.
  *
  * @author gjoseph
  * @version $Revision: $ ($Author: $)
@@ -288,6 +288,20 @@ public class ModuleManagerImpl implements ModuleManager {
                 final String moduleName = moduleDefinition.getName();
                 log.debug("Initializing module {}", moduleName);
 
+                // TODO : why would this return anything else than null ?
+                Object moduleInstance = registry.getModuleInstance(moduleName);
+                System.out.println("moduleInstance = " + moduleInstance);
+
+                if (moduleInstance == null && moduleClassName != null) {
+                    try {
+                        moduleInstance = ClassUtil.newInstance(moduleClassName);
+                    } catch (Throwable t) {
+                        log.error("Can't instanciate " + moduleClassName + " for module " + moduleName + " : " + t.getClass() + " : " + t.getMessage(), t);
+                        continue;
+                    }
+                    registry.registerModuleInstance(moduleName, moduleInstance);
+                }
+
                 // TODO - isn't all this code only there to support "old style" modules ?
                 final Map moduleProperties = new HashMap();
                 moduleProperties.put("moduleDefinition", moduleDefinition);
@@ -301,13 +315,6 @@ public class ModuleManagerImpl implements ModuleManager {
                         final Content configNode = new SystemContentWrapper(moduleNode.getContent("config"));
                         moduleProperties.put("configNode", configNode);
                     }
-                }
-
-                Object moduleInstance = registry.getModuleInstance(moduleName);
-
-                if (moduleInstance == null && moduleClassName != null) {
-                    moduleInstance = ClassUtil.newInstance(moduleClassName);
-                    registry.registerModuleInstance(moduleName, moduleInstance);
                 }
 
                 if (moduleInstance != null) {
@@ -339,15 +346,6 @@ public class ModuleManagerImpl implements ModuleManager {
             lifecycleContext.start(moduleNodes);
         }
         catch (RepositoryException e) {
-            throw new RuntimeException(e); // TODO
-        }
-        catch (IllegalAccessException e) {
-            throw new RuntimeException(e); // TODO
-        }
-        catch (ClassNotFoundException e) {
-            throw new RuntimeException(e); // TODO
-        }
-        catch (InstantiationException e) {
             throw new RuntimeException(e); // TODO
         }
     }
