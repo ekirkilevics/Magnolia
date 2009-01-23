@@ -34,13 +34,16 @@
 package info.magnolia.link;
 
 import info.magnolia.cms.beans.config.ContentRepository;
+import info.magnolia.cms.core.Content;
 import info.magnolia.cms.util.FactoryUtil;
+import info.magnolia.context.MgnlContext;
 
 import javax.jcr.RepositoryException;
 
 import org.apache.commons.lang.StringUtils;
 
 import java.io.IOException;
+import java.text.MessageFormat;
 
 /**
  * @author gjoseph
@@ -56,7 +59,12 @@ public class LinkUtilTest extends BaseLinkTest {
         String res = LinkUtil.convertAbsoluteLinksToUUIDs(HTML_WITH_ABSOLUTE_LINK);
         assertEquals(HTML_WITH_UUIDS, res);
     }
-
+    
+    public void testParsingLinksWithBackslashInQueryParam() throws IOException, RepositoryException {
+        String res = LinkUtil.convertAbsoluteLinksToUUIDs("look <a href=\"/parent/sub.html?p4if_p=\\File%20Box\\Quick%20Reference%20Guides\\Strategy%20Management\\WIT\">here</a> for results");
+        assertEquals("look <a href=\"${link:{uuid:{2},repository:{website},handle:{/parent/sub},nodeData:{},extension:{html}}}?p4if_p=\\File%20Box\\Quick%20Reference%20Guides\\Strategy%20Management\\WIT\">here</a> for results", res);
+    }
+    
     public void testParsingLinksShouldNotTouchNonContentAbsoluteLinks() throws IOException, RepositoryException {
         doTestParsingLinksShouldNotParse("/somthing/else.html");
     }
@@ -194,4 +202,5 @@ public class LinkUtilTest extends BaseLinkTest {
         String absolutePath = LinkFactory.createLink(ContentRepository.WEBSITE, "2").getHandle();
         assertEquals("/parent/sub", absolutePath);
     }
+
 }

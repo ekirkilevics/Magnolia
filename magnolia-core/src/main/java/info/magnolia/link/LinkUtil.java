@@ -118,7 +118,11 @@ public class LinkUtil {
             if (!isExternalLinkOrAnchor(href)) {
                 try {
                     Link link = LinkFactory.parseLink(href);
-                    matcher.appendReplacement(res, "$1" + StringUtils.replace(LinkFactory.toPattern(link), "$", "\\$") + "$5");
+                    String linkStr = LinkFactory.toPattern(link);
+                    System.out.println(linkStr);
+                    linkStr = StringUtils.replace(linkStr, "\\", "\\\\");
+                    linkStr = StringUtils.replace(linkStr, "$", "\\$");
+                    matcher.appendReplacement(res, "$1" + linkStr + "$5");
                 }
                 catch (info.magnolia.link.LinkException e) {
                     // this is expected if the link is an absolute path to something else
