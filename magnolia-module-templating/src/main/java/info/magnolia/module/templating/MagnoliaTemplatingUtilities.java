@@ -38,6 +38,7 @@ import info.magnolia.cms.beans.config.ServerConfiguration;
 import info.magnolia.cms.core.Content;
 import info.magnolia.cms.core.NodeData;
 import info.magnolia.cms.i18n.I18nContentWrapper;
+import info.magnolia.cms.util.FactoryUtil;
 import info.magnolia.cms.util.InheritanceContentWrapper;
 import info.magnolia.cms.util.SiblingsHelper;
 import info.magnolia.context.MgnlContext;
@@ -64,6 +65,10 @@ import java.io.Writer;
 public class MagnoliaTemplatingUtilities {
 
     private static final Logger log = LoggerFactory.getLogger(MagnoliaTemplatingUtilities.class);
+
+    public static MagnoliaTemplatingUtilities getInstance(){
+        return (MagnoliaTemplatingUtilities) FactoryUtil.getSingleton(MagnoliaTemplatingUtilities.class);
+    }
 
     /**
      * Returns an instance of SiblingsHelper for the given node.

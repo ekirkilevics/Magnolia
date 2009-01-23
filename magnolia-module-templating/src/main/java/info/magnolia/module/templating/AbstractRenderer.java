@@ -139,7 +139,7 @@ public abstract class AbstractRenderer {
     }
 
     protected MagnoliaTemplatingUtilities getMagnoliaTemplatingUtilities() {
-        return new MagnoliaTemplatingUtilities();
+        return MagnoliaTemplatingUtilities.getInstance();
     }
 
     /**
