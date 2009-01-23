@@ -43,7 +43,7 @@
     <sv:property sv:name="i18nBasename" sv:type="String">
       <sv:value>info.magnolia.module.samples.messages</sv:value>
     </sv:property>
-    <sv:property sv:name="path" sv:type="String">
+    <sv:property sv:name="templatePath" sv:type="String">
       <sv:value>/templates/samples/templates/main.jsp</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
@@ -120,7 +120,7 @@
     <sv:property sv:name="i18nBasename" sv:type="String">
       <sv:value>info.magnolia.module.samples.messages</sv:value>
     </sv:property>
-    <sv:property sv:name="path" sv:type="String">
+    <sv:property sv:name="templatePath" sv:type="String">
       <sv:value>samples/templates/main.ftl</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
@@ -197,7 +197,7 @@
     <sv:property sv:name="i18nBasename" sv:type="String">
       <sv:value>info.magnolia.module.samples.messages</sv:value>
     </sv:property>
-    <sv:property sv:name="path" sv:type="String">
+    <sv:property sv:name="templatePath" sv:type="String">
       <sv:value>samples/templates/virtualURI.ftl</sv:value>
     </sv:property>
     <sv:property sv:name="title" sv:type="String">
